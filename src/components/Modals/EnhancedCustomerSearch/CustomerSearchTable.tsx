@@ -64,8 +64,8 @@ const mockData: ICustomerWithVehicles[] = [
         id: "1",
         lastName: 'Johnson',
         firstName: 'Ana',
-        cellPhoneNumber: '1234567890',
-        homePhoneNumber: '2234567890',
+        cellPhone: '1234567890',
+        homePhone: '2234567890',
         email: "alisa444444.86@gmail.com",
         state: "Illinois",
         city: 'Ohaio',
@@ -83,8 +83,8 @@ const mockData: ICustomerWithVehicles[] = [
         id:"2",
         lastName: 'Johnson',
         firstName: 'Ana',
-        cellPhoneNumber: '1234567890',
-        homePhoneNumber: '2234567890',
+        cellPhone: '1234567890',
+        homePhone: '2234567890',
         state: "Illinois",
         email: "alisa444444.86@gmail.com",
         city: 'Ohaio',
@@ -170,9 +170,9 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
     }, [])
 
     const setCustomerData = async (item: IRemappedCustomer) => {
-        const phoneNumbers = [item.cellPhoneNumber];
+        const phoneNumbers = [item.cellPhone];
         const customerData = mockData.find(el => el.id === item.id);
-        if (customerData?.homePhoneNumber) phoneNumbers.push(customerData.homePhoneNumber);
+        if (customerData?.homePhone) phoneNumbers.push(customerData.homePhone);
         const vehicles = customerData?.vehicles ? customerData?.vehicles.map(el => ({...el, mileage: null})) : [];
         const data: ICustomerLoadedData = {
             emails: customerData?.email ? [customerData.email] : [],
@@ -290,8 +290,8 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                                 value={editingElement.firstName}
                                 onChange={onFieldChange("firstName")}/>
                             : customer.firstName}</TableCell>
-                        <TableCell key="home" className={classes.bodyCell}>{customer.homePhoneNumber ?? ""}</TableCell>
-                        <TableCell key="cell" className={classes.bodyCell}>{customer.cellPhoneNumber ?? ""}</TableCell>
+                        <TableCell key="home" className={classes.bodyCell}>{customer.homePhone ?? ""}</TableCell>
+                        <TableCell key="cell" className={classes.bodyCell}>{customer.cellPhone ?? ""}</TableCell>
                         <TableCell key="email" className={classes.bodyCell}>{
                             isEdit && editingElement?.vehicle.id === customer.vehicle.id
                                 ? <Input

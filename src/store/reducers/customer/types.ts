@@ -11,8 +11,8 @@ export interface ICustomerByName {
     id: string;
     lastName: string;
     firstName: string;
-    cellPhoneNumber: string;
-    homePhoneNumber?: string;
+    cellPhone: string;
+    homePhone?: string;
     state?: string;
     city?: string;
     address?: string;
