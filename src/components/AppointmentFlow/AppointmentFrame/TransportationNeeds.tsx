@@ -237,16 +237,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         }
     }
 
-    const handleSideBar = () => {
-        const index = sideBarSteps.indexOf("appointmentSelection");
-        if (index > -1) {
-            const slicedSteps = sideBarSteps.slice(0, index + 1);
-            dispatch(setSideBarSteps(slicedSteps))
-        }
-    }
-
     const handleBack = () => {
-        // handleSideBar();
         dispatch(setTransportation(null));
         onBack();
     }
@@ -279,6 +270,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         }
         <Actions
             onBack={handleBack}
+            nextLabel={t("Next")}
             hideNext={!!transportations.length}
             onNext={onNext}
             nextDisabled={loading || Boolean(transportations.length) && !transportation}

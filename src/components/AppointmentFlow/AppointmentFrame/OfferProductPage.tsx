@@ -139,6 +139,7 @@ const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeV
             </PriceAndDate>
             {category?.offer?.description ? <Description dangerouslySetInnerHTML={{ __html: category.offer.description}}/> : null }
             <Actions
+                nextLabel={t("Next")}
                 onBack={handleBack}
                 onNext={onSubmit}
             />

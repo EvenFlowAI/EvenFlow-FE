@@ -119,7 +119,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         categoriesIds,
         serviceType,
         config,
-        consultants
     ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
@@ -134,7 +133,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         state.appointmentFrame.categoriesIds,
         state.appointmentFrame.serviceType,
         state.bookingFlowConfig.config,
-        state.appointmentFrame.consultants,
     ]);
     const dispatch = useDispatch();
     const isInit = useRef(true);
@@ -349,7 +347,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
                 <Caption title={t("The price for the service will be quoted at the dealership")}/>
             </Wrapper>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
-            <Actions onBack={handleBack} nextDisabled={!selectedCode.length} onNext={handleNext} />
+            <Actions onBack={handleBack} nextDisabled={!selectedCode.length} onNext={handleNext} nextLabel={t("Next")}/>
         </StepWrapper>
     );
 };
