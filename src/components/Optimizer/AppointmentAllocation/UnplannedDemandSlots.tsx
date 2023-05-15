@@ -41,10 +41,10 @@ const UnplannedDemandSlots: React.FC<TTableProps> = ({ slots, setDemandSlots }) 
     const onChange = (item: IUnplannedDemandBySlot, value: number|string) => {
         setDemandSlots(prev => {
             let data = [...prev];
-            const prevItem = data.find(el => el.id === item.id)
+            const prevItem = data.find(el => el.start === item.start)
             if (prevItem) {
                 const updated = {...prevItem, amount: +value};
-                data = data.filter(el => el.id !== item.id).concat(updated);
+                data = data.filter(el => el.start !== item.start).concat(updated);
             }
             return sortSlots(data);
         })
