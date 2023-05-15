@@ -99,7 +99,7 @@ const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdi
     const handleSave = () => {
         if (selectedSC && editingElement) {
             const items = [...slots1, ...slots2]
-                .map(item => ({id: item.id, amount: +item.amount}))
+                .map(item => ({...item, amount: +item.amount}))
             const data = {
                 items,
                 day: editingElement.day,
