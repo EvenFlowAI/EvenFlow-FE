@@ -24,6 +24,7 @@ import CartTable from "./CartTable";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {Routes} from "../../../config/routes";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {useTranslation} from "react-i18next";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -48,6 +49,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
     const {id} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
+    const {t} = useTranslation();
 
     const handleBack = () => {
         if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
@@ -152,6 +154,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
                 prevDisabled={history?.location?.search?.includes('view=unique')}
                 nextDisabled={!selectedService}
                 hideNext
+                nextLabel={t("Next")}
                 onNext={() => {}}
                 onBack={handleBack} />
         </StepWrapper>

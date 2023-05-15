@@ -185,6 +185,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
             <Actions
                 hideNext
                 onBack={onBack}
+                nextLabel={t("Next")}
                 onNext={onNext}
                 nextDisabled={!selectedVehicle
                     || !checkSelectedCar(selectedVehicle, customerLoadedData?.vehicles)}

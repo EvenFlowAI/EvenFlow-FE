@@ -553,6 +553,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 : <Actions
                 onBack={handleBack}
                 // hideNext={!isXs}
+                nextLabel={t("Next")}
                 nextDisabled={!selectedPackage}
                 onNext={() => handleNext(selectedPackage)}/>}
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
