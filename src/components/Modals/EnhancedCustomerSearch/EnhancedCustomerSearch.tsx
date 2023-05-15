@@ -3,12 +3,14 @@ import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
-import {useDispatch} from "react-redux";
-import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {useException, useModal} from "../../../utils/hooks";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../UI/Button";
 import {TCallback} from "../../../types/types";
 import CustomerSearchResults from "./CustomerSearchResults";
+import {loadCustomersByName} from "../../../store/reducers/enhancedCustomerSearch/actions";
+import {RootState} from "../../../store/rootReducer";
 
 const useStyles = makeStyles(() => ({
     buttonsWrapper: {
@@ -35,14 +37,13 @@ const useStyles = makeStyles(() => ({
 type TEnhancedCustomerSearchProps = DialogProps & {onOpenNotFound: TCallback, handleNew: TCallback};
 
 const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, onClose, onOpenNotFound, handleNew}) => {
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {onOpen: onOpenSearchResults, onClose: onCloseSearchResults, isOpen: isOpenSearchResults} = useModal();
     const dispatch = useDispatch();
     const showError = useException();
-    const showMessage = useMessage();
-    const {selectedSC} = useSCs();
     const classes = useStyles();
     const {t} = useTranslation();
 
@@ -67,17 +68,17 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
         onClose();
     }, [clearForm])
 
-    const onSuccess = () => {
+    const onSuccess = (count: number) => {
+        count > 0 ? onOpenSearchResults() : onOpenNotFound()
         onCancel()
     }
 
     const onSave = useCallback((): void => {
-        setFormIsChecked(true);
-        // todo request and then open corresponding window with them
-        //onOpenNotFound();
-
-        onOpenSearchResults()
-    }, [])
+        if (scProfile) {
+            setFormIsChecked(true);
+            dispatch(loadCustomersByName(scProfile.id, firstName, lastName, onSuccess, showError))
+        }
+    }, [scProfile, firstName, lastName])
 
     return (
         <BaseModal open={open} width={700} onClose={onCancel}>

@@ -19,11 +19,12 @@ import {
 } from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {ICustomerWithVehicles, IRemappedCustomer} from "../../../store/reducers/customer/types";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {ICustomerLoadedData} from "../../../api/types";
 import {setAddress, setVehicle, setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {TCallback} from "../../../types/types";
+import {RootState} from "../../../store/rootReducer";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -151,6 +152,7 @@ const columnNames = [
 ]
 
 const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
+    const {customers} = useSelector((state: RootState) => state.customers);
     const [data, setData] = useState<IRemappedCustomer[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<IRemappedCustomer|null>(null)
@@ -159,7 +161,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
 
     useEffect(() => {
         const remappedData: IRemappedCustomer[] = [];
-        mockData.forEach(customer => {
+        customers.forEach(customer => {
             customer.vehicles.forEach(vehicle => {
                 const data = {...customer, vehicle}
                 delete data.vehicles;
@@ -167,11 +169,11 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
             })
         })
         setData(remappedData);
-    }, [])
+    }, [customers])
 
     const setCustomerData = async (item: IRemappedCustomer) => {
         const phoneNumbers = [item.cellPhone];
-        const customerData = mockData.find(el => el.id === item.id);
+        const customerData = customers.find(el => el.id === item.id);
         if (customerData?.homePhone) phoneNumbers.push(customerData.homePhone);
         const vehicles = customerData?.vehicles ? customerData?.vehicles.map(el => ({...el, mileage: null})) : [];
         const data: ICustomerLoadedData = {

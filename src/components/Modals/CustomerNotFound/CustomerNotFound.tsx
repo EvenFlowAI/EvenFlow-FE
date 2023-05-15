@@ -1,9 +1,7 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {BaseModal} from "../BaseModal";
 import {DialogProps} from "../types";
 import {makeStyles} from "@material-ui/core/styles";
-import {useDispatch} from "react-redux";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../UI/Button";
 
@@ -28,7 +26,8 @@ const useStyles = makeStyles(() => ({
         fontWeight: 600,
         fontSize: 24,
         color: "#202021",
-        marginBottom: 24
+        marginBottom: 24,
+        textAlign: "center",
     }
 }))
 
@@ -38,17 +37,8 @@ type TCustomerNotFoundProps = DialogProps & {
 }
 
 const CustomerNotFound: React.FC<TCustomerNotFoundProps> = ({ open, onClose, onTryAnotherName, handleNew}) => {
-    const dispatch = useDispatch();
-    const showError = useException();
-    const showMessage = useMessage();
-    const {selectedSC} = useSCs();
     const classes = useStyles();
     const {t} = useTranslation();
-
-    useEffect(() => {
-
-    }, [])
-
 
     const onCancel = useCallback((): void => {
         onClose();
