@@ -28,6 +28,7 @@ import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameR
 import {useParams} from "react-router-dom";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import AppointmentTimingCard from "./AppointmentTimingCard";
+import {useTranslation} from "react-i18next";
 
 const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({
     display: "grid",
@@ -108,6 +109,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
             state.appointmentFrame.packagePricingType,
             state.appointmentFrame.sideBarSteps,
         ]);
+    const {t} = useTranslation();
 
     useEffect(() => {
         setLoading(true);
@@ -226,7 +228,7 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
                         key={card.name}/>
                 })}
             </TimingWrapper>
-            <Actions onBack={onBack} onNext={onSubmit} nextDisabled={!isValid} />
+            <Actions onBack={onBack} onNext={onSubmit} nextDisabled={!isValid} nextLabel={t("Next")}/>
         </StepWrapper>
     );
 };

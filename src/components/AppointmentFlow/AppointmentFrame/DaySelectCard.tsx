@@ -47,7 +47,13 @@ export const DayCard = styled(({available, isCurrent, isOffPeak, ...props}) => (
             border: isCurrent ? "1px solid #000000" : (isOffPeak ? "1px solid #237243" : "1px solid #DADADA"),
             background: isCurrent ? "#000000" : isOffPeak ? "#89E5AB" : "#FAFAFA",
         }
-    }
+    },
+    "& .dayName": {
+        fontSize: 14,
+        fontWeight: "normal",
+        marginBottom: -12,
+        textTransform: 'none'
+    },
 }));
 
 type TProps = {
@@ -67,12 +73,12 @@ export const XsMontFormat = "MMM";
 export const DaySelectCard: React.FC<TProps> = ({
     day, onClick, appointment, isCurrent, isXs, appointments,
 }) => {
-    const isCustomRange = useSelector((state: RootState) => {
-        return Boolean(
-            state.appointment.searchedDateRange
-            && state.appointmentFrame.selectedTiming !== EAppointmentTimingType.SpecialOffers
-        );
-    })
+    // const isCustomRange = useSelector((state: RootState) => {
+    //     return Boolean(
+    //         state.appointment.searchedDateRange
+    //         && state.appointmentFrame.selectedTiming !== EAppointmentTimingType.SpecialOffers
+    //     );
+    // })
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
     const getMaxPrice = () => {
@@ -114,26 +120,31 @@ export const DaySelectCard: React.FC<TProps> = ({
         return t("Not Available");
     }
 
-    const getFormat = () => {
-        if (isXs) {
-            if (isCustomRange) {
-                return XsMontFormat;
-            }
-            return XsFormat;
-        } else if (isCustomRange) {
-            return monthFormat;
-        }
-        return defaultFormat;
-    }
+    // const getFormat = () => {
+    //     if (isXs) {
+    //         if (isCustomRange) {
+    //             return XsMontFormat;
+    //         }
+    //         return XsFormat;
+    //     } else if (isCustomRange) {
+    //         return monthFormat;
+    //     }
+    //     return defaultFormat;
+    // }
 
     const isOffPeak = Boolean(appointment?.amountOfSavingMoney);
+    const getDayNameString = (): string => {
+        const name = moment.utc(day).format('ddd').toLowerCase();
+        return name.charAt(0).toUpperCase() + name.slice(1);
+    }
 
     return <DayCard
             available={Boolean(appointment)}
             isCurrent={isCurrent}
             isOffPeak={isOffPeak}
         >
-        <div>{moment.utc(day).format(getFormat())}</div>
+        <div className="dayName">{getDayNameString()}</div>
+        <div>{moment.utc(day).format(isXs ? XsMontFormat : monthFormat)}</div>
         <div className="day" onClick={onClick}>
             {getLabel()}
             {isXs ? <div className="padding" /> : null}
