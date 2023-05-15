@@ -1,10 +1,11 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {ICustomerByName} from "./types";
 import {getCustomers, setCurrentCustomer, setLoading} from "./actions";
+import {ICustomerWithVehicles} from "../customer/types";
 
 type TCustomerSearchState = {
     isLoading: boolean;
-    customers: ICustomerByName[];
+    customers: ICustomerWithVehicles[];
     currentCustomer: ICustomerByName|null;
 }
 const initialState: TCustomerSearchState = {
@@ -13,7 +14,7 @@ const initialState: TCustomerSearchState = {
     currentCustomer: null,
 }
 
-export const scEmployees = createReducer(initialState, builder => builder
+export const customerReducer = createReducer(initialState, builder => builder
     .addCase(setLoading, (state, {payload}) => {
         return {...state, isLoading: payload}
     })

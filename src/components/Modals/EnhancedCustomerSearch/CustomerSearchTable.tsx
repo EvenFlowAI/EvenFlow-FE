@@ -163,7 +163,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
         const remappedData: IRemappedCustomer[] = [];
         customers.forEach(customer => {
             customer.vehicles.forEach(vehicle => {
-                const data = {...customer, vehicle}
+                const data = {...customer, vehicle, uniqueId: customer.id.toString() + vehicle.id.toString()}
                 delete data.vehicles;
                 remappedData.push(data)
             })
@@ -235,7 +235,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                 {data.map((customer, index) =>
                     (<TableRow key={customer.vehicle.vin + index}>
                         <TableCell key="icon" className={classes.bodyCell}>
-                            { isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                            { isEdit && editingElement?.uniqueId === customer.uniqueId
                                 ? <IconsBlock>
                                     <Button
                                         onClick={onSaveInfo}
@@ -253,16 +253,16 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                                             <Create/>
                                         </IconButton>
                                     </HtmlTooltip>
-                                    <HtmlTooltip title="Edit Appointment">
-                                        <IconButton
-                                            style={{padding: 4}}
-                                                    disabled={!customer.vehicle.appointmentHashKeys?.length}
-                                                    onClick={() => onUpdateAppForCar(customer)}>
-                                            {customer.vehicle.appointmentHashKeys?.length
-                                                ? <Update/>
-                                                : <EditDisabled/>}
-                                        </IconButton>
-                                    </HtmlTooltip>
+                                    {customer.vehicle.appointmentHashKeys?.length
+                                        ? <HtmlTooltip title="Edit Appointment">
+                                            <IconButton
+                                                style={{padding: 4}}
+                                                onClick={() => onUpdateAppForCar(customer)}>
+                                                <Update/>
+                                            </IconButton>
+                                        </HtmlTooltip>
+                                        : <IconButton style={{padding: 4}} disabled><EditDisabled/></IconButton>
+                                    }
                                     <HtmlTooltip title="View Repair History">
                                         <IconButton
                                             style={{padding: 4}}
@@ -280,14 +280,14 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                                 </IconsBlock>}
                         </TableCell>
                         <TableCell key="last" className={classes.bodyCell}>
-                            {isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                            {isEdit && editingElement?.uniqueId === customer.uniqueId
                                 ? <Input
                                     value={editingElement.lastName}
                                     onChange={onFieldChange("lastName")}/>
                                 : customer.lastName }
                         </TableCell>
                         <TableCell key="first" className={classes.bodyCell}>{
-                            isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                            isEdit && editingElement?.uniqueId === customer.uniqueId
                             ? <Input
                                 value={editingElement.firstName}
                                 onChange={onFieldChange("firstName")}/>
@@ -295,27 +295,27 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                         <TableCell key="home" className={classes.bodyCell}>{customer.homePhone ?? ""}</TableCell>
                         <TableCell key="cell" className={classes.bodyCell}>{customer.cellPhone ?? ""}</TableCell>
                         <TableCell key="email" className={classes.bodyCell}>{
-                            isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                            isEdit && editingElement?.uniqueId === customer.uniqueId
                                 ? <Input
                                     value={editingElement.email}
                                     onChange={onFieldChange("email")}/>
                                 : customer.email ?? ""}
                         </TableCell>
                         <TableCell key="address" className={classes.bodyCell}>{
-                            isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                            isEdit && editingElement?.uniqueId === customer.uniqueId
                                 ? <Input
                                     value={editingElement.address}
                                     onChange={onFieldChange("address")}/>
                                 : customer.address ?? ""}
                         </TableCell>
                         <TableCell key="city" className={classes.bodyCell}>{
-                            isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                            isEdit && editingElement?.uniqueId === customer.uniqueId
                                 ? <Input
                                     value={editingElement.city}
                                     onChange={onFieldChange("city")}/>
                                 : customer.city ?? ""}</TableCell>
                         <TableCell key="state" className={classes.bodyCell}>{
-                            isEdit && editingElement?.vehicle.id === customer.vehicle.id
+                            isEdit && editingElement?.uniqueId === customer.uniqueId
                                 ? <Input
                                     value={editingElement.state}
                                     onChange={onFieldChange("state")}/>

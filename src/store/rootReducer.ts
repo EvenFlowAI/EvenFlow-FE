@@ -28,7 +28,7 @@ import {serviceValetReducer} from "./reducers/serviceValet/reducer";
 import {recallsReducer} from "./reducers/recall/reducer";
 import {firstScreenOptionsReducer} from "./reducers/serviceTypes/reducer";
 import {capacityServiceValetReducer} from "./reducers/capacityServiceValet/reducer";
-import {customerReducer} from "./reducers/customer/reducer";
+import {customerReducer} from "./reducers/enhancedCustomerSearch/reducer";
 
 export const rootReducer = combineReducers({
     appointment: appointmentReducer,

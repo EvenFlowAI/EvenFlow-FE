@@ -70,7 +70,6 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
 
     const onSuccess = (count: number) => {
         count > 0 ? onOpenSearchResults() : onOpenNotFound()
-        onCancel()
     }
 
     const onSave = useCallback((): void => {

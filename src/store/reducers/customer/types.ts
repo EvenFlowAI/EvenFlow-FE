@@ -25,4 +25,5 @@ export interface ICustomerWithVehicles extends ICustomerByName{
 
 export interface IRemappedCustomer extends ICustomerByName {
     vehicle: ICustomerVehicle;
+    uniqueId: string;
 }
