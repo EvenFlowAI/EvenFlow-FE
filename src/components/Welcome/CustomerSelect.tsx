@@ -116,7 +116,7 @@ export const useStyles = makeStyles(theme => ({
     searchLinkWrapper: {
         position: "absolute",
         right: '31%',
-        bottom: 5,
+        bottom: 0,
     }
 }))
 type TProps = {
@@ -128,7 +128,6 @@ type TProps = {
 export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew}) => {
     const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {currentUser} = useSelector((state: RootState) => state.users);
     const {onOpen, onClose, isOpen} = useModal();
     const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);

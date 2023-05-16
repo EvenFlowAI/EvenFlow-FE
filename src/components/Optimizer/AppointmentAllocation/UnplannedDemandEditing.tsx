@@ -91,17 +91,22 @@ const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdi
         setEdit(false);
     }, [setInitialData])
 
+    const onSuccess = () => {
+        showMessage("Unplanned Demand Updated");
+        handleCancel()
+    }
+
     const handleSave = () => {
         if (selectedSC && editingElement) {
             const items = [...slots1, ...slots2]
-                .map(item => ({id: item.id, amount: +item.amount}))
+                .map(item => ({...item, amount: +item.amount}))
             const data = {
                 items,
                 day: editingElement.day,
                 serviceCenterId: selectedSC.id,
                 podId: selectedPod?.id
             }
-            dispatch(changeUnplannedSlots(data, showError, () => showMessage("Unplanned Demand Updated")))
+            dispatch(changeUnplannedSlots(data, showError, onSuccess))
         }
     }
 

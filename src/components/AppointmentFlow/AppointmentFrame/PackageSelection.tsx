@@ -243,7 +243,7 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
     }
 }));
 
-const Info = styled("div")({
+export const Info = styled("div")({
     width: '100%',
     display: 'flex',
     justifyContent: 'flex-start',
@@ -251,7 +251,7 @@ const Info = styled("div")({
     color: "#808080",
 })
 
-const FeesText = styled('div')<Theme, { count: number }>(({theme, count}) => ({
+export const FeesText = styled('div')<Theme, { count: number }>(({theme, count}) => ({
     width: "100%",
     display: "grid",
     gap: "0 16px",
@@ -553,6 +553,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 : <Actions
                 onBack={handleBack}
                 // hideNext={!isXs}
+                nextLabel={t("Next")}
                 nextDisabled={!selectedPackage}
                 onNext={() => handleNext(selectedPackage)}/>}
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>

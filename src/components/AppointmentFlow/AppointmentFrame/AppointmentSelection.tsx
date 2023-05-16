@@ -31,6 +31,7 @@ import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/ty
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector";
 import {setSideBarSteps} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useTranslation} from "react-i18next";
 
 const Wrapper = styled('div')(({ theme }) => ({
         display: "flex",
@@ -132,6 +133,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const initRef = useRef<boolean>(false);
     const isMount = useRef(true);
     const dispatch = useDispatch();
+    const {t} = useTranslation();
     const nextDisabled = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? !serviceValetAppointment
         : !appointment,
@@ -325,7 +327,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         <StepWrapper>
             <Wrapper>
                 <SelectedAppointment />
-                <Actions onBack={handleBack} onNext={handleNext} nextDisabled={nextDisabled} />
+                <Actions onBack={handleBack} onNext={handleNext} nextDisabled={nextDisabled} nextLabel={t("Next")}/>
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}

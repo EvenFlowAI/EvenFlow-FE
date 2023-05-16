@@ -23,6 +23,7 @@ import CartTable from "./CartTable";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {Routes} from "../../../config/routes";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {useTranslation} from "react-i18next";
 
 type TProps = {
     onNext: TArgCallback<TScreen>;
@@ -37,6 +38,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
     const dispatch = useDispatch();
     const history = useHistory();
     const {id} = useParams();
+    const {t} = useTranslation();
 
     useEffect(() => {
         setLoading(true);
@@ -122,6 +124,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
             <CartTable/>
             <Actions
                 nextDisabled={!subService}
+                nextLabel={t("Next")}
                 hideNext
                 onNext={() => {}}
                 onBack={handleBack} />
