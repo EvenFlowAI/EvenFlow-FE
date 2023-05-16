@@ -13,6 +13,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {changeUnplannedSlots, loadUnplannedSlots} from "../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
+import {Divider} from "@material-ui/core";
 
 type TUnplannedDemandEditingProps = {
     isEdit: boolean;
@@ -45,6 +46,12 @@ const useStyles = makeStyles(() => ({
     dayName:{
         fontSize: 16,
         fontWeight: 700,
+    },
+    text: {
+        fontSize: 16,
+        fontWeight: "bold",
+        textAlign: "center",
+        padding: '24px 0 36px 0',
     }
 }))
 
@@ -130,10 +137,15 @@ const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdi
             </div>
             {isSlotsLoading
                 ? <Loading/>
-                :  <div className={classes.tablesWrapper}>
-                    <UnplannedDemandSlots slots={slots1} setDemandSlots={setSlots1}/>
-                    <UnplannedDemandSlots slots={slots2} setDemandSlots={setSlots2}/>
-                </div>}
+                : slots1.length
+                    ?  <div className={classes.tablesWrapper}>
+                        <UnplannedDemandSlots slots={slots1} setDemandSlots={setSlots1}/>
+                        <UnplannedDemandSlots slots={slots2} setDemandSlots={setSlots2}/>
+                    </div>
+                    : <div className={classes.text}>
+                        <Divider style={{marginBottom: 36}}/>
+                        <div>There are no working hours for this day</div>
+                    </div>}
         </div>
     );
 };
