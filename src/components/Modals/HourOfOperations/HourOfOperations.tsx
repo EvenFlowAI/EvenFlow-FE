@@ -165,7 +165,7 @@ export const HourOfOperations: React.FC<DialogProps&TViewMode> = ({viewMode, ...
                     await Api.call(Api.endpoints.ServiceCenters.SetHOO, {data: {hoursOfOperations: fd}, urlParams: {id: selectedSC.id}});
                     setSaving(false);
                     showMessage("Hours of Operation updated");
-                    showMessage("The Unplanned Demand Settings for edited days were reset", "info");
+                    showMessage("The Unplanned Demand Settings for edited days were reset", "warning");
                     props.onClose();
                 } catch (e) {
                     showError(e);
