@@ -1,11 +1,14 @@
 import {createAction} from "@reduxjs/toolkit";
 import {ICustomerByName} from "./types";
-import {AppThunk} from "../../../types/types";
+import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
+import {ActionCreator} from "redux";
 
 export const getCustomers = createAction<ICustomerByName[]>("CustomerSearch/GetCustomers");
 export const setCurrentCustomer = createAction<ICustomerByName|null>("CustomerSearch/SetCurrentCustomer");
 export const setLoading = createAction<boolean>("CustomerSearch/SetLoading");
+export const setPaging = createAction<IPagingResponse>("customerSearch/SetPaging");
+export const setPageData = createAction<Partial<IPageRequest>>("customerSearch/SetPageData");
 
 export const loadCustomersByName = (
     serviceCenterId: number,
@@ -13,14 +16,14 @@ export const loadCustomersByName = (
     lastName: string,
     onSuccess: (count: number) => void,
     onError: (err: string) => void,
-    pageSize = 10,
-    pageIndex = 0,
-    ): AppThunk => dispatch => {
+): AppThunk => (dispatch, getState) => {
     dispatch(setLoading(true))
-    Api.call(Api.endpoints.Customers.GetByName, {params: {serviceCenterId, firstName, lastName, pageSize, pageIndex}})
+    const {pageSize, pageIndex} = getState().customers.pageData;
+    Api.call<PaginatedAPIResponse<ICustomerByName>>(Api.endpoints.Customers.GetByName, {params: {serviceCenterId, firstName, lastName, pageSize, pageIndex}})
         .then(result => {
             if (result.data?.result) {
                 dispatch(getCustomers(result.data.result))
+                dispatch(setPaging(result.data.paging))
                 onSuccess(result.data.result.length)
             }
         })
@@ -29,6 +32,11 @@ export const loadCustomersByName = (
             onError(err)
         })
         .finally(() => dispatch(setLoading(false)))
+}
+export const changePageData: ActionCreator<AppThunk> = (payload: Partial<IPageRequest>) => {
+    return async dispatch => {
+        dispatch(setPageData(payload));
+    }
 }
 
 export const updateCustomer = (data: ICustomerByName, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {

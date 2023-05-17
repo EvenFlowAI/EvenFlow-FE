@@ -12,7 +12,7 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableHead,
+    TableHead, TablePagination,
     TableRow,
     Tooltip,
     withStyles
@@ -26,8 +26,11 @@ import {TCallback} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
 import {ICustomerByName} from "../../../store/reducers/enhancedCustomerSearch/types";
 import CustomerInputField from "./CustomerInputField";
-import {updateCustomer} from "../../../store/reducers/enhancedCustomerSearch/actions";
-import {useException} from "../../../utils/hooks";
+import {
+    changePageData,
+    updateCustomer
+} from "../../../store/reducers/enhancedCustomerSearch/actions";
+import {useException, usePagination} from "../../../utils/hooks";
 import {Loading} from "../../UI/Loading";
 
 const useStyles = makeStyles({
@@ -69,7 +72,11 @@ const useStyles = makeStyles({
         padding: 0,
         backgroundColor: 'transparent',
         fontSize: 12,
-    }
+    },
+    pagination: {
+        flexShrink: 0,
+        width: "100%",
+    },
 })
 
 const IconsBlock = styled('div')({
@@ -115,10 +122,11 @@ const columnNames = [
 ]
 
 const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> = ({onClose, loadData}) => {
-    const {customers, isLoading} = useSelector((state: RootState) => state.customers);
+    const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const [data, setData] = useState<ICustomerByName[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<ICustomerByName|null>(null);
+    const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
     const classes = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
@@ -192,10 +200,19 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
             dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err)));
         }
     }
+    const handleChangePage = async (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
+        await changePage(e, pageNumber);
+        await loadData();
+    }
+    const handleChangeRows = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        await changeRowsPerPage(e);
+        await loadData();
+    }
 
     return isLoading
         ? <div className={classes.emptyWrapper}><Loading/></div>
-        : <Table className={classes.wrapper}>
+        : <>
+            <Table className={classes.wrapper}>
             <TableHead>
                 <TableRow>
                     <TableCell/>
@@ -308,6 +325,16 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                     </TableRow>))}
             </TableBody>
         </Table>
+            <TablePagination
+                className={classes.pagination}
+                // classes={{select: classes.select}}
+                component="div"
+                count={paging.numberOfRecords}
+                page={pageData.pageIndex}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRows}
+                rowsPerPage={pageData.pageSize}/>
+            </>
 };
 
 export default CustomerSearchTable;
