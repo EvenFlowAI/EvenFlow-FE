@@ -202,7 +202,7 @@ export const Welcome = () => {
         }
     }
 
-    const getTitle = (view: TView) => view === 'serviceSelect' ? t("Do you want to bring your car in") : t("welcome");
+    const getTitle = (view: TView) => view === 'serviceSelect' ? t("Do you want to bring your car in") : null;
     const getSubTitle = (view: TView) => view === 'serviceSelect' ? t("Or use our mobile service?") : t("schedule service");
 
     // todo uncomment language switcher
