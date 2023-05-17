@@ -232,7 +232,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                 />
 
             </SelectWrapper>
-            <Actions onBack={handleBack} onNext={handleNext} />
+            <Actions onBack={handleBack} onNext={handleNext} nextLabel={t("Next")}/>
             <DisplayAncillaryPrice onNext={onNext} open={isOpen} onClose={onClose}/>
             <UnavailableService open={isUnavailableOpen} onClose={onUnavailableClose} setFormChecked={setFormChecked}/>
         </StepWrapper>

@@ -264,6 +264,18 @@ export const AppointmentSlotsDesirability = () => {
         }
     }
 
+    const onSuccess = () => {
+        showMessage("Saved");
+        setEdit(false);
+        setSaving(false);
+        if (form.timeSlotType !== desirabilityItems[0].timeSlotType) showMessage("The Unplanned Demand Settings were reset", "warning")
+    }
+
+    const onError = (err:any) => {
+        showError(err);
+        setSaving(false);
+    }
+
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
@@ -280,10 +292,8 @@ export const AppointmentSlotsDesirability = () => {
                         }
                         )),
                     form.timeSlotType, selectedSC.id, selectedPod?.id,
-                    () => showMessage("Saved"),
-                    (e) => showError(e)));
-                setEdit(false);
-                setSaving(false);
+                    onSuccess,
+                    (e) => onError(e)));
             } catch (e) {
                 showError(e);
                 setSaving(false);

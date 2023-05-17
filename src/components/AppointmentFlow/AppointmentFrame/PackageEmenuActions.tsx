@@ -64,7 +64,7 @@ const PackageEMenuActions: React.FC<TProps> = ({isLoading, onBack, onNext}) => {
                     disabled={isLoading}
                     onClick={onSelectFactory}
                     color={'primary'}
-                    variant='contained'>
+                    variant='outlined'>
                     {t("Select Factory")}
                 </Button>
                 <Button

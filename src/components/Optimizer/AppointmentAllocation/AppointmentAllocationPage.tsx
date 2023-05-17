@@ -5,13 +5,12 @@ import {optimizerRoot} from "../utils";
 import {TabList} from "../../UI/Tabs";
 import {Tab} from "@material-ui/core";
 import {ScheduledAppointments} from "./ScheduledAppointments";
-import {UnplannedDemand} from "./UnplannedDemand";
 import RoPredictionParameters from "./RoPredictionParameters";
 import {OverbookingFactor} from "./OverbookingFactor";
+import {UnplannedDemand} from "./UnplannedDemand";
 
 export const AppointmentAllocationPage = () => {
     const [selectedTab, setTab] = useState<string>("0");
-
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
         setTab(tab);
     }

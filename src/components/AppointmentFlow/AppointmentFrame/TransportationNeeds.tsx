@@ -237,16 +237,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         }
     }
 
-    const handleSideBar = () => {
-        const index = sideBarSteps.indexOf("appointmentSelection");
-        if (index > -1) {
-            const slicedSteps = sideBarSteps.slice(0, index + 1);
-            dispatch(setSideBarSteps(slicedSteps))
-        }
-    }
-
     const handleBack = () => {
-        // handleSideBar();
         dispatch(setTransportation(null));
         onBack();
     }
@@ -277,6 +268,12 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                     {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
                 </TextWrapper>
         }
-        <Actions onBack={handleBack} hideNext onNext={() => {}} nextDisabled={loading || Boolean(transportations.length) && !transportation}/>
+        <Actions
+            onBack={handleBack}
+            nextLabel={t("Next")}
+            hideNext={!!transportations.length}
+            onNext={onNext}
+            nextDisabled={loading || Boolean(transportations.length) && !transportation}
+        />
     </StepWrapper>
 };

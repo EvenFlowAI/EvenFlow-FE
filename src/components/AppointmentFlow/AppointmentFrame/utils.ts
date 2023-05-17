@@ -162,7 +162,8 @@ export const getCurrentMenu = (serviceType: EServiceType, advisor: boolean, tran
     return Object.values(menu);
 }
 
-export const getStepsScreen = (serviceType: EServiceType, advisorSelection: boolean, appointmentSelection: boolean, transportationNeeds: boolean): TScreen[] => {
+export const getStepsScreen = (serviceType: EServiceType, advisorSelection: boolean, appointmentSelection: boolean,
+                               transportationNeeds: boolean): TScreen[] => {
     const screens: {[key: string]: TScreen} = {
         location: "location",
         serviceNeeds: "serviceNeeds",
@@ -177,7 +178,8 @@ export const getStepsScreen = (serviceType: EServiceType, advisorSelection: bool
     return Object.values(screens);
 }
 
-export const getStepsMap = (serviceType: EServiceType, isAdvisorAvailable: boolean, isAppointmentSelection: boolean, isTransportationNeeds: boolean): {[K in TScreen]: number} => {
+export const getStepsMap = (serviceType: EServiceType, isAdvisorAvailable: boolean, isAppointmentSelection: boolean,
+                            isTransportationNeeds: boolean): {[K in TScreen]: number} => {
     const data: { [K in TScreen]: number } = {
         carSelection: 0,
         serviceNeeds: serviceType === EServiceType.VisitCenter ? 1 : 2,
@@ -208,7 +210,7 @@ export const getStepsMap = (serviceType: EServiceType, isAdvisorAvailable: boole
     if (!isAppointmentSelection) {
         data.appointmentTiming = -1;
     }
-    if (!isTransportationNeeds && data.transportationNeeds > -1) {
+    if ((!isTransportationNeeds) && data.transportationNeeds > -1) {
         for (let key in data) {
             if (data[key as keyof TData] > data.transportationNeeds) {
                 data[key as keyof TData] = data[key as keyof TData] - 1
