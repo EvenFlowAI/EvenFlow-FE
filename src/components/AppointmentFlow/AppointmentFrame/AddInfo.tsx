@@ -61,6 +61,14 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
     const screenToReturn = useMemo(() => subService ? 'serviceSelection' : 'serviceNeeds', [subService])
 
     const getScreenForNew = (): TScreen => {
+        if (isAdditionalServices) {
+            return getScreenForNew();
+        } else {
+            return 'maintenanceDetails';
+        }
+    }
+
+    const getScreenForExisting = (): TScreen => {
         if (currentConfig?.advisorSelection) {
             return 'consultantSelection';
         } else {
@@ -70,20 +78,12 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         }
     }
 
-    const getScreenForExisting = (): TScreen => {
-        if (isAdditionalServices) {
-            return getScreenForNew();
-        } else {
-            return 'maintenanceDetails';
-        }
-    }
-
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setFrameDescription(value))
     }
 
     const handleNext = () => {
-        if (!checkSelectedCar(vehicle, vehicles) || userType === EUserType.Existing) {
+        if (checkSelectedCar(vehicle, vehicles) || userType === EUserType.Existing) {
             handleSetScreen(getScreenForExisting());
         } else {
             handleSetScreen(getScreenForNew());
