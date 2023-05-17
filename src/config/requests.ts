@@ -283,7 +283,7 @@ export class Api {
         },
         Customers: {
           GetByName: {route: "/customers/vehicles/by-customer-name", method: "get"},
-          Update: {route: "/customers/by-name", method: "put"}
+          Update: {route: "/customers/vehicles", method: "put"}
         },
         Dealerships: {
             Create: {route: "/dealerships", method: "post"},

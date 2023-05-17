@@ -8,9 +8,10 @@ import CustomerSearchTable from "./CustomerSearchTable";
 type TCustomerSearchResultsProps = DialogProps & {
     onClearSearchForm: TCallback;
     handleNew: TCallback;
+    loadData: TCallback;
 };
 
-const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({open, onClose, handleNew, onClearSearchForm}) => {
+const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({loadData, open, onClose, handleNew, onClearSearchForm}) => {
     const onCancel = () => {
         onClose()
     }
@@ -37,7 +38,7 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({open, onC
                     onNewSearch={onNewSearch}
                     onCreateNewAppointment={onCreateNewAppointment}/>
 
-                <CustomerSearchTable onClose={onClose}/>
+                <CustomerSearchTable onClose={onClose} loadData={loadData}/>
             </DialogContent>
         </BaseModal>
     );

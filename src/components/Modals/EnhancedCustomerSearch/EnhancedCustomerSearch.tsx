@@ -38,6 +38,7 @@ type TEnhancedCustomerSearchProps = DialogProps & {onOpenNotFound: TCallback, ha
 
 const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, onClose, onOpenNotFound, handleNew}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {isLoading} = useSelector((state: RootState) => state.customers);
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
@@ -72,12 +73,14 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
         count > 0 ? onOpenSearchResults() : onOpenNotFound()
     }
 
-    const onSave = useCallback((): void => {
-        if (scProfile) {
-            setFormIsChecked(true);
-            dispatch(loadCustomersByName(scProfile.id, firstName, lastName, onSuccess, showError))
-        }
-    }, [scProfile, firstName, lastName])
+    const loadData = () => {
+        scProfile && dispatch(loadCustomersByName(scProfile.id, firstName, lastName, onSuccess, showError))
+    }
+
+    const onSave = (): void => {
+        setFormIsChecked(true);
+        loadData()
+    };
 
     return (
         <BaseModal open={open} width={700} onClose={onCancel}>
@@ -111,6 +114,7 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
                     </LoadingButton>
                     <LoadingButton
                         onClick={onSave}
+                        loading={isLoading}
                         variant="contained"
                         color="primary">
                         {t("Search")}
@@ -120,6 +124,7 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
             </div>
             <CustomerSearchResults
                 handleNew={handleNew}
+                loadData={loadData}
                 onClose={onCloseSearchResults}
                 open={isOpenSearchResults}
                 onClearSearchForm={clearForm}

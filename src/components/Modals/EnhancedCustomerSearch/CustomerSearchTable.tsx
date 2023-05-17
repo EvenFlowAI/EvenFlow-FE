@@ -26,9 +26,20 @@ import {TCallback} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
 import {ICustomerByName} from "../../../store/reducers/enhancedCustomerSearch/types";
 import CustomerInputField from "./CustomerInputField";
+import {updateCustomer} from "../../../store/reducers/enhancedCustomerSearch/actions";
+import {useException} from "../../../utils/hooks";
+import {Loading} from "../../UI/Loading";
 
 const useStyles = makeStyles({
     wrapper: {
+        border: '1px solid #DADADA',
+        marginTop: 16,
+    },
+    emptyWrapper: {
+        height: 500,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         border: '1px solid #DADADA',
         marginTop: 16,
     },
@@ -103,32 +114,14 @@ const columnNames = [
     "VIN"
 ]
 
-const initialForm: ICustomerByName = {
-    vin: '',
-    year: 2020,
-    model: '',
-    make: '',
-    vehicleId: 0,
-    firstName: '',
-    lastName: '',
-    address: '',
-    city: '',
-    state: '',
-    customerId: 0,
-    homePhone: '',
-    cellPhone: '',
-    appointmentHashKeys: [],
-    email: ''
-}
-
-const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
-    const {customers} = useSelector((state: RootState) => state.customers);
+const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> = ({onClose, loadData}) => {
+    const {customers, isLoading} = useSelector((state: RootState) => state.customers);
     const [data, setData] = useState<ICustomerByName[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<ICustomerByName|null>(null);
-    const [form, setForm] = useState<ICustomerByName>(initialForm)
     const classes = useStyles();
     const dispatch = useDispatch();
+    const showError = useException();
 
     useEffect(() => {
         setData(customers);
@@ -166,22 +159,18 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
             onClose()
         })
         setEditingElement(item);
-        setForm(item);
     }
 
     const onUpdateAppForCar = (item: ICustomerByName) => {
         setEditingElement(item)
-        setForm(item);
     }
 
     const onViewRepairHistory = (item: ICustomerByName) => {
         setEditingElement(item);
-        setForm(item);
     }
 
     const onEditData = async (item: ICustomerByName) => {
         await setEditingElement(item);
-        await setForm(item);
         await setEdit(true);
     }
 
@@ -192,12 +181,21 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
         });
     }
 
-    const onSaveInfo = () => {
-
+    const onSuccess = () => {
+        setEditingElement(null);
+        setEdit(false);
+        loadData();
     }
 
-    return (
-        <Table className={classes.wrapper}>
+    const onSaveInfo = async () => {
+        if (editingElement) {
+            dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err)));
+        }
+    }
+
+    return isLoading
+        ? <div className={classes.emptyWrapper}><Loading/></div>
+        : <Table className={classes.wrapper}>
             <TableHead>
                 <TableRow>
                     <TableCell/>
@@ -255,7 +253,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                         </TableCell>
                         <TableCell key="last" className={classes.bodyCell}>
                             <CustomerInputField
-                                editingElement={form}
+                                editingElement={editingElement}
                                 customer={customer}
                                 fieldName="lastName"
                                 isEdit={isEdit}
@@ -263,7 +261,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                         </TableCell>
                         <TableCell key="first" className={classes.bodyCell}>
                             <CustomerInputField
-                                editingElement={form}
+                                editingElement={editingElement}
                                 customer={customer}
                                 fieldName="firstName"
                                 isEdit={isEdit}
@@ -273,7 +271,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                         <TableCell key="cell" className={classes.bodyCell}>{customer.cellPhone ?? ""}</TableCell>
                         <TableCell key="email" className={classes.bodyCell}>
                             <CustomerInputField
-                                editingElement={form}
+                                editingElement={editingElement}
                                 customer={customer}
                                 fieldName="email"
                                 isEdit={isEdit}
@@ -281,7 +279,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                         </TableCell>
                         <TableCell key="address" className={classes.bodyCell}>
                             <CustomerInputField
-                                editingElement={form}
+                                editingElement={editingElement}
                                 customer={customer}
                                 fieldName="address"
                                 isEdit={isEdit}
@@ -289,7 +287,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                         </TableCell>
                         <TableCell key="city" className={classes.bodyCell}>
                             <CustomerInputField
-                                editingElement={form}
+                                editingElement={editingElement}
                                 customer={customer}
                                 fieldName="city"
                                 isEdit={isEdit}
@@ -297,7 +295,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                         </TableCell>
                         <TableCell key="state" className={classes.bodyCell}>
                             <CustomerInputField
-                                editingElement={form}
+                                editingElement={editingElement}
                                 customer={customer}
                                 fieldName="state"
                                 isEdit={isEdit}
@@ -310,7 +308,6 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                     </TableRow>))}
             </TableBody>
         </Table>
-    );
 };
 
 export default CustomerSearchTable;

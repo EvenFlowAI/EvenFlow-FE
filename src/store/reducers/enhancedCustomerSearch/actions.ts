@@ -30,3 +30,16 @@ export const loadCustomersByName = (
         })
         .finally(() => dispatch(setLoading(false)))
 }
+
+export const updateCustomer = (data: ICustomerByName, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.Customers.Update, {data})
+        .then(res => {
+            if (res) onSuccess();
+        })
+        .catch(err => {
+            onError(err);
+            console.log('update customer err', err)
+        })
+        .finally(() => dispatch(setLoading(false)))
+}
