@@ -1,14 +1,17 @@
 export interface ICustomerByName {
-    id: number;
+    customerId: number;
     lastName: string;
     firstName: string;
-    cellPhoneNumber: string;
-    homePhoneNumber: string;
+    cellPhone: string;
+    homePhone: string;
     email: string;
+    vehicleId: number;
     address: string;
     city: string;
     state: string;
     make: string;
     model: string;
     vin: string;
+    year: number;
+    appointmentHashKeys?: string[];
 }

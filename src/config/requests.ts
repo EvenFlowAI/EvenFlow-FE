@@ -282,7 +282,7 @@ export class Api {
             Remove: {route: "/complimentary-services/{id}", method: "delete"},
         },
         Customers: {
-          GetByName: {route: "/customers/by-name", method: "get"},
+          GetByName: {route: "/customers/vehicles/by-customer-name", method: "get"},
           Update: {route: "/customers/by-name", method: "put"}
         },
         Dealerships: {

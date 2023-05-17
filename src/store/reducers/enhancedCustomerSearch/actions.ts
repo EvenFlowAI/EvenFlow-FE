@@ -2,9 +2,8 @@ import {createAction} from "@reduxjs/toolkit";
 import {ICustomerByName} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {ICustomerWithVehicles} from "../customer/types";
 
-export const getCustomers = createAction<ICustomerWithVehicles[]>("CustomerSearch/GetCustomers");
+export const getCustomers = createAction<ICustomerByName[]>("CustomerSearch/GetCustomers");
 export const setCurrentCustomer = createAction<ICustomerByName|null>("CustomerSearch/SetCurrentCustomer");
 export const setLoading = createAction<boolean>("CustomerSearch/SetLoading");
 
@@ -14,9 +13,11 @@ export const loadCustomersByName = (
     lastName: string,
     onSuccess: (count: number) => void,
     onError: (err: string) => void,
+    pageSize = 10,
+    pageIndex = 0,
     ): AppThunk => dispatch => {
     dispatch(setLoading(true))
-    Api.call(Api.endpoints.Customers.GetByName, {params: {serviceCenterId, firstName, lastName}})
+    Api.call(Api.endpoints.Customers.GetByName, {params: {serviceCenterId, firstName, lastName, pageSize, pageIndex}})
         .then(result => {
             if (result.data?.result) {
                 dispatch(getCustomers(result.data.result))

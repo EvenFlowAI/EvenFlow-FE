@@ -18,13 +18,14 @@ import {
     withStyles
 } from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
-import {ICustomerWithVehicles, IRemappedCustomer} from "../../../store/reducers/customer/types";
 import {useDispatch, useSelector} from "react-redux";
 import {ICustomerLoadedData} from "../../../api/types";
 import {setAddress, setVehicle, setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {TCallback} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
+import {ICustomerByName} from "../../../store/reducers/enhancedCustomerSearch/types";
+import CustomerInputField from "./CustomerInputField";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -60,62 +61,13 @@ const useStyles = makeStyles({
     }
 })
 
-const mockData: ICustomerWithVehicles[] = [
-    {
-        id: "1",
-        lastName: 'Johnson',
-        firstName: 'Ana',
-        cellPhone: '1234567890',
-        homePhone: '2234567890',
-        email: "alisa444444.86@gmail.com",
-        state: "Illinois",
-        city: 'Ohaio',
-        address: "Fidel Castro str, 12/24",
-        vehicles: [{
-            id: 78,
-            vin: '443456789044345Y',
-            make: "Ford",
-            model: "Focus",
-            year: 2013,
-            appointmentHashKeys: [],
-        }]
-    },
-    {
-        id:"2",
-        lastName: 'Johnson',
-        firstName: 'Ana',
-        cellPhone: '1234567890',
-        homePhone: '2234567890',
-        state: "Illinois",
-        email: "alisa444444.86@gmail.com",
-        city: 'Ohaio',
-        address: "Fidel Castro str, 12/24",
-        vehicles: [{
-            id: 45,
-            vin: '123456789012345Y',
-            make: "Ford",
-            model: "Kuga",
-            year: 2016,
-            appointmentHashKeys: [],
-        },
-            {
-                id: 8,
-                vin: '12345678901236Y',
-                make: "Ford",
-                model: "Escape",
-                year: 2013,
-                appointmentHashKeys: [],
-            }]
-    }
-]
-
 const IconsBlock = styled('div')({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
 })
 
-const Input = withStyles({
+export const CustomerInput = withStyles({
     root: {
         '& input': {
             padding: 4
@@ -151,70 +103,92 @@ const columnNames = [
     "VIN"
 ]
 
+const initialForm: ICustomerByName = {
+    vin: '',
+    year: 2020,
+    model: '',
+    make: '',
+    vehicleId: 0,
+    firstName: '',
+    lastName: '',
+    address: '',
+    city: '',
+    state: '',
+    customerId: 0,
+    homePhone: '',
+    cellPhone: '',
+    appointmentHashKeys: [],
+    email: ''
+}
+
 const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
     const {customers} = useSelector((state: RootState) => state.customers);
-    const [data, setData] = useState<IRemappedCustomer[]>([]);
+    const [data, setData] = useState<ICustomerByName[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
-    const [editingElement, setEditingElement] = useState<IRemappedCustomer|null>(null)
+    const [editingElement, setEditingElement] = useState<ICustomerByName|null>(null);
+    const [form, setForm] = useState<ICustomerByName>(initialForm)
     const classes = useStyles();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const remappedData: IRemappedCustomer[] = [];
-        customers.forEach(customer => {
-            customer.vehicles.forEach(vehicle => {
-                const data = {...customer, vehicle, uniqueId: customer.id.toString() + vehicle.id.toString()}
-                delete data.vehicles;
-                remappedData.push(data)
-            })
-        })
-        setData(remappedData);
+        setData(customers);
     }, [customers])
 
-    const setCustomerData = async (item: IRemappedCustomer) => {
+    const setCustomerData = async (item: ICustomerByName) => {
         const phoneNumbers = [item.cellPhone];
-        const customerData = customers.find(el => el.id === item.id);
+        const customerData = customers.find(el => el.vehicleId === item.vehicleId);
         if (customerData?.homePhone) phoneNumbers.push(customerData.homePhone);
-        const vehicles = customerData?.vehicles ? customerData?.vehicles.map(el => ({...el, mileage: null})) : [];
+        const vehicle = {
+            vin: item.vin,
+            make: item.make,
+            model: item.model,
+            year: item.year,
+            appointmentHashKeys: [],
+            mileage: null
+        }
         const data: ICustomerLoadedData = {
-            emails: customerData?.email ? [customerData.email] : [],
-            firstName: customerData?.firstName ?? "",
-            lastName: customerData?.lastName ?? "",
-            id: customerData?.id ?? item.id,
+            emails: item?.email ? [item.email] : [],
+            firstName: item?.firstName ?? "",
+            lastName: item?.lastName ?? "",
+            id: item.customerId.toString(),
             phoneNumbers,
-            vehicles,
+            vehicles: [vehicle],
         }
         if (customerData?.city) data.city = customerData.city;
         if (customerData?.address) await dispatch(setAddress(customerData.address));
         await dispatch(setCustomerLoadedData(data));
-        await dispatch(setVehicle({...item.vehicle, mileage: null}));
+        await dispatch(setVehicle(vehicle));
     }
 
-    const onCreateNewForCar = (item: IRemappedCustomer) => {
+    const onCreateNewForCar = (item: ICustomerByName) => {
         setCustomerData(item).then(() => {
             dispatch(setWelcomeScreenView("serviceSelect"));
             onClose()
         })
-        setEditingElement(item)
-    }
-
-    const onUpdateAppForCar = (item: IRemappedCustomer) => {
-        setEditingElement(item)
-    }
-
-    const onViewRepairHistory = (item: IRemappedCustomer) => {
         setEditingElement(item);
+        setForm(item);
     }
 
-    const onEditData = async (item: IRemappedCustomer) => {
+    const onUpdateAppForCar = (item: ICustomerByName) => {
+        setEditingElement(item)
+        setForm(item);
+    }
+
+    const onViewRepairHistory = (item: ICustomerByName) => {
+        setEditingElement(item);
+        setForm(item);
+    }
+
+    const onEditData = async (item: ICustomerByName) => {
         await setEditingElement(item);
+        await setForm(item);
         await setEdit(true);
     }
 
-    const onFieldChange = (fieldName: keyof IRemappedCustomer) => (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditingElement(prev => {
-            if (prev) return {...prev, [fieldName]: e.target.value};
-            return prev;
+    const onFieldChange = (fieldName: keyof ICustomerByName) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.persist()
+        setEditingElement(prevState => {
+            return prevState ? {...prevState, [fieldName]: e.target.value} : prevState;
         });
     }
 
@@ -233,9 +207,9 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
             <TableBody>
                 <TableRow className={classes.greyRow}/>
                 {data.map((customer, index) =>
-                    (<TableRow key={customer.vehicle.vin + index}>
+                    (<TableRow key={customer.vin + index}>
                         <TableCell key="icon" className={classes.bodyCell}>
-                            { isEdit && editingElement?.uniqueId === customer.uniqueId
+                            { isEdit && editingElement?.vehicleId === customer.vehicleId
                                 ? <IconsBlock>
                                     <Button
                                         onClick={onSaveInfo}
@@ -253,7 +227,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                                             <Create/>
                                         </IconButton>
                                     </HtmlTooltip>
-                                    {customer.vehicle.appointmentHashKeys?.length
+                                    {customer.appointmentHashKeys?.length
                                         ? <HtmlTooltip title="Edit Appointment">
                                             <IconButton
                                                 style={{padding: 4}}
@@ -280,50 +254,59 @@ const CustomerSearchTable: React.FC<{onClose: TCallback}> = ({onClose}) => {
                                 </IconsBlock>}
                         </TableCell>
                         <TableCell key="last" className={classes.bodyCell}>
-                            {isEdit && editingElement?.uniqueId === customer.uniqueId
-                                ? <Input
-                                    value={editingElement.lastName}
-                                    onChange={onFieldChange("lastName")}/>
-                                : customer.lastName }
+                            <CustomerInputField
+                                editingElement={form}
+                                customer={customer}
+                                fieldName="lastName"
+                                isEdit={isEdit}
+                                onFieldChange={onFieldChange}/>
                         </TableCell>
-                        <TableCell key="first" className={classes.bodyCell}>{
-                            isEdit && editingElement?.uniqueId === customer.uniqueId
-                            ? <Input
-                                value={editingElement.firstName}
-                                onChange={onFieldChange("firstName")}/>
-                            : customer.firstName}</TableCell>
+                        <TableCell key="first" className={classes.bodyCell}>
+                            <CustomerInputField
+                                editingElement={form}
+                                customer={customer}
+                                fieldName="firstName"
+                                isEdit={isEdit}
+                                onFieldChange={onFieldChange}/>
+                        </TableCell>
                         <TableCell key="home" className={classes.bodyCell}>{customer.homePhone ?? ""}</TableCell>
                         <TableCell key="cell" className={classes.bodyCell}>{customer.cellPhone ?? ""}</TableCell>
-                        <TableCell key="email" className={classes.bodyCell}>{
-                            isEdit && editingElement?.uniqueId === customer.uniqueId
-                                ? <Input
-                                    value={editingElement.email}
-                                    onChange={onFieldChange("email")}/>
-                                : customer.email ?? ""}
+                        <TableCell key="email" className={classes.bodyCell}>
+                            <CustomerInputField
+                                editingElement={form}
+                                customer={customer}
+                                fieldName="email"
+                                isEdit={isEdit}
+                                onFieldChange={onFieldChange}/>
                         </TableCell>
-                        <TableCell key="address" className={classes.bodyCell}>{
-                            isEdit && editingElement?.uniqueId === customer.uniqueId
-                                ? <Input
-                                    value={editingElement.address}
-                                    onChange={onFieldChange("address")}/>
-                                : customer.address ?? ""}
+                        <TableCell key="address" className={classes.bodyCell}>
+                            <CustomerInputField
+                                editingElement={form}
+                                customer={customer}
+                                fieldName="address"
+                                isEdit={isEdit}
+                                onFieldChange={onFieldChange}/>
                         </TableCell>
-                        <TableCell key="city" className={classes.bodyCell}>{
-                            isEdit && editingElement?.uniqueId === customer.uniqueId
-                                ? <Input
-                                    value={editingElement.city}
-                                    onChange={onFieldChange("city")}/>
-                                : customer.city ?? ""}</TableCell>
-                        <TableCell key="state" className={classes.bodyCell}>{
-                            isEdit && editingElement?.uniqueId === customer.uniqueId
-                                ? <Input
-                                    value={editingElement.state}
-                                    onChange={onFieldChange("state")}/>
-                                : customer.state ?? ""}</TableCell>
-                        <TableCell key="year" className={classes.bodyCell}>{customer.vehicle?.year ?? ""}</TableCell>
-                        <TableCell key="make" className={classes.bodyCell}>{customer.vehicle?.make ?? ""}</TableCell>
-                        <TableCell key="model" className={classes.bodyCell}>{customer.vehicle?.model ?? ""}</TableCell>
-                        <TableCell key="vin" className={classes.bodyCell}>{customer.vehicle?.vin ?? ""}</TableCell>
+                        <TableCell key="city" className={classes.bodyCell}>
+                            <CustomerInputField
+                                editingElement={form}
+                                customer={customer}
+                                fieldName="city"
+                                isEdit={isEdit}
+                                onFieldChange={onFieldChange}/>
+                        </TableCell>
+                        <TableCell key="state" className={classes.bodyCell}>
+                            <CustomerInputField
+                                editingElement={form}
+                                customer={customer}
+                                fieldName="state"
+                                isEdit={isEdit}
+                                onFieldChange={onFieldChange}/>
+                        </TableCell>
+                        <TableCell key="year" className={classes.bodyCell}>{customer.year ?? ""}</TableCell>
+                        <TableCell key="make" className={classes.bodyCell}>{customer.make ?? ""}</TableCell>
+                        <TableCell key="model" className={classes.bodyCell}>{customer.model ?? ""}</TableCell>
+                        <TableCell key="vin" className={classes.bodyCell}>{customer.vin ?? ""}</TableCell>
                     </TableRow>))}
             </TableBody>
         </Table>

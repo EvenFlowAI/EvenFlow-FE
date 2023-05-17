@@ -1,11 +1,10 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {ICustomerByName} from "./types";
 import {getCustomers, setCurrentCustomer, setLoading} from "./actions";
-import {ICustomerWithVehicles} from "../customer/types";
 
 type TCustomerSearchState = {
     isLoading: boolean;
-    customers: ICustomerWithVehicles[];
+    customers: ICustomerByName[];
     currentCustomer: ICustomerByName|null;
 }
 const initialState: TCustomerSearchState = {
