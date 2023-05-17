@@ -124,7 +124,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     }, [serviceType, valueService, currentConfig, consultants])
 
     useEffect(() => {
-        if (customerLoadedData && !customerLoadedData.vehicles?.length) {
+        if (customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)) {
             if (needToShowServiceSelection) {
                 handleServiceTypeSelection()
             } else {

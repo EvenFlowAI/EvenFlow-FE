@@ -3,7 +3,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import {ReactComponent as Create} from "../../../assets/img/create_appointment.svg";
 import {ReactComponent as Update} from "../../../assets/img/editAppointment.svg";
 import {ReactComponent as Edit} from "../../../assets/img/editIcon.svg";
-import {ReactComponent as EditDisabled} from "../../../assets/img/editAppointmentDisabled.svg";
 import {ReactComponent as Search} from "../../../assets/img/searchInfoIcon.svg";
 import {
     Button,
@@ -12,7 +11,8 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableHead, TablePagination,
+    TableHead,
+    TablePagination,
     TableRow,
     Tooltip,
     withStyles
@@ -20,18 +20,23 @@ import {
 import {TextField} from "../../UI/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {ICustomerLoadedData} from "../../../api/types";
-import {setAddress, setVehicle, setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setAddress,
+    setUserType,
+    setVehicle,
+    setWelcomeScreenView
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {TCallback} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
 import {ICustomerByName} from "../../../store/reducers/enhancedCustomerSearch/types";
 import CustomerInputField from "./CustomerInputField";
-import {
-    changePageData,
-    updateCustomer
-} from "../../../store/reducers/enhancedCustomerSearch/actions";
+import {changePageData, updateCustomer} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {useException, usePagination} from "../../../utils/hooks";
 import {Loading} from "../../UI/Loading";
+import {useHistory} from "react-router-dom";
+import {encodeSCID} from "../../../utils/utils";
+import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -123,6 +128,7 @@ const columnNames = [
 
 const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> = ({onClose, loadData}) => {
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const [data, setData] = useState<ICustomerByName[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<ICustomerByName|null>(null);
@@ -130,6 +136,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
     const classes = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
+    const history = useHistory();
 
     useEffect(() => {
         setData(customers);
@@ -144,7 +151,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
             make: item.make,
             model: item.model,
             year: item.year,
-            appointmentHashKeys: [],
+            appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
             mileage: null
         }
         const data: ICustomerLoadedData = {
@@ -154,10 +161,12 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
             id: item.customerId.toString(),
             phoneNumbers,
             vehicles: [vehicle],
+            fromSearchByName: true,
         }
         if (customerData?.city) data.city = customerData.city;
         if (customerData?.address) await dispatch(setAddress(customerData.address));
         await dispatch(setCustomerLoadedData(data));
+        await setUserType(EUserType.Existing);
         await dispatch(setVehicle(vehicle));
     }
 
@@ -170,7 +179,14 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
     }
 
     const onUpdateAppForCar = (item: ICustomerByName) => {
-        setEditingElement(item)
+        if (scProfile) {
+            const id = encodeSCID(scProfile.id)
+            setEditingElement(item)
+            setCustomerData(item).then(() => {
+                history.push(`/f/appointment/${id}`)
+                onClose()
+            })
+        }
     }
 
     const onViewRepairHistory = (item: ICustomerByName) => {
@@ -242,16 +258,23 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                                             <Create/>
                                         </IconButton>
                                     </HtmlTooltip>
-                                    {customer.appointmentHashKey?.length
-                                        ? <HtmlTooltip title="Edit Appointment">
-                                            <IconButton
-                                                style={{padding: 4}}
-                                                onClick={() => onUpdateAppForCar(customer)}>
-                                                <Update/>
-                                            </IconButton>
-                                        </HtmlTooltip>
-                                        : <IconButton style={{padding: 4}} disabled><EditDisabled/></IconButton>
-                                    }
+                                    <HtmlTooltip title="Edit Appointment">
+                                        <IconButton
+                                            style={{padding: 4}}
+                                            onClick={() => onUpdateAppForCar(customer)}>
+                                            <Update/>
+                                        </IconButton>
+                                    </HtmlTooltip>
+                                    {/*{customer.appointmentHashKey?.length*/}
+                                    {/*    ? <HtmlTooltip title="Edit Appointment">*/}
+                                    {/*        <IconButton*/}
+                                    {/*            style={{padding: 4}}*/}
+                                    {/*            onClick={() => onUpdateAppForCar(customer)}>*/}
+                                    {/*            <Update/>*/}
+                                    {/*        </IconButton>*/}
+                                    {/*    </HtmlTooltip>*/}
+                                    {/*    : <IconButton style={{padding: 4}} disabled><EditDisabled/></IconButton>*/}
+                                    {/*}*/}
                                     <HtmlTooltip title="View Repair History">
                                         <IconButton
                                             style={{padding: 4}}
