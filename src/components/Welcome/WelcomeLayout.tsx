@@ -3,7 +3,6 @@ import {Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import bg from "../../assets/img/welcomeBg.jpg";
 
-
 const mh400 = "@media (max-height: 400px)";
 const mh600 = "@media (max-height: 600px)";
 
@@ -61,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type TProps = {
-    title: string;
+    title: string|null;
     subtitle?: string;
 }
 
@@ -69,8 +68,12 @@ export const WelcomeLayout: React.FC<TProps> = ({children, title, subtitle}) => 
     const classes = useStyles();
     return <div className={classes.container}>
         <Paper className={classes.paper} variant="outlined">
-            <h1 className={classes.title}>{title}</h1>
-            {subtitle ? <h2 className={classes.title}>{subtitle}</h2> : null}
+            {title
+                ? <h1 className={classes.title}>{title}</h1>
+                : null}
+            {subtitle
+                ? <h2 className={classes.title}>{subtitle}</h2>
+                : null}
             {children}
         </Paper>
     </div>

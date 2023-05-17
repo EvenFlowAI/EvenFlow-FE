@@ -79,7 +79,6 @@ const App = () => {
                 disableGutters
                 style={{
                     height: isTopAligning ? "auto" : "100vh",
-                    paddingTop: isTopAligning ? 20 : 'unset',
                     maxHeight: "-webkit-fill-available"}}>
                 <ConfirmDialog/>
                 <Switch>
