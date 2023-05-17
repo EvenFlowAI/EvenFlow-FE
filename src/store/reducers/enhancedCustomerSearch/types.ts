@@ -13,5 +13,5 @@ export interface ICustomerByName {
     model: string;
     vin: string;
     year: number;
-    appointmentHashKeys?: string[];
+    appointmentHashKey?: string;
 }

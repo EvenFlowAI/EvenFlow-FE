@@ -242,7 +242,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                                             <Create/>
                                         </IconButton>
                                     </HtmlTooltip>
-                                    {customer.appointmentHashKeys?.length
+                                    {customer.appointmentHashKey?.length
                                         ? <HtmlTooltip title="Edit Appointment">
                                             <IconButton
                                                 style={{padding: 4}}
