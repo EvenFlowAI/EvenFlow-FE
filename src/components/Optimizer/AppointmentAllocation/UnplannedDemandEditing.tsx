@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
         display: 'flex',
         justifyContent: "space-between",
         alignItems: 'center',
-        padding: '12px 36px',
+        padding: '12px 36px 0 36px',
     },
     title: {
         fontSize: 16,
@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
         fontSize: 16,
         fontWeight: "bold",
         textAlign: "center",
-        padding: '24px 0 36px 0',
+        paddingBottom: 36,
     }
 }))
 
