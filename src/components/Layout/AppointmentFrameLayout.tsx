@@ -202,6 +202,48 @@ export const AppointmentFrameLayout = () => {
         }
     }, [id, history, dispatch, scProfile]);
 
+    const getTrimmedKey = (key: string): string => {
+        const lastIndex = key.lastIndexOf('==');
+        return  lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
+    }
+
+    const handleSetScreen = useCallback((screen: TScreen) => {
+        setCurrentScreen(screen);
+        dispatch(setCurrentFrameScreen(screen));
+    }, []);
+
+    const onUpdateAppointment = useCallback(async(car: ILoadedVehicle, needToShowService: boolean) => {
+        const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
+        const trimmedKey = getTrimmedKey(key);
+        setLoadingCar(true);
+        try {
+            const {data} = await API.appointment.getByKey(trimmedKey);
+            if (data?.vehicle?.vin && scProfile && data.recalls?.length) {
+                const makeId = makes.find(item => item.name.toLowerCase() === data.vehicle.make.toLowerCase())?.id
+                if (makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, makeId, data.recalls))
+            }
+            dispatch(setUpdateAppointment(data));
+            data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
+            if (data.maintenancePackageOption) {
+                if (isLexus) {
+                    dispatch(setPackageEMenuType(data.maintenancePackageOption.type))
+                } else {
+                    dispatch(setPackage(data.maintenancePackageOption))
+                }
+            }
+            needToShowService = handleServiceTypeOption(data);
+            if (needToShowService) {
+                handleServiceTypeSelection()
+            } else {
+                handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+            }
+        } catch (e) {
+            showError(e);
+        } finally {
+            setLoadingCar(false);
+        }
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile])
+
     useEffect(() => {
         trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
     }, [trackerCreated])
@@ -241,6 +283,10 @@ export const AppointmentFrameLayout = () => {
             sessionStorage.setItem(LocalTokens.sessionId, '')
         })
     }, [sessionStorage])
+
+    useEffect(() => {
+        if (selectedVehicle && customerLoadedData?.fromSearchByName) onUpdateAppointment(selectedVehicle, needToShowServiceSelection).then()
+    }, [needToShowServiceSelection, customerLoadedData, selectedVehicle])
 
     const handleNewCustomer = () => {
         const c = getBlankCustomer();
@@ -291,10 +337,6 @@ export const AppointmentFrameLayout = () => {
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);
         dispatch(setCurrentFrameScreen(name));
-    }, []);
-    const handleSetScreen = useCallback((screen: TScreen) => {
-        setCurrentScreen(screen);
-        dispatch(setCurrentFrameScreen(screen));
     }, []);
 
     const clearAppointmentData = useCallback(() => {
@@ -370,43 +412,6 @@ export const AppointmentFrameLayout = () => {
         }
         return needToShowService;
     }
-
-    const getTrimmedKey = (key: string): string => {
-        const lastIndex = key.lastIndexOf('==');
-        return  lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
-    }
-
-    const onUpdateAppointment = useCallback(async(car: ILoadedVehicle, needToShowService: boolean) => {
-        const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
-        const trimmedKey = getTrimmedKey(key);
-        setLoadingCar(true);
-        try {
-            const {data} = await API.appointment.getByKey(trimmedKey);
-            if (data?.vehicle?.vin && scProfile && data.recalls?.length) {
-                const makeId = makes.find(item => item.name.toLowerCase() === data.vehicle.make.toLowerCase())?.id
-                if (makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, makeId, data.recalls))
-            }
-            dispatch(setUpdateAppointment(data));
-            data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
-            if (data.maintenancePackageOption) {
-                if (isLexus) {
-                    dispatch(setPackageEMenuType(data.maintenancePackageOption.type))
-                } else {
-                    dispatch(setPackage(data.maintenancePackageOption))
-                }
-            }
-            needToShowService = handleServiceTypeOption(data);
-            if (needToShowService) {
-                handleServiceTypeSelection()
-            } else {
-                handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
-            }
-        } catch (e) {
-            showError(e);
-        } finally {
-            setLoadingCar(false);
-        }
-    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile])
 
     const onSelectCar = useCallback(async (car: ILoadedVehicle) => {
         dispatch(selectSR(null));

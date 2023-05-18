@@ -3,6 +3,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {ReactComponent as Create} from "../../../assets/img/create_appointment.svg";
 import {ReactComponent as Update} from "../../../assets/img/editAppointment.svg";
 import {ReactComponent as Edit} from "../../../assets/img/editIcon.svg";
+import {ReactComponent as EditDisabled} from "../../../assets/img/editAppointmentDisabled.svg";
 import {ReactComponent as Search} from "../../../assets/img/searchInfoIcon.svg";
 import {
     Button,
@@ -258,23 +259,16 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                                             <Create/>
                                         </IconButton>
                                     </HtmlTooltip>
-                                    <HtmlTooltip title="Edit Appointment">
-                                        <IconButton
-                                            style={{padding: 4}}
-                                            onClick={() => onUpdateAppForCar(customer)}>
-                                            <Update/>
-                                        </IconButton>
-                                    </HtmlTooltip>
-                                    {/*{customer.appointmentHashKey?.length*/}
-                                    {/*    ? <HtmlTooltip title="Edit Appointment">*/}
-                                    {/*        <IconButton*/}
-                                    {/*            style={{padding: 4}}*/}
-                                    {/*            onClick={() => onUpdateAppForCar(customer)}>*/}
-                                    {/*            <Update/>*/}
-                                    {/*        </IconButton>*/}
-                                    {/*    </HtmlTooltip>*/}
-                                    {/*    : <IconButton style={{padding: 4}} disabled><EditDisabled/></IconButton>*/}
-                                    {/*}*/}
+                                    {customer.appointmentHashKey?.length
+                                        ? <HtmlTooltip title="Edit Appointment">
+                                            <IconButton
+                                                style={{padding: 4}}
+                                                onClick={() => onUpdateAppForCar(customer)}>
+                                                <Update/>
+                                            </IconButton>
+                                        </HtmlTooltip>
+                                        : <IconButton style={{padding: 4}} disabled><EditDisabled/></IconButton>
+                                    }
                                     <HtmlTooltip title="View Repair History">
                                         <IconButton
                                             style={{padding: 4}}
@@ -348,7 +342,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                     </TableRow>))}
             </TableBody>
         </Table>
-            <TablePagination
+            {paging?.numberOfRecords > 10 ? <TablePagination
                 className={classes.pagination}
                 // classes={{select: classes.select}}
                 component="div"
@@ -357,7 +351,8 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRows}
                 rowsPerPage={pageData.pageSize}/>
-            </>
+               : null }
+        </>
 };
 
 export default CustomerSearchTable;

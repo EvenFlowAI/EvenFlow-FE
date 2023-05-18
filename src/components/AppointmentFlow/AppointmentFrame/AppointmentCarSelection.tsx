@@ -15,6 +15,7 @@ import {useTranslation} from "react-i18next";
 import {TScreen} from "../../Layout/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
+import {setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 
 const CarsWrapper = styled('div')({
     display: "flex",
@@ -125,6 +126,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
 
     useEffect(() => {
         if (customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)) {
+            dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
             if (needToShowServiceSelection) {
                 handleServiceTypeSelection()
             } else {
