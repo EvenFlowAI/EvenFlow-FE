@@ -51,7 +51,9 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
     const {selectedSC, loading} = useSelector((state: RootState) => state.serviceCenters);
     const [primaryMethod, setPrimaryMethod] = useState<EAdvisorAssignMethod|null>(null);
     const [secondaryMethod, setSecondaryMethod] = useState<EAdvisorAssignMethod|null>(null);
-    const isSecondaryDisabled = useMemo(() => primaryMethod !== EAdvisorAssignMethod.LastAdvisor,[primaryMethod])
+    const [noAssignment, setNoAssignment] = useState<boolean>(false);
+    const isSecondaryDisabled = useMemo(() => primaryMethod !== EAdvisorAssignMethod.LastAdvisor
+        || noAssignment,[primaryMethod])
 
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -84,14 +86,29 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
     }
 
     const onSave = () => {
-
+        const data = {
+            primaryMethod,
+            secondaryMethod
+        }
+        console.log(data)
     }
 
     const onChange = (method: TMethod, type: EAdvisorAssignMethod) => {
+        setNoAssignment(false)
         if (method === "primary") {
             setPrimaryMethod(type)
+            if (type !== EAdvisorAssignMethod.LastAdvisor) setSecondaryMethod(null);
         } else {
             !isSecondaryDisabled && setSecondaryMethod(type)
+        }
+    }
+
+    const onNoAssignmentCheck = () => {
+        const noAssignmentSelected = !noAssignment;
+        setNoAssignment(prev => !prev)
+        if (noAssignmentSelected) {
+            setPrimaryMethod(null);
+            setSecondaryMethod(null);
         }
     }
 
@@ -185,6 +202,22 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
                                             htmlColor="#DADADA"
                                             cursor={isSecondaryDisabled ? "" : "pointer"}
                                             onClick={() => onChange("secondary", EAdvisorAssignMethod.LastAdvisor)}/>}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>No assignment</TableCell>
+                                <TableCell align="center">
+                                    {noAssignment
+                                        ? <RadioButtonChecked
+                                            htmlColor="#3855F3"
+                                            cursor="pointer"/>
+                                        : <RadioButtonUnchecked
+                                            htmlColor="#DADADA"
+                                            cursor="pointer"
+                                            onClick={onNoAssignmentCheck}/>}
+                                </TableCell>
+                                <TableCell align="center" style={{backgroundColor: "#F4F4F4"}}>
+                                    <RadioButtonUnchecked htmlColor="#DADADA"/>
                                 </TableCell>
                             </TableRow>
                         </TableBody>
