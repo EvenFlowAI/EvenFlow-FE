@@ -12,6 +12,10 @@ import {TextField} from "../UI/EndUserInputs";
 import {EServiceCenterName} from "../../api/types";
 import {LoadingButton} from "../UI/Button";
 import {useTranslation} from "react-i18next";
+import {getCurrentUser} from "../../store/reducers/users/actions";
+import {useModal} from "../../utils/hooks";
+import EnhancedCustomerSearch from "../Modals/EnhancedCustomerSearch/EnhancedCustomerSearch";
+import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
 
 export const mh400 = "@media (max-height: 400px)";
 export const mh600 = "@media (max-height: 600px)";
@@ -27,9 +31,10 @@ export const useStyles = makeStyles(theme => ({
         }
     },
     existing: {
+        position: "relative",
         fontWeight: "bold",
         fontSize: 32,
-        padding: "7%",
+        padding: "7% 7% 9% 7%",
         height: "100%",
         textAlign: "center",
         border: "1px solid #DADADA",
@@ -58,7 +63,7 @@ export const useStyles = makeStyles(theme => ({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "7%",
+        padding: "7% 7% 9% 7%",
         height: "100%",
         textAlign: "center",
         border: "1px solid #DADADA",
@@ -99,6 +104,19 @@ export const useStyles = makeStyles(theme => ({
                 marginTop: theme.spacing(2),
             }
         }
+    },
+    searchButton: {
+        textTransform: 'none',
+        textDecoration: 'underline',
+        fontSize: 14,
+        fontWeight: 600,
+        color: "#202021",
+        textDecorationColor: "#DADADA",
+    },
+    searchLinkWrapper: {
+        position: "absolute",
+        right: '31%',
+        bottom: 0,
     }
 }))
 type TProps = {
@@ -110,6 +128,8 @@ type TProps = {
 export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew}) => {
     const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {onOpen, onClose, isOpen} = useModal();
+    const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
     const isDominion = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Dominion, [scProfile]);
     const isLakePowell = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord, [scProfile]);
@@ -125,7 +145,8 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
         window.addEventListener('unload', () => {
             sessionStorage.setItem(LocalTokens.sessionId, '')
         })
-    }, [sessionStorage])
+        dispatch(getCurrentUser())
+    }, [sessionStorage, dispatch])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setCustomerEnteredEmail(value));
@@ -160,6 +181,9 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                     onClick={handleComplete}>
                     {t("Search")}
                 </LoadingButton>
+                <div className={classes.searchLinkWrapper}>
+                    <Button variant="text" onClick={onOpen} className={classes.searchButton}>{t("Search Customer by Name")}</Button>
+                </div>
             </div>
         </Grid>
         <Grid item xs={12} sm={12} md={6}>
@@ -175,5 +199,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                 </Button>
             </div>
         </Grid>
+        <EnhancedCustomerSearch open={isOpen} onClose={onClose} onOpenNotFound={onOpenNotFound} handleNew={handleNew}/>
+        <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
     </Grid>
 };
