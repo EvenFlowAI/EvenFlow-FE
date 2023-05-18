@@ -17,7 +17,7 @@ const CustomerInputField: React.FC<TCustomerInputFieldProps> = ({
                                                                     fieldName,
                                                                     customer
                                                                 }) => {
-    return isEdit && editingElement?.vehicleId === customer.vehicleId
+    return isEdit && editingElement?.vehicleId === customer.vehicleId && editingElement?.customerId === customer.customerId
         ? <CustomerInput
             value={editingElement[fieldName] ?? ""}
             onChange={onFieldChange(fieldName)}/>

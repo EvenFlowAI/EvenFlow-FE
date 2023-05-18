@@ -241,7 +241,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                 {data.map((customer, index) =>
                     (<TableRow key={customer.vin + index}>
                         <TableCell key="icon" className={classes.bodyCell}>
-                            { isEdit && editingElement?.vehicleId === customer.vehicleId
+                            { isEdit && editingElement?.vehicleId === customer.vehicleId && editingElement?.customerId === customer.customerId
                                 ? <IconsBlock>
                                     <Button
                                         onClick={onSaveInfo}
