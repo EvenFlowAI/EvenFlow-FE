@@ -117,6 +117,7 @@ export interface ICustomerLoadedData {
     phoneNumbers: string[];
     vehicles: ILoadedVehicle[];
     city?:string;
+    fromSearchByName?: boolean;
 }
 
 export interface IVehicle {
