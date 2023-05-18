@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ICustomerByName} from "./types";
+import {ICustomerByName, IRepairHistory} from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {ActionCreator} from "redux";
@@ -9,6 +9,7 @@ export const setCurrentCustomer = createAction<ICustomerByName|null>("CustomerSe
 export const setLoading = createAction<boolean>("CustomerSearch/SetLoading");
 export const setPaging = createAction<IPagingResponse>("CustomerSearch/SetPaging");
 export const setPageData = createAction<Partial<IPageRequest>>("CustomerSearch/SetPageData");
+export const getRepairHistory = createAction<IRepairHistory|null>("CustomerSearch/GetRepairHistory");
 
 export const loadCustomersByName = (
     serviceCenterId: number,
@@ -48,6 +49,19 @@ export const updateCustomer = (data: ICustomerByName, onSuccess: () => void, onE
         .catch(err => {
             onError(err);
             console.log('update customer err', err)
+        })
+        .finally(() => dispatch(setLoading(false)))
+}
+
+export const loadRepairHistory = (serviceCenterId: number, vehicleId: string): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    // todo real params
+    Api.call(Api.endpoints.Customers.GetRepairHistory, {params: {serviceCenterId, vehicleId}})
+        .then(result => {
+            if (result?.data?.result) dispatch(getRepairHistory(result.data.result))
+        })
+        .catch(err => {
+            console.log('get repair history error', err)
         })
         .finally(() => dispatch(setLoading(false)))
 }
