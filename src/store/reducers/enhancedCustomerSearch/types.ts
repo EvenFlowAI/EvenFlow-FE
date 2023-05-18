@@ -40,7 +40,7 @@ export type TRepairPrice = {
 export interface IRepairOrder {
     date: string;
     number: string;
-    advisor: null;
+    advisor: string;
     mileage: number;
     status: string;
     comments: string[];
@@ -59,11 +59,11 @@ export interface IRepairHistory {
     firstName: string;
     cellPhone: string;
     homePhone: string;
-    email: string;
     vehicleId: number;
     make: string;
     model: string;
     vin: string;
     year: number;
     repairOrders: IRepairOrder[];
+    email?: string;
 }
