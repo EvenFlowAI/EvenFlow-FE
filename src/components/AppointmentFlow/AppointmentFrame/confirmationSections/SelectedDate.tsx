@@ -38,10 +38,10 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
             </ConfirmationTitle>
             <Edit fontSize="small" onClick={handleChangeSlot} />
         </TitleWrapper>
-        {serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+        {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
             ? <div><span style={{fontWeight: 'bold'}}>{t("Date")}</span>: {moment.utc(serviceValetAppointment?.date).format('MMMM D')}</div>
             : moment.utc(appointment?.date).format('MMMM D, hh:mm A')}
-        {serviceTypeOption?.type === EServiceType.PikUpDropOff && serviceValetAppointment
+        {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
             ? <div>
                 <div>
                     <span style={{fontWeight: 'bold'}}>{t("Pick Up Time")}: </span>

@@ -98,7 +98,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const classes = useStyles();
     const autocompleteClasses = useAutocompleteStyles();
     const {t} = useTranslation();
-    const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PikUpDropOff
+    const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? t('Enter pick up address')
         : t('Enter your requested location'), [serviceTypeOption])
 
@@ -221,7 +221,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                         label: t('Your ZIP'),
                         placeholder: isFormChecked && !zip
                             ? t("zip code required")
-                                : serviceTypeOption?.type === EServiceType.PikUpDropOff
+                                : serviceTypeOption?.type === EServiceType.PickUpDropOff
                                  ? t("Enter pick up zip code")
                                 : t("Enter your requested zip code"),
                         error: isFormChecked && !zip,
@@ -232,7 +232,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                 />
 
             </SelectWrapper>
-            <Actions onBack={handleBack} onNext={handleNext} />
+            <Actions onBack={handleBack} onNext={handleNext} nextLabel={t("Next")}/>
             <DisplayAncillaryPrice onNext={onNext} open={isOpen} onClose={onClose}/>
             <UnavailableService open={isUnavailableOpen} onClose={onUnavailableClose} setFormChecked={setFormChecked}/>
         </StepWrapper>

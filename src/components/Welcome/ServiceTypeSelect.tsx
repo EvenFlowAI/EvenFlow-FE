@@ -116,7 +116,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     const remappedCards = useMemo(() => firstScreenOptions
             .map(card => {
                 if (card.type === EServiceType.MobileService && !isMobileServiceOn) return null;
-                if (card.type === EServiceType.PikUpDropOff && !isPickUpDropOffServiceOn) return null;
+                if (card.type === EServiceType.PickUpDropOff && !isPickUpDropOffServiceOn) return null;
                 return card
             })
         .filter(card => card), [firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn])

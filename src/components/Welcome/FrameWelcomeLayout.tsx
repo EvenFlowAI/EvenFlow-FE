@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {styled} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/rootReducer";
+import {EServiceCenterName} from "../../api/types";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -24,12 +27,14 @@ const Title = styled('h1')(({theme}) => ({
     }
 }));
 export const FrameWelcomeLayout: React.FC<{}> = ({children}) => {
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
+    const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
+        || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
     return (
-        <Wrapper>
+        <Wrapper style={{paddingTop: isTopAligning ? 20 : 'unset'}}>
             <div>
-                <Title>{t("Welcome")!}</Title>
-                <Title>{t("Schedule your service")}:</Title>
+                <Title>{t("Schedule your service")}</Title>
             </div>
             <div>{children}</div>
         </Wrapper>

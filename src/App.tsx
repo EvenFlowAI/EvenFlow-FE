@@ -26,19 +26,19 @@ import {EServiceCenterName} from "./api/types";
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
-    const {serviceType, consultants} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
     const dispatch = useDispatch();
-    const isWithoutTopPadding = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
+    const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
 
     useEffect(() => {
         if (serviceType === EServiceType.MobileService) {
             setValueServicePreviousScreen("location");
         }
-        if (serviceType === EServiceType.PikUpDropOff) {
+        if (serviceType === EServiceType.PickUpDropOff) {
             setValueServicePreviousScreen("location");
         }
         const currentConfig = config.find(item => item.serviceType && serviceType && item.serviceType.toString() === serviceType.toString());
@@ -72,8 +72,14 @@ const App = () => {
             action={shackAction}
             anchorOrigin={{horizontal: "right", vertical: "top"}}
             variant="success">
-            <Container component="main" maxWidth={false} className={isWin ? "winos" : undefined} disableGutters style={{
-                height: isWithoutTopPadding ? "60vh" : "100vh", maxHeight: "-webkit-fill-available"}}>
+            <Container
+                component="main"
+                maxWidth={false}
+                className={isWin ? "winos" : undefined}
+                disableGutters
+                style={{
+                    height: isTopAligning ? "auto" : "100vh",
+                    maxHeight: "-webkit-fill-available"}}>
                 <ConfirmDialog/>
                 <Switch>
                     <Route path={Routes.EndUser.Appointment} exact component={AppointmentLayout} />

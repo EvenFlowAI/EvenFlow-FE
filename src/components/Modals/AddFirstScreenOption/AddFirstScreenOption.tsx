@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
@@ -100,6 +100,12 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
     const showError = useException();
     const classes = useStyles();
 
+    const enabledTransportationOptions = useMemo(() => options.filter(op => op.state), [options]);
+    const isTransportationDisabled = useMemo(() => !enabledTransportationOptions.length ||
+            selectedServiceType?.value === EServiceType.MobileService.toString()
+                    || selectedServiceType?.value === EServiceType.PickUpDropOff.toString(),
+        [selectedServiceType, EServiceType, enabledTransportationOptions])
+
     useEffect(() => {
         if (selectedSC) dispatch(loadTransportationOptions(selectedSC.id))
     }, [selectedSC])
@@ -175,29 +181,42 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
         setDefaultTransportation(value)
     }, [])
 
-    const onSave = () => {
-        if (!selectedServiceType) return showError('"Booking Flow Config" is required');
-        if (!orderIndex) return showError('"Order Index" is required');
-        const data: TUpdateFirstScreenOption = {
-            name: firstScreenOptionName,
-            description,
-            note,
-            type: selectedServiceType?.value ?? EServiceType.VisitCenter,
-            orderIndex: +orderIndex,
-            taglineText: taglineText.trim().length ? taglineText.trim() : null,
-            taglineFontColorHex: taglineColor.length ? taglineColor : null,
+    const checkIsValid = (): boolean => {
+        let isValid = true;
+        if (!selectedServiceType) {
+            showError('"Booking Flow Config" is required');
+            isValid = false;
         }
-        if (externalLink) data.externalLink = externalLink;
-        if (selectedSC) {
-            if (defaultTransportation) data.transportationOptionId = defaultTransportation.id;
-            if (editingItem) {
-                dispatch(updateFirstScreenOption(editingItem.id, selectedSC.id, data, onSuccessCreate, showError))
-            } else {
-                const newData: TNewFirstScreenOption = {
-                    ...data,
-                    serviceCenterId: selectedSC.id
+        if (!orderIndex) {
+            showError('"Order Index" is required');
+            isValid = false;
+        }
+        return isValid;
+    }
+
+    const onSave = () => {
+        if (checkIsValid()) {
+            const data: TUpdateFirstScreenOption = {
+                name: firstScreenOptionName,
+                description,
+                note,
+                type: selectedServiceType?.value ?? EServiceType.VisitCenter,
+                orderIndex: +orderIndex,
+                taglineText: taglineText.trim().length ? taglineText.trim() : null,
+                taglineFontColorHex: taglineColor.length ? taglineColor : null,
+            }
+            if (externalLink) data.externalLink = externalLink;
+            if (selectedSC) {
+                if (defaultTransportation) data.transportationOptionId = defaultTransportation.id;
+                if (editingItem) {
+                    dispatch(updateFirstScreenOption(editingItem.id, selectedSC.id, data, onSuccessCreate, showError))
+                } else {
+                    const newData: TNewFirstScreenOption = {
+                        ...data,
+                        serviceCenterId: selectedSC.id
+                    }
+                    dispatch(createFirstScreenOption(newData, selectedSC.id, onSuccessCreate, showError))
                 }
-                dispatch(createFirstScreenOption(newData, selectedSC.id, onSuccessCreate, showError))
             }
         }
     }
@@ -209,7 +228,13 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
     const onServiceTypeChange = useCallback((e: React.ChangeEvent<{}>, value: TOption|null) => {
         setFormIsChecked(false);
         setSelectedServiceType(value);
-    }, [])
+        if (value && defaultTransportation) {
+            if (value?.value === EServiceType.MobileService.toString()
+            || value?.value === EServiceType.PickUpDropOff.toString()) {
+                setDefaultTransportation(null);
+            }
+        }
+    }, [showError, defaultTransportation])
 
     const onTaglineTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormIsChecked(false);
@@ -267,11 +292,12 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                         })}
                     />
                     <Autocomplete
-                        options={options}
+                        options={enabledTransportationOptions}
                         getOptionSelected={(option) => option.id === defaultTransportation?.id}
                         getOptionLabel={o => getOptionString(o.type)}
                         value={defaultTransportation}
                         onChange={onTransportationChange}
+                        disabled={isTransportationDisabled}
                         renderInput={autocompleteRender({
                             label: 'Default Transportation Option',
                             placeholder: 'Select Transportation Option',

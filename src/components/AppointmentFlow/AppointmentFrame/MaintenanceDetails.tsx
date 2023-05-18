@@ -79,7 +79,7 @@ type TMaintenanceDetailsProps = {
 }
 
 export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
-    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType, recallsAreShown, consultants}= useSelector((state: RootState) => state.appointmentFrame);
+    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType, recallsAreShown}= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
@@ -442,7 +442,13 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     </div> : null}
             </SelectWrapper>
         }
-        <Actions onBack={handleBack} onNext={handleSubmit} prevDisabled={isLoading} nextDisabled={isNextDisabled || isLoading} />
+        <Actions
+            onBack={handleBack}
+            onNext={handleSubmit}
+            prevDisabled={isLoading}
+            nextDisabled={isNextDisabled || isLoading}
+            nextLabel={t("Next")}
+        />
         <RecallsByVin open={isOpen} onClose={onClose} handleNext={handleNext}/>
         <NoRecalls open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleNext}/>
     </StepWrapper>);

@@ -24,6 +24,7 @@ import CartTable from "./CartTable";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {Routes} from "../../../config/routes";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {useTranslation} from "react-i18next";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -40,12 +41,15 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
         selectedPackage,
         valueService,
         serviceType,
-        userType
+        userType,
+        serviceTypeOption,
+        packageEMenuType
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
+    const {t} = useTranslation();
 
     const handleBack = () => {
         if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
@@ -60,8 +64,11 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
         Api.call<IServiceCategory[]>(
             Api.endpoints.ServiceCategories.GetByPage,
             {data: {
-                serviceCenterId: decodeSCID(id),
-                page: EServiceCategoryPage.Page1
+                    serviceCenterId: decodeSCID(id),
+                    page: EServiceCategoryPage.Page1,
+                    serviceType: serviceTypeOption?.type === EServiceType.MobileService
+                        ? EServiceType.MobileService
+                        : EServiceType.VisitCenter
             }}
         )
             .then(({data}) => {
@@ -125,7 +132,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
     }
 
     const getCardState = (card: IServiceCategory): boolean => {
-        if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage);
+        if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage || (packageEMenuType !== null));
         if (card.type === EServiceCategoryType.ValueService) return Boolean(valueService?.selectedService);
         return categoriesIds?.includes(card.id)
     }
@@ -147,6 +154,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
                 prevDisabled={history?.location?.search?.includes('view=unique')}
                 nextDisabled={!selectedService}
                 hideNext
+                nextLabel={t("Next")}
                 onNext={() => {}}
                 onBack={handleBack} />
         </StepWrapper>

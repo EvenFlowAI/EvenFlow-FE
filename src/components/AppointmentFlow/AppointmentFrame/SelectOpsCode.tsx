@@ -11,7 +11,7 @@ import {
     selectSR,
     selectSRMultiple
 } from "../../../store/reducers/appointment/actions";
-import {Checkbox, FormControlLabel, IconButton, styled, useMediaQuery, useTheme} from "@material-ui/core";
+import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core";
 import {TextField} from "../UI";
 import {InfoOutlined, Search} from "@material-ui/icons";
 import {TArgCallback} from "../../../types/types";
@@ -119,7 +119,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         categoriesIds,
         serviceType,
         config,
-        consultants
     ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
@@ -134,10 +133,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         state.appointmentFrame.categoriesIds,
         state.appointmentFrame.serviceType,
         state.bookingFlowConfig.config,
-        state.appointmentFrame.consultants,
     ]);
-    const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
     const isInit = useRef(true);
     const {t} = useTranslation();
@@ -342,7 +338,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
                                 {/*    {getOfferString(s.offer, Boolean(scProfile?.isRoundPrice))}*/}
                                 {/*</OfferPrice> : null}*/}
                             {Boolean(s.price)
-                                ? <Price style={isSm ? {width: '20%'} : {}}>${scProfile?.isRoundPrice ? s.price : s.price.toFixed(2)}</Price>
+                                ? <Price>${scProfile?.isRoundPrice ? s.price : s.price.toFixed(2)}</Price>
                                 : <InfoOutlined style={{paddingRight: 8, fontSize: '2rem'}}/>}
                             </PricesWrapper>
                         </CodeWrapper>
@@ -351,7 +347,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
                 <Caption title={t("The price for the service will be quoted at the dealership")}/>
             </Wrapper>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
-            <Actions onBack={handleBack} nextDisabled={!selectedCode.length} onNext={handleNext} />
+            <Actions onBack={handleBack} nextDisabled={!selectedCode.length} onNext={handleNext} nextLabel={t("Next")}/>
         </StepWrapper>
     );
 };

@@ -141,7 +141,7 @@ type ApiRoutes = {
         | "CreateDemandSegment" | "GetDemandSegments"
         | "GetTWEligibility" | "SetTWEligibility"
         | "BatchUpdateDemandSegments" | "RemoveDemandSegment"
-        | "SetUnplanned" | "GetUnplanned", TApiRoute>,
+        | "SetUnplanned" | "GetUnplanned" | "GetUnplannedSlotsByDay" | "UpdateUnplannedSlots", TApiRoute>,
     AppointmentSlots: Record<"GetSlots" | "GetServiceValetSlots", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
@@ -250,6 +250,8 @@ export class Api {
             RemoveDemandSegment: {route: "/appointment-allocations/demand-segments/{id}", method: "delete"},
             SetUnplanned: {route: "/appointment-allocations/unplanned-demand-segments", method: "put"},
             GetUnplanned: {route: "/appointment-allocations/unplanned-demand-segments", method: "get"},
+            GetUnplannedSlotsByDay: {route: "/appointment-allocations/unplanned-demand-slots", method: "get"},
+            UpdateUnplannedSlots: {route: "/appointment-allocations/unplanned-demand-slots", method: "put"},
         },
         AppointmentSlots: {
             GetSlots: {route: "/appointment-slots/by-query", method: "post"},

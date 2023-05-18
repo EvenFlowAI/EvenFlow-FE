@@ -34,7 +34,7 @@ export const Arrow = styled('div')<Theme, {disabled?: boolean}>({
     flexShrink: 0,
     opacity: ({disabled}) => disabled ? .5 : 1,
     display: "flex",
-    marginTop: 12,
+    marginTop: 35,
     alignItems: "center",
     justifyContent: "center",
     cursor: ({disabled}) => disabled ? "default" : "pointer",
@@ -169,6 +169,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
                     isXs={isXs}
                     isCurrent={date.isSame(moment.utc(day), 'date')}
                     appointment={appointments[day]}
+                    appointments={appointments}
                     onClick={handleChangeDay(day)}
                     day={day}
                 />

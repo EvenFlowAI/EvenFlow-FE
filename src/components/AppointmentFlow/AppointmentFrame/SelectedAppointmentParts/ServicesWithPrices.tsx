@@ -11,12 +11,15 @@ const ServicesList = () => {
         categoriesIds,
         valueService,
         selectedRecalls,
+        packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {serviceRequests, selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {serviceRequests, selectedSR, scProfile} = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
 
-    const selectedServices = useMemo(() => getMaintenanceDescription(serviceRequests, selectedRecalls, packagePriceTitles, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType),
-        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService, packagePricingType])
+    const selectedServices = useMemo(() => getMaintenanceDescription(serviceRequests, selectedRecalls, packagePriceTitles, selectedSR, 
+            selectedPackage, allCategories, categoriesIds, valueService, packagePricingType, packageEMenuType, scProfile?.maintenancePackageOptionTypes),
+        [serviceRequests, selectedSR, selectedRecalls, selectedPackage, packagePriceTitles, 
+            allCategories, categoriesIds, valueService, packagePricingType, packageEMenuType, scProfile])
 
     return (
         <div className="service-list">

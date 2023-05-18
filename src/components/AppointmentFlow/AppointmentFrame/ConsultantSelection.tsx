@@ -33,7 +33,6 @@ import {useTranslation} from "react-i18next";
 import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
 import {useParams} from "react-router-dom";
 import {decodeSCID} from "../../../utils/utils";
-import {MPOptionShort} from "../../../store/reducers/appointment/types";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -129,20 +128,23 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         serviceTypeOption,
         address,
         zipCode,
-        valueService
+        valueService,
+        packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams();
+    const {t} = useTranslation();
 
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType]);
     const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection) && Boolean(consultants.length), [currentConfig, consultants]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
-    const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds), [currentConfig]);
+    const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds &&
+        !serviceTypeOption?.transportationOption), [currentConfig, serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(service, subService, null, selectedSR, selectedRecalls);
     }, [service, subService, selectedRecalls, selectedSR]);
@@ -157,9 +159,12 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     useEffect(() => {
         if (selectedVehicle) {
-            const maintenancePackageOption: MPOptionShort|null = selectedPackage
+            const maintenancePackageOption = selectedPackage
                 ? {id: selectedPackage?.id, priceType: packagePricingType}
-                : null;
+                : packageEMenuType !== null
+                    ? {optionType: packageEMenuType}
+                    : null;
+
             const data: IConsultantsRequestData = {
                 serviceCenterId: decodeSCID(id),
                 pageIndex: 0,
@@ -186,7 +191,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             }
             dispatch(loadConsultants(data, onNext))
         }
-    }, [id, serviceRequestIds, selectedVehicle, selectedRecalls, getCategories, mapRecallsForRequest])
+    }, [id, serviceRequestIds, selectedVehicle, selectedRecalls, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage])
 
     useEffect(() => {
         dispatch(setSideBarMenu(getCurrentMenu(serviceType, advisorSelection, transportationNeeds)))
@@ -280,6 +285,6 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             </React.Fragment>
             }
         </ConsultantsWrapper>
-        <Actions onNext={onNext} onBack={handleBack} />
+        <Actions onNext={onNext} onBack={handleBack} nextLabel={t("Next")}/>
     </StepWrapper>);
 };
