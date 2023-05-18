@@ -1,6 +1,6 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {ICustomerByName} from "./types";
-import {getCustomers, setCurrentCustomer, setLoading, setPageData} from "./actions";
+import {getCustomers, setCurrentCustomer, setLoading, setPageData, setPaging} from "./actions";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 
 type TCustomerSearchState = {
@@ -30,5 +30,8 @@ export const customerReducer = createReducer(initialState, builder => builder
     })
     .addCase(setPageData, (state, {payload}) => {
         return {...state, pageData: {...state.pageData, ...payload}}
+    })
+    .addCase(setPaging, (state, {payload}) => {
+        return {...state, paging: payload}
     })
 )

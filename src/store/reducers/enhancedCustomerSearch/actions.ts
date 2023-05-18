@@ -7,8 +7,8 @@ import {ActionCreator} from "redux";
 export const getCustomers = createAction<ICustomerByName[]>("CustomerSearch/GetCustomers");
 export const setCurrentCustomer = createAction<ICustomerByName|null>("CustomerSearch/SetCurrentCustomer");
 export const setLoading = createAction<boolean>("CustomerSearch/SetLoading");
-export const setPaging = createAction<IPagingResponse>("customerSearch/SetPaging");
-export const setPageData = createAction<Partial<IPageRequest>>("customerSearch/SetPageData");
+export const setPaging = createAction<IPagingResponse>("CustomerSearch/SetPaging");
+export const setPageData = createAction<Partial<IPageRequest>>("CustomerSearch/SetPageData");
 
 export const loadCustomersByName = (
     serviceCenterId: number,
