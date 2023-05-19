@@ -1,4 +1,5 @@
 import {
+    IAdvisorAssignment,
     ILaborRate,
     IPredictionParams,
     ISCAnalytics,
@@ -41,6 +42,8 @@ type TServiceCenterState = {
     predictionParams: IPredictionParams,
     laborRate: ILaborRate,
     predictionParamsLoading: boolean,
+    advisorAssignment: IAdvisorAssignment;
+    advisorAssignmentLoading: boolean;
 };
 
 const initialState: TServiceCenterState = {
@@ -75,6 +78,8 @@ const initialState: TServiceCenterState = {
         internal: 0,
     },
     predictionParamsLoading: false,
+    advisorAssignment: {},
+    advisorAssignmentLoading: false,
 };
 
 export const serviceCenterReducer = (state=initialState, action: TServiceCenterActions): TServiceCenterState => {
@@ -119,6 +124,10 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
             return {...state, predictionParamsLoading: action.payload};
         case "ServiceCenters/PackageOptionsLoading":
             return {...state, packagesOptionsLoading: action.payload};
+        case "ServiceCenters/GetAdvisorAssignment":
+            return {...state, advisorAssignment: action.payload};
+        case "ServiceCenters/SetAdvisorAssignmentLoading":
+            return {...state, advisorAssignmentLoading: action.payload};
 
         case getWorkingDays.type:
             if (getWorkingDays.match(action)) {
