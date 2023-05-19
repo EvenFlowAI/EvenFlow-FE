@@ -77,9 +77,18 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
         scProfile && dispatch(loadCustomersByName(scProfile.id, firstName, lastName, onSuccess, showError))
     }
 
+    const checkIsValid = () => {
+        const searchString = firstName.length > 1  ? firstName : lastName;
+        return searchString.length > 1;
+    }
+
     const onSave = (): void => {
         setFormIsChecked(true);
-        loadData()
+        if (checkIsValid()) {
+            loadData()
+        } else {
+            showError('First Name or Last Name must consist from 2 or more characters')
+        }
     };
 
     return (
@@ -90,7 +99,7 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
                 <TextField
                     label={t("Customer First Name")}
                     placeholder={t("Enter First Name")}
-                    error={!firstName && formIsChecked}
+                    error={formIsChecked && (firstName.length < 2 && lastName.length < 2)}
                     onChange={onFirstNameChange}
                     fullWidth
                     style={{ marginBottom: 10 }}
@@ -98,7 +107,7 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
                 <TextField
                     label={t("Customer Last Name")}
                     placeholder={t("Enter Last Name")}
-                    error={!firstName && formIsChecked}
+                    error={formIsChecked && (lastName.length < 2 && firstName.length < 2)}
                     onChange={onLastNameChange}
                     fullWidth
                     style={{ marginBottom: 10 }}
