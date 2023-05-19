@@ -171,7 +171,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                     className={classes.submitButton}
                     onClick={handleNew}
                 >
-                    {t("Submit")}
+                    {t("Next")}
                 </Button>
             </div>
         </Grid>
