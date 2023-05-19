@@ -271,7 +271,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     {t("View itemized fees of services")}
                 </div>
                 <ServiceType/>
-                {currentConfig?.transportationNeeds && appointmentFrame.transportation
+                {appointmentFrame.transportation || appointmentFrame.serviceTypeOption?.transportationOption || currentConfig?.advisorSelection
                     ? <Review/>
                     : null}
             </div>

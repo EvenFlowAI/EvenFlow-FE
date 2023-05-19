@@ -24,37 +24,28 @@ export const Review = () => {
         consultant,
         transportation,
         serviceType,
-        consultants,
-        config
+        config,
+        serviceTypeOption
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.advisor,
         state.appointmentFrame.transportation,
         state.appointmentFrame.serviceType,
-        state.appointmentFrame.consultants,
         state.bookingFlowConfig.config,
+        state.appointmentFrame.serviceTypeOption,
     ]);
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])
     const {t} = useTranslation();
-
-    // const TRANSPORTATION_SHORT_DESCRIPTION = [
-    //     t("I will take the shuttle"),
-    //     t("I would like a loaner vehicle"),
-    //     t("I would like a rental car"),
-    //     t("I would like you to book me a ride"),
-    // ]
-    // const LOCAL_TRANSPORTATION_SHORT_DESCRIPTION = [
-    //     t("I will wait at the dealership"),
-    //     t("I will drop off my vehicle and have a ride"),
-    // ]
+    const transportationSelected = serviceTypeOption?.transportationOption || transportation;
 
     return (
         <div>
             <ConfirmationTitle>{t("Appointment Details")}</ConfirmationTitle>
             <Wrapper>
-                <li>Transportation needs: {transportation?.description}
-                </li>
+                {transportationSelected
+                    ? <li>Transportation needs: {transportationSelected?.description}</li>
+                    : null}
                 {currentConfig?.advisorSelection
                     ? <li>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}</li>
                     : null

@@ -483,6 +483,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                     type={selectedPackage.type}
                     text={getTitle(EPackagePricingType.BasePrice)}
                     price={selectedPackage.price}
+                    totalMaintenanceValue={selectedPackage.totalMaintenanceValue}
                     complimentaryPrice={selectedPackage.marketPriceComplimentaryServices}
                 />
                 {withUpsells
@@ -493,6 +494,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                     type={selectedPackage.type}
                     text={getTitle(EPackagePricingType.PriceWithFee)}
                     price={selectedPackage.price}
+                    totalMaintenanceValue={selectedPackage.totalMaintenanceValue}
                     complimentaryPrice={selectedPackage.marketPriceComplimentaryServices}
                     upsellPrice={selectedPackage.marketPriceIntervalUpsells}
                 />
