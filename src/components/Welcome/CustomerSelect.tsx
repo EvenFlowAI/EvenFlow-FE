@@ -13,7 +13,7 @@ import {EServiceCenterName} from "../../api/types";
 import {LoadingButton} from "../UI/Button";
 import {useTranslation} from "react-i18next";
 import {getCurrentUser} from "../../store/reducers/users/actions";
-import {useModal} from "../../utils/hooks";
+import {useCurrentUser, useModal} from "../../utils/hooks";
 import EnhancedCustomerSearch from "../Modals/EnhancedCustomerSearch/EnhancedCustomerSearch";
 import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
 
@@ -138,6 +138,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
     const classes = useStyles();
     const dispatch = useDispatch();
     const { t } = useTranslation();
+    const currentUser = useCurrentUser();
 
     useEffect(() => {
         const uid = uuidv4();
@@ -181,9 +182,12 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                     onClick={handleComplete}>
                     {t("Search")}
                 </LoadingButton>
-                <div className={classes.searchLinkWrapper}>
-                    <Button variant="text" onClick={onOpen} className={classes.searchButton}>{t("Search Customer by Name")}</Button>
+                {currentUser?.role === "Call Center Rep"
+                    ? <div className={classes.searchLinkWrapper}>
+                    <Button variant="text" onClick={onOpen}
+                            className={classes.searchButton}>{t("Search Customer by Name")}</Button>
                 </div>
+                    : null}
             </div>
         </Grid>
         <Grid item xs={12} sm={12} md={6}>
