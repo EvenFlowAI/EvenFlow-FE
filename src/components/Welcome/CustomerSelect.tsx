@@ -182,7 +182,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                     onClick={handleComplete}>
                     {t("Search")}
                 </LoadingButton>
-                {currentUser?.role === "Call Center Rep"
+                {currentUser
                     ? <div className={classes.searchLinkWrapper}>
                     <Button variant="text" onClick={onOpen}
                             className={classes.searchButton}>{t("Search Customer by Name")}</Button>
