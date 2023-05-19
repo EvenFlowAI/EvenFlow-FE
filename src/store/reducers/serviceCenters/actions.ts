@@ -1,4 +1,5 @@
 import {
+    IAdvisorAssignment,
     ILaborRate,
     IPredictionParams,
     ISCAnalytics,
@@ -413,4 +414,35 @@ export const updateAvailablePackageOptions = (id: number, data: EMaintenanceOpti
             console.log('update Available Package Options err', err)
         })
         .finally(() => dispatch(packageOptionsLoading(false)))
+}
+
+export const getAdvisorAssignment = createAction<IAdvisorAssignment>("ServiceCenters/GetAdvisorAssignment");
+export const setAdvisorAssignmentLoading = createAction<boolean>("ServiceCenters/SetAdvisorAssignmentLoading");
+
+export const loadAdvisorAssignment = (id: number): AppThunk => dispatch => {
+    dispatch(setAdvisorAssignmentLoading(true))
+    Api.call(Api.endpoints.ServiceCenters.GetAssignedAdvisorMethod, {urlParams: {id}})
+        .then(result => {
+            if (result.data) dispatch(getAdvisorAssignment(result.data));
+        })
+        .catch(err => {
+            console.log('load advisor assignment error', err)
+        })
+        .finally(() => dispatch(setAdvisorAssignmentLoading(false)))
+}
+
+export const updateAdvisorAssignment = (id: number, data: IAdvisorAssignment, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setAdvisorAssignmentLoading(true))
+    Api.call(Api.endpoints.ServiceCenters.UpdateAssignedAdvisorMethod, {urlParams: {id}, data})
+        .then(result => {
+            if (result.data) {
+                dispatch(loadAdvisorAssignment(id));
+                onSuccess()
+            }
+        })
+        .catch(err => {
+            onError(err)
+            console.log('update advisor assignment error', err)
+        })
+        .finally(() => dispatch(setAdvisorAssignmentLoading(false)))
 }

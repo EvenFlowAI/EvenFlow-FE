@@ -101,6 +101,8 @@ export type TSetPredictionParams = {type: "ServiceCenters/SetPredictionParams", 
 export type TSetLaborRate = {type: "ServiceCenters/SetLaborRate", payload: ILaborRate};
 export type TSetPredictionParamsLoading = {type: "ServiceCenters/SetParamsLoading", payload: boolean};
 export type TSetPackageOptionsLoading = {type: "ServiceCenters/PackageOptionsLoading", payload: boolean};
+export type TAdvisorAssignment = {type: "ServiceCenters/GetAdvisorAssignment", payload: IAdvisorAssignment};
+export type TAdvisorAssignmentLoading = {type: "ServiceCenters/SetAdvisorAssignmentLoading", payload: boolean};
 
 export type TServiceCenterActions =
     | TCreate
@@ -122,7 +124,9 @@ export type TServiceCenterActions =
     | TSetPredictionParams
     | TSetLaborRate
     | TSetPredictionParamsLoading
-    | TSetPackageOptionsLoading;
+    | TSetPackageOptionsLoading
+    | TAdvisorAssignment
+    | TAdvisorAssignmentLoading;
 
 export interface IPredictionParams {
     heavyRepairLaborHours: number;
@@ -136,4 +140,15 @@ export interface ILaborRate {
     customerPay: number;
     warranty: number;
     internal: number;
+}
+
+export enum EAdvisorAssignMethod {
+    Rotational,
+    MaxCapacity,
+    LastAdvisor
+}
+
+export interface IAdvisorAssignment {
+    primaryMethod?: EAdvisorAssignMethod|null;
+    secondaryMethod?: EAdvisorAssignMethod|null;
 }

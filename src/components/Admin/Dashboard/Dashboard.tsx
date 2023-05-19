@@ -21,9 +21,11 @@ import {ReactComponent as RemindersIcon} from "../../../assets/img/Icon_36px_App
 import {ReactComponent as EmployeeScheduleIcon} from "../../../assets/img/Subtract.svg";
 import {ReactComponent as BreaksIcon} from "../../../assets/img/Icon 4 Breaks.svg";
 import {ReactComponent as LockOutlined} from "../../../assets/img/Icon 5 Holidays.svg";
+import {ReactComponent as AdvisorIcon} from "../../../assets/img/advisor_assignment.svg";
 import Reminders from "../../Modals/Reminders/Reminders";
 import LaborRate from "../../Modals/LaborRate/LaborRate";
 import {EmployeeSchedule} from "../../Modals/EmployeeSchedule/EmployeeSchedule";
+import AdvisorAssignment from "../../Modals/AdvisorAssignment/AdvisorAssignment";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -172,6 +174,11 @@ export const AdminDashboard: React.FC = () => {
         onOpen: onOpenEmployeeSchedule,
         isOpen: isOpenEmployeeSchedule,
     } = useModal();
+    const {
+        onClose: onCloseAdvisorAssignment,
+        onOpen: onOpenAdvisorAssignment,
+        isOpen: isOpenAdvisorAssignment,
+    } = useModal();
 
     const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
         technicians: analytics.countOfTechnicians,
@@ -189,6 +196,7 @@ export const AdminDashboard: React.FC = () => {
         {label: "Bays", icon: <BaysIcon />, action: onOpenBays},
         {label: "Labor Rate", icon: <LaborRateIcon />, action: onOpenLaborRate},
         {label: "Appointment Reminders", icon: <RemindersIcon />, action: onOpenReminders},
+        {label: "Advisor Assignment", icon: <AdvisorIcon />, action: onOpenAdvisorAssignment},
     ];
 
     const classes = useStyles();
@@ -232,5 +240,6 @@ export const AdminDashboard: React.FC = () => {
         <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
         <Reminders open={isOpenReminders} onClose={onCloseReminders}/>
         <LaborRate open={isOpenLaborRate} onClose={onCloseLaborRate}/>
+        <AdvisorAssignment open={isOpenAdvisorAssignment} onClose={onCloseAdvisorAssignment}/>
     </div>
 }
