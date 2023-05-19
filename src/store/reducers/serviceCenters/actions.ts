@@ -431,14 +431,18 @@ export const loadAdvisorAssignment = (id: number): AppThunk => dispatch => {
         .finally(() => dispatch(setAdvisorAssignmentLoading(false)))
 }
 
-export const updateAdvisorAssignment = (id: number, data: IAdvisorAssignment): AppThunk => dispatch => {
+export const updateAdvisorAssignment = (id: number, data: IAdvisorAssignment, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setAdvisorAssignmentLoading(true))
-    Api.call(Api.endpoints.ServiceCenters.Update, {urlParams: {id}, data})
+    Api.call(Api.endpoints.ServiceCenters.UpdateAssignedAdvisorMethod, {urlParams: {id}, data})
         .then(result => {
-            if (result.data) dispatch(getAdvisorAssignment(result.data));
+            if (result.data) {
+                dispatch(loadAdvisorAssignment(id));
+                onSuccess()
+            }
         })
         .catch(err => {
-            console.log('load advisor assignment error', err)
+            onError(err)
+            console.log('update advisor assignment error', err)
         })
         .finally(() => dispatch(setAdvisorAssignmentLoading(false)))
 }

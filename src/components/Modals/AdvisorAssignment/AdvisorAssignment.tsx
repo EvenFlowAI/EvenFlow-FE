@@ -7,9 +7,10 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useException, useMessage} from "../../../utils/hooks";
-import {EAdvisorAssignMethod} from "../../../store/reducers/serviceCenters/types";
+import {EAdvisorAssignMethod, IAdvisorAssignment} from "../../../store/reducers/serviceCenters/types";
 import {Loading} from "../../UI/Loading";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import {loadAdvisorAssignment, updateAdvisorAssignment} from "../../../store/reducers/serviceCenters/actions";
 
 const useStyles = makeStyles(() => ({
     actionsWrapper: {
@@ -48,7 +49,7 @@ export const TableCell = withStyles({
 type TMethod = "primary"|"secondary"
 
 const AdvisorAssignment: React.FC<DialogProps> = (props) => {
-    const {selectedSC, loading} = useSelector((state: RootState) => state.serviceCenters);
+    const {selectedSC, advisorAssignment, advisorAssignmentLoading} = useSelector((state: RootState) => state.serviceCenters);
     const [primaryMethod, setPrimaryMethod] = useState<EAdvisorAssignMethod|null>(null);
     const [secondaryMethod, setSecondaryMethod] = useState<EAdvisorAssignMethod|null>(null);
     const [noAssignment, setNoAssignment] = useState<boolean>(false);
@@ -61,14 +62,15 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
     const showMessage = useMessage();
 
     useEffect(() => {
-        // todo get data
-    }, [selectedSC])
+        if (props.open) {
+            selectedSC && dispatch(loadAdvisorAssignment(selectedSC.id))
+        }
+    }, [props.open, selectedSC])
 
     useEffect(() => {
-        if (props.open) {
-          // todo set data from the BE
-        }
-    }, [props.open])
+        setPrimaryMethod( advisorAssignment.primaryMethod || null);
+        setSecondaryMethod(advisorAssignment.secondaryMethod || null);
+    }, [advisorAssignment])
 
     const onCancel = () => {
         setPrimaryMethod(null);
@@ -77,7 +79,7 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
     }
 
     const onSuccess = () => {
-        showMessage('Method of Assigning Advisors to Appointments updated')
+        showMessage('The Methods of Assigning Advisors to Appointments updated')
         onCancel();
     }
 
@@ -86,11 +88,11 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
     }
 
     const onSave = () => {
-        const data = {
+        const data: IAdvisorAssignment = {
             primaryMethod,
-            secondaryMethod
         }
-        console.log(data)
+        if (secondaryMethod) data.secondaryMethod = secondaryMethod;
+        selectedSC && dispatch(updateAdvisorAssignment(selectedSC.id, data, onSuccess, onError))
     }
 
     const onChange = (method: TMethod, type: EAdvisorAssignMethod) => {
@@ -120,7 +122,7 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
                 Method to assign advisors to appointments
             </DialogTitle>
             <DialogContent>
-                {loading
+                {advisorAssignmentLoading
                     ? <Loading/>
                     : <DemandTable>
                         <TableHead>
@@ -228,14 +230,14 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
                 <div className={classes.actionsWrapper}>
                     <div className={classes.buttonsWrapper}>
                         <Button
-                            disabled={loading}
+                            disabled={advisorAssignmentLoading}
                             onClick={onCancel}
                             className={classes.cancelButton}>
                             Cancel
                         </Button>
                         <Button
                             onClick={onSave}
-                            disabled={loading}
+                            disabled={advisorAssignmentLoading}
                             className={classes.saveButton}>
                             Save
                         </Button>
