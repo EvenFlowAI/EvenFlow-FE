@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Button, Grid} from "@material-ui/core";
+import {Button, Grid, useMediaQuery} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {setUserType} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
@@ -117,8 +117,20 @@ export const useStyles = makeStyles(theme => ({
         position: "absolute",
         right: '31%',
         bottom: 0,
+        [theme.breakpoints.down("xs")]: {
+            right: '22%',
+        }
+    },
+}))
+
+const useLoadingStyles = makeStyles(theme => ({
+    wrapper: {
+        [theme.breakpoints.down("xs")]: {
+            width: "100%",
+        }
     }
 }))
+
 type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
     loading: boolean;
@@ -136,8 +148,10 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
     const isDealerBuilt = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
     const notShowEmail = isRiverviewFord || isDominion || isLakePowell || isDealerBuilt;
     const classes = useStyles();
+    const loadingClasses = useLoadingStyles();
     const dispatch = useDispatch();
     const { t } = useTranslation();
+    const isXs = useMediaQuery("xs");
     const currentUser = useCurrentUser();
 
     useEffect(() => {
@@ -174,15 +188,17 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                     value={customerEnteredEmail}
                     fullWidth/>
                 <LoadingButton
+                    fullWidth={isXs}
                     loading={loading}
                     variant="contained"
                     color="primary"
+                    classes={loadingClasses}
                     className={classes.loadingButton}
                     disabled={loading || !customerEnteredEmail}
                     onClick={handleComplete}>
                     {t("Search")}
                 </LoadingButton>
-                {currentUser?.role === "Call Center Rep"
+                {currentUser
                     ? <div className={classes.searchLinkWrapper}>
                     <Button variant="text" onClick={onOpen}
                             className={classes.searchButton}>{t("Search Customer by Name")}</Button>

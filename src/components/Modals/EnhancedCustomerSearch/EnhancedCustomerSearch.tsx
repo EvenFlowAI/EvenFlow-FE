@@ -12,7 +12,7 @@ import CustomerSearchResults from "./CustomerSearchResults";
 import {loadCustomersByName} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {RootState} from "../../../store/rootReducer";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
     buttonsWrapper: {
         display: 'flex',
         justifyContent: "space-between",
@@ -30,7 +30,11 @@ const useStyles = makeStyles(() => ({
         paddingTop: 14,
     },
     modalWrapper: {
-        padding: "20px 120px 36px 120px"
+        padding: "20px 120px 36px 120px",
+        [theme.breakpoints.down("sm")]: {
+            padding: 0,
+            paddingBottom: 16,
+        }
     }
 }))
 
