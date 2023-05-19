@@ -70,6 +70,7 @@ type TProps = {
     type: EMaintenanceOptionType,
     handleClick: (type: EMaintenanceOptionType, packagePricingType: EPackagePricingType) => void,
     withUpsells?: boolean;
+    totalMaintenanceValue: number;
 }
 
 const TotalPriceMobile: React.FC<TProps> = ({
@@ -81,6 +82,7 @@ const TotalPriceMobile: React.FC<TProps> = ({
                                                 complimentaryPrice,
                                                 upsellPrice,
                                                 withUpsells,
+                                                totalMaintenanceValue,
                                             }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {selectedPackage, packagePricingType} = useSelector((state: RootState) => state.appointmentFrame);
@@ -97,8 +99,8 @@ const TotalPriceMobile: React.FC<TProps> = ({
     const defaultString = `${t("Total")} (${t("excluding taxes & fees")})`;
 
     const prevPrice = useMemo(() => scProfile?.isRoundPrice
-        ? price + (complimentaryPrice ?? 0)
-        : (price + (complimentaryPrice ?? 0)).toFixed(2), [scProfile, price, complimentaryPrice]);
+        ? Number(totalMaintenanceValue) + (complimentaryPrice ?? 0)
+        : (Number(totalMaintenanceValue) + (complimentaryPrice ?? 0)).toFixed(2), [scProfile, price, complimentaryPrice, totalMaintenanceValue]);
     const uniquePrice = useMemo(() => scProfile?.isRoundPrice
         ? price
         : price.toFixed(2), [scProfile, price]);
