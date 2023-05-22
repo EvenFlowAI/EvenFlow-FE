@@ -43,9 +43,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
         serviceType,
         userType,
         serviceTypeOption,
-        packageEMenuType
+        packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
+    const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -80,6 +80,13 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
     useEffect(() => {
         if (!userType) dispatch(setUserType(EUserType.New))
     }, [userType])
+
+    // useEffect(() => {
+    //     const indRequestsCategory = serviceCategories.find(cat => cat.serviceRequests.find(req => selectedSR.includes(req.id)));
+    //     if (indRequestsCategory) {
+    //         dispatch(selectCategoriesIds([indRequestsCategory]))
+    //     }
+    // }, [serviceCategories, selectedSR])
 
     const handleGA = (selectedService: IServiceCategory) => {
         const requestsString = selectedService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
@@ -134,6 +141,16 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
     const getCardState = (card: IServiceCategory): boolean => {
         if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage || (packageEMenuType !== null));
         if (card.type === EServiceCategoryType.ValueService) return Boolean(valueService?.selectedService);
+        if (card.type === EServiceCategoryType.IndividualServices) {
+            return Boolean(serviceCategories
+                .find(cat => cat.type === EServiceCategoryType.IndividualServices
+                    && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
+        }
+        if (card.type === EServiceCategoryType.Diagnose) {
+            return Boolean(serviceCategories
+                .find(cat => cat.type === EServiceCategoryType.Diagnose
+                    && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
+        }
         return categoriesIds?.includes(card.id)
     }
 
