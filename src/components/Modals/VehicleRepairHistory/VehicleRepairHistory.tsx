@@ -1,14 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {
-    IRepairHistory,
-    IRepairOrder,
-} from "../../../store/reducers/enhancedCustomerSearch/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadRepairHistory} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
-import {Divider, Grid} from "@material-ui/core";
+import {Divider} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import moment from "moment";
 import {Loading} from "../../UI/Loading";
@@ -89,6 +85,15 @@ const useStyles = makeStyles({
     orderMainData: {
         display: 'grid',
         gridTemplateColumns: '1fr 1fr'
+    },
+    italic: {
+        fontStyle: "italic",
+    },
+    serviceItem: {
+        padding: 8,
+        "&::marker": {
+            fontWeight: "bold"
+        }
     }
 })
 
@@ -179,8 +184,19 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
                                         <div className={classes.titleNonUpperCase}>Services Performed:</div>
                                         <ol>
                                             {item.services.map(service => {
-                                                return <li key={service.correction}>
-                                                    {/*<span className={classes.titleNonUpperCase}></span>*/}
+                                                return <li key={service.correction} className={classes.serviceItem}>
+                                                    <div><span className={classes.italic}>Complaint: </span>{service.complaint}</div>
+                                                    <div><span className={classes.italic}>Correction: </span>{service.correction}</div>
+                                                    <div><span className={classes.italic}>Cause: </span>{service.cause}</div>
+                                                    <div className={classes.titleNonUpperCase}>Labors:</div>
+                                                    <ul>
+                                                        {service.labors.map(item => {
+                                                            return <li key={item.title}>
+                                                                <div><span>[Tech {item.technicianId} {item.technicianName}]</span> <span className={classes.titleNonUpperCase}>{item.title}</span></div>
+                                                                <div><span className={classes.italic}>Description: </span> {item.description}</div>
+                                                            </li>
+                                                        })}
+                                                    </ul>
                                                 </li>
                                             })}
                                         </ol>
