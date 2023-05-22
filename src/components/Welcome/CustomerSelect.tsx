@@ -200,9 +200,14 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                 </LoadingButton>
                 {currentUser
                     ? <div className={classes.searchLinkWrapper}>
-                    <Button variant="text" onClick={onOpen}
-                            className={classes.searchButton}>{t("Search Customer by Name")}</Button>
-                </div>
+                        <Button
+                            variant="text"
+                            onClick={onOpen}
+                            disabled={loading}
+                            className={classes.searchButton}>
+                            {t("Search Customer by Name")}
+                        </Button>
+                    </div>
                     : null}
             </div>
         </Grid>
@@ -219,7 +224,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                 </Button>
             </div>
         </Grid>
-        <EnhancedCustomerSearch open={isOpen} onClose={onClose} onOpenNotFound={onOpenNotFound} handleNew={handleNew}/>
+        <EnhancedCustomerSearch open={isOpen} onClose={onClose} onOpenNotFound={onOpenNotFound} handleNew={handleNew} />
         <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
     </Grid>
 };

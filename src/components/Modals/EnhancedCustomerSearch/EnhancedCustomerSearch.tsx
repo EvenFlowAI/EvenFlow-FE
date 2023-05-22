@@ -9,8 +9,9 @@ import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../UI/Button";
 import {TCallback} from "../../../types/types";
 import CustomerSearchResults from "./CustomerSearchResults";
-import {loadCustomersByName} from "../../../store/reducers/enhancedCustomerSearch/actions";
+import {loadCustomersByName, setPageData, setPaging} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {RootState} from "../../../store/rootReducer";
+import {defaultPageData} from "../../../store/reducers/defaultInitials";
 
 const useStyles = makeStyles(theme => ({
     buttonsWrapper: {
@@ -68,8 +69,10 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
         setLastName('');
     }
 
-    const onCancel = useCallback((): void => {
+    const onCancel = useCallback(async () => {
         clearForm()
+        await dispatch(setPaging({numberOfPages: 0, numberOfRecords: 0}));
+        await dispatch(setPageData(defaultPageData))
         onClose();
     }, [clearForm])
 
