@@ -169,7 +169,7 @@ export const AppointmentFrameLayout = () => {
         [userType, firstScreenOptions]);
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
-    const isLexus = useMemo(() => (scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt), [scProfile]);
+    const isDealerBuilt = useMemo(() => (scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt), [scProfile]);
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType?.toString() === serviceType?.toString());
     }, [config, serviceType])
@@ -225,7 +225,7 @@ export const AppointmentFrameLayout = () => {
             dispatch(setUpdateAppointment(data));
             data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
             if (data.maintenancePackageOption) {
-                if (isLexus) {
+                if (isDealerBuilt && scProfile?.eMenuEnabled) {
                     dispatch(setPackageEMenuType(data.maintenancePackageOption.type))
                 } else {
                     dispatch(setPackage(data.maintenancePackageOption))
