@@ -118,6 +118,7 @@ export interface ICustomerLoadedData {
     vehicles: ILoadedVehicle[];
     city?:string;
     fromSearchByName?: boolean;
+    isUpdating?: boolean;
 }
 
 export interface IVehicle {

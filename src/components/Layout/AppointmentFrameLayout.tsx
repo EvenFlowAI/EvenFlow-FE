@@ -285,7 +285,9 @@ export const AppointmentFrameLayout = () => {
     }, [sessionStorage])
 
     useEffect(() => {
-        if (selectedVehicle && customerLoadedData?.fromSearchByName) onUpdateAppointment(selectedVehicle, needToShowServiceSelection).then()
+        if (selectedVehicle &&customerLoadedData) {
+            if (customerLoadedData.fromSearchByName && customerLoadedData.isUpdating) onUpdateAppointment(selectedVehicle, needToShowServiceSelection).then()
+        }
     }, [needToShowServiceSelection, customerLoadedData, selectedVehicle])
 
     const handleNewCustomer = () => {
