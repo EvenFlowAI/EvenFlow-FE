@@ -75,6 +75,7 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
     const onCancel = () => {
         setPrimaryMethod(null);
         setSecondaryMethod(null);
+        setNoAssignment(false);
         props.onClose();
     }
 
@@ -90,8 +91,8 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
     const onSave = () => {
         const data: IAdvisorAssignment = {
             primaryMethod,
+            secondaryMethod
         }
-        if (secondaryMethod) data.secondaryMethod = secondaryMethod;
         selectedSC && dispatch(updateAdvisorAssignment(selectedSC.id, data, onSuccess, onError))
     }
 
