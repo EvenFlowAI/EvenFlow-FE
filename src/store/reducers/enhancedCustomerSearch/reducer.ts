@@ -1,6 +1,14 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {ICustomerByName, IRepairHistory} from "./types";
-import {getCustomers, getRepairHistory, setCurrentCustomer, setLoading, setPageData, setPaging} from "./actions";
+import {
+    getCustomers,
+    getRepairHistory,
+    setCurrentCustomer,
+    setLoading,
+    setPageData,
+    setPaging,
+    setRepairHistoryLoading
+} from "./actions";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 
 type TCustomerSearchState = {
@@ -10,6 +18,7 @@ type TCustomerSearchState = {
     paging: IPagingResponse;
     pageData: IPageRequest;
     repairHistory: IRepairHistory|null;
+    repairHistoryLoading: boolean;
 }
 const initialState: TCustomerSearchState = {
     isLoading: false,
@@ -18,6 +27,7 @@ const initialState: TCustomerSearchState = {
     paging: {numberOfPages: 0, numberOfRecords: 0},
     pageData: {pageIndex: 0, pageSize: 10},
     repairHistory: null,
+    repairHistoryLoading: false,
 }
 
 export const customerReducer = createReducer(initialState, builder => builder
@@ -38,5 +48,8 @@ export const customerReducer = createReducer(initialState, builder => builder
     })
     .addCase(getRepairHistory, (state, {payload}) => {
         return {...state, repairHistory: payload}
+    })
+    .addCase(setRepairHistoryLoading, (state, {payload}) => {
+        return {...state, repairHistoryLoading: payload}
     })
 )

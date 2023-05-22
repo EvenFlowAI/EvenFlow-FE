@@ -18,19 +18,24 @@ export interface ICustomerByName {
 }
 
 export interface IRepairOrderPart {
-    number: string;
+    id: string;
     description: string;
     quantity: number;
     price: number;
 }
 
-export interface IRepairOrderService {
-    number: string;
+export interface IRepairOrderLabor {
+    technicianId: string;
+    technicianName: string;
     title: string;
     description: string;
+}
+
+export interface IRepairOrderService {
     complaint: string;
     correction: string;
     cause: string;
+    labors: IRepairOrderLabor[];
 }
 
 export type TRepairPrice = {
@@ -46,7 +51,7 @@ export interface IRepairOrder {
     status: string;
     comments: string[];
     technicianLaborTime: number;
-    repairOrderPrice: TRepairPrice;
+    totalPrice: TRepairPrice;
     warrantyPrice: TRepairPrice;
     customerPayPrice: TRepairPrice;
     miscPrice: TRepairPrice;

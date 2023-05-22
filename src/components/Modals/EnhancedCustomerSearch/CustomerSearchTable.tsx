@@ -34,11 +34,12 @@ import {RootState} from "../../../store/rootReducer";
 import {ICustomerByName} from "../../../store/reducers/enhancedCustomerSearch/types";
 import CustomerInputField from "./CustomerInputField";
 import {changePageData, updateCustomer} from "../../../store/reducers/enhancedCustomerSearch/actions";
-import {useException, usePagination} from "../../../utils/hooks";
+import {useException, useModal, usePagination} from "../../../utils/hooks";
 import {Loading} from "../../UI/Loading";
 import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../utils/utils";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
+import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -135,6 +136,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<ICustomerByName|null>(null);
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
+    const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
     const classes = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
@@ -183,7 +185,6 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
     const onUpdateAppForCar = (item: ICustomerByName) => {
         if (scProfile) {
             const id = encodeSCID(scProfile.id)
-            setEditingElement(item)
             setCustomerData(item, true).then(() => {
                 history.push(`/f/appointment/${id}`)
                 onClose()
@@ -191,8 +192,8 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
         }
     }
 
-    const onViewRepairHistory = (item: ICustomerByName) => {
-        setEditingElement(item);
+    const onViewRepairHistory = () => {
+        onOpenHistory();
     }
 
     const onEditData = async (item: ICustomerByName) => {
@@ -273,7 +274,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                                     <HtmlTooltip title="View Repair History">
                                         <IconButton
                                             style={{padding: 4}}
-                                            onClick={() => onViewRepairHistory(customer)}>
+                                            onClick={() => onViewRepairHistory()}>
                                             <Search/>
                                         </IconButton>
                                     </HtmlTooltip>
@@ -353,6 +354,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                 onChangeRowsPerPage={handleChangeRows}
                 rowsPerPage={pageData.pageSize}/>
                : null }
+            <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId="D783895"/>
         </>
 };
 

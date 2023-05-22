@@ -283,10 +283,9 @@ export class Api {
             Remove: {route: "/complimentary-services/{id}", method: "delete"},
         },
         Customers: {
-          GetByName: {route: "/customers/vehicles/by-customer-name", method: "get"},
-          Update: {route: "/customers/vehicles", method: "put"},
-            // todo real request
-            GetRepairHistory: {route: "/customers/vehicles", method: "get"}
+            GetByName: {route: "/customers/vehicles/by-customer-name", method: "get"},
+            Update: {route: "/customers/vehicles", method: "put"},
+            GetRepairHistory: {route: "/customers/vehicles/repair-orders", method: "get"}
         },
         Dealerships: {
             Create: {route: "/dealerships", method: "post"},

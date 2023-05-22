@@ -7,9 +7,11 @@ import {ActionCreator} from "redux";
 export const getCustomers = createAction<ICustomerByName[]>("CustomerSearch/GetCustomers");
 export const setCurrentCustomer = createAction<ICustomerByName|null>("CustomerSearch/SetCurrentCustomer");
 export const setLoading = createAction<boolean>("CustomerSearch/SetLoading");
+
 export const setPaging = createAction<IPagingResponse>("CustomerSearch/SetPaging");
 export const setPageData = createAction<Partial<IPageRequest>>("CustomerSearch/SetPageData");
 export const getRepairHistory = createAction<IRepairHistory|null>("CustomerSearch/GetRepairHistory");
+export const setRepairHistoryLoading = createAction<boolean>("CustomerSearch/SetRepairHistoryLoading");
 
 export const loadCustomersByName = (
     serviceCenterId: number,
@@ -53,15 +55,14 @@ export const updateCustomer = (data: ICustomerByName, onSuccess: () => void, onE
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const loadRepairHistory = (serviceCenterId: number, vehicleId: string): AppThunk => dispatch => {
-    dispatch(setLoading(true));
-    // todo real params
-    Api.call(Api.endpoints.Customers.GetRepairHistory, {params: {serviceCenterId, vehicleId}})
+export const loadRepairHistory = (serviceCenterId: number, vehicleDmsId: string, pageIndex: number, pageSize: number): AppThunk => dispatch => {
+    dispatch(setRepairHistoryLoading(true));
+    Api.call(Api.endpoints.Customers.GetRepairHistory, {params: {serviceCenterId, vehicleDmsId, pageIndex, pageSize}})
         .then(result => {
             if (result?.data?.result) dispatch(getRepairHistory(result.data.result))
         })
         .catch(err => {
             console.log('get repair history error', err)
         })
-        .finally(() => dispatch(setLoading(false)))
+        .finally(() => dispatch(setRepairHistoryLoading(false)))
 }
