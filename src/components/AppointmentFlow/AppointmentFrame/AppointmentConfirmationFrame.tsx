@@ -16,7 +16,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {Api} from "../../../config/requests";
 import {
-    setAppointmentId,
+    setAppointmentId, setCustomer,
     setPackagePricingType,
     setReminders
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -111,7 +111,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         }
         if (appointment.customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
             const d = {
-                ...appointment.customerLoadedData
+                ...appointment.customerLoadedData,
             };
             let vehicle = d.vehicles.find(
                 c => c.vin === data.vehicle.vin
@@ -129,6 +129,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 d.phoneNumbers = [data.driver?.phoneNumber];
             }
             dispatch(setCustomerLoadedData(d));
+            dispatch(setCustomer(data.driver));
             saveCustomerCache(d);
         }
         onNext();
