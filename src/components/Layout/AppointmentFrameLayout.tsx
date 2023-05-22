@@ -49,7 +49,7 @@ import {
     setRecallsAreShown,
     setSelectedRecalls,
     setServiceType,
-    setServiceTypeOption,
+    setServiceTypeOption, setSideBarSteps,
     setTiming,
     setTrackerCreated,
     setUpdateAppointment,
@@ -285,8 +285,11 @@ export const AppointmentFrameLayout = () => {
     }, [sessionStorage])
 
     useEffect(() => {
-        if (selectedVehicle &&customerLoadedData) {
-            if (customerLoadedData.fromSearchByName && customerLoadedData.isUpdating) onUpdateAppointment(selectedVehicle, needToShowServiceSelection).then()
+        if (selectedVehicle && customerLoadedData) {
+            if (customerLoadedData.fromSearchByName && customerLoadedData.isUpdating) {
+                if (!selectedVehicle?.mileage) dispatch(setSideBarSteps([]));
+                onUpdateAppointment(selectedVehicle, needToShowServiceSelection).then()
+            }
         }
     }, [needToShowServiceSelection, customerLoadedData, selectedVehicle])
 
@@ -357,6 +360,7 @@ export const AppointmentFrameLayout = () => {
         dispatch(setPackagePricingType(null));
         dispatch(setServiceTypeOption(null));
         dispatch(setPackageEMenuType(null));
+        dispatch(setSideBarSteps([]));
     },[])
 
     const clearData = useCallback(() => {
