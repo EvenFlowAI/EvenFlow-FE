@@ -9,10 +9,11 @@ import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../UI/Button";
 import {TCallback} from "../../../types/types";
 import CustomerSearchResults from "./CustomerSearchResults";
-import {loadCustomersByName} from "../../../store/reducers/enhancedCustomerSearch/actions";
+import {loadCustomersByName, setPageData, setPaging} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {RootState} from "../../../store/rootReducer";
+import {defaultPageData} from "../../../store/reducers/defaultInitials";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
     buttonsWrapper: {
         display: 'flex',
         justifyContent: "space-between",
@@ -30,7 +31,11 @@ const useStyles = makeStyles(() => ({
         paddingTop: 14,
     },
     modalWrapper: {
-        padding: "20px 120px 36px 120px"
+        padding: "20px 120px 36px 120px",
+        [theme.breakpoints.down("sm")]: {
+            padding: 0,
+            paddingBottom: 16,
+        }
     }
 }))
 
@@ -64,8 +69,10 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
         setLastName('');
     }
 
-    const onCancel = useCallback((): void => {
+    const onCancel = useCallback(async () => {
         clearForm()
+        await dispatch(setPaging({numberOfPages: 0, numberOfRecords: 0}));
+        await dispatch(setPageData(defaultPageData))
         onClose();
     }, [clearForm])
 
@@ -77,9 +84,18 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
         scProfile && dispatch(loadCustomersByName(scProfile.id, firstName, lastName, onSuccess, showError))
     }
 
+    const checkIsValid = () => {
+        const searchString = firstName.length > 1  ? firstName : lastName;
+        return searchString.length > 1;
+    }
+
     const onSave = (): void => {
         setFormIsChecked(true);
-        loadData()
+        if (checkIsValid()) {
+            loadData()
+        } else {
+            showError('First Name or Last Name must consist from 2 or more characters')
+        }
     };
 
     return (
@@ -90,7 +106,7 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
                 <TextField
                     label={t("Customer First Name")}
                     placeholder={t("Enter First Name")}
-                    error={!firstName && formIsChecked}
+                    error={formIsChecked && (firstName.length < 2 && lastName.length < 2)}
                     onChange={onFirstNameChange}
                     fullWidth
                     style={{ marginBottom: 10 }}
@@ -98,7 +114,7 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
                 <TextField
                     label={t("Customer Last Name")}
                     placeholder={t("Enter Last Name")}
-                    error={!firstName && formIsChecked}
+                    error={formIsChecked && (lastName.length < 2 && firstName.length < 2)}
                     onChange={onLastNameChange}
                     fullWidth
                     style={{ marginBottom: 10 }}

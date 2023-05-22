@@ -6,7 +6,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Info, TPackage} from "./PackageSelection";
 import {setPackage, setPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {EMaintenanceOptionType, TExtendedComplimentary} from "../../../api/types";
+import {EMaintenanceOptionType} from "../../../api/types";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {HtmlTooltip} from "./ServiceCard";
@@ -54,7 +54,6 @@ type TTabLabelProps = {
 type PackageSelectionMobileProps = {
     data: TPackage[];
     isBmWService: boolean;
-    isSanfordInfinity: boolean;
     getTitle: (type: EPackagePricingType) => string;
     withUpsells: boolean;
 }
@@ -269,9 +268,8 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                                                                            getTitle,
                                                                            data,
                                                                            isBmWService,
-                                                                           isSanfordInfinity,
                                                                            withUpsells,
-}) => {
+                                                                       }) => {
     const [value, setValue] = useState<string>('1');
     const {selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -301,10 +299,6 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
         currentPackage && dispatch(setPackage(currentPackage));
     }
 
-    const getPrice = (requests: TExtendedComplimentary[]): number => {
-        return requests.reduce((a, b) => a + +b.price, 0)
-    }
-
     const handleClick = (type: EMaintenanceOptionType, pricing?: EPackagePricingType) => {
         const p = data.find(item => item.type === type);
         if (p) dispatch(setPackage(p));
@@ -314,167 +308,158 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
     return (
         <div className={classes.wrapper}>
             {data?.length &&
-            <TabContext value={value}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                variant="fullWidth"
-                aria-label="icon tabs example">
-                  {data.map((item, index) => (
-                      <Tab style={isBmWService ? {fontSize: 16} : {}}
-                           key={item.id}
-                           className={index === +value ? classes.selectedTab : classes.tabWrapper}
-                           value={`${index}`}
-                           label={<TabLabel text={item.name} isSelected={index === +value}/>}/>)
-                  )}
-              </Tabs>
+                <TabContext value={value}>
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        variant="fullWidth"
+                        aria-label="icon tabs example">
+                        {data.map((item, index) => (
+                            <Tab style={isBmWService ? {fontSize: 16} : {}}
+                                 key={item.id}
+                                 className={index === +value ? classes.selectedTab : classes.tabWrapper}
+                                 value={`${index}`}
+                                 label={<TabLabel text={item.name} isSelected={index === +value}/>}/>)
+                        )}
+                    </Tabs>
 
-                {data.map((item, index) => (
-                    <TabPanel value={`${index}`} key={item.name}>
-                        <div style={{ border: '1px solid rgba(0, 0, 0, 0.15)'}}>
-                            <div className={classes.packageName} style={getTitleStyle(index, isBmWService)}>{item.name}</div>
-                            <div className={classes.serviceRequests} style={{paddingBottom: 36}}>
-                                {item.serviceRequests
-                                    .slice()
-                                    .sort((a, b) => a.orderIndex - b.orderIndex)
-                                    .map(item => {
-                                        return item.detailedDescription?.length
-                                            ? <HtmlTooltip
-                                                key={item.id}
-                                                placement="top"
-                                                enterTouchDelay={0}
-                                                title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
-                                            >
-                                                <p className={classes.serviceRequestUnderlined}
-                                                   style={isBmWService ? {fontSize: 18} : {}}>
+                    {data.map((item, index) => (
+                        <TabPanel value={`${index}`} key={item.name}>
+                            <div style={{ border: '1px solid rgba(0, 0, 0, 0.15)'}}>
+                                <div className={classes.packageName} style={getTitleStyle(index, isBmWService)}>{item.name}</div>
+                                <div className={classes.serviceRequests} style={{paddingBottom: 36}}>
+                                    {item.serviceRequests
+                                        .slice()
+                                        .sort((a, b) => a.orderIndex - b.orderIndex)
+                                        .map(item => {
+                                            return item.detailedDescription?.length
+                                                ? <HtmlTooltip
+                                                    key={item.id}
+                                                    placement="top"
+                                                    enterTouchDelay={0}
+                                                    title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
+                                                >
+                                                    <p className={classes.serviceRequestUnderlined}
+                                                       style={isBmWService ? {fontSize: 18} : {}}>
+                                                        {item.description}
+                                                    </p>
+                                                </HtmlTooltip>
+                                                :  <p className={classes.serviceRequest}
+                                                      key={item.id}
+                                                      style={isBmWService ? {fontSize: 18} : {}}>
                                                     {item.description}
                                                 </p>
-                                            </HtmlTooltip>
-                                            :  <p className={classes.serviceRequest}
-                                                  key={item.id}
-                                                  style={isBmWService ? {fontSize: 18} : {}}>
-                                                {item.description}
-                                            </p>
-                                    })
-                                }
-                            </div>
+                                        })
+                                    }
+                                </div>
 
-                            { scProfile?.isShowPriceDetails
-                            && <div className={classes.totalMaintenance}>
+                                { scProfile?.isShowPriceDetails
+                                    && <div className={classes.totalMaintenance}>
                                 <span className={classes.smallText}>
                                   {t("Total Maintenance Value")}:
                                 </span>
-                              <span className={classes.bigText}>${scProfile?.isRoundPrice ? item.totalMaintenanceValue : item.totalMaintenanceValue.toFixed(2)}</span>
-                            </div>}
-                            {item.intervalUpsells?.length
-                                ? <React.Fragment>
-                                    <div className={classes.upsellTitle} style={isBmWService ? {fontSize: 16} : {}}>
-                                        {t(t("Service Interval Upsell"))}
-                                    </div>
-                                    <div className={classes.intervalUpsells}>
-                                        {item.intervalUpsells
-                                            .slice()
-                                            .sort((a, b) => a.orderIndex - b.orderIndex)
-                                            .map(item => {
-                                                return item.detailedDescription?.length
-                                                    ? <HtmlTooltip
-                                                        key={item.id}
-                                                        placement="top"
-                                                        enterTouchDelay={0}
-                                                        title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
-                                                    >
-                                                        <p className={classes.serviceRequestUnderlined}
-                                                           style={isBmWService ? {fontSize: 18} : {}}>
+                                        <span className={classes.bigText}>${scProfile?.isRoundPrice ? item.totalMaintenanceValue : item.totalMaintenanceValue.toFixed(2)}</span>
+                                    </div>}
+                                {item.intervalUpsells?.length
+                                    ? <React.Fragment>
+                                        <div className={classes.upsellTitle} style={isBmWService ? {fontSize: 16} : {}}>
+                                            {t(t("Service Interval Upsell"))}
+                                        </div>
+                                        <div className={classes.intervalUpsells}>
+                                            {item.intervalUpsells
+                                                .slice()
+                                                .sort((a, b) => a.orderIndex - b.orderIndex)
+                                                .map(item => {
+                                                    return item.detailedDescription?.length
+                                                        ? <HtmlTooltip
+                                                            key={item.id}
+                                                            placement="top"
+                                                            enterTouchDelay={0}
+                                                            title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
+                                                        >
+                                                            <p className={classes.serviceRequestUnderlined}
+                                                               style={isBmWService ? {fontSize: 18} : {}}>
+                                                                {item.name}
+                                                            </p>
+                                                        </HtmlTooltip>
+                                                        :  <p className={classes.serviceRequest}
+                                                              key={item.id}
+                                                              style={isBmWService ? {fontSize: 18} : {}}>
                                                             {item.name}
                                                         </p>
-                                                    </HtmlTooltip>
-                                                    :  <p className={classes.serviceRequest}
-                                                          key={item.id}
-                                                          style={isBmWService ? {fontSize: 18} : {}}>
-                                                        {item.name}
-                                                    </p>
-                                            })
-                                        }
-                                    </div>
-                                </React.Fragment>
-                                : null}
+                                                })
+                                            }
+                                        </div>
+                                    </React.Fragment>
+                                    : null}
 
-                            <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>
-                                {t("Complimentary")}
-                            </div>
+                                <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>
+                                    {t("Complimentary")}
+                                </div>
 
-                            <div className={classes.complimentaryServices}>
-                                {item.complimentaryServices
-                                    .slice()
-                                    .sort((a, b) => a.orderIndex - b.orderIndex)
-                                    .map(item => {
-                                        return item.detailedDescription?.length
-                                            ? <HtmlTooltip
-                                                key={item.id}
-                                                placement="top"
-                                                enterTouchDelay={0}
-                                                title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
-                                            >
-                                                <p className={classes.serviceRequestUnderlined}
-                                                   style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
-                                            </HtmlTooltip>
-                                            : <p className={classes.serviceRequest}
-                                                 key={item.id}
-                                                 style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
-                                    })}
-                            </div>
+                                <div className={classes.complimentaryServices}>
+                                    {item.complimentaryServices
+                                        .slice()
+                                        .sort((a, b) => a.orderIndex - b.orderIndex)
+                                        .map(item => {
+                                            return item.detailedDescription?.length
+                                                ? <HtmlTooltip
+                                                    key={item.id}
+                                                    placement="top"
+                                                    enterTouchDelay={0}
+                                                    title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
+                                                >
+                                                    <p className={classes.serviceRequestUnderlined}
+                                                       style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
+                                                </HtmlTooltip>
+                                                : <p className={classes.serviceRequest}
+                                                     key={item.id}
+                                                     style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
+                                        })}
+                                </div>
 
-                            {scProfile?.isShowPriceDetails
-                                ? <div className={classes.complimentaryTotal}>
+                                {scProfile?.isShowPriceDetails
+                                    ? <div className={classes.complimentaryTotal}>
                                 <span className={classes.smallText}>
                                     {t("Total Complimentary Value")}:
                                 </span>
-                                    {isBmWService || isSanfordInfinity
-                                        ? <span className={classes.bigText}>
+                                        <span className={classes.bigText}>
                                         {item.marketPriceComplimentaryServices
                                             ? `$${scProfile?.isRoundPrice
                                                 ? item.marketPriceComplimentaryServices
                                                 : item.marketPriceComplimentaryServices.toFixed(2)}`
                                             : ''}
                                 </span>
-                                        : <span className={classes.bigText}>
-                                        {getPrice(item.complimentaryServices)
-                                            ? `$${scProfile?.isRoundPrice
-                                                ? getPrice(item.complimentaryServices)
-                                                : getPrice(item.complimentaryServices).toFixed(2)}`
-                                            : ''}
-                                    </span>
-                                    }
-                                </div>
-                                : null
-                            }
-                            {/*<div className={classes.totalSums}>*/}
-                            {/*    <div>*/}
-                            {/*        <span className={classes.totalName}>{t("Total")}</span><span className={classes.totalText} > ({t("excluding taxes")})</span>*/}
-                            {/*    </div>*/}
-                            {/*    <div className={classes.pricesWrapper}>*/}
-                            {/*        {scProfile?.isShowPriceDetails &&*/}
-                            {/*        <div className={classes.prevPrice}>*/}
-                            {/*          ${scProfile?.isRoundPrice*/}
-                            {/*            ? item.price + item.marketPriceComplimentaryServices*/}
-                            {/*            : (item.price + item.marketPriceComplimentaryServices).toFixed(2)}*/}
-                            {/*        </div>}*/}
+                                    </div>
+                                    : null
+                                }
+                                {/*<div className={classes.totalSums}>*/}
+                                {/*    <div>*/}
+                                {/*        <span className={classes.totalName}>{t("Total")}</span><span className={classes.totalText} > ({t("excluding taxes")})</span>*/}
+                                {/*    </div>*/}
+                                {/*    <div className={classes.pricesWrapper}>*/}
+                                {/*        {scProfile?.isShowPriceDetails &&*/}
+                                {/*        <div className={classes.prevPrice}>*/}
+                                {/*          ${scProfile?.isRoundPrice*/}
+                                {/*            ? item.price + item.marketPriceComplimentaryServices*/}
+                                {/*            : (item.price + item.marketPriceComplimentaryServices).toFixed(2)}*/}
+                                {/*        </div>}*/}
 
-                            {/*        <div className={classes.currentWrp}>*/}
-                            {/*            <div className={classes.current}>*/}
-                            {/*                ${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}*/}
-                            {/*            </div>*/}
-                            {/*        </div>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
-                        </div>
-                    </TabPanel>
-                ))}
-            </TabContext>
+                                {/*        <div className={classes.currentWrp}>*/}
+                                {/*            <div className={classes.current}>*/}
+                                {/*                ${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}*/}
+                                {/*            </div>*/}
+                                {/*        </div>*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
+                            </div>
+                        </TabPanel>
+                    ))}
+                </TabContext>
             }
             {withUpsells && Boolean(getTitle(EPackagePricingType.BasePrice).length)
                 ? <div style={{fontWeight: "bold"}}>{t("Total")}<span className={classes.info}> ({t("Excluding taxes & fees")}):</span></div>
-            : null}
+                : null}
             {selectedPackage ? <React.Fragment>
                 <TotalPriceMobile
                     withUpsells={withUpsells}
@@ -483,19 +468,21 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                     type={selectedPackage.type}
                     text={getTitle(EPackagePricingType.BasePrice)}
                     price={selectedPackage.price}
+                    totalMaintenanceValue={selectedPackage.totalMaintenanceValue}
                     complimentaryPrice={selectedPackage.marketPriceComplimentaryServices}
                 />
                 {withUpsells
                     ? <TotalPriceMobile
-                    isUpsellPrice
-                    withUpsells={withUpsells}
-                    handleClick={handleClick}
-                    type={selectedPackage.type}
-                    text={getTitle(EPackagePricingType.PriceWithFee)}
-                    price={selectedPackage.price}
-                    complimentaryPrice={selectedPackage.marketPriceComplimentaryServices}
-                    upsellPrice={selectedPackage.marketPriceIntervalUpsells}
-                />
+                        isUpsellPrice
+                        withUpsells={withUpsells}
+                        handleClick={handleClick}
+                        type={selectedPackage.type}
+                        text={getTitle(EPackagePricingType.PriceWithFee)}
+                        price={selectedPackage.price}
+                        totalMaintenanceValue={selectedPackage.totalMaintenanceValue}
+                        complimentaryPrice={selectedPackage.marketPriceComplimentaryServices}
+                        upsellPrice={selectedPackage.marketPriceIntervalUpsells}
+                    />
                     : null}
             </React.Fragment> : null}
             <Info style={{paddingTop: 8}}>

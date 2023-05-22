@@ -13,6 +13,7 @@ export interface ICustomerByName {
     model: string;
     vin: string;
     year: number;
+    mileage?: number|null;
     appointmentHashKey?: string;
 }
 

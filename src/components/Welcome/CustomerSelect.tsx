@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Button, Grid} from "@material-ui/core";
+import {Button, Grid, useMediaQuery} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {setUserType} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens} from "../../types/types";
@@ -13,7 +13,7 @@ import {EServiceCenterName} from "../../api/types";
 import {LoadingButton} from "../UI/Button";
 import {useTranslation} from "react-i18next";
 import {getCurrentUser} from "../../store/reducers/users/actions";
-import {useModal} from "../../utils/hooks";
+import {useCurrentUser, useModal} from "../../utils/hooks";
 import EnhancedCustomerSearch from "../Modals/EnhancedCustomerSearch/EnhancedCustomerSearch";
 import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
 
@@ -117,8 +117,20 @@ export const useStyles = makeStyles(theme => ({
         position: "absolute",
         right: '31%',
         bottom: 0,
+        [theme.breakpoints.down("xs")]: {
+            right: '22%',
+        }
+    },
+}))
+
+const useLoadingStyles = makeStyles(theme => ({
+    wrapper: {
+        [theme.breakpoints.down("xs")]: {
+            width: "100%",
+        }
     }
 }))
+
 type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
     loading: boolean;
@@ -136,8 +148,11 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
     const isDealerBuilt = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
     const notShowEmail = isRiverviewFord || isDominion || isLakePowell || isDealerBuilt;
     const classes = useStyles();
+    const loadingClasses = useLoadingStyles();
     const dispatch = useDispatch();
     const { t } = useTranslation();
+    const isXs = useMediaQuery("xs");
+    const currentUser = useCurrentUser();
 
     useEffect(() => {
         const uid = uuidv4();
@@ -173,17 +188,27 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                     value={customerEnteredEmail}
                     fullWidth/>
                 <LoadingButton
+                    fullWidth={isXs}
                     loading={loading}
                     variant="contained"
                     color="primary"
+                    classes={loadingClasses}
                     className={classes.loadingButton}
                     disabled={loading || !customerEnteredEmail}
                     onClick={handleComplete}>
                     {t("Search")}
                 </LoadingButton>
-                <div className={classes.searchLinkWrapper}>
-                    <Button variant="text" onClick={onOpen} className={classes.searchButton}>{t("Search Customer by Name")}</Button>
-                </div>
+                {currentUser
+                    ? <div className={classes.searchLinkWrapper}>
+                        <Button
+                            variant="text"
+                            onClick={onOpen}
+                            disabled={loading}
+                            className={classes.searchButton}>
+                            {t("Search Customer by Name")}
+                        </Button>
+                    </div>
+                    : null}
             </div>
         </Grid>
         <Grid item xs={12} sm={12} md={6}>
@@ -195,11 +220,11 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                     className={classes.submitButton}
                     onClick={handleNew}
                 >
-                    {t("Submit")}
+                    {t("Next")}
                 </Button>
             </div>
         </Grid>
-        <EnhancedCustomerSearch open={isOpen} onClose={onClose} onOpenNotFound={onOpenNotFound} handleNew={handleNew}/>
+        <EnhancedCustomerSearch open={isOpen} onClose={onClose} onOpenNotFound={onOpenNotFound} handleNew={handleNew} />
         <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
     </Grid>
 };

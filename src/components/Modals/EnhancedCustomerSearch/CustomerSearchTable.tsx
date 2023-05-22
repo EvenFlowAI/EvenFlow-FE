@@ -22,6 +22,7 @@ import {TextField} from "../../UI/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {ICustomerLoadedData} from "../../../api/types";
 import {
+    clearAppointmentData,
     setAddress,
     setUserType,
     setVehicle,
@@ -143,9 +144,9 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
         setData(customers);
     }, [customers])
 
-    const setCustomerData = async (item: ICustomerByName) => {
-        const phoneNumbers = [item.cellPhone];
-        const customerData = customers.find(el => el.vehicleId === item.vehicleId);
+    const setCustomerData = async (item: ICustomerByName, isUpdating: boolean) => {
+        const phoneNumbers = item.cellPhone ? [item.cellPhone] : [];
+        const customerData = customers.find(el => el.vehicleId === item.vehicleId && el.customerId === item.customerId);
         if (customerData?.homePhone) phoneNumbers.push(customerData.homePhone);
         const vehicle = {
             vin: item.vin,
@@ -153,7 +154,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
             model: item.model,
             year: item.year,
             appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
-            mileage: null
+            mileage: item.mileage ?? null,
         }
         const data: ICustomerLoadedData = {
             emails: item?.email ? [item.email] : [],
@@ -163,6 +164,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
             phoneNumbers,
             vehicles: [vehicle],
             fromSearchByName: true,
+            isUpdating,
         }
         if (customerData?.city) data.city = customerData.city;
         if (customerData?.address) await dispatch(setAddress(customerData.address));
@@ -171,19 +173,18 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
         await dispatch(setVehicle(vehicle));
     }
 
-    const onCreateNewForCar = (item: ICustomerByName) => {
-        setCustomerData(item).then(() => {
-            dispatch(setWelcomeScreenView("serviceSelect"));
-            onClose()
-        })
-        setEditingElement(item);
+    const onCreateNewForCar = async (item: ICustomerByName) => {
+        await dispatch(clearAppointmentData());
+        await setCustomerData(item, false);
+        await dispatch(setWelcomeScreenView("serviceSelect"));
+        await onClose()
     }
 
     const onUpdateAppForCar = (item: ICustomerByName) => {
         if (scProfile) {
             const id = encodeSCID(scProfile.id)
             setEditingElement(item)
-            setCustomerData(item).then(() => {
+            setCustomerData(item, true).then(() => {
                 history.push(`/f/appointment/${id}`)
                 onClose()
             })

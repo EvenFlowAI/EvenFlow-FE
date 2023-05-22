@@ -180,7 +180,8 @@ type ApiRoutes = {
         | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth"
         | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate"
         | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType" | "UpdatePackagePriceDetails"
-        | "UpdateDefaultOpsCode" | "UpdateDefaultMake" | "UpdatePresentedPackageOptions" | "UpdateEngineTypeFieldName", TApiRoute>,
+        | "UpdateDefaultOpsCode" | "UpdateDefaultMake" | "UpdatePresentedPackageOptions" | "UpdateEngineTypeFieldName"
+        | "GetAssignedAdvisorMethod" | "UpdateAssignedAdvisorMethod", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -456,6 +457,8 @@ export class Api {
             UpdateDefaultMake: {route: "/service-center-settings/{id}/default-vehicle-make", method: "patch"},
             UpdatePresentedPackageOptions: {route: "/service-centers/{id}/maintenance-package-option-types", method: "put"},
             UpdateEngineTypeFieldName: {route: "/service-centers/{id}/engine-type-field-name", method: "patch"},
+            GetAssignedAdvisorMethod: {route: "/service-center-settings/{id}/advisor-assignment", method: "get"},
+            UpdateAssignedAdvisorMethod: {route: "/service-center-settings/{id}/advisor-assignment", method: "put"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},
