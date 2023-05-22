@@ -12,7 +12,7 @@ import {
     setAddress,
     setAdvisor,
     setAncillaryPriceByZip,
-    setAncillaryPriceLoading,
+    setAncillaryPriceLoading, setAnyAdvisorSelected,
     setAppointmentId,
     setConsultants,
     setCurrentFrameScreen,
@@ -137,6 +137,7 @@ type TState = {
     packagePricingType: EPackagePricingType | null;
     packagePriceTitles: TPackagePrice[];
     packageEMenuType: EMaintenanceOptionType|null;
+    anyAdvisorSelected: boolean;
 }
 const initialState: TState = {
     service: null,
@@ -196,6 +197,7 @@ const initialState: TState = {
     packagePricingType: null,
     packagePriceTitles: [],
     packageEMenuType: null,
+    anyAdvisorSelected: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -390,5 +392,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setPackageEMenuType, (state, {payload}) => {
         return {...state, packageEMenuType: payload}
+    })
+    .addCase(setAnyAdvisorSelected, (state, {payload}) => {
+        return {...state, anyAdvisorSelected: payload}
     })
 )

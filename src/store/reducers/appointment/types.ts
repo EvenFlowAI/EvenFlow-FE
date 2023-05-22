@@ -133,6 +133,7 @@ export interface IAppointmentSlot {
     priceWithOffer?: IPrice;
     offer?: IOffer;
     isShorterWaitTime: boolean;
+    consultantId?: string|null;
 }
 export interface ISearchedDateRange {
     from: ParsableDate;

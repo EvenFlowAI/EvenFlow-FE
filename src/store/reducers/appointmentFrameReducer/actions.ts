@@ -87,6 +87,7 @@ export const setSelectedRecalls = createAction<IRecallByVin[]>('fAppointment/Set
 export const setRecallsAreShown = createAction<boolean>('fAppointment/SetRecallsAreShown');
 export const setHoursOfOperations = createAction<IHOODataForm[]>('fAppointment/SetHorsOfOperations');
 export const setPackageEMenuType = createAction<EMaintenanceOptionType|null>('fAppointment/SetPackageEMenuType');
+export const setAnyAdvisorSelected = createAction<boolean>('fAppointment/SetAnyAdvisorSelected');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -108,7 +109,11 @@ export const loadConsultants = (data: IConsultantsRequestData, onEmptyList: () =
         Api.endpoints.ServiceConsultants.GetByQuery, {data})
         .then(({data: {result}}) => {
             dispatch(setConsultants(result));
-            if (!result.length) onEmptyList();
+            if (!result.length) {
+                onEmptyList()
+            } else {
+                dispatch(setAnyAdvisorSelected(true))
+            }
         })
         .catch(err => console.log(err))
 }
