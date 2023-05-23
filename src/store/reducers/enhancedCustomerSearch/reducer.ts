@@ -1,6 +1,14 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {ICustomerByName} from "./types";
-import {getCustomers, setCurrentCustomer, setLoading, setPageData, setPaging} from "./actions";
+import {ICustomerByName, IRepairHistory} from "./types";
+import {
+    getCustomers,
+    getRepairHistory,
+    setCurrentCustomer,
+    setLoading,
+    setPageData,
+    setPaging,
+    setRepairHistoryLoading, setRepairHistoryPaging
+} from "./actions";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 
 type TCustomerSearchState = {
@@ -9,6 +17,9 @@ type TCustomerSearchState = {
     currentCustomer: ICustomerByName|null;
     paging: IPagingResponse;
     pageData: IPageRequest;
+    repairHistory: IRepairHistory|null;
+    repairHistoryPaging: IPagingResponse;
+    repairHistoryLoading: boolean;
 }
 const initialState: TCustomerSearchState = {
     isLoading: false,
@@ -16,6 +27,9 @@ const initialState: TCustomerSearchState = {
     currentCustomer: null,
     paging: {numberOfPages: 0, numberOfRecords: 0},
     pageData: {pageIndex: 0, pageSize: 10},
+    repairHistoryPaging: {numberOfPages: 0, numberOfRecords: 0},
+    repairHistory: null,
+    repairHistoryLoading: false,
 }
 
 export const customerReducer = createReducer(initialState, builder => builder
@@ -33,5 +47,14 @@ export const customerReducer = createReducer(initialState, builder => builder
     })
     .addCase(setPaging, (state, {payload}) => {
         return {...state, paging: payload}
+    })
+    .addCase(getRepairHistory, (state, {payload}) => {
+        return {...state, repairHistory: payload}
+    })
+    .addCase(setRepairHistoryLoading, (state, {payload}) => {
+        return {...state, repairHistoryLoading: payload}
+    })
+    .addCase(setRepairHistoryPaging, (state, {payload}) => {
+        return {...state, repairHistoryPaging: payload}
     })
 )

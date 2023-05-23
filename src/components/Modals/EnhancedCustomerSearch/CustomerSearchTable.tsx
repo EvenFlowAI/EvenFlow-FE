@@ -5,6 +5,7 @@ import {ReactComponent as Update} from "../../../assets/img/editAppointment.svg"
 import {ReactComponent as Edit} from "../../../assets/img/editIcon.svg";
 import {ReactComponent as EditDisabled} from "../../../assets/img/editAppointmentDisabled.svg";
 import {ReactComponent as Search} from "../../../assets/img/searchInfoIcon.svg";
+import {ReactComponent as SearchDisabled} from "../../../assets/img/searchInfoIconDisabled.svg";
 import {
     Button,
     IconButton,
@@ -34,11 +35,12 @@ import {RootState} from "../../../store/rootReducer";
 import {ICustomerByName} from "../../../store/reducers/enhancedCustomerSearch/types";
 import CustomerInputField from "./CustomerInputField";
 import {changePageData, updateCustomer} from "../../../store/reducers/enhancedCustomerSearch/actions";
-import {useException, usePagination} from "../../../utils/hooks";
+import {useException, useModal, usePagination} from "../../../utils/hooks";
 import {Loading} from "../../UI/Loading";
 import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../utils/utils";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
+import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -135,6 +137,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<ICustomerByName|null>(null);
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
+    const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
     const classes = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
@@ -160,7 +163,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
             emails: item?.email ? [item.email] : [],
             firstName: item?.firstName ?? "",
             lastName: item?.lastName ?? "",
-            id: item.customerId.toString(),
+            id: item.customerInternalId.toString(),
             phoneNumbers,
             vehicles: [vehicle],
             fromSearchByName: true,
@@ -183,7 +186,6 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
     const onUpdateAppForCar = (item: ICustomerByName) => {
         if (scProfile) {
             const id = encodeSCID(scProfile.id)
-            setEditingElement(item)
             setCustomerData(item, true).then(() => {
                 history.push(`/f/appointment/${id}`)
                 onClose()
@@ -191,8 +193,9 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
         }
     }
 
-    const onViewRepairHistory = (item: ICustomerByName) => {
-        setEditingElement(item);
+    const onViewRepairHistory = async (item: ICustomerByName) => {
+        await setEditingElement(item);
+        await onOpenHistory();
     }
 
     const onEditData = async (item: ICustomerByName) => {
@@ -270,13 +273,19 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                                         </HtmlTooltip>
                                         : <IconButton style={{padding: 4}} disabled><EditDisabled/></IconButton>
                                     }
-                                    <HtmlTooltip title="View Repair History">
-                                        <IconButton
+                                    {customer.customerHasOrders
+                                        ? <HtmlTooltip title="View Repair History">
+                                            <IconButton
+                                                style={{padding: 4}}
+                                                onClick={() => onViewRepairHistory(customer)}>
+                                                <Search/>
+                                            </IconButton>
+                                        </HtmlTooltip>
+                                        : <IconButton
                                             style={{padding: 4}}
-                                            onClick={() => onViewRepairHistory(customer)}>
-                                            <Search/>
-                                        </IconButton>
-                                    </HtmlTooltip>
+                                            disabled>
+                                            <SearchDisabled/>
+                                        </IconButton>}
                                     <HtmlTooltip title="Edit Customer Information">
                                         <IconButton
                                             style={{padding: 4}}
@@ -353,6 +362,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                 onChangeRowsPerPage={handleChangeRows}
                 rowsPerPage={pageData.pageSize}/>
                : null }
+            {editingElement ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={editingElement.vehicleDmsId}/> : null}
         </>
 };
 
