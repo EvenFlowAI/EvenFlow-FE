@@ -24,7 +24,7 @@ import {
     clearCustomerCache,
     getBlankCustomer,
     getBlankVehicle,
-    getCustomerCache,
+    getCustomerCache, getSlotsConsultantId,
     loadSCProfile,
     loadSRs,
     saveCustomerCache, selectAppointment, selectServiceValetAppointment,
@@ -353,6 +353,7 @@ export const AppointmentFrameLayout = () => {
         dispatch(selectSubService(null));
         dispatch(setTiming(null));
         dispatch(setAdvisor(null));
+        dispatch(getSlotsConsultantId(null));
         dispatch(selectSR(null));
         dispatch(setSelectedRecalls([]));
         dispatch(setRecallsAreShown(false));

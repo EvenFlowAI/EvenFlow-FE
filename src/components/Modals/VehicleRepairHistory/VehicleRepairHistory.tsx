@@ -177,7 +177,8 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
             <DialogContent>
                 {repairHistoryLoading
                     ? <Loading/>
-                    : !repairHistory ? <NoData/>
+                    : !repairHistory
+                        ? <NoData/>
                         : <div className={classes.wrapper}>
                             <div className={classes.rightHeaderPart}>
                                 <div className={classes.textBig} style={{paddingBottom: 12}}>Customer & Vehicle Information:</div>

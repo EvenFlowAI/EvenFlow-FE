@@ -12,7 +12,7 @@ import {
     selectCategoriesIds,
     selectService,
     selectSubService,
-    setAdvisor, setAnyAdvisorSelected,
+    setAdvisor,
     setPackage,
     setPackageIsSelected,
     setSelectedPackageOptionType,
@@ -206,7 +206,6 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(setAdvisor(c));
-        dispatch(setAnyAdvisorSelected(!!c));
     }
 
     const clearPackage = () => {

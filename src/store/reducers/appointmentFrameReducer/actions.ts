@@ -26,7 +26,7 @@ import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
-import {selectAppointment, selectServiceValetAppointment, selectSR} from "../appointment/actions";
+import {getSlotsConsultantId, selectAppointment, selectServiceValetAppointment, selectSR} from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
@@ -87,7 +87,6 @@ export const setSelectedRecalls = createAction<IRecallByVin[]>('fAppointment/Set
 export const setRecallsAreShown = createAction<boolean>('fAppointment/SetRecallsAreShown');
 export const setHoursOfOperations = createAction<IHOODataForm[]>('fAppointment/SetHorsOfOperations');
 export const setPackageEMenuType = createAction<EMaintenanceOptionType|null>('fAppointment/SetPackageEMenuType');
-export const setAnyAdvisorSelected = createAction<boolean>('fAppointment/SetAnyAdvisorSelected');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -111,8 +110,6 @@ export const loadConsultants = (data: IConsultantsRequestData, onEmptyList: () =
             dispatch(setConsultants(result));
             if (!result.length) {
                 onEmptyList()
-            } else {
-                dispatch(setAnyAdvisorSelected(true))
             }
         })
         .catch(err => console.log(err))
@@ -201,6 +198,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(selectSR(null));
     dispatch(setTiming(null));
     dispatch(setAdvisor(null));
+    dispatch(getSlotsConsultantId(null));
     dispatch(setTransportation(null));
     dispatch(setRecallsAreShown(false));
     dispatch(setSelectedRecalls([]))

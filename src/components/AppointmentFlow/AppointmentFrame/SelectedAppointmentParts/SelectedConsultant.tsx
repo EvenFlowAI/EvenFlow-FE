@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {MenuItem, Select, useMediaQuery, useTheme} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../../store/reducers/appointment/actions";
-import {setAdvisor, setAnyAdvisorSelected} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {setAdvisor} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useSelectedAppointmentStyles} from "../SelectedAppointment";
 import {RootState} from "../../../../store/rootReducer";
@@ -31,9 +31,7 @@ const SelectedConsultant: React.FC<TSelectedConsultantProps> = ({currentConfig})
             dispatch(selectServiceValetAppointment(null));
         }
         dispatch(setAdvisor(consultant ? consultant : null))
-        dispatch(setAnyAdvisorSelected(e.target.value === "Any"));
     }
-
 
     return currentConfig?.advisorSelection && consultants.length
         ? <div className={classes.selectWrapper}>
