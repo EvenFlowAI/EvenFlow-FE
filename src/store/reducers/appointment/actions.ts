@@ -71,14 +71,16 @@ export const getServiceCategories = createAction<IServiceCategory[]>("Appointmen
 export const getAllServiceCategories = createAction<IServiceCategoryShort[]>("Appointment/GetAllServiceCategories");
 export const setLoadedDateRange = createAction<ISearchedDateRange>("Appointment/SetLoadedDateRange");
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
+export const getSlotsConsultantId = createAction<string|null>("Appointment/GetSlotsConsultantId");
 export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void, loadCB?: TCallback): AppThunk => async dispatch => {
     try {
-        const {data: {items, searchedDateRange, slotGapMinutes}} = await Api.call<IAppointmentResponse>(
+        const {data: {items, searchedDateRange, slotGapMinutes, consultantId}} = await Api.call<IAppointmentResponse>(
             Api.endpoints.AppointmentSlots.GetSlots,
             {data}
         );
         const res = dispatch(getAppointmentSlots(items));
         if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
+        if (consultantId) dispatch(getSlotsConsultantId(consultantId))
         if (loadCB) {
             loadCB();
         }

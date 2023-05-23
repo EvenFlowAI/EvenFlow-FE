@@ -81,6 +81,7 @@ import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
 import {TPackagePrice} from "../packages/types";
+import {getSlotsConsultantId} from "../appointment/actions";
 
 type TState = {
     service: IServiceCategory|null;
@@ -137,6 +138,7 @@ type TState = {
     packagePricingType: EPackagePricingType | null;
     packagePriceTitles: TPackagePrice[];
     packageEMenuType: EMaintenanceOptionType|null;
+    slotsConsultantId: string|null;
 }
 const initialState: TState = {
     service: null,
@@ -196,6 +198,7 @@ const initialState: TState = {
     packagePricingType: null,
     packagePriceTitles: [],
     packageEMenuType: null,
+    slotsConsultantId: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -216,7 +219,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, selectedPackage: payload};
     })
     .addCase(setAdvisor, (state, {payload}) => {
-        return {...state, advisor: payload};
+        return {...state, advisor: payload, slotsConsultantId: payload ? null : state.slotsConsultantId};
     })
     .addCase(setTiming, (state, {payload}) => {
         return {
@@ -390,5 +393,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setPackageEMenuType, (state, {payload}) => {
         return {...state, packageEMenuType: payload}
+    })
+    .addCase(getSlotsConsultantId, (state, {payload}) => {
+        return {...state, slotsConsultantId: payload}
     })
 )
