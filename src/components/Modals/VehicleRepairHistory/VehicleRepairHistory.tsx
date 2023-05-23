@@ -183,8 +183,8 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
                                 <div className={classes.textBig} style={{paddingBottom: 12}}>Customer & Vehicle Information:</div>
                                 <div className={classes.nameLineGrid}>
                                     <div className={classes.name}>{repairHistory?.firstName} {repairHistory?.lastName}</div>
-                                    <div><span className={classes.titleSmall}>Cell Phone</span> {repairHistory?.cellPhone}</div>
-                                    <div><span className={classes.titleSmall}>Home Phone</span> {repairHistory?.homePhone}</div>
+                                    <div><span className={classes.titleSmall}>Cell: </span>{repairHistory?.cellPhone}</div>
+                                    <div><span className={classes.titleSmall}>Home: </span>{repairHistory?.homePhone}</div>
                                 </div>
                                 <Divider style={{marginTop: 18, marginBottom: 24, padding: 0}}/>
                                 <div className={classnames(classes.carDataGrid)}>
