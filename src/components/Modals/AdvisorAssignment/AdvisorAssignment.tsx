@@ -91,10 +91,8 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
     }
 
     const onSave = () => {
-        const data: IAdvisorAssignment = {
-            primaryMethod,
-            secondaryMethod
-        }
+        const data: IAdvisorAssignment = {primaryMethod};
+        if (secondaryMethod) data.secondaryMethod = secondaryMethod;
         selectedSC && dispatch(updateAdvisorAssignment(selectedSC.id, data, onSuccess, onError))
     }
 
@@ -198,15 +196,16 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
                                             cursor="pointer"
                                             onClick={() => onChange("primary", EAdvisorAssignMethod.LastAdvisor)}/>}
                                 </TableCell>
-                                <TableCell align="center"  style={{backgroundColor: isSecondaryDisabled ? "#F4F4F4" : ""}}>
-                                    {secondaryMethod === EAdvisorAssignMethod.LastAdvisor
-                                        ? <RadioButtonChecked
-                                            htmlColor={isSecondaryDisabled ? "#DADADA" : "#3855F3"}
-                                            cursor={isSecondaryDisabled ? "" : "pointer"}/>
-                                        : <RadioButtonUnchecked
-                                            htmlColor="#DADADA"
-                                            cursor={isSecondaryDisabled ? "" : "pointer"}
-                                            onClick={() => onChange("secondary", EAdvisorAssignMethod.LastAdvisor)}/>}
+                                <TableCell align="center" style={{backgroundColor: "#F4F4F4"}}>
+                                    <RadioButtonUnchecked htmlColor="#DADADA"/>
+                                    {/*{secondaryMethod === EAdvisorAssignMethod.LastAdvisor*/}
+                                    {/*    ? <RadioButtonChecked*/}
+                                    {/*        htmlColor={isSecondaryDisabled ? "#DADADA" : "#3855F3"}*/}
+                                    {/*        cursor={isSecondaryDisabled ? "" : "pointer"}/>*/}
+                                    {/*    : <RadioButtonUnchecked*/}
+                                    {/*        htmlColor="#DADADA"*/}
+                                    {/*        cursor={isSecondaryDisabled ? "" : "pointer"}*/}
+                                    {/*        onClick={() => onChange("secondary", EAdvisorAssignMethod.LastAdvisor)}/>}*/}
                                 </TableCell>
                             </TableRow>
                             <TableRow>
