@@ -5,7 +5,7 @@ export interface ICustomerByName {
     cellPhone: string;
     homePhone: string;
     email: string;
-    vehicleId: number;
+    vehicleId: string;
     address: string;
     city: string;
     state: string;

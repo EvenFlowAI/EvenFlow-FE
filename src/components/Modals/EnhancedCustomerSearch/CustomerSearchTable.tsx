@@ -193,8 +193,9 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
         }
     }
 
-    const onViewRepairHistory = () => {
-        onOpenHistory();
+    const onViewRepairHistory = async (item: ICustomerByName) => {
+        await setEditingElement(item);
+        await onOpenHistory();
     }
 
     const onEditData = async (item: ICustomerByName) => {
@@ -276,7 +277,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                                         ? <HtmlTooltip title="View Repair History">
                                             <IconButton
                                                 style={{padding: 4}}
-                                                onClick={() => onViewRepairHistory()}>
+                                                onClick={() => onViewRepairHistory(customer)}>
                                                 <Search/>
                                             </IconButton>
                                         </HtmlTooltip>
@@ -361,7 +362,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                 onChangeRowsPerPage={handleChangeRows}
                 rowsPerPage={pageData.pageSize}/>
                : null }
-            <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId="D1068150"/>
+            {editingElement ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={editingElement.vehicleId}/> : null}
         </>
 };
 

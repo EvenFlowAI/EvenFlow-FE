@@ -161,7 +161,6 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
     }, [scProfile, vehicleDmsId, open, pageIndex])
 
     const onCancel = () => {
-        // todo clear data?
         onClose();
     }
 
