@@ -156,9 +156,7 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
 
     useEffect(() => {
         if (scProfile && vehicleDmsId && open) {
-            // todo real id of service center
-            // dispatch(loadRepairHistory(scProfile.id, vehicleDmsId, pageIndex, 5));
-            dispatch(loadRepairHistory(76, vehicleDmsId, pageIndex, 4));
+            dispatch(loadRepairHistory(scProfile.id, vehicleDmsId, pageIndex, 4));
         }
     }, [scProfile, vehicleDmsId, open, pageIndex])
 
@@ -170,7 +168,7 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
     const onLoadMore = () => {
         const index = pageIndex + 1;
         setPageIndex(index);
-        dispatch(loadMoreRepairHistory(76, vehicleDmsId, index, 4))
+        scProfile && dispatch(loadMoreRepairHistory(scProfile.id, vehicleDmsId, index, 4))
     }
 
     return (

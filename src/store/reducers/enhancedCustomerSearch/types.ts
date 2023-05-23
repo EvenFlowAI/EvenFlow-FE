@@ -15,6 +15,7 @@ export interface ICustomerByName {
     year: number;
     mileage?: number|null;
     appointmentHashKey?: string;
+    customerHasOrders?: boolean;
 }
 
 export interface IRepairOrderPart {

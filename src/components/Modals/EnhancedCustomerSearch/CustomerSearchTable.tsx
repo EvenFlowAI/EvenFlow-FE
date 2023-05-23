@@ -5,6 +5,7 @@ import {ReactComponent as Update} from "../../../assets/img/editAppointment.svg"
 import {ReactComponent as Edit} from "../../../assets/img/editIcon.svg";
 import {ReactComponent as EditDisabled} from "../../../assets/img/editAppointmentDisabled.svg";
 import {ReactComponent as Search} from "../../../assets/img/searchInfoIcon.svg";
+import {ReactComponent as SearchDisabled} from "../../../assets/img/searchInfoIconDisabled.svg";
 import {
     Button,
     IconButton,
@@ -271,13 +272,19 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                                         </HtmlTooltip>
                                         : <IconButton style={{padding: 4}} disabled><EditDisabled/></IconButton>
                                     }
-                                    <HtmlTooltip title="View Repair History">
-                                        <IconButton
+                                    {customer.customerHasOrders
+                                        ? <HtmlTooltip title="View Repair History">
+                                            <IconButton
+                                                style={{padding: 4}}
+                                                onClick={() => onViewRepairHistory()}>
+                                                <Search/>
+                                            </IconButton>
+                                        </HtmlTooltip>
+                                        : <IconButton
                                             style={{padding: 4}}
-                                            onClick={() => onViewRepairHistory()}>
-                                            <Search/>
-                                        </IconButton>
-                                    </HtmlTooltip>
+                                            disabled>
+                                            <SearchDisabled/>
+                                        </IconButton>}
                                     <HtmlTooltip title="Edit Customer Information">
                                         <IconButton
                                             style={{padding: 4}}
