@@ -68,9 +68,10 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
     }, [props.open, selectedSC])
 
     useEffect(() => {
-        setPrimaryMethod( advisorAssignment.primaryMethod ?? null);
-        setSecondaryMethod(advisorAssignment.secondaryMethod ?? null);
-        setNoAssignment(advisorAssignment.primaryMethod === null && advisorAssignment.secondaryMethod === null);
+        const {primaryMethod, secondaryMethod} = advisorAssignment;
+        setPrimaryMethod( primaryMethod ?? null);
+        setSecondaryMethod(secondaryMethod ?? null);
+        setNoAssignment((primaryMethod === null || primaryMethod === undefined) && (secondaryMethod === null || secondaryMethod === undefined));
     }, [advisorAssignment])
 
     const onCancel = () => {
