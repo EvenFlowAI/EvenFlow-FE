@@ -41,7 +41,6 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         allCategories,
         userType,
         isAdditionalServices,
-        consultants
     ] = useSelector(({appointmentFrame, appointment, categories}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
@@ -53,7 +52,6 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         categories.allCategories,
         appointmentFrame.userType,
         appointmentFrame.isAdditionalServices,
-        appointmentFrame.consultants,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
@@ -153,7 +151,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
                 // required={scProfile?.isCommentRequired}
                 placeholder={t("Describe what`s going on")}
             />
-            <Actions onBack={handleBack} onNext={onSubmit} />
+            <Actions onBack={handleBack} onNext={onSubmit} nextLabel={t("Next")}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isOpen}/>
             <AddCommentPrompt open={isErrorOpen} onClose={onErrorClose}/>
         </StepWrapper>

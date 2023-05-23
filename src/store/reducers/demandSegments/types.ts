@@ -40,8 +40,35 @@ export interface IUnplannedDemandForm {
     day: EDay;
     optimizerSetting: number;
 }
+
+export interface IUnplannedDemandBySlot {
+    id: number;
+    day: EDay;
+    start: string;
+    end: string;
+    amount: number|string;
+}
+
 export interface IUnplannedDemandRequest {
     items: IUnplannedDemandForm[];
     serviceCenterId: number;
+    podId?: number;
+}
+
+export interface IUnplannedDemandSlotsRequest {
+    serviceCenterId: number;
+    day: EDay;
+    podId?: number;
+}
+
+export type TUnplannedSlot = {
+    id: number;
+    amount: number;
+}
+
+export interface IUnplannedSlotUpdateData {
+    serviceCenterId: number;
+    day: EDay;
+    items: TUnplannedSlot[]
     podId?: number;
 }

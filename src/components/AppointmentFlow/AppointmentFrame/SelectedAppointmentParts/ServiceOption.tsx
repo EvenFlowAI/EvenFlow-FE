@@ -9,7 +9,7 @@ import {selectAppointment, selectServiceValetAppointment} from "../../../../stor
 import {
     setServiceType,
     setServiceTypeOption,
-    setSideBarSteps
+    setSideBarSteps, setTransportation
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 
 const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
@@ -54,6 +54,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     }
 
     const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+        dispatch(setTransportation(null));
         if (e.target.value === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));
         } else {

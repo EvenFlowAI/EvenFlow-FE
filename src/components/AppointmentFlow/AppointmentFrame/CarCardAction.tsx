@@ -1,6 +1,6 @@
 import {ILoadedVehicle} from "../../../api/types";
 import {TArgCallback, TCallback} from "../../../types/types";
-import React, {useCallback, useMemo, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -49,7 +49,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
 
     const handleMenuItemClick = useCallback((event: any, index:number) => {
         setSelectedIndex(index);
-        setOpen(false);
+       setOpen(false);
         onAddNewAppointment(car);
     }, [car]);
 
@@ -57,7 +57,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
         if (anchorRef.current && anchorRef.current?.contains(event?.target as Node)) {
             return;
         }
-        setOpen(false);
+       setOpen(false);
     }, [anchorRef])
 
     const hasAppointments = useMemo(() => Boolean(car.appointmentHashKeys.length), [car]);
@@ -72,6 +72,11 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
         onSelectCar(car);
     }, [hasAppointments, car, onNext, clearData])
 
+    const onMenuClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation()
+        setOpen(true)
+    }
+
     return <ActionButtons>
         <ButtonGroup variant="contained" color="primary" ref={anchorRef}>
             <Button
@@ -81,7 +86,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
             </Button>
             {hasAppointments
                 ? <Button
-                    onClick={() => setOpen(true)}
+                    onClick={onMenuClick}
                     size="small"
                     color="primary"
                     style={hasAppointments ? {backgroundColor: "#27AE60"} : {}}>
@@ -93,7 +98,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
             open={open}
             anchorEl={anchorRef.current}
             placement={"bottom-end"}
-            role={undefined}
+            role="presentation"
             transition disablePortal>
             {({ TransitionProps, placement }) => (
                 <Grow
@@ -124,4 +129,4 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
     </ActionButtons>
 };
 
-export default CarCardAction;
+export default React.memo(CarCardAction);

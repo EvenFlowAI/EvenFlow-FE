@@ -5,6 +5,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {EMaintenanceOptionType} from "../../../../api/types";
+import {useTranslation} from "react-i18next";
 
 const PriceWrapper = styled(({isUpsellPrice, isShowPriceDetails, isSelected, ...props}) =>
     (<div {...props}/>))<Theme, {isShowPriceDetails: boolean, isUpsellPrice?: boolean, isSelected: boolean}>(
@@ -21,7 +22,7 @@ const PriceWrapper = styled(({isUpsellPrice, isShowPriceDetails, isSelected, ...
             alignItems: 'center',
             background: isUpsellPrice ?'#FFD966' : '#3E3E40',
             color: isUpsellPrice ? '#202021' : '#FFFFFF',
-            padding: '10px 0 10px 25px',
+            padding: '10px 0 10px 0',
         },
         '& .text': {
             display: 'flex',
@@ -68,6 +69,8 @@ type TProps = {
     upsellPrice?:number,
     type: EMaintenanceOptionType,
     handleClick: (type: EMaintenanceOptionType, packagePricingType: EPackagePricingType) => void,
+    withUpsells?: boolean;
+    totalMaintenanceValue: number;
 }
 
 const TotalPriceMobile: React.FC<TProps> = ({
@@ -77,10 +80,13 @@ const TotalPriceMobile: React.FC<TProps> = ({
                                                 text,
                                                 price,
                                                 complimentaryPrice,
-                                                upsellPrice
-}) => {
+                                                upsellPrice,
+                                                withUpsells,
+                                                totalMaintenanceValue,
+                                            }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {selectedPackage, packagePricingType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {t} = useTranslation();
 
     const selected = useMemo(() => {
         return type === selectedPackage?.type
@@ -90,10 +96,11 @@ const TotalPriceMobile: React.FC<TProps> = ({
     }, [type, selectedPackage, packagePricingType, isUpsellPrice]);
 
     const showDetails = Boolean(scProfile?.isShowPriceDetails && complimentaryPrice && complimentaryPrice > 0);
+    const defaultString = `${t("Total")} (${t("excluding taxes & fees")})`;
 
     const prevPrice = useMemo(() => scProfile?.isRoundPrice
-            ? price + (complimentaryPrice ?? 0)
-            : (price + (complimentaryPrice ?? 0)).toFixed(2), [scProfile, price, complimentaryPrice]);
+        ? Number(totalMaintenanceValue) + (complimentaryPrice ?? 0)
+        : (Number(totalMaintenanceValue) + (complimentaryPrice ?? 0)).toFixed(2), [scProfile, price, complimentaryPrice, totalMaintenanceValue]);
     const uniquePrice = useMemo(() => scProfile?.isRoundPrice
         ? price
         : price.toFixed(2), [scProfile, price]);
@@ -114,12 +121,12 @@ const TotalPriceMobile: React.FC<TProps> = ({
             <div className="radio">
                 {selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}
             </div>
-            <div className="text">{text}</div>
+            <div className="text">{text && withUpsells ? text : isUpsellPrice ? "" : defaultString}</div>
             <div className="price">
                 {showDetails ?
                     <React.Fragment>
-                    <div className="prevPrice">${isUpsellPrice ? upsellPrevPrice : prevPrice}</div>
-                    <div className="currentPrice">${isUpsellPrice ? upsellUniquePrice : uniquePrice}</div>
+                        <div className="prevPrice">${isUpsellPrice ? upsellPrevPrice : prevPrice}</div>
+                        <div className="currentPrice">${isUpsellPrice ? upsellUniquePrice : uniquePrice}</div>
                     </React.Fragment>
                     : <div className="uniquePrice">
                         ${isUpsellPrice ? upsellUniquePrice : uniquePrice}

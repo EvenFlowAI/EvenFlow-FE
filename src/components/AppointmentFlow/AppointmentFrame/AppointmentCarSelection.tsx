@@ -37,14 +37,33 @@ const Info = styled('div')({
 });
 
 const Arrow = styled("span")<Theme, {disabled?: boolean}>(({theme, disabled}) => ({
+    position: "relative",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     width: 40,
     height: 40,
     cursor: "pointer",
-    border: "1px solid #DADADA",
-    opacity: disabled ? .4 : 1
+    border: `1px solid ${disabled ? "#DADADA" : "#91CFF7"}`,
+    backgroundColor: disabled ? "#DADADA" : "#E5F5FF",
+    color: "#202021",
+    opacity: disabled ? 0.4 : 1,
+    "&:hover": {
+        border: `1px solid ${disabled ? "#DADADA" : "#E5F5FF"}`,
+        backgroundColor: disabled ? "#DADADA" :  "#91CFF7",
+    },
+    "& .text": {
+        position: 'absolute',
+        bottom: -24,
+        fontSize: 12,
+        whiteSpace: 'nowrap',
+        [theme.breakpoints.down("sm")]: {
+            bottom: -40,
+            fontSize: 12,
+            whiteSpace: 'normal',
+            textAlign: 'center',
+        }
+    }
 }));
 
 type TProps = {
@@ -75,6 +94,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const dispatch = useDispatch();
     const {t} = useTranslation();
 
@@ -117,7 +137,6 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
 
     const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - vehiclesPerScreen;
     const prevDisabled = () => idx <= 0;
-    console.log(idx, idx + vehiclesPerScreen)
 
     const isSelected = (vehicle: ILoadedVehicle) => {
         if (!selectedVehicle) {
@@ -139,10 +158,11 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                     <>
                         <Arrow onClick={prev} disabled={prevDisabled()}>
                             <ChevronLeft />
+                            <span className="text" style={{left: isSm ? -6 : -27}}>Previous Vehicle</span>
                         </Arrow>
                         {customerLoadedData.vehicles
                             .slice(idx, idx + vehiclesPerScreen)
-                            .map(vehicle =>
+                            .map((vehicle, index) =>
                                 <CarCard
                                     onNext={onNext}
                                     onSelectCar={onSelectCar}
@@ -150,10 +170,11 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                                     selected={isSelected(vehicle)}
                                     clearData={clearData}
                                     car={vehicle}
-                                    key={vehicle.dmsId || new Date().toISOString()}/>
+                                    key={vehicle.dmsId || new Date().toISOString() + index}/>
                             )}
                         <Arrow onClick={next} disabled={nextDisabled()}>
                             <ChevronRight />
+                            <span className="text" style={{left: isSm ? -4 : -13}}>Next Vehicle</span>
                         </Arrow>
                     </> : <p>{t("No vehicles present")}</p>
                 }
@@ -164,6 +185,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
             <Actions
                 hideNext
                 onBack={onBack}
+                nextLabel={t("Next")}
                 onNext={onNext}
                 nextDisabled={!selectedVehicle
                     || !checkSelectedCar(selectedVehicle, customerLoadedData?.vehicles)}

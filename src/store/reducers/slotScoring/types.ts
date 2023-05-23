@@ -1,3 +1,5 @@
+import {EDayOfWeek} from "../offers/types";
+
 export enum EProximityType {
     Closest,
     Earliest,

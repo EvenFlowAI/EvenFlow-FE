@@ -206,7 +206,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
                 modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
             },
-            transportationOptionId: appointmentFrame.transportation?.id ?? null,
+            transportationOptionId: appointmentFrame.serviceTypeOption?.transportationOption?.id
+                ?? appointmentFrame.transportation?.id
+                ?? null,
             slot: appointment.appointment?.id.split("|")[1] || "00:00:00",
             serviceRequestIds: collectServiceRequestIds(
                 appointmentFrame.service,
@@ -268,7 +270,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     {t("View itemized fees of services")}
                 </div>
                 <ServiceType/>
-                {currentConfig?.transportationNeeds && appointmentFrame.transportation
+                {appointmentFrame.transportation || appointmentFrame.serviceTypeOption?.transportationOption || currentConfig?.advisorSelection
                     ? <Review/>
                     : null}
             </div>

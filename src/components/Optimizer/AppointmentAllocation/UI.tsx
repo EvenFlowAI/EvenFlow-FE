@@ -45,12 +45,15 @@ type TSaveEditProps = {
     onCancel: () => void;
     isEdit: boolean;
     isSaving: boolean;
+    isLowerCase?:boolean;
 }
-export const SaveEditBlock: React.FC<TSaveEditProps> = ({isEdit, isSaving, onEdit, onCancel, onSave}) => {
+export const SaveEditBlock: React.FC<TSaveEditProps> = ({isEdit, isSaving, onEdit, onCancel, onSave, isLowerCase}) => {
     if (!isEdit) {
         return <Button
             onClick={onEdit}
-            color='primary'>
+            color='primary'
+            style={{textTransform: isLowerCase ? "none" : "uppercase"}}
+        >
             Edit
         </Button>
     } else if (isSaving) {
@@ -60,11 +63,13 @@ export const SaveEditBlock: React.FC<TSaveEditProps> = ({isEdit, isSaving, onEdi
         <Button
             onClick={onCancel}
             color="secondary"
+            style={{textTransform: isLowerCase ? "none" : "uppercase"}}
         >
             Cancel
         </Button>
         <Button
             onClick={onSave}
+            style={{textTransform: isLowerCase ? "none" : "uppercase"}}
             color="primary"
         >
             Save
