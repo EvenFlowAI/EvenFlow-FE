@@ -1,5 +1,6 @@
 export interface ICustomerByName {
     customerId: number;
+    customerInternalId: number;
     lastName: string;
     firstName: string;
     cellPhone: string;
@@ -7,6 +8,7 @@ export interface ICustomerByName {
     email: string;
     vehicleId: string;
     vehicleDmsId: string;
+    vehicleInternalId: number;
     address: string;
     city: string;
     state: string;
