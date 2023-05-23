@@ -1,7 +1,8 @@
 import React, {useCallback} from 'react';
 import {
+    Button,
     styled,
-    Theme
+    Theme, withStyles
 } from "@material-ui/core";
 import carImage from '../../../assets/img/car_icon.svg';
 import {ILoadedVehicle} from "../../../api/types";
@@ -10,6 +11,8 @@ import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/action
 import {TArgCallback, TCallback} from "../../../types/types";
 import {useTranslation} from "react-i18next";
 import CarCardAction from "./CarCardAction";
+import {useCurrentUser, useModal} from "../../../utils/hooks";
+import VehicleRepairHistory from "../../Modals/VehicleRepairHistory/VehicleRepairHistory";
 
 type TProps = {
     car: ILoadedVehicle;
@@ -18,6 +21,7 @@ type TProps = {
     clearData: () => void;
     onNext: TCallback;
     onSelectCar: TArgCallback<ILoadedVehicle>;
+    hasOrders?: boolean;
 }
 const Wrapper = styled((({active, ...props}) => (<div {...props}/>)))<Theme, {active?: boolean}>(({theme}) => ({
     display: "flex",
@@ -40,6 +44,12 @@ const Wrapper = styled((({active, ...props}) => (<div {...props}/>)))<Theme, {ac
         maxWidth: '50%',
     }
 }));
+
+const CarDataWithBtn = styled('div')({
+    display: 'flex',
+    justifyContent: "space-between",
+    alignItems: 'flex-start'
+})
 const CarInfo = styled('ul')({
     fontSize: 20,
     listStyle: "none",
@@ -53,6 +63,15 @@ const CarInfo = styled('ul')({
     }
 });
 
+const RepairBtn = withStyles({
+    root: {
+        textTransform: "none",
+        textDecoration: "underline",
+        fontSize: 14,
+        fontWeight: 600
+    }
+})(Button)
+
 export const CarCard: React.FC<TProps> = ({
     onNext,
     car,
@@ -60,9 +79,12 @@ export const CarCard: React.FC<TProps> = ({
     onAddNewAppointment,
     clearData,
                                               onSelectCar,
+    hasOrders,
 }) => {
     const dispatch = useDispatch();
     const {t} = useTranslation();
+    const currentUser = useCurrentUser();
+    const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
 
     const onClick = useCallback(() => {
         dispatch(setVehicle(car));
@@ -75,10 +97,13 @@ export const CarCard: React.FC<TProps> = ({
             onClick={onClick}
             style={{border: `2px solid ${selected ? '#DADADA' : 'transparent'}`}}>
             <img src={carImage} alt="Car"/>
-            <CarInfo>
-                <li>{car.year} {car.make} {car.model} {car?.modelDetails ?? ''}</li>
-                <li>{t("VIN")}: <span>{car.vin}</span></li>
-            </CarInfo>
+            <CarDataWithBtn>
+                <CarInfo>
+                    <li>{car.year} {car.make} {car.model} {car?.modelDetails ?? ''}</li>
+                    <li>{t("VIN")}: <span>{car.vin}</span></li>
+                </CarInfo>
+                {currentUser && hasOrders ? <RepairBtn variant="text" onClick={onOpenHistory}>Repair Order History</RepairBtn> : null}
+            </CarDataWithBtn>
             <CarCardAction
                 onSelectCar={onSelectCar}
                 onAddNewAppointment={onAddNewAppointment}
@@ -87,6 +112,7 @@ export const CarCard: React.FC<TProps> = ({
                 clearData={clearData}
                 onNext={onNext}
             />
+            {car.dmsId ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={car.dmsId}/> : null}
         </Wrapper>
     );
 };

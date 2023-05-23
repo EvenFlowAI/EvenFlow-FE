@@ -166,6 +166,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                             .slice(idx, idx + vehiclesPerScreen)
                             .map((vehicle, index) =>
                                 <CarCard
+                                    hasOrders={vehicle.hasOrders}
                                     onNext={onNext}
                                     onSelectCar={onSelectCar}
                                     onAddNewAppointment={onAddNewCarAppointment}

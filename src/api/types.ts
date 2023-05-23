@@ -136,6 +136,7 @@ export interface ILoadedVehicle  extends IVehicle {
     dmsId?: string;
     warrantyExpiration?: ParsableDate;
     appointmentHashKeys: string[];
+    hasOrders?: boolean;
 }
 
 export interface IPasswordRecoveryData {
