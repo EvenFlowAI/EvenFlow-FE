@@ -43,7 +43,7 @@ type TEnhancedCustomerSearchProps = DialogProps & {onOpenNotFound: TCallback, ha
 
 const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, onClose, onOpenNotFound, handleNew}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {isLoading} = useSelector((state: RootState) => state.customers);
+    const {isLoading, pageData} = useSelector((state: RootState) => state.customers);
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
@@ -73,7 +73,7 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
         clearForm()
         await dispatch(setPaging({numberOfPages: 0, numberOfRecords: 0}));
         await dispatch(setPageData(defaultPageData))
-        onClose();
+        await onClose();
     }, [clearForm])
 
     const onSuccess = (count: number) => {
