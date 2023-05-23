@@ -26,7 +26,7 @@ import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
-import {selectAppointment, selectServiceValetAppointment, selectSR} from "../appointment/actions";
+import {getSlotsConsultantId, selectAppointment, selectServiceValetAppointment, selectSR} from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
@@ -108,7 +108,9 @@ export const loadConsultants = (data: IConsultantsRequestData, onEmptyList: () =
         Api.endpoints.ServiceConsultants.GetByQuery, {data})
         .then(({data: {result}}) => {
             dispatch(setConsultants(result));
-            if (!result.length) onEmptyList();
+            if (!result.length) {
+                onEmptyList()
+            }
         })
         .catch(err => console.log(err))
 }
@@ -196,6 +198,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(selectSR(null));
     dispatch(setTiming(null));
     dispatch(setAdvisor(null));
+    dispatch(getSlotsConsultantId(null));
     dispatch(setTransportation(null));
     dispatch(setRecallsAreShown(false));
     dispatch(setSelectedRecalls([]))
@@ -203,6 +206,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setFrameDescription(''));
     dispatch(setPackagePricingType(null));
     dispatch(setPackageEMenuType(null));
+    dispatch(setSideBarSteps([]));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {

@@ -27,7 +27,7 @@ export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
     useEffect(() => {
         if (customerLoadedData) {
             dispatch(setCustomer({
-                fullName: customerLoadedData?.fullName ?? "",
+                fullName: customerLoadedData?.fullName ?? `${customerLoadedData.firstName} ${customerLoadedData.lastName}`,
                 email: customerLoadedData?.emails?.length ? customerLoadedData.emails[0] : "",
                 phoneNumber: customerLoadedData?.phoneNumbers?.length ? customerLoadedData.phoneNumbers[0] : "",
                 city: customerLoadedData?.city,

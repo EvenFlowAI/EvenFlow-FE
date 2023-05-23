@@ -32,7 +32,7 @@ type TProps = {
 }
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelectedCategory}) => {
     const {subService, categoriesIds, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const [loading, setLoading] = useState<boolean>(false);
     const [services, setServices] = useState<IServiceCategory[]>([]);
     const dispatch = useDispatch();
@@ -109,12 +109,27 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
         onBack();
     }
 
+    const getCardState = (card: IServiceCategory): boolean => {
+        // todo refactor double code
+        if (card.type === EServiceCategoryType.IndividualServices) {
+            return Boolean(services
+                .find(cat => cat.type === EServiceCategoryType.IndividualServices
+                    && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
+        }
+        if (card.type === EServiceCategoryType.Diagnose) {
+            return Boolean(services
+                .find(cat => cat.type === EServiceCategoryType.Diagnose
+                    && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
+        }
+        return categoriesIds?.includes(card.id)
+    }
+
     return (
         <StepWrapper>
             {!loading ? <CardsWrapper>
                 {services.map(card => {
                     return <ServiceCard
-                        selected={categoriesIds?.includes(card.id)}
+                        selected={getCardState(card)}
                         active={subService?.id === card.id}
                         onSelect={handleSelectCard(card)}
                         card={card}
