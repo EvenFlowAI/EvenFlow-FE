@@ -12,7 +12,6 @@ import CustomerSearchResults from "./CustomerSearchResults";
 import {loadCustomersByName, setPageData, setPaging} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {RootState} from "../../../store/rootReducer";
 import {defaultPageData} from "../../../store/reducers/defaultInitials";
-import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
 
 const useStyles = makeStyles(theme => ({
     buttonsWrapper: {

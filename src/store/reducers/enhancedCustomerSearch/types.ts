@@ -6,6 +6,7 @@ export interface ICustomerByName {
     homePhone: string;
     email: string;
     vehicleId: string;
+    vehicleDmsId: string;
     address: string;
     city: string;
     state: string;
