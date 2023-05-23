@@ -20,7 +20,7 @@ export interface ICustomerByName {
 export interface IRepairOrderPart {
     id: string;
     description: string;
-    quantity: number;
+    qantity: number;
     price: number;
 }
 
@@ -51,10 +51,10 @@ export interface IRepairOrder {
     status: string;
     comments: string[];
     technicianLaborTime: number;
-    totalPrice: TRepairPrice;
-    warrantyPrice: TRepairPrice;
-    customerPayPrice: TRepairPrice;
-    miscPrice: TRepairPrice;
+    totalPrice: number;
+    warrantyPrice:number;
+    customerPayPrice: number;
+    miscPrice: number;
     services: IRepairOrderService[];
     parts: IRepairOrderPart[];
 }

@@ -7,7 +7,7 @@ import {
     setLoading,
     setPageData,
     setPaging,
-    setRepairHistoryLoading
+    setRepairHistoryLoading, setRepairHistoryPaging
 } from "./actions";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 
@@ -18,6 +18,7 @@ type TCustomerSearchState = {
     paging: IPagingResponse;
     pageData: IPageRequest;
     repairHistory: IRepairHistory|null;
+    repairHistoryPaging: IPagingResponse;
     repairHistoryLoading: boolean;
 }
 const initialState: TCustomerSearchState = {
@@ -26,6 +27,7 @@ const initialState: TCustomerSearchState = {
     currentCustomer: null,
     paging: {numberOfPages: 0, numberOfRecords: 0},
     pageData: {pageIndex: 0, pageSize: 10},
+    repairHistoryPaging: {numberOfPages: 0, numberOfRecords: 0},
     repairHistory: null,
     repairHistoryLoading: false,
 }
@@ -51,5 +53,8 @@ export const customerReducer = createReducer(initialState, builder => builder
     })
     .addCase(setRepairHistoryLoading, (state, {payload}) => {
         return {...state, repairHistoryLoading: payload}
+    })
+    .addCase(setRepairHistoryPaging, (state, {payload}) => {
+        return {...state, repairHistoryPaging: payload}
     })
 )

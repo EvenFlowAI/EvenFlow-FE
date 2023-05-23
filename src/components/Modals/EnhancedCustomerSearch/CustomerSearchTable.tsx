@@ -354,7 +354,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                 onChangeRowsPerPage={handleChangeRows}
                 rowsPerPage={pageData.pageSize}/>
                : null }
-            <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId="D783895"/>
+            <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId="D1068150"/>
         </>
 };
 
