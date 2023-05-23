@@ -4,6 +4,9 @@ import {DialogProps} from "../types";
 import CustomerSearchResultsActions from "./CustomerSearchResultsActions";
 import {TCallback} from "../../../types/types";
 import CustomerSearchTable from "./CustomerSearchTable";
+import {setPageData, setPaging} from "../../../store/reducers/enhancedCustomerSearch/actions";
+import {defaultPageData} from "../../../store/reducers/defaultInitials";
+import {useDispatch} from "react-redux";
 
 type TCustomerSearchResultsProps = DialogProps & {
     onClearSearchForm: TCallback;
@@ -12,7 +15,11 @@ type TCustomerSearchResultsProps = DialogProps & {
 };
 
 const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({loadData, open, onClose, handleNew, onClearSearchForm}) => {
-    const onCancel = () => {
+    const dispatch = useDispatch();
+
+    const onCancel = async () => {
+        await dispatch(setPaging({numberOfPages: 0, numberOfRecords: 0}));
+        await dispatch(setPageData(defaultPageData))
         onClose()
     }
 
