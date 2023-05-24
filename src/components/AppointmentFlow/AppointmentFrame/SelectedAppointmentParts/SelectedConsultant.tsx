@@ -33,7 +33,6 @@ const SelectedConsultant: React.FC<TSelectedConsultantProps> = ({currentConfig})
         dispatch(setAdvisor(consultant ? consultant : null))
     }
 
-
     return currentConfig?.advisorSelection && consultants.length
         ? <div className={classes.selectWrapper}>
             <div className={classes.selectWrapper}>

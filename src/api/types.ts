@@ -117,6 +117,8 @@ export interface ICustomerLoadedData {
     phoneNumbers: string[];
     vehicles: ILoadedVehicle[];
     city?:string;
+    fromSearchByName?: boolean;
+    isUpdating?: boolean;
 }
 
 export interface IVehicle {
@@ -134,6 +136,7 @@ export interface ILoadedVehicle  extends IVehicle {
     dmsId?: string;
     warrantyExpiration?: ParsableDate;
     appointmentHashKeys: string[];
+    hasRepairOrders?: boolean;
 }
 
 export interface IPasswordRecoveryData {

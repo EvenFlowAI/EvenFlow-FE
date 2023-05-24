@@ -147,6 +147,7 @@ type ApiRoutes = {
     Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
     BookingFlowConfig: Record<"Get" | "Update", TApiRoute>,
     ComplimentaryServices: Record<"GetByQuery" | "Remove" | "Update" | "AddFromList" | "Create", TApiRoute>,
+    Customers: Record<"GetByName" | "Update" | "GetRepairHistory", TApiRoute>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
@@ -179,7 +180,8 @@ type ApiRoutes = {
         | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth"
         | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate"
         | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType" | "UpdatePackagePriceDetails"
-        | "UpdateDefaultOpsCode" | "UpdateDefaultMake" | "UpdatePresentedPackageOptions" | "UpdateEngineTypeFieldName", TApiRoute>,
+        | "UpdateDefaultOpsCode" | "UpdateDefaultMake" | "UpdatePresentedPackageOptions" | "UpdateEngineTypeFieldName"
+        | "GetAssignedAdvisorMethod" | "UpdateAssignedAdvisorMethod", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -279,6 +281,11 @@ export class Api {
             AddFromList: {route: "/complimentary-services/add-service-request", method: "post"},
             Update: {route: "/complimentary-services/{id}", method: "put"},
             Remove: {route: "/complimentary-services/{id}", method: "delete"},
+        },
+        Customers: {
+            GetByName: {route: "/customers/vehicles/by-customer-name", method: "get"},
+            Update: {route: "/customers/vehicles", method: "put"},
+            GetRepairHistory: {route: "/customers/vehicles/repair-orders", method: "get"}
         },
         Dealerships: {
             Create: {route: "/dealerships", method: "post"},
@@ -449,6 +456,8 @@ export class Api {
             UpdateDefaultMake: {route: "/service-center-settings/{id}/default-vehicle-make", method: "patch"},
             UpdatePresentedPackageOptions: {route: "/service-centers/{id}/maintenance-package-option-types", method: "put"},
             UpdateEngineTypeFieldName: {route: "/service-centers/{id}/engine-type-field-name", method: "patch"},
+            GetAssignedAdvisorMethod: {route: "/service-center-settings/{id}/advisor-assignment", method: "get"},
+            UpdateAssignedAdvisorMethod: {route: "/service-center-settings/{id}/advisor-assignment", method: "put"},
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},

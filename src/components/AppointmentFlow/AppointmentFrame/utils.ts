@@ -43,9 +43,10 @@ export const checkSelectedCar = (vehicle: ILoadedVehicle|null, vehicles?: ILoade
     }
     return Boolean(vehicles.find(v => {
         if (vehicle.vin && v.vin) {
-            return vehicle.vin === v.vin;
+            return vehicle?.mileage && vehicle.vin === v.vin;
         }
-        return vehicle.year === v.year
+        return vehicle?.mileage
+            && vehicle.year === v.year
             && vehicle.make === v.make
             && vehicle.model === v.model;
     }))
