@@ -313,7 +313,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                         handleNext();
                     }
                 }
-            }
+            } else handleNext();
         } else {
             handleNext()
         }
