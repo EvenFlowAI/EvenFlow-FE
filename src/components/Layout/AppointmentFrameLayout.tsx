@@ -153,6 +153,7 @@ export const AppointmentFrameLayout = () => {
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory|null>(null);
+    const [needToShowServiceSelection, setNeedToShowServiceSelection] = useState<boolean>(false)
 
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -163,10 +164,6 @@ export const AppointmentFrameLayout = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const {t} = useTranslation();
-
-    let needToShowServiceSelection = useMemo(() => Boolean(userType === EUserType.Existing
-        && (!!firstScreenOptions.length)),
-        [userType, firstScreenOptions]);
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
     const isDealerBuilt = useMemo(() => (scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt), [scProfile]);
@@ -229,7 +226,7 @@ export const AppointmentFrameLayout = () => {
         return needToShowService;
     }
 
-    const onUpdateAppointment = useCallback(async(car: ILoadedVehicle, needToShowService: boolean) => {
+    const onUpdateAppointment = useCallback(async(car: ILoadedVehicle) => {
         const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
         const trimmedKey = getTrimmedKey(key);
         setLoadingCar(true);
@@ -248,7 +245,8 @@ export const AppointmentFrameLayout = () => {
                     dispatch(setPackage(data.maintenancePackageOption))
                 }
             }
-            needToShowService = handleServiceTypeOption(data);
+            let needToShowService = handleServiceTypeOption(data);
+            setNeedToShowServiceSelection(needToShowService)
             if (needToShowService) {
                 handleServiceTypeSelection()
             } else {
@@ -259,7 +257,7 @@ export const AppointmentFrameLayout = () => {
         } finally {
             setLoadingCar(false);
         }
-    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile, handleServiceTypeOption])
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile, handleServiceTypeOption, needToShowServiceSelection])
 
     useEffect(() => {
         trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
@@ -267,6 +265,7 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         window.addEventListener('beforeunload', handleLogin)
+        return () => window.removeEventListener('beforeunload', handleLogin)
     }, [handleLogin])
 
     useEffect(() => {
@@ -302,13 +301,17 @@ export const AppointmentFrameLayout = () => {
     }, [sessionStorage])
 
     useEffect(() => {
+        setNeedToShowServiceSelection(Boolean(userType === EUserType.Existing && (!!firstScreenOptions.length)));
+    }, [userType, firstScreenOptions])
+
+    useEffect(() => {
         if (selectedVehicle && customerLoadedData) {
             if (customerLoadedData.fromSearchByName && customerLoadedData.isUpdating) {
                 if (!selectedVehicle?.mileage) dispatch(setSideBarSteps([]));
-                onUpdateAppointment(selectedVehicle, needToShowServiceSelection).then()
+                onUpdateAppointment(selectedVehicle).then()
             }
         }
-    }, [needToShowServiceSelection, customerLoadedData, selectedVehicle])
+    }, [customerLoadedData, selectedVehicle])
 
     const handleNewCustomer = () => {
         const c = getBlankCustomer();
@@ -417,19 +420,17 @@ export const AppointmentFrameLayout = () => {
 
     const handleServiceTypeSelection = useCallback(() => {
         if (needToShowServiceSelection) {
-            needToShowServiceSelection = false;
+            setNeedToShowServiceSelection(false);
             dispatch(setWelcomeScreenView('serviceSelect'))
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         }
-    }, [history])
+    }, [history, needToShowServiceSelection])
 
     const onSelectCar = useCallback(async (car: ILoadedVehicle) => {
         dispatch(selectSR(null));
         clearAppointmentData()
-        let needToShowService: boolean = needToShowServiceSelection;
-
         if (car?.appointmentHashKeys.length) {
-            await onUpdateAppointment(car, needToShowService)
+            await onUpdateAppointment(car)
         } else {
             if (needToShowServiceSelection) {
                 handleServiceTypeSelection()
@@ -437,7 +438,7 @@ export const AppointmentFrameLayout = () => {
                 handleSetScreen(getNextScreen());
             }
         }
-    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile, onUpdateAppointment]);
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile, onUpdateAppointment, needToShowServiceSelection]);
 
     const handleSelectCar = useCallback( () => {
         selectedVehicle && onSelectCar(selectedVehicle)
@@ -450,6 +451,7 @@ export const AppointmentFrameLayout = () => {
                 loading={loadingCar}
                 clearData={clearData}
                 onAddNew={handleAddNewVehicle}
+                setNeedToShowServiceSelection={setNeedToShowServiceSelection}
                 onAddNewCarAppointment={handleAddNewCarAppointment}
                 needToShowServiceSelection={needToShowServiceSelection}
                 handleSetScreen={handleSetScreen}

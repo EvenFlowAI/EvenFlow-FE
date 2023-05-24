@@ -179,12 +179,14 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
     const onCreateNewForCar = async (item: ICustomerByName) => {
         await dispatch(clearAppointmentData());
         await setCustomerData(item, false);
+        await dispatch(setUserType(EUserType.Existing));
         await dispatch(setWelcomeScreenView("serviceSelect"));
         await onClose()
     }
 
     const onUpdateAppForCar = (item: ICustomerByName) => {
         if (scProfile) {
+            dispatch(setUserType(EUserType.Existing));
             const id = encodeSCID(scProfile.id)
             setCustomerData(item, true).then(() => {
                 history.push(`/f/appointment/${id}`)
