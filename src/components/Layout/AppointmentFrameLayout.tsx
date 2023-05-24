@@ -164,7 +164,7 @@ export const AppointmentFrameLayout = () => {
     const showError = useException();
     const {t} = useTranslation();
 
-    const needToShowServiceSelection = useMemo(() => Boolean(userType === EUserType.Existing
+    let needToShowServiceSelection = useMemo(() => Boolean(userType === EUserType.Existing
         && (!!firstScreenOptions.length)),
         [userType, firstScreenOptions]);
 
@@ -212,6 +212,23 @@ export const AppointmentFrameLayout = () => {
         dispatch(setCurrentFrameScreen(screen));
     }, []);
 
+    const handleServiceTypeOption = (data:IAppointmentByQuery): boolean => {
+        /**
+         * We have decided to go through the flow and then to see if we should allow to user to change service type in any case
+         * And if we should to clear all the appointment data if the service type was changed from the previous one
+         **/
+        let needToShowService = needToShowServiceSelection;
+        if (data.serviceType && data.serviceTypeOption) {
+            const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
+            if (option) {
+                needToShowService = false;
+                dispatch(setServiceType(data.serviceType));
+                dispatch(setServiceTypeOption(data.serviceTypeOption));
+            }
+        }
+        return needToShowService;
+    }
+
     const onUpdateAppointment = useCallback(async(car: ILoadedVehicle, needToShowService: boolean) => {
         const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
         const trimmedKey = getTrimmedKey(key);
@@ -242,7 +259,7 @@ export const AppointmentFrameLayout = () => {
         } finally {
             setLoadingCar(false);
         }
-    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile])
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile, handleServiceTypeOption])
 
     useEffect(() => {
         trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
@@ -399,26 +416,12 @@ export const AppointmentFrameLayout = () => {
     }
 
     const handleServiceTypeSelection = useCallback(() => {
-        dispatch(setWelcomeScreenView('serviceSelect'))
-        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
-    }, [history])
-
-    const handleServiceTypeOption = (data:IAppointmentByQuery): boolean => {
-        /**
-         * We have decided to go through the flow and then to see if we should allow to user to change service type in any case
-         * And if we should to clear all the appointment data if the service type was changed from the previous one
-         **/
-        let needToShowService = needToShowServiceSelection;
-        if (data.serviceType && data.serviceTypeOption) {
-            const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
-            if (option) {
-                needToShowService = false;
-                dispatch(setServiceType(data.serviceType));
-                dispatch(setServiceTypeOption(data.serviceTypeOption));
-            }
+        if (needToShowServiceSelection) {
+            needToShowServiceSelection = false;
+            dispatch(setWelcomeScreenView('serviceSelect'))
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         }
-        return needToShowService;
-    }
+    }, [history])
 
     const onSelectCar = useCallback(async (car: ILoadedVehicle) => {
         dispatch(selectSR(null));
