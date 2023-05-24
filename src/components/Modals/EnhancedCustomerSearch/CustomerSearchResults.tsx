@@ -36,7 +36,7 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({loadData,
     }
 
     return (
-        <BaseModal open={open} width={1248} onClose={onCancel}>
+        <BaseModal open={open} width={1400} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>Customer Search results</DialogTitle>
             <DialogContent>
                 <CustomerSearchResultsActions
