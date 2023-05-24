@@ -85,7 +85,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                                                               needToShowServiceSelection, handleServiceTypeSelection, currentConfig, onSelectCar
                                                           }) => {
 
-    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {
         selectedVehicle,
         valueService,
@@ -135,7 +135,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         }
         dispatch(setMaintenanceDetails({ mileage: ''}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customerLoadedData, selectedVehicle]);
+    }, [customerLoadedData, selectedVehicle, scProfile]);
 
     const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - vehiclesPerScreen;
     const prevDisabled = () => idx <= 0;
