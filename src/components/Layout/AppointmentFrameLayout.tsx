@@ -25,13 +25,11 @@ import {
     getBlankCustomer,
     getBlankVehicle,
     getCustomerCache, getSlotsConsultantId,
-    loadSCProfile,
-    loadSRs,
     saveCustomerCache, selectAppointment, selectServiceValetAppointment,
     selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {decodeSCID, encodeSCID, getTracker} from "../../utils/utils";
+import {encodeSCID, getTracker} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
@@ -353,11 +351,6 @@ export const AppointmentFrameLayout = () => {
             setCurrentScreen("location");
         }
     }, [serviceType, customerLoadedData])
-
-    useEffect(() => {
-        dispatch(loadSCProfile(decodeSCID(id)));
-        dispatch(loadSRs(decodeSCID(id)));
-    }, [id, dispatch]);
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);

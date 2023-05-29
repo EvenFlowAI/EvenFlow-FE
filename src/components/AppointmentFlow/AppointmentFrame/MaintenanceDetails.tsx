@@ -10,7 +10,6 @@ import {
     TMaintenanceDetails
 } from "../../../store/reducers/appointmentFrameReducer/types";
 import {
-    loadMakes,
     selectService,
     setMaintenanceDetails,
     setPackage, setRecallsAreShown,
@@ -209,7 +208,6 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }, [makes, selectedVehicle])
 
     useEffect(() => {
-        dispatch(loadMakes(decodeSCID(id)));
         dispatch(loadMileage(decodeSCID(id)));
         dispatch(loadEngineType(decodeSCID(id)));
     }, [id]);
