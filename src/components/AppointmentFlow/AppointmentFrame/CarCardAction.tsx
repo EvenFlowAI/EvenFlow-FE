@@ -1,6 +1,6 @@
 import {ILoadedVehicle} from "../../../api/types";
 import {TArgCallback, TCallback} from "../../../types/types";
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useMemo, useRef, useState} from "react";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -13,9 +13,9 @@ import {
     MenuList,
     Paper,
     Popper,
-    styled
 } from "@material-ui/core";
 import {MoreVert} from "@material-ui/icons";
+import {makeStyles} from "@material-ui/core/styles";
 
 type TCarActionProps = {
     car: ILoadedVehicle;
@@ -26,16 +26,22 @@ type TCarActionProps = {
     onSelectCar: TArgCallback<ILoadedVehicle>;
 }
 
-const ActionButtons = styled("div")({
-    fontSize: 20,
-    width: "100%",
-    "&>div:first-child": {
-        width: "100%"
-    },
-    "& button:first-child": {
-        flexGrow: 1
+const useStyles = makeStyles(theme => ({
+    wrapper: {
+        fontSize: 20,
+        width: "100%",
+        "&>div:first-child": {
+            width: "100%",
+            [theme.breakpoints.down("xs")]: {
+                width: 200,
+            }
+        },
+        "& button:first-child": {
+            flexGrow: 1
+        }
     }
-});
+}))
+
 const options: string[] = [
     "Schedule New Appointment"
 ];
@@ -46,6 +52,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
     const anchorRef = useRef<HTMLDivElement|null>(null);
     const {t} = useTranslation();
     const dispatch = useDispatch();
+    const classes = useStyles()
 
     const handleMenuItemClick = useCallback((event: any, index:number) => {
         setSelectedIndex(index);
@@ -77,7 +84,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
         setOpen(true)
     }
 
-    return <ActionButtons>
+    return <div className={classes.wrapper}>
         <ButtonGroup variant="contained" color="primary" ref={anchorRef}>
             <Button
                 onClick={handleSelect}
@@ -126,7 +133,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
                 </Grow>
             )}
         </Popper>
-    </ActionButtons>
+    </div>
 };
 
 export default React.memo(CarCardAction);
