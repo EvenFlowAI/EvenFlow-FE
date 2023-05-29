@@ -303,7 +303,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         return dateString;
     }, [isServiceValetApp, serviceValetAppointment, appointment])
 
-    const calendarData: TItem[] = useMemo(() => ([
+    const calendarData: TItem[] = useMemo(() => {
+        const data = [
         {
             label: t('VEHICLE DETAILS'),
             content: vehicleData,
@@ -328,7 +329,12 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             label: t('DEALERSHIP CONTACT NUMBER'),
             content: scProfile?.phoneNumber ?? '',
         }
-    ]), [vehicleData, getServiceName, getDateForCalendar, isServiceValetApp, servicesList, advisor, scProfile])
+    ];
+        if (serviceTypeOption?.type === EServiceType.MobileService) {
+            data.splice(4, 1);
+        }
+        return data
+    }, [vehicleData, getServiceName, getDateForCalendar, isServiceValetApp, servicesList, advisor, scProfile, serviceTypeOption])
 
     const handleAddToCalendar = () => {
         const date = isServiceValetApp
