@@ -1,13 +1,9 @@
-import React, {useEffect} from 'react';
-import {useParams} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {loadSCProfile} from "../../store/reducers/appointment/actions";
+import React from 'react';
 import {Container, ThemeProvider, styled} from "@material-ui/core";
 import {endUserTheme} from "../../theme/theme";
 import {EndUserBar} from "../NavBar/EndUserBar";
 import bg from "../../assets/img/confirmationBg.png";
 import { ConfirmationContent } from './ConfirmationContent';
-import {decodeSCID} from "../../utils/utils";
 
 const Wrapper = styled(Container)({
     background: `#F2F3F7 url(${bg}) top center no-repeat`,
@@ -30,15 +26,6 @@ const ContentWrapper = styled("div")({
 });
 
 export const AppointmentConfirmation = () => {
-    const {id} = useParams();
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (id) {
-            dispatch(loadSCProfile(decodeSCID(id)));
-        }
-    }, [id, dispatch]);
-
     return <ThemeProvider theme={endUserTheme}>
         <Wrapper disableGutters>
             <EndUserBar />

@@ -123,7 +123,7 @@ const CartTable = () => {
             dispatch(loadMakes(scProfile.id))
             dispatch(loadSRs(scProfile.id))
         }
-    }, [scProfile, dispatch])
+    }, [scProfile])
 
     const deleteIndService = (item: IMaintenanceItem) => {
         const services = selectedSR.filter(sr => sr !== item.id);
