@@ -5,6 +5,7 @@ import {TextField} from "../UI";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
+    clearAppointmentSteps,
     selectCategoriesIds,
     setAdditionalServicesChosen,
     setFrameDescription
@@ -14,7 +15,11 @@ import {checkSelectedCar} from "./utils";
 import {TScreen} from "../../Layout/types";
 import {useModal} from "../../../utils/hooks";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
-import {selectSRMultiple} from "../../../store/reducers/appointment/actions";
+import {
+    selectAppointment,
+    selectServiceValetAppointment,
+    selectSRMultiple
+} from "../../../store/reducers/appointment/actions";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {useTranslation} from "react-i18next";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
@@ -111,7 +116,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         } else handleNext()
     }
 
-    const handleCategories = () => {
+    const filterCategories = () => {
         let categories = [...categoriesIds];
         if (subService && categoriesIds?.includes(subService.id)) {
             categories = categoriesIds.filter(id => id !== subService?.id)
@@ -123,7 +128,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         dispatch(selectCategoriesIds(categories))
     }
 
-    const handleServiceRequests = () => {
+    const filterServiceRequests = () => {
         if (subService?.type === EServiceCategoryType.IndividualServices) {
             const diagnoseCategoryRequestsIds: number[] = allCategories
                 .find(item => item.type === EServiceCategoryType.Diagnose)
@@ -135,8 +140,11 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
     }
 
     const handleBack = () => {
-        handleCategories();
-        handleServiceRequests();
+        filterCategories();
+        filterServiceRequests();
+        dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
+        dispatch(clearAppointmentSteps("serviceNeeds"));
         handleSetScreen(screenToReturn);
     }
 

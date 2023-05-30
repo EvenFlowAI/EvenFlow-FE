@@ -79,15 +79,22 @@ export const Welcome = () => {
     useEffect(() => {
         clearStorage();
     }, []);
+
+    const listenToPopState = () => dispatch(setWelcomeScreenView("select"))
+
     useEffect(() => {
         if ((!id || !decodeSCID(id) && !scProfile?.id)) {
             window.location.href = "/";
         }
+        window.addEventListener("popstate", listenToPopState);
+        return () => window.removeEventListener("popstate", listenToPopState);
     }, [id, scProfile]);
 
     const redirect = () => {
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
-        if (scProfile?.id) {
+        if (id) {
+            history.push(route.replace(":id", id));
+        } else if (scProfile?.id) {
             history.push(route.replace(":id", encodeSCID(scProfile.id)));
         }
     }

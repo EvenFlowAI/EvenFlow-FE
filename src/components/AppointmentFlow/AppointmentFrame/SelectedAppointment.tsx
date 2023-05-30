@@ -1,9 +1,8 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {makeStyles} from "@material-ui/core/styles";
-import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import SelectedConsultant from "./SelectedAppointmentParts/SelectedConsultant";
@@ -154,10 +153,8 @@ export const DateWrapper = styled('div')(({theme}) => ({
 
 export const SelectedAppointment = () => {
     const { serviceType, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
-    const { scProfile, appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
+    const { appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
-
-    const dispatch = useDispatch();
     const classes = useSelectedAppointmentStyles();
     const theme = useTheme();
     const {t} = useTranslation();
@@ -172,10 +169,6 @@ export const SelectedAppointment = () => {
     const ancillaryPrice = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
         ? serviceValetAppointment?.price.ancillaryPrice ?? 0
         : appointment?.price.ancillaryPrice ?? 0;
-
-    useEffect(() => {
-        scProfile && dispatch(loadCategoriesByQuery(scProfile.id))
-    }, [scProfile])
 
     return (
         <div>

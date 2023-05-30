@@ -30,7 +30,7 @@ import {TScreen} from "../../Layout/types";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector";
-import {setSideBarSteps} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {clearAppointmentSteps} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 
 const Wrapper = styled('div')(({ theme }) => ({
@@ -188,19 +188,15 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         }
     }, [slots, selectedTime, appointment, serviceTypeOption, serviceValetSlots, serviceValetAppointment]);
 
-    const handleSideBar = () => {
-        const index = sideBarSteps.indexOf("appointmentSelection");
-        if (index > -1) {
-            const slicedSteps = sideBarSteps.slice(0, index + 1);
-            dispatch(setSideBarSteps(slicedSteps))
-        }
+    const clearData = () => {
+        dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
+        dispatch(clearAppointmentSteps("appointmentSelection"));
     }
 
     const updateDate = useCallback((d: moment.Moment) => {
+        clearData()
         setDate(d.startOf('day'));
-        handleSideBar();
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
         if (!d.isSame(month, 'month')) {
             setMonth(d);
         }

@@ -6,8 +6,6 @@ import {RootState} from "../../../store/rootReducer";
 import {useDebounce, useModal} from "../../../utils/hooks";
 import {
     handleSearch,
-    selectAppointment,
-    selectServiceValetAppointment,
     selectSR,
     selectSRMultiple
 } from "../../../store/reducers/appointment/actions";
@@ -21,7 +19,6 @@ import {checkSelectedCar} from "./utils";
 import ReactGA from "react-ga";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
-import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {
     selectCategoriesIds,
@@ -31,8 +28,6 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {Caption} from "../../UI/Caption";
 import {useTranslation} from "react-i18next";
-import {EOfferType} from "../../../store/reducers/offers/types";
-
 
 const Wrapper = styled('div')({
     width: "100%"
@@ -152,9 +147,9 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
     }, [search]);
     useEffect(() => {isInit.current = false}, []);
 
-    useEffect(() => {
-        if (scProfile) dispatch(loadCategoriesByQuery(scProfile.id))
-    }, [scProfile])
+    // useEffect(() => {
+    //     if (scProfile) dispatch(loadCategoriesByQuery(scProfile.id))
+    // }, [scProfile])
 
     const setInitialData = useCallback(() => {
         if (service?.type === EServiceCategoryType.IndividualServices || service?.type === EServiceCategoryType.Diagnose) {
@@ -206,8 +201,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
     const handleSelectCode = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         handleCategories(value);
         dispatch(selectSR(value ? Number(value) : null));
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
     }
 
     const goNext = () => {
