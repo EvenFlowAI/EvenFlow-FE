@@ -267,3 +267,12 @@ export const setDefaultVisitCenterOption = (): AppThunk => (dispatch, getState) 
     dispatch(setServiceType(EServiceType.VisitCenter));
     dispatch(setCurrentFrameScreen("serviceNeeds"));
 }
+
+export const clearAppointmentSteps = (screenName: TScreen): AppThunk => (dispatch, getState) => {
+    const {sideBarSteps} = getState().appointmentFrame;
+    const index = sideBarSteps.indexOf(screenName);
+    if (index > -1) {
+        const slicedSteps = sideBarSteps.slice(0, index + 1);
+        dispatch(setSideBarSteps(slicedSteps))
+    }
+}

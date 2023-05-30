@@ -6,8 +6,6 @@ import {RootState} from "../../../store/rootReducer";
 import {useDebounce, useModal} from "../../../utils/hooks";
 import {
     handleSearch,
-    selectAppointment,
-    selectServiceValetAppointment,
     selectSR,
     selectSRMultiple
 } from "../../../store/reducers/appointment/actions";
@@ -203,8 +201,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
     const handleSelectCode = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         handleCategories(value);
         dispatch(selectSR(value ? Number(value) : null));
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
     }
 
     const goNext = () => {

@@ -6,6 +6,7 @@ import {TScreen} from "../../Layout/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
+    clearAppointmentSteps,
     selectCategoriesIds,
     selectSubService,
     setAdditionalServicesChosen
@@ -24,6 +25,7 @@ import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {Routes} from "../../../config/routes";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
+import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 
 type TProps = {
     onNext: TArgCallback<TScreen>;
@@ -76,6 +78,13 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
         }
     }
 
+    const clearData = () => {
+        dispatch(setAdditionalServicesChosen(false));
+        dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
+        dispatch(clearAppointmentSteps("serviceNeeds"));
+    }
+
     const handleSubmit = (subService: IServiceCategory) => {
         if (subService) {
             setLastSelectedCategory(subService);
@@ -84,7 +93,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
             } else {
                 handleGA(subService);
                 handleCategories(subService);
-                dispatch(setAdditionalServicesChosen(false));
+                clearData();
 
                 switch (subService.type) {
                     case 2:
