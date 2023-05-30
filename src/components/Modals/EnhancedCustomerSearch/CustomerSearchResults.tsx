@@ -24,10 +24,10 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({loadData,
     }
 
     const onBack = () => {
-        onCancel();
+        onCancel().then();
     }
     const onNewSearch = () => {
-        onCancel()
+        onCancel().then()
         onClearSearchForm()
     }
     const onCreateNewAppointment = async () => {
@@ -35,9 +35,8 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({loadData,
         await onCancel()
     }
 
-
     return (
-        <BaseModal open={open} width={1248} onClose={onCancel}>
+        <BaseModal open={open} width={1400} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>Customer Search results</DialogTitle>
             <DialogContent>
                 <CustomerSearchResultsActions

@@ -110,7 +110,8 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
         if (index > 0 && sideBarSteps.length < 2) return true;
         if (sideBarActualSteps) {
             const currentScreenNumberValue = sideBarActualSteps[screen];
-            const lastPassedScreenNumberValue = sideBarActualSteps[sideBarSteps[sideBarSteps.length - 1]];
+            const lastStep = sideBarSteps[sideBarSteps.length - 2]
+            const lastPassedScreenNumberValue = sideBarActualSteps[lastStep];
             return (currentScreenNumberValue < index + 1 && lastPassedScreenNumberValue < index + 1);
         }
         return false;
@@ -127,6 +128,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
             {!isSm
                 ? currentConfig && sideBarActualSteps
                     ? sideBarMenu.map((item, idx) => {
+                        console.log(item, 'disabled = ', getButtonState(idx))
                         return <li key={item}>
                             <Button
                                 fullWidth

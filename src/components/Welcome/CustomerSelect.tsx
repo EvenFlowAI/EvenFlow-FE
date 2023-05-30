@@ -12,7 +12,6 @@ import {TextField} from "../UI/EndUserInputs";
 import {EServiceCenterName} from "../../api/types";
 import {LoadingButton} from "../UI/Button";
 import {useTranslation} from "react-i18next";
-import {getCurrentUser} from "../../store/reducers/users/actions";
 import {useCurrentUser, useModal} from "../../utils/hooks";
 import EnhancedCustomerSearch from "../Modals/EnhancedCustomerSearch/EnhancedCustomerSearch";
 import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
@@ -160,8 +159,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
         window.addEventListener('unload', () => {
             sessionStorage.setItem(LocalTokens.sessionId, '')
         })
-        dispatch(getCurrentUser())
-    }, [sessionStorage, dispatch])
+    }, [sessionStorage])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setCustomerEnteredEmail(value));

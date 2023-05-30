@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {Title} from "./Title";
 import {CarCard} from "./CarCard";
 import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
@@ -79,13 +79,14 @@ type TProps = {
     currentConfig: TServiceTypeSettings|undefined;
     handleSetScreen: TArgCallback<TScreen>;
     onSelectCar: TArgCallback<ILoadedVehicle>;
+    setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>
 }
 export const AppointmentCarSelection: React.FC<TProps> = ({
                                                               onNext, onBack, loading, onAddNew, onAddNewCarAppointment, clearData, handleSetScreen,
-                                                              needToShowServiceSelection, handleServiceTypeSelection, currentConfig, onSelectCar
+                                                              needToShowServiceSelection, setNeedToShowServiceSelection, handleServiceTypeSelection, currentConfig, onSelectCar
                                                           }) => {
 
-    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {
         selectedVehicle,
         valueService,
@@ -128,6 +129,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         if (customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)) {
             dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
             if (needToShowServiceSelection) {
+                setNeedToShowServiceSelection(false);
                 handleServiceTypeSelection()
             } else {
                 handleSetScreen(getNextScreen());
@@ -135,7 +137,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         }
         dispatch(setMaintenanceDetails({ mileage: ''}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customerLoadedData, selectedVehicle]);
+    }, [customerLoadedData, selectedVehicle, scProfile, needToShowServiceSelection]);
 
     const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - vehiclesPerScreen;
     const prevDisabled = () => idx <= 0;

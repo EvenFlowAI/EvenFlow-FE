@@ -1,11 +1,9 @@
-import React, {ChangeEvent, useEffect} from 'react';
+import React, {ChangeEvent} from 'react';
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../UI/AutocompleteRender";
 import {Grid} from "@material-ui/core";
 import {ISR} from "../../../../store/reducers/appointment/types";
-import {useDispatch, useSelector} from "react-redux";
-import {loadCategoriesByQuery} from "../../../../store/reducers/categories/actions";
-import {useSCs} from "../../../../utils/hooks";
+import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {ICategory} from "../../../../store/reducers/categories/types";
 import {IPackageAppointments, IPackageOptions} from "../../../../api/types";
@@ -39,12 +37,6 @@ const ServicesSelection: React.FC<TServicesSelectionProps> = ({
 }) => {
     const { allCategories, isLoading } = useSelector((state: RootState) => state.categories);
     const { packages } = useSelector((state: RootState) => state.appointments);
-    const dispatch = useDispatch();
-    const {selectedSC} = useSCs();
-
-    useEffect(() => {
-        selectedSC && dispatch(loadCategoriesByQuery(selectedSC.id))
-    }, [selectedSC])
 
     return (
         <React.Fragment>
