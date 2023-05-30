@@ -1,15 +1,14 @@
-import React, {useCallback, useState} from 'react';
+import React, {Dispatch, SetStateAction, useCallback} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {TextField} from "../../UI/TextField";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
-import {useException, useModal} from "../../../utils/hooks";
+import {useException} from "../../../utils/hooks";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../UI/Button";
 import {TCallback} from "../../../types/types";
-import CustomerSearchResults from "./CustomerSearchResults";
-import {loadCustomersByName, setPageData, setPaging} from "../../../store/reducers/enhancedCustomerSearch/actions";
+import { setPageData, setPaging} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {RootState} from "../../../store/rootReducer";
 import {defaultPageData} from "../../../store/reducers/defaultInitials";
 
@@ -39,15 +38,28 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-type TEnhancedCustomerSearchProps = DialogProps & {onOpenNotFound: TCallback, handleNew: TCallback};
+type TEnhancedCustomerSearchProps = DialogProps & {
+    loadData: TCallback,
+    formIsChecked: boolean,
+    setFormIsChecked: Dispatch<SetStateAction<boolean>>;
+    firstName: string;
+    lastName: string;
+    setFirstName: Dispatch<SetStateAction<string>>;
+    setLastName: Dispatch<SetStateAction<string>>;
+};
 
-const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, onClose, onOpenNotFound, handleNew}) => {
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {isLoading, pageData} = useSelector((state: RootState) => state.customers);
-    const [firstName, setFirstName] = useState<string>('');
-    const [lastName, setLastName] = useState<string>('');
-    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
-    const {onOpen: onOpenSearchResults, onClose: onCloseSearchResults, isOpen: isOpenSearchResults} = useModal();
+const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({
+                                                                            open,
+                                                                            onClose,
+                                                                            loadData,
+                                                                            formIsChecked,
+                                                                            setFormIsChecked,
+                                                                            firstName,
+                                                                            lastName,
+                                                                            setFirstName,
+                                                                            setLastName,
+                                                                        }) => {
+    const {isLoading} = useSelector((state: RootState) => state.customers);
     const dispatch = useDispatch();
     const showError = useException();
     const classes = useStyles();
@@ -75,14 +87,6 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
         await dispatch(setPageData(defaultPageData))
         await onClose();
     }, [clearForm])
-
-    const onSuccess = (count: number) => {
-        count > 0 ? onOpenSearchResults() : onOpenNotFound()
-    }
-
-    const loadData = () => {
-        scProfile && dispatch(loadCustomersByName(scProfile.id, firstName, lastName, onSuccess, showError))
-    }
 
     const checkIsValid = () => {
         const searchString = firstName.length > 1  ? firstName : lastName;
@@ -138,13 +142,6 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({ open, 
                 </div>
             </div>
             </div>
-            <CustomerSearchResults
-                handleNew={handleNew}
-                loadData={loadData}
-                onClose={onCloseSearchResults}
-                open={isOpenSearchResults}
-                onClearSearchForm={clearForm}
-            />
         </BaseModal>
     );
 };

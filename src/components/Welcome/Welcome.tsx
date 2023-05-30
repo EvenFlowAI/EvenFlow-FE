@@ -18,7 +18,7 @@ import {
     setSessionId
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
-import {useException, useLayout, useModal} from "../../utils/hooks";
+import {useCurrentUser, useException, useLayout, useModal} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
@@ -45,22 +45,27 @@ import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCusto
 import {Loading} from "../UI/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
+import {loadCustomersByName} from "../../store/reducers/enhancedCustomerSearch/actions";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
     const {welcomeScreenView, serviceType, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {isLoading} = useSelector((state: RootState) => state.customers);
 
     const [loading, setLoading] = useState<boolean>(false);
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
+    const {onOpen: onOpenSearchResults, onClose: onCloseSearchResults, isOpen: isOpenSearchResults} = useModal();
+    const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
 
     const {id} = useParams();
     const history = useHistory();
     const showError = useException();
     const isFrame = useLayout();
     const dispatch = useDispatch();
+    const currentUser = useCurrentUser();
 
     useEffect(() => {
         scProfile && dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
@@ -113,6 +118,10 @@ export const Welcome = () => {
         });
     }
 
+    const onLoadingSearchResults = (count: number) => {
+        count > 0 ? onOpenSearchResults() : onOpenNotFound()
+    }
+
     const handleExistingUser = async () => {
         setLoading(true);
         try {
@@ -124,8 +133,12 @@ export const Welcome = () => {
             dispatch(saveAppointmentReducer());
             if (data) {
                 handleGA();
-                dispatch(setCurrentFrameScreen("carSelection"));
-                redirect();
+                if (currentUser && scProfile && (data.lastName || data.firstName)) {
+                    dispatch(loadCustomersByName(scProfile.id, onLoadingSearchResults, showError, data.firstName, data.lastName))
+                } else {
+                    dispatch(setCurrentFrameScreen("carSelection"));
+                    redirect();
+                }
             }
         } catch (err) {
             dispatch(setSessionId(""));
@@ -151,7 +164,6 @@ export const Welcome = () => {
     }
 
     const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
-        // todo service type from the appointment by key
         if (serviceTypeOption?.id !== serviceOption.id) {
             dispatch(clearAppointmentData());
         }
@@ -202,9 +214,15 @@ export const Welcome = () => {
             case "select":
             default:
                 return <CustomerSelect
-                    loading={loading}
+                    onOpenSearchResults={onOpenSearchResults}
+                    onCloseSearchResults={onCloseSearchResults}
+                    isOpenSearchResults={isOpenSearchResults}
+                    loading={loading || isLoading}
                     onComplete={onComplete}
                     handleNew={handleNew}
+                    onOpenNotFound={onOpenNotFound}
+                    onCloseNotFound={onCloseNotFound}
+                    isOpenNotFound={isOpenNotFound}
                 />;
         }
     }
