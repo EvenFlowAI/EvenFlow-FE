@@ -55,6 +55,8 @@ export const Welcome = () => {
     const {isLoading} = useSelector((state: RootState) => state.customers);
 
     const [loading, setLoading] = useState<boolean>(false);
+    const [customerFirstName, setCustomerFirstName] = useState<string>('');
+    const [customerLastName, setCustomerLastName] = useState<string>('');
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
     const {onOpen: onOpenSearchResults, onClose: onCloseSearchResults, isOpen: isOpenSearchResults} = useModal();
@@ -134,6 +136,8 @@ export const Welcome = () => {
             if (data) {
                 handleGA();
                 if (currentUser && scProfile && (data.lastName || data.firstName)) {
+                    setCustomerFirstName(data.firstName ?? '');
+                    setCustomerLastName(data.lastName ?? '');
                     dispatch(loadCustomersByName(scProfile.id, onLoadingSearchResults, showError, data.firstName, data.lastName))
                 } else {
                     dispatch(setCurrentFrameScreen("carSelection"));
@@ -223,6 +227,10 @@ export const Welcome = () => {
                     onOpenNotFound={onOpenNotFound}
                     onCloseNotFound={onCloseNotFound}
                     isOpenNotFound={isOpenNotFound}
+                    firstName={customerFirstName}
+                    lastName={customerLastName}
+                    setFirstName={setCustomerFirstName}
+                    setLastName={setCustomerLastName}
                 />;
         }
     }

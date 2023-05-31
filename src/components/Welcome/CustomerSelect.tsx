@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Grid, useMediaQuery} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -142,6 +142,10 @@ type TProps = {
     isOpenNotFound: boolean;
     onCloseNotFound: TCallback;
     onOpenNotFound: TCallback;
+    firstName: string;
+    lastName: string;
+    setFirstName: Dispatch<SetStateAction<string>>;
+    setLastName: Dispatch<SetStateAction<string>>;
 };
 
 export const CustomerSelect: React.FC<TProps> = ({
@@ -154,12 +158,14 @@ export const CustomerSelect: React.FC<TProps> = ({
                                                      isOpenNotFound,
                                                      onCloseNotFound,
                                                      onOpenNotFound,
+                                                     firstName,
+                                                     lastName,
+                                                     setFirstName,
+                                                     setLastName,
                                                  }) => {
     const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
     const {onOpen, onClose, isOpen} = useModal();
-    const [firstName, setFirstName] = useState<string>('');
-    const [lastName, setLastName] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
@@ -194,6 +200,12 @@ export const CustomerSelect: React.FC<TProps> = ({
 
     const onSuccess = (count: number) => {
         count > 0 ? onOpenSearchResults() : onOpenNotFound()
+    }
+
+    const onOpenSearch = () => {
+        setFirstName('')
+        setLastName('')
+        onOpen()
     }
 
     const loadData = () => {
@@ -236,7 +248,7 @@ export const CustomerSelect: React.FC<TProps> = ({
                     ? <div className={classes.searchLinkWrapper}>
                         <Button
                             variant="text"
-                            onClick={onOpen}
+                            onClick={onOpenSearch}
                             disabled={loading}
                             className={classes.searchButton}>
                             {t("Search Customer by Name")}
