@@ -1,9 +1,9 @@
-import React, {useEffect, useMemo} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Grid, useMediaQuery} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {setUserType} from "../../store/reducers/appointmentFrameReducer/actions";
-import {LocalTokens} from "../../types/types";
+import {LocalTokens, TCallback} from "../../types/types";
 import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../store/rootReducer";
@@ -12,9 +12,11 @@ import {TextField} from "../UI/EndUserInputs";
 import {EServiceCenterName} from "../../api/types";
 import {LoadingButton} from "../UI/Button";
 import {useTranslation} from "react-i18next";
-import {useCurrentUser, useModal} from "../../utils/hooks";
+import {useCurrentUser, useException, useModal} from "../../utils/hooks";
 import EnhancedCustomerSearch from "../Modals/EnhancedCustomerSearch/EnhancedCustomerSearch";
 import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
+import CustomerSearchResults from "../Modals/EnhancedCustomerSearch/CustomerSearchResults";
+import {loadCustomersByName} from "../../store/reducers/enhancedCustomerSearch/actions";
 
 export const mh400 = "@media (max-height: 400px)";
 export const mh600 = "@media (max-height: 600px)";
@@ -134,13 +136,32 @@ type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
     loading: boolean;
     handleNew: () => void;
+    isOpenSearchResults: boolean;
+    onCloseSearchResults: TCallback;
+    onOpenSearchResults: TCallback;
+    isOpenNotFound: boolean;
+    onCloseNotFound: TCallback;
+    onOpenNotFound: TCallback;
 };
 
-export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew}) => {
+export const CustomerSelect: React.FC<TProps> = ({
+                                                     onComplete,
+                                                     loading,
+                                                     handleNew,
+                                                     isOpenSearchResults,
+                                                     onCloseSearchResults,
+                                                     onOpenSearchResults,
+                                                     isOpenNotFound,
+                                                     onCloseNotFound,
+                                                     onOpenNotFound,
+                                                 }) => {
     const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
     const {onOpen, onClose, isOpen} = useModal();
-    const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
+    const [firstName, setFirstName] = useState<string>('');
+    const [lastName, setLastName] = useState<string>('');
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
     const isDominion = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Dominion, [scProfile]);
     const isLakePowell = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord, [scProfile]);
@@ -152,6 +173,7 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
     const { t } = useTranslation();
     const isXs = useMediaQuery("xs");
     const currentUser = useCurrentUser();
+    const showError = useException();
 
     useEffect(() => {
         const uid = uuidv4();
@@ -168,6 +190,20 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
     const handleComplete = async () => {
         dispatch(setUserType(EUserType.Existing));
         onComplete(serviceType, EUserType.Existing);
+    }
+
+    const onSuccess = (count: number) => {
+        count > 0 ? onOpenSearchResults() : onOpenNotFound()
+    }
+
+    const loadData = () => {
+        scProfile && dispatch(loadCustomersByName(scProfile.id, onSuccess, showError, firstName, lastName))
+    }
+
+    const clearForm = () => {
+        setFormIsChecked(false);
+        setFirstName('');
+        setLastName('');
     }
 
     return <Grid className={classes.buttonsContainer}
@@ -222,7 +258,24 @@ export const CustomerSelect: React.FC<TProps> = ({onComplete, loading, handleNew
                 </Button>
             </div>
         </Grid>
-        <EnhancedCustomerSearch open={isOpen} onClose={onClose} onOpenNotFound={onOpenNotFound} handleNew={handleNew} />
+        <EnhancedCustomerSearch
+            firstName={firstName}
+            lastName={lastName}
+            setFirstName={setFirstName}
+            setLastName={setLastName}
+            open={isOpen}
+            onClose={onClose}
+            loadData={loadData}
+            formIsChecked={formIsChecked}
+            setFormIsChecked={setFormIsChecked}
+        />
+        <CustomerSearchResults
+            handleNew={handleNew}
+            loadData={loadData}
+            onClose={onCloseSearchResults}
+            open={isOpenSearchResults}
+            onClearSearchForm={clearForm}
+        />
         <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
     </Grid>
 };

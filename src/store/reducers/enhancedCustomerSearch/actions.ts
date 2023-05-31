@@ -16,10 +16,10 @@ export const setRepairHistoryPaging = createAction<IPagingResponse>("CustomerSea
 
 export const loadCustomersByName = (
     serviceCenterId: number,
-    firstName: string,
-    lastName: string,
     onSuccess: (count: number) => void,
     onError: (err: string) => void,
+    firstName?: string,
+    lastName?: string,
 ): AppThunk => (dispatch, getState) => {
     dispatch(setLoading(true))
     const {pageSize, pageIndex} = getState().customers.pageData;
