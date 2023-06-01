@@ -1,11 +1,12 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 
 const Address = () => {
-    const { serviceType, address, zipCode } = useSelector((state: RootState) => state.appointmentFrame);
+    const { serviceTypeOption, address, zipCode } = useSelector((state: RootState) => state.appointmentFrame);
+    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
     const {t} = useTranslation();
 
     return serviceType !== EServiceType.VisitCenter && address

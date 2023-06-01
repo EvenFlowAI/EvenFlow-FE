@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from "./StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
@@ -28,6 +28,7 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {Caption} from "../../UI/Caption";
 import {useTranslation} from "react-i18next";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const Wrapper = styled('div')({
     width: "100%"
@@ -112,7 +113,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         allCategories,
         selectedPackage,
         categoriesIds,
-        serviceType,
+        serviceTypeOption,
         config,
     ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
@@ -126,7 +127,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         state.categories.allCategories,
         state.appointmentFrame.selectedPackage,
         state.appointmentFrame.categoriesIds,
-        state.appointmentFrame.serviceType,
+        state.appointmentFrame.serviceTypeOption,
         state.bookingFlowConfig.config,
     ]);
     const dispatch = useDispatch();
@@ -134,6 +135,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
     const {t} = useTranslation();
     const debouncedSearch = useDebounce(searchInput);
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
+    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
 
     useEffect(() => {
         if (!isInit.current) {
@@ -146,10 +148,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         }
     }, [search]);
     useEffect(() => {isInit.current = false}, []);
-
-    // useEffect(() => {
-    //     if (scProfile) dispatch(loadCategoriesByQuery(scProfile.id))
-    // }, [scProfile])
 
     const setInitialData = useCallback(() => {
         if (service?.type === EServiceCategoryType.IndividualServices || service?.type === EServiceCategoryType.Diagnose) {

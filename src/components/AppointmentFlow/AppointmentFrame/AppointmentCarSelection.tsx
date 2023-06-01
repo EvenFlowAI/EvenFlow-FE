@@ -90,9 +90,10 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     const {
         selectedVehicle,
         valueService,
-        serviceType,
+        serviceTypeOption,
         consultants
     } = useSelector((state: RootState) => state.appointmentFrame);
+    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("xs"));

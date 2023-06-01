@@ -84,7 +84,6 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         userType,
         vehicle,
         hashKey,
-        serviceType,
         zipCode,
         address,
         selectedRecalls,
@@ -114,7 +113,6 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.userType,
         state.appointmentFrame.selectedVehicle,
         state.appointmentFrame.hashKey,
-        state.appointmentFrame.serviceType,
         state.appointmentFrame.zipCode,
         state.appointmentFrame.address,
         state.appointmentFrame.selectedRecalls,
@@ -129,6 +127,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const [month, setMonth] = useState<moment.Moment>(moment.utc());
     const [loading, setLoading] = useState<boolean>(false);
 
+    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
     const {id} = useParams();
     const initRef = useRef<boolean>(false);
     const isMount = useRef(true);

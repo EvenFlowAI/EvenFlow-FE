@@ -26,7 +26,7 @@ import {EServiceCenterName} from "./api/types";
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
-    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
@@ -35,18 +35,16 @@ const App = () => {
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
 
     useEffect(() => {
-        if (serviceType === EServiceType.MobileService) {
+        if (serviceTypeOption?.type === EServiceType.MobileService || serviceTypeOption?.type === EServiceType.PickUpDropOff) {
             setValueServicePreviousScreen("location");
         }
-        if (serviceType === EServiceType.PickUpDropOff) {
-            setValueServicePreviousScreen("location");
-        }
-        const currentConfig = config.find(item => item.serviceType && serviceType && item.serviceType.toString() === serviceType.toString());
+        const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
+        const currentConfig = config.find(item => item.serviceType?.toString() === serviceType.toString());
         if ((!currentConfig?.advisorSelection)
             || serviceType === EServiceType.MobileService) {
             setValueServiceNextScreen("appointmentTiming");
         }
-    }, [serviceType, config])
+    }, [serviceTypeOption, config])
 
     useEffect(() => {
         if (scProfile) dispatch(loadBookingFlowConfig(scProfile.id))

@@ -63,7 +63,6 @@ export const setSelectedPackagePriceTitles = createAction<TPackagePrice[]>('fApp
 export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCategoriesIds');
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
-export const setServiceType = createAction<EServiceType>('fAppointment/SetServiceType');
 export const setServiceTypeOption = createAction<IFirstScreenOption|null>('fAppointment/SetServiceTypeOption');
 export const setZipCode = createAction<string>('fAppointment/SetZipCode');
 export const setAddress = createAction<any>('fAppointment/SetAddress');
@@ -264,7 +263,6 @@ export const setDefaultVisitCenterOption = (): AppThunk => (dispatch, getState) 
     const defaultOption = visitCenterWithTransport && visitCenterWithoutTransport ? visitCenterWithoutTransport : firstVisitCenterOption;
 
     if (defaultOption) dispatch(setServiceTypeOption(defaultOption));
-    dispatch(setServiceType(EServiceType.VisitCenter));
     dispatch(setCurrentFrameScreen("serviceNeeds"));
 }
 

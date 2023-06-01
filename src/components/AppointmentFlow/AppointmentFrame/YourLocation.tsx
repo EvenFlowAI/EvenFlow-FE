@@ -90,7 +90,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {zipCode: zipCodeValue, address, serviceType, filteredZipCodes, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {zipCode: zipCodeValue, address, filteredZipCodes, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
@@ -98,6 +98,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const classes = useStyles();
     const autocompleteClasses = useAutocompleteStyles();
     const {t} = useTranslation();
+
+    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
     const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? t('Enter pick up address')
         : t('Enter your requested location'), [serviceTypeOption])

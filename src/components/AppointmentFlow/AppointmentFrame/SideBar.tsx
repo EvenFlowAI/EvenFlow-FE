@@ -11,6 +11,7 @@ import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {getCurrentMenu, getStepsMap, getStepsScreen} from "./utils";
 import {Loading} from "../../UI/Loading";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const Wrapper = styled('ul')(({theme}) => ({
     listStyle: "none",
@@ -67,13 +68,14 @@ type TProps = {
 }
 
 export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
-    const {serviceType, sideBarSteps, sideBarMenu, sideBarActualSteps, sideBarStepsList, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {sideBarSteps, sideBarMenu, sideBarActualSteps, sideBarStepsList, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const theme = useTheme();
     const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const {t} = useTranslation();
 
+    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString())
     }, [config, serviceType]);

@@ -152,13 +152,14 @@ export const DateWrapper = styled('div')(({theme}) => ({
 }))
 
 export const SelectedAppointment = () => {
-    const { serviceType, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+    const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
     const { appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const classes = useSelectedAppointmentStyles();
     const theme = useTheme();
     const {t} = useTranslation();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])

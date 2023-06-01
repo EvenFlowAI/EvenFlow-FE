@@ -5,11 +5,9 @@ import {DialogProps} from "../types";
 import {useTranslation} from "react-i18next";
 import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions";
 import {useDispatch} from "react-redux";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {
     setCurrentFrameScreen,
-    setServiceType,
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 
 type TExistingCustomerErrorProps = DialogProps & {
@@ -45,7 +43,6 @@ const ExistingCustomerError: React.FC<TExistingCustomerErrorProps> = ({open, onC
     const classes = useStyles();
 
     const onNew = () => {
-        dispatch(setServiceType(EServiceType.VisitCenter));
         dispatch(setCurrentFrameScreen("serviceNeeds"));
         onClose()
         onNext();

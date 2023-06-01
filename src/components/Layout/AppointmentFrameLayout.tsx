@@ -46,7 +46,6 @@ import {
     setPackagePricingType,
     setRecallsAreShown,
     setSelectedRecalls,
-    setServiceType,
     setServiceTypeOption, setSideBarSteps,
     setTiming,
     setTrackerCreated,
@@ -140,7 +139,6 @@ export const AppointmentFrameLayout = () => {
         selectedVehicle,
         trackerCreated,
         valueService,
-        serviceType,
         currentScreen: currentFrameScreen,
         userType,
         consultants,
@@ -150,6 +148,7 @@ export const AppointmentFrameLayout = () => {
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
     const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory|null>(null);
     const [needToShowServiceSelection, setNeedToShowServiceSelection] = useState<boolean>(false)
 
@@ -207,7 +206,7 @@ export const AppointmentFrameLayout = () => {
         dispatch(setCurrentFrameScreen(screen));
     }, []);
 
-    const handleServiceTypeOption = (data:IAppointmentByQuery): boolean => {
+    const handleServiceTypeOption = useCallback((data:IAppointmentByQuery): boolean => {
         /**
          * We have decided to go through the flow and then to see if we should allow to user to change service type in any case
          * And if we should to clear all the appointment data if the service type was changed from the previous one
@@ -217,12 +216,11 @@ export const AppointmentFrameLayout = () => {
             const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
             if (option) {
                 needToShowService = false;
-                dispatch(setServiceType(data.serviceTypeOption.type));
                 dispatch(setServiceTypeOption(data.serviceTypeOption));
             }
         }
         return needToShowService;
-    }
+    }, [needToShowServiceSelection, firstScreenOptions])
 
     const onUpdateAppointment = useCallback(async(car: ILoadedVehicle) => {
         const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
@@ -255,7 +253,7 @@ export const AppointmentFrameLayout = () => {
         } finally {
             setLoadingCar(false);
         }
-    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile, handleServiceTypeOption, needToShowServiceSelection])
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile, handleServiceTypeOption, needToShowServiceSelection, serviceType])
 
     useEffect(() => {
         trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);

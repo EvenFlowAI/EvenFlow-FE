@@ -4,6 +4,7 @@ import {styled} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
+import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 const Wrapper = styled('ul')({
     display: "flex",
@@ -23,16 +24,15 @@ export const Review = () => {
     const [
         consultant,
         transportation,
-        serviceType,
         config,
         serviceTypeOption
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.advisor,
         state.appointmentFrame.transportation,
-        state.appointmentFrame.serviceType,
         state.bookingFlowConfig.config,
         state.appointmentFrame.serviceTypeOption,
     ]);
+    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])

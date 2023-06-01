@@ -33,6 +33,7 @@ import {useTranslation} from "react-i18next";
 import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
 import {useParams} from "react-router-dom";
 import {decodeSCID} from "../../../utils/utils";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -121,7 +122,6 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         service,
         subService,
         categoriesIds,
-        serviceType,
         selectedRecalls,
         selectedVehicle,
         packagePricingType,
@@ -138,9 +138,11 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const {id} = useParams();
     const {t} = useTranslation();
 
+    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType]);
+
     const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection) && Boolean(consultants.length), [currentConfig, consultants]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
     const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds &&
