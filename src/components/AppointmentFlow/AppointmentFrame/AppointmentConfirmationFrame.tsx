@@ -227,7 +227,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             searchTerm: customerEnteredEmail,
             serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
             zipCode: appointmentFrame.zipCode ?? null,
-            address: appointmentFrame.address?.label ?? null,
+            address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
             recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
         };
 
