@@ -54,7 +54,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const {id} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();

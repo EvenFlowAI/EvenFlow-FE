@@ -159,7 +159,7 @@ export const SelectedAppointment = () => {
     const theme = useTheme();
     const {t} = useTranslation();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType])

@@ -68,7 +68,7 @@ export const Welcome = () => {
     const isFrame = useLayout();
     const dispatch = useDispatch();
     const currentUser = useCurrentUser();
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useEffect(() => {
         scProfile && dispatch(loadFirstScreenOptionsByQuery(scProfile.id))

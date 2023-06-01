@@ -30,7 +30,7 @@ const List = styled('ul')({
 const Address = () => {
     const {address, zipCode, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     return address && (serviceType === EServiceType.MobileService || serviceType === EServiceType.PickUpDropOff)
         ? <div>
             <TitleWrapper>

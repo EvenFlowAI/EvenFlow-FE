@@ -46,7 +46,7 @@ const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams();
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const isServiceDetailsPageOn = useMemo(() => {
         return Boolean(config.find(item => item.serviceType.toString() === serviceType.toString())?.productPageForValueService)
     }, [config, serviceType])

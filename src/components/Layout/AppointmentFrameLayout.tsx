@@ -148,7 +148,7 @@ export const AppointmentFrameLayout = () => {
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory|null>(null);
     const [needToShowServiceSelection, setNeedToShowServiceSelection] = useState<boolean>(false)
 

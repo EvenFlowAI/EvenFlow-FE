@@ -25,7 +25,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const classes = useSelectedAppointmentStyles();
     const dispatch = useDispatch();
 
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const wasSelectedSecondaryTypes = useMemo(() => {
         return  selectedOptionTypes.includes(EServiceType.MobileService)
         || selectedOptionTypes.includes(EServiceType.PickUpDropOff)

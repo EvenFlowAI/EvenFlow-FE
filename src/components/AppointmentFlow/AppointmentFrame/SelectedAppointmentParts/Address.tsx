@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 
 const Address = () => {
     const { serviceTypeOption, address, zipCode } = useSelector((state: RootState) => state.appointmentFrame);
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const {t} = useTranslation();
 
     return serviceType !== EServiceType.VisitCenter && address

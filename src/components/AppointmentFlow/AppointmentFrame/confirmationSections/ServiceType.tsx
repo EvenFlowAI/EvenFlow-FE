@@ -17,7 +17,7 @@ const TitleWrapper = styled('div')({
 const ServiceType = () => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     const getServiceName = (serviceTypeOption: IFirstScreenOption|null, serviceType: EServiceType) => {
         if (serviceTypeOption?.note) return serviceTypeOption.note;

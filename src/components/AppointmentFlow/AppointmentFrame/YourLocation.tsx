@@ -99,7 +99,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const autocompleteClasses = useAutocompleteStyles();
     const {t} = useTranslation();
 
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? t('Enter pick up address')
         : t('Enter your requested location'), [serviceTypeOption])

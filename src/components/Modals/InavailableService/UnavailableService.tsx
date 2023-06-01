@@ -49,7 +49,7 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
     const classes = useStyles();
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceString = serviceType === EServiceType.MobileService
         ? t("Mobile Service")
         : t("Pick Up / Drop Off Service");

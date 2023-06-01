@@ -140,7 +140,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const {id} = useParams();
     const dispatch = useDispatch();
 
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const servicesList = useMemo(() => {
             return getMaintenanceDescription(
                 srList,

@@ -135,7 +135,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
     const {t} = useTranslation();
     const debouncedSearch = useDebounce(searchInput);
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useEffect(() => {
         if (!isInit.current) {

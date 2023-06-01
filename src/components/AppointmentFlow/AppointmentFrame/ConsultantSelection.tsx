@@ -138,7 +138,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const {id} = useParams();
     const {t} = useTranslation();
 
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType.toString() === serviceType.toString());
     }, [config, serviceType]);

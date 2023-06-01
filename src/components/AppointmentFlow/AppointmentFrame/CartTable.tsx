@@ -94,7 +94,7 @@ const CartTable = () => {
     const { scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [isOpen, setOpen] = useState<boolean>(true);
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const selectedServices = useMemo(() => {
            return getMaintenanceList(
                serviceRequests,

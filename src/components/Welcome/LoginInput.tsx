@@ -100,7 +100,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const isRiverviewFord = useMemo(() => serviceCenter?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [serviceCenter])
     const isDominion = useMemo(() => serviceCenter?.serviceCenterFlag === EServiceCenterName.Dominion, [serviceCenter])
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {

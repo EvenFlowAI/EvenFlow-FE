@@ -111,7 +111,7 @@ const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const {t} = useTranslation();
-    const serviceType = useMemo(() => serviceTypeOption?.type ?? EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const price = useMemo(() => {
             if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
                 return serviceValetAppointment?.price?.value && serviceValetAppointment.price.value > 0
