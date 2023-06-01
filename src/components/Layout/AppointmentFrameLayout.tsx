@@ -213,11 +213,11 @@ export const AppointmentFrameLayout = () => {
          * And if we should to clear all the appointment data if the service type was changed from the previous one
          **/
         let needToShowService = needToShowServiceSelection;
-        if (data.serviceType && data.serviceTypeOption) {
+        if (data.serviceTypeOption) {
             const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
             if (option) {
                 needToShowService = false;
-                dispatch(setServiceType(data.serviceType));
+                dispatch(setServiceType(data.serviceTypeOption.type));
                 dispatch(setServiceTypeOption(data.serviceTypeOption));
             }
         }
@@ -454,10 +454,9 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleSelectCar} />,
             serviceNeeds: <ServiceNeedsFrame
                 setLastSelectedCategory={setLastSelectedCategory}
+                setNeedToShowServiceSelection={setNeedToShowServiceSelection}
                 onLogin={handleLogin}
-                onBack={isPromotionPage
-                    ? () => {}
-                    : handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
+                onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection
                 setLastSelectedCategory={setLastSelectedCategory}

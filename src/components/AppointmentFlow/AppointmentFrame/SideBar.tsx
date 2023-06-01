@@ -75,7 +75,8 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const {t} = useTranslation();
 
     const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType.toString() === serviceType.toString());
+        const conf = config.find(item => item.serviceType.toString() === serviceType.toString())
+        return conf;
     }, [config, serviceType]);
     const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection), [currentConfig]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
@@ -128,7 +129,6 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
             {!isSm
                 ? currentConfig && sideBarActualSteps
                     ? sideBarMenu.map((item, idx) => {
-                        console.log(item, 'disabled = ', getButtonState(idx))
                         return <li key={item}>
                             <Button
                                 fullWidth

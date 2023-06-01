@@ -268,7 +268,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             reminders: payload.reminderTypes,
             categoriesIds: payload.serviceCategories ? payload.serviceCategories?.map(item => item.id) : [],
             description: payload.comment,
-            serviceType: payload.serviceType ?? payload.serviceTypeOption?.type ?? EServiceType.VisitCenter,
+            serviceType: payload.serviceTypeOption?.type ?? EServiceType.VisitCenter,
             address: payload.address ?? null,
             zipCode: payload.zipCode ?? "",
             serviceTypeOption: payload.serviceTypeOption ?? null,
