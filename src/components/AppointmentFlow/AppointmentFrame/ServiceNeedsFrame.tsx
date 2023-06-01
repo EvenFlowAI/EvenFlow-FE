@@ -30,11 +30,18 @@ import {selectAppointment, selectServiceValetAppointment} from "../../../store/r
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
-    onBack: TCallback;
+    onBack: () => void;
     onLogin: TCallback;
     setLastSelectedCategory: Dispatch<SetStateAction<IServiceCategory|null>>;
+    setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>
 }
-export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, setLastSelectedCategory}) => {
+export const ServiceNeedsFrame: React.FC<TProps> = ({
+                                                        onSelect,
+                                                        onBack,
+                                                        onLogin,
+                                                        setLastSelectedCategory,
+                                                        setNeedToShowServiceSelection
+}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
     const {
@@ -57,6 +64,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
         if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();
         } else {
+            setNeedToShowServiceSelection(true)
             onBack();
         }
     }
