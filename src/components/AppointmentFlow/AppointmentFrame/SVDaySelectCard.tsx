@@ -62,11 +62,17 @@ export const SVDaySelectCard: React.FC<TProps> = ({
         return defaultFormat;
     }
 
+    const getDayNameString = (): string => {
+        const name = moment.utc(day).format('ddd').toLowerCase();
+        return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+
     return <DayCard
         available={Boolean(appointment)}
         isCurrent={isCurrent}
         isOffPeak={false}
     >
+        <div className="dayName">{getDayNameString()}</div>
         <div>{moment.utc(day).format(getFormat())}</div>
         <div className="day" onClick={onClick}>
             {getLabel()}
