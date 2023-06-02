@@ -11,7 +11,6 @@ import {
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {
-    setServiceType,
     setServiceTypeOption,
     setVehicle,
     setWelcomeScreenView
@@ -151,7 +150,6 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
 
     const handleSelect = (card: IFirstScreenOption) => {
         dispatch(setServiceTypeOption(card))
-        card.type && dispatch(setServiceType(card.type));
         if (card.type === EServiceType.General) {
             if (card.externalLink) window.location.href = card.externalLink;
         } else {

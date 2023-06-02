@@ -99,7 +99,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         vehicle,
         allCategories,
         categoriesIds,
-        serviceType,
         serviceTypeOption,
         address,
         zipCode,
@@ -124,7 +123,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.selectedVehicle,
         state.categories.allCategories,
         state.appointmentFrame.categoriesIds,
-        state.appointmentFrame.serviceType,
         state.appointmentFrame.serviceTypeOption,
         state.appointmentFrame.address,
         state.appointmentFrame.zipCode,
@@ -142,6 +140,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const {id} = useParams();
     const dispatch = useDispatch();
 
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const servicesList = useMemo(() => {
             return getMaintenanceDescription(
                 srList,

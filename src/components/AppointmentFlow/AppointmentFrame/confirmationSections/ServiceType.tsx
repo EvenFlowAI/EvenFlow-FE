@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {styled} from "@material-ui/core";
 import {ConfirmationTitle} from "../Title";
 import {useSelector} from "react-redux";
@@ -15,8 +15,9 @@ const TitleWrapper = styled('div')({
 });
 
 const ServiceType = () => {
-    const {serviceType, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     const getServiceName = (serviceTypeOption: IFirstScreenOption|null, serviceType: EServiceType) => {
         if (serviceTypeOption?.note) return serviceTypeOption.note;

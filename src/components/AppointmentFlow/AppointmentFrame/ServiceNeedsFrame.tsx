@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from './StepWrapper';
 import {TArgCallback, TCallback} from "../../../types/types";
@@ -49,12 +49,12 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         categoriesIds,
         selectedPackage,
         valueService,
-        serviceType,
         userType,
         serviceTypeOption,
         packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const {id} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -85,7 +85,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
                 setServiceCategories(data);
             })
             .finally(() => {setLoading(false)});
-    }, [id]);
+    }, [id, serviceTypeOption]);
 
     useEffect(() => {
         if (!userType) dispatch(setUserType(EUserType.New))

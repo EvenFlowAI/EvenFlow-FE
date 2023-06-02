@@ -90,9 +90,10 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     const {
         selectedVehicle,
         valueService,
-        serviceType,
+        serviceTypeOption,
         consultants
     } = useSelector((state: RootState) => state.appointmentFrame);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();
     const isXs = useMediaQuery(theme.breakpoints.down("xs"));
@@ -126,6 +127,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     }, [serviceType, valueService, currentConfig, consultants])
 
     useEffect(() => {
+        dispatch(setMaintenanceDetails({ mileage: ''}));
         if (customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)) {
             dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
             if (needToShowServiceSelection) {
@@ -135,7 +137,6 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                 handleSetScreen(getNextScreen());
             }
         }
-        dispatch(setMaintenanceDetails({ mileage: ''}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [customerLoadedData, selectedVehicle, scProfile, needToShowServiceSelection]);
 
