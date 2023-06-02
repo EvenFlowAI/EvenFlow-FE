@@ -85,7 +85,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
                 setServiceCategories(data);
             })
             .finally(() => {setLoading(false)});
-    }, [id]);
+    }, [id, serviceTypeOption]);
 
     useEffect(() => {
         if (!userType) dispatch(setUserType(EUserType.New))

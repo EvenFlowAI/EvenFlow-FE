@@ -24,8 +24,11 @@ import {
     clearCustomerCache,
     getBlankCustomer,
     getBlankVehicle,
-    getCustomerCache, getSlotsConsultantId,
-    saveCustomerCache, selectAppointment, selectServiceValetAppointment,
+    getCustomerCache,
+    getSlotsConsultantId,
+    saveCustomerCache,
+    selectAppointment,
+    selectServiceValetAppointment,
     selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
@@ -46,7 +49,8 @@ import {
     setPackagePricingType,
     setRecallsAreShown,
     setSelectedRecalls,
-    setServiceTypeOption, setSideBarSteps,
+    setServiceTypeOption,
+    setSideBarSteps,
     setTiming,
     setTrackerCreated,
     setUpdateAppointment,
@@ -207,10 +211,6 @@ export const AppointmentFrameLayout = () => {
     }, []);
 
     const handleServiceTypeOption = useCallback((data:IAppointmentByQuery): boolean => {
-        /**
-         * We have decided to go through the flow and then to see if we should allow to user to change service type in any case
-         * And if we should to clear all the appointment data if the service type was changed from the previous one
-         **/
         let needToShowService = needToShowServiceSelection;
         if (data.serviceTypeOption) {
             const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
@@ -219,8 +219,28 @@ export const AppointmentFrameLayout = () => {
                 dispatch(setServiceTypeOption(data.serviceTypeOption));
             }
         }
+        setNeedToShowServiceSelection(needToShowService)
         return needToShowService;
     }, [needToShowServiceSelection, firstScreenOptions])
+
+    const handlePackage = async (data: IAppointmentByQuery) => {
+        if (data.maintenancePackageOption) {
+            if (isDealerBuilt && scProfile?.eMenuEnabled) {
+                dispatch(setPackageEMenuType(data.maintenancePackageOption.type))
+            } else {
+                dispatch(setPackage(data.maintenancePackageOption))
+            }
+        }
+    }
+
+    const handleRecalls = async (data: IAppointmentByQuery) => {
+        if (data?.vehicle?.vin && scProfile && data.recalls?.length) {
+            const makeId = makes.find(item => item.name.toLowerCase() === data.vehicle.make.toLowerCase())?.id
+            if (makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, makeId, data.recalls))
+        }
+    }
+
+    const handleSRs = async (data: IAppointmentByQuery) => data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
 
     const onUpdateAppointment = useCallback(async(car: ILoadedVehicle) => {
         const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
@@ -228,32 +248,22 @@ export const AppointmentFrameLayout = () => {
         setLoadingCar(true);
         try {
             const {data} = await API.appointment.getByKey(trimmedKey);
-            if (data?.vehicle?.vin && scProfile && data.recalls?.length) {
-                const makeId = makes.find(item => item.name.toLowerCase() === data.vehicle.make.toLowerCase())?.id
-                if (makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, makeId, data.recalls))
-            }
-            dispatch(setUpdateAppointment(data));
-            data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
-            if (data.maintenancePackageOption) {
-                if (isDealerBuilt && scProfile?.eMenuEnabled) {
-                    dispatch(setPackageEMenuType(data.maintenancePackageOption.type))
-                } else {
-                    dispatch(setPackage(data.maintenancePackageOption))
-                }
-            }
-            let needToShowService = handleServiceTypeOption(data);
-            setNeedToShowServiceSelection(needToShowService)
-            if (needToShowService) {
-                handleServiceTypeSelection()
+            await handleRecalls(data);
+            await dispatch(setUpdateAppointment(data));
+            await handleSRs(data);
+            await handlePackage(data)
+            if (handleServiceTypeOption(data)) {
+                handleServiceTypeSelection();
             } else {
-                handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+                handleSetScreen(data.serviceTypeOption?.type !== EServiceType.VisitCenter ? 'location' : 'serviceNeeds');
             }
         } catch (e) {
             showError(e);
         } finally {
             setLoadingCar(false);
         }
-    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile, handleServiceTypeOption, needToShowServiceSelection, serviceType])
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
+        handleServiceTypeOption, needToShowServiceSelection, serviceTypeOption])
 
     useEffect(() => {
         trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
@@ -348,7 +358,7 @@ export const AppointmentFrameLayout = () => {
             dispatch(setCurrentFrameScreen("location"))
             setCurrentScreen("location");
         }
-    }, [serviceType, customerLoadedData])
+    }, [serviceType, customerLoadedData, valueService])
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);

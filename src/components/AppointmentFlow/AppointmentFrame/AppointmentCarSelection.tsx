@@ -127,6 +127,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     }, [serviceType, valueService, currentConfig, consultants])
 
     useEffect(() => {
+        dispatch(setMaintenanceDetails({ mileage: ''}));
         if (customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)) {
             dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
             if (needToShowServiceSelection) {
@@ -136,7 +137,6 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                 handleSetScreen(getNextScreen());
             }
         }
-        dispatch(setMaintenanceDetails({ mileage: ''}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [customerLoadedData, selectedVehicle, scProfile, needToShowServiceSelection]);
 
