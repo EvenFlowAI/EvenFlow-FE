@@ -25,7 +25,7 @@ import {
 import {useTranslation} from "react-i18next";
 import {styled} from "@material-ui/core";
 import DisplayAncillaryPrice from "../../Modals/DisplayAncillaryPrice/DisplayAncillaryPrice";
-import {useException, useModal} from "../../../utils/hooks";
+import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import UnavailableService from "../../Modals/InavailableService/UnavailableService";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
@@ -98,6 +98,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const classes = useStyles();
     const autocompleteClasses = useAutocompleteStyles();
     const {t} = useTranslation();
+    const currentUser = useCurrentUser();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
@@ -138,7 +139,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const handleBack = () => {
         clearAddress();
         clearSelectedData();
-        if (!customerLoadedData?.id) {
+        if (!customerLoadedData?.id || currentUser) {
             onLogin();
         } else {
             onBack();
