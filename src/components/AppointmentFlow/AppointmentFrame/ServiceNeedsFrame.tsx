@@ -27,6 +27,7 @@ import {Routes} from "../../../config/routes";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
+import {useCurrentUser} from "../../../utils/hooks";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -59,9 +60,10 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const dispatch = useDispatch();
     const history = useHistory();
     const {t} = useTranslation();
+    const currentUser = useCurrentUser();
 
     const handleBack = () => {
-        if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
+        if ((!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) || currentUser) {
             onLogin();
         } else {
             setNeedToShowServiceSelection(true)
