@@ -163,7 +163,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
             emails: item?.email ? [item.email] : [],
             firstName: item?.firstName ?? "",
             lastName: item?.lastName ?? "",
-            id: item.customerInternalId?.toString() ?? item.customerId.toString(),
+            id: item.customerInternalId?.toString() ?? null,
             phoneNumbers,
             vehicles: [vehicle],
             fromSearchByName: true,
