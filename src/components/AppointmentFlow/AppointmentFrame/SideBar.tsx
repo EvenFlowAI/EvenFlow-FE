@@ -117,7 +117,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
             return (currentScreenNumberValue < index + 1 && lastPassedScreenNumberValue < index + 1);
         }
         return false;
-    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, sideBarSteps, sideBarActualSteps])
+    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, sideBarSteps, sideBarActualSteps, screen])
 
     const activeButtonStyles = {
         background: '#E6FCEC',
