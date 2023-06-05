@@ -171,6 +171,7 @@ export const Welcome = () => {
     const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
         if (serviceTypeOption?.id !== serviceOption.id) {
             dispatch(clearAppointmentData());
+            dispatch(setSideBarSteps([]))
         }
         handleConfig(serviceOption.type);
         const nextScreen = serviceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';

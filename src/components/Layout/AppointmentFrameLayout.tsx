@@ -392,12 +392,14 @@ export const AppointmentFrameLayout = () => {
 
     const handleAddNewVehicle = useCallback(() => {
         clearData()
-        if (needToShowServiceSelection) {
-            handleServiceTypeSelection()
+        if (!!firstScreenOptions.length) {
+            setNeedToShowServiceSelection(false);
+            dispatch(setWelcomeScreenView('serviceSelect'))
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
             handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
         }
-    }, [dispatch, handleSetScreen]);
+    }, [dispatch, handleSetScreen, firstScreenOptions]);
 
     const handleAddNewCarAppointment = useCallback((vehicle: ILoadedVehicle) => {
         clearAppointmentData();

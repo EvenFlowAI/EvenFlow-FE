@@ -15,7 +15,7 @@ import {useTranslation} from "react-i18next";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {
-    clearAppointmentData,
+    clearAppointmentData, setSideBarSteps,
     setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -361,6 +361,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const onMakeNew = () => {
         dispatch(setVehicle(null));
         dispatch(clearAppointmentData());
+        dispatch(setSideBarSteps([]));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
     }
 
