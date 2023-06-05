@@ -41,6 +41,8 @@ import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../utils/utils";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
+import {CloseOutlined} from "@material-ui/icons";
+import CancelAppointmentConfirm from "../CancelAppoitntmentConfirm/CancelAppointmentConfirm";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -138,6 +140,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
     const [editingElement, setEditingElement] = useState<ICustomerByName|null>(null);
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
+    const {onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm} = useModal();
     const classes = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
@@ -204,6 +207,13 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
     const onEditData = async (item: ICustomerByName) => {
         await setEditingElement(item);
         await setEdit(true);
+    }
+
+    const onCancelAppointment = async (item: ICustomerByName) => {
+        if (item.appointmentHashKey) {
+            await setEditingElement(item);
+            await onOpenConfirm()
+        }
     }
 
     const onFieldChange = (fieldName: keyof ICustomerByName) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -275,6 +285,16 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                                             </IconButton>
                                         </HtmlTooltip>
                                         : <IconButton style={{padding: 4}} disabled><EditDisabled/></IconButton>
+                                    }
+                                    {customer.appointmentHashKey?.length
+                                        ? <HtmlTooltip title="Cancel Appointment">
+                                            <IconButton
+                                                style={{padding: 4}}
+                                                onClick={() => onCancelAppointment(customer)}>
+                                                <CloseOutlined/>
+                                            </IconButton>
+                                        </HtmlTooltip>
+                                        : <IconButton style={{padding: 4}} disabled><CloseOutlined/></IconButton>
                                     }
                                     {customer.customerHasOrders
                                         ? <HtmlTooltip title="View Repair History">
@@ -366,6 +386,13 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                 rowsPerPage={pageData.pageSize}/>
                : null }
             {editingElement ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={editingElement.vehicleDmsId}/> : null}
+            {editingElement?.appointmentHashKey
+                ? <CancelAppointmentConfirm
+                    open={isOpenConfirm}
+                    onClose={onCloseConfirm}
+                    loadData={loadData}
+                    hashKey={editingElement.appointmentHashKey}/>
+                : null}
         </>
 };
 
