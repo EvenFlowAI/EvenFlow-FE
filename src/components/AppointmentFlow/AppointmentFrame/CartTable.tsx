@@ -121,7 +121,6 @@ const CartTable = () => {
     useEffect(() => {
         if (scProfile) {
             dispatch(loadCategoriesByQuery(scProfile.id))
-            dispatch(loadMakes(scProfile.id))
             dispatch(loadSRs(scProfile.id))
         }
     }, [scProfile])
