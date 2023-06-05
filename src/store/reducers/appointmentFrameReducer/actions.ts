@@ -205,7 +205,6 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setFrameDescription(''));
     dispatch(setPackagePricingType(null));
     dispatch(setPackageEMenuType(null));
-    dispatch(setSideBarSteps([]));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
