@@ -15,7 +15,7 @@ import {useTranslation} from "react-i18next";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {
-    clearAppointmentData,
+    clearAppointmentData, setSideBarSteps,
     setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -99,7 +99,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         vehicle,
         allCategories,
         categoriesIds,
-        serviceType,
         serviceTypeOption,
         address,
         zipCode,
@@ -124,7 +123,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.selectedVehicle,
         state.categories.allCategories,
         state.appointmentFrame.categoriesIds,
-        state.appointmentFrame.serviceType,
         state.appointmentFrame.serviceTypeOption,
         state.appointmentFrame.address,
         state.appointmentFrame.zipCode,
@@ -142,6 +140,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const {id} = useParams();
     const dispatch = useDispatch();
 
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const servicesList = useMemo(() => {
             return getMaintenanceDescription(
                 srList,
@@ -362,6 +361,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const onMakeNew = () => {
         dispatch(setVehicle(null));
         dispatch(clearAppointmentData());
+        dispatch(setSideBarSteps([]));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
     }
 

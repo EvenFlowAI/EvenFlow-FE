@@ -163,11 +163,12 @@ export const CustomerSelect: React.FC<TProps> = ({
                                                      setFirstName,
                                                      setLastName,
                                                  }) => {
-    const {serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
     const {onOpen, onClose, isOpen} = useModal();
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
     const isDominion = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Dominion, [scProfile]);
     const isLakePowell = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord, [scProfile]);

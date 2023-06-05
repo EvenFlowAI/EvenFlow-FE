@@ -90,8 +90,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType?.toString() === appointmentFrame.serviceType?.toString());
-    }, [config, appointmentFrame.serviceType])
+        const serviceType = appointmentFrame.serviceTypeOption?.type ?? EServiceType.VisitCenter;
+        return config.find(item => item.serviceType?.toString() === serviceType.toString());
+    }, [config, appointmentFrame.serviceTypeOption])
 
     useEffect(() => {
         appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
@@ -227,7 +228,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             searchTerm: customerEnteredEmail,
             serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
             zipCode: appointmentFrame.zipCode ?? null,
-            address: appointmentFrame.address?.label ?? null,
+            address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
             recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
         };
 

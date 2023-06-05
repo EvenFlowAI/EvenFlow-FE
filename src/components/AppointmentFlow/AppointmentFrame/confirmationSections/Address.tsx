@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {styled} from "@material-ui/core";
 import {ConfirmationTitle} from "../Title";
 import {useSelector} from "react-redux";
@@ -28,8 +28,9 @@ const List = styled('ul')({
 });
 
 const Address = () => {
-    const {address, zipCode, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {address, zipCode, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     return address && (serviceType === EServiceType.MobileService || serviceType === EServiceType.PickUpDropOff)
         ? <div>
             <TitleWrapper>

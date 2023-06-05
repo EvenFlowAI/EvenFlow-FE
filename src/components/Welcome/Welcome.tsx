@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 import {CustomerSelect} from "./CustomerSelect";
 import {useHistory, useParams} from 'react-router-dom';
@@ -25,7 +25,7 @@ import {frameTheme} from "../../theme/theme";
 import {
     clearAppointmentData,
     setCurrentFrameScreen,
-    setServiceType, setServiceTypeOption,
+    setServiceTypeOption,
     setSideBarSteps,
     setUserType,
     setValueServiceAvailability,
@@ -49,7 +49,7 @@ import {loadCustomersByName} from "../../store/reducers/enhancedCustomerSearch/a
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
-    const {welcomeScreenView, serviceType, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {welcomeScreenView, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {isLoading} = useSelector((state: RootState) => state.customers);
@@ -68,6 +68,7 @@ export const Welcome = () => {
     const isFrame = useLayout();
     const dispatch = useDispatch();
     const currentUser = useCurrentUser();
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useEffect(() => {
         scProfile && dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
@@ -170,9 +171,9 @@ export const Welcome = () => {
     const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
         if (serviceTypeOption?.id !== serviceOption.id) {
             dispatch(clearAppointmentData());
+            dispatch(setSideBarSteps([]))
         }
         handleConfig(serviceOption.type);
-        dispatch(setServiceType(serviceOption.type));
         const nextScreen = serviceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
         dispatch(setCurrentFrameScreen(nextScreen));
         redirect();
@@ -198,7 +199,6 @@ export const Welcome = () => {
         handleReactGA('A New');
         dispatch(setCustomerEnteredEmail(''));
         if (firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter) {
-            dispatch(setServiceType(EServiceType.VisitCenter))
             dispatch(setServiceTypeOption(firstScreenOptions[0]));
         } else {
             if (firstScreenOptions.length > 1) {

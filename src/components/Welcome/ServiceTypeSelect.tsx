@@ -10,7 +10,11 @@ import {
     saveCustomerCache,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {setServiceType, setServiceTypeOption, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setServiceTypeOption,
+    setVehicle,
+    setWelcomeScreenView
+} from "../../store/reducers/appointmentFrameReducer/actions";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {Loading} from "../UI/Loading";
@@ -19,6 +23,7 @@ import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {InfoOutlined} from "@material-ui/icons";
 import {HtmlTooltip} from "../AppointmentFlow/AppointmentFrame/ServiceCard";
 import ServiceTypeIcon from "./ServiceTypeIcon";
+import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
 
 type TProps = {
     onComplete: (serviceType: IFirstScreenOption, userType?: EUserType) => void;
@@ -103,6 +108,12 @@ const useStyles = makeStyles((theme) => ({
     name: {
         width: "100%",
         fontSize: 28,
+    },
+    wrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 }))
 
@@ -139,7 +150,6 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
 
     const handleSelect = (card: IFirstScreenOption) => {
         dispatch(setServiceTypeOption(card))
-        card.type && dispatch(setServiceType(card.type));
         if (card.type === EServiceType.General) {
             if (card.externalLink) window.location.href = card.externalLink;
         } else {
@@ -147,30 +157,35 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
         }
     }
 
+    const handleBack = () => dispatch(setWelcomeScreenView("select"))
+
     return isLoading || loading
         ? <Loading/>
-        : <CardsWrapper cardsAmount={remappedCards.length}>
-            {[...remappedCards]
-                .sort((a, b) => a && b ? a.orderIndex - b.orderIndex : 0)
-                .map((card) => {
-                    if (card) {
-                        return <Grid key={card.id}>
-                            <Button onClick={() => !isSM && handleSelect(card)} isTaglinePresent={!!isTaglinePresent}>
-                                {card.description ? <HtmlTooltip
-                                    enterTouchDelay={0}
-                                    placement="right-end"
-                                    title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
-                                >
-                                    <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
-                                </HtmlTooltip> : null}
-                                <div className={classes.name} onClick={() => isSM && handleSelect(card)}>{card.name}</div>
-                                {isTaglinePresent ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
-                                <ServiceTypeIcon card={card} onClick={() => isSM && handleSelect(card)} isSM={isSM}/>
-                            </Button>
-                        </Grid>
-                    }
-            })}
-        </CardsWrapper>
+        : <div className={classes.wrapper}>
+            <CardsWrapper cardsAmount={remappedCards.length}>
+                {[...remappedCards]
+                    .sort((a, b) => a && b ? a.orderIndex - b.orderIndex : 0)
+                    .map((card) => {
+                        if (card) {
+                            return <Grid key={card.id}>
+                                <Button onClick={() => !isSM && handleSelect(card)} isTaglinePresent={!!isTaglinePresent}>
+                                    {card.description ? <HtmlTooltip
+                                        enterTouchDelay={0}
+                                        placement="right-end"
+                                        title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
+                                    >
+                                        <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
+                                    </HtmlTooltip> : null}
+                                    <div className={classes.name} onClick={() => isSM && handleSelect(card)}>{card.name}</div>
+                                    {isTaglinePresent ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
+                                    <ServiceTypeIcon card={card} onClick={() => isSM && handleSelect(card)} isSM={isSM}/>
+                                </Button>
+                            </Grid>
+                        }
+                    })}
+            </CardsWrapper>
+            <Actions onBack={handleBack} onNext={() => {}} hideNext/>
+        </div>
 };
 
 export default ServiceTypeSelect;

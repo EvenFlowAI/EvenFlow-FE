@@ -5,7 +5,6 @@ import moment from "moment";
 import {TGroupedAppointment, TGroupedAppointments} from "../../../utils/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import {useTranslation} from "react-i18next";
 
 type TDayCardProps = {
@@ -73,12 +72,6 @@ export const XsMontFormat = "MMM";
 export const DaySelectCard: React.FC<TProps> = ({
     day, onClick, appointment, isCurrent, isXs, appointments,
 }) => {
-    // const isCustomRange = useSelector((state: RootState) => {
-    //     return Boolean(
-    //         state.appointment.searchedDateRange
-    //         && state.appointmentFrame.selectedTiming !== EAppointmentTimingType.SpecialOffers
-    //     );
-    // })
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
     const getMaxPrice = () => {
@@ -110,27 +103,12 @@ export const DaySelectCard: React.FC<TProps> = ({
             } else {
                 return t("Available");
             }
-            // const price = appointment.amountOfSavingMoney
-            //     ? appointment.lowestPrice + appointment.ancillaryPrice + appointment.amountOfSavingMoney
-            //     : appointment.lowestPrice + appointment.ancillaryPrice;
         }
         if (appointment) {
             return t("Available");
         }
         return t("Not Available");
     }
-
-    // const getFormat = () => {
-    //     if (isXs) {
-    //         if (isCustomRange) {
-    //             return XsMontFormat;
-    //         }
-    //         return XsFormat;
-    //     } else if (isCustomRange) {
-    //         return monthFormat;
-    //     }
-    //     return defaultFormat;
-    // }
 
     const isOffPeak = Boolean(appointment?.amountOfSavingMoney);
     const getDayNameString = (): string => {

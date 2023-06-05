@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from './StepWrapper';
 import {TArgCallback, TCallback} from "../../../types/types";
@@ -27,14 +27,22 @@ import {Routes} from "../../../config/routes";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
+import {useCurrentUser} from "../../../utils/hooks";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
-    onBack: TCallback;
+    onBack: () => void;
     onLogin: TCallback;
     setLastSelectedCategory: Dispatch<SetStateAction<IServiceCategory|null>>;
+    setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>
 }
-export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, setLastSelectedCategory}) => {
+export const ServiceNeedsFrame: React.FC<TProps> = ({
+                                                        onSelect,
+                                                        onBack,
+                                                        onLogin,
+                                                        setLastSelectedCategory,
+                                                        setNeedToShowServiceSelection
+}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
     const {
@@ -42,21 +50,23 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
         categoriesIds,
         selectedPackage,
         valueService,
-        serviceType,
         userType,
         serviceTypeOption,
         packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const {id} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
     const {t} = useTranslation();
+    const currentUser = useCurrentUser();
 
     const handleBack = () => {
-        if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
+        if ((!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) || currentUser) {
             onLogin();
         } else {
+            setNeedToShowServiceSelection(true)
             onBack();
         }
     }
@@ -77,7 +87,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({onSelect, onBack, onLogin, 
                 setServiceCategories(data);
             })
             .finally(() => {setLoading(false)});
-    }, [id]);
+    }, [id, serviceTypeOption]);
 
     useEffect(() => {
         if (!userType) dispatch(setUserType(EUserType.New))

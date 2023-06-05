@@ -17,6 +17,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {TScreen} from "../../../Layout/types";
 import {loadSCProfile} from "../../../../store/reducers/appointment/actions";
 import {decodeSCID} from "../../../../utils/utils";
+import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 const Container = styled('div')(({theme}) => ({
     display: "flex",
@@ -41,10 +42,11 @@ type TValueServiceProps = {
 
 const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
     const [screen, setScreen] = useState<TValueServiceScreen>("vehicleDetails");
-    const {makes, valueService, selectedVehicle, serviceType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {makes, valueService, selectedVehicle, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams();
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const isServiceDetailsPageOn = useMemo(() => {
         return Boolean(config.find(item => item.serviceType.toString() === serviceType.toString())?.productPageForValueService)
     }, [config, serviceType])

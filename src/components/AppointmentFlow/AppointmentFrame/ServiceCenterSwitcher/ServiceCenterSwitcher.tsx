@@ -10,7 +10,11 @@ import {useHistory} from "react-router-dom";
 import {Routes} from "../../../../config/routes";
 import {encodeSCID} from "../../../../utils/utils";
 import {Loading} from "../../../UI/Loading";
-import {clearAppointmentData, setVehicle} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    clearAppointmentData,
+    setSideBarSteps,
+    setVehicle
+} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
 import {getCurrentUser} from "../../../../store/reducers/users/actions";
 import {useCurrentUser} from "../../../../utils/hooks";
@@ -77,6 +81,7 @@ export const ServiceCenterSwitcher = () => {
         handleMenuClose();
         if (selectedServiceCenter?.id !== sc.id) {
             dispatch(clearAppointmentData());
+            dispatch(setSideBarSteps([]));
             dispatch(setVehicle(null));
             dispatch(setCustomerLoadedData(null));
         }
