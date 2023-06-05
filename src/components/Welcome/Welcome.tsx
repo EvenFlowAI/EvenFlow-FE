@@ -23,7 +23,7 @@ import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
-    clearAppointmentData,
+    clearAppointmentData, loadMakes,
     setCurrentFrameScreen,
     setServiceTypeOption,
     setSideBarSteps,
@@ -71,7 +71,10 @@ export const Welcome = () => {
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useEffect(() => {
-        scProfile && dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
+       if (scProfile) {
+           dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
+           dispatch(loadMakes(scProfile.id))
+       }
     }, [scProfile])
 
     useEffect(() => {

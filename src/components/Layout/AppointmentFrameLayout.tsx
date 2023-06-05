@@ -233,12 +233,12 @@ export const AppointmentFrameLayout = () => {
         }
     }
 
-    const handleRecalls = async (data: IAppointmentByQuery) => {
+    const handleRecalls = useCallback(async (data: IAppointmentByQuery) => {
         if (data?.vehicle?.vin && scProfile && data.recalls?.length) {
             const makeId = makes.find(item => item.name.toLowerCase() === data.vehicle.make.toLowerCase())?.id
             if (makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, makeId, data.recalls))
         }
-    }
+    }, [scProfile, makes])
 
     const handleSRs = async (data: IAppointmentByQuery) => data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
 

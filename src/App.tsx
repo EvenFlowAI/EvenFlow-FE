@@ -47,7 +47,9 @@ const App = () => {
     }, [serviceTypeOption, config])
 
     useEffect(() => {
-        if (scProfile) dispatch(loadBookingFlowConfig(scProfile.id))
+        if (scProfile) {
+            dispatch(loadBookingFlowConfig(scProfile.id))
+        }
     }, [scProfile])
 
     const handleClose = (key: React.ReactText) => () => {
