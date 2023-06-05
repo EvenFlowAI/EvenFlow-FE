@@ -137,6 +137,9 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             } else {
                 setSelectedEngineTypes([]);
             }
+            if (payload?.vehicleMakes) {
+                setSelectedMakes(makesModels.filter(make => payload?.vehicleMakes?.find(item => item.id === make.id)))
+            }
         }
     }, [props.open, payload, makesModels, engineTypes, serviceValetZones, zones]);
 
