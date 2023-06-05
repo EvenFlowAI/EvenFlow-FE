@@ -137,31 +137,30 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             } else {
                 setSelectedEngineTypes([]);
             }
-            if (payload?.vehicleMakes) {
-                setSelectedMakes(makesModels.filter(make => payload?.vehicleMakes?.find(item => item.id === make.id)))
-            }
         }
     }, [props.open, payload, makesModels, engineTypes, serviceValetZones, zones]);
 
     useEffect(() => {
-        if (payload?.vehicleModels?.length) {
-            const models: IModel[][] = [];
-            makesModels.forEach(item => {
-                const makeIsSelected = payload?.vehicleMakes?.find(make => make.id === item.id);
-                if (makeIsSelected) {
-                    models.push(item.models)
-                }
-            });
-            const modelsIDs = models.flat().map(item => item.id);
-            const filteredModels = payload?.vehicleModels?.filter(item => modelsIDs.includes(item.id))
-            const filteredMakes = makesModels.filter(item => payload?.vehicleMakes?.find(el => el.id === item.id));
+        const filteredMakes = makesModels.filter(item => payload?.vehicleMakes?.find(el => el.id === item.id));
+        const models: IModel[][] = [];
+        makesModels.forEach(item => {
+            const makeIsSelected = payload?.vehicleMakes?.find(make => make.id === item.id);
+            if (makeIsSelected) {
+                models.push(item.models)
+            }
+        });
+        setModelsOptions(filteredMakes.map(make => make.models).flat())
+        if (payload?.vehicleMakes) {
             setSelectedMakes(filteredMakes);
-            setModelsOptions(filteredMakes.map(make => make.models).flat())
-            setSelectedModels(filteredModels);
         } else {
             setSelectedMakes([])
+        }
+        if (payload?.vehicleModels?.length) {
+            const modelsIDs = models.flat().map(item => item.id);
+            const filteredModels = payload?.vehicleModels?.filter(item => modelsIDs.includes(item.id))
+            setSelectedModels(filteredModels);
+        } else {
             setSelectedModels([])
-            setModelsOptions([])
         }
     }, [makesModels, props.open, payload])
 
