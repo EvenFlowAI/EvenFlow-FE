@@ -75,16 +75,22 @@ const CancelAppointmentConfirm: React.FC<DialogProps&{hashKey: string, loadData:
     }
 
     return (
-        <BaseModal open={open} fullWidth  style={{paddingBottom: 20}} onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}} width={700}>
+        <BaseModal
+            width={800}
+            open={open}
+            style={{paddingBottom: 20}}
+            onClose={onClose}
+            classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
             <DialogTitle onClose={onClose}/>
             {loading
                 ? <Loading/>
                 : data
                     ? <DialogContent>
                 <div className={classes.info}>
-                    <span className={classes.question}>
-                        Do you want to cancel Appointment for {moment(data?.dateInUtc).format("MMM D, YYYY dddd")} ?
-                    </span>
+                    <div className={classes.question}>
+                        Confirm cancellation of Appointment on {moment(data?.dateInUtc).format("dddd")}
+                        <div>{moment(data?.dateInUtc).format("MMMM D, YYYY")} at {moment(data?.timeSlot, "hh:mm:ss").format("hh:mm A")} for customer {data.driver.fullName}</div>
+                    </div>
                 </div>
             </DialogContent>
                     : <NoData/>}
@@ -95,7 +101,7 @@ const CancelAppointmentConfirm: React.FC<DialogProps&{hashKey: string, loadData:
                     onBack={onClose}
                     onNext={handleSubmit}
                     nextLabel="Cancel Appoitment"
-                    prevLabel="Close"
+                    prevLabel="Back"
                 />
             </div>
         </BaseModal>

@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {ReactComponent as Create} from "../../../assets/img/create_appointment.svg";
-import {ReactComponent as Update} from "../../../assets/img/editAppointment.svg";
+import {ReactComponent as Update} from "../../../assets/img/Manage appointment.svg";
 import {ReactComponent as Edit} from "../../../assets/img/editIcon.svg";
-import {ReactComponent as EditDisabled} from "../../../assets/img/editAppointmentDisabled.svg";
+import {ReactComponent as EditDisabled} from "../../../assets/img/Manage appointment_dis.svg";
 import {ReactComponent as Search} from "../../../assets/img/searchInfoIcon.svg";
 import {ReactComponent as SearchDisabled} from "../../../assets/img/searchInfoIconDisabled.svg";
+import {ReactComponent as CancelApp} from "../../../assets/img/Icon_16px_Cancel appointment.svg";
+import {ReactComponent as CancelAppDisabled} from "../../../assets/img/Disabled-Cancel-appointment.svg";
 import {
     Button,
     IconButton,
@@ -41,7 +43,6 @@ import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../utils/utils";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
-import {CloseOutlined} from "@material-ui/icons";
 import CancelAppointmentConfirm from "../CancelAppoitntmentConfirm/CancelAppointmentConfirm";
 
 const useStyles = makeStyles({
@@ -291,10 +292,10 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                                             <IconButton
                                                 style={{padding: 4}}
                                                 onClick={() => onCancelAppointment(customer)}>
-                                                <CloseOutlined/>
+                                                <CancelApp/>
                                             </IconButton>
                                         </HtmlTooltip>
-                                        : <IconButton style={{padding: 4}} disabled><CloseOutlined/></IconButton>
+                                        : <IconButton style={{padding: 4}} disabled><CancelAppDisabled/></IconButton>
                                     }
                                     {customer.customerHasOrders
                                         ? <HtmlTooltip title="View Repair History">
