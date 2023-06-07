@@ -100,7 +100,7 @@ const CancelAppointmentConfirm: React.FC<DialogProps&{hashKey: string, loadData:
                     prevDisabled={loading}
                     onBack={onClose}
                     onNext={handleSubmit}
-                    nextLabel="Cancel Appoitment"
+                    nextLabel="Cancel Appointment"
                     prevLabel="Back"
                 />
             </div>
