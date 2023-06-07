@@ -4,6 +4,7 @@ import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {EServiceCenterName} from "../../api/types";
+import {TView} from "./types";
 
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -26,15 +27,16 @@ const Title = styled('h1')(({theme}) => ({
         fontSize: 18
     }
 }));
-export const FrameWelcomeLayout: React.FC<{}> = ({children}) => {
+export const FrameWelcomeLayout: React.FC<{}> = ({children }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {welcomeScreenView, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
     return (
         <Wrapper style={{paddingTop: isTopAligning ? 20 : 'unset'}}>
             <div>
-                <Title>{t("Schedule your service")}</Title>
+                <Title>{ welcomeScreenView === 'serviceCenterSelect' ? "Dealership name Network Service Centers" : t("Schedule your service")}</Title>
             </div>
             <div>{children}</div>
         </Wrapper>

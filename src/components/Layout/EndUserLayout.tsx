@@ -10,12 +10,15 @@ import {loadSCProfile} from "../../store/reducers/appointment/actions";
 import {CancelAppointment} from "../Welcome/CancelAppointment";
 import {EditAppointment} from "../Welcome/EditAppointment";
 import {decodeSCID, getTracker} from "../../utils/utils";
-import {useLayout} from "../../utils/hooks";
+import {useCurrentUser, useLayout} from "../../utils/hooks";
 import ReactGA, {GaOptions} from "react-ga";
 //import ReactGA, {GaOptions} from "react-ga4";
 import {RootState} from "../../store/rootReducer";
 import {setTrackerCreated} from "../../store/reducers/appointmentFrameReducer/actions";
 import {prodParentLinks} from "./AppointmentFrameLayout";
+import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
+import {getCurrentUser} from "../../store/reducers/users/actions";
+import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 
 const nonFrameStyles = {
     display: "flex",
@@ -24,7 +27,7 @@ const nonFrameStyles = {
     width: "100%",
     height: "100%"
 }
-const frameStyles = {
+export const frameStyles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -32,7 +35,7 @@ const frameStyles = {
     width: '100%'
 }
 
-const frameSmStyles = {
+export const frameSmStyles = {
     ...frameStyles,
     height: 'auto',
     overflowY: 'auto',
@@ -49,6 +52,7 @@ export const options: GaOptions = {
 
 export const EndUserLayout = () => {
     const { trackerCreated, welcomeScreenView } = useSelector((state: RootState) => state.appointmentFrame);
+    const { scProfile } = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
     const dispatch = useDispatch();
     const isFrame = useLayout();
@@ -102,7 +106,15 @@ export const EndUserLayout = () => {
         }
     }, [id, dispatch]);
 
+    useEffect(() => {
+        if (scProfile) {
+            dispatch(loadShortSC(false, scProfile.dealershipId));
+            dispatch(getCurrentUser());
+        }
+    }, [scProfile])
+
     return <ThemeProvider theme={endUserTheme}>
+        <ServiceCenterSwitcher/>
         <div style={!isFrame ? nonFrameStyles : isSm && welcomeScreenView === 'serviceSelect' ? frameSmStyles : frameStyles}>
             {!isFrame ? <EndUserBar/> : null}
             <Switch>

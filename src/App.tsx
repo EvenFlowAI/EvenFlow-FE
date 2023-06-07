@@ -22,6 +22,7 @@ import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
 import {loadBookingFlowConfig} from "./store/reducers/bookingFlowConfig/actions";
 import PaymentBill from "./components/AppointmentFlow/PaymentBill/PaymentBill";
 import {EServiceCenterName} from "./api/types";
+import {ServiceCenterSelector} from "./components/NavBar/ServiceCenterSelector";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);

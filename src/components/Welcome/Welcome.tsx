@@ -20,7 +20,7 @@ import {
 import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {useCurrentUser, useException, useLayout, useModal} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
-import {MuiThemeProvider} from "@material-ui/core";
+import {MuiThemeProvider, useMediaQuery, useTheme} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
     clearAppointmentData, loadMakes,
@@ -46,6 +46,9 @@ import {Loading} from "../UI/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {loadCustomersByName} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {ServiceCenterSelector} from "../NavBar/ServiceCenterSelector";
+import SelectServiceCenter from "./SelectServiceCenter";
+import {frameSmStyles, frameStyles} from "../Layout/EndUserLayout";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
@@ -68,6 +71,8 @@ export const Welcome = () => {
     const isFrame = useLayout();
     const dispatch = useDispatch();
     const currentUser = useCurrentUser();
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useEffect(() => {
@@ -215,6 +220,8 @@ export const Welcome = () => {
 
     const getComponent = () => {
         switch (welcomeScreenView) {
+            case "serviceCenterSelect":
+                return <SelectServiceCenter/>
             case "search":
             case "serviceSelect":
                 return <ServiceTypeSelect onComplete={onServiceTypeSelect} loading={loading}/>;
@@ -238,8 +245,14 @@ export const Welcome = () => {
         }
     }
 
-    const getTitle = (view: TView) => view === 'serviceSelect' ? t("Do you want to bring your car in") : null;
-    const getSubTitle = (view: TView) => view === 'serviceSelect' ? t("Or use our mobile service?") : t("schedule service");
+    const getTitle = (view: TView) => {
+        return view === 'serviceCenterSelect'
+            ? "Dealership name Network Service Centers"
+            :  view === 'serviceSelect' ? t("Do you want to bring your car in") : null
+    };
+    const getSubTitle = (view: TView) => {
+        return view === 'serviceSelect' ? t("Or use our mobile service?") : t("schedule service")
+    };
 
     // todo uncomment language switcher
 
@@ -247,17 +260,17 @@ export const Welcome = () => {
         ? <Loading/>
         : isFrame
             ? <MuiThemeProvider theme={frameTheme}>
-            <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
+                <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
                 <FrameWelcomeLayout>
-                    {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                     {/*<LanguageSwitcher/>*/}
                     {getComponent()}
                 </FrameWelcomeLayout>
             </MuiThemeProvider>
-            : <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
-                {/*<LanguageSwitcher/>*/}
-                {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
-                {getComponent()}
-                <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
-            </WelcomeLayout>
+            : <React.Fragment>
+                <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
+                    {/*<LanguageSwitcher/>*/}
+                    {getComponent()}
+                    <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
+                </WelcomeLayout>
+            </React.Fragment>
 };
