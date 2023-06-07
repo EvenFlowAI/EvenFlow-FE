@@ -4,15 +4,10 @@ import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {EServiceCenterName} from "../../api/types";
-import {TView} from "./types";
-
 
 const Wrapper = styled('div')(({theme}) => ({
     width: '80%',
     maxWidth: 1000,
-    // [theme.breakpoints.down('sm')]: {
-    //     height: '100vh'
-    // }
 }));
 const Title = styled('h1')(({theme}) => ({
     textTransform: 'uppercase',
@@ -29,7 +24,7 @@ const Title = styled('h1')(({theme}) => ({
 }));
 export const FrameWelcomeLayout: React.FC<{}> = ({children }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {welcomeScreenView, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {welcomeScreenView} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);

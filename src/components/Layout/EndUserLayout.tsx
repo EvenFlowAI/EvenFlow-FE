@@ -10,7 +10,7 @@ import {loadSCProfile} from "../../store/reducers/appointment/actions";
 import {CancelAppointment} from "../Welcome/CancelAppointment";
 import {EditAppointment} from "../Welcome/EditAppointment";
 import {decodeSCID, getTracker} from "../../utils/utils";
-import {useCurrentUser, useLayout} from "../../utils/hooks";
+import {useLayout} from "../../utils/hooks";
 import ReactGA, {GaOptions} from "react-ga";
 //import ReactGA, {GaOptions} from "react-ga4";
 import {RootState} from "../../store/rootReducer";

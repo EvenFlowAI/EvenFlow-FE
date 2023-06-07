@@ -40,15 +40,12 @@ import {API} from "../../api/api";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
-import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCustomerError";
 import {Loading} from "../UI/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {loadCustomersByName} from "../../store/reducers/enhancedCustomerSearch/actions";
-import {ServiceCenterSelector} from "../NavBar/ServiceCenterSelector";
 import SelectServiceCenter from "./SelectServiceCenter";
-import {frameSmStyles, frameStyles} from "../Layout/EndUserLayout";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
@@ -72,7 +69,6 @@ export const Welcome = () => {
     const dispatch = useDispatch();
     const currentUser = useCurrentUser();
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useEffect(() => {
