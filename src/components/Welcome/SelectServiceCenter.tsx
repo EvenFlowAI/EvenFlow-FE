@@ -14,6 +14,9 @@ import {
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {loadSCProfile, setCustomerLoadedData} from "../../store/reducers/appointment/actions";
+import {Routes} from "../../config/routes";
+import {useHistory} from "react-router-dom";
+import {encodeSCID} from "../../utils/utils";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -47,6 +50,7 @@ const restrictedRoles: TRole[] = ["Manager", "Advisor"];
 const ServiceCenterCard: React.FC<{sc: IServiceCenter}> = ({sc}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const onClick = () => {
         dispatch(loadSCProfile(sc.id));
@@ -55,6 +59,8 @@ const ServiceCenterCard: React.FC<{sc: IServiceCenter}> = ({sc}) => {
         dispatch(setVehicle(null));
         dispatch(setCustomerLoadedData(null));
         dispatch(setWelcomeScreenView('select'))
+        const encoded = encodeSCID(sc.id)
+        history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`)
     };
 
     return <div className={classes.card}>

@@ -7,10 +7,10 @@ import {useCurrentUser} from "../../../../utils/hooks";
 
 const useStyles = makeStyles((theme) => ({
     selectWrapper: {
+        width: "100%",
         display: 'flex',
         justifyContent: 'flex-end',
-        marginTop: 12,
-        marginBottom: 48,
+        padding: '12px 24px 48px 0',
         [theme.breakpoints.down("sm")]: {
             justifyContent: 'center',
             marginBottom: 20,
@@ -32,7 +32,7 @@ export const ServiceCenterSwitcher = () => {
     const currentUser = useCurrentUser();
     const classes = useStyles();
 
-    return currentUser && welcomeScreenView !== "serviceCenterSelect"
+    return currentUser && scProfile && (welcomeScreenView && welcomeScreenView !== "serviceCenterSelect")
         ? <div className={classes.selectWrapper}>
             { shortLoading
                 ? <Loading/>

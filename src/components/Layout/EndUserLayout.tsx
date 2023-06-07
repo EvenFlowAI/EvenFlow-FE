@@ -109,7 +109,7 @@ export const EndUserLayout = () => {
     useEffect(() => {
         if (scProfile) {
             dispatch(loadShortSC(false, scProfile.dealershipId));
-            dispatch(getCurrentUser());
+            dispatch(getCurrentUser())
         }
     }, [scProfile])
 

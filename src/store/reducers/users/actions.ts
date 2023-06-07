@@ -3,6 +3,7 @@ import {Api} from "../../../config/requests";
 import {AppThunk} from "../../../types/types";
 import {IEmployee} from "../employees/types";
 import {loadByFilters} from "../employees/actions";
+import {setWelcomeScreenView} from "../appointmentFrameReducer/actions";
 
 const _getCurrentUser = (payload: ICurrentUser): TUserActions => ({
     type: "User/GetCurrentUser", payload
@@ -14,7 +15,7 @@ export const getCurrentUser = (): AppThunk => async dispatch => {
         const result = await Api.call<ICurrentUser>(Api.endpoints.Accounts.Profile);
         if (result.data) dispatch(_getCurrentUser(result.data));
     } catch (e) {
-        console.error(e);
+        if (e.response?.status === 401) dispatch(setWelcomeScreenView("select"))
     } finally {
         dispatch(loading(false));
     }

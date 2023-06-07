@@ -20,7 +20,7 @@ import {
 import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {useCurrentUser, useException, useLayout, useModal} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
-import {MuiThemeProvider, useMediaQuery, useTheme} from "@material-ui/core";
+import {MuiThemeProvider, useTheme} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
     clearAppointmentData, loadMakes,
@@ -53,6 +53,7 @@ export const Welcome = () => {
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {isLoading} = useSelector((state: RootState) => state.customers);
+    const {shortLoading} = useSelector((state: RootState) => state.serviceCenters);
 
     const [loading, setLoading] = useState<boolean>(false);
     const [customerFirstName, setCustomerFirstName] = useState<string>('');
@@ -77,6 +78,10 @@ export const Welcome = () => {
            dispatch(loadMakes(scProfile.id))
        }
     }, [scProfile])
+
+    useEffect(() => {
+        setLoading(isLoading || shortLoading || isProfileLoading)
+    }, [isLoading, shortLoading, isProfileLoading])
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {
@@ -252,7 +257,7 @@ export const Welcome = () => {
 
     // todo uncomment language switcher
 
-    return !scProfile || isProfileLoading
+    return !scProfile || loading
         ? <Loading/>
         : isFrame
             ? <MuiThemeProvider theme={frameTheme}>
