@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
         display: 'flex',
         justifyContent: 'flex-end',
-        padding: '12px 0 48px 0',
+        padding: '12px 0 28px 0',
         [theme.breakpoints.down("sm")]: {
             justifyContent: 'center',
             marginBottom: 20,
