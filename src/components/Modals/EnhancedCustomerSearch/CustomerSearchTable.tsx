@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {ReactComponent as Create} from "../../../assets/img/create_appointment.svg";
-import {ReactComponent as Update} from "../../../assets/img/editAppointment.svg";
+import {ReactComponent as Update} from "../../../assets/img/Manage appointment.svg";
 import {ReactComponent as Edit} from "../../../assets/img/editIcon.svg";
-import {ReactComponent as EditDisabled} from "../../../assets/img/editAppointmentDisabled.svg";
+import {ReactComponent as EditDisabled} from "../../../assets/img/Manage appointment_dis.svg";
 import {ReactComponent as Search} from "../../../assets/img/searchInfoIcon.svg";
 import {ReactComponent as SearchDisabled} from "../../../assets/img/searchInfoIconDisabled.svg";
+import {ReactComponent as CancelApp} from "../../../assets/img/Icon_16px_Cancel appointment.svg";
+import {ReactComponent as CancelAppDisabled} from "../../../assets/img/Disabled-Cancel-appointment.svg";
 import {
     Button,
     IconButton,
@@ -41,6 +43,7 @@ import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../utils/utils";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
+import CancelAppointmentConfirm from "../CancelAppoitntmentConfirm/CancelAppointmentConfirm";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -138,6 +141,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
     const [editingElement, setEditingElement] = useState<ICustomerByName|null>(null);
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
+    const {onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm} = useModal();
     const classes = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
@@ -204,6 +208,13 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
     const onEditData = async (item: ICustomerByName) => {
         await setEditingElement(item);
         await setEdit(true);
+    }
+
+    const onCancelAppointment = async (item: ICustomerByName) => {
+        if (item.appointmentHashKey) {
+            await setEditingElement(item);
+            await onOpenConfirm()
+        }
     }
 
     const onFieldChange = (fieldName: keyof ICustomerByName) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -275,6 +286,16 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                                             </IconButton>
                                         </HtmlTooltip>
                                         : <IconButton style={{padding: 4}} disabled><EditDisabled/></IconButton>
+                                    }
+                                    {customer.appointmentHashKey?.length
+                                        ? <HtmlTooltip title="Cancel Appointment">
+                                            <IconButton
+                                                style={{padding: 4}}
+                                                onClick={() => onCancelAppointment(customer)}>
+                                                <CancelApp/>
+                                            </IconButton>
+                                        </HtmlTooltip>
+                                        : <IconButton style={{padding: 4}} disabled><CancelAppDisabled/></IconButton>
                                     }
                                     {customer.customerHasOrders
                                         ? <HtmlTooltip title="View Repair History">
@@ -366,6 +387,13 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                 rowsPerPage={pageData.pageSize}/>
                : null }
             {editingElement ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={editingElement.vehicleDmsId}/> : null}
+            {editingElement?.appointmentHashKey
+                ? <CancelAppointmentConfirm
+                    open={isOpenConfirm}
+                    onClose={onCloseConfirm}
+                    loadData={loadData}
+                    hashKey={editingElement.appointmentHashKey}/>
+                : null}
         </>
 };
 
