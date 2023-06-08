@@ -20,7 +20,7 @@ import {
 import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {useCurrentUser, useException, useLayout, useModal} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
-import {MuiThemeProvider, useTheme} from "@material-ui/core";
+import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
     clearAppointmentData, loadMakes,
@@ -69,15 +69,14 @@ export const Welcome = () => {
     const isFrame = useLayout();
     const dispatch = useDispatch();
     const currentUser = useCurrentUser();
-    const theme = useTheme();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useEffect(() => {
-       if (scProfile) {
-           dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
-           dispatch(loadMakes(scProfile.id))
+       if (id) {
+           dispatch(loadFirstScreenOptionsByQuery(decodeSCID(id)))
+           dispatch(loadMakes(decodeSCID(id)))
        }
-    }, [scProfile])
+    }, [id])
 
     useEffect(() => {
         setLoading(isLoading || shortLoading || isProfileLoading)

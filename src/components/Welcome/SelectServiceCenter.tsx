@@ -8,7 +8,7 @@ import {IServiceCenter} from "../../store/reducers/serviceCenters/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {TRole} from "../../store/reducers/users/types";
 import {
-    clearAppointmentData,
+    clearAppointmentData, setServiceTypeOption,
     setSideBarSteps,
     setVehicle,
     setWelcomeScreenView
@@ -58,6 +58,7 @@ const ServiceCenterCard: React.FC<{sc: IServiceCenter}> = ({sc}) => {
         dispatch(setSideBarSteps([]));
         dispatch(setVehicle(null));
         dispatch(setCustomerLoadedData(null));
+        dispatch(setServiceTypeOption(null));
         dispatch(setWelcomeScreenView('select'))
         const encoded = encodeSCID(sc.id)
         history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`)

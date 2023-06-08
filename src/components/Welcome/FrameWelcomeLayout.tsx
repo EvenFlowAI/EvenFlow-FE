@@ -26,7 +26,6 @@ const Title = styled('h1')(({theme}) => ({
     }
 }));
 
-
 export const nonFrameStyles = {
     display: "flex",
     flexFlow: "column nowrap",
