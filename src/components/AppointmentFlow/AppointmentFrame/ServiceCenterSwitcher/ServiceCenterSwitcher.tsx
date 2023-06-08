@@ -10,10 +10,11 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
         display: 'flex',
         justifyContent: 'flex-end',
-        padding: '12px 24px 48px 0',
+        padding: '12px 0 48px 0',
         [theme.breakpoints.down("sm")]: {
             justifyContent: 'center',
             marginBottom: 20,
+            padding: '12px 0 0 0',
         }
     },
     textWrapper: {
