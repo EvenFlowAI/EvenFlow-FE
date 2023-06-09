@@ -6,9 +6,10 @@ import {Routes} from "../../../config/routes";
 import {TextLink} from "../../UI/TextLink";
 import {styled} from "@material-ui/core";
 import {LoadingButton} from "../../UI/Button";
-import {useDispatch} from "react-redux";
-import {useSCs} from "../../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {recalculateCapacity} from "../../../store/reducers/demandSegments/actions";
+import {RootState} from "../../../store/rootReducer";
 
 const TableContainer = styled("div")({
     overflowX: "auto"
@@ -22,16 +23,24 @@ const ButtonContainer = styled('div')({
 })
 
 export const ScheduledAppointments = () => {
-    const dispatch = useDispatch();
+    const {isRecalculationLoading} = useSelector((state: RootState) => state.demandSegments);
     const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
+    const showError = useException();
+    const showMessage = useMessage();
+
+    const onSuccess = () => {
+        showMessage('Capacity recalculated')
+    }
 
     const recalculate = () => {
-        if (selectedSC) dispatch(recalculateCapacity(selectedSC.id))
+        if (selectedSC) dispatch(recalculateCapacity(selectedSC.id, onSuccess, showError))
     }
 
     return <div>
         <ButtonContainer>
             <LoadingButton
+                loading={isRecalculationLoading}
                 variant="contained"
                 color="primary"
                 onClick={recalculate}>
