@@ -141,11 +141,13 @@ type ApiRoutes = {
         | "CreateDemandSegment" | "GetDemandSegments"
         | "GetTWEligibility" | "SetTWEligibility"
         | "BatchUpdateDemandSegments" | "RemoveDemandSegment"
-        | "SetUnplanned" | "GetUnplanned" | "GetUnplannedSlotsByDay" | "UpdateUnplannedSlots", TApiRoute>,
+        | "SetUnplanned" | "GetUnplanned" | "GetUnplannedSlotsByDay"
+        | "UpdateUnplannedSlots", TApiRoute>,
     AppointmentSlots: Record<"GetSlots" | "GetServiceValetSlots", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
     BookingFlowConfig: Record<"Get" | "Update", TApiRoute>,
+    CapacityManagement: Record<"Reallocate", TApiRoute>,
     ComplimentaryServices: Record<"GetByQuery" | "Remove" | "Update" | "AddFromList" | "Create", TApiRoute>,
     Customers: Record<"GetByName" | "Update" | "GetRepairHistory", TApiRoute>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
@@ -274,6 +276,9 @@ export class Api {
         BookingFlowConfig: {
             Get: {route: "/booking-flow/{id}/settings", method: "get"},
             Update: {route: "/booking-flow/{id}/settings", method: "put"},
+        },
+        CapacityManagement: {
+            Reallocate: {route: "/capacity-management/capacity-data-reallocate", method: "put"},
         },
         ComplimentaryServices: {
             GetByQuery: {route: "/complimentary-services/by-query", method: "post"},
