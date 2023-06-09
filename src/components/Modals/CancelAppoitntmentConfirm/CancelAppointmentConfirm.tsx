@@ -88,8 +88,8 @@ const CancelAppointmentConfirm: React.FC<DialogProps&{hashKey: string, loadData:
                     ? <DialogContent>
                 <div className={classes.info}>
                     <div className={classes.question}>
-                        Confirm cancellation of Appointment on {moment(data?.dateInUtc).format("dddd")}
-                        <div>{moment(data?.dateInUtc).format("MMMM D, YYYY")} at {moment(data?.timeSlot, "hh:mm:ss").format("hh:mm A")} for customer {data.driver.fullName}</div>
+                        Confirm cancellation of Appointment on {moment.utc(data?.dateInUtc).format("dddd")}
+                        <div>{moment.utc(data?.dateInUtc).format("MMMM D, YYYY")} at {moment(data?.timeSlot, "hh:mm:ss").format("hh:mm A")} for customer {data.driver.fullName}</div>
                     </div>
                 </div>
             </DialogContent>
