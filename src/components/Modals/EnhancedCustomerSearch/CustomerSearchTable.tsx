@@ -336,20 +336,22 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                                 onFieldChange={onFieldChange}/>
                         </TableCell>
                         <TableCell key="home" className={classes.bodyCell}>
-                            <CustomerInputField
-                                editingElement={editingElement}
-                                customer={customer}
-                                fieldName="homePhone"
-                                isEdit={isEdit}
-                                onFieldChange={onFieldChange}/>
+                            <TableCell key="homePhone" className={classes.bodyCell}>{customer.homePhone ?? ""}</TableCell>
+                            {/*<CustomerInputField*/}
+                            {/*    editingElement={editingElement}*/}
+                            {/*    customer={customer}*/}
+                            {/*    fieldName="homePhone"*/}
+                            {/*    isEdit={isEdit}*/}
+                            {/*    onFieldChange={onFieldChange}/>*/}
                         </TableCell>
                         <TableCell key="cell" className={classes.bodyCell}>
-                            <CustomerInputField
-                                editingElement={editingElement}
-                                customer={customer}
-                                fieldName="cellPhone"
-                                isEdit={isEdit}
-                                onFieldChange={onFieldChange}/>
+                            <TableCell key="cellPhone" className={classes.bodyCell}>{customer.cellPhone ?? ""}</TableCell>
+                            {/*<CustomerInputField*/}
+                            {/*    editingElement={editingElement}*/}
+                            {/*    customer={customer}*/}
+                            {/*    fieldName="cellPhone"*/}
+                            {/*    isEdit={isEdit}*/}
+                            {/*    onFieldChange={onFieldChange}/>*/}
                         </TableCell>
                         <TableCell key="email" className={classes.bodyCell}>
                             <CustomerInputField
