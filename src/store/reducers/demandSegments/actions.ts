@@ -89,3 +89,7 @@ export const changeUnplannedSlots = (data: IUnplannedSlotUpdateData, onError: TA
         })
         .finally(() => dispatch(setUnplannedLoading(false)));
 }
+
+export const recalculateCapacity = (id: number): AppThunk => () => {
+    // todo request
+}
