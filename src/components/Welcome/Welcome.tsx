@@ -256,7 +256,7 @@ export const Welcome = () => {
 
     // todo uncomment language switcher
 
-    return !scProfile || loading
+    return !scProfile || isProfileLoading || shortLoading
         ? <Loading/>
         : isFrame
             ? <MuiThemeProvider theme={frameTheme}>
