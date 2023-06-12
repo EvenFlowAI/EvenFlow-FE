@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import CustomerSearchResultsActions from "./CustomerSearchResultsActions";
@@ -15,6 +15,7 @@ type TCustomerSearchResultsProps = DialogProps & {
 };
 
 const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({loadData, open, onClose, handleNew, onClearSearchForm}) => {
+    const [isNewVehicleMode, setNewVehicleMode] = useState<boolean>(false);
     const dispatch = useDispatch();
 
     const onCancel = async () => {
@@ -24,7 +25,11 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({loadData,
     }
 
     const onBack = () => {
-        onCancel().then();
+        if (isNewVehicleMode) {
+            setNewVehicleMode(false)
+        } else {
+            onCancel().then();
+        }
     }
     const onNewSearch = () => {
         onCancel().then()
@@ -35,6 +40,10 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({loadData,
         await onCancel()
     }
 
+    const onAppointmentForNewVehicle = async () => {
+        setNewVehicleMode(true);
+    }
+
     return (
         <BaseModal open={open} width={1400} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>Customer Search results</DialogTitle>
@@ -42,9 +51,11 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({loadData,
                 <CustomerSearchResultsActions
                     onBack={onBack}
                     onNewSearch={onNewSearch}
-                    onCreateNewAppointment={onCreateNewAppointment}/>
+                    isNewVehicleMode={isNewVehicleMode}
+                    onCreateNewAppointment={onCreateNewAppointment}
+                    onAppointmentForNewVehicle={onAppointmentForNewVehicle}/>
 
-                <CustomerSearchTable onClose={onClose} loadData={loadData}/>
+                <CustomerSearchTable onClose={onClose} loadData={loadData} isNewVehicleMode={isNewVehicleMode}/>
             </DialogContent>
         </BaseModal>
     );

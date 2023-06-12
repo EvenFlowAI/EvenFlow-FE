@@ -133,7 +133,7 @@ const columnNames = [
     "VIN"
 ]
 
-const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> = ({onClose, loadData}) => {
+const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, isNewVehicleMode: boolean}> = ({onClose, loadData, isNewVehicleMode}) => {
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const [data, setData] = useState<ICustomerByName[]>([]);
@@ -244,6 +244,10 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
         await loadData();
     }
 
+    const onSelectCustomerForNewVehicle = () => {
+
+    }
+
     return isLoading
         ? <div className={classes.emptyWrapper}><Loading/></div>
         : <>
@@ -259,7 +263,17 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback}> =
                 {data.map((customer, index) =>
                     (<TableRow key={customer.vin + index}>
                         <TableCell key="icon" className={classes.bodyCell}>
-                            { isEdit && editingElement?.vehicleId === customer.vehicleId && editingElement?.customerId === customer.customerId
+                            { isNewVehicleMode
+                                ? <IconsBlock>
+                                    <Button
+                                        onClick={onSelectCustomerForNewVehicle}
+                                        color="primary"
+                                        variant="text"
+                                        size="small">
+                                        SELECT
+                                    </Button>
+                                </IconsBlock>
+                                : isEdit && editingElement?.vehicleId === customer.vehicleId && editingElement?.customerId === customer.customerId
                                 ? <IconsBlock>
                                     <Button
                                         onClick={onSaveInfo}
