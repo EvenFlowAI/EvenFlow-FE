@@ -247,7 +247,7 @@ export const Welcome = () => {
 
     const getTitle = (view: TView) => {
         return view === 'serviceCenterSelect'
-            ? "Dealership name Network Service Centers"
+            ? `${scProfile?.dealershipName} Network Service Centers`
             :  view === 'serviceSelect' ? t("Do you want to bring your car in") : null
     };
     const getSubTitle = (view: TView) => {

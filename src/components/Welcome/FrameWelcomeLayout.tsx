@@ -80,7 +80,7 @@ export const FrameWelcomeLayout: React.FC<{}> = ({children }) => {
                     <div>
                         <Title>
                             { welcomeScreenView === 'serviceCenterSelect'
-                                ? "Dealership name Network Service Centers"
+                                ? `${scProfile?.dealershipName} Network Service Centers`
                                 : t("Schedule your service")}
                         </Title>
                     </div>
