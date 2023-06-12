@@ -8,22 +8,28 @@ import {IServiceCenter} from "../../store/reducers/serviceCenters/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {TRole} from "../../store/reducers/users/types";
 import {
-    clearAppointmentData, setServiceTypeOption,
+    clearAppointmentData, setAddress, setServiceTypeOption,
     setSideBarSteps,
     setVehicle,
-    setWelcomeScreenView
+    setWelcomeScreenView, setZipCode
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {loadSCProfile, setCustomerLoadedData} from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";
 import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../utils/utils";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     wrapper: {
         display: 'grid',
         gridTemplateColumns: "1fr 1fr 1fr",
         gridGap: 20,
         marginTop: 48,
+        [theme.breakpoints.down("sm")]: {
+            gridTemplateColumns: "1fr 1fr",
+        },
+        [theme.breakpoints.down("xs")]: {
+            gridTemplateColumns: "1fr",
+        }
     },
     card: {
         display: 'flex',
@@ -43,7 +49,7 @@ const useStyles = makeStyles({
         textAlign: 'center',
         marginBottom: 20,
     }
-})
+}));
 
 const restrictedRoles: TRole[] = ["Manager", "Advisor"];
 
@@ -55,6 +61,8 @@ const ServiceCenterCard: React.FC<{sc: IServiceCenter}> = ({sc}) => {
     const onClick = () => {
         dispatch(loadSCProfile(sc.id));
         dispatch(clearAppointmentData());
+        dispatch(setAddress(null));
+        dispatch(setZipCode(''));
         dispatch(setSideBarSteps([]));
         dispatch(setVehicle(null));
         dispatch(setCustomerLoadedData(null));
