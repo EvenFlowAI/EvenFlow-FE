@@ -31,7 +31,7 @@ import {
     setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import {setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
+import {getBlankVehicle, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {TCallback} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
 import {ICustomerByName} from "../../../store/reducers/enhancedCustomerSearch/types";
@@ -244,8 +244,24 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
         await loadData();
     }
 
-    const onSelectCustomerForNewVehicle = () => {
-
+    const onSelectCustomerForNewVehicle = (customer: ICustomerByName) => async () => {
+        const phoneNumber = customer.cellPhone || customer.homePhone || '';
+        const data: ICustomerLoadedData = {
+            emails: customer?.email ? [customer.email] : [],
+            firstName: customer?.firstName ?? "",
+            lastName: customer?.lastName ?? "",
+            id: customer.customerInternalId?.toString() ?? null,
+            phoneNumbers: phoneNumber ? [phoneNumber] : [],
+            vehicles: [],
+            fromSearchByName: true,
+        }
+        if (customer?.city) data.city = customer.city;
+        if (customer?.address) await dispatch(setAddress(customer.address));
+        await dispatch(setCustomerLoadedData(data));
+        await setUserType(EUserType.Existing);
+        await dispatch(setVehicle(getBlankVehicle()))
+        onClose()
+        dispatch(setWelcomeScreenView("serviceSelect"))
     }
 
     return isLoading
@@ -266,7 +282,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
                             { isNewVehicleMode
                                 ? <IconsBlock>
                                     <Button
-                                        onClick={onSelectCustomerForNewVehicle}
+                                        onClick={onSelectCustomerForNewVehicle(customer)}
                                         color="primary"
                                         variant="text"
                                         size="small">
