@@ -44,7 +44,7 @@ import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCusto
 import {Loading} from "../UI/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
-import {loadCustomersByName} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {loadCustomersBySearchTerm} from "../../store/reducers/enhancedCustomerSearch/actions";
 import SelectServiceCenter from "./SelectServiceCenter";
 
 export const Welcome = () => {
@@ -136,21 +136,25 @@ export const Welcome = () => {
     const handleExistingUser = async () => {
         setLoading(true);
         try {
-            const {data} = await API.appointment.searchCustomer({
-                searchTerm: customerEnteredEmail,
-                serviceCenterId: scProfile?.id ?? 0
-            });
-            dispatch(setCustomerLoadedData(data));
-            dispatch(saveAppointmentReducer());
-            if (data) {
+            if (currentUser && scProfile) {
+                dispatch(loadCustomersBySearchTerm(scProfile?.id ?? 0, onLoadingSearchResults, showError, '', '', customerEnteredEmail))
                 handleGA();
-                if (currentUser && scProfile && (data.lastName || data.firstName)) {
-                    setCustomerFirstName(data.firstName ?? '');
-                    setCustomerLastName(data.lastName ?? '');
-                    dispatch(loadCustomersByName(scProfile.id, onLoadingSearchResults, showError, data.firstName, data.lastName))
-                } else {
-                    dispatch(setCurrentFrameScreen("carSelection"));
-                    redirect();
+            } else {
+                const {data} = await API.appointment.searchCustomer({
+                    searchTerm: customerEnteredEmail,
+                    serviceCenterId: scProfile?.id ?? 0
+                });
+                dispatch(setCustomerLoadedData(data));
+                dispatch(saveAppointmentReducer());
+                if (data) {
+                    handleGA();
+                    if (currentUser && scProfile && (data.lastName || data.firstName)) {
+                        setCustomerFirstName(data.firstName ?? '');
+                        setCustomerLastName(data.lastName ?? '');
+                    } else {
+                        dispatch(setCurrentFrameScreen("carSelection"));
+                        redirect();
+                    }
                 }
             }
         } catch (err) {

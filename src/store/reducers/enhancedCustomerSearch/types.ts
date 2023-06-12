@@ -1,3 +1,5 @@
+import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+
 export interface ICustomerByName {
     customerId: number;
     customerInternalId: number;
@@ -21,6 +23,22 @@ export interface ICustomerByName {
     customerHasOrders?: boolean;
 }
 
+export type TCustomerCommunication = {
+    id: number,
+    type: string,
+    value: string
+}
+
+export interface ICustomerWithPhones extends ICustomerByName {
+    workPhone: string;
+    communications: TCustomerCommunication[];
+    hasOrders: boolean;
+    transmission: string|null;
+    driveType:  string|null;
+    engineTypeId: number|null;
+    warrantyExpiration: ParsableDate|null;
+}
+
 export interface IRepairOrderPart {
     id: string;
     description: string;
@@ -40,11 +58,6 @@ export interface IRepairOrderService {
     correction: string;
     cause: string;
     labors: IRepairOrderLabor[];
-}
-
-export type TRepairPrice = {
-    total: number;
-    tax: number;
 }
 
 export interface IRepairOrder {
@@ -76,4 +89,10 @@ export interface IRepairHistory {
     year: number;
     repairOrders: IRepairOrder[];
     email?: string;
+}
+
+export type TSearchCustomerParams = {
+    phoneOrEmail?: string;
+    firstName?: string;
+    lastName?: string;
 }

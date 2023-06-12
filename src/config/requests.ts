@@ -149,7 +149,7 @@ type ApiRoutes = {
     BookingFlowConfig: Record<"Get" | "Update", TApiRoute>,
     CapacityManagement: Record<"Reallocate", TApiRoute>,
     ComplimentaryServices: Record<"GetByQuery" | "Remove" | "Update" | "AddFromList" | "Create", TApiRoute>,
-    Customers: Record<"GetByName" | "Update" | "GetRepairHistory", TApiRoute>,
+    Customers: Record<"GetByName" | "Update" | "GetRepairHistory" | "GetBySearchTerm", TApiRoute>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
@@ -290,7 +290,8 @@ export class Api {
         Customers: {
             GetByName: {route: "/customers/vehicles/by-customer-name", method: "get"},
             Update: {route: "/customers/vehicles", method: "put"},
-            GetRepairHistory: {route: "/customers/vehicles/repair-orders", method: "get"}
+            GetRepairHistory: {route: "/customers/vehicles/repair-orders", method: "get"},
+            GetBySearchTerm: {route: "/customers/vehicles", method: "get"},
         },
         Dealerships: {
             Create: {route: "/dealerships", method: "post"},
