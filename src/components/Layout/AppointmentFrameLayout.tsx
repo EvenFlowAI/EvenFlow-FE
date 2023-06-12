@@ -70,6 +70,7 @@ import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
 import {useTranslation} from "react-i18next";
 import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPage";
 import {setUpdateSelectedRecalls} from "../../store/reducers/recall/actions";
+import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 
 const Container = styled('div')({
     display: "flex",
@@ -582,6 +583,7 @@ export const AppointmentFrameLayout = () => {
     return (
         <MuiThemeProvider theme={frameTheme}>
             <Container>
+                <ServiceCenterSwitcher/>
                 {isSm && !['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
                     ? <SideBar screen={currentScreen} handleSetScreen={handleSetScreen}/> : null}
                 {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)

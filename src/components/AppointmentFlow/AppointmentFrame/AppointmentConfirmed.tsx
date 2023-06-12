@@ -358,10 +358,11 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         window.open(url);
     }
 
-    const onMakeNew = () => {
-        dispatch(setVehicle(null));
-        dispatch(clearAppointmentData());
-        dispatch(setSideBarSteps([]));
+    const onMakeNew = async () => {
+        await dispatch(setVehicle(null));
+        await dispatch(clearAppointmentData());
+        await dispatch(setSideBarSteps([]));
+        await dispatch(setWelcomeScreenView("serviceCenterSelect"));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
     }
 

@@ -23,6 +23,7 @@ export interface IServiceCenterProfile {
     avatarPath: string;
     address: IAddress;
     dealershipId: number;
+    dealershipName: string;
     serviceCenterFlag: number;
     isRoundPrice: boolean;
     isAuthRequired: boolean;
