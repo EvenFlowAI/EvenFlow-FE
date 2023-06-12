@@ -4,7 +4,7 @@ import {
     getDemandSegments,
     getTimeWindow,
     getUnplannedDemand,
-    loadingDemandSegments,
+    loadingDemandSegments, setRecalculationLoading,
     setUnplannedLoading, setUnplannedSlots
 } from "./actions";
 
@@ -15,6 +15,7 @@ type TState = {
     unplannedDemands: IUnplannedDemand[];
     unplannedSlots: IUnplannedDemandBySlot[];
     isSlotsLoading: boolean;
+    isRecalculationLoading: boolean;
 }
 type TPDemandSegment = {
     window1Point: number;
@@ -38,6 +39,7 @@ const initialState: TState = {
     unplannedDemands: [],
     unplannedSlots: [],
     isSlotsLoading: false,
+    isRecalculationLoading: false,
 }
 export const demandSegmentsReducer = createReducer(initialState, builder => builder
     .addCase(getDemandSegments, (state, {payload}) => {
@@ -57,5 +59,8 @@ export const demandSegmentsReducer = createReducer(initialState, builder => buil
     })
     .addCase(setUnplannedSlots, (state, {payload}) => {
         return {...state, unplannedSlots: payload};
+    })
+    .addCase(setRecalculationLoading, (state, {payload}) => {
+        return {...state, isRecalculationLoading: payload};
     })
 );
