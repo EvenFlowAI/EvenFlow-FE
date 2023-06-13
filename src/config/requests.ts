@@ -183,7 +183,7 @@ type ApiRoutes = {
         | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate"
         | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType" | "UpdatePackagePriceDetails"
         | "UpdateDefaultOpsCode" | "UpdateDefaultMake" | "UpdatePresentedPackageOptions" | "UpdateEngineTypeFieldName"
-        | "GetAssignedAdvisorMethod" | "UpdateAssignedAdvisorMethod", TApiRoute>,
+        | "GetAssignedAdvisorMethod" | "UpdateAssignedAdvisorMethod" | "SetEmailRequired", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -463,6 +463,7 @@ export class Api {
             UpdateEngineTypeFieldName: {route: "/service-centers/{id}/engine-type-field-name", method: "patch"},
             GetAssignedAdvisorMethod: {route: "/service-center-settings/{id}/advisor-assignment", method: "get"},
             UpdateAssignedAdvisorMethod: {route: "/service-center-settings/{id}/advisor-assignment", method: "put"},
+            SetEmailRequired: {route: "/service-center-settings/{id}/email-required", method: "patch"}
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},
