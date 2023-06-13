@@ -81,7 +81,7 @@ export const EndUserLayout = () => {
     }, [id, dispatch]);
 
     useEffect(() => {
-        dispatch(getCurrentUser())
+        dispatch(getCurrentUser(true))
     }, [])
 
     useEffect(() => {

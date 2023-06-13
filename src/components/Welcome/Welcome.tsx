@@ -11,7 +11,6 @@ import {
     clearStorage,
     getBlankCustomer,
     getBlankVehicle,
-    saveAppointmentReducer,
     saveCustomerCache,
     setCustomerEnteredEmail,
     setCustomerLoadedData,
@@ -48,7 +47,6 @@ import {
     loadCustomersBySearchTerm
 } from "../../store/reducers/enhancedCustomerSearch/actions";
 import SelectServiceCenter from "./SelectServiceCenter";
-import {ICustomerLoadedData, ILoadedVehicle} from "../../api/types";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
@@ -57,7 +55,6 @@ export const Welcome = () => {
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {isLoading} = useSelector((state: RootState) => state.customers);
     const {shortLoading} = useSelector((state: RootState) => state.serviceCenters);
-    const {singleCustomerWithVehicles} = useSelector((state: RootState) => state.customers);
 
     const [loading, setLoading] = useState<boolean>(false);
     const [customerFirstName, setCustomerFirstName] = useState<string>('');
@@ -95,41 +92,6 @@ export const Welcome = () => {
             sessionStorage.setItem(LocalTokens.sessionId, '')
         })
     }, [sessionStorage])
-
-    useEffect(() => {
-        if (singleCustomerWithVehicles) {
-            const {cellPhone, homePhone, workPhone, vehicles} = singleCustomerWithVehicles;
-            const phoneNumber = cellPhone ?? homePhone ?? workPhone;
-            const vehiclesData = vehicles.map(item => {
-                const vehicle: ILoadedVehicle = {
-                    vin: item.vin,
-                    year: item.year,
-                    make: item.make,
-                    model: item.model,
-                    mileage: item.mileage,
-                    engineTypeId: item.engineTypeId ? +item.engineTypeId : null,
-                    appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
-                }
-                if (item.hasOrders) vehicle.hasRepairOrders = true;
-                return vehicle;
-            })
-            const data:ICustomerLoadedData = {
-                emails: singleCustomerWithVehicles.email ? [singleCustomerWithVehicles.email] : [],
-                firstName: singleCustomerWithVehicles.firstName,
-                lastName: singleCustomerWithVehicles.lastName,
-                fullName: `${singleCustomerWithVehicles.firstName} ${singleCustomerWithVehicles.lastName}`,
-                id: singleCustomerWithVehicles.customerId.toString() ?? null,
-                phoneNumbers: phoneNumber ? [phoneNumber] : [],
-                vehicles: vehiclesData,
-            }
-            if (singleCustomerWithVehicles.city) data.city = singleCustomerWithVehicles.city;
-            dispatch(setCustomerLoadedData(data));
-            dispatch(saveAppointmentReducer());
-            handleGA();
-            dispatch(setCurrentFrameScreen("carSelection"));
-            redirect();
-        }
-    }, [singleCustomerWithVehicles])
 
     useEffect(() => {
         clearStorage();
@@ -186,9 +148,14 @@ export const Welcome = () => {
         }
     }
 
+    const onSuccessForCustomer = () => {
+        handleGA();
+        redirect()
+    }
+
     const getDataForCustomer = () => {
         try {
-            dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail))
+            dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail, onSuccessForCustomer))
         } catch (err) {
             dispatch(setSessionId(""));
             if (err.response?.data?.errorCode === 6) {

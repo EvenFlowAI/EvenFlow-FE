@@ -1,11 +1,13 @@
 import {createAction} from "@reduxjs/toolkit";
 import {ICustomerWithPhones, ICustomerWithVehicles, IRepairHistory, TSearchCustomerParams} from "./types";
-import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, IAPIResponse, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {ActionCreator} from "redux";
+import {ICustomerLoadedData, ILoadedVehicle} from "../../../api/types";
+import {saveAppointmentReducer, setCustomerLoadedData} from "../appointment/actions";
+import {setCurrentFrameScreen} from "../appointmentFrameReducer/actions";
 
 export const getCustomers = createAction<ICustomerWithPhones[]>("CustomerSearch/GetCustomers");
-export const getSingleCustomerVehicles = createAction<ICustomerWithVehicles|null>("CustomerSearch/GetSingleCustomerVehicles");
 export const setCurrentCustomer = createAction<ICustomerWithPhones|null>("CustomerSearch/SetCurrentCustomer");
 export const setLoading = createAction<boolean>("CustomerSearch/SetLoading");
 
@@ -77,12 +79,43 @@ export const loadCustomersByPhoneOrEmail = (
     serviceCenterId: number,
     onError: (err: string) => void,
     phoneOrEmail: string,
+    onSuccess?: () => void,
 ): AppThunk => (dispatch) => {
-    Api.call(Api.endpoints.Customers.GetSingleCustomerVehicles,
+    Api.call<IAPIResponse<ICustomerWithVehicles>>(Api.endpoints.Customers.GetSingleCustomerVehicles,
         {params: {serviceCenterId, phoneOrEmail}})
         .then(result => {
             if (result.data?.result) {
-                dispatch(getSingleCustomerVehicles(result.data.result))
+                const customer = result.data.result;
+                // dispatch(getSingleCustomerVehicles(result.data.result))
+                const {cellPhone, homePhone, workPhone, vehicles} = customer;
+                const phoneNumber = cellPhone ?? homePhone ?? workPhone;
+                const vehiclesData = vehicles.map(item => {
+                    const vehicle: ILoadedVehicle = {
+                        vin: item.vin,
+                        year: item.year,
+                        make: item.make,
+                        model: item.model,
+                        mileage: item.mileage,
+                        engineTypeId: item.engineTypeId ? +item.engineTypeId : null,
+                        appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
+                    }
+                    if (item.hasOrders) vehicle.hasRepairOrders = true;
+                    return vehicle;
+                })
+                const data:ICustomerLoadedData = {
+                    emails: customer.email ? [customer.email] : [],
+                    firstName: customer.firstName,
+                    lastName: customer.lastName,
+                    fullName: `${customer.firstName} ${customer.lastName}`,
+                    id: customer.customerId.toString() ?? null,
+                    phoneNumbers: phoneNumber ? [phoneNumber] : [],
+                    vehicles: vehiclesData,
+                }
+                if (customer.city) data.city = customer.city;
+                dispatch(setCustomerLoadedData(data));
+                dispatch(saveAppointmentReducer());
+                dispatch(setCurrentFrameScreen("carSelection"));
+                onSuccess && onSuccess();
             }
         })
         .catch(err => {
