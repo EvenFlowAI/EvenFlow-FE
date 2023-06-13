@@ -182,7 +182,7 @@ const initialState: TState = {
     sideBarMenu: [],
     sideBarActualSteps: null,
     sideBarStepsList: [],
-    welcomeScreenView: "serviceCenterSelect",
+    welcomeScreenView: "select",
     language: "en",
     ancillaryPriceLoading: false,
     ancillaryPrice: null,
