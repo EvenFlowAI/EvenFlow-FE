@@ -9,13 +9,18 @@ const _getCurrentUser = (payload: ICurrentUser): TUserActions => ({
     type: "User/GetCurrentUser", payload
 });
 const loading = (payload: boolean): TUserActions => ({type: "User/Loading", payload});
-export const getCurrentUser = (): AppThunk => async dispatch => {
+export const getCurrentUser = (shouldShowCenterSelection?: boolean): AppThunk => async (dispatch, getState) => {
+    const {welcomeScreenView} = getState().appointmentFrame;
     try {
         dispatch(loading(true));
         const result = await Api.call<ICurrentUser>(Api.endpoints.Accounts.Profile);
-        if (result.data) dispatch(_getCurrentUser(result.data));
+        if (result.data) {
+            dispatch(_getCurrentUser(result.data));
+            if (welcomeScreenView !== "serviceCenterSelect" && shouldShowCenterSelection) {
+                dispatch(setWelcomeScreenView("serviceCenterSelect"))
+            }
+        }
     } catch (e) {
-        if (e.response?.status === 401) dispatch(setWelcomeScreenView("select"))
     } finally {
         dispatch(loading(false));
     }

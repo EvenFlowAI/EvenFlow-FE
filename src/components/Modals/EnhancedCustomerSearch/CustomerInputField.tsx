@@ -1,13 +1,13 @@
 import React from 'react';
 import {CustomerInput} from "./CustomerSearchTable";
-import {ICustomerByName} from "../../../store/reducers/enhancedCustomerSearch/types";
+import {ICustomerWithPhones} from "../../../store/reducers/enhancedCustomerSearch/types";
 
 type TCustomerInputFieldProps = {
-    editingElement: ICustomerByName|null;
+    editingElement: ICustomerWithPhones|null;
     isEdit: boolean;
-    fieldName: keyof ICustomerByName;
-    customer: ICustomerByName;
-    onFieldChange: (fieldName: keyof ICustomerByName) => (e: React.ChangeEvent<HTMLInputElement>) => void;
+    fieldName: keyof ICustomerWithPhones;
+    customer: ICustomerWithPhones;
+    onFieldChange: (fieldName: keyof ICustomerWithPhones) => (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const CustomerInputField: React.FC<TCustomerInputFieldProps> = ({

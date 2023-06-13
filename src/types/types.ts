@@ -75,6 +75,10 @@ export interface PaginatedAPIResponse<T> {
     paging: IPagingResponse;
 }
 
+export interface IAPIResponse<T> {
+    result: T;
+}
+
 export type TTechnicianLevel = 1 | 2 | 3;
 
 export type AppThunk<ReturnType=void> = ThunkAction<ReturnType, RootState, unknown, Action<string>>;

@@ -9,14 +9,13 @@ import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameRedu
 import {RootState} from "../../store/rootReducer";
 import {setCustomerEnteredEmail} from "../../store/reducers/appointment/actions";
 import {TextField} from "../UI/EndUserInputs";
-import {EServiceCenterName} from "../../api/types";
 import {LoadingButton} from "../UI/Button";
 import {useTranslation} from "react-i18next";
 import {useCurrentUser, useException, useModal} from "../../utils/hooks";
 import EnhancedCustomerSearch from "../Modals/EnhancedCustomerSearch/EnhancedCustomerSearch";
 import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
 import CustomerSearchResults from "../Modals/EnhancedCustomerSearch/CustomerSearchResults";
-import {loadCustomersByName} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {loadCustomersBySearchTerm} from "../../store/reducers/enhancedCustomerSearch/actions";
 import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
 
 export const mh400 = "@media (max-height: 400px)";
@@ -177,11 +176,6 @@ export const CustomerSelect: React.FC<TProps> = ({
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-    const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
-    const isDominion = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Dominion, [scProfile]);
-    const isLakePowell = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord, [scProfile]);
-    const isDealerBuilt = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
-    const notShowEmail = isRiverviewFord || isDominion || isLakePowell || isDealerBuilt;
     const classes = useStyles();
     const loadingClasses = useLoadingStyles();
     const dispatch = useDispatch();
@@ -218,7 +212,7 @@ export const CustomerSelect: React.FC<TProps> = ({
     }
 
     const loadData = () => {
-        scProfile && dispatch(loadCustomersByName(scProfile.id, onSuccess, showError, firstName, lastName))
+        scProfile && dispatch(loadCustomersBySearchTerm(scProfile.id, onSuccess, showError, firstName, lastName))
     }
 
     const clearForm = () => {
@@ -239,7 +233,7 @@ export const CustomerSelect: React.FC<TProps> = ({
                     <span>{t("I`m a returning customer")}</span>
                     <TextField
                         style={{ marginTop: 20, marginBottom: 20 }}
-                        placeholder={`${t("Enter your")} ${notShowEmail ? "" : t("Email or ")}${t("Phone")}`}
+                        placeholder={`${t("Enter your")} ${t("Email or ")}${t("Phone")}`}
                         InputProps={{disableUnderline: true}}
                         variant="standard"
                         onChange={handleChange}
