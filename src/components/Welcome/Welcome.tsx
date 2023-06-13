@@ -172,44 +172,47 @@ export const Welcome = () => {
         count > 0 ? onOpenSearchResults() : onOpenNotFound()
     }
 
-    const handleExistingUser = async () => {
-        setLoading(true);
+    const getDataForAdminUser = () => {
         try {
-            if (currentUser && scProfile) {
-                dispatch(loadCustomersBySearchTerm(scProfile?.id ?? 0, onLoadingSearchResults, showError, '', '', customerEnteredEmail))
-            } else {
-                dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail))
-                // const {data} = await API.appointment.searchCustomer({
-                //     searchTerm: customerEnteredEmail,
-                //     serviceCenterId: scProfile?.id ?? 0
-                // });
-                // dispatch(setCustomerLoadedData(data));
-                // dispatch(saveAppointmentReducer());
-                // if (data) {
-                //     handleGA();
-                //     if (currentUser && scProfile && (data.lastName || data.firstName)) {
-                //         setCustomerFirstName(data.firstName ?? '');
-                //         setCustomerLastName(data.lastName ?? '');
-                //     } else {
-                //         dispatch(setCurrentFrameScreen("carSelection"));
-                //         redirect();
-                //     }
-                // }
-            }
+            dispatch(loadCustomersBySearchTerm(scProfile?.id ?? 0, onLoadingSearchResults, showError, '', '', customerEnteredEmail))
         } catch (err) {
             dispatch(setSessionId(""));
             if (err.response?.data?.errorCode === 6) {
                 onOpen()
             } else showError(err)
-        } finally {
+        }
+        finally {
             setLoading(false);
+        }
+    }
+
+    const getDataForCustomer = () => {
+        try {
+            dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail))
+        } catch (err) {
+            dispatch(setSessionId(""));
+            if (err.response?.data?.errorCode === 6) {
+                onOpen()
+            } else showError(err)
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+
+    const handleExistingUser = () => {
+        setLoading(true);
+        if (currentUser && scProfile) {
+            getDataForAdminUser()
+        } else {
+            getDataForCustomer()
         }
     }
 
     const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
         handleConfig(serviceType);
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
-            handleExistingUser().then();
+            handleExistingUser()
         } else {
             if (firstScreenOptions.length) {
                 dispatch(setWelcomeScreenView("serviceSelect"))
