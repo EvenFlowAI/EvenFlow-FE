@@ -35,6 +35,7 @@ export interface IServiceCenterProfile {
     dmsId?: string;
     maintenancePackageOptionTypes: EMaintenanceOptionType[];
     eMenuEnabled?: boolean;
+    isEmailRequired: boolean;
 }
 export interface ISR {
     id: number;
