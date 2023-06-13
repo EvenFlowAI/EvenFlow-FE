@@ -131,7 +131,7 @@ export const Welcome = () => {
     }
 
     const onLoadingSearchResults = (count: number) => {
-        count > 0 ? onOpenSearchResults() : onOpenNotFound()
+        count > 0 ? onOpenSearchResults() : onOpen()
     }
 
     const getDataForAdminUser = () => {
@@ -149,8 +149,9 @@ export const Welcome = () => {
     }
 
     const onSuccessForCustomer = () => {
+        setLoading(false);
         handleGA();
-        redirect()
+        redirect();
     }
 
     const getDataForCustomer = () => {
@@ -158,12 +159,10 @@ export const Welcome = () => {
             dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail, onSuccessForCustomer))
         } catch (err) {
             dispatch(setSessionId(""));
+            setLoading(false)
             if (err.response?.data?.errorCode === 6) {
                 onOpen()
             } else showError(err)
-        }
-        finally {
-            setLoading(false);
         }
     }
 
