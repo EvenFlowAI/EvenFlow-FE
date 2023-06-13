@@ -189,7 +189,10 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 : EAppointmentTimingType.FirstAvailable,
             customerId: appointment.customerLoadedData?.id ?? null,
             comment: appointmentFrame.description,
-            driver: appointmentFrame.customer,
+            driver: {
+                ...appointmentFrame.customer,
+                email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
+            },
             gmt: moment().utcOffset(),
             isNeedCall: false,
             offerId: appointment.appointment?.offer?.id ?? null,
@@ -246,6 +249,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             })
             .catch(e => {
                 showError(e);
+                if (e.response?.data?.message?.toLowerCase().includes('email')) setErrors(prev => ([...prev, 'email']))
                 if (e.response?.data?.errors) {
                     const data = [...e.response.data.errors]
                     setErrors(() => {
