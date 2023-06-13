@@ -39,6 +39,39 @@ export interface ICustomerWithPhones extends ICustomerByName {
     warrantyExpiration: ParsableDate|null;
 }
 
+export interface ICustomerVehicle {
+    vehicleId: string;
+    vehicleDmsId: string;
+    vehicleInternalId: number|null;
+    make: string;
+    model: string;
+    vin: string;
+    year: number;
+    appointmentHashKey?: string;
+    mileage: number|null;
+    hasOrders: boolean;
+    transmission: string|null;
+    driveType: string|null;
+    engineTypeId: string|null;
+    warrantyExpiration: ParsableDate|null;
+}
+
+export interface ICustomerWithVehicles {
+    customerId: number;
+    customerInternalId: number;
+    lastName: string;
+    firstName: string;
+    cellPhone: string;
+    homePhone: string;
+    email: string;
+    workPhone: string;
+    city: string;
+    state: string;
+    address: string;
+    communications: TCustomerCommunication[];
+    vehicles: ICustomerVehicle[];
+}
+
 export interface IRepairOrderPart {
     id: string;
     description: string;

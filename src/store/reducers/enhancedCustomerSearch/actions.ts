@@ -1,10 +1,11 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ICustomerWithPhones, IRepairHistory, TSearchCustomerParams} from "./types";
+import {ICustomerWithPhones, ICustomerWithVehicles, IRepairHistory, TSearchCustomerParams} from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {ActionCreator} from "redux";
 
 export const getCustomers = createAction<ICustomerWithPhones[]>("CustomerSearch/GetCustomers");
+export const getSingleCustomerVehicles = createAction<ICustomerWithVehicles|null>("CustomerSearch/GetSingleCustomerVehicles");
 export const setCurrentCustomer = createAction<ICustomerWithPhones|null>("CustomerSearch/SetCurrentCustomer");
 export const setLoading = createAction<boolean>("CustomerSearch/SetLoading");
 
@@ -70,6 +71,25 @@ export const loadCustomersBySearchTerm = (
     } else {
         onError("Please enter phone, email, first name or last name")
     }
+}
+
+export const loadCustomersByPhoneOrEmail = (
+    serviceCenterId: number,
+    onError: (err: string) => void,
+    phoneOrEmail: string,
+): AppThunk => (dispatch) => {
+    Api.call(Api.endpoints.Customers.GetSingleCustomerVehicles,
+        {params: {serviceCenterId, phoneOrEmail}})
+        .then(result => {
+            if (result.data?.result) {
+                dispatch(getSingleCustomerVehicles(result.data.result))
+            }
+        })
+        .catch(err => {
+            console.log('get customers by search term error', err)
+            onError(err)
+        })
+        .finally(() => dispatch(setLoading(false)))
 }
 
 export const changePageData: ActionCreator<AppThunk> = (payload: Partial<IPageRequest>) => {

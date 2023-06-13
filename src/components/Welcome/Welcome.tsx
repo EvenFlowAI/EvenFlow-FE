@@ -36,7 +36,6 @@ import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import ServiceTypeSelect from "./ServiceTypeSelect";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
-import {API} from "../../api/api";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
@@ -44,8 +43,12 @@ import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCusto
 import {Loading} from "../UI/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
-import {loadCustomersBySearchTerm} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {
+    loadCustomersByPhoneOrEmail,
+    loadCustomersBySearchTerm
+} from "../../store/reducers/enhancedCustomerSearch/actions";
 import SelectServiceCenter from "./SelectServiceCenter";
+import {ICustomerLoadedData, ILoadedVehicle} from "../../api/types";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
@@ -54,6 +57,7 @@ export const Welcome = () => {
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {isLoading} = useSelector((state: RootState) => state.customers);
     const {shortLoading} = useSelector((state: RootState) => state.serviceCenters);
+    const {singleCustomerWithVehicles} = useSelector((state: RootState) => state.customers);
 
     const [loading, setLoading] = useState<boolean>(false);
     const [customerFirstName, setCustomerFirstName] = useState<string>('');
@@ -91,6 +95,41 @@ export const Welcome = () => {
             sessionStorage.setItem(LocalTokens.sessionId, '')
         })
     }, [sessionStorage])
+
+    useEffect(() => {
+        if (singleCustomerWithVehicles) {
+            const {cellPhone, homePhone, workPhone, vehicles} = singleCustomerWithVehicles;
+            const phoneNumber = cellPhone ?? homePhone ?? workPhone;
+            const vehiclesData = vehicles.map(item => {
+                const vehicle: ILoadedVehicle = {
+                    vin: item.vin,
+                    year: item.year,
+                    make: item.make,
+                    model: item.model,
+                    mileage: item.mileage,
+                    engineTypeId: item.engineTypeId ? +item.engineTypeId : null,
+                    appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
+                }
+                if (item.hasOrders) vehicle.hasRepairOrders = true;
+                return vehicle;
+            })
+            const data:ICustomerLoadedData = {
+                emails: singleCustomerWithVehicles.email ? [singleCustomerWithVehicles.email] : [],
+                firstName: singleCustomerWithVehicles.firstName,
+                lastName: singleCustomerWithVehicles.lastName,
+                fullName: `${singleCustomerWithVehicles.firstName} ${singleCustomerWithVehicles.lastName}`,
+                id: singleCustomerWithVehicles.customerId.toString() ?? null,
+                phoneNumbers: phoneNumber ? [phoneNumber] : [],
+                vehicles: vehiclesData,
+            }
+            if (singleCustomerWithVehicles.city) data.city = singleCustomerWithVehicles.city;
+            dispatch(setCustomerLoadedData(data));
+            dispatch(saveAppointmentReducer());
+            handleGA();
+            dispatch(setCurrentFrameScreen("carSelection"));
+            redirect();
+        }
+    }, [singleCustomerWithVehicles])
 
     useEffect(() => {
         clearStorage();
@@ -138,24 +177,24 @@ export const Welcome = () => {
         try {
             if (currentUser && scProfile) {
                 dispatch(loadCustomersBySearchTerm(scProfile?.id ?? 0, onLoadingSearchResults, showError, '', '', customerEnteredEmail))
-                handleGA();
             } else {
-                const {data} = await API.appointment.searchCustomer({
-                    searchTerm: customerEnteredEmail,
-                    serviceCenterId: scProfile?.id ?? 0
-                });
-                dispatch(setCustomerLoadedData(data));
-                dispatch(saveAppointmentReducer());
-                if (data) {
-                    handleGA();
-                    if (currentUser && scProfile && (data.lastName || data.firstName)) {
-                        setCustomerFirstName(data.firstName ?? '');
-                        setCustomerLastName(data.lastName ?? '');
-                    } else {
-                        dispatch(setCurrentFrameScreen("carSelection"));
-                        redirect();
-                    }
-                }
+                dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail))
+                // const {data} = await API.appointment.searchCustomer({
+                //     searchTerm: customerEnteredEmail,
+                //     serviceCenterId: scProfile?.id ?? 0
+                // });
+                // dispatch(setCustomerLoadedData(data));
+                // dispatch(saveAppointmentReducer());
+                // if (data) {
+                //     handleGA();
+                //     if (currentUser && scProfile && (data.lastName || data.firstName)) {
+                //         setCustomerFirstName(data.firstName ?? '');
+                //         setCustomerLastName(data.lastName ?? '');
+                //     } else {
+                //         dispatch(setCurrentFrameScreen("carSelection"));
+                //         redirect();
+                //     }
+                // }
             }
         } catch (err) {
             dispatch(setSessionId(""));
