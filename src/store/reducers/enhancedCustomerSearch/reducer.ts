@@ -1,5 +1,5 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {ICustomerByName, IRepairHistory} from "./types";
+import {ICustomerWithPhones, IRepairHistory} from "./types";
 import {
     getCustomers,
     getRepairHistory,
@@ -13,8 +13,8 @@ import {IPageRequest, IPagingResponse} from "../../../types/types";
 
 type TCustomerSearchState = {
     isLoading: boolean;
-    customers: ICustomerByName[];
-    currentCustomer: ICustomerByName|null;
+    customers: ICustomerWithPhones[];
+    currentCustomer: ICustomerWithPhones|null;
     paging: IPagingResponse;
     pageData: IPageRequest;
     repairHistory: IRepairHistory|null;

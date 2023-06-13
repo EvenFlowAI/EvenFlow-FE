@@ -1,3 +1,5 @@
+import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+
 export interface ICustomerByName {
     customerId: number;
     customerInternalId: number;
@@ -21,6 +23,55 @@ export interface ICustomerByName {
     customerHasOrders?: boolean;
 }
 
+export type TCustomerCommunication = {
+    id: number,
+    type: string,
+    value: string
+}
+
+export interface ICustomerWithPhones extends ICustomerByName {
+    workPhone: string;
+    communications: TCustomerCommunication[];
+    hasOrders: boolean;
+    transmission: string|null;
+    driveType:  string|null;
+    engineTypeId: number|null;
+    warrantyExpiration: ParsableDate|null;
+}
+
+export interface ICustomerVehicle {
+    vehicleId: string;
+    vehicleDmsId: string;
+    vehicleInternalId: number|null;
+    make: string;
+    model: string;
+    vin: string;
+    year: number;
+    appointmentHashKey?: string;
+    mileage: number|null;
+    hasOrders: boolean;
+    transmission: string|null;
+    driveType: string|null;
+    engineTypeId: string|null;
+    warrantyExpiration: ParsableDate|null;
+}
+
+export interface ICustomerWithVehicles {
+    customerId: number;
+    customerInternalId: number;
+    lastName: string;
+    firstName: string;
+    cellPhone: string;
+    homePhone: string;
+    email: string;
+    workPhone: string;
+    city: string;
+    state: string;
+    address: string;
+    communications: TCustomerCommunication[];
+    vehicles: ICustomerVehicle[];
+}
+
 export interface IRepairOrderPart {
     id: string;
     description: string;
@@ -40,11 +91,6 @@ export interface IRepairOrderService {
     correction: string;
     cause: string;
     labors: IRepairOrderLabor[];
-}
-
-export type TRepairPrice = {
-    total: number;
-    tax: number;
 }
 
 export interface IRepairOrder {
@@ -76,4 +122,10 @@ export interface IRepairHistory {
     year: number;
     repairOrders: IRepairOrder[];
     email?: string;
+}
+
+export type TSearchCustomerParams = {
+    phoneOrEmail?: string;
+    firstName?: string;
+    lastName?: string;
 }

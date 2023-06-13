@@ -34,7 +34,7 @@ import {
 import {getBlankVehicle, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {TCallback} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
-import {ICustomerByName} from "../../../store/reducers/enhancedCustomerSearch/types";
+import {ICustomerWithPhones} from "../../../store/reducers/enhancedCustomerSearch/types";
 import CustomerInputField from "./CustomerInputField";
 import {changePageData, updateCustomer} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {useException, useModal, usePagination} from "../../../utils/hooks";
@@ -123,6 +123,7 @@ const columnNames = [
     "First Name",
     "Home",
     "Cell",
+    "Work",
     "Email",
     "Address",
     "City",
@@ -136,9 +137,9 @@ const columnNames = [
 const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, isNewVehicleMode: boolean}> = ({onClose, loadData, isNewVehicleMode}) => {
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const [data, setData] = useState<ICustomerByName[]>([]);
+    const [data, setData] = useState<ICustomerWithPhones[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
-    const [editingElement, setEditingElement] = useState<ICustomerByName|null>(null);
+    const [editingElement, setEditingElement] = useState<ICustomerWithPhones|null>(null);
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
     const {onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm} = useModal();
@@ -151,7 +152,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
         setData(customers);
     }, [customers])
 
-    const setCustomerData = async (item: ICustomerByName, isUpdating: boolean) => {
+    const setCustomerData = async (item: ICustomerWithPhones, isUpdating: boolean) => {
         const phoneNumbers = item.cellPhone ? [item.cellPhone] : [];
         const customerData = customers.find(el => el.vehicleId === item.vehicleId && el.customerId === item.customerId);
         if (customerData?.homePhone) phoneNumbers.push(customerData.homePhone);
@@ -180,7 +181,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
         await dispatch(setVehicle(vehicle));
     }
 
-    const onCreateNewForCar = async (item: ICustomerByName) => {
+    const onCreateNewForCar = async (item: ICustomerWithPhones) => {
         await dispatch(clearAppointmentData());
         await dispatch(setSideBarSteps([]));
         await setCustomerData(item, false);
@@ -189,7 +190,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
         await onClose()
     }
 
-    const onUpdateAppForCar = (item: ICustomerByName) => {
+    const onUpdateAppForCar = (item: ICustomerWithPhones) => {
         if (scProfile) {
             dispatch(setUserType(EUserType.Existing));
             const id = encodeSCID(scProfile.id)
@@ -200,24 +201,24 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
         }
     }
 
-    const onViewRepairHistory = async (item: ICustomerByName) => {
+    const onViewRepairHistory = async (item: ICustomerWithPhones) => {
         await setEditingElement(item);
         await onOpenHistory();
     }
 
-    const onEditData = async (item: ICustomerByName) => {
+    const onEditData = async (item: ICustomerWithPhones) => {
         await setEditingElement(item);
         await setEdit(true);
     }
 
-    const onCancelAppointment = async (item: ICustomerByName) => {
+    const onCancelAppointment = async (item: ICustomerWithPhones) => {
         if (item.appointmentHashKey) {
             await setEditingElement(item);
             await onOpenConfirm()
         }
     }
 
-    const onFieldChange = (fieldName: keyof ICustomerByName) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onFieldChange = (fieldName: keyof ICustomerWithPhones) => (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
         setEditingElement(prevState => {
             return prevState ? {...prevState, [fieldName]: e.target.value} : prevState;
@@ -244,7 +245,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
         await loadData();
     }
 
-    const onSelectCustomerForNewVehicle = (customer: ICustomerByName) => async () => {
+    const onSelectCustomerForNewVehicle = (customer: ICustomerWithPhones) => async () => {
         const phoneNumber = customer.cellPhone || customer.homePhone || '';
         const data: ICustomerLoadedData = {
             emails: customer?.email ? [customer.email] : [],
@@ -378,6 +379,14 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
                                 editingElement={editingElement}
                                 customer={customer}
                                 fieldName="cellPhone"
+                                isEdit={isEdit}
+                                onFieldChange={onFieldChange}/>
+                        </TableCell>
+                        <TableCell key="work" className={classes.bodyCell} width={100}>
+                            <CustomerInputField
+                                editingElement={editingElement}
+                                customer={customer}
+                                fieldName="workPhone"
                                 isEdit={isEdit}
                                 onFieldChange={onFieldChange}/>
                         </TableCell>

@@ -11,7 +11,6 @@ import {
     clearStorage,
     getBlankCustomer,
     getBlankVehicle,
-    saveAppointmentReducer,
     saveCustomerCache,
     setCustomerEnteredEmail,
     setCustomerLoadedData,
@@ -36,7 +35,6 @@ import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import ServiceTypeSelect from "./ServiceTypeSelect";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
-import {API} from "../../api/api";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
@@ -44,7 +42,10 @@ import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCusto
 import {Loading} from "../UI/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
-import {loadCustomersByName} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {
+    loadCustomersByPhoneOrEmail,
+    loadCustomersBySearchTerm
+} from "../../store/reducers/enhancedCustomerSearch/actions";
 import SelectServiceCenter from "./SelectServiceCenter";
 
 export const Welcome = () => {
@@ -130,43 +131,53 @@ export const Welcome = () => {
     }
 
     const onLoadingSearchResults = (count: number) => {
-        count > 0 ? onOpenSearchResults() : onOpenNotFound()
+        setLoading(false);
+        count > 0 ? onOpenSearchResults() : onOpen()
     }
 
-    const handleExistingUser = async () => {
-        setLoading(true);
+    const getDataForAdminUser = () => {
         try {
-            const {data} = await API.appointment.searchCustomer({
-                searchTerm: customerEnteredEmail,
-                serviceCenterId: scProfile?.id ?? 0
-            });
-            dispatch(setCustomerLoadedData(data));
-            dispatch(saveAppointmentReducer());
-            if (data) {
-                handleGA();
-                if (currentUser && scProfile && (data.lastName || data.firstName)) {
-                    setCustomerFirstName(data.firstName ?? '');
-                    setCustomerLastName(data.lastName ?? '');
-                    dispatch(loadCustomersByName(scProfile.id, onLoadingSearchResults, showError, data.firstName, data.lastName))
-                } else {
-                    dispatch(setCurrentFrameScreen("carSelection"));
-                    redirect();
-                }
-            }
+            dispatch(loadCustomersBySearchTerm(scProfile?.id ?? 0, onLoadingSearchResults, showError, '', '', customerEnteredEmail))
         } catch (err) {
             dispatch(setSessionId(""));
+            setLoading(false);
             if (err.response?.data?.errorCode === 6) {
                 onOpen()
             } else showError(err)
-        } finally {
-            setLoading(false);
+        }
+    }
+
+    const onSuccessForCustomer = () => {
+        setLoading(false);
+        handleGA();
+        redirect();
+    }
+
+    const getDataForCustomer = () => {
+        try {
+            dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail, onSuccessForCustomer))
+        } catch (err) {
+            dispatch(setSessionId(""));
+            setLoading(false)
+            if (err.response?.data?.errorCode === 6) {
+                onOpen()
+            } else showError(err)
+        }
+    }
+
+    const handleExistingUser = () => {
+        setLoading(true);
+        if (currentUser && scProfile) {
+            getDataForAdminUser()
+        } else {
+            getDataForCustomer()
         }
     }
 
     const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
         handleConfig(serviceType);
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
-            handleExistingUser().then();
+            handleExistingUser()
         } else {
             if (firstScreenOptions.length) {
                 dispatch(setWelcomeScreenView("serviceSelect"))

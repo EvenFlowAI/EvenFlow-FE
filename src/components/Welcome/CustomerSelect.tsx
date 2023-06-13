@@ -15,7 +15,7 @@ import {useCurrentUser, useException, useModal} from "../../utils/hooks";
 import EnhancedCustomerSearch from "../Modals/EnhancedCustomerSearch/EnhancedCustomerSearch";
 import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
 import CustomerSearchResults from "../Modals/EnhancedCustomerSearch/CustomerSearchResults";
-import {loadCustomersByName} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {loadCustomersBySearchTerm} from "../../store/reducers/enhancedCustomerSearch/actions";
 import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
 
 export const mh400 = "@media (max-height: 400px)";
@@ -212,7 +212,7 @@ export const CustomerSelect: React.FC<TProps> = ({
     }
 
     const loadData = () => {
-        scProfile && dispatch(loadCustomersByName(scProfile.id, onSuccess, showError, firstName, lastName))
+        scProfile && dispatch(loadCustomersBySearchTerm(scProfile.id, onSuccess, showError, firstName, lastName))
     }
 
     const clearForm = () => {
