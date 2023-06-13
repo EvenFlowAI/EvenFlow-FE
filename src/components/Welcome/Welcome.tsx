@@ -131,6 +131,7 @@ export const Welcome = () => {
     }
 
     const onLoadingSearchResults = (count: number) => {
+        setLoading(false);
         count > 0 ? onOpenSearchResults() : onOpen()
     }
 
@@ -139,12 +140,10 @@ export const Welcome = () => {
             dispatch(loadCustomersBySearchTerm(scProfile?.id ?? 0, onLoadingSearchResults, showError, '', '', customerEnteredEmail))
         } catch (err) {
             dispatch(setSessionId(""));
+            setLoading(false);
             if (err.response?.data?.errorCode === 6) {
                 onOpen()
             } else showError(err)
-        }
-        finally {
-            setLoading(false);
         }
     }
 
