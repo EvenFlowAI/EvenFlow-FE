@@ -2,21 +2,21 @@ import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from "rea
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Grid, useMediaQuery} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {setUserType} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setUserType, setWelcomeScreenView} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens, TCallback} from "../../types/types";
 import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../store/rootReducer";
 import {setCustomerEnteredEmail} from "../../store/reducers/appointment/actions";
 import {TextField} from "../UI/EndUserInputs";
-import {EServiceCenterName} from "../../api/types";
 import {LoadingButton} from "../UI/Button";
 import {useTranslation} from "react-i18next";
 import {useCurrentUser, useException, useModal} from "../../utils/hooks";
 import EnhancedCustomerSearch from "../Modals/EnhancedCustomerSearch/EnhancedCustomerSearch";
 import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
 import CustomerSearchResults from "../Modals/EnhancedCustomerSearch/CustomerSearchResults";
-import {loadCustomersByName} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {loadCustomersBySearchTerm} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
 
 export const mh400 = "@media (max-height: 400px)";
 export const mh600 = "@media (max-height: 600px)";
@@ -24,6 +24,7 @@ export const mh600 = "@media (max-height: 600px)";
 export const useStyles = makeStyles(theme => ({
     buttonsContainer: {
         marginTop: "5%",
+        marginBottom: 20,
         [mh600]: {
             marginTop: "2%"
         },
@@ -122,6 +123,12 @@ export const useStyles = makeStyles(theme => ({
             right: '22%',
         }
     },
+    wrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 }))
 
 const useLoadingStyles = makeStyles(theme => ({
@@ -169,11 +176,6 @@ export const CustomerSelect: React.FC<TProps> = ({
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-    const isRiverviewFord = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.RiverviewFord, [scProfile]);
-    const isDominion = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Dominion, [scProfile]);
-    const isLakePowell = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord, [scProfile]);
-    const isDealerBuilt = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
-    const notShowEmail = isRiverviewFord || isDominion || isLakePowell || isDealerBuilt;
     const classes = useStyles();
     const loadingClasses = useLoadingStyles();
     const dispatch = useDispatch();
@@ -209,8 +211,10 @@ export const CustomerSelect: React.FC<TProps> = ({
         onOpen()
     }
 
+    console.log(customerEnteredEmail)
+
     const loadData = () => {
-        scProfile && dispatch(loadCustomersByName(scProfile.id, onSuccess, showError, firstName, lastName))
+        scProfile && dispatch(loadCustomersBySearchTerm(scProfile.id, onSuccess, showError, firstName, lastName, customerEnteredEmail))
     }
 
     const clearForm = () => {
@@ -219,76 +223,81 @@ export const CustomerSelect: React.FC<TProps> = ({
         setLastName('');
     }
 
-    return <Grid className={classes.buttonsContainer}
-                 alignItems="stretch"
-                 container
-                 spacing={4}>
-        <Grid item xs={12} sm={12} md={6}>
-            <div className={classes.existing}>
-                <span>{t("I`m a returning customer")}</span>
-                <TextField
-                    style={{ marginTop: 20, marginBottom: 20 }}
-                    placeholder={`${t("Enter your")} ${notShowEmail ? "" : t("Email or ")}${t("Phone")}`}
-                    InputProps={{disableUnderline: true}}
-                    variant="standard"
-                    onChange={handleChange}
-                    value={customerEnteredEmail}
-                    fullWidth/>
-                <LoadingButton
-                    fullWidth={isXs}
-                    loading={loading}
-                    variant="contained"
-                    color="primary"
-                    classes={loadingClasses}
-                    className={classes.loadingButton}
-                    disabled={loading || !customerEnteredEmail}
-                    onClick={handleComplete}>
-                    {t("Search")}
-                </LoadingButton>
-                {currentUser
-                    ? <div className={classes.searchLinkWrapper}>
-                        <Button
-                            variant="text"
-                            onClick={onOpenSearch}
-                            disabled={loading}
-                            className={classes.searchButton}>
-                            {t("Search Customer by Name")}
-                        </Button>
-                    </div>
-                    : null}
-            </div>
+    const handleBack = () => dispatch(setWelcomeScreenView("serviceCenterSelect"))
+
+    return <div className={classes.wrapper}>
+        <Grid className={classes.buttonsContainer}
+              alignItems="stretch"
+              container
+              spacing={4}>
+            <Grid item xs={12} sm={12} md={6}>
+                <div className={classes.existing}>
+                    <span>{t("I`m a returning customer")}</span>
+                    <TextField
+                        style={{ marginTop: 20, marginBottom: 20 }}
+                        placeholder={`${t("Enter your")} ${t("Email or ")}${t("Phone")}`}
+                        InputProps={{disableUnderline: true}}
+                        variant="standard"
+                        onChange={handleChange}
+                        value={customerEnteredEmail}
+                        fullWidth/>
+                    <LoadingButton
+                        fullWidth={isXs}
+                        loading={loading}
+                        variant="contained"
+                        color="primary"
+                        classes={loadingClasses}
+                        className={classes.loadingButton}
+                        disabled={loading || !customerEnteredEmail}
+                        onClick={handleComplete}>
+                        {t("Search")}
+                    </LoadingButton>
+                    {currentUser
+                        ? <div className={classes.searchLinkWrapper}>
+                            <Button
+                                variant="text"
+                                onClick={onOpenSearch}
+                                disabled={loading}
+                                className={classes.searchButton}>
+                                {t("Search Customer by Name")}
+                            </Button>
+                        </div>
+                        : null}
+                </div>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+                <div className={classes.button}>
+                    <span>{t("I`m a new customer")}</span>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.submitButton}
+                        onClick={handleNew}
+                    >
+                        {t("Next")}
+                    </Button>
+                </div>
+            </Grid>
+            <EnhancedCustomerSearch
+                firstName={firstName}
+                lastName={lastName}
+                setFirstName={setFirstName}
+                setLastName={setLastName}
+                open={isOpen}
+                onClose={onClose}
+                loadData={loadData}
+                formIsChecked={formIsChecked}
+                setFormIsChecked={setFormIsChecked}
+            />
+            <CustomerSearchResults
+                handleNew={handleNew}
+                loadData={loadData}
+                onClose={onCloseSearchResults}
+                open={isOpenSearchResults}
+                onClearSearchForm={clearForm}
+            />
+            <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
         </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-            <div className={classes.button}>
-                <span>{t("I`m a new customer")}</span>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.submitButton}
-                    onClick={handleNew}
-                >
-                    {t("Next")}
-                </Button>
-            </div>
-        </Grid>
-        <EnhancedCustomerSearch
-            firstName={firstName}
-            lastName={lastName}
-            setFirstName={setFirstName}
-            setLastName={setLastName}
-            open={isOpen}
-            onClose={onClose}
-            loadData={loadData}
-            formIsChecked={formIsChecked}
-            setFormIsChecked={setFormIsChecked}
-        />
-        <CustomerSearchResults
-            handleNew={handleNew}
-            loadData={loadData}
-            onClose={onCloseSearchResults}
-            open={isOpenSearchResults}
-            onClearSearchForm={clearForm}
-        />
-        <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
-    </Grid>
+        {currentUser && <Actions onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service"/>}
+    </div>
 };

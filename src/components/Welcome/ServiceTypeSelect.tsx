@@ -35,6 +35,7 @@ const CardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Th
     gridTemplateColumns: `repeat(${cardsAmount}, 1fr)`,
     gap: "18px",
     marginTop: "5%",
+    marginBottom: 20,
     [mh600]: {
         marginTop: "2%"
     },
@@ -112,8 +113,6 @@ const useStyles = makeStyles((theme) => ({
     wrapper: {
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
     }
 }))
 

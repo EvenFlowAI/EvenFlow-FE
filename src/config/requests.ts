@@ -141,13 +141,15 @@ type ApiRoutes = {
         | "CreateDemandSegment" | "GetDemandSegments"
         | "GetTWEligibility" | "SetTWEligibility"
         | "BatchUpdateDemandSegments" | "RemoveDemandSegment"
-        | "SetUnplanned" | "GetUnplanned" | "GetUnplannedSlotsByDay" | "UpdateUnplannedSlots", TApiRoute>,
+        | "SetUnplanned" | "GetUnplanned" | "GetUnplannedSlotsByDay"
+        | "UpdateUnplannedSlots", TApiRoute>,
     AppointmentSlots: Record<"GetSlots" | "GetServiceValetSlots", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
     BookingFlowConfig: Record<"Get" | "Update", TApiRoute>,
+    CapacityManagement: Record<"Reallocate", TApiRoute>,
     ComplimentaryServices: Record<"GetByQuery" | "Remove" | "Update" | "AddFromList" | "Create", TApiRoute>,
-    Customers: Record<"GetByName" | "Update" | "GetRepairHistory", TApiRoute>,
+    Customers: Record<"GetByName" | "Update" | "GetRepairHistory" | "GetBySearchTerm" | "GetSingleCustomerVehicles", TApiRoute>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiRoute>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiRoute>,
@@ -181,7 +183,7 @@ type ApiRoutes = {
         | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate"
         | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType" | "UpdatePackagePriceDetails"
         | "UpdateDefaultOpsCode" | "UpdateDefaultMake" | "UpdatePresentedPackageOptions" | "UpdateEngineTypeFieldName"
-        | "GetAssignedAdvisorMethod" | "UpdateAssignedAdvisorMethod", TApiRoute>,
+        | "GetAssignedAdvisorMethod" | "UpdateAssignedAdvisorMethod" | "SetEmailRequired", TApiRoute>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetDmsAdvisors", TApiRoute>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
@@ -275,6 +277,9 @@ export class Api {
             Get: {route: "/booking-flow/{id}/settings", method: "get"},
             Update: {route: "/booking-flow/{id}/settings", method: "put"},
         },
+        CapacityManagement: {
+            Reallocate: {route: "/capacity-management/capacity-data-reallocate", method: "put"},
+        },
         ComplimentaryServices: {
             GetByQuery: {route: "/complimentary-services/by-query", method: "post"},
             Create: {route: "/complimentary-services", method: "post"},
@@ -285,7 +290,9 @@ export class Api {
         Customers: {
             GetByName: {route: "/customers/vehicles/by-customer-name", method: "get"},
             Update: {route: "/customers/vehicles", method: "put"},
-            GetRepairHistory: {route: "/customers/vehicles/repair-orders", method: "get"}
+            GetRepairHistory: {route: "/customers/vehicles/repair-orders", method: "get"},
+            GetBySearchTerm: {route: "/customers/vehicles", method: "get"},
+            GetSingleCustomerVehicles: {route: "/customers/single-customer-vehicles", method: "get"},
         },
         Dealerships: {
             Create: {route: "/dealerships", method: "post"},
@@ -458,6 +465,7 @@ export class Api {
             UpdateEngineTypeFieldName: {route: "/service-centers/{id}/engine-type-field-name", method: "patch"},
             GetAssignedAdvisorMethod: {route: "/service-center-settings/{id}/advisor-assignment", method: "get"},
             UpdateAssignedAdvisorMethod: {route: "/service-center-settings/{id}/advisor-assignment", method: "put"},
+            SetEmailRequired: {route: "/service-center-settings/{id}/email-required", method: "patch"}
         },
         ServiceConsultants: {
             Create: {route: "/service-consultants", method: "post"},

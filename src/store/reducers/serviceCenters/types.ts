@@ -22,6 +22,7 @@ export interface IServiceCenter {
     defaultVehicleMakeId?: number|null;
     maintenancePackageOptionTypes: EMaintenanceOptionType[];
     engineTypeFieldName?: string;
+    isEmailRequired: boolean;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;
@@ -152,3 +153,5 @@ export interface IAdvisorAssignment {
     primaryMethod?: EAdvisorAssignMethod|null;
     secondaryMethod?: EAdvisorAssignMethod|null;
 }
+
+export type TRemindersField = "email"| "reminders"

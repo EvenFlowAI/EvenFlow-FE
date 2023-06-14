@@ -11,7 +11,6 @@ import {
     clearStorage,
     getBlankCustomer,
     getBlankVehicle,
-    saveAppointmentReducer,
     saveCustomerCache,
     setCustomerEnteredEmail,
     setCustomerLoadedData,
@@ -36,16 +35,18 @@ import {LocalTokens} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import ServiceTypeSelect from "./ServiceTypeSelect";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
-import {API} from "../../api/api";
 //import ReactGA from "react-ga4";
 import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
-import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCustomerError";
 import {Loading} from "../UI/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
-import {loadCustomersByName} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {
+    loadCustomersByPhoneOrEmail,
+    loadCustomersBySearchTerm
+} from "../../store/reducers/enhancedCustomerSearch/actions";
+import SelectServiceCenter from "./SelectServiceCenter";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
@@ -53,6 +54,7 @@ export const Welcome = () => {
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {isLoading} = useSelector((state: RootState) => state.customers);
+    const {shortLoading} = useSelector((state: RootState) => state.serviceCenters);
 
     const [loading, setLoading] = useState<boolean>(false);
     const [customerFirstName, setCustomerFirstName] = useState<string>('');
@@ -71,11 +73,15 @@ export const Welcome = () => {
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useEffect(() => {
-       if (scProfile) {
-           dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
-           dispatch(loadMakes(scProfile.id))
+       if (id) {
+           dispatch(loadFirstScreenOptionsByQuery(decodeSCID(id)))
+           dispatch(loadMakes(decodeSCID(id)))
        }
-    }, [scProfile])
+    }, [id])
+
+    useEffect(() => {
+        setLoading(isLoading || shortLoading || isProfileLoading)
+    }, [isLoading, shortLoading, isProfileLoading])
 
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {
@@ -125,31 +131,16 @@ export const Welcome = () => {
     }
 
     const onLoadingSearchResults = (count: number) => {
-        count > 0 ? onOpenSearchResults() : onOpenNotFound()
+        setLoading(false);
+        count > 0 ? onOpenSearchResults() : onOpen()
     }
 
-    const handleExistingUser = async () => {
-        setLoading(true);
+    const getDataForAdminUser = () => {
         try {
-            const {data} = await API.appointment.searchCustomer({
-                searchTerm: customerEnteredEmail,
-                serviceCenterId: scProfile?.id ?? 0
-            });
-            dispatch(setCustomerLoadedData(data));
-            dispatch(saveAppointmentReducer());
-            if (data) {
-                handleGA();
-                if (currentUser && scProfile && (data.lastName || data.firstName)) {
-                    setCustomerFirstName(data.firstName ?? '');
-                    setCustomerLastName(data.lastName ?? '');
-                    dispatch(loadCustomersByName(scProfile.id, onLoadingSearchResults, showError, data.firstName, data.lastName))
-                } else {
-                    dispatch(setCurrentFrameScreen("carSelection"));
-                    redirect();
-                }
-            }
+            dispatch(loadCustomersBySearchTerm(scProfile?.id ?? 0, onLoadingSearchResults, showError, '', '', customerEnteredEmail))
         } catch (err) {
             dispatch(setSessionId(""));
+            setLoading(false);
             if (err.response?.data?.errorCode === 6) {
                 onOpen()
             } else showError(err)
@@ -158,10 +149,39 @@ export const Welcome = () => {
         }
     }
 
+    const onSuccessForCustomer = () => {
+        setLoading(false);
+        handleGA();
+        redirect();
+    }
+
+    const getDataForCustomer = () => {
+        try {
+            dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail, onSuccessForCustomer, onOpen))
+        } catch (err) {
+            dispatch(setSessionId(""));
+            setLoading(false)
+            if (err.response?.data?.errorCode === 6) {
+                onOpen()
+            } else showError(err)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleExistingUser = () => {
+        setLoading(true);
+        if (currentUser && scProfile) {
+            getDataForAdminUser()
+        } else {
+            getDataForCustomer()
+        }
+    }
+
     const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
         handleConfig(serviceType);
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
-            handleExistingUser().then();
+            handleExistingUser()
         } else {
             if (firstScreenOptions.length) {
                 dispatch(setWelcomeScreenView("serviceSelect"))
@@ -215,6 +235,8 @@ export const Welcome = () => {
 
     const getComponent = () => {
         switch (welcomeScreenView) {
+            case "serviceCenterSelect":
+                return <SelectServiceCenter/>
             case "search":
             case "serviceSelect":
                 return <ServiceTypeSelect onComplete={onServiceTypeSelect} loading={loading}/>;
@@ -238,26 +260,32 @@ export const Welcome = () => {
         }
     }
 
-    const getTitle = (view: TView) => view === 'serviceSelect' ? t("Do you want to bring your car in") : null;
-    const getSubTitle = (view: TView) => view === 'serviceSelect' ? t("Or use our mobile service?") : t("schedule service");
+    const getTitle = (view: TView) => {
+        return view === 'serviceCenterSelect'
+            ? `${scProfile?.dealershipName} Network Service Centers`
+            :  view === 'serviceSelect' ? t("Do you want to bring your car in") : null
+    };
+    const getSubTitle = (view: TView) => {
+        return view === 'serviceSelect' ? t("Or use our mobile service?") : t("schedule service")
+    };
 
     // todo uncomment language switcher
 
-    return !scProfile || isProfileLoading
+    return !scProfile || isProfileLoading || shortLoading
         ? <Loading/>
         : isFrame
             ? <MuiThemeProvider theme={frameTheme}>
-            <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
+                <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
                 <FrameWelcomeLayout>
-                    {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
                     {/*<LanguageSwitcher/>*/}
                     {getComponent()}
                 </FrameWelcomeLayout>
             </MuiThemeProvider>
-            : <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
-                {/*<LanguageSwitcher/>*/}
-                {welcomeScreenView === "select" ? <ServiceCenterSwitcher/> : null}
-                {getComponent()}
-                <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
-            </WelcomeLayout>
+            : <React.Fragment>
+                <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
+                    {/*<LanguageSwitcher/>*/}
+                    {getComponent()}
+                    <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
+                </WelcomeLayout>
+            </React.Fragment>
 };

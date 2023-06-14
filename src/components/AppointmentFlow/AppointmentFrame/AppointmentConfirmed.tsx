@@ -19,6 +19,7 @@ import {
     setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useCurrentUser} from "../../../utils/hooks";
 
 const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -139,6 +140,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const isFrame = window.top !== window.self;
     const {id} = useParams();
     const dispatch = useDispatch();
+    const currentUser = useCurrentUser();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const servicesList = useMemo(() => {
@@ -358,10 +360,11 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         window.open(url);
     }
 
-    const onMakeNew = () => {
-        dispatch(setVehicle(null));
-        dispatch(clearAppointmentData());
-        dispatch(setSideBarSteps([]));
+    const onMakeNew = async () => {
+        await dispatch(setVehicle(null));
+        await dispatch(clearAppointmentData());
+        await dispatch(setSideBarSteps([]));
+        await dispatch(setWelcomeScreenView(currentUser ? "serviceCenterSelect" : "select"));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
     }
 

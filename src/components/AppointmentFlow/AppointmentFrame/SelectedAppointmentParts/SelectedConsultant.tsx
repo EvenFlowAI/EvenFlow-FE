@@ -1,7 +1,11 @@
 import React, {useMemo} from 'react';
 import {MenuItem, Select, useMediaQuery, useTheme} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
-import {selectAppointment, selectServiceValetAppointment} from "../../../../store/reducers/appointment/actions";
+import {
+    getSlotsConsultantId,
+    selectAppointment,
+    selectServiceValetAppointment
+} from "../../../../store/reducers/appointment/actions";
 import {setAdvisor} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useSelectedAppointmentStyles} from "../SelectedAppointment";
@@ -31,6 +35,7 @@ const SelectedConsultant: React.FC<TSelectedConsultantProps> = ({currentConfig})
             dispatch(selectServiceValetAppointment(null));
         }
         dispatch(setAdvisor(consultant ? consultant : null))
+        if (!consultant) dispatch(getSlotsConsultantId(null));
     }
 
     return currentConfig?.advisorSelection && consultants.length
