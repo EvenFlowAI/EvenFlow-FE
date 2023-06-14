@@ -13,7 +13,7 @@ import {
     setVehicle,
     setWelcomeScreenView, setZipCode
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {loadSCProfile, setCustomerLoadedData} from "../../store/reducers/appointment/actions";
+import {loadSCProfile, setCustomerEnteredEmail, setCustomerLoadedData} from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";
 import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../utils/utils";
@@ -60,7 +60,8 @@ const ServiceCenterCard: React.FC<{sc: IServiceCenter}> = ({sc}) => {
 
     const onClick = () => {
         dispatch(loadSCProfile(sc.id));
-        dispatch(clearAppointmentData());
+        dispatch(clearAppointmentData())
+        dispatch(setCustomerEnteredEmail(""))
         dispatch(setAddress(null));
         dispatch(setZipCode(''));
         dispatch(setSideBarSteps([]));

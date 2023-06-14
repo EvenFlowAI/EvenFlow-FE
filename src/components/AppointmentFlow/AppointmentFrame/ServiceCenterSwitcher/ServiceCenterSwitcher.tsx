@@ -5,7 +5,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {Loading} from "../../../UI/Loading";
 import {useCurrentUser} from "../../../../utils/hooks";
 import {useHistory} from "react-router-dom";
-import {setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
+import {setCustomerEnteredEmail, setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
 import {
     clearAppointmentData, setServiceTypeOption,
     setSideBarSteps,
@@ -47,6 +47,7 @@ export const ServiceCenterSwitcher = () => {
 
     const handleClick = () => {
         dispatch(clearAppointmentData());
+        dispatch(setCustomerEnteredEmail(""))
         dispatch(setSideBarSteps([]));
         dispatch(setVehicle(null));
         dispatch(setCustomerLoadedData(null));
