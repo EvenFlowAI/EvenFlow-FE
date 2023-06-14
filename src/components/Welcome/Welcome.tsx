@@ -144,6 +144,8 @@ export const Welcome = () => {
             if (err.response?.data?.errorCode === 6) {
                 onOpen()
             } else showError(err)
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -155,13 +157,15 @@ export const Welcome = () => {
 
     const getDataForCustomer = () => {
         try {
-            dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail, onSuccessForCustomer))
+            dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail, onSuccessForCustomer, onOpen))
         } catch (err) {
             dispatch(setSessionId(""));
             setLoading(false)
             if (err.response?.data?.errorCode === 6) {
                 onOpen()
             } else showError(err)
+        } finally {
+            setLoading(false);
         }
     }
 

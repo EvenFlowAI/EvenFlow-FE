@@ -56,6 +56,7 @@ export const loadCustomersBySearchTerm = (
     if (lastName) data.lastName = lastName;
 
     if (Object.keys(data).length) {
+        dispatch(setLoading(true))
         Api.call<PaginatedAPIResponse<ICustomerWithPhones>>(Api.endpoints.Customers.GetBySearchTerm,
             {params: {serviceCenterId, ...data, pageSize, pageIndex}})
             .then(result => {
@@ -80,7 +81,9 @@ export const loadCustomersByPhoneOrEmail = (
     onError: (err: string) => void,
     phoneOrEmail: string,
     onSuccess?: () => void,
+    onNullResult?: () => void,
 ): AppThunk => (dispatch) => {
+    dispatch(setLoading(true))
     Api.call<IAPIResponse<ICustomerWithVehicles>>(Api.endpoints.Customers.GetSingleCustomerVehicles,
         {params: {serviceCenterId, phoneOrEmail}})
         .then(result => {
@@ -116,7 +119,7 @@ export const loadCustomersByPhoneOrEmail = (
                 dispatch(saveAppointmentReducer());
                 dispatch(setCurrentFrameScreen("carSelection"));
                 onSuccess && onSuccess();
-            }
+            } else if (onNullResult) onNullResult()
         })
         .catch(err => {
             console.log('get customers by search term error', err)
