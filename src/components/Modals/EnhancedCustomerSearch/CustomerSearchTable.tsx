@@ -123,7 +123,7 @@ const columnNames = [
     "First Name",
     "Home",
     "Cell",
-    "Work",
+    "Other",
     "Email",
     "Address",
     "City",
@@ -382,11 +382,11 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
                                 isEdit={isEdit}
                                 onFieldChange={onFieldChange}/>
                         </TableCell>
-                        <TableCell key="work" className={classes.bodyCell} width={100}>
+                        <TableCell key="otherPhone" className={classes.bodyCell} width={100}>
                             <CustomerInputField
                                 editingElement={editingElement}
                                 customer={customer}
-                                fieldName="workPhone"
+                                fieldName="otherPhone"
                                 isEdit={isEdit}
                                 onFieldChange={onFieldChange}/>
                         </TableCell>

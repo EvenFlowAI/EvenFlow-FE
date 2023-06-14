@@ -30,6 +30,7 @@ export type TCustomerCommunication = {
 }
 
 export interface ICustomerWithPhones extends ICustomerByName {
+    otherPhone: string;
     workPhone: string;
     communications: TCustomerCommunication[];
     hasOrders: boolean;
