@@ -123,7 +123,7 @@ const columnNames = [
     "First Name",
     "Home",
     "Cell",
-    "Other",
+    "Work",
     "Email",
     "Address",
     "City",
