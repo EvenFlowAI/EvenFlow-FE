@@ -5,20 +5,18 @@ import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    EUserType,
-    TMaintenanceDetails
-} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EUserType, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
     selectService,
     setMaintenanceDetails,
-    setPackage, setRecallsAreShown,
+    setPackage,
+    setRecallsAreShown,
     setVehicle,
     updateVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
-import {EServiceCenterName, ILoadedVehicle} from "../../../api/types";
+import {EServiceCategoryPage, EServiceCenterName, ILoadedVehicle} from "../../../api/types";
 import moment from "moment";
 import {TextField} from "../../UI/TextField";
 import {useException, useModal} from "../../../utils/hooks";
@@ -113,6 +111,12 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
 
     const recallsToggledOn = useMemo(() => (currentConfig?.checkRecallsNew && userType === EUserType.New)
         || (currentConfig?.checkRecallsExisting && userType === EUserType.Existing), [currentConfig, userType])
+
+    const isRecallsCategorySelected = useMemo(() => {
+        const isServiceRecall = service?.type == EServiceCategoryType.OpenRecalls && service.page === EServiceCategoryPage.Page1;
+        const isSubServiceRecall = subService?.type == EServiceCategoryType.OpenRecalls && subService.page === EServiceCategoryPage.Page2;
+        return isServiceRecall || isSubServiceRecall;
+    }, [service, subService])
 
     const isNextDisabled = useMemo(() => {
         return !Boolean(maintenanceDetails.make
@@ -249,6 +253,10 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         setErrors(e => e.filter(err => err !== name));
     }
 
+    const handleDeclineRecalls = () => {
+        if (isRecallsCategorySelected) onBack('serviceNeeds');
+    }
+
     const isValid = () => {
         const errorsArray: string [] = [];
         for (let f of requiredFields) {
@@ -296,7 +304,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }
 
     const handleSubmit = async () => {
-        if (selectedVehicle?.vin?.length === 17 && recallsToggledOn && !recallsAreShown) {
+        if (selectedVehicle?.vin?.length === 17 && !recallsAreShown && (recallsToggledOn || isRecallsCategorySelected)) {
             setLoading(true);
             const make = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase());
             if (selectedVehicle?.make && make?.id) {
@@ -305,7 +313,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 if (data.length) {
                     await onOpen()
                 } else {
-                    if (userType === EUserType.New) {
+                    if (userType === EUserType.New || isRecallsCategorySelected) {
                         onNoRecallsOpen()
                     } else {
                         handleNext();
@@ -445,9 +453,9 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             onNext={handleSubmit}
             prevDisabled={isLoading}
             nextDisabled={isNextDisabled || isLoading}
-            nextLabel={t("Next")}
+            nextLabel={isRecallsCategorySelected ? t("Check for Recalls") : t("Next")}
         />
-        <RecallsByVin open={isOpen} onClose={onClose} handleNext={handleNext}/>
+        <RecallsByVin open={isOpen} onClose={onClose} handleNext={handleNext} onDeclineRecalls={handleDeclineRecalls}/>
         <NoRecalls open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleNext}/>
     </StepWrapper>);
 };
