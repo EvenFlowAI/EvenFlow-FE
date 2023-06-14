@@ -89,3 +89,17 @@ export const changeUnplannedSlots = (data: IUnplannedSlotUpdateData, onError: TA
         })
         .finally(() => dispatch(setUnplannedLoading(false)));
 }
+
+export const setRecalculationLoading = createAction<boolean>("DemandSegments/RecalculationLoading")
+export const recalculateCapacity = (serviceCenterId: number, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setRecalculationLoading(true))
+    Api.call(Api.endpoints.CapacityManagement.Reallocate, {data: {serviceCenterId}})
+        .then(res => {
+            if (res) onSuccess()
+        })
+        .catch(err => {
+            onError(err)
+            console.log('reallocate capacity error', err)
+        })
+        .finally(() => dispatch(setRecalculationLoading(false)))
+}

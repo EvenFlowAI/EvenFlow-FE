@@ -33,7 +33,6 @@ import {
     setSelectedPackageOptionType,
     setSelectedPackagePriceTitles,
     setSelectedRecalls,
-    setServiceType,
     setServiceTypeOption,
     setSideBarActualSteps, setSideBarMenu,
     setSideBarSteps, setSideBarStepsList,
@@ -111,7 +110,6 @@ type TState = {
     hashKey?: string;
     gap: number | undefined;
     userType: EUserType | undefined;
-    serviceType: EServiceType;
     address: any;
     zipCode: string;
     valueService: IValueService | null;
@@ -171,7 +169,6 @@ const initialState: TState = {
     packageOptionType: null,
     gap: undefined,
     userType: undefined,
-    serviceType: EServiceType.VisitCenter,
     address: null,
     zipCode: "",
     valueService: null,
@@ -268,7 +265,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             reminders: payload.reminderTypes,
             categoriesIds: payload.serviceCategories ? payload.serviceCategories?.map(item => item.id) : [],
             description: payload.comment,
-            serviceType: payload.serviceType ?? payload.serviceTypeOption?.type ?? EServiceType.VisitCenter,
+            serviceType: payload.serviceTypeOption?.type ?? EServiceType.VisitCenter,
             address: payload.address ?? null,
             zipCode: payload.zipCode ?? "",
             serviceTypeOption: payload.serviceTypeOption ?? null,
@@ -312,9 +309,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setUserType, (state, {payload}) => {
         return {...state, userType: payload};
-    })
-    .addCase(setServiceType, (state, { payload }) => {
-        return {...state, serviceType: payload};
     })
     .addCase(setAddress, (state, { payload }) => {
         return {...state, address: payload};

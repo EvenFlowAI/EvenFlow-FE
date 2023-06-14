@@ -23,6 +23,7 @@ export interface IServiceCenterProfile {
     avatarPath: string;
     address: IAddress;
     dealershipId: number;
+    dealershipName: string;
     serviceCenterFlag: number;
     isRoundPrice: boolean;
     isAuthRequired: boolean;
@@ -34,6 +35,7 @@ export interface IServiceCenterProfile {
     dmsId?: string;
     maintenancePackageOptionTypes: EMaintenanceOptionType[];
     eMenuEnabled?: boolean;
+    isEmailRequired: boolean;
 }
 export interface ISR {
     id: number;

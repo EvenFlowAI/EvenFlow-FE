@@ -90,8 +90,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType?.toString() === appointmentFrame.serviceType?.toString());
-    }, [config, appointmentFrame.serviceType])
+        const serviceType = appointmentFrame.serviceTypeOption?.type ?? EServiceType.VisitCenter;
+        return config.find(item => item.serviceType?.toString() === serviceType.toString());
+    }, [config, appointmentFrame.serviceTypeOption])
 
     useEffect(() => {
         appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
@@ -167,94 +168,122 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 : null;
     }
 
+    const checkIsValid = () => {
+        let isValid = true;
+        const localErrors: string[] = [];
+        if (!appointmentFrame.customer.email && appointment.scProfile?.isEmailRequired) {
+            isValid = false;
+            localErrors.push('email')
+            showError('"Email" must not be empty')
+        }
+        if (!appointmentFrame.customer?.fullName) {
+            isValid = false;
+            localErrors.push('fullname')
+            showError('"Full Name" must not be empty')
+        }
+        if (!appointmentFrame.customer?.phoneNumber) {
+            isValid = false;
+            localErrors.push('phonenumber')
+            showError('"Phone Number" must not be empty')
+        }
+        setErrors(localErrors)
+        return isValid;
+    }
+
     const handleCreateAppointment = () => {
-        const make = getMake();
-        const model = getModel();
-        const year = getYear();
-        const maintenancePackageOption = appointmentFrame.selectedPackage
-            ? {
-                id: appointmentFrame.selectedPackage?.id,
-                priceType: appointmentFrame.packagePricingType
-            }
-            : appointmentFrame.packageEMenuType !== null
-                ? {optionType: appointmentFrame.packageEMenuType}
-                : null;
-
-        const data = {
-            id: appointmentFrame.id,
-            hashKey: appointmentFrame.hashKey,
-            appointmentTimingType: appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff  && appointmentFrame.selectedTiming
-                ? appointmentFrame.selectedTiming
-                : EAppointmentTimingType.FirstAvailable,
-            customerId: appointment.customerLoadedData?.id ?? null,
-            comment: appointmentFrame.description,
-            driver: appointmentFrame.customer,
-            gmt: moment().utcOffset(),
-            isNeedCall: false,
-            offerId: appointment.appointment?.offer?.id ?? null,
-            reminderTypes: appointmentFrame.reminders,
-            serviceCenterId: decodeSCID(id),
-            consultantId: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
-            vehicle: {
-                dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
-                driveType: "",
-                ...(appointmentFrame.selectedVehicle ?? {}),
-                engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
-                model,
-                make,
-                transmission: "",
-                vin: appointmentFrame.selectedVehicle?.vin ?? '',
-                year,
-                mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
-                modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
-            },
-            transportationOptionId: appointmentFrame.serviceTypeOption?.transportationOption?.id
-                ?? appointmentFrame.transportation?.id
-                ?? null,
-            slot: appointment.appointment?.id.split("|")[1] || "00:00:00",
-            serviceRequestIds: collectServiceRequestIds(
-                appointmentFrame.service,
-                appointmentFrame.subService,
-                appointmentFrame.selectedPackage,
-                appointment.selectedSR
-            ),
-            date: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
-                ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
-                : appointment.appointment?.id.split("|")[0] || "",
-            serviceCategoryIds: getCategories(),
-            maintenancePackageOption,
-            valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
-            searchTerm: customerEnteredEmail,
-            serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
-            zipCode: appointmentFrame.zipCode ?? null,
-            address: appointmentFrame.address?.label ?? null,
-            recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
-        };
-
-        const endpoint = data?.hashKey
-            ? Api.endpoints.Appointments.UpdateByKey
-            : Api.endpoints.Appointments.Create;
-
-        setSaving(true);
-
-        Api.call<ICreateAppointmentResp>(
-            endpoint, { data, urlParams: {id: data.hashKey} }
-        )
-            .then(({data}) => {
-                handleResponse(data, endpoint);
-            })
-            .catch(e => {
-                showError(e);
-                if (e.response?.data?.errors) {
-                    const data = [...e.response.data.errors]
-                    setErrors(() => {
-                        return data.map((err: TError): string => err.field.split('.')[1].toLowerCase());
-                    })
+        if (checkIsValid()) {
+            const make = getMake();
+            const model = getModel();
+            const year = getYear();
+            const maintenancePackageOption = appointmentFrame.selectedPackage
+                ? {
+                    id: appointmentFrame.selectedPackage?.id,
+                    priceType: appointmentFrame.packagePricingType
                 }
-            })
-            .finally(() => {
-                setSaving(false);
-            })
+                : appointmentFrame.packageEMenuType !== null
+                    ? {optionType: appointmentFrame.packageEMenuType}
+                    : null;
+
+            const data = {
+                id: appointmentFrame.id,
+                hashKey: appointmentFrame.hashKey,
+                appointmentTimingType: appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff  && appointmentFrame.selectedTiming
+                    ? appointmentFrame.selectedTiming
+                    : EAppointmentTimingType.FirstAvailable,
+                customerId: appointment.customerLoadedData?.id ?? null,
+                comment: appointmentFrame.description,
+                driver: {
+                    ...appointmentFrame.customer,
+                    email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
+                },
+                gmt: moment().utcOffset(),
+                isNeedCall: false,
+                offerId: appointment.appointment?.offer?.id ?? null,
+                reminderTypes: appointmentFrame.reminders,
+                serviceCenterId: decodeSCID(id),
+                consultantId: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
+                vehicle: {
+                    dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
+                    driveType: "",
+                    ...(appointmentFrame.selectedVehicle ?? {}),
+                    engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
+                    model,
+                    make,
+                    transmission: "",
+                    vin: appointmentFrame.selectedVehicle?.vin ?? '',
+                    year,
+                    mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
+                    modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
+                },
+                transportationOptionId: appointmentFrame.serviceTypeOption?.transportationOption?.id
+                    ?? appointmentFrame.transportation?.id
+                    ?? null,
+                slot: appointment.appointment?.id.split("|")[1] || "00:00:00",
+                serviceRequestIds: collectServiceRequestIds(
+                    appointmentFrame.service,
+                    appointmentFrame.subService,
+                    appointmentFrame.selectedPackage,
+                    appointment.selectedSR
+                ),
+                date: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
+                    ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
+                    : appointment.appointment?.id.split("|")[0] || "",
+                serviceCategoryIds: getCategories(),
+                maintenancePackageOption,
+                valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
+                searchTerm: customerEnteredEmail,
+                serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
+                zipCode: appointmentFrame.zipCode ?? null,
+                address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
+                recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
+            };
+
+            const endpoint = data?.hashKey
+                ? Api.endpoints.Appointments.UpdateByKey
+                : Api.endpoints.Appointments.Create;
+
+            setSaving(true);
+
+            Api.call<ICreateAppointmentResp>(
+                endpoint, { data, urlParams: {id: data.hashKey} }
+            )
+                .then(({data}) => {
+                    handleResponse(data, endpoint);
+                })
+                .catch(e => {
+                    showError(e);
+                    if (e.response?.data?.message?.toLowerCase().includes('email')) setErrors(prev => ([...prev, 'email']))
+                    if (e.response?.data?.errors) {
+                        const data = [...e.response.data.errors]
+                        setErrors(() => {
+                            return data.map((err: TError): string => err.field.split('.')[1].toLowerCase());
+                        })
+                    }
+                })
+                .finally(() => {
+                    setSaving(false);
+                })
+        }
     }
 
     return <StepWrapper>

@@ -5,11 +5,9 @@ import {DialogProps} from "../types";
 import {useTranslation} from "react-i18next";
 import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions";
 import {useDispatch} from "react-redux";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {
     setCurrentFrameScreen,
-    setServiceType,
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 
 type TExistingCustomerErrorProps = DialogProps & {
@@ -45,7 +43,6 @@ const ExistingCustomerError: React.FC<TExistingCustomerErrorProps> = ({open, onC
     const classes = useStyles();
 
     const onNew = () => {
-        dispatch(setServiceType(EServiceType.VisitCenter));
         dispatch(setCurrentFrameScreen("serviceNeeds"));
         onClose()
         onNext();
@@ -56,9 +53,9 @@ const ExistingCustomerError: React.FC<TExistingCustomerErrorProps> = ({open, onC
             <DialogTitle onClose={onClose}/>
             <DialogContent>
                 <div className={classes.info}>
-                    {t("We are sorry but we can not find any vehicle associated with that phone number.")}
+                    {t("We are sorry but we can not find any vehicle associated with that email/phone number.")}
                     <span className={classes.question}>
-                        {t("Would you like to try a different number?")}
+                        {t("Would you like to try a different number or email?")}
                     </span>
                 </div>
             </DialogContent>

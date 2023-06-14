@@ -12,7 +12,7 @@ import {ICurrentUser} from "../store/reducers/users/types";
 import {TEnumKeyLabel} from "../store/reducers/utils";
 import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
 import {EJobType} from "../store/reducers/pods/types";
-import {EPackagePricingType, EServiceType} from "../store/reducers/appointmentFrameReducer/types";
+import {EPackagePricingType} from "../store/reducers/appointmentFrameReducer/types";
 import {ETransportColumn} from "../store/reducers/transportationNeeds/types";
 import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
@@ -233,7 +233,6 @@ export interface IBaseAppointment {
     serviceRequests: IServiceRequestShort[];
     createdBy: string;
     user?: ICurrentUser;
-    serviceType: EServiceType;
     serviceTypeOption?: IFirstScreenOption|null;
     address?: string;
     zipCode?: string;

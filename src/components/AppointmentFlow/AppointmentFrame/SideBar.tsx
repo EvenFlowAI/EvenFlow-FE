@@ -11,6 +11,7 @@ import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {getCurrentMenu, getStepsMap, getStepsScreen} from "./utils";
 import {Loading} from "../../UI/Loading";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const Wrapper = styled('ul')(({theme}) => ({
     listStyle: "none",
@@ -67,15 +68,16 @@ type TProps = {
 }
 
 export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
-    const {serviceType, sideBarSteps, sideBarMenu, sideBarActualSteps, sideBarStepsList, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {sideBarSteps, sideBarMenu, sideBarActualSteps, sideBarStepsList, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const theme = useTheme();
     const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const {t} = useTranslation();
 
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType.toString() === serviceType.toString());
+        return config.find(item => item.serviceType.toString() === serviceType.toString())
     }, [config, serviceType]);
     const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection), [currentConfig]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
@@ -115,7 +117,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
             return (currentScreenNumberValue < index + 1 && lastPassedScreenNumberValue < index + 1);
         }
         return false;
-    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, sideBarSteps, sideBarActualSteps])
+    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, sideBarSteps, sideBarActualSteps, screen])
 
     const activeButtonStyles = {
         background: '#E6FCEC',
@@ -128,7 +130,6 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
             {!isSm
                 ? currentConfig && sideBarActualSteps
                     ? sideBarMenu.map((item, idx) => {
-                        console.log(item, 'disabled = ', getButtonState(idx))
                         return <li key={item}>
                             <Button
                                 fullWidth

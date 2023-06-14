@@ -15,10 +15,11 @@ import {useTranslation} from "react-i18next";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {
-    clearAppointmentData,
+    clearAppointmentData, setSideBarSteps,
     setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useCurrentUser} from "../../../utils/hooks";
 
 const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -99,7 +100,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         vehicle,
         allCategories,
         categoriesIds,
-        serviceType,
         serviceTypeOption,
         address,
         zipCode,
@@ -124,7 +124,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.selectedVehicle,
         state.categories.allCategories,
         state.appointmentFrame.categoriesIds,
-        state.appointmentFrame.serviceType,
         state.appointmentFrame.serviceTypeOption,
         state.appointmentFrame.address,
         state.appointmentFrame.zipCode,
@@ -141,7 +140,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const isFrame = window.top !== window.self;
     const {id} = useParams();
     const dispatch = useDispatch();
+    const currentUser = useCurrentUser();
 
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const servicesList = useMemo(() => {
             return getMaintenanceDescription(
                 srList,
@@ -359,9 +360,11 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         window.open(url);
     }
 
-    const onMakeNew = () => {
-        dispatch(setVehicle(null));
-        dispatch(clearAppointmentData());
+    const onMakeNew = async () => {
+        await dispatch(setVehicle(null));
+        await dispatch(clearAppointmentData());
+        await dispatch(setSideBarSteps([]));
+        await dispatch(setWelcomeScreenView(currentUser ? "serviceCenterSelect" : "select"));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
     }
 

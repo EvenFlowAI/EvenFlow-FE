@@ -20,7 +20,7 @@ type TUserDataProps = {
 
 export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
     const dispatch = useDispatch();
-    const customerLoadedData = useSelector((state: RootState) => state.appointment.customerLoadedData);
+    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const customer = useSelector((state: RootState) => state.appointmentFrame.customer);
     const {t} = useTranslation();
 
@@ -63,7 +63,7 @@ export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
             <TextField
                 onChange={handleChange}
                 value={customer?.email}
-                error={errors.includes('email')}
+                error={errors.includes('email') && scProfile?.isEmailRequired}
                 name="email"
                 fullWidth
                 placeholder={t("Type here")}

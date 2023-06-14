@@ -1,111 +1,69 @@
-import React, {useEffect, useState} from "react";
-import {Button, Menu, MenuItem} from "@material-ui/core";
-import {ArrowDropDown} from "@material-ui/icons";
+import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {IServiceCenter} from "../../../../store/reducers/serviceCenters/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {loadShortSC} from "../../../../store/reducers/serviceCenters/actions";
-import {useHistory} from "react-router-dom";
-import {Routes} from "../../../../config/routes";
-import {encodeSCID} from "../../../../utils/utils";
 import {Loading} from "../../../UI/Loading";
-import {clearAppointmentData, setVehicle} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
-import {getCurrentUser} from "../../../../store/reducers/users/actions";
 import {useCurrentUser} from "../../../../utils/hooks";
-import {TRole} from "../../../../store/reducers/users/types";
+import {useHistory} from "react-router-dom";
+import {setCustomerEnteredEmail, setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
+import {
+    clearAppointmentData, setServiceTypeOption,
+    setSideBarSteps,
+    setVehicle, setWelcomeScreenView
+} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {encodeSCID} from "../../../../utils/utils";
+import {Routes} from "../../../../config/routes";
 
-const useStyles = makeStyles(() => ({
-    root: {
-        color: "#858585",
-        marginRight: 10,
-        fontSize: 16,
-        textTransform: "none"
-    },
+const useStyles = makeStyles((theme) => ({
     selectWrapper: {
+        width: "100%",
         display: 'flex',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+        padding: '12px 0 28px 0',
+        [theme.breakpoints.down("sm")]: {
+            justifyContent: 'center',
+            marginBottom: 20,
+            padding: '12px 0 0 0',
+        }
+    },
+    textWrapper: {
+        fontSize: 20,
+        fontWeight: 600,
+        cursor: "pointer",
+        [theme.breakpoints.down("sm")]: {
+            fontSize: 16,
+        }
     }
 }))
 
-const restrictedRoles: TRole[] = ["Manager", "Advisor"];
-
 export const ServiceCenterSwitcher = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {shortSC, shortLoading} = useSelector((state: RootState) => state.serviceCenters);
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const [selectedServiceCenter, setSelectedServiceCenter] = useState<IServiceCenter|null>(null);
-    const [centersList, setCentersList] = useState<IServiceCenter[]>([]);
-
-    const dispatch = useDispatch();
-    const history = useHistory();
-    const classes = useStyles();
+    const {welcomeScreenView} = useSelector((state: RootState) => state.appointmentFrame);
+    const {shortLoading} = useSelector((state: RootState) => state.serviceCenters);
     const currentUser = useCurrentUser();
+    const classes = useStyles();
+    const dispatch = useDispatch();
+    const history = useHistory()
 
-    useEffect(() => {
-        if (shortSC?.length && currentUser) {
-            setCentersList(() => restrictedRoles.includes(currentUser?.role)
-                ? shortSC.filter(item => item.id === currentUser.serviceCenterId)
-                : shortSC)
-        }
-    }, [currentUser, shortSC, restrictedRoles])
-
-    useEffect(() => {
+    const handleClick = () => {
+        dispatch(clearAppointmentData());
+        dispatch(setCustomerEnteredEmail(""))
+        dispatch(setSideBarSteps([]));
+        dispatch(setVehicle(null));
+        dispatch(setCustomerLoadedData(null));
+        dispatch(setWelcomeScreenView('serviceCenterSelect'))
+        dispatch(setServiceTypeOption(null));
         if (scProfile) {
-            dispatch(loadShortSC(false, scProfile.dealershipId));
-            dispatch(getCurrentUser());
-        }
-    }, [scProfile])
-
-    useEffect(() => {
-        if (scProfile && shortSC.length) {
-            const sc = shortSC.find(item => item.id === scProfile.id);
-            sc && setSelectedServiceCenter(sc);
-        }
-    }, [scProfile, shortSC])
-
-    const handleMenuOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(e.currentTarget);
-    }
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    }
-
-    const handleChooseServiceCenter = (sc: IServiceCenter) => () => {
-        handleMenuClose();
-        if (selectedServiceCenter?.id !== sc.id) {
-            dispatch(clearAppointmentData());
-            dispatch(setVehicle(null));
-            dispatch(setCustomerLoadedData(null));
-        }
-        setSelectedServiceCenter(sc);
-        if (scProfile && sc.id !== scProfile.id) {
-            history.push(`${Routes.EndUser.Welcome}/${encodeSCID(sc.id)}?frame=1`)
+            const encoded = encodeSCID(scProfile.id)
+            history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`)
         }
     }
 
-    return currentUser && centersList?.length
-        ? <div className={classes.selectWrapper}>
+    return currentUser && scProfile && (welcomeScreenView && welcomeScreenView !== "serviceCenterSelect")
+        ? <div className={classes.selectWrapper} onClick={handleClick}>
             { shortLoading
                 ? <Loading/>
-                : <React.Fragment>
-                    <Button
-                        className={classes.root}
-                        onClick={handleMenuOpen}
-                        endIcon={<ArrowDropDown />}>
-                        {selectedServiceCenter?.name}
-                    </Button>
-                    <Menu
-                        anchorEl={anchorEl}
-                        onClose={handleMenuClose}
-                        open={Boolean(anchorEl)}>
-                        {centersList.map(sc => {
-                            return <MenuItem key={sc.id} onClick={handleChooseServiceCenter(sc)}>{sc.name}</MenuItem>
-                        })}
-                    </Menu>
-                </React.Fragment>
+                : <div className={classes.textWrapper}>{scProfile?.name}</div>
             }
         </div>
         : null

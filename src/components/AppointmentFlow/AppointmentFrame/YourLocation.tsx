@@ -25,7 +25,7 @@ import {
 import {useTranslation} from "react-i18next";
 import {styled} from "@material-ui/core";
 import DisplayAncillaryPrice from "../../Modals/DisplayAncillaryPrice/DisplayAncillaryPrice";
-import {useException, useModal} from "../../../utils/hooks";
+import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import UnavailableService from "../../Modals/InavailableService/UnavailableService";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
@@ -90,7 +90,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {zipCode: zipCodeValue, address, serviceType, filteredZipCodes, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {zipCode: zipCodeValue, address, filteredZipCodes, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
@@ -98,6 +98,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const classes = useStyles();
     const autocompleteClasses = useAutocompleteStyles();
     const {t} = useTranslation();
+    const currentUser = useCurrentUser();
+
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? t('Enter pick up address')
         : t('Enter your requested location'), [serviceTypeOption])
@@ -136,7 +139,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const handleBack = () => {
         clearAddress();
         clearSelectedData();
-        if (!customerLoadedData?.id) {
+        if (!customerLoadedData?.id || currentUser) {
             onLogin();
         } else {
             onBack();

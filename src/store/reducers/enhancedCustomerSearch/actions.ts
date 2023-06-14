@@ -1,11 +1,14 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ICustomerByName, IRepairHistory} from "./types";
-import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
+import {ICustomerWithPhones, ICustomerWithVehicles, IRepairHistory, TSearchCustomerParams} from "./types";
+import {AppThunk, IAPIResponse, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {ActionCreator} from "redux";
+import {ICustomerLoadedData, ILoadedVehicle} from "../../../api/types";
+import {saveAppointmentReducer, setCustomerLoadedData} from "../appointment/actions";
+import {setCurrentFrameScreen} from "../appointmentFrameReducer/actions";
 
-export const getCustomers = createAction<ICustomerByName[]>("CustomerSearch/GetCustomers");
-export const setCurrentCustomer = createAction<ICustomerByName|null>("CustomerSearch/SetCurrentCustomer");
+export const getCustomers = createAction<ICustomerWithPhones[]>("CustomerSearch/GetCustomers");
+export const setCurrentCustomer = createAction<ICustomerWithPhones|null>("CustomerSearch/SetCurrentCustomer");
 export const setLoading = createAction<boolean>("CustomerSearch/SetLoading");
 
 export const setPaging = createAction<IPagingResponse>("CustomerSearch/SetPaging");
@@ -14,36 +17,124 @@ export const getRepairHistory = createAction<IRepairHistory|null>("CustomerSearc
 export const setRepairHistoryLoading = createAction<boolean>("CustomerSearch/SetRepairHistoryLoading");
 export const setRepairHistoryPaging = createAction<IPagingResponse>("CustomerSearch/SetRepairHistoryPaging");
 
-export const loadCustomersByName = (
+// export const loadCustomersByName = (
+//     serviceCenterId: number,
+//     onSuccess: (count: number) => void,
+//     onError: (err: string) => void,
+//     firstName?: string,
+//     lastName?: string,
+// ): AppThunk => (dispatch, getState) => {
+//     dispatch(setLoading(true))
+//     const {pageSize, pageIndex} = getState().customers.pageData;
+//     Api.call<PaginatedAPIResponse<ICustomerByName>>(Api.endpoints.Customers.GetByName, {params: {serviceCenterId, firstName, lastName, pageSize, pageIndex}})
+//         .then(result => {
+//             if (result.data?.result) {
+//                 dispatch(getCustomers(result.data.result))
+//                 dispatch(setPaging(result.data.paging))
+//                 onSuccess(result.data.result.length)
+//             }
+//         })
+//         .catch(err => {
+//             console.log('get customers by name error', err)
+//             onError(err)
+//         })
+//         .finally(() => dispatch(setLoading(false)))
+// }
+
+export const loadCustomersBySearchTerm = (
     serviceCenterId: number,
     onSuccess: (count: number) => void,
     onError: (err: string) => void,
     firstName?: string,
     lastName?: string,
+    phoneOrEmail?: string,
 ): AppThunk => (dispatch, getState) => {
-    dispatch(setLoading(true))
     const {pageSize, pageIndex} = getState().customers.pageData;
-    Api.call<PaginatedAPIResponse<ICustomerByName>>(Api.endpoints.Customers.GetByName, {params: {serviceCenterId, firstName, lastName, pageSize, pageIndex}})
+    const data: TSearchCustomerParams = {};
+    if (phoneOrEmail) data.phoneOrEmail = phoneOrEmail;
+    if (firstName) data.firstName = firstName;
+    if (lastName) data.lastName = lastName;
+
+    if (Object.keys(data).length) {
+        dispatch(setLoading(true))
+        Api.call<PaginatedAPIResponse<ICustomerWithPhones>>(Api.endpoints.Customers.GetBySearchTerm,
+            {params: {serviceCenterId, ...data, pageSize, pageIndex}})
+            .then(result => {
+                if (result.data?.result) {
+                    dispatch(getCustomers(result.data.result))
+                    dispatch(setPaging(result.data.paging))
+                    onSuccess(result.data.result.length)
+                }
+            })
+            .catch(err => {
+                console.log('get customers by search term error', err)
+                onError(err)
+            })
+            .finally(() => dispatch(setLoading(false)))
+    } else {
+        onError("Please enter phone, email, first name or last name")
+    }
+}
+
+export const loadCustomersByPhoneOrEmail = (
+    serviceCenterId: number,
+    onError: (err: string) => void,
+    phoneOrEmail: string,
+    onSuccess?: () => void,
+    onNullResult?: () => void,
+): AppThunk => (dispatch) => {
+    dispatch(setLoading(true))
+    Api.call<IAPIResponse<ICustomerWithVehicles>>(Api.endpoints.Customers.GetSingleCustomerVehicles,
+        {params: {serviceCenterId, phoneOrEmail}})
         .then(result => {
             if (result.data?.result) {
-                dispatch(getCustomers(result.data.result))
-                dispatch(setPaging(result.data.paging))
-                onSuccess(result.data.result.length)
-            }
+                const customer = result.data.result;
+                // dispatch(getSingleCustomerVehicles(result.data.result))
+                const {cellPhone, homePhone, workPhone, vehicles} = customer;
+                const phoneNumber = cellPhone ?? homePhone ?? workPhone;
+                const vehiclesData = vehicles.map(item => {
+                    const vehicle: ILoadedVehicle = {
+                        vin: item.vin,
+                        year: item.year,
+                        make: item.make,
+                        model: item.model,
+                        mileage: item.mileage,
+                        engineTypeId: item.engineTypeId ? +item.engineTypeId : null,
+                        appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
+                    }
+                    if (item.hasOrders) vehicle.hasRepairOrders = true;
+                    return vehicle;
+                })
+                const data:ICustomerLoadedData = {
+                    emails: customer.email ? [customer.email] : [],
+                    firstName: customer.firstName,
+                    lastName: customer.lastName,
+                    fullName: `${customer.firstName} ${customer.lastName}`,
+                    id: customer.customerInternalId ? customer.customerInternalId.toString() : '',
+                    phoneNumbers: phoneNumber ? [phoneNumber] : [],
+                    vehicles: vehiclesData,
+                }
+                if (customer.city) data.city = customer.city;
+                dispatch(setCustomerLoadedData(data));
+                dispatch(saveAppointmentReducer());
+                dispatch(setCurrentFrameScreen("carSelection"));
+                onSuccess && onSuccess();
+            } else if (onNullResult) onNullResult()
         })
         .catch(err => {
-            console.log('get customers by name error', err)
+            console.log('get customers by search term error', err)
             onError(err)
         })
         .finally(() => dispatch(setLoading(false)))
 }
+
 export const changePageData: ActionCreator<AppThunk> = (payload: Partial<IPageRequest>) => {
     return async dispatch => {
         dispatch(setPageData(payload));
     }
 }
 
-export const updateCustomer = (data: ICustomerByName, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+export const updateCustomer = (data: ICustomerWithPhones, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setLoading(true))
     Api.call(Api.endpoints.Customers.Update, {data})
         .then(res => {

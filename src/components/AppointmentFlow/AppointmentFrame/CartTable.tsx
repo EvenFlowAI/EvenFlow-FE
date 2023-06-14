@@ -87,13 +87,14 @@ const CartTable = () => {
         valueService,
         makes,
         sideBarSteps,
-        serviceType,
+        serviceTypeOption,
         selectedRecalls,
         packageEMenuType
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [isOpen, setOpen] = useState<boolean>(true);
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const selectedServices = useMemo(() => {
            return getMaintenanceList(
                serviceRequests,
@@ -120,7 +121,6 @@ const CartTable = () => {
     useEffect(() => {
         if (scProfile) {
             dispatch(loadCategoriesByQuery(scProfile.id))
-            dispatch(loadMakes(scProfile.id))
             dispatch(loadSRs(scProfile.id))
         }
     }, [scProfile])

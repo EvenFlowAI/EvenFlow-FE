@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useDialogStyles} from "../DetailedFees/DetailedFees";
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
@@ -49,11 +49,12 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onClose, onNext}) => {
-    const {serviceType, ancillaryPrice} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceTypeOption, ancillaryPrice} = useSelector((state: RootState) => state.appointmentFrame);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const {t} = useTranslation();
     const dispatch = useDispatch();
+    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const price = ancillaryPrice?.feeAmount && ancillaryPrice?.feeType === EAncillaryType.Amount ? `${ancillaryPrice?.feeAmount.toFixed(2)}` : `${ancillaryPrice?.feeAmount}%`
 
     const serviceString = serviceType === EServiceType.MobileService
