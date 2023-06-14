@@ -328,7 +328,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
                                         </HtmlTooltip>
                                         : <IconButton style={{padding: 4}} disabled><CancelAppDisabled/></IconButton>
                                     }
-                                    {customer.customerHasOrders
+                                    {customer.hasOrders
                                         ? <HtmlTooltip title="View Repair History">
                                             <IconButton
                                                 style={{padding: 4}}
