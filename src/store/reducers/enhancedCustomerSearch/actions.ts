@@ -110,7 +110,7 @@ export const loadCustomersByPhoneOrEmail = (
                     firstName: customer.firstName,
                     lastName: customer.lastName,
                     fullName: `${customer.firstName} ${customer.lastName}`,
-                    id: customer.customerId.toString() ?? null,
+                    id: customer.customerInternalId ? customer.customerInternalId.toString() : '',
                     phoneNumbers: phoneNumber ? [phoneNumber] : [],
                     vehicles: vehiclesData,
                 }
