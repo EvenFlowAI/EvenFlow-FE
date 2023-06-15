@@ -109,7 +109,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
 
     const isNewVehicleView = useMemo(() => {
         return !Boolean(customerLoadedData?.vehicles.find(v => {
-            return v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin
+            return v.vin && selectedVehicle?.vin
                 || (v.make === selectedVehicle?.make
                     && v.model === selectedVehicle?.model
                     && v.year === selectedVehicle?.year)
@@ -441,11 +441,11 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     })}
                     value={maintenanceDetails.model ?? ''}
                 />
-                {(userType === EUserType.New || isNewVehicleView) && recallsToggledOn
+                {recallsToggledOn || isRecallsCategorySelected
                     ? <div key="vin" className={recallsToggledOn ? classes.vinWrapper : ""} style={orderMapStyles.vin}>
                         <TextField
                             onChange={handleTextChange("vin")}
-                            label={recallsToggledOn
+                            label={recallsToggledOn || isRecallsCategorySelected
                                 ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
                                 : `${t("VIN")} (${t("Optional")})`
                             }
@@ -453,7 +453,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                             error={errors.includes("vin")}
                             required={requiredFields.includes("vin") || isRecallsCategorySelected}
                             fullWidth
-                            disabled={!isNewVehicleView || (recallsAreShown && !isRecallsCategorySelected)}
+                            disabled={recallsAreShown && !isRecallsCategorySelected}
                             value={selectedVehicle ? selectedVehicle.vin : ""}
                             placeholder={errors.includes("vin")
                                 ? `${t("VIN")} ${t("required")}`
