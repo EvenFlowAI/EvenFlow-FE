@@ -211,8 +211,6 @@ export const CustomerSelect: React.FC<TProps> = ({
         onOpen()
     }
 
-    console.log(customerEnteredEmail)
-
     const loadData = () => {
         scProfile && dispatch(loadCustomersBySearchTerm(scProfile.id, onSuccess, showError, firstName, lastName, customerEnteredEmail))
     }
@@ -298,6 +296,6 @@ export const CustomerSelect: React.FC<TProps> = ({
             />
             <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
         </Grid>
-        {currentUser && <Actions onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service"/>}
+        {currentUser && <Actions onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service Center"/>}
     </div>
 };
