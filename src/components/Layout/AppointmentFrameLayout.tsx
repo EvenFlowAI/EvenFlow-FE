@@ -256,7 +256,8 @@ export const AppointmentFrameLayout = () => {
             if (handleServiceTypeOption(data)) {
                 handleServiceTypeSelection();
             } else {
-                handleSetScreen(data.serviceTypeOption?.type !== EServiceType.VisitCenter ? 'location' : 'serviceNeeds');
+                const isMobileOrPickUp = data.serviceTypeOption && data.serviceTypeOption?.type !== EServiceType.VisitCenter;
+                handleSetScreen(isMobileOrPickUp ? 'location' : 'serviceNeeds');
             }
         } catch (e) {
             showError(e);
