@@ -183,6 +183,8 @@ export const CustomerSelect: React.FC<TProps> = ({
     const isXs = useMediaQuery("xs");
     const currentUser = useCurrentUser();
     const showError = useException();
+    const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
+        [currentUser, scProfile])
 
     useEffect(() => {
         const uid = uuidv4();
@@ -250,7 +252,7 @@ export const CustomerSelect: React.FC<TProps> = ({
                         onClick={handleComplete}>
                         {t("Search")}
                     </LoadingButton>
-                    {currentUser
+                    {isAuthorized
                         ? <div className={classes.searchLinkWrapper}>
                             <Button
                                 variant="text"
@@ -296,6 +298,6 @@ export const CustomerSelect: React.FC<TProps> = ({
             />
             <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
         </Grid>
-        {currentUser && <Actions onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service Center"/>}
+        {isAuthorized && <Actions onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service Center"/>}
     </div>
 };

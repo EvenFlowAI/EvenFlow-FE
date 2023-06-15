@@ -171,7 +171,7 @@ export const Welcome = () => {
 
     const handleExistingUser = () => {
         setLoading(true);
-        if (currentUser && scProfile) {
+        if (currentUser && currentUser?.dealershipId === scProfile?.dealershipId) {
             getDataForAdminUser()
         } else {
             getDataForCustomer()

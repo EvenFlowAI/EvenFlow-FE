@@ -91,6 +91,7 @@ const SelectServiceCenter = () => {
 
     const classes = useStyles();
     const currentUser = useCurrentUser();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (shortSC?.length && currentUser) {
@@ -99,6 +100,12 @@ const SelectServiceCenter = () => {
                 : shortSC)
         }
     }, [currentUser, shortSC, restrictedRoles])
+
+    useEffect(() => {
+        if (currentUser && scProfile && scProfile?.dealershipId !== currentUser?.dealershipId) {
+            dispatch(setWelcomeScreenView('select'))
+        }
+    }, [currentUser, scProfile])
 
     return !scProfile || isProfileLoading || shortLoading
         ? <Loading/>
