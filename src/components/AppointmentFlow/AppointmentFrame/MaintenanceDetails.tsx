@@ -60,10 +60,6 @@ if (moment().month() > 9) year = moment.utc().add(1, 'year').year();
 const YEARS = 23;
 export const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 
-const requiredFields: TKey[] = [
-    "model", "year", "make", "mileage"
-];
-
 type TOptionsState = {[s: string]: string[]};
 const blankOptions: TOptionsState = {};
 
@@ -74,9 +70,20 @@ type TMaintenanceDetailsProps = {
     onNext: TArgCallback<TScreen>;
     currentConfig: TServiceTypeSettings|undefined;
 }
+const requiredFields: TKey[] = ["model", "year", "make", "mileage"];
 
 export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
-    const {maintenanceDetails, selectedVehicle, makes, service, valueService, subService, userType, recallsAreShown}= useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        maintenanceDetails,
+        selectedVehicle,
+        makes,
+        service,
+        valueService,
+        subService,
+        userType,
+        recallsAreShown,
+        categoriesIds
+    }= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
@@ -123,8 +130,9 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             && maintenanceDetails.model
             && maintenanceDetails.year
             && maintenanceDetails.mileage
-            && (currentConfig?.engineType ? maintenanceDetails.engineTypeId : true))
-    }, [maintenanceDetails, currentConfig])
+            && (currentConfig?.engineType ? maintenanceDetails.engineTypeId : true)
+            && (isRecallsCategorySelected ? maintenanceDetails.vin : true))
+    }, [maintenanceDetails, currentConfig, isRecallsCategorySelected])
 
     useEffect(() => {
         if (selectedVehicle) {
@@ -247,14 +255,8 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const handleTextChange = (name: TKey) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setRecallsAreShown(false));
         dispatch(updateVehicle({[name]: value.trim()}));
-        if (name === "model") {
-            dispatch(setMaintenanceDetails({[name]: value.trim()}));
-        }
+        dispatch(setMaintenanceDetails({[name]: value.trim()}));
         setErrors(e => e.filter(err => err !== name));
-    }
-
-    const handleDeclineRecalls = () => {
-        if (isRecallsCategorySelected) onBack('serviceNeeds');
     }
 
     const isValid = () => {
@@ -303,8 +305,16 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             ? 'opsCode' : 'serviceNeeds');
     }
 
+    const handleDeclineRecalls = () => {
+        if (isRecallsCategorySelected && categoriesIds.length < 2) {
+            onBack('serviceNeeds');
+        } else {
+            handleNext()
+        }
+    }
+
     const handleSubmit = async () => {
-        if (selectedVehicle?.vin?.length === 17 && !recallsAreShown && (recallsToggledOn || isRecallsCategorySelected)) {
+        if (selectedVehicle?.vin?.length === 17 && recallsToggledOn && (!recallsAreShown|| isRecallsCategorySelected)) {
             setLoading(true);
             const make = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase());
             if (selectedVehicle?.make && make?.id) {
@@ -321,7 +331,11 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 }
             } else handleNext();
         } else {
-            handleNext()
+            if (categoriesIds.length < 2 && isRecallsCategorySelected) {
+                handleBack()
+            } else {
+                handleNext()
+            }
         }
         setLoading(false);
     }
@@ -437,9 +451,9 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                             }
                             name={"vin"}
                             error={errors.includes("vin")}
-                            required={requiredFields.includes("vin")}
+                            required={requiredFields.includes("vin") || isRecallsCategorySelected}
                             fullWidth
-                            disabled={!isNewVehicleView || recallsAreShown}
+                            disabled={!isNewVehicleView || (recallsAreShown && !isRecallsCategorySelected)}
                             value={selectedVehicle ? selectedVehicle.vin : ""}
                             placeholder={errors.includes("vin")
                                 ? `${t("VIN")} ${t("required")}`
@@ -456,6 +470,6 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             nextLabel={isRecallsCategorySelected ? t("Check for Recalls") : t("Next")}
         />
         <RecallsByVin open={isOpen} onClose={onClose} handleNext={handleNext} onDeclineRecalls={handleDeclineRecalls}/>
-        <NoRecalls open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleNext}/>
+        <NoRecalls open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleDeclineRecalls}/>
     </StepWrapper>);
 };

@@ -37,6 +37,7 @@ export interface TMaintenanceDetails extends IMaintenanceDetailsShort {
     powertrain?: string;
     oilType?: string;
     engineTypeId?: number|null;
+    vin?: string;
 }
 
 export interface IFrameScreens {
