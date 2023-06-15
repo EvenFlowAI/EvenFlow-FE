@@ -123,7 +123,7 @@ const columnNames = [
     "First Name",
     "Home",
     "Cell",
-    "Work",
+    "Other",
     "Email",
     "Address",
     "City",
@@ -366,7 +366,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
                                 isEdit={isEdit}
                                 onFieldChange={onFieldChange}/>
                         </TableCell>
-                        <TableCell key="home" className={classes.bodyCell}>
+                        <TableCell key="home" className={classes.bodyCell} width={150}>
                             <CustomerInputField
                                 editingElement={editingElement}
                                 customer={customer}
@@ -374,7 +374,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
                                 isEdit={isEdit}
                                 onFieldChange={onFieldChange}/>
                         </TableCell>
-                        <TableCell key="cell" className={classes.bodyCell} width={100}>
+                        <TableCell key="cell" className={classes.bodyCell} width={150}>
                             <CustomerInputField
                                 editingElement={editingElement}
                                 customer={customer}
@@ -382,7 +382,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
                                 isEdit={isEdit}
                                 onFieldChange={onFieldChange}/>
                         </TableCell>
-                        <TableCell key="otherPhone" className={classes.bodyCell} width={100}>
+                        <TableCell key="otherPhone" className={classes.bodyCell} width={150}>
                             <CustomerInputField
                                 editingElement={editingElement}
                                 customer={customer}
@@ -390,7 +390,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
                                 isEdit={isEdit}
                                 onFieldChange={onFieldChange}/>
                         </TableCell>
-                        <TableCell key="email" className={classes.bodyCell}>
+                        <TableCell key="email" className={classes.bodyCell} width={150}>
                             <CustomerInputField
                                 editingElement={editingElement}
                                 customer={customer}
