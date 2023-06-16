@@ -7,8 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {useException} from "../../../utils/hooks";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../UI/Button";
-import {TCallback} from "../../../types/types";
-import { setPageData, setPaging} from "../../../store/reducers/enhancedCustomerSearch/actions";
+import {TArgCallback} from "../../../types/types";
+import {setCustomerSearchData, setPageData, setPaging} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {RootState} from "../../../store/rootReducer";
 import {defaultPageData} from "../../../store/reducers/defaultInitials";
 
@@ -39,13 +39,9 @@ const useStyles = makeStyles(theme => ({
 }))
 
 type TEnhancedCustomerSearchProps = DialogProps & {
-    loadData: TCallback,
+    loadData: TArgCallback<boolean>,
     formIsChecked: boolean,
     setFormIsChecked: Dispatch<SetStateAction<boolean>>;
-    firstName: string;
-    lastName: string;
-    setFirstName: Dispatch<SetStateAction<string>>;
-    setLastName: Dispatch<SetStateAction<string>>;
 };
 
 const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({
@@ -54,12 +50,8 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({
                                                                             loadData,
                                                                             formIsChecked,
                                                                             setFormIsChecked,
-                                                                            firstName,
-                                                                            lastName,
-                                                                            setFirstName,
-                                                                            setLastName,
                                                                         }) => {
-    const {isLoading} = useSelector((state: RootState) => state.customers);
+    const {isLoading, customerSearchData} = useSelector((state: RootState) => state.customers);
     const dispatch = useDispatch();
     const showError = useException();
     const classes = useStyles();
@@ -67,18 +59,17 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({
 
     const onFirstNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setFormIsChecked(false);
-        setFirstName(e.target.value);
+        dispatch(setCustomerSearchData({firstName: e.target.value}));
     }, [])
 
     const onLastNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setFormIsChecked(false);
-        setLastName(e.target.value);
+        dispatch(setCustomerSearchData({lastName: e.target.value}));
     }, [])
 
     const clearForm = () => {
         setFormIsChecked(false);
-        setFirstName('');
-        setLastName('');
+        dispatch(setCustomerSearchData({firstName: '', lastName: ''}))
     }
 
     const onCancel = useCallback(async () => {
@@ -89,14 +80,14 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({
     }, [clearForm])
 
     const checkIsValid = () => {
-        const searchString = firstName.length > 1  ? firstName : lastName;
+        const searchString = customerSearchData?.firstName?.length ? customerSearchData.firstName : customerSearchData.lastName;
         return searchString.length > 1;
     }
 
     const onSave = (): void => {
         setFormIsChecked(true);
         if (checkIsValid()) {
-            loadData()
+            loadData(true)
         } else {
             showError('First Name or Last Name must consist from 2 or more characters')
         }
@@ -110,19 +101,19 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({
                 <TextField
                     label={t("Customer First Name")}
                     placeholder={t("Enter First Name")}
-                    error={formIsChecked && (firstName.length < 2 && lastName.length < 2)}
+                    error={formIsChecked && (customerSearchData.firstName.length < 2 && customerSearchData.lastName.length < 2)}
                     onChange={onFirstNameChange}
                     fullWidth
                     style={{ marginBottom: 10 }}
-                    value={firstName}/>
+                    value={customerSearchData.firstName}/>
                 <TextField
                     label={t("Customer Last Name")}
                     placeholder={t("Enter Last Name")}
-                    error={formIsChecked && (lastName.length < 2 && firstName.length < 2)}
+                    error={formIsChecked && (customerSearchData.lastName.length < 2 && customerSearchData.firstName.length < 2)}
                     onChange={onLastNameChange}
                     fullWidth
                     style={{ marginBottom: 10 }}
-                    value={lastName}/>
+                    value={customerSearchData.lastName}/>
             </DialogContent>
             <div className={classes.wrapper}>
                 <div className={classes.buttonsWrapper}>

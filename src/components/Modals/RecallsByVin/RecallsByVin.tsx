@@ -96,9 +96,12 @@ const CustomSwitch = withStyles({
 })(Switch)
 
 
-type TRecallsByVinProps = DialogProps & {handleNext : () => void}
+type TRecallsByVinProps = DialogProps & {
+    handleNext : () => void,
+    onDeclineRecalls: () => void,
+}
 
-const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext}) => {
+const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, onDeclineRecalls}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
     const {selectedVehicle, selectedRecalls, makes} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
@@ -128,6 +131,7 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext})
 
     const onDecline = () => {
         dispatch(setSelectedRecalls([]))
+        onDeclineRecalls()
         onClose();
     }
 
