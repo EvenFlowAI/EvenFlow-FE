@@ -213,8 +213,15 @@ export const CustomerSelect: React.FC<TProps> = ({
         onOpen()
     }
 
-    const loadData = () => {
-        scProfile && dispatch(loadCustomersBySearchTerm(scProfile.id, onSuccess, showError, firstName, lastName))
+    const loadData = (byName?: boolean) => {
+        scProfile && dispatch(loadCustomersBySearchTerm(
+            scProfile.id,
+            onSuccess,
+            showError,
+            firstName,
+            lastName,
+            byName ? undefined : customerEnteredEmail
+        ))
     }
 
     const clearForm = () => {
