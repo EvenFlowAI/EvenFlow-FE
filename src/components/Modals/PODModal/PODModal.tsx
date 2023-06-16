@@ -93,6 +93,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         serviceValetZones,
         engineTypes,
         transportations,
+        isTransportationLoading,
     ] = useSelector((state: RootState) => [
         state.scEmployees.advisorsList,
         state.scEmployees.techniciansList,
@@ -103,6 +104,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         state.serviceValet.zones,
         state.vehicleDetails.engineTypes,
         state.transportation.options,
+        state.transportation.isLoading,
     ]);
 
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
@@ -142,8 +144,8 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             } else {
                 setSelectedEngineTypes([]);
             }
-            if (payload?.transportationOptionIds) {
-                setTransportationOptions(transportations.filter(item => payload?.transportationOptionIds?.includes(item.id)))
+            if (payload?.transportationOptions) {
+                setTransportationOptions(transportations.filter(item => payload?.transportationOptions?.find(el => el.id === item.id)))
             } else {
                 setTransportationOptions([]);
             }
@@ -532,12 +534,12 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         }}
                         disableCloseOnSelect
                         onChange={handleTransportationsChange}
-                        getOptionLabel={i => i.description}
+                        getOptionLabel={i => getTransportationOptionString(i.type)}
                         getOptionSelected={(o, v) => o.id === v.id}
                         renderOption={autocompleteOptionsRender((e) => getTransportationOptionString(e.type))}
-                        loading={false}
+                        loading={isTransportationLoading}
                         value={transportationOptions}
-                        renderInput={autocompleteRender({label: "Transportation Options", fullWidth: true, placeholder: "SelectTransportation Options"})}
+                        renderInput={autocompleteRender({label: "Transportation Options", fullWidth: true, placeholder: "Select Transportation Options"})}
                     />
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>

@@ -23,6 +23,11 @@ export type TPodZone = {
     name: string;
 }
 
+export type TPodTransportation = {
+    id: number;
+    type: string;
+}
+
 export interface IPod {
     id: number;
     name: string;
@@ -41,7 +46,7 @@ export interface IPod {
     appointmentType?: EAppointmentType;
     engineTypes?: IEngineType[];
     isVisitCenter?: boolean;
-    transportationOptionIds?: number[];
+    transportationOptions?: TPodTransportation[];
 }
 export interface IPodFilters {
     searchTerm: string;

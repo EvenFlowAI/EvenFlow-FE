@@ -10,6 +10,7 @@ import {TableRowDataTypeResp} from "../../UI/types";
 import {Table} from "../../UI/Table";
 import {MoreHoriz} from "@material-ui/icons";
 import {TViewMode} from "../../Modals/types";
+import {getTransportationOptionString} from "../../../utils/utils";
 
 const getNameFromEnum = (str: string) => {
     let array = [];
@@ -36,6 +37,7 @@ const rowData: TableRowDataTypeResp<IPod>[] = [
     {header: "Service Valet Zones", val: e => e.serviceValetZones?.map(zone => zone.name).join(", ") || "", xsHidden: true},
     {header: "Mobile Zones", val: e => e.mobileZones?.map(zone => zone.name).join(", ") || "", xsHidden: true},
     {header: "Appointment Type", val: e => typeof e.appointmentType !== "undefined" && Number.isInteger(+e.appointmentType) ? getNameFromEnum(EAppointmentType[e.appointmentType]) : "", xsHidden: true},
+    {header: "Transportation Options", val: e => e.transportationOptions?.map(tr => getTransportationOptionString(tr.type)).join(", ") || "", xsHidden: true},
 ]
 
 export const ProfilePODs:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode}) => {
