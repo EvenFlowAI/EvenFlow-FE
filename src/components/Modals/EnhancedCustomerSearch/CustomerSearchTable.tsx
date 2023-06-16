@@ -32,7 +32,7 @@ import {
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {getBlankVehicle, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
-import {TCallback} from "../../../types/types";
+import {TArgCallback, TCallback} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
 import {ICustomerWithPhones} from "../../../store/reducers/enhancedCustomerSearch/types";
 import CustomerInputField from "./CustomerInputField";
@@ -134,8 +134,14 @@ const columnNames = [
     "VIN"
 ]
 
-const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, isNewVehicleMode: boolean}> = ({onClose, loadData, isNewVehicleMode}) => {
-    const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
+type TCustomerSearchTableProps = {
+    onClose: TCallback;
+    loadData: TArgCallback<boolean>;
+    isNewVehicleMode: boolean
+}
+
+const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, loadData, isNewVehicleMode}) => {
+    const {customers, isLoading, paging, pageData, customerSearchData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const [data, setData] = useState<ICustomerWithPhones[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
@@ -228,7 +234,7 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
     const onSuccess = () => {
         setEditingElement(null);
         setEdit(false);
-        loadData();
+        loadData(Boolean(customerSearchData.firstName.length || customerSearchData.lastName.length));
     }
 
     const onSaveInfo = async () => {
@@ -238,11 +244,11 @@ const CustomerSearchTable: React.FC<{onClose: TCallback, loadData: TCallback, is
     }
     const handleChangePage = async (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
         await changePage(e, pageNumber);
-        await loadData();
+        await loadData(false);
     }
     const handleChangeRows = async (e: React.ChangeEvent<HTMLInputElement>) => {
         await changeRowsPerPage(e);
-        await loadData();
+        await loadData(false);
     }
 
     const onSelectCustomerForNewVehicle = (customer: ICustomerWithPhones) => async () => {
