@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useException} from "../../../utils/hooks";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../UI/Button";
-import {TCallback} from "../../../types/types";
+import {TArgCallback} from "../../../types/types";
 import { setPageData, setPaging} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {RootState} from "../../../store/rootReducer";
 import {defaultPageData} from "../../../store/reducers/defaultInitials";
@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 type TEnhancedCustomerSearchProps = DialogProps & {
-    loadData: TCallback,
+    loadData: TArgCallback<boolean>,
     formIsChecked: boolean,
     setFormIsChecked: Dispatch<SetStateAction<boolean>>;
     firstName: string;
@@ -96,7 +96,7 @@ const EnhancedCustomerSearch: React.FC<TEnhancedCustomerSearchProps> = ({
     const onSave = (): void => {
         setFormIsChecked(true);
         if (checkIsValid()) {
-            loadData()
+            loadData(true)
         } else {
             showError('First Name or Last Name must consist from 2 or more characters')
         }
