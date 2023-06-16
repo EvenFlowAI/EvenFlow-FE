@@ -297,6 +297,8 @@ export const CustomerSelect: React.FC<TProps> = ({
                 setFormIsChecked={setFormIsChecked}
             />
             <CustomerSearchResults
+                firstName={firstName}
+                lastName={lastName}
                 handleNew={handleNew}
                 loadData={loadData}
                 onClose={onCloseSearchResults}
