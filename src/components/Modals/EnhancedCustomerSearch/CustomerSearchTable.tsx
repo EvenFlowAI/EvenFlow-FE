@@ -135,15 +135,13 @@ const columnNames = [
 ]
 
 type TCustomerSearchTableProps = {
-    firstName: string;
-    lastName: string;
     onClose: TCallback;
     loadData: TArgCallback<boolean>;
     isNewVehicleMode: boolean
 }
 
-const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, loadData, isNewVehicleMode, firstName, lastName}) => {
-    const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
+const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, loadData, isNewVehicleMode}) => {
+    const {customers, isLoading, paging, pageData, customerSearchData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const [data, setData] = useState<ICustomerWithPhones[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
@@ -236,7 +234,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const onSuccess = () => {
         setEditingElement(null);
         setEdit(false);
-        loadData(Boolean(firstName.length || lastName.length));
+        loadData(Boolean(customerSearchData.firstName.length || customerSearchData.lastName.length));
     }
 
     const onSaveInfo = async () => {

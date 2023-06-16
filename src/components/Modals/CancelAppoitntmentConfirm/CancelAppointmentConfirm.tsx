@@ -11,6 +11,8 @@ import {Loading} from "../../UI/Loading";
 import {NoData} from "../../UI/NoData";
 import {useDialogStyles} from "../DetailedFees/DetailedFees";
 import {TArgCallback} from "../../../types/types";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 const useStyles = makeStyles(theme => ({
     info: {
@@ -44,6 +46,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const CancelAppointmentConfirm: React.FC<DialogProps&{hashKey: string, loadData: TArgCallback<boolean>}> = ({open, onClose, hashKey, loadData}) => {
+    const {customerSearchData} = useSelector((state: RootState) => state.customers);
     const [data, setData] = useState<IAppointmentByQuery|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const showError = useException();
@@ -67,7 +70,7 @@ const CancelAppointmentConfirm: React.FC<DialogProps&{hashKey: string, loadData:
         API.appointment.cancelByKey(hashKey)
             .then(() => {
                 setLoading(false)
-                loadData(false)
+                loadData(Boolean(customerSearchData.firstName.length || customerSearchData.lastName.length))
                 onClose()
             })
             .catch(err => showError(err))
