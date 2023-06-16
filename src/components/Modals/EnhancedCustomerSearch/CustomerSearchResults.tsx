@@ -12,8 +12,6 @@ type TCustomerSearchResultsProps = DialogProps & {
     onClearSearchForm: TCallback;
     handleNew: TCallback;
     loadData: TArgCallback<boolean>;
-    firstName: string;
-    lastName: string;
 };
 
 const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
@@ -21,9 +19,7 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
                                                                           open,
                                                                           onClose,
                                                                           handleNew,
-                                                                          onClearSearchForm,
-                                                                      firstName,
-                                                                      lastName}) => {
+                                                                          onClearSearchForm}) => {
     const [isNewVehicleMode, setNewVehicleMode] = useState<boolean>(false);
     const dispatch = useDispatch();
 
@@ -67,9 +63,7 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
                 <CustomerSearchTable
                     onClose={onClose}
                     loadData={loadData}
-                    isNewVehicleMode={isNewVehicleMode}
-                    firstName={firstName}
-                    lastName={lastName}/>
+                    isNewVehicleMode={isNewVehicleMode}/>
             </DialogContent>
         </BaseModal>
     );
