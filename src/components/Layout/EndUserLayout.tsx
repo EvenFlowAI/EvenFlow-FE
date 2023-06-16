@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {Switch, Route, useParams} from "react-router-dom";
 import {endUserTheme} from "../../theme/theme";
 import {ThemeProvider} from "@material-ui/core";
@@ -14,7 +14,7 @@ import {useLayout} from "../../utils/hooks";
 import ReactGA, {GaOptions} from "react-ga";
 //import ReactGA, {GaOptions} from "react-ga4";
 import {RootState} from "../../store/rootReducer";
-import {setTrackerCreated, setWelcomeScreenView} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setTrackerCreated} from "../../store/reducers/appointmentFrameReducer/actions";
 import {prodParentLinks} from "./AppointmentFrameLayout";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
@@ -27,7 +27,7 @@ export const options: GaOptions = {
 }
 
 export const EndUserLayout = () => {
-    const { trackerCreated, welcomeScreenView } = useSelector((state: RootState) => state.appointmentFrame);
+    const { trackerCreated } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile } = useSelector((state: RootState) => state.appointment);
     const {id} = useParams();
     const dispatch = useDispatch();
