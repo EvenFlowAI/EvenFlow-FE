@@ -22,13 +22,15 @@ import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actio
 import {createPod, updatePod} from "../../../store/reducers/pods/actions";
 import {loadBaysShort} from "../../../store/reducers/bays/actions";
 import {IMakeExtended, IModel} from "../../../api/types";
-import {getOptions} from "../../../utils/utils";
+import {getOptions, getTransportationOptionString} from "../../../utils/utils";
 import {EmployeeSchedule} from "../EmployeeSchedule/EmployeeSchedule";
 import {loadEngineType, loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
 import {TZone} from "../../../store/reducers/mobileService/types";
 import {loadMobServiceZones} from "../../../store/reducers/mobileService/actions";
 import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
+import {ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
+import {loadTransportationOptions} from "../../../store/reducers/transportationNeeds/actions";
 
 type TForm = {
     name: string;
@@ -76,6 +78,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const [selectedEngineTypes, setSelectedEngineTypes] = useState<IEngineType[]>([]);
     const [jobType, setJobType] = useState<TOption|null>(null);
     const [appointmentType, setAppointmentType] = useState<TOption|null>(null);
+    const [transportationOptions, setTransportationOptions] = useState<ITransportationOptionFull[]>([]);
     const {onOpen, isOpen, onClose} = useModal();
     const showError = useException();
     const showMessage = useMessage();
@@ -89,6 +92,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         zones,
         serviceValetZones,
         engineTypes,
+        transportations,
     ] = useSelector((state: RootState) => [
         state.scEmployees.advisorsList,
         state.scEmployees.techniciansList,
@@ -98,6 +102,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         state.mobileService.zones,
         state.serviceValet.zones,
         state.vehicleDetails.engineTypes,
+        state.transportation.options,
     ]);
 
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
@@ -137,8 +142,13 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             } else {
                 setSelectedEngineTypes([]);
             }
+            if (payload?.transportationOptionIds) {
+                setTransportationOptions(transportations.filter(item => payload?.transportationOptionIds?.includes(item.id)))
+            } else {
+                setTransportationOptions([]);
+            }
         }
-    }, [props.open, payload, makesModels, engineTypes, serviceValetZones, zones]);
+    }, [props.open, payload, makesModels, engineTypes, serviceValetZones, zones, transportations]);
 
     useEffect(() => {
         const filteredMakes = makesModels.filter(item => payload?.vehicleMakes?.find(el => el.id === item.id));
@@ -174,6 +184,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
             dispatch(loadMobServiceZones(selectedSC.id));
             dispatch(loadServiceValetZones(selectedSC.id));
             dispatch(loadEngineType(selectedSC.id))
+            dispatch(loadTransportationOptions(selectedSC.id));
         }
     }, [selectedSC, dispatch, props.open]);
 
@@ -205,6 +216,10 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         setForm({...form, bays: val});
     }
 
+    const handleTransportationsChange = (e: any, val: ITransportationOptionFull[]) => {
+        setTransportationOptions(val);
+    }
+
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
@@ -228,7 +243,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                 };
                 if (jobType) data.jobType = jobType.value;
                 if (appointmentType) data.appointmentType = appointmentType.value;
-
+                if (transportationOptions?.length) data.transportationOptionIds = transportationOptions.map(el => el.id);
                 if (payload) {
                     await dispatch(updatePod(data, payload.id));
                 } else {
@@ -504,6 +519,25 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                         loading={false}
                         value={form.bays}
                         renderInput={autocompleteRender({label: "Bays", fullWidth: true, placeholder: "Select Bays"})}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                    <Autocomplete
+                        options={transportations}
+                        multiple
+                        ChipProps={{
+                            color: "primary",
+                            style: {borderRadius: 4},
+                            size: "small"
+                        }}
+                        disableCloseOnSelect
+                        onChange={handleTransportationsChange}
+                        getOptionLabel={i => i.description}
+                        getOptionSelected={(o, v) => o.id === v.id}
+                        renderOption={autocompleteOptionsRender((e) => getTransportationOptionString(e.type))}
+                        loading={false}
+                        value={transportationOptions}
+                        renderInput={autocompleteRender({label: "Transportation Options", fullWidth: true, placeholder: "SelectTransportation Options"})}
                     />
                 </Grid>
                 <Grid item xs={12} sm={12} md={6}>

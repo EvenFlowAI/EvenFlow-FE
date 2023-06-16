@@ -41,6 +41,7 @@ export interface IPod {
     appointmentType?: EAppointmentType;
     engineTypes?: IEngineType[];
     isVisitCenter?: boolean;
+    transportationOptionIds?: number[];
 }
 export interface IPodFilters {
     searchTerm: string;
@@ -63,6 +64,7 @@ export interface IPodForm {
     serviceValetZones?: number[];
     engineTypes?:number[];
     isVisitCenter: boolean;
+    transportationOptionIds?: number[];
 }
 
 export enum EJobType {
