@@ -1,5 +1,11 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ICustomerWithPhones, ICustomerWithVehicles, IRepairHistory, TSearchCustomerParams} from "./types";
+import {
+    ICustomerWithPhones,
+    ICustomerWithVehicles,
+    IRepairHistory,
+    TCustomerSearchData,
+    TSearchCustomerParams
+} from "./types";
 import {AppThunk, IAPIResponse, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {ActionCreator} from "redux";
@@ -10,6 +16,7 @@ import {setCurrentFrameScreen} from "../appointmentFrameReducer/actions";
 export const getCustomers = createAction<ICustomerWithPhones[]>("CustomerSearch/GetCustomers");
 export const setCurrentCustomer = createAction<ICustomerWithPhones|null>("CustomerSearch/SetCurrentCustomer");
 export const setLoading = createAction<boolean>("CustomerSearch/SetLoading");
+export const setCustomerSearchData = createAction<Partial<TCustomerSearchData>|null>("CustomerSearch/CustomerSearchData");
 
 export const setPaging = createAction<IPagingResponse>("CustomerSearch/SetPaging");
 export const setPageData = createAction<Partial<IPageRequest>>("CustomerSearch/SetPageData");

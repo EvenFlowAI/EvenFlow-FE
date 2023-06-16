@@ -130,3 +130,8 @@ export type TSearchCustomerParams = {
     firstName?: string;
     lastName?: string;
 }
+
+export type TCustomerSearchData = {
+    firstName: string;
+    lastName: string;
+}
