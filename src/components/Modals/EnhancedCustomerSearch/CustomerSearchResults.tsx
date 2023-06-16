@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import CustomerSearchResultsActions from "./CustomerSearchResultsActions";
-import {TCallback} from "../../../types/types";
+import {TArgCallback, TCallback} from "../../../types/types";
 import CustomerSearchTable from "./CustomerSearchTable";
 import {setPageData, setPaging} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {defaultPageData} from "../../../store/reducers/defaultInitials";
@@ -11,10 +11,19 @@ import {useDispatch} from "react-redux";
 type TCustomerSearchResultsProps = DialogProps & {
     onClearSearchForm: TCallback;
     handleNew: TCallback;
-    loadData: TCallback;
+    loadData: TArgCallback<boolean>;
+    firstName: string;
+    lastName: string;
 };
 
-const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({loadData, open, onClose, handleNew, onClearSearchForm}) => {
+const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
+                                                                          loadData,
+                                                                          open,
+                                                                          onClose,
+                                                                          handleNew,
+                                                                          onClearSearchForm,
+                                                                      firstName,
+                                                                      lastName}) => {
     const [isNewVehicleMode, setNewVehicleMode] = useState<boolean>(false);
     const dispatch = useDispatch();
 
@@ -55,7 +64,12 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({loadData,
                     onCreateNewAppointment={onCreateNewAppointment}
                     onAppointmentForNewVehicle={onAppointmentForNewVehicle}/>
 
-                <CustomerSearchTable onClose={onClose} loadData={loadData} isNewVehicleMode={isNewVehicleMode}/>
+                <CustomerSearchTable
+                    onClose={onClose}
+                    loadData={loadData}
+                    isNewVehicleMode={isNewVehicleMode}
+                    firstName={firstName}
+                    lastName={lastName}/>
             </DialogContent>
         </BaseModal>
     );
