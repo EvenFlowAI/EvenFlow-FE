@@ -313,6 +313,10 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         }
     }
 
+    const handleAddServices = () => {
+        onBack('serviceNeeds');
+    }
+
     const handleSubmit = async () => {
         if (selectedVehicle?.vin?.length === 17 && recallsToggledOn && (!recallsAreShown|| isRecallsCategorySelected)) {
             setLoading(true);
@@ -471,7 +475,13 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             nextDisabled={isNextDisabled || isLoading}
             nextLabel={isRecallsCategorySelected ? t("Check for Recalls") : t("Next")}
         />
-        <RecallsByVin open={isOpen} onClose={onClose} handleNext={handleNext} onDeclineRecalls={handleDeclineRecalls}/>
+        <RecallsByVin
+            open={isOpen}
+            onClose={onClose}
+            handleNext={handleNext}
+            handleAddServices={handleAddServices}
+            onDeclineRecalls={handleDeclineRecalls}
+        />
         <NoRecalls open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleDeclineRecalls}/>
     </StepWrapper>);
 };
