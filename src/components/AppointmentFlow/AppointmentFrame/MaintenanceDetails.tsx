@@ -70,7 +70,6 @@ type TMaintenanceDetailsProps = {
     onNext: TArgCallback<TScreen>;
     currentConfig: TServiceTypeSettings|undefined;
 }
-const requiredFields: TKey[] = ["model", "year", "make", "mileage"];
 
 export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
     const {
@@ -103,6 +102,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
 
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+    const requiredFields: TKey[] = ["model", "year", "make", "mileage"];
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
@@ -147,6 +147,10 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             }));
         }
     }, [dispatch, selectedVehicle, mileage]);
+
+    useEffect(() => {
+        if (isRecallsCategorySelected) requiredFields.push('vin')
+    }, [isRecallsCategorySelected])
 
     useEffect(() => {
         if (selectedVehicle?.engineTypeId && engineTypes.length) {
@@ -318,6 +322,23 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         onBack('serviceNeeds');
     }
 
+    const onEmptyRecalls = () => {
+        if (userType === EUserType.New || isRecallsCategorySelected) {
+            onNoRecallsOpen()
+        } else {
+            handleNext();
+        }
+    }
+
+    const checkVINforRecallCategory = () => {
+        if (selectedVehicle?.vin?.length !== 17) {
+            errors.push('vin')
+            showError("VIN must include 17 characters")
+        } else {
+            onNoRecallsOpen()
+        }
+    }
+
     const handleSubmit = async () => {
         const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn
         if (selectedVehicle?.vin?.length === 17 && (recallsFromTheAdmin || isRecallsCategorySelected)) {
@@ -329,16 +350,12 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 if (data.length) {
                     await onOpen()
                 } else {
-                    if (userType === EUserType.New || isRecallsCategorySelected) {
-                        onNoRecallsOpen()
-                    } else {
-                        handleNext();
-                    }
+                    onEmptyRecalls()
                 }
             } else handleNext();
         } else {
             if (categoriesIds.length < 2 && isRecallsCategorySelected) {
-                handleBack()
+                checkVINforRecallCategory()
             } else {
                 handleNext()
             }
