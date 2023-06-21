@@ -12,7 +12,9 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button, Divider, FormControlLabel, Switch, withStyles} from "@material-ui/core";
 import {IRecallByVin} from "../../AppointmentFlow/AppointmentFrame/types";
 import moment from "moment";
-import {setSelectedRecalls} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setAdditionalServicesChosen, setSelectedRecalls} from "../../../store/reducers/appointmentFrameReducer/actions";
+import AskAddService from "../AskAddService/AskAddService";
+import {useModal} from "../../../utils/hooks";
 
 const useStyles = makeStyles(() => ({
     mainTitle: {
@@ -99,12 +101,14 @@ const CustomSwitch = withStyles({
 type TRecallsByVinProps = DialogProps & {
     handleNext : () => void,
     onDeclineRecalls: () => void,
+    handleAddServices: () => void,
 }
 
-const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, onDeclineRecalls}) => {
+const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
     const {selectedVehicle, selectedRecalls, makes} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
+    const {isOpen: isAddServiceOpen, onClose: onAddServiceClose, onOpen: onAddServiceOpen} = useModal();
     const {id} = useParams();
     const {t} = useTranslation();
     const classes = useStyles();
@@ -133,6 +137,23 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
         dispatch(setSelectedRecalls([]))
         onDeclineRecalls()
         onClose();
+    }
+
+    const handleYes = () => {
+        dispatch(setAdditionalServicesChosen(true));
+        onAddServiceClose();
+        handleAddServices();
+        onClose();
+    }
+
+    const handleNo = () => {
+        onAddServiceClose();
+        handleNext();
+        onClose();
+    }
+
+    const handleSubmit = () => {
+        onAddServiceOpen()
     }
 
     return (
@@ -201,11 +222,12 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
                     <Button variant="outlined" onClick={onDecline}>
                         {t("Decline")}
                     </Button>
-                    <Button  variant="contained" onClick={handleNext} color="primary" disabled={!selectedRecalls.length}>
+                    <Button  variant="contained" onClick={handleSubmit} color="primary" disabled={!selectedRecalls.length}>
                         {t("Add Service")}
                     </Button>
                 </div>
             </DialogActions>
+            <AskAddService onSave={handleYes} onClose={handleNo} open={isAddServiceOpen}/>
         </BaseModal>
     );
 };
