@@ -143,6 +143,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
                 mileage: selectedMileage?.value?.toString() ?? "",
                 engineTypeId: selectedVehicle.engineTypeId,
+                vin: selectedVehicle.vin,
             }));
         }
     }, [dispatch, selectedVehicle, mileage]);
@@ -453,7 +454,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                             onChange={handleTextChange("vin")}
                             label={recallsToggledOn && !isRecallsCategorySelected
                                 ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
-                                : `${t("VIN")} ${isRecallsCategorySelected ? "" : `(${ t("Optional")})`}`
+                                : `${t("VIN")}${isRecallsCategorySelected ? "" : `(${ t("Optional")})`}`
                             }
                             name={"vin"}
                             error={errors.includes("vin")}
