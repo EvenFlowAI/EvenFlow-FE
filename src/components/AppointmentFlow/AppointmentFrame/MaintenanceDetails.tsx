@@ -442,7 +442,9 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     value={maintenanceDetails.model ?? ''}
                 />
                 {recallsToggledOn || isRecallsCategorySelected
-                    ? <div key="vin" className={recallsToggledOn ? classes.vinWrapper : ""} style={orderMapStyles.vin}>
+                    ? <div key="vin"
+                           className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}
+                           style={orderMapStyles.vin}>
                         <TextField
                             onChange={handleTextChange("vin")}
                             label={recallsToggledOn && !isRecallsCategorySelected

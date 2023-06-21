@@ -201,7 +201,7 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
                     <Button variant="outlined" onClick={onDecline}>
                         {t("Decline")}
                     </Button>
-                    <Button  variant="contained" onClick={handleNext} color="primary">
+                    <Button  variant="contained" onClick={handleNext} color="primary" disabled={!selectedRecalls.length}>
                         {t("Add Service")}
                     </Button>
                 </div>
