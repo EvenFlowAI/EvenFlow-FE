@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -44,6 +44,8 @@ export const ServiceCenterSwitcher = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory()
+    const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
+        [currentUser, scProfile])
 
     const handleClick = () => {
         dispatch(clearAppointmentData());
@@ -59,7 +61,7 @@ export const ServiceCenterSwitcher = () => {
         }
     }
 
-    return currentUser && scProfile && (welcomeScreenView && welcomeScreenView !== "serviceCenterSelect")
+    return isAuthorized && (welcomeScreenView !== "serviceCenterSelect")
         ? <div className={classes.selectWrapper} onClick={handleClick}>
             { shortLoading
                 ? <Loading/>

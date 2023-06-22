@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Grid, useMediaQuery} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -15,7 +15,7 @@ import {useCurrentUser, useException, useModal} from "../../utils/hooks";
 import EnhancedCustomerSearch from "../Modals/EnhancedCustomerSearch/EnhancedCustomerSearch";
 import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
 import CustomerSearchResults from "../Modals/EnhancedCustomerSearch/CustomerSearchResults";
-import {loadCustomersBySearchTerm} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {loadCustomersBySearchTerm, setCustomerSearchData} from "../../store/reducers/enhancedCustomerSearch/actions";
 import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
 
 export const mh400 = "@media (max-height: 400px)";
@@ -149,10 +149,6 @@ type TProps = {
     isOpenNotFound: boolean;
     onCloseNotFound: TCallback;
     onOpenNotFound: TCallback;
-    firstName: string;
-    lastName: string;
-    setFirstName: Dispatch<SetStateAction<string>>;
-    setLastName: Dispatch<SetStateAction<string>>;
 };
 
 export const CustomerSelect: React.FC<TProps> = ({
@@ -165,13 +161,10 @@ export const CustomerSelect: React.FC<TProps> = ({
                                                      isOpenNotFound,
                                                      onCloseNotFound,
                                                      onOpenNotFound,
-                                                     firstName,
-                                                     lastName,
-                                                     setFirstName,
-                                                     setLastName,
                                                  }) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {customerSearchData} = useSelector((state: RootState) => state.customers);
     const {onOpen, onClose, isOpen} = useModal();
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
@@ -183,6 +176,8 @@ export const CustomerSelect: React.FC<TProps> = ({
     const isXs = useMediaQuery("xs");
     const currentUser = useCurrentUser();
     const showError = useException();
+    const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
+        [currentUser, scProfile])
 
     useEffect(() => {
         const uid = uuidv4();
@@ -206,19 +201,24 @@ export const CustomerSelect: React.FC<TProps> = ({
     }
 
     const onOpenSearch = () => {
-        setFirstName('')
-        setLastName('')
+        dispatch(setCustomerSearchData(null))
         onOpen()
     }
 
-    const loadData = () => {
-        scProfile && dispatch(loadCustomersBySearchTerm(scProfile.id, onSuccess, showError, firstName, lastName, customerEnteredEmail))
+    const loadData = (byName?: boolean) => {
+        scProfile && dispatch(loadCustomersBySearchTerm(
+            scProfile.id,
+            onSuccess,
+            showError,
+            customerSearchData.firstName,
+            customerSearchData.lastName,
+            byName ? undefined : customerEnteredEmail
+        ))
     }
 
     const clearForm = () => {
         setFormIsChecked(false);
-        setFirstName('');
-        setLastName('');
+        dispatch(setCustomerSearchData(null))
     }
 
     const handleBack = () => dispatch(setWelcomeScreenView("serviceCenterSelect"))
@@ -250,7 +250,7 @@ export const CustomerSelect: React.FC<TProps> = ({
                         onClick={handleComplete}>
                         {t("Search")}
                     </LoadingButton>
-                    {currentUser
+                    {isAuthorized
                         ? <div className={classes.searchLinkWrapper}>
                             <Button
                                 variant="text"
@@ -277,10 +277,6 @@ export const CustomerSelect: React.FC<TProps> = ({
                 </div>
             </Grid>
             <EnhancedCustomerSearch
-                firstName={firstName}
-                lastName={lastName}
-                setFirstName={setFirstName}
-                setLastName={setLastName}
                 open={isOpen}
                 onClose={onClose}
                 loadData={loadData}
@@ -296,6 +292,6 @@ export const CustomerSelect: React.FC<TProps> = ({
             />
             <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
         </Grid>
-        {currentUser && <Actions onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service Center"/>}
+        {isAuthorized && <Actions onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service Center"/>}
     </div>
 };

@@ -57,8 +57,6 @@ export const Welcome = () => {
     const {shortLoading} = useSelector((state: RootState) => state.serviceCenters);
 
     const [loading, setLoading] = useState<boolean>(false);
-    const [customerFirstName, setCustomerFirstName] = useState<string>('');
-    const [customerLastName, setCustomerLastName] = useState<string>('');
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
     const {onOpen: onOpenSearchResults, onClose: onCloseSearchResults, isOpen: isOpenSearchResults} = useModal();
@@ -171,7 +169,7 @@ export const Welcome = () => {
 
     const handleExistingUser = () => {
         setLoading(true);
-        if (currentUser && scProfile) {
+        if (currentUser && currentUser?.dealershipId === scProfile?.dealershipId) {
             getDataForAdminUser()
         } else {
             getDataForCustomer()
@@ -252,10 +250,6 @@ export const Welcome = () => {
                     onOpenNotFound={onOpenNotFound}
                     onCloseNotFound={onCloseNotFound}
                     isOpenNotFound={isOpenNotFound}
-                    firstName={customerFirstName}
-                    lastName={customerLastName}
-                    setFirstName={setCustomerFirstName}
-                    setLastName={setCustomerLastName}
                 />;
         }
     }
