@@ -64,12 +64,16 @@ export const EndUserLayout = () => {
 
     useEffect(() => {
         if (!trackerCreated) {
-            setTimeout(() => {
-                const url = (window.location != window.parent?.location)
-                    ? document.referrer
-                    : document.location.href;
-                createTracker('', url, trackerCreated);
-            }, 3000);
+            if (process.env.REACT_APP_ENV === "production") {
+                setTimeout(() => {
+                    const url = (window.location != window.parent?.location)
+                        ? document.referrer
+                        : document.location.href;
+                    createTracker('', url, trackerCreated);
+                }, 3000);
+            } else {
+                createTracker('', '', trackerCreated);
+            }
         }
     }, [window.location, document.referrer, document.location])
 
