@@ -144,7 +144,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
 
     const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
         || categoryType?.value === EServiceCategoryType.LinkToPage2
-        || categoryType?.value === EServiceCategoryType.ValueService, [categoryType])
+        || categoryType?.value === EServiceCategoryType.ValueService
+        || categoryType?.value === EServiceCategoryType.OpenRecalls, [categoryType])
 
     const visitCenterConfig = useMemo(() => {
         const currentServiceType = selectedServiceType === EServiceType.VisitCenter ? EServiceType.VisitCenter : EServiceType.MobileService;
@@ -244,9 +245,9 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
                     serviceType: selectedServiceType,
                 }
                 if (description) data.description = description;
-                if (categoryType.value !== EServiceCategoryType.MaintenancePackage
-                    && categoryType.value !== EServiceCategoryType.LinkToPage2
-                    && categoryType.value !== EServiceCategoryType.ValueService) {
+                if (categoryType.value === EServiceCategoryType.GeneralCategory
+                    || categoryType.value === EServiceCategoryType.Diagnose
+                    || categoryType.value === EServiceCategoryType.IndividualServices) {
                     if (selectedCodes.length) {
                         data.serviceRequests = selectedCodes.map(item => item.id);
                     } else {
