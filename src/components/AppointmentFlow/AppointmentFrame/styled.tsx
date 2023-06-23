@@ -7,5 +7,6 @@ export const CardsWrapper = styled("div")<Theme>(({theme}) => ({
     gap: "18px",
     [theme.breakpoints.down("sm")]: {
         gridTemplateColumns: '1fr',
+        justifyItems: "center",
     }
 }));
