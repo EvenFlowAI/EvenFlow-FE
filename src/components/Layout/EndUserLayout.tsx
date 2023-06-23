@@ -11,8 +11,8 @@ import {CancelAppointment} from "../Welcome/CancelAppointment";
 import {EditAppointment} from "../Welcome/EditAppointment";
 import {decodeSCID, getTracker} from "../../utils/utils";
 import {useLayout} from "../../utils/hooks";
-import ReactGA, {GaOptions} from "react-ga";
-//import ReactGA, {GaOptions} from "react-ga4";
+//import ReactGA, {GaOptions} from "react-ga";
+import ReactGA from "react-ga4";
 import TagManager from 'react-gtm-module'
 import {RootState} from "../../store/rootReducer";
 import {setTrackerCreated} from "../../store/reducers/appointmentFrameReducer/actions";
@@ -20,7 +20,15 @@ import {prodParentLinks} from "./AppointmentFrameLayout";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
 
-export const options: GaOptions = {
+type TGAOptions = {
+    siteSpeedSampleRate: number;
+    cookieDomain: string;
+    allowLinker: boolean;
+    storage: string;
+    clientId?: string;
+}
+
+export const options: TGAOptions = {
     siteSpeedSampleRate: 100,
     cookieDomain: 'auto',
     allowLinker: true,
@@ -40,8 +48,6 @@ export const EndUserLayout = () => {
             if (opt_clientId) options.clientId = opt_clientId
 
             ReactGA.initialize(TRACKER, {
-                debug: true,
-                titleCase: false,
                 gaOptions: options,
             });
             TagManager.initialize({
