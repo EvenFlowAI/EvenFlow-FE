@@ -227,7 +227,7 @@ export const getTracker = (origin: string): string => {
         //if (origin.includes(parentOrigins.janssenfordholdrege)) return "UA-210743216-12";
         if (origin.includes(parentOrigins.lakepowellford)) return "G-HS4HDY3376";
         //if (origin.includes(parentOrigins.lakepowellford)) return "UA-210743216-13";
-        if (origin.includes(parentOrigins.larnedford)) return "G-XBNS359C9B";
+        if (origin.includes(parentOrigins.larnedford)) return "G-4BFDSPFKH6";
         //if (origin.includes(parentOrigins.larnedford)) return "UA-210743216-14";
         if (origin.includes(parentOrigins.performancekingshonda)) return "G-P3DH15MW8P";
         //if (origin.includes(parentOrigins.performancekingshonda)) return "UA-210743216-15";
