@@ -95,6 +95,7 @@ export interface IRepairOrderService {
 }
 
 export interface IRepairOrder {
+    id: number;
     date: string;
     number: string;
     advisor: string;
