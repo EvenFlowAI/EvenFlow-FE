@@ -13,6 +13,7 @@ import {decodeSCID, getTracker} from "../../utils/utils";
 import {useLayout} from "../../utils/hooks";
 import ReactGA, {GaOptions} from "react-ga";
 //import ReactGA, {GaOptions} from "react-ga4";
+import TagManager from 'react-gtm-module'
 import {RootState} from "../../store/rootReducer";
 import {setTrackerCreated} from "../../store/reducers/appointmentFrameReducer/actions";
 import {prodParentLinks} from "./AppointmentFrameLayout";
@@ -43,6 +44,9 @@ export const EndUserLayout = () => {
                 titleCase: false,
                 gaOptions: options,
             });
+            TagManager.initialize({
+                gtmId: TRACKER
+            })
             dispatch(setTrackerCreated(true));
         }
     }

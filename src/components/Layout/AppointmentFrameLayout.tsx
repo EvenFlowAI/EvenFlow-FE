@@ -71,6 +71,7 @@ import {useTranslation} from "react-i18next";
 import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPage";
 import {setUpdateSelectedRecalls} from "../../store/reducers/recall/actions";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
+import TagManager from "react-gtm-module";
 
 const Container = styled('div')({
     display: "flex",
@@ -181,6 +182,9 @@ export const AppointmentFrameLayout = () => {
             ReactGA.initialize(TRACKER, {
                 gaOptions: options,
             });
+            TagManager.initialize({
+                gtmId: TRACKER
+            })
             dispatch(setTrackerCreated(true));
         }
     }
