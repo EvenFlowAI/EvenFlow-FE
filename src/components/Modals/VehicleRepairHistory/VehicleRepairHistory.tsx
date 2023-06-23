@@ -211,7 +211,7 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
                             {repairHistory?.repairOrders.map(item => <div className={classes.orderWrapper} key={item.date}>
                                 <div className={classes.orderMainData}>
                                     <div className={classnames(classes.gridTableHead)}>
-                                        <div className={classnames(classes.titleNonUpperCase, classes.padding)}>#{item.id}</div>
+                                        <div className={classnames(classes.titleNonUpperCase, classes.padding)}>{item.dmsId ? `#${item.dmsId}` : ''}</div>
                                         <div className={classnames(classes.titleNonUpperCase, classes.padding)}>{moment(item.date).format('dddd, MMMM DD, YYYY')}</div>
                                     </div>
                                     <div className={classes.padding}>
