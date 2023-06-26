@@ -36,6 +36,17 @@ const CardWrapper = styled(({active, selected, ...props}) => <div {...props}/>)<
         background: active ? '#000000' : selected ? "#DEFFDF" : "transparent",
         border: `1px solid ${active ? '#000000' : selected ? '#89E5AB' : '#DADADA'}`,
         cursor: "pointer",
+        [theme.breakpoints.down('sm')]: {
+            position: 'relative',
+            maxWidth: 300,
+            gridTemplateColumns: "1fr 3fr",
+            gridTemplateRows: "1fr",
+            fontSize: 18,
+            ".cardIcon": {
+                width: 65,
+                height: 65
+            }
+        },
         "& .priceWrapper": {
             height: 30,
             display: 'flex',
@@ -86,16 +97,6 @@ const CardWrapper = styled(({active, selected, ...props}) => <div {...props}/>)<
                 right: 5,
             }
         },
-        [theme.breakpoints.down('sm')]: {
-            position: 'relative',
-            gridTemplateColumns: "1fr 3fr",
-            gridTemplateRows: "1fr",
-            fontSize: 18,
-            ".cardIcon": {
-                width: 65,
-                height: 65
-            }
-        }
     }
 });
 

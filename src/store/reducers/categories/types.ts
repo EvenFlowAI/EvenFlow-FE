@@ -39,12 +39,8 @@ export enum EServiceCategoryType {
     IndividualServices,
     LinkToPage2,
     Diagnose,
-    ValueService
+    ValueService,
+    OpenRecalls
 }
 
 export type TSuccessCallback = (id: number) => void;
-
-export enum ECategoriesFilter {
-    VisitCenter,
-    MobileService
-}

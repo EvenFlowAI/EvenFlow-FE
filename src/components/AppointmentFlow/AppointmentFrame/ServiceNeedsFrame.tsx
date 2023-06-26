@@ -53,6 +53,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         userType,
         serviceTypeOption,
         packageEMenuType,
+        selectedRecalls,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
@@ -140,6 +141,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
                     case 4:
                         return onSelect('opsCode');
                     case 1:
+                    case 6:
                         return onSelect('maintenanceDetails');
                     case 3:
                         return onSelect('serviceSelection');
@@ -160,6 +162,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const getCardState = (card: IServiceCategory): boolean => {
         if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage || (packageEMenuType !== null));
         if (card.type === EServiceCategoryType.ValueService) return Boolean(valueService?.selectedService);
+        if (card.type === EServiceCategoryType.OpenRecalls) return Boolean(selectedRecalls.length && categoriesIds?.includes(card.id));
         if (card.type === EServiceCategoryType.IndividualServices) {
             return Boolean(serviceCategories
                 .find(cat => cat.type === EServiceCategoryType.IndividualServices
