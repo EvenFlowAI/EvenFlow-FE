@@ -210,38 +210,39 @@ export const parentOrigins = {
 }
 
 export const getTracker = (origin: string): string => {
-    //if (process.env.REACT_APP_ENV === "stage") return "G-ZW2CJN5R98";
-    if (process.env.REACT_APP_ENV === "stage") return "UA-210743216-4";
+    if (process.env.REACT_APP_ENV === "stage") return "G-ZW2CJN5R98";
+    // if (process.env.REACT_APP_ENV === "stage") return "UA-210743216-4";
     if (process.env.REACT_APP_ENV === "production") {
         if (origin.includes(parentOrigins.bmwofschererville)) return "UA-210743216-6";
-        if (origin.includes(parentOrigins.riverviewford)) return "UA-210743216-3";
+        //if (origin.includes(parentOrigins.riverviewford)) return "UA-210743216-3";
+        if (origin.includes(parentOrigins.riverviewford)) return "G-NBXVY09B7S";
         if (origin.includes(parentOrigins.scherervilleEvenflow)) return "UA-210743216-8";
-        //if (origin.includes(parentOrigins.fremontchryslerdodgejeepcasper)) return "G-FBF51NY0TY";
-        if (origin.includes(parentOrigins.fremontchryslerdodgejeepcasper)) return "UA-210743216-9";
-        //if (origin.includes(parentOrigins.fremontchryslerdodgejeeprocksprings)) return "G-9DVYXDJ45M";
-        if (origin.includes(parentOrigins.fremontchryslerdodgejeeprocksprings)) return "UA-210743216-10";
-        //if (origin.includes(parentOrigins.janssenchryslerjeepdodge)) return "G-7177QY7LH2";
-        if (origin.includes(parentOrigins.janssenchryslerjeepdodge)) return "UA-210743216-11";
-        //if (origin.includes(parentOrigins.janssenfordholdrege)) return "G-YXMH70Q2JX";
-        if (origin.includes(parentOrigins.janssenfordholdrege)) return "UA-210743216-12";
-        //if (origin.includes(parentOrigins.lakepowellford)) return "G-HS4HDY3376";
-        if (origin.includes(parentOrigins.lakepowellford)) return "UA-210743216-13";
-        //if (origin.includes(parentOrigins.larnedford)) return "G-XBNS359C9B";
-        if (origin.includes(parentOrigins.larnedford)) return "UA-210743216-14";
-        //if (origin.includes(parentOrigins.performancekingshonda)) return "G-P3DH15MW8P";
-        if (origin.includes(parentOrigins.performancekingshonda)) return "UA-210743216-15";
-        //if (origin.includes(parentOrigins.performancehondastore)) return "G-JFFE7XLTF5";
-        if (origin.includes(parentOrigins.performancehondastore)) return "UA-210743216-16";
-        //if (origin.includes(parentOrigins.performancelexusrivercenter)) return "G-3074D59PM3";
-        if (origin.includes(parentOrigins.performancelexusrivercenter)) return "UA-210743216-18";
-        //if (origin.includes(parentOrigins.performancelexus)) return "G-5XJ8256YEZ";
-        if (origin.includes(parentOrigins.performancelexus)) return "UA-210743216-17";
-        //if (origin.includes(parentOrigins.performancechryslerjeepcenterville)) return "G-EEJPTXTVF2";
-        if (origin.includes(parentOrigins.performancechryslerjeepcenterville)) return "UA-210743216-19";
-        //if (origin.includes(parentOrigins.performancetoyotastore)) return "G-HXLXXZQ4YB";
-        if (origin.includes(parentOrigins.performancetoyotastore)) return "UA-210743216-20";
-        //return "G-LS5EEY1SRM";
-        return "UA-210743216-5";
+        if (origin.includes(parentOrigins.fremontchryslerdodgejeepcasper)) return "G-FBF51NY0TY";
+        //if (origin.includes(parentOrigins.fremontchryslerdodgejeepcasper)) return "UA-210743216-9";
+        if (origin.includes(parentOrigins.fremontchryslerdodgejeeprocksprings)) return "G-9DVYXDJ45M";
+        //if (origin.includes(parentOrigins.fremontchryslerdodgejeeprocksprings)) return "UA-210743216-10";
+        if (origin.includes(parentOrigins.janssenchryslerjeepdodge)) return "G-7177QY7LH2";
+        //if (origin.includes(parentOrigins.janssenchryslerjeepdodge)) return "UA-210743216-11";
+        if (origin.includes(parentOrigins.janssenfordholdrege)) return "G-YXMH70Q2JX";
+        //if (origin.includes(parentOrigins.janssenfordholdrege)) return "UA-210743216-12";
+        if (origin.includes(parentOrigins.lakepowellford)) return "G-HS4HDY3376";
+        //if (origin.includes(parentOrigins.lakepowellford)) return "UA-210743216-13";
+        if (origin.includes(parentOrigins.larnedford)) return "G-4BFDSPFKH6";
+        //if (origin.includes(parentOrigins.larnedford)) return "UA-210743216-14";
+        if (origin.includes(parentOrigins.performancekingshonda)) return "G-P3DH15MW8P";
+        //if (origin.includes(parentOrigins.performancekingshonda)) return "UA-210743216-15";
+        if (origin.includes(parentOrigins.performancehondastore)) return "G-JFFE7XLTF5";
+        //if (origin.includes(parentOrigins.performancehondastore)) return "UA-210743216-16";
+        if (origin.includes(parentOrigins.performancelexusrivercenter)) return "G-3074D59PM3";
+        //if (origin.includes(parentOrigins.performancelexusrivercenter)) return "UA-210743216-18";
+        if (origin.includes(parentOrigins.performancelexus)) return "G-5XJ8256YEZ";
+        //if (origin.includes(parentOrigins.performancelexus)) return "UA-210743216-17";
+        if (origin.includes(parentOrigins.performancechryslerjeepcenterville)) return "G-EEJPTXTVF2";
+        //if (origin.includes(parentOrigins.performancechryslerjeepcenterville)) return "UA-210743216-19";
+        if (origin.includes(parentOrigins.performancetoyotastore)) return "G-HXLXXZQ4YB";
+        //if (origin.includes(parentOrigins.performancetoyotastore)) return "UA-210743216-20";
+        return "G-DWX0X9CBTT";
+        //return "UA-210743216-5";
     } else {
         return "G-LS5EEY1SRM";
         //return "UA-210743216-5";

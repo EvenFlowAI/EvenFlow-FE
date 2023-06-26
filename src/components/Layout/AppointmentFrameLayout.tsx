@@ -64,8 +64,8 @@ import {
     IServiceCategory
 } from "../../api/types";
 import './MaintenanceDetails.css';
-//import ReactGA from "react-ga4";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
+// import ReactGA from "react-ga";
 import {LocalTokens, PaginatedAPIResponse} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {options} from "./EndUserLayout";
@@ -76,6 +76,7 @@ import {useTranslation} from "react-i18next";
 import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPage";
 import {setUpdateSelectedRecalls} from "../../store/reducers/recall/actions";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
+import TagManager from "react-gtm-module";
 import {Api} from "../../config/requests";
 import {EServiceCategoryType} from "../../store/reducers/categories/types";
 
@@ -189,6 +190,9 @@ export const AppointmentFrameLayout = () => {
             ReactGA.initialize(TRACKER, {
                 gaOptions: options,
             });
+            TagManager.initialize({
+                gtmId: TRACKER
+            })
             dispatch(setTrackerCreated(true));
         }
     }
@@ -319,12 +323,16 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         if (!trackerCreated) {
-            setTimeout(() => {
-                const url = (window.location != window.parent?.location)
-                    ? document.referrer
-                    : document.location.href;
-                createTracker('', url, trackerCreated);
-            }, 3000);
+            if (process.env.REACT_APP_ENV === "production") {
+                setTimeout(() => {
+                    const url = (window.location != window.parent?.location)
+                        ? document.referrer
+                        : document.location.href;
+                    createTracker('', url, trackerCreated);
+                }, 3000);
+            } else {
+                createTracker('', '', trackerCreated);
+            }
         }
     }, [window.location, document.referrer, document.location])
 
