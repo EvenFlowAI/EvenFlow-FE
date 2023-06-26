@@ -25,8 +25,8 @@ import {
     TUpsellOfOption
 } from "../../../api/types";
 import PackageSelectionMobile from "./PackageSelectionMobile";
-import ReactGA from "react-ga";
-//import ReactGA from "react-ga4";
+//import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import {useModal} from "../../../utils/hooks";
 import ConfirmChangeOption from "../../Modals/ConfirmChangeOption/ConfirmChangeOption";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
