@@ -33,7 +33,7 @@ type TProps = {
     setLastSelectedCategory: Dispatch<SetStateAction<IServiceCategory|null>>;
 }
 export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelectedCategory}) => {
-    const {subService, categoriesIds, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {subService, categoriesIds, serviceTypeOption, selectedRecalls} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const [loading, setLoading] = useState<boolean>(false);
     const [services, setServices] = useState<IServiceCategory[]>([]);
@@ -99,6 +99,8 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
                     case 2:
                     case 4:
                         return onNext('opsCode');
+                    case 6:
+                        return onNext('maintenanceDetails');
                     case 5:
                         return history.push(`${Routes.EndUser.AppointmentFrameBase}/${id}/valueService`)
                     default:
@@ -120,6 +122,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
 
     const getCardState = (card: IServiceCategory): boolean => {
         // todo refactor double code
+        if (card.type === EServiceCategoryType.OpenRecalls) return Boolean(selectedRecalls.length && categoriesIds?.includes(card.id));
         if (card.type === EServiceCategoryType.IndividualServices) {
             return Boolean(services
                 .find(cat => cat.type === EServiceCategoryType.IndividualServices

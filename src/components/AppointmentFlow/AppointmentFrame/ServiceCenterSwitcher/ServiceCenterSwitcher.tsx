@@ -62,10 +62,10 @@ export const ServiceCenterSwitcher = () => {
     }
 
     return isAuthorized && (welcomeScreenView !== "serviceCenterSelect")
-        ? <div className={classes.selectWrapper} onClick={handleClick}>
+        ? <div className={classes.selectWrapper}>
             { shortLoading
                 ? <Loading/>
-                : <div className={classes.textWrapper}>{scProfile?.name}</div>
+                : <div className={classes.textWrapper} onClick={handleClick}>{scProfile?.name}</div>
             }
         </div>
         : null

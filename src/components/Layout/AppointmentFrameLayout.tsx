@@ -32,7 +32,7 @@ import {
     selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {encodeSCID, getTracker} from "../../utils/utils";
+import {decodeSCID, encodeSCID, getTracker} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
@@ -57,11 +57,16 @@ import {
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {EServiceCenterName, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
+import {
+    EServiceCenterName,
+    IAppointmentByQuery,
+    ILoadedVehicle,
+    IServiceCategory
+} from "../../api/types";
 import './MaintenanceDetails.css';
 import ReactGA from "react-ga4";
 // import ReactGA from "react-ga";
-import {LocalTokens} from "../../types/types";
+import {LocalTokens, PaginatedAPIResponse} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {options} from "./EndUserLayout";
 import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
@@ -72,6 +77,8 @@ import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPa
 import {setUpdateSelectedRecalls} from "../../store/reducers/recall/actions";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 import TagManager from "react-gtm-module";
+import {Api} from "../../config/requests";
+import {EServiceCategoryType} from "../../store/reducers/categories/types";
 
 const Container = styled('div')({
     display: "flex",
@@ -154,6 +161,7 @@ export const AppointmentFrameLayout = () => {
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {allCategories} = useSelector((state: RootState) => state.categories);
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory|null>(null);
     const [needToShowServiceSelection, setNeedToShowServiceSelection] = useState<boolean>(false)
@@ -242,8 +250,29 @@ export const AppointmentFrameLayout = () => {
         if (data?.vehicle?.vin && scProfile && data.recalls?.length) {
             const makeId = makes.find(item => item.name.toLowerCase() === data.vehicle.make.toLowerCase())?.id
             if (makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, makeId, data.recalls))
+            if (!data.maintenancePackageOption && !data.serviceRequests.length && !allCategories.length) {
+                Api.call<PaginatedAPIResponse<IServiceCategory>>(
+                    Api.endpoints.ServiceCategories.GetByQuery,
+                    {data: {
+                            serviceCenterId: decodeSCID(id),
+                            serviceType: data?.serviceTypeOption?.type === EServiceType.MobileService
+                                ? EServiceType.MobileService
+                                : EServiceType.VisitCenter
+                        }}
+                ).then(({data}) => {
+                    const category = data?.result?.find(item => item.type === EServiceCategoryType.OpenRecalls)
+                    if (category) {
+                        dispatch(selectCategoriesIds([category.id]))
+                        if (category.page === 0) {
+                            dispatch(selectService(category))
+                        } else {
+                            dispatch(selectSubService(category))
+                        }
+                    }
+                })
+            }
         }
-    }, [scProfile, makes])
+    }, [scProfile, makes, id, allCategories])
 
     const handleSRs = async (data: IAppointmentByQuery) => data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
 
@@ -257,7 +286,8 @@ export const AppointmentFrameLayout = () => {
             await dispatch(setUpdateAppointment(data));
             await handleSRs(data);
             await handlePackage(data)
-            if (handleServiceTypeOption(data)) {
+            const serviceSelection = handleServiceTypeOption(data);
+            if (serviceSelection) {
                 handleServiceTypeSelection();
             } else {
                 const isMobileOrPickUp = data.serviceTypeOption && data.serviceTypeOption?.type !== EServiceType.VisitCenter;
