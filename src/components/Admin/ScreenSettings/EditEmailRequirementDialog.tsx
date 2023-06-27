@@ -41,7 +41,7 @@ const useStyles = makeStyles(() => ({
     },
 }))
 
-const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, open, ...props}) => {
+const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, ...props}) => {
     const {emailRequirement, isEmailRequirementLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
     const [data, setData] = useState<TEmailRequirement|null>(null);
     const {selectedSC} = useSCs();
@@ -80,7 +80,7 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, open, ...pr
     }
 
     return (
-        <BaseModal {...props} width={550} onClose={onCancel} open={open}>
+        <BaseModal {...props} width={550} onClose={onCancel}>
             <DialogTitle
                 onClose={onCancel}
                 style={{textTransform: 'uppercase', color: "#575757", padding: '16px 48px'}}>
@@ -101,6 +101,16 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, open, ...pr
                             <TableRow>
                                 <TableCell>Call Center & Service Advisor</TableCell>
                                 <TableCell align="center">
+                                    {!data?.callCenterServiceAdvisorEnabled
+                                        ? <RadioButtonChecked
+                                            htmlColor="#3855F3"
+                                            cursor="pointer"/>
+                                        : <RadioButtonUnchecked
+                                            htmlColor="#DADADA"
+                                            cursor="pointer"
+                                            onClick={() => onChange("callCenterServiceAdvisorEnabled", true)}/>}
+                                </TableCell>
+                                <TableCell align="center">
                                     {data?.callCenterServiceAdvisorEnabled
                                         ? <RadioButtonChecked
                                             htmlColor="#3855F3"
@@ -110,19 +120,19 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, open, ...pr
                                             cursor="pointer"
                                             onClick={() => onChange("callCenterServiceAdvisorEnabled", false)}/>}
                                 </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Customer Self Service</TableCell>
                                 <TableCell align="center">
-                                    {data?.callCenterServiceAdvisorEnabled
+                                    {!data?.customerSelfServiceEnabled
                                         ? <RadioButtonChecked
                                             htmlColor="#3855F3"
                                             cursor="pointer"/>
                                         : <RadioButtonUnchecked
                                             htmlColor="#DADADA"
                                             cursor="pointer"
-                                            onClick={() => onChange("callCenterServiceAdvisorEnabled", true)}/>}
+                                            onClick={() => onChange("customerSelfServiceEnabled", true)}/>}
                                 </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Customer Self Service</TableCell>
                                 <TableCell align="center">
                                     {data?.customerSelfServiceEnabled
                                         ? <RadioButtonChecked
@@ -132,16 +142,6 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, open, ...pr
                                             htmlColor="#DADADA"
                                             cursor="pointer"
                                             onClick={() => onChange("customerSelfServiceEnabled", false)}/>}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {data?.customerSelfServiceEnabled
-                                        ? <RadioButtonChecked
-                                            htmlColor="#3855F3"
-                                            cursor="pointer"/>
-                                        : <RadioButtonUnchecked
-                                            htmlColor="#DADADA"
-                                            cursor="pointer"
-                                            onClick={() => onChange("customerSelfServiceEnabled", true)}/>}
                                 </TableCell>
                             </TableRow>
                         </TableBody>
