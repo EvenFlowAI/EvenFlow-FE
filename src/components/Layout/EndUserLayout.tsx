@@ -63,9 +63,11 @@ export const EndUserLayout = () => {
 
     useEffect(() => {
         if (!trackerCreated) {
+            /** expects for the post message from the parent site in order to create tracker with right trackingID **/
             window.addEventListener('message', function(event) {
                 if (!prodParentLinks.includes(event?.origin)) return;
                 let originSite = event.origin;
+                /** in some browsers checks the parent URL and use it like origin **/
                 if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
                 if (originSite) createTracker(event.data, originSite, trackerCreated);
             });
@@ -74,6 +76,7 @@ export const EndUserLayout = () => {
 
     useEffect(() => {
         if (!trackerCreated) {
+            /** if there are not a message from the parent site, try to get tracker from the document`s props **/
             if (process.env.REACT_APP_ENV === "production") {
                 setTimeout(() => {
                     const url = (window.location != window.parent?.location)
@@ -82,6 +85,7 @@ export const EndUserLayout = () => {
                     createTracker('', url, trackerCreated);
                 }, 3000);
             } else {
+                /**without origin (parent site URL) creates default tracker for current environment**/
                 createTracker('', '', trackerCreated);
             }
         }
