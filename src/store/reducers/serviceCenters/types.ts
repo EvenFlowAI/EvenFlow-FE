@@ -153,5 +153,3 @@ export interface IAdvisorAssignment {
     primaryMethod?: EAdvisorAssignMethod|null;
     secondaryMethod?: EAdvisorAssignMethod|null;
 }
-
-export type TRemindersField = "email"| "reminders"
