@@ -8,8 +8,14 @@ export const setEmailRequirementLoading = createAction<boolean>("ServiceCenters/
 
 export const loadEmailRequirement = (id: number): AppThunk => dispatch => {
     dispatch(setEmailRequirementLoading(true))
-    // todo request
-    dispatch(setEmailRequirementLoading(false))
+    Api.call<TEmailRequirement>(Api.endpoints.BookingFlowScreenSettings.GetEmailRequirement, {urlParams: {id}})
+        .then(res => {
+            if (res) dispatch(getEmailRequirement(res.data))
+        })
+        .catch(err => {
+            console.log("load email requirement error", err)
+        })
+        .finally(() => dispatch(setEmailRequirementLoading(false)))
 }
 
 export const updateEmailRequirement = (serviceCenterId: number, data: TEmailRequirement, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
@@ -18,7 +24,14 @@ export const updateEmailRequirement = (serviceCenterId: number, data: TEmailRequ
         ...data,
         serviceCenterId,
     }
-    dispatch(loadEmailRequirement(serviceCenterId));
-    // todo request
-    dispatch(setEmailRequirementLoading(false))
+    Api.call(Api.endpoints.BookingFlowScreenSettings.UpdateEmailRequirement, {urlParams: {id: serviceCenterId}, data})
+        .then(res => {
+            if (res) {
+                dispatch(loadEmailRequirement(serviceCenterId));
+            }
+        })
+        .catch(err => {
+            console.log("update email requirement error", err)
+        })
+        .finally(() => dispatch(setEmailRequirementLoading(false)))
 }
