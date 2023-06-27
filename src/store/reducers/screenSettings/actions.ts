@@ -24,14 +24,16 @@ export const updateEmailRequirement = (serviceCenterId: number, data: TEmailRequ
         ...data,
         serviceCenterId,
     }
-    Api.call(Api.endpoints.BookingFlowScreenSettings.UpdateEmailRequirement, {urlParams: {id: serviceCenterId}, data})
+    Api.call(Api.endpoints.BookingFlowScreenSettings.UpdateEmailRequirement, {urlParams: {id: serviceCenterId}, data: payload})
         .then(res => {
             if (res) {
                 dispatch(loadEmailRequirement(serviceCenterId));
+                onSuccess()
             }
         })
         .catch(err => {
             console.log("update email requirement error", err)
+            onError(err)
         })
         .finally(() => dispatch(setEmailRequirementLoading(false)))
 }
