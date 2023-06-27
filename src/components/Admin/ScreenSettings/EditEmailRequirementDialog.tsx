@@ -6,7 +6,7 @@ import {DemandTable, TableRow} from "../../Optimizer/AppointmentAllocation/UI";
 import {Button, TableBody, TableHead} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {DialogProps} from "../../Modals/types";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {TEmailRequirement} from "../../../store/reducers/screenSettings/types";
@@ -47,6 +47,8 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, open, ...pr
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useStyles();
+    const showError = useException();
+    const showMessage = useMessage();
 
     useEffect(() => {
         setData(emailRequirement)
@@ -66,9 +68,14 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, open, ...pr
         })
     }
 
+    const onSuccess = () => {
+        showMessage("Email Requirements Updated");
+        onCancel();
+    }
+
     const onSave = () => {
         if (selectedSC && data) {
-            dispatch(updateEmailRequirement(selectedSC.id, data))
+            dispatch(updateEmailRequirement(selectedSC.id, data, showError, onSuccess))
         }
     }
 

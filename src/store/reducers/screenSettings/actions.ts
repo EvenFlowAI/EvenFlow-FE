@@ -18,6 +18,7 @@ export const updateEmailRequirement = (serviceCenterId: number, data: TEmailRequ
         ...data,
         serviceCenterId,
     }
+    dispatch(loadEmailRequirement(serviceCenterId));
     // todo request
     dispatch(setEmailRequirementLoading(false))
 }

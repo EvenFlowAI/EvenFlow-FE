@@ -6,7 +6,7 @@ import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {RootState} from "../../../store/rootReducer";
-import {loadReminders, updateEmailIsRequired, updateReminders} from "../../../store/reducers/serviceCenters/actions";
+import {loadReminders, updateReminders} from "../../../store/reducers/serviceCenters/actions";
 import {TRemindersField} from "../../../store/reducers/serviceCenters/types";
 
 const useStyles = makeStyles(() => ({
@@ -52,7 +52,6 @@ const useStyles = makeStyles(() => ({
 
 const Reminders: React.FC<DialogProps> = (props) => {
     const [isRemindersOn, setRemindersOn] = useState<boolean>(false);
-    const [isEmailRequired, setEmailRequired] = useState<boolean>(false);
     const { reminders, remindersLoading } = useSelector((state: RootState) => state.serviceCenters);
     const showError = useException();
     const showMessage = useMessage();
@@ -63,7 +62,6 @@ const Reminders: React.FC<DialogProps> = (props) => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadReminders(selectedSC.id));
-            setEmailRequired(selectedSC.isEmailRequired)
         }
     }, [selectedSC])
 
@@ -74,23 +72,16 @@ const Reminders: React.FC<DialogProps> = (props) => {
     const handleSwitch = (field: TRemindersField) => (e: any, value: boolean) => {
         if (field === "reminders") {
             setRemindersOn(value);
-        } else {
-            setEmailRequired(value);
         }
     }
 
     const onCancel = () => {
         setRemindersOn(reminders)
-        selectedSC && setEmailRequired(selectedSC.isEmailRequired)
         props.onClose();
     }
 
-    const onSuccess = (field: TRemindersField) => {
-        if (field === "email") {
-            showMessage('Email Configuration updated')
-        } else {
-            showMessage('Appointment Reminders Configuration updated')
-        }
+    const onSuccess = () => {
+        showMessage('Appointment Reminders Configuration updated')
     }
 
     const onError = (err: string) => {
@@ -99,8 +90,7 @@ const Reminders: React.FC<DialogProps> = (props) => {
 
     const onSave = () => {
         if (selectedSC) {
-            dispatch(updateReminders(selectedSC.id, isRemindersOn, onError, () => onSuccess("reminders")))
-            dispatch(updateEmailIsRequired(selectedSC.id, isEmailRequired, onError, () => onSuccess("email")))
+            dispatch(updateReminders(selectedSC.id, isRemindersOn, onError, onSuccess))
             props.onClose();
         }
     }
@@ -118,15 +108,6 @@ const Reminders: React.FC<DialogProps> = (props) => {
                         disabled={remindersLoading}
                         onChange={handleSwitch("reminders")}
                         checked={isRemindersOn}
-                        color="primary"
-                    />
-                </div>
-                <div className={classes.switchWrapper}>
-                    <p className={classes.text}>Email field as required</p>
-                    <Switch
-                        disabled={remindersLoading}
-                        onChange={handleSwitch("email")}
-                        checked={isEmailRequired}
                         color="primary"
                     />
                 </div>
