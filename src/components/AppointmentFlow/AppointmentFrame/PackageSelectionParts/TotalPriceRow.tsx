@@ -125,19 +125,19 @@ const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, is
                 showDetails={showDetails}
                 key={p.id}>
                 <div className={showDetails ? "" : "positionedBtn"}>{selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}</div>
-                    <div className="prices" style={{ fontSize: 20 }}>
-                        {showDetails
-                            ? <div className="previousPrice">${scProfile?.isRoundPrice
-                                ? complimentaryPrice + +p.totalMaintenanceValue
-                                : (complimentaryPrice + +p.totalMaintenanceValue).toFixed(2)}
-                            </div>
-                            : null}
-                        <div className={showDetails ? "currentPrice" : "centeredPrice"}>
-                            ${scProfile?.isRoundPrice
-                                ? servicesPrice
-                                : (servicesPrice).toFixed(2)}
+                <div className="prices" style={{ fontSize: 20 }}>
+                    {showDetails
+                        ? <div className="previousPrice">${scProfile?.isRoundPrice
+                            ? complimentaryPrice + +p.totalMaintenanceValue
+                            : (complimentaryPrice + +p.totalMaintenanceValue).toFixed(2)}
                         </div>
+                        : null}
+                    <div className={showDetails ? "currentPrice" : "centeredPrice"}>
+                        ${scProfile?.isRoundPrice
+                        ? servicesPrice
+                        : (servicesPrice).toFixed(2)}
                     </div>
+                </div>
             </PriceValue>;
         })}
     </Wrapper>
