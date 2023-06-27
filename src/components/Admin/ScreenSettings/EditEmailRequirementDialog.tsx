@@ -94,47 +94,47 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, open, ...pr
                             <TableRow>
                                 <TableCell>Call Center & Service Advisor</TableCell>
                                 <TableCell align="center">
-                                    {data?.adminUserService
+                                    {data?.callCenterServiceAdvisorEnabled
                                         ? <RadioButtonChecked
                                             htmlColor="#3855F3"
                                             cursor="pointer"/>
                                         : <RadioButtonUnchecked
                                             htmlColor="#DADADA"
                                             cursor="pointer"
-                                            onClick={() => onChange("adminUserService", false)}/>}
+                                            onClick={() => onChange("callCenterServiceAdvisorEnabled", false)}/>}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {data?.adminUserService
+                                    {data?.callCenterServiceAdvisorEnabled
                                         ? <RadioButtonChecked
                                             htmlColor="#3855F3"
                                             cursor="pointer"/>
                                         : <RadioButtonUnchecked
                                             htmlColor="#DADADA"
                                             cursor="pointer"
-                                            onClick={() => onChange("adminUserService", true)}/>}
+                                            onClick={() => onChange("callCenterServiceAdvisorEnabled", true)}/>}
                                 </TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>Customer Self Service</TableCell>
                                 <TableCell align="center">
-                                    {data?.customerSelfService
+                                    {data?.customerSelfServiceEnabled
                                         ? <RadioButtonChecked
                                             htmlColor="#3855F3"
                                             cursor="pointer"/>
                                         : <RadioButtonUnchecked
                                             htmlColor="#DADADA"
                                             cursor="pointer"
-                                            onClick={() => onChange("customerSelfService", false)}/>}
+                                            onClick={() => onChange("customerSelfServiceEnabled", false)}/>}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {data?.customerSelfService
+                                    {data?.customerSelfServiceEnabled
                                         ? <RadioButtonChecked
                                             htmlColor="#3855F3"
                                             cursor="pointer"/>
                                         : <RadioButtonUnchecked
                                             htmlColor="#DADADA"
                                             cursor="pointer"
-                                            onClick={() => onChange("customerSelfService", true)}/>}
+                                            onClick={() => onChange("customerSelfServiceEnabled", true)}/>}
                                 </TableCell>
                             </TableRow>
                         </TableBody>

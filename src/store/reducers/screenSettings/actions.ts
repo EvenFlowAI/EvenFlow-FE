@@ -12,8 +12,12 @@ export const loadEmailRequirement = (id: number): AppThunk => dispatch => {
     dispatch(setEmailRequirementLoading(false))
 }
 
-export const updateEmailRequirement = (id: number, data: TEmailRequirement): AppThunk => dispatch => {
+export const updateEmailRequirement = (serviceCenterId: number, data: TEmailRequirement, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
     dispatch(setEmailRequirementLoading(true))
+    const payload = {
+        ...data,
+        serviceCenterId,
+    }
     // todo request
     dispatch(setEmailRequirementLoading(false))
 }

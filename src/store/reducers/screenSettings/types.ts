@@ -1,6 +1,6 @@
 export type TEmailRequirement = {
-    adminUserService: boolean;
-    customerSelfService: boolean;
+    callCenterServiceAdvisorEnabled: boolean;
+    customerSelfServiceEnabled: boolean;
 }
 
 export enum EScreenSettingsType {
