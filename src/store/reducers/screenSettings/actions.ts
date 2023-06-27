@@ -11,3 +11,9 @@ export const loadEmailRequirement = (id: number): AppThunk => dispatch => {
     // todo request
     dispatch(setEmailRequirementLoading(false))
 }
+
+export const updateEmailRequirement = (id: number, data: TEmailRequirement): AppThunk => dispatch => {
+    dispatch(setEmailRequirementLoading(true))
+    // todo request
+    dispatch(setEmailRequirementLoading(false))
+}

@@ -9,12 +9,13 @@ import {screenSettingsList, TOptContent} from "../../../store/reducers/screenSet
 import {RootState} from "../../../store/rootReducer";
 import {EScreenSettingsType} from "../../../store/reducers/screenSettings/types";
 import {CenterSettingsPlate} from "../../Optimizer/CapacityServiceValet/CenterSettingsPlate";
+import EditEmailRequirementDialog from "./EditEmailRequirementDialog";
 
 const ScreenSettings = () => {
     const {emailRequirement} = useSelector((state: RootState) => state.screenSettingsBooking);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const {onOpen: onEmailEditOpen, isOpen: isEmailEditOpen, onClose: isEmailEditClose} = useModal();
+    const {onOpen: onEmailEditOpen, isOpen: isEmailEditOpen, onClose: onEmailEditClose} = useModal();
 
     useEffect(() => {
         if (selectedSC) {
@@ -78,6 +79,7 @@ const ScreenSettings = () => {
                     />
                 })}
             </Grid>
+            <EditEmailRequirementDialog open={isEmailEditOpen} onClose={onEmailEditClose}/>
         </>
     );
 };
