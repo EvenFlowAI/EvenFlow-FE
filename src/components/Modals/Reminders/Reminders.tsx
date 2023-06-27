@@ -7,7 +7,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {RootState} from "../../../store/rootReducer";
 import {loadReminders, updateReminders} from "../../../store/reducers/serviceCenters/actions";
-import {TRemindersField} from "../../../store/reducers/serviceCenters/types";
 
 const useStyles = makeStyles(() => ({
     switchWrapper: {
@@ -60,19 +59,15 @@ const Reminders: React.FC<DialogProps> = (props) => {
     const {selectedSC} = useSCs();
 
     useEffect(() => {
-        if (selectedSC) {
-            dispatch(loadReminders(selectedSC.id));
-        }
-    }, [selectedSC])
+        if (selectedSC) dispatch(loadReminders(selectedSC.id));
+    }, [selectedSC, dispatch])
 
     useEffect(() => {
         setRemindersOn(reminders);
     }, [reminders])
 
-    const handleSwitch = (field: TRemindersField) => (e: any, value: boolean) => {
-        if (field === "reminders") {
-            setRemindersOn(value);
-        }
+    const handleSwitch = (e: any, value: boolean) => {
+        setRemindersOn(value);
     }
 
     const onCancel = () => {
@@ -84,13 +79,9 @@ const Reminders: React.FC<DialogProps> = (props) => {
         showMessage('Appointment Reminders Configuration updated')
     }
 
-    const onError = (err: string) => {
-        showError(err)
-    }
-
     const onSave = () => {
         if (selectedSC) {
-            dispatch(updateReminders(selectedSC.id, isRemindersOn, onError, onSuccess))
+            dispatch(updateReminders(selectedSC.id, isRemindersOn, showError, onSuccess))
             props.onClose();
         }
     }
@@ -106,7 +97,7 @@ const Reminders: React.FC<DialogProps> = (props) => {
                     <p className={classes.text}>Email & Text Appointment Reminders</p>
                     <Switch
                         disabled={remindersLoading}
-                        onChange={handleSwitch("reminders")}
+                        onChange={handleSwitch}
                         checked={isRemindersOn}
                         color="primary"
                     />
