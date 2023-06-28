@@ -280,7 +280,7 @@ export class Api {
         },
         BookingFlowScreenSettings: {
             GetEmailRequirement: {route: "/booking-flow-screen-settings/{id}/email-requirement", method: "get"},
-            UpdateEmailRequirement: {route: "/booking-flow-screen-settings/{id}/email-requirement", method: "patch"},
+            UpdateEmailRequirement: {route: "/booking-flow-screen-settings/{id}/email-requirement", method: "put"},
         },
         CapacityManagement: {
             Reallocate: {route: "/capacity-management/capacity-data-reallocate", method: "put"},
