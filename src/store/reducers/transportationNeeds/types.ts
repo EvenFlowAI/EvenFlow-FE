@@ -76,7 +76,9 @@ export enum ETransportationType {
     Rental,
     Ride,
     WaitAtDealership,
-    DropOffVehicle
+    DropOffVehicle,
+    NightTimeDropOff,
+    PickUpDelivery
 }
 
 export enum ETransportationDays {

@@ -12,7 +12,7 @@ const PriceWrapper = styled(({isUpsellPrice, isShowPriceDetails, isSelected, ...
     ({theme, isShowPriceDetails, isUpsellPrice, isSelected}) => ({
         width: '100%',
         display: 'grid',
-        gridTemplateColumns: '1fr 3fr 2fr',
+        gridTemplateColumns: '10% 50% 40%',
         border: `1px solid ${isSelected ? '#202021' : '#BDBDBD'}`,
         marginBottom: isUpsellPrice ? 0 : 10,
         marginTop: isUpsellPrice ? 0 : 10,

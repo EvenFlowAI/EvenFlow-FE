@@ -102,8 +102,7 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
 
     const enabledTransportationOptions = useMemo(() => options.filter(op => op.state), [options]);
     const isTransportationDisabled = useMemo(() => !enabledTransportationOptions.length ||
-            selectedServiceType?.value === EServiceType.MobileService.toString()
-                    || selectedServiceType?.value === EServiceType.PickUpDropOff.toString(),
+            selectedServiceType?.value === EServiceType.MobileService.toString(),
         [selectedServiceType, EServiceType, enabledTransportationOptions])
 
     useEffect(() => {
