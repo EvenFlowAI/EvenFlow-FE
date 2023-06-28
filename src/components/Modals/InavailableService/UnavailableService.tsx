@@ -15,7 +15,7 @@ import {
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     info: {
         display: 'flex',
         flexDirection: 'column',
@@ -31,6 +31,9 @@ const useStyles = makeStyles(() => ({
         justifyContent: 'center',
         alignItems: 'center',
         margin: '20px 0',
+        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+            margin: 0,
+        }
     },
     linkButton: {
         textTransform: 'none',
