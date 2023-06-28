@@ -67,7 +67,7 @@ const MainLinksWithSub: LinkTypeWithSub[] = [
     {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Owner"]},
     {to: Routes.Admin.Employees, name: "Employees", roles: ["Owner", "Manager"]},
     {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager"]},
-    {to: Routes.Optimizer.Base, name: "Capacity Optimization", exact: true, roles: ["Owner", "Manager"], subLinks: [
+    {to: Routes.Optimizer.Base, name: "Capacity Optimization", roles: ["Owner", "Manager"], subLinks: [
             {to: Routes.Optimizer.ServiceRequests, name: "Service Requests", sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.Optimizer.AppointmentValue, name: "Appointment Value Settings", sub: true, roles: ["Owner", "Manager"]},
             {to: Routes.Optimizer.AppointmentSlotScoring, name: "Appointment Slot Scoring", sub: true, roles: ["Owner", "Manager"]},
