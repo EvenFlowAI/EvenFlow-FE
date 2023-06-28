@@ -446,19 +446,3 @@ export const updateAdvisorAssignment = (id: number, data: IAdvisorAssignment, on
         })
         .finally(() => dispatch(setAdvisorAssignmentLoading(false)))
 }
-
-export const updateEmailIsRequired = (id: number, isEmailRequired: boolean, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
-    dispatch(setRemindersLoading(true));
-    Api.call(Api.endpoints.ServiceCenters.SetEmailRequired, {urlParams: {id}, data: {isEmailRequired}})
-        .then(result => {
-            if (result) {
-                if (result) dispatch(loadAllSCs())
-                onSuccess();
-            }
-        })
-        .catch(err => {
-            onError(err);
-            console.log('update email required error', err)
-        })
-        .finally(() => dispatch(setRemindersLoading(false)))
-}
