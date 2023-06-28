@@ -5,7 +5,7 @@ import {Loading} from "../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
 import {useTranslation} from "react-i18next";
 
-type TServiceTypeIconProps = {card: IFirstScreenOption, onClick: () => void, isSM: boolean}
+type TServiceTypeIconProps = {card: IFirstScreenOption}
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card, onClick, isSM}) => {
+const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card}) => {
     const [isIconLoading, setIsIconLoading] = useState<boolean>(false);
     const [icon, setIcon] = useState<string>('');
     const classes = useStyles();
@@ -88,7 +88,6 @@ const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card, onClick, isSM})
             ? iconType.toLowerCase() === 'svg'
                 ? <div className={classes.icon} dangerouslySetInnerHTML={{__html: icon}} />
                 : <div className={classes.icon}
-                       onClick={() => isSM && onClick()}
                     //style={{backgroundImage: `url(${card.iconPath})`}}
                 >
                     <img className={classes.image} src={card.iconPath} alt="logo"/>
