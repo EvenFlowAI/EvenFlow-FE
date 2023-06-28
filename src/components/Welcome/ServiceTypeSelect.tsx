@@ -85,7 +85,7 @@ const Button = styled(({isTaglinePresent, ...props}) => (<div {...props}/>))<The
         fontSize: 22,
         padding: "7%"
     },
-    [mh400]: {
+    [`${mh400} and (orientation: portrait)`]: {
         fontSize: 18,
         padding: "2%"
     },

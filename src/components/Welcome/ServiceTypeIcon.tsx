@@ -3,6 +3,7 @@ import axios from "axios";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {Loading} from "../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
+import {useTranslation} from "react-i18next";
 
 type TServiceTypeIconProps = {card: IFirstScreenOption, onClick: () => void, isSM: boolean}
 
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     },
     noLogo: {
         width: '100%',
+        minHeight: 105,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -59,6 +61,7 @@ const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card, onClick, isSM})
     const [isIconLoading, setIsIconLoading] = useState<boolean>(false);
     const [icon, setIcon] = useState<string>('');
     const classes = useStyles();
+    const {t} = useTranslation();
 
     const iconType = useMemo((): string => {
         if (card.iconPath?.length) {
@@ -90,7 +93,7 @@ const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card, onClick, isSM})
                 >
                     <img className={classes.image} src={card.iconPath} alt="logo"/>
                 </div>
-            : <div className={classes.noLogo}>No logo</div>
+            : <div className={classes.noLogo}>{t("No logo")}</div>
 };
 
 export default ServiceTypeIcon;
