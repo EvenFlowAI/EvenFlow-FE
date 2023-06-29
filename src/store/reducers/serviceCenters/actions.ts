@@ -19,6 +19,7 @@ import {setSelectedPod} from "../pods/actions";
 import {createAction} from "@reduxjs/toolkit";
 import {EDay} from "../demandSegments/types";
 import {EMaintenanceOptionType} from "../../../api/types";
+import {setWelcomeScreenView} from "../appointmentFrameReducer/actions";
 
 const getAll = (payload: IServiceCenterExtended[]): TServiceCenterActions => ({
     type: "ServiceCenters/GetAll", payload
@@ -120,6 +121,8 @@ export const loadShortSC: ActionCreator<ThunkAction<void, RootState, void, TServ
         dispatch(_loadShortSC(result));
         dispatch(shortLoading(false));
     } catch (e) {
+        // @ts-ignore
+        dispatch(setWelcomeScreenView("select"))
         dispatch(shortLoading(false));
         throw e;
     }

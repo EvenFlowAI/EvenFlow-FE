@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {Grid, styled, Theme, useTheme} from "@material-ui/core";
+import {Grid, styled, Theme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {mh400, mh600} from "./CustomerSelect";
 import {RootState} from "../../store/rootReducer";
@@ -121,7 +121,6 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const classes = useStyles();
     const dispatch = useDispatch();
-    const theme = useTheme();
     const remappedCards = useMemo(() => firstScreenOptions
             .map(card => {
                 if (card.type === EServiceType.MobileService && !isMobileServiceOn) return null;
