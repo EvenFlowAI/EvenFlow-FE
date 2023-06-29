@@ -8,7 +8,7 @@ import {
     clearAppointmentSteps,
     selectCategoriesIds,
     selectService,
-    setAdditionalServicesChosen,
+    setAdditionalServicesChosen, setShowServiceCentersList,
     setUserType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "../../Layout/types";
@@ -68,6 +68,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const handleBack = () => {
         if (currentUser) {
+            dispatch(setShowServiceCentersList(false));
             onGoToFirstScreen("serviceSelect")
         } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();

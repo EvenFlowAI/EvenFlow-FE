@@ -93,13 +93,13 @@ export const EndUserLayout = () => {
 
     useEffect(() => {
         const decoded = decodeSCID(id);
-        if (id && decoded) {
+        if (id && decoded && (!scProfile || decoded !== scProfile?.id)) {
             dispatch(loadSCProfile(decoded));
         }
-    }, [id, dispatch]);
+    }, [id, dispatch, scProfile]);
 
     useEffect(() => {
-        dispatch(getCurrentUser(true))
+        dispatch(getCurrentUser())
     }, [])
 
     useEffect(() => {
