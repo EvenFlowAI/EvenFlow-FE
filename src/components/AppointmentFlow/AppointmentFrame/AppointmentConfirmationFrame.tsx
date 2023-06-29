@@ -23,7 +23,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
-import {useException, useModal} from "../../../utils/hooks";
+import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import {
     loadAllServiceCategories,
     saveCustomerCache,
@@ -75,6 +75,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const [saving, setSaving] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const currentUser = useCurrentUser();
     const [appointment, appointmentFrame, categories, customerEnteredEmail] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame,
@@ -93,6 +94,14 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         const serviceType = appointmentFrame.serviceTypeOption?.type ?? EServiceType.VisitCenter;
         return config.find(item => item.serviceType?.toString() === serviceType.toString());
     }, [config, appointmentFrame.serviceTypeOption])
+    const isEmailRequired = useMemo(() => {
+        if (currentUser && appointment.scProfile?.emailRequirement?.callCenterServiceAdvisorEnabled) {
+            return true;
+        } else if (!currentUser && appointment.scProfile?.emailRequirement?.customerSelfServiceEnabled) {
+            return true
+        }
+        return false;
+    }, [currentUser, appointment.scProfile])
 
     useEffect(() => {
         appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
@@ -171,7 +180,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const checkIsValid = () => {
         let isValid = true;
         const localErrors: string[] = [];
-        if (!appointmentFrame.customer.email && appointment.scProfile?.isEmailRequired) {
+        if (!appointmentFrame.customer.email && isEmailRequired) {
             isValid = false;
             localErrors.push('email')
             showError('"Email" must not be empty')
@@ -306,8 +315,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     : null}
             </div>
             <div>
-                <UserData errors={errors} setErrors={setErrors}/>
-                <Reminders/>
+                <UserData errors={errors} setErrors={setErrors} isEmailRequired={isEmailRequired}/>
+                <Reminders isEmailRequired={isEmailRequired}/>
                 <Info>{t("terms of our Visitor Agreement")}.</Info>
             </div>
 
