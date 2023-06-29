@@ -15,7 +15,7 @@ import {useLayout} from "../../utils/hooks";
 import ReactGA from "react-ga4";
 import TagManager from 'react-gtm-module'
 import {RootState} from "../../store/rootReducer";
-import {setTrackerCreated} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setTrackerCreated, setWelcomeScreenView} from "../../store/reducers/appointmentFrameReducer/actions";
 import {prodParentLinks} from "./AppointmentFrameLayout";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
@@ -104,7 +104,11 @@ export const EndUserLayout = () => {
 
     useEffect(() => {
         if (scProfile) {
-            dispatch(loadShortSC(false, scProfile.dealershipId));
+            try {
+                dispatch(loadShortSC(false, scProfile.dealershipId));
+            } catch (e) {
+                dispatch(setWelcomeScreenView('select'))
+            }
         }
     }, [scProfile])
 

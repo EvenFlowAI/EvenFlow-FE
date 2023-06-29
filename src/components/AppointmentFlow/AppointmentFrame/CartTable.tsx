@@ -205,20 +205,22 @@ const CartTable = () => {
     const handleDeleteRecall = useCallback((item: IMaintenanceItem) => {
         const recalls = selectedRecalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)
         item.nhtsaRecallNumber && dispatch(setSelectedRecalls(recalls))
-        if (!recalls.length && (service?.type === EServiceCategoryType.OpenRecalls || subService?.type === EServiceCategoryType.OpenRecalls)) {
+        if (!recalls.length) {
             dispatch(setRecallsAreShown(false));
-            let filteredCategories = [];
-            if (service?.type === EServiceCategoryType.OpenRecalls) {
-                dispatch(selectService(null));
-                filteredCategories = categoriesIds.filter(id => id !== service?.id);
-                dispatch(selectCategoriesIds(filteredCategories));
+            if (service?.type === EServiceCategoryType.OpenRecalls || subService?.type === EServiceCategoryType.OpenRecalls) {
+                let filteredCategories = [];
+                if (service?.type === EServiceCategoryType.OpenRecalls) {
+                    dispatch(selectService(null));
+                    filteredCategories = categoriesIds.filter(id => id !== service?.id);
+                    dispatch(selectCategoriesIds(filteredCategories));
+                }
+                if (subService?.type === EServiceCategoryType.OpenRecalls) {
+                    dispatch(selectSubService(null));
+                    filteredCategories = categoriesIds.filter(id => id !== subService?.id)
+                    dispatch(selectCategoriesIds(filteredCategories));
+                }
+                handleSideBarSteps();
             }
-            if (subService?.type === EServiceCategoryType.OpenRecalls) {
-                dispatch(selectSubService(null));
-                filteredCategories = categoriesIds.filter(id => id !== subService?.id)
-                dispatch(selectCategoriesIds(filteredCategories));
-            }
-            handleSideBarSteps();
         }
     }, [selectedRecalls, categoriesIds, service, subService])
 

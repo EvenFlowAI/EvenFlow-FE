@@ -165,6 +165,7 @@ export const CustomerSelect: React.FC<TProps> = ({
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
     const {customerSearchData} = useSelector((state: RootState) => state.customers);
+    const {shortSC} = useSelector((state: RootState) => state.serviceCenters);
     const {onOpen, onClose, isOpen} = useModal();
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
@@ -292,6 +293,6 @@ export const CustomerSelect: React.FC<TProps> = ({
             />
             <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
         </Grid>
-        {isAuthorized && <Actions onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service Center"/>}
+        {isAuthorized && shortSC?.length && <Actions onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service Center"/>}
     </div>
 };

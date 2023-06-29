@@ -9,7 +9,7 @@ import {
     selectCategoriesIds,
     selectService,
     setAdditionalServicesChosen,
-    setUserType,
+    setUserType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "../../Layout/types";
 import {CardsWrapper} from "./styled";
@@ -28,20 +28,23 @@ import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameR
 import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {useCurrentUser} from "../../../utils/hooks";
+import {TView} from "../../Welcome/types";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
     onBack: () => void;
     onLogin: TCallback;
     setLastSelectedCategory: Dispatch<SetStateAction<IServiceCategory|null>>;
-    setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>
+    setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
+    onGoToFirstScreen: TArgCallback<TView>;
 }
 export const ServiceNeedsFrame: React.FC<TProps> = ({
                                                         onSelect,
                                                         onBack,
                                                         onLogin,
                                                         setLastSelectedCategory,
-                                                        setNeedToShowServiceSelection
+                                                        setNeedToShowServiceSelection,
+    onGoToFirstScreen
 }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
@@ -64,7 +67,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const currentUser = useCurrentUser();
 
     const handleBack = () => {
-        if ((!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) || currentUser) {
+        if (currentUser) {
+            onGoToFirstScreen("serviceSelect")
+        } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();
         } else {
             setNeedToShowServiceSelection(true)
