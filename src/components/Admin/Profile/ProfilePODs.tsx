@@ -24,20 +24,90 @@ const getNameFromEnum = (str: string) => {
 }
 
 const rowData: TableRowDataTypeResp<IPod>[] = [
-    {header: "POD#", val: el => el.name},
-    {header: "Description", val: e => e.description, xsHidden: true},
-    {header: "Advisor", val: e => e.advisor?.fullName},
-    {header: "Technicians", val: e => e.technicians?.map(t => t.fullName).join(", ") || ""},
-    {header: "Bays", val: e => e.bays?.map(b => b.name).join(", ") || ""},
-    {header: "Service Requests", val: e => e.serviceRequests?.map(s => s.code).join(", ") || "", xsHidden: true},
-    {header: "Makes", val: e => e.vehicleMakes?.map(s => s.name).join(", ") || "", xsHidden: true},
-    {header: "Models", val: e => e.vehicleModels?.map(s => s.name).join(", ") || "", xsHidden: true},
-    {header: "Job Type", val: e => typeof e.jobType !== "undefined" && Number.isInteger(+e.jobType) ? EJobType[e.jobType] : "", xsHidden: true},
-    {header: "Engine Types", val: e => e.engineTypes?.map(type => type.name).join(", ") || "", xsHidden: true},
-    {header: "Service Valet Zones", val: e => e.serviceValetZones?.map(zone => zone.name).join(", ") || "", xsHidden: true, width: 120},
-    {header: "Mobile Zones", val: e => e.mobileZones?.map(zone => zone.name).join(", ") || "", xsHidden: true},
-    {header: "Appointment Type", val: e => typeof e.appointmentType !== "undefined" && Number.isInteger(+e.appointmentType) ? getNameFromEnum(EAppointmentType[e.appointmentType]) : "", xsHidden: true},
-    {header: "Transportation Options", val: e => e.transportationOptions?.map(tr => getTransportationOptionString(tr.type)).join(", ") || "", xsHidden: true},
+    {
+        header: "POD#",
+        val: el => el.name
+    },
+    {
+        header: "Description",
+        val: e => e.description,
+        xsHidden: true
+    },
+    {
+        header: "Advisor",
+        val: e => e.advisor?.fullName
+    },
+    {
+        header: "Technicians",
+        val: e => e.technicians?.map(t => t.fullName).join(", ") || ""
+    },
+    {
+        header: "Bays",
+        val: e => e.bays?.map(b => b.name).join(", ") || ""
+    },
+    {
+        header: "Service Requests",
+        val: e => e.serviceRequests?.map(s => s.code).join(", ") || "",
+        xsHidden: true
+    },
+    {
+        header: "Makes",
+        val: e => e.vehicleMakes?.map(s => s.name).join(", ") || "",
+        xsHidden: true
+    },
+    {
+        header: "Models",
+        val: e => e.vehicleModels?.map(s => s.name).join(", ") || "",
+        xsHidden: true
+    },
+    {
+        header: "Job Type",
+        val: e => typeof e.jobType !== "undefined" && Number.isInteger(+e.jobType) ? EJobType[e.jobType] : "",
+        xsHidden: true
+    },
+    {
+        header: "Engine Types",
+        val: e => e.engineTypes?.map(type => type.name).join(", ") || "",
+        xsHidden: true
+    },
+    {
+        header: "Service Valet Zones",
+        val: e => {
+            return e.serviceValetZones?.length
+                ? <div>
+                    {e.serviceValetZones?.map((zone, i) => {
+                        const notLastElement = e.serviceValetZones && i !== e.serviceValetZones?.length - 1;
+                        return <div>{zone.name}{notLastElement ? ',' : ''}</div>})}
+                        </div>
+                : ''
+                    },
+        xsHidden: true,
+    },
+    {
+        header: "Mobile Zones",
+        val: e => {
+            return e.mobileZones?.length
+                ? <div>
+                    {e.mobileZones?.map((zone, i) => {
+                        const notLastElement = e.mobileZones && i !== e.mobileZones?.length - 1;
+                        return <div>{zone.name}{notLastElement ? ',' : ''}</div>})}
+                </div>
+                : ''
+        },
+        xsHidden: true
+    },
+    {
+        header: "Appointment Type",
+        val: e => typeof e.appointmentType !== "undefined" && Number.isInteger(+e.appointmentType)
+            ? getNameFromEnum(EAppointmentType[e.appointmentType])
+            : "",
+        xsHidden: true
+    },
+    {
+        header: "Transportation Options",
+        val: e => e.transportationOptions?.map(tr => getTransportationOptionString(tr.type)).join(", ") || "",
+        xsHidden: true
+    },
 ]
 
 export const ProfilePODs:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode}) => {
