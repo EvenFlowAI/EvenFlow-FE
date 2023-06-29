@@ -33,7 +33,7 @@ import {
     setSelectedPackageOptionType,
     setSelectedPackagePriceTitles,
     setSelectedRecalls,
-    setServiceTypeOption,
+    setServiceTypeOption, setShowServiceCentersList,
     setSideBarActualSteps, setSideBarMenu,
     setSideBarSteps, setSideBarStepsList,
     setTime,
@@ -137,6 +137,7 @@ type TState = {
     packagePriceTitles: TPackagePrice[];
     packageEMenuType: EMaintenanceOptionType|null;
     slotsConsultantId: string|null;
+    shouldShowServiceCentersList: boolean;
 }
 const initialState: TState = {
     service: null,
@@ -196,6 +197,7 @@ const initialState: TState = {
     packagePriceTitles: [],
     packageEMenuType: null,
     slotsConsultantId: null,
+    shouldShowServiceCentersList: true,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -390,5 +392,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(getSlotsConsultantId, (state, {payload}) => {
         return {...state, slotsConsultantId: payload}
+    })
+    .addCase(setShowServiceCentersList, (state, {payload}) => {
+        return {...state, shouldShowServiceCentersList: payload}
     })
 )
