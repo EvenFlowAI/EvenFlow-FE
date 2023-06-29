@@ -79,6 +79,7 @@ import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/Service
 import TagManager from "react-gtm-module";
 import {Api} from "../../config/requests";
 import {EServiceCategoryType} from "../../store/reducers/categories/types";
+import {TView} from "../Welcome/types";
 
 const Container = styled('div')({
     display: "flex",
@@ -197,6 +198,15 @@ export const AppointmentFrameLayout = () => {
         }
     }
 
+    const onGoToFirstScreen = useCallback((screen: TView) => {
+        dispatch(setWelcomeScreenView(screen))
+        if (id) {
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        } else if (scProfile?.id) {
+            history.push(Routes.EndUser.Welcome + "/" + encodeSCID(scProfile?.id) + "?frame=1");
+        }
+    }, [id, history, dispatch, scProfile])
+
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
@@ -204,14 +214,9 @@ export const AppointmentFrameLayout = () => {
             handleNewCustomer();
             dispatch(setCurrentFrameScreen("serviceNeeds"));
         } else {
-            dispatch(setWelcomeScreenView('select'))
-            if (id) {
-                history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
-            } else if (scProfile?.id) {
-                history.push(Routes.EndUser.Welcome + "/" + encodeSCID(scProfile?.id) + "?frame=1");
-            }
+            onGoToFirstScreen('select')
         }
-    }, [id, history, dispatch, scProfile]);
+    }, [onGoToFirstScreen, isPromotionPage]);
 
     const getTrimmedKey = (key: string): string => {
         const lastIndex = key.lastIndexOf('==');
@@ -510,6 +515,7 @@ export const AppointmentFrameLayout = () => {
                 setLastSelectedCategory={setLastSelectedCategory}
                 setNeedToShowServiceSelection={setNeedToShowServiceSelection}
                 onLogin={handleLogin}
+                onGoToFirstScreen={onGoToFirstScreen}
                 onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection
