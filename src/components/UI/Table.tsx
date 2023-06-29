@@ -123,6 +123,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                         {props.rowData.map((rE, idx) => (
                             isXS && rE.xsHidden ? null : <TableCell
                                 key={`t_${idx}`}
+                                width={rE.width}
                                 align={rE.align || "left"}
                                 className={classes.tableHead}>
                                 {rE.orderId
@@ -154,7 +155,8 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                                 {props.rowData.map((cellData, cIdx) => (
                                     isXS && cellData.xsHidden ? null :
                                     <TableCell
-                                        style={{ width: cellData.width}}
+                                        width={cellData.width}
+                                        // style={{ width: cellData.width}}
                                         align={cellData.align || "left"}
                                         className={classes.tableCell}
                                         key={`${rIdx}_${cIdx}`}>
