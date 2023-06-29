@@ -156,7 +156,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                                     isXS && cellData.xsHidden ? null :
                                     <TableCell
                                         width={cellData.width}
-                                        // style={{ width: cellData.width}}
+                                        style={{ width: cellData.width}}
                                         align={cellData.align || "left"}
                                         className={classes.tableCell}
                                         key={`${rIdx}_${cIdx}`}>
