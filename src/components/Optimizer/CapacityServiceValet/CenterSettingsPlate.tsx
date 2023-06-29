@@ -2,8 +2,6 @@ import React from "react";
 import {Button, Grid, Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {Loading} from "../../UI/Loading";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
 
 const useStyles = makeStyles({
     paper: {
@@ -53,6 +51,7 @@ export type TCenterSettingsPlateProps = {
     suffix?: string;
     label: string;
     helperText: string;
+    isLoading: boolean;
 }
 export const CenterSettingsPlate: React.FC<TCenterSettingsPlateProps> = ({
                                                                              onEdit,
@@ -62,8 +61,8 @@ export const CenterSettingsPlate: React.FC<TCenterSettingsPlateProps> = ({
                                                                              suffix,
                                                                              label,
                                                                              helperText,
+                                                                             isLoading
                                                                          }) => {
-    const {isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
     const classes = useStyles();
     return <Grid item xs={6} md={4}>
         <Paper className={classes.paper} variant={"outlined"} >

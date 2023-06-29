@@ -108,7 +108,7 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, ...props}) 
                                         : <RadioButtonUnchecked
                                             htmlColor="#DADADA"
                                             cursor="pointer"
-                                            onClick={() => onChange("callCenterServiceAdvisorEnabled", true)}/>}
+                                            onClick={() => onChange("callCenterServiceAdvisorEnabled", false)}/>}
                                 </TableCell>
                                 <TableCell align="center">
                                     {data?.callCenterServiceAdvisorEnabled
@@ -118,7 +118,7 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, ...props}) 
                                         : <RadioButtonUnchecked
                                             htmlColor="#DADADA"
                                             cursor="pointer"
-                                            onClick={() => onChange("callCenterServiceAdvisorEnabled", false)}/>}
+                                            onClick={() => onChange("callCenterServiceAdvisorEnabled", true)}/>}
                                 </TableCell>
                             </TableRow>
                             <TableRow>
@@ -131,7 +131,7 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, ...props}) 
                                         : <RadioButtonUnchecked
                                             htmlColor="#DADADA"
                                             cursor="pointer"
-                                            onClick={() => onChange("customerSelfServiceEnabled", true)}/>}
+                                            onClick={() => onChange("customerSelfServiceEnabled", false)}/>}
                                 </TableCell>
                                 <TableCell align="center">
                                     {data?.customerSelfServiceEnabled
@@ -141,7 +141,7 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, ...props}) 
                                         : <RadioButtonUnchecked
                                             htmlColor="#DADADA"
                                             cursor="pointer"
-                                            onClick={() => onChange("customerSelfServiceEnabled", false)}/>}
+                                            onClick={() => onChange("customerSelfServiceEnabled", true)}/>}
                                 </TableCell>
                             </TableRow>
                         </TableBody>

@@ -12,7 +12,7 @@ import {CenterSettingsPlate} from "../../Optimizer/CapacityServiceValet/CenterSe
 import EditEmailRequirementDialog from "./EditEmailRequirementDialog";
 
 const ScreenSettings = () => {
-    const {emailRequirement} = useSelector((state: RootState) => state.screenSettingsBooking);
+    const {emailRequirement, isEmailRequirementLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const {onOpen: onEmailEditOpen, isOpen: isEmailEditOpen, onClose: onEmailEditClose} = useModal();
@@ -76,6 +76,7 @@ const ScreenSettings = () => {
                         prefix={plate.prefix}
                         suffix={plate.suffix}
                         helperText={plate.helperText}
+                        isLoading={isEmailRequirementLoading}
                     />
                 })}
             </Grid>

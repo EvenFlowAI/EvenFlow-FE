@@ -15,7 +15,7 @@ import {TDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/
 import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
 
 const CenterSettings = () => {
-    const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
+    const {centerSettings, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
     const [calendarValue, setCalendarValue] = useState<moment.Moment>(moment())
     const [isOpen, setOpen] = useState<boolean>(false);
@@ -106,6 +106,7 @@ const CenterSettings = () => {
                     prefix={plate.prefix}
                     suffix={plate.suffix}
                     helperText={plate.helperText}
+                    isLoading={isLoading}
                 />
             })}
             <ShowDropOffTimeDialog open={isShowTimeOpen} onClose={isShowTimeClose}/>
