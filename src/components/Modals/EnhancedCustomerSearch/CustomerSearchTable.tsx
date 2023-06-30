@@ -243,6 +243,12 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err)));
         }
     }
+
+    const onCancelEditing = () => {
+        setData(customers);
+        setEdit(false)
+    }
+
     const handleChangePage = async (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
         await changePage(e, pageNumber);
         await loadData(isSearchByName);
@@ -299,12 +305,21 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                                 </IconsBlock>
                                 : isEdit && editingElement?.vehicleId === customer.vehicleId && editingElement?.customerId === customer.customerId
                                 ? <IconsBlock>
+                                        <Button
+                                            style={{fontSize: 11, minWidth: 46}}
+                                            onClick={onCancelEditing}
+                                            color="secondary"
+                                            variant="text"
+                                            size="small">
+                                            Cancel
+                                        </Button>
                                     <Button
                                         onClick={onSaveInfo}
+                                        style={{fontSize: 11, minWidth: 46}}
                                         color="primary"
                                         variant="text"
                                         size="small">
-                                        SAVE
+                                        Save
                                     </Button>
                                 </IconsBlock>
                                 : <IconsBlock>
