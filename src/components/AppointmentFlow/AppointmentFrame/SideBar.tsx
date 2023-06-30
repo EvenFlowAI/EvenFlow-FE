@@ -68,7 +68,14 @@ type TProps = {
 }
 
 export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
-    const {sideBarSteps, sideBarMenu, sideBarActualSteps, sideBarStepsList, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        sideBarSteps,
+        sideBarMenu,
+        sideBarActualSteps,
+        sideBarStepsList,
+        serviceTypeOption,
+        isAppointmentSaving
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const theme = useTheme();
     const dispatch = useDispatch();
@@ -109,6 +116,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     }
 
     const getButtonState = useCallback((index: number) => {
+        if (isAppointmentSaving) return true;
         if (index > 0 && sideBarSteps.length < 2) return true;
         if (sideBarActualSteps) {
             const currentScreenNumberValue = sideBarActualSteps[screen];
@@ -117,7 +125,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
             return (currentScreenNumberValue < index + 1 && lastPassedScreenNumberValue < index + 1);
         }
         return false;
-    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, sideBarSteps, sideBarActualSteps, screen])
+    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, sideBarSteps, sideBarActualSteps, screen, isAppointmentSaving])
 
     const activeButtonStyles = {
         background: '#E6FCEC',

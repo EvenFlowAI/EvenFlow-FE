@@ -16,7 +16,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {Api} from "../../../config/requests";
 import {
-    setAppointmentId, setCustomer,
+    setAppointmentId, setAppointmentSaving, setCustomer,
     setPackagePricingType,
     setReminders
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -72,15 +72,15 @@ type TProps = {
     onChangeSlot: TCallback;
 } & TActionProps;
 export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
-    const [saving, setSaving] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const currentUser = useCurrentUser();
-    const [appointment, appointmentFrame, categories, customerEnteredEmail] = useSelector((state: RootState) => [
+    const [appointment, appointmentFrame, categories, customerEnteredEmail, saving] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame,
         state.categories,
         state.appointment.customerEnteredEmail,
+        state.appointmentFrame.isAppointmentSaving,
     ]);
 
     const {id} = useParams();
@@ -271,7 +271,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 ? Api.endpoints.Appointments.UpdateByKey
                 : Api.endpoints.Appointments.Create;
 
-            setSaving(true);
+            dispatch(setAppointmentSaving(true))
 
             Api.call<ICreateAppointmentResp>(
                 endpoint, { data, urlParams: {id: data.hashKey} }
@@ -290,7 +290,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     }
                 })
                 .finally(() => {
-                    setSaving(false);
+                    dispatch(setAppointmentSaving(false))
                 })
         }
     }
