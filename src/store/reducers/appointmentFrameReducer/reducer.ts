@@ -13,7 +13,7 @@ import {
     setAdvisor,
     setAncillaryPriceByZip,
     setAncillaryPriceLoading,
-    setAppointmentId,
+    setAppointmentId, setAppointmentSaving,
     setConsultants,
     setCurrentFrameScreen,
     setCustomer,
@@ -138,6 +138,7 @@ type TState = {
     packageEMenuType: EMaintenanceOptionType|null;
     slotsConsultantId: string|null;
     shouldShowServiceCentersList: boolean;
+    isAppointmentSaving: boolean;
 }
 const initialState: TState = {
     service: null,
@@ -198,6 +199,8 @@ const initialState: TState = {
     packageEMenuType: null,
     slotsConsultantId: null,
     shouldShowServiceCentersList: true,
+    isAppointmentSaving: false
+
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -395,5 +398,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setShowServiceCentersList, (state, {payload}) => {
         return {...state, shouldShowServiceCentersList: payload}
+    })
+    .addCase(setAppointmentSaving, (state, {payload}) => {
+        return {...state, isAppointmentSaving: payload}
     })
 )

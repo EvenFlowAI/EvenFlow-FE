@@ -25,18 +25,18 @@ type TProps = {
 export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     const {appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const { dropOffSettings } = useSelector((state: RootState) => state.appointment);
-    const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceTypeOption, isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
 
     const handleChangeSlot = () => {
-        onChangeSlot();
+        if (!isAppointmentSaving) onChangeSlot();
     }
     return <div>
         <TitleWrapper>
             <ConfirmationTitle>
                 {t("Selected Date & Time")}
             </ConfirmationTitle>
-            <Edit fontSize="small" onClick={handleChangeSlot} />
+            <Edit fontSize="small" onClick={handleChangeSlot}/>
         </TitleWrapper>
         {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
             ? <div><span style={{fontWeight: 'bold'}}>{t("Date")}</span>: {moment.utc(serviceValetAppointment?.date).format('MMMM D')}</div>

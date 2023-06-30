@@ -87,6 +87,7 @@ export const setRecallsAreShown = createAction<boolean>('fAppointment/SetRecalls
 export const setHoursOfOperations = createAction<IHOODataForm[]>('fAppointment/SetHorsOfOperations');
 export const setPackageEMenuType = createAction<EMaintenanceOptionType|null>('fAppointment/SetPackageEMenuType');
 export const setShowServiceCentersList = createAction<boolean>('fAppointment/SetShowServiceCentersList');
+export const setAppointmentSaving = createAction<boolean>('fAppointment/SetAppointmentSaving');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;

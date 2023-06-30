@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const ServiceCenterSwitcher = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {welcomeScreenView} = useSelector((state: RootState) => state.appointmentFrame);
+    const {welcomeScreenView, isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
     const {shortLoading, shortSC} = useSelector((state: RootState) => state.serviceCenters);
     const currentUser = useCurrentUser();
     const classes = useStyles();
@@ -49,20 +49,22 @@ export const ServiceCenterSwitcher = () => {
         [currentUser, scProfile])
 
     const handleClick = () => {
-        if (shortSC?.length) {
-            dispatch(clearAppointmentData());
-            dispatch(setCustomerEnteredEmail(""))
-            dispatch(setSideBarSteps([]));
-            dispatch(setVehicle(null));
-            dispatch(setCustomerLoadedData(null));
-            dispatch(setWelcomeScreenView('serviceCenterSelect'))
-            dispatch(setServiceTypeOption(null));
-            if (scProfile) {
-                const encoded = encodeSCID(scProfile.id)
-                history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`)
+        if (!isAppointmentSaving) {
+            if (shortSC?.length) {
+                dispatch(clearAppointmentData());
+                dispatch(setCustomerEnteredEmail(""))
+                dispatch(setSideBarSteps([]));
+                dispatch(setVehicle(null));
+                dispatch(setCustomerLoadedData(null));
+                dispatch(setWelcomeScreenView('serviceCenterSelect'))
+                dispatch(setServiceTypeOption(null));
+                if (scProfile) {
+                    const encoded = encodeSCID(scProfile.id)
+                    history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`)
+                }
+            } else {
+                showError("There are not Service Centers list of the current Dealership")
             }
-        } else {
-            showError("There are not Service Centers list of the current Dealership")
         }
     }
 
