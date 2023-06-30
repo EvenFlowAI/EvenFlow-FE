@@ -95,6 +95,14 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>&TC
                             </ListItem>
                         })
                         : null}
+                    {payload.recallDescriptions
+                        ? payload.recallDescriptions.map(recall => {
+                            return <ListItem key={recall}>
+                                <ListItemIcon><Settings /></ListItemIcon>
+                                <ListItemText primary={recall} />
+                            </ListItem>
+                        })
+                        : null}
 
                     <Divider />
                     <Info appointment={payload} />
