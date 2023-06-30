@@ -92,7 +92,7 @@ const AdvisorAssignment: React.FC<DialogProps> = (props) => {
 
     const onSave = () => {
         const data: IAdvisorAssignment = {primaryMethod};
-        if (secondaryMethod) data.secondaryMethod = secondaryMethod;
+        if (secondaryMethod !== null) data.secondaryMethod = secondaryMethod;
         selectedSC && dispatch(updateAdvisorAssignment(selectedSC.id, data, onSuccess, onError))
     }
 
