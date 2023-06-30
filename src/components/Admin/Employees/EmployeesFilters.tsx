@@ -47,6 +47,10 @@ const EmployeesFilters = () => {
         changePageData
     );
 
+    const applyFilters = () => {
+        dispatch(loadByFilters())
+    }
+
     useEffect(() => {
         if (filters.role) setSelectedRole(filters.role)
         if (filters.serviceCenterId) setSelectedCenterId(filters.serviceCenterId)
@@ -57,14 +61,12 @@ const EmployeesFilters = () => {
             dispatch(setEmployeeFilters({role: e.target.value}))
             changePage(null, 0)
         }
-        // setSelectedRole(e.target.value);
     }
 
     const handleSelectCenter = (e: React.ChangeEvent<{value: unknown}>) => {
         const center = fullSCList.find(el => el.id === e.target.value);
         if (center) {
             dispatch(setEmployeeFilters({serviceCenterId: center.id}))
-            // setSelectedCenterId(center?.id);
         } else {
             dispatch(setEmployeeFilters({serviceCenterId: null}))
             // setSelectedCenterId(null)
@@ -81,9 +83,6 @@ const EmployeesFilters = () => {
         dispatch(loadAll());
     }
 
-    const applyFilters = () => {
-        dispatch(loadByFilters())
-    }
 
     return (
         <>

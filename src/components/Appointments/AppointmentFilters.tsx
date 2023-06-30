@@ -16,6 +16,7 @@ type TAppointmentFilterProps = {
 
 const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({ handleSelectStatus, status, selectedDate, onChange }) => {
     const [isOpen, setOpen] = useState<boolean>(false);
+
     const handleOpen = (s: boolean) => () => {
         setOpen(s);
     }
