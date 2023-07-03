@@ -13,6 +13,7 @@ import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameRed
 import {selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {SVDaySelectCard} from "./SVDaySelectCard";
 import {Arrow, DaySelectorWrapper, WHILE_LIMIT} from "./DaySelector";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 type TProps = {
     date: moment.Moment,
@@ -24,6 +25,10 @@ type TProps = {
 }
 
 export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments, dateRangeUpdated, onDateRangeSet}) => {
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {selectedTiming, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {searchedDateRange, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
+
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const theme = useTheme();
     const dispatch = useDispatch();
@@ -35,8 +40,8 @@ export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, ap
         return isSm ? 4 : isMds ? 5 : 6;
     }, [isSm, isMds]);
 
-    const {selectedTiming} = useSelector((state: RootState) => state.appointmentFrame);
-    const {searchedDateRange, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
+    const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
+    const currentConfig = config.find(item => item.serviceType?.toString() === serviceType.toString());
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
         let daysInMonth: number = date.daysInMonth();
@@ -107,7 +112,7 @@ export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, ap
                 return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen;
             });
         } else {
-            onOpen();
+            if (currentConfig?.appointmentSelection) onOpen();
         }
     }
     const handlePrev = () => {
