@@ -95,7 +95,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         return config.find(item => item.serviceType?.toString() === serviceType.toString());
     }, [config, appointmentFrame.serviceTypeOption])
     const isEmailRequired = useMemo(() => {
-        if (currentUser && appointment.scProfile?.emailRequirement?.callCenterServiceAdvisorEnabled) {
+        if (currentUser && appointment.scProfile?.emailRequirement?.adminAndEmployeesEnabled) {
             return true;
         } else if (!currentUser && appointment.scProfile?.emailRequirement?.customerSelfServiceEnabled) {
             return true
