@@ -1,5 +1,5 @@
 export type TEmailRequirement = {
-    callCenterServiceAdvisorEnabled: boolean;
+    adminAndEmployeesEnabled: boolean;
     customerSelfServiceEnabled: boolean;
 }
 
