@@ -27,6 +27,7 @@ import {styled, Theme} from "@material-ui/core";
 import DisplayAncillaryPrice from "../../Modals/DisplayAncillaryPrice/DisplayAncillaryPrice";
 import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import UnavailableService from "../../Modals/InavailableService/UnavailableService";
+import {ArrowDownward, KeyboardArrowDown} from "@material-ui/icons";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -87,6 +88,9 @@ const useAutocompleteStyles = makeStyles<Theme, TStyleProps>(() => ({
         "& input::placeholder": {
             color: props => props.error ? "red" : 'black'
         },
+    },
+    popupIndicator: {
+        marginRight: 8
     },
 }))
 
@@ -225,6 +229,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                     classes={autocompleteClasses}
                     autoComplete={true}
                     onInputChange={onInputChange}
+                    popupIcon={<KeyboardArrowDown htmlColor="#CCCCCC" />}
                     renderInput={autocompleteRender({
                         label: t('Your ZIP'),
                         placeholder: isFormChecked && !zip
