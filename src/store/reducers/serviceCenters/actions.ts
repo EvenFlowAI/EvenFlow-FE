@@ -108,8 +108,9 @@ const _loadShortSC = (payload: IServiceCenter[]): TServiceCenterActions => ({
     type: "ServiceCenters/GetShort", payload
 });
 export const loadShortSC: ActionCreator<ThunkAction<void, RootState, void, TServiceCenterActions>>
-    = (isAdminPanel: boolean, dealershipId?: number) => async dispatch => {
+    = (isAdminPanel: boolean, dealershipId?: number) => async (dispatch, getState) => {
     dispatch(shortLoading(true));
+    const {customerLoadedData} = getState().appointment;
     try {
         const params = {
             pageIndex: 0,
@@ -122,7 +123,7 @@ export const loadShortSC: ActionCreator<ThunkAction<void, RootState, void, TServ
         dispatch(shortLoading(false));
     } catch (e) {
         // @ts-ignore
-        dispatch(setWelcomeScreenView("select"))
+        if (!customerLoadedData) dispatch(setWelcomeScreenView("select"))
         dispatch(shortLoading(false));
         throw e;
     }
