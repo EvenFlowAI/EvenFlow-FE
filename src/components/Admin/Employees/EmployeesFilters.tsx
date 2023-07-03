@@ -39,7 +39,6 @@ const EmployeesFilters = () => {
     const {fullSCList} = useSelector((state: RootState) => state.serviceCenters);
     const {filters} = useSelector((state: RootState) => state.employees);
     const [selectedRole, setSelectedRole] = useState<string|unknown>('');
-    const [selectedCenterId, setSelectedCenterId] = useState<number|unknown>('');
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();
     const {changePage} = usePagination(
@@ -53,7 +52,6 @@ const EmployeesFilters = () => {
 
     useEffect(() => {
         if (filters.role) setSelectedRole(filters.role)
-        if (filters.serviceCenterId) setSelectedCenterId(filters.serviceCenterId)
     }, [filters])
 
     const handleSelectRole = (e: React.ChangeEvent<{value: unknown}>) => {
@@ -69,14 +67,12 @@ const EmployeesFilters = () => {
             dispatch(setEmployeeFilters({serviceCenterId: center.id}))
         } else {
             dispatch(setEmployeeFilters({serviceCenterId: null}))
-            // setSelectedCenterId(null)
         }
         changePage(null, 0)
     }
 
     const clearFilters = () => {
         dispatch(setEmployeeFilters({serviceCenterId: null}))
-        setSelectedCenterId(null);
         dispatch(setEmployeeFilters({role: ''}))
         setSelectedRole(null);
         changePage(null, 0)
@@ -107,7 +103,7 @@ const EmployeesFilters = () => {
                     fullWidth
                     placeholder='Service Center'
                     onChange={handleSelectCenter}
-                    value={selectedCenterId}
+                    value={filters.serviceCenterId ?? ""}
                     input={
                         <TextField label='Service Center'/>
                     }
