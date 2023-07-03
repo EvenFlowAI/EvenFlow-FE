@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
         marginTop: 48,
         [theme.breakpoints.down("sm")]: {
             gridTemplateColumns: "1fr 1fr",
+            marginBottom: 20,
         },
         [theme.breakpoints.down("xs")]: {
             gridTemplateColumns: "1fr",
