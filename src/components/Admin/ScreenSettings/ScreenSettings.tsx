@@ -26,9 +26,9 @@ const ScreenSettings = () => {
     const getEmailRequirementLabel = (): string => {
         let str = "No data";
         if (emailRequirement) {
-            const {callCenterServiceAdvisorEnabled, customerSelfServiceEnabled} = emailRequirement;
-            if (callCenterServiceAdvisorEnabled && customerSelfServiceEnabled) return "On";
-            if (!callCenterServiceAdvisorEnabled && !customerSelfServiceEnabled) return "Off";
+            const {adminAndEmployeesEnabled, customerSelfServiceEnabled} = emailRequirement;
+            if (adminAndEmployeesEnabled && customerSelfServiceEnabled) return "On";
+            if (!adminAndEmployeesEnabled && !customerSelfServiceEnabled) return "Off";
             return "Mixed";
         }
         return str;

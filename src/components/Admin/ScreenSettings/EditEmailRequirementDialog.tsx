@@ -101,24 +101,24 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, ...props}) 
                             <TableRow>
                                 <TableCell>Call Center & Service Advisor</TableCell>
                                 <TableCell align="center">
-                                    {!data?.callCenterServiceAdvisorEnabled
+                                    {!data?.adminAndEmployeesEnabled
                                         ? <RadioButtonChecked
                                             htmlColor="#3855F3"
                                             cursor="pointer"/>
                                         : <RadioButtonUnchecked
                                             htmlColor="#DADADA"
                                             cursor="pointer"
-                                            onClick={() => onChange("callCenterServiceAdvisorEnabled", false)}/>}
+                                            onClick={() => onChange("adminAndEmployeesEnabled", false)}/>}
                                 </TableCell>
                                 <TableCell align="center">
-                                    {data?.callCenterServiceAdvisorEnabled
+                                    {data?.adminAndEmployeesEnabled
                                         ? <RadioButtonChecked
                                             htmlColor="#3855F3"
                                             cursor="pointer"/>
                                         : <RadioButtonUnchecked
                                             htmlColor="#DADADA"
                                             cursor="pointer"
-                                            onClick={() => onChange("callCenterServiceAdvisorEnabled", true)}/>}
+                                            onClick={() => onChange("adminAndEmployeesEnabled", true)}/>}
                                 </TableCell>
                             </TableRow>
                             <TableRow>
