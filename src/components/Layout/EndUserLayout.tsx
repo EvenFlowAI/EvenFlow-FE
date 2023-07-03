@@ -107,6 +107,7 @@ export const EndUserLayout = () => {
             try {
                 dispatch(loadShortSC(false, scProfile.dealershipId));
             } catch (e) {
+                debugger
                 dispatch(setWelcomeScreenView('select'))
             }
         }
