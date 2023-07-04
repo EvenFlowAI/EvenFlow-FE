@@ -58,6 +58,7 @@ enum BookingFlowConfigRoutes {
     ServiceOpsCodesMapping = "/admin/booking-flow-config/service-codes-mapping",
     VehicleDetails = "/admin/booking-flow-config/vehicle-details",
     FirstScreen = "/admin/booking-flow-config/first-screen",
+    ScreenSettings = "/admin/booking-flow-config/screen-settings",
 }
 
 enum PricingRoutes {

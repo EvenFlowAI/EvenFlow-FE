@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {Grid, styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
+import {Grid, styled, Theme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {mh400, mh600} from "./CustomerSelect";
 import {RootState} from "../../store/rootReducer";
@@ -85,7 +85,7 @@ const Button = styled(({isTaglinePresent, ...props}) => (<div {...props}/>))<The
         fontSize: 22,
         padding: "7%"
     },
-    [mh400]: {
+    [`${mh400} and (orientation: portrait)`]: {
         fontSize: 18,
         padding: "2%"
     },
@@ -121,8 +121,6 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const classes = useStyles();
     const dispatch = useDispatch();
-    const theme = useTheme();
-    const isSM = useMediaQuery(theme.breakpoints.down("sm"))
     const remappedCards = useMemo(() => firstScreenOptions
             .map(card => {
                 if (card.type === EServiceType.MobileService && !isMobileServiceOn) return null;
@@ -167,7 +165,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
                     .map((card) => {
                         if (card) {
                             return <Grid key={card.id}>
-                                <Button onClick={() => !isSM && handleSelect(card)} isTaglinePresent={!!isTaglinePresent}>
+                                <Button onClick={() => handleSelect(card)} isTaglinePresent={!!isTaglinePresent}>
                                     {card.description ? <HtmlTooltip
                                         enterTouchDelay={0}
                                         placement="right-end"
@@ -175,9 +173,9 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
                                     >
                                         <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
                                     </HtmlTooltip> : null}
-                                    <div className={classes.name} onClick={() => isSM && handleSelect(card)}>{card.name}</div>
+                                    <div className={classes.name}>{card.name}</div>
                                     {isTaglinePresent ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
-                                    <ServiceTypeIcon card={card} onClick={() => isSM && handleSelect(card)} isSM={isSM}/>
+                                    <ServiceTypeIcon card={card}/>
                                 </Button>
                             </Grid>
                         }

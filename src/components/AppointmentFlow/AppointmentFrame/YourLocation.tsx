@@ -23,10 +23,11 @@ import {
     TAncillaryPriceByZip
 } from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
-import {styled} from "@material-ui/core";
+import {styled, Theme} from "@material-ui/core";
 import DisplayAncillaryPrice from "../../Modals/DisplayAncillaryPrice/DisplayAncillaryPrice";
 import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import UnavailableService from "../../Modals/InavailableService/UnavailableService";
+import {ArrowDownward, KeyboardArrowDown} from "@material-ui/icons";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -78,13 +79,20 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const useAutocompleteStyles = makeStyles({
+export interface TStyleProps {
+    error: boolean;
+}
+
+const useAutocompleteStyles = makeStyles<Theme, TStyleProps>(() => ({
     root: {
         "& input::placeholder": {
-            color: 'black'
+            color: props => props.error ? "red" : 'black'
         },
     },
-})
+    popupIndicator: {
+        marginRight: 8
+    },
+}))
 
 const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) => {
     const [zip, setZip] = useState<string>("");
@@ -96,7 +104,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const dispatch = useDispatch();
     const showError = useException();
     const classes = useStyles();
-    const autocompleteClasses = useAutocompleteStyles();
+    const styleProps:TStyleProps = {error: isFormChecked && !zip};
+    const autocompleteClasses = useAutocompleteStyles(styleProps);
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
 
@@ -220,6 +229,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                     classes={autocompleteClasses}
                     autoComplete={true}
                     onInputChange={onInputChange}
+                    popupIcon={<KeyboardArrowDown htmlColor="#CCCCCC" />}
                     renderInput={autocompleteRender({
                         label: t('Your ZIP'),
                         placeholder: isFormChecked && !zip

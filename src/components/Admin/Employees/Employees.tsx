@@ -7,8 +7,21 @@ import {TableAvatar} from "../TableAvatar";
 import {IEmployee} from "../../../store/reducers/employees/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {loadAll, removeEmployee, setEmplOrder} from "../../../store/reducers/employees/actions";
-import {useConfirm, useCurrentUser, useException, useMessage, useModal, usePagination} from "../../../utils/hooks";
+import {
+    loadByFilters,
+    removeEmployee,
+    setEmplOrder,
+    setEmployeeFilters
+} from "../../../store/reducers/employees/actions";
+import {
+    useConfirm,
+    useCurrentUser,
+    useException,
+    useMessage,
+    useModal,
+    usePagination,
+    useSCs
+} from "../../../utils/hooks";
 import {changePageData} from "../../../store/reducers/employees/actions";
 import {concatAddress} from "../../../utils/utils";
 import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
@@ -34,17 +47,18 @@ const AdminRowData: TableRowDataType<IEmployee>[] = [
 ];
 
 export const Employees = () => {
-    const [data, isLoading, count, search, order] = useSelector((state: RootState) => [
+    const [data, isLoading, count,  order, search] = useSelector((state: RootState) => [
         state.employees.employeesList,
         state.employees.loading,
         state.employees.paging.numberOfRecords,
+        state.employees.order,
         state.employees.searchTerm,
-        state.employees.order
     ]);
     const [editedItem, setEditedItem] = useState<IEmployee|undefined>();
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
-    const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
+    const [isFiltersOpen, setFiltersOpen] = useState<boolean>(true);
 
+    const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const {askConfirm} = useConfirm();
     const showError = useException();
@@ -60,8 +74,15 @@ export const Employees = () => {
     }, [currentUser]);
 
     useEffect(() => {
-        dispatch(loadAll());
-    }, [dispatch, search, order]);
+        if (selectedSC) {
+            dispatch(setEmployeeFilters({serviceCenterId: selectedSC.id}))
+        }
+    }, [selectedSC])
+
+    useEffect(() => {
+        selectedSC && dispatch(loadByFilters())
+    }, [order, search, selectedSC])
+
 
     const handleMenuOpen = (item: IEmployee) => (e: React.MouseEvent<HTMLButtonElement>) => {
         setEditedItem(item);

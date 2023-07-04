@@ -248,6 +248,7 @@ export interface IAppointmentByQuery extends IBaseAppointment {
     jobType?: EJobType;
     serviceTypeOption?: IFirstScreenOption;
     recalls?: string[];
+    recallDescriptions?: string[];
 }
 
 export interface ISearchCustomerParams {
