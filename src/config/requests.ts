@@ -147,6 +147,7 @@ type ApiRoutes = {
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
     BookingFlowConfig: Record<"Get" | "Update", TApiRoute>,
+    BookingFlowScreenSettings: Record<"GetEmailRequirement" | "UpdateEmailRequirement", TApiRoute>,
     CapacityManagement: Record<"Reallocate", TApiRoute>,
     ComplimentaryServices: Record<"GetByQuery" | "Remove" | "Update" | "AddFromList" | "Create", TApiRoute>,
     Customers: Record<"GetByName" | "Update" | "GetRepairHistory" | "GetBySearchTerm" | "GetSingleCustomerVehicles", TApiRoute>,
@@ -276,6 +277,10 @@ export class Api {
         BookingFlowConfig: {
             Get: {route: "/booking-flow/{id}/settings", method: "get"},
             Update: {route: "/booking-flow/{id}/settings", method: "put"},
+        },
+        BookingFlowScreenSettings: {
+            GetEmailRequirement: {route: "/booking-flow-screen-settings/{id}/email-requirement", method: "get"},
+            UpdateEmailRequirement: {route: "/booking-flow-screen-settings/{id}/email-requirement", method: "put"},
         },
         CapacityManagement: {
             Reallocate: {route: "/capacity-management/capacity-data-reallocate", method: "put"},

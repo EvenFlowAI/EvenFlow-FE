@@ -36,14 +36,18 @@ const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolea
     padding: '22px 16px',
     lineHeight: '20px',
     cursor: 'pointer',
-    [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+    [`${theme.breakpoints.down("md")} and (orientation: landscape)`]: {
         gridTemplateColumns: showDetails ? '1fr 2fr' : '1fr',
         padding: '11px 8px',
+    },
+    [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+        gridTemplateColumns: showDetails ? '1fr 3fr' : '1fr',
+        padding: '8px 6px',
     },
     "& .prices": {
         display: 'flex',
         justifyContent: showDetails ? !roundPrice ? 'space-between' : 'space-evenly' : 'center',
-        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+        [`${theme.breakpoints.down("md")} and (orientation: landscape)`]: {
             flexDirection: 'column'
         }
     },
@@ -121,19 +125,19 @@ const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, is
                 showDetails={showDetails}
                 key={p.id}>
                 <div className={showDetails ? "" : "positionedBtn"}>{selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}</div>
-                    <div className="prices" style={{ fontSize: 20 }}>
-                        {showDetails
-                            ? <div className="previousPrice">${scProfile?.isRoundPrice
-                                ? complimentaryPrice + +p.totalMaintenanceValue
-                                : (complimentaryPrice + +p.totalMaintenanceValue).toFixed(2)}
-                            </div>
-                            : null}
-                        <div className={showDetails ? "currentPrice" : "centeredPrice"}>
-                            ${scProfile?.isRoundPrice
-                                ? servicesPrice
-                                : (servicesPrice).toFixed(2)}
+                <div className="prices" style={{ fontSize: 20 }}>
+                    {showDetails
+                        ? <div className="previousPrice">${scProfile?.isRoundPrice
+                            ? complimentaryPrice + +p.totalMaintenanceValue
+                            : (complimentaryPrice + +p.totalMaintenanceValue).toFixed(2)}
                         </div>
+                        : null}
+                    <div className={showDetails ? "currentPrice" : "centeredPrice"}>
+                        ${scProfile?.isRoundPrice
+                        ? servicesPrice
+                        : (servicesPrice).toFixed(2)}
                     </div>
+                </div>
             </PriceValue>;
         })}
     </Wrapper>

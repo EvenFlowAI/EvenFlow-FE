@@ -19,6 +19,7 @@ import {setSelectedPod} from "../pods/actions";
 import {createAction} from "@reduxjs/toolkit";
 import {EDay} from "../demandSegments/types";
 import {EMaintenanceOptionType} from "../../../api/types";
+import {setWelcomeScreenView} from "../appointmentFrameReducer/actions";
 
 const getAll = (payload: IServiceCenterExtended[]): TServiceCenterActions => ({
     type: "ServiceCenters/GetAll", payload
@@ -107,8 +108,9 @@ const _loadShortSC = (payload: IServiceCenter[]): TServiceCenterActions => ({
     type: "ServiceCenters/GetShort", payload
 });
 export const loadShortSC: ActionCreator<ThunkAction<void, RootState, void, TServiceCenterActions>>
-    = (isAdminPanel: boolean, dealershipId?: number) => async dispatch => {
+    = (isAdminPanel: boolean, dealershipId?: number) => async (dispatch, getState) => {
     dispatch(shortLoading(true));
+    const {customerLoadedData} = getState().appointment;
     try {
         const params = {
             pageIndex: 0,
@@ -120,6 +122,8 @@ export const loadShortSC: ActionCreator<ThunkAction<void, RootState, void, TServ
         dispatch(_loadShortSC(result));
         dispatch(shortLoading(false));
     } catch (e) {
+        // @ts-ignore
+        if (!customerLoadedData) dispatch(setWelcomeScreenView("select"))
         dispatch(shortLoading(false));
         throw e;
     }
@@ -445,20 +449,4 @@ export const updateAdvisorAssignment = (id: number, data: IAdvisorAssignment, on
             console.log('update advisor assignment error', err)
         })
         .finally(() => dispatch(setAdvisorAssignmentLoading(false)))
-}
-
-export const updateEmailIsRequired = (id: number, isEmailRequired: boolean, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
-    dispatch(setRemindersLoading(true));
-    Api.call(Api.endpoints.ServiceCenters.SetEmailRequired, {urlParams: {id}, data: {isEmailRequired}})
-        .then(result => {
-            if (result) {
-                if (result) dispatch(loadAllSCs())
-                onSuccess();
-            }
-        })
-        .catch(err => {
-            onError(err);
-            console.log('update email required error', err)
-        })
-        .finally(() => dispatch(setRemindersLoading(false)))
 }

@@ -16,14 +16,14 @@ import {decodeSCID} from "../../../utils/utils";
 import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {Api} from "../../../config/requests";
 import {
-    setAppointmentId, setCustomer,
+    setAppointmentId, setAppointmentSaving, setCustomer,
     setPackagePricingType,
     setReminders
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
-import {useException, useModal} from "../../../utils/hooks";
+import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import {
     loadAllServiceCategories,
     saveCustomerCache,
@@ -72,14 +72,15 @@ type TProps = {
     onChangeSlot: TCallback;
 } & TActionProps;
 export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
-    const [saving, setSaving] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([]);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
-    const [appointment, appointmentFrame, categories, customerEnteredEmail] = useSelector((state: RootState) => [
+    const currentUser = useCurrentUser();
+    const [appointment, appointmentFrame, categories, customerEnteredEmail, saving] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame,
         state.categories,
         state.appointment.customerEnteredEmail,
+        state.appointmentFrame.isAppointmentSaving,
     ]);
 
     const {id} = useParams();
@@ -93,6 +94,14 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         const serviceType = appointmentFrame.serviceTypeOption?.type ?? EServiceType.VisitCenter;
         return config.find(item => item.serviceType?.toString() === serviceType.toString());
     }, [config, appointmentFrame.serviceTypeOption])
+    const isEmailRequired = useMemo(() => {
+        if (currentUser && appointment.scProfile?.emailRequirement?.adminAndEmployeesEnabled) {
+            return true;
+        } else if (!currentUser && appointment.scProfile?.emailRequirement?.customerSelfServiceEnabled) {
+            return true
+        }
+        return false;
+    }, [currentUser, appointment.scProfile])
 
     useEffect(() => {
         appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
@@ -171,7 +180,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const checkIsValid = () => {
         let isValid = true;
         const localErrors: string[] = [];
-        if (!appointmentFrame.customer.email && appointment.scProfile?.isEmailRequired) {
+        if (!appointmentFrame.customer.email && isEmailRequired) {
             isValid = false;
             localErrors.push('email')
             showError('"Email" must not be empty')
@@ -243,7 +252,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     appointmentFrame.service,
                     appointmentFrame.subService,
                     appointmentFrame.selectedPackage,
-                    appointment.selectedSR
+                    appointment.selectedSR,
+                    appointmentFrame.selectedRecalls,
                 ),
                 date: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
                     ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
@@ -262,7 +272,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 ? Api.endpoints.Appointments.UpdateByKey
                 : Api.endpoints.Appointments.Create;
 
-            setSaving(true);
+            dispatch(setAppointmentSaving(true))
 
             Api.call<ICreateAppointmentResp>(
                 endpoint, { data, urlParams: {id: data.hashKey} }
@@ -281,7 +291,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     }
                 })
                 .finally(() => {
-                    setSaving(false);
+                    dispatch(setAppointmentSaving(false))
                 })
         }
     }
@@ -306,8 +316,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     : null}
             </div>
             <div>
-                <UserData errors={errors} setErrors={setErrors}/>
-                <Reminders/>
+                <UserData errors={errors} setErrors={setErrors} isEmailRequired={isEmailRequired}/>
+                <Reminders isEmailRequired={isEmailRequired}/>
                 <Info>{t("terms of our Visitor Agreement")}.</Info>
             </div>
 

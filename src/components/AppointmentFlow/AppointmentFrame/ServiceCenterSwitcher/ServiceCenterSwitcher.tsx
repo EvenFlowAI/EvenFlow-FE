@@ -3,7 +3,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Loading} from "../../../UI/Loading";
-import {useCurrentUser} from "../../../../utils/hooks";
+import {useCurrentUser, useException} from "../../../../utils/hooks";
 import {useHistory} from "react-router-dom";
 import {setCustomerEnteredEmail, setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
 import {
@@ -38,26 +38,33 @@ const useStyles = makeStyles((theme) => ({
 
 export const ServiceCenterSwitcher = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {welcomeScreenView} = useSelector((state: RootState) => state.appointmentFrame);
-    const {shortLoading} = useSelector((state: RootState) => state.serviceCenters);
+    const {welcomeScreenView, isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
+    const {shortLoading, shortSC} = useSelector((state: RootState) => state.serviceCenters);
     const currentUser = useCurrentUser();
     const classes = useStyles();
     const dispatch = useDispatch();
+    const showError = useException();
     const history = useHistory()
     const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
         [currentUser, scProfile])
 
     const handleClick = () => {
-        dispatch(clearAppointmentData());
-        dispatch(setCustomerEnteredEmail(""))
-        dispatch(setSideBarSteps([]));
-        dispatch(setVehicle(null));
-        dispatch(setCustomerLoadedData(null));
-        dispatch(setWelcomeScreenView('serviceCenterSelect'))
-        dispatch(setServiceTypeOption(null));
-        if (scProfile) {
-            const encoded = encodeSCID(scProfile.id)
-            history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`)
+        if (!isAppointmentSaving) {
+            if (shortSC?.length) {
+                dispatch(clearAppointmentData());
+                dispatch(setCustomerEnteredEmail(""))
+                dispatch(setSideBarSteps([]));
+                dispatch(setVehicle(null));
+                dispatch(setCustomerLoadedData(null));
+                dispatch(setWelcomeScreenView('serviceCenterSelect'))
+                dispatch(setServiceTypeOption(null));
+                if (scProfile) {
+                    const encoded = encodeSCID(scProfile.id)
+                    history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`)
+                }
+            } else {
+                showError("There are not Service Centers list of the current Dealership")
+            }
         }
     }
 

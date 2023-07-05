@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {ReactComponent as Create} from "../../../assets/img/create_appointment.svg";
 import {ReactComponent as Update} from "../../../assets/img/Manage appointment.svg";
@@ -153,6 +153,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory();
+    const isSearchByName = useMemo(() => Boolean(customerSearchData.firstName.length || customerSearchData.lastName.length), [customerSearchData])
 
     useEffect(() => {
         setData(customers);
@@ -234,7 +235,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const onSuccess = () => {
         setEditingElement(null);
         setEdit(false);
-        loadData(Boolean(customerSearchData.firstName.length || customerSearchData.lastName.length));
+        loadData(isSearchByName);
     }
 
     const onSaveInfo = async () => {
@@ -242,13 +243,19 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err)));
         }
     }
+
+    const onCancelEditing = () => {
+        setData(customers);
+        setEdit(false)
+    }
+
     const handleChangePage = async (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
         await changePage(e, pageNumber);
-        await loadData(false);
+        await loadData(isSearchByName);
     }
     const handleChangeRows = async (e: React.ChangeEvent<HTMLInputElement>) => {
         await changeRowsPerPage(e);
-        await loadData(false);
+        await loadData(isSearchByName);
     }
 
     const onSelectCustomerForNewVehicle = (customer: ICustomerWithPhones) => async () => {
@@ -298,12 +305,21 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                                 </IconsBlock>
                                 : isEdit && editingElement?.vehicleId === customer.vehicleId && editingElement?.customerId === customer.customerId
                                 ? <IconsBlock>
+                                        <Button
+                                            style={{fontSize: 11, minWidth: 46}}
+                                            onClick={onCancelEditing}
+                                            color="secondary"
+                                            variant="text"
+                                            size="small">
+                                            Cancel
+                                        </Button>
                                     <Button
                                         onClick={onSaveInfo}
+                                        style={{fontSize: 11, minWidth: 46}}
                                         color="primary"
                                         variant="text"
                                         size="small">
-                                        SAVE
+                                        Save
                                     </Button>
                                 </IconsBlock>
                                 : <IconsBlock>

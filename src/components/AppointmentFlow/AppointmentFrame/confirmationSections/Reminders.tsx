@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {ConfirmationTitle} from '../Title';
 import {Checkbox, FormControlLabel, FormGroup, styled} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -17,10 +17,24 @@ const FlexGroup = styled(FormGroup)({
     }
 })
 
-export const Reminders = () => {
+type TRemindersProps = {
+    isEmailRequired: boolean
+}
+
+export const Reminders: React.FC<TRemindersProps> = ({isEmailRequired}) => {
     const {reminders}= useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {t} = useTranslation();
+    const emailReminder = useMemo(() => {
+        const reminder= reminders.find(el => el.toString() === EReminderType.Email.toString());
+        return typeof reminder !== "undefined"
+    }, [reminders])
+
+    useEffect(() => {
+        if (!isEmailRequired && emailReminder) {
+            dispatch(setReminders(reminders.filter(el => el.toString() !== EReminderType.Email.toString())));
+        }
+    }, [isEmailRequired, emailReminder])
 
     const handleChange = (t: EReminderType) => () => {
         if (reminders.includes(t)) {
@@ -43,6 +57,7 @@ export const Reminders = () => {
                 <FormControlLabel
                     label={t("E-mail")}
                     control={<Checkbox
+                        disabled={!isEmailRequired}
                         checked={reminders.includes(EReminderType.Email)}
                         onChange={handleChange(EReminderType.Email)}
                         color="primary" />}

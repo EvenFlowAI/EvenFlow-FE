@@ -2,6 +2,7 @@ import {IAddress, IDealershipGroupShort} from "../dealershipGroups/types";
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../utils";
 import {ITimeSpan} from "../../../types/types";
 import {EMaintenanceOptionType} from "../../../api/types";
+import {TEmailRequirement} from "../screenSettings/types";
 
 export interface IServiceCenter {
     id: number;
@@ -22,7 +23,7 @@ export interface IServiceCenter {
     defaultVehicleMakeId?: number|null;
     maintenancePackageOptionTypes: EMaintenanceOptionType[];
     engineTypeFieldName?: string;
-    isEmailRequired: boolean;
+    emailRequirement?: TEmailRequirement;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
     countOfManagers: number;
@@ -153,5 +154,3 @@ export interface IAdvisorAssignment {
     primaryMethod?: EAdvisorAssignMethod|null;
     secondaryMethod?: EAdvisorAssignMethod|null;
 }
-
-export type TRemindersField = "email"| "reminders"

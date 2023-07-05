@@ -97,7 +97,6 @@ export const Appointments = () => {
             title={Titles.Appointments}
             pad
             actions={<AppointmentActions
-                onAction={refresh}
                 searchTerm={searchTerm}
                 selectedView={selectedView}
                 handleChangeView={handleChangeView}

@@ -13,6 +13,7 @@ import {
     ITransportation
 } from "../../../api/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
+import {TEmailRequirement} from "../screenSettings/types";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -35,7 +36,7 @@ export interface IServiceCenterProfile {
     dmsId?: string;
     maintenancePackageOptionTypes: EMaintenanceOptionType[];
     eMenuEnabled?: boolean;
-    isEmailRequired: boolean;
+    emailRequirement?: TEmailRequirement;
 }
 export interface ISR {
     id: number;

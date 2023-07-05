@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "./StepWrapper";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
@@ -11,7 +11,7 @@ import {
     clearAppointmentData,
     loadAncillaryPriceByZip,
     loadFilteredZip,
-    setAddress,
+    setAddress, setShowServiceCentersList,
     setSideBarSteps,
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -23,10 +23,13 @@ import {
     TAncillaryPriceByZip
 } from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
-import {styled} from "@material-ui/core";
+import {styled, Theme} from "@material-ui/core";
 import DisplayAncillaryPrice from "../../Modals/DisplayAncillaryPrice/DisplayAncillaryPrice";
 import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import UnavailableService from "../../Modals/InavailableService/UnavailableService";
+import {KeyboardArrowDown} from "@material-ui/icons";
+import {TArgCallback} from "../../../types/types";
+import {TView} from "../../Welcome/types";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -46,7 +49,9 @@ export const SelectWrapper = styled('div')(({theme}) => ({
 }));
 
 type TYourLocationProps = TActionProps & {
-    onLogin: () => void
+    onLogin: () => void,
+    setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
+    onGoToFirstScreen: TArgCallback<TView>;
 }
 
 const useStyles = makeStyles(() => ({
@@ -78,15 +83,22 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const useAutocompleteStyles = makeStyles({
+export interface TStyleProps {
+    error: boolean;
+}
+
+const useAutocompleteStyles = makeStyles<Theme, TStyleProps>(() => ({
     root: {
         "& input::placeholder": {
-            color: 'black'
+            color: props => props.error ? "red" : 'black'
         },
     },
-})
+    popupIndicator: {
+        marginRight: 8
+    },
+}))
 
-const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) => {
+const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin, setNeedToShowServiceSelection, onGoToFirstScreen}) => {
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -96,7 +108,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const dispatch = useDispatch();
     const showError = useException();
     const classes = useStyles();
-    const autocompleteClasses = useAutocompleteStyles();
+    const styleProps:TStyleProps = {error: isFormChecked && !zip};
+    const autocompleteClasses = useAutocompleteStyles(styleProps);
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
 
@@ -121,14 +134,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
 
     const handleChangeAddress = async (e: any) => {
         clearSelectedData();
-        // const geoCode = await geocodeByPlaceId(e.value.place_id)
         setFormChecked(false);
         dispatch(setAddress(e));
-        // if (e?.label) {
-        //     dispatch(setAddress(e));
-        // } else {
-        //     dispatch(setAddress(null));
-        // }
     }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
         clearSelectedData();
@@ -139,9 +146,13 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
     const handleBack = () => {
         clearAddress();
         clearSelectedData();
-        if (!customerLoadedData?.id || currentUser) {
+        if (currentUser) {
+            dispatch(setShowServiceCentersList(false));
+            onGoToFirstScreen("serviceSelect")
+        } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();
         } else {
+            setNeedToShowServiceSelection(true)
             onBack();
         }
     }
@@ -220,6 +231,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin}) =
                     classes={autocompleteClasses}
                     autoComplete={true}
                     onInputChange={onInputChange}
+                    popupIcon={<KeyboardArrowDown htmlColor="#CCCCCC" />}
                     renderInput={autocompleteRender({
                         label: t('Your ZIP'),
                         placeholder: isFormChecked && !zip

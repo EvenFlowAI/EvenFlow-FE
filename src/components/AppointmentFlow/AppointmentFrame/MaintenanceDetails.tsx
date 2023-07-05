@@ -311,7 +311,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }
 
     const handleDeclineRecalls = () => {
-        if (isRecallsCategorySelected && categoriesIds.length < 2) {
+        if (isRecallsCategorySelected) {
             onBack('serviceNeeds');
         } else {
             handleNext()

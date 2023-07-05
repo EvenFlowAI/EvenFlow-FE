@@ -3,21 +3,25 @@ import {Api} from "../../../config/requests";
 import {AppThunk} from "../../../types/types";
 import {IEmployee} from "../employees/types";
 import {loadByFilters} from "../employees/actions";
-import {setWelcomeScreenView} from "../appointmentFrameReducer/actions";
+import {setShowServiceCentersList, setWelcomeScreenView} from "../appointmentFrameReducer/actions";
 
 const _getCurrentUser = (payload: ICurrentUser): TUserActions => ({
     type: "User/GetCurrentUser", payload
 });
 const loading = (payload: boolean): TUserActions => ({type: "User/Loading", payload});
-export const getCurrentUser = (shouldShowCenterSelection?: boolean): AppThunk => async (dispatch, getState) => {
-    const {welcomeScreenView} = getState().appointmentFrame;
+export const getCurrentUser = (): AppThunk => async (dispatch, getState) => {
+    const {welcomeScreenView, shouldShowServiceCentersList} = getState().appointmentFrame;
     try {
         dispatch(loading(true));
         const result = await Api.call<ICurrentUser>(Api.endpoints.Accounts.Profile);
         if (result.data) {
             dispatch(_getCurrentUser(result.data));
-            if (welcomeScreenView !== "serviceCenterSelect" && shouldShowCenterSelection) {
-                dispatch(setWelcomeScreenView("serviceCenterSelect"))
+            if (welcomeScreenView !== "serviceCenterSelect") {
+                if (shouldShowServiceCentersList) {
+                    dispatch(setWelcomeScreenView("serviceCenterSelect"))
+                } else {
+                    dispatch(setShowServiceCentersList(true));
+                }
             }
         }
     } catch (e) {

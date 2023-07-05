@@ -73,7 +73,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-export const useDialogStyles = makeStyles({
+export const useDialogStyles = makeStyles(theme => ({
     root: {
         "& hr": {
             margin: "28px 0",
@@ -102,8 +102,11 @@ export const useDialogStyles = makeStyles({
         backgroundColor: '#E5E5E5',
         maxWidth: 525,
         paddingBottom: 24,
+        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+            paddingBottom: 12,
+        }
     }
-});
+}));
 
 const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
     const {appointment, scProfile, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);

@@ -3,18 +3,18 @@ import {useDialogStyles} from "../DetailedFees/DetailedFees";
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {useTranslation} from "react-i18next";
-import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions";
 import {useDispatch} from "react-redux";
 import {makeStyles} from "@material-ui/core/styles";
 import {
     setCurrentFrameScreen,
 } from "../../../store/reducers/appointmentFrameReducer/actions";
+import {Button, styled} from "@material-ui/core";
 
 type TExistingCustomerErrorProps = DialogProps & {
     onNext: () => void;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     info: {
         display: 'flex',
         flexDirection: 'column',
@@ -32,9 +32,31 @@ const useStyles = makeStyles(() => ({
     actionsWrapper: {
         display: 'flex',
         justifyContent: 'center',
-        marginBottom: 30
+        marginBottom: 30,
+        [theme.breakpoints.down('sm')]: {
+            padding: '0 20px'
+        }
     }
 }))
+
+export const ButtonsRow = styled('div')(({theme}) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "22px",
+    marginTop: 20,
+    "& button": {
+        minWidth: 144
+    },
+    [theme.breakpoints.down('sm')]: {
+        flexDirection: "column",
+        width: "100%",
+        gap: "12px",
+        "& button": {
+            width: "100%"
+        }
+    }
+}));
 
 const ExistingCustomerError: React.FC<TExistingCustomerErrorProps> = ({open, onClose, onNext}) => {
     const dispatch = useDispatch();
@@ -60,12 +82,21 @@ const ExistingCustomerError: React.FC<TExistingCustomerErrorProps> = ({open, onC
                 </div>
             </DialogContent>
             <div className={classes.actionsWrapper}>
-                <Actions
-                    onBack={onClose}
-                    onNext={onNew}
-                    nextLabel={t("Continue as a new customer")}
-                    prevLabel={t("Try another number")}
-                />
+                <ButtonsRow>
+                    <Button
+                        onClick={onClose}
+                        color={'primary'}
+                        variant='outlined'
+                        style={{backgroundColor: '#F7F8FB'}}>
+                        {t("Try another number")}
+                    </Button>
+                    <Button
+                        onClick={onNew}
+                        color={'primary'}
+                        variant='contained'>
+                        {t("Continue as a new customer")}
+                    </Button>
+                </ButtonsRow>
             </div>
         </BaseModal>
     );

@@ -16,11 +16,12 @@ const Wrapper = styled('div')({
 type TUserDataProps = {
     errors: string[],
     setErrors: Dispatch<SetStateAction<string[]>>,
+    isEmailRequired: boolean;
 };
 
-export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
+export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors, isEmailRequired }) => {
     const dispatch = useDispatch();
-    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const customer = useSelector((state: RootState) => state.appointmentFrame.customer);
     const {t} = useTranslation();
 
@@ -63,7 +64,7 @@ export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors }) => {
             <TextField
                 onChange={handleChange}
                 value={customer?.email}
-                error={errors.includes('email') && scProfile?.isEmailRequired}
+                error={errors.includes('email') && isEmailRequired}
                 name="email"
                 fullWidth
                 placeholder={t("Type here")}

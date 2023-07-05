@@ -79,6 +79,7 @@ import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/Service
 import TagManager from "react-gtm-module";
 import {Api} from "../../config/requests";
 import {EServiceCategoryType} from "../../store/reducers/categories/types";
+import {TView} from "../Welcome/types";
 
 const Container = styled('div')({
     display: "flex",
@@ -197,6 +198,15 @@ export const AppointmentFrameLayout = () => {
         }
     }
 
+    const onGoToFirstScreen = useCallback((screen: TView) => {
+        dispatch(setWelcomeScreenView(screen))
+        if (id) {
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        } else if (scProfile?.id) {
+            history.push(Routes.EndUser.Welcome + "/" + encodeSCID(scProfile?.id) + "?frame=1");
+        }
+    }, [id, history, dispatch, scProfile])
+
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
@@ -204,14 +214,9 @@ export const AppointmentFrameLayout = () => {
             handleNewCustomer();
             dispatch(setCurrentFrameScreen("serviceNeeds"));
         } else {
-            dispatch(setWelcomeScreenView('select'))
-            if (id) {
-                history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
-            } else if (scProfile?.id) {
-                history.push(Routes.EndUser.Welcome + "/" + encodeSCID(scProfile?.id) + "?frame=1");
-            }
+            onGoToFirstScreen('select')
         }
-    }, [id, history, dispatch, scProfile]);
+    }, [onGoToFirstScreen, isPromotionPage]);
 
     const getTrimmedKey = (key: string): string => {
         const lastIndex = key.lastIndexOf('==');
@@ -312,9 +317,11 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         if (!trackerCreated) {
+            /** expects for the post message from the parent site in order to create tracker with right trackingID **/
             window.addEventListener('message', function(event) {
                 if (!prodParentLinks.includes(event?.origin)) return;
                 let originSite = event.origin;
+                /** in some browsers checks the parent URL and use it like origin **/
                 if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
                 if (originSite) createTracker(event.data, originSite, trackerCreated);
             });
@@ -323,6 +330,7 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         if (!trackerCreated) {
+            /** if there are not a message from the parent site, try to get tracker from the document`s props **/
             if (process.env.REACT_APP_ENV === "production") {
                 setTimeout(() => {
                     const url = (window.location != window.parent?.location)
@@ -331,6 +339,7 @@ export const AppointmentFrameLayout = () => {
                     createTracker('', url, trackerCreated);
                 }, 3000);
             } else {
+                /**without origin (parent site URL) creates default tracker for current environment**/
                 createTracker('', '', trackerCreated);
             }
         }
@@ -506,6 +515,7 @@ export const AppointmentFrameLayout = () => {
                 setLastSelectedCategory={setLastSelectedCategory}
                 setNeedToShowServiceSelection={setNeedToShowServiceSelection}
                 onLogin={handleLogin}
+                onGoToFirstScreen={onGoToFirstScreen}
                 onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection
@@ -568,6 +578,8 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen('carSelection')}
                 onNext={handleChangeScreen('serviceNeeds')}
                 onLogin={handleLogin}
+                setNeedToShowServiceSelection={setNeedToShowServiceSelection}
+                onGoToFirstScreen={onGoToFirstScreen}
             />,
             payment: <PaymentScreen/>,
             serviceOfferProductPage: <OfferProductPage
