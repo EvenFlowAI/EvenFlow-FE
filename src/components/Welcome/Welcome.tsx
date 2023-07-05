@@ -23,7 +23,7 @@ import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
     clearAppointmentData, loadMakes,
-    setCurrentFrameScreen,
+    setCurrentFrameScreen, setRecallsAreShown,
     setServiceTypeOption,
     setSideBarSteps,
     setUserType,
@@ -75,6 +75,7 @@ export const Welcome = () => {
            dispatch(loadFirstScreenOptionsByQuery(decodeSCID(id)))
            dispatch(loadMakes(decodeSCID(id)))
        }
+        dispatch(setRecallsAreShown(false));
     }, [id])
 
     useEffect(() => {
