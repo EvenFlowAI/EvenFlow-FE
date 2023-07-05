@@ -38,6 +38,7 @@ export interface ICustomerWithPhones extends ICustomerByName {
     driveType:  string|null;
     engineTypeId: number|null;
     warrantyExpiration: ParsableDate|null;
+    sortOrder?: number;
 }
 
 export interface ICustomerVehicle {
