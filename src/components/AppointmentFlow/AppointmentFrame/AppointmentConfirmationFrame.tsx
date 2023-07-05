@@ -252,7 +252,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                     appointmentFrame.service,
                     appointmentFrame.subService,
                     appointmentFrame.selectedPackage,
-                    appointment.selectedSR
+                    appointment.selectedSR,
+                    appointmentFrame.selectedRecalls,
                 ),
                 date: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
                     ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
