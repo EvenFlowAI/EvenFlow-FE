@@ -578,6 +578,8 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen('carSelection')}
                 onNext={handleChangeScreen('serviceNeeds')}
                 onLogin={handleLogin}
+                setNeedToShowServiceSelection={setNeedToShowServiceSelection}
+                onGoToFirstScreen={onGoToFirstScreen}
             />,
             payment: <PaymentScreen/>,
             serviceOfferProductPage: <OfferProductPage
