@@ -55,8 +55,7 @@ export const loadCustomersBySearchTerm = (
     firstName?: string,
     lastName?: string,
     phoneOrEmail?: string,
-): AppThunk => (dispatch, getState) => {
-    const {pageSize, pageIndex} = getState().customers.pageData;
+): AppThunk => (dispatch) => {
     const data: TSearchCustomerParams = {};
     if (phoneOrEmail) data.phoneOrEmail = phoneOrEmail;
     if (firstName) data.firstName = firstName;
@@ -65,7 +64,7 @@ export const loadCustomersBySearchTerm = (
     if (Object.keys(data).length) {
         dispatch(setLoading(true))
         Api.call<PaginatedAPIResponse<ICustomerWithPhones>>(Api.endpoints.Customers.GetBySearchTerm,
-            {params: {serviceCenterId, ...data, pageSize, pageIndex}})
+            {params: {serviceCenterId, ...data, pageSize: 0, pageIndex: 0}})
             .then(result => {
                 if (result.data?.result) {
                     dispatch(getCustomers(result.data.result))
