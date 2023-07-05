@@ -141,7 +141,7 @@ type TCustomerSearchTableProps = {
 }
 
 const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, loadData, isNewVehicleMode}) => {
-    const {customers, isLoading, paging, pageData, customerSearchData} = useSelector((state: RootState) => state.customers);
+    const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const [data, setData] = useState<ICustomerWithPhones[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
@@ -153,10 +153,13 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory();
-    const isSearchByName = useMemo(() => Boolean(customerSearchData.firstName.length || customerSearchData.lastName.length), [customerSearchData])
+    const [currentFirstItemIndex, currentLastItemIndex] = useMemo(() => {
+        return [pageData.pageIndex * pageData.pageSize, (pageData.pageIndex + 1) * pageData.pageSize]
+    }, [pageData]) ;
 
     useEffect(() => {
-        setData(customers);
+        const orderedData = customers.map((el, i) => ({...el, sortOrder: i}))
+        setData(orderedData);
     }, [customers])
 
     const setCustomerData = async (item: ICustomerWithPhones, isUpdating: boolean) => {
@@ -228,14 +231,36 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const onFieldChange = (fieldName: keyof ICustomerWithPhones) => (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
         setEditingElement(prevState => {
-            return prevState ? {...prevState, [fieldName]: e.target.value} : prevState;
+            return prevState
+                ? {...prevState, [fieldName]: e.target.value}
+                : prevState;
         });
     }
 
+    const sortCustomers = (a: ICustomerWithPhones, b: ICustomerWithPhones) => a.sortOrder && b.sortOrder ? a.sortOrder - b.sortOrder : 0
+
     const onSuccess = () => {
+        const edited = data.find(customer => customer.vehicleId === editingElement?.vehicleId)
+        if (edited && editingElement) {
+            const customerData:Partial<ICustomerWithPhones> = {
+                cellPhone: editingElement.cellPhone,
+                homePhone: editingElement.homePhone,
+                otherPhone: editingElement.otherPhone,
+                firstName: editingElement.firstName,
+                lastName: editingElement.lastName,
+                email: editingElement.email,
+                address: editingElement.address,
+                city: editingElement.city,
+                state: editingElement.state,
+            }
+            const filtered = data.map(item => item.customerId === edited.customerId ? {...item, ...customerData} : item)
+            if (filtered[0].sortOrder !== undefined) {
+                setData(filtered.sort(sortCustomers))
+            } else setData(filtered)
+        }
         setEditingElement(null);
         setEdit(false);
-        loadData(isSearchByName);
+        // loadData(isSearchByName);
     }
 
     const onSaveInfo = async () => {
@@ -245,17 +270,15 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     }
 
     const onCancelEditing = () => {
-        setData(customers);
+        setData(customers.slice().sort(sortCustomers))
         setEdit(false)
     }
 
     const handleChangePage = async (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
         await changePage(e, pageNumber);
-        await loadData(isSearchByName);
     }
     const handleChangeRows = async (e: React.ChangeEvent<HTMLInputElement>) => {
         await changeRowsPerPage(e);
-        await loadData(isSearchByName);
     }
 
     const onSelectCustomerForNewVehicle = (customer: ICustomerWithPhones) => async () => {
@@ -290,7 +313,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             </TableHead>
             <TableBody>
                 <TableRow className={classes.greyRow}/>
-                {data.map((customer, index) =>
+                {data.slice(currentFirstItemIndex, currentLastItemIndex).map((customer, index) =>
                     (<TableRow key={customer.vin + index}>
                         <TableCell key="icon" className={classes.bodyCell}>
                             { isNewVehicleMode

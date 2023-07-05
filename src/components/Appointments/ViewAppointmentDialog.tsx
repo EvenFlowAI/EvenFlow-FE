@@ -36,7 +36,7 @@ const ContactInfo: React.FC<{driver: IAppointmentByQuery["driver"]}> = ({driver}
         <ListItem>
             <ListItemText
                 primary={driver.fullName}
-                secondary={`${driver.email} ${driver.phoneNumber}`}
+                secondary={`${driver.email ?? ""} ${driver.phoneNumber}`}
             />
         </ListItem>
     </>
