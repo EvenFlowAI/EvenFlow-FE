@@ -26,7 +26,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {ICustomerLoadedData} from "../../../api/types";
 import {
     clearAppointmentData,
-    setAddress, setSideBarSteps,
+    setAddress,
+    setServiceTypeOption,
+    setSideBarSteps,
     setUserType,
     setVehicle,
     setWelcomeScreenView
@@ -41,7 +43,7 @@ import {useException, useModal, usePagination} from "../../../utils/hooks";
 import {Loading} from "../../UI/Loading";
 import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../utils/utils";
-import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
 import CancelAppointmentConfirm from "../CancelAppoitntmentConfirm/CancelAppointmentConfirm";
 
@@ -193,17 +195,32 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
         await dispatch(setVehicle(vehicle));
     }
 
+    const onRedirect = async () => {
+        await onClose()
+        redirect()
+    }
+
+
     const onCreateNewForCar = async (item: ICustomerWithPhones) => {
         await dispatch(clearAppointmentData());
         await dispatch(setSideBarSteps([]));
         await setCustomerData(item, false);
         await dispatch(setUserType(EUserType.Existing));
         if (firstScreenOptions?.length) {
-            await dispatch(setWelcomeScreenView("serviceSelect"));
-            await onClose()
+            if (firstScreenOptions.length > 1) {
+                await dispatch(setWelcomeScreenView("serviceSelect"))
+                await onClose()
+            } else {
+                if (firstScreenOptions[0].type === EServiceType.VisitCenter) {
+                    await dispatch(setServiceTypeOption(firstScreenOptions[0]))
+                    await onRedirect()
+                } else {
+                    await dispatch(setWelcomeScreenView("serviceSelect"))
+                    await onClose()
+                }
+            }
         } else {
-            await onClose()
-            redirect()
+            await onRedirect()
         }
     }
 
@@ -306,7 +323,16 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
         await dispatch(setVehicle(getBlankVehicle()))
         onClose()
         if (firstScreenOptions?.length) {
-            await dispatch(setWelcomeScreenView("serviceSelect"));
+            if (firstScreenOptions.length > 1) {
+                await dispatch(setWelcomeScreenView("serviceSelect"))
+            } else {
+                if (firstScreenOptions[0].type === EServiceType.VisitCenter) {
+                    await dispatch(setServiceTypeOption(firstScreenOptions[0]))
+                    redirect()
+                } else {
+                    await dispatch(setWelcomeScreenView("serviceSelect"))
+                }
+            }
         } else {
             redirect()
         }

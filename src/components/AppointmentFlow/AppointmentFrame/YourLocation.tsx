@@ -149,7 +149,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin, se
         clearSelectedData();
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
-            onGoToFirstScreen(Boolean(firstScreenOptions?.length) ? "serviceSelect" : "select")
+            onGoToFirstScreen(firstScreenOptions?.length > 1 ? "serviceSelect" : "select")
         } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();
         } else {

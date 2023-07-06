@@ -11,7 +11,7 @@ export const loadFirstScreenOptionsByQuery = (id: number): AppThunk => dispatch 
     Api.call(Api.endpoints.ServiceTypes.GetByQuery, {data: { serviceCenterId: id, pageSize: 0, pageIndex: 0}})
         .then(result => {
             if (result?.data) {
-               dispatch(getFirstScreenOptionsByQuery(result.data.result))
+              dispatch(getFirstScreenOptionsByQuery(result.data.result))
             }
         })
         .catch(err => {

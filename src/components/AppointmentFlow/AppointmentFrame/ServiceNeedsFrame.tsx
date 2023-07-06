@@ -70,7 +70,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const handleBack = () => {
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
-            onGoToFirstScreen(Boolean(firstScreenOptions?.length) ? "serviceSelect" : "select")
+            onGoToFirstScreen(firstScreenOptions?.length > 1 ? "serviceSelect" : "select")
         } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();
         } else {
