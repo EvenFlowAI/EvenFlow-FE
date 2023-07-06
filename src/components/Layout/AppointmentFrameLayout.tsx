@@ -36,7 +36,7 @@ import {decodeSCID, encodeSCID, getTracker} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
-import {useException} from "../../utils/hooks";
+import {useException, useLayout} from "../../utils/hooks";
 import {
     selectCategoriesIds,
     selectService,
@@ -171,6 +171,7 @@ export const AppointmentFrameLayout = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const {t} = useTranslation();
+    const isFrame = useLayout();
 
     const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
     const isDealerBuilt = useMemo(() => (scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt), [scProfile]);
@@ -209,13 +210,13 @@ export const AppointmentFrameLayout = () => {
             handleNewCustomer();
             dispatch(setCurrentFrameScreen("serviceNeeds"));
         } else {
-            onGoToFirstScreen('select')
+            onGoToFirstScreen('select');
         }
-    }, [onGoToFirstScreen, isPromotionPage]);
+    }, [onGoToFirstScreen, isPromotionPage, isFrame]);
 
     const getTrimmedKey = (key: string): string => {
         const lastIndex = key.lastIndexOf('==');
-        return  lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
+        return lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
     }
 
     const handleSetScreen = useCallback((screen: TScreen) => {
