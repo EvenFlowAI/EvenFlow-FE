@@ -103,6 +103,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin, se
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {zipCode: zipCodeValue, address, filteredZipCodes, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
@@ -148,11 +149,11 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin, se
         clearSelectedData();
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
-            onGoToFirstScreen("serviceSelect")
+            onGoToFirstScreen(Boolean(firstScreenOptions?.length) ? "serviceSelect" : "select")
         } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();
         } else {
-            setNeedToShowServiceSelection(true)
+            setNeedToShowServiceSelection(Boolean(firstScreenOptions?.length))
             onBack();
         }
     }

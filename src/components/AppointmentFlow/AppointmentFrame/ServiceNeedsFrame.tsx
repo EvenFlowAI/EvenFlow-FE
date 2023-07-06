@@ -59,6 +59,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         selectedRecalls,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const {id} = useParams();
     const dispatch = useDispatch();
@@ -69,11 +70,11 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const handleBack = () => {
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
-            onGoToFirstScreen("serviceSelect")
+            onGoToFirstScreen(Boolean(firstScreenOptions?.length) ? "serviceSelect" : "select")
         } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();
         } else {
-            setNeedToShowServiceSelection(true)
+            setNeedToShowServiceSelection(Boolean(firstScreenOptions?.length))
             onBack();
         }
     }
