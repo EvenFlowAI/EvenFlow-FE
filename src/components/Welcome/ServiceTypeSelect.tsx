@@ -36,6 +36,10 @@ const CardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Th
     gap: "18px",
     marginTop: "5%",
     marginBottom: 20,
+    justifyItems: cardsAmount === 1 ? "center" : "unset",
+    '& > div': {
+        minWidth:   cardsAmount === 1 ? 440 : 'unset'
+    },
     [mh600]: {
         marginTop: "2%"
     },
