@@ -137,12 +137,14 @@ const columnNames = [
 type TCustomerSearchTableProps = {
     onClose: TCallback;
     loadData: TArgCallback<boolean>;
-    isNewVehicleMode: boolean
+    isNewVehicleMode: boolean;
+    redirect: TCallback;
 }
 
-const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, loadData, isNewVehicleMode}) => {
+const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, loadData, isNewVehicleMode, redirect}) => {
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const [data, setData] = useState<ICustomerWithPhones[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<ICustomerWithPhones|null>(null);
@@ -196,8 +198,13 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
         await dispatch(setSideBarSteps([]));
         await setCustomerData(item, false);
         await dispatch(setUserType(EUserType.Existing));
-        await dispatch(setWelcomeScreenView("serviceSelect"));
-        await onClose()
+        if (firstScreenOptions?.length) {
+            await dispatch(setWelcomeScreenView("serviceSelect"));
+            await onClose()
+        } else {
+            await onClose()
+            redirect()
+        }
     }
 
     const onUpdateAppForCar = (item: ICustomerWithPhones) => {
@@ -298,7 +305,11 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(getBlankVehicle()))
         onClose()
-        dispatch(setWelcomeScreenView("serviceSelect"))
+        if (firstScreenOptions?.length) {
+            await dispatch(setWelcomeScreenView("serviceSelect"));
+        } else {
+            redirect()
+        }
     }
 
     return isLoading

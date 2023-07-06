@@ -250,6 +250,7 @@ export const Welcome = () => {
                     onOpenNotFound={onOpenNotFound}
                     onCloseNotFound={onCloseNotFound}
                     isOpenNotFound={isOpenNotFound}
+                    redirect={redirect}
                 />;
         }
     }
