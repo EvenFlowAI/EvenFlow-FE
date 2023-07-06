@@ -25,7 +25,7 @@ import {
     clearAppointmentData,
     loadMakes,
     setCurrentFrameScreen,
-    setServiceTypeOption,
+    setServiceTypeOption, setShowServiceCentersList,
     setSideBarSteps,
     setUserType,
     setValueServiceAvailability,
@@ -177,7 +177,7 @@ export const Welcome = () => {
         }
     }
 
-    const onNextForNew = () => {
+    const onNextForNew = async () => {
         if (firstScreenOptions.length) {
             if (firstScreenOptions.length > 1) {
                 dispatch(setWelcomeScreenView("serviceSelect"))
@@ -233,6 +233,7 @@ export const Welcome = () => {
         dispatch(setUserType(EUserType.New));
         handleReactGA('A New');
         dispatch(setCustomerEnteredEmail(''));
+        dispatch(setShowServiceCentersList(false));
         if (firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter) {
             dispatch(setServiceTypeOption(firstScreenOptions[0]));
             redirect()
