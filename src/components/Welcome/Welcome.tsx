@@ -22,7 +22,8 @@ import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
-    clearAppointmentData, loadMakes,
+    clearAppointmentData,
+    loadMakes,
     setCurrentFrameScreen,
     setServiceTypeOption,
     setSideBarSteps,
@@ -176,16 +177,29 @@ export const Welcome = () => {
         }
     }
 
+    const onNextForNew = () => {
+        if (firstScreenOptions.length) {
+            if (firstScreenOptions.length > 1) {
+                dispatch(setWelcomeScreenView("serviceSelect"))
+            } else {
+                if (firstScreenOptions[0].type === EServiceType.VisitCenter) {
+                    dispatch(setServiceTypeOption(firstScreenOptions[0]))
+                    redirect()
+                } else {
+                    dispatch(setWelcomeScreenView("serviceSelect"))
+                }
+            }
+        } else {
+            redirect();
+        }
+    }
+
     const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
         handleConfig(serviceType);
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
             handleExistingUser()
         } else {
-            if (firstScreenOptions.length) {
-                dispatch(setWelcomeScreenView("serviceSelect"))
-            } else {
-                redirect();
-            }
+            onNextForNew()
         }
     }
 
@@ -221,8 +235,9 @@ export const Welcome = () => {
         dispatch(setCustomerEnteredEmail(''));
         if (firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter) {
             dispatch(setServiceTypeOption(firstScreenOptions[0]));
+            redirect()
         } else {
-            if (firstScreenOptions.length > 1) {
+            if (firstScreenOptions.length) {
                 dispatch(setWelcomeScreenView('serviceSelect'))
             } else {
                 createBlankCar()

@@ -57,12 +57,7 @@ import {
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {
-    EServiceCenterName,
-    IAppointmentByQuery,
-    ILoadedVehicle,
-    IServiceCategory
-} from "../../api/types";
+import {EServiceCenterName, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
 import ReactGA from "react-ga4";
 // import ReactGA from "react-ga";
@@ -441,10 +436,16 @@ export const AppointmentFrameLayout = () => {
 
     const handleAddNewVehicle = useCallback(() => {
         clearData()
-        if (!!firstScreenOptions.length) {
-            setNeedToShowServiceSelection(false);
-            dispatch(setWelcomeScreenView('serviceSelect'))
-            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        if (firstScreenOptions.length) {
+            if (firstScreenOptions.length > 1
+                || (firstScreenOptions.length === 1 && firstScreenOptions[0].type !== EServiceType.VisitCenter)) {
+                setNeedToShowServiceSelection(false);
+                dispatch(setWelcomeScreenView('serviceSelect'))
+                history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+            } else {
+                dispatch(setServiceTypeOption(firstScreenOptions[0]))
+                handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+            }
         } else {
             handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
         }
