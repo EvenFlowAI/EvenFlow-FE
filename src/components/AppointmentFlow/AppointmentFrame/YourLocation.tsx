@@ -147,13 +147,16 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin, se
     const handleBack = () => {
         clearAddress();
         clearSelectedData();
+        const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
-            onGoToFirstScreen(firstScreenOptions?.length > 1 ? "serviceSelect" : "select")
+            const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
+            onGoToFirstScreen(firstScreenOptions?.length && !onlyVisitCenterExists ? "serviceSelect" : "select")
         } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();
+            onGoToFirstScreen(firstScreenOptions?.length && !onlyVisitCenterExists ? "serviceSelect" : "select")
         } else {
-            setNeedToShowServiceSelection(Boolean(firstScreenOptions?.length))
+            setNeedToShowServiceSelection(Boolean(firstScreenOptions?.length && !onlyVisitCenterExists))
             onBack();
         }
     }
