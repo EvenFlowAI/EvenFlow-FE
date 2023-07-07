@@ -8,7 +8,8 @@ import {
     clearAppointmentSteps,
     selectCategoriesIds,
     selectService,
-    setAdditionalServicesChosen, setShowServiceCentersList,
+    setAdditionalServicesChosen,
+    setShowServiceCentersList,
     setUserType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "../../Layout/types";
@@ -68,13 +69,17 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const currentUser = useCurrentUser();
 
     const handleBack = () => {
+        const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
+        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
+        const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
-            onGoToFirstScreen(firstScreenOptions?.length > 1 ? "serviceSelect" : "select")
+            onGoToFirstScreen(prevScreen)
         } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();
+            onGoToFirstScreen(prevScreen)
         } else {
-            setNeedToShowServiceSelection(Boolean(firstScreenOptions?.length))
+            setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
             onBack();
         }
     }
@@ -100,13 +105,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     useEffect(() => {
         if (!userType) dispatch(setUserType(EUserType.New))
     }, [userType])
-
-    // useEffect(() => {
-    //     const indRequestsCategory = serviceCategories.find(cat => cat.serviceRequests.find(req => selectedSR.includes(req.id)));
-    //     if (indRequestsCategory) {
-    //         dispatch(selectCategoriesIds([indRequestsCategory]))
-    //     }
-    // }, [serviceCategories, selectedSR])
 
     const handleGA = (selectedService: IServiceCategory) => {
         const requestsString = selectedService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
