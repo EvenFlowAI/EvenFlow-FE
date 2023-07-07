@@ -68,20 +68,27 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
 
+    const handleBackScreen = (shouldSkipServiceTypeSelect: boolean) => {
+        setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
+        if (serviceTypeOption?.type !== EServiceType.VisitCenter) {
+            onBack()
+        } else {
+            history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+        }
+    }
+
     const handleBack = () => {
         const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
         const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
         const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
-        debugger
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
-            onGoToFirstScreen(prevScreen)
+            handleBackScreen(shouldSkipServiceTypeSelect)
         } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();
             onGoToFirstScreen(prevScreen)
         } else {
-            setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
-            history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+            handleBackScreen(shouldSkipServiceTypeSelect)
         }
     }
 
@@ -106,6 +113,13 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     useEffect(() => {
         if (!userType) dispatch(setUserType(EUserType.New))
     }, [userType])
+
+    // useEffect(() => {
+    //     const indRequestsCategory = serviceCategories.find(cat => cat.serviceRequests.find(req => selectedSR.includes(req.id)));
+    //     if (indRequestsCategory) {
+    //         dispatch(selectCategoriesIds([indRequestsCategory]))
+    //     }
+    // }, [serviceCategories, selectedSR])
 
     const handleGA = (selectedService: IServiceCategory) => {
         const requestsString = selectedService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
