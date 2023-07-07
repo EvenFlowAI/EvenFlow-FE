@@ -1,17 +1,28 @@
 import {createAction} from "@reduxjs/toolkit";
-import {AppThunk} from "../../../types/types";
+import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {IFirstScreenOption, TNewFirstScreenOption, TUpdateFirstScreenOption} from "./types";
+import {EServiceType} from "../appointmentFrameReducer/types";
 
 export const setFirstScreenOptionsLoading = createAction<boolean>("ServiceTypes/SetLoading");
 export const getFirstScreenOptionsByQuery = createAction<IFirstScreenOption[]>("ServiceTypes/GetServiceTypesByQuery");
 
-export const loadFirstScreenOptionsByQuery = (id: number): AppThunk => dispatch => {
+export const loadFirstScreenOptionsByQuery = (id: number): AppThunk => (dispatch, getState) => {
     dispatch(setFirstScreenOptionsLoading(true));
-    Api.call(Api.endpoints.ServiceTypes.GetByQuery, {data: { serviceCenterId: id, pageSize: 0, pageIndex: 0}})
+    const {isMobileServiceOn, isPickUpDropOffServiceOn} = getState().appointmentFrame
+    Api.call<PaginatedAPIResponse<IFirstScreenOption>>(Api.endpoints.ServiceTypes.GetByQuery, {data: { serviceCenterId: id, pageSize: 0, pageIndex: 0}})
         .then(result => {
             if (result?.data) {
-              dispatch(getFirstScreenOptionsByQuery(result.data.result))
+                const data: IFirstScreenOption[] = [];
+                result.data.result.forEach(card => {
+                    if (card.type !== EServiceType.MobileService && card.type !== EServiceType.PickUpDropOff) {
+                        data.push(card)
+                    } else {
+                        if (card.type === EServiceType.MobileService && isMobileServiceOn) data.push(card)
+                        if (card.type === EServiceType.PickUpDropOff && isPickUpDropOffServiceOn) data.push(card)
+                    }
+                })
+              dispatch(getFirstScreenOptionsByQuery(data))
             }
         })
         .catch(err => {

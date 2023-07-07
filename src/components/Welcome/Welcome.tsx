@@ -73,10 +73,10 @@ export const Welcome = () => {
 
     useEffect(() => {
        if (id) {
-           dispatch(loadFirstScreenOptionsByQuery(decodeSCID(id)))
+           if (config?.length) dispatch(loadFirstScreenOptionsByQuery(decodeSCID(id)))
            dispatch(loadMakes(decodeSCID(id)))
        }
-    }, [id])
+    }, [id, config])
 
     useEffect(() => {
         setLoading(isLoading || shortLoading || isProfileLoading)
