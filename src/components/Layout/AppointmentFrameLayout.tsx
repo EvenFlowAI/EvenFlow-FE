@@ -373,7 +373,7 @@ export const AppointmentFrameLayout = () => {
                 dispatch(setVehicle(getBlankVehicle()));
             } else {
                 if (!valueService) {
-                    handleLogin();
+                    handleLogin()
                     const nextScreen = serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter ? "location" : "serviceNeeds"
                     dispatch(setCurrentFrameScreen(nextScreen))
                 }

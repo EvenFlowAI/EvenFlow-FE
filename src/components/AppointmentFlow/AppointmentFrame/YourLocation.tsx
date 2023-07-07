@@ -30,6 +30,8 @@ import UnavailableService from "../../Modals/InavailableService/UnavailableServi
 import {KeyboardArrowDown} from "@material-ui/icons";
 import {TArgCallback} from "../../../types/types";
 import {TView} from "../../Welcome/types";
+import {Routes} from "../../../config/routes";
+import {useHistory, useParams} from "react-router-dom";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -113,6 +115,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin, se
     const autocompleteClasses = useAutocompleteStyles(styleProps);
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
+    const {id} = useParams();
+    const history = useHistory();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
@@ -158,7 +162,11 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin, se
             onGoToFirstScreen(prevScreen)
         } else {
             setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
-            onBack();
+            if (!customerLoadedData?.id) {
+                history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+            } else {
+                onBack();
+            }
         }
     }
 
