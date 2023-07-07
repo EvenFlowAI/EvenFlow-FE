@@ -31,11 +31,26 @@ export const loadFirstScreenOptionsByQuery = (id: number): AppThunk => (dispatch
         .finally(() => dispatch(setFirstScreenOptionsLoading(false)))
 }
 
+export const loadFirstScreenOptionsList = (id: number): AppThunk => (dispatch) => {
+    dispatch(setFirstScreenOptionsLoading(true));
+    Api.call<PaginatedAPIResponse<IFirstScreenOption>>(Api.endpoints.ServiceTypes.GetByQuery, {data: { serviceCenterId: id, pageSize: 0, pageIndex: 0}})
+        .then(result => {
+            if (result?.data) {
+                dispatch(getFirstScreenOptionsByQuery(result.data.result))
+            }
+        })
+        .catch(err => {
+            console.log('get service types by query', err)
+        })
+        .finally(() => dispatch(setFirstScreenOptionsLoading(false)))
+}
+
+
 export const deleteFirstScreenOptionById = (id: number, serviceCenterId: number): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceTypes.Remove, {urlParams: {id}})
         .then(result => {
             if (result) {
-                dispatch(loadFirstScreenOptionsByQuery(serviceCenterId))
+                dispatch(loadFirstScreenOptionsList(serviceCenterId))
             }
         })
         .catch(err => {
@@ -47,7 +62,7 @@ export const updateFirstScreenOption = (id: number, serviceCenterId: number, dat
     Api.call(Api.endpoints.ServiceTypes.Update, {urlParams: {id}, data})
         .then(result => {
             if (result) {
-                dispatch(loadFirstScreenOptionsByQuery(serviceCenterId))
+                dispatch(loadFirstScreenOptionsList(serviceCenterId))
                 onSuccess(id);
             }
         })
@@ -61,7 +76,7 @@ export const createFirstScreenOption = (data: TNewFirstScreenOption, serviceCent
     Api.call(Api.endpoints.ServiceTypes.Create, {data})
         .then(result => {
             if (result) {
-                dispatch(loadFirstScreenOptionsByQuery(serviceCenterId))
+                dispatch(loadFirstScreenOptionsList(serviceCenterId))
                 if (result.data?.id) onSuccess(result.data.id);
             }
         })
@@ -77,7 +92,7 @@ export const updateFirstScreenOptionIcon = (id: number, serviceCenterId: number,
     Api.call(Api.endpoints.ServiceTypes.UpdateIcon, {urlParams: {id}, data})
         .then(result => {
             if (result) {
-                dispatch(loadFirstScreenOptionsByQuery(serviceCenterId))
+                dispatch(loadFirstScreenOptionsList(serviceCenterId))
             }
         })
         .catch(err => {
