@@ -6,7 +6,10 @@ import {RootState} from "../../../store/rootReducer";
 import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
-import {deleteFirstScreenOptionById, loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
+import {
+    deleteFirstScreenOptionById,
+    loadFirstScreenOptionsList
+} from "../../../store/reducers/serviceTypes/actions";
 import {Table} from "../../UI/Table";
 import {bookingFlowRoot} from "../../Optimizer/utils";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
@@ -39,7 +42,7 @@ const FirstScreen = () => {
     const {isOpen, onOpen, onClose} = useModal();
 
     useEffect(() => {
-        selectedSC && dispatch(loadFirstScreenOptionsByQuery(selectedSC.id));
+        selectedSC && dispatch(loadFirstScreenOptionsList(selectedSC.id));
     }, [selectedSC])
 
     const openMenu = (el: IFirstScreenOption) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
