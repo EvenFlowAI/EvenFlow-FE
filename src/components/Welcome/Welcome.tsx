@@ -234,16 +234,11 @@ export const Welcome = () => {
         handleReactGA('A New');
         dispatch(setCustomerEnteredEmail(''));
         dispatch(setShowServiceCentersList(false));
-        if (firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter) {
-            dispatch(setServiceTypeOption(firstScreenOptions[0]));
-            redirect()
+        if (firstScreenOptions.length) {
+            dispatch(setWelcomeScreenView('serviceSelect'))
         } else {
-            if (firstScreenOptions.length) {
-                dispatch(setWelcomeScreenView('serviceSelect'))
-            } else {
-                createBlankCar()
-                onComplete(serviceType, EUserType.New);
-            }
+            createBlankCar()
+            onComplete(serviceType, EUserType.New);
         }
     }
 
