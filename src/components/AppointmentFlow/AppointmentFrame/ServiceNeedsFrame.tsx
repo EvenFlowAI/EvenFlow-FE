@@ -72,6 +72,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
         const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
         const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
+        debugger
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
             onGoToFirstScreen(prevScreen)
@@ -80,7 +81,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             onGoToFirstScreen(prevScreen)
         } else {
             setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
-            onBack();
+            history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
         }
     }
 

@@ -162,11 +162,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin, se
             onGoToFirstScreen(prevScreen)
         } else {
             setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
-            if (!customerLoadedData?.id) {
-                history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
-            } else {
-                onBack();
-            }
+            history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
         }
     }
 
