@@ -201,7 +201,8 @@ export const AppointmentFrameLayout = () => {
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
-    }, []);
+        onGoToFirstScreen("select");
+    }, [onGoToFirstScreen]);
 
     const getTrimmedKey = (key: string): string => {
         const lastIndex = key.lastIndexOf('==');
@@ -372,7 +373,6 @@ export const AppointmentFrameLayout = () => {
                 dispatch(setVehicle(getBlankVehicle()));
             } else {
                 if (!valueService) {
-                    debugger
                     handleLogin();
                     const nextScreen = serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter ? "location" : "serviceNeeds"
                     dispatch(setCurrentFrameScreen(nextScreen))

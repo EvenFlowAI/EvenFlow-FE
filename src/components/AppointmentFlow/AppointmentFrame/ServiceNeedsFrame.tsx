@@ -106,13 +106,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         if (!userType) dispatch(setUserType(EUserType.New))
     }, [userType])
 
-    // useEffect(() => {
-    //     const indRequestsCategory = serviceCategories.find(cat => cat.serviceRequests.find(req => selectedSR.includes(req.id)));
-    //     if (indRequestsCategory) {
-    //         dispatch(selectCategoriesIds([indRequestsCategory]))
-    //     }
-    // }, [serviceCategories, selectedSR])
-
     const handleGA = (selectedService: IServiceCategory) => {
         const requestsString = selectedService.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
         ReactGA.event({
