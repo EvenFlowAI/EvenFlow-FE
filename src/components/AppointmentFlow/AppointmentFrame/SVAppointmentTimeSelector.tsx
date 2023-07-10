@@ -59,7 +59,7 @@ export const SVAppointmentTimeSelector: React.FC<TProps> =
         }, [serviceValetSlots, date])
 
         useEffect(() => {
-            if (firstCardRef?.current && date) firstCardRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
+           // if (firstCardRef?.current && date) firstCardRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
         }, [date, firstCardRef])
 
         const handleGA = useCallback((a: IServiceValetAppointment|null) => {
