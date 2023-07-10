@@ -91,6 +91,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         packagePricingType,
         packageEMenuType,
         consultants,
+        currentScreen,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -119,6 +120,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.packagePricingType,
         state.appointmentFrame.packageEMenuType,
         state.appointmentFrame.consultants,
+        state.appointmentFrame.currentScreen,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -167,6 +169,10 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     useEffect(() => {
         if (selectedTime) setMonth(moment.utc(selectedTime))
     }, [selectedTime])
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [currentScreen, date])
 
     useEffect(() => {
         const currentSlots = serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : slots;
