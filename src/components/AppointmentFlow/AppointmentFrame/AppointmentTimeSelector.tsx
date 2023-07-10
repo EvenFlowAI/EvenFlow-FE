@@ -40,7 +40,7 @@ const TimeSlotsWrapper = styled('div')(({theme}) => ({
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
-        maxHeight: '40vh',
+        height: '40vh',
         overflowY: "auto",
         [theme.breakpoints.down("xs")]: {
             maxHeight: '30vh',
