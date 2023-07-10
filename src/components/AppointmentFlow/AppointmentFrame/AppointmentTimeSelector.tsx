@@ -64,13 +64,13 @@ export const AppointmentTimeSelector: React.FC<TProps> =
         const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
         const {selectedTiming, gap, hoursOfOperations, sideBarSteps} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
-        const firstCardRef = useRef<HTMLDivElement|null>(null);
+        const titleRef = useRef<HTMLDivElement|null>(null);
         const classes = useStyles();
         const {t} = useTranslation();
 
         useEffect(() => {
            // if (firstCardRef?.current && date) firstCardRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
-        }, [date, firstCardRef])
+        }, [date, titleRef])
 
         useEffect(() => {
             if (scProfile) {
@@ -121,7 +121,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
 
         return (
             <div className={classes.wrapper}>
-                <h4 ref={firstCardRef}>{t("Select Time")}</h4>
+                <h4 ref={titleRef}>{t("Select Time")}</h4>
                 {!loading
                     ? <TimeSlotsWrapper>
                         {slots.map((timeSlot) => {

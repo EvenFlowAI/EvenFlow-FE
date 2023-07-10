@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
@@ -91,7 +91,12 @@ const AppointmentTimingCard: React.FC<TCardProps> = ({card, active, onClick,
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
     const {t} = useTranslation();
     const {appointmentSlots} = useSelector((state: RootState) => state.appointment)
+    const cardRef = useRef<HTMLDivElement|null>(null);
     const shouldDisableDate = (date: moment.Moment|null) => !appointmentSlots.find(item => moment(item.date).format("YYYY-MM-DD") === moment(date).format('YYYY-MM-DD'));
+
+    useEffect(() => {
+        if (cardRef?.current) cardRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
+    }, [cardRef])
 
     const content = card.name === EAppointmentTimingType.PreferredDate
         ? <StyledDate
@@ -108,7 +113,7 @@ const AppointmentTimingCard: React.FC<TCardProps> = ({card, active, onClick,
         />
         : null;
 
-    return <CardWrapper onClick={onClick} active={active}>
+    return <CardWrapper onClick={onClick} active={active} ref={cardRef}>
         {active ? <RadioButtonChecked /> : <RadioButtonUnchecked />}
         <div className="icon">{card.icon}</div>
         {!isSm
