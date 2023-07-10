@@ -396,6 +396,10 @@ export const AppointmentFrameLayout = () => {
         }
     }, [currentScreen, currentFrameScreen])
 
+    // useEffect(() => {
+    //     window.scrollTo(0, 0)
+    // }, [currentScreen])
+
     useEffect(() => {
         if (serviceType === EServiceType.MobileService && !customerLoadedData?.vehicles?.length && !valueService?.selectedService) {
             dispatch(setCurrentFrameScreen("location"))
