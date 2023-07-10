@@ -264,24 +264,24 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const sortCustomers = (a: ICustomerWithPhones, b: ICustomerWithPhones) => a.sortOrder && b.sortOrder ? a.sortOrder - b.sortOrder : 0
 
     const onSuccess = () => {
-        const edited = data.find(customer => customer.vehicleId === editingElement?.vehicleId)
-        if (edited && editingElement) {
-            const customerData:Partial<ICustomerWithPhones> = {
-                cellPhone: editingElement.cellPhone,
-                homePhone: editingElement.homePhone,
-                otherPhone: editingElement.otherPhone,
-                firstName: editingElement.firstName,
-                lastName: editingElement.lastName,
-                email: editingElement.email,
-                address: editingElement.address,
-                city: editingElement.city,
-                state: editingElement.state,
-            }
-            const filtered = data.map(item => item.customerId === edited.customerId ? {...item, ...customerData} : item)
-            if (filtered[0].sortOrder !== undefined) {
-                setData(filtered.sort(sortCustomers))
-            } else setData(filtered)
-        }
+        // const edited = data.find(customer => customer.vehicleId === editingElement?.vehicleId)
+        // if (edited && editingElement) {
+        //     const customerData:Partial<ICustomerWithPhones> = {
+        //         cellPhone: editingElement.cellPhone,
+        //         homePhone: editingElement.homePhone,
+        //         otherPhone: editingElement.otherPhone,
+        //         firstName: editingElement.firstName,
+        //         lastName: editingElement.lastName,
+        //         email: editingElement.email,
+        //         address: editingElement.address,
+        //         city: editingElement.city,
+        //         state: editingElement.state,
+        //     }
+        //     const filtered = data.map(item => item.customerId === edited.customerId ? {...item, ...customerData} : item)
+        //     if (filtered[0].sortOrder !== undefined) {
+        //         setData(filtered.sort(sortCustomers))
+        //     } else setData(filtered)
+        // }
         setEditingElement(null);
         setEdit(false);
         // loadData(isSearchByName);
