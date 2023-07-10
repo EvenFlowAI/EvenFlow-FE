@@ -40,7 +40,7 @@ const TimeSlotsWrapper = styled('div')(({theme}) => ({
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
-        height: '40vh',
+        maxHeight: '40vh',
         overflowY: "auto",
         [theme.breakpoints.down("xs")]: {
             maxHeight: '30vh',
@@ -69,7 +69,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
         const {t} = useTranslation();
 
         useEffect(() => {
-            // if (firstCardRef?.current && date) firstCardRef.current?.scrollIntoView();
+            if (firstCardRef?.current && date) firstCardRef.current?.scrollIntoView(false);
         }, [date, firstCardRef])
 
         useEffect(() => {
