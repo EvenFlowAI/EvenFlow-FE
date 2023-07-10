@@ -91,7 +91,7 @@ export const loadCustomersByPhoneOrEmail = (
 ): AppThunk => (dispatch) => {
     dispatch(setLoading(true))
     Api.call<IAPIResponse<ICustomerWithVehicles>>(Api.endpoints.Customers.GetSingleCustomerVehicles,
-        {params: {serviceCenterId, phoneOrEmail}})
+        {params: {serviceCenterId, phoneOrEmail: phoneOrEmail.trim()}})
         .then(result => {
             if (result.data?.result) {
                 const customer = result.data.result;
