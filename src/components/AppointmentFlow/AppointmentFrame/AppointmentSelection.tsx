@@ -172,7 +172,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
 
     useEffect(() => {
         window.scrollTo(0, 0)
-    }, [currentScreen, date])
+    }, [currentScreen, groupedAppointments, date])
 
     useEffect(() => {
         const currentSlots = serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : slots;
