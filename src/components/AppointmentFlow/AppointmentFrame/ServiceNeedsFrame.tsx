@@ -70,7 +70,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const handleBackScreen = (shouldSkipServiceTypeSelect: boolean) => {
         setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
-        if (serviceTypeOption?.type !== EServiceType.VisitCenter) {
+        if (serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter) {
             onBack()
         } else {
             history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
