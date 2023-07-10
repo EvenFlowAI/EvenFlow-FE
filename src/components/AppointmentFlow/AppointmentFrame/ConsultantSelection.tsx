@@ -148,8 +148,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds &&
         !serviceTypeOption?.transportationOption), [currentConfig, serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
-        return collectServiceRequestIds(service, subService, null, selectedSR, selectedRecalls);
-    }, [service, subService, selectedRecalls, selectedSR]);
+        return collectServiceRequestIds(service, subService, null, selectedSR);
+    }, [service, subService, selectedSR]);
 
     const getCategories = useCallback((): number[] => {
         return allCategories
@@ -193,7 +193,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             }
             dispatch(loadConsultants(data, onNext))
         }
-    }, [id, serviceRequestIds, selectedVehicle, selectedRecalls, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage])
+    }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage])
 
     useEffect(() => {
         dispatch(setSideBarMenu(getCurrentMenu(serviceType, advisorSelection, transportationNeeds)))
