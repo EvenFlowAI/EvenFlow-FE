@@ -22,11 +22,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {
     clearCustomerCache,
-    getBlankCustomer,
     getBlankVehicle,
     getCustomerCache,
     getSlotsConsultantId,
-    saveCustomerCache,
     selectAppointment,
     selectServiceValetAppointment,
     selectSR,
@@ -57,12 +55,7 @@ import {
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {
-    EServiceCenterName,
-    IAppointmentByQuery,
-    ILoadedVehicle,
-    IServiceCategory
-} from "../../api/types";
+import {EServiceCenterName, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
 import ReactGA from "react-ga4";
 // import ReactGA from "react-ga";
@@ -70,7 +63,7 @@ import {LocalTokens, PaginatedAPIResponse} from "../../types/types";
 import {v4 as uuidv4} from "uuid";
 import {options} from "./EndUserLayout";
 import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
-import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
 import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
 import {useTranslation} from "react-i18next";
 import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPage";
@@ -154,7 +147,6 @@ export const AppointmentFrameLayout = () => {
         trackerCreated,
         valueService,
         currentScreen: currentFrameScreen,
-        userType,
         consultants,
         makes,
         serviceTypeOption,
@@ -177,7 +169,6 @@ export const AppointmentFrameLayout = () => {
     const showError = useException();
     const {t} = useTranslation();
 
-    const isPromotionPage = useMemo(() => history.location.search?.includes("view=unique"), [history])
     const isDealerBuilt = useMemo(() => (scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt), [scProfile]);
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType?.toString() === serviceType?.toString());
@@ -210,17 +201,12 @@ export const AppointmentFrameLayout = () => {
     const handleLogin = useCallback(() => {
         clearCustomerCache();
         dispatch(setCustomerLoadedData(null));
-        if (isPromotionPage) {
-            handleNewCustomer();
-            dispatch(setCurrentFrameScreen("serviceNeeds"));
-        } else {
-            onGoToFirstScreen('select')
-        }
-    }, [onGoToFirstScreen, isPromotionPage]);
+        onGoToFirstScreen("select");
+    }, [onGoToFirstScreen]);
 
     const getTrimmedKey = (key: string): string => {
         const lastIndex = key.lastIndexOf('==');
-        return  lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
+        return lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
     }
 
     const handleSetScreen = useCallback((screen: TScreen) => {
@@ -253,8 +239,7 @@ export const AppointmentFrameLayout = () => {
 
     const handleRecalls = useCallback(async (data: IAppointmentByQuery) => {
         if (data?.vehicle?.vin && scProfile && data.recalls?.length) {
-            const makeId = makes.find(item => item.name.toLowerCase() === data.vehicle.make.toLowerCase())?.id
-            if (makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, makeId, data.recalls))
+            if (data?.vehicle?.makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, data.vehicle.vin, data.vehicle.makeId, data.recalls))
             if (!data.maintenancePackageOption && !data.serviceRequests.length && !allCategories.length) {
                 Api.call<PaginatedAPIResponse<IServiceCategory>>(
                     Api.endpoints.ServiceCategories.GetByQuery,
@@ -277,7 +262,7 @@ export const AppointmentFrameLayout = () => {
                 })
             }
         }
-    }, [scProfile, makes, id, allCategories])
+    }, [scProfile, id, allCategories])
 
     const handleSRs = async (data: IAppointmentByQuery) => data.serviceRequests.forEach(item => dispatch(selectSR(item.id)));
 
@@ -305,6 +290,8 @@ export const AppointmentFrameLayout = () => {
         }
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
         handleServiceTypeOption, needToShowServiceSelection, serviceTypeOption])
+
+    /** TRACKER CODE START **/
 
     useEffect(() => {
         trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
@@ -345,6 +332,8 @@ export const AppointmentFrameLayout = () => {
         }
     }, [window.location, document.referrer, document.location])
 
+    /** TRACKER CODE END **/
+
     useEffect(() => {
         if (!sessionStorage.getItem(LocalTokens.sessionId)) {
             const uid = uuidv4();
@@ -356,8 +345,9 @@ export const AppointmentFrameLayout = () => {
     }, [sessionStorage])
 
     useEffect(() => {
-        setNeedToShowServiceSelection(Boolean(userType === EUserType.Existing && (!!firstScreenOptions.length)));
-    }, [userType, firstScreenOptions])
+        const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
+        setNeedToShowServiceSelection(Boolean(firstScreenOptions.length) || onlyVisitCenterExists);
+    }, [firstScreenOptions])
 
     useEffect(() => {
         if (selectedVehicle && customerLoadedData) {
@@ -368,12 +358,12 @@ export const AppointmentFrameLayout = () => {
         }
     }, [customerLoadedData, selectedVehicle])
 
-    const handleNewCustomer = () => {
-        const c = getBlankCustomer();
-        dispatch(setCustomerLoadedData(c));
-        dispatch(setVehicle(getBlankVehicle()));
-        saveCustomerCache(c);
-    }
+    // const handleNewCustomer = () => {
+    //     const c = getBlankCustomer();
+    //     dispatch(setCustomerLoadedData(c));
+    //     dispatch(setVehicle(getBlankVehicle()));
+    //     saveCustomerCache(c);
+    // }
 
     useEffect(() => {
         if (!customerLoadedData) {
@@ -382,7 +372,11 @@ export const AppointmentFrameLayout = () => {
                 dispatch(setCustomerLoadedData(data));
                 dispatch(setVehicle(getBlankVehicle()));
             } else {
-                if (!valueService) handleLogin();
+                if (!valueService) {
+                    handleLogin()
+                    const nextScreen = serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter ? "location" : "serviceNeeds"
+                    dispatch(setCurrentFrameScreen(nextScreen))
+                }
             }
         }
     }, [customerLoadedData, dispatch, handleLogin]);
@@ -441,10 +435,16 @@ export const AppointmentFrameLayout = () => {
 
     const handleAddNewVehicle = useCallback(() => {
         clearData()
-        if (!!firstScreenOptions.length) {
-            setNeedToShowServiceSelection(false);
-            dispatch(setWelcomeScreenView('serviceSelect'))
-            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        if (firstScreenOptions.length) {
+            if (firstScreenOptions.length > 1
+                || (firstScreenOptions.length === 1 && firstScreenOptions[0].type !== EServiceType.VisitCenter)) {
+                setNeedToShowServiceSelection(false);
+                dispatch(setWelcomeScreenView('serviceSelect'))
+                history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+            } else {
+                dispatch(setServiceTypeOption(firstScreenOptions[0]))
+                handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+            }
         } else {
             handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
         }

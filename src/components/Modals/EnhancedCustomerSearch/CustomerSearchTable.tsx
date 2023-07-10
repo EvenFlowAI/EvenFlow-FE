@@ -26,7 +26,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {ICustomerLoadedData} from "../../../api/types";
 import {
     clearAppointmentData,
-    setAddress, setSideBarSteps,
+    setAddress,
+    setServiceTypeOption,
+    setSideBarSteps,
     setUserType,
     setVehicle,
     setWelcomeScreenView
@@ -41,7 +43,7 @@ import {useException, useModal, usePagination} from "../../../utils/hooks";
 import {Loading} from "../../UI/Loading";
 import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../utils/utils";
-import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
 import CancelAppointmentConfirm from "../CancelAppoitntmentConfirm/CancelAppointmentConfirm";
 
@@ -137,12 +139,14 @@ const columnNames = [
 type TCustomerSearchTableProps = {
     onClose: TCallback;
     loadData: TArgCallback<boolean>;
-    isNewVehicleMode: boolean
+    isNewVehicleMode: boolean;
+    redirect: TCallback;
 }
 
-const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, loadData, isNewVehicleMode}) => {
+const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, loadData, isNewVehicleMode, redirect}) => {
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const [data, setData] = useState<ICustomerWithPhones[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<ICustomerWithPhones|null>(null);
@@ -191,13 +195,33 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
         await dispatch(setVehicle(vehicle));
     }
 
+    const onRedirect = async () => {
+        await onClose()
+        redirect()
+    }
+
+
     const onCreateNewForCar = async (item: ICustomerWithPhones) => {
         await dispatch(clearAppointmentData());
         await dispatch(setSideBarSteps([]));
         await setCustomerData(item, false);
         await dispatch(setUserType(EUserType.Existing));
-        await dispatch(setWelcomeScreenView("serviceSelect"));
-        await onClose()
+        if (firstScreenOptions?.length) {
+            if (firstScreenOptions.length > 1) {
+                await dispatch(setWelcomeScreenView("serviceSelect"))
+                await onClose()
+            } else {
+                if (firstScreenOptions[0].type === EServiceType.VisitCenter) {
+                    await dispatch(setServiceTypeOption(firstScreenOptions[0]))
+                    await onRedirect()
+                } else {
+                    await dispatch(setWelcomeScreenView("serviceSelect"))
+                    await onClose()
+                }
+            }
+        } else {
+            await onRedirect()
+        }
     }
 
     const onUpdateAppForCar = (item: ICustomerWithPhones) => {
@@ -240,24 +264,24 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const sortCustomers = (a: ICustomerWithPhones, b: ICustomerWithPhones) => a.sortOrder && b.sortOrder ? a.sortOrder - b.sortOrder : 0
 
     const onSuccess = () => {
-        const edited = data.find(customer => customer.vehicleId === editingElement?.vehicleId)
-        if (edited && editingElement) {
-            const customerData:Partial<ICustomerWithPhones> = {
-                cellPhone: editingElement.cellPhone,
-                homePhone: editingElement.homePhone,
-                otherPhone: editingElement.otherPhone,
-                firstName: editingElement.firstName,
-                lastName: editingElement.lastName,
-                email: editingElement.email,
-                address: editingElement.address,
-                city: editingElement.city,
-                state: editingElement.state,
-            }
-            const filtered = data.map(item => item.customerId === edited.customerId ? {...item, ...customerData} : item)
-            if (filtered[0].sortOrder !== undefined) {
-                setData(filtered.sort(sortCustomers))
-            } else setData(filtered)
-        }
+        // const edited = data.find(customer => customer.vehicleId === editingElement?.vehicleId)
+        // if (edited && editingElement) {
+        //     const customerData:Partial<ICustomerWithPhones> = {
+        //         cellPhone: editingElement.cellPhone,
+        //         homePhone: editingElement.homePhone,
+        //         otherPhone: editingElement.otherPhone,
+        //         firstName: editingElement.firstName,
+        //         lastName: editingElement.lastName,
+        //         email: editingElement.email,
+        //         address: editingElement.address,
+        //         city: editingElement.city,
+        //         state: editingElement.state,
+        //     }
+        //     const filtered = data.map(item => item.customerId === edited.customerId ? {...item, ...customerData} : item)
+        //     if (filtered[0].sortOrder !== undefined) {
+        //         setData(filtered.sort(sortCustomers))
+        //     } else setData(filtered)
+        // }
         setEditingElement(null);
         setEdit(false);
         // loadData(isSearchByName);
@@ -298,7 +322,20 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(getBlankVehicle()))
         onClose()
-        dispatch(setWelcomeScreenView("serviceSelect"))
+        if (firstScreenOptions?.length) {
+            if (firstScreenOptions.length > 1) {
+                await dispatch(setWelcomeScreenView("serviceSelect"))
+            } else {
+                if (firstScreenOptions[0].type === EServiceType.VisitCenter) {
+                    await dispatch(setServiceTypeOption(firstScreenOptions[0]))
+                    redirect()
+                } else {
+                    await dispatch(setWelcomeScreenView("serviceSelect"))
+                }
+            }
+        } else {
+            redirect()
+        }
     }
 
     return isLoading

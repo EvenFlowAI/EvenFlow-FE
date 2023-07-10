@@ -482,7 +482,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                             value={selectedVehicle ? selectedVehicle.vin : ""}
                             placeholder={errors.includes("vin")
                                 ? `${t("VIN")} ${t("required")}`
-                                : `${t("Type")} ${t("VIN")} (${t("Optional")})`}
+                                : `${t("Type")} ${t("VIN")} ${isRecallsCategorySelected ? "" : `(${t("Optional")})`}`}
                         />
                     </div> : null}
             </SelectWrapper>

@@ -8,7 +8,8 @@ import {
     clearAppointmentSteps,
     selectCategoriesIds,
     selectService,
-    setAdditionalServicesChosen, setShowServiceCentersList,
+    setAdditionalServicesChosen,
+    setShowServiceCentersList,
     setUserType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "../../Layout/types";
@@ -59,6 +60,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         selectedRecalls,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const {id} = useParams();
     const dispatch = useDispatch();
@@ -66,15 +68,27 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
 
+    const handleBackScreen = (shouldSkipServiceTypeSelect: boolean) => {
+        setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
+        if (serviceTypeOption?.type !== EServiceType.VisitCenter) {
+            onBack()
+        } else {
+            history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+        }
+    }
+
     const handleBack = () => {
+        const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
+        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
+        const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
-            onGoToFirstScreen("serviceSelect")
+            handleBackScreen(shouldSkipServiceTypeSelect)
         } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
             onLogin();
+            onGoToFirstScreen(prevScreen)
         } else {
-            setNeedToShowServiceSelection(true)
-            onBack();
+            handleBackScreen(shouldSkipServiceTypeSelect)
         }
     }
 

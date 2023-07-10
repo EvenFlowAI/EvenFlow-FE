@@ -11,6 +11,7 @@ import {useDispatch} from "react-redux";
 type TCustomerSearchResultsProps = DialogProps & {
     onClearSearchForm: TCallback;
     handleNew: TCallback;
+    redirect: TCallback;
     loadData: TArgCallback<boolean>;
 };
 
@@ -19,7 +20,8 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
                                                                           open,
                                                                           onClose,
                                                                           handleNew,
-                                                                          onClearSearchForm}) => {
+                                                                          onClearSearchForm,
+                                                                      redirect}) => {
     const [isNewVehicleMode, setNewVehicleMode] = useState<boolean>(false);
     const dispatch = useDispatch();
 
@@ -61,6 +63,7 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
                     onAppointmentForNewVehicle={onAppointmentForNewVehicle}/>
 
                 <CustomerSearchTable
+                    redirect={redirect}
                     onClose={onClose}
                     loadData={loadData}
                     isNewVehicleMode={isNewVehicleMode}/>

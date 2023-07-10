@@ -42,6 +42,8 @@ export const EndUserLayout = () => {
     const dispatch = useDispatch();
     const isFrame = useLayout();
 
+    /** TRACKER CODE START **/
+
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
         if (!trackerCreated) {
@@ -91,6 +93,8 @@ export const EndUserLayout = () => {
         }
     }, [window.location, document.referrer, document.location])
 
+    /** TRACKER CODE END **/
+
     useEffect(() => {
         const decoded = decodeSCID(id);
         if (id && decoded && (!scProfile || decoded !== scProfile?.id)) {
@@ -107,7 +111,6 @@ export const EndUserLayout = () => {
             try {
                 dispatch(loadShortSC(false, scProfile.dealershipId));
             } catch (e) {
-                debugger
                 dispatch(setWelcomeScreenView('select'))
             }
         }

@@ -63,6 +63,7 @@ export interface IVehicleData {
     transmission: string;
     driveType: string;
     engineTypeId?: number;
+    makeId?: number;
 }
 
 export interface IVehicleShort {
