@@ -57,9 +57,9 @@ export const loadCustomersBySearchTerm = (
     phoneOrEmail?: string,
 ): AppThunk => (dispatch) => {
     const data: TSearchCustomerParams = {};
-    if (phoneOrEmail) data.phoneOrEmail = phoneOrEmail;
-    if (firstName) data.firstName = firstName;
-    if (lastName) data.lastName = lastName;
+    if (phoneOrEmail) data.phoneOrEmail = phoneOrEmail.trim();
+    if (firstName) data.firstName = firstName.trim();
+    if (lastName) data.lastName = lastName.trim();
 
     if (Object.keys(data).length) {
         dispatch(setLoading(true))
