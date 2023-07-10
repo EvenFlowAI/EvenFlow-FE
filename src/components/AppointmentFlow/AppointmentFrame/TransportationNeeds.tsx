@@ -11,7 +11,7 @@ import {RootState} from "../../../store/rootReducer";
 import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {ITransportation} from '../../../api/types';
 import {TArgCallback, TCallback} from "../../../types/types";
-import {setSideBarSteps, setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import theme from "../../../theme/theme";
 import {Loading} from "../../UI/Loading";
@@ -139,7 +139,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         hashKey,
         selectedRecalls,
         transportation,
-        sideBarSteps,
         packagePricingType,
         selectedPackage,
         selectedVehicle,
@@ -155,7 +154,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointmentFrame.hashKey,
         state.appointmentFrame.selectedRecalls,
         state.appointmentFrame.transportation,
-        state.appointmentFrame.sideBarSteps,
         state.appointmentFrame.packagePricingType,
         state.appointmentFrame.selectedPackage,
         state.appointmentFrame.selectedVehicle,
@@ -164,7 +162,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     ]);
 
     const serviceRequestIds = useMemo(() => {
-        return collectServiceRequestIds(s, ss, null, individualOps, selectedRecalls);
+        return collectServiceRequestIds(s, ss, null, individualOps);
     }, [s, ss, individualOps]);
     const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
     const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])

@@ -36,6 +36,10 @@ const CardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Th
     gap: "18px",
     marginTop: "5%",
     marginBottom: 20,
+    justifyItems: cardsAmount === 1 ? "center" : "unset",
+    '& > div': {
+        minWidth:   cardsAmount === 1 ? 440 : 'unset'
+    },
     [mh600]: {
         marginTop: "2%"
     },
@@ -117,18 +121,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
-    const {userType, isMobileServiceOn, isPickUpDropOffServiceOn} = useSelector((state: RootState) => state.appointmentFrame);
+    const {userType} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const classes = useStyles();
     const dispatch = useDispatch();
-    const remappedCards = useMemo(() => firstScreenOptions
-            .map(card => {
-                if (card.type === EServiceType.MobileService && !isMobileServiceOn) return null;
-                if (card.type === EServiceType.PickUpDropOff && !isPickUpDropOffServiceOn) return null;
-                return card
-            })
-        .filter(card => card), [firstScreenOptions, isMobileServiceOn, isPickUpDropOffServiceOn])
-    const isTaglinePresent = useMemo(() => remappedCards.find(el => el?.taglineText?.length), [remappedCards]);
+    const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
 
     const handleUser = (service: IFirstScreenOption) => {
         if (userType === EUserType.New) {
@@ -159,8 +156,8 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     return isLoading || loading
         ? <Loading/>
         : <div className={classes.wrapper}>
-            <CardsWrapper cardsAmount={remappedCards.length}>
-                {[...remappedCards]
+            <CardsWrapper cardsAmount={firstScreenOptions.length}>
+                {[...firstScreenOptions]
                     .sort((a, b) => a && b ? a.orderIndex - b.orderIndex : 0)
                     .map((card) => {
                         if (card) {

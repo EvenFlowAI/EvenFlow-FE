@@ -140,11 +140,27 @@ export const changePageData: ActionCreator<AppThunk> = (payload: Partial<IPageRe
     }
 }
 
-export const updateCustomer = (data: ICustomerWithPhones, onSuccess: () => void, onError: (err: string) => void): AppThunk => dispatch => {
+export const updateCustomer = (data: ICustomerWithPhones, onSuccess: () => void, onError: (err: string) => void): AppThunk => (dispatch, getState) => {
     dispatch(setLoading(true))
     Api.call(Api.endpoints.Customers.Update, {data})
         .then(res => {
-            if (res) onSuccess();
+            if (res.data) {
+                onSuccess();
+                const {customers} = getState().customers;
+                const customerData:Partial<ICustomerWithPhones> = {
+                    cellPhone: res.data.cellPhone,
+                    homePhone: res.data.homePhone,
+                    otherPhone: res.data.otherPhone,
+                    firstName: res.data.firstName,
+                    lastName: res.data.lastName,
+                    email: res.data.email,
+                    address: res.data.address,
+                    city: res.data.city,
+                    state: res.data.state,
+                }
+                const filtered = [...customers].map(item => item.customerId === data.customerId ? {...item, ...customerData} : item)
+                dispatch(getCustomers(filtered))
+            }
         })
         .catch(err => {
             onError(err);

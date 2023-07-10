@@ -149,6 +149,7 @@ type TProps = {
     isOpenNotFound: boolean;
     onCloseNotFound: TCallback;
     onOpenNotFound: TCallback;
+    redirect: TCallback;
 };
 
 export const CustomerSelect: React.FC<TProps> = ({
@@ -161,6 +162,7 @@ export const CustomerSelect: React.FC<TProps> = ({
                                                      isOpenNotFound,
                                                      onCloseNotFound,
                                                      onOpenNotFound,
+    redirect,
                                                  }) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -287,6 +289,7 @@ export const CustomerSelect: React.FC<TProps> = ({
             <CustomerSearchResults
                 handleNew={handleNew}
                 loadData={loadData}
+                redirect={redirect}
                 onClose={onCloseSearchResults}
                 open={isOpenSearchResults}
                 onClearSearchForm={clearForm}
