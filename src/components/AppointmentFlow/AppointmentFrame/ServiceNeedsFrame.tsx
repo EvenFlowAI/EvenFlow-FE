@@ -60,9 +60,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         selectedRecalls,
         selectedVehicle,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const {id} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -71,7 +70,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const handleBackScreen = (shouldSkipServiceTypeSelect: boolean) => {
         setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
-        if (serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter) {
+        const notVisitCenterSelected = serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter;
+        const needsToShowCarsSelection = Boolean(selectedVehicle?.make) && userType === EUserType.Existing && !currentUser
+        if (notVisitCenterSelected || needsToShowCarsSelection) {
             onBack()
         } else {
             history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
@@ -81,16 +82,10 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const handleBack = () => {
         const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
         const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
-        const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
-            handleBackScreen(shouldSkipServiceTypeSelect)
-        // } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
-        //     onLogin();
-        //     onGoToFirstScreen(prevScreen)
-        } else {
-            handleBackScreen(shouldSkipServiceTypeSelect)
         }
+        handleBackScreen(shouldSkipServiceTypeSelect)
     }
 
     useEffect(() => {
