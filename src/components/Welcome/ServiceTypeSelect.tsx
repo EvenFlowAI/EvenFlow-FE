@@ -11,6 +11,7 @@ import {
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {
+    clearAppointmentData,
     setServiceTypeOption,
     setVehicle,
     setWelcomeScreenView
@@ -121,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
-    const {userType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {userType, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -143,6 +144,9 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     }
 
     const handleSelect = (card: IFirstScreenOption) => {
+        if (serviceTypeOption && card.id !== serviceTypeOption.id) {
+            dispatch(clearAppointmentData())
+        }
         dispatch(setServiceTypeOption(card))
         if (card.type === EServiceType.General) {
             if (card.externalLink) window.location.href = card.externalLink;
