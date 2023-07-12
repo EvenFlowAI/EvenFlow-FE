@@ -8,12 +8,19 @@ import {IServiceCenter} from "../../store/reducers/serviceCenters/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {TRole} from "../../store/reducers/users/types";
 import {
-    clearAppointmentData, setAddress, setServiceTypeOption,
+    clearAppointmentData,
+    setAddress,
+    setServiceTypeOption,
     setSideBarSteps,
     setVehicle,
-    setWelcomeScreenView, setZipCode
+    setWelcomeScreenView,
+    setZipCode
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {loadSCProfile, setCustomerEnteredEmail, setCustomerLoadedData} from "../../store/reducers/appointment/actions";
+import {
+    loadSCProfile,
+    setCustomerEnteredEmail,
+    setCustomerLoadedData
+} from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";
 import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../utils/utils";
