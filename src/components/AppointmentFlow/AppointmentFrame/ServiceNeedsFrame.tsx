@@ -1,7 +1,7 @@
-import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from './StepWrapper';
-import {TArgCallback, TCallback} from "../../../types/types";
+import {TArgCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
@@ -29,23 +29,18 @@ import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameR
 import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {useCurrentUser} from "../../../utils/hooks";
-import {TView} from "../../Welcome/types";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
     onBack: () => void;
-    onLogin: TCallback;
     setLastSelectedCategory: Dispatch<SetStateAction<IServiceCategory|null>>;
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
-    onGoToFirstScreen: TArgCallback<TView>;
 }
 export const ServiceNeedsFrame: React.FC<TProps> = ({
                                                         onSelect,
                                                         onBack,
-                                                        onLogin,
                                                         setLastSelectedCategory,
                                                         setNeedToShowServiceSelection,
-    onGoToFirstScreen
 }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
@@ -69,7 +64,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const currentUser = useCurrentUser();
 
     const handleBackScreen = (shouldSkipServiceTypeSelect: boolean) => {
-        setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
+        setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
         const notVisitCenterSelected = serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter;
         const needsToShowCarsSelection = Boolean(selectedVehicle?.make) && userType === EUserType.Existing && !currentUser
         if (notVisitCenterSelected || needsToShowCarsSelection) {
