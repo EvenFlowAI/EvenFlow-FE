@@ -177,29 +177,39 @@ export const Welcome = () => {
         }
     }
 
-    const onNextForNew = async () => {
+    const handleFirstScreen = () => {
         if (firstScreenOptions.length) {
             if (firstScreenOptions.length > 1) {
                 dispatch(setWelcomeScreenView("serviceSelect"))
             } else {
                 if (firstScreenOptions[0].type === EServiceType.VisitCenter) {
                     dispatch(setServiceTypeOption(firstScreenOptions[0]))
+                    createBlankCar()
                     redirect()
                 } else {
                     dispatch(setWelcomeScreenView("serviceSelect"))
                 }
             }
         } else {
-            redirect();
+            createBlankCar()
+            redirect()
         }
     }
+    //
+    // const onNextForNew = async () => {
+    //     if (firstScreenOptions.length) {
+    //         handleFirstScreen()
+    //     } else {
+    //         redirect();
+    //     }
+    // }
 
     const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
         handleConfig(serviceType);
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
             handleExistingUser()
         } else {
-            onNextForNew()
+            handleFirstScreen()
         }
     }
 
@@ -235,7 +245,7 @@ export const Welcome = () => {
         dispatch(setCustomerEnteredEmail(''));
         dispatch(setShowServiceCentersList(false));
         if (firstScreenOptions.length) {
-            dispatch(setWelcomeScreenView('serviceSelect'))
+            handleFirstScreen()
         } else {
             createBlankCar()
             onComplete(serviceType, EUserType.New);
