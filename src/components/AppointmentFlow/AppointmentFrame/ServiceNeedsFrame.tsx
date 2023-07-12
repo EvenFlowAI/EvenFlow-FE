@@ -58,6 +58,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         serviceTypeOption,
         packageEMenuType,
         selectedRecalls,
+        selectedVehicle,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -84,9 +85,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
             handleBackScreen(shouldSkipServiceTypeSelect)
-        } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
-            onLogin();
-            onGoToFirstScreen(prevScreen)
+        // } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
+        //     onLogin();
+        //     onGoToFirstScreen(prevScreen)
         } else {
             handleBackScreen(shouldSkipServiceTypeSelect)
         }

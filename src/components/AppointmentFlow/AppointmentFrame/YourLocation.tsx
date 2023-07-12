@@ -104,7 +104,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin, se
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {zipCode: zipCodeValue, address, filteredZipCodes, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {zipCode: zipCodeValue, address, filteredZipCodes, serviceTypeOption, selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
@@ -157,11 +157,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin, se
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
             onGoToFirstScreen(prevScreen)
-        } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
-            onLogin();
-            onGoToFirstScreen(prevScreen)
         } else {
             setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
+            if (customerLoadedData && selectedVehicle) onBack()
             history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
         }
     }
