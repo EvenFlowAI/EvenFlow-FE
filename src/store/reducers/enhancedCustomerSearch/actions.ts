@@ -24,30 +24,6 @@ export const getRepairHistory = createAction<IRepairHistory|null>("CustomerSearc
 export const setRepairHistoryLoading = createAction<boolean>("CustomerSearch/SetRepairHistoryLoading");
 export const setRepairHistoryPaging = createAction<IPagingResponse>("CustomerSearch/SetRepairHistoryPaging");
 
-// export const loadCustomersByName = (
-//     serviceCenterId: number,
-//     onSuccess: (count: number) => void,
-//     onError: (err: string) => void,
-//     firstName?: string,
-//     lastName?: string,
-// ): AppThunk => (dispatch, getState) => {
-//     dispatch(setLoading(true))
-//     const {pageSize, pageIndex} = getState().customers.pageData;
-//     Api.call<PaginatedAPIResponse<ICustomerByName>>(Api.endpoints.Customers.GetByName, {params: {serviceCenterId, firstName, lastName, pageSize, pageIndex}})
-//         .then(result => {
-//             if (result.data?.result) {
-//                 dispatch(getCustomers(result.data.result))
-//                 dispatch(setPaging(result.data.paging))
-//                 onSuccess(result.data.result.length)
-//             }
-//         })
-//         .catch(err => {
-//             console.log('get customers by name error', err)
-//             onError(err)
-//         })
-//         .finally(() => dispatch(setLoading(false)))
-// }
-
 export const loadCustomersBySearchTerm = (
     serviceCenterId: number,
     onSuccess: (count: number) => void,
