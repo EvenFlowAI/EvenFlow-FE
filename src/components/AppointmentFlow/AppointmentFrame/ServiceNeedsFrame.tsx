@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from './StepWrapper';
 import {TArgCallback} from "../../../types/types";
@@ -53,7 +53,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         serviceTypeOption,
         packageEMenuType,
         selectedRecalls,
-        selectedVehicle,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -62,11 +61,14 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const history = useHistory();
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
+    const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
+        [firstScreenOptions])
 
     const handleBackScreen = (shouldSkipServiceTypeSelect: boolean) => {
         setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
         const notVisitCenterSelected = serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter;
-        const needsToShowCarsSelection = Boolean(selectedVehicle?.make) && userType === EUserType.Existing && !currentUser
+        const firstScreenOptionsUnavailable = !firstScreenOptions.length || onlyVisitCenterOptionExists;
+        const needsToShowCarsSelection = userType === EUserType.Existing && !currentUser && firstScreenOptionsUnavailable;
         if (notVisitCenterSelected || needsToShowCarsSelection) {
             onBack()
         } else {
