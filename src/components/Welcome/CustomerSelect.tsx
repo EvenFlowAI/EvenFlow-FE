@@ -2,7 +2,11 @@ import React, {useEffect, useMemo, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Grid, useMediaQuery} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {setUserType, setWelcomeScreenView} from "../../store/reducers/appointmentFrameReducer/actions";
+import {
+    clearAppointmentData,
+    setUserType,
+    setWelcomeScreenView
+} from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens, TCallback} from "../../types/types";
 import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
@@ -189,6 +193,10 @@ export const CustomerSelect: React.FC<TProps> = ({
             sessionStorage.setItem(LocalTokens.sessionId, '')
         })
     }, [sessionStorage])
+
+    useEffect(() => {
+        dispatch(clearAppointmentData())
+    }, [])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setCustomerEnteredEmail(value));
