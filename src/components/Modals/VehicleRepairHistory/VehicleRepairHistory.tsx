@@ -216,7 +216,7 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
                                     </div>
                                     <div className={classes.padding}>
                                         <span className={classes.titleNonUpperCase}>Repair Order:</span><span className={classnames(classes.uppercase, classes.textSmaller)}> total/tax </span>
-                                        <span>${item.totalPrice.toFixed(2)} / $0.00</span>
+                                        <span>${item.totalPrice ? item.totalPrice.toFixed(2) : 0} / $0.00</span>
                                     </div>
                                 </div>
                                 <div className={classes.greyRow}></div>
@@ -244,15 +244,15 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
                                     <div className={classes.orderMainDataRightTop}>
                                         <div className={classes.smallPadding}>
                                             <span className={classes.titleNonUpperCase}>Warranty: </span><span className={classnames(classes.uppercase, classes.textSmaller)}> total/tax</span>
-                                            <div>${item.warrantyPrice.toFixed(2)} / $0.00</div>
+                                            <div>${item.warrantyPrice ? item.warrantyPrice.toFixed(2) : 0} / $0.00</div>
                                         </div>
                                         <div className={classes.smallPadding}>
                                             <span className={classes.titleNonUpperCase}>Customer Pay: </span><span className={classnames(classes.uppercase, classes.textSmaller)}> total/tax</span>
-                                            <div>${item.customerPayPrice.toFixed(2)} / $0.00</div>
+                                            <div>${item.customerPayPrice ? item.customerPayPrice.toFixed(2) : 0} / $0.00</div>
                                         </div>
                                         <div className={classes.smallPadding}>
                                             <span className={classes.titleNonUpperCase}>Misc: </span><span className={classnames(classes.uppercase, classes.textSmaller)}> total/tax</span>
-                                            <div>${item.miscPrice.toFixed(2)} / $0.00</div>
+                                            <div>${item.miscPrice ? item.miscPrice.toFixed(2) : 0} / $0.00</div>
                                         </div>
                                     </div>
                                 </div>

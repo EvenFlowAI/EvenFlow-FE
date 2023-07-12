@@ -11,6 +11,8 @@ import {
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {
+    clearAppointmentData,
+    setCurrentFrameScreen,
     setServiceTypeOption,
     setVehicle,
     setWelcomeScreenView
@@ -24,6 +26,10 @@ import {InfoOutlined} from "@material-ui/icons";
 import {HtmlTooltip} from "../AppointmentFlow/AppointmentFrame/ServiceCard";
 import ServiceTypeIcon from "./ServiceTypeIcon";
 import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
+import {useCurrentUser} from "../../utils/hooks";
+import {Routes} from "../../config/routes";
+import {encodeSCID} from "../../utils/utils";
+import {useHistory, useParams} from "react-router-dom";
 
 type TProps = {
     onComplete: (serviceType: IFirstScreenOption, userType?: EUserType) => void;
@@ -121,10 +127,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
-    const {userType} = useSelector((state: RootState) => state.appointmentFrame);
+    const {userType, selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
+    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {id} = useParams();
     const classes = useStyles();
+    const currentUser = useCurrentUser();
     const dispatch = useDispatch();
+    const history = useHistory();
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
 
     const handleUser = (service: IFirstScreenOption) => {
@@ -143,6 +153,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
     }
 
     const handleSelect = (card: IFirstScreenOption) => {
+        dispatch(clearAppointmentData())
         dispatch(setServiceTypeOption(card))
         if (card.type === EServiceType.General) {
             if (card.externalLink) window.location.href = card.externalLink;
@@ -151,7 +162,22 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
         }
     }
 
-    const handleBack = () => dispatch(setWelcomeScreenView("select"))
+    const redirect = () => {
+        if (id) {
+            history.push(Routes.EndUser.AppointmentFrame.replace(":id", id));
+        } else if (scProfile?.id) {
+            history.push(Routes.EndUser.AppointmentFrame.replace(":id", encodeSCID(scProfile.id)));
+        }
+    }
+
+    const handleBack = () => {
+        if (currentUser || (!customerLoadedData?.id && !selectedVehicle?.make) || userType === EUserType.New) {
+            dispatch(setWelcomeScreenView("select"))
+        } else {
+            dispatch(setCurrentFrameScreen("carSelection"))
+            redirect()
+        }
+    }
 
     return isLoading || loading
         ? <Loading/>
