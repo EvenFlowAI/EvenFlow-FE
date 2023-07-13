@@ -53,6 +53,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         serviceTypeOption,
         packageEMenuType,
         selectedRecalls,
+        hashKey,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -78,7 +79,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const handleBack = () => {
         const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
-        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
+        const isAppointmentManagingFlow = Boolean(hashKey?.length);
+        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists || isAppointmentManagingFlow;
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
         }

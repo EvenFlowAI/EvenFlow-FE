@@ -22,9 +22,7 @@ import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
-    clearAppointmentData,
     loadMakes,
-    setCurrentFrameScreen,
     setServiceTypeOption, setShowServiceCentersList,
     setSideBarSteps,
     setUserType,
@@ -42,7 +40,6 @@ import {useTranslation} from "react-i18next";
 import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCustomerError";
 import {Loading} from "../UI/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
-import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {
     loadCustomersByPhoneOrEmail,
     loadCustomersBySearchTerm
@@ -115,9 +112,9 @@ export const Welcome = () => {
         }
     }
 
-    const handleConfig = (serviceType: EServiceType) => {
-        const selectedServiceConfig = config.find(item => item.serviceType.toString() === serviceType.toString());
-        if (selectedServiceConfig) dispatch(setValueServiceAvailability(selectedServiceConfig.valueService));
+    const handleValueServiceConfig = (serviceType: EServiceType) => {
+        const currentConfig = config.find(item => item.serviceType.toString() === serviceType.toString());
+        if (currentConfig) dispatch(setValueServiceAvailability(currentConfig.valueService));
         dispatch(setSideBarSteps([]));
     }
 
@@ -130,36 +127,24 @@ export const Welcome = () => {
     }
 
     const onLoadingSearchResults = (count: number) => {
-        setLoading(false);
         count > 0 ? onOpenSearchResults() : onOpen()
     }
 
-    const getDataForAdminUser = () => {
-        try {
-            dispatch(loadCustomersBySearchTerm(scProfile?.id ?? 0, onLoadingSearchResults, showError, '', '', customerEnteredEmail))
-        } catch (err) {
-            dispatch(setSessionId(""));
-            setLoading(false);
-            if (err.response?.data?.errorCode === 6) {
-                onOpen()
-            } else showError(err)
-        } finally {
-            setLoading(false);
-        }
-    }
-
     const onSuccessForCustomer = () => {
-        setLoading(false);
         handleGA();
         redirect();
     }
 
-    const getDataForCustomer = () => {
+    const getDataByRole = (isAdmin: boolean) => {
         try {
-            dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail, onSuccessForCustomer, onOpen))
+            setLoading(true);
+            if (isAdmin) {
+                dispatch(loadCustomersBySearchTerm(scProfile?.id ?? 0, onLoadingSearchResults, showError, '', '', customerEnteredEmail))
+            } else {
+                dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail, onSuccessForCustomer, onOpen))
+            }
         } catch (err) {
             dispatch(setSessionId(""));
-            setLoading(false)
             if (err.response?.data?.errorCode === 6) {
                 onOpen()
             } else showError(err)
@@ -169,43 +154,38 @@ export const Welcome = () => {
     }
 
     const handleExistingUser = () => {
-        setLoading(true);
-        if (currentUser && currentUser?.dealershipId === scProfile?.dealershipId) {
-            getDataForAdminUser()
+        const isAdmin = Boolean(currentUser && currentUser?.dealershipId === scProfile?.dealershipId)
+        getDataByRole(isAdmin)
+    }
+
+    const skipServiceTypeSelection = () => {
+        createBlankUser()
+        redirect()
+    }
+
+    const handleFirstScreenOptions = () => {
+        if (firstScreenOptions.length > 1) {
+            dispatch(setWelcomeScreenView("serviceSelect"))
         } else {
-            getDataForCustomer()
+            if (firstScreenOptions[0].type === EServiceType.VisitCenter) {
+                dispatch(setServiceTypeOption(firstScreenOptions[0]))
+                skipServiceTypeSelection()
+            } else {
+                dispatch(setWelcomeScreenView("serviceSelect"))
+            }
         }
     }
 
     const handleFirstScreen = () => {
-        if (firstScreenOptions.length) {
-            if (firstScreenOptions.length > 1) {
-                dispatch(setWelcomeScreenView("serviceSelect"))
-            } else {
-                if (firstScreenOptions[0].type === EServiceType.VisitCenter) {
-                    dispatch(setServiceTypeOption(firstScreenOptions[0]))
-                    createBlankCar()
-                    redirect()
-                } else {
-                    dispatch(setWelcomeScreenView("serviceSelect"))
-                }
-            }
+        if (!firstScreenOptions.length) {
+            skipServiceTypeSelection()
         } else {
-            createBlankCar()
-            redirect()
+            handleFirstScreenOptions()
         }
     }
-    //
-    // const onNextForNew = async () => {
-    //     if (firstScreenOptions.length) {
-    //         handleFirstScreen()
-    //     } else {
-    //         redirect();
-    //     }
-    // }
 
     const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
-        handleConfig(serviceType);
+        handleValueServiceConfig(serviceType);
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
             handleExistingUser()
         } else {
@@ -213,18 +193,7 @@ export const Welcome = () => {
         }
     }
 
-    const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
-        if (serviceTypeOption?.id !== serviceOption.id) {
-            dispatch(clearAppointmentData());
-            dispatch(setSideBarSteps([]))
-        }
-        handleConfig(serviceOption.type);
-        const nextScreen = serviceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
-        dispatch(setCurrentFrameScreen(nextScreen));
-        redirect();
-    }
-
-    const createBlankCar = () => {
+    const createBlankUser = () => {
         const c = getBlankCustomer();
         dispatch(setCustomerLoadedData(c));
         dispatch(setVehicle(getBlankVehicle()));
@@ -245,9 +214,9 @@ export const Welcome = () => {
         dispatch(setCustomerEnteredEmail(''));
         dispatch(setShowServiceCentersList(false));
         if (firstScreenOptions.length) {
-            handleFirstScreen()
+            handleFirstScreenOptions()
         } else {
-            createBlankCar()
+            createBlankUser()
             onComplete(serviceType, EUserType.New);
         }
     }
@@ -258,7 +227,7 @@ export const Welcome = () => {
                 return <SelectServiceCenter/>
             case "search":
             case "serviceSelect":
-                return <ServiceTypeSelect onComplete={onServiceTypeSelect} loading={loading}/>;
+                return <ServiceTypeSelect loading={loading} handleValueServiceConfig={handleValueServiceConfig}/>;
             case "select":
             default:
                 return <CustomerSelect

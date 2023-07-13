@@ -88,6 +88,7 @@ export const setHoursOfOperations = createAction<IHOODataForm[]>('fAppointment/S
 export const setPackageEMenuType = createAction<EMaintenanceOptionType|null>('fAppointment/SetPackageEMenuType');
 export const setShowServiceCentersList = createAction<boolean>('fAppointment/SetShowServiceCentersList');
 export const setAppointmentSaving = createAction<boolean>('fAppointment/SetAppointmentSaving');
+export const setHashKey = createAction<string>('fAppointment/SetHashKey');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -207,6 +208,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setFrameDescription(''));
     dispatch(setPackagePricingType(null));
     dispatch(setPackageEMenuType(null));
+    dispatch(setHashKey(''));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {

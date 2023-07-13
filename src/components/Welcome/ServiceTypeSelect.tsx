@@ -13,7 +13,7 @@ import {
 import {
     clearAppointmentData,
     setCurrentFrameScreen,
-    setServiceTypeOption,
+    setServiceTypeOption, setSideBarSteps,
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
@@ -32,7 +32,7 @@ import {encodeSCID} from "../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
 
 type TProps = {
-    onComplete: (serviceType: IFirstScreenOption, userType?: EUserType) => void;
+    handleValueServiceConfig: (serviceType: EServiceType) => void;
     loading: boolean;
 };
 
@@ -75,11 +75,6 @@ const Button = styled(({isTaglinePresent, ...props}) => (<div {...props}/>))<The
     display: "grid",
     gridTemplateRows: isTaglinePresent ? '1fr 2fr 3fr' : '1fr 3fr',
     gridGap: isTaglinePresent ? 10 : 20,
-    // flexDirection: 'column',
-    // alignItems: "center",
-    // alignContent: "center",
-    // justifyContent: "center",
-    // justifyItems: "center",
     fontWeight: "bold",
     fontSize: 32,
     textAlign: "center",
@@ -126,41 +121,17 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
-    const {userType, selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
+const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading }) => {
+    const {userType, selectedVehicle, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
+    const currentUser = useCurrentUser();
+
     const {id} = useParams();
     const classes = useStyles();
-    const currentUser = useCurrentUser();
     const dispatch = useDispatch();
     const history = useHistory();
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
-
-    const handleUser = (service: IFirstScreenOption) => {
-        if (userType === EUserType.New) {
-            const c = getBlankCustomer();
-            dispatch(setCustomerLoadedData(c));
-            dispatch(setVehicle(getBlankVehicle()));
-            saveCustomerCache(c);
-            ReactGA.event({
-                category: 'EvenFlow User',
-                action: 'Enters Page',
-                label: `As New User`,
-            });
-        }
-        onComplete(service);
-    }
-
-    const handleSelect = (card: IFirstScreenOption) => {
-        dispatch(clearAppointmentData())
-        dispatch(setServiceTypeOption(card))
-        if (card.type === EServiceType.General) {
-            if (card.externalLink) window.location.href = card.externalLink;
-        } else {
-            handleUser(card);
-        }
-    }
 
     const redirect = () => {
         if (id) {
@@ -170,8 +141,47 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
         }
     }
 
+    const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
+        if (serviceTypeOption?.id !== serviceOption.id) {
+            dispatch(clearAppointmentData());
+            dispatch(setSideBarSteps([]))
+        }
+        handleValueServiceConfig(serviceOption.type);
+        const nextScreen = serviceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
+        dispatch(setCurrentFrameScreen(nextScreen));
+        redirect();
+    }
+
+    const createBlankUser = () => {
+        const c = getBlankCustomer();
+        dispatch(setCustomerLoadedData(c));
+        dispatch(setVehicle(getBlankVehicle()));
+        saveCustomerCache(c);
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: 'Enters Page',
+            label: `As New User`,
+        });
+    }
+
+    const handleUser = (service: IFirstScreenOption) => {
+        if (userType === EUserType.New) createBlankUser();
+        onServiceTypeSelect(service);
+    }
+
+    const handleSelectOption = (card: IFirstScreenOption) => {
+        dispatch(clearAppointmentData())
+        dispatch(setServiceTypeOption(card))
+        if (card.type === EServiceType.General) {
+            if (card.externalLink) window.location.href = card.externalLink;
+        } else {
+            handleUser(card);
+        }
+    }
+
     const handleBack = () => {
-        if (currentUser || (!customerLoadedData?.id && !selectedVehicle?.make) || userType === EUserType.New) {
+        const userIsNew = (!customerLoadedData?.id && !selectedVehicle?.make) || userType === EUserType.New;
+        if (currentUser || userIsNew) {
             dispatch(setWelcomeScreenView("select"))
         } else {
             dispatch(setCurrentFrameScreen("carSelection"))
@@ -188,7 +198,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({onComplete, loading }) => {
                     .map((card) => {
                         if (card) {
                             return <Grid key={card.id}>
-                                <Button onClick={() => handleSelect(card)} isTaglinePresent={!!isTaglinePresent}>
+                                <Button onClick={() => handleSelectOption(card)} isTaglinePresent={!!isTaglinePresent}>
                                     {card.description ? <HtmlTooltip
                                         enterTouchDelay={0}
                                         placement="right-end"
