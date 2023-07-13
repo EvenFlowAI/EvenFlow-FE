@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from './StepWrapper';
-import {TArgCallback, TCallback} from "../../../types/types";
+import {TArgCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
@@ -29,23 +29,18 @@ import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameR
 import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {useCurrentUser} from "../../../utils/hooks";
-import {TView} from "../../Welcome/types";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
     onBack: () => void;
-    onLogin: TCallback;
     setLastSelectedCategory: Dispatch<SetStateAction<IServiceCategory|null>>;
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
-    onGoToFirstScreen: TArgCallback<TView>;
 }
 export const ServiceNeedsFrame: React.FC<TProps> = ({
                                                         onSelect,
                                                         onBack,
-                                                        onLogin,
                                                         setLastSelectedCategory,
                                                         setNeedToShowServiceSelection,
-    onGoToFirstScreen
 }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
@@ -58,20 +53,23 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         serviceTypeOption,
         packageEMenuType,
         selectedRecalls,
-        selectedVehicle,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const {id} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
+    const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
+        [firstScreenOptions])
 
     const handleBackScreen = (shouldSkipServiceTypeSelect: boolean) => {
-        setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
-        if (serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter) {
+        setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
+        const notVisitCenterSelected = serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter;
+        const firstScreenOptionsUnavailable = !firstScreenOptions.length || onlyVisitCenterOptionExists;
+        const needsToShowCarsSelection = userType === EUserType.Existing && !currentUser && firstScreenOptionsUnavailable;
+        if (notVisitCenterSelected || needsToShowCarsSelection) {
             onBack()
         } else {
             history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
@@ -81,16 +79,10 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const handleBack = () => {
         const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
         const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
-        const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
-            handleBackScreen(shouldSkipServiceTypeSelect)
-        // } else if (!customerLoadedData?.id && serviceType === EServiceType.VisitCenter) {
-        //     onLogin();
-        //     onGoToFirstScreen(prevScreen)
-        } else {
-            handleBackScreen(shouldSkipServiceTypeSelect)
         }
+        handleBackScreen(shouldSkipServiceTypeSelect)
     }
 
     useEffect(() => {

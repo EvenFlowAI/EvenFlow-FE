@@ -173,6 +173,8 @@ export const AppointmentFrameLayout = () => {
     const currentConfig = useMemo(() => {
         return config.find(item => item.serviceType?.toString() === serviceType?.toString());
     }, [config, serviceType])
+    const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
+        [firstScreenOptions])
 
     function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
         const TRACKER = getTracker(origin);
@@ -345,9 +347,8 @@ export const AppointmentFrameLayout = () => {
     }, [sessionStorage])
 
     useEffect(() => {
-        const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
-        setNeedToShowServiceSelection(Boolean(firstScreenOptions.length) || onlyVisitCenterExists);
-    }, [firstScreenOptions])
+        setNeedToShowServiceSelection(Boolean(firstScreenOptions.length) && !onlyVisitCenterOptionExists);
+    }, [firstScreenOptions, onlyVisitCenterOptionExists])
 
     useEffect(() => {
         if (selectedVehicle && customerLoadedData) {
@@ -357,13 +358,6 @@ export const AppointmentFrameLayout = () => {
             }
         }
     }, [customerLoadedData, selectedVehicle])
-
-    // const handleNewCustomer = () => {
-    //     const c = getBlankCustomer();
-    //     dispatch(setCustomerLoadedData(c));
-    //     dispatch(setVehicle(getBlankVehicle()));
-    //     saveCustomerCache(c);
-    // }
 
     useEffect(() => {
         if (!customerLoadedData) {
@@ -395,10 +389,6 @@ export const AppointmentFrameLayout = () => {
             currentFrameScreen && setCurrentScreen(currentFrameScreen);
         }
     }, [currentScreen, currentFrameScreen])
-
-    // useEffect(() => {
-    //     window.scrollTo(0, 0)
-    // }, [currentScreen])
 
     useEffect(() => {
         if (serviceType === EServiceType.MobileService && !customerLoadedData?.vehicles?.length && !valueService?.selectedService) {
@@ -518,8 +508,6 @@ export const AppointmentFrameLayout = () => {
             serviceNeeds: <ServiceNeedsFrame
                 setLastSelectedCategory={setLastSelectedCategory}
                 setNeedToShowServiceSelection={setNeedToShowServiceSelection}
-                onLogin={handleLogin}
-                onGoToFirstScreen={onGoToFirstScreen}
                 onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
             serviceSelection: <ServiceSelection
