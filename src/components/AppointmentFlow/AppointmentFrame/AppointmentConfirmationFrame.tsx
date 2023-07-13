@@ -13,11 +13,11 @@ import {ICreateAppointmentResp} from "../../../api/types";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
-import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
+import {collectServiceRequestIds, getCategories, getVehicleData, mapRecallsForRequest} from "./utils";
 import {Api} from "../../../config/requests";
 import {
-    setAppointmentId, setAppointmentSaving, setCustomer,
-    setPackagePricingType,
+    handleAppointmentResponse,
+    setAppointmentSaving,
     setReminders
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -26,13 +26,10 @@ import {useParams} from "react-router-dom";
 import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import {
     loadAllServiceCategories,
-    saveCustomerCache,
-    setCustomerLoadedData
 } from "../../../store/reducers/appointment/actions";
 import Vehicle from "./confirmationSections/Vehicle";
 import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
-import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import Address from "./confirmationSections/Address";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
 import ServiceType from "./confirmationSections/ServiceType";
@@ -71,6 +68,7 @@ interface TError {
 type TProps = {
     onChangeSlot: TCallback;
 } & TActionProps;
+
 export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
     const [errors, setErrors] = useState<string[]>([]);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -90,17 +88,16 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const showError = useException();
     const dispatch = useDispatch();
     const {t} = useTranslation();
+
     const currentConfig = useMemo(() => {
         const serviceType = appointmentFrame.serviceTypeOption?.type ?? EServiceType.VisitCenter;
         return config.find(item => item.serviceType?.toString() === serviceType.toString());
     }, [config, appointmentFrame.serviceTypeOption])
+
     const isEmailRequired = useMemo(() => {
-        if (currentUser && appointment.scProfile?.emailRequirement?.adminAndEmployeesEnabled) {
-            return true;
-        } else if (!currentUser && appointment.scProfile?.emailRequirement?.customerSelfServiceEnabled) {
-            return true
-        }
-        return false;
+        return currentUser
+            ? Boolean(appointment.scProfile?.emailRequirement?.adminAndEmployeesEnabled)
+            : Boolean(appointment.scProfile?.emailRequirement?.customerSelfServiceEnabled)
     }, [currentUser, appointment.scProfile])
 
     useEffect(() => {
@@ -111,70 +108,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         dispatch(setReminders([0, 2]));
     }, [])
 
-    const handleResponse = (data: ICreateAppointmentResp, endpoint: {route: string; method: string}) => {
-        dispatch(setAppointmentId({
-            id: data.id,
-            hashKey: data.hashKey,
-        }));
-        if (data.maintenancePackageOption?.priceType) {
-            dispatch(setPackagePricingType(data.maintenancePackageOption.priceType))
-        }
-        if (appointment.customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
-            const d = {
-                ...appointment.customerLoadedData,
-            };
-            let vehicle = d.vehicles.find(
-                c => c.vin === data.vehicle.vin
-            );
-            if (vehicle) {
-                vehicle = {...vehicle};
-                vehicle.appointmentHashKeys = [...vehicle.appointmentHashKeys, data.hashKey]
-            } else {
-                d.vehicles = [...d.vehicles, {...data.vehicle, appointmentHashKeys: [data.hashKey]}];
-            }
-            if (!d.emails?.length) {
-                d.emails = [appointmentFrame.customer.email];
-                d.fullName = data.driver?.fullName;
-                d.id = data.customerId;
-                d.phoneNumbers = [data.driver?.phoneNumber];
-            }
-            dispatch(setCustomerLoadedData(d));
-            dispatch(setCustomer(data.driver));
-            saveCustomerCache(d);
-        }
-        onNext();
-    }
-
-    const getCategories = (): number[] => {
-        return categories.allCategories
-            .filter(category => {
-                return category.type === EServiceCategoryType.GeneralCategory
-                    && appointmentFrame.categoriesIds.includes(category.id)
-            })
-            .map(item => item.id)
-    }
-
-    const getMake = (): string|null => {
-        return appointmentFrame?.selectedVehicle?.make?.length
-            ? appointmentFrame?.selectedVehicle?.make
-            : appointmentFrame?.valueService
-                ? "BMW"
-                : null;
-    }
-    const getModel = (): string|null => {
-        return appointmentFrame?.selectedVehicle?.model?.length
-            ? appointmentFrame?.selectedVehicle?.model
-            : appointmentFrame?.valueService?.series?.name
-                ? appointmentFrame.valueService.series.name
-                : null;
-    }
-
-    const getYear = (): string|null => {
-        return appointmentFrame?.selectedVehicle?.year
-            ? String(appointmentFrame.selectedVehicle.year)
-            : appointmentFrame?.valueService?.year?.year
-                ? String(appointmentFrame.valueService.year.year)
-                : null;
+    const handleResponse = async (data: ICreateAppointmentResp, endpoint: {route: string; method: string}) => {
+        await dispatch(handleAppointmentResponse(data, endpoint))
     }
 
     const checkIsValid = () => {
@@ -201,49 +136,48 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
 
     const handleCreateAppointment = () => {
         if (checkIsValid()) {
-            const make = getMake();
-            const model = getModel();
-            const year = getYear();
+            const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
             const maintenancePackageOption = appointmentFrame.selectedPackage
-                ? {
-                    id: appointmentFrame.selectedPackage?.id,
-                    priceType: appointmentFrame.packagePricingType
-                }
+                ? {id: appointmentFrame.selectedPackage?.id, priceType: appointmentFrame.packagePricingType}
                 : appointmentFrame.packageEMenuType !== null
                     ? {optionType: appointmentFrame.packageEMenuType}
                     : null;
 
+            const vehicle = {
+                dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
+                driveType: "",
+                ...(appointmentFrame.selectedVehicle ?? {}),
+                engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
+                model,
+                make,
+                year,
+                vin: appointmentFrame.selectedVehicle?.vin ?? '',
+                mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
+                modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
+                transmission: "",
+            }
+
+            const driver = {
+                ...appointmentFrame.customer,
+                email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
+            }
+
             const data = {
                 id: appointmentFrame.id,
                 hashKey: appointmentFrame.hashKey,
-                appointmentTimingType: appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff  && appointmentFrame.selectedTiming
+                appointmentTimingType: appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && appointmentFrame.selectedTiming
                     ? appointmentFrame.selectedTiming
                     : EAppointmentTimingType.FirstAvailable,
                 customerId: appointment.customerLoadedData?.id ?? null,
                 comment: appointmentFrame.description,
-                driver: {
-                    ...appointmentFrame.customer,
-                    email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
-                },
+                driver,
+                vehicle,
                 gmt: moment().utcOffset(),
                 isNeedCall: false,
                 offerId: appointment.appointment?.offer?.id ?? null,
                 reminderTypes: appointmentFrame.reminders,
                 serviceCenterId: decodeSCID(id),
                 consultantId: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
-                vehicle: {
-                    dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
-                    driveType: "",
-                    ...(appointmentFrame.selectedVehicle ?? {}),
-                    engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
-                    model,
-                    make,
-                    transmission: "",
-                    vin: appointmentFrame.selectedVehicle?.vin ?? '',
-                    year,
-                    mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
-                    modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
-                },
                 transportationOptionId: appointmentFrame.serviceTypeOption?.transportationOption?.id
                     ?? appointmentFrame.transportation?.id
                     ?? null,
@@ -257,9 +191,11 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
                 date: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
                     ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
                     : appointment.appointment?.id.split("|")[0] || "",
-                serviceCategoryIds: getCategories(),
+                serviceCategoryIds: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
                 maintenancePackageOption,
-                valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id ? [appointmentFrame?.valueService?.selectedService.id] : [],
+                valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
+                    ? [appointmentFrame?.valueService?.selectedService.id]
+                    : [],
                 searchTerm: customerEnteredEmail,
                 serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
                 zipCode: appointmentFrame.zipCode ?? null,
@@ -273,15 +209,13 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
 
             dispatch(setAppointmentSaving(true))
 
-            Api.call<ICreateAppointmentResp>(
-                endpoint, { data, urlParams: {id: data.hashKey} }
-            )
+            Api.call<ICreateAppointmentResp>(endpoint, { data, urlParams: {id: data.hashKey} })
                 .then(({data}) => {
-                    handleResponse(data, endpoint);
+                    handleResponse(data, endpoint)
+                        .then(() => onNext());
                 })
                 .catch(e => {
                     showError(e);
-                    if (e.response?.data?.message?.toLowerCase().includes('email')) setErrors(prev => ([...prev, 'email']))
                     if (e.response?.data?.errors) {
                         const data = [...e.response.data.errors]
                         setErrors(() => {
