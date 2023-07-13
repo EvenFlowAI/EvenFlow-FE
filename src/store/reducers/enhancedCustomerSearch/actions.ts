@@ -71,7 +71,6 @@ export const loadCustomersByPhoneOrEmail = (
         .then(result => {
             if (result.data?.result) {
                 const customer = result.data.result;
-                // dispatch(getSingleCustomerVehicles(result.data.result))
                 const {cellPhone, homePhone, workPhone, vehicles} = customer;
                 const phoneNumber = cellPhone ?? homePhone ?? workPhone;
                 const vehiclesData = vehicles.map(item => {
