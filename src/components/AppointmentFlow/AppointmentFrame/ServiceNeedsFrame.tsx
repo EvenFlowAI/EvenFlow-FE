@@ -64,11 +64,12 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const currentUser = useCurrentUser();
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
+    const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterOptionExists || Boolean(hashKey?.length);
 
-    const handleBackScreen = (shouldSkipServiceTypeSelect: boolean) => {
+    const handleBackScreen = () => {
         setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
         const notVisitCenterSelected = serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter;
-        const firstScreenOptionsUnavailable = !firstScreenOptions.length || onlyVisitCenterOptionExists;
+        const firstScreenOptionsUnavailable = !firstScreenOptions.length || onlyVisitCenterOptionExists || Boolean(hashKey?.length);
         const needsToShowCarsSelection = userType === EUserType.Existing && !currentUser && firstScreenOptionsUnavailable;
         if (notVisitCenterSelected || needsToShowCarsSelection) {
             onBack()
@@ -78,13 +79,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     }
 
     const handleBack = () => {
-        const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
-        const isAppointmentManagingFlow = Boolean(hashKey?.length);
-        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists || isAppointmentManagingFlow;
-        if (currentUser) {
-            dispatch(setShowServiceCentersList(false));
-        }
-        handleBackScreen(shouldSkipServiceTypeSelect)
+        if (currentUser) dispatch(setShowServiceCentersList(false));
+        handleBackScreen()
     }
 
     useEffect(() => {
