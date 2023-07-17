@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EMaintenanceOptionType,
-    IAppointmentByQuery, IConsultantsRequestData,
+    IAppointmentByQuery, IConsultantsRequestData, ICreateAppointmentResp,
     ICustomer,
     ILoadedVehicle, IPackage,
     IPackageOptions,
@@ -26,7 +26,13 @@ import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
-import {getSlotsConsultantId, selectAppointment, selectServiceValetAppointment, selectSR} from "../appointment/actions";
+import {
+    getSlotsConsultantId, saveCustomerCache,
+    selectAppointment,
+    selectServiceValetAppointment,
+    selectSR,
+    setCustomerLoadedData
+} from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
@@ -276,5 +282,38 @@ export const clearAppointmentSteps = (screenName: TScreen): AppThunk => (dispatc
     if (index > -1) {
         const slicedSteps = sideBarSteps.slice(0, index + 1);
         dispatch(setSideBarSteps(slicedSteps))
+    }
+}
+
+export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint: {route: string; method: string}): AppThunk => (dispatch, getState) => {
+    const {customerLoadedData} = getState().appointment;
+    const {customer} = getState().appointmentFrame;
+    dispatch(setAppointmentId({
+        id: data.id,
+        hashKey: data.hashKey,
+    }));
+    if (data.maintenancePackageOption?.priceType) {
+        dispatch(setPackagePricingType(data.maintenancePackageOption.priceType))
+    }
+    if (customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
+        const updatedData = {...customerLoadedData};
+        let vehicle = updatedData.vehicles.find(
+            car => car.vin === data.vehicle.vin
+        );
+        if (vehicle) {
+            vehicle = {...vehicle};
+            vehicle.appointmentHashKeys = [...vehicle.appointmentHashKeys, data.hashKey]
+        } else {
+            updatedData.vehicles = [...updatedData.vehicles, {...data.vehicle, appointmentHashKeys: [data.hashKey]}];
+        }
+        if (!updatedData.emails?.length) {
+            updatedData.emails = [customer.email];
+            updatedData.fullName = data.driver?.fullName;
+            updatedData.id = data.customerId;
+            updatedData.phoneNumbers = [data.driver?.phoneNumber];
+        }
+        dispatch(setCustomerLoadedData(updatedData));
+        dispatch(setCustomer(data.driver));
+        saveCustomerCache(updatedData);
     }
 }

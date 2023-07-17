@@ -8,10 +8,11 @@ import {
 } from "../../../api/types";
 import {TComplimentary, TPackage, TService, TUpsell} from "./PackageSelection";
 import {EOfferType} from "../../../store/reducers/offers/types";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, IValueService} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TScreen} from "../../Layout/types";
 import {IRecallByVin} from "./types";
 import {TRecallForRequest} from "../../../store/reducers/appointment/types";
+import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
 
 export const getAppointmentDate = (date: moment.Moment, d: number) => {
     return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
@@ -233,6 +234,33 @@ export const mapRecallsForRequest = (selectedRecalls: IRecallByVin[]): TRecallFo
     })
 }
 
+export const getVehicleData = (selectedVehicle: ILoadedVehicle|null, valueService: IValueService|null): (string|null)[] => {
+    const make = selectedVehicle?.make?.length
+        ? selectedVehicle?.make
+        : valueService
+            ? "BMW"
+            : null;
+    const model = selectedVehicle?.model?.length
+        ? selectedVehicle?.model
+        : valueService?.series?.name
+            ? valueService.series.name
+            : null;
+    const year = selectedVehicle?.year
+        ? String(selectedVehicle.year)
+        : valueService?.year?.year
+            ? String(valueService.year.year)
+            : null;
+    return [make, model, year];
+}
+
+export const getCategories = (allCategories: ICategory[], categoriesIds: number[]): number[] => {
+    return allCategories
+        .filter(category => {
+            return category.type === EServiceCategoryType.GeneralCategory
+                && categoriesIds.includes(category.id)
+        })
+        .map(item => item.id)
+}
 export const SCREENS = {
     carSelection: 'Car Selection',
     serviceNeeds: 'Service Needs',
