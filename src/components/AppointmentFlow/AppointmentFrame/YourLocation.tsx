@@ -150,18 +150,23 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     const handleBack = () => {
         clearAddress();
         clearSelectedData();
+        const isManagingAppointment = Boolean(hashKey?.length) && (!serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id))
         const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
-        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists || Boolean(hashKey?.length);
+        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists || isManagingAppointment;
         const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
             onGoToFirstScreen(prevScreen)
         } else {
             setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
-            if (customerLoadedData && selectedVehicle) {
-                onBack()
+            if (shouldSkipServiceTypeSelect) {
+                if (customerLoadedData && selectedVehicle) {
+                    onBack()
+                } else {
+                    history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+                }
             } else {
-                history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+                onGoToFirstScreen(prevScreen)
             }
         }
     }
