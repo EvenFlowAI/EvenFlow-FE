@@ -62,6 +62,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const history = useHistory();
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
+    const isManagingAppointment = Boolean(hashKey?.length) && (!serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id))
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
     const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterOptionExists || Boolean(hashKey?.length);
