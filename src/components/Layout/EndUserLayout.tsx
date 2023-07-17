@@ -16,9 +16,9 @@ import ReactGA from "react-ga4";
 import TagManager from 'react-gtm-module'
 import {RootState} from "../../store/rootReducer";
 import {setTrackerCreated, setWelcomeScreenView} from "../../store/reducers/appointmentFrameReducer/actions";
-import {prodParentLinks} from "./AppointmentFrameLayout";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
+import {prodParentLinks} from "../AppointmentFlow/AppointmentFrame/utils";
 
 type TGAOptions = {
     siteSpeedSampleRate: number;

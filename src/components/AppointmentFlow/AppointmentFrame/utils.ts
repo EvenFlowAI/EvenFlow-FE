@@ -261,3 +261,43 @@ export const getCategories = (allCategories: ICategory[], categoriesIds: number[
         })
         .map(item => item.id)
 }
+export const SCREENS = {
+    carSelection: 'Car Selection',
+    serviceNeeds: 'Service Needs',
+    packageSelection: 'Package Selection',
+    maintenanceDetails: 'Car Details',
+    carDetails: 'Car Details',
+    consultantSelection: 'Consultant Selection',
+    serviceSelection: 'Service Selection',
+    describeMore: 'Describe More',
+    appointmentConfirmation: 'Appointment Confirmation',
+    appointmentSelection: 'Appointment Selection',
+    appointmentConfirmed: 'Appointment Confirmed',
+    appointmentTiming: 'Appointment Timing',
+    transportationNeeds: 'Transportation Needs',
+    opsCode: "opsCode",
+    vehicleData: "vehicleData",
+    location: "Your Location",
+    payment: "payment",
+    serviceOfferProductPage: "Service Offer Produce Page",
+}
+
+// todo add new parent links while go live with new dealerships
+export const prodParentLinks = [
+    'https://apps.evenflow.ai/',
+    'https://www.riverviewford.com/',
+    "https://www.bmwofschererville.com/",
+    "https://bmw-schererville.evenflow.services",
+    "https://www.fremontchryslerdodgejeepcasper.com",
+    "https://www.fremontchryslerdodgejeeprocksprings.com",
+    "https://www.janssenfordholdrege.com/",
+    "https://www.janssenchryslerjeepdodge.com/",
+    "https://www.lakepowellford.com/",
+    "https://www.morrissmithfordoflarned.com/",
+    "https://www.performancekingshonda.com/",
+    "https://www.performancehondastore.com/",
+    "https://www.performancelexus.com/",
+    "https://www.performancelexusrivercenter.com/",
+    "https://www.performancechryslerjeepcenterville.com/",
+    "https://www.performancetoyotastore.com/",
+];

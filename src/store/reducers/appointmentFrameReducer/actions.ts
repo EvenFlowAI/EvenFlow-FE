@@ -215,6 +215,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setPackagePricingType(null));
     dispatch(setPackageEMenuType(null));
     dispatch(setHashKey(''));
+    dispatch(setServiceTypeOption(null));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
