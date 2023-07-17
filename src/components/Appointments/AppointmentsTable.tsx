@@ -15,11 +15,11 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 
 const cols: TableRowDataType<IAppointmentByQuery>[] = [
-    {header: "Date", val: el => moment.utc(el.dateInUtc).format("LL"), orderId: "date"},
-    {header: "Time", val: el => moment(el.timeSlot, timeSpanString).format(timeString)},
+    {header: "Date", val: el => el.dateInUtc ? moment.utc(el.dateInUtc).format("LL") : "", orderId: "date"},
+    {header: "Time", val: el => el.timeSlot ? moment(el.timeSlot, timeSpanString).format(timeString) : ""},
     {header: "Full Name", val: el => el.driver?.fullName ?? "", orderId: "fullName"},
     {header: "Car Info", val: el => `${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${el.vehicle?.year ?? ''}`},
-    {header: "Status", val: el => appointmentStatuses[el.appointmentStatus], orderId: "appointmentStatus"},
+    {header: "Status", val: el => el.appointmentStatus ? appointmentStatuses[el.appointmentStatus] : "", orderId: "appointmentStatus"},
     {header: "Job Type", val: el => typeof el.jobType !== 'undefined' && Number.isInteger(el.jobType) ? jobTypes[el.jobType] : ""},
 ]
 
