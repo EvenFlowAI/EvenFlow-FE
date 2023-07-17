@@ -164,6 +164,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
 
     const clearAllData = useCallback(() => {
         dispatch(clearAppointmentData())
+        dispatch(setServiceTypeOption(null))
         dispatch(setSideBarSteps([]));
     },[])
 
