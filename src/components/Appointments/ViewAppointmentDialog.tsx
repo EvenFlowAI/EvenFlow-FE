@@ -21,8 +21,8 @@ const Info: React.FC<{appointment: IAppointmentByQuery}> = ({appointment}) => {
         </ListItem>
         <ListItem>
             <ListItemText
-                primary={appointment.vehicle.vin}
-                secondary={`${appointment.vehicle.make} ${appointment.vehicle.model} ${appointment.vehicle.year}`}
+                primary={appointment.vehicle?.vin ?? ""}
+                secondary={`${appointment.vehicle?.make ?? ""} ${appointment.vehicle?.model ?? ""} ${appointment.vehicle?.year ?? ""}`}
             />
         </ListItem>
     </>
@@ -35,8 +35,8 @@ const ContactInfo: React.FC<{driver: IAppointmentByQuery["driver"]}> = ({driver}
         </ListItem>
         <ListItem>
             <ListItemText
-                primary={driver.fullName}
-                secondary={`${driver.email ?? ""} ${driver.phoneNumber}`}
+                primary={driver.fullName ?? ""}
+                secondary={`${driver.email ?? ""} ${driver.phoneNumber ?? ""}`}
             />
         </ListItem>
     </>
