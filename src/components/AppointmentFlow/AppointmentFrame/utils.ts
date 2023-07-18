@@ -301,3 +301,8 @@ export const prodParentLinks = [
     "https://www.performancechryslerjeepcenterville.com/",
     "https://www.performancetoyotastore.com/",
 ];
+
+export const getTrimmedKey = (key: string): string => {
+    const lastIndex = key.lastIndexOf('==');
+    return lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
+}

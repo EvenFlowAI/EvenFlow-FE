@@ -157,7 +157,7 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
 
     useEffect(() => {
         if (scProfile && vehicleDmsId && open) {
-            dispatch(loadRepairHistory(scProfile.id, vehicleDmsId, pageIndex, 4));
+            dispatch(loadRepairHistory(scProfile.id, vehicleDmsId, pageIndex, 2));
         }
     }, [scProfile, vehicleDmsId, open, pageIndex])
 
@@ -168,7 +168,7 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
     const onLoadMore = () => {
         const index = pageIndex + 1;
         setPageIndex(index);
-        scProfile && dispatch(loadMoreRepairHistory(scProfile.id, vehicleDmsId, index, 4))
+        scProfile && dispatch(loadMoreRepairHistory(scProfile.id, vehicleDmsId, index, 2))
     }
 
     return (
@@ -307,7 +307,7 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
                                     {item.comments && item.comments.map(comment => <div>{comment}</div>)}
                                 </div>
                             </div>)}
-                            {repairHistoryPaging.numberOfPages > 1
+                            {repairHistoryPaging.numberOfPages > 1 && repairHistoryPaging.numberOfPages > pageIndex + 1
                                 ? <div className={classes.centered}>
                                     <Button
                                         variant="text"
