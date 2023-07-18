@@ -1,7 +1,7 @@
 import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
 import {useSnackbar} from "notistack";
-import {IPageRequest, ValidationKeyPairs} from "../types/types";
-import {getAPIException} from "./utils";
+import {IPageRequest, LocalTokens, ValidationKeyPairs} from "../types/types";
+import {getAPIException, getTracker} from "./utils";
 import {RootState} from "../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {closeConfirmModal, openConfirmModal} from "../store/reducers/modals/actions";
@@ -12,6 +12,11 @@ import {IDealershipProfile} from "../store/reducers/dealershipGroups/types";
 import {IServiceCenter} from "../store/reducers/serviceCenters/types";
 import {selectSC as selectSCAction} from "../store/reducers/serviceCenters/actions";
 import {useLocation} from "react-router-dom";
+import {options} from "../components/Layout/EndUserLayout";
+import ReactGA from "react-ga4";
+import TagManager from "react-gtm-module";
+import {prodParentLinks} from "../components/AppointmentFlow/AppointmentFrame/utils";
+import {v4 as uuidv4} from "uuid";
 
 export const useModal = () => {
     const [isOpen, setOpen] = useState(false);
@@ -173,4 +178,66 @@ export const useLayout = () => {
         const isFrame = new URLSearchParams(search).get('frame')?.toLowerCase();
         return isFrame === 'true' || isFrame === '1';
     }, [search]);
+}
+
+export const useAnalytics = (trackerCreated: boolean, setTrackerCreated: () => void) => {
+    function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
+        const TRACKER = getTracker(origin);
+        if (!trackerCreated) {
+            if (opt_clientId) options.clientId = opt_clientId
+
+            ReactGA.initialize(TRACKER, {
+                gaOptions: options,
+            });
+            TagManager.initialize({
+                gtmId: TRACKER
+            })
+            setTrackerCreated();
+        }
+    }
+    useEffect(() => {
+        if (!trackerCreated) {
+            /** if there are not a message from the parent site, try to get tracker from the document`s props **/
+            if (process.env.REACT_APP_ENV === "production") {
+                setTimeout(() => {
+                    const url = (window.location != window.parent?.location)
+                        ? document.referrer
+                        : document.location.href;
+                    createTracker('', url, trackerCreated);
+                }, 3000);
+            } else {
+                /**without origin (parent site URL) creates default tracker for current environment**/
+                createTracker('', '', trackerCreated);
+            }
+        }
+    }, [window.location, document.referrer, document.location])
+
+    useEffect(() => {
+        trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
+    }, [trackerCreated])
+
+    useEffect(() => {
+        if (!trackerCreated) {
+            /** expects for the post message from the parent site in order to create tracker with right trackingID **/
+            window.addEventListener('message', function(event) {
+                if (!prodParentLinks.includes(event?.origin)) return;
+                let originSite = event.origin;
+                /** in some browsers checks the parent URL and use it like origin **/
+                if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
+                if (originSite) createTracker(event.data, originSite, trackerCreated);
+            });
+        }
+    }, [trackerCreated, window.location?.ancestorOrigins]);
+}
+
+export const useStorage = () => {
+    useEffect(() => {
+        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
+            const uid = uuidv4();
+            sessionStorage.setItem(LocalTokens.sessionId, uid);
+        }
+        window.addEventListener('unload', () => {
+            sessionStorage.setItem(LocalTokens.sessionId, '')
+        })
+    }, [sessionStorage])
 }
