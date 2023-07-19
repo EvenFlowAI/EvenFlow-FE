@@ -157,9 +157,9 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
 
     useEffect(() => {
         if (scProfile && vehicleDmsId && open) {
-            dispatch(loadRepairHistory(scProfile.id, vehicleDmsId, pageIndex, 2));
+            dispatch(loadRepairHistory(scProfile.id, vehicleDmsId, 0, 2));
         }
-    }, [scProfile, vehicleDmsId, open, pageIndex])
+    }, [scProfile, vehicleDmsId, open])
 
     const onCancel = () => {
         onClose();
