@@ -31,7 +31,7 @@ import {encodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
-import {useAnalytics, useException, useStorage} from "../../utils/hooks";
+import {useAnalytics, useAnalyticsBySCId, useException, useStorage} from "../../utils/hooks";
 import {
     updateRecalls, updatePackageOption,
     setCurrentFrameScreen,
@@ -186,60 +186,8 @@ export const AppointmentFrameLayout = () => {
         updateServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
         updateRecalls, updatePackageOption, goToServiceTypeSelection])
 
-    /** TRACKER CODE START **/
-
-    // function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
-    //     const TRACKER = getTracker(origin);
-    //     if (!trackerCreated) {
-    //         if (opt_clientId) options.clientId = opt_clientId
-    //
-    //         ReactGA.initialize(TRACKER, {
-    //             gaOptions: options,
-    //         });
-    //         TagManager.initialize({
-    //             gtmId: TRACKER
-    //         })
-    //         dispatch(setTrackerCreated(true));
-    //     }
-    // }
-    //
-    // useEffect(() => {
-    //     trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
-    // }, [trackerCreated])
-    //
-    // useEffect(() => {
-    //     if (!trackerCreated) {
-    //         /** expects for the post message from the parent site in order to create tracker with right trackingID **/
-    //         window.addEventListener('message', function(event) {
-    //             if (!prodParentLinks.includes(event?.origin)) return;
-    //             let originSite = event.origin;
-    //             /** in some browsers checks the parent URL and use it like origin **/
-    //             if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
-    //             if (originSite) createTracker(event.data, originSite, trackerCreated);
-    //         });
-    //     }
-    // }, [trackerCreated, window.location?.ancestorOrigins]);
-    //
-    // useEffect(() => {
-    //     if (!trackerCreated) {
-    //         /** if there are not a message from the parent site, try to get tracker from the document`s props **/
-    //         if (process.env.REACT_APP_ENV === "production") {
-    //             setTimeout(() => {
-    //                 const url = (window.location != window.parent?.location)
-    //                     ? document.referrer
-    //                     : document.location.href;
-    //                 createTracker('', url, trackerCreated);
-    //             }, 3000);
-    //         } else {
-    //             /**without origin (parent site URL) creates default tracker for current environment**/
-    //             createTracker('', '', trackerCreated);
-    //         }
-    //     }
-    // }, [window.location, document.referrer, document.location])
-
-    /** TRACKER CODE END **/
-
-    useAnalytics(trackerCreated, () => dispatch(setTrackerCreated(true)))
+    // useAnalytics(trackerCreated, () => dispatch(setTrackerCreated(true)))
+    useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
     useStorage();
 
@@ -247,16 +195,6 @@ export const AppointmentFrameLayout = () => {
         window.addEventListener('beforeunload', handleLogin)
         return () => window.removeEventListener('beforeunload', handleLogin)
     }, [handleLogin])
-
-    // useEffect(() => {
-    //     if (!sessionStorage.getItem(LocalTokens.sessionId)) {
-    //         const uid = uuidv4();
-    //         sessionStorage.setItem(LocalTokens.sessionId, uid);
-    //     }
-    //     window.addEventListener('unload', () => {
-    //         sessionStorage.setItem(LocalTokens.sessionId, '')
-    //     })
-    // }, [sessionStorage])
 
     useEffect(() => {
         setNeedToShowServiceTypes(Boolean(firstScreenOptions.length) && !onlyVisitCenterOptionExists && !hashKey?.length);

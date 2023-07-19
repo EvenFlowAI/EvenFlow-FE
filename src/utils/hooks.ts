@@ -1,7 +1,7 @@
 import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
 import {useSnackbar} from "notistack";
 import {IPageRequest, LocalTokens, ValidationKeyPairs} from "../types/types";
-import {getAPIException, getTracker} from "./utils";
+import {getAPIException, getTracker, getTrackerById} from "./utils";
 import {RootState} from "../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {closeConfirmModal, openConfirmModal} from "../store/reducers/modals/actions";
@@ -240,4 +240,30 @@ export const useStorage = () => {
             sessionStorage.setItem(LocalTokens.sessionId, '')
         })
     }, [sessionStorage])
+}
+
+export const useAnalyticsBySCId = (id: string, trackerCreated: boolean, setTrackerCreated: () => void) => {
+    function createTracker(opt_clientId = '', trackerCreated: boolean) {
+        const TRACKER = getTrackerById(id);
+        if (!trackerCreated) {
+            if (opt_clientId) options.clientId = opt_clientId
+
+            ReactGA.initialize(TRACKER, {
+                gaOptions: options,
+            });
+            TagManager.initialize({
+                gtmId: TRACKER
+            })
+            setTrackerCreated();
+        }
+    }
+    useEffect(() => {
+        if (!trackerCreated && id) {
+            createTracker('', trackerCreated);
+        }
+    }, [id])
+
+    useEffect(() => {
+        trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
+    }, [trackerCreated])
 }
