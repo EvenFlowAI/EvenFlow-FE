@@ -38,7 +38,7 @@ import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
 import {TPackagePrice} from "../packages/types";
-import {setUpdateSelectedRecalls} from "../recall/actions";
+import {updateSelectedRecalls} from "../recall/actions";
 import {EServiceCategoryType} from "../categories/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
@@ -321,7 +321,6 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
 
 export const updateRecalls = (data: IAppointmentByQuery, id: string): AppThunk => (dispatch, getState) => {
     const {scProfile} = getState().appointment;
-    const {allCategories} = getState().categories;
     const {
         vehicle,
         recalls,
@@ -330,8 +329,8 @@ export const updateRecalls = (data: IAppointmentByQuery, id: string): AppThunk =
         serviceTypeOption
     } = data;
     if (vehicle?.vin && scProfile && recalls?.length) {
-        if (vehicle?.makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, vehicle.vin, vehicle.makeId, recalls))
-        if (!maintenancePackageOption && !serviceRequests.length && !allCategories.length) {
+        if (vehicle?.makeId) dispatch(updateSelectedRecalls(scProfile.id, vehicle.vin, vehicle.makeId, recalls))
+        if (!maintenancePackageOption && !serviceRequests.length) {
             Api.call<PaginatedAPIResponse<IServiceCategory>>(
                 Api.endpoints.ServiceCategories.GetByQuery,
                 {data: {
@@ -340,8 +339,8 @@ export const updateRecalls = (data: IAppointmentByQuery, id: string): AppThunk =
                             ? EServiceType.MobileService
                             : EServiceType.VisitCenter
                     }}
-            ).then(({data}) => {
-                const category = data?.result?.find(item => item.type === EServiceCategoryType.OpenRecalls)
+            ).then(result => {
+                const category = result?.data?.result?.find(item => item.type === EServiceCategoryType.OpenRecalls)
                 if (category) {
                     dispatch(selectCategoriesIds([category.id]))
                     if (category.page === 0) {

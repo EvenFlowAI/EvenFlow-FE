@@ -181,7 +181,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const getCardState = (card: IServiceCategory): boolean => {
         if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage || (packageEMenuType !== null));
         if (card.type === EServiceCategoryType.ValueService) return Boolean(valueService?.selectedService);
-        if (card.type === EServiceCategoryType.OpenRecalls) return Boolean(selectedRecalls.length && categoriesIds?.includes(card.id));
+        if (card.type === EServiceCategoryType.OpenRecalls) {
+            return Boolean(selectedRecalls.length && categoriesIds?.includes(card.id));
+        }
         if (card.type === EServiceCategoryType.IndividualServices) {
             return Boolean(serviceCategories
                 .find(cat => cat.type === EServiceCategoryType.IndividualServices
