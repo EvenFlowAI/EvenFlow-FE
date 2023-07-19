@@ -7,6 +7,7 @@ import {Actions} from "./Actions";
 import {useDispatch, useSelector} from "react-redux";
 import {EUserType, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
+    loadMakes,
     selectService,
     setMaintenanceDetails,
     setPackage,
@@ -227,6 +228,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     useEffect(() => {
         dispatch(loadMileage(decodeSCID(id)));
         dispatch(loadEngineType(decodeSCID(id)));
+        dispatch(loadMakes(decodeSCID(id)));
     }, [id]);
 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
@@ -339,26 +341,34 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         }
     }
 
+    const handleNoRecalls = () => {
+        if (categoriesIds.length < 2 && isRecallsCategorySelected) {
+            checkVINforRecallCategory()
+        } else {
+            handleNext()
+        }
+    }
+
     const handleSubmit = async () => {
-        const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn
-        if (selectedVehicle?.vin?.length === 17 && (recallsFromTheAdmin || isRecallsCategorySelected)) {
-            setLoading(true);
-            const make = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase());
-            if (selectedVehicle?.make && make?.id) {
-                const {data} = await Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId: decodeSCID(id), vin: selectedVehicle.vin, vehicleMakeId: make?.id}})
+        const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn;
+        const makeInTheList = makes.find(item => item.name.toLowerCase() === selectedVehicle?.make.toLowerCase());
+        if (selectedVehicle && makeInTheList) {
+            const {vin, make} = selectedVehicle;
+            if (vin?.length === 17 && make && (recallsFromTheAdmin || isRecallsCategorySelected)) {
+                setLoading(true);
+                const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
+                    {data: {serviceCenterId: decodeSCID(id), vin: vin, vehicleMakeId: makeInTheList?.id}})
                 dispatch(setRecallsAreShown(true));
                 if (data.length) {
                     await onOpen()
                 } else {
                     onEmptyRecalls()
                 }
-            } else handleNext();
-        } else {
-            if (categoriesIds.length < 2 && isRecallsCategorySelected) {
-                checkVINforRecallCategory()
             } else {
-                handleNext()
+                handleNoRecalls()
             }
+        } else {
+            handleNoRecalls()
         }
         setLoading(false);
     }

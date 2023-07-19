@@ -53,6 +53,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         serviceTypeOption,
         packageEMenuType,
         selectedRecalls,
+        hashKey,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -61,13 +62,15 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const history = useHistory();
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
+    const isManagingAppointment = Boolean(hashKey?.length) && (!serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id))
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
+    const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterOptionExists || isManagingAppointment;
 
-    const handleBackScreen = (shouldSkipServiceTypeSelect: boolean) => {
+    const handleBackScreen = () => {
         setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
         const notVisitCenterSelected = serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter;
-        const firstScreenOptionsUnavailable = !firstScreenOptions.length || onlyVisitCenterOptionExists;
+        const firstScreenOptionsUnavailable = !firstScreenOptions.length || onlyVisitCenterOptionExists || isManagingAppointment;
         const needsToShowCarsSelection = userType === EUserType.Existing && !currentUser && firstScreenOptionsUnavailable;
         if (notVisitCenterSelected || needsToShowCarsSelection) {
             onBack()
@@ -77,12 +80,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     }
 
     const handleBack = () => {
-        const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
-        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
-        if (currentUser) {
-            dispatch(setShowServiceCentersList(false));
-        }
-        handleBackScreen(shouldSkipServiceTypeSelect)
+        if (currentUser) dispatch(setShowServiceCentersList(false));
+        handleBackScreen()
     }
 
     useEffect(() => {

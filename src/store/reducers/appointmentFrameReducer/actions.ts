@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    EMaintenanceOptionType,
-    IAppointmentByQuery, IConsultantsRequestData,
+    EMaintenanceOptionType, EServiceCenterName,
+    IAppointmentByQuery, IConsultantsRequestData, ICreateAppointmentResp,
     ICustomer,
     ILoadedVehicle, IPackage,
     IPackageOptions,
@@ -26,12 +26,20 @@ import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
-import {getSlotsConsultantId, selectAppointment, selectServiceValetAppointment, selectSR} from "../appointment/actions";
+import {
+    getSlotsConsultantId, saveCustomerCache,
+    selectAppointment,
+    selectServiceValetAppointment,
+    selectSR,
+    setCustomerLoadedData
+} from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
 import {TPackagePrice} from "../packages/types";
+import {setUpdateSelectedRecalls} from "../recall/actions";
+import {EServiceCategoryType} from "../categories/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -88,6 +96,7 @@ export const setHoursOfOperations = createAction<IHOODataForm[]>('fAppointment/S
 export const setPackageEMenuType = createAction<EMaintenanceOptionType|null>('fAppointment/SetPackageEMenuType');
 export const setShowServiceCentersList = createAction<boolean>('fAppointment/SetShowServiceCentersList');
 export const setAppointmentSaving = createAction<boolean>('fAppointment/SetAppointmentSaving');
+export const setHashKey = createAction<string>('fAppointment/SetHashKey');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -207,6 +216,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setFrameDescription(''));
     dispatch(setPackagePricingType(null));
     dispatch(setPackageEMenuType(null));
+    dispatch(setHashKey(''));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
@@ -273,5 +283,85 @@ export const clearAppointmentSteps = (screenName: TScreen): AppThunk => (dispatc
     if (index > -1) {
         const slicedSteps = sideBarSteps.slice(0, index + 1);
         dispatch(setSideBarSteps(slicedSteps))
+    }
+}
+
+export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint: {route: string; method: string}): AppThunk => (dispatch, getState) => {
+    const {customerLoadedData} = getState().appointment;
+    const {customer} = getState().appointmentFrame;
+    dispatch(setAppointmentId({
+        id: data.id,
+        hashKey: data.hashKey,
+    }));
+    if (data.maintenancePackageOption?.priceType) {
+        dispatch(setPackagePricingType(data.maintenancePackageOption.priceType))
+    }
+    if (customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
+        const updatedData = {...customerLoadedData};
+        let vehicle = updatedData.vehicles.find(
+            car => car.vin === data.vehicle.vin
+        );
+        if (vehicle) {
+            vehicle = {...vehicle};
+            vehicle.appointmentHashKeys = [...vehicle.appointmentHashKeys, data.hashKey]
+        } else {
+            updatedData.vehicles = [...updatedData.vehicles, {...data.vehicle, appointmentHashKeys: [data.hashKey]}];
+        }
+        if (!updatedData.emails?.length) {
+            updatedData.emails = [customer.email];
+            updatedData.fullName = data.driver?.fullName;
+            updatedData.id = data.customerId;
+            updatedData.phoneNumbers = [data.driver?.phoneNumber];
+        }
+        dispatch(setCustomerLoadedData(updatedData));
+        dispatch(setCustomer(data.driver));
+        saveCustomerCache(updatedData);
+    }
+}
+
+export const updateRecalls = (data: IAppointmentByQuery, id: string): AppThunk => (dispatch, getState) => {
+    const {scProfile} = getState().appointment;
+    const {allCategories} = getState().categories;
+    const {
+        vehicle,
+        recalls,
+        maintenancePackageOption,
+        serviceRequests,
+        serviceTypeOption
+    } = data;
+    if (vehicle?.vin && scProfile && recalls?.length) {
+        if (vehicle?.makeId) dispatch(setUpdateSelectedRecalls(scProfile.id, vehicle.vin, vehicle.makeId, recalls))
+        if (!maintenancePackageOption && !serviceRequests.length && !allCategories.length) {
+            Api.call<PaginatedAPIResponse<IServiceCategory>>(
+                Api.endpoints.ServiceCategories.GetByQuery,
+                {data: {
+                        serviceCenterId: decodeSCID(id),
+                        serviceType: serviceTypeOption?.type === EServiceType.MobileService
+                            ? EServiceType.MobileService
+                            : EServiceType.VisitCenter
+                    }}
+            ).then(({data}) => {
+                const category = data?.result?.find(item => item.type === EServiceCategoryType.OpenRecalls)
+                if (category) {
+                    dispatch(selectCategoriesIds([category.id]))
+                    if (category.page === 0) {
+                        dispatch(selectService(category))
+                    } else {
+                        dispatch(selectSubService(category))
+                    }
+                }
+            })
+        }
+    }
+}
+
+export const updatePackageOption = (maintenancePackageOption: IPackageOptions|null): AppThunk => (dispatch, getState) => {
+    const {scProfile} = getState().appointment;
+    if (maintenancePackageOption && scProfile) {
+        if (scProfile.serviceCenterFlag === EServiceCenterName.DealerBuilt && scProfile.eMenuEnabled) {
+            dispatch(setPackageEMenuType(maintenancePackageOption.type))
+        } else {
+            dispatch(setPackage(maintenancePackageOption))
+        }
     }
 }

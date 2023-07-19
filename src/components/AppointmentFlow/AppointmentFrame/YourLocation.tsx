@@ -51,7 +51,6 @@ export const SelectWrapper = styled('div')(({theme}) => ({
 }));
 
 type TYourLocationProps = TActionProps & {
-    onLogin: () => void,
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
     onGoToFirstScreen: TArgCallback<TView>;
 }
@@ -100,11 +99,11 @@ const useAutocompleteStyles = makeStyles<Theme, TStyleProps>(() => ({
     },
 }))
 
-const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin, setNeedToShowServiceSelection, onGoToFirstScreen}) => {
+const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToShowServiceSelection, onGoToFirstScreen}) => {
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {zipCode: zipCodeValue, address, filteredZipCodes, serviceTypeOption, selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
+    const {zipCode: zipCodeValue, address, filteredZipCodes, serviceTypeOption, hashKey, selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
@@ -151,16 +150,24 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, onLogin, se
     const handleBack = () => {
         clearAddress();
         clearSelectedData();
+        const isManagingAppointment = Boolean(hashKey?.length) && (!serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id))
         const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
-        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
+        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists || isManagingAppointment;
         const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
         if (currentUser) {
             dispatch(setShowServiceCentersList(false));
             onGoToFirstScreen(prevScreen)
         } else {
-            setNeedToShowServiceSelection(shouldSkipServiceTypeSelect)
-            if (customerLoadedData && selectedVehicle) onBack()
-            history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+            setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
+            if (shouldSkipServiceTypeSelect) {
+                if (customerLoadedData && selectedVehicle) {
+                    onBack()
+                } else {
+                    history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+                }
+            } else {
+                onGoToFirstScreen(prevScreen)
+            }
         }
     }
 
