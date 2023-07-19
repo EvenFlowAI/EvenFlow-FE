@@ -7,6 +7,7 @@ import {Actions} from "./Actions";
 import {useDispatch, useSelector} from "react-redux";
 import {EUserType, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
+    loadMakes,
     selectService,
     setMaintenanceDetails,
     setPackage,
@@ -227,6 +228,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     useEffect(() => {
         dispatch(loadMileage(decodeSCID(id)));
         dispatch(loadEngineType(decodeSCID(id)));
+        dispatch(loadMakes(decodeSCID(id)));
     }, [id]);
 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
