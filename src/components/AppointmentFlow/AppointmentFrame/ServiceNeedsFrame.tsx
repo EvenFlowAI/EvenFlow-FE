@@ -201,7 +201,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
                 {serviceCategories.map(card => {
                     return <ServiceCard
                         selected={getCardState(card)}
-                        active={currentService?.id === card.id}
+                        active={currentService?.id === card.id && !categoriesIds.includes(card.id)}
                         onSelect={handleSelectCard(card)}
                         card={card}
                         key={card.id}/>
