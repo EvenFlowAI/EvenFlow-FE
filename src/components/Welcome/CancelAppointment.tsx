@@ -3,7 +3,7 @@ import {WelcomeLayout} from "./WelcomeLayout";
 import {useHistory, useParams} from "react-router-dom";
 import {API} from "../../api/api";
 import {AppointmentStatus, IAppointmentByQuery} from "../../api/types";
-import {useException} from "../../utils/hooks";
+import {useException, useStorage} from "../../utils/hooks";
 import {LoadingButton} from "../UI/Button";
 import {Loading} from "../UI/Loading";
 import {useDispatch} from "react-redux";
@@ -14,8 +14,6 @@ import {Edit} from "@material-ui/icons";
 import {Routes} from "../../config/routes";
 import {NotFoundError} from "./NotFoundError";
 import {encodeSCID} from "../../utils/utils";
-import {v4 as uuidv4} from "uuid";
-import {LocalTokens} from "../../types/types";
 import {useTranslation} from "react-i18next";
 
 type TState = "loading" | "new" | "canceled" | "already_canceled" | "error";
@@ -42,6 +40,8 @@ export const CancelAppointment = () => {
     const history = useHistory();
     const {t} = useTranslation();
 
+    useStorage();
+
     useEffect(() => {
         setLoading(true);
         const lastIndex = id.lastIndexOf('==');
@@ -65,16 +65,7 @@ export const CancelAppointment = () => {
         if (appointment?.serviceCenterId) {
             dispatch(loadSCProfile(appointment.serviceCenterId));
         }
-        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
-            const uid = uuidv4();
-            sessionStorage.setItem(LocalTokens.sessionId, uid);
-        }
-        window.addEventListener('unload', () => {
-            sessionStorage.setItem(LocalTokens.sessionId, '')
-        })
-    }, [appointment, dispatch, sessionStorage]);
-
-
+    }, [appointment, dispatch]);
 
     const handleCancel = async () => {
         setSaving(true);

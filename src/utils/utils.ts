@@ -249,6 +249,68 @@ export const getTracker = (origin: string): string => {
     }
 }
 
+const ServiceCenters = {
+    HennessysRiverViewFordQuickLane: 2,
+    HennessysRiverViewFordMainServiceDrive: 6,
+    FremontCDJRCasper: 7,
+    FremontCDJRRockSprings: 8,
+    JanssenCDJRofNorthPlatte: 9,
+    JanssenSonsFord: 10,
+    MorrisSmithFordOfLarned: 13,
+    PerformanceKingsHondaCincinnati: 14,
+    PerformanceHondaFairfield: 15,
+    PerformanceLexusCincinnati: 16,
+    PerformanceLexusRiverCenter: 17,
+    PerformanceCDJRCenterville: 18,
+    PerformanceToyotaFairfield: 19,
+    LeeJanssenMotorCompanyChevrolet: 20,
+    LakePowellFord: 35,
+    TestBmwOfSchererville: 123,
+}
+
+export const getTrackerById = (id: string): string => {
+    const decodedId = decodeSCID(id);
+    if (process.env.REACT_APP_ENV === "stage") return "G-ZW2CJN5R98";
+    // if (process.env.REACT_APP_ENV === "stage") return "UA-210743216-4";
+    if (process.env.REACT_APP_ENV === "production") {
+        if (decodedId === ServiceCenters.TestBmwOfSchererville) return "UA-210743216-6";
+        //if (origin.includes(parentOrigins.riverviewford)) return "UA-210743216-3";
+        if (decodedId === ServiceCenters.HennessysRiverViewFordQuickLane) return "G-NBXVY09B7S";
+        // todo its own property in GA
+        if (decodedId === ServiceCenters.HennessysRiverViewFordMainServiceDrive) return "G-NBXVY09B7S";
+        if (origin.includes(parentOrigins.scherervilleEvenflow)) return "UA-210743216-8";
+        if (decodedId === ServiceCenters.FremontCDJRCasper) return "G-FBF51NY0TY";
+        //if (origin.includes(parentOrigins.fremontchryslerdodgejeepcasper)) return "UA-210743216-9";
+        if (decodedId === ServiceCenters.FremontCDJRRockSprings) return "G-9DVYXDJ45M";
+        //if (origin.includes(parentOrigins.fremontchryslerdodgejeeprocksprings)) return "UA-210743216-10";
+        if (decodedId === ServiceCenters.JanssenCDJRofNorthPlatte) return "G-7177QY7LH2";
+        //if (origin.includes(parentOrigins.janssenchryslerjeepdodge)) return "UA-210743216-11";
+        if (decodedId === ServiceCenters.JanssenSonsFord) return "G-YXMH70Q2JX";
+        //if (origin.includes(parentOrigins.janssenfordholdrege)) return "UA-210743216-12";
+        if (decodedId === ServiceCenters.LakePowellFord) return "G-HS4HDY3376";
+        //if (origin.includes(parentOrigins.lakepowellford)) return "UA-210743216-13";
+        if (decodedId === ServiceCenters.MorrisSmithFordOfLarned) return "G-4BFDSPFKH6";
+        //if (origin.includes(parentOrigins.larnedford)) return "UA-210743216-14";
+        if (decodedId === ServiceCenters.PerformanceKingsHondaCincinnati) return "G-P3DH15MW8P";
+        //if (origin.includes(parentOrigins.performancekingshonda)) return "UA-210743216-15";
+        if (decodedId === ServiceCenters.PerformanceHondaFairfield) return "G-JFFE7XLTF5";
+        //if (origin.includes(parentOrigins.performancehondastore)) return "UA-210743216-16";
+        if (decodedId === ServiceCenters.PerformanceLexusRiverCenter) return "G-3074D59PM3";
+        //if (origin.includes(parentOrigins.performancelexusrivercenter)) return "UA-210743216-18";
+        if (decodedId === ServiceCenters.PerformanceLexusCincinnati) return "G-5XJ8256YEZ";
+        //if (origin.includes(parentOrigins.performancelexus)) return "UA-210743216-17";
+        if (decodedId === ServiceCenters.PerformanceCDJRCenterville) return "G-EEJPTXTVF2";
+        //if (origin.includes(parentOrigins.performancechryslerjeepcenterville)) return "UA-210743216-19";
+        if (decodedId === ServiceCenters.PerformanceToyotaFairfield) return "G-HXLXXZQ4YB";
+        //if (origin.includes(parentOrigins.performancetoyotastore)) return "UA-210743216-20";
+        return "G-DWX0X9CBTT";
+        //return "UA-210743216-5";
+    } else {
+        return "G-LS5EEY1SRM";
+        //return "UA-210743216-5";
+    }
+}
+
 export const getOptions = (optionsArray: string[]): TOption[] => {
     const options: TOption[] = [];
     optionsArray.forEach((option, index) => {
