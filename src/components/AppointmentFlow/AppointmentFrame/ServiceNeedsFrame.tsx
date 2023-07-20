@@ -36,12 +36,16 @@ type TProps = {
     onBack: () => void;
     setLastSelectedCategory: Dispatch<SetStateAction<IServiceCategory|null>>;
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
+    page: EServiceCategoryPage;
+    setPage: Dispatch<SetStateAction<EServiceCategoryPage>>;
 }
 export const ServiceNeedsFrame: React.FC<TProps> = ({
                                                         onSelect,
                                                         onBack,
                                                         setLastSelectedCategory,
                                                         setNeedToShowServiceSelection,
+                                                        page,
+                                                        setPage,
 }) => {
     const {
         service: selectedService,
@@ -60,7 +64,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
-    const [page, setPage] = useState<EServiceCategoryPage>(EServiceCategoryPage.Page1);
     const {id} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -186,12 +189,12 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         }
         if (card.type === EServiceCategoryType.IndividualServices) {
             return Boolean(serviceCategories
-                .find(cat => cat.type === EServiceCategoryType.IndividualServices
+                .find(cat => cat.type === EServiceCategoryType.IndividualServices && card.id === cat.id
                     && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
         }
         if (card.type === EServiceCategoryType.Diagnose) {
             return Boolean(serviceCategories
-                .find(cat => cat.type === EServiceCategoryType.Diagnose
+                .find(cat => cat.type === EServiceCategoryType.Diagnose && card.id === cat.id
                     && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
         }
         return categoriesIds?.includes(card.id)
