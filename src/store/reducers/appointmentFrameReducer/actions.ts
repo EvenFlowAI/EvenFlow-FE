@@ -330,14 +330,15 @@ export const updateRecalls = (data: IAppointmentByQuery, id: string): AppThunk =
     } = data;
     if (vehicle?.vin && scProfile && recalls?.length) {
         if (vehicle?.makeId) dispatch(updateSelectedRecalls(scProfile.id, vehicle.vin, vehicle.makeId, recalls))
+        const serviceType = serviceTypeOption?.type === EServiceType.MobileService
+            ? EServiceType.MobileService
+            : EServiceType.VisitCenter;
         if (!maintenancePackageOption && !serviceRequests.length) {
             Api.call<PaginatedAPIResponse<IServiceCategory>>(
                 Api.endpoints.ServiceCategories.GetByQuery,
                 {data: {
                         serviceCenterId: decodeSCID(id),
-                        serviceType: serviceTypeOption?.type === EServiceType.MobileService
-                            ? EServiceType.MobileService
-                            : EServiceType.VisitCenter
+                        serviceType,
                     }}
             ).then(result => {
                 const category = result?.data?.result?.find(item => item.type === EServiceCategoryType.OpenRecalls)
