@@ -17,10 +17,9 @@ import {NotFoundError} from "./NotFoundError";
 import {encodeSCID} from "../../utils/utils";
 import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
-import {LocalTokens} from "../../types/types";
-import {v4 as uuidv4} from "uuid";
 import {loadCategoriesByQuery} from "../../store/reducers/categories/actions";
 import {useTranslation} from "react-i18next";
+import {useStorage} from "../../utils/hooks";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -41,6 +40,8 @@ export const EditAppointment = () => {
     const dispatch = useDispatch();
     const {id} = useParams();
     const {t} = useTranslation();
+
+    useStorage();
 
     useEffect(() => {
         if (selectedSC) {
@@ -64,9 +65,6 @@ export const EditAppointment = () => {
                     ...data.vehicle,
                     appointmentHashKeys: [data.hashKey]
                 }
-                // const parts = data.driver.fullName.split(" ");
-                // const fN = parts[0];
-                // const lN = parts.slice(1).join(" ");
                 const customer: ICustomerLoadedData = {
                     ...data.driver,
                     id: data.customerId,
@@ -94,16 +92,6 @@ export const EditAppointment = () => {
                 setState("error");
             })
     }, [id, dispatch, history, allCategories]);
-
-    useEffect(() => {
-        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
-            const uid = uuidv4();
-            sessionStorage.setItem(LocalTokens.sessionId, uid);
-        }
-        window.addEventListener('unload', () => {
-            sessionStorage.setItem(LocalTokens.sessionId, '')
-        })
-    }, [sessionStorage])
 
     const handleCreateNew = () => {
         if (selectedSC) {

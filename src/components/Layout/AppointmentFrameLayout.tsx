@@ -27,11 +27,11 @@ import {
     selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {encodeSCID, getTracker} from "../../utils/utils";
+import {encodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
-import {useException} from "../../utils/hooks";
+import {useAnalytics, useAnalyticsBySCId, useException, useStorage} from "../../utils/hooks";
 import {
     updateRecalls, updatePackageOption,
     setCurrentFrameScreen,
@@ -42,22 +42,18 @@ import {
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
+import {EServiceCategoryPage, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
 import ReactGA from "react-ga4";
 // import ReactGA from "react-ga";
-import {LocalTokens} from "../../types/types";
-import {v4 as uuidv4} from "uuid";
-import {options} from "./EndUserLayout";
 import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
 import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
 import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
 import {useTranslation} from "react-i18next";
 import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPage";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
-import TagManager from "react-gtm-module";
 import {TView} from "../Welcome/types";
-import {getTrimmedKey, prodParentLinks, SCREENS} from "../AppointmentFlow/AppointmentFrame/utils";
+import {getTrimmedKey, SCREENS} from "../AppointmentFlow/AppointmentFrame/utils";
 import {IServiceRequestShort} from "../../store/reducers/serviceRequests/types";
 
 const Container = styled('div')({
@@ -101,6 +97,7 @@ export const AppointmentFrameLayout = () => {
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
     const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory|null>(null);
     const [needToShowServiceTypes, setNeedToShowServiceTypes] = useState<boolean>(false)
+    const [serviceCategoryPage, setServiceCategoryPage] = useState<EServiceCategoryPage>(EServiceCategoryPage.Page1);
 
     const {id} = useParams();
     const history = useHistory();
@@ -190,73 +187,15 @@ export const AppointmentFrameLayout = () => {
         updateServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
         updateRecalls, updatePackageOption, goToServiceTypeSelection])
 
-    /** TRACKER CODE START **/
+    // useAnalytics(trackerCreated, () => dispatch(setTrackerCreated(true)))
+    useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
-    function createTracker(opt_clientId = '', origin = '', trackerCreated: boolean) {
-        const TRACKER = getTracker(origin);
-        if (!trackerCreated) {
-            if (opt_clientId) options.clientId = opt_clientId
-
-            ReactGA.initialize(TRACKER, {
-                gaOptions: options,
-            });
-            TagManager.initialize({
-                gtmId: TRACKER
-            })
-            dispatch(setTrackerCreated(true));
-        }
-    }
-
-    useEffect(() => {
-        trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
-    }, [trackerCreated])
+    useStorage();
 
     useEffect(() => {
         window.addEventListener('beforeunload', handleLogin)
         return () => window.removeEventListener('beforeunload', handleLogin)
     }, [handleLogin])
-
-    useEffect(() => {
-        if (!trackerCreated) {
-            /** expects for the post message from the parent site in order to create tracker with right trackingID **/
-            window.addEventListener('message', function(event) {
-                if (!prodParentLinks.includes(event?.origin)) return;
-                let originSite = event.origin;
-                /** in some browsers checks the parent URL and use it like origin **/
-                if (window.location?.ancestorOrigins?.length) originSite = window.location.ancestorOrigins[0];
-                if (originSite) createTracker(event.data, originSite, trackerCreated);
-            });
-        }
-    }, [trackerCreated, window.location?.ancestorOrigins]);
-
-    useEffect(() => {
-        if (!trackerCreated) {
-            /** if there are not a message from the parent site, try to get tracker from the document`s props **/
-            if (process.env.REACT_APP_ENV === "production") {
-                setTimeout(() => {
-                    const url = (window.location != window.parent?.location)
-                        ? document.referrer
-                        : document.location.href;
-                    createTracker('', url, trackerCreated);
-                }, 3000);
-            } else {
-                /**without origin (parent site URL) creates default tracker for current environment**/
-                createTracker('', '', trackerCreated);
-            }
-        }
-    }, [window.location, document.referrer, document.location])
-
-    /** TRACKER CODE END **/
-
-    useEffect(() => {
-        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
-            const uid = uuidv4();
-            sessionStorage.setItem(LocalTokens.sessionId, uid);
-        }
-        window.addEventListener('unload', () => {
-            sessionStorage.setItem(LocalTokens.sessionId, '')
-        })
-    }, [sessionStorage])
 
     useEffect(() => {
         setNeedToShowServiceTypes(Boolean(firstScreenOptions.length) && !onlyVisitCenterOptionExists && !hashKey?.length);
@@ -325,6 +264,8 @@ export const AppointmentFrameLayout = () => {
                 onUpdateAppointment={onUpdateAppointment}
                 currentConfig={currentConfig}/>,
             serviceNeeds: <ServiceNeedsFrame
+                page={serviceCategoryPage}
+                setPage={setServiceCategoryPage}
                 setLastSelectedCategory={setLastSelectedCategory}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
                 onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
@@ -353,6 +294,7 @@ export const AppointmentFrameLayout = () => {
             opsCode: <SelectOpsCode
                 onAddServices={handleChangeScreen('serviceNeeds')}
                 handleSetScreen={handleSetScreen}
+                page={serviceCategoryPage}
             />,
             vehicleData: <VehicleData
                 onBack={handleChangeScreen('describeMore')}
@@ -400,7 +342,8 @@ export const AppointmentFrameLayout = () => {
             />,
         }
         return carSelections[currentScreen];
-    }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption, needToShowServiceTypes, onUpdateAppointment]);
+    }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,
+        needToShowServiceTypes, onUpdateAppointment, serviceCategoryPage]);
 
     const getTitle = () => {
         switch (currentScreen) {

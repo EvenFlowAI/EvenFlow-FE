@@ -17,7 +17,7 @@ import {
     setSessionId
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
-import {useCurrentUser, useException, useLayout, useModal} from "../../utils/hooks";
+import {useCurrentUser, useException, useLayout, useModal, useStorage} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
@@ -30,8 +30,6 @@ import {
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {LocalTokens} from "../../types/types";
-import {v4 as uuidv4} from "uuid";
 import ServiceTypeSelect from "./ServiceTypeSelect";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import ReactGA from "react-ga4";
@@ -68,6 +66,8 @@ export const Welcome = () => {
     const currentUser = useCurrentUser();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
+    useStorage();
+
     useEffect(() => {
        if (id) {
            if (config?.length) dispatch(loadFirstScreenOptionsByQuery(decodeSCID(id)))
@@ -78,16 +78,6 @@ export const Welcome = () => {
     useEffect(() => {
         setLoading(isLoading || shortLoading || isProfileLoading)
     }, [isLoading, shortLoading, isProfileLoading])
-
-    useEffect(() => {
-        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
-            const uid = uuidv4();
-            sessionStorage.setItem(LocalTokens.sessionId, uid);
-        }
-        window.addEventListener('unload', () => {
-            sessionStorage.setItem(LocalTokens.sessionId, '')
-        })
-    }, [sessionStorage])
 
     useEffect(() => {
         clearStorage();
