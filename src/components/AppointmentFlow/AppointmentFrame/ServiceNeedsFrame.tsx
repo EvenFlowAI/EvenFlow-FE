@@ -181,7 +181,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         handleSubmit(card);
     }
 
-    const getCardState = (card: IServiceCategory): boolean => {
+    const getCardIsSelected = (card: IServiceCategory): boolean => {
         if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage || (packageEMenuType !== null));
         if (card.type === EServiceCategoryType.ValueService) return Boolean(valueService?.selectedService);
         if (card.type === EServiceCategoryType.OpenRecalls) {
@@ -200,13 +200,17 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         return categoriesIds?.includes(card.id)
     }
 
+    const getCardIsActive = (card: IServiceCategory): boolean => {
+        return currentService?.id === card.id && !categoriesIds.includes(card.id) && card.type !== EServiceCategoryType.LinkToPage2
+    }
+
     return (
         <StepWrapper>
             {!loading ? <CardsWrapper>
                 {serviceCategories.map(card => {
                     return <ServiceCard
-                        selected={getCardState(card)}
-                        active={currentService?.id === card.id && !categoriesIds.includes(card.id)}
+                        selected={getCardIsSelected(card)}
+                        active={getCardIsActive(card)}
                         onSelect={handleSelectCard(card)}
                         card={card}
                         key={card.id}/>
