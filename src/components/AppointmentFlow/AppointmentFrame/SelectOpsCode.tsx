@@ -216,11 +216,12 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
             action: 'Selected Individual Service Requests',
             label: `With Codes ${srList.filter(item => selectedCodes.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
         })
-        const categoryChosen = service?.type === 0 || subService?.type === 0;
-        if (service?.type === EServiceCategoryType.Diagnose && (!selectedPackage || !categoryChosen)) {
-            return onAdditionalOpen();
-        }
-        goNext();
+        //const categoryChosen = service?.type === 0 || subService?.type === 0;
+        // if (service?.type === EServiceCategoryType.Diagnose && (!selectedPackage || !categoryChosen)) {
+        //     return onAdditionalOpen();
+        // }
+        onAdditionalOpen()
+        // goNext();
     }
 
     // const getIndCodes = (): number[] => {

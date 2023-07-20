@@ -364,18 +364,19 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     }
 
     const askAdditionalServices = (): void => {
-        const categoryChosen = service?.type === 0 || subService?.type === 0;
-        if (!categoryChosen || !selectedSR.length) {
-            onAdditionalOpen();
-        } else {
-            handleNextScreen();
-        }
+        // const categoryChosen = service?.type === 0 || subService?.type === 0;
+        // if (!categoryChosen || !selectedSR.length) {
+        //     onAdditionalOpen();
+        // } else {
+        //     handleNextScreen();
+        // }
     }
 
     const onSave = async () => {
         selectedPackage && dispatch(setSelectedPackageOptionType(selectedPackage.type));
         await onClose();
-        await askAdditionalServices();
+        await onAdditionalOpen();
+        // await askAdditionalServices();
     }
 
     const handleGA = (selectedPackage: IPackageOptions): void => {
@@ -394,7 +395,8 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             if (packageIsSelected && packageOptionType !== null && packageOptionType !== selectedPackage.type) {
                 onOpen();
             } else {
-                askAdditionalServices();
+                onAdditionalOpen();
+                //askAdditionalServices();
                 dispatch(setSelectedPackageOptionType(selectedPackage.type));
             }
         }
@@ -409,13 +411,11 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             label: `With ${packageEMenuType === firstOption ? 'Factory' : "Dealer"} Option`,
         });
         askAdditionalServices();
-        //handleNextScreen();
     }
 
     const handleClick = (p: IPackageOptions, pricing?: EPackagePricingType) => () => {
         dispatch(setPackage(p));
         dispatch(setPackagePricingType(pricing ?? EPackagePricingType.BasePrice));
-        //handleNext(p);
     }
 
     const handleDontChangeOption = (): void => {

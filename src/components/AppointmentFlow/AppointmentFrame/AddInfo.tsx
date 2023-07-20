@@ -111,9 +111,10 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         if (isCommentRequired && !description.length) {
             return onErrorOpen();
         }
-        if (!selectedPackage || !selectedSR.length) {
-            onOpen()
-        } else handleNext()
+        onOpen()
+        // if (!selectedPackage || !selectedSR.length) {
+        //     onOpen()
+        // } else handleNext()
     }
 
     const filterCategories = () => {
