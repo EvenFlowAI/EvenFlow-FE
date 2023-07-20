@@ -63,7 +63,6 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isErrorOpen, onClose: onErrorClose, onOpen: onErrorOpen} = useModal();
     const {t} = useTranslation();
-    const screenToReturn = useMemo(() => subService ? 'serviceSelection' : 'serviceNeeds', [subService])
 
     const getScreenForNew = (): TScreen => {
         if (isAdditionalServices) {
@@ -145,7 +144,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(clearAppointmentSteps("serviceNeeds"));
-        handleSetScreen(screenToReturn);
+        handleSetScreen("serviceNeeds");
     }
 
     return (
