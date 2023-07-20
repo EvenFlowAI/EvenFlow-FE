@@ -42,7 +42,7 @@ import {
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
+import {EServiceCategoryPage, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
 import ReactGA from "react-ga4";
 // import ReactGA from "react-ga";
@@ -97,6 +97,7 @@ export const AppointmentFrameLayout = () => {
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
     const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory|null>(null);
     const [needToShowServiceTypes, setNeedToShowServiceTypes] = useState<boolean>(false)
+    const [serviceCategoryPage, setServiceCategoryPage] = useState<EServiceCategoryPage>(EServiceCategoryPage.Page1);
 
     const {id} = useParams();
     const history = useHistory();
@@ -263,6 +264,8 @@ export const AppointmentFrameLayout = () => {
                 onUpdateAppointment={onUpdateAppointment}
                 currentConfig={currentConfig}/>,
             serviceNeeds: <ServiceNeedsFrame
+                page={serviceCategoryPage}
+                setPage={setServiceCategoryPage}
                 setLastSelectedCategory={setLastSelectedCategory}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
                 onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
@@ -291,6 +294,7 @@ export const AppointmentFrameLayout = () => {
             opsCode: <SelectOpsCode
                 onAddServices={handleChangeScreen('serviceNeeds')}
                 handleSetScreen={handleSetScreen}
+                page={serviceCategoryPage}
             />,
             vehicleData: <VehicleData
                 onBack={handleChangeScreen('describeMore')}
@@ -338,7 +342,8 @@ export const AppointmentFrameLayout = () => {
             />,
         }
         return carSelections[currentScreen];
-    }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption, needToShowServiceTypes, onUpdateAppointment]);
+    }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,
+        needToShowServiceTypes, onUpdateAppointment, serviceCategoryPage]);
 
     const getTitle = () => {
         switch (currentScreen) {
