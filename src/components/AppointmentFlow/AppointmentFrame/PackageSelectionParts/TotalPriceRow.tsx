@@ -14,6 +14,8 @@ type TTotalPriceRowProps = {
     handleClick: (p: IPackageOptions, pricing: EPackagePricingType) => () => void;
     isUpsells?: boolean;
     title: string;
+    selectedPackage: IPackageOptions|null;
+    packagePricingType: EPackagePricingType|null;
 }
 
 const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean, count: number, roundPrice?: boolean }>(({
@@ -100,9 +102,8 @@ const useStyles = makeStyles({
     }
 })
 
-const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, isUpsells, title}) => {
+const TotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, isUpsells, title, selectedPackage, packagePricingType}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {selectedPackage, packagePricingType} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
     const classes = useStyles();
     const defaultString = `${t("Total")} (${t("excluding taxes & fees")})`;

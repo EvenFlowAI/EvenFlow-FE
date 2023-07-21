@@ -8,9 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {EUserType, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
     loadMakes,
-    selectService,
     setMaintenanceDetails,
-    setPackage,
     setRecallsAreShown,
     setVehicle,
     updateVehicle
@@ -304,10 +302,6 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }
 
     const handleBack = () => {
-        if (service?.type === EServiceCategoryType.MaintenancePackage) {
-            dispatch(setPackage(null))
-            dispatch(selectService(null));
-        }
         onBack(service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
             ? 'opsCode' : 'serviceNeeds');
     }

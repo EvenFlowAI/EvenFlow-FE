@@ -12,6 +12,8 @@ type TTotalPriceRowProps = {
     packages: TPackage[];
     handleClick: (p: IPackageOptions, pricing: EPackagePricingType) => () => void;
     title: string;
+    selectedPackage: IPackageOptions|null;
+    packagePricingType: EPackagePricingType|null;
 }
 
 const PriceValue = styled('div')<Theme, { selected: boolean, showDetails: boolean, count: number, roundPrice?: boolean }>(({
@@ -98,9 +100,8 @@ const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
     },
 }))
 
-const TotalPriceWithFeeRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, title}) => {
+const TotalPriceWithFeeRow: React.FC<TTotalPriceRowProps> = ({packages, handleClick, title, selectedPackage, packagePricingType}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {selectedPackage, packagePricingType} = useSelector((state: RootState) => state.appointmentFrame);
     const classes = useStyles();
 
 
