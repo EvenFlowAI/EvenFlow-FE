@@ -131,9 +131,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const handleCategoryHighlight = (selectedCategory: IServiceCategory) => {
         if (categoriesIds && selectedCategory.type !== EServiceCategoryType.LinkToPage2) {
-            // const categories = categoriesIds?.includes(selectedCategory.id)
-            //     ? categoriesIds
-            //     : [...categoriesIds, selectedCategory.id];
             dispatch(selectCategoriesIds([...categoriesIds, selectedCategory.id]));
         }
     }
@@ -204,6 +201,10 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         return currentService?.id === card.id && !categoriesIds.includes(card.id) && card.type !== EServiceCategoryType.LinkToPage2
     }
 
+    const handleNext = () => {
+        onSelect('maintenanceDetails');
+    }
+
     return (
         <StepWrapper>
             {!loading ? <CardsWrapper>
@@ -219,10 +220,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             <CartTable/>
             <Actions
                 prevDisabled={history?.location?.search?.includes('view=unique')}
-                nextDisabled={!currentService}
-                hideNext
+                hideNext={!currentService}
                 nextLabel={t("Next")}
-                onNext={() => {}}
+                onNext={handleNext}
                 onBack={handleBack} />
         </StepWrapper>
     );
