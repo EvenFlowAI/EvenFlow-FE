@@ -257,15 +257,15 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const handleBack = () => {
-        if (selectedPackage && service?.type === EServiceCategoryType.MaintenancePackage) {
-            clearPackage();
-        }
-        if (selectedSR?.length && subService?.type === EServiceCategoryType.IndividualServices) {
-            clearIndOpsCodes();
-        } else if (service?.type === EServiceCategoryType.Diagnose) {
-            clearDiagnoseCodes()
-        }
-        clearCategories();
+        // if (selectedPackage && service?.type === EServiceCategoryType.MaintenancePackage) {
+        //     clearPackage();
+        // }
+        // if (selectedSR?.length && subService?.type === EServiceCategoryType.IndividualServices) {
+        //     clearIndOpsCodes();
+        // } else if (service?.type === EServiceCategoryType.Diagnose) {
+        //     clearDiagnoseCodes()
+        // }
+        // clearCategories();
         onBack();
     }
 
