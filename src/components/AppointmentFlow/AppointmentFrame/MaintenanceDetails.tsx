@@ -7,10 +7,9 @@ import {Actions} from "./Actions";
 import {useDispatch, useSelector} from "react-redux";
 import {EUserType, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
+    clearAppointmentSteps,
     loadMakes,
-    selectService,
     setMaintenanceDetails,
-    setPackage,
     setRecallsAreShown,
     setVehicle,
     updateVehicle
@@ -82,9 +81,10 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         subService,
         userType,
         recallsAreShown,
-        categoriesIds
+        categoriesIds,
+        selectedPackage,
     }= useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
@@ -125,6 +125,11 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         const isSubServiceRecall = subService?.type == EServiceCategoryType.OpenRecalls && subService.page === EServiceCategoryPage.Page2;
         return isServiceRecall || isSubServiceRecall;
     }, [service, subService])
+
+    const onlyRecallsSelected = useMemo(() => {
+        const uniqueCategories = Array.from(new Set(categoriesIds));
+        return !selectedSR.length && !selectedPackage && isRecallsCategorySelected && uniqueCategories.length === 1
+    }, [selectedSR, selectedPackage, isRecallsCategorySelected, categoriesIds])
 
     const isNextDisabled = useMemo(() => {
         return !Boolean(maintenanceDetails.make
@@ -304,16 +309,13 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }
 
     const handleBack = () => {
-        if (service?.type === EServiceCategoryType.MaintenancePackage) {
-            dispatch(setPackage(null))
-            dispatch(selectService(null));
-        }
         onBack(service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
             ? 'opsCode' : 'serviceNeeds');
     }
 
     const handleDeclineRecalls = () => {
         if (isRecallsCategorySelected) {
+            if (onlyRecallsSelected) dispatch(clearAppointmentSteps("serviceNeeds"))
             onBack('serviceNeeds');
         } else {
             handleNext()

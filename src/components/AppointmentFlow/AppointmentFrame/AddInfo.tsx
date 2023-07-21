@@ -39,7 +39,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         subService,
         vehicle,
         vehicles,
-        selectedPackage,
+        scProfile,
         selectedSR,
         service,
         categoriesIds,
@@ -50,7 +50,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
         appointment.customerLoadedData?.vehicles,
-        appointmentFrame.selectedPackage,
+        appointment.scProfile,
         appointment.selectedSR,
         appointmentFrame.service,
         appointmentFrame.categoriesIds,
@@ -110,20 +110,19 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         if (isCommentRequired && !description.length) {
             return onErrorOpen();
         }
-        if (!selectedPackage || !selectedSR.length) {
-            onOpen()
-        } else handleNext()
+        onOpen()
     }
 
     const filterCategories = () => {
         let categories = [...categoriesIds];
-        if (subService && categoriesIds?.includes(subService.id)) {
-            categories = categoriesIds.filter(id => id !== subService?.id)
-        } else {
-            if (service && categoriesIds?.includes(service.id)) {
-                categories = categoriesIds.filter(id => id !== service?.id)
-            }
-        }
+        // if (subService && categoriesIds?.includes(subService.id)) {
+        //     categories = categoriesIds.filter(id => id !== subService?.id)
+        // } else {
+        //     if (service && categoriesIds?.includes(service.id)) {
+        //         categories = categoriesIds.filter(id => id !== service?.id)
+        //     }
+        // }
+        categories.pop()
         dispatch(selectCategoriesIds(categories))
     }
 
@@ -140,7 +139,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
 
     const handleBack = () => {
         filterCategories();
-        filterServiceRequests();
+        // filterServiceRequests();
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(clearAppointmentSteps("serviceNeeds"));
@@ -155,7 +154,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
                 onChange={handleChange}
                 value={description}
                 rows={4}
-                // required={scProfile?.isCommentRequired}
+                required={scProfile?.isCommentRequired}
                 placeholder={t("Describe what`s going on")}
             />
             <Actions onBack={handleBack} onNext={onSubmit} nextLabel={t("Next")}/>

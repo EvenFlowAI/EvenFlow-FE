@@ -131,10 +131,10 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const handleCategoryHighlight = (selectedCategory: IServiceCategory) => {
         if (categoriesIds && selectedCategory.type !== EServiceCategoryType.LinkToPage2) {
-            const categories = categoriesIds?.includes(selectedCategory.id)
-                ? categoriesIds
-                : [...categoriesIds, selectedCategory.id];
-            dispatch(selectCategoriesIds(categories));
+            // const categories = categoriesIds?.includes(selectedCategory.id)
+            //     ? categoriesIds
+            //     : [...categoriesIds, selectedCategory.id];
+            dispatch(selectCategoriesIds([...categoriesIds, selectedCategory.id]));
         }
     }
 

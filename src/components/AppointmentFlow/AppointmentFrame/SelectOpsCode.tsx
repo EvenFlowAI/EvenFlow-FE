@@ -4,7 +4,7 @@ import {StepWrapper} from "./StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useDebounce, useModal} from "../../../utils/hooks";
-import {handleSearch, selectSR} from "../../../store/reducers/appointment/actions";
+import {handleSearch, selectSR, selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core";
 import {TextField} from "../UI";
 import {InfoOutlined, Search} from "@material-ui/icons";
@@ -95,10 +95,8 @@ type TProps = {
 }
 
 export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices, page}) => {
-    const [searchInput, setSearch] = useState<string>("");
-    const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
     const [
-        selectedCodes,
+        selectedSR,
         srList,
         search,
         vehicles,
@@ -107,7 +105,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         subService,
         service,
         allCategories,
-        selectedPackage,
         categoriesIds,
         serviceTypeOption,
         config,
@@ -121,18 +118,25 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         state.appointmentFrame.subService,
         state.appointmentFrame.service,
         state.categories.allCategories,
-        state.appointmentFrame.selectedPackage,
         state.appointmentFrame.categoriesIds,
         state.appointmentFrame.serviceTypeOption,
         state.bookingFlowConfig.config,
     ]);
+
+    const [searchInput, setSearch] = useState<string>("");
+    const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
+    const [selectedOpsCodes, setSelectedOpsCodes] = useState<number[]>([]);
+
     const dispatch = useDispatch();
     const isInit = useRef(true);
     const {t} = useTranslation();
     const debouncedSearch = useDebounce(searchInput);
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-    const currentService = page === EServiceCategoryPage.Page2 ? subService : service;
+
+    useEffect(() => {
+        setSelectedOpsCodes(selectedSR);
+    }, [selectedSR])
 
     useEffect(() => {
         if (!isInit.current) {
@@ -158,7 +162,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         setInitialData()
     }, [subService, service])
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
         setSearch(e.target.value);
         const value = e?.target?.value?.toLowerCase().trim();
@@ -182,8 +186,8 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices && item.page === page);
         const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
         let categories = [...categoriesIds];
-        if (Number(value) && selectedCodes.includes(Number(value))) {
-            const filteredCodes = selectedCodes.filter(id => id !== Number(value));
+        if (Number(value) && selectedSR.includes(Number(value))) {
+            const filteredCodes = selectedSR.filter(id => id !== Number(value));
             if (!filteredCodes.find(code => diagnoseCategoryRequestsIds.includes(code))) {
                 categories = categories.filter(id => id !== diagnoseCategory?.id);
             }
@@ -196,7 +200,11 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
 
     const handleSelectCode = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         handleCategories(value);
-        dispatch(selectSR(value ? Number(value) : null));
+        setSelectedOpsCodes(prev => {
+            return prev.includes(Number(value))
+                ? prev.filter(el => el !== Number(value))
+                : [...prev, Number(value)];
+        })
     }
 
     const goNext = () => {
@@ -214,37 +222,11 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         ReactGA.event({
             category: 'EvenFlow User',
             action: 'Selected Individual Service Requests',
-            label: `With Codes ${srList.filter(item => selectedCodes.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
+            label: `With Codes ${srList.filter(item => selectedOpsCodes.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
         })
-        const categoryChosen = service?.type === 0 || subService?.type === 0;
-        if (service?.type === EServiceCategoryType.Diagnose && (!selectedPackage || !categoryChosen)) {
-            return onAdditionalOpen();
-        }
-        goNext();
+        dispatch(selectSRMultiple(selectedOpsCodes))
+        onAdditionalOpen()
     }
-
-    // const getIndCodes = (): number[] => {
-    //     let codes: number[];
-    //     const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
-    //     const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
-    //     codes = selectedCodes.filter(item => {
-    //         return !currentService?.serviceRequests.find(el => item === el.id)
-    //             || (diagnoseCategory && categoriesIds.includes(diagnoseCategory.id) && diagnoseCategoryRequestsIds.includes(item))
-    //     })
-    //     return codes;
-    // }
-    //
-    // const getDiagnoseCodes = (): number[] => {
-    //     let codes: number[];
-    //     const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
-    //     const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
-    //     codes = selectedCodes.filter(code => {
-    //         return !currentService?.serviceRequests.find(request => code === request.id)
-    //             || (individualCategory && categoriesIds.includes(individualCategory?.id) && individualRequestsIds.includes(code))
-    //     })
-    //     return codes;
-    // }
-
 
     const handleBack = () => {
         handleSetScreen('serviceNeeds');
@@ -271,7 +253,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
                 <SearchInput
                     placeholder={t("Type here")}
                     value={searchInput}
-                    onChange={handleChange}
+                    onChange={handleSearchChange}
                     style={{flexShrink: 0}}
                     InputProps={{
                         startAdornment: <IconButton
@@ -293,7 +275,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
                                     onChange={handleSelectCode}
                                     value={s.id}
                                     size={"small"}
-                                    checked={selectedCodes.includes(s.id)}
+                                    checked={selectedOpsCodes.includes(s.id)}
                                     color="primary"
                                 />
                             }
@@ -314,7 +296,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
                 <Caption title={t("The price for the service will be quoted at the dealership")}/>
             </Wrapper>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
-            <Actions onBack={handleBack} nextDisabled={!selectedCodes.length} onNext={handleNext} nextLabel={t("Next")}/>
+            <Actions onBack={handleBack} nextDisabled={!selectedOpsCodes.length} onNext={handleNext} nextLabel={t("Next")}/>
         </StepWrapper>
     );
 };
