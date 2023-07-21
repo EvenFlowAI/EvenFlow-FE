@@ -1,12 +1,11 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Tab, Tabs as Ts, withStyles} from "@material-ui/core";
 import {Done} from "@material-ui/icons";
 import {TabContext, TabPanel as Tp} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
 import {Info, TPackage} from "./PackageSelection";
-import {setPackage, setPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {useDispatch, useSelector} from "react-redux";
-import {EMaintenanceOptionType} from "../../../api/types";
+import { useSelector} from "react-redux";
+import {EMaintenanceOptionType, IPackageOptions} from "../../../api/types";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {HtmlTooltip} from "./ServiceCard";
@@ -56,6 +55,9 @@ type PackageSelectionMobileProps = {
     isBmWService: boolean;
     getTitle: (type: EPackagePricingType) => string;
     withUpsells: boolean;
+    selectedPackage: IPackageOptions|null;
+    setLocalPackage: Dispatch<SetStateAction<IPackageOptions|null>>;
+    setLocalPricingType: Dispatch<SetStateAction<EPackagePricingType|null>>;
 }
 
 const useStyles = makeStyles(() => ({
@@ -269,11 +271,12 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                                                                            data,
                                                                            isBmWService,
                                                                            withUpsells,
+                                                                           selectedPackage,
+    setLocalPackage,
+                                                                           setLocalPricingType
                                                                        }) => {
     const [value, setValue] = useState<string>('1');
-    const {selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const dispatch = useDispatch();
     const classes = useStyles();
     const {t} = useTranslation();
 
@@ -283,10 +286,10 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
         } else {
             const currentPackage = data[+value];
             if (currentPackage) {
-                dispatch(setPackage(currentPackage));
+                setLocalPackage(currentPackage)
             } else {
                 if (data.length) {
-                    dispatch(setPackage(data[0]))
+                    setLocalPackage(data[0])
                     setValue('0')
                 }
             }
@@ -296,13 +299,13 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
     const handleChange = (e: ChangeEvent<{}>, newValue: any): void => {
         setValue(newValue);
         const currentPackage = data[newValue];
-        currentPackage && dispatch(setPackage(currentPackage));
+        currentPackage && setLocalPackage(currentPackage);
     }
 
     const handleClick = (type: EMaintenanceOptionType, pricing?: EPackagePricingType) => {
         const p = data.find(item => item.type === type);
-        if (p) dispatch(setPackage(p));
-        dispatch(setPackagePricingType(pricing ?? EPackagePricingType.BasePrice));
+        if (p) setLocalPackage(p);
+        setLocalPricingType(pricing ?? EPackagePricingType.BasePrice)
     }
 
     return (

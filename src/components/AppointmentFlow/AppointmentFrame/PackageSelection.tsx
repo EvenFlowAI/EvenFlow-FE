@@ -460,6 +460,9 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                         withUpsells={!!upsells.length}
                         data={packages}
                         isBmWService={isBmWService}
+                        selectedPackage={localSelectedPackage}
+                        setLocalPackage={setLocalSelectedPackage}
+                        setLocalPricingType={setLocalSelectedPricingType}
                     />
                     : <React.Fragment>
                         <Wrapper count={packages.length}>
