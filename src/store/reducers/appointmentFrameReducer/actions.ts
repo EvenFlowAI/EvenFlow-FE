@@ -40,6 +40,10 @@ import {IFirstScreenOption} from "../serviceTypes/types";
 import {TPackagePrice} from "../packages/types";
 import {updateSelectedRecalls} from "../recall/actions";
 import {EServiceCategoryType} from "../categories/types";
+import {
+    collectServiceRequestIds,
+    mapRecallsForRequest
+} from "../../../components/AppointmentFlow/AppointmentFrame/utils";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -113,16 +117,58 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
     }
 }
 
-export const loadConsultants = (data: IConsultantsRequestData, onEmptyList: () => void): AppThunk => async dispatch => {
-    Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-        Api.endpoints.ServiceConsultants.GetByQuery, {data})
-        .then(({data: {result}}) => {
-            dispatch(setConsultants(result));
-            if (!result.length) {
-                onEmptyList()
-            }
+export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void): AppThunk => async (dispatch, getState) => {
+    const {selectedPackage, packagePricingType, packageEMenuType, selectedRecalls, selectedVehicle, address, zipCode, valueService,
+        service, subService, categoriesIds, } = getState().appointmentFrame;
+    const {selectedSR} = getState().appointment;
+    const {allCategories} = getState().categories;
+    const serviceCategoryIds = allCategories
+        .filter(category => {
+            return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
         })
-        .catch(err => console.log(err))
+        .map(item => item.id);
+
+    if (selectedVehicle) {
+        const maintenancePackageOption = selectedPackage
+            ? {id: selectedPackage?.id, priceType: packagePricingType}
+            : packageEMenuType !== null
+                ? {optionType: packageEMenuType}
+                : null;
+        const serviceRequestIds = collectServiceRequestIds(service, subService, null, selectedSR)
+        const data: IConsultantsRequestData = {
+            serviceCenterId: decodeSCID(id),
+            pageIndex: 0,
+            pageSize: 0,
+            serviceRequestIds,
+            recalls: mapRecallsForRequest(selectedRecalls),
+            serviceCategoryIds,
+            maintenancePackageOption,
+            serviceTypeOptionId,
+            searchTerm: "",
+            vehicle: {
+                vin: selectedVehicle.vin,
+                year: selectedVehicle.year,
+                make: selectedVehicle.make,
+                model: selectedVehicle.model,
+                mileage: selectedVehicle.mileage,
+                engineTypeId: selectedVehicle.engineTypeId,
+            },
+            address: typeof address === 'string' ? address : address?.label ?? '',
+            zipCode,
+        }
+        if (valueService?.selectedService) {
+            data.valueServiceOfferIds = [valueService.selectedService.id];
+        }
+        Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+            Api.endpoints.ServiceConsultants.GetByQuery, {data})
+            .then(({data: {result}}) => {
+                dispatch(setConsultants(result));
+                if (!result.length && onEmptyList) {
+                    onEmptyList()
+                }
+            })
+            .catch(err => console.log(err))
+    }
 }
 
 export const loadPackages = (id: number): AppThunk => async (dispatch, getState) => {
