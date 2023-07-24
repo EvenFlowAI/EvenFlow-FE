@@ -112,46 +112,47 @@ export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {t} = useTranslation();
 
     useEffect(() => {
-        setLoading(true);
-        const date = moment();
-        const maintenancePackageOption: MPOptionShort|null = selectedPackage
-            ? {id: selectedPackage?.id, priceType: packagePricingType}
-            : null;
-        const dd: IAppointmentSlotsRequest = {
-            appointmentTimingType: EAppointmentTimingType.PreferredDate,
-            serviceCenterId: decodeSCID(id),
-            consultantId: consultant?.id ?? null,
-            fromDate: date.toISOString(),
-            maintenancePackageOption,
-            serviceRequestIds: collectServiceRequestIds(
-                service, subService, selectedPackage, selectedOpsCodes
-            ),
-            serviceCategoryIds: getCategories(),
-            customerId: customerData?.id,
-            warrantyExpiration: selectedVehicle?.warrantyExpiration,
-            serviceTypeOptionId: serviceTypeOption?.id ?? null,
-            recalls: mapRecallsForRequest(selectedRecalls),
-        }
-        if (valueService?.selectedService) {
-            dd.valueServiceOfferIds = [valueService.selectedService.id];
-        }
-        if (vehicle) {
-            dd.vehicle = {
-                vin: vehicle.vin,
-                year: vehicle.year,
-                make: vehicle.make,
-                model: vehicle.model,
-                mileage: vehicle.mileage,
-                engineTypeId: vehicle.engineTypeId,
-            }
-        }
-        if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
-        if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-            // todo uncomment when the calendar dates disabling functionality will be ready
-            // dispatch(loadServiceValetSlots(dd, () => {}, () => setLoading(false)));
-        } else {
-            dispatch(loadAppointmentSlots(dd, () => {}, () => setLoading(false)));
-        }
+        // todo uncomment when the calendar dates disabling functionality will be ready
+        // setLoading(true);
+        // const date = moment();
+        // const maintenancePackageOption: MPOptionShort|null = selectedPackage
+        //     ? {id: selectedPackage?.id, priceType: packagePricingType}
+        //     : null;
+        // const dd: IAppointmentSlotsRequest = {
+        //     appointmentTimingType: EAppointmentTimingType.PreferredDate,
+        //     serviceCenterId: decodeSCID(id),
+        //     consultantId: consultant?.id ?? null,
+        //     fromDate: date.toISOString(),
+        //     maintenancePackageOption,
+        //     serviceRequestIds: collectServiceRequestIds(
+        //         service, subService, selectedPackage, selectedOpsCodes
+        //     ),
+        //     serviceCategoryIds: getCategories(),
+        //     customerId: customerData?.id,
+        //     warrantyExpiration: selectedVehicle?.warrantyExpiration,
+        //     serviceTypeOptionId: serviceTypeOption?.id ?? null,
+        //     recalls: mapRecallsForRequest(selectedRecalls),
+        // }
+        // if (valueService?.selectedService) {
+        //     dd.valueServiceOfferIds = [valueService.selectedService.id];
+        // }
+        // if (vehicle) {
+        //     dd.vehicle = {
+        //         vin: vehicle.vin,
+        //         year: vehicle.year,
+        //         make: vehicle.make,
+        //         model: vehicle.model,
+        //         mileage: vehicle.mileage,
+        //         engineTypeId: vehicle.engineTypeId,
+        //     }
+        // }
+        // if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
+        // if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+        //     // todo uncomment when the calendar dates disabling functionality will be ready
+        //     // dispatch(loadServiceValetSlots(dd, () => {}, () => setLoading(false)));
+        // } else {
+        //     dispatch(loadAppointmentSlots(dd, () => {}, () => setLoading(false)));
+        // }
     }, [consultant, service, subService, selectedPackage, selectedOpsCodes, customerData, selectedVehicle, valueService, vehicle, userType, customerEnteredEmail])
 
     const getCategories = useCallback((): number[] => {
