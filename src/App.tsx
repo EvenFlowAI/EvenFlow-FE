@@ -37,6 +37,8 @@ const App = () => {
     useEffect(() => {
         if (serviceTypeOption?.type === EServiceType.MobileService || serviceTypeOption?.type === EServiceType.PickUpDropOff) {
             setValueServicePreviousScreen("location");
+        } else {
+            setValueServicePreviousScreen("serviceNeeds");
         }
         const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
         const currentConfig = config.find(item => item.serviceType?.toString() === serviceType.toString());

@@ -158,7 +158,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
 
     const getCategoryOptions = () => {
         let options: TOption[] = categoryOptions;
-        if (selectedSC?.isValueServiceAvailable && visitCenterConfig?.valueService) {
+        if (!selectedSC?.isValueServiceAvailable || !visitCenterConfig?.valueService) {
             options = categoryOptions.filter(o => o.value !== EServiceCategoryType.ValueService)
         }
         if (definedPage?.value === 1) {
