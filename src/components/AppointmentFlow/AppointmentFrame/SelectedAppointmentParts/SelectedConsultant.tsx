@@ -12,6 +12,7 @@ import {useSelectedAppointmentStyles} from "../SelectedAppointment";
 import {RootState} from "../../../../store/rootReducer";
 import {TServiceTypeSettings} from "../../../../store/reducers/bookingFlowConfig/types";
 import {EServiceCenterName} from "../../../../api/types";
+import {loginTheme} from "../../../../theme/theme";
 
 type TSelectedConsultantProps = {
     currentConfig: TServiceTypeSettings|undefined;

@@ -7,9 +7,11 @@ import {useTranslation} from "react-i18next";
 import {useSelectedAppointmentStyles} from "../SelectedAppointment";
 import {selectAppointment, selectServiceValetAppointment} from "../../../../store/reducers/appointment/actions";
 import {
+    loadConsultants,
     setServiceTypeOption,
     setSideBarSteps, setTransportation
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {useParams} from "react-router-dom";
 
 const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const {
@@ -24,6 +26,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const {t} = useTranslation();
     const classes = useSelectedAppointmentStyles();
     const dispatch = useDispatch();
+    const {id} = useParams();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const wasSelectedSecondaryTypes = useMemo(() => {
@@ -56,14 +59,17 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
 
     const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         dispatch(setTransportation(null));
+        const option = firstScreenOptions.find(item => item.id === e.target.value);
+        if (option) {
+            dispatch(setServiceTypeOption(option));
+            dispatch(loadConsultants(id, option.id));
+        }
         if (e.target.value === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));
         } else {
             dispatch(selectServiceValetAppointment(null));
         }
         handleSideBar();
-        const option = firstScreenOptions.find(item => item.id === e.target.value);
-        if (option) dispatch(setServiceTypeOption(option));
     }
 
     return wasSelectedSecondaryTypes

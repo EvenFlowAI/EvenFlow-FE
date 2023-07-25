@@ -6,16 +6,10 @@ import {styled, Theme} from "@material-ui/core";
 import {ReactComponent as AnyConsultantIcon} from '../../../assets/img/advisor_black.svg';
 import {ReactComponent as ConsultantIcon} from '../../../assets/img/advisor_grey.svg';
 import {TCallback} from "../../../types/types";
-import {IConsultantsRequestData, IServiceConsultant} from '../../../api/types';
+import {IServiceConsultant} from '../../../api/types';
 import {
     loadConsultants,
-    selectCategoriesIds,
-    selectService,
-    selectSubService,
     setAdvisor,
-    setPackage,
-    setPackageIsSelected,
-    setSelectedPackageOptionType,
     setSideBarActualSteps,
     setSideBarMenu,
     setSideBarStepsList
@@ -26,18 +20,15 @@ import {Loading} from "../../UI/Loading";
 import {
     selectAppointment,
     selectServiceValetAppointment,
-    selectSRMultiple
 } from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
 import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
 import {useParams} from "react-router-dom";
-import {decodeSCID} from "../../../utils/utils";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
-   // gridTemplateColumns: "1fr 1fr 1fr 1fr",
     gridTemplateColumns: "1fr 1fr 1fr",
     alignItems: "stretch",
     justifyContent: "flex-start",
@@ -53,11 +44,8 @@ const ConsultantsWrapper = styled('div')(({theme}) => ({
 
 const ConsultantWrapper = styled(
     ({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
-    //display: "flex",
     display: 'grid',
     gridGap: 16,
-    // rowGap: 16,
-    // columnGap: 16,
     gridTemplateColumns: '1fr 1fr',
     border: `1px solid ${active ? "#000000" : "#DADADA"}`,
     color: active ? "#FFFFFF" : theme.palette.text.primary,
@@ -122,13 +110,9 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         service,
         subService,
         categoriesIds,
-        selectedRecalls,
         selectedVehicle,
         packagePricingType,
         serviceTypeOption,
-        address,
-        zipCode,
-        valueService,
         packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
@@ -160,40 +144,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }, [allCategories, EServiceCategoryType, categoriesIds])
 
     useEffect(() => {
-        if (selectedVehicle) {
-            const maintenancePackageOption = selectedPackage
-                ? {id: selectedPackage?.id, priceType: packagePricingType}
-                : packageEMenuType !== null
-                    ? {optionType: packageEMenuType}
-                    : null;
-
-            const data: IConsultantsRequestData = {
-                serviceCenterId: decodeSCID(id),
-                pageIndex: 0,
-                pageSize: 0,
-                serviceRequestIds,
-                recalls: mapRecallsForRequest(selectedRecalls),
-                serviceCategoryIds: getCategories(),
-                maintenancePackageOption,
-                serviceTypeOptionId: serviceTypeOption?.id ??  null,
-                searchTerm: "",
-                vehicle: {
-                    vin: selectedVehicle.vin,
-                    year: selectedVehicle.year,
-                    make: selectedVehicle.make,
-                    model: selectedVehicle.model,
-                    mileage: selectedVehicle.mileage,
-                    engineTypeId: selectedVehicle.engineTypeId,
-                },
-                address: typeof address === 'string' ? address : address?.label ?? '',
-                zipCode,
-            }
-            if (valueService?.selectedService) {
-                data.valueServiceOfferIds = [valueService.selectedService.id];
-            }
-            dispatch(loadConsultants(data, onNext))
-        }
-    }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage])
+        dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, onNext))
+    }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage, serviceTypeOption])
 
     useEffect(() => {
         dispatch(setSideBarMenu(getCurrentMenu(serviceType, advisorSelection, transportationNeeds)))
@@ -208,65 +160,6 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(setAdvisor(c));
-    }
-
-    const clearPackage = () => {
-        dispatch(setPackage(null));
-        dispatch(selectService(null));
-        dispatch(setSelectedPackageOptionType(null))
-        dispatch(setPackageIsSelected(false));
-    }
-
-    const clearIndOpsCodes = () => {
-        let codes: number[];
-        const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
-        const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
-        codes = selectedSR.filter(item => {
-            return !subService?.serviceRequests.find(el => item === el.id)
-                || (diagnoseCategory && categoriesIds.includes(diagnoseCategory.id) && diagnoseCategoryRequestsIds.includes(item))
-        })
-        dispatch(selectSubService(null));
-        dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== subService?.id)));
-        dispatch(selectSRMultiple(codes));
-    }
-
-    const clearDiagnoseCodes = () => {
-        let codes: number[];
-        const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
-        const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
-        codes = selectedSR.filter(code => {
-            return !service?.serviceRequests.find(request => code === request.id)
-                || (individualCategory && categoriesIds.includes(individualCategory?.id) && individualRequestsIds.includes(code))
-        })
-        dispatch(selectService(null));
-        dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));
-        dispatch(selectSRMultiple(codes));
-    }
-
-    const clearCategories = () => {
-        let categories = [...categoriesIds];
-        if (service && categoriesIds?.includes(service.id)) {
-            dispatch(selectService(null));
-            categories = categories.filter(item => item !== service.id);
-        }
-        if (subService && categoriesIds?.includes(subService.id)) {
-            dispatch(selectSubService(null));
-            categories = categories.filter(item => item !== subService.id);
-        }
-        dispatch(selectCategoriesIds(categories));
-    }
-
-    const handleBack = () => {
-        // if (selectedPackage && service?.type === EServiceCategoryType.MaintenancePackage) {
-        //     clearPackage();
-        // }
-        // if (selectedSR?.length && subService?.type === EServiceCategoryType.IndividualServices) {
-        //     clearIndOpsCodes();
-        // } else if (service?.type === EServiceCategoryType.Diagnose) {
-        //     clearDiagnoseCodes()
-        // }
-        // clearCategories();
-        onBack();
     }
 
     return (<StepWrapper>
@@ -287,6 +180,6 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             </React.Fragment>
             }
         </ConsultantsWrapper>
-        <Actions onNext={onNext} onBack={handleBack} nextLabel={t("Next")}/>
+        <Actions onNext={onNext} onBack={onBack} nextLabel={t("Next")}/>
     </StepWrapper>);
 };

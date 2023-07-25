@@ -74,7 +74,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
     const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterOptionExists || isManagingAppointment;
-    const currentService = useMemo(() => page === EServiceCategoryPage.Page1 ? selectedService : subService, [page, selectedService, subService]);
+    const currentService = useMemo(() => page === EServiceCategoryPage.Page1
+        ? selectedService
+        : subService, [page, selectedService, subService]);
 
     const handleBackScreen = () => {
         setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
@@ -220,7 +222,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             <CartTable/>
             <Actions
                 prevDisabled={history?.location?.search?.includes('view=unique')}
-                hideNext={!currentService}
+                hideNext={!selectedService && !subService}
                 nextLabel={t("Next")}
                 onNext={handleNext}
                 onBack={handleBack} />
