@@ -1,7 +1,9 @@
 import {IOrder} from "../types/types";
 import {TRole} from "../store/reducers/users/types";
 
-let apiHost = "https://be.dev.evenflow.ai";
+//let apiHost = "https://be.dev.evenflow.ai";
+let apiHost = "https://3.134.209.56";
+
 // todo change
 // let apiHost = "https://api.evenflow.ai";
 switch(process.env.REACT_APP_ENV){
