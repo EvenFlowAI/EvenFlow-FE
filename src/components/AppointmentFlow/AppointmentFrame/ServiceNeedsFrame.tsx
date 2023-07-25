@@ -188,12 +188,16 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         }
         if (card.type === EServiceCategoryType.IndividualServices) {
             return Boolean(serviceCategories
-                .find(cat => cat.type === EServiceCategoryType.IndividualServices && card.id === cat.id
+                .find(cat => cat.type === EServiceCategoryType.IndividualServices
+                    && categoriesIds.includes(card.id)
+                    && card.id === cat.id
                     && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
         }
         if (card.type === EServiceCategoryType.Diagnose) {
             return Boolean(serviceCategories
-                .find(cat => cat.type === EServiceCategoryType.Diagnose && card.id === cat.id
+                .find(cat => cat.type === EServiceCategoryType.Diagnose
+                    && categoriesIds.includes(card.id)
+                    && card.id === cat.id
                     && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
         }
         return categoriesIds?.includes(card.id)
