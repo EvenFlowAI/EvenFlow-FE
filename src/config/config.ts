@@ -2,7 +2,7 @@ import {IOrder} from "../types/types";
 import {TRole} from "../store/reducers/users/types";
 
 //let apiHost = "https://be.dev.evenflow.ai";
-let apiHost = "https://3.134.209.56";
+let apiHost = "http://3.134.209.56:5000";
 
 // todo change
 // let apiHost = "https://api.evenflow.ai";
