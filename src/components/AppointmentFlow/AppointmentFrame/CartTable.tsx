@@ -132,15 +132,16 @@ const CartTable = () => {
         const indServiceCategory = allCategories.find(category => category.type === EServiceCategoryType.IndividualServices);
         const diagnoseCategory = allCategories.find(category => category.type === EServiceCategoryType.Diagnose);
         let categories = [...categoriesIds];
-        if (!indServiceCategory?.serviceRequests.find(request => request.id === item.id)) {
-            if (subService?.type === indServiceCategory?.type && !services.length) dispatch(selectSubService(null))
-            if (service?.type === indServiceCategory?.type && !services.length) dispatch(selectService(null))
+        // todo delete by page not by category type & fix filtering
+        if (!indServiceCategory?.serviceRequests.find(request => request.id)) {
+            if (subService?.type === indServiceCategory?.type) dispatch(selectSubService(null))
+            if (service?.type === indServiceCategory?.type) dispatch(selectService(null))
             categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
             dispatch(selectCategoriesIds(categories));
         }
-        if (!diagnoseCategory?.serviceRequests.find(request => request.id === item.id)) {
-            if (subService?.type === diagnoseCategory?.type && !services.length) dispatch(selectSubService(null))
-            if (service?.type === diagnoseCategory?.type && !services.length) dispatch(selectService(null))
+        if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
+            if (subService?.type === diagnoseCategory?.type) dispatch(selectSubService(null))
+            if (service?.type === diagnoseCategory?.type) dispatch(selectService(null))
             categories = categories.filter(id => id !== diagnoseCategory?.id)
             dispatch(selectCategoriesIds(categories));
         }
