@@ -52,8 +52,7 @@ type TProps = {
 }
 
 export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments, dateRangeUpdated, onDateRangeSet}) => {
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
-    const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const theme = useTheme();
     const dispatch = useDispatch();
@@ -64,8 +63,6 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     const daysPerScreen: number = useMemo(() => {
         return isSm ? 4 : isMds ? 5 : 6;
     }, [isSm, isMds]);
-    const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
-    const currentConfig = config.find(item => item.serviceType?.toString() === serviceType.toString());
     
     const {selectedTiming} = useSelector((state: RootState) => state.appointmentFrame);
     const {searchedDateRange, appointment} = useSelector((state: RootState) => state.appointment);

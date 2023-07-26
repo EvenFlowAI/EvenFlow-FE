@@ -1,15 +1,28 @@
 import {TServiceTypeSettings} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
-import {setBookingFlowConfig, setBookingFlowConfigLoading} from "./actions";
+import {
+    setAdvisorAvailable, setAppointmentTimingAvailable,
+    setBookingFlowConfig,
+    setBookingFlowConfigLoading, setCurrentConfig,
+    setTransportationAvailable
+} from "./actions";
 
 interface InitialState {
     config: TServiceTypeSettings[],
     isLoading: boolean;
+    currentConfig: TServiceTypeSettings|null;
+    isAdvisorAvailable: boolean;
+    isTransportationAvailable: boolean;
+    isAppointmentTimingAvailable: boolean;
 }
 
 const initialState: InitialState = {
     config: [],
     isLoading: false,
+    currentConfig: null,
+    isAdvisorAvailable: false,
+    isTransportationAvailable: false,
+    isAppointmentTimingAvailable: false,
 }
 
 export const bookingFlowConfigReducer = createReducer(initialState, builder => builder
@@ -18,5 +31,25 @@ export const bookingFlowConfigReducer = createReducer(initialState, builder => b
     })
     .addCase(setBookingFlowConfigLoading, (state, {payload}) => {
         return {...state, isLoading: payload};
+    })
+    .addCase(setAdvisorAvailable, (state, {payload}) => {
+        return {...state, isAdvisorAvailable: payload};
+    })
+    .addCase(setTransportationAvailable, (state, {payload}) => {
+        return {...state, isTransportationAvailable: payload};
+    })
+    .addCase(setAppointmentTimingAvailable, (state, {payload}) => {
+        return {...state, isAppointmentTimingAvailable: payload};
+    })
+    .addCase(setCurrentConfig, (state, {payload}) => {
+        if (payload) {
+            return {...state,
+                currentConfig: payload,
+                isAdvisorAvailable: payload.advisorSelection,
+                isTransportationAvailable: payload.transportationNeeds,
+                isAppointmentTimingAvailable: payload.appointmentSelection,
+            }
+        }
+        return {...state, currentConfig: payload};
     })
 )

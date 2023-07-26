@@ -7,6 +7,10 @@ import {EServiceType} from "../appointmentFrameReducer/types";
 
 export const setBookingFlowConfig = createAction<TServiceTypeSettings[]>("BookingFlowConfig/SetConfig");
 export const setBookingFlowConfigLoading = createAction<boolean>("BookingFlowConfig/SetLoading");
+export const setAdvisorAvailable = createAction<boolean>("BookingFlowConfig/SetAdvisorAvailable");
+export const setTransportationAvailable = createAction<boolean>("BookingFlowConfig/SetTransportationAvailable");
+export const setAppointmentTimingAvailable = createAction<boolean>("BookingFlowConfig/SetAppointmentTimingAvailable");
+export const setCurrentConfig = createAction<TServiceTypeSettings|null>("BookingFlowConfig/SetCurrentConfig");
 
 export const loadBookingFlowConfig = (id: number): AppThunk => dispatch => {
     dispatch(setBookingFlowConfigLoading(true));

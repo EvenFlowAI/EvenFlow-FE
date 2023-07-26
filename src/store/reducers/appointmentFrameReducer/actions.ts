@@ -44,6 +44,7 @@ import {
     collectServiceRequestIds,
     mapRecallsForRequest
 } from "../../../components/AppointmentFlow/AppointmentFrame/utils";
+import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -163,8 +164,9 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
             Api.endpoints.ServiceConsultants.GetByQuery, {data})
             .then(({data: {result}}) => {
                 dispatch(setConsultants(result));
-                if (!result.length && onEmptyList) {
-                    onEmptyList()
+                if (!result.length) {
+                    onEmptyList && onEmptyList()
+                    dispatch(setAdvisorAvailable(false));
                 }
             })
             .catch(err => console.log(err))

@@ -27,7 +27,6 @@ import {useTranslation} from "react-i18next";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
-import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import RecallsByVin from "../../Modals/RecallsByVin/RecallsByVin";
 import {Api} from "../../../config/requests";
 import {Loading} from "../../UI/Loading";
@@ -68,10 +67,9 @@ type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 type TMaintenanceDetailsProps = {
     onBack: TArgCallback<TScreen>;
     onNext: TArgCallback<TScreen>;
-    currentConfig: TServiceTypeSettings|undefined;
 }
 
-export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
+export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack}) => {
     const {
         maintenanceDetails,
         selectedVehicle,
@@ -86,6 +84,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
+    const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);

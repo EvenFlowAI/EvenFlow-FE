@@ -91,7 +91,7 @@ export const AppointmentFrameLayout = () => {
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
@@ -110,10 +110,6 @@ export const AppointmentFrameLayout = () => {
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-
-    const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType?.toString() === serviceType?.toString());
-    }, [config, serviceType])
 
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
@@ -261,8 +257,7 @@ export const AppointmentFrameLayout = () => {
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
                 needToShowServiceSelection={needToShowServiceTypes}
                 handleSetScreen={handleSetScreen}
-                onUpdateAppointment={onUpdateAppointment}
-                currentConfig={currentConfig}/>,
+                onUpdateAppointment={onUpdateAppointment}/>,
             serviceNeeds: <ServiceNeedsFrame
                 page={serviceCategoryPage}
                 setPage={setServiceCategoryPage}
@@ -278,17 +273,14 @@ export const AppointmentFrameLayout = () => {
             maintenanceDetails: <MaintenanceDetails
                 onBack={handleSetScreen}
                 onNext={handleSetScreen}
-                currentConfig={currentConfig}
             />,
             packageSelection: <PackageSelection
-                currentConfig={currentConfig}
                 onBack={handleChangeScreen('maintenanceDetails')}
                 onNext={handleSetScreen}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             describeMore: <AddInfo
                 handleSetScreen={handleSetScreen}
-                currentConfig={currentConfig}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             opsCode: <SelectOpsCode
@@ -298,7 +290,6 @@ export const AppointmentFrameLayout = () => {
             />,
             vehicleData: <VehicleData
                 onBack={handleChangeScreen('describeMore')}
-                currentConfig={currentConfig}
                 onNext={handleSetScreen}
             />,
             consultantSelection: <ConsultantSelection
@@ -311,7 +302,6 @@ export const AppointmentFrameLayout = () => {
             />,
             appointmentSelection: <AppointmentSelection
                 handleSetScreen={handleSetScreen}
-                currentConfig={currentConfig}
             />,
             transportationNeeds: <TransportationNeeds
                 onBack={handleChangeScreen('appointmentSelection')}

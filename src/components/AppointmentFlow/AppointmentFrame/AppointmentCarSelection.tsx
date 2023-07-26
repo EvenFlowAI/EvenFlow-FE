@@ -18,7 +18,6 @@ import {
 import {useTranslation} from "react-i18next";
 import {TScreen} from "../../Layout/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import {getBlankVehicle, selectSR, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {useException} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
@@ -78,14 +77,13 @@ type TProps = {
     onBack: TCallback;
     loading: boolean;
     needToShowServiceSelection: boolean;
-    currentConfig: TServiceTypeSettings|undefined;
     handleSetScreen: TArgCallback<TScreen>;
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
     onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
 }
 export const AppointmentCarSelection: React.FC<TProps> = ({
                                                               onUpdateAppointment, onBack, loading, handleSetScreen,
-                                                              needToShowServiceSelection, setNeedToShowServiceSelection, currentConfig
+                                                              needToShowServiceSelection, setNeedToShowServiceSelection
                                                           }) => {
 
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -97,6 +95,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         makes
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
+    const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();

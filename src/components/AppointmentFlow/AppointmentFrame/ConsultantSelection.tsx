@@ -117,20 +117,12 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams();
     const {t} = useTranslation();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-    const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType.toString() === serviceType.toString());
-    }, [config, serviceType]);
-
-    const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection) && Boolean(consultants.length), [currentConfig, consultants]);
-    const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
-    const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds &&
-        !serviceTypeOption?.transportationOption), [currentConfig, serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(service, subService, null, selectedSR);
     }, [service, subService, selectedSR]);
@@ -148,13 +140,13 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage, serviceTypeOption])
 
     useEffect(() => {
-        dispatch(setSideBarMenu(getCurrentMenu(serviceType, advisorSelection, transportationNeeds)))
-    }, [serviceType, advisorSelection, transportationNeeds, getCurrentMenu])
+        dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable)))
+    }, [serviceType, isAdvisorAvailable, isTransportationAvailable, getCurrentMenu])
 
     useEffect(() => {
-        dispatch(setSideBarActualSteps(getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
-        dispatch(setSideBarStepsList(getStepsScreen(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
-    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, getStepsMap, getStepsScreen])
+        dispatch(setSideBarActualSteps(getStepsMap(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
+        dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
+    }, [serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, getStepsMap, getStepsScreen])
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
         dispatch(selectAppointment(null));
@@ -164,7 +156,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     return (<StepWrapper>
         <ConsultantsWrapper>
-            {loading || !advisorSelection ? <Loading /> : <React.Fragment>
+            {loading || !isAdvisorAvailable ? <Loading /> : <React.Fragment>
                 <ConsultantCard
                     blank
                     onClick={handleSelectConsultant(null)}

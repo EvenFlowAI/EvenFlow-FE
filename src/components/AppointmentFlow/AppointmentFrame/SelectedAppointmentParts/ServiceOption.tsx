@@ -7,7 +7,7 @@ import {useTranslation} from "react-i18next";
 import {useSelectedAppointmentStyles} from "../SelectedAppointment";
 import {selectAppointment, selectServiceValetAppointment} from "../../../../store/reducers/appointment/actions";
 import {
-    loadConsultants,
+    loadConsultants, setAdvisor,
     setServiceTypeOption,
     setSideBarSteps, setTransportation
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
@@ -63,6 +63,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         if (option) {
             dispatch(setServiceTypeOption(option));
             dispatch(loadConsultants(id, option.id));
+            dispatch(setAdvisor(null));
         }
         if (e.target.value === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));

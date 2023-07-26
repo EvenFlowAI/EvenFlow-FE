@@ -23,7 +23,6 @@ import {
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {useTranslation} from "react-i18next";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import AddCommentPrompt from "../../Modals/AddCommentPrompt/AddCommentPrompt";
 
 type TProps = {
@@ -32,9 +31,8 @@ type TProps = {
     nextLabel?: string;
     loading?: boolean;
     onAddServices: () => void;
-    currentConfig: TServiceTypeSettings|undefined;
 };
-export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, currentConfig}) => {
+export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
     const [
         subService,
         vehicle,
@@ -46,7 +44,8 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         allCategories,
         userType,
         isAdditionalServices,
-    ] = useSelector(({appointmentFrame, appointment, categories}: RootState) => [
+        currentConfig,
+    ] = useSelector(({appointmentFrame, appointment, categories, bookingFlowConfig}: RootState) => [
         appointmentFrame.subService,
         appointmentFrame.selectedVehicle,
         appointment.customerLoadedData?.vehicles,
@@ -57,6 +56,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         categories.allCategories,
         appointmentFrame.userType,
         appointmentFrame.isAdditionalServices,
+        bookingFlowConfig.currentConfig,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
@@ -127,16 +127,16 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         dispatch(selectCategoriesIds(categories))
     }
 
-    const filterServiceRequests = () => {
-        if (subService?.type === EServiceCategoryType.IndividualServices) {
-            const diagnoseCategoryRequestsIds: number[] = allCategories
-                .find(item => item.type === EServiceCategoryType.Diagnose)
-                ?.serviceRequests.map(item => item.id) || [];
-            const codes = selectedSR
-                .filter(item => !subService.serviceRequests.find(el => item === el.id) || diagnoseCategoryRequestsIds.includes(item))
-            dispatch(selectSRMultiple(codes));
-        }
-    }
+    // const filterServiceRequests = () => {
+    //     if (subService?.type === EServiceCategoryType.IndividualServices) {
+    //         const diagnoseCategoryRequestsIds: number[] = allCategories
+    //             .find(item => item.type === EServiceCategoryType.Diagnose)
+    //             ?.serviceRequests.map(item => item.id) || [];
+    //         const codes = selectedSR
+    //             .filter(item => !subService.serviceRequests.find(el => item === el.id) || diagnoseCategoryRequestsIds.includes(item))
+    //         dispatch(selectSRMultiple(codes));
+    //     }
+    // }
 
     const handleBack = () => {
         filterCategories();

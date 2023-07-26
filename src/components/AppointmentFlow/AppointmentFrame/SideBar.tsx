@@ -76,29 +76,26 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
         serviceTypeOption,
         isAppointmentSaving
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {currentConfig, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const theme = useTheme();
     const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const {t} = useTranslation();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-    const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType.toString() === serviceType.toString())
-    }, [config, serviceType]);
-    const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection), [currentConfig]);
-    const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
-    const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds
-        && !serviceTypeOption?.transportationOption), [currentConfig, serviceTypeOption]);
+    // const isAdvisorAvailable = useMemo(() => Boolean(currentConfig?.advisorSelection), [currentConfig]);
+    // const isAppointmentAvailable = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
+    // const isTransportationAvailable = useMemo(() => Boolean(currentConfig?.transportationNeeds
+    //     && !serviceTypeOption?.transportationOption), [currentConfig, serviceTypeOption]);
 
     useEffect(() => {
-        dispatch(setSideBarMenu(getCurrentMenu(serviceType, advisorSelection, transportationNeeds)))
-    }, [serviceType, advisorSelection, transportationNeeds, getCurrentMenu])
+        dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable)))
+    }, [serviceType, isAdvisorAvailable, isTransportationAvailable, getCurrentMenu])
 
     useEffect(() => {
-        dispatch(setSideBarActualSteps(getStepsMap(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
-        dispatch(setSideBarStepsList(getStepsScreen(serviceType, advisorSelection, appointmentSelection, transportationNeeds)))
-    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, getStepsMap])
+        dispatch(setSideBarActualSteps(getStepsMap(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
+        dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
+    }, [serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, getStepsMap])
 
     useEffect(() => {
         dispatch(setSideBarSteps(Array.from(new Set([...sideBarSteps, screen]))));
@@ -125,7 +122,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
             return (currentScreenNumberValue < index + 1 && lastPassedScreenNumberValue < index + 1);
         }
         return false;
-    }, [serviceType, advisorSelection, appointmentSelection, transportationNeeds, sideBarSteps, sideBarActualSteps, screen, isAppointmentSaving])
+    }, [serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, sideBarSteps, sideBarActualSteps, screen, isAppointmentSaving])
 
     const activeButtonStyles = {
         background: '#E6FCEC',
