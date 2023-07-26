@@ -62,7 +62,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "buildStage": "REACT_APP_ENV=stage react-scripts build",
+    "buildUAT": "REACT_APP_ENV=uat react-scripts build",
     "buildProduction": "REACT_APP_ENV=production react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
