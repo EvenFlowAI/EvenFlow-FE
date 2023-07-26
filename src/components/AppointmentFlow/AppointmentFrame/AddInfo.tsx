@@ -87,11 +87,12 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
     }
 
     const handleNext = () => {
-        if (checkSelectedCar(vehicle, vehicles) || (vehicle?.mileage && userType === EUserType.Existing)) {
-            handleSetScreen(getScreenForExisting());
-        } else {
-            handleSetScreen(getScreenForNew());
-        }
+        handleSetScreen(getScreenForNew());
+        // if (checkSelectedCar(vehicle, vehicles) || (vehicle?.mileage && userType === EUserType.Existing)) {
+        //     handleSetScreen(getScreenForExisting());
+        // } else {
+        //     handleSetScreen(getScreenForNew());
+        // }
     }
 
     const handleYes = () => {
