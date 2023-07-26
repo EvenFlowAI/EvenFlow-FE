@@ -76,16 +76,13 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
         serviceTypeOption,
         isAppointmentSaving
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
     const theme = useTheme();
     const dispatch = useDispatch();
     const isSm = useMediaQuery(theme.breakpoints.down('sm'));
     const {t} = useTranslation();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-    const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType.toString() === serviceType.toString())
-    }, [config, serviceType]);
     const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection), [currentConfig]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
     const transportationNeeds = useMemo(() => Boolean(currentConfig?.transportationNeeds

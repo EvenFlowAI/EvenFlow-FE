@@ -19,13 +19,13 @@ import {RootState} from "./store/rootReducer";
 import {setCurrentFrameScreen, setValueService} from "./store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "./components/Layout/types";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
-import {loadBookingFlowConfig} from "./store/reducers/bookingFlowConfig/actions";
+import {loadBookingFlowConfig, setCurrentConfig} from "./store/reducers/bookingFlowConfig/actions";
 import PaymentBill from "./components/AppointmentFlow/PaymentBill/PaymentBill";
 import {EServiceCenterName} from "./api/types";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {config, currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
@@ -35,18 +35,23 @@ const App = () => {
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
 
     useEffect(() => {
+        const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
+        const currentConfiguration = config.find(item => item.serviceType?.toString() === serviceType.toString());
+        if (currentConfiguration) dispatch(setCurrentConfig(currentConfiguration))
+    }, [serviceTypeOption, config])
+
+    useEffect(() => {
         if (serviceTypeOption?.type === EServiceType.MobileService || serviceTypeOption?.type === EServiceType.PickUpDropOff) {
             setValueServicePreviousScreen("location");
         } else {
             setValueServicePreviousScreen("serviceNeeds");
         }
         const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
-        const currentConfig = config.find(item => item.serviceType?.toString() === serviceType.toString());
         if ((!currentConfig?.advisorSelection)
             || serviceType === EServiceType.MobileService) {
             setValueServiceNextScreen("appointmentTiming");
         }
-    }, [serviceTypeOption, config])
+    }, [serviceTypeOption, currentConfig])
 
     useEffect(() => {
         if (scProfile) {

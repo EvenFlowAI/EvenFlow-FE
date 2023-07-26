@@ -27,7 +27,6 @@ import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
-import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector";
 import {clearAppointmentSteps} from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -59,10 +58,9 @@ const Wrapper = styled('div')(({ theme }) => ({
 
 type TAppointmentSelectionProps = {
     handleSetScreen: TArgCallback<TScreen>;
-    currentConfig: TServiceTypeSettings|undefined;
 }
 
-export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({handleSetScreen, currentConfig}) => {
+export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({handleSetScreen}) => {
     const [
         slots,
         serviceValetSlots,
@@ -91,7 +89,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         packagePricingType,
         packageEMenuType,
         consultants,
-        currentScreen,
+        currentConfig,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -120,7 +118,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.packagePricingType,
         state.appointmentFrame.packageEMenuType,
         state.appointmentFrame.consultants,
-        state.appointmentFrame.currentScreen,
+        state.bookingFlowConfig.currentConfig,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));

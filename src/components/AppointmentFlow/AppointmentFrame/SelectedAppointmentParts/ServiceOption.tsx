@@ -57,12 +57,16 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         }
     }
 
+    const onEmptyConsultantsList = () => {
+      // todo logic to change side bar steps list
+    }
+
     const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         dispatch(setTransportation(null));
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {
             dispatch(setServiceTypeOption(option));
-            dispatch(loadConsultants(id, option.id));
+            dispatch(loadConsultants(id, option.id, onEmptyConsultantsList));
         }
         if (e.target.value === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));

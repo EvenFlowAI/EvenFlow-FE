@@ -71,7 +71,7 @@ type TProps = {
 
 export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
     const [errors, setErrors] = useState<string[]>([]);
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
     const currentUser = useCurrentUser();
     const [appointment, appointmentFrame, categories, customerEnteredEmail, saving] = useSelector((state: RootState) => [
         state.appointment,
@@ -88,11 +88,6 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const showError = useException();
     const dispatch = useDispatch();
     const {t} = useTranslation();
-
-    const currentConfig = useMemo(() => {
-        const serviceType = appointmentFrame.serviceTypeOption?.type ?? EServiceType.VisitCenter;
-        return config.find(item => item.serviceType?.toString() === serviceType.toString());
-    }, [config, appointmentFrame.serviceTypeOption])
 
     const isEmailRequired = useMemo(() => {
         return currentUser

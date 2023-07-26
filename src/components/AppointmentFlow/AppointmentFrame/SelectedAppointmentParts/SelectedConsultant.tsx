@@ -10,17 +10,12 @@ import {setAdvisor} from "../../../../store/reducers/appointmentFrameReducer/act
 import {useDispatch, useSelector} from "react-redux";
 import {useSelectedAppointmentStyles} from "../SelectedAppointment";
 import {RootState} from "../../../../store/rootReducer";
-import {TServiceTypeSettings} from "../../../../store/reducers/bookingFlowConfig/types";
 import {EServiceCenterName} from "../../../../api/types";
-import {loginTheme} from "../../../../theme/theme";
 
-type TSelectedConsultantProps = {
-    currentConfig: TServiceTypeSettings|undefined;
-}
-
-const SelectedConsultant: React.FC<TSelectedConsultantProps> = ({currentConfig}) => {
+const SelectedConsultant = () => {
     const { advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile } = useSelector((state: RootState) => state.appointment);
+    const { currentConfig } = useSelector((state: RootState) => state.bookingFlowConfig);
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const classes = useSelectedAppointmentStyles();

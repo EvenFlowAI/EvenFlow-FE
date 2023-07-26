@@ -117,15 +117,12 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams();
     const {t} = useTranslation();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-    const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType.toString() === serviceType.toString());
-    }, [config, serviceType]);
 
     const advisorSelection = useMemo(() => Boolean(currentConfig?.advisorSelection) && Boolean(consultants.length), [currentConfig, consultants]);
     const appointmentSelection = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
