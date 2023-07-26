@@ -9,8 +9,8 @@ switch(process.env.REACT_APP_ENV){
     case "production":
         apiHost = "https://api.evenflow.ai"; 
         break;
-    case "stage":
-        apiHost = "https://be.stage.evenflow.ai"; 
+    case "uat":
+        apiHost = "https://be.uat.evenflow.ai"; 
         break;
     case "local":
         apiHost = "http://localhost:5000"; 
