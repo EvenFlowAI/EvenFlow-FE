@@ -210,7 +210,7 @@ export const parentOrigins = {
 }
 
 export const getTracker = (origin: string): string => {
-    if (process.env.REACT_APP_ENV === "stage") return "G-ZW2CJN5R98";
+    if (process.env.REACT_APP_ENV === "uat") return "G-ZW2CJN5R98";
     // if (process.env.REACT_APP_ENV === "stage") return "UA-210743216-4";
     if (process.env.REACT_APP_ENV === "production") {
         if (origin.includes(parentOrigins.bmwofschererville)) return "UA-210743216-6";
@@ -270,7 +270,7 @@ const ServiceCenters = {
 
 export const getTrackerById = (id: string): string => {
     const decodedId = decodeSCID(id);
-    if (process.env.REACT_APP_ENV === "stage") return "G-ZW2CJN5R98";
+    if (process.env.REACT_APP_ENV === "uat") return "G-ZW2CJN5R98";
     // if (process.env.REACT_APP_ENV === "stage") return "UA-210743216-4";
     if (process.env.REACT_APP_ENV === "production") {
         if (decodedId === ServiceCenters.TestBmwOfSchererville) return "UA-210743216-6";
