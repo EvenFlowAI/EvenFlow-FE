@@ -30,6 +30,7 @@ import {useCurrentUser} from "../../utils/hooks";
 import {Routes} from "../../config/routes";
 import {encodeSCID} from "../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
+import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig/actions";
 
 type TProps = {
     handleValueServiceConfig: (serviceType: EServiceType) => void;
@@ -146,6 +147,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
             dispatch(clearAppointmentData());
             dispatch(setSideBarSteps([]))
         }
+        if (serviceTypeOption?.transportationOption) dispatch(setTransportationAvailable(false));
         handleValueServiceConfig(serviceOption.type);
         const nextScreen = serviceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
         dispatch(setCurrentFrameScreen(nextScreen));

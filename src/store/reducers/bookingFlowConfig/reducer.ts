@@ -42,6 +42,14 @@ export const bookingFlowConfigReducer = createReducer(initialState, builder => b
         return {...state, isAppointmentTimingAvailable: payload};
     })
     .addCase(setCurrentConfig, (state, {payload}) => {
+        if (payload) {
+            return {...state,
+                currentConfig: payload,
+                isAdvisorAvailable: payload.advisorSelection,
+                isTransportationAvailable: payload.transportationNeeds,
+                isAppointmentTimingAvailable: payload.appointmentSelection,
+            }
+        }
         return {...state, currentConfig: payload};
     })
 )
