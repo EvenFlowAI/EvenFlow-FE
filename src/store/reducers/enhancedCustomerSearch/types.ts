@@ -65,6 +65,7 @@ export interface ICustomerWithVehicles {
     firstName: string;
     cellPhone: string;
     homePhone: string;
+    otherPhone: string;
     email: string;
     workPhone: string;
     city: string;
