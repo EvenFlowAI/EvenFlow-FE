@@ -129,19 +129,22 @@ const CartTable = () => {
         item.id && dispatch(selectSR(item.id));
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
-        const indServiceCategory = allCategories.find(category => category.type === EServiceCategoryType.IndividualServices);
-        const diagnoseCategory = allCategories.find(category => category.type === EServiceCategoryType.Diagnose);
+        const indServiceCategory = allCategories.find(category => {
+            return category.type === EServiceCategoryType.IndividualServices && category.serviceRequests.find(el => el.id === item.id)
+        });
+        const diagnoseCategory = allCategories.find(category => {
+            return category.type === EServiceCategoryType.Diagnose && category.serviceRequests.find(el => el.id === item.id)
+        });
         let categories = [...categoriesIds];
-        // todo delete by page not by category type & fix filtering
-        if (!indServiceCategory?.serviceRequests.find(request => request.id)) {
-            if (subService?.type === indServiceCategory?.type) dispatch(selectSubService(null))
-            if (service?.type === indServiceCategory?.type) dispatch(selectService(null))
+        if (!indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
+            if (subService && indServiceCategory && subService?.id === indServiceCategory?.id) dispatch(selectSubService(null))
+            if (service && indServiceCategory && service?.id === indServiceCategory?.id) dispatch(selectService(null))
             categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
             dispatch(selectCategoriesIds(categories));
         }
         if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
-            if (subService?.type === diagnoseCategory?.type) dispatch(selectSubService(null))
-            if (service?.type === diagnoseCategory?.type) dispatch(selectService(null))
+            if (subService && diagnoseCategory && subService?.id === diagnoseCategory?.id) dispatch(selectSubService(null))
+            if (service && diagnoseCategory && service?.id === diagnoseCategory?.id) dispatch(selectService(null))
             categories = categories.filter(id => id !== diagnoseCategory?.id)
             dispatch(selectCategoriesIds(categories));
         }
