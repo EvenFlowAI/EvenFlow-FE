@@ -45,6 +45,8 @@ import {
     mapRecallsForRequest
 } from "../../../components/AppointmentFlow/AppointmentFrame/utils";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
+import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import {useMemo} from "react";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -376,6 +378,33 @@ export const updatePackageOption = (maintenancePackageOption: IPackageOptions|nu
             dispatch(setPackageEMenuType(maintenancePackageOption.type))
         } else {
             dispatch(setPackage(maintenancePackageOption))
+        }
+    }
+}
+
+export const setVehicleDataFromValueService = (): AppThunk => (dispatch, getState) => {
+    const {valueService, makes} = getState().appointmentFrame;
+    const {scProfile} = getState().appointment;
+    const isBmWService =  scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest;
+    const vehicle: ILoadedVehicle = {
+        vin: '',
+        make: "",
+        model: "",
+        year: null,
+        mileage: null,
+        appointmentHashKeys: [],
+    };
+    if (valueService && isBmWService) {
+        const bmwMake = makes.find(item => item.name === "BMW");
+        if (bmwMake) {
+            vehicle.make = bmwMake.name;
+            if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
+                vehicle.year = Number(valueService.year.year)
+            }
+            const model = bmwMake.models.find(model => model === valueService.series?.name);
+            if (model) vehicle.model = model;
+            dispatch(setVehicle(vehicle));
         }
     }
 }

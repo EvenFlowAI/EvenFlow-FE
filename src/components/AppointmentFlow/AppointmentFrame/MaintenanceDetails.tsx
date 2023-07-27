@@ -10,7 +10,7 @@ import {
     clearAppointmentSteps,
     loadMakes,
     setRecallsAreShown,
-    setVehicle,
+    setVehicle, setVehicleDataFromValueService,
     updateVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -155,31 +155,8 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         }
     }, [selectedVehicle, engineTypes])
 
-    const setDataFromValueService = useCallback(() => {
-        const vehicle: ILoadedVehicle = {
-            vin: '',
-            make: "",
-            model: "",
-            year: null,
-            mileage: null,
-            appointmentHashKeys: [],
-        };
-        if (valueService && isBmWService) {
-            const bmwMake = makes.find(item => item.name === "BMW");
-            if (bmwMake) {
-                vehicle.make = bmwMake.name;
-                if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
-                    vehicle.year = Number(valueService.year.year)
-                }
-                const model = bmwMake.models.find(model => model === valueService.series?.name);
-                if (model) vehicle.model = model;
-                dispatch(setVehicle(vehicle));
-            }
-        }
-    }, [valueService, makes, isBmWService])
-
     useEffect(() => {
-        setDataFromValueService();
+        dispatch(setVehicleDataFromValueService())
     }, [valueService, makes, isBmWService])
 
     useEffect(() => {

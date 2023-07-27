@@ -4,7 +4,7 @@ import {frameTheme} from "../../../../theme/theme";
 import {YearModel} from "./YearModel";
 import {
     setCurrentFrameScreen,
-    setVehicle
+    setVehicle, setVehicleDataFromValueService
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory, useParams} from "react-router-dom";
@@ -80,7 +80,7 @@ const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
     }
 
     const onNext = async () => {
-        await setSelectedVehicle();
+        await dispatch(setVehicleDataFromValueService())
         await dispatch(setCurrentFrameScreen(nextScreen));
         history.push( "/f/appointment/" + id);
     };

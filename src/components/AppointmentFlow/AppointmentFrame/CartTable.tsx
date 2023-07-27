@@ -23,7 +23,7 @@ import {
     setSelectedRecalls,
     setSideBarSteps,
     setValueService,
-    setVehicle
+    setVehicle, setVehicleDataFromValueService
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useConfirm} from "../../../utils/hooks";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
@@ -86,7 +86,6 @@ const CartTable = () => {
         subService,
         service,
         valueService,
-        makes,
         sideBarSteps,
         serviceTypeOption,
         selectedRecalls,
@@ -110,8 +109,6 @@ const CartTable = () => {
         },
         [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService,
             selectedRecalls, packageEMenuType, scProfile])
-    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
     const dispatch = useDispatch();
     const {askConfirm, closeConfirm} = useConfirm();
     const theme = useTheme();
@@ -163,37 +160,13 @@ const CartTable = () => {
         }
     }, [service, subService, categoriesIds])
 
-    const handleMaintenanceDetails = useCallback(() => {
-        // todo add possibility to use value service with other dealerships if needed
-        if (valueService && isBmWService) {
-            const vehicle: ILoadedVehicle = {
-                vin: '',
-                make: "",
-                model: "",
-                year: null,
-                mileage: null,
-                appointmentHashKeys: [],
-            };
-            const bmwMake = makes.find(item => item.name === "BMW");
-            if (bmwMake) {
-                vehicle.make = bmwMake.name;
-                if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
-                    vehicle.year = Number(valueService.year.year)
-                }
-                const model = bmwMake.models.find(model => model === valueService.series?.name);
-                if (model) vehicle.model = model;
-                dispatch(setVehicle(vehicle));
-            }
-        }
-    }, [valueService, isBmWService, makes, yearOptions])
-
     const deleteValueService = useCallback(() => {
-        handleMaintenanceDetails()
+        dispatch(setVehicleDataFromValueService())
         filterCategories();
         dispatch(setValueService(null));
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
-    }, [handleMaintenanceDetails, filterCategories])
+    }, [filterCategories])
 
     const handleSideBarSteps = useCallback(() => {
         if (sideBarSteps?.length) {
