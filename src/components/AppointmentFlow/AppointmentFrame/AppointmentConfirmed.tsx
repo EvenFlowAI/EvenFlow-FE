@@ -282,15 +282,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         return list;
     }, [appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption]);
 
-    // const getPrice = (): string => {
-    //     const price = isServiceValetApp
-    //         ? serviceValetAppointment?.price?.value
-    //         : appointment?.price?.value;
-    //     return price
-    //         ? `${t("Selected Price")}: $${scProfile?.isRoundPrice ? price : price.toFixed(2)}`
-    //         : t('Service price will be quoted at dealership');
-    // }
-
     const getDateForCalendar = useCallback(() => {
         let dateString: string = '';
         if (isServiceValetApp) {
@@ -348,14 +339,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             text: `${scProfile?.name} ${t("Service Appointment")}`,
             location: scProfile?.address ? concatAddress(scProfile?.address) : "",
             details: calendarData.map(r => `${r.label}:\n${r.content}`).join("\n \n"),
-            // details: [
-            //     `${t("Contact number")}: ${scProfile?.phoneNumber}\n`,
-            //     ...data.slice(0, 2).map(r =>
-            //         `${r.label}: ${r.content}`
-            //     ),
-            //     `${t("Service type")}: ${servicesList.map(item => item.includes('Going') ? t('My Description Of Need') : item).join(', ')}`,
-            //     getPrice(),
-            // ].join("\n"),
         });
         window.open(url);
     }

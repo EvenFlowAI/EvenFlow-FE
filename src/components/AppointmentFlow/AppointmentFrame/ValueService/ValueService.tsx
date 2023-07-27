@@ -4,7 +4,6 @@ import {frameTheme} from "../../../../theme/theme";
 import {YearModel} from "./YearModel";
 import {
     setCurrentFrameScreen,
-    setMaintenanceDetails,
     setVehicle
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -69,19 +68,12 @@ const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
             };
             const bmwMake = makes.find(item => item.name === "BMW");
             if (bmwMake) {
-                dispatch(setMaintenanceDetails({make: bmwMake.name}));
                 vehicle.make = bmwMake.name;
-
                 if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
-                    dispatch(setMaintenanceDetails({year: valueService.year.year.toString()}));
                     vehicle.year = Number(valueService.year.year)
                 }
-
                 const model = bmwMake.models.find(model => model === valueService.series?.name);
-                if (model) {
-                    dispatch(setMaintenanceDetails({model}));
-                    vehicle.model = model;
-                }
+                if (model) vehicle.model = model;
                 dispatch(setVehicle(vehicle));
             }
         }

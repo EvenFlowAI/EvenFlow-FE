@@ -173,30 +173,6 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
     }
 }
 
-export const loadPackages = (id: number): AppThunk => async (dispatch, getState) => {
-    const selectedVehicle = getState().appointmentFrame.selectedVehicle;
-    const maintenanceDetails = getState().appointmentFrame.maintenanceDetails;
-    dispatch(setLoadingPackages(true));
-    if (selectedVehicle && id && maintenanceDetails) {
-        Api.call<IPackage[]>(
-            Api.endpoints.MaintenancePackages.ByVehicle,
-            {
-                data: {
-                    serviceCenterId: decodeSCID(`${id}`),
-                    vehicle: {
-                        ...selectedVehicle,
-                        mileage: maintenanceDetails.serviceInterval
-                    }
-                }
-            }
-        ).then(({data}) => {
-            setPackages(data);
-        }).catch(err => {
-            console.log(err)
-        }).finally(() => dispatch(setLoadingPackages(false)))
-    }
-}
-
 export const loadMakes = (serviceCenterId: number): AppThunk => async dispatch => {
     Api.call<IMake[]>(
         Api.endpoints.Vehicles.Makes,
@@ -209,16 +185,6 @@ export const loadMakes = (serviceCenterId: number): AppThunk => async dispatch =
         .catch(err => {
         console.log('get Makes error', err)
     })
-}
-
-export const loadSlotsGap = (serviceCenterId: number): AppThunk => dispatch => {
-    Api.call(Api.endpoints.SlotScoring.GetSlotsGap, {params: {serviceCenterId}})
-        .then(result => {
-            if (result?.data) dispatch(getSlotsGap(result.data))
-        })
-        .catch(err => {
-            console.log('load slots gap err', err)
-        })
 }
 
 export const loadSeriesModels = (serviceCenterId: number): AppThunk => dispatch => {

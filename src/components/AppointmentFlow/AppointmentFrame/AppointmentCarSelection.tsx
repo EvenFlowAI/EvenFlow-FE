@@ -12,7 +12,7 @@ import {ILoadedVehicle} from "../../../api/types";
 import {checkSelectedCar} from "./utils";
 import {
     clearAppointmentData, setHashKey,
-    setMaintenanceDetails, setServiceTypeOption, setSideBarSteps, setVehicle,
+    setServiceTypeOption, setSideBarSteps, setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
@@ -133,7 +133,6 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     }, [serviceType, valueService, currentConfig, consultants])
 
     useEffect(() => {
-        dispatch(setMaintenanceDetails({ mileage: ''}));
         if (customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)) {
             dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
             if (needToShowServiceSelection) {
