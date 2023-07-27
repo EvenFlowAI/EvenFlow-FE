@@ -280,7 +280,6 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const {
         selectedPackage,
         selectedVehicle,
-        maintenanceDetails,
         packagePricingType,
         packageOptionType,
         packageEMenuType,
@@ -321,7 +320,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                         serviceCenterId: decodeSCID(id),
                         vehicle: {
                             ...selectedVehicle,
-                            mileage: selectedVehicle?.mileage ?? maintenanceDetails.mileage
+                            mileage: selectedVehicle?.mileage
                         }
                     }
                 }
@@ -336,7 +335,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 .finally(() => {setLoading(false)})
 
         }
-    }, [id, selectedVehicle, maintenanceDetails]);
+    }, [id, selectedVehicle]);
 
     const setClasses = (id: number, cls: string): string => {
         if (id === localSelectedPackage?.id) {

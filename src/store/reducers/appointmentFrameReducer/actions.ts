@@ -34,7 +34,7 @@ import {
     setCustomerLoadedData
 } from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
-import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
+import {IMaintenanceItem, IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
 import {TPackagePrice} from "../packages/types";
@@ -45,6 +45,7 @@ import {
     mapRecallsForRequest
 } from "../../../components/AppointmentFlow/AppointmentFrame/utils";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
+import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -173,30 +174,6 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
     }
 }
 
-export const loadPackages = (id: number): AppThunk => async (dispatch, getState) => {
-    const selectedVehicle = getState().appointmentFrame.selectedVehicle;
-    const maintenanceDetails = getState().appointmentFrame.maintenanceDetails;
-    dispatch(setLoadingPackages(true));
-    if (selectedVehicle && id && maintenanceDetails) {
-        Api.call<IPackage[]>(
-            Api.endpoints.MaintenancePackages.ByVehicle,
-            {
-                data: {
-                    serviceCenterId: decodeSCID(`${id}`),
-                    vehicle: {
-                        ...selectedVehicle,
-                        mileage: maintenanceDetails.serviceInterval
-                    }
-                }
-            }
-        ).then(({data}) => {
-            setPackages(data);
-        }).catch(err => {
-            console.log(err)
-        }).finally(() => dispatch(setLoadingPackages(false)))
-    }
-}
-
 export const loadMakes = (serviceCenterId: number): AppThunk => async dispatch => {
     Api.call<IMake[]>(
         Api.endpoints.Vehicles.Makes,
@@ -209,16 +186,6 @@ export const loadMakes = (serviceCenterId: number): AppThunk => async dispatch =
         .catch(err => {
         console.log('get Makes error', err)
     })
-}
-
-export const loadSlotsGap = (serviceCenterId: number): AppThunk => dispatch => {
-    Api.call(Api.endpoints.SlotScoring.GetSlotsGap, {params: {serviceCenterId}})
-        .then(result => {
-            if (result?.data) dispatch(getSlotsGap(result.data))
-        })
-        .catch(err => {
-            console.log('load slots gap err', err)
-        })
 }
 
 export const loadSeriesModels = (serviceCenterId: number): AppThunk => dispatch => {
@@ -410,6 +377,130 @@ export const updatePackageOption = (maintenancePackageOption: IPackageOptions|nu
             dispatch(setPackageEMenuType(maintenancePackageOption.type))
         } else {
             dispatch(setPackage(maintenancePackageOption))
+        }
+    }
+}
+
+export const setVehicleDataFromValueService = (): AppThunk => (dispatch, getState) => {
+    const {valueService, makes} = getState().appointmentFrame;
+    const {scProfile} = getState().appointment;
+    const isBmWService =  scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest;
+    const vehicle: ILoadedVehicle = {
+        vin: '',
+        make: "",
+        model: "",
+        year: null,
+        mileage: null,
+        appointmentHashKeys: [],
+    };
+    if (valueService && isBmWService) {
+        const bmwMake = makes.find(item => item.name === "BMW");
+        if (bmwMake) {
+            vehicle.make = bmwMake.name;
+            if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
+                vehicle.year = Number(valueService.year.year)
+            }
+            const model = bmwMake.models.find(model => model === valueService.series?.name);
+            if (model) vehicle.model = model;
+            dispatch(setVehicle(vehicle));
+        }
+    }
+}
+
+export const deleteIndService = (item: IMaintenanceItem): AppThunk => (dispatch, getState) => {
+    const {selectedSR} = getState().appointment;
+    const {categoriesIds, service, subService} = getState().appointmentFrame;
+    const {allCategories} = getState().categories;
+    const services = selectedSR.filter(sr => sr !== item.id);
+    item.id && dispatch(selectSR(item.id));
+    dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
+    const indServiceCategory = allCategories.find(category => {
+        return category.type === EServiceCategoryType.IndividualServices && category.serviceRequests.find(el => el.id === item.id)
+    });
+    const diagnoseCategory = allCategories.find(category => {
+        return category.type === EServiceCategoryType.Diagnose && category.serviceRequests.find(el => el.id === item.id)
+    });
+    let categories = [...categoriesIds];
+    if (!indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
+        if (subService && indServiceCategory && subService?.id === indServiceCategory?.id) dispatch(selectSubService(null))
+        if (service && indServiceCategory && service?.id === indServiceCategory?.id) dispatch(selectService(null))
+        categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
+        dispatch(selectCategoriesIds(categories));
+    }
+    if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
+        if (subService && diagnoseCategory && subService?.id === diagnoseCategory?.id) dispatch(selectSubService(null))
+        if (service && diagnoseCategory && service?.id === diagnoseCategory?.id) dispatch(selectService(null))
+        categories = categories.filter(id => id !== diagnoseCategory?.id)
+        dispatch(selectCategoriesIds(categories));
+    }
+}
+
+export const deletePackage = (): AppThunk => (dispatch, getState) =>  {
+    const {service, packageEMenuType} = getState().appointmentFrame
+    if (service?.type === 1) dispatch(selectService(null));
+    dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
+    if (packageEMenuType !== null) dispatch(setPackageEMenuType(null));
+    dispatch(setPackage(null));
+}
+
+export const deleteGeneralService = (item: IMaintenanceItem): AppThunk => (dispatch, getState) =>  {
+    const {service, subService, categoriesIds} = getState().appointmentFrame
+    if (service?.id === item.id) dispatch(selectService(null));
+    if (subService?.id === item.id) dispatch(selectSubService(null));
+    dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
+    dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== item.id)));
+}
+
+export const deleteValueService = (): AppThunk => (dispatch, getState) => {
+    const {service, subService, categoriesIds} = getState().appointmentFrame
+    if (service?.type === EServiceCategoryType.ValueService) {
+        dispatch(selectService(null));
+        dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== service?.id)));
+    }
+    if (subService?.type === EServiceCategoryType.ValueService) {
+        dispatch(selectSubService(null));
+        dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== subService?.id)));
+    }
+    dispatch(setVehicleDataFromValueService())
+    dispatch(setValueService(null));
+    dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
+}
+
+export const deleteRecall = (item: IMaintenanceItem): AppThunk => (dispatch, getState) => {
+    const {
+        service,
+        subService,
+        categoriesIds,
+        selectedRecalls,
+        sideBarSteps,
+        serviceTypeOption
+    } = getState().appointmentFrame
+    const recalls = selectedRecalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)
+    const serviceType = serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter
+    item.nhtsaRecallNumber && dispatch(setSelectedRecalls(recalls))
+
+    if (!recalls.length) {
+        dispatch(setRecallsAreShown(false));
+        if (service?.type === EServiceCategoryType.OpenRecalls || subService?.type === EServiceCategoryType.OpenRecalls) {
+            let filteredCategories = [];
+            if (service?.type === EServiceCategoryType.OpenRecalls) {
+                dispatch(selectService(null));
+                filteredCategories = categoriesIds.filter(id => id !== service?.id);
+                dispatch(selectCategoriesIds(filteredCategories));
+            }
+            if (subService?.type === EServiceCategoryType.OpenRecalls) {
+                dispatch(selectSubService(null));
+                filteredCategories = categoriesIds.filter(id => id !== subService?.id)
+                dispatch(selectCategoriesIds(filteredCategories));
+            }
+            if (sideBarSteps?.length) {
+                dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location", "serviceNeeds"]));
+            }
         }
     }
 }

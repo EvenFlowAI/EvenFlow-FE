@@ -5,29 +5,19 @@ import {getMaintenanceList} from "./uiUtils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as TrashBin} from "../../../assets/img/trash_bin.svg";
-import {
-    loadSRs,
-    selectAppointment,
-    selectServiceValetAppointment,
-    selectSR
-} from "../../../store/reducers/appointment/actions";
+import {loadSRs} from "../../../store/reducers/appointment/actions";
 import {IMaintenanceItem} from "./types";
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {
-    selectCategoriesIds,
-    selectService,
-    selectSubService,
-    setMaintenanceDetails,
-    setPackage, setPackageEMenuType, setRecallsAreShown, setSelectedRecalls,
+    deleteGeneralService,
+    deleteIndService,
+    deletePackage,
+    deleteRecall,
+    deleteValueService,
     setSideBarSteps,
-    setValueService,
-    setVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useConfirm} from "../../../utils/hooks";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
-import {EServiceCategoryType} from "../../../store/reducers/categories/types";
-import {EServiceCenterName, ILoadedVehicle} from "../../../api/types";
-import {yearOptions} from "./MaintenanceDetails";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 
@@ -81,10 +71,7 @@ const CartTable = () => {
     const {
         selectedPackage,
         categoriesIds,
-        subService,
-        service,
         valueService,
-        makes,
         sideBarSteps,
         serviceTypeOption,
         selectedRecalls,
@@ -92,7 +79,16 @@ const CartTable = () => {
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
+
     const [isOpen, setOpen] = useState<boolean>(true);
+
+    const {askConfirm, closeConfirm} = useConfirm();
+    const {t} = useTranslation();
+    const dispatch = useDispatch();
+    const theme = useTheme();
+    const classes = useStyles(theme);
+    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const selectedServices = useMemo(() => {
            return getMaintenanceList(
@@ -106,16 +102,9 @@ const CartTable = () => {
                packageEMenuType,
                scProfile?.maintenancePackageOptionTypes)
         },
-        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService,
+        [serviceRequests, selectedSR, selectedPackage,
+            allCategories, categoriesIds, valueService,
             selectedRecalls, packageEMenuType, scProfile])
-    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const dispatch = useDispatch();
-    const {askConfirm, closeConfirm} = useConfirm();
-    const theme = useTheme();
-    const classes = useStyles(theme);
-    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
-    const {t} = useTranslation();
 
     useEffect(() => {
         if (scProfile) {
@@ -124,137 +113,33 @@ const CartTable = () => {
         }
     }, [scProfile])
 
-    const deleteIndService = (item: IMaintenanceItem) => {
-        const services = selectedSR.filter(sr => sr !== item.id);
-        item.id && dispatch(selectSR(item.id));
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
-        const indServiceCategory = allCategories.find(category => {
-            return category.type === EServiceCategoryType.IndividualServices && category.serviceRequests.find(el => el.id === item.id)
-        });
-        const diagnoseCategory = allCategories.find(category => {
-            return category.type === EServiceCategoryType.Diagnose && category.serviceRequests.find(el => el.id === item.id)
-        });
-        let categories = [...categoriesIds];
-        if (!indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
-            if (subService && indServiceCategory && subService?.id === indServiceCategory?.id) dispatch(selectSubService(null))
-            if (service && indServiceCategory && service?.id === indServiceCategory?.id) dispatch(selectService(null))
-            categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
-            dispatch(selectCategoriesIds(categories));
-        }
-        if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
-            if (subService && diagnoseCategory && subService?.id === diagnoseCategory?.id) dispatch(selectSubService(null))
-            if (service && diagnoseCategory && service?.id === diagnoseCategory?.id) dispatch(selectService(null))
-            categories = categories.filter(id => id !== diagnoseCategory?.id)
-            dispatch(selectCategoriesIds(categories));
-        }
-    }
-
-    const filterCategories = useCallback(() => {
-        if (service?.type === EServiceCategoryType.ValueService) {
-            dispatch(selectService(null));
-            dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== service?.id)));
-        }
-        if (subService?.type === EServiceCategoryType.ValueService) {
-            dispatch(selectSubService(null));
-            dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== subService?.id)));
-        }
-    }, [service, subService, categoriesIds])
-
-    const handleMaintenanceDetails = useCallback(() => {
-        // todo add possibility to use value service with other dealerships if needed
-        if (valueService && isBmWService) {
-            const vehicle: ILoadedVehicle = {
-                vin: '',
-                make: "",
-                model: "",
-                year: null,
-                mileage: null,
-                appointmentHashKeys: [],
-            };
-            const bmwMake = makes.find(item => item.name === "BMW");
-            if (bmwMake) {
-                dispatch(setMaintenanceDetails({make: bmwMake.name}));
-                vehicle.make = bmwMake.name;
-
-                if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
-                    dispatch(setMaintenanceDetails({year: valueService.year.year.toString()}));
-                    vehicle.year = Number(valueService.year.year)
-                }
-
-                const model = bmwMake.models.find(model => model === valueService.series?.name);
-                if (model) {
-                    dispatch(setMaintenanceDetails({model}));
-                    vehicle.model = model;
-                }
-                dispatch(setVehicle(vehicle));
-            }
-        }
-    }, [valueService, isBmWService, makes, yearOptions])
-
-    const deleteValueService = useCallback(() => {
-        handleMaintenanceDetails()
-        filterCategories();
-        dispatch(setValueService(null));
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
-    }, [handleMaintenanceDetails, filterCategories])
-
     const handleSideBarSteps = useCallback(() => {
         if (sideBarSteps?.length) {
             dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location", "serviceNeeds"]));
         }
     }, [sideBarSteps, serviceType])
 
-    const handleDeleteRecall = useCallback((item: IMaintenanceItem) => {
-        const recalls = selectedRecalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)
-        item.nhtsaRecallNumber && dispatch(setSelectedRecalls(recalls))
-        if (!recalls.length) {
-            dispatch(setRecallsAreShown(false));
-            if (service?.type === EServiceCategoryType.OpenRecalls || subService?.type === EServiceCategoryType.OpenRecalls) {
-                let filteredCategories = [];
-                if (service?.type === EServiceCategoryType.OpenRecalls) {
-                    dispatch(selectService(null));
-                    filteredCategories = categoriesIds.filter(id => id !== service?.id);
-                    dispatch(selectCategoriesIds(filteredCategories));
-                }
-                if (subService?.type === EServiceCategoryType.OpenRecalls) {
-                    dispatch(selectSubService(null));
-                    filteredCategories = categoriesIds.filter(id => id !== subService?.id)
-                    dispatch(selectCategoriesIds(filteredCategories));
-                }
-                handleSideBarSteps();
-            }
-        }
-    }, [selectedRecalls, categoriesIds, service, subService])
-
     const deleteService = (item: IMaintenanceItem) => {
         switch (item.type) {
             case 'service':
-                deleteIndService(item);
+                dispatch(deleteIndService(item));
                 handleSideBarSteps()
                 return;
             case 'package':
-                if (service?.type === 1) dispatch(selectService(null));
-                dispatch(selectAppointment(null));
-                dispatch(selectServiceValetAppointment(null));
+                dispatch(deletePackage())
                 handleSideBarSteps();
-                if (packageEMenuType !== null) dispatch(setPackageEMenuType(null));
-                return dispatch(setPackage(null));
+                return;
             case 'valueService':
+                dispatch(deleteValueService())
                 handleSideBarSteps();
-                deleteValueService();
-               return;
+                return;
             case 'recall':
-                handleDeleteRecall(item)
+                dispatch(deleteRecall(item))
                 return;
             default:
-                if (service?.id === item.id) dispatch(selectService(null));
-                if (subService?.id === item.id) dispatch(selectSubService(null));
-                dispatch(selectAppointment(null));
-                dispatch(selectServiceValetAppointment(null));
+                dispatch(deleteGeneralService(item))
                 handleSideBarSteps();
-                return dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== item.id)));
+                return;
         }
     }
 
