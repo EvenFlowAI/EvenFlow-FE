@@ -30,6 +30,7 @@ import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameR
 import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {useCurrentUser} from "../../../utils/hooks";
+import {getMaintenanceList} from "./uiUtils";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -59,9 +60,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         selectedRecalls,
         hashKey,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {selectedSR, serviceRequests, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-
+    const { allCategories } = useSelector((state: RootState) => state.categories);
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
     const {id} = useParams();
@@ -77,6 +78,20 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const currentService = useMemo(() => page === EServiceCategoryPage.Page1
         ? selectedService
         : subService, [page, selectedService, subService]);
+    const selectedServices = useMemo(() => {
+            return getMaintenanceList(
+                serviceRequests,
+                selectedRecalls,
+                selectedSR,
+                selectedPackage,
+                allCategories,
+                categoriesIds,
+                valueService,
+                packageEMenuType,
+                scProfile?.maintenancePackageOptionTypes)
+        },
+        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService,
+            selectedRecalls, packageEMenuType, scProfile])
 
     const handleBackScreen = () => {
         setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
@@ -226,7 +241,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             <CartTable/>
             <Actions
                 prevDisabled={history?.location?.search?.includes('view=unique')}
-                hideNext={!selectedService && !subService}
+                hideNext={!selectedServices?.length}
                 nextLabel={t("Next")}
                 onNext={handleNext}
                 onBack={handleBack} />
