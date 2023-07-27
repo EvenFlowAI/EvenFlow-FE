@@ -5,28 +5,19 @@ import {getMaintenanceList} from "./uiUtils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as TrashBin} from "../../../assets/img/trash_bin.svg";
-import {
-    loadSRs,
-    selectAppointment,
-    selectServiceValetAppointment,
-} from "../../../store/reducers/appointment/actions";
+import {loadSRs} from "../../../store/reducers/appointment/actions";
 import {IMaintenanceItem} from "./types";
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {
     deleteGeneralService,
-    deleteIndService, deletePackage,
-    selectCategoriesIds,
-    selectService,
-    selectSubService,
-    setRecallsAreShown,
-    setSelectedRecalls,
+    deleteIndService,
+    deletePackage,
+    deleteRecall,
+    deleteValueService,
     setSideBarSteps,
-    setValueService,
-    setVehicleDataFromValueService
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useConfirm} from "../../../utils/hooks";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
-import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 
@@ -80,8 +71,6 @@ const CartTable = () => {
     const {
         selectedPackage,
         categoriesIds,
-        subService,
-        service,
         valueService,
         sideBarSteps,
         serviceTypeOption,
@@ -90,7 +79,16 @@ const CartTable = () => {
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
+
     const [isOpen, setOpen] = useState<boolean>(true);
+
+    const {askConfirm, closeConfirm} = useConfirm();
+    const {t} = useTranslation();
+    const dispatch = useDispatch();
+    const theme = useTheme();
+    const classes = useStyles(theme);
+    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const selectedServices = useMemo(() => {
            return getMaintenanceList(
@@ -104,14 +102,9 @@ const CartTable = () => {
                packageEMenuType,
                scProfile?.maintenancePackageOptionTypes)
         },
-        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService,
+        [serviceRequests, selectedSR, selectedPackage,
+            allCategories, categoriesIds, valueService,
             selectedRecalls, packageEMenuType, scProfile])
-    const dispatch = useDispatch();
-    const {askConfirm, closeConfirm} = useConfirm();
-    const theme = useTheme();
-    const classes = useStyles(theme);
-    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
-    const {t} = useTranslation();
 
     useEffect(() => {
         if (scProfile) {
@@ -120,78 +113,11 @@ const CartTable = () => {
         }
     }, [scProfile])
 
-    // const deleteIndService = (item: IMaintenanceItem) => {
-    //     const services = selectedSR.filter(sr => sr !== item.id);
-    //     item.id && dispatch(selectSR(item.id));
-    //     dispatch(selectAppointment(null));
-    //     dispatch(selectServiceValetAppointment(null));
-    //     const indServiceCategory = allCategories.find(category => {
-    //         return category.type === EServiceCategoryType.IndividualServices && category.serviceRequests.find(el => el.id === item.id)
-    //     });
-    //     const diagnoseCategory = allCategories.find(category => {
-    //         return category.type === EServiceCategoryType.Diagnose && category.serviceRequests.find(el => el.id === item.id)
-    //     });
-    //     let categories = [...categoriesIds];
-    //     if (!indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
-    //         if (subService && indServiceCategory && subService?.id === indServiceCategory?.id) dispatch(selectSubService(null))
-    //         if (service && indServiceCategory && service?.id === indServiceCategory?.id) dispatch(selectService(null))
-    //         categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
-    //         dispatch(selectCategoriesIds(categories));
-    //     }
-    //     if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
-    //         if (subService && diagnoseCategory && subService?.id === diagnoseCategory?.id) dispatch(selectSubService(null))
-    //         if (service && diagnoseCategory && service?.id === diagnoseCategory?.id) dispatch(selectService(null))
-    //         categories = categories.filter(id => id !== diagnoseCategory?.id)
-    //         dispatch(selectCategoriesIds(categories));
-    //     }
-    // }
-
-    const filterCategories = useCallback(() => {
-        if (service?.type === EServiceCategoryType.ValueService) {
-            dispatch(selectService(null));
-            dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== service?.id)));
-        }
-        if (subService?.type === EServiceCategoryType.ValueService) {
-            dispatch(selectSubService(null));
-            dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== subService?.id)));
-        }
-    }, [service, subService, categoriesIds])
-
-    const deleteValueService = useCallback(() => {
-        dispatch(setVehicleDataFromValueService())
-        filterCategories();
-        dispatch(setValueService(null));
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
-    }, [filterCategories])
-
     const handleSideBarSteps = useCallback(() => {
         if (sideBarSteps?.length) {
             dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location", "serviceNeeds"]));
         }
     }, [sideBarSteps, serviceType])
-
-    const handleDeleteRecall = useCallback((item: IMaintenanceItem) => {
-        const recalls = selectedRecalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)
-        item.nhtsaRecallNumber && dispatch(setSelectedRecalls(recalls))
-        if (!recalls.length) {
-            dispatch(setRecallsAreShown(false));
-            if (service?.type === EServiceCategoryType.OpenRecalls || subService?.type === EServiceCategoryType.OpenRecalls) {
-                let filteredCategories = [];
-                if (service?.type === EServiceCategoryType.OpenRecalls) {
-                    dispatch(selectService(null));
-                    filteredCategories = categoriesIds.filter(id => id !== service?.id);
-                    dispatch(selectCategoriesIds(filteredCategories));
-                }
-                if (subService?.type === EServiceCategoryType.OpenRecalls) {
-                    dispatch(selectSubService(null));
-                    filteredCategories = categoriesIds.filter(id => id !== subService?.id)
-                    dispatch(selectCategoriesIds(filteredCategories));
-                }
-                handleSideBarSteps();
-            }
-        }
-    }, [selectedRecalls, categoriesIds, service, subService])
 
     const deleteService = (item: IMaintenanceItem) => {
         switch (item.type) {
@@ -204,11 +130,11 @@ const CartTable = () => {
                 handleSideBarSteps();
                 return;
             case 'valueService':
-                deleteValueService();
+                dispatch(deleteValueService())
                 handleSideBarSteps();
-               return;
+                return;
             case 'recall':
-                handleDeleteRecall(item)
+                dispatch(deleteRecall(item))
                 return;
             default:
                 dispatch(deleteGeneralService(item))

@@ -454,3 +454,53 @@ export const deleteGeneralService = (item: IMaintenanceItem): AppThunk => (dispa
     dispatch(selectServiceValetAppointment(null));
     dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== item.id)));
 }
+
+export const deleteValueService = (): AppThunk => (dispatch, getState) => {
+    const {service, subService, categoriesIds} = getState().appointmentFrame
+    if (service?.type === EServiceCategoryType.ValueService) {
+        dispatch(selectService(null));
+        dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== service?.id)));
+    }
+    if (subService?.type === EServiceCategoryType.ValueService) {
+        dispatch(selectSubService(null));
+        dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== subService?.id)));
+    }
+    dispatch(setVehicleDataFromValueService())
+    dispatch(setValueService(null));
+    dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
+}
+
+export const deleteRecall = (item: IMaintenanceItem): AppThunk => (dispatch, getState) => {
+    const {
+        service,
+        subService,
+        categoriesIds,
+        selectedRecalls,
+        sideBarSteps,
+        serviceTypeOption
+    } = getState().appointmentFrame
+    const recalls = selectedRecalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)
+    const serviceType = serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter
+    item.nhtsaRecallNumber && dispatch(setSelectedRecalls(recalls))
+
+    if (!recalls.length) {
+        dispatch(setRecallsAreShown(false));
+        if (service?.type === EServiceCategoryType.OpenRecalls || subService?.type === EServiceCategoryType.OpenRecalls) {
+            let filteredCategories = [];
+            if (service?.type === EServiceCategoryType.OpenRecalls) {
+                dispatch(selectService(null));
+                filteredCategories = categoriesIds.filter(id => id !== service?.id);
+                dispatch(selectCategoriesIds(filteredCategories));
+            }
+            if (subService?.type === EServiceCategoryType.OpenRecalls) {
+                dispatch(selectSubService(null));
+                filteredCategories = categoriesIds.filter(id => id !== subService?.id)
+                dispatch(selectCategoriesIds(filteredCategories));
+            }
+            if (sideBarSteps?.length) {
+                dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location", "serviceNeeds"]));
+            }
+        }
+    }
+}
