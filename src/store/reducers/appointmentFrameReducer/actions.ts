@@ -46,7 +46,6 @@ import {
 } from "../../../components/AppointmentFlow/AppointmentFrame/utils";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
 import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
-import {useMemo} from "react";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");

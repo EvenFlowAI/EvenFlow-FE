@@ -23,13 +23,11 @@ import {
     setSelectedRecalls,
     setSideBarSteps,
     setValueService,
-    setVehicle, setVehicleDataFromValueService
+    setVehicleDataFromValueService
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useConfirm} from "../../../utils/hooks";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
-import {EServiceCenterName, ILoadedVehicle} from "../../../api/types";
-import {yearOptions} from "./MaintenanceDetails";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 
