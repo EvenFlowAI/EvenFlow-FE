@@ -9,16 +9,15 @@ import {
     loadSRs,
     selectAppointment,
     selectServiceValetAppointment,
-    selectSR
 } from "../../../store/reducers/appointment/actions";
 import {IMaintenanceItem} from "./types";
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {
+    deleteGeneralService,
+    deleteIndService, deletePackage,
     selectCategoriesIds,
     selectService,
     selectSubService,
-    setPackage,
-    setPackageEMenuType,
     setRecallsAreShown,
     setSelectedRecalls,
     setSideBarSteps,
@@ -121,31 +120,31 @@ const CartTable = () => {
         }
     }, [scProfile])
 
-    const deleteIndService = (item: IMaintenanceItem) => {
-        const services = selectedSR.filter(sr => sr !== item.id);
-        item.id && dispatch(selectSR(item.id));
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
-        const indServiceCategory = allCategories.find(category => {
-            return category.type === EServiceCategoryType.IndividualServices && category.serviceRequests.find(el => el.id === item.id)
-        });
-        const diagnoseCategory = allCategories.find(category => {
-            return category.type === EServiceCategoryType.Diagnose && category.serviceRequests.find(el => el.id === item.id)
-        });
-        let categories = [...categoriesIds];
-        if (!indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
-            if (subService && indServiceCategory && subService?.id === indServiceCategory?.id) dispatch(selectSubService(null))
-            if (service && indServiceCategory && service?.id === indServiceCategory?.id) dispatch(selectService(null))
-            categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
-            dispatch(selectCategoriesIds(categories));
-        }
-        if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
-            if (subService && diagnoseCategory && subService?.id === diagnoseCategory?.id) dispatch(selectSubService(null))
-            if (service && diagnoseCategory && service?.id === diagnoseCategory?.id) dispatch(selectService(null))
-            categories = categories.filter(id => id !== diagnoseCategory?.id)
-            dispatch(selectCategoriesIds(categories));
-        }
-    }
+    // const deleteIndService = (item: IMaintenanceItem) => {
+    //     const services = selectedSR.filter(sr => sr !== item.id);
+    //     item.id && dispatch(selectSR(item.id));
+    //     dispatch(selectAppointment(null));
+    //     dispatch(selectServiceValetAppointment(null));
+    //     const indServiceCategory = allCategories.find(category => {
+    //         return category.type === EServiceCategoryType.IndividualServices && category.serviceRequests.find(el => el.id === item.id)
+    //     });
+    //     const diagnoseCategory = allCategories.find(category => {
+    //         return category.type === EServiceCategoryType.Diagnose && category.serviceRequests.find(el => el.id === item.id)
+    //     });
+    //     let categories = [...categoriesIds];
+    //     if (!indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
+    //         if (subService && indServiceCategory && subService?.id === indServiceCategory?.id) dispatch(selectSubService(null))
+    //         if (service && indServiceCategory && service?.id === indServiceCategory?.id) dispatch(selectService(null))
+    //         categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
+    //         dispatch(selectCategoriesIds(categories));
+    //     }
+    //     if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
+    //         if (subService && diagnoseCategory && subService?.id === diagnoseCategory?.id) dispatch(selectSubService(null))
+    //         if (service && diagnoseCategory && service?.id === diagnoseCategory?.id) dispatch(selectService(null))
+    //         categories = categories.filter(id => id !== diagnoseCategory?.id)
+    //         dispatch(selectCategoriesIds(categories));
+    //     }
+    // }
 
     const filterCategories = useCallback(() => {
         if (service?.type === EServiceCategoryType.ValueService) {
@@ -197,30 +196,24 @@ const CartTable = () => {
     const deleteService = (item: IMaintenanceItem) => {
         switch (item.type) {
             case 'service':
-                deleteIndService(item);
+                dispatch(deleteIndService(item));
                 handleSideBarSteps()
                 return;
             case 'package':
-                if (service?.type === 1) dispatch(selectService(null));
-                dispatch(selectAppointment(null));
-                dispatch(selectServiceValetAppointment(null));
+                dispatch(deletePackage())
                 handleSideBarSteps();
-                if (packageEMenuType !== null) dispatch(setPackageEMenuType(null));
-                return dispatch(setPackage(null));
+                return;
             case 'valueService':
-                handleSideBarSteps();
                 deleteValueService();
+                handleSideBarSteps();
                return;
             case 'recall':
                 handleDeleteRecall(item)
                 return;
             default:
-                if (service?.id === item.id) dispatch(selectService(null));
-                if (subService?.id === item.id) dispatch(selectSubService(null));
-                dispatch(selectAppointment(null));
-                dispatch(selectServiceValetAppointment(null));
+                dispatch(deleteGeneralService(item))
                 handleSideBarSteps();
-                return dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== item.id)));
+                return;
         }
     }
 

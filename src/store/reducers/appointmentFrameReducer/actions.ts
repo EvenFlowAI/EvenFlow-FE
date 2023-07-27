@@ -34,7 +34,7 @@ import {
     setCustomerLoadedData
 } from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
-import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
+import {IMaintenanceItem, IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
 import {TPackagePrice} from "../packages/types";
@@ -406,4 +406,51 @@ export const setVehicleDataFromValueService = (): AppThunk => (dispatch, getStat
             dispatch(setVehicle(vehicle));
         }
     }
+}
+
+export const deleteIndService = (item: IMaintenanceItem): AppThunk => (dispatch, getState) => {
+    const {selectedSR} = getState().appointment;
+    const {categoriesIds, service, subService} = getState().appointmentFrame;
+    const {allCategories} = getState().categories;
+    const services = selectedSR.filter(sr => sr !== item.id);
+    item.id && dispatch(selectSR(item.id));
+    dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
+    const indServiceCategory = allCategories.find(category => {
+        return category.type === EServiceCategoryType.IndividualServices && category.serviceRequests.find(el => el.id === item.id)
+    });
+    const diagnoseCategory = allCategories.find(category => {
+        return category.type === EServiceCategoryType.Diagnose && category.serviceRequests.find(el => el.id === item.id)
+    });
+    let categories = [...categoriesIds];
+    if (!indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
+        if (subService && indServiceCategory && subService?.id === indServiceCategory?.id) dispatch(selectSubService(null))
+        if (service && indServiceCategory && service?.id === indServiceCategory?.id) dispatch(selectService(null))
+        categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
+        dispatch(selectCategoriesIds(categories));
+    }
+    if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
+        if (subService && diagnoseCategory && subService?.id === diagnoseCategory?.id) dispatch(selectSubService(null))
+        if (service && diagnoseCategory && service?.id === diagnoseCategory?.id) dispatch(selectService(null))
+        categories = categories.filter(id => id !== diagnoseCategory?.id)
+        dispatch(selectCategoriesIds(categories));
+    }
+}
+
+export const deletePackage = (): AppThunk => (dispatch, getState) =>  {
+    const {service, packageEMenuType} = getState().appointmentFrame
+    if (service?.type === 1) dispatch(selectService(null));
+    dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
+    if (packageEMenuType !== null) dispatch(setPackageEMenuType(null));
+    dispatch(setPackage(null));
+}
+
+export const deleteGeneralService = (item: IMaintenanceItem): AppThunk => (dispatch, getState) =>  {
+    const {service, subService, categoriesIds} = getState().appointmentFrame
+    if (service?.id === item.id) dispatch(selectService(null));
+    if (subService?.id === item.id) dispatch(selectSubService(null));
+    dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
+    dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== item.id)));
 }
