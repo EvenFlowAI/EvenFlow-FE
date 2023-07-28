@@ -183,7 +183,7 @@ export const SelectedAppointment = () => {
                         <ServiceOption isSm={isSm}/>
                         {appointment && isSm
                             ? <DateWrapper>
-                            {appointment.date.format('MMMM D, h:mm A')}
+                            {appointment.date.format('ddd, MMMM D, h:mm A')}
                         </DateWrapper>
                             : serviceValetAppointment && isSm
                                 ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/>
@@ -194,7 +194,7 @@ export const SelectedAppointment = () => {
                 <PriceWrapper>
                     {appointment && !isSm
                         ? <DateWrapper>
-                            {t("Date & Time")}: <br /> {appointment.date.format('MMMM D, h:mm A')}
+                            {t("Date & Time")}: <br /> {appointment.date.format('ddd, MMMM D, h:mm A')}
                         </DateWrapper>
                         : serviceValetAppointment && !isSm
                             ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/>
