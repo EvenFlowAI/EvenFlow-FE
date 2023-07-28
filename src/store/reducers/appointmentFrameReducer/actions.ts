@@ -2,7 +2,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {
     EMaintenanceOptionType, EServiceCenterName,
     IAppointmentByQuery, IConsultantsRequestData, ICreateAppointmentResp,
-    ICustomer,
+    ICustomer, ICustomerLoadedData, IDriverInfo,
     ILoadedVehicle, IPackage,
     IPackageOptions,
     IServiceCategory,
@@ -22,7 +22,7 @@ import {
     TMaintenanceDetails,
     TYear
 } from "./types";
-import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, PaginatedAPIResponse, TArgCallback} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
@@ -46,6 +46,8 @@ import {
 } from "../../../components/AppointmentFlow/AppointmentFrame/utils";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
 import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import {setAppointmentsLoading} from "../appointments/actions";
+import {ICustomerWithPhones, TSearchCustomerParams} from "../enhancedCustomerSearch/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -502,5 +504,48 @@ export const deleteRecall = (item: IMaintenanceItem): AppThunk => (dispatch, get
                 dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location", "serviceNeeds"]));
             }
         }
+    }
+}
+
+export const searchCustomerAppointmentsTable = (driver: IDriverInfo, hashKey: string, onError: TArgCallback<string>): AppThunk => (dispatch) => {
+    dispatch(setAppointmentsLoading(true))
+    const {email, phoneNumber} = driver;
+    const requestData: TSearchCustomerParams = {};
+    if (phoneNumber || email) requestData.phoneOrEmail = phoneNumber ?? email;
+    if (requestData.phoneOrEmail) {
+        dispatch(setAppointmentsLoading(true))
+        Api.call<PaginatedAPIResponse<ICustomerWithPhones>>(Api.endpoints.Customers.GetBySearchTerm, {data: requestData})
+            .then(({data}) => {
+                const customer = data.result?.find(el => el.appointmentHashKey === hashKey)
+                if (customer) {
+                    const phoneNumbers = customer.cellPhone ? [customer.cellPhone] : [];
+                    if (customer?.homePhone) phoneNumbers.push(customer.homePhone);
+                    if (customer?.otherPhone) phoneNumbers.push(customer.otherPhone);
+                    const vehicle = {
+                        vin: customer.vin,
+                        make: customer.make,
+                        model: customer.model,
+                        year: customer.year,
+                        appointmentHashKeys: customer.appointmentHashKey ? [customer.appointmentHashKey] : [],
+                        mileage: customer.mileage ?? null,
+                    }
+                    const data: ICustomerLoadedData = {
+                        emails: customer?.email ? [customer.email] : [],
+                        firstName: customer?.firstName ?? "",
+                        lastName: customer?.lastName ?? "",
+                        id: customer.customerInternalId?.toString() ?? null,
+                        phoneNumbers,
+                        vehicles: [vehicle],
+                        fromSearchByName: true,
+                        isUpdating: true,
+                    }
+                    dispatch(setCustomerLoadedData(data))
+                    dispatch(setVehicle(vehicle))
+                }
+            })
+            .catch(e => {
+                onError(e)
+            })
+            .finally(() => dispatch(setAppointmentsLoading(false)))
     }
 }
