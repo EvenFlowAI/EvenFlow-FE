@@ -11,7 +11,7 @@ import {IOrder, IPageRequest} from "../../types/types";
 import {useConfirm, useException, useMessage, useModal} from "../../utils/hooks";
 import {TableRowDataType} from "../UI/types";
 import {timeSpanString, timeString} from "../../config/constants";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 
 const cols: TableRowDataType<IAppointmentByQuery>[] = [
@@ -44,6 +44,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
     const showMessage = useMessage();
     const showError = useException();
     const {askConfirm} = useConfirm();
+    const dispatch = useDispatch();
 
     const handleOpen = (el: IAppointmentByQuery) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         setViewItem && setViewItem(el);
