@@ -355,7 +355,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         <Paper>
             <Wrapper>
                 <h2>Appointment Confirmed!</h2>
-                {data.map((item, index) => {
+                {data.filter(el => el.content).map((item, index) => {
                     if (!selectedPackage && item.label === t("Selected Price")) {
                         return null;
                     }
