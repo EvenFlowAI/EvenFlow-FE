@@ -19,7 +19,7 @@ import {RootState} from "./store/rootReducer";
 import {setCurrentFrameScreen, setValueService} from "./store/reducers/appointmentFrameReducer/actions";
 import {TScreen} from "./components/Layout/types";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
-import {loadBookingFlowConfig, setCurrentConfig} from "./store/reducers/bookingFlowConfig/actions";
+import {loadBookingFlowConfig, setConfiguration} from "./store/reducers/bookingFlowConfig/actions";
 import PaymentBill from "./components/AppointmentFlow/PaymentBill/PaymentBill";
 import {EServiceCenterName} from "./api/types";
 
@@ -37,7 +37,7 @@ const App = () => {
     useEffect(() => {
         const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
         const currentConfiguration = config.find(item => item.serviceType?.toString() === serviceType.toString());
-        if (currentConfiguration) dispatch(setCurrentConfig(currentConfiguration))
+        if (currentConfiguration) dispatch(setConfiguration(currentConfiguration, serviceTypeOption))
     }, [serviceTypeOption, config])
 
     useEffect(() => {
