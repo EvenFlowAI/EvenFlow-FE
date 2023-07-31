@@ -88,6 +88,10 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
     }
 
     const checkIsValid = (): boolean => {
+        if (+dailyCapacity <= 0) {
+            showError('"Daily Capacity" must be more than 0')
+            return false;
+        }
         return Boolean(pickUpMin) && Boolean(pickUpMax) && Boolean(dropOffMin) && Boolean(dropOffMax) && (+dailyCapacity > 0);
     }
 
@@ -187,7 +191,7 @@ const EditTimeRangeAndCapacity: React.FC<TProps> = ({onClose, open, editingEleme
                             label={"Daily Capacity"}
                             name="dailyCapacity"
                             type="number"
-                            error={formIsChecked && (+dailyCapacity < 0 || !dailyCapacity.toString().length)}
+                            error={formIsChecked && (+dailyCapacity <= 0 || !dailyCapacity.toString().length)}
                             inputProps={{
                                 min: 0,
 
