@@ -461,6 +461,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                         selectedPackage={localSelectedPackage}
                         setLocalPackage={setLocalSelectedPackage}
                         setLocalPricingType={setLocalSelectedPricingType}
+                        localSelectedPricingType={localSelectedPricingType}
                     />
                     : <React.Fragment>
                         <Wrapper count={packages.length}>
@@ -545,7 +546,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 : <Actions
                 onBack={handleBack}
                 nextLabel={t("Next")}
-                nextDisabled={!localSelectedPackage}
+                nextDisabled={!localSelectedPackage || localSelectedPricingType === null}
                 onNext={() => handleNext(localSelectedPackage)}/>}
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>

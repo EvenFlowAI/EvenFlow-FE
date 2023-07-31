@@ -4,7 +4,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {EMaintenanceOptionType} from "../../../../api/types";
+import {EMaintenanceOptionType, IPackageOptions} from "../../../../api/types";
 import {useTranslation} from "react-i18next";
 
 const PriceWrapper = styled(({isUpsellPrice, isShowPriceDetails, isSelected, ...props}) =>
@@ -71,6 +71,8 @@ type TProps = {
     handleClick: (type: EMaintenanceOptionType, packagePricingType: EPackagePricingType) => void,
     withUpsells?: boolean;
     totalMaintenanceValue: number;
+    packagePricingType: EPackagePricingType|null;
+    selectedPackage: IPackageOptions|null;
 }
 
 const TotalPriceMobile: React.FC<TProps> = ({
@@ -83,9 +85,10 @@ const TotalPriceMobile: React.FC<TProps> = ({
                                                 upsellPrice,
                                                 withUpsells,
                                                 totalMaintenanceValue,
+                                                packagePricingType,
+                                                selectedPackage
                                             }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {selectedPackage, packagePricingType} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
 
     const selected = useMemo(() => {
