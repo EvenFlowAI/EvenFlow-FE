@@ -1,13 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {WelcomeLayout} from "./WelcomeLayout";
 import {Loading} from "../UI/Loading";
-import {useHistory, useParams} from "react-router-dom";
+import {useHistory, useLocation, useParams} from "react-router-dom";
 import {API} from "../../api/api";
 import {Button, styled} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {
     clearStorage,
-    loadSCProfile, saveCustomerCache, setCustomerLoadedData
+    loadSCProfile,
+    saveCustomerCache,
+    setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";
 import {AppointmentStatus, ICustomerLoadedData, ILoadedVehicle} from "../../api/types";
@@ -15,11 +17,17 @@ import {Edit} from "@material-ui/icons";
 import {RootState} from "../../store/rootReducer";
 import {NotFoundError} from "./NotFoundError";
 import {encodeSCID} from "../../utils/utils";
-import {setUpdateAppointment, setVehicle} from "../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setCurrentFrameScreen,
+    setUpdateAppointment,
+    setVehicle
+} from "../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
 import {loadCategoriesByQuery} from "../../store/reducers/categories/actions";
 import {useTranslation} from "react-i18next";
 import {useStorage} from "../../utils/hooks";
+import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
+import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -28,6 +36,10 @@ const ContentContainer = styled("div")({
 });
 
 type TState = "loading" | "error" | "canceled" | "passed";
+
+type TLParams = {
+    fromAdmin?: string
+}
 
 export const EditAppointment = () => {
     const [state, setState] = useState<TState>("loading");
@@ -40,8 +52,17 @@ export const EditAppointment = () => {
     const dispatch = useDispatch();
     const {id} = useParams();
     const {t} = useTranslation();
+    const {search} = useLocation<TLParams>();
+    const isFromAdmin = useMemo(() => {
+        const isFromAdmin = new URLSearchParams(search).get('fromAdmin')?.toLowerCase();
+        return isFromAdmin === 'true' || isFromAdmin === '1';
+    }, [search])
 
     useStorage();
+
+    const setFrameScreen = (serviceTypeOption: IFirstScreenOption|undefined) => {
+        dispatch(setCurrentFrameScreen(serviceTypeOption?.type !== EServiceType.VisitCenter ? "location" : "serviceNeeds"))
+    }
 
     useEffect(() => {
         if (selectedSC) {
@@ -54,13 +75,8 @@ export const EditAppointment = () => {
         API.appointment.getByKey(trimmedKey)
             .then(async ({data}) => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
+                if (isFromAdmin) setFrameScreen(data.serviceTypeOption)
                 dispatch(setUpdateAppointment(data));
-                if (data.serviceCategories && allCategories) {
-                    const ids = data.serviceCategories.map(item => item.id);
-                    const service = allCategories.find(item => ids.includes(item.id));
-                    // TODO uncomment
-                    // service && dispatch(selectService(service));
-                }
                 const vehicle: ILoadedVehicle = {
                     ...data.vehicle,
                     appointmentHashKeys: [data.hashKey]

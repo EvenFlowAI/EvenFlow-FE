@@ -13,18 +13,11 @@ import {getAppointmentDate} from "../../utils/utils";
 import {API} from "../../api/api";
 import {MoreHoriz} from "@material-ui/icons";
 import {IOrder, IPageRequest} from "../../types/types";
-import {useConfirm, useException, useMessage, useModal, useSCs} from "../../utils/hooks";
+import {useConfirm, useException, useMessage, useModal} from "../../utils/hooks";
 import {TableRowDataType} from "../UI/types";
 import {timeSpanString, timeString} from "../../config/constants";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
-import {loadSCProfile} from "../../store/reducers/appointment/actions";
-import {
-    loadMakes,
-    searchCustomerAppointmentsTable,
-} from "../../store/reducers/appointmentFrameReducer/actions";
-import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
-import {getCurrentUser} from "../../store/reducers/users/actions";
 
 const cols: TableRowDataType<IAppointmentByQuery>[] = [
     {header: "Date", val: el => el.dateInUtc ? moment.utc(el.dateInUtc).format("LL") : "", orderId: "date"},
@@ -51,13 +44,11 @@ type TAppointmentsTable = {
 export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setViewItem, isLoading, refresh, setOrder, order, onEditOpen, pageData, onChangeRowsPerPage, onChangePage }) => {
     const { appointments, count } = useSelector((state: RootState) => state.appointments);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const {selectedSC} = useSCs();
 
     const {isOpen, onClose, onOpen} = useModal();
     const showMessage = useMessage();
     const showError = useException();
     const {askConfirm} = useConfirm();
-    const dispatch = useDispatch();
 
     const handleOpen = (el: IAppointmentByQuery) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         setViewItem && setViewItem(el);
@@ -69,19 +60,16 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
         onOpen();
     }
 
+    const openInNewTab = async () => {
+        if (viewItem?.hashKey) {
+            const url = window.location.href.replace('/admin/appointments', `/appointment-update/${viewItem.hashKey}?fromAdmin=true`)
+            window.open(url, '_blank', 'noreferrer');
+        }
+    };
+
     const handleEdit = async () => {
         setAnchorEl(null);
-        if (viewItem?.driver) {
-            if (selectedSC) {
-                await dispatch(loadSCProfile(selectedSC.id))
-                await dispatch(loadMakes(selectedSC.id))
-                await dispatch(loadFirstScreenOptionsByQuery(selectedSC.id))
-                await dispatch(getCurrentUser())
-                await dispatch(searchCustomerAppointmentsTable(viewItem.driver, viewItem.hashKey, showError))
-            }
-        } else {
-            showError("We don`t have driver information to open the Booking Flow page")
-        }
+        await openInNewTab();
     }
 
     const handleCancel = useCallback(() => {
