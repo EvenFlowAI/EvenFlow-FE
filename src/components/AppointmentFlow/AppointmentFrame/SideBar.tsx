@@ -83,10 +83,6 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const {t} = useTranslation();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-    // const isAdvisorAvailable = useMemo(() => Boolean(currentConfig?.advisorSelection), [currentConfig]);
-    // const isAppointmentAvailable = useMemo(() => Boolean(currentConfig?.appointmentSelection), [currentConfig]);
-    // const isTransportationAvailable = useMemo(() => Boolean(currentConfig?.transportationNeeds
-    //     && !serviceTypeOption?.transportationOption), [currentConfig, serviceTypeOption]);
 
     useEffect(() => {
         dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable)))

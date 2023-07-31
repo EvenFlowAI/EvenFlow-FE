@@ -55,6 +55,7 @@ import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/Service
 import {TView} from "../Welcome/types";
 import {getTrimmedKey, SCREENS} from "../AppointmentFlow/AppointmentFrame/utils";
 import {IServiceRequestShort} from "../../store/reducers/serviceRequests/types";
+import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig/actions";
 
 const Container = styled('div')({
     display: "flex",
@@ -243,6 +244,10 @@ export const AppointmentFrameLayout = () => {
             setCurrentScreen("location");
         }
     }, [serviceType, customerLoadedData, valueService])
+
+    useEffect(() => {
+        if (currentConfig && serviceTypeOption?.transportationOption) dispatch(setTransportationAvailable(false));
+    }, [serviceTypeOption, currentConfig])
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);
