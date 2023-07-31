@@ -60,8 +60,6 @@ export interface IVehicleData {
     year: number;
     model: string;
     mileage: number;
-    transmission: string;
-    driveType: string;
     engineTypeId?: number;
     makeId?: number;
 }

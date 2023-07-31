@@ -504,3 +504,46 @@ export const deleteRecall = (item: IMaintenanceItem): AppThunk => (dispatch, get
         }
     }
 }
+
+// export const searchCustomerAppointmentsTable = (driver: IDriverInfo, hashKey: string, onError: TArgCallback<string>): AppThunk => (dispatch) => {
+//     dispatch(setAppointmentsLoading(true))
+//     const {email, phoneNumber} = driver;
+//     const requestData: TSearchCustomerParams = {};
+//     if (phoneNumber || email) requestData.phoneOrEmail = phoneNumber ?? email;
+//     if (requestData.phoneOrEmail?.length) {
+//         dispatch(setAppointmentsLoading(true))
+//         Api.call<PaginatedAPIResponse<ICustomerWithPhones>>(Api.endpoints.Customers.GetBySearchTerm, {data: requestData})
+//             .then(({data}) => {
+//                 const customer = data.result?.find(el => el.appointmentHashKey === hashKey)
+//                 if (customer) {
+//                     const phoneNumbers = customer.cellPhone ? [customer.cellPhone] : [];
+//                     if (customer?.homePhone) phoneNumbers.push(customer.homePhone);
+//                     if (customer?.otherPhone) phoneNumbers.push(customer.otherPhone);
+//                     const vehicle = {
+//                         vin: customer.vin,
+//                         make: customer.make,
+//                         model: customer.model,
+//                         year: customer.year,
+//                         appointmentHashKeys: customer.appointmentHashKey ? [customer.appointmentHashKey] : [],
+//                         mileage: customer.mileage ?? null,
+//                     }
+//                     const data: ICustomerLoadedData = {
+//                         emails: customer?.email ? [customer.email] : [],
+//                         firstName: customer?.firstName ?? "",
+//                         lastName: customer?.lastName ?? "",
+//                         id: customer.customerInternalId?.toString() ?? null,
+//                         phoneNumbers,
+//                         vehicles: [vehicle],
+//                         fromSearchByName: true,
+//                         isUpdating: true,
+//                     }
+//                     dispatch(setCustomerLoadedData(data))
+//                     dispatch(setVehicle(vehicle))
+//                 }
+//             })
+//             .catch(e => {
+//                 onError(e)
+//             })
+//             .finally(() => dispatch(setAppointmentsLoading(false)))
+//     }
+// }

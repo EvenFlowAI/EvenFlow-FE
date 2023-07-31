@@ -14,8 +14,6 @@ export type TForm = {
     vehicleYear: string;
     vehicleModel: string;
     vehicleMileage: string;
-    vehicleTransmission: string;
-    vehicleDriveType: string;
     isNeedCall: boolean;
     comment: string;
     serviceRequestIds: number[];
