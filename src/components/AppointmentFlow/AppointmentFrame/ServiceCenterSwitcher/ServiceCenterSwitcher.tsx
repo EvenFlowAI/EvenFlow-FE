@@ -7,7 +7,7 @@ import {useCurrentUser, useException} from "../../../../utils/hooks";
 import {useHistory} from "react-router-dom";
 import {setCustomerEnteredEmail, setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
 import {
-    clearAppointmentData, setServiceTypeOption,
+    clearAppointmentData, setCurrentFrameScreen, setServiceTypeOption,
     setSideBarSteps,
     setVehicle, setWelcomeScreenView
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
@@ -54,6 +54,7 @@ export const ServiceCenterSwitcher = () => {
                 dispatch(clearAppointmentData());
                 dispatch(setCustomerEnteredEmail(""))
                 dispatch(setSideBarSteps([]));
+                dispatch(setCurrentFrameScreen('serviceNeeds'))
                 dispatch(setVehicle(null));
                 dispatch(setCustomerLoadedData(null));
                 dispatch(setWelcomeScreenView('serviceCenterSelect'))
