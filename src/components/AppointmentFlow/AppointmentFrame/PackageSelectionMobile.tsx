@@ -4,7 +4,7 @@ import {Done} from "@material-ui/icons";
 import {TabContext, TabPanel as Tp} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
 import {Info, TPackage} from "./PackageSelection";
-import { useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {EMaintenanceOptionType, IPackageOptions} from "../../../api/types";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
@@ -62,6 +62,7 @@ type PackageSelectionMobileProps = {
     selectedPackage: IPackageOptions|null;
     setLocalPackage: Dispatch<SetStateAction<IPackageOptions|null>>;
     setLocalPricingType: Dispatch<SetStateAction<EPackagePricingType|null>>;
+    localSelectedPricingType: EPackagePricingType|null;
 }
 export const usePackageMobileStyles = makeStyles(() => ({
     wrapper: {
@@ -277,7 +278,8 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                                                                            withUpsells,
                                                                            selectedPackage,
     setLocalPackage,
-                                                                           setLocalPricingType
+                                                                           setLocalPricingType,
+                                                                           localSelectedPricingType
                                                                        }) => {
     const [value, setValue] = useState<string>('1');
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -304,6 +306,7 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
         setValue(newValue);
         const currentPackage = data[newValue];
         currentPackage && setLocalPackage(currentPackage);
+        setLocalPricingType(EPackagePricingType.BasePrice);
     }
 
     const handleClick = (type: EMaintenanceOptionType, pricing?: EPackagePricingType) => {
@@ -356,8 +359,10 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
             {selectedPackage ? <React.Fragment>
                 <TotalPriceMobile
                     withUpsells={withUpsells}
+                    selectedPackage={selectedPackage}
                     isUpsellPrice={false}
                     handleClick={handleClick}
+                    packagePricingType={localSelectedPricingType}
                     type={selectedPackage.type}
                     text={getTitle(EPackagePricingType.BasePrice)}
                     price={selectedPackage.price}
@@ -368,7 +373,9 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                     ? <TotalPriceMobile
                         isUpsellPrice
                         withUpsells={withUpsells}
+                        selectedPackage={selectedPackage}
                         handleClick={handleClick}
+                        packagePricingType={localSelectedPricingType}
                         type={selectedPackage.type}
                         text={getTitle(EPackagePricingType.PriceWithFee)}
                         price={selectedPackage.price}
