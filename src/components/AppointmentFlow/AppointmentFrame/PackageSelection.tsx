@@ -276,7 +276,7 @@ type TPackageSelectionProps = {
 
 export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {
         selectedPackage,
         selectedVehicle,
@@ -359,9 +359,9 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     }
 
     const handleNextScreen = (): void => {
-        onNext(currentConfig?.advisorSelection
+        onNext(isAdvisorAvailable
             ? 'consultantSelection'
-            : currentConfig?.appointmentSelection
+            : isAppointmentTimingAvailable
                 ? 'appointmentTiming'
                 : "appointmentSelection")
     }

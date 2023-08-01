@@ -25,7 +25,7 @@ import {EServiceCenterName} from "./api/types";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {config, currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {config, currentConfig, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
@@ -47,11 +47,11 @@ const App = () => {
             setValueServicePreviousScreen("serviceNeeds");
         }
         const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
-        if ((!currentConfig?.advisorSelection)
+        if ((currentConfig && !isAdvisorAvailable)
             || serviceType === EServiceType.MobileService) {
             setValueServiceNextScreen("appointmentTiming");
         }
-    }, [serviceTypeOption, currentConfig])
+    }, [serviceTypeOption, currentConfig, isAdvisorAvailable])
 
     useEffect(() => {
         if (scProfile) {

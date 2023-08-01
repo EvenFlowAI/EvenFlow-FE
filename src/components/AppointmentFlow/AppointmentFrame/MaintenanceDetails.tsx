@@ -82,7 +82,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
-    const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {currentConfig, isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
@@ -256,9 +256,9 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         if (isValid()) {
             onNext(service?.type === EServiceCategoryType.MaintenancePackage
                 ? 'packageSelection'
-                : currentConfig?.advisorSelection
+                : isAdvisorAvailable
                     ? 'consultantSelection'
-                    : currentConfig?.appointmentSelection
+                    : isAppointmentTimingAvailable
                         ? 'appointmentTiming'
                         : "appointmentSelection");
         }
