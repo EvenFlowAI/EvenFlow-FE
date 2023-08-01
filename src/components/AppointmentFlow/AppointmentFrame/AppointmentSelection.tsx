@@ -90,6 +90,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         packageEMenuType,
         consultants,
         currentConfig,
+        isTransportationAvailable,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -119,6 +120,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.packageEMenuType,
         state.appointmentFrame.consultants,
         state.bookingFlowConfig.currentConfig,
+        state.bookingFlowConfig.isTransportationAvailable,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -303,7 +305,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
 
     const handleNext = useCallback((): void => {
         handleGANext();
-        handleSetScreen(currentConfig?.transportationNeeds && !serviceTypeOption?.transportationOption ? 'transportationNeeds' : 'appointmentConfirmation');
+        handleSetScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption ? 'transportationNeeds' : 'appointmentConfirmation');
     }, [currentConfig, serviceTypeOption])
 
     const handleBack = useCallback((): void => {

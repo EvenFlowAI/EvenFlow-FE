@@ -96,7 +96,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         makes
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();
@@ -126,12 +126,12 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     const getNextScreen = useCallback((): TScreen => {
         let nextScreen: TScreen = serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
         if (valueService?.selectedService) {
-            nextScreen = currentConfig?.advisorSelection
+            nextScreen = isAdvisorAvailable
                 ? 'consultantSelection'
                 : 'appointmentTiming'
         }
         return nextScreen;
-    }, [serviceType, valueService, currentConfig, consultants])
+    }, [serviceType, valueService, isAdvisorAvailable, consultants])
 
     useEffect(() => {
         if (customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)) {
