@@ -135,7 +135,7 @@ export const useStyles = makeStyles(theme => ({
     }
 }))
 
-const useLoadingStyles = makeStyles(theme => ({
+export const useLoadingStyles = makeStyles(theme => ({
     wrapper: {
         [theme.breakpoints.down("xs")]: {
             width: "100%",
@@ -241,7 +241,7 @@ export const CustomerSelect: React.FC<TProps> = ({
               spacing={4}>
             <Grid item xs={12} sm={12} md={6}>
                 <div className={classes.existing}>
-                    <span>{t("I`m a returning customer")}</span>
+                    <span>{t("Returning customer")}</span>
                     <TextField
                         style={{ marginTop: 20, marginBottom: 20 }}
                         placeholder={`${t("Enter your")} ${t("Email or ")}${t("Phone")}`}
@@ -276,7 +276,7 @@ export const CustomerSelect: React.FC<TProps> = ({
             </Grid>
             <Grid item xs={12} sm={12} md={6}>
                 <div className={classes.button}>
-                    <span>{t("I`m a new customer")}</span>
+                    <span>{t("New customer")}</span>
                     <Button
                         variant="contained"
                         color="primary"
