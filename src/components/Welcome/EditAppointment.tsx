@@ -89,6 +89,8 @@ export const EditAppointment = () => {
                     emails: [data.driver.email],
                     fullName: data.driver.fullName,
                     city: data.driver.city ?? "",
+                    fromSearchByName: isFromAdmin,
+                    isUpdating: true,
                 }
                 dispatch(setCustomerLoadedData(customer));
                 dispatch(setVehicle({...vehicle}));
