@@ -31,7 +31,7 @@ import {encodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
-import {useAnalytics, useAnalyticsBySCId, useException, useStorage} from "../../utils/hooks";
+import {useAnalytics, useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
 import {
     updateRecalls, updatePackageOption,
     setCurrentFrameScreen,
@@ -57,6 +57,8 @@ import {getTrimmedKey, SCREENS} from "../AppointmentFlow/AppointmentFrame/utils"
 import {IServiceRequestShort} from "../../store/reducers/serviceRequests/types";
 import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig/actions";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
+import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
+import {getCurrentUser} from "../../store/reducers/users/actions";
 
 const Container = styled('div')({
     display: "flex",
@@ -105,6 +107,7 @@ export const AppointmentFrameLayout = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const showError = useException();
+    const currentUser = useCurrentUser();
     const {t} = useTranslation();
 
     const theme = useTheme();
@@ -256,6 +259,14 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (currentConfig && serviceTypeOption?.transportationOption) dispatch(setTransportationAvailable(false));
     }, [serviceTypeOption, currentConfig])
+
+    useEffect(() => {
+        if (currentUser && scProfile) dispatch(loadShortSC(false, scProfile.dealershipId));
+    }, [currentUser, scProfile])
+
+    useEffect(() => {
+        dispatch(getCurrentUser())
+    }, [])
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);
