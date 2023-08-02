@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {setCustomerEnteredEmail} from "../../store/reducers/appointment/actions";
-import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
+import {EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {setUserType} from "../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {
@@ -73,8 +73,6 @@ export const useReturningAdminStyles = makeStyles((theme) => ({
 }))
 
 type TProps = {
-    onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
-    loading: boolean;
     handleNew: () => void;
     isOpenSearchResults: boolean;
     onCloseSearchResults: TCallback;
@@ -91,8 +89,6 @@ const InputLabel: React.FC<{label: string}> = ({label}) => {
 }
 
 const ReturningCustomerForAdmin: React.FC<TProps> = ({
-                                                         loading,
-                                                         onComplete,
                                                          handleNew,
                                                          isOpenSearchResults,
                                                          onCloseSearchResults,
@@ -103,7 +99,6 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                                                          redirect
 }) => {
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerSearchData} = useSelector((state: RootState) => state.customers);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [isExpanded, setExpanded] = useState<boolean>(false);
@@ -116,12 +111,11 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
 
     const classes = useStyles();
     const returningClasses = useReturningAdminStyles();
-
-    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
+    const formIsValid = useMemo(() => Boolean(customerEnteredEmail) || Object.values(customerSearchData).find(item => item.length > 1),
+        [customerEnteredEmail, customerSearchData])
 
     const handleComplete = async () => {
         dispatch(setUserType(EUserType.Existing));
-        onComplete(serviceType, EUserType.Existing);
     }
 
     const onSuccess = (count: number) => {
@@ -156,13 +150,9 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
         dispatch(setCustomerSearchData({[name]: e.target.value}));
     }
 
-    const checkIsValid = () => {
-        return Object.values(customerSearchData).find(item => item.length > 1);
-    }
-
     const onSave = (): void => {
         setFormIsChecked(true);
-        if (checkIsValid()) {
+        if (formIsValid) {
             loadData()
         } else {
             showError('First Name or Last Name must consist from 2 or more characters')
@@ -186,6 +176,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
             <InputLabel label={t("Search Customer by Phone or Email")}/>
             <TextField
                 style={{ marginBottom: isSm ? 12 : 28 }}
+                error={formIsChecked && (!customerEnteredEmail.length || !formIsValid)}
                 placeholder={t("Enter Phone or Email")}
                 InputProps={{disableUnderline: true}}
                 variant="standard"
@@ -197,14 +188,14 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
             <div className={returningClasses.nameFieldsWrapper}>
                 <TextField
                     placeholder={t("Enter First Name")}
-                    error={formIsChecked && (customerSearchData.firstName.length < 2 && customerSearchData.lastName.length < 2)}
+                    error={formIsChecked && (customerSearchData.firstName.length === 1 || !formIsValid)}
                     onChange={onTextChange('firstName')}
                     InputProps={{disableUnderline: true}}
                     fullWidth
                     value={customerSearchData.firstName}/>
                 <TextField
                     placeholder={t("Enter Last Name")}
-                    error={formIsChecked && (customerSearchData.lastName.length < 2 && customerSearchData.firstName.length < 2)}
+                    error={formIsChecked && (customerSearchData.lastName.length === 1 || !formIsValid)}
                     onChange={onTextChange('lastName')}
                     InputProps={{disableUnderline: true}}
                     fullWidth
@@ -218,7 +209,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     <InputLabel label={t("Search by Company Name")}/>
                     <TextField
                         placeholder={t("Enter Company Name")}
-                        error={formIsChecked && (customerSearchData.companyName.length < 2)}
+                        error={formIsChecked && (customerSearchData.companyName.length === 1 || !formIsValid)}
                         onChange={onTextChange('companyName')}
                         InputProps={{disableUnderline: true}}
                         fullWidth
@@ -227,7 +218,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     <InputLabel label={t("Search by Address")}/>
                     <TextField
                         placeholder={t("Enter Address")}
-                        error={formIsChecked && (customerSearchData.address.length < 2)}
+                        error={formIsChecked && (customerSearchData.address.length === 1 || !formIsValid)}
                         onChange={onTextChange('address')}
                         InputProps={{disableUnderline: true}}
                         fullWidth
@@ -236,7 +227,10 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     <InputLabel label={t("Search by VIN (Last 8 digits)")}/>
                     <TextField
                         placeholder={t("Enter Last 8 VIN digits")}
-                        error={formIsChecked && (customerSearchData.lastVINDigits.length < 8 || Number.isNaN(+customerSearchData.lastVINDigits))}
+                        error={formIsChecked &&
+                            ((customerSearchData.lastVINDigits.length && customerSearchData.lastVINDigits.length < 8)
+                                || Number.isNaN(+customerSearchData.lastVINDigits)
+                                || !formIsValid)}
                         onChange={onTextChange('lastVINDigits')}
                         InputProps={{disableUnderline: true}}
                         fullWidth
