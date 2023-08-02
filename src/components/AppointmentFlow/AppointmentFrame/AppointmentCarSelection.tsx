@@ -81,6 +81,7 @@ type TProps = {
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
     onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
 }
+
 export const AppointmentCarSelection: React.FC<TProps> = ({
                                                               onUpdateAppointment, onBack, loading, handleSetScreen,
                                                               needToShowServiceSelection, setNeedToShowServiceSelection

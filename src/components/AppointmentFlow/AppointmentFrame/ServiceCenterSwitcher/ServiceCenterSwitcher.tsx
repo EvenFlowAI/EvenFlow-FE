@@ -45,6 +45,7 @@ export const ServiceCenterSwitcher = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory()
+    const isWelcomePage = useMemo(() => history.location.pathname.includes('welcome'), [history])
     const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
         [currentUser, scProfile])
 
@@ -69,7 +70,7 @@ export const ServiceCenterSwitcher = () => {
         }
     }
 
-    return isAuthorized && (welcomeScreenView !== "serviceCenterSelect")
+    return isAuthorized && (welcomeScreenView !== "serviceCenterSelect" || !isWelcomePage)
         ? <div className={classes.selectWrapper}>
             { shortLoading
                 ? <Loading/>
