@@ -223,7 +223,6 @@ export const CustomerSelect: React.FC<TProps> = ({
               spacing={4}>
             {isAuthorized
                 ? <ReturningCustomerForAdmin
-                    loading={loading}
                     onCloseSearchResults={onCloseSearchResults}
                     onCloseNotFound={onCloseNotFound}
                     handleNew={handleNew}
@@ -231,7 +230,6 @@ export const CustomerSelect: React.FC<TProps> = ({
                     isOpenNotFound={isOpenNotFound}
                     onOpenSearchResults={onOpenSearchResults}
                     onOpenNotFound={onOpenNotFound}
-                    onComplete={onComplete}
                     redirect={redirect}
                 />
                 : <ReturningSelfCustomer onComplete={onComplete} loading={loading} />}
