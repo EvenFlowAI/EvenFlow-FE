@@ -298,7 +298,20 @@
       "Would you like to try a different first & last name?": "Would you like to try a different first & last name?",
       "New Search": "New Search",
       "Create Appointment for New Customer": "Create Appointment for New Customer",
-      "Check for Recalls": "Check for Recalls"
+      "Check for Recalls": "Check for Recalls",
+      "Add Data and hit enter to search": "Add Data and hit {{button}} to search",
+      "Enter": "Enter",
+      "Enter Phone or Email": "Enter Phone or Email",
+      "Search Customer by Phone or Email": "Search Customer by Phone or Email",
+      "Click to expand advanced search criteria": "Click to expand advanced search criteria",
+      "Click to collapse expanded search criteria": "Click to collapse expanded search criteria",
+      "Search by Company Name": "Search by Company Name",
+      "Search by Address": "Search by Address",
+      "Search by VIN (Last 8 digits)": "Search by VIN (Last 8 digits)",
+      "Enter Company Name": "Enter Company Name",
+      "Enter Address": "Enter Address",
+      "Enter Last 8 VIN digits": "Enter Last 8 VIN digits",
+      "Click button to start": "Click {{button}} to start"
     }
   },
   "es": {

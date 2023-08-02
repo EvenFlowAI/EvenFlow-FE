@@ -1,12 +1,11 @@
 import React, {useMemo} from 'react';
 import {TextField} from "../UI/EndUserInputs";
 import {LoadingButton} from "../UI/Button";
-import {Button, Grid, useMediaQuery} from "@material-ui/core";
+import {Grid, useMediaQuery} from "@material-ui/core";
 import {useLoadingStyles, useStyles} from "./CustomerSelect";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
-import {useCurrentUser} from "../../utils/hooks";
 import {setCustomerEnteredEmail} from "../../store/reducers/appointment/actions";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {setUserType} from "../../store/reducers/appointmentFrameReducer/actions";
@@ -16,19 +15,16 @@ type TProps = {
     loading: boolean;
 }
 
-const ReturningCustomerCard: React.FC<TProps> = ({loading, onComplete}) => {
-    const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
+const ReturningSelfCustomer: React.FC<TProps> = ({loading, onComplete}) => {
+    const {customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
 
     const classes = useStyles();
     const loadingClasses = useLoadingStyles();
     const { t } = useTranslation();
     const isXs = useMediaQuery("xs");
-    const currentUser = useCurrentUser();
     const dispatch = useDispatch();
 
-    const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
-        [currentUser, scProfile])
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
@@ -42,7 +38,7 @@ const ReturningCustomerCard: React.FC<TProps> = ({loading, onComplete}) => {
 
     return <Grid item xs={12} sm={12} md={6}>
         <div className={classes.existing}>
-            <span>{t("Returning customer")}</span>
+            <span>{t("I`m a returning customer")}</span>
             <TextField
                 style={{ marginTop: 20, marginBottom: 20 }}
                 placeholder={`${t("Enter your")} ${t("Email or ")}${t("Phone")}`}
@@ -62,19 +58,8 @@ const ReturningCustomerCard: React.FC<TProps> = ({loading, onComplete}) => {
                 onClick={handleComplete}>
                 {t("Search")}
             </LoadingButton>
-            {isAuthorized
-                ? <div className={classes.searchLinkWrapper}>
-                    <Button
-                        variant="text"
-                        // onClick={onOpenSearch}
-                        disabled={loading}
-                        className={classes.searchButton}>
-                        {t("Search Customer by Name")}
-                    </Button>
-                </div>
-                : null}
         </div>
     </Grid>
 };
 
-export default ReturningCustomerCard;
+export default ReturningSelfCustomer;

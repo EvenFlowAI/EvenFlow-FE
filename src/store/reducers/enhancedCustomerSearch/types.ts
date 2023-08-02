@@ -133,9 +133,15 @@ export type TSearchCustomerParams = {
     phoneOrEmail?: string;
     firstName?: string;
     lastName?: string;
+    companyName?: string;
+    address?: string;
+    lastVINDigits?: string;
 }
 
 export type TCustomerSearchData = {
     firstName: string;
     lastName: string;
+    companyName: string;
+    address: string;
+    lastVINDigits: string;
 }

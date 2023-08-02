@@ -11,6 +11,14 @@ import {
 } from "./actions";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 
+const initialCustomerSearch: TCustomerSearchData = {
+    firstName: '',
+    lastName: '',
+    companyName: '',
+    address: '',
+    lastVINDigits: ''
+}
+
 type TCustomerSearchState = {
     isLoading: boolean;
     customers: ICustomerWithPhones[];
@@ -31,10 +39,7 @@ const initialState: TCustomerSearchState = {
     repairHistoryPaging: {numberOfPages: 0, numberOfRecords: 0},
     repairHistory: null,
     repairHistoryLoading: false,
-    customerSearchData: {
-        firstName: '',
-        lastName: ''
-    },
+    customerSearchData: initialCustomerSearch,
 }
 
 export const customerReducer = createReducer(initialState, builder => builder
@@ -63,7 +68,7 @@ export const customerReducer = createReducer(initialState, builder => builder
         return {...state, repairHistoryPaging: payload}
     })
     .addCase(setCustomerSearchData, (state, {payload}) => {
-        if (!payload) return {...state, customerSearchData: {firstName: '', lastName: ''}}
+        if (!payload) return {...state, customerSearchData: initialCustomerSearch}
         return {...state, customerSearchData: {...state.customerSearchData, ...payload}}
     })
 )
