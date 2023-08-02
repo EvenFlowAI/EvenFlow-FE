@@ -167,7 +167,8 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     }, [customers])
 
     const setCustomerData = async (item: ICustomerWithPhones, isUpdating: boolean) => {
-        const phoneNumbers = item.cellPhone ? [item.cellPhone] : [];
+        const phoneNumber = item.cellPhone ?? item.homePhone ?? item.otherPhone;
+        const phoneNumbers = phoneNumber ? [phoneNumber] : [];
         const customerData = customers.find(el => el.vehicleId === item.vehicleId && el.customerId === item.customerId);
         if (customerData?.homePhone) phoneNumbers.push(customerData.homePhone);
         const vehicle = {
