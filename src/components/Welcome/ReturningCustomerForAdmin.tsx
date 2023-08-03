@@ -1,7 +1,7 @@
 import React, {useMemo, useState} from 'react';
 import {TextField} from "../UI/EndUserInputs";
 import {Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
-import {useLoadingStyles, useStyles} from "./CustomerSelect";
+import {useStyles} from "./CustomerSelect";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
@@ -20,9 +20,9 @@ import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
 import {TCallback} from "../../types/types";
 import {defaultPageData} from "../../store/reducers/defaultInitials";
 import {TCustomerSearchData} from "../../store/reducers/enhancedCustomerSearch/types";
-import {checkEmail, validatePhoneNumber} from "../../utils/utils";
+import {checkEmail} from "../../utils/utils";
 import {Loading} from "../UI/Loading";
-import {LoadingButton} from "../UI/Button";
+import {KeyboardArrowDown, KeyboardArrowUp} from "@material-ui/icons";
 
 export const useReturningAdminStyles = makeStyles((theme) => ({
     greyText: {
@@ -85,10 +85,6 @@ const InputLabel: React.FC<{label: string}> = ({label}) => {
     return <div className={returningClasses.inputLabel}>{label}</div>
 }
 
-type TError = {
-    field: string;
-}
-
 const ReturningCustomerForAdmin: React.FC<TProps> = ({
                                                          handleNew,
                                                          redirect
@@ -97,7 +93,6 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
     const {customerSearchData, isLoading} = useSelector((state: RootState) => state.customers);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [isExpanded, setExpanded] = useState<boolean>(false);
-    const [errors, setErrors] = useState<string[]>([])
 
     const {onOpen: onOpenSearchResults, onClose: onCloseSearchResults, isOpen: isOpenSearchResults} = useModal();
     const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
@@ -108,7 +103,6 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
     const showError = useException();
 
     const classes = useStyles();
-    const loadingClasses = useLoadingStyles();
     const returningClasses = useReturningAdminStyles();
     const formIsValid = useMemo(() => {
              return !!customerEnteredEmail.length
@@ -198,6 +192,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                 name="phoneOrEmail"
                 onChange={handlePhoneOrEmailChange}
                 value={customerEnteredEmail}
+                disabled={isLoading}
                 fullWidth/>
 
             <InputLabel label={t("Search Customer by Name")}/>
@@ -209,6 +204,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     onChange={onTextChange('firstName')}
                     InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.firstName.length ? <Loading size="1rem" /> : null }}
                     fullWidth
+                    disabled={isLoading}
                     value={customerSearchData.firstName}/>
                 <TextField
                     name="lastName"
@@ -217,10 +213,12 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     onChange={onTextChange('lastName')}
                     InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.lastName.length ? <Loading size="1rem" /> : null }}
                     fullWidth
+                    disabled={isLoading}
                     value={customerSearchData.lastName}/>
             </div>
             <div className={returningClasses.expandBtn} onClick={onExpandClick} style={{marginBottom: isExpanded ? 16 : 0}}>
-                {isExpanded ? t("Click to collapse expanded search criteria") : t("Click to expand advanced search criteria")}
+                {isExpanded ? t("Collapse expanded search criteria") : t("Expand advanced search criteria")}
+                {isExpanded ? <KeyboardArrowUp htmlColor="#142EA1"/> : <KeyboardArrowDown htmlColor="#142EA1"/> }
             </div>
             {isExpanded
                 ? <React.Fragment>
@@ -241,6 +239,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                         InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.address.length ? <Loading size="1rem" /> : null }}
                         fullWidth
                         name="address"
+                        disabled={isLoading}
                         style={{ marginBottom: 16 }}
                         value={customerSearchData.address}/>
                     <InputLabel label={t("Search by VIN (Last 8 digits)")}/>
@@ -253,6 +252,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                         InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.lastVINCharacters.length ? <Loading size="1rem" /> : null }}
                         name="lastVINCharacters"
                         fullWidth
+                        disabled={isLoading}
                         style={{ marginBottom: 16 }}
                         value={customerSearchData.lastVINCharacters}/>
             </React.Fragment>
