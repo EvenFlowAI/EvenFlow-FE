@@ -27,7 +27,7 @@ export const setRepairHistoryPaging = createAction<IPagingResponse>("CustomerSea
 export const loadCustomersBySearchTerm = (
     serviceCenterId: number,
     onSuccess: (count: number) => void,
-    onError: (err: string) => void,
+    onError: (err: any) => void,
     firstName?: string,
     lastName?: string,
     phoneOrEmail?: string,

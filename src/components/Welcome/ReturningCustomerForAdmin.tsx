@@ -82,6 +82,10 @@ const InputLabel: React.FC<{label: string}> = ({label}) => {
     return <div className={returningClasses.inputLabel}>{label}</div>
 }
 
+type TError = {
+    field: string;
+}
+
 const ReturningCustomerForAdmin: React.FC<TProps> = ({
                                                          handleNew,
                                                          redirect
@@ -90,6 +94,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
     const {customerSearchData} = useSelector((state: RootState) => state.customers);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [isExpanded, setExpanded] = useState<boolean>(false);
+    const [errors, setErrors] = useState<string[]>([])
 
     const {onOpen: onOpenSearchResults, onClose: onCloseSearchResults, isOpen: isOpenSearchResults} = useModal();
     const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
@@ -176,6 +181,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                 placeholder={t("Enter Phone or Email")}
                 InputProps={{disableUnderline: true}}
                 variant="standard"
+                name="phoneOrEmail"
                 onChange={handlePhoneOrEmailChange}
                 value={customerEnteredEmail}
                 fullWidth/>
@@ -183,6 +189,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
             <InputLabel label={t("Search Customer by Name")}/>
             <div className={returningClasses.nameFieldsWrapper}>
                 <TextField
+                    name="firstName"
                     placeholder={t("Enter First Name")}
                     error={formIsChecked && (customerSearchData.firstName.length === 1 || !formIsValid)}
                     onChange={onTextChange('firstName')}
@@ -190,6 +197,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     fullWidth
                     value={customerSearchData.firstName}/>
                 <TextField
+                    name="lastName"
                     placeholder={t("Enter Last Name")}
                     error={formIsChecked && (customerSearchData.lastName.length === 1 || !formIsValid)}
                     onChange={onTextChange('lastName')}
@@ -218,6 +226,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                         onChange={onTextChange('address')}
                         InputProps={{disableUnderline: true}}
                         fullWidth
+                        name="address"
                         style={{ marginBottom: 16 }}
                         value={customerSearchData.address}/>
                     <InputLabel label={t("Search by VIN (Last 8 digits)")}/>
@@ -228,6 +237,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                                 || !formIsValid)}
                         onChange={onTextChange('lastVINCharacters')}
                         InputProps={{disableUnderline: true}}
+                        name="lastVINCharacters"
                         fullWidth
                         style={{ marginBottom: 16 }}
                         value={customerSearchData.lastVINCharacters}/>
