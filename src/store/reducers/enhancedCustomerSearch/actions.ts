@@ -31,11 +31,15 @@ export const loadCustomersBySearchTerm = (
     firstName?: string,
     lastName?: string,
     phoneOrEmail?: string,
+    address?: string,
+    lastVINCharacters?: string,
 ): AppThunk => (dispatch) => {
     const data: TSearchCustomerParams = {};
     if (phoneOrEmail) data.phoneOrEmail = phoneOrEmail.trim();
     if (firstName) data.firstName = firstName.trim();
     if (lastName) data.lastName = lastName.trim();
+    if (address) data.address = address.trim();
+    if (lastVINCharacters) data.lastVINCharacters = lastVINCharacters.trim();
 
     if (Object.keys(data).length) {
         dispatch(setLoading(true))

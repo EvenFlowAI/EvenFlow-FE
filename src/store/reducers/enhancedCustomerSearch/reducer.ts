@@ -16,7 +16,7 @@ const initialCustomerSearch: TCustomerSearchData = {
     lastName: '',
     companyName: '',
     address: '',
-    lastVINDigits: ''
+    lastVINCharacters: ''
 }
 
 type TCustomerSearchState = {

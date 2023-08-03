@@ -54,8 +54,6 @@ export const Welcome = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
-    const {onOpen: onOpenSearchResults, onClose: onCloseSearchResults, isOpen: isOpenSearchResults} = useModal();
-    const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
 
     const {id} = useParams();
     const history = useHistory();
@@ -206,15 +204,9 @@ export const Welcome = () => {
             case "select":
             default:
                 return <CustomerSelect
-                    onOpenSearchResults={onOpenSearchResults}
-                    onCloseSearchResults={onCloseSearchResults}
-                    isOpenSearchResults={isOpenSearchResults}
                     loading={loading || isLoading}
                     onComplete={onComplete}
                     handleNew={handleNew}
-                    onOpenNotFound={onOpenNotFound}
-                    onCloseNotFound={onCloseNotFound}
-                    isOpenNotFound={isOpenNotFound}
                     redirect={redirect}
                 />;
         }

@@ -14,7 +14,7 @@ import {
     setCustomerSearchData, setPageData,
     setPaging
 } from "../../store/reducers/enhancedCustomerSearch/actions";
-import {useException} from "../../utils/hooks";
+import {useException, useModal} from "../../utils/hooks";
 import CustomerSearchResults from "../Modals/EnhancedCustomerSearch/CustomerSearchResults";
 import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
 import {TCallback} from "../../types/types";
@@ -74,12 +74,6 @@ export const useReturningAdminStyles = makeStyles((theme) => ({
 
 type TProps = {
     handleNew: () => void;
-    isOpenSearchResults: boolean;
-    onCloseSearchResults: TCallback;
-    onOpenSearchResults: TCallback;
-    isOpenNotFound: boolean;
-    onCloseNotFound: TCallback;
-    onOpenNotFound: TCallback;
     redirect: TCallback;
 };
 
@@ -90,12 +84,6 @@ const InputLabel: React.FC<{label: string}> = ({label}) => {
 
 const ReturningCustomerForAdmin: React.FC<TProps> = ({
                                                          handleNew,
-                                                         isOpenSearchResults,
-                                                         onCloseSearchResults,
-                                                         onOpenSearchResults,
-                                                         isOpenNotFound,
-                                                         onCloseNotFound,
-                                                         onOpenNotFound,
                                                          redirect
 }) => {
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -103,6 +91,8 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [isExpanded, setExpanded] = useState<boolean>(false);
 
+    const {onOpen: onOpenSearchResults, onClose: onCloseSearchResults, isOpen: isOpenSearchResults} = useModal();
+    const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
     const { t } = useTranslation();
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
@@ -111,7 +101,11 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
 
     const classes = useStyles();
     const returningClasses = useReturningAdminStyles();
-    const formIsValid = useMemo(() => Boolean(customerEnteredEmail) || Object.values(customerSearchData).find(item => item.length > 1),
+    const formIsValid = useMemo(() => {
+             return !!customerEnteredEmail.length
+             || Object.values(customerSearchData).find(item => item.length)
+                || customerSearchData.lastVINCharacters.length === 8
+        },
         [customerEnteredEmail, customerSearchData])
 
     const handleComplete = async () => {
@@ -129,7 +123,9 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
             showError,
             customerSearchData.firstName,
             customerSearchData.lastName,
-            customerEnteredEmail
+            customerEnteredEmail,
+            customerSearchData.address,
+            customerSearchData.lastVINCharacters
         ))
     }
 
@@ -155,7 +151,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
         if (formIsValid) {
             loadData()
         } else {
-            showError('First Name or Last Name must consist from 2 or more characters')
+            showError('Any search field must contain 2 or more characters')
         }
     };
 
@@ -176,7 +172,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
             <InputLabel label={t("Search Customer by Phone or Email")}/>
             <TextField
                 style={{ marginBottom: isSm ? 12 : 28 }}
-                error={formIsChecked && (!customerEnteredEmail.length || !formIsValid)}
+                error={formIsChecked && (customerEnteredEmail.length && customerEnteredEmail.length < 2 || !formIsValid)}
                 placeholder={t("Enter Phone or Email")}
                 InputProps={{disableUnderline: true}}
                 variant="standard"
@@ -206,15 +202,15 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
             </div>
             {isExpanded
                 ? <React.Fragment>
-                    <InputLabel label={t("Search by Company Name")}/>
-                    <TextField
-                        placeholder={t("Enter Company Name")}
-                        error={formIsChecked && (customerSearchData.companyName.length === 1 || !formIsValid)}
-                        onChange={onTextChange('companyName')}
-                        InputProps={{disableUnderline: true}}
-                        fullWidth
-                        style={{ marginBottom: 16 }}
-                        value={customerSearchData.companyName}/>
+                    {/*<InputLabel label={t("Search by Company Name")}/>*/}
+                    {/*<TextField*/}
+                    {/*    placeholder={t("Enter Company Name")}*/}
+                    {/*    error={formIsChecked && (customerSearchData.companyName.length === 1 || !formIsValid)}*/}
+                    {/*    onChange={onTextChange('companyName')}*/}
+                    {/*    InputProps={{disableUnderline: true}}*/}
+                    {/*    fullWidth*/}
+                    {/*    style={{ marginBottom: 16 }}*/}
+                    {/*    value={customerSearchData.companyName}/>*/}
                     <InputLabel label={t("Search by Address")}/>
                     <TextField
                         placeholder={t("Enter Address")}
@@ -228,14 +224,13 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     <TextField
                         placeholder={t("Enter Last 8 VIN digits")}
                         error={formIsChecked &&
-                            ((customerSearchData.lastVINDigits.length && customerSearchData.lastVINDigits.length < 8)
-                                || Number.isNaN(+customerSearchData.lastVINDigits)
+                            ((!!customerSearchData.lastVINCharacters.length && customerSearchData.lastVINCharacters.length < 8)
                                 || !formIsValid)}
-                        onChange={onTextChange('lastVINDigits')}
+                        onChange={onTextChange('lastVINCharacters')}
                         InputProps={{disableUnderline: true}}
                         fullWidth
                         style={{ marginBottom: 16 }}
-                        value={customerSearchData.lastVINDigits}/>
+                        value={customerSearchData.lastVINCharacters}/>
             </React.Fragment>
                 : null}
             <CustomerSearchResults

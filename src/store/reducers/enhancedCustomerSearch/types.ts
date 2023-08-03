@@ -135,7 +135,7 @@ export type TSearchCustomerParams = {
     lastName?: string;
     companyName?: string;
     address?: string;
-    lastVINDigits?: string;
+    lastVINCharacters?: string;
 }
 
 export type TCustomerSearchData = {
@@ -143,5 +143,5 @@ export type TCustomerSearchData = {
     lastName: string;
     companyName: string;
     address: string;
-    lastVINDigits: string;
+    lastVINCharacters: string;
 }

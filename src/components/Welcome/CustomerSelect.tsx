@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Grid} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,11 +10,7 @@ import {LocalTokens, TCallback} from "../../types/types";
 import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../store/rootReducer";
-import {useCurrentUser, useException, useModal} from "../../utils/hooks";
-import EnhancedCustomerSearch from "../Modals/EnhancedCustomerSearch/EnhancedCustomerSearch";
-import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
-import CustomerSearchResults from "../Modals/EnhancedCustomerSearch/CustomerSearchResults";
-import {loadCustomersBySearchTerm, setCustomerSearchData} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {useCurrentUser} from "../../utils/hooks";
 import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
 import ReturningSelfCustomer from "./ReturningSelfCustomer";
 import NewSelfCustomer from "./NewSelfCustomer";
@@ -148,12 +144,6 @@ type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
     loading: boolean;
     handleNew: () => void;
-    isOpenSearchResults: boolean;
-    onCloseSearchResults: TCallback;
-    onOpenSearchResults: TCallback;
-    isOpenNotFound: boolean;
-    onCloseNotFound: TCallback;
-    onOpenNotFound: TCallback;
     redirect: TCallback;
 };
 
@@ -161,24 +151,14 @@ export const CustomerSelect: React.FC<TProps> = ({
                                                      onComplete,
                                                      loading,
                                                      handleNew,
-                                                     isOpenSearchResults,
-                                                     onCloseSearchResults,
-                                                     onOpenSearchResults,
-                                                     isOpenNotFound,
-                                                     onCloseNotFound,
-                                                     onOpenNotFound,
     redirect,
                                                  }) => {
-    const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {customerSearchData} = useSelector((state: RootState) => state.customers);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {shortSC} = useSelector((state: RootState) => state.serviceCenters);
-    const {onOpen, onClose, isOpen} = useModal();
-    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
     const classes = useStyles();
     const dispatch = useDispatch();
     const currentUser = useCurrentUser();
-    const showError = useException();
     const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
         [currentUser, scProfile])
 
@@ -194,26 +174,6 @@ export const CustomerSelect: React.FC<TProps> = ({
         dispatch(clearAppointmentData())
     }, [])
 
-    const onSuccess = (count: number) => {
-        count > 0 ? onOpenSearchResults() : onOpenNotFound()
-    }
-
-    const loadData = (byName?: boolean) => {
-        scProfile && dispatch(loadCustomersBySearchTerm(
-            scProfile.id,
-            onSuccess,
-            showError,
-            customerSearchData.firstName,
-            customerSearchData.lastName,
-            byName ? undefined : customerEnteredEmail
-        ))
-    }
-
-    const clearForm = () => {
-        setFormIsChecked(false);
-        dispatch(setCustomerSearchData(null))
-    }
-
     const handleBack = () => dispatch(setWelcomeScreenView("serviceCenterSelect"))
 
     return <div className={classes.wrapper}>
@@ -222,36 +182,11 @@ export const CustomerSelect: React.FC<TProps> = ({
               container
               spacing={4}>
             {isAuthorized
-                ? <ReturningCustomerForAdmin
-                    onCloseSearchResults={onCloseSearchResults}
-                    onCloseNotFound={onCloseNotFound}
-                    handleNew={handleNew}
-                    isOpenSearchResults={isOpenSearchResults}
-                    isOpenNotFound={isOpenNotFound}
-                    onOpenSearchResults={onOpenSearchResults}
-                    onOpenNotFound={onOpenNotFound}
-                    redirect={redirect}
-                />
+                ? <ReturningCustomerForAdmin handleNew={handleNew} redirect={redirect}/>
                 : <ReturningSelfCustomer onComplete={onComplete} loading={loading} />}
             {isAuthorized
                 ? <NewCustomerForAdmin handleNew={handleNew}/>
                 : <NewSelfCustomer handleNew={handleNew}/>}
-            <EnhancedCustomerSearch
-                open={isOpen}
-                onClose={onClose}
-                loadData={loadData}
-                formIsChecked={formIsChecked}
-                setFormIsChecked={setFormIsChecked}
-            />
-            <CustomerSearchResults
-                handleNew={handleNew}
-                loadData={loadData}
-                redirect={redirect}
-                onClose={onCloseSearchResults}
-                open={isOpenSearchResults}
-                onClearSearchForm={clearForm}
-            />
-            <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
         </Grid>
         {isAuthorized && !!shortSC?.length && <Actions onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service Center"/>}
     </div>
