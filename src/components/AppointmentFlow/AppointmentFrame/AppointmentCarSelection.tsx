@@ -140,7 +140,9 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                 setNeedToShowServiceSelection(false);
                 handleServiceTypeSelection()
             } else {
-                handleSetScreen(getNextScreen());
+                if (customerLoadedData?.isUpdating) {
+                    handleSetScreen("appointmentConfirmation")
+                } else handleSetScreen(getNextScreen());
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

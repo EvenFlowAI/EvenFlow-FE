@@ -40,7 +40,7 @@ import {
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
-    setWelcomeScreenView
+    setWelcomeScreenView, handleSideBarAppointmentUpdate
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {EServiceCategoryPage, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
@@ -180,12 +180,15 @@ export const AppointmentFrameLayout = () => {
             await dispatch(updatePackageOption(data.maintenancePackageOption))
             await updateServiceRequests(data.serviceRequests);
             const shouldShowServiceSelection = updateServiceTypeOption(data);
-            if (shouldShowServiceSelection) {
-                goToServiceTypeSelection();
-            } else {
-                const isMobileOrPickUp = data.serviceTypeOption && data.serviceTypeOption?.type !== EServiceType.VisitCenter;
-                handleSetScreen(isMobileOrPickUp ? 'location' : 'serviceNeeds');
-            }
+            await dispatch(handleSideBarAppointmentUpdate());
+            handleSetScreen("appointmentConfirmation");
+
+            // if (shouldShowServiceSelection) {
+            //     goToServiceTypeSelection();
+            // } else {
+            //     const isMobileOrPickUp = data.serviceTypeOption && data.serviceTypeOption?.type !== EServiceType.VisitCenter;
+            //     handleSetScreen(isMobileOrPickUp ? 'location' : 'serviceNeeds');
+            // }
         } catch (e) {
             showError(e);
         } finally {
@@ -193,7 +196,8 @@ export const AppointmentFrameLayout = () => {
         }
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
         updateServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
-        updateRecalls, updatePackageOption, goToServiceTypeSelection])
+        updateRecalls, updatePackageOption, goToServiceTypeSelection,
+        isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable])
 
     // useAnalytics(trackerCreated, () => dispatch(setTrackerCreated(true)))
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
