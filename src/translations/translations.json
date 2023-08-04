@@ -315,7 +315,10 @@
       "Search Customer": "Search Customer",
       "Expand advanced search criteria": "Expand advanced search criteria",
       "Collapse advanced search criteria": "Collapse advanced search criteria",
-      "Start": "Start"
+      "Start": "Start",
+      "We cannot find any existing customers that met the search criteria you entered.": "We cannot find any existing customers that met the search criteria you entered.",
+      "Would you like to try different search criteria?": "Would you like to try different search criteria?",
+      "Try other search criteria": "Try other search criteria"
     }
   },
   "es": {
