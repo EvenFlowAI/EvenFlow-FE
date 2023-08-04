@@ -17,7 +17,7 @@ import {
     setSessionId
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
-import {useCurrentUser, useException, useLayout, useModal, useStorage} from "../../utils/hooks";
+import {useException, useLayout, useModal, useStorage} from "../../utils/hooks";
 import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
@@ -40,7 +40,6 @@ import {Loading} from "../UI/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 import {
     loadCustomersByPhoneOrEmail,
-    loadCustomersBySearchTerm
 } from "../../store/reducers/enhancedCustomerSearch/actions";
 import SelectServiceCenter from "./SelectServiceCenter";
 
@@ -55,15 +54,12 @@ export const Welcome = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
-    const {onOpen: onOpenSearchResults, onClose: onCloseSearchResults, isOpen: isOpenSearchResults} = useModal();
-    const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
 
     const {id} = useParams();
     const history = useHistory();
     const showError = useException();
     const isFrame = useLayout();
     const dispatch = useDispatch();
-    const currentUser = useCurrentUser();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useStorage();
@@ -116,23 +112,15 @@ export const Welcome = () => {
         });
     }
 
-    const onLoadingSearchResults = (count: number) => {
-        count > 0 ? onOpenSearchResults() : onOpen()
-    }
-
     const onSuccessForCustomer = () => {
         handleGA();
         redirect();
     }
 
-    const getDataByRole = (isAdmin: boolean) => {
+    const getData = () => {
         try {
             setLoading(true);
-            if (isAdmin) {
-                dispatch(loadCustomersBySearchTerm(scProfile?.id ?? 0, onLoadingSearchResults, showError, '', '', customerEnteredEmail))
-            } else {
-                dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail, onSuccessForCustomer, onOpen))
-            }
+            dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail, onSuccessForCustomer, onOpen))
         } catch (err) {
             dispatch(setSessionId(""));
             if (err.response?.data?.errorCode === 6) {
@@ -141,11 +129,6 @@ export const Welcome = () => {
         } finally {
             setLoading(false);
         }
-    }
-
-    const handleExistingUser = () => {
-        const isAdmin = Boolean(currentUser && currentUser?.dealershipId === scProfile?.dealershipId)
-        getDataByRole(isAdmin)
     }
 
     const skipServiceTypeSelection = () => {
@@ -177,7 +160,7 @@ export const Welcome = () => {
     const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
         handleValueServiceConfig(serviceType);
         if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
-            handleExistingUser()
+            getData()
         } else {
             handleFirstScreen()
         }
@@ -221,15 +204,9 @@ export const Welcome = () => {
             case "select":
             default:
                 return <CustomerSelect
-                    onOpenSearchResults={onOpenSearchResults}
-                    onCloseSearchResults={onCloseSearchResults}
-                    isOpenSearchResults={isOpenSearchResults}
                     loading={loading || isLoading}
                     onComplete={onComplete}
                     handleNew={handleNew}
-                    onOpenNotFound={onOpenNotFound}
-                    onCloseNotFound={onCloseNotFound}
-                    isOpenNotFound={isOpenNotFound}
                     redirect={redirect}
                 />;
         }

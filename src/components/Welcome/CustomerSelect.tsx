@@ -1,26 +1,21 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import {Button, Grid, useMediaQuery} from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {
     clearAppointmentData,
-    setUserType,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens, TCallback} from "../../types/types";
 import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../store/rootReducer";
-import {setCustomerEnteredEmail} from "../../store/reducers/appointment/actions";
-import {TextField} from "../UI/EndUserInputs";
-import {LoadingButton} from "../UI/Button";
-import {useTranslation} from "react-i18next";
-import {useCurrentUser, useException, useModal} from "../../utils/hooks";
-import EnhancedCustomerSearch from "../Modals/EnhancedCustomerSearch/EnhancedCustomerSearch";
-import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
-import CustomerSearchResults from "../Modals/EnhancedCustomerSearch/CustomerSearchResults";
-import {loadCustomersBySearchTerm, setCustomerSearchData} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {useCurrentUser} from "../../utils/hooks";
 import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
+import ReturningSelfCustomer from "./ReturningSelfCustomer";
+import NewSelfCustomer from "./NewSelfCustomer";
+import ReturningCustomerForAdmin from "./ReturningCustomerForAdmin";
+import NewCustomerForAdmin from "./NewCustomerForAdmin";
 
 export const mh400 = "@media (max-height: 400px)";
 export const mh600 = "@media (max-height: 600px)";
@@ -29,18 +24,19 @@ export const useStyles = makeStyles(theme => ({
     buttonsContainer: {
         marginTop: "5%",
         marginBottom: 20,
+        justifyContent: "center",
         [mh600]: {
             marginTop: "2%"
         },
         [theme.breakpoints.down("sm")]: {
-            marginTop: theme.spacing(5)
+            marginTop: theme.spacing(5),
         }
     },
     existing: {
         position: "relative",
         fontWeight: "bold",
         fontSize: 32,
-        padding: "7% 7% 9% 7%",
+        padding: "32px 28px",
         height: "100%",
         textAlign: "center",
         border: "1px solid #DADADA",
@@ -60,18 +56,19 @@ export const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down("xs")]: {
             fontSize: 18,
             padding: "5%"
-        }
+        },
     },
     button: {
-        fontWeight: "bold",
-        fontSize: 32,
+        height: "100%",
+        maxHeight: 400,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "7% 7% 9% 7%",
-        height: "100%",
+        fontWeight: "bold",
+        fontSize: 32,
         textAlign: "center",
+        padding: "7% 7% 9% 7%",
         border: "1px solid #DADADA",
         background: "#FFFFFF",
         transition: theme.transitions.create(["box-shadow"]),
@@ -135,7 +132,7 @@ export const useStyles = makeStyles(theme => ({
     }
 }))
 
-const useLoadingStyles = makeStyles(theme => ({
+export const useLoadingStyles = makeStyles(theme => ({
     wrapper: {
         [theme.breakpoints.down("xs")]: {
             width: "100%",
@@ -147,12 +144,6 @@ type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
     loading: boolean;
     handleNew: () => void;
-    isOpenSearchResults: boolean;
-    onCloseSearchResults: TCallback;
-    onOpenSearchResults: TCallback;
-    isOpenNotFound: boolean;
-    onCloseNotFound: TCallback;
-    onOpenNotFound: TCallback;
     redirect: TCallback;
 };
 
@@ -160,29 +151,14 @@ export const CustomerSelect: React.FC<TProps> = ({
                                                      onComplete,
                                                      loading,
                                                      handleNew,
-                                                     isOpenSearchResults,
-                                                     onCloseSearchResults,
-                                                     onOpenSearchResults,
-                                                     isOpenNotFound,
-                                                     onCloseNotFound,
-                                                     onOpenNotFound,
     redirect,
                                                  }) => {
-    const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
-    const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {customerSearchData} = useSelector((state: RootState) => state.customers);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {shortSC} = useSelector((state: RootState) => state.serviceCenters);
-    const {onOpen, onClose, isOpen} = useModal();
-    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
-    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const classes = useStyles();
-    const loadingClasses = useLoadingStyles();
     const dispatch = useDispatch();
-    const { t } = useTranslation();
-    const isXs = useMediaQuery("xs");
     const currentUser = useCurrentUser();
-    const showError = useException();
     const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
         [currentUser, scProfile])
 
@@ -198,40 +174,6 @@ export const CustomerSelect: React.FC<TProps> = ({
         dispatch(clearAppointmentData())
     }, [])
 
-    const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
-        dispatch(setCustomerEnteredEmail(value));
-    }
-
-    const handleComplete = async () => {
-        dispatch(setUserType(EUserType.Existing));
-        onComplete(serviceType, EUserType.Existing);
-    }
-
-    const onSuccess = (count: number) => {
-        count > 0 ? onOpenSearchResults() : onOpenNotFound()
-    }
-
-    const onOpenSearch = () => {
-        dispatch(setCustomerSearchData(null))
-        onOpen()
-    }
-
-    const loadData = (byName?: boolean) => {
-        scProfile && dispatch(loadCustomersBySearchTerm(
-            scProfile.id,
-            onSuccess,
-            showError,
-            customerSearchData.firstName,
-            customerSearchData.lastName,
-            byName ? undefined : customerEnteredEmail
-        ))
-    }
-
-    const clearForm = () => {
-        setFormIsChecked(false);
-        dispatch(setCustomerSearchData(null))
-    }
-
     const handleBack = () => dispatch(setWelcomeScreenView("serviceCenterSelect"))
 
     return <div className={classes.wrapper}>
@@ -239,70 +181,12 @@ export const CustomerSelect: React.FC<TProps> = ({
               alignItems="stretch"
               container
               spacing={4}>
-            <Grid item xs={12} sm={12} md={6}>
-                <div className={classes.existing}>
-                    <span>{t("I`m a returning customer")}</span>
-                    <TextField
-                        style={{ marginTop: 20, marginBottom: 20 }}
-                        placeholder={`${t("Enter your")} ${t("Email or ")}${t("Phone")}`}
-                        InputProps={{disableUnderline: true}}
-                        variant="standard"
-                        onChange={handleChange}
-                        value={customerEnteredEmail}
-                        fullWidth/>
-                    <LoadingButton
-                        fullWidth={isXs}
-                        loading={loading}
-                        variant="contained"
-                        color="primary"
-                        classes={loadingClasses}
-                        className={classes.loadingButton}
-                        disabled={loading || !customerEnteredEmail}
-                        onClick={handleComplete}>
-                        {t("Search")}
-                    </LoadingButton>
-                    {isAuthorized
-                        ? <div className={classes.searchLinkWrapper}>
-                            <Button
-                                variant="text"
-                                onClick={onOpenSearch}
-                                disabled={loading}
-                                className={classes.searchButton}>
-                                {t("Search Customer by Name")}
-                            </Button>
-                        </div>
-                        : null}
-                </div>
-            </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-                <div className={classes.button}>
-                    <span>{t("I`m a new customer")}</span>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.submitButton}
-                        onClick={handleNew}
-                    >
-                        {t("Next")}
-                    </Button>
-                </div>
-            </Grid>
-            <EnhancedCustomerSearch
-                open={isOpen}
-                onClose={onClose}
-                loadData={loadData}
-                formIsChecked={formIsChecked}
-                setFormIsChecked={setFormIsChecked}
-            />
-            <CustomerSearchResults
-                handleNew={handleNew}
-                loadData={loadData}
-                redirect={redirect}
-                onClose={onCloseSearchResults}
-                open={isOpenSearchResults}
-                onClearSearchForm={clearForm}
-            />
-            <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onOpen}/>
+            {isAuthorized
+                ? <ReturningCustomerForAdmin handleNew={handleNew} redirect={redirect}/>
+                : <ReturningSelfCustomer onComplete={onComplete} loading={loading} />}
+            {isAuthorized
+                ? <NewCustomerForAdmin handleNew={handleNew}/>
+                : <NewSelfCustomer handleNew={handleNew}/>}
         </Grid>
         {isAuthorized && !!shortSC?.length && <Actions onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service Center"/>}
     </div>
