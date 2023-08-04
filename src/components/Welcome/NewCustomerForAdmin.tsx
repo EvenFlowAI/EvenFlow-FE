@@ -10,10 +10,10 @@ const useStyles = makeStyles(theme => ({
     button: {
         height: "100%",
         maxHeight: 400,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "space-between",
+        // display: "flex",
+        // flexDirection: "column",
+        // alignItems: "center",
+        // justifyContent: "space-between",
         fontWeight: "bold",
         fontSize: 32,
         textAlign: "center",
@@ -46,9 +46,9 @@ const useStyles = makeStyles(theme => ({
                 marginTop: theme.spacing(2),
             }
         },
-        [theme.breakpoints.up("sm")]: {
-            marginBottom: 120
-        }
+        // [theme.breakpoints.up("sm")]: {
+        //     marginBottom: 120
+        // }
     },
 }))
 
@@ -62,17 +62,17 @@ const NewCustomerForAdmin: React.FC<{ handleNew: () => void}> = ({ handleNew }) 
     return <Grid item xs={12} sm={12} md={6} style={{maxWidth: 440, padding: isSm ? '16px 0' : 16}}>
         <div className={classes.button}>
             <span style={{fontSize : isSm ? 28 : 32}}>{t("New customer")}</span>
-            {/*{isSm*/}
-            {/*    ? null*/}
-            {/*    : <div className={returningClasses.greyText}>{t("Click button to start", {button: `"${t("Submit")}"`})}</div>}*/}
-            {/*<Divider style={{marginBottom: isSm ? 12 : 72, marginTop: isSm ? 12 : 17}}/>*/}
+            {isSm
+                ? null
+                : <div className={returningClasses.greyText}>{t("Click button to start", {button: `"${t("Submit")}"`})}</div>}
+            <Divider style={{marginBottom: isSm ? 12 : 72, marginTop: isSm ? 12 : 17}}/>
             <Button
                 variant="contained"
                 color="primary"
                 className={classes.submitButton}
                 onClick={handleNew}
             >
-                {t("Start")}
+                {t("Submit")}
             </Button>
         </div>
     </Grid>
