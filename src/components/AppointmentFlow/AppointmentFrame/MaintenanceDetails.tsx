@@ -9,8 +9,9 @@ import {EUserType, TMaintenanceDetails} from "../../../store/reducers/appointmen
 import {
     clearAppointmentSteps,
     loadMakes,
-    setRecallsAreShown,
-    setVehicle, setVehicleDataFromValueService,
+    setRecallsAreShown, setSelectedRecalls,
+    setVehicle,
+    setVehicleDataFromValueService,
     updateVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -270,6 +271,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }
 
     const handleDeclineRecalls = () => {
+        dispatch(setSelectedRecalls([]));
         if (isRecallsCategorySelected) {
             if (onlyRecallsSelected) dispatch(clearAppointmentSteps("serviceNeeds"))
             onBack('serviceNeeds');
@@ -446,7 +448,8 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                             error={errors.includes("vin")}
                             required={requiredFields.includes("vin") || isRecallsCategorySelected}
                             fullWidth
-                            disabled={recallsAreShown && !isRecallsCategorySelected}
+                            disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length)}
+                            //disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length) || (recallsAreShown && !isRecallsCategorySelected)}
                             value={selectedVehicle ? selectedVehicle.vin : ""}
                             placeholder={errors.includes("vin")
                                 ? `${t("VIN")} ${t("required")}`

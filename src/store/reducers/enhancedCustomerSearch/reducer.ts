@@ -11,7 +11,7 @@ import {
 } from "./actions";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
 
-const initialCustomerSearch: TCustomerSearchData = {
+export const initialCustomerSearch: TCustomerSearchData = {
     firstName: '',
     lastName: '',
     companyName: '',
