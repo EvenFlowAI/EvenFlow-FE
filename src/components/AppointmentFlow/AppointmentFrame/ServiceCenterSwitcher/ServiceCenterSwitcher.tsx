@@ -13,6 +13,8 @@ import {
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {encodeSCID} from "../../../../utils/utils";
 import {Routes} from "../../../../config/routes";
+import {setCustomerSearchData} from "../../../../store/reducers/enhancedCustomerSearch/actions";
+import {initialCustomerSearch} from "../../../../store/reducers/enhancedCustomerSearch/reducer";
 
 const useStyles = makeStyles((theme) => ({
     selectWrapper: {
@@ -54,6 +56,7 @@ export const ServiceCenterSwitcher = () => {
             if (shortSC?.length) {
                 dispatch(clearAppointmentData());
                 dispatch(setCustomerEnteredEmail(""))
+                dispatch(setCustomerSearchData(initialCustomerSearch))
                 dispatch(setSideBarSteps([]));
                 dispatch(setCurrentFrameScreen('serviceNeeds'))
                 dispatch(setVehicle(null));
