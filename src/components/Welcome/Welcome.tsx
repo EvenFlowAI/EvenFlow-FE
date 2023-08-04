@@ -39,9 +39,10 @@ import ExistingCustomerError from "../Modals/ExistingCustomerError/ExistingCusto
 import {Loading} from "../UI/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/actions";
 import {
-    loadCustomersByPhoneOrEmail,
+    loadCustomersByPhoneOrEmail, setCustomerSearchData,
 } from "../../store/reducers/enhancedCustomerSearch/actions";
 import SelectServiceCenter from "./SelectServiceCenter";
+import {initialCustomerSearch} from "../../store/reducers/enhancedCustomerSearch/reducer";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
@@ -185,6 +186,7 @@ export const Welcome = () => {
         dispatch(setUserType(EUserType.New));
         handleReactGA('A New');
         dispatch(setCustomerEnteredEmail(''));
+        dispatch(setCustomerSearchData(initialCustomerSearch))
         dispatch(setShowServiceCentersList(false));
         if (firstScreenOptions.length) {
             handleFirstScreenOptions()
