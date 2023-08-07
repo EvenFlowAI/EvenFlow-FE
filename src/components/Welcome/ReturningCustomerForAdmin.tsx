@@ -20,7 +20,6 @@ import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
 import {TCallback} from "../../types/types";
 import {defaultPageData} from "../../store/reducers/defaultInitials";
 import {TCustomerSearchData} from "../../store/reducers/enhancedCustomerSearch/types";
-import {checkEmail} from "../../utils/utils";
 import {Loading} from "../UI/Loading";
 import {KeyboardArrowDown, KeyboardArrowUp} from "@material-ui/icons";
 
@@ -80,6 +79,11 @@ type TProps = {
     redirect: TCallback;
 };
 
+type TError = {
+    field: string;
+    message: string;
+}
+
 const InputLabel: React.FC<{label: string}> = ({label}) => {
     const returningClasses = useReturningAdminStyles();
     return <div className={returningClasses.inputLabel}>{label}</div>
@@ -93,6 +97,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
     const {customerSearchData, isLoading} = useSelector((state: RootState) => state.customers);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [isExpanded, setExpanded] = useState<boolean>(false);
+    const [errors, setErrors] = useState<string[]>([])
 
     const {onOpen: onOpenSearchResults, onClose: onCloseSearchResults, isOpen: isOpenSearchResults} = useModal();
     const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
@@ -115,11 +120,19 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
         count > 0 ? onOpenSearchResults() : onOpenNotFound()
     }
 
+    const onError = (e: any) => {
+        showError(e)
+        if (e.response?.data?.errors) {
+            const data = [...e.response.data.errors]
+            setErrors(() => data.map((err: TError): string => err.field).filter(el => el !== null))
+        }
+    }
+
     const loadData = () => {
         scProfile && dispatch(loadCustomersBySearchTerm(
             scProfile.id,
             onSuccess,
-            showError,
+            onError,
             customerSearchData.firstName,
             customerSearchData.lastName,
             customerEnteredEmail,
@@ -130,6 +143,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
 
     const clearForm = async () => {
         setFormIsChecked(false);
+        setErrors([]);
         dispatch(setCustomerSearchData(null))
         dispatch(setPaging({numberOfPages: 0, numberOfRecords: 0}));
         dispatch(setPageData(defaultPageData))
@@ -137,11 +151,13 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
 
     const handlePhoneOrEmailChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         setFormIsChecked(false);
+        setErrors([]);
         dispatch(setCustomerEnteredEmail(value));
     }
 
     const onTextChange = (name: keyof TCustomerSearchData) => (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormIsChecked(false);
+        setErrors([]);
         dispatch(setCustomerSearchData({[name]: e.target.value}));
     }
 
@@ -156,7 +172,6 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
 
     const handleComplete = async () => {
         dispatch(setUserType(EUserType.Existing));
-        // onSave()
     }
 
     const onKeyUp = (e: React.KeyboardEvent) => {
@@ -166,14 +181,14 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
 
     const onExpandClick = () => setExpanded(prev => !prev)
 
-    const checkPhoneOrEmailValid = () => {
-        if (customerEnteredEmail.length) {
-            return Number.isNaN(+customerEnteredEmail)
-                ? checkEmail(customerEnteredEmail)
-                : customerEnteredEmail.length >= 11
-        }
-        return true
-    }
+    // const checkPhoneOrEmailValid = () => {
+    //     if (customerEnteredEmail.length) {
+    //         return Number.isNaN(+customerEnteredEmail)
+    //             ? checkEmail(customerEnteredEmail)
+    //             : customerEnteredEmail.length >= 11
+    //     }
+    //     return true
+    // }
 
     return <Grid item xs={12} sm={12} md={6} style={{maxWidth: 440, padding: isSm ? '16px 0' : 16}}>
         <div className={classes.existing} onKeyUp={onKeyUp}>
@@ -185,7 +200,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
             <InputLabel label={t("Search Customer by Phone or Email")}/>
             <TextField
                 style={{ marginBottom: isSm ? 12 : 28 }}
-                error={formIsChecked && (!checkPhoneOrEmailValid() || !formIsValid)}
+                error={formIsChecked && (errors.includes("PhoneOrEmail") || !formIsValid)}
                 placeholder={t("Enter Phone or Email")}
                 InputProps={{disableUnderline: true, endAdornment: isLoading && customerEnteredEmail.length ? <Loading size="1rem" /> : null }}
                 variant="standard"
