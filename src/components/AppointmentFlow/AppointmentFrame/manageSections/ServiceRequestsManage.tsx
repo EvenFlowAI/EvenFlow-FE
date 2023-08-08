@@ -1,10 +1,9 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {styled} from "@material-ui/core";
 import {ConfirmationTitle} from "../Title";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
-import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {setCurrentFrameScreen} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {Edit} from "@material-ui/icons";
 

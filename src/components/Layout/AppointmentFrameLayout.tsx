@@ -24,19 +24,18 @@ import {
     clearCustomerCache,
     getBlankVehicle,
     getCustomerCache,
-    selectSR, selectSRMultiple,
+    selectSRMultiple,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {encodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
-import {useAnalytics, useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
+import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
 import {
     updateRecalls, updatePackageOption,
     setCurrentFrameScreen,
     setServiceTypeOption,
-    setSideBarSteps,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,

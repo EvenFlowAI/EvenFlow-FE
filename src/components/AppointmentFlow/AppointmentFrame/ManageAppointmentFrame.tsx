@@ -1,12 +1,9 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {UserData} from "./confirmationSections/UserData";
 import {styled} from "@material-ui/core";
 import {SelectedDate} from "./confirmationSections/SelectedDate";
-import {Review} from "./confirmationSections/Review";
-import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TCallback} from "../../../types/types";
 import {ICreateAppointmentResp} from "../../../api/types";
@@ -28,11 +25,9 @@ import {
     loadAllServiceCategories,
 } from "../../../store/reducers/appointment/actions";
 import Vehicle from "./confirmationSections/Vehicle";
-import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 import Address from "./confirmationSections/Address";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
-import ServiceType from "./confirmationSections/ServiceType";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import ServiceRequestsManage from "./manageSections/ServiceRequestsManage";

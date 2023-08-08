@@ -2,19 +2,10 @@ import React, {useMemo} from 'react';
 import {Grid} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {
-    getBlankCustomer,
-    getBlankVehicle,
-    saveCustomerCache,
-    setCustomerLoadedData
-} from "../../../../store/reducers/appointment/actions";
-import {
-    clearAppointmentData,
     setCurrentFrameScreen,
     setServiceTypeOption, setSideBarSteps, setValueServiceAvailability,
-    setVehicle,
-    setWelcomeScreenView
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga4";
 //import ReactGA from "react-ga";
@@ -24,29 +15,20 @@ import {InfoOutlined} from "@material-ui/icons";
 import {HtmlTooltip} from "../ServiceCard";
 import ServiceTypeIcon from "../../../Welcome/ServiceTypeIcon";
 import {Actions} from "../Actions";
-import {useCurrentUser} from "../../../../utils/hooks";
-import {Routes} from "../../../../config/routes";
-import {encodeSCID} from "../../../../utils/utils";
-import {useHistory, useParams} from "react-router-dom";
 import {
     ServiceTypeButton,
     ServiceTypeCardsWrapper,
     Tagline,
     useServiceTypeStyles
 } from "../../../Welcome/ServiceTypeSelect";
-import serviceOption from "../SelectedAppointmentParts/ServiceOption";
 
 const ServiceTypeSelect = () => {
-    const {userType, selectedVehicle, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const { serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
-    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
-    const currentUser = useCurrentUser();
 
-    const {id} = useParams();
     const classes = useServiceTypeStyles();
     const dispatch = useDispatch();
-    const history = useHistory();
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
 
     const handleValueServiceConfig = (serviceType: EServiceType) => {
