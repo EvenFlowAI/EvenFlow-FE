@@ -268,7 +268,6 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
                 onSave={handleChangesCompleted}
                 onAdditionalChanges={handleAdditionalChanges}
                 open={isChangesCompletedOpen}
-                onCancel={onChangesCompletedClose}
             />
             <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
         </BaseModal>

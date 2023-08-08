@@ -140,7 +140,6 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
                 onSave={handleChangesCompleted}
                 onAdditionalChanges={handleAdditionalChanges}
                 open={isChangesCompletedOpen}
-                onCancel={onChangesCompletedClose}
             />
             <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
             <AddCommentPrompt open={isErrorOpen} onClose={onErrorClose}/>

@@ -590,7 +590,6 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 onSave={handleChangesCompleted}
                 onAdditionalChanges={handleAdditionalChanges}
                 open={isChangesCompletedOpen}
-                onCancel={onChangesCompletedClose}
             />
             <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
         </PackagesStepWrapper>

@@ -10,7 +10,6 @@ import {RootState} from "../../../store/rootReducer";
 
 type TAskChangesCompletedProps = DialogProps & {
     onSave: () => void;
-    onCancel: () => void;
     onAdditionalChanges: () => void;
 }
 
@@ -61,7 +60,7 @@ const AskChangesCompleted = (props: TAskChangesCompletedProps) => {
                     <LoadingButton
                         loading={isAppointmentSaving}
                         fullWidth
-                        onClick={props.onCancel}
+                        onClick={props.onClose}
                         variant="outlined"
                         color="primary">
                         {t("Cancel")}

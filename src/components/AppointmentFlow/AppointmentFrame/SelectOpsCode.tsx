@@ -326,7 +326,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
                 onSave={handleChangesCompleted}
                 onAdditionalChanges={handleAdditionalChanges}
                 open={isChangesCompletedOpen}
-                onCancel={onChangesCompletedClose}
             />
             <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
             <Actions onBack={handleBack} nextDisabled={!selectedOpsCodes.length} onNext={handleNext} nextLabel={t("Next")}/>
