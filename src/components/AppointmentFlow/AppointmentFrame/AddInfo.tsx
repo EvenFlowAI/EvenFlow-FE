@@ -117,10 +117,6 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
         dispatch(setCurrentFrameScreen("manageAppointment"))
     }
 
-    const onCancelChanges = () => {
-        onChangesCompletedClose()
-    }
-
     const onSlotsWarningClick = () => {
         onSlotsWarningClose();
         dispatch(setCurrentFrameScreen("appointmentSelection"));
@@ -144,7 +140,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
                 onSave={handleChangesCompleted}
                 onAdditionalChanges={handleAdditionalChanges}
                 open={isChangesCompletedOpen}
-                onCancel={onCancelChanges}
+                onCancel={onChangesCompletedClose}
             />
             <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
             <AddCommentPrompt open={isErrorOpen} onClose={onErrorClose}/>

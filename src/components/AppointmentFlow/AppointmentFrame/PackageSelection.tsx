@@ -5,7 +5,8 @@ import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
-    setAdditionalServicesChosen,
+    createOrUpdateAppointment,
+    setAdditionalServicesChosen, setCurrentFrameScreen,
     setPackage,
     setPackageIsSelected,
     setPackagePricingType,
@@ -27,7 +28,7 @@ import {
 import PackageSelectionMobile from "./PackageSelectionMobile";
 //import ReactGA from "react-ga";
 import ReactGA from "react-ga4";
-import {useModal} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
 import ConfirmChangeOption from "../../Modals/ConfirmChangeOption/ConfirmChangeOption";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {getPackagesData} from "./utils";
@@ -44,6 +45,8 @@ import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
 import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
 import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
 import PackagesEmenu from "./PackagesEmenu";
+import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
+import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 
 const border = '1px solid #DADADA';
 
@@ -275,7 +278,7 @@ type TPackageSelectionProps = {
 }
 
 export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices}) => {
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {
         selectedPackage,
@@ -293,8 +296,11 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const theme = useTheme();
     const { isOpen, onOpen, onClose } = useModal();
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
+    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
+    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
     const {t} = useTranslation();
+    const showError = useException();
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
@@ -366,10 +372,20 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 : "appointmentSelection")
     }
 
+    const onSelectionCompleted = () => {
+        if (customerLoadedData?.isUpdating) {
+            // todo request to get pod
+            onChangesCompletedOpen()
+            //onSlotsWarningOpen()
+        } else {
+            onAdditionalOpen()
+        }
+    }
+
     const onSave = async () => {
         localSelectedPackage && dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
         await onClose();
-        await onAdditionalOpen();
+        await onSelectionCompleted();
     }
 
     const handleGA = (selectedPackage: IPackageOptions): void => {
@@ -388,7 +404,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             if (selectedPackage && packageOptionType !== null && packageOptionType !== localSelectedPackage.type) {
                 onOpen();
             } else {
-                onAdditionalOpen();
+                onSelectionCompleted();
                 dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
                 dispatch(setPackage(localSelectedPackage))
                 dispatch(setPackagePricingType(localSelectedPricingType))
@@ -404,7 +420,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             action: `Selected eMenu Package`,
             label: `With ${packageEMenuType === firstOption ? 'Factory' : "Dealer"} Option`,
         });
-        onAdditionalOpen();
+        onSelectionCompleted();
     }
 
     const handleClick = (p: IPackageOptions, pricing?: EPackagePricingType) => () => {
@@ -435,6 +451,25 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             if (price) title = price.title;
         }
         return title;
+    }
+
+    const onSlotsWarningClick = () => {
+        onSlotsWarningClose();
+        dispatch(setCurrentFrameScreen("appointmentSelection"));
+    }
+
+    const onSuccessAppointmentUpdate = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
+    }
+
+    const handleChangesCompleted = async () => {
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, showError))
+    }
+
+    const handleAdditionalChanges = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("manageAppointment"))
     }
 
     return (
@@ -550,6 +585,14 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 onNext={() => handleNext(localSelectedPackage)}/>}
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
+            <AskChangesCompleted
+                onClose={onChangesCompletedClose}
+                onSave={handleChangesCompleted}
+                onAdditionalChanges={handleAdditionalChanges}
+                open={isChangesCompletedOpen}
+                onCancel={onChangesCompletedClose}
+            />
+            <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
         </PackagesStepWrapper>
     );
 };

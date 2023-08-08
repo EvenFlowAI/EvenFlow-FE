@@ -12,9 +12,16 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button, Divider, FormControlLabel, Switch, withStyles} from "@material-ui/core";
 import {IRecallByVin} from "../../AppointmentFlow/AppointmentFrame/types";
 import moment from "moment";
-import {setAdditionalServicesChosen, setSelectedRecalls} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    createOrUpdateAppointment,
+    setAdditionalServicesChosen,
+    setCurrentFrameScreen,
+    setSelectedRecalls
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import AskAddService from "../AskAddService/AskAddService";
-import {useModal} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
+import AskChangesCompleted from "../AskChangesCompleted/AskChangesCompleted";
+import SlotImpactedWarning from "../SlotImpactedWarning/SlotImpactedWarning";
 
 const useStyles = makeStyles(() => ({
     mainTitle: {
@@ -107,11 +114,15 @@ type TRecallsByVinProps = DialogProps & {
 const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
     const {selectedVehicle, selectedRecalls, makes} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
-    const {isOpen: isAddServiceOpen, onClose: onAddServiceClose, onOpen: onAddServiceOpen} = useModal();
     const {id} = useParams();
     const {t} = useTranslation();
     const classes = useStyles();
+    const showError = useException();
+    const {isOpen: isAddServiceOpen, onClose: onAddServiceClose, onOpen: onAddServiceOpen} = useModal();
+    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
+    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
 
     useEffect(() => {
         if (selectedVehicle) {
@@ -153,7 +164,31 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
     }
 
     const handleSubmit = () => {
-        onAddServiceOpen()
+        if (customerLoadedData?.isUpdating) {
+            // todo request to get pod
+            onChangesCompletedOpen()
+        } else {
+            onAddServiceOpen()
+        }
+    }
+
+    const onSuccessAppointmentUpdate = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
+    }
+
+    const handleChangesCompleted = async () => {
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, showError))
+    }
+
+    const handleAdditionalChanges = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("manageAppointment"))
+    }
+
+    const onSlotsWarningClick = () => {
+        onSlotsWarningClose();
+        dispatch(setCurrentFrameScreen("appointmentSelection"));
     }
 
     return (
@@ -228,6 +263,14 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
                 </div>
             </DialogActions>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAddServiceOpen}/>
+            <AskChangesCompleted
+                onClose={onChangesCompletedClose}
+                onSave={handleChangesCompleted}
+                onAdditionalChanges={handleAdditionalChanges}
+                open={isChangesCompletedOpen}
+                onCancel={onChangesCompletedClose}
+            />
+            <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
         </BaseModal>
     );
 };

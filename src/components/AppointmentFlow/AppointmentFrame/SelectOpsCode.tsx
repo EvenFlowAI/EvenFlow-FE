@@ -1,29 +1,32 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from "./StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useDebounce, useModal} from "../../../utils/hooks";
-import {handleSearch, selectSR, selectSRMultiple} from "../../../store/reducers/appointment/actions";
+import {useDebounce, useException, useModal} from "../../../utils/hooks";
+import {handleSearch, selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core";
 import {TextField} from "../UI";
 import {InfoOutlined, Search} from "@material-ui/icons";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
-import {checkSelectedCar} from "./utils";
 import ReactGA from "react-ga4";
 //import ReactGA from "react-ga";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {
+    createOrUpdateAppointment,
     selectCategoriesIds,
-    setAdditionalServicesChosen
+    setAdditionalServicesChosen, setCurrentFrameScreen
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {Caption} from "../../UI/Caption";
 import {useTranslation} from "react-i18next";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EServiceCategoryPage} from "../../../api/types";
+import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
+import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import {decodeSCID} from "../../../utils/utils";
+import {useParams} from "react-router-dom";
 
 const Wrapper = styled('div')({
     width: "100%"
@@ -99,28 +102,22 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         selectedSR,
         srList,
         search,
-        vehicles,
-        vehicle,
         scProfile,
         subService,
         service,
         allCategories,
         categoriesIds,
-        serviceTypeOption,
-        config,
+        customerLoadedData,
     ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
         state.appointment.search,
-        state.appointment.customerLoadedData?.vehicles,
-        state.appointment.customerSelectedVehicle,
         state.appointment.scProfile,
         state.appointmentFrame.subService,
         state.appointmentFrame.service,
         state.categories.allCategories,
         state.appointmentFrame.categoriesIds,
-        state.appointmentFrame.serviceTypeOption,
-        state.bookingFlowConfig.config,
+        state.appointment.customerLoadedData,
     ]);
 
     const [searchInput, setSearch] = useState<string>("");
@@ -130,9 +127,12 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
     const dispatch = useDispatch();
     const isInit = useRef(true);
     const {t} = useTranslation();
+    const {id} = useParams();
+    const showError = useException();
     const debouncedSearch = useDebounce(searchInput);
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
-    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
+    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
+    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
 
     useEffect(() => {
         setSelectedOpsCodes(selectedSR);
@@ -226,7 +226,12 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
             label: `With Codes ${srList.filter(item => selectedOpsCodes.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
         })
         dispatch(selectSRMultiple(selectedOpsCodes))
-        onAdditionalOpen()
+        if (customerLoadedData?.isUpdating) {
+            // todo request to get pod
+            onChangesCompletedOpen()
+        } else {
+            onAdditionalOpen()
+        }
     }
 
     const handleBack = () => {
@@ -246,6 +251,25 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
     const handleNo = () => {
         onAdditionalClose();
         goNext();
+    }
+
+    const onSuccessAppointmentUpdate = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
+    }
+
+    const handleChangesCompleted = async () => {
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, showError))
+    }
+
+    const handleAdditionalChanges = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("manageAppointment"))
+    }
+
+    const onSlotsWarningClick = () => {
+        onSlotsWarningClose();
+        dispatch(setCurrentFrameScreen("appointmentSelection"));
     }
 
     return (
@@ -297,6 +321,14 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
                 <Caption title={t("The price for the service will be quoted at the dealership")}/>
             </Wrapper>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
+            <AskChangesCompleted
+                onClose={onChangesCompletedClose}
+                onSave={handleChangesCompleted}
+                onAdditionalChanges={handleAdditionalChanges}
+                open={isChangesCompletedOpen}
+                onCancel={onChangesCompletedClose}
+            />
+            <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
             <Actions onBack={handleBack} nextDisabled={!selectedOpsCodes.length} onNext={handleNext} nextLabel={t("Next")}/>
         </StepWrapper>
     );
