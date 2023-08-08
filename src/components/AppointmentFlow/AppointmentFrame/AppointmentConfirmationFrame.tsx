@@ -9,16 +9,9 @@ import {Review} from "./confirmationSections/Review";
 import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TCallback} from "../../../types/types";
-import {ICreateAppointmentResp} from "../../../api/types";
-import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
-import moment from "moment";
 import {decodeSCID} from "../../../utils/utils";
-import {collectServiceRequestIds, getCategories, getVehicleData, mapRecallsForRequest} from "./utils";
-import {Api} from "../../../config/requests";
 import {
     createOrUpdateAppointment,
-    handleAppointmentResponse,
-    setAppointmentSaving,
     setReminders
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -35,7 +28,6 @@ import Address from "./confirmationSections/Address";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
 import ServiceType from "./confirmationSections/ServiceType";
 import {useTranslation} from "react-i18next";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
