@@ -68,7 +68,7 @@ type TProps = {
     onChangeSlot: TCallback;
 };
 
-export const ManageAppointmentFrame: React.FC<TProps> = ({onChangeSlot}) => {
+export const ManageAppointment: React.FC<TProps> = ({onChangeSlot}) => {
     const [errors, setErrors] = useState<string[]>([]);
     const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const currentUser = useCurrentUser();

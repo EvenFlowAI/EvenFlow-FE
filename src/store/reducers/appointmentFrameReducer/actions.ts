@@ -41,7 +41,7 @@ import {TPackagePrice} from "../packages/types";
 import {updateSelectedRecalls} from "../recall/actions";
 import {EServiceCategoryType} from "../categories/types";
 import {
-    collectServiceRequestIds,
+    collectServiceRequestIds, getCategories, getVehicleData,
     mapRecallsForRequest
 } from "../../../components/AppointmentFlow/AppointmentFrame/utils";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
@@ -303,7 +303,7 @@ export const clearAppointmentSteps = (screenName: TScreen): AppThunk => (dispatc
     }
 }
 
-export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint: {route: string; method: string}): AppThunk => (dispatch, getState) => {
+export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint: {route: string; method: string}, onNext?: () => void): AppThunk => (dispatch, getState) => {
     const {customerLoadedData} = getState().appointment;
     const {customer} = getState().appointmentFrame;
     dispatch(setAppointmentId({
@@ -334,6 +334,7 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
         dispatch(setCustomer(data.driver));
         saveCustomerCache(updatedData);
     }
+    onNext && onNext()
 }
 
 export const updateRecalls = (data: IAppointmentByQuery, id: string): AppThunk => (dispatch, getState) => {
@@ -518,4 +519,105 @@ export const handleSideBarAppointmentUpdate = (): AppThunk => (dispatch, getStat
 
 export const updateConsultant = (id: string, serviceTypeOption: IFirstScreenOption|null, advisorId: string|null): AppThunk => dispatch => {
     dispatch(loadConsultants(id, serviceTypeOption?.id ?? null))
+}
+
+export const createOrUpdateAppointment = (id: number, onNext: () => void, onError: (e: any) => void): AppThunk => (dispatch, getState) => {
+    const appointmentFrame = getState().appointmentFrame;
+    const appointment = getState().appointment;
+    const categories = getState().categories;
+
+    const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
+
+    const vehicle = {
+        dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
+        ...(appointmentFrame.selectedVehicle ?? {}),
+        engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
+        model,
+        make,
+        year,
+        vin: appointmentFrame.selectedVehicle?.vin ?? '',
+        mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
+        modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
+    }
+    const driver = {
+        ...appointmentFrame.customer,
+        email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
+    }
+
+    const date = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
+        ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
+        : appointmentFrame.appointmentByKey
+            ? appointmentFrame.appointmentByKey.dateInUtc
+            : appointment.appointment?.id.split("|")[0] || "";
+
+    const appointmentTimingType = appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && appointmentFrame.selectedTiming
+        ? appointmentFrame.selectedTiming
+        : EAppointmentTimingType.FirstAvailable;
+
+    const transportationOptionId = appointmentFrame.serviceTypeOption?.transportationOption?.id
+        ?? appointmentFrame.transportation?.id
+        ?? null;
+
+    const serviceRequestIds = collectServiceRequestIds(
+        appointmentFrame.service,
+        appointmentFrame.subService,
+        appointmentFrame.selectedPackage,
+        appointment.selectedSR,
+    )
+
+    const maintenancePackageOption = appointmentFrame.selectedPackage
+        ? {id: appointmentFrame.selectedPackage?.id, priceType: appointmentFrame.packagePricingType}
+        : appointmentFrame.packageEMenuType !== null
+            ? {optionType: appointmentFrame.packageEMenuType}
+            : null;
+
+    const slot = appointmentFrame.appointmentByKey && appointmentFrame.hashKey
+        ? appointmentFrame.appointmentByKey.timeSlot
+        : appointment.appointment?.id.split("|")[1] || "00:00:00"
+
+    const data = {
+        id: appointmentFrame.id,
+        hashKey: appointmentFrame.hashKey,
+        appointmentTimingType,
+        customerId: appointment.customerLoadedData?.id ?? null,
+        comment: appointmentFrame.description,
+        driver,
+        vehicle,
+        gmt: moment().utcOffset(),
+        offerId: appointment.appointment?.offer?.id ?? null,
+        reminderTypes: appointmentFrame.reminders,
+        serviceCenterId: id,
+        consultantId: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
+        transportationOptionId,
+        slot,
+        serviceRequestIds,
+        date,
+        serviceCategoryIds: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
+        maintenancePackageOption,
+        valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
+            ? [appointmentFrame?.valueService?.selectedService.id]
+            : [],
+        searchTerm: appointment.customerEnteredEmail,
+        serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
+        zipCode: appointmentFrame.zipCode ?? null,
+        address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
+        recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
+    };
+
+    const endpoint = data?.hashKey
+        ? Api.endpoints.Appointments.UpdateByKey
+        : Api.endpoints.Appointments.Create;
+
+    dispatch(setAppointmentSaving(true))
+
+    Api.call<ICreateAppointmentResp>(endpoint, { data, urlParams: {id: data.hashKey} })
+        .then(({data}) => {
+            dispatch(handleAppointmentResponse(data, endpoint, onNext))
+        })
+        .catch(e => {
+            onError(e)
+        })
+        .finally(() => {
+            dispatch(setAppointmentSaving(false))
+        })
 }

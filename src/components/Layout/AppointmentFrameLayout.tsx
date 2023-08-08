@@ -58,7 +58,7 @@ import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
-import {ManageAppointmentFrame} from "../AppointmentFlow/AppointmentFrame/ManageAppointmentFrame";
+import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
 import ServiceTypeSelect from "../AppointmentFlow/AppointmentFrame/ManageAppointmentScreens/ServiceTypeSelect";
 
 const Container = styled('div')({
@@ -364,7 +364,7 @@ export const AppointmentFrameLayout = () => {
                 lastCategory={lastSelectedCategory}
                 onChangeVehicle={handleChangeScreen('maintenanceDetails')}
             />,
-            manageAppointment: <ManageAppointmentFrame
+            manageAppointment: <ManageAppointment
                 onChangeSlot={handleChangeScreen('appointmentSelection')}/>,
             manageServiceType: <ServiceTypeSelect/>
         }

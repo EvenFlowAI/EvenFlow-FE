@@ -35,3 +35,4 @@ export type TMobileScreen =
     | "location"
     | "payment"
     | "serviceOfferProductPage"
+
