@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {
+    createOrUpdateAppointment,
     setCurrentFrameScreen,
     setServiceTypeOption, setSideBarSteps, setValueServiceAvailability,
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
@@ -21,14 +22,23 @@ import {
     Tagline,
     useServiceTypeStyles
 } from "../../../Welcome/ServiceTypeSelect";
+import {useException, useModal} from "../../../../utils/hooks";
+import AskChangesCompleted from "../../../Modals/AskChangesCompleted/AskChangesCompleted";
+import SlotImpactedWarning from "../../../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import {decodeSCID} from "../../../../utils/utils";
+import {useParams} from "react-router-dom";
 
 const ServiceTypeSelect = () => {
     const { serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
 
+    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
+    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
     const classes = useServiceTypeStyles();
     const dispatch = useDispatch();
+    const {id} = useParams();
+    const showError = useException();
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
 
     const handleValueServiceConfig = (serviceType: EServiceType) => {
@@ -43,10 +53,10 @@ const ServiceTypeSelect = () => {
         } else {
             const newOptionHasDifferentTransportation = serviceOption.transportationOption && (serviceOption.transportationOption?.id !== serviceTypeOption?.transportationOption?.id)
             if (newOptionHasDifferentTransportation) {
-                // todo message
+                onSlotsWarningOpen()
                 dispatch(setCurrentFrameScreen("appointmentSelection"))
             } else {
-                // todo open window
+                onChangesCompletedOpen()
             }
         }
     }
@@ -86,6 +96,25 @@ const ServiceTypeSelect = () => {
         dispatch(setCurrentFrameScreen("manageAppointment"))
     }
 
+    const onSuccessAppointmentUpdate = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
+    }
+
+    const handleChangesCompleted = async () => {
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, showError))
+    }
+
+    const handleAdditionalChanges = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("manageAppointment"))
+    }
+
+    const onSlotsWarningClick = () => {
+        onSlotsWarningClose();
+        dispatch(setCurrentFrameScreen("appointmentSelection"));
+    }
+
     return isLoading
         ? <Loading/>
         : <div className={classes.wrapper}>
@@ -112,6 +141,13 @@ const ServiceTypeSelect = () => {
                     })}
             </ServiceTypeCardsWrapper>
             <Actions onBack={handleBack} onNext={() => {}} hideNext/>
+            <AskChangesCompleted
+                onClose={onChangesCompletedClose}
+                onSave={handleChangesCompleted}
+                onAdditionalChanges={handleAdditionalChanges}
+                open={isChangesCompletedOpen}
+            />
+            <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
         </div>
 };
 

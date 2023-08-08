@@ -11,9 +11,9 @@ import {
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {
-    clearAppointmentData,
+    clearAppointmentData, createOrUpdateAppointment,
     setCurrentFrameScreen,
-    setServiceTypeOption, setSideBarSteps,
+    setServiceTypeOption, setSideBarSteps, setTransportation,
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
@@ -26,10 +26,12 @@ import {InfoOutlined} from "@material-ui/icons";
 import {HtmlTooltip} from "../AppointmentFlow/AppointmentFrame/ServiceCard";
 import ServiceTypeIcon from "./ServiceTypeIcon";
 import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
-import {useCurrentUser} from "../../utils/hooks";
+import {useCurrentUser, useException, useModal} from "../../utils/hooks";
 import {Routes} from "../../config/routes";
-import {encodeSCID} from "../../utils/utils";
+import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
+import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
+import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
 
 type TProps = {
     handleValueServiceConfig: (serviceType: EServiceType) => void;
@@ -122,15 +124,18 @@ export const useServiceTypeStyles = makeStyles((theme) => ({
 }))
 
 const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading }) => {
-    const {userType, selectedVehicle, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {userType, selectedVehicle, serviceTypeOption, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const currentUser = useCurrentUser();
+    const showError = useException();
 
     const {id} = useParams();
     const classes = useServiceTypeStyles();
     const dispatch = useDispatch();
     const history = useHistory();
+    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
+    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
 
     const redirect = () => {
@@ -141,15 +146,57 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
         }
     }
 
-    const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
-        if (serviceTypeOption?.id !== serviceOption.id) {
-            dispatch(clearAppointmentData());
-            dispatch(setSideBarSteps([]))
+    const handleChangeFromVisitCenter = (serviceOption: IFirstScreenOption) => {
+        if (serviceOption?.type === EServiceType.MobileService || serviceOption?.type === EServiceType.PickUpDropOff) {
+            dispatch(setTransportation(null))
+            dispatch(setCurrentFrameScreen("location"));
+        } else {
+            const newOptionHasDifferentTransportation = serviceOption.transportationOption && (serviceOption.transportationOption?.id !== serviceTypeOption?.transportationOption?.id)
+            if (newOptionHasDifferentTransportation) {
+                // todo check for pod
+                onSlotsWarningOpen()
+                dispatch(setCurrentFrameScreen("appointmentSelection"))
+            } else {
+                onChangesCompletedOpen()
+            }
         }
+    }
+
+    const handleChangeFromOtherOption = (serviceOption: IFirstScreenOption) => {
+        dispatch(setCurrentFrameScreen("location"))
+        // todo If user is not in a zone of service or declines the convenience fee for the new address, bring the user back to the Address page
+        // If user is in the same zone of service, then
+        // Prompt user if he/she wishes to make any additional changes
+        // If yes, then return user to Manage Appointment / Appointment Configuration page
+        // If no, then send user to the Appointment Confirmation page
+        // If user is in a different zone of service and accepted any applicable convenience fees, then
+        // Message user that their selection impacts appointment date and time availability
+        // Bring the user to the Appointment Date & Time selection page
+
+    }
+
+
+    const handleManaging = (serviceOption: IFirstScreenOption) => {
+        if (serviceTypeOption?.type === EServiceType.VisitCenter) {
+            handleChangeFromVisitCenter(serviceOption)
+        } else {
+            handleChangeFromOtherOption(serviceOption)
+        }
+    }
+
+    const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
         handleValueServiceConfig(serviceOption.type);
-        const nextScreen = serviceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
-        dispatch(setCurrentFrameScreen(nextScreen));
-        redirect();
+        if (customerLoadedData?.isUpdating && appointmentByKey) {
+            handleManaging(serviceOption)
+        } else {
+            if (serviceTypeOption?.id !== serviceOption.id) {
+                dispatch(clearAppointmentData());
+                dispatch(setSideBarSteps([]))
+            }
+            const nextScreen = serviceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
+            dispatch(setCurrentFrameScreen(nextScreen));
+            redirect();
+        }
     }
 
     const createBlankUser = () => {
@@ -189,6 +236,25 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
         }
     }
 
+    const onSuccessAppointmentUpdate = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
+    }
+
+    const handleChangesCompleted = async () => {
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, showError))
+    }
+
+    const handleAdditionalChanges = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("manageAppointment"))
+    }
+
+    const onSlotsWarningClick = () => {
+        onSlotsWarningClose();
+        dispatch(setCurrentFrameScreen("appointmentSelection"));
+    }
+
     return isLoading || loading
         ? <Loading/>
         : <div className={classes.wrapper}>
@@ -215,6 +281,13 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
                     })}
             </ServiceTypeCardsWrapper>
             <Actions onBack={handleBack} onNext={() => {}} hideNext/>
+            <AskChangesCompleted
+                onClose={onChangesCompletedClose}
+                onSave={handleChangesCompleted}
+                onAdditionalChanges={handleAdditionalChanges}
+                open={isChangesCompletedOpen}
+            />
+            <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
         </div>
 };
 
