@@ -24,7 +24,7 @@ import {
     clearCustomerCache,
     getBlankVehicle,
     getCustomerCache,
-    selectSR,
+    selectSR, selectSRMultiple,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {encodeSCID} from "../../utils/utils";
@@ -40,7 +40,7 @@ import {
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
-    setWelcomeScreenView, handleSideBarAppointmentUpdate
+    setWelcomeScreenView, handleSideBarAppointmentUpdate, updateConsultant, setAppointmentByKey
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {EServiceCategoryPage, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
@@ -59,6 +59,8 @@ import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
+import {ManageAppointmentFrame} from "../AppointmentFlow/AppointmentFrame/ManageAppointmentFrame";
+import ServiceTypeSelect from "../AppointmentFlow/AppointmentFrame/ManageAppointmentScreens/ServiceTypeSelect";
 
 const Container = styled('div')({
     display: "flex",
@@ -145,18 +147,20 @@ export const AppointmentFrameLayout = () => {
         }
     }
 
-    const updateServiceTypeOption = useCallback((data:IAppointmentByQuery): boolean => {
+    const handleServiceTypeOption = useCallback((data:IAppointmentByQuery): IFirstScreenOption|null => {
         let needToShowService = needToShowServiceTypes;
+        let option: IFirstScreenOption|null = null;
         if (data.serviceTypeOption) {
             const optionExists = Boolean(firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id))
             if (optionExists) {
+                option = data.serviceTypeOption;
                 needToShowService = false;
                 dispatch(setServiceTypeOption(data.serviceTypeOption));
                 handleTransportationScreen(data.serviceTypeOption);
             }
         }
         setNeedToShowServiceTypes(needToShowService)
-        return needToShowService;
+        return option;
     }, [needToShowServiceTypes, firstScreenOptions])
 
     const goToServiceTypeSelection = useCallback(() => {
@@ -167,7 +171,9 @@ export const AppointmentFrameLayout = () => {
         }
     }, [history, needToShowServiceTypes])
 
-    const updateServiceRequests = async (serviceRequests: IServiceRequestShort[]) => serviceRequests.forEach(item => dispatch(selectSR(item.id)));
+    const updateServiceRequests = async (serviceRequests: IServiceRequestShort[]) => {
+        dispatch(selectSRMultiple(serviceRequests.map(el => el.id)));
+    }
 
     const onUpdateAppointment = useCallback(async(car: ILoadedVehicle) => {
         const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
@@ -177,11 +183,12 @@ export const AppointmentFrameLayout = () => {
             const {data} = await API.appointment.getByKey(trimmedKey);
             await dispatch(updateRecalls(data, id));
             await dispatch(setUpdateAppointment(data));
+            await dispatch(setAppointmentByKey(data));
             await dispatch(updatePackageOption(data.maintenancePackageOption))
             await updateServiceRequests(data.serviceRequests);
-            const shouldShowServiceSelection = updateServiceTypeOption(data);
+            const option = handleServiceTypeOption(data);
             await dispatch(handleSideBarAppointmentUpdate());
-            handleSetScreen("appointmentConfirmation");
+            await dispatch(updateConsultant(id, option, data.consultant?.id ?? null))
 
             // if (shouldShowServiceSelection) {
             //     goToServiceTypeSelection();
@@ -195,7 +202,7 @@ export const AppointmentFrameLayout = () => {
             setLoadingCar(false);
         }
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
-        updateServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
+        handleServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
         updateRecalls, updatePackageOption, goToServiceTypeSelection,
         isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable])
 
@@ -216,8 +223,8 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (selectedVehicle && customerLoadedData) {
             if (customerLoadedData.fromSearchByName && customerLoadedData.isUpdating) {
-                if (!selectedVehicle?.mileage) dispatch(setSideBarSteps([]));
-                onUpdateAppointment(selectedVehicle).then()
+                // if (!selectedVehicle?.mileage) dispatch(setSideBarSteps([]));
+                onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
             }
         }
     }, [customerLoadedData, selectedVehicle])
@@ -358,6 +365,9 @@ export const AppointmentFrameLayout = () => {
                 lastCategory={lastSelectedCategory}
                 onChangeVehicle={handleChangeScreen('maintenanceDetails')}
             />,
+            manageAppointment: <ManageAppointmentFrame
+                onChangeSlot={handleChangeScreen('appointmentSelection')}/>,
+            manageServiceType: <ServiceTypeSelect/>
         }
         return carSelections[currentScreen];
     }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,

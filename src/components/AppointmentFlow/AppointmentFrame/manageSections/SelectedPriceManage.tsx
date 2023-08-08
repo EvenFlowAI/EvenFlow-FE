@@ -1,0 +1,58 @@
+import React from 'react';
+import {ConfirmationTitle} from "../Title";
+import {styled} from "@material-ui/core";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../store/rootReducer";
+import {useTranslation} from "react-i18next";
+import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
+
+const Price = styled('div')({
+    marginTop: 8,
+    display: "flex",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontWeight: "bold",
+})
+
+export const SpecialLabel = styled('div')({
+    display: "flex",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    color: "#142EA1",
+    fontWeight: 'bold',
+    fontSize: 16,
+    "& .icon": {
+        marginRight: 10,
+    }
+})
+
+export const SelectedPriceManage = () => {
+    const {appointment, scProfile, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
+    const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {t} = useTranslation();
+    return (
+        <div>
+            <ConfirmationTitle>{t("Selected Price")}</ConfirmationTitle>
+            <Price>
+                {serviceTypeOption?.type === EServiceType.PickUpDropOff
+                    ? serviceValetAppointment?.price.value ?
+                        <span>${scProfile?.isRoundPrice
+                            ? serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice
+                            : (serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice).toFixed(2)}
+                    </span>
+                        : t('Service items will be quoted at dealership')
+                    : appointment?.price.value ?
+                        <span>${scProfile?.isRoundPrice
+                            ? appointment.price.value + appointment.price.ancillaryPrice
+                            : (appointment.price.value + appointment.price.ancillaryPrice).toFixed(2)}
+                    </span>
+                        : t('Service items will be quoted at dealership')
+                }
+                {/*todo uncomment for offer new functionality*/}
+                {/*{appointment?.serviceRequestPrices?.find(item => !!item.offer)*/}
+                {/*    ? <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>*/}
+                {/*    : null}*/}
+            </Price>
+        </div>
+    );
+};

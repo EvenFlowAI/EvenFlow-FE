@@ -9,7 +9,7 @@ import {TCallback} from "../../../types/types";
 import {IServiceConsultant} from '../../../api/types';
 import {
     loadConsultants,
-    setAdvisor,
+    setAdvisor, setCurrentFrameScreen,
     setSideBarActualSteps,
     setSideBarMenu,
     setSideBarStepsList
@@ -115,7 +115,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         serviceTypeOption,
         packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {selectedSR, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
     const {isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
@@ -154,6 +154,10 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         dispatch(setAdvisor(c));
     }
 
+    const handleBack = () => {
+        customerLoadedData?.isUpdating ? dispatch(setCurrentFrameScreen("manageAppointment")) : onBack()
+    }
+
     return (<StepWrapper>
         <ConsultantsWrapper>
             {loading || !isAdvisorAvailable ? <Loading /> : <React.Fragment>
@@ -172,6 +176,6 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             </React.Fragment>
             }
         </ConsultantsWrapper>
-        <Actions onNext={onNext} onBack={onBack} nextLabel={t("Next")}/>
+        <Actions onNext={onNext} onBack={handleBack} nextLabel={t("Next")}/>
     </StepWrapper>);
 };

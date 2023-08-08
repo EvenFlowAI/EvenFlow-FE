@@ -21,17 +21,21 @@ const Wrapper = styled('ul')({
     }
 });
 
-export const Review = () => {
+export const ReviewManage = () => {
     const [
         consultant,
         transportation,
         serviceTypeOption,
         currentConfig,
+        isTransportationAvailable,
+        isAdvisorAvailable,
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.advisor,
         state.appointmentFrame.transportation,
         state.appointmentFrame.serviceTypeOption,
         state.bookingFlowConfig.currentConfig,
+        state.bookingFlowConfig.isTransportationAvailable,
+        state.bookingFlowConfig.isAdvisorAvailable,
     ]);
     const {t} = useTranslation();
     const transportationSelected = serviceTypeOption?.transportationOption || transportation;
@@ -41,16 +45,23 @@ export const Review = () => {
         dispatch(setCurrentFrameScreen("consultantSelection"));
     }
 
+    const handleChangeTransportation = () => {
+        dispatch(setCurrentFrameScreen("transportationNeeds"));
+    }
+
     return (
         <div>
             <ConfirmationTitle>{t("Appointment Details")}</ConfirmationTitle>
             <Wrapper>
                 {transportationSelected
-                    ? <li>Transportation needs: {transportationSelected?.description}</li>
+                    ? <li>Transportation needs: {transportationSelected?.description}
+                        {isTransportationAvailable ? <Edit fontSize="small" onClick={handleChangeTransportation} style={{cursor: "pointer"}}/> : null}
+                    </li>
                     : null}
                 {currentConfig?.advisorSelection
                     ? <li>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}
-                        <Edit fontSize="small" onClick={handleChangeAdvisor} style={{cursor: "pointer"}}/></li>
+                        {isAdvisorAvailable ? <Edit fontSize="small" onClick={handleChangeAdvisor} style={{cursor: "pointer"}}/> : null}
+                </li>
                     : null
                 }
             </Wrapper>

@@ -103,6 +103,7 @@ export const setPackageEMenuType = createAction<EMaintenanceOptionType|null>('fA
 export const setShowServiceCentersList = createAction<boolean>('fAppointment/SetShowServiceCentersList');
 export const setAppointmentSaving = createAction<boolean>('fAppointment/SetAppointmentSaving');
 export const setHashKey = createAction<string>('fAppointment/SetHashKey');
+export const setAppointmentByKey = createAction<IAppointmentByQuery|null>("fAppointment/SetAppointmentByKey");
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -232,6 +233,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setPackagePricingType(null));
     dispatch(setPackageEMenuType(null));
     dispatch(setHashKey(''));
+    dispatch(setAppointmentByKey(null));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
@@ -508,8 +510,12 @@ export const deleteRecall = (item: IMaintenanceItem): AppThunk => (dispatch, get
 export const handleSideBarAppointmentUpdate = (): AppThunk => (dispatch, getState) => {
     let steps: TScreen[] = ["carSelection", "location", "serviceNeeds", "describeMore", "opsCode", "packageSelection", "consultantSelection", "appointmentTiming", "appointmentSelection", "transportationNeeds", "appointmentConfirmation"];
     const {isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = getState().bookingFlowConfig;
-    if (!isAdvisorAvailable) steps = steps.filter(item => item === "consultantSelection");
-    if (!isAppointmentTimingAvailable) steps = steps.filter(item => item === "appointmentTiming");
-    if (!isTransportationAvailable) steps = steps.filter(item => item === "transportationNeeds");
+    if (!isAdvisorAvailable) steps = steps.filter(item => item !== "consultantSelection");
+    if (!isAppointmentTimingAvailable) steps = steps.filter(item => item !== "appointmentTiming");
+    if (!isTransportationAvailable) steps = steps.filter(item => item !== "transportationNeeds");
     dispatch(setSideBarSteps(steps));
+}
+
+export const updateConsultant = (id: string, serviceTypeOption: IFirstScreenOption|null, advisorId: string|null): AppThunk => dispatch => {
+    dispatch(loadConsultants(id, serviceTypeOption?.id ?? null))
 }

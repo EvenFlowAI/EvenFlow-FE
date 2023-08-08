@@ -36,7 +36,7 @@ type TProps = {
     loading: boolean;
 };
 
-const CardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Theme, {cardsAmount: number}>(({theme, cardsAmount}) => ({
+export const ServiceTypeCardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Theme, {cardsAmount: number}>(({theme, cardsAmount}) => ({
     display: 'grid',
     gridTemplateColumns: `repeat(${cardsAmount}, 1fr)`,
     gap: "18px",
@@ -56,7 +56,7 @@ const CardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Th
     }
 }));
 
-const Tagline = styled(({taglineColor, ...props}) => (<div {...props}/>))<Theme, {taglineColor?: string}>(({theme, taglineColor}) => ({
+export const Tagline = styled(({taglineColor, ...props}) => (<div {...props}/>))<Theme, {taglineColor?: string}>(({theme, taglineColor}) => ({
     minHeight: 40,
     width: '100%',
     display: 'flex',
@@ -67,7 +67,7 @@ const Tagline = styled(({taglineColor, ...props}) => (<div {...props}/>))<Theme,
     color: taglineColor ? `#${taglineColor}` : 'inherit',
 }))
 
-const Button = styled(({isTaglinePresent, ...props}) => (<div {...props}/>))<Theme, {isTaglinePresent: boolean}>(({theme, isTaglinePresent}) => ({
+export const ServiceTypeButton = styled(({isTaglinePresent, ...props}) => (<div {...props}/>))<Theme, {isTaglinePresent: boolean}>(({theme, isTaglinePresent}) => ({
     position: 'relative',
     height: "100%",
     maxHeight: 285,
@@ -110,7 +110,7 @@ const Button = styled(({isTaglinePresent, ...props}) => (<div {...props}/>))<The
     },
 }));
 
-const useStyles = makeStyles((theme) => ({
+export const useServiceTypeStyles = makeStyles((theme) => ({
     name: {
         width: "100%",
         fontSize: 28,
@@ -128,7 +128,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     const currentUser = useCurrentUser();
 
     const {id} = useParams();
-    const classes = useStyles();
+    const classes = useServiceTypeStyles();
     const dispatch = useDispatch();
     const history = useHistory();
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
@@ -192,13 +192,13 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     return isLoading || loading
         ? <Loading/>
         : <div className={classes.wrapper}>
-            <CardsWrapper cardsAmount={firstScreenOptions.length}>
+            <ServiceTypeCardsWrapper cardsAmount={firstScreenOptions.length}>
                 {[...firstScreenOptions]
                     .sort((a, b) => a && b ? a.orderIndex - b.orderIndex : 0)
                     .map((card) => {
                         if (card) {
                             return <Grid key={card.id}>
-                                <Button onClick={() => handleSelectOption(card)} isTaglinePresent={!!isTaglinePresent}>
+                                <ServiceTypeButton onClick={() => handleSelectOption(card)} isTaglinePresent={!!isTaglinePresent}>
                                     {card.description ? <HtmlTooltip
                                         enterTouchDelay={0}
                                         placement="right-end"
@@ -209,11 +209,11 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
                                     <div className={classes.name}>{card.name}</div>
                                     {isTaglinePresent ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
                                     <ServiceTypeIcon card={card}/>
-                                </Button>
+                                </ServiceTypeButton>
                             </Grid>
                         }
                     })}
-            </CardsWrapper>
+            </ServiceTypeCardsWrapper>
             <Actions onBack={handleBack} onNext={() => {}} hideNext/>
         </div>
 };

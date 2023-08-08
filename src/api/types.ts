@@ -247,6 +247,7 @@ export interface IAppointmentByQuery extends IBaseAppointment {
     serviceTypeOption?: IFirstScreenOption;
     recalls?: string[];
     recallDescriptions?: string[];
+    consultant?: Partial<IServiceConsultant>|null;
 }
 
 export interface ISearchCustomerParams {

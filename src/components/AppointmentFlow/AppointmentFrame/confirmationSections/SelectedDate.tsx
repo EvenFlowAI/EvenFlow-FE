@@ -36,7 +36,7 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
             <ConfirmationTitle>
                 {t("Selected Date & Time")}
             </ConfirmationTitle>
-            <Edit fontSize="small" onClick={handleChangeSlot}/>
+            <Edit fontSize="small" onClick={handleChangeSlot} style={{cursor: "pointer"}}/>
         </TitleWrapper>
         {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
             ? <div><span style={{fontWeight: 'bold'}}>{t("Date")}</span>: {moment.utc(serviceValetAppointment?.date).format('ddd, MMMM D')}</div>

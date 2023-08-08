@@ -12,7 +12,7 @@ import {
     setAddress,
     setAdvisor,
     setAncillaryPriceByZip,
-    setAncillaryPriceLoading,
+    setAncillaryPriceLoading, setAppointmentByKey,
     setAppointmentId, setAppointmentSaving,
     setConsultants,
     setCurrentFrameScreen,
@@ -51,7 +51,7 @@ import {
     updateVehicle,
 } from "./actions";
 import {
-    EMaintenanceOptionType,
+    EMaintenanceOptionType, IAppointmentByQuery,
     ICustomer,
     ILoadedVehicle,
     IMake,
@@ -139,6 +139,7 @@ type TState = {
     slotsConsultantId: string|null;
     shouldShowServiceCentersList: boolean;
     isAppointmentSaving: boolean;
+    appointmentByKey: IAppointmentByQuery|null;
 }
 const initialState: TState = {
     service: null,
@@ -199,7 +200,8 @@ const initialState: TState = {
     packageEMenuType: null,
     slotsConsultantId: null,
     shouldShowServiceCentersList: true,
-    isAppointmentSaving: false
+    isAppointmentSaving: false,
+    appointmentByKey: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -403,5 +405,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setHashKey, (state, {payload}) => {
         return {...state, hashKey: payload}
+    })
+    .addCase(setAppointmentByKey, (state, {payload}) => {
+        return {...state, appointmentByKey: payload}
     })
 )
