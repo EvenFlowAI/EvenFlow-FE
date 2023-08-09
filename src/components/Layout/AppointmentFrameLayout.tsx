@@ -365,6 +365,7 @@ export const AppointmentFrameLayout = () => {
                 onChangeVehicle={handleChangeScreen('maintenanceDetails')}
             />,
             manageAppointment: <ManageAppointment
+                onUpdateAppointment={onUpdateAppointment}
                 onChangeSlot={handleChangeScreen('appointmentSelection')}/>,
             manageServiceType: <ServiceTypeSelect/>
         }

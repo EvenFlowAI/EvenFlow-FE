@@ -5,16 +5,12 @@ import {UserData} from "./confirmationSections/UserData";
 import {styled} from "@material-ui/core";
 import {SelectedDate} from "./confirmationSections/SelectedDate";
 import {Reminders} from "./confirmationSections/Reminders";
-import {TCallback} from "../../../types/types";
-import {ICreateAppointmentResp} from "../../../api/types";
-import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
-import moment from "moment";
+import {TArgCallback, TCallback} from "../../../types/types";
 import {decodeSCID} from "../../../utils/utils";
-import {collectServiceRequestIds, getCategories, getVehicleData, mapRecallsForRequest} from "./utils";
-import {Api} from "../../../config/requests";
 import {
-    handleAppointmentResponse,
-    setAppointmentSaving,
+    clearAppointmentData,
+    createOrUpdateAppointment,
+    setCurrentFrameScreen,
     setReminders
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -29,11 +25,12 @@ import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 import Address from "./confirmationSections/Address";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
 import {useTranslation} from "react-i18next";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import ServiceRequestsManage from "./manageSections/ServiceRequestsManage";
 import {SelectedPriceManage} from "./manageSections/SelectedPriceManage";
 import ServiceTypeManage from "./manageSections/ServiceTypeManage";
 import {ReviewManage} from "./manageSections/ReviewManage";
+import ConfirmCancelUpdate from "../../Modals/ConfirmCancelUpdate/ConfirmCancelUpdate";
+import {ILoadedVehicle} from "../../../api/types";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -66,13 +63,14 @@ interface TError {
 
 type TProps = {
     onChangeSlot: TCallback;
+    onUpdateAppointment: TArgCallback<ILoadedVehicle>;
 };
 
-export const ManageAppointment: React.FC<TProps> = ({onChangeSlot}) => {
+export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppointment}) => {
     const [errors, setErrors] = useState<string[]>([]);
     const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const currentUser = useCurrentUser();
-    const [appointment, appointmentFrame, categories, customerEnteredEmail, saving] = useSelector((state: RootState) => [
+    const [appointment, appointmentFrame, saving] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame,
         state.categories,
@@ -83,6 +81,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot}) => {
     const {id} = useParams();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
+    const {isOpen: isCancelConfirmOpen, onClose: onCancelConfirmClose, onOpen: onCancelConfirmOpen} = useModal();
 
     const showError = useException();
     const dispatch = useDispatch();
@@ -101,10 +100,6 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot}) => {
     useEffect(() => {
         dispatch(setReminders([0, 2]));
     }, [])
-
-    const handleResponse = async (data: ICreateAppointmentResp, endpoint: {route: string; method: string}) => {
-        await dispatch(handleAppointmentResponse(data, endpoint))
-    }
 
     const checkIsValid = () => {
         let isValid = true;
@@ -128,111 +123,32 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot}) => {
         return isValid;
     }
 
+    const handleError = (e: any) => {
+        showError(e);
+        if (e.response?.data?.errors) {
+            const data = [...e.response.data.errors]
+            setErrors(() => {
+                return data.map((err: TError): string => err.field.split('.')[1].toLowerCase());
+            })
+        }
+    }
+
+    const onNext = () => {
+        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
+    }
+
     const handleCreateAppointment = () => {
         if (checkIsValid()) {
-            const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
-
-            const vehicle = {
-                dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
-                ...(appointmentFrame.selectedVehicle ?? {}),
-                engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
-                model,
-                make,
-                year,
-                vin: appointmentFrame.selectedVehicle?.vin ?? '',
-                mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
-                modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
-            }
-
-            const driver = {
-                ...appointmentFrame.customer,
-                email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
-            }
-
-            const date = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
-                ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
-                : appointment.appointment?.id.split("|")[0] || "";
-
-            const appointmentTimingType = appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && appointmentFrame.selectedTiming
-                ? appointmentFrame.selectedTiming
-                : EAppointmentTimingType.FirstAvailable;
-
-            const transportationOptionId = appointmentFrame.serviceTypeOption?.transportationOption?.id
-                ?? appointmentFrame.transportation?.id
-                ?? null;
-
-            const serviceRequestIds = collectServiceRequestIds(
-                appointmentFrame.service,
-                appointmentFrame.subService,
-                appointmentFrame.selectedPackage,
-                appointment.selectedSR,
-            )
-
-            const maintenancePackageOption = appointmentFrame.selectedPackage
-                ? {id: appointmentFrame.selectedPackage?.id, priceType: appointmentFrame.packagePricingType}
-                : appointmentFrame.packageEMenuType !== null
-                    ? {optionType: appointmentFrame.packageEMenuType}
-                    : null;
-
-            const data = {
-                id: appointmentFrame.id,
-                hashKey: appointmentFrame.hashKey,
-                appointmentTimingType,
-                customerId: appointment.customerLoadedData?.id ?? null,
-                comment: appointmentFrame.description,
-                driver,
-                vehicle,
-                gmt: moment().utcOffset(),
-                offerId: appointment.appointment?.offer?.id ?? null,
-                reminderTypes: appointmentFrame.reminders,
-                serviceCenterId: decodeSCID(id),
-                consultantId: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
-                transportationOptionId,
-                slot: appointment.appointment?.id.split("|")[1] || "00:00:00",
-                serviceRequestIds,
-                date,
-                serviceCategoryIds: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
-                maintenancePackageOption,
-                valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
-                    ? [appointmentFrame?.valueService?.selectedService.id]
-                    : [],
-                searchTerm: customerEnteredEmail,
-                serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
-                zipCode: appointmentFrame.zipCode ?? null,
-                address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
-                recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
-            };
-
-            const endpoint = data?.hashKey
-                ? Api.endpoints.Appointments.UpdateByKey
-                : Api.endpoints.Appointments.Create;
-
-            dispatch(setAppointmentSaving(true))
-
-            Api.call<ICreateAppointmentResp>(endpoint, { data, urlParams: {id: data.hashKey} })
-                .then(({data}) => {
-                    handleResponse(data, endpoint)
-                        .then(() => {
-                            // onNext()
-                        });
-                })
-                .catch(e => {
-                    showError(e);
-                    if (e.response?.data?.errors) {
-                        const data = [...e.response.data.errors]
-                        setErrors(() => {
-                            return data.map((err: TError): string => err.field.split('.')[1].toLowerCase());
-                        })
-                    }
-                })
-                .finally(() => {
-                    dispatch(setAppointmentSaving(false))
-                })
+            dispatch(createOrUpdateAppointment(decodeSCID(id), onNext, handleError))
         }
     }
 
     const onCancelChanges = () => {
-
+        if (appointmentFrame.selectedVehicle) {
+            const vehicle = {...appointmentFrame.selectedVehicle};
+            dispatch(clearAppointmentData())
+            onUpdateAppointment(vehicle)
+        }
     }
 
     return <StepWrapper>
@@ -265,12 +181,13 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot}) => {
         {/*todo change to open payment window on next*/}
         <Actions
             loading={saving}
-            onBack={onCancelChanges}
+            onBack={onCancelConfirmOpen}
             onNext={handleCreateAppointment}
             nextLabel="Confirm Changes"
             prevLabel="Cancel Changes"
         />
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
         <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
+        <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
     </StepWrapper>
 };

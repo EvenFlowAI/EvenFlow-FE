@@ -323,7 +323,10 @@
       "I’d like to make additional changes": "I’d like to make additional changes",
       "Yes, no other changes needed": "Yes, no other changes needed",
       "Date and time of available appointments depends on the service requested.": "Date and time of available appointments depends on the service requested.",
-      "Please continue to see available dates and times for you requested change": "Please continue to see available dates and times for you requested change"
+      "Please continue to see available dates and times for you requested change": "Please continue to see available dates and times for you requested change",
+      "Are you sure you want to undo your appointment changes?": "Are you sure you want to undo your appointment changes?",
+      "Yes, I’m good with the existing appointment": "Yes, I’m good with the existing appointment",
+      "No, i still want to make changes": "No, i still want to make changes"
     }
   },
   "es": {
