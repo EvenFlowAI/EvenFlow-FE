@@ -264,8 +264,12 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const handleBack = () => {
-        dispatch(setTransportation(null));
-        onBack();
+        if (customerLoadedData?.isUpdating) {
+             dispatch(setCurrentFrameScreen("manageAppointment"))
+        } else {
+            dispatch(setTransportation(null));
+            onBack();
+        }
     }
 
     const onSuccessAppointmentUpdate = () => {
