@@ -33,7 +33,6 @@ import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import {getMaintenanceList} from "./uiUtils";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {TError} from "./types";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -250,10 +249,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const handleError = (e: any) => {
         showError(e)
-        if (e.response?.data?.errors) {
-            const data = [...e.response.data.errors]
-            const timeSlotError = data.find((item: TError) => item.message.toLowerCase().includes("slot"))
-            if (timeSlotError) onSlotsWarningOpen()
+        if (e.response?.data?.message?.includes("Time slot")) {
+            onSlotsWarningOpen()
         }
     }
 

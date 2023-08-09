@@ -27,7 +27,6 @@ import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesComp
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
-import {TError} from "./types";
 
 const Wrapper = styled('div')({
     width: "100%"
@@ -261,10 +260,8 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
 
     const handleError = (e: any) => {
         showError(e)
-        if (e.response?.data?.errors) {
-            const data = [...e.response.data.errors]
-            const timeSlotError = data.find((item: TError) => item.message.toLowerCase().includes("slot"))
-            if (timeSlotError) onSlotsWarningOpen()
+        if (e.response?.data?.message?.includes("Time slot")) {
+            onSlotsWarningOpen()
         }
     }
 

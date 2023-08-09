@@ -3,7 +3,7 @@ import {StepWrapper} from "./StepWrapper";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {Actions} from "./Actions";
-import {TActionProps, TError} from "./types";
+import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
@@ -245,10 +245,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const handleError = (e: any) => {
         showError(e)
-        if (e.response?.data?.errors) {
-            const data = [...e.response.data.errors]
-            const timeSlotError = data.find((item: TError) => item.message.toLowerCase().includes("slot"))
-            if (timeSlotError) onSlotsWarningOpen()
+        if (e.response?.data?.message?.includes("Time slot")) {
+            onSlotsWarningOpen()
         }
     }
 

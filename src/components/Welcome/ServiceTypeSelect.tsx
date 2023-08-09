@@ -151,9 +151,9 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
             dispatch(setTransportation(null))
             dispatch(setCurrentFrameScreen("location"));
         } else {
-            const newOptionHasDifferentTransportation = serviceOption.transportationOption && (serviceOption.transportationOption?.id !== serviceTypeOption?.transportationOption?.id)
+            // todo check for pod
+            const newOptionHasDifferentTransportation = true;
             if (newOptionHasDifferentTransportation) {
-                // todo check for pod
                 onSlotsWarningOpen()
                 dispatch(setCurrentFrameScreen("appointmentSelection"))
             } else {

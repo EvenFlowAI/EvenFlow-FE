@@ -47,7 +47,6 @@ import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReduc
 import PackagesEmenu from "./PackagesEmenu";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {TError} from "./types";
 
 const border = '1px solid #DADADA';
 
@@ -466,10 +465,8 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     const handleError = (e: any) => {
         showError(e)
-        if (e.response?.data?.errors) {
-            const data = [...e.response.data.errors]
-            const timeSlotError = data.find((item: TError) => item.message.toLowerCase().includes("slot"))
-            if (timeSlotError) onSlotsWarningOpen()
+        if (e.response?.data?.message?.includes("Time slot")) {
+            onSlotsWarningOpen()
         }
     }
 

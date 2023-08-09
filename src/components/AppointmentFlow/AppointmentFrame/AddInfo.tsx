@@ -24,7 +24,6 @@ import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesComp
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {useParams} from "react-router-dom";
 import {decodeSCID} from "../../../utils/utils";
-import {TError} from "./types";
 
 type TProps = {
     handleSetScreen:TArgCallback<TScreen>;
@@ -112,10 +111,8 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
 
     const handleError = (e: any) => {
         showError(e)
-        if (e.response?.data?.errors) {
-            const data = [...e.response.data.errors]
-            const timeSlotError = data.find((item: TError) => item.message.toLowerCase().includes("slot"))
-            if (timeSlotError) onSlotsWarningOpen()
+        if (e.response?.data?.message?.includes("Time slot")) {
+            onSlotsWarningOpen()
         }
     }
 
