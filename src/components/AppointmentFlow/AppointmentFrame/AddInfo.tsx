@@ -111,7 +111,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
 
     const handleError = (e: any) => {
         showError(e)
-        if (e.response?.data?.message?.includes("Time slot")) {
+        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
             onSlotsWarningOpen()
         }
     }

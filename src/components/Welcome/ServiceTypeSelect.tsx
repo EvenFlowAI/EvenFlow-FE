@@ -163,7 +163,6 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     }
 
     const handleChangeFromOtherOption = (serviceOption: IFirstScreenOption) => {
-        dispatch(setCurrentFrameScreen("location"))
         // todo If user is not in a zone of service or declines the convenience fee for the new address, bring the user back to the Address page
         // If user is in the same zone of service, then
         // Prompt user if he/she wishes to make any additional changes

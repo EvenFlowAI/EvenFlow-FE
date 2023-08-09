@@ -125,7 +125,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
 
     const handleError = (e: any) => {
         showError(e);
-        if (e.response?.data?.message?.includes("Time slot")) {
+        if (e.response?.data?.message?.toLowerCase().includes("Time slot")) {
             onSlotsWarningOpen()
         }
         if (e.response?.data?.errors) {

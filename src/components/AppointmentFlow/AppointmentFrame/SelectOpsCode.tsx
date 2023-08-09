@@ -260,7 +260,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
 
     const handleError = (e: any) => {
         showError(e)
-        if (e.response?.data?.message?.includes("Time slot")) {
+        if (e.response?.data?.message?.toLowerCase().includes("Time slot")) {
             onSlotsWarningOpen()
         }
     }

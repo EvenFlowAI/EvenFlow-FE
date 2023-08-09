@@ -245,7 +245,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const handleError = (e: any) => {
         showError(e)
-        if (e.response?.data?.message?.includes("Time slot")) {
+        if (e.response?.data?.message?.toLowerCase().includes("Time slot")) {
             onSlotsWarningOpen()
         }
     }

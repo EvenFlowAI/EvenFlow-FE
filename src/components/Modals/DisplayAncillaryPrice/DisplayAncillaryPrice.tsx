@@ -56,7 +56,7 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
     const dispatch = useDispatch();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const price = ancillaryPrice?.feeAmount && ancillaryPrice?.feeType === EAncillaryType.Amount ? `${ancillaryPrice?.feeAmount.toFixed(2)}` : `${ancillaryPrice?.feeAmount}%`
-
+    // todo text and logic for updating
     const serviceString = serviceType === EServiceType.MobileService
         ? t("Mobile Service")
         : t("Pick Up / Drop Off Service");
