@@ -73,8 +73,6 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     const [appointment, appointmentFrame, saving] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame,
-        state.categories,
-        state.appointment.customerEnteredEmail,
         state.appointmentFrame.isAppointmentSaving,
     ]);
 
