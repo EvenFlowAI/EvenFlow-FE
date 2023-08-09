@@ -148,12 +148,12 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage, serviceTypeOption])
 
     useEffect(() => {
-        dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable)))
+        dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable, Boolean(customerLoadedData?.isUpdating))))
     }, [serviceType, isAdvisorAvailable, isTransportationAvailable, getCurrentMenu])
 
     useEffect(() => {
         dispatch(setSideBarActualSteps(getStepsMap(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
-        dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
+        dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, Boolean(customerLoadedData?.isUpdating))))
     }, [serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, getStepsMap, getStepsScreen])
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {

@@ -149,7 +149,7 @@ export const getOfferString = (offer: IOfferForCategory, isRoundPrice: boolean):
 
 type TData = { [K in TScreen]: number };
 
-export const getCurrentMenu = (serviceType: EServiceType, advisor: boolean, transportation: boolean): string[] => {
+export const getCurrentMenu = (serviceType: EServiceType, advisor: boolean, transportation: boolean, isManaging: boolean): string[] => {
     const menu = {
         yourLocation: "Your Location",
         serviceNeeds: "Service Needs",
@@ -157,15 +157,21 @@ export const getCurrentMenu = (serviceType: EServiceType, advisor: boolean, tran
         appointmentSelection: "Appointment Selection",
         transportationNeeds: "Transportation Needs",
         appointmentConfirmation: "Appointment Confirmation",
+        manageAppointment: "Manage Appointment",
     }
     if (!advisor) delete menu.advisorSelection;
     if (!transportation) delete menu.transportationNeeds;
+    if (!isManaging) {
+        delete menu.manageAppointment;
+    } else {
+        delete menu.appointmentConfirmation;
+    }
     if (serviceType === EServiceType.VisitCenter) delete menu.yourLocation;
     return Object.values(menu);
 }
 
 export const getStepsScreen = (serviceType: EServiceType, advisorSelection: boolean, appointmentSelection: boolean,
-                               transportationNeeds: boolean): TScreen[] => {
+                               transportationNeeds: boolean, isManaging: boolean): TScreen[] => {
     const screens: {[key: string]: TScreen} = {
         location: "location",
         serviceNeeds: "serviceNeeds",
@@ -173,9 +179,15 @@ export const getStepsScreen = (serviceType: EServiceType, advisorSelection: bool
         appointmentSelection: appointmentSelection ? "appointmentTiming" : "appointmentSelection",
         transportationNeeds: "transportationNeeds",
         appointmentConfirmation: "appointmentConfirmation",
+        manageAppointment: "manageAppointment",
     }
     if (!advisorSelection) delete screens.consultantSelection;
     if (!transportationNeeds) delete screens.transportationNeeds;
+    if (!isManaging) {
+        delete screens.manageAppointment;
+    } else {
+        delete screens.appointmentConfirmation;
+    }
     if (serviceType === EServiceType.VisitCenter) delete screens.location;
     return Object.values(screens);
 }
