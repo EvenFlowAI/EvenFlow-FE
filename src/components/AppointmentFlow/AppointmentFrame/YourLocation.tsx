@@ -3,7 +3,7 @@ import {StepWrapper} from "./StepWrapper";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {Actions} from "./Actions";
-import {TActionProps} from "./types";
+import {TActionProps, TError} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
@@ -243,8 +243,17 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         dispatch(setCurrentFrameScreen("appointmentConfirmed"))
     }
 
+    const handleError = (e: any) => {
+        showError(e)
+        if (e.response?.data?.errors) {
+            const data = [...e.response.data.errors]
+            const timeSlotError = data.find((item: TError) => item.message.toLowerCase().includes("slot"))
+            if (timeSlotError) onSlotsWarningOpen()
+        }
+    }
+
     const handleChangesCompleted = async () => {
-        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, showError))
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
     }
 
     const handleAdditionalChanges = () => {

@@ -10,7 +10,7 @@ import {DialogProps} from "../types";
 import {Loading} from "../../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Divider, FormControlLabel, Switch, withStyles} from "@material-ui/core";
-import {IRecallByVin} from "../../AppointmentFlow/AppointmentFrame/types";
+import {IRecallByVin, TError} from "../../AppointmentFlow/AppointmentFrame/types";
 import moment from "moment";
 import {
     createOrUpdateAppointment,
@@ -177,8 +177,17 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
         dispatch(setCurrentFrameScreen("appointmentConfirmed"))
     }
 
+    const handleError = (e: any) => {
+        showError(e)
+        if (e.response?.data?.errors) {
+            const data = [...e.response.data.errors]
+            const timeSlotError = data.find((item: TError) => item.message.toLowerCase().includes("slot"))
+            if (timeSlotError) onSlotsWarningOpen()
+        }
+    }
+
     const handleChangesCompleted = async () => {
-        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, showError))
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
     }
 
     const handleAdditionalChanges = () => {

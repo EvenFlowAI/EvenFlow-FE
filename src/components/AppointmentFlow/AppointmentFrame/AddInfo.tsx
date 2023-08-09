@@ -24,6 +24,7 @@ import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesComp
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {useParams} from "react-router-dom";
 import {decodeSCID} from "../../../utils/utils";
+import {TError} from "./types";
 
 type TProps = {
     handleSetScreen:TArgCallback<TScreen>;
@@ -32,6 +33,7 @@ type TProps = {
     loading?: boolean;
     onAddServices: () => void;
 };
+
 export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
     const [
         subService,
@@ -108,8 +110,17 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
         dispatch(setCurrentFrameScreen("appointmentConfirmed"))
     }
 
+    const handleError = (e: any) => {
+        showError(e)
+        if (e.response?.data?.errors) {
+            const data = [...e.response.data.errors]
+            const timeSlotError = data.find((item: TError) => item.message.toLowerCase().includes("slot"))
+            if (timeSlotError) onSlotsWarningOpen()
+        }
+    }
+
     const handleChangesCompleted = async () => {
-        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, showError))
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
     }
 
     const handleAdditionalChanges = () => {

@@ -27,6 +27,7 @@ import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesComp
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {decodeSCID} from "../../../utils/utils";
 import {useParams} from "react-router-dom";
+import {TError} from "./types";
 
 const Wrapper = styled('div')({
     width: "100%"
@@ -258,8 +259,17 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         dispatch(setCurrentFrameScreen("appointmentConfirmed"))
     }
 
+    const handleError = (e: any) => {
+        showError(e)
+        if (e.response?.data?.errors) {
+            const data = [...e.response.data.errors]
+            const timeSlotError = data.find((item: TError) => item.message.toLowerCase().includes("slot"))
+            if (timeSlotError) onSlotsWarningOpen()
+        }
+    }
+
     const handleChangesCompleted = async () => {
-        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, showError))
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
     }
 
     const handleAdditionalChanges = () => {
