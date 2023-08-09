@@ -18,7 +18,7 @@ import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import {
-    loadAllServiceCategories,
+    loadAllServiceCategories, loadSRs,
 } from "../../../store/reducers/appointment/actions";
 import Vehicle from "./confirmationSections/Vehicle";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
@@ -32,6 +32,7 @@ import {ReviewManage} from "./manageSections/ReviewManage";
 import ConfirmCancelUpdate from "../../Modals/ConfirmCancelUpdate/ConfirmCancelUpdate";
 import {ILoadedVehicle} from "../../../api/types";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -97,6 +98,8 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
         if (appointment?.scProfile) {
             dispatch(loadAllServiceCategories(appointment.scProfile.id));
             dispatch(loadConsultants(id, appointmentFrame.serviceTypeOption?.id ?? null))
+            dispatch(loadCategoriesByQuery(appointment.scProfile.id))
+            dispatch(loadSRs(appointment.scProfile.id))
         }
     }, [appointment.scProfile, appointmentFrame.serviceTypeOption, id])
 
@@ -128,7 +131,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
 
     const handleError = (e: any) => {
         showError(e);
-        if (e.response?.data?.message?.toLowerCase().includes("Time slot")) {
+        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
             onSlotsWarningOpen()
         }
         if (e.response?.data?.errors) {

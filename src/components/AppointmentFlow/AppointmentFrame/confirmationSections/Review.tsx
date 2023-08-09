@@ -1,11 +1,9 @@
 import React from 'react';
 import {ConfirmationTitle} from "../Title";
 import {styled} from "@material-ui/core";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
-import {Edit} from "@material-ui/icons";
-import {setCurrentFrameScreen} from "../../../../store/reducers/appointmentFrameReducer/actions";
 
 const Wrapper = styled('ul')({
     display: "flex",
@@ -35,11 +33,6 @@ export const Review = () => {
     ]);
     const {t} = useTranslation();
     const transportationSelected = serviceTypeOption?.transportationOption || transportation;
-    const dispatch = useDispatch();
-
-    const handleChangeAdvisor = () => {
-        dispatch(setCurrentFrameScreen("consultantSelection"));
-    }
 
     return (
         <div>
@@ -49,8 +42,7 @@ export const Review = () => {
                     ? <li>Transportation needs: {transportationSelected?.description}</li>
                     : null}
                 {currentConfig?.advisorSelection
-                    ? <li>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}
-                        <Edit fontSize="small" onClick={handleChangeAdvisor} style={{cursor: "pointer"}}/></li>
+                    ? <li>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}</li>
                     : null
                 }
             </Wrapper>

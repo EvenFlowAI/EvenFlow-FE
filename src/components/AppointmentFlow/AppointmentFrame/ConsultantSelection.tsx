@@ -182,7 +182,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const handleError = (e: any) => {
         showError(e)
-        if (e.response?.data?.message?.toLowerCase().includes("Time slot")) {
+        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
             onSlotsWarningOpen()
         }
     }

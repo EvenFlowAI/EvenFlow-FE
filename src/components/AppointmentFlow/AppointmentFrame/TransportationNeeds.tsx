@@ -11,7 +11,11 @@ import {RootState} from "../../../store/rootReducer";
 import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {ITransportation} from '../../../api/types';
 import {TArgCallback, TCallback} from "../../../types/types";
-import {setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    createOrUpdateAppointment,
+    setCurrentFrameScreen,
+    setTransportation
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import theme from "../../../theme/theme";
 import {Loading} from "../../UI/Loading";
@@ -20,6 +24,10 @@ import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import {ETransportColumn} from "../../../store/reducers/transportationNeeds/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import moment from "moment";
+import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
+import {useException, useModal} from "../../../utils/hooks";
+import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 
 const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
     width: 287,
@@ -144,6 +152,8 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         selectedVehicle,
         packageEMenuType,
         allCategories,
+        appointmentByKey,
+        customerLoadedData,
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
@@ -159,15 +169,30 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointmentFrame.selectedVehicle,
         state.appointmentFrame.packageEMenuType,
         state.categories.allCategories,
+        state.appointmentFrame.appointmentByKey,
+        state.appointment.customerLoadedData
     ]);
+
+    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
+    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
+    const showError = useException();
+    const dispatch = useDispatch();
 
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(s, ss, null, individualOps);
     }, [s, ss, individualOps]);
     const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
     const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])
-
-    const dispatch = useDispatch();
+    const date = useMemo(() => {
+        if (appointmentByKey && customerLoadedData?.isUpdating) {
+            const [hh, mm] = appointmentByKey.timeSlot.split(':');
+            return appointmentByKey
+                ? moment(appointmentByKey.dateInUtc).set('hour', +hh).set("minute", +mm).toISOString(true)
+                : undefined
+        } else {
+            return appointmentDate
+        }
+    }, [appointmentByKey, appointmentDate, customerLoadedData])
 
     const getCategories = useCallback((): number[] => {
         return allCategories
@@ -188,7 +213,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             const data: TTransportationData = {
                 serviceCenterId: decodeSCID(id),
                 serviceRequestIds,
-                slot: appointmentDate,
+                slot: date,
                 serviceCategoryIds: getCategories(),
                 recalls: mapRecallsForRequest(selectedRecalls),
                 maintenancePackageOption,
@@ -201,7 +226,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                     engineTypeId: selectedVehicle.engineTypeId,
                 },
             }
-            if (appointmentDate) data.slot = appointmentDate;
             if (hashKey) data.appointmentHashKey = hashKey;
             Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
                 .then(({data}) => {
@@ -212,7 +236,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                 })
         }
     }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls,
-        packagePricingType, packageEMenuType, appointmentDate, packageOpt, categoriesIds, hashKey]);
+        packagePricingType, packageEMenuType, packageOpt, categoriesIds, hashKey, date]);
 
     const handleNext = (transportation: ITransportation|null): void => {
         ReactGA.event({
@@ -220,7 +244,11 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             action: 'Selected Transportation Need',
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
         })
-        onNext();
+        if (customerLoadedData?.isUpdating) {
+            onChangesCompletedOpen()
+        } else {
+            onNext();
+        }
     }
 
     const handleSelectOption = (o: ITransportation|null) => {
@@ -238,6 +266,32 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const handleBack = () => {
         dispatch(setTransportation(null));
         onBack();
+    }
+
+    const onSuccessAppointmentUpdate = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
+    }
+
+    const handleError = (e: any) => {
+        showError(e)
+        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
+            onSlotsWarningOpen()
+        }
+    }
+
+    const handleChangesCompleted = async () => {
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
+    }
+
+    const handleAdditionalChanges = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("manageAppointment"))
+    }
+
+    const onSlotsWarningClick = () => {
+        onSlotsWarningClose();
+        dispatch(setCurrentFrameScreen("appointmentSelection"));
     }
 
     return <StepWrapper>
@@ -273,5 +327,12 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             onNext={onNext}
             nextDisabled={loading || Boolean(transportations.length) && !transportation}
         />
+        <AskChangesCompleted
+            onClose={onChangesCompletedClose}
+            onSave={handleChangesCompleted}
+            onAdditionalChanges={handleAdditionalChanges}
+            open={isChangesCompletedOpen}
+        />
+        <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
     </StepWrapper>
 };
