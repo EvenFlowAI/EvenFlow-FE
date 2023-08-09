@@ -411,14 +411,22 @@ export const setVehicleDataFromValueService = (): AppThunk => (dispatch, getStat
     }
 }
 
+export const clearAppointmentsWhileCreating = (): AppThunk => (dispatch, getState) => {
+    const {customerLoadedData} = getState().appointment;
+    const {appointmentByKey} = getState().appointmentFrame;
+    if (!customerLoadedData?.isUpdating && !appointmentByKey) {
+        dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
+    }
+}
+
 export const deleteIndService = (item: IMaintenanceItem): AppThunk => (dispatch, getState) => {
     const {selectedSR} = getState().appointment;
     const {categoriesIds, service, subService} = getState().appointmentFrame;
     const {allCategories} = getState().categories;
     const services = selectedSR.filter(sr => sr !== item.id);
     item.id && dispatch(selectSR(item.id));
-    dispatch(selectAppointment(null));
-    dispatch(selectServiceValetAppointment(null));
+    dispatch(clearAppointmentsWhileCreating())
     const indServiceCategory = allCategories.find(category => {
         return category.type === EServiceCategoryType.IndividualServices && category.serviceRequests.find(el => el.id === item.id)
     });
@@ -443,8 +451,7 @@ export const deleteIndService = (item: IMaintenanceItem): AppThunk => (dispatch,
 export const deletePackage = (): AppThunk => (dispatch, getState) =>  {
     const {service, packageEMenuType} = getState().appointmentFrame
     if (service?.type === 1) dispatch(selectService(null));
-    dispatch(selectAppointment(null));
-    dispatch(selectServiceValetAppointment(null));
+    dispatch(clearAppointmentsWhileCreating())
     if (packageEMenuType !== null) dispatch(setPackageEMenuType(null));
     dispatch(setPackage(null));
 }
@@ -453,8 +460,7 @@ export const deleteGeneralService = (item: IMaintenanceItem): AppThunk => (dispa
     const {service, subService, categoriesIds} = getState().appointmentFrame
     if (service?.id === item.id) dispatch(selectService(null));
     if (subService?.id === item.id) dispatch(selectSubService(null));
-    dispatch(selectAppointment(null));
-    dispatch(selectServiceValetAppointment(null));
+    dispatch(clearAppointmentsWhileCreating())
     dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== item.id)));
 }
 
@@ -470,8 +476,7 @@ export const deleteValueService = (): AppThunk => (dispatch, getState) => {
     }
     dispatch(setVehicleDataFromValueService())
     dispatch(setValueService(null));
-    dispatch(selectAppointment(null));
-    dispatch(selectServiceValetAppointment(null));
+    dispatch(clearAppointmentsWhileCreating())
 }
 
 export const deleteRecall = (item: IMaintenanceItem): AppThunk => (dispatch, getState) => {

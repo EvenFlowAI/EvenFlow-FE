@@ -5,11 +5,11 @@ import {TArgCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
-    clearAppointmentSteps,
+    clearAppointmentSteps, createOrUpdateAppointment,
     selectCategoriesIds,
     selectService,
     selectSubService,
-    setAdditionalServicesChosen,
+    setAdditionalServicesChosen, setCurrentFrameScreen,
     setShowServiceCentersList,
     setUserType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -29,8 +29,11 @@ import {Routes} from "../../../config/routes";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
-import {useCurrentUser} from "../../../utils/hooks";
+import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import {getMaintenanceList} from "./uiUtils";
+import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
+import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import {TError} from "./types";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -58,9 +61,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         serviceTypeOption,
         packageEMenuType,
         selectedRecalls,
-        hashKey,
+        appointmentByKey
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {selectedSR, serviceRequests, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {selectedSR, serviceRequests, scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [loading, setLoading] = useState<boolean>(false);
@@ -69,12 +72,16 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const dispatch = useDispatch();
     const history = useHistory();
     const {t} = useTranslation();
+    const showError = useException();
     const currentUser = useCurrentUser();
+    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
+    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
 
-    const isManagingAppointment = Boolean(hashKey?.length) && (!serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id))
+    const isServiceOptionSelected = !serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id)
+    const isManagingAppointment = customerLoadedData?.isUpdating && appointmentByKey;
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
-    const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterOptionExists || isManagingAppointment;
+    const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterOptionExists || (isManagingAppointment && isServiceOptionSelected);
     const currentService = useMemo(() => page === EServiceCategoryPage.Page1
         ? selectedService
         : subService, [page, selectedService, subService]);
@@ -109,8 +116,12 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         if (page === EServiceCategoryPage.Page2) {
             setPage(EServiceCategoryPage.Page1);
         } else {
-            if (currentUser) dispatch(setShowServiceCentersList(false));
-            handleBackScreen()
+            if (isManagingAppointment) {
+                dispatch(setCurrentFrameScreen("manageAppointment"))
+            } else {
+                if (currentUser) dispatch(setShowServiceCentersList(false));
+                handleBackScreen()
+            }
         }
     }
 
@@ -167,7 +178,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             } else {
                 handleGA(selectedCategory);
                 handleCategoryHighlight(selectedCategory);
-                clearData();
+                !isManagingAppointment && clearData();
 
                 switch (selectedCategory?.type) {
                     case 2:
@@ -223,7 +234,41 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     }
 
     const handleNext = () => {
-        onSelect('maintenanceDetails');
+        if (isManagingAppointment) {
+            // todo request to get pod
+            onChangesCompletedOpen()
+            //onSlotsWarningOpen()
+        } else {
+            onSelect('maintenanceDetails');
+        }
+    }
+
+    const onSuccessAppointmentUpdate = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
+    }
+
+    const handleError = (e: any) => {
+        showError(e)
+        if (e.response?.data?.errors) {
+            const data = [...e.response.data.errors]
+            const timeSlotError = data.find((item: TError) => item.message.toLowerCase().includes("slot"))
+            if (timeSlotError) onSlotsWarningOpen()
+        }
+    }
+
+    const handleChangesCompleted = async () => {
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
+    }
+
+    const handleAdditionalChanges = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("manageAppointment"))
+    }
+
+    const onSlotsWarningClick = () => {
+        onSlotsWarningClose();
+        dispatch(setCurrentFrameScreen("appointmentSelection"));
     }
 
     return (
@@ -245,6 +290,13 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
                 nextLabel={t("Next")}
                 onNext={handleNext}
                 onBack={handleBack} />
+            <AskChangesCompleted
+                onClose={onChangesCompletedClose}
+                onSave={handleChangesCompleted}
+                onAdditionalChanges={handleAdditionalChanges}
+                open={isChangesCompletedOpen}
+            />
+            <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
         </StepWrapper>
     );
 };
