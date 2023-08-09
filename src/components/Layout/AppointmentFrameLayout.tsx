@@ -39,7 +39,7 @@ import {
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
-    setWelcomeScreenView, handleSideBarAppointmentUpdate, updateConsultant, setAppointmentByKey
+    setWelcomeScreenView, handleSideBarAppointmentUpdate, updateConsultant, setAppointmentByKey, setAppointmentSaving
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {EServiceCategoryPage, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
@@ -178,6 +178,7 @@ export const AppointmentFrameLayout = () => {
         const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
         const trimmedKey = getTrimmedKey(key);
         setLoadingCar(true);
+        dispatch(setAppointmentSaving(true))
         try {
             const {data} = await API.appointment.getByKey(trimmedKey);
             await dispatch(updateRecalls(data, id));
@@ -199,6 +200,7 @@ export const AppointmentFrameLayout = () => {
             showError(e);
         } finally {
             setLoadingCar(false);
+            dispatch(setAppointmentSaving(false))
         }
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
         handleServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
@@ -348,9 +350,7 @@ export const AppointmentFrameLayout = () => {
                 onChangeSlot={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
-            appointmentConfirmed: <AppointmentConfirmed
-                onModify={handleChangeScreen("serviceNeeds")}
-            />,
+            appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment}/>,
             location: <YourLocation
                 onBack={handleChangeScreen('carSelection')}
                 onNext={handleChangeScreen('serviceNeeds')}

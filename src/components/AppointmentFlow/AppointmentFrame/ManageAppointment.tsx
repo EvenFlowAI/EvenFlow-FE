@@ -33,6 +33,7 @@ import ConfirmCancelUpdate from "../../Modals/ConfirmCancelUpdate/ConfirmCancelU
 import {ILoadedVehicle} from "../../../api/types";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
+import {Loading} from "../../UI/Loading";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -168,28 +169,33 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     return <StepWrapper>
         <div>Manage Appointment</div>
         <Wrapper>
-            <div>
-                <SelectedDate onChangeSlot={onChangeSlot} />
-                <Vehicle/>
-                <ServiceRequestsManage/>
-                <Address/>
-                <SelectedPriceManage/>
-                <div
-                    role="presentation"
-                    style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
-                    onClick={onFeesOpen}>
-                    {t("View itemized fees of services")}
-                </div>
-                <ServiceTypeManage/>
-                {appointmentFrame.transportation || appointmentFrame.serviceTypeOption?.transportationOption || isAdvisorAvailable
-                    ? <ReviewManage/>
-                    : null}
-            </div>
-            <div>
-                <UserData errors={errors} setErrors={setErrors} isEmailRequired={isEmailRequired}/>
-                <Reminders isEmailRequired={isEmailRequired}/>
-                <Info>{t("terms of our Visitor Agreement")}.</Info>
-            </div>
+            {saving
+                ? <Loading/>
+                : <React.Fragment>
+                    <div>
+                        <SelectedDate onChangeSlot={onChangeSlot} />
+                        <Vehicle/>
+                        <ServiceRequestsManage/>
+                        <Address/>
+                        <SelectedPriceManage/>
+                        <div
+                            role="presentation"
+                            style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
+                            onClick={onFeesOpen}>
+                            {t("View itemized fees of services")}
+                        </div>
+                        <ServiceTypeManage/>
+                        {appointmentFrame.transportation || appointmentFrame.serviceTypeOption?.transportationOption || isAdvisorAvailable
+                            ? <ReviewManage/>
+                            : null}
+                    </div>
+                    <div>
+                        <UserData errors={errors} setErrors={setErrors} isEmailRequired={isEmailRequired}/>
+                        <Reminders isEmailRequired={isEmailRequired}/>
+                        <Info>{t("terms of our Visitor Agreement")}.</Info>
+                    </div>
+                </React.Fragment>
+}
 
         </Wrapper>
         {/*todo change to open payment window on next*/}
