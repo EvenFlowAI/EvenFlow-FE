@@ -8,6 +8,7 @@ import {ReactComponent as ConsultantIcon} from '../../../assets/img/advisor_grey
 import {TCallback} from "../../../types/types";
 import {IServiceConsultant} from '../../../api/types';
 import {
+    createOrUpdateAppointment,
     loadConsultants,
     setAdvisor, setCurrentFrameScreen,
     setSideBarActualSteps,
@@ -26,6 +27,10 @@ import {useTranslation} from "react-i18next";
 import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
 import {useParams} from "react-router-dom";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
+import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import {decodeSCID} from "../../../utils/utils";
+import {useException, useModal} from "../../../utils/hooks";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -118,9 +123,12 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const {selectedSR, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
     const {isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
+    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
     const dispatch = useDispatch();
     const {id} = useParams();
     const {t} = useTranslation();
+    const showError = useException();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
@@ -149,13 +157,48 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }, [serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, getStepsMap, getStepsScreen])
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
         dispatch(setAdvisor(c));
+        if (!customerLoadedData?.isUpdating) {
+            dispatch(selectAppointment(null));
+            dispatch(selectServiceValetAppointment(null));
+        }
+    }
+
+    const handleNext = () => {
+        if (customerLoadedData?.isUpdating) {
+            // todo request to get pod
+            onChangesCompletedOpen()
+            //onSlotsWarningOpen()
+        } else onNext()
     }
 
     const handleBack = () => {
         customerLoadedData?.isUpdating ? dispatch(setCurrentFrameScreen("manageAppointment")) : onBack()
+    }
+    const onSuccessAppointmentUpdate = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
+    }
+
+    const handleError = (e: any) => {
+        showError(e)
+        if (e.response?.data?.message?.toLowerCase().includes("Time slot")) {
+            onSlotsWarningOpen()
+        }
+    }
+
+    const handleChangesCompleted = async () => {
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
+    }
+
+    const handleAdditionalChanges = () => {
+        onChangesCompletedClose()
+        dispatch(setCurrentFrameScreen("manageAppointment"))
+    }
+
+    const onSlotsWarningClick = () => {
+        onSlotsWarningClose();
+        dispatch(setCurrentFrameScreen("appointmentSelection"));
     }
 
     return (<StepWrapper>
@@ -176,6 +219,13 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             </React.Fragment>
             }
         </ConsultantsWrapper>
-        <Actions onNext={onNext} onBack={handleBack} nextLabel={t("Next")}/>
+        <Actions onNext={handleNext} onBack={handleBack} nextLabel={t("Next")}/>
+        <AskChangesCompleted
+            onClose={onChangesCompletedClose}
+            onSave={handleChangesCompleted}
+            onAdditionalChanges={handleAdditionalChanges}
+            open={isChangesCompletedOpen}
+        />
+        <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
     </StepWrapper>);
 };

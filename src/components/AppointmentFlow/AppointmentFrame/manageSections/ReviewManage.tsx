@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {ConfirmationTitle} from "../Title";
 import {styled} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {Edit} from "@material-ui/icons";
-import {setCurrentFrameScreen} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {setAdvisor, setCurrentFrameScreen} from "../../../../store/reducers/appointmentFrameReducer/actions";
 
 const Wrapper = styled('ul')({
     display: "flex",
@@ -29,6 +29,8 @@ export const ReviewManage = () => {
         currentConfig,
         isTransportationAvailable,
         isAdvisorAvailable,
+        consultants,
+        appointmentByKey
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.advisor,
         state.appointmentFrame.transportation,
@@ -36,10 +38,23 @@ export const ReviewManage = () => {
         state.bookingFlowConfig.currentConfig,
         state.bookingFlowConfig.isTransportationAvailable,
         state.bookingFlowConfig.isAdvisorAvailable,
+        state.appointmentFrame.consultants,
+        state.appointmentFrame.appointmentByKey,
     ]);
     const {t} = useTranslation();
     const transportationSelected = serviceTypeOption?.transportationOption || transportation;
     const dispatch = useDispatch();
+
+
+
+    useEffect(() => {
+        if (!consultant) {
+            const selectedPreviouslyConsultant = appointmentByKey?.consultant?.id
+                ? consultants.find(item => item.id === appointmentByKey?.consultant?.id)
+                : undefined
+            selectedPreviouslyConsultant && dispatch(setAdvisor(selectedPreviouslyConsultant))
+        }
+    }, [appointmentByKey, consultants, consultant])
 
     const handleChangeAdvisor = () => {
         dispatch(setCurrentFrameScreen("consultantSelection"));

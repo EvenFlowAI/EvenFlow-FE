@@ -9,7 +9,7 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {decodeSCID} from "../../../utils/utils";
 import {
     clearAppointmentData,
-    createOrUpdateAppointment,
+    createOrUpdateAppointment, loadConsultants,
     setCurrentFrameScreen,
     setReminders
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -94,8 +94,11 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     }, [currentUser, appointment.scProfile])
 
     useEffect(() => {
-        appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
-    }, [appointment.scProfile])
+        if (appointment?.scProfile) {
+            dispatch(loadAllServiceCategories(appointment.scProfile.id));
+            dispatch(loadConsultants(id, appointmentFrame.serviceTypeOption?.id ?? null))
+        }
+    }, [appointment.scProfile, appointmentFrame.serviceTypeOption, id])
 
     useEffect(() => {
         dispatch(setReminders([0, 2]));

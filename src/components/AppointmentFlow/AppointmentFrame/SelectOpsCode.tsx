@@ -209,14 +209,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
 
     const goNext = () => {
         handleSetScreen("maintenanceDetails");
-        // if (!checkSelectedCar(vehicle, vehicles)) {
-        //     handleSetScreen("maintenanceDetails");
-        // } else {
-        //     const nextScreen: TScreen = config.find(item => item.serviceType.toString() === serviceType.toString())?.advisorSelection
-        //         ? "consultantSelection"
-        //         : "appointmentTiming";
-        //     handleSetScreen(nextScreen);
-        // }
     }
 
     const handleNext = () => {
