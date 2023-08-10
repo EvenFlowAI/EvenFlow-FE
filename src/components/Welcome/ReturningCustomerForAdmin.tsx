@@ -191,7 +191,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
     // }
 
     return <Grid item xs={12} sm={12} md={6} style={{maxWidth: 440, padding: isSm ? '16px 0' : 16}}>
-        <div className={classes.existing} onKeyUp={onKeyUp}>
+        <div className={classes.existing}>
             <span style={{fontSize: isSm ? 28 : 32}}>{t("Search Customer")}</span>
             {isSm
                 ? null
@@ -199,6 +199,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
             <Divider style={{marginBottom: isSm ? 8 : 16, marginTop: 17}}/>
             <InputLabel label={t("Search Customer by Phone or Email")}/>
             <TextField
+                onKeyUp={onKeyUp}
                 style={{ marginBottom: isSm ? 12 : 28 }}
                 error={formIsChecked && (errors.includes("PhoneOrEmail") || !formIsValid)}
                 placeholder={t("Enter Phone or Email")}
@@ -213,6 +214,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
             <InputLabel label={t("Search Customer by Name")}/>
             <div className={returningClasses.nameFieldsWrapper}>
                 <TextField
+                    onKeyUp={onKeyUp}
                     name="firstName"
                     placeholder={t("Enter First Name")}
                     error={formIsChecked && (customerSearchData.firstName.length === 1 || !formIsValid)}
@@ -222,6 +224,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     disabled={isLoading}
                     value={customerSearchData.firstName}/>
                 <TextField
+                    onKeyUp={onKeyUp}
                     name="lastName"
                     placeholder={t("Enter Last Name")}
                     error={formIsChecked && (customerSearchData.lastName.length === 1 || !formIsValid)}
@@ -239,6 +242,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                 ? <React.Fragment>
                     {/*<InputLabel label={t("Search by Company Name")}/>*/}
                     {/*<TextField*/}
+                    {/*onKeyUp={onKeyUp}*/}
                     {/*    placeholder={t("Enter Company Name")}*/}
                     {/*    error={formIsChecked && (customerSearchData.companyName.length === 1 || !formIsValid)}*/}
                     {/*    onChange={onTextChange('companyName')}*/}
@@ -248,6 +252,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     {/*    value={customerSearchData.companyName}/>*/}
                     <InputLabel label={t("Search by Address")}/>
                     <TextField
+                        onKeyUp={onKeyUp}
                         placeholder={t("Enter Address")}
                         error={formIsChecked && (customerSearchData.address.length === 1 || !formIsValid)}
                         onChange={onTextChange('address')}
@@ -259,6 +264,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                         value={customerSearchData.address}/>
                     <InputLabel label={t("Search by VIN (Last 8 digits)")}/>
                     <TextField
+                        onKeyUp={onKeyUp}
                         placeholder={t("Enter Last 8 VIN digits")}
                         error={formIsChecked &&
                             ((!!customerSearchData.lastVINCharacters.length && customerSearchData.lastVINCharacters.length < 8)
