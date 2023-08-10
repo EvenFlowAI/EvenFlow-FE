@@ -34,6 +34,7 @@ import {ILoadedVehicle} from "../../../api/types";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {Loading} from "../../UI/Loading";
+import {setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -83,7 +84,6 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
     const {isOpen: isCancelConfirmOpen, onClose: onCancelConfirmClose, onOpen: onCancelConfirmOpen} = useModal();
-    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
 
     const showError = useException();
     const dispatch = useDispatch();
@@ -133,7 +133,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     const handleError = (e: any) => {
         showError(e);
         if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
-            onSlotsWarningOpen()
+            dispatch(setSlotsWarningOpen(true))
         }
         if (e.response?.data?.errors) {
             const data = [...e.response.data.errors]
@@ -159,11 +159,6 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
             dispatch(clearAppointmentData())
             onUpdateAppointment(vehicle)
         }
-    }
-
-    const onSlotsWarningClick = () => {
-        onSlotsWarningClose();
-        dispatch(setCurrentFrameScreen("appointmentSelection"));
     }
 
     return <StepWrapper>
@@ -209,6 +204,6 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
         <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
         <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
-        <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
+        <SlotImpactedWarning/>
     </StepWrapper>
 };

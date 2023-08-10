@@ -8,10 +8,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import {
-    clearAppointmentData, createOrUpdateAppointment,
+    clearAppointmentData,
     loadAncillaryPriceByZip,
     loadFilteredZip,
-    setAddress, setCurrentFrameScreen, setShowServiceCentersList,
+    setAddress, setShowServiceCentersList,
     setSideBarSteps,
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -32,9 +32,9 @@ import {TArgCallback} from "../../../types/types";
 import {TView} from "../../Welcome/types";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
-import {decodeSCID} from "../../../utils/utils";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -118,8 +118,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
-    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
-    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
     const dispatch = useDispatch();
     const showError = useException();
     const classes = useStyles();
@@ -161,7 +159,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const handleBackWhileManaging = () => {
-        dispatch(setCurrentFrameScreen("manageServiceType"));
+        // todo redirect to service type selection
     }
 
     const handleBack = () => {
@@ -194,8 +192,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const handleManagingFlow = () => {
         // todo request to get slot
-        onChangesCompletedOpen()
-        onSlotsWarningOpen()
+        dispatch(setChangesCompletedOpen(true))
+       // dispatch(setSlotsWarningOpen(true))
     }
 
     const onSuccess = (data: TAncillaryPriceByZip) => {
@@ -237,33 +235,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         if (address?.label) return address?.label;
         return isFormChecked ? t('Address is required') : placeholder
     }
-
-    const onSuccessAppointmentUpdate = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
-    }
-
-    const handleError = (e: any) => {
-        showError(e)
-        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
-            onSlotsWarningOpen()
-        }
-    }
-
-    const handleChangesCompleted = async () => {
-        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
-    }
-
-    const handleAdditionalChanges = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("manageAppointment"))
-    }
-
-    const onSlotsWarningClick = () => {
-        onSlotsWarningClose();
-        dispatch(setCurrentFrameScreen("appointmentSelection"));
-    }
-
 
     return (
         <StepWrapper>
@@ -322,13 +293,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
             <Actions onBack={handleBack} onNext={handleNext} nextLabel={t("Next")}/>
             <DisplayAncillaryPrice onNext={onNext} open={isOpen} onClose={onClose}/>
             <UnavailableService open={isUnavailableOpen} onClose={onUnavailableClose} setFormChecked={setFormChecked}/>
-            <AskChangesCompleted
-                onClose={onChangesCompletedClose}
-                onSave={handleChangesCompleted}
-                onAdditionalChanges={handleAdditionalChanges}
-                open={isChangesCompletedOpen}
-            />
-            <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
+            <AskChangesCompleted/>
+            <SlotImpactedWarning/>
         </StepWrapper>
     );
 };

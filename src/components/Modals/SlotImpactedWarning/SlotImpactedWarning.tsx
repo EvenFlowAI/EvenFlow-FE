@@ -1,13 +1,12 @@
 import React from 'react';
 import {BaseModal, DialogTitle} from "../BaseModal";
 import {LoadingButton} from "../../UI/Button";
-import {DialogProps} from "../types";
 import {useTranslation} from "react-i18next";
 import {makeStyles} from "@material-ui/core/styles";
-
-type TSlotImpactedWarning = DialogProps & {
-    onClick: () => void;
-}
+import {setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -23,16 +22,29 @@ const useStyles = makeStyles({
     },
 })
 
-const SlotImpactedWarning = (props: TSlotImpactedWarning) => {
-    const {t} = useTranslation();
+const SlotImpactedWarning = () => {
+    const {isSlotsWarningOpen} = useSelector((state: RootState) => state.modals);
+    const {isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const dispatch = useDispatch();
     const classes = useStyles();
+    const {t} = useTranslation();
+
+    const onSlotsWarningClick = () => {
+        dispatch(setSlotsWarningOpen(false))
+        dispatch(setCurrentFrameScreen(isAppointmentTimingAvailable ? "appointmentTiming" : "appointmentSelection"));
+    }
+
+    const onClose = () => {
+        dispatch(setSlotsWarningOpen(false))
+    }
+
     return (
         <BaseModal
             width={450}
-            open={props.open}
-            onClose={props.onClose}
+            open={isSlotsWarningOpen}
+            onClose={onClose}
         >
-            <DialogTitle onClose={props.onClose}>
+            <DialogTitle onClose={onClose}>
                 <div>{t("Date and time of available appointments depends on the service requested.")}</div>
                 <div>{t("Please continue to see available dates and times for you requested change")}</div>
             </DialogTitle>
@@ -40,7 +52,7 @@ const SlotImpactedWarning = (props: TSlotImpactedWarning) => {
                     <LoadingButton
                         loading={false}
                         fullWidth
-                        onClick={props.onClick}
+                        onClick={onSlotsWarningClick}
                         variant="outlined"
                         color="primary">
                         {t("Close")}

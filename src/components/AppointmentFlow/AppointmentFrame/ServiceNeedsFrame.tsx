@@ -5,7 +5,7 @@ import {TArgCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
-    clearAppointmentSteps, createOrUpdateAppointment,
+    clearAppointmentSteps,
     selectCategoriesIds,
     selectService,
     selectSubService,
@@ -29,10 +29,11 @@ import {Routes} from "../../../config/routes";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
-import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
+import {useCurrentUser} from "../../../utils/hooks";
 import {getMaintenanceList} from "./uiUtils";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -71,10 +72,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const dispatch = useDispatch();
     const history = useHistory();
     const {t} = useTranslation();
-    const showError = useException();
     const currentUser = useCurrentUser();
-    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
-    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
 
     const isServiceOptionSelected = !serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id)
     const isManagingAppointment = customerLoadedData?.isUpdating && appointmentByKey;
@@ -237,37 +235,11 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const handleNext = () => {
         if (isManagingAppointment) {
             // todo request to get pod
-            onChangesCompletedOpen()
-            //onSlotsWarningOpen()
+            dispatch(setChangesCompletedOpen(true))
+            //dispatch(setSlotsWarningOpen(true))
         } else {
             onSelect('maintenanceDetails');
         }
-    }
-
-    const onSuccessAppointmentUpdate = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
-    }
-
-    const handleError = (e: any) => {
-        showError(e)
-        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
-            onSlotsWarningOpen()
-        }
-    }
-
-    const handleChangesCompleted = async () => {
-        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
-    }
-
-    const handleAdditionalChanges = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("manageAppointment"))
-    }
-
-    const onSlotsWarningClick = () => {
-        onSlotsWarningClose();
-        dispatch(setCurrentFrameScreen("appointmentSelection"));
     }
 
     return (
@@ -289,13 +261,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
                 nextLabel={t("Next")}
                 onNext={handleNext}
                 onBack={handleBack} />
-            <AskChangesCompleted
-                onClose={onChangesCompletedClose}
-                onSave={handleChangesCompleted}
-                onAdditionalChanges={handleAdditionalChanges}
-                open={isChangesCompletedOpen}
-            />
-            <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
+            <AskChangesCompleted/>
+            <SlotImpactedWarning/>
         </StepWrapper>
     );
 };

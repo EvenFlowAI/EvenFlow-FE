@@ -12,7 +12,6 @@ import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {ITransportation} from '../../../api/types';
 import {TArgCallback, TCallback} from "../../../types/types";
 import {
-    createOrUpdateAppointment,
     setCurrentFrameScreen,
     setTransportation
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -26,8 +25,8 @@ import {ETransportColumn} from "../../../store/reducers/transportationNeeds/type
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import moment from "moment";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
-import {useException, useModal} from "../../../utils/hooks";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
 
 const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
     width: 287,
@@ -170,12 +169,8 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointmentFrame.packageEMenuType,
         state.categories.allCategories,
         state.appointmentFrame.appointmentByKey,
-        state.appointment.customerLoadedData
+        state.appointment.customerLoadedData,
     ]);
-
-    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
-    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
-    const showError = useException();
     const dispatch = useDispatch();
 
     const serviceRequestIds = useMemo(() => {
@@ -245,7 +240,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
         })
         if (customerLoadedData?.isUpdating) {
-            onChangesCompletedOpen()
+            dispatch(setChangesCompletedOpen(true))
         } else {
             onNext();
         }
@@ -272,37 +267,10 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         }
     }
 
-    const onSuccessAppointmentUpdate = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
-    }
-
-    const handleError = (e: any) => {
-        showError(e)
-        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
-            onSlotsWarningOpen()
-        }
-    }
-
-    const handleChangesCompleted = async () => {
-        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
-    }
-
-    const handleAdditionalChanges = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("manageAppointment"))
-    }
-
-    const onSlotsWarningClick = () => {
-        onSlotsWarningClose();
-        dispatch(setCurrentFrameScreen("appointmentSelection"));
-    }
-
     return <StepWrapper>
         {loading ? <Loading/>
             : transportations.length ? <TransportationWrapper>
                     {transportationNo.length ? <TransportationCard
-                        //active={Boolean(transportationNo.find(item => item.id === transportation?.id))}
                         active
                         selectedTransportation={transportation}
                         transportation={`${t("No, I will")}:`}
@@ -311,7 +279,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                         onSelectOption={handleSelectOption}
                     /> : null}
                     {transportationYes.length ? <TransportationCard
-                        //active={Boolean(transportationYes.find(item => item.id === transportation?.id))}
                         active
                         options={transportationYes}
                         selectedTransportation={transportation}
@@ -331,12 +298,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             onNext={onNext}
             nextDisabled={loading || Boolean(transportations.length) && !transportation}
         />
-        <AskChangesCompleted
-            onClose={onChangesCompletedClose}
-            onSave={handleChangesCompleted}
-            onAdditionalChanges={handleAdditionalChanges}
-            open={isChangesCompletedOpen}
-        />
-        <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
+        <AskChangesCompleted />
+        <SlotImpactedWarning />
     </StepWrapper>
 };

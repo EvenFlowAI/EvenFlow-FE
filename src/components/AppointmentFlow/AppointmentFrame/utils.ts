@@ -211,7 +211,6 @@ export const getStepsMap = (serviceType: EServiceType, isAdvisorAvailable: boole
         appointmentConfirmation: serviceType === EServiceType.MobileService ? 4 : 5,
         manageAppointment: serviceType === EServiceType.MobileService ? 4 : 5,
         appointmentConfirmed: serviceType === EServiceType.MobileService ? 4 : 5,
-        manageServiceType: 0,
         location: 1,
         payment: 5,
     }
@@ -295,7 +294,6 @@ export const SCREENS = {
     payment: "payment",
     serviceOfferProductPage: "Service Offer Produce Page",
     manageAppointment: "Manage Appointment",
-    manageServiceType: "Manage Appointment First Screen Option"
 }
 
 // todo add new parent links while go live with new dealerships

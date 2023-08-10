@@ -1,17 +1,19 @@
 import React from 'react';
 import {BaseModal, DialogTitle} from "../BaseModal";
 import {LoadingButton} from "../../UI/Button";
-import {DialogProps} from "../types";
 import {useTranslation} from "react-i18next";
 import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@material-ui/core";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-
-type TAskChangesCompletedProps = DialogProps & {
-    onSave: () => void;
-    onAdditionalChanges: () => void;
-}
+import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {
+    createOrUpdateAppointment,
+    setCurrentFrameScreen
+} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {decodeSCID} from "../../../utils/utils";
+import {useParams} from "react-router-dom";
+import {useException} from "../../../utils/hooks";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -31,28 +33,57 @@ const useStyles = makeStyles({
     }
 })
 
-const AskChangesCompleted = (props: TAskChangesCompletedProps) => {
-    const {t} = useTranslation();
-    const classes = useStyles();
+const AskChangesCompleted = () => {
     const {isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isChangesCompletedOpen} = useSelector((state: RootState) => state.modals);
+    const dispatch = useDispatch();
+    const classes = useStyles();
+    const showError = useException();
+    const {t} = useTranslation();
+    const {id} = useParams();
+
+    const onClose = () => {
+        dispatch(setChangesCompletedOpen(false))
+    }
+
+    const onAdditionalChanges = () => {
+        dispatch(setChangesCompletedOpen(false))
+        dispatch(setCurrentFrameScreen("manageAppointment"))
+    }
+
+    const onSuccessAppointmentUpdate = () => {
+        dispatch(setChangesCompletedOpen(false))
+        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
+    }
+
+    const handleError = (e: any) => {
+        showError(e)
+        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
+            dispatch(setSlotsWarningOpen(true))
+        }
+    }
+
+    const handleChangesCompleted = async () => {
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
+    }
 
     return (
         <BaseModal
             width={600}
-            open={props.open}
-            onClose={props.onClose}
+            open={isChangesCompletedOpen}
+            onClose={onClose}
         >
-            <DialogTitle onClose={props.onClose}>
+            <DialogTitle onClose={onClose}>
                 {t("Are you satisfied with the appointment changes?")}
             </DialogTitle>
                 <div className={classes.wrapper}>
-                    <Button variant="text" className={classes.textButton} onClick={props.onAdditionalChanges}>
+                    <Button variant="text" className={classes.textButton} onClick={onAdditionalChanges}>
                         {t("I’d like to make additional changes")}
                     </Button>
                     <LoadingButton
                         fullWidth
                         loading={isAppointmentSaving}
-                        onClick={props.onSave}
+                        onClick={handleChangesCompleted}
                         color="primary"
                         variant="contained">
                         {t("Yes, no other changes needed")}
@@ -60,7 +91,7 @@ const AskChangesCompleted = (props: TAskChangesCompletedProps) => {
                     <LoadingButton
                         loading={isAppointmentSaving}
                         fullWidth
-                        onClick={props.onClose}
+                        onClick={onClose}
                         variant="outlined"
                         color="primary">
                         {t("Cancel")}

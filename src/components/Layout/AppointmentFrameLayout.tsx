@@ -59,7 +59,6 @@ import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
 import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
-import ServiceTypeSelect from "../AppointmentFlow/AppointmentFrame/ManageAppointmentScreens/ServiceTypeSelect";
 
 const Container = styled('div')({
     display: "flex",
@@ -367,7 +366,6 @@ export const AppointmentFrameLayout = () => {
             manageAppointment: <ManageAppointment
                 onUpdateAppointment={onUpdateAppointment}
                 onChangeSlot={handleChangeScreen('appointmentSelection')}/>,
-            manageServiceType: <ServiceTypeSelect/>
         }
         return carSelections[currentScreen];
     }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,

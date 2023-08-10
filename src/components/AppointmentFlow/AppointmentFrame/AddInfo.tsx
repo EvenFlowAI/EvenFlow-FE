@@ -5,14 +5,14 @@ import {TextField} from "../UI";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
-    clearAppointmentSteps, createOrUpdateAppointment,
+    clearAppointmentSteps,
     selectCategoriesIds,
-    setAdditionalServicesChosen, setCurrentFrameScreen,
+    setAdditionalServicesChosen,
     setFrameDescription
 } from '../../../store/reducers/appointmentFrameReducer/actions';
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
-import {useException, useModal} from "../../../utils/hooks";
+import {useModal} from "../../../utils/hooks";
 import {
     selectAppointment,
     selectServiceValetAppointment,
@@ -22,8 +22,7 @@ import {useTranslation} from "react-i18next";
 import AddCommentPrompt from "../../Modals/AddCommentPrompt/AddCommentPrompt";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {useParams} from "react-router-dom";
-import {decodeSCID} from "../../../utils/utils";
+import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
 
 type TProps = {
     handleSetScreen:TArgCallback<TScreen>;
@@ -51,11 +50,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
     const dispatch = useDispatch();
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isErrorOpen, onClose: onErrorClose, onOpen: onErrorOpen} = useModal();
-    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
-    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
     const {t} = useTranslation();
-    const {id} = useParams();
-    const showError = useException();
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setFrameDescription(value))
@@ -79,8 +74,8 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
         }
         if (customerLoadedData?.isUpdating) {
             // todo request to get pod
-            onChangesCompletedOpen()
-            //onSlotsWarningOpen()
+            dispatch(setChangesCompletedOpen(true))
+            //dispatch(setSlotsWarningOpen(true))
         } else {
             onOpen()
         }
@@ -104,32 +99,6 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
         handleSetScreen("serviceNeeds");
     }
 
-    const onSuccessAppointmentUpdate = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
-    }
-
-    const handleError = (e: any) => {
-        showError(e)
-        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
-            onSlotsWarningOpen()
-        }
-    }
-
-    const handleChangesCompleted = async () => {
-        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
-    }
-
-    const handleAdditionalChanges = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("manageAppointment"))
-    }
-
-    const onSlotsWarningClick = () => {
-        onSlotsWarningClose();
-        dispatch(setCurrentFrameScreen("appointmentSelection"));
-    }
-
     return (
         <StepWrapper>
             <TextField
@@ -143,13 +112,8 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
             />
             <Actions onBack={handleBack} onNext={onSubmit} nextLabel={t("Next")}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isOpen}/>
-            <AskChangesCompleted
-                onClose={onChangesCompletedClose}
-                onSave={handleChangesCompleted}
-                onAdditionalChanges={handleAdditionalChanges}
-                open={isChangesCompletedOpen}
-            />
-            <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
+            <AskChangesCompleted/>
+            <SlotImpactedWarning/>
             <AddCommentPrompt open={isErrorOpen} onClose={onErrorClose}/>
         </StepWrapper>
     );

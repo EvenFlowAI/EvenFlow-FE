@@ -11,7 +11,7 @@ import {
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {
-    clearAppointmentData, createOrUpdateAppointment,
+    clearAppointmentData,
     setCurrentFrameScreen,
     setServiceTypeOption, setSideBarSteps, setTransportation,
     setVehicle,
@@ -26,12 +26,13 @@ import {InfoOutlined} from "@material-ui/icons";
 import {HtmlTooltip} from "../AppointmentFlow/AppointmentFrame/ServiceCard";
 import ServiceTypeIcon from "./ServiceTypeIcon";
 import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
-import {useCurrentUser, useException, useModal} from "../../utils/hooks";
+import {useCurrentUser} from "../../utils/hooks";
 import {Routes} from "../../config/routes";
-import {decodeSCID, encodeSCID} from "../../utils/utils";
+import {encodeSCID} from "../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
 import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../store/reducers/modals/actions";
 
 type TProps = {
     handleValueServiceConfig: (serviceType: EServiceType) => void;
@@ -128,14 +129,11 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const currentUser = useCurrentUser();
-    const showError = useException();
 
     const {id} = useParams();
     const classes = useServiceTypeStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
-    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
 
     const redirect = () => {
@@ -154,10 +152,10 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
             // todo check for pod
             const newOptionHasDifferentTransportation = true;
             if (newOptionHasDifferentTransportation) {
-                onSlotsWarningOpen()
+                dispatch(setSlotsWarningOpen(true))
                 dispatch(setCurrentFrameScreen("appointmentSelection"))
             } else {
-                onChangesCompletedOpen()
+                dispatch(setChangesCompletedOpen(true))
             }
         }
     }
@@ -235,25 +233,6 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
         }
     }
 
-    const onSuccessAppointmentUpdate = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
-    }
-
-    const handleChangesCompleted = async () => {
-        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, showError))
-    }
-
-    const handleAdditionalChanges = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("manageAppointment"))
-    }
-
-    const onSlotsWarningClick = () => {
-        onSlotsWarningClose();
-        dispatch(setCurrentFrameScreen("appointmentSelection"));
-    }
-
     return isLoading || loading
         ? <Loading/>
         : <div className={classes.wrapper}>
@@ -280,13 +259,8 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
                     })}
             </ServiceTypeCardsWrapper>
             <Actions onBack={handleBack} onNext={() => {}} hideNext/>
-            <AskChangesCompleted
-                onClose={onChangesCompletedClose}
-                onSave={handleChangesCompleted}
-                onAdditionalChanges={handleAdditionalChanges}
-                open={isChangesCompletedOpen}
-            />
-            <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
+            <AskChangesCompleted />
+            <SlotImpactedWarning />
         </div>
 };
 

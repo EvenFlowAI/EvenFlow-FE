@@ -29,14 +29,10 @@ import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector";
-import {
-    clearAppointmentSteps,
-    createOrUpdateAppointment,
-    setCurrentFrameScreen
-} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {clearAppointmentSteps} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
-import {useException, useModal} from "../../../utils/hooks";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
+import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
 
 const Wrapper = styled('div')(({ theme }) => ({
         display: "flex",
@@ -135,12 +131,10 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const {id} = useParams();
-    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
     const initRef = useRef<boolean>(false);
     const isMount = useRef(true);
     const dispatch = useDispatch();
     const {t} = useTranslation();
-    const showError = useException();
     const nextDisabled = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? !serviceValetAppointment
         : !appointment,
@@ -314,7 +308,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const handleNext = useCallback((): void => {
         handleGANext();
         if (customerData?.isUpdating) {
-            onChangesCompletedOpen()
+            dispatch(setChangesCompletedOpen(true))
         } else {
             handleSetScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption ? 'transportationNeeds' : 'appointmentConfirmation');
         }
@@ -329,20 +323,6 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         handleGABack();
         handleSetScreen(nextScreen);
     }, [currentConfig])
-
-    const onSuccessAppointmentUpdate = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
-    }
-
-    const handleChangesCompleted = async () => {
-        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, showError))
-    }
-
-    const handleAdditionalChanges = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("manageAppointment"))
-    }
 
     return (
         <StepWrapper>
@@ -377,12 +357,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         date={date}
                         loading={loading}/>}
             </Wrapper>
-            <AskChangesCompleted
-                onClose={onChangesCompletedClose}
-                onSave={handleChangesCompleted}
-                onAdditionalChanges={handleAdditionalChanges}
-                open={isChangesCompletedOpen}
-            />
+            <AskChangesCompleted/>
         </StepWrapper>
     );
 };

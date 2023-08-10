@@ -5,8 +5,7 @@ import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
-    createOrUpdateAppointment,
-    setAdditionalServicesChosen, setCurrentFrameScreen,
+    setAdditionalServicesChosen,
     setPackage,
     setPackageIsSelected,
     setPackagePricingType,
@@ -28,7 +27,7 @@ import {
 import PackageSelectionMobile from "./PackageSelectionMobile";
 //import ReactGA from "react-ga";
 import ReactGA from "react-ga4";
-import {useException, useModal} from "../../../utils/hooks";
+import {useModal} from "../../../utils/hooks";
 import ConfirmChangeOption from "../../Modals/ConfirmChangeOption/ConfirmChangeOption";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {getPackagesData} from "./utils";
@@ -47,6 +46,7 @@ import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReduc
 import PackagesEmenu from "./PackagesEmenu";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
 
 const border = '1px solid #DADADA';
 
@@ -296,11 +296,8 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const theme = useTheme();
     const { isOpen, onOpen, onClose } = useModal();
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
-    const {isOpen: isChangesCompletedOpen, onClose: onChangesCompletedClose, onOpen: onChangesCompletedOpen} = useModal();
-    const {isOpen: isSlotsWarningOpen, onClose: onSlotsWarningClose, onOpen: onSlotsWarningOpen} = useModal();
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
     const {t} = useTranslation();
-    const showError = useException();
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
@@ -375,8 +372,8 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const onSelectionCompleted = () => {
         if (customerLoadedData?.isUpdating) {
             // todo request to get pod
-            onChangesCompletedOpen()
-            //onSlotsWarningOpen()
+            dispatch(setChangesCompletedOpen(true))
+            //dispatch(setSlotsWarningOpen(true))
         } else {
             onAdditionalOpen()
         }
@@ -451,32 +448,6 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             if (price) title = price.title;
         }
         return title;
-    }
-
-    const onSlotsWarningClick = () => {
-        onSlotsWarningClose();
-        dispatch(setCurrentFrameScreen("appointmentSelection"));
-    }
-
-    const onSuccessAppointmentUpdate = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
-    }
-
-    const handleError = (e: any) => {
-        showError(e)
-        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
-            onSlotsWarningOpen()
-        }
-    }
-
-    const handleChangesCompleted = async () => {
-        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
-    }
-
-    const handleAdditionalChanges = () => {
-        onChangesCompletedClose()
-        dispatch(setCurrentFrameScreen("manageAppointment"))
     }
 
     return (
@@ -592,13 +563,8 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 onNext={() => handleNext(localSelectedPackage)}/>}
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
-            <AskChangesCompleted
-                onClose={onChangesCompletedClose}
-                onSave={handleChangesCompleted}
-                onAdditionalChanges={handleAdditionalChanges}
-                open={isChangesCompletedOpen}
-            />
-            <SlotImpactedWarning open={isSlotsWarningOpen} onClose={onSlotsWarningClick} onClick={onSlotsWarningClick}/>
+            <AskChangesCompleted/>
+            <SlotImpactedWarning/>
         </PackagesStepWrapper>
     );
 };
