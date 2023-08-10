@@ -106,9 +106,9 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
-    const isNewVehicleView = useMemo(() => {
-        return !Boolean(customerLoadedData?.vehicles.find(v => {
-            return v.vin && selectedVehicle?.vin
+    const isExistingVehicle = useMemo(() => {
+        return Boolean(customerLoadedData?.vehicles.find(v => {
+            return (v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin)
                 || (v.make === selectedVehicle?.make
                     && v.model === selectedVehicle?.model
                     && v.year === selectedVehicle?.year)
@@ -354,7 +354,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     fullWidth
                     disableClearable
                     autoComplete={true}
-                    disabled={!isNewVehicleView}
+                    disabled={isExistingVehicle}
                     renderInput={autocompleteRender({
                         label: t("Year"),
                         placeholder: errors.includes("year") ? `${t("Year")} ${t("required")}` : `${t("Select")} ${t("Year")}`,
@@ -387,7 +387,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     fullWidth
                     disableClearable
                     autoComplete={true}
-                    disabled={!isNewVehicleView}
+                    disabled={isExistingVehicle}
                     renderInput={autocompleteRender({
                         label: t("Make"),
                         placeholder: errors.includes("make") ? `${t("Make")} ${t("required")}` : `${t("Select")} ${t("Make")}`,
@@ -425,7 +425,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     fullWidth
                     disableClearable
                     autoComplete={true}
-                    disabled={!isNewVehicleView}
+                    disabled={isExistingVehicle}
                     renderInput={autocompleteRender({
                         label: t("Model"),
                         placeholder: errors.includes("model") ? `${t("Model")} ${t("required")}` : `${t("Select")} ${t("Model")}`,
@@ -448,7 +448,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                             error={errors.includes("vin")}
                             required={requiredFields.includes("vin") || isRecallsCategorySelected}
                             fullWidth
-                            disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length)}
+                            disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length && isExistingVehicle)}
                             //disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length) || (recallsAreShown && !isRecallsCategorySelected)}
                             value={selectedVehicle ? selectedVehicle.vin : ""}
                             placeholder={errors.includes("vin")
