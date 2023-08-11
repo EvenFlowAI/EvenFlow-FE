@@ -112,7 +112,7 @@ type TRecallsByVinProps = DialogProps & {
 
 const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
-    const {selectedVehicle, selectedRecalls, makes} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, selectedRecalls, makes, carIsValidForUpdate} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -161,9 +161,14 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
 
     const handleSubmit = () => {
         if (customerLoadedData?.isUpdating) {
-            // todo request to get pod
-            dispatch(setChangesCompletedOpen(true))
-            // dispatch(setSlotsWarningOpen(true))
+            if (carIsValidForUpdate) {
+                // todo request to get pod
+                dispatch(setChangesCompletedOpen(true))
+                // dispatch(setSlotsWarningOpen(true))
+            } else {
+                handleNext();
+                onClose();
+            }
         } else {
             onAddServiceOpen()
         }

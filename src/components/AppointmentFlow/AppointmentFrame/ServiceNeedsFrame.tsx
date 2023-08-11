@@ -61,7 +61,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         serviceTypeOption,
         packageEMenuType,
         selectedRecalls,
-        appointmentByKey
+        appointmentByKey,
+        carIsValidForUpdate
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, serviceRequests, scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -233,7 +234,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     }
 
     const handleNext = () => {
-        if (isManagingAppointment) {
+        if (isManagingAppointment && carIsValidForUpdate) {
             // todo request to get pod
             dispatch(setChangesCompletedOpen(true))
             //dispatch(setSlotsWarningOpen(true))

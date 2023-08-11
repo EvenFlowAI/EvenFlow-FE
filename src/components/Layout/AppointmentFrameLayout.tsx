@@ -27,19 +27,25 @@ import {
     selectSRMultiple,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {encodeSCID} from "../../utils/utils";
+import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
 import {
-    updateRecalls, updatePackageOption,
+    updateRecalls,
+    updatePackageOption,
     setCurrentFrameScreen,
     setServiceTypeOption,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
-    setWelcomeScreenView, handleSideBarAppointmentUpdate, updateConsultant, setAppointmentByKey, setAppointmentSaving
+    setWelcomeScreenView,
+    handleSideBarAppointmentUpdate,
+    updateConsultant,
+    setAppointmentByKey,
+    setAppointmentSaving,
+    checkCarIsValid, loadMakes
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {EServiceCategoryPage, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
@@ -59,6 +65,7 @@ import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
 import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
+import {loadEngineType, loadMileage} from "../../store/reducers/vehicleDetails/actions";
 
 const Container = styled('div')({
     display: "flex",
@@ -188,7 +195,7 @@ export const AppointmentFrameLayout = () => {
             const option = handleServiceTypeOption(data);
             await dispatch(handleSideBarAppointmentUpdate());
             await dispatch(updateConsultant(id, option, data.consultant?.id ?? null))
-
+            await dispatch(checkCarIsValid());
             // if (shouldShowServiceSelection) {
             //     goToServiceTypeSelection();
             // } else {
@@ -210,6 +217,12 @@ export const AppointmentFrameLayout = () => {
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
     useStorage();
+
+    useEffect(() => {
+        dispatch(loadMileage(decodeSCID(id)));
+        dispatch(loadEngineType(decodeSCID(id)));
+        dispatch(loadMakes(decodeSCID(id)));
+    }, [id])
 
     useEffect(() => {
         window.addEventListener('beforeunload', handleLogin)

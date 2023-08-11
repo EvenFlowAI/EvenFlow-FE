@@ -106,6 +106,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         allCategories,
         categoriesIds,
         customerLoadedData,
+        carIsValidForUpdate
     ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
         state.appointment.serviceRequests,
@@ -116,6 +117,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         state.categories.allCategories,
         state.appointmentFrame.categoriesIds,
         state.appointment.customerLoadedData,
+        state.appointmentFrame.carIsValidForUpdate,
     ]);
 
     const [searchInput, setSearch] = useState<string>("");
@@ -213,9 +215,13 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         })
         dispatch(selectSRMultiple(selectedOpsCodes))
         if (customerLoadedData?.isUpdating) {
-            // todo request to get pod
-            dispatch(setChangesCompletedOpen(true))
-            //dispatch(setSlotsWarningOpen(true))
+            if (carIsValidForUpdate) {
+                // todo request to get pod
+                dispatch(setChangesCompletedOpen(true))
+                //dispatch(setSlotsWarningOpen(true))
+            } else {
+                goNext();
+            }
         } else {
             onAdditionalOpen()
         }

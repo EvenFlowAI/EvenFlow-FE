@@ -104,6 +104,7 @@ export const setShowServiceCentersList = createAction<boolean>('fAppointment/Set
 export const setAppointmentSaving = createAction<boolean>('fAppointment/SetAppointmentSaving');
 export const setHashKey = createAction<string>('fAppointment/SetHashKey');
 export const setAppointmentByKey = createAction<IAppointmentByQuery|null>("fAppointment/SetAppointmentByKey");
+export const setCarIsValidForUpdate = createAction<boolean>("fAppointment/SetCarIsValidForUpdate");
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -625,4 +626,28 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         .finally(() => {
             dispatch(setAppointmentSaving(false))
         })
+}
+
+export const checkCarIsValid = (): AppThunk => (dispatch, getState) => {
+    const {selectedVehicle, makes} = getState().appointmentFrame;
+    const {engineTypes, mileage} = getState().vehicleDetails;
+    const {currentConfig} = getState().bookingFlowConfig;
+    let carIsValid = true;
+    if (selectedVehicle) {
+        const models = makes.map(item => item.models).flat();
+        if (!selectedVehicle.mileage) carIsValid = false;
+        const existingMileage = mileage.find(item => item.value === selectedVehicle.mileage);
+        if (!existingMileage) carIsValid = false;
+        const existingEngineType = engineTypes.find(item => item.id === selectedVehicle.engineTypeId);
+        if (currentConfig?.engineType && (!existingEngineType || !selectedVehicle.engineTypeId)) carIsValid = false;
+
+        if (!selectedVehicle.vin?.length) {
+            const existingMake = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase())
+            const existingModel = models.find(item => item.toLowerCase() === selectedVehicle.model.toLowerCase())
+            if (!existingMake || !existingModel) carIsValid = false;
+        }
+    } else {
+        carIsValid = false;
+    }
+    dispatch(setCarIsValidForUpdate(carIsValid));
 }

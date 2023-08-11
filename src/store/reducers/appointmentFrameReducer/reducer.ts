@@ -13,7 +13,7 @@ import {
     setAdvisor,
     setAncillaryPriceByZip,
     setAncillaryPriceLoading, setAppointmentByKey,
-    setAppointmentId, setAppointmentSaving,
+    setAppointmentId, setAppointmentSaving, setCarIsValidForUpdate,
     setConsultants,
     setCurrentFrameScreen,
     setCustomer,
@@ -140,6 +140,7 @@ type TState = {
     shouldShowServiceCentersList: boolean;
     isAppointmentSaving: boolean;
     appointmentByKey: IAppointmentByQuery|null;
+    carIsValidForUpdate: boolean;
 }
 const initialState: TState = {
     service: null,
@@ -202,6 +203,7 @@ const initialState: TState = {
     shouldShowServiceCentersList: true,
     isAppointmentSaving: false,
     appointmentByKey: null,
+    carIsValidForUpdate: true,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -409,5 +411,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setAppointmentByKey, (state, {payload}) => {
         return {...state, appointmentByKey: payload}
+    })
+    .addCase(setCarIsValidForUpdate, (state, {payload}) => {
+        return {...state, carIsValidForUpdate: payload}
     })
 )

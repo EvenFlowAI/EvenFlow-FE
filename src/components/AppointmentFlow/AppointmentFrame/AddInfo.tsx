@@ -39,12 +39,14 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
         service,
         categoriesIds,
         customerLoadedData,
+        carIsValidForUpdate
     ] = useSelector(({appointmentFrame, appointment}: RootState) => [
         appointmentFrame.subService,
         appointment.scProfile,
         appointmentFrame.service,
         appointmentFrame.categoriesIds,
         appointment.customerLoadedData,
+        appointmentFrame.carIsValidForUpdate,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
@@ -73,9 +75,13 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
             return onErrorOpen();
         }
         if (customerLoadedData?.isUpdating) {
-            // todo request to get pod
-            dispatch(setChangesCompletedOpen(true))
-            //dispatch(setSlotsWarningOpen(true))
+            if (carIsValidForUpdate) {
+                // todo request to get pod
+                dispatch(setChangesCompletedOpen(true))
+                //dispatch(setSlotsWarningOpen(true))
+            } else {
+                handleSetScreen('maintenanceDetails');
+            }
         } else {
             onOpen()
         }
