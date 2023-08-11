@@ -28,7 +28,7 @@ import {useParams} from "react-router-dom";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
+import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -162,8 +162,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const handleNext = () => {
         if (customerLoadedData?.isUpdating) {
             // todo request to get pod
-            dispatch(setChangesCompletedOpen(true))
-            // dispatch(setSlotsWarningOpen(true))
+            //dispatch(setChangesCompletedOpen(true))
+            dispatch(setSlotsWarningOpen(true))
         } else onNext()
     }
 

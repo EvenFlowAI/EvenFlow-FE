@@ -22,7 +22,7 @@ import {useTranslation} from "react-i18next";
 import AddCommentPrompt from "../../Modals/AddCommentPrompt/AddCommentPrompt";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
+import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 
 type TProps = {
     handleSetScreen:TArgCallback<TScreen>;
@@ -77,8 +77,8 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
         if (customerLoadedData?.isUpdating) {
             if (carIsValidForUpdate) {
                 // todo request to get pod
-                dispatch(setChangesCompletedOpen(true))
-                //dispatch(setSlotsWarningOpen(true))
+                //dispatch(setChangesCompletedOpen(true))
+                dispatch(setSlotsWarningOpen(true))
             } else {
                 handleSetScreen('maintenanceDetails');
             }

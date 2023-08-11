@@ -577,9 +577,11 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             ? {optionType: appointmentFrame.packageEMenuType}
             : null;
 
-    const slot = appointmentFrame.appointmentByKey && appointmentFrame.hashKey
-        ? appointmentFrame.appointmentByKey.timeSlot
-        : appointment.appointment?.id.split("|")[1] || "00:00:00"
+    const slot = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff
+        ? "00:00:00"
+        : appointment.appointment?.id
+            ? appointment.appointment?.id.split("|")[1]
+            : appointmentFrame.appointmentByKey?.timeSlot || "00:00:00"
 
     const data = {
         id: appointmentFrame.id,

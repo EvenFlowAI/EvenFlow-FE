@@ -99,6 +99,7 @@ type TState = {
     isPackagesLoading: boolean;
     consultants: IServiceConsultant[];
     currentScreen: TScreen | '';
+    prevScreen: TScreen | '';
     makes: IMake[];
     models: string[];
     trackerCreated: boolean;
@@ -164,6 +165,7 @@ const initialState: TState = {
     isPackagesLoading: false,
     consultants: [],
     currentScreen: '',
+    prevScreen: '',
     makes: [],
     models: [],
     trackerCreated: false,
@@ -290,7 +292,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, consultants: payload};
     })
     .addCase(setCurrentFrameScreen, (state, { payload }) => {
-        return {...state, currentScreen: payload};
+        return {...state, prevScreen: state.currentScreen, currentScreen: payload};
     })
     .addCase(getMakes, (state, { payload }) => {
         return {...state, makes: payload }

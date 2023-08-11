@@ -146,8 +146,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const handleManagingFlow = () => {
         // todo request to get slot
-        dispatch(setChangesCompletedOpen(true))
-        // dispatch(setSlotsWarningOpen(true))
+        // dispatch(setChangesCompletedOpen(true))
+        dispatch(setSlotsWarningOpen(true))
     }
 
 

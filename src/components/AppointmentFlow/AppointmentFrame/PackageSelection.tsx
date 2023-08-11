@@ -46,7 +46,7 @@ import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReduc
 import PackagesEmenu from "./PackagesEmenu";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
+import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 
 const border = '1px solid #DADADA';
 
@@ -372,8 +372,8 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const onSelectionCompleted = () => {
         if (customerLoadedData?.isUpdating) {
             // todo request to get pod
-            dispatch(setChangesCompletedOpen(true))
-            //dispatch(setSlotsWarningOpen(true))
+            //dispatch(setChangesCompletedOpen(true))
+            dispatch(setSlotsWarningOpen(true))
         } else {
             onAdditionalOpen()
         }

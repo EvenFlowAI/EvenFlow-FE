@@ -163,8 +163,8 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
         if (customerLoadedData?.isUpdating) {
             if (carIsValidForUpdate) {
                 // todo request to get pod
-                dispatch(setChangesCompletedOpen(true))
-                // dispatch(setSlotsWarningOpen(true))
+                // dispatch(setChangesCompletedOpen(true))
+                dispatch(setSlotsWarningOpen(true))
             } else {
                 handleNext();
                 onClose();

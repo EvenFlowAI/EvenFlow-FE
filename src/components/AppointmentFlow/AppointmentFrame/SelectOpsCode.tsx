@@ -217,8 +217,8 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         if (customerLoadedData?.isUpdating) {
             if (carIsValidForUpdate) {
                 // todo request to get pod
-                dispatch(setChangesCompletedOpen(true))
-                //dispatch(setSlotsWarningOpen(true))
+                //dispatch(setChangesCompletedOpen(true))
+                dispatch(setSlotsWarningOpen(true))
             } else {
                 goNext();
             }

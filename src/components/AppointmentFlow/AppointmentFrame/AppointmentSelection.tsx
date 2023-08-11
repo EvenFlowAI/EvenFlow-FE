@@ -93,6 +93,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         consultants,
         currentConfig,
         isTransportationAvailable,
+        sideBarSteps,
+        prevScreen,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -123,6 +125,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.consultants,
         state.bookingFlowConfig.currentConfig,
         state.bookingFlowConfig.isTransportationAvailable,
+        state.appointmentFrame.sideBarSteps,
+        state.appointmentFrame.prevScreen,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -306,11 +310,10 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     }, [])
 
     const handleTransportation = useCallback(() => {
-        if (serviceTypeOption?.transportationOption) {
+        if (serviceTypeOption?.transportationOption || !isTransportationAvailable) {
             dispatch(setChangesCompletedOpen(true))
         } else {
-            // todo if transportation is turned off from the Admin Panel
-            isTransportationAvailable && handleSetScreen('transportationNeeds')
+            handleSetScreen('transportationNeeds')
         }
     }, [serviceTypeOption, isTransportationAvailable])
 
@@ -324,14 +327,22 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         }
     }, [isTransportationAvailable, serviceTypeOption, handleTransportation, customerData, handleGANext])
 
-    const handleBack = useCallback((): void => {
-        const nextScreen = currentConfig?.appointmentSelection
+    const definePrevScreen = (): TScreen => {
+        let previousLogicalScreen: TScreen = currentConfig?.appointmentSelection
             ? 'appointmentTiming'
             : currentConfig?.advisorSelection && consultants.length
                 ? 'consultantSelection'
                 : "serviceNeeds"
+        if (customerData?.isUpdating && prevScreen) {
+            previousLogicalScreen = prevScreen
+        }
+        return previousLogicalScreen
+    }
+
+    const handleBack = useCallback((): void => {
         handleGABack();
-        handleSetScreen(nextScreen);
+        const prevScreen = definePrevScreen()
+        handleSetScreen(prevScreen);
     }, [currentConfig])
 
     return (
