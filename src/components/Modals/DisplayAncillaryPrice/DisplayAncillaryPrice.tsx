@@ -48,20 +48,26 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onClose, onNext, onBackToServiceOption, onVisitCenter}) => {
-    const {serviceTypeOption, ancillaryPrice} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceTypeOption, ancillaryPrice, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const {t} = useTranslation();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const price = ancillaryPrice?.feeAmount && ancillaryPrice?.feeType === EAncillaryType.Amount ? `${ancillaryPrice?.feeAmount.toFixed(2)}` : `${ancillaryPrice?.feeAmount}%`
+    const isSameServiceTypeOption = useMemo(() => {
+        return appointmentByKey?.serviceTypeOption?.id === serviceTypeOption?.id
+    }, [appointmentByKey, serviceTypeOption])
 
     const serviceString = serviceType === EServiceType.MobileService
         ? t("Mobile Service")
         : t("Pick Up / Drop Off Service");
 
     const onBack = () => {
-        customerLoadedData?.isUpdating ? onBackToServiceOption() : onVisitCenter()
+        customerLoadedData?.isUpdating
+            ? isSameServiceTypeOption
+                ? onClose()
+                : onBackToServiceOption() : onVisitCenter()
         onClose();
     }
 

@@ -196,12 +196,6 @@ export const AppointmentFrameLayout = () => {
             await dispatch(handleSideBarAppointmentUpdate());
             await dispatch(updateConsultant(id, option, data.consultant?.id ?? null))
             await dispatch(checkCarIsValid());
-            // if (shouldShowServiceSelection) {
-            //     goToServiceTypeSelection();
-            // } else {
-            //     const isMobileOrPickUp = data.serviceTypeOption && data.serviceTypeOption?.type !== EServiceType.VisitCenter;
-            //     handleSetScreen(isMobileOrPickUp ? 'location' : 'serviceNeeds');
-            // }
         } catch (e) {
             showError(e);
         } finally {
@@ -236,7 +230,6 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (selectedVehicle && customerLoadedData) {
             if (customerLoadedData.fromSearchByName && customerLoadedData.isUpdating) {
-                // if (!selectedVehicle?.mileage) dispatch(setSideBarSteps([]));
                 onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
             }
         }

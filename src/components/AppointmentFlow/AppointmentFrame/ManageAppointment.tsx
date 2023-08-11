@@ -22,7 +22,6 @@ import {
 } from "../../../store/reducers/appointment/actions";
 import Vehicle from "./confirmationSections/Vehicle";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
-import Address from "./confirmationSections/Address";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
 import {useTranslation} from "react-i18next";
 import ServiceRequestsManage from "./manageSections/ServiceRequestsManage";
@@ -35,6 +34,7 @@ import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWa
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {Loading} from "../../UI/Loading";
 import {setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import AddressManage from "./manageSections/AddressManage";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -171,7 +171,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
                         <SelectedDate onChangeSlot={onChangeSlot} />
                         <Vehicle/>
                         <ServiceRequestsManage/>
-                        <Address/>
+                        <AddressManage/>
                         <SelectedPriceManage/>
                         <div
                             role="presentation"

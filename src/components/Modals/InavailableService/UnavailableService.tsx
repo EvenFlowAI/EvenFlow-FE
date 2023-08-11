@@ -45,7 +45,7 @@ type TUnavailableServiceProps = DialogProps & {
 }
 
 const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, setFormChecked, onBackToServiceOption, onVisitCenter}) => {
-    const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceTypeOption, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
@@ -53,9 +53,17 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
     const dispatch = useDispatch();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
+    const isSameServiceTypeOption = useMemo(() => {
+        return appointmentByKey?.serviceTypeOption?.id === serviceTypeOption?.id
+    }, [appointmentByKey, serviceTypeOption])
     const serviceString = serviceType === EServiceType.MobileService
         ? t("Mobile Service")
         : t("Pick Up / Drop Off Service");
+
+    const backLabel = customerLoadedData?.isUpdating
+        ? isSameServiceTypeOption
+            ? t("Keep Original Location")
+            : t("Back") : t("Visit Center")
 
     const clearLocation = () => {
         setFormChecked(false);
@@ -64,9 +72,24 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
         onClose()
     }
 
+    const keepOriginalLocation = () => {
+        dispatch(setAddress(appointmentByKey?.address ?? ''))
+        dispatch(setZipCode(appointmentByKey?.zipCode ?? ''))
+        onClose()
+    }
+
     const onVisitCenterClick = () => {
-        customerLoadedData?.isUpdating ? onBackToServiceOption() : onVisitCenter()
-        clearLocation()
+        if (customerLoadedData?.isUpdating) {
+            if (isSameServiceTypeOption) {
+                keepOriginalLocation()
+            } else {
+                onBackToServiceOption()
+                clearLocation();
+            }
+        } else {
+            onVisitCenter()
+            clearLocation();
+        }
     }
 
     return (
@@ -82,7 +105,7 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
                     onClick={onVisitCenterClick}
                     color={'primary'}
                     variant='contained'>
-                    {customerLoadedData?.isUpdating ? t("Back") : t("Visit Center")}
+                    {backLabel}
                 </Button>
             </div>
             <div className={classes.buttonWrapper}>
