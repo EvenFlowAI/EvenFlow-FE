@@ -265,7 +265,7 @@ export const AppointmentFrameLayout = () => {
     }, [currentUser, scProfile])
 
     useEffect(() => {
-        dispatch(getCurrentUser())
+        dispatch(getCurrentUser(true))
     }, [])
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
