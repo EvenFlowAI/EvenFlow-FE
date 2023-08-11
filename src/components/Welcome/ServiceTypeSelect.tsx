@@ -144,50 +144,35 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
         }
     }
 
-    const handleChangeFromVisitCenter = (serviceOption: IFirstScreenOption) => {
-        if (serviceOption?.type === EServiceType.MobileService || serviceOption?.type === EServiceType.PickUpDropOff) {
-            dispatch(setTransportation(null))
-            dispatch(setCurrentFrameScreen("location"));
-            redirect()
+    const changeToMobileOrServiceValet = () => {
+        dispatch(setTransportation(null))
+        dispatch(setCurrentFrameScreen("location"));
+        redirect()
+    }
+
+    const changeToVisitCenter = () => {
+        // todo check for pod
+        const newOptionHasDifferentTransportation = true;
+        if (newOptionHasDifferentTransportation) {
+            dispatch(setSlotsWarningOpen(true))
+            dispatch(setCurrentFrameScreen("appointmentSelection"))
         } else {
-            // todo check for pod
-            const newOptionHasDifferentTransportation = true;
-            if (newOptionHasDifferentTransportation) {
-                dispatch(setSlotsWarningOpen(true))
-                dispatch(setCurrentFrameScreen("appointmentSelection"))
-            } else {
-                dispatch(setChangesCompletedOpen(true))
-            }
+            dispatch(setChangesCompletedOpen(true))
         }
     }
 
-    const handleChangeFromOtherOption = (serviceOption: IFirstScreenOption) => {
-        // todo If user is not in a zone of service or declines the convenience fee for the new address, bring the user back to the Address page
-        // If user is in the same zone of service, then
-        // Prompt user if he/she wishes to make any additional changes
-        // If yes, then return user to Manage Appointment / Appointment Configuration page
-        // If no, then send user to the Appointment Confirmation page
-        // If user is in a different zone of service and accepted any applicable convenience fees, then
-        // Message user that their selection impacts appointment date and time availability
-        // Bring the user to the Appointment Date & Time selection page
-
-    }
-
-    const handleManaging = (serviceOption: IFirstScreenOption) => {
-        if (appointmentByKey) {
-            const {serviceTypeOption} = appointmentByKey;
-            if (serviceTypeOption?.type === EServiceType.VisitCenter) {
-                handleChangeFromVisitCenter(serviceOption)
-            } else {
-                handleChangeFromOtherOption(serviceOption)
-            }
+    const handleUpdateOption = (serviceOption: IFirstScreenOption) => {
+        if (serviceOption?.type === EServiceType.VisitCenter) {
+            changeToVisitCenter()
+        } else {
+            changeToMobileOrServiceValet()
         }
     }
 
     const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
         handleValueServiceConfig(serviceOption.type);
         if (customerLoadedData?.isUpdating) {
-            handleManaging(serviceOption)
+            handleUpdateOption(serviceOption)
         } else {
             if (serviceTypeOption?.id !== serviceOption.id) {
                 dispatch(clearAppointmentData());
