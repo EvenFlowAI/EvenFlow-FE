@@ -12,7 +12,7 @@ import {
     setCurrentFrameScreen
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {decodeSCID} from "../../../utils/utils";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {useException} from "../../../utils/hooks";
 
 const useStyles = makeStyles({
@@ -41,19 +41,28 @@ const AskChangesCompleted = () => {
     const showError = useException();
     const {t} = useTranslation();
     const {id} = useParams();
+    const history = useHistory();
 
     const onClose = () => {
         dispatch(setChangesCompletedOpen(false))
     }
 
+    const redirectToAppointmentFrame = () => {
+        if (history.location.pathname.includes("welcome")) {
+            history.push( "/f/appointment/" + id);
+        }
+    }
+
     const onAdditionalChanges = () => {
         dispatch(setChangesCompletedOpen(false))
         dispatch(setCurrentFrameScreen("manageAppointment"))
+        redirectToAppointmentFrame()
     }
 
     const onSuccessAppointmentUpdate = () => {
         dispatch(setChangesCompletedOpen(false))
         dispatch(setCurrentFrameScreen("appointmentConfirmed"))
+        redirectToAppointmentFrame()
     }
 
     const handleError = (e: any) => {

@@ -8,12 +8,8 @@ import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {DialogProps} from "../types";
-import {
-    clearAppointmentData,
-    setAddress,
-    setDefaultVisitCenterOption, setSideBarSteps,
-    setZipCode
-} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setAddress, setZipCode} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {TCallback} from "../../../types/types";
 
 const useStyles = makeStyles((theme) => ({
     info: {
@@ -44,31 +40,33 @@ const useStyles = makeStyles((theme) => ({
 
 type TUnavailableServiceProps = DialogProps & {
     setFormChecked: Dispatch<SetStateAction<boolean>>;
+    onBackToServiceOption: TCallback;
+    onVisitCenter: TCallback;
 }
 
-const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, setFormChecked}) => {
+const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, setFormChecked, onBackToServiceOption, onVisitCenter}) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const {t} = useTranslation();
     const dispatch = useDispatch();
+
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceString = serviceType === EServiceType.MobileService
         ? t("Mobile Service")
         : t("Pick Up / Drop Off Service");
- // todo text and logic for updating
-    const onTryAnother = () => {
+
+    const clearLocation = () => {
         setFormChecked(false);
         dispatch(setAddress(null));
         dispatch(setZipCode(""));
         onClose()
     }
 
-    const onVisitCenter = () => {
-        dispatch(setDefaultVisitCenterOption());
-        dispatch(clearAppointmentData());
-        dispatch(setSideBarSteps([]));
-        onTryAnother();
+    const onVisitCenterClick = () => {
+        customerLoadedData?.isUpdating ? onBackToServiceOption() : onVisitCenter()
+        clearLocation()
     }
 
     return (
@@ -81,16 +79,16 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
             </DialogContent>
             <div className={classes.buttonWrapper}>
                 <Button
-                    onClick={onVisitCenter}
+                    onClick={onVisitCenterClick}
                     color={'primary'}
                     variant='contained'>
-                    {t("Visit Center")}
+                    {customerLoadedData?.isUpdating ? t("Back") : t("Visit Center")}
                 </Button>
             </div>
             <div className={classes.buttonWrapper}>
                 <Button
                     className={classes.linkButton}
-                    onClick={onTryAnother}
+                    onClick={clearLocation}
                     variant="text">
                     {t("Try another location")}
                 </Button>

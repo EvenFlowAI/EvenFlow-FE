@@ -11,8 +11,8 @@ import {
     clearAppointmentData,
     loadAncillaryPriceByZip,
     loadFilteredZip,
-    setAddress, setShowServiceCentersList,
-    setSideBarSteps,
+    setAddress, setDefaultVisitCenterOption, setShowServiceCentersList,
+    setSideBarSteps, setWelcomeScreenView,
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
@@ -138,8 +138,25 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }, [zipCodeValue])
 
     const clearSelectedData = () => {
-        dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
-        dispatch(clearAppointmentData())
+        if (!customerLoadedData?.isUpdating) {
+            dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
+            dispatch(clearAppointmentData())
+        }
+    }
+
+    const handleManagingFlow = () => {
+        // todo request to get slot
+        dispatch(setChangesCompletedOpen(true))
+        // dispatch(setSlotsWarningOpen(true))
+    }
+
+
+    const onNextStep = () => {
+        if (customerLoadedData?.isUpdating) {
+            handleManagingFlow()
+        } else {
+            onNext();
+        }
     }
 
     const clearAddress = () => {
@@ -158,14 +175,16 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         setZip(option ?? "");
     }
 
-    const handleBackWhileManaging = () => {
-        // todo redirect to service type selection
+    const onBackToFirstScreen = async () => {
+        await dispatch(setShowServiceCentersList(false))
+        await dispatch(setWelcomeScreenView("serviceSelect"));
+        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     }
 
     const handleBack = () => {
         clearAddress();
         if (customerLoadedData?.isUpdating && appointmentByKey) {
-            handleBackWhileManaging()
+            onBackToFirstScreen()
         } else {
             clearSelectedData();
             const isManagingAppointment = Boolean(hashKey?.length) && (!serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id))
@@ -190,19 +209,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         }
     }
 
-    const handleManagingFlow = () => {
-        // todo request to get slot
-        dispatch(setChangesCompletedOpen(true))
-       // dispatch(setSlotsWarningOpen(true))
-    }
-
     const onSuccess = (data: TAncillaryPriceByZip) => {
         if (data.feeAmount === 0 && data.feeType === EAncillaryType.Amount) {
-            if (customerLoadedData?.isUpdating && appointmentByKey) {
-                handleManagingFlow()
-            } else {
-                onNext();
-            }
+            onNextStep();
         } else {
             onOpen();
         }
@@ -234,6 +243,12 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         if (typeof address === 'string') return address;
         if (address?.label) return address?.label;
         return isFormChecked ? t('Address is required') : placeholder
+    }
+
+    const setDefaultVisitCenter = async () => {
+        await dispatch(setDefaultVisitCenterOption());
+        await dispatch(clearAppointmentData());
+        await dispatch(setSideBarSteps([]));
     }
 
     return (
@@ -291,8 +306,18 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
             </SelectWrapper>
             <Actions onBack={handleBack} onNext={handleNext} nextLabel={t("Next")}/>
-            <DisplayAncillaryPrice onNext={onNext} open={isOpen} onClose={onClose}/>
-            <UnavailableService open={isUnavailableOpen} onClose={onUnavailableClose} setFormChecked={setFormChecked}/>
+            <DisplayAncillaryPrice
+                onNext={onNextStep}
+                open={isOpen}
+                onClose={onClose}
+                onBackToServiceOption={onBackToFirstScreen}
+                onVisitCenter={setDefaultVisitCenter}/>
+            <UnavailableService
+                open={isUnavailableOpen}
+                onClose={onUnavailableClose}
+                setFormChecked={setFormChecked}
+                onBackToServiceOption={onBackToFirstScreen}
+                onVisitCenter={setDefaultVisitCenter}/>
             <AskChangesCompleted/>
             <SlotImpactedWarning/>
         </StepWrapper>

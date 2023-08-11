@@ -305,14 +305,24 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         });
     }, [])
 
+    const handleTransportation = useCallback(() => {
+        if (serviceTypeOption?.transportationOption) {
+            dispatch(setChangesCompletedOpen(true))
+        } else {
+            // todo if transportation is turned off from the Admin Panel
+            isTransportationAvailable && handleSetScreen('transportationNeeds')
+        }
+    }, [serviceTypeOption, isTransportationAvailable])
+
+
     const handleNext = useCallback((): void => {
         handleGANext();
         if (customerData?.isUpdating) {
-            dispatch(setChangesCompletedOpen(true))
+            handleTransportation()
         } else {
             handleSetScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption ? 'transportationNeeds' : 'appointmentConfirmation');
         }
-    }, [currentConfig, serviceTypeOption])
+    }, [isTransportationAvailable, serviceTypeOption, handleTransportation, customerData, handleGANext])
 
     const handleBack = useCallback((): void => {
         const nextScreen = currentConfig?.appointmentSelection

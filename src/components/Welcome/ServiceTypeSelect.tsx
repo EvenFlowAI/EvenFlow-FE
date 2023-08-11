@@ -148,6 +148,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
         if (serviceOption?.type === EServiceType.MobileService || serviceOption?.type === EServiceType.PickUpDropOff) {
             dispatch(setTransportation(null))
             dispatch(setCurrentFrameScreen("location"));
+            redirect()
         } else {
             // todo check for pod
             const newOptionHasDifferentTransportation = true;
@@ -172,18 +173,20 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
 
     }
 
-
     const handleManaging = (serviceOption: IFirstScreenOption) => {
-        if (serviceTypeOption?.type === EServiceType.VisitCenter) {
-            handleChangeFromVisitCenter(serviceOption)
-        } else {
-            handleChangeFromOtherOption(serviceOption)
+        if (appointmentByKey) {
+            const {serviceTypeOption} = appointmentByKey;
+            if (serviceTypeOption?.type === EServiceType.VisitCenter) {
+                handleChangeFromVisitCenter(serviceOption)
+            } else {
+                handleChangeFromOtherOption(serviceOption)
+            }
         }
     }
 
     const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
         handleValueServiceConfig(serviceOption.type);
-        if (customerLoadedData?.isUpdating && appointmentByKey) {
+        if (customerLoadedData?.isUpdating) {
             handleManaging(serviceOption)
         } else {
             if (serviceTypeOption?.id !== serviceOption.id) {
@@ -214,7 +217,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     }
 
     const handleSelectOption = (card: IFirstScreenOption) => {
-        dispatch(clearAppointmentData())
+        if (!customerLoadedData?.isUpdating) dispatch(clearAppointmentData())
         dispatch(setServiceTypeOption(card))
         if (card.type === EServiceType.General) {
             if (card.externalLink) window.location.href = card.externalLink;

@@ -4,17 +4,16 @@ import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {useTranslation} from "react-i18next";
 import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAncillaryType, EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";
-import {
-    clearAppointmentData,
-    setDefaultVisitCenterOption, setSideBarSteps
-} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {TCallback} from "../../../types/types";
 
 type TDisplayAncillaryPriceProps = DialogProps & {
-    onNext: () => void;
+    onNext: TCallback;
+    onBackToServiceOption: TCallback;
+    onVisitCenter: TCallback;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -48,23 +47,21 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onClose, onNext}) => {
+const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onClose, onNext, onBackToServiceOption, onVisitCenter}) => {
     const {serviceTypeOption, ancillaryPrice} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const {t} = useTranslation();
-    const dispatch = useDispatch();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const price = ancillaryPrice?.feeAmount && ancillaryPrice?.feeType === EAncillaryType.Amount ? `${ancillaryPrice?.feeAmount.toFixed(2)}` : `${ancillaryPrice?.feeAmount}%`
-    // todo text and logic for updating
+
     const serviceString = serviceType === EServiceType.MobileService
         ? t("Mobile Service")
         : t("Pick Up / Drop Off Service");
 
     const onBack = () => {
-        dispatch(setDefaultVisitCenterOption());
-        dispatch(clearAppointmentData());
-        dispatch(setSideBarSteps([]));
+        customerLoadedData?.isUpdating ? onBackToServiceOption() : onVisitCenter()
         onClose();
     }
 
@@ -90,7 +87,7 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
                     onBack={onBack}
                     onNext={onSubmit}
                     nextLabel={`${t("Continue with")} ${serviceString}`}
-                    prevLabel={t("Visit Center instead")}
+                    prevLabel={customerLoadedData?.isUpdating ? t("Back") : t("Visit Center instead")}
                 />
             </div>
         </BaseModal>

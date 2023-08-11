@@ -7,6 +7,7 @@ import {setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
+import {useHistory, useParams} from "react-router-dom";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -28,23 +29,24 @@ const SlotImpactedWarning = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const {t} = useTranslation();
+    const {id} = useParams();
+    const history = useHistory();
 
     const onSlotsWarningClick = () => {
-        dispatch(setSlotsWarningOpen(false))
         dispatch(setCurrentFrameScreen(isAppointmentTimingAvailable ? "appointmentTiming" : "appointmentSelection"));
-    }
-
-    const onClose = () => {
         dispatch(setSlotsWarningOpen(false))
+        if (history.location.pathname.includes("welcome")) {
+            history.push( "/f/appointment/" + id);
+        }
     }
 
     return (
         <BaseModal
             width={450}
             open={isSlotsWarningOpen}
-            onClose={onClose}
+            onClose={onSlotsWarningClick}
         >
-            <DialogTitle onClose={onClose}>
+            <DialogTitle onClose={onSlotsWarningClick}>
                 <div>{t("Date and time of available appointments depends on the service requested.")}</div>
                 <div>{t("Please continue to see available dates and times for you requested change")}</div>
             </DialogTitle>
