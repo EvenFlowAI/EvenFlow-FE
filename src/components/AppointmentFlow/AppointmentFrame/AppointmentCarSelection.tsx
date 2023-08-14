@@ -218,6 +218,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         dispatch(selectSR(null));
         clearAllData()
         if (car?.appointmentHashKeys.length) {
+            customerLoadedData && dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
             await onUpdateAppointment(car)
             dispatch(setCurrentFrameScreen("manageAppointment"))
         } else {
