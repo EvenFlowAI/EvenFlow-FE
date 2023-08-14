@@ -105,6 +105,7 @@ export const setAppointmentSaving = createAction<boolean>('fAppointment/SetAppoi
 export const setHashKey = createAction<string>('fAppointment/SetHashKey');
 export const setAppointmentByKey = createAction<IAppointmentByQuery|null>("fAppointment/SetAppointmentByKey");
 export const setCarIsValidForUpdate = createAction<boolean>("fAppointment/SetCarIsValidForUpdate");
+export const setUsualFlowNeeded = createAction<boolean>("fAppointment/SetUsualFlowNeeded");
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -212,29 +213,34 @@ export const loadServiceOffers = (year: number, seriesId: number, modelId: numbe
         .finally(() => dispatch(setOffersLoading(false)))
 }
 
-export const clearAppointmentData = (): AppThunk => (dispatch) => {
+export const clearSelectedServices = (): AppThunk => (dispatch) => {
     dispatch(setPackage(null));
     dispatch(setPackageIsSelected(false));
     dispatch(setSelectedPackageOptionType(null));
+    dispatch(setPackagePricingType(null));
+    dispatch(setPackageEMenuType(null));
     dispatch(selectService(null));
     dispatch(selectSubService(null));
-    dispatch(selectAppointment(null));
-    dispatch(selectServiceValetAppointment(null));
     dispatch(setValueService(null));
     dispatch(selectCategoriesIds([]));
     dispatch(selectSR(null));
-    dispatch(setTiming(null));
     dispatch(setAdvisor(null));
     dispatch(getSlotsConsultantId(null));
     dispatch(setTransportation(null));
     dispatch(setRecallsAreShown(false));
     dispatch(setSelectedRecalls([]))
     dispatch(setAdditionalServicesChosen(false));
+}
+
+export const clearAppointmentData = (): AppThunk => (dispatch) => {
+    dispatch(clearSelectedServices());
+    dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
+    dispatch(setTiming(null));
     dispatch(setFrameDescription(''));
-    dispatch(setPackagePricingType(null));
-    dispatch(setPackageEMenuType(null));
     dispatch(setHashKey(''));
     dispatch(setAppointmentByKey(null));
+    dispatch(setUsualFlowNeeded(false));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {

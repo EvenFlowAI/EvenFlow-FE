@@ -22,7 +22,7 @@ import {
     setHoursOfOperations,
     setLoadingPackages,
     setMaintenanceDetails,
-    setMobileServiceAvailability,
+    setMobileServiceAvailability, setUsualFlowNeeded,
     setOffersLoading,
     setPackage, setPackageEMenuType,
     setPackageIsSelected, setPackagePricingType,
@@ -142,6 +142,7 @@ type TState = {
     isAppointmentSaving: boolean;
     appointmentByKey: IAppointmentByQuery|null;
     carIsValidForUpdate: boolean;
+    isUsualFlowNeeded: boolean;
 }
 const initialState: TState = {
     service: null,
@@ -206,6 +207,7 @@ const initialState: TState = {
     isAppointmentSaving: false,
     appointmentByKey: null,
     carIsValidForUpdate: true,
+    isUsualFlowNeeded: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -416,5 +418,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setCarIsValidForUpdate, (state, {payload}) => {
         return {...state, carIsValidForUpdate: payload}
+    })
+    .addCase(setUsualFlowNeeded, (state, {payload}) => {
+        return {...state, isUsualFlowNeeded: payload}
     })
 )

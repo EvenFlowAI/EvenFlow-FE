@@ -152,6 +152,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         packageEMenuType,
         allCategories,
         appointmentByKey,
+        isUsualFlowNeeded,
         customerLoadedData,
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
@@ -169,6 +170,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointmentFrame.packageEMenuType,
         state.categories.allCategories,
         state.appointmentFrame.appointmentByKey,
+        state.appointmentFrame.isUsualFlowNeeded,
         state.appointment.customerLoadedData,
     ]);
     const dispatch = useDispatch();
@@ -179,7 +181,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
     const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])
     const date = useMemo(() => {
-        if (appointmentByKey && customerLoadedData?.isUpdating) {
+        if (appointmentByKey && customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
             const [hh, mm] = appointmentByKey.timeSlot.split(':');
             return appointmentByKey
                 ? moment(appointmentByKey.dateInUtc).set('hour', +hh).set("minute", +mm).toISOString(true)
@@ -187,7 +189,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         } else {
             return appointmentDate
         }
-    }, [appointmentByKey, appointmentDate, customerLoadedData])
+    }, [appointmentByKey, appointmentDate, customerLoadedData, isUsualFlowNeeded])
 
     const getCategories = useCallback((): number[] => {
         return allCategories
@@ -239,7 +241,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             action: 'Selected Transportation Need',
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
         })
-        if (customerLoadedData?.isUpdating) {
+        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
             dispatch(setChangesCompletedOpen(true))
         } else {
             onNext();
@@ -259,7 +261,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const handleBack = () => {
-        if (customerLoadedData?.isUpdating) {
+        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
              dispatch(setCurrentFrameScreen("manageAppointment"))
         } else {
             dispatch(setTransportation(null));

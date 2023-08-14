@@ -286,6 +286,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         packagePricingType,
         packageOptionType,
         packageEMenuType,
+        isUsualFlowNeeded,
     } = useSelector((state: RootState) => state.appointmentFrame);
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -370,7 +371,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     }
 
     const onSelectionCompleted = () => {
-        if (customerLoadedData?.isUpdating) {
+        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
             // todo request to get pod
             //dispatch(setChangesCompletedOpen(true))
             dispatch(setSlotsWarningOpen(true))

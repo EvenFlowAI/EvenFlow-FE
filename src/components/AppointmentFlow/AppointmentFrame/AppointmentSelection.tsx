@@ -6,7 +6,7 @@ import {AppointmentDateSelector} from "./AppointmentDateSelector";
 import {AppointmentTimeSelector} from "./AppointmentTimeSelector";
 import {styled} from "@material-ui/core";
 import moment from "moment";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {decodeSCID, groupAppointments} from "../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -29,10 +29,11 @@ import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector";
-import {clearAppointmentSteps} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {clearAppointmentSteps, setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
+import {Routes} from "../../../config/routes";
 
 const Wrapper = styled('div')(({ theme }) => ({
         display: "flex",
@@ -93,7 +94,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         consultants,
         currentConfig,
         isTransportationAvailable,
-        sideBarSteps,
+        isUsualFlowNeeded,
         prevScreen,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
@@ -125,7 +126,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.consultants,
         state.bookingFlowConfig.currentConfig,
         state.bookingFlowConfig.isTransportationAvailable,
-        state.appointmentFrame.sideBarSteps,
+        state.appointmentFrame.isUsualFlowNeeded,
         state.appointmentFrame.prevScreen,
     ]);
 
@@ -139,6 +140,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const isMount = useRef(true);
     const dispatch = useDispatch();
     const {t} = useTranslation();
+    const history = useHistory();
     const nextDisabled = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? !serviceValetAppointment
         : !appointment,
@@ -333,7 +335,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             : currentConfig?.advisorSelection && consultants.length
                 ? 'consultantSelection'
                 : "serviceNeeds"
-        if (customerData?.isUpdating && prevScreen) {
+        if (customerData?.isUpdating && !isUsualFlowNeeded && prevScreen) {
             previousLogicalScreen = prevScreen
         }
         return previousLogicalScreen
@@ -342,8 +344,13 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const handleBack = useCallback((): void => {
         handleGABack();
         const prevScreen = definePrevScreen()
-        handleSetScreen(prevScreen);
-    }, [currentConfig])
+        if (prevScreen === "appointmentSelection") {
+            dispatch(setWelcomeScreenView("serviceSelect"))
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        } else {
+            handleSetScreen(prevScreen);
+        }
+    }, [currentConfig, history])
 
     return (
         <StepWrapper>

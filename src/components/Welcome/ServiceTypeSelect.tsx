@@ -12,7 +12,7 @@ import {
 } from "../../store/reducers/appointment/actions";
 import {
     clearAppointmentData,
-    setCurrentFrameScreen,
+    setCurrentFrameScreen, setUsualFlowNeeded,
     setServiceTypeOption, setSideBarSteps, setTransportation,
     setVehicle,
     setWelcomeScreenView
@@ -171,6 +171,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
 
     const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
         handleValueServiceConfig(serviceOption.type);
+        dispatch(setUsualFlowNeeded(false));
         if (customerLoadedData?.isUpdating) {
             handleUpdateOption(serviceOption)
         } else {

@@ -117,6 +117,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         packagePricingType,
         serviceTypeOption,
         packageEMenuType,
+        isUsualFlowNeeded,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
@@ -160,7 +161,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const handleNext = () => {
-        if (customerLoadedData?.isUpdating) {
+        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
             // todo request to get pod
             //dispatch(setChangesCompletedOpen(true))
             dispatch(setSlotsWarningOpen(true))

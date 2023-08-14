@@ -12,9 +12,11 @@ export type TOpenConfirmModal = {type: "Modals/OpenConfirm", payload: TConfirmMo
 export type TCloseConfirmModal = {type: "Modals/CloseConfirm"};
 export type TSetChangesModal = {type: "Modals/SetOpenChanges", payload: boolean};
 export type TSetSlotsWarningModal = {type: "Modals/SetSlotsWarning", payload: boolean};
+export type TSetServiceWarningModal = {type: "Modals/SetServiceWarning", payload: boolean};
 
 export type TModalActions =
     | TCloseConfirmModal
     | TOpenConfirmModal
     | TSetChangesModal
-    | TSetSlotsWarningModal;
+    | TSetSlotsWarningModal
+    | TSetServiceWarningModal;

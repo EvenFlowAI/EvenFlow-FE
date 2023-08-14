@@ -61,7 +61,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         serviceTypeOption,
         packageEMenuType,
         selectedRecalls,
-        appointmentByKey,
+        isUsualFlowNeeded,
         carIsValidForUpdate
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, serviceRequests, scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
@@ -76,7 +76,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const currentUser = useCurrentUser();
 
     const isServiceOptionSelected = !serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id)
-    const isManagingAppointment = customerLoadedData?.isUpdating;
+    const isManagingAppointment = customerLoadedData?.isUpdating && !isUsualFlowNeeded;
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
     const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterOptionExists || (isManagingAppointment && isServiceOptionSelected);

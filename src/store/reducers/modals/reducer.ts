@@ -9,12 +9,14 @@ export type TModalState = {
     confirm: TConfirmState,
     isChangesCompletedOpen: boolean;
     isSlotsWarningOpen: boolean;
+    isServiceWarningOpen: boolean;
 };
 
 const initialState: TModalState = {
     confirm: {open: false},
     isChangesCompletedOpen: false,
     isSlotsWarningOpen: false,
+    isServiceWarningOpen: false,
 }
 
 export const modalsReducer = (state=initialState, action: TModalActions): TModalState => {
@@ -27,6 +29,8 @@ export const modalsReducer = (state=initialState, action: TModalActions): TModal
             return {...state, isChangesCompletedOpen: action.payload};
         case "Modals/SetSlotsWarning":
             return {...state, isSlotsWarningOpen: action.payload};
+        case "Modals/SetServiceWarning":
+            return {...state, isServiceWarningOpen: action.payload};
         default:
             return state
     }

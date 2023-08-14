@@ -326,7 +326,9 @@
       "Please continue to see available dates and times for you requested change": "Please continue to see available dates and times for you requested change",
       "Are you sure you want to undo your appointment changes?": "Are you sure you want to undo your appointment changes?",
       "Yes, I’m good with the existing appointment": "Yes, I’m good with the existing appointment",
-      "No, i still want to make changes": "No, i still want to make changes"
+      "No, i still want to make changes": "No, i still want to make changes",
+      "The available services supported with our mobile truck service may be different than when you visit our service center.": "The available services supported with our mobile truck service may be different than when you visit our service center.",
+      "Please continue to see the available services and the available appointment dates and times": "Please continue to see the available services and the available appointment dates and times"
     }
   },
   "es": {

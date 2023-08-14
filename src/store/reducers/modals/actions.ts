@@ -10,3 +10,4 @@ export const closeConfirmModal = (): TModalActions => ({
 
 export const setSlotsWarningOpen = createAction<boolean>("Modals/SetSlotsWarning");
 export const setChangesCompletedOpen = createAction<boolean>("Modals/SetOpenChanges");
+export const setServiceWarningOpen = createAction<boolean>("Modals/SetServiceWarning");

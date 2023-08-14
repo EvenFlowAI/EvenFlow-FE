@@ -93,7 +93,8 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         valueService,
         serviceTypeOption,
         consultants,
-        makes
+        makes,
+        isUsualFlowNeeded
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const { isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -140,7 +141,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                 setNeedToShowServiceSelection(false);
                 handleServiceTypeSelection()
             } else {
-                if (customerLoadedData?.isUpdating) {
+                if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
                     handleSetScreen("appointmentConfirmation")
                 } else handleSetScreen(getNextScreen());
             }

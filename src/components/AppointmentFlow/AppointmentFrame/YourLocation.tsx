@@ -11,8 +11,11 @@ import {
     clearAppointmentData,
     loadAncillaryPriceByZip,
     loadFilteredZip,
-    setAddress, setDefaultVisitCenterOption, setShowServiceCentersList,
-    setSideBarSteps, setWelcomeScreenView,
+    setAddress,
+    setDefaultVisitCenterOption,
+    setShowServiceCentersList,
+    setSideBarSteps,
+    setWelcomeScreenView,
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
@@ -34,7 +37,8 @@ import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import ServiceImpactedWarning from "../../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -145,9 +149,19 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const handleManagingFlow = () => {
-        // todo request to get slot
-        // dispatch(setChangesCompletedOpen(true))
-        dispatch(setSlotsWarningOpen(true))
+        const mobileServiceSelected = serviceTypeOption?.type === EServiceType.MobileService
+            && appointmentByKey?.serviceTypeOption
+            && appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService;
+        const mobileServiceChanged = serviceTypeOption?.type !== EServiceType.MobileService
+            && appointmentByKey?.serviceTypeOption?.type === EServiceType.MobileService;
+        if (mobileServiceSelected || mobileServiceChanged) {
+            dispatch(setServiceWarningOpen(true))
+            // todo disable the steps
+        } else {
+            // todo request to get slot
+            // dispatch(setChangesCompletedOpen(true))
+            dispatch(setSlotsWarningOpen(true))
+        }
     }
 
 
@@ -320,6 +334,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                 onVisitCenter={setDefaultVisitCenter}/>
             <AskChangesCompleted/>
             <SlotImpactedWarning/>
+            <ServiceImpactedWarning/>
         </StepWrapper>
     );
 };
