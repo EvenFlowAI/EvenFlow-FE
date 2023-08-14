@@ -96,6 +96,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         isTransportationAvailable,
         isUsualFlowNeeded,
         prevScreen,
+        appointmentByKey,
+        isAppointmentTimingAvailable
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -128,6 +130,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.bookingFlowConfig.isTransportationAvailable,
         state.appointmentFrame.isUsualFlowNeeded,
         state.appointmentFrame.prevScreen,
+        state.appointmentFrame.appointmentByKey,
+        state.bookingFlowConfig.isAppointmentTimingAvailable,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -344,7 +348,9 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const handleBack = useCallback((): void => {
         handleGABack();
         const prevScreen = definePrevScreen()
-        if (prevScreen === "appointmentSelection") {
+        const fromServiceValetToVisitCenter = serviceTypeOption?.type === EServiceType.VisitCenter
+            && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff;
+        if (prevScreen === "appointmentSelection" || (fromServiceValetToVisitCenter && !isAppointmentTimingAvailable)) {
             dispatch(setWelcomeScreenView("serviceSelect"))
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {

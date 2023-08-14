@@ -95,7 +95,6 @@ export const AppointmentFrameLayout = () => {
         trackerCreated,
         valueService,
         currentScreen: currentFrameScreen,
-        consultants,
         makes,
         serviceTypeOption,
         hashKey,
@@ -337,13 +336,8 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
             />,
-            appointmentTiming: <AppointmentTiming
-                onBack={handleChangeScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')}
-                onNext={handleChangeScreen('appointmentSelection')}
-            />,
-            appointmentSelection: <AppointmentSelection
-                handleSetScreen={handleSetScreen}
-            />,
+            appointmentTiming: <AppointmentTiming handleSetScreen={handleSetScreen}/>,
+            appointmentSelection: <AppointmentSelection handleSetScreen={handleSetScreen}/>,
             transportationNeeds: <TransportationNeeds
                 onBack={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmation')}
