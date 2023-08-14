@@ -3,7 +3,7 @@ import {Actions} from "./Actions";
 import {StepWrapper} from "./StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useDebounce, useModal} from "../../../utils/hooks";
+import {useDebounce, useException, useModal} from "../../../utils/hooks";
 import {handleSearch, selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core";
 import {TextField} from "../UI";
@@ -24,7 +24,7 @@ import {useTranslation} from "react-i18next";
 import {EServiceCategoryPage} from "../../../api/types";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 const Wrapper = styled('div')({
     width: "100%"
@@ -130,6 +130,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
     const isInit = useRef(true);
     const {t} = useTranslation();
     const debouncedSearch = useDebounce(searchInput);
+    const showError = useException();
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
 
     useEffect(() => {
@@ -218,9 +219,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         dispatch(selectSRMultiple(selectedOpsCodes))
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
             if (carIsValidForUpdate) {
-                // todo request to get pod
-                //dispatch(setChangesCompletedOpen(true))
-                dispatch(setSlotsWarningOpen(true))
+                scProfile && dispatch(checkPodChanged(scProfile.id, showError))
             } else {
                 goNext();
             }

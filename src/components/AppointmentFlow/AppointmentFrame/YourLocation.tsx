@@ -37,8 +37,9 @@ import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {setServiceWarningOpen} from "../../../store/reducers/modals/actions";
 import ServiceImpactedWarning from "../../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -158,9 +159,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
             dispatch(setServiceWarningOpen(true))
             // todo disable the steps
         } else {
-            // todo request to get slot
-            // dispatch(setChangesCompletedOpen(true))
-            dispatch(setSlotsWarningOpen(true))
+            scProfile && dispatch(checkPodChanged(scProfile.id, showError))
         }
     }
 

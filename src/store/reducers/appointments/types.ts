@@ -1,5 +1,7 @@
 import moment from "moment";
-import {EAppointmentStatus, IListAppointment, IVehicle} from "../../../api/types";
+import {EAppointmentStatus, EMaintenanceOptionType, IListAppointment, IVehicle} from "../../../api/types";
+import {EPackagePricingType} from "../appointmentFrameReducer/types";
+import {EAppointmentTimingType, TRecallForRequest} from "../appointment/types";
 
 export interface IAppointmentsRequest {
     pageIndex: number;
@@ -23,4 +25,26 @@ export interface IVehicleDetails {
 export interface IPackageRequestData {
     serviceCenterId: number;
     vehicle: IVehicle;
+}
+
+type TPackageOptionRequest = {
+    id?: number;
+    priceType?: EPackagePricingType|null;
+    optionType?: EMaintenanceOptionType|null;
+}
+
+export interface ICheckPodRequest {
+    serviceRequestIds: number[];
+    serviceCategoryIds: number[];
+    valueServiceOfferIds: number[];
+    recalls: TRecallForRequest[];
+    maintenancePackageOption: TPackageOptionRequest|null;
+    appointmentTimingType: EAppointmentTimingType;
+    serviceCenterId: number;
+    appointmentHashKey: string;
+    address: string|null;
+    zipCode: string|null;
+    vehicle: IVehicle;
+    serviceTypeOptionId: number|null;
+    consultantId: string|null;
 }

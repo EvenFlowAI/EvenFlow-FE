@@ -27,7 +27,7 @@ import {
 import PackageSelectionMobile from "./PackageSelectionMobile";
 //import ReactGA from "react-ga";
 import ReactGA from "react-ga4";
-import {useModal} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
 import ConfirmChangeOption from "../../Modals/ConfirmChangeOption/ConfirmChangeOption";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {getPackagesData} from "./utils";
@@ -46,7 +46,7 @@ import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReduc
 import PackagesEmenu from "./PackagesEmenu";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 const border = '1px solid #DADADA';
 
@@ -299,6 +299,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
     const {t} = useTranslation();
+    const showError = useException();
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
@@ -372,9 +373,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     const onSelectionCompleted = () => {
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-            // todo request to get pod
-            //dispatch(setChangesCompletedOpen(true))
-            dispatch(setSlotsWarningOpen(true))
+            dispatch(checkPodChanged(decodeSCID(id), showError))
         } else {
             onAdditionalOpen()
         }

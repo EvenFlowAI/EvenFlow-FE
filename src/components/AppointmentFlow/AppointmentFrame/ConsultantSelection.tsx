@@ -28,7 +28,9 @@ import {useParams} from "react-router-dom";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {useException} from "../../../utils/hooks";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
+import {decodeSCID} from "../../../utils/utils";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -125,6 +127,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const dispatch = useDispatch();
     const {id} = useParams();
     const {t} = useTranslation();
+    const showError = useException();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
@@ -162,9 +165,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const handleNext = () => {
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-            // todo request to get pod
-            //dispatch(setChangesCompletedOpen(true))
-            dispatch(setSlotsWarningOpen(true))
+            dispatch(checkPodChanged(decodeSCID(id), showError))
         } else onNext()
     }
 

@@ -29,14 +29,15 @@ import {InfoOutlined} from "@material-ui/icons";
 import {HtmlTooltip} from "../AppointmentFlow/AppointmentFrame/ServiceCard";
 import ServiceTypeIcon from "./ServiceTypeIcon";
 import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
-import {useCurrentUser} from "../../utils/hooks";
+import {useCurrentUser, useException} from "../../utils/hooks";
 import {Routes} from "../../config/routes";
-import {encodeSCID} from "../../utils/utils";
+import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
 import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setChangesCompletedOpen, setServiceWarningOpen, setSlotsWarningOpen} from "../../store/reducers/modals/actions";
+import {setServiceWarningOpen} from "../../store/reducers/modals/actions";
 import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
+import {checkPodChanged} from "../../store/reducers/appointments/actions";
 
 type TProps = {
     handleValueServiceConfig: (serviceType: EServiceType) => void;
@@ -138,6 +139,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     const classes = useServiceTypeStyles();
     const dispatch = useDispatch();
     const history = useHistory();
+    const showError = useException();
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
 
     const redirect = () => {
@@ -159,14 +161,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
             dispatch(setServiceWarningOpen(true))
             // todo disable the steps
         } else {
-            // todo check for pod
-            const newOptionHasDifferentTransportation = true;
-            if (newOptionHasDifferentTransportation) {
-                dispatch(setSlotsWarningOpen(true))
-                dispatch(setCurrentFrameScreen("appointmentSelection"))
-            } else {
-                dispatch(setChangesCompletedOpen(true))
-            }
+            dispatch(checkPodChanged(decodeSCID(id), showError))
         }
     }
 

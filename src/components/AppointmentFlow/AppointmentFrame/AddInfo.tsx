@@ -12,7 +12,7 @@ import {
 } from '../../../store/reducers/appointmentFrameReducer/actions';
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
-import {useModal} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
 import {
     selectAppointment,
     selectServiceValetAppointment,
@@ -22,7 +22,7 @@ import {useTranslation} from "react-i18next";
 import AddCommentPrompt from "../../Modals/AddCommentPrompt/AddCommentPrompt";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 type TProps = {
     handleSetScreen:TArgCallback<TScreen>;
@@ -55,6 +55,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isErrorOpen, onClose: onErrorClose, onOpen: onErrorOpen} = useModal();
     const {t} = useTranslation();
+    const showError = useException();
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setFrameDescription(value))
@@ -78,9 +79,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
         }
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
             if (carIsValidForUpdate) {
-                // todo request to get pod
-                //dispatch(setChangesCompletedOpen(true))
-                dispatch(setSlotsWarningOpen(true))
+                scProfile && dispatch(checkPodChanged(scProfile.id, showError))
             } else {
                 handleSetScreen('maintenanceDetails');
             }

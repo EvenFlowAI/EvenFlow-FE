@@ -17,10 +17,10 @@ import {
     setSelectedRecalls
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import AskAddService from "../AskAddService/AskAddService";
-import {useModal} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
 import AskChangesCompleted from "../AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../SlotImpactedWarning/SlotImpactedWarning";
-import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 const useStyles = makeStyles(() => ({
     mainTitle: {
@@ -116,6 +116,7 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {id} = useParams();
+    const showError = useException();
     const {t} = useTranslation();
     const classes = useStyles();
     const {isOpen: isAddServiceOpen, onClose: onAddServiceClose, onOpen: onAddServiceOpen} = useModal();
@@ -162,9 +163,7 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
     const handleSubmit = () => {
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
             if (carIsValidForUpdate) {
-                // todo request to get pod
-                // dispatch(setChangesCompletedOpen(true))
-                dispatch(setSlotsWarningOpen(true))
+                dispatch(checkPodChanged(decodeSCID(id), showError))
             } else {
                 handleNext();
                 onClose();

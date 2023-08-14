@@ -29,11 +29,11 @@ import {Routes} from "../../../config/routes";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
-import {useCurrentUser} from "../../../utils/hooks";
+import {useCurrentUser, useException} from "../../../utils/hooks";
 import {getMaintenanceList} from "./uiUtils";
 import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -74,6 +74,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const history = useHistory();
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
+    const showError = useException();
 
     const isServiceOptionSelected = !serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id)
     const isManagingAppointment = customerLoadedData?.isUpdating && !isUsualFlowNeeded;
@@ -235,9 +236,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const handleNext = () => {
         if (isManagingAppointment && carIsValidForUpdate) {
-            // todo request to get pod
-            //dispatch(setChangesCompletedOpen(true))
-            dispatch(setSlotsWarningOpen(true))
+            scProfile && dispatch(checkPodChanged(scProfile.id, showError))
         } else {
             onSelect('maintenanceDetails');
         }
