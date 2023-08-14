@@ -130,7 +130,6 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
         dispatch(setAppointmentSaving(true))
         Api.call(Api.endpoints.Appointments.CheckPodChanged, {data, urlParams: {key: appointmentFrame?.appointmentByKey?.hashKey}})
             .then(result => {
-               debugger
                 if (result?.data) {
                     dispatch(setSlotsWarningOpen(true));
                 } else {

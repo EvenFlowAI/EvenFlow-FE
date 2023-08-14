@@ -4,11 +4,12 @@ import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {useTranslation} from "react-i18next";
 import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAncillaryType, EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {TCallback} from "../../../types/types";
+import {setAddress, setZipCode} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 type TDisplayAncillaryPriceProps = DialogProps & {
     onNext: TCallback;
@@ -53,6 +54,7 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
     const {t} = useTranslation();
+    const dispatch = useDispatch();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const price = ancillaryPrice?.feeAmount && ancillaryPrice?.feeType === EAncillaryType.Amount ? `${ancillaryPrice?.feeAmount.toFixed(2)}` : `${ancillaryPrice?.feeAmount}%`
     const isSameServiceTypeOption = useMemo(() => {
@@ -63,10 +65,15 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
         ? t("Mobile Service")
         : t("Pick Up / Drop Off Service");
 
+    const restorePrevData = () => {
+        if (appointmentByKey?.address) dispatch(setAddress(appointmentByKey?.address))
+        if (appointmentByKey?.zipCode) dispatch(setZipCode(appointmentByKey?.zipCode))
+    }
+
     const onBack = () => {
         customerLoadedData?.isUpdating
             ? isSameServiceTypeOption
-                ? onClose()
+                ? restorePrevData()
                 : onBackToServiceOption() : onVisitCenter()
         onClose();
     }

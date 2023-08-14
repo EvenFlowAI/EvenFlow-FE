@@ -70,7 +70,7 @@ const ServiceRequestsManage = () => {
         ? <div>
             <TitleWrapper>
                 <ConfirmationTitle>{t("Service Requests")}</ConfirmationTitle>
-                <Edit fontSize="small" style={{cursor: "pointer"}} onClick={handleEditServiceRequests}/>
+                <Edit htmlColor="#142EA1" fontSize="small" style={{cursor: "pointer"}} onClick={handleEditServiceRequests}/>
             </TitleWrapper>
             <List>
                 {servicesList.map(item => (

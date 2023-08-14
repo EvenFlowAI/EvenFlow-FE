@@ -43,7 +43,7 @@ const Address = () => {
         ? <div>
             <TitleWrapper>
                 <ConfirmationTitle>{t("Address")}</ConfirmationTitle>
-                <Edit fontSize="small" onClick={handleChangeAddress} style={{cursor: "pointer"}}/>
+                <Edit htmlColor="#142EA1" fontSize="small" onClick={handleChangeAddress} style={{cursor: "pointer"}}/>
             </TitleWrapper>
             <List>
                 <li className="service-item">

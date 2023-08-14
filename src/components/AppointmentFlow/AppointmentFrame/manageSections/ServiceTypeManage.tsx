@@ -54,7 +54,7 @@ const ServiceTypeManage = () => {
         <TitleWrapper>
             <ConfirmationTitle>{serviceTypeOption?.note || serviceTypeOption?.name ? t("Service Option") : t("Location Of Service")}</ConfirmationTitle>
             {onlyNotVisitCenterExists || firstScreenOptions.length > 2
-                ? <Edit fontSize="small" cursor="pointer" onClick={onServiceOptionChange}/>
+                ? <Edit htmlColor="#142EA1" fontSize="small" cursor="pointer" onClick={onServiceOptionChange}/>
             : null}
         </TitleWrapper>
         {getServiceName(serviceTypeOption, serviceType)}

@@ -69,13 +69,13 @@ export const ReviewManage = () => {
             <ConfirmationTitle>{t("Appointment Details")}</ConfirmationTitle>
             <Wrapper>
                 {transportationSelected
-                    ? <li>Transportation needs: {transportationSelected?.description}
-                        {isTransportationAvailable ? <Edit fontSize="small" onClick={handleChangeTransportation} style={{cursor: "pointer"}}/> : null}
+                    ? <li style={{display: "flex"}}>Transportation needs: {transportationSelected?.description}
+                        {isTransportationAvailable ? <Edit htmlColor="#142EA1" fontSize="small" onClick={handleChangeTransportation} style={{cursor: "pointer"}}/> : null}
                     </li>
                     : null}
                 {currentConfig?.advisorSelection
-                    ? <li>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}
-                        {isAdvisorAvailable ? <Edit fontSize="small" onClick={handleChangeAdvisor} style={{cursor: "pointer"}}/> : null}
+                    ? <li style={{display: "flex"}}>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}
+                        {isAdvisorAvailable ? <Edit htmlColor="#142EA1" fontSize="small" onClick={handleChangeAdvisor} style={{cursor: "pointer"}}/> : null}
                 </li>
                     : null
                 }
