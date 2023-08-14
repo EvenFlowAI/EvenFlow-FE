@@ -53,6 +53,11 @@ const Wrapper = styled('div')(({theme}) => ({
     },
     [theme.breakpoints.down("sm")]: {
         gridTemplateColumns: "1fr"
+    },
+    "& .manageTitle": {
+        fontWeight: 700,
+        fontSize: 20,
+        textTransform: 'uppercase'
     }
 }));
 
@@ -162,7 +167,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     }
 
     return <StepWrapper>
-        <div>Manage Appointment</div>
+        <div className="manageTitle">Manage Appointment</div>
         <Wrapper>
             {saving
                 ? <Loading/>

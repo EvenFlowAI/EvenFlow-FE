@@ -12,8 +12,11 @@ import {
 } from "../../store/reducers/appointment/actions";
 import {
     clearAppointmentData,
-    setCurrentFrameScreen, setUsualFlowNeeded,
-    setServiceTypeOption, setSideBarSteps, setTransportation,
+    setCurrentFrameScreen,
+    setServiceTypeOption,
+    setSideBarSteps,
+    setTransportation,
+    setUsualFlowNeeded,
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
@@ -32,7 +35,8 @@ import {encodeSCID} from "../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
 import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../store/reducers/modals/actions";
+import {setChangesCompletedOpen, setServiceWarningOpen, setSlotsWarningOpen} from "../../store/reducers/modals/actions";
+import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
 
 type TProps = {
     handleValueServiceConfig: (serviceType: EServiceType) => void;
@@ -151,13 +155,18 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     }
 
     const changeToVisitCenter = () => {
-        // todo check for pod
-        const newOptionHasDifferentTransportation = true;
-        if (newOptionHasDifferentTransportation) {
-            dispatch(setSlotsWarningOpen(true))
-            dispatch(setCurrentFrameScreen("appointmentSelection"))
+        if (serviceTypeOption?.type === EServiceType.MobileService) {
+            dispatch(setServiceWarningOpen(true))
+            // todo disable the steps
         } else {
-            dispatch(setChangesCompletedOpen(true))
+            // todo check for pod
+            const newOptionHasDifferentTransportation = true;
+            if (newOptionHasDifferentTransportation) {
+                dispatch(setSlotsWarningOpen(true))
+                dispatch(setCurrentFrameScreen("appointmentSelection"))
+            } else {
+                dispatch(setChangesCompletedOpen(true))
+            }
         }
     }
 
@@ -250,6 +259,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
             <Actions onBack={handleBack} onNext={() => {}} hideNext/>
             <AskChangesCompleted />
             <SlotImpactedWarning />
+            <ServiceImpactedWarning/>
         </div>
 };
 
