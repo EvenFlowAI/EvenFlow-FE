@@ -104,6 +104,11 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
+    const isExistingVin = useMemo(() => {
+        return Boolean(customerLoadedData?.vehicles.find(v => {
+            return (v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin)}));
+    }, [selectedVehicle, customerLoadedData])
+
     const isExistingVehicle = useMemo(() => {
         return Boolean(customerLoadedData?.vehicles.find(v => {
             return (v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin)
@@ -440,7 +445,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                             error={errors.includes("vin")}
                             required={requiredFields.includes("vin") || isRecallsCategorySelected}
                             fullWidth
-                            disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length && isExistingVehicle)}
+                            disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length && isExistingVin)}
                             //disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length) || (recallsAreShown && !isRecallsCategorySelected)}
                             value={selectedVehicle ? selectedVehicle.vin : ""}
                             placeholder={errors.includes("vin")
