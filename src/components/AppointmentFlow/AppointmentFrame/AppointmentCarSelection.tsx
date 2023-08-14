@@ -11,7 +11,7 @@ import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {ILoadedVehicle} from "../../../api/types";
 import {checkSelectedCar} from "./utils";
 import {
-    clearAppointmentData, setHashKey,
+    clearAppointmentData, setCurrentFrameScreen, setHashKey,
     setServiceTypeOption, setSideBarSteps, setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -142,7 +142,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                 handleServiceTypeSelection()
             } else {
                 if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-                    handleSetScreen("appointmentConfirmation")
+                    handleSetScreen("manageAppointment")
                 } else handleSetScreen(getNextScreen());
             }
         }
@@ -219,6 +219,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         clearAllData()
         if (car?.appointmentHashKeys.length) {
             await onUpdateAppointment(car)
+            dispatch(setCurrentFrameScreen("manageAppointment"))
         } else {
             dispatch(setHashKey(''));
             if (needToShowServiceSelection) {

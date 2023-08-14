@@ -159,7 +159,6 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     const changeToVisitCenter = () => {
         if (serviceTypeOption?.type === EServiceType.MobileService) {
             dispatch(setServiceWarningOpen(true))
-            // todo disable the steps
         } else {
             dispatch(checkPodChanged(decodeSCID(id), showError))
         }
