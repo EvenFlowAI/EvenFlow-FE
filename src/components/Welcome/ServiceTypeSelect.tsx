@@ -130,7 +130,7 @@ export const useServiceTypeStyles = makeStyles((theme) => ({
 }))
 
 const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading }) => {
-    const {userType, selectedVehicle, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {userType, selectedVehicle, serviceTypeOption, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const currentUser = useCurrentUser();
@@ -215,10 +215,20 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
         }
     }
 
+    const handleBackWhileUpdating = () => {
+        dispatch(setCurrentFrameScreen("manageAppointment"))
+        dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+        redirect();
+    }
+
     const handleBack = () => {
         const userIsNew = (!customerLoadedData?.id && !selectedVehicle?.make) || userType === EUserType.New;
         if (currentUser || userIsNew) {
-            dispatch(setWelcomeScreenView("select"))
+            if (customerLoadedData?.isUpdating) {
+                handleBackWhileUpdating()
+            } else {
+                dispatch(setWelcomeScreenView("select"))
+            }
         } else {
             dispatch(setCurrentFrameScreen("carSelection"))
             redirect()

@@ -170,7 +170,9 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const handleBack = () => {
-        customerLoadedData?.isUpdating && !isUsualFlowNeeded ? dispatch(setCurrentFrameScreen("manageAppointment")) : onBack()
+        customerLoadedData?.isUpdating && !isUsualFlowNeeded
+            ? dispatch(setCurrentFrameScreen("manageAppointment"))
+            : onBack()
     }
 
     return (<StepWrapper>

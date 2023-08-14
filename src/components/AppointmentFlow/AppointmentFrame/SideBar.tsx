@@ -75,7 +75,6 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
         sideBarStepsList,
         serviceTypeOption,
         isAppointmentSaving,
-        isUsualFlowNeeded
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {currentConfig, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -111,7 +110,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     }
 
     const getButtonState = useCallback((index: number) => {
-        if (isAppointmentSaving || (customerLoadedData?.isUpdating)) return true;
+        if (isAppointmentSaving || customerLoadedData?.isUpdating) return true;
         if (index > 0 && sideBarSteps.length < 2) return true;
         if (sideBarActualSteps) {
             const currentScreenNumberValue = sideBarActualSteps[screen];
