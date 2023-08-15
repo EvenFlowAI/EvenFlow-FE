@@ -328,7 +328,10 @@
       "Yes, I’m good with the existing appointment": "Yes, I’m good with the existing appointment",
       "No, i still want to make changes": "No, i still want to make changes",
       "The available services supported with our mobile truck service may be different than when you visit our service center.": "The available services supported with our mobile truck service may be different than when you visit our service center.",
-      "Please continue to see the available services and the available appointment dates and times": "Please continue to see the available services and the available appointment dates and times"
+      "Please continue to see the available services and the available appointment dates and times": "Please continue to see the available services and the available appointment dates and times",
+      "Appointment availability depends on the service requested.": "Appointment availability depends on the service requested.",
+      "The services our Mobile Truck offer may be different from our Service Center.": "The services our Mobile Truck offer may be different from our Service Center.",
+      "Please continue to see available services and appointment times": "Please continue to see available services and appointment times"
     }
   },
   "es": {

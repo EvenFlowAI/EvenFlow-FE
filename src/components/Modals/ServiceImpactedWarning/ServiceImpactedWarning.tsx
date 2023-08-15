@@ -79,8 +79,8 @@ const ServiceImpactedWarning = () => {
             onClose={onCancel}
         >
             <DialogTitle onClose={onCancel}>
-                <div>{t("The available services supported with our mobile truck service may be different than when you visit our service center.")}</div>
-                <div>{t("Please continue to see the available services and the available appointment dates and times")}</div>
+                <div>{t("The services our Mobile Truck offer may be different from our Service Center.")}</div>
+                <div>{t("Please continue to see available services and appointment times")}</div>
             </DialogTitle>
             <div className={classes.wrapper}>
                 <LoadingButton

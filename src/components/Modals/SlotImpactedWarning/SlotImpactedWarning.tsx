@@ -49,7 +49,7 @@ const SlotImpactedWarning = () => {
             onClose={onNext}
         >
             <DialogTitle onClose={onNext}>
-                <div>{t("Date and time of available appointments depends on the service requested.")}</div>
+                <div>{t("Appointment availability depends on the service requested.")}</div>
                 <div>{t("Please continue to see available dates and times for you requested change")}</div>
             </DialogTitle>
                 <div className={classes.wrapper}>
