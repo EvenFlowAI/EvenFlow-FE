@@ -31,7 +31,6 @@ import {Loading} from "../../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
 import NoRecalls from "../../Modals/RecallsByVin/NoRecalls";
 import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
-import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -483,7 +482,6 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             handleAddServices={handleAddServices}
             onDeclineRecalls={handleDeclineRecalls}
         />
-        <AskChangesCompleted/>
         <NoRecalls open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleDeclineRecalls}/>
     </StepWrapper>);
 };

@@ -26,8 +26,6 @@ import {useTranslation} from "react-i18next";
 import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
 import {useParams} from "react-router-dom";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
-import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {useException} from "../../../utils/hooks";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 import {decodeSCID} from "../../../utils/utils";
@@ -194,7 +192,5 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             }
         </ConsultantsWrapper>
         <Actions onNext={handleNext} onBack={handleBack} nextLabel={t("Next")}/>
-        <AskChangesCompleted/>
-        <SlotImpactedWarning/>
     </StepWrapper>);
 };

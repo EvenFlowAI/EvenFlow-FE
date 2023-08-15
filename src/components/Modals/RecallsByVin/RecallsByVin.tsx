@@ -19,8 +19,6 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import AskAddService from "../AskAddService/AskAddService";
 import {useException, useModal} from "../../../utils/hooks";
-import AskChangesCompleted from "../AskChangesCompleted/AskChangesCompleted";
-import SlotImpactedWarning from "../SlotImpactedWarning/SlotImpactedWarning";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 const useStyles = makeStyles(() => ({
@@ -248,8 +246,6 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
                 </div>
             </DialogActions>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAddServiceOpen}/>
-            <AskChangesCompleted/>
-            <SlotImpactedWarning/>
         </BaseModal>
     );
 };

@@ -32,8 +32,6 @@ import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {useCurrentUser, useException} from "../../../utils/hooks";
 import {getMaintenanceList} from "./uiUtils";
-import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
-import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 type TProps = {
@@ -265,8 +263,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
                 nextLabel={t("Next")}
                 onNext={handleNext}
                 onBack={handleBack} />
-            <AskChangesCompleted/>
-            <SlotImpactedWarning/>
         </StepWrapper>
     );
 };

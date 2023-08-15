@@ -31,7 +31,6 @@ import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector";
 import {clearAppointmentSteps, setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
-import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
 import {Routes} from "../../../config/routes";
 
@@ -391,7 +390,6 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         date={date}
                         loading={loading}/>}
             </Wrapper>
-            <AskChangesCompleted/>
         </StepWrapper>
     );
 };

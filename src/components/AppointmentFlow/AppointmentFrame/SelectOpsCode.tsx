@@ -23,8 +23,6 @@ import {
 import {Caption} from "../../UI/Caption";
 import {useTranslation} from "react-i18next";
 import {EServiceCategoryPage} from "../../../api/types";
-import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
-import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 const Wrapper = styled('div')({
@@ -293,8 +291,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
                 <Caption title={t("The price for the service will be quoted at the dealership")}/>
             </Wrapper>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
-            <AskChangesCompleted/>
-            <SlotImpactedWarning/>
             <Actions onBack={handleBack} nextDisabled={!selectedOpsCodes.length} onNext={handleNext} nextLabel={t("Next")}/>
         </StepWrapper>
     );

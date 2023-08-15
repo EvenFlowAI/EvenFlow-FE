@@ -35,10 +35,7 @@ import {TArgCallback} from "../../../types/types";
 import {TView} from "../../Welcome/types";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
-import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
-import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {setServiceWarningOpen} from "../../../store/reducers/modals/actions";
-import ServiceImpactedWarning from "../../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
@@ -116,7 +113,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         address,
         filteredZipCodes,
         serviceTypeOption,
-        hashKey,
         selectedVehicle,
         appointmentByKey
         ,} = useSelector((state: RootState) => state.appointmentFrame);
@@ -157,7 +153,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
             && appointmentByKey?.serviceTypeOption?.type === EServiceType.MobileService;
         if (mobileServiceSelected || mobileServiceChanged) {
             dispatch(setServiceWarningOpen(true))
-            // todo disable the steps
         } else {
             scProfile && dispatch(checkPodChanged(scProfile.id, showError))
         }
@@ -195,14 +190,13 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const handleBack = () => {
-        clearAddress();
         if (customerLoadedData?.isUpdating && appointmentByKey) {
             onBackToFirstScreen()
         } else {
+            clearAddress();
             clearSelectedData();
-            const isManagingAppointment = Boolean(hashKey?.length) && (!serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id))
             const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
-            const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists || isManagingAppointment;
+            const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
             const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
             if (currentUser) {
                 dispatch(setShowServiceCentersList(false));
@@ -331,9 +325,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                 setFormChecked={setFormChecked}
                 onBackToServiceOption={onBackToFirstScreen}
                 onVisitCenter={setDefaultVisitCenter}/>
-            <AskChangesCompleted/>
-            <SlotImpactedWarning/>
-            <ServiceImpactedWarning/>
         </StepWrapper>
     );
 };

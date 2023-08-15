@@ -66,6 +66,9 @@ import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
 import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
 import {loadEngineType, loadMileage} from "../../store/reducers/vehicleDetails/actions";
+import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
+import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
 
 const Container = styled('div')({
     display: "flex",
@@ -430,6 +433,9 @@ export const AppointmentFrameLayout = () => {
                     </SidebarWrapper> : component
                 }
             </Container>
+            <AskChangesCompleted />
+            <SlotImpactedWarning />
+            <ServiceImpactedWarning/>
         </MuiThemeProvider>
     );
 };

@@ -21,8 +21,6 @@ import {
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {useTranslation} from "react-i18next";
 import AddCommentPrompt from "../../Modals/AddCommentPrompt/AddCommentPrompt";
-import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
-import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 type TProps = {
@@ -118,8 +116,6 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
             />
             <Actions onBack={handleBack} onNext={onSubmit} nextLabel={t("Next")}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isOpen}/>
-            <AskChangesCompleted/>
-            <SlotImpactedWarning/>
             <AddCommentPrompt open={isErrorOpen} onClose={onErrorClose}/>
         </StepWrapper>
     );

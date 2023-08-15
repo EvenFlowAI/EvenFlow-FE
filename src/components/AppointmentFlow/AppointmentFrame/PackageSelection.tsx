@@ -44,8 +44,6 @@ import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
 import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
 import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
 import PackagesEmenu from "./PackagesEmenu";
-import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
-import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 const border = '1px solid #DADADA';
@@ -563,8 +561,6 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 onNext={() => handleNext(localSelectedPackage)}/>}
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
-            <AskChangesCompleted/>
-            <SlotImpactedWarning/>
         </PackagesStepWrapper>
     );
 };

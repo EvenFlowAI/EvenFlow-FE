@@ -24,8 +24,6 @@ import {useTranslation} from "react-i18next";
 import {ETransportColumn} from "../../../store/reducers/transportationNeeds/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import moment from "moment";
-import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
-import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
 
 const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
@@ -300,7 +298,5 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             onNext={onNext}
             nextDisabled={loading || Boolean(transportations.length) && !transportation}
         />
-        <AskChangesCompleted />
-        <SlotImpactedWarning />
     </StepWrapper>
 };

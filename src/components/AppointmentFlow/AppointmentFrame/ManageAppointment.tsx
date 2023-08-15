@@ -30,7 +30,6 @@ import ServiceTypeManage from "./manageSections/ServiceTypeManage";
 import {ReviewManage} from "./manageSections/ReviewManage";
 import ConfirmCancelUpdate from "../../Modals/ConfirmCancelUpdate/ConfirmCancelUpdate";
 import {ILoadedVehicle} from "../../../api/types";
-import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {Loading} from "../../UI/Loading";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
@@ -211,6 +210,5 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
         <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
         <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
-        <SlotImpactedWarning/>
     </StepWrapper>
 };

@@ -35,38 +35,42 @@ const ServiceImpactedWarning = () => {
     const {id} = useParams();
     const history = useHistory();
 
-    const onServiceWarningClick = () => {
+    const onClose = () => {
+        dispatch(setServiceWarningOpen(false));
+    }
+
+    const onNext = () => {
         dispatch(clearSelectedServices());
         dispatch(setUsualFlowNeeded(true));
         dispatch(setCurrentFrameScreen("serviceNeeds"));
-        dispatch(setServiceWarningOpen(false));
+        onClose()
         if (history.location.pathname.includes("welcome")) {
             history.push( "/f/appointment/" + id);
-        }
-    }
-
-    const onCancel = () => {
-        dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
-        dispatch(setCurrentFrameScreen("manageAppointment"));
-        dispatch(setServiceWarningOpen(false));
-        if (history.location.pathname.includes("welcome")) {
-            history.push( "/f/appointment/" + id);
-        } else {
-            dispatch(setAddress(null));
-            dispatch(setZipCode(""));
         }
     }
 
     // const onCancel = () => {
     //     dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
-    //     dispatch(setWelcomeScreenView("serviceSelect"));
-    //     dispatch(setServiceWarningOpen(false));
-    //     if (!history.location.pathname.includes("welcome")) {
+    //     dispatch(setCurrentFrameScreen("manageAppointment"));
+    //     onClose()
+    //     if (history.location.pathname.includes("welcome")) {
+    //         history.push( "/f/appointment/" + id);
+    //     } else {
     //         dispatch(setAddress(null));
     //         dispatch(setZipCode(""));
-    //         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     //     }
     // }
+
+    const onCancel = () => {
+        dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+        dispatch(setWelcomeScreenView("serviceSelect"));
+        onClose();
+        if (!history.location.pathname.includes("welcome")) {
+            dispatch(setAddress(null));
+            dispatch(setZipCode(""));
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        }
+    }
 
     return (
         <BaseModal
@@ -90,10 +94,10 @@ const ServiceImpactedWarning = () => {
                 <LoadingButton
                     loading={false}
                     fullWidth
-                    onClick={onServiceWarningClick}
+                    onClick={onNext}
                     variant="contained"
                     color="primary">
-                    {t("Proceed")}
+                    {t("Next")}
                 </LoadingButton>
             </div>
         </BaseModal>

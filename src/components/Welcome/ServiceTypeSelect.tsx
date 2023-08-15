@@ -263,7 +263,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
             <Actions onBack={handleBack} onNext={() => {}} hideNext/>
             <AskChangesCompleted />
             <SlotImpactedWarning />
-            <ServiceImpactedWarning/>
+            <ServiceImpactedWarning />
         </div>
 };
 

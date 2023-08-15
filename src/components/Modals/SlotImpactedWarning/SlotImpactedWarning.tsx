@@ -12,13 +12,11 @@ import {useHistory, useParams} from "react-router-dom";
 const useStyles = makeStyles({
     wrapper: {
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: "center",
+        justifyContent: "space-between",
         padding: '16px 80px',
-        gap: 12,
         "& > div:not(:last-child)": {
-            marginBottom: 12
+            marginRight: 20
         }
     },
 })
@@ -32,7 +30,7 @@ const SlotImpactedWarning = () => {
     const {id} = useParams();
     const history = useHistory();
 
-    const onSlotsWarningClick = () => {
+    const onNext = () => {
         dispatch(setCurrentFrameScreen(isAppointmentTimingAvailable ? "appointmentTiming" : "appointmentSelection"));
         dispatch(setSlotsWarningOpen(false))
         if (history.location.pathname.includes("welcome")) {
@@ -40,13 +38,17 @@ const SlotImpactedWarning = () => {
         }
     }
 
+    const onCancel = () => {
+        dispatch(setSlotsWarningOpen(false))
+    }
+
     return (
         <BaseModal
             width={450}
             open={isSlotsWarningOpen}
-            onClose={onSlotsWarningClick}
+            onClose={onNext}
         >
-            <DialogTitle onClose={onSlotsWarningClick}>
+            <DialogTitle onClose={onNext}>
                 <div>{t("Date and time of available appointments depends on the service requested.")}</div>
                 <div>{t("Please continue to see available dates and times for you requested change")}</div>
             </DialogTitle>
@@ -54,10 +56,18 @@ const SlotImpactedWarning = () => {
                     <LoadingButton
                         loading={false}
                         fullWidth
-                        onClick={onSlotsWarningClick}
+                        onClick={onCancel}
                         variant="outlined"
                         color="primary">
-                        {t("Close")}
+                        {t("Cancel")}
+                    </LoadingButton>
+                    <LoadingButton
+                        loading={false}
+                        fullWidth
+                        onClick={onNext}
+                        variant="contained"
+                        color="primary">
+                        {t("Next")}
                     </LoadingButton>
                 </div>
         </BaseModal>
