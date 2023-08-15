@@ -45,8 +45,6 @@ export const ReviewManage = () => {
     const transportationSelected = serviceTypeOption?.transportationOption || transportation;
     const dispatch = useDispatch();
 
-
-
     useEffect(() => {
         if (!consultant) {
             const selectedPreviouslyConsultant = appointmentByKey?.consultant?.id

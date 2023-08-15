@@ -66,11 +66,9 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const [errors, setErrors] = useState<string[]>([]);
     const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const currentUser = useCurrentUser();
-    const [appointment, appointmentFrame, categories, customerEnteredEmail, saving] = useSelector((state: RootState) => [
+    const [appointment, appointmentFrame, saving] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame,
-        state.categories,
-        state.appointment.customerEnteredEmail,
         state.appointmentFrame.isAppointmentSaving,
     ]);
 
@@ -123,7 +121,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         if (e.response?.data?.errors) {
             const data = [...e.response.data.errors]
             setErrors(() => {
-                return data.map((err: TError): string => err.field.split('.')[1].toLowerCase());
+                return data.map((err: TError): string => err.field?.split('.')[1].toLowerCase());
             })
         }
     }

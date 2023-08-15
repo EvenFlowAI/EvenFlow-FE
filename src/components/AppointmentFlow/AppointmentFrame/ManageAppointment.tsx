@@ -33,7 +33,7 @@ import {ILoadedVehicle} from "../../../api/types";
 import SlotImpactedWarning from "../../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {Loading} from "../../UI/Loading";
-import {setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 import AddressManage from "./manageSections/AddressManage";
 
 const Wrapper = styled('div')(({theme}) => ({
@@ -139,12 +139,13 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     const handleError = (e: any) => {
         showError(e);
         if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
+            dispatch(setChangesCompletedOpen(false))
             dispatch(setSlotsWarningOpen(true))
         }
         if (e.response?.data?.errors) {
             const data = [...e.response.data.errors]
             setErrors(() => {
-                return data.map((err: TError): string => err.field.split('.')[1].toLowerCase());
+                return data.map((err: TError): string => err.field?.split('.')[1].toLowerCase());
             })
         }
     }

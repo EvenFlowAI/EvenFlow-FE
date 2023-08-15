@@ -21,6 +21,7 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useCurrentUser} from "../../../utils/hooks";
 import {ILoadedVehicle} from "../../../api/types";
+import {setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 
 const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -110,6 +111,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         advisor,
         packagePriceTitles,
         dropOffSettings,
+        customerLoadedData,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -134,6 +136,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         state.appointmentFrame.advisor,
         state.appointmentFrame.packagePriceTitles,
         state.appointment.dropOffSettings,
+        state.appointment.customerLoadedData,
     ]);
 
     const {t} = useTranslation();
@@ -354,6 +357,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
 
     const onModify = async () => {
         if (vehicle) {
+            if (customerLoadedData) {
+                await dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
+            }
             await onUpdateAppointment(vehicle)
             await dispatch(setCurrentFrameScreen("manageAppointment"))
         }

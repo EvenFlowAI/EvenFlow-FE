@@ -68,6 +68,7 @@ const AskChangesCompleted = () => {
     const handleError = (e: any) => {
         showError(e)
         if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
+            dispatch(setChangesCompletedOpen(false))
             dispatch(setSlotsWarningOpen(true))
         }
     }
