@@ -5,6 +5,7 @@ import {TArgCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
+    checkCarIsValid,
     clearAppointmentSteps,
     selectCategoriesIds,
     selectService,
@@ -62,7 +63,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         packageEMenuType,
         selectedRecalls,
         isUsualFlowNeeded,
-        carIsValidForUpdate
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, serviceRequests, scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -234,11 +234,15 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         return currentService?.id === card.id && !categoriesIds.includes(card.id) && card.type !== EServiceCategoryType.LinkToPage2
     }
 
+    const goNext = () => onSelect('maintenanceDetails');
+
+    const onCarIsValid = () => scProfile && dispatch(checkPodChanged(scProfile.id, showError));
+
     const handleNext = () => {
-        if (isManagingAppointment && carIsValidForUpdate) {
-            scProfile && dispatch(checkPodChanged(scProfile.id, showError))
+        if (isManagingAppointment) {
+            dispatch(checkCarIsValid(onCarIsValid, goNext))
         } else {
-            onSelect('maintenanceDetails');
+            goNext()
         }
     }
 

@@ -13,6 +13,7 @@ import {Button, Divider, FormControlLabel, Switch, withStyles} from "@material-u
 import {IRecallByVin} from "../../AppointmentFlow/AppointmentFrame/types";
 import moment from "moment";
 import {
+    checkCarIsValid,
     setAdditionalServicesChosen,
     setSelectedRecalls
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -112,7 +113,7 @@ type TRecallsByVinProps = DialogProps & {
 
 const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
-    const {selectedVehicle, selectedRecalls, makes, carIsValidForUpdate, isUsualFlowNeeded} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, selectedRecalls, makes, isUsualFlowNeeded} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -160,14 +161,16 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
         onClose();
     }
 
+    const onCarIsValid = () => dispatch(checkPodChanged(decodeSCID(id), showError))
+
+    const onCarIsInvalid = () => {
+        handleNext();
+        onClose();
+    }
+
     const handleSubmit = () => {
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-            if (carIsValidForUpdate) {
-                dispatch(checkPodChanged(decodeSCID(id), showError))
-            } else {
-                handleNext();
-                onClose();
-            }
+            dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid))
         } else {
             onAddServiceOpen()
         }

@@ -101,7 +101,8 @@ export const AppointmentFrameLayout = () => {
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const { currentConfig, isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
+    const {currentConfig, isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
@@ -204,7 +205,7 @@ export const AppointmentFrameLayout = () => {
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
         handleServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
         updateRecalls, updatePackageOption, goToServiceTypeSelection,
-        isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable])
+        isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes])
 
     // useAnalytics(trackerCreated, () => dispatch(setTrackerCreated(true)))
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))

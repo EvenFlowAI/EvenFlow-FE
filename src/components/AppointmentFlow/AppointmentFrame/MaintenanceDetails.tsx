@@ -30,6 +30,8 @@ import {Api} from "../../../config/requests";
 import {Loading} from "../../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
 import NoRecalls from "../../Modals/RecallsByVin/NoRecalls";
+import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
+import AskChangesCompleted from "../../Modals/AskChangesCompleted/AskChangesCompleted";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -250,15 +252,27 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         return !errorsArray.length;
     }
 
+    const goToNextScreen = () => {
+        onNext(service?.type === EServiceCategoryType.MaintenancePackage
+            ? 'packageSelection'
+            : isAdvisorAvailable
+                ? 'consultantSelection'
+                : isAppointmentTimingAvailable
+                    ? 'appointmentTiming'
+                    : "appointmentSelection");
+    }
+
+    const handleUpdating = () => {
+        service?.type === EServiceCategoryType.MaintenancePackage
+            ? goToNextScreen()
+            : dispatch(setChangesCompletedOpen(true))
+    }
+
     const handleNext = () => {
         if (isValid()) {
-            onNext(service?.type === EServiceCategoryType.MaintenancePackage
-                ? 'packageSelection'
-                : isAdvisorAvailable
-                    ? 'consultantSelection'
-                    : isAppointmentTimingAvailable
-                        ? 'appointmentTiming'
-                        : "appointmentSelection");
+            customerLoadedData?.isUpdating
+                ? handleUpdating()
+                : goToNextScreen()
         }
     }
 
@@ -469,6 +483,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             handleAddServices={handleAddServices}
             onDeclineRecalls={handleDeclineRecalls}
         />
+        <AskChangesCompleted/>
         <NoRecalls open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleDeclineRecalls}/>
     </StepWrapper>);
 };

@@ -16,6 +16,7 @@ import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {
+    checkCarIsValid,
     selectCategoriesIds,
     setAdditionalServicesChosen,
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -106,7 +107,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         allCategories,
         categoriesIds,
         customerLoadedData,
-        carIsValidForUpdate,
         isUsualFlowNeeded
     ] = useSelector((state: RootState) => [
         state.appointment.selectedSR,
@@ -118,7 +118,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         state.categories.allCategories,
         state.appointmentFrame.categoriesIds,
         state.appointment.customerLoadedData,
-        state.appointmentFrame.carIsValidForUpdate,
         state.appointmentFrame.isUsualFlowNeeded,
     ]);
 
@@ -210,6 +209,8 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         handleSetScreen("maintenanceDetails");
     }
 
+    const onCarIsValid = () => scProfile && dispatch(checkPodChanged(scProfile.id, showError))
+
     const handleNext = () => {
         ReactGA.event({
             category: 'EvenFlow User',
@@ -218,11 +219,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         })
         dispatch(selectSRMultiple(selectedOpsCodes))
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-            if (carIsValidForUpdate) {
-                scProfile && dispatch(checkPodChanged(scProfile.id, showError))
-            } else {
-                goNext();
-            }
+            dispatch(checkCarIsValid(onCarIsValid, goNext))
         } else {
             onAdditionalOpen()
         }

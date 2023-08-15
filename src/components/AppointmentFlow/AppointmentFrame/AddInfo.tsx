@@ -5,6 +5,7 @@ import {TextField} from "../UI";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
+    checkCarIsValid,
     clearAppointmentSteps,
     selectCategoriesIds,
     setAdditionalServicesChosen,
@@ -39,7 +40,6 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
         service,
         categoriesIds,
         customerLoadedData,
-        carIsValidForUpdate,
         isUsualFlowNeeded,
     ] = useSelector(({appointmentFrame, appointment}: RootState) => [
         appointmentFrame.subService,
@@ -47,7 +47,6 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
         appointmentFrame.service,
         appointmentFrame.categoriesIds,
         appointment.customerLoadedData,
-        appointmentFrame.carIsValidForUpdate,
         appointmentFrame.isUsualFlowNeeded,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
@@ -72,17 +71,17 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
         handleSetScreen('maintenanceDetails');
     }
 
+    const onCarIsValid = () => scProfile && dispatch(checkPodChanged(scProfile.id, showError));
+
+    const onCarIsInvalid = () => handleSetScreen('maintenanceDetails');
+
     const onSubmit = () => {
         const isCommentRequired = subService ? subService?.isCommentRequired : service?.isCommentRequired;
         if (isCommentRequired && !description.length) {
             return onErrorOpen();
         }
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-            if (carIsValidForUpdate) {
-                scProfile && dispatch(checkPodChanged(scProfile.id, showError))
-            } else {
-                handleSetScreen('maintenanceDetails');
-            }
+            dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid))
         } else {
             onOpen()
         }

@@ -636,7 +636,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         })
 }
 
-export const checkCarIsValid = (): AppThunk => (dispatch, getState) => {
+export const checkCarIsValid = (onCarIsValid = () => {}, onCarIsInvalid = () => {}): AppThunk => (dispatch, getState) => {
     const {selectedVehicle, makes} = getState().appointmentFrame;
     const {engineTypes, mileage} = getState().vehicleDetails;
     const {currentConfig} = getState().bookingFlowConfig;
@@ -657,5 +657,8 @@ export const checkCarIsValid = (): AppThunk => (dispatch, getState) => {
     } else {
         carIsValid = false;
     }
+    carIsValid
+        ? onCarIsValid()
+        : onCarIsInvalid()
     dispatch(setCarIsValidForUpdate(carIsValid));
 }
