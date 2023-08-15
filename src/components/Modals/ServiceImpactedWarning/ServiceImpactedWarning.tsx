@@ -3,10 +3,10 @@ import {BaseModal, DialogTitle} from "../BaseModal";
 import {LoadingButton} from "../../UI/Button";
 import {useTranslation} from "react-i18next";
 import {makeStyles} from "@material-ui/core/styles";
-import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {setServiceWarningOpen} from "../../../store/reducers/modals/actions";
 import {
     clearSelectedServices,
-    setCurrentFrameScreen,
+    setCurrentFrameScreen, setServiceTypeOption,
     setUsualFlowNeeded
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -16,19 +16,18 @@ import {useHistory, useParams} from "react-router-dom";
 const useStyles = makeStyles({
     wrapper: {
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: "center",
+        justifyContent: "space-between",
         padding: '16px 80px',
-        gap: 12,
         "& > div:not(:last-child)": {
-            marginBottom: 12
+            marginRight: 20
         }
     },
 })
 
 const ServiceImpactedWarning = () => {
     const {isServiceWarningOpen} = useSelector((state: RootState) => state.modals);
+    const {appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const classes = useStyles();
     const {t} = useTranslation();
@@ -45,13 +44,22 @@ const ServiceImpactedWarning = () => {
         }
     }
 
+    const onCancel = () => {
+        dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+        dispatch(setCurrentFrameScreen("manageAppointment"));
+        dispatch(setServiceWarningOpen(false));
+        if (history.location.pathname.includes("welcome")) {
+            history.push( "/f/appointment/" + id);
+        }
+    }
+
     return (
         <BaseModal
             width={450}
             open={isServiceWarningOpen}
-            onClose={onServiceWarningClick}
+            onClose={onCancel}
         >
-            <DialogTitle onClose={onServiceWarningClick}>
+            <DialogTitle onClose={onCancel}>
                 <div>{t("The available services supported with our mobile truck service may be different than when you visit our service center.")}</div>
                 <div>{t("Please continue to see the available services and the available appointment dates and times")}</div>
             </DialogTitle>
@@ -59,10 +67,18 @@ const ServiceImpactedWarning = () => {
                 <LoadingButton
                     loading={false}
                     fullWidth
-                    onClick={onServiceWarningClick}
+                    onClick={onCancel}
                     variant="outlined"
                     color="primary">
-                    {t("Close")}
+                    {t("Cancel")}
+                </LoadingButton>
+                <LoadingButton
+                    loading={false}
+                    fullWidth
+                    onClick={onServiceWarningClick}
+                    variant="contained"
+                    color="primary">
+                    {t("Proceed")}
                 </LoadingButton>
             </div>
         </BaseModal>
