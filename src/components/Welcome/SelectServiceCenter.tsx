@@ -24,6 +24,8 @@ import {
 import {Routes} from "../../config/routes";
 import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../utils/utils";
+import {setCustomerSearchData} from "../../store/reducers/enhancedCustomerSearch/actions";
+import {initialCustomerSearch} from "../../store/reducers/enhancedCustomerSearch/reducer";
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -70,6 +72,7 @@ const ServiceCenterCard: React.FC<{sc: IServiceCenter}> = ({sc}) => {
         dispatch(loadSCProfile(sc.id));
         dispatch(clearAppointmentData())
         dispatch(setCustomerEnteredEmail(""))
+        dispatch(setCustomerSearchData(initialCustomerSearch))
         dispatch(setAddress(null));
         dispatch(setZipCode(''));
         dispatch(setSideBarSteps([]));

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -154,15 +154,10 @@ export const DateWrapper = styled('div')(({theme}) => ({
 export const SelectedAppointment = () => {
     const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
     const { appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
-    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const classes = useSelectedAppointmentStyles();
     const theme = useTheme();
     const {t} = useTranslation();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
-    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-    const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType.toString() === serviceType.toString());
-    }, [config, serviceType])
 
     const price = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
         ? serviceValetAppointment?.price.value ?? 0
@@ -183,12 +178,12 @@ export const SelectedAppointment = () => {
                         <Prices price={price} ancillaryPrice={ancillaryPrice}/> }
                     </li>
                     <li key="advisor">
-                        <SelectedConsultant currentConfig={currentConfig}/>
+                        <SelectedConsultant />
                         <Address />
                         <ServiceOption isSm={isSm}/>
                         {appointment && isSm
                             ? <DateWrapper>
-                            {appointment.date.format('MMMM D, h:mm A')}
+                            {appointment.date.format('ddd, MMMM D, h:mm A')}
                         </DateWrapper>
                             : serviceValetAppointment && isSm
                                 ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/>
@@ -199,7 +194,7 @@ export const SelectedAppointment = () => {
                 <PriceWrapper>
                     {appointment && !isSm
                         ? <DateWrapper>
-                            {t("Date & Time")}: <br /> {appointment.date.format('MMMM D, h:mm A')}
+                            {t("Date & Time")}: <br /> {appointment.date.format('ddd, MMMM D, h:mm A')}
                         </DateWrapper>
                         : serviceValetAppointment && !isSm
                             ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/>

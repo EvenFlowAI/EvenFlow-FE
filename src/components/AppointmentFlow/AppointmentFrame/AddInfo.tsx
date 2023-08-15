@@ -11,19 +11,14 @@ import {
     setFrameDescription
 } from '../../../store/reducers/appointmentFrameReducer/actions';
 import {TArgCallback} from "../../../types/types";
-import {checkSelectedCar} from "./utils";
 import {TScreen} from "../../Layout/types";
 import {useModal} from "../../../utils/hooks";
-import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {
     selectAppointment,
     selectServiceValetAppointment,
-    selectSRMultiple
 } from "../../../store/reducers/appointment/actions";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {useTranslation} from "react-i18next";
-import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import AddCommentPrompt from "../../Modals/AddCommentPrompt/AddCommentPrompt";
 
 type TProps = {
@@ -32,31 +27,18 @@ type TProps = {
     nextLabel?: string;
     loading?: boolean;
     onAddServices: () => void;
-    currentConfig: TServiceTypeSettings|undefined;
 };
-export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, currentConfig}) => {
+export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
     const [
         subService,
-        vehicle,
-        vehicles,
         scProfile,
-        selectedSR,
         service,
         categoriesIds,
-        allCategories,
-        userType,
-        isAdditionalServices,
-    ] = useSelector(({appointmentFrame, appointment, categories}: RootState) => [
+    ] = useSelector(({appointmentFrame, appointment}: RootState) => [
         appointmentFrame.subService,
-        appointmentFrame.selectedVehicle,
-        appointment.customerLoadedData?.vehicles,
         appointment.scProfile,
-        appointment.selectedSR,
         appointmentFrame.service,
         appointmentFrame.categoriesIds,
-        categories.allCategories,
-        appointmentFrame.userType,
-        appointmentFrame.isAdditionalServices,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
@@ -64,34 +46,8 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
     const {isOpen: isErrorOpen, onClose: onErrorClose, onOpen: onErrorOpen} = useModal();
     const {t} = useTranslation();
 
-    const getScreenForNew = (): TScreen => {
-        if (isAdditionalServices) {
-            return getScreenForNew();
-        } else {
-            return 'maintenanceDetails';
-        }
-    }
-
-    const getScreenForExisting = (): TScreen => {
-        if (currentConfig?.advisorSelection) {
-            return 'consultantSelection';
-        } else {
-            return currentConfig?.appointmentSelection
-                ? 'appointmentTiming'
-                : "appointmentSelection"
-        }
-    }
-
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setFrameDescription(value))
-    }
-
-    const handleNext = () => {
-        if (checkSelectedCar(vehicle, vehicles) || (vehicle?.mileage && userType === EUserType.Existing)) {
-            handleSetScreen(getScreenForExisting());
-        } else {
-            handleSetScreen(getScreenForNew());
-        }
     }
 
     const handleYes = () => {
@@ -102,7 +58,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
 
     const handleNo = () => {
         onClose();
-        handleNext();
+        handleSetScreen('maintenanceDetails');
     }
 
     const onSubmit = () => {
@@ -113,36 +69,21 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices, curre
         onOpen()
     }
 
-    const filterCategories = () => {
+    const removeLastCategory = () => {
         let categories = [...categoriesIds];
-        // if (subService && categoriesIds?.includes(subService.id)) {
-        //     categories = categoriesIds.filter(id => id !== subService?.id)
-        // } else {
-        //     if (service && categoriesIds?.includes(service.id)) {
-        //         categories = categoriesIds.filter(id => id !== service?.id)
-        //     }
-        // }
         categories.pop()
         dispatch(selectCategoriesIds(categories))
     }
 
-    const filterServiceRequests = () => {
-        if (subService?.type === EServiceCategoryType.IndividualServices) {
-            const diagnoseCategoryRequestsIds: number[] = allCategories
-                .find(item => item.type === EServiceCategoryType.Diagnose)
-                ?.serviceRequests.map(item => item.id) || [];
-            const codes = selectedSR
-                .filter(item => !subService.serviceRequests.find(el => item === el.id) || diagnoseCategoryRequestsIds.includes(item))
-            dispatch(selectSRMultiple(codes));
-        }
-    }
-
-    const handleBack = () => {
-        filterCategories();
-        // filterServiceRequests();
+    const clearData = () => {
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(clearAppointmentSteps("serviceNeeds"));
+    }
+
+    const handleBack = () => {
+        removeLastCategory();
+        clearData();
         handleSetScreen("serviceNeeds");
     }
 

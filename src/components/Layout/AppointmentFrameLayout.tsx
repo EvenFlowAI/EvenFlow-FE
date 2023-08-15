@@ -31,7 +31,7 @@ import {encodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
-import {useAnalytics, useAnalyticsBySCId, useException, useStorage} from "../../utils/hooks";
+import {useAnalytics, useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
 import {
     updateRecalls, updatePackageOption,
     setCurrentFrameScreen,
@@ -55,6 +55,10 @@ import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/Service
 import {TView} from "../Welcome/types";
 import {getTrimmedKey, SCREENS} from "../AppointmentFlow/AppointmentFrame/utils";
 import {IServiceRequestShort} from "../../store/reducers/serviceRequests/types";
+import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig/actions";
+import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
+import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
+import {getCurrentUser} from "../../store/reducers/users/actions";
 
 const Container = styled('div')({
     display: "flex",
@@ -91,7 +95,7 @@ export const AppointmentFrameLayout = () => {
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { currentConfig, isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
@@ -103,6 +107,7 @@ export const AppointmentFrameLayout = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const showError = useException();
+    const currentUser = useCurrentUser();
     const {t} = useTranslation();
 
     const theme = useTheme();
@@ -110,10 +115,6 @@ export const AppointmentFrameLayout = () => {
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-
-    const currentConfig = useMemo(() => {
-        return config.find(item => item.serviceType?.toString() === serviceType?.toString());
-    }, [config, serviceType])
 
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
@@ -138,6 +139,12 @@ export const AppointmentFrameLayout = () => {
         dispatch(setCurrentFrameScreen(screen));
     }, []);
 
+    const handleTransportationScreen = (option:IFirstScreenOption) => {
+        if (option.transportationOption) {
+            dispatch(setTransportationAvailable(false));
+        }
+    }
+
     const updateServiceTypeOption = useCallback((data:IAppointmentByQuery): boolean => {
         let needToShowService = needToShowServiceTypes;
         if (data.serviceTypeOption) {
@@ -145,6 +152,7 @@ export const AppointmentFrameLayout = () => {
             if (optionExists) {
                 needToShowService = false;
                 dispatch(setServiceTypeOption(data.serviceTypeOption));
+                handleTransportationScreen(data.serviceTypeOption);
             }
         }
         setNeedToShowServiceTypes(needToShowService)
@@ -248,6 +256,18 @@ export const AppointmentFrameLayout = () => {
         }
     }, [serviceType, customerLoadedData, valueService])
 
+    useEffect(() => {
+        if (currentConfig && serviceTypeOption?.transportationOption) dispatch(setTransportationAvailable(false));
+    }, [serviceTypeOption, currentConfig])
+
+    useEffect(() => {
+        if (currentUser && scProfile) dispatch(loadShortSC(false, scProfile.dealershipId));
+    }, [currentUser, scProfile])
+
+    useEffect(() => {
+        dispatch(getCurrentUser(true))
+    }, [])
+
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);
         dispatch(setCurrentFrameScreen(name));
@@ -261,8 +281,7 @@ export const AppointmentFrameLayout = () => {
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
                 needToShowServiceSelection={needToShowServiceTypes}
                 handleSetScreen={handleSetScreen}
-                onUpdateAppointment={onUpdateAppointment}
-                currentConfig={currentConfig}/>,
+                onUpdateAppointment={onUpdateAppointment}/>,
             serviceNeeds: <ServiceNeedsFrame
                 page={serviceCategoryPage}
                 setPage={setServiceCategoryPage}
@@ -278,17 +297,14 @@ export const AppointmentFrameLayout = () => {
             maintenanceDetails: <MaintenanceDetails
                 onBack={handleSetScreen}
                 onNext={handleSetScreen}
-                currentConfig={currentConfig}
             />,
             packageSelection: <PackageSelection
-                currentConfig={currentConfig}
                 onBack={handleChangeScreen('maintenanceDetails')}
                 onNext={handleSetScreen}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             describeMore: <AddInfo
                 handleSetScreen={handleSetScreen}
-                currentConfig={currentConfig}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
             opsCode: <SelectOpsCode
@@ -298,27 +314,25 @@ export const AppointmentFrameLayout = () => {
             />,
             vehicleData: <VehicleData
                 onBack={handleChangeScreen('describeMore')}
-                currentConfig={currentConfig}
                 onNext={handleSetScreen}
             />,
             consultantSelection: <ConsultantSelection
                 onBack={handleChangeScreen('serviceNeeds')}
-                onNext={handleChangeScreen(currentConfig?.appointmentSelection ? 'appointmentTiming' : "appointmentSelection")}
+                onNext={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
             />,
             appointmentTiming: <AppointmentTiming
-                onBack={handleChangeScreen(currentConfig?.advisorSelection && consultants.length ? 'consultantSelection' : 'serviceNeeds')}
+                onBack={handleChangeScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')}
                 onNext={handleChangeScreen('appointmentSelection')}
             />,
             appointmentSelection: <AppointmentSelection
                 handleSetScreen={handleSetScreen}
-                currentConfig={currentConfig}
             />,
             transportationNeeds: <TransportationNeeds
                 onBack={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmation')}
             />,
             appointmentConfirmation: <AppointmentConfirmationFrame
-                onBack={handleChangeScreen(currentConfig?.transportationNeeds && !serviceTypeOption?.transportationOption
+                onBack={handleChangeScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption
                     ? 'transportationNeeds'
                     : 'appointmentSelection')}
                 onChangeSlot={handleChangeScreen('appointmentSelection')}
@@ -343,7 +357,8 @@ export const AppointmentFrameLayout = () => {
         }
         return carSelections[currentScreen];
     }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,
-        needToShowServiceTypes, onUpdateAppointment, serviceCategoryPage]);
+        needToShowServiceTypes, onUpdateAppointment, serviceCategoryPage, isTransportationAvailable,
+        isAdvisorAvailable, isAppointmentTimingAvailable]);
 
     const getTitle = () => {
         switch (currentScreen) {

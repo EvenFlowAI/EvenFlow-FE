@@ -30,6 +30,7 @@ import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameR
 import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {useCurrentUser} from "../../../utils/hooks";
+import {getMaintenanceList} from "./uiUtils";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -59,9 +60,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         selectedRecalls,
         hashKey,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {selectedSR, serviceRequests, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-
+    const { allCategories } = useSelector((state: RootState) => state.categories);
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
     const {id} = useParams();
@@ -74,7 +75,23 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
     const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterOptionExists || isManagingAppointment;
-    const currentService = useMemo(() => page === EServiceCategoryPage.Page1 ? selectedService : subService, [page, selectedService, subService]);
+    const currentService = useMemo(() => page === EServiceCategoryPage.Page1
+        ? selectedService
+        : subService, [page, selectedService, subService]);
+    const selectedServices = useMemo(() => {
+            return getMaintenanceList(
+                serviceRequests,
+                selectedRecalls,
+                selectedSR,
+                selectedPackage,
+                allCategories,
+                categoriesIds,
+                valueService,
+                packageEMenuType,
+                scProfile?.maintenancePackageOptionTypes)
+        },
+        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService,
+            selectedRecalls, packageEMenuType, scProfile])
 
     const handleBackScreen = () => {
         setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
@@ -131,9 +148,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const handleCategoryHighlight = (selectedCategory: IServiceCategory) => {
         if (categoriesIds && selectedCategory.type !== EServiceCategoryType.LinkToPage2) {
-            // const categories = categoriesIds?.includes(selectedCategory.id)
-            //     ? categoriesIds
-            //     : [...categoriesIds, selectedCategory.id];
             dispatch(selectCategoriesIds([...categoriesIds, selectedCategory.id]));
         }
     }
@@ -185,16 +199,22 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage || (packageEMenuType !== null));
         if (card.type === EServiceCategoryType.ValueService) return Boolean(valueService?.selectedService);
         if (card.type === EServiceCategoryType.OpenRecalls) {
-            return Boolean(selectedRecalls.length && categoriesIds?.includes(card.id));
+            return Boolean(selectedRecalls.length
+                // && categoriesIds?.includes(card.id)
+            );
         }
         if (card.type === EServiceCategoryType.IndividualServices) {
             return Boolean(serviceCategories
-                .find(cat => cat.type === EServiceCategoryType.IndividualServices && card.id === cat.id
+                .find(cat => cat.type === EServiceCategoryType.IndividualServices
+                    // && categoriesIds.includes(card.id)
+                    && card.id === cat.id
                     && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
         }
         if (card.type === EServiceCategoryType.Diagnose) {
             return Boolean(serviceCategories
-                .find(cat => cat.type === EServiceCategoryType.Diagnose && card.id === cat.id
+                .find(cat => cat.type === EServiceCategoryType.Diagnose
+                    // && categoriesIds.includes(card.id)
+                    && card.id === cat.id
                     && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
         }
         return categoriesIds?.includes(card.id)
@@ -202,6 +222,10 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const getCardIsActive = (card: IServiceCategory): boolean => {
         return currentService?.id === card.id && !categoriesIds.includes(card.id) && card.type !== EServiceCategoryType.LinkToPage2
+    }
+
+    const handleNext = () => {
+        onSelect('maintenanceDetails');
     }
 
     return (
@@ -219,10 +243,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             <CartTable/>
             <Actions
                 prevDisabled={history?.location?.search?.includes('view=unique')}
-                nextDisabled={!currentService}
-                hideNext
+                hideNext={!selectedServices?.length}
                 nextLabel={t("Next")}
-                onNext={() => {}}
+                onNext={handleNext}
                 onBack={handleBack} />
         </StepWrapper>
     );

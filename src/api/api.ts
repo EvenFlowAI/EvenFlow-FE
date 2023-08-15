@@ -9,7 +9,6 @@ import {
     IConfig,
     IListAppointmentRequest,
     ISearchCustomerParams,
-    ISearchTerm,
     ISecurityCode,
     ISessionId,
     IServiceCenterId,
@@ -41,7 +40,6 @@ const appointment = {
             endUserRequest.get("/appointments", {headers, params}),
     searchCustomer: (params: ISearchCustomerParams): TApiResponse<ICustomerLoadedData> => request.get("/customers", {params}),
     searchCustomerByKey: (headers: ISessionId, params: ISearchCustomerParams): TApiResponse => endUserRequest.get("/customers/by-session", {params, headers}),
-    sendConfirmation: (data: ISearchTerm): TApiResponse<string> => request.post("/sessions/open", data),
     confirm: (headers: ISessionId,  data: ISecurityCode): TApiResponse => endUserRequest.post(
         '/sessions/activate', data, {headers}),
     cancelByKey: (key: string): TApiResponse => request.put(`/appointments/${key}/cancel/by-key`),

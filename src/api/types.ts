@@ -83,8 +83,6 @@ export interface ICreateAppointment {
         year: string | null;
         model: string,
         mileage: string | null;
-        transmission: string;
-        driveType: string;
         engineTypeId?: number|null;
     },
     isNeedCall: boolean;

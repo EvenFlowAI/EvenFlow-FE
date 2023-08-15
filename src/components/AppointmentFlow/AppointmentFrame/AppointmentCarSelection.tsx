@@ -12,13 +12,12 @@ import {ILoadedVehicle} from "../../../api/types";
 import {checkSelectedCar} from "./utils";
 import {
     clearAppointmentData, setHashKey,
-    setMaintenanceDetails, setServiceTypeOption, setSideBarSteps, setVehicle,
+    setServiceTypeOption, setSideBarSteps, setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {TScreen} from "../../Layout/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import {getBlankVehicle, selectSR, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {useException} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
@@ -78,14 +77,14 @@ type TProps = {
     onBack: TCallback;
     loading: boolean;
     needToShowServiceSelection: boolean;
-    currentConfig: TServiceTypeSettings|undefined;
     handleSetScreen: TArgCallback<TScreen>;
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
     onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
 }
+
 export const AppointmentCarSelection: React.FC<TProps> = ({
                                                               onUpdateAppointment, onBack, loading, handleSetScreen,
-                                                              needToShowServiceSelection, setNeedToShowServiceSelection, currentConfig
+                                                              needToShowServiceSelection, setNeedToShowServiceSelection
                                                           }) => {
 
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -97,6 +96,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         makes
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
+    const { isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();
@@ -126,15 +126,14 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
     const getNextScreen = useCallback((): TScreen => {
         let nextScreen: TScreen = serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
         if (valueService?.selectedService) {
-            nextScreen = currentConfig?.advisorSelection
+            nextScreen = isAdvisorAvailable
                 ? 'consultantSelection'
                 : 'appointmentTiming'
         }
         return nextScreen;
-    }, [serviceType, valueService, currentConfig, consultants])
+    }, [serviceType, valueService, isAdvisorAvailable, consultants])
 
     useEffect(() => {
-        dispatch(setMaintenanceDetails({ mileage: ''}));
         if (customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)) {
             dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
             if (needToShowServiceSelection) {

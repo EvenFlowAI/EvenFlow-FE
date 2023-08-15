@@ -1,6 +1,11 @@
 import React, {Dispatch, SetStateAction, useCallback, useState} from 'react';
 import {Table} from "../UI/Table";
-import {AppointmentStatus, appointmentStatuses, IAppointmentByQuery, jobTypes} from "../../api/types";
+import {
+    AppointmentStatus,
+    appointmentStatuses,
+    IAppointmentByQuery,
+    jobTypes
+} from "../../api/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {ViewAppointmentDialog} from "./ViewAppointmentDialog";
 import moment from "moment";
@@ -55,9 +60,16 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
         onOpen();
     }
 
-    const handleEdit = () => {
+    const openInNewTab = async () => {
+        if (viewItem?.hashKey) {
+            const url = window.location.href.replace('/admin/appointments', `/appointment-update/${viewItem.hashKey}?fromAdmin=true`)
+            window.open(url, '_blank', 'noreferrer');
+        }
+    };
+
+    const handleEdit = async () => {
         setAnchorEl(null);
-        onEditOpen();
+        await openInNewTab();
     }
 
     const handleCancel = useCallback(() => {

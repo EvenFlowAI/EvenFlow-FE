@@ -39,7 +39,6 @@ import TotalComplimentary from "./PackageSelectionParts/TotalComplimentary";
 import {useTranslation} from "react-i18next";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
-import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
 import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
 import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
@@ -272,16 +271,15 @@ export const FeesText = styled('div')<Theme, { count: number }>(({theme, count})
 type TPackageSelectionProps = {
     onNext: TArgCallback<TScreen>;
     onBack: () => void;
-    currentConfig: TServiceTypeSettings|undefined;
     onAddServices: () => void;
 }
 
-export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices, currentConfig}) => {
+export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {
         selectedPackage,
         selectedVehicle,
-        maintenanceDetails,
         packagePricingType,
         packageOptionType,
         packageEMenuType,
@@ -322,7 +320,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                         serviceCenterId: decodeSCID(id),
                         vehicle: {
                             ...selectedVehicle,
-                            mileage: selectedVehicle?.mileage ?? maintenanceDetails.mileage
+                            mileage: selectedVehicle?.mileage
                         }
                     }
                 }
@@ -337,7 +335,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 .finally(() => {setLoading(false)})
 
         }
-    }, [id, selectedVehicle, maintenanceDetails]);
+    }, [id, selectedVehicle]);
 
     const setClasses = (id: number, cls: string): string => {
         if (id === localSelectedPackage?.id) {
@@ -361,9 +359,9 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     }
 
     const handleNextScreen = (): void => {
-        onNext(currentConfig?.advisorSelection
+        onNext(isAdvisorAvailable
             ? 'consultantSelection'
-            : currentConfig?.appointmentSelection
+            : isAppointmentTimingAvailable
                 ? 'appointmentTiming'
                 : "appointmentSelection")
     }
@@ -463,6 +461,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                         selectedPackage={localSelectedPackage}
                         setLocalPackage={setLocalSelectedPackage}
                         setLocalPricingType={setLocalSelectedPricingType}
+                        localSelectedPricingType={localSelectedPricingType}
                     />
                     : <React.Fragment>
                         <Wrapper count={packages.length}>
@@ -547,7 +546,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 : <Actions
                 onBack={handleBack}
                 nextLabel={t("Next")}
-                nextDisabled={!localSelectedPackage}
+                nextDisabled={!localSelectedPackage || localSelectedPricingType === null}
                 onNext={() => handleNext(localSelectedPackage)}/>}
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
