@@ -5,13 +5,14 @@ import {useTranslation} from "react-i18next";
 import {makeStyles} from "@material-ui/core/styles";
 import {setServiceWarningOpen} from "../../../store/reducers/modals/actions";
 import {
-    clearSelectedServices,
+    clearSelectedServices, setAddress,
     setCurrentFrameScreen, setServiceTypeOption,
-    setUsualFlowNeeded
+    setUsualFlowNeeded, setWelcomeScreenView, setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useHistory, useParams} from "react-router-dom";
+import {Routes} from "../../../config/routes";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -50,8 +51,22 @@ const ServiceImpactedWarning = () => {
         dispatch(setServiceWarningOpen(false));
         if (history.location.pathname.includes("welcome")) {
             history.push( "/f/appointment/" + id);
+        } else {
+            dispatch(setAddress(null));
+            dispatch(setZipCode(""));
         }
     }
+
+    // const onCancel = () => {
+    //     dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+    //     dispatch(setWelcomeScreenView("serviceSelect"));
+    //     dispatch(setServiceWarningOpen(false));
+    //     if (!history.location.pathname.includes("welcome")) {
+    //         dispatch(setAddress(null));
+    //         dispatch(setZipCode(""));
+    //         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+    //     }
+    // }
 
     return (
         <BaseModal
