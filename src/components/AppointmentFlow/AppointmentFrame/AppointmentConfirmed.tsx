@@ -39,6 +39,13 @@ const Paper = styled('div')(({theme}) => ({
     },
 }))
 
+const ButtonsWrapper = styled('div')({
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: "15px",
+    marginBottom: 20,
+})
+
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
@@ -366,7 +373,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                         <div>{item.content}</div>
                     </React.Fragment>;
                 })}
-
+            </Wrapper>
+            <ButtonsWrapper>
                 <Button color="primary" fullWidth variant="outlined" onClick={onModify}>
                     {t("Modify Appointment")}
                 </Button>
@@ -374,7 +382,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                     {t("Add to Calendar")}
                 </Button>
                 <Divider />
-            </Wrapper>
+            </ButtonsWrapper>
             { !isFrame ? <Button color="primary" fullWidth variant="outlined" onClick={onMakeNew}>
                 {t("Make New Appointment")}
             </Button> : null}
