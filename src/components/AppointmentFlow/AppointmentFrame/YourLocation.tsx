@@ -11,8 +11,11 @@ import {
     clearAppointmentData,
     loadAncillaryPriceByZip,
     loadFilteredZip,
-    setAddress, setShowServiceCentersList,
+    setAddress,
+    setDefaultVisitCenterOption,
+    setShowServiceCentersList,
     setSideBarSteps,
+    setWelcomeScreenView,
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
@@ -32,6 +35,8 @@ import {TArgCallback} from "../../../types/types";
 import {TView} from "../../Welcome/types";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
+import {setServiceWarningOpen} from "../../../store/reducers/modals/actions";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -103,7 +108,14 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {zipCode: zipCodeValue, address, filteredZipCodes, serviceTypeOption, hashKey, selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        zipCode: zipCodeValue,
+        address,
+        filteredZipCodes,
+        serviceTypeOption,
+        selectedVehicle,
+        appointmentByKey
+        ,} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
@@ -127,8 +139,32 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }, [zipCodeValue])
 
     const clearSelectedData = () => {
-        dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
-        dispatch(clearAppointmentData())
+        if (!customerLoadedData?.isUpdating) {
+            dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
+            dispatch(clearAppointmentData())
+        }
+    }
+
+    const handleManagingFlow = () => {
+        const mobileServiceSelected = serviceTypeOption?.type === EServiceType.MobileService
+            && appointmentByKey?.serviceTypeOption
+            && appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService;
+        const mobileServiceChanged = serviceTypeOption?.type !== EServiceType.MobileService
+            && appointmentByKey?.serviceTypeOption?.type === EServiceType.MobileService;
+        if (mobileServiceSelected || mobileServiceChanged) {
+            dispatch(setServiceWarningOpen(true))
+        } else {
+            scProfile && dispatch(checkPodChanged(scProfile.id, showError))
+        }
+    }
+
+
+    const onNextStep = () => {
+        if (customerLoadedData?.isUpdating) {
+            handleManagingFlow()
+        } else {
+            onNext();
+        }
     }
 
     const clearAddress = () => {
@@ -147,33 +183,42 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         setZip(option ?? "");
     }
 
+    const onBackToFirstScreen = async () => {
+        await dispatch(setShowServiceCentersList(false))
+        await dispatch(setWelcomeScreenView("serviceSelect"));
+        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+    }
+
     const handleBack = () => {
-        clearAddress();
-        clearSelectedData();
-        const isManagingAppointment = Boolean(hashKey?.length) && (!serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id))
-        const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
-        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists || isManagingAppointment;
-        const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
-        if (currentUser) {
-            dispatch(setShowServiceCentersList(false));
-            onGoToFirstScreen(prevScreen)
+        if (customerLoadedData?.isUpdating && appointmentByKey) {
+            onBackToFirstScreen()
         } else {
-            setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
-            if (shouldSkipServiceTypeSelect) {
-                if (customerLoadedData && selectedVehicle) {
-                    onBack()
-                } else {
-                    history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
-                }
-            } else {
+            clearAddress();
+            clearSelectedData();
+            const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
+            const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
+            const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
+            if (currentUser) {
+                dispatch(setShowServiceCentersList(false));
                 onGoToFirstScreen(prevScreen)
+            } else {
+                setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
+                if (shouldSkipServiceTypeSelect) {
+                    if (customerLoadedData && selectedVehicle) {
+                        onBack()
+                    } else {
+                        history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+                    }
+                } else {
+                    onGoToFirstScreen(prevScreen)
+                }
             }
         }
     }
 
     const onSuccess = (data: TAncillaryPriceByZip) => {
         if (data.feeAmount === 0 && data.feeType === EAncillaryType.Amount) {
-            onNext();
+            onNextStep();
         } else {
             onOpen();
         }
@@ -205,6 +250,12 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         if (typeof address === 'string') return address;
         if (address?.label) return address?.label;
         return isFormChecked ? t('Address is required') : placeholder
+    }
+
+    const setDefaultVisitCenter = async () => {
+        await dispatch(setDefaultVisitCenterOption());
+        await dispatch(clearAppointmentData());
+        await dispatch(setSideBarSteps([]));
     }
 
     return (
@@ -262,8 +313,18 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
             </SelectWrapper>
             <Actions onBack={handleBack} onNext={handleNext} nextLabel={t("Next")}/>
-            <DisplayAncillaryPrice onNext={onNext} open={isOpen} onClose={onClose}/>
-            <UnavailableService open={isUnavailableOpen} onClose={onUnavailableClose} setFormChecked={setFormChecked}/>
+            <DisplayAncillaryPrice
+                onNext={onNextStep}
+                open={isOpen}
+                onClose={onClose}
+                onBackToServiceOption={onBackToFirstScreen}
+                onVisitCenter={setDefaultVisitCenter}/>
+            <UnavailableService
+                open={isUnavailableOpen}
+                onClose={onUnavailableClose}
+                setFormChecked={setFormChecked}
+                onBackToServiceOption={onBackToFirstScreen}
+                onVisitCenter={setDefaultVisitCenter}/>
         </StepWrapper>
     );
 };

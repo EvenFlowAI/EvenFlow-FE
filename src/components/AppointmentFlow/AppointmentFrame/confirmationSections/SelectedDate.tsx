@@ -14,9 +14,6 @@ const TitleWrapper = styled('div')({
     alignItems: "center",
     gap: "8px",
     margin: '8px 0',
-    "& svg": {
-        color: "#757575"
-    }
 })
 
 type TProps = {
@@ -36,7 +33,7 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
             <ConfirmationTitle>
                 {t("Selected Date & Time")}
             </ConfirmationTitle>
-            <Edit fontSize="small" onClick={handleChangeSlot}/>
+            <Edit htmlColor="#142EA1" fontSize="small" onClick={handleChangeSlot} style={{cursor: "pointer"}}/>
         </TitleWrapper>
         {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
             ? <div><span style={{fontWeight: 'bold'}}>{t("Date")}</span>: {moment.utc(serviceValetAppointment?.date).format('ddd, MMMM D')}</div>

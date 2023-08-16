@@ -8,7 +8,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {EUserType, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
     clearAppointmentSteps,
-    loadMakes,
     setRecallsAreShown, setSelectedRecalls,
     setVehicle,
     setVehicleDataFromValueService,
@@ -21,7 +20,6 @@ import moment from "moment";
 import {TextField} from "../../UI/TextField";
 import {useException, useModal} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
-import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
@@ -32,6 +30,7 @@ import {Api} from "../../../config/requests";
 import {Loading} from "../../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
 import NoRecalls from "../../Modals/RecallsByVin/NoRecalls";
+import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -195,12 +194,6 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         }
     }, [makes, selectedVehicle])
 
-    useEffect(() => {
-        dispatch(loadMileage(decodeSCID(id)));
-        dispatch(loadEngineType(decodeSCID(id)));
-        dispatch(loadMakes(decodeSCID(id)));
-    }, [id]);
-
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
         if (isXS) e.preventDefault();
         if (option && !skip) {
@@ -258,15 +251,27 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         return !errorsArray.length;
     }
 
+    const goToNextScreen = () => {
+        onNext(service?.type === EServiceCategoryType.MaintenancePackage
+            ? 'packageSelection'
+            : isAdvisorAvailable
+                ? 'consultantSelection'
+                : isAppointmentTimingAvailable
+                    ? 'appointmentTiming'
+                    : "appointmentSelection");
+    }
+
+    const handleUpdating = () => {
+        service?.type === EServiceCategoryType.MaintenancePackage
+            ? goToNextScreen()
+            : dispatch(setChangesCompletedOpen(true))
+    }
+
     const handleNext = () => {
         if (isValid()) {
-            onNext(service?.type === EServiceCategoryType.MaintenancePackage
-                ? 'packageSelection'
-                : isAdvisorAvailable
-                    ? 'consultantSelection'
-                    : isAppointmentTimingAvailable
-                        ? 'appointmentTiming'
-                        : "appointmentSelection");
+            customerLoadedData?.isUpdating
+                ? handleUpdating()
+                : goToNextScreen()
         }
     }
 

@@ -1,17 +1,16 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {UserData} from "./confirmationSections/UserData";
 import {styled} from "@material-ui/core";
 import {SelectedDate} from "./confirmationSections/SelectedDate";
-import {Review} from "./confirmationSections/Review";
-import {SelectedPrice} from "./confirmationSections/SelectedPrice";
 import {Reminders} from "./confirmationSections/Reminders";
-import {TCallback} from "../../../types/types";
+import {TArgCallback, TCallback} from "../../../types/types";
 import {decodeSCID} from "../../../utils/utils";
 import {
-    createOrUpdateAppointment,
+    clearAppointmentData,
+    createOrUpdateAppointment, loadConsultants,
+    setCurrentFrameScreen,
     setReminders
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -19,15 +18,22 @@ import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import {
-    loadAllServiceCategories,
+    loadAllServiceCategories, loadSRs,
 } from "../../../store/reducers/appointment/actions";
 import Vehicle from "./confirmationSections/Vehicle";
-import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
-import Address from "./confirmationSections/Address";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
-import ServiceType from "./confirmationSections/ServiceType";
 import {useTranslation} from "react-i18next";
+import ServiceRequestsManage from "./manageSections/ServiceRequestsManage";
+import {SelectedPriceManage} from "./manageSections/SelectedPriceManage";
+import ServiceTypeManage from "./manageSections/ServiceTypeManage";
+import {ReviewManage} from "./manageSections/ReviewManage";
+import ConfirmCancelUpdate from "../../Modals/ConfirmCancelUpdate/ConfirmCancelUpdate";
+import {ILoadedVehicle} from "../../../api/types";
+import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
+import {Loading} from "../../UI/Loading";
+import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import AddressManage from "./manageSections/AddressManage";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -46,8 +52,14 @@ const Wrapper = styled('div')(({theme}) => ({
     },
     [theme.breakpoints.down("sm")]: {
         gridTemplateColumns: "1fr"
-    }
+    },
 }));
+
+const ManageTitle = styled('div')({
+    fontSize: 20,
+    fontWeight: 700,
+    textTransform: 'uppercase'
+})
 
 const Info = styled('div')({
     fontSize: 12
@@ -60,9 +72,10 @@ interface TError {
 
 type TProps = {
     onChangeSlot: TCallback;
-} & TActionProps;
+    onUpdateAppointment: TArgCallback<ILoadedVehicle>;
+};
 
-export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
+export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppointment}) => {
     const [errors, setErrors] = useState<string[]>([]);
     const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const currentUser = useCurrentUser();
@@ -75,6 +88,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     const {id} = useParams();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
+    const {isOpen: isCancelConfirmOpen, onClose: onCancelConfirmClose, onOpen: onCancelConfirmOpen} = useModal();
 
     const showError = useException();
     const dispatch = useDispatch();
@@ -87,8 +101,13 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
     }, [currentUser, appointment.scProfile])
 
     useEffect(() => {
-        appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
-    }, [appointment.scProfile])
+        if (appointment?.scProfile) {
+            dispatch(loadAllServiceCategories(appointment.scProfile.id));
+            dispatch(loadConsultants(id, appointmentFrame.serviceTypeOption?.id ?? null))
+            dispatch(loadCategoriesByQuery(appointment.scProfile.id))
+            dispatch(loadSRs(appointment.scProfile.id))
+        }
+    }, [appointment.scProfile, appointmentFrame.serviceTypeOption, id])
 
     useEffect(() => {
         dispatch(setReminders([0, 2]));
@@ -118,6 +137,10 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
 
     const handleError = (e: any) => {
         showError(e);
+        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
+            dispatch(setChangesCompletedOpen(false))
+            dispatch(setSlotsWarningOpen(true))
+        }
         if (e.response?.data?.errors) {
             const data = [...e.response.data.errors]
             setErrors(() => {
@@ -126,41 +149,66 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         }
     }
 
+    const onNext = () => {
+        dispatch(setCurrentFrameScreen("appointmentConfirmed"))
+    }
+
     const handleCreateAppointment = () => {
         if (checkIsValid()) {
             dispatch(createOrUpdateAppointment(decodeSCID(id), onNext, handleError))
         }
     }
 
+    const onCancelChanges = () => {
+        if (appointmentFrame.selectedVehicle) {
+            const vehicle = {...appointmentFrame.selectedVehicle};
+            dispatch(clearAppointmentData())
+            onUpdateAppointment(vehicle)
+        }
+    }
+
     return <StepWrapper>
+        <ManageTitle>Manage Appointment</ManageTitle>
         <Wrapper>
-            <div>
-                <SelectedDate onChangeSlot={onChangeSlot} />
-                <Vehicle/>
-                <ServiceRequests/>
-                <Address/>
-                <SelectedPrice/>
-                <div
-                    role="presentation"
-                    style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
-                    onClick={onFeesOpen}>
-                    {t("View itemized fees of services")}
-                </div>
-                <ServiceType/>
-                {appointmentFrame.transportation || appointmentFrame.serviceTypeOption?.transportationOption || isAdvisorAvailable
-                    ? <Review/>
-                    : null}
-            </div>
-            <div>
-                <UserData errors={errors} setErrors={setErrors} isEmailRequired={isEmailRequired}/>
-                <Reminders isEmailRequired={isEmailRequired}/>
-                <Info>{t("terms of our Visitor Agreement")}.</Info>
-            </div>
+            {saving
+                ? <Loading/>
+                : <React.Fragment>
+                    <div>
+                        <SelectedDate onChangeSlot={onChangeSlot} />
+                        <Vehicle/>
+                        <ServiceRequestsManage/>
+                        <AddressManage/>
+                        <SelectedPriceManage/>
+                        <div
+                            role="presentation"
+                            style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
+                            onClick={onFeesOpen}>
+                            {t("View itemized fees of services")}
+                        </div>
+                        <ServiceTypeManage/>
+                        {appointmentFrame.transportation || appointmentFrame.serviceTypeOption?.transportationOption || isAdvisorAvailable
+                            ? <ReviewManage/>
+                            : null}
+                    </div>
+                    <div>
+                        <UserData errors={errors} setErrors={setErrors} isEmailRequired={isEmailRequired}/>
+                        <Reminders isEmailRequired={isEmailRequired}/>
+                        <Info>{t("terms of our Visitor Agreement")}.</Info>
+                    </div>
+                </React.Fragment>
+}
 
         </Wrapper>
         {/*todo change to open payment window on next*/}
-        <Actions loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
+        <Actions
+            loading={saving}
+            onBack={onCancelConfirmOpen}
+            onNext={handleCreateAppointment}
+            nextLabel="Confirm Changes"
+            prevLabel="Cancel Changes"
+        />
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
         <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
+        <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
     </StepWrapper>
 };

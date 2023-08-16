@@ -16,6 +16,7 @@ import {EPackagePricingType} from "../store/reducers/appointmentFrameReducer/typ
 import {ETransportColumn} from "../store/reducers/transportationNeeds/types";
 import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
+import {EPricingDisplayType} from "../store/reducers/pricingSettings/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -241,12 +242,20 @@ export interface IListAppointment extends IBaseAppointment {
     serviceCategory: ICategory|null;
 }
 
+export type TDetailedAppointmentPrice = {
+    requestName: string;
+    priceValue: number;
+    pricingDisplayType?: EPricingDisplayType;
+}
+
 export interface IAppointmentByQuery extends IBaseAppointment {
     serviceCategories: ICategory[];
     jobType?: EJobType;
     serviceTypeOption?: IFirstScreenOption;
     recalls?: string[];
     recallDescriptions?: string[];
+    consultant?: Partial<IServiceConsultant>|null;
+    detailedPriceList?: TDetailedAppointmentPrice[];
 }
 
 export interface ISearchCustomerParams {

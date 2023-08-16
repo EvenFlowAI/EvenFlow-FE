@@ -5,11 +5,12 @@ import {TArgCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
+    checkCarIsValid,
     clearAppointmentSteps,
     selectCategoriesIds,
     selectService,
     selectSubService,
-    setAdditionalServicesChosen,
+    setAdditionalServicesChosen, setCurrentFrameScreen,
     setShowServiceCentersList,
     setUserType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -29,8 +30,9 @@ import {Routes} from "../../../config/routes";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
-import {useCurrentUser} from "../../../utils/hooks";
+import {useCurrentUser, useException} from "../../../utils/hooks";
 import {getMaintenanceList} from "./uiUtils";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
@@ -58,9 +60,9 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         serviceTypeOption,
         packageEMenuType,
         selectedRecalls,
-        hashKey,
+        isUsualFlowNeeded,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {selectedSR, serviceRequests, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {selectedSR, serviceRequests, scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [loading, setLoading] = useState<boolean>(false);
@@ -70,11 +72,13 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const history = useHistory();
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
+    const showError = useException();
 
-    const isManagingAppointment = Boolean(hashKey?.length) && (!serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id))
+    const isServiceOptionSelected = !serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id)
+    const isManagingAppointment = customerLoadedData?.isUpdating && !isUsualFlowNeeded;
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
-    const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterOptionExists || isManagingAppointment;
+    const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterOptionExists || (isManagingAppointment && isServiceOptionSelected);
     const currentService = useMemo(() => page === EServiceCategoryPage.Page1
         ? selectedService
         : subService, [page, selectedService, subService]);
@@ -109,8 +113,12 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         if (page === EServiceCategoryPage.Page2) {
             setPage(EServiceCategoryPage.Page1);
         } else {
-            if (currentUser) dispatch(setShowServiceCentersList(false));
-            handleBackScreen()
+            if (isManagingAppointment) {
+                dispatch(setCurrentFrameScreen("manageAppointment"))
+            } else {
+                if (currentUser) dispatch(setShowServiceCentersList(false));
+                handleBackScreen()
+            }
         }
     }
 
@@ -167,7 +175,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             } else {
                 handleGA(selectedCategory);
                 handleCategoryHighlight(selectedCategory);
-                clearData();
+                !isManagingAppointment && clearData();
 
                 switch (selectedCategory?.type) {
                     case 2:
@@ -224,8 +232,16 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         return currentService?.id === card.id && !categoriesIds.includes(card.id) && card.type !== EServiceCategoryType.LinkToPage2
     }
 
+    const goNext = () => onSelect('maintenanceDetails');
+
+    const onCarIsValid = () => scProfile && dispatch(checkPodChanged(scProfile.id, showError));
+
     const handleNext = () => {
-        onSelect('maintenanceDetails');
+        if (isManagingAppointment) {
+            dispatch(checkCarIsValid(onCarIsValid, goNext))
+        } else {
+            goNext()
+        }
     }
 
     return (

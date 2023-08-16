@@ -55,3 +55,9 @@ export type TCard = {
     name: EAppointmentTimingType;
     icon: JSX.Element;
 }
+
+export interface TError {
+    field: string,
+    message: string
+}
+

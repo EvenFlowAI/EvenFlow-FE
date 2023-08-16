@@ -8,18 +8,20 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {concatAddress, getCalendarUrl} from "../../../utils/utils";
 import {G_CALENDAR_FORMAT} from "../../../config/constants";
-import {TCallback} from "../../../types/types";
+import {TArgCallback} from "../../../types/types";
 import {getMaintenanceDescription} from "./uiUtils";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {
-    clearAppointmentData, setSideBarSteps,
+    clearAppointmentData, setCurrentFrameScreen, setSideBarSteps,
     setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useCurrentUser} from "../../../utils/hooks";
+import {ILoadedVehicle} from "../../../api/types";
+import {setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 
 const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -90,9 +92,9 @@ type TItem = {
 
 
 type TProps = {
-    onModify: TCallback;
+    onUpdateAppointment: TArgCallback<ILoadedVehicle>;
 }
-export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
+export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) => {
     const [
         appointment,
         serviceValetAppointment,
@@ -116,6 +118,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         advisor,
         packagePriceTitles,
         dropOffSettings,
+        customerLoadedData,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -140,6 +143,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.advisor,
         state.appointmentFrame.packagePriceTitles,
         state.appointment.dropOffSettings,
+        state.appointment.customerLoadedData,
     ]);
 
     const {t} = useTranslation();
@@ -357,6 +361,16 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         await dispatch(setSideBarSteps([]));
         await dispatch(setWelcomeScreenView(currentUser ? "serviceCenterSelect" : "select"));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+    }
+
+    const onModify = async () => {
+        if (vehicle) {
+            if (customerLoadedData) {
+                await dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
+            }
+            await onUpdateAppointment(vehicle)
+            await dispatch(setCurrentFrameScreen("manageAppointment"))
+        }
     }
 
     return <StepWrapper>

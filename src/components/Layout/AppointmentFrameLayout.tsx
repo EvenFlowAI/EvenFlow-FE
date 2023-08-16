@@ -24,23 +24,28 @@ import {
     clearCustomerCache,
     getBlankVehicle,
     getCustomerCache,
-    selectSR,
+    selectSRMultiple,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {encodeSCID} from "../../utils/utils";
+import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
-import {useAnalytics, useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
+import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
 import {
-    updateRecalls, updatePackageOption,
+    updateRecalls,
+    updatePackageOption,
     setCurrentFrameScreen,
     setServiceTypeOption,
-    setSideBarSteps,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
-    setWelcomeScreenView
+    setWelcomeScreenView,
+    handleSideBarAppointmentUpdate,
+    updateConsultant,
+    setAppointmentByKey,
+    setAppointmentSaving,
+    checkCarIsValid, loadMakes
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {EServiceCategoryPage, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
@@ -59,6 +64,11 @@ import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
+import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
+import {loadEngineType, loadMileage} from "../../store/reducers/vehicleDetails/actions";
+import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
+import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
 
 const Container = styled('div')({
     display: "flex",
@@ -88,14 +98,14 @@ export const AppointmentFrameLayout = () => {
         trackerCreated,
         valueService,
         currentScreen: currentFrameScreen,
-        consultants,
         makes,
         serviceTypeOption,
         hashKey,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const { currentConfig, isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
+    const {currentConfig, isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
@@ -145,18 +155,20 @@ export const AppointmentFrameLayout = () => {
         }
     }
 
-    const updateServiceTypeOption = useCallback((data:IAppointmentByQuery): boolean => {
+    const handleServiceTypeOption = useCallback((data:IAppointmentByQuery): IFirstScreenOption|null => {
         let needToShowService = needToShowServiceTypes;
+        let option: IFirstScreenOption|null = null;
         if (data.serviceTypeOption) {
             const optionExists = Boolean(firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id))
             if (optionExists) {
+                option = data.serviceTypeOption;
                 needToShowService = false;
                 dispatch(setServiceTypeOption(data.serviceTypeOption));
                 handleTransportationScreen(data.serviceTypeOption);
             }
         }
         setNeedToShowServiceTypes(needToShowService)
-        return needToShowService;
+        return option;
     }, [needToShowServiceTypes, firstScreenOptions])
 
     const goToServiceTypeSelection = useCallback(() => {
@@ -167,38 +179,47 @@ export const AppointmentFrameLayout = () => {
         }
     }, [history, needToShowServiceTypes])
 
-    const updateServiceRequests = async (serviceRequests: IServiceRequestShort[]) => serviceRequests.forEach(item => dispatch(selectSR(item.id)));
+    const updateServiceRequests = async (serviceRequests: IServiceRequestShort[]) => {
+        dispatch(selectSRMultiple(serviceRequests.map(el => el.id)));
+    }
 
     const onUpdateAppointment = useCallback(async(car: ILoadedVehicle) => {
         const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
         const trimmedKey = getTrimmedKey(key);
         setLoadingCar(true);
+        dispatch(setAppointmentSaving(true))
         try {
             const {data} = await API.appointment.getByKey(trimmedKey);
             await dispatch(updateRecalls(data, id));
             await dispatch(setUpdateAppointment(data));
+            await dispatch(setAppointmentByKey(data));
             await dispatch(updatePackageOption(data.maintenancePackageOption))
             await updateServiceRequests(data.serviceRequests);
-            const shouldShowServiceSelection = updateServiceTypeOption(data);
-            if (shouldShowServiceSelection) {
-                goToServiceTypeSelection();
-            } else {
-                const isMobileOrPickUp = data.serviceTypeOption && data.serviceTypeOption?.type !== EServiceType.VisitCenter;
-                handleSetScreen(isMobileOrPickUp ? 'location' : 'serviceNeeds');
-            }
+            const option = handleServiceTypeOption(data);
+            await dispatch(handleSideBarAppointmentUpdate());
+            await dispatch(updateConsultant(id, option, data.consultant?.id ?? null))
+            await dispatch(checkCarIsValid());
         } catch (e) {
             showError(e);
         } finally {
             setLoadingCar(false);
+            dispatch(setAppointmentSaving(false))
         }
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
-        updateServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
-        updateRecalls, updatePackageOption, goToServiceTypeSelection])
+        handleServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
+        updateRecalls, updatePackageOption, goToServiceTypeSelection,
+        isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes])
 
     // useAnalytics(trackerCreated, () => dispatch(setTrackerCreated(true)))
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
     useStorage();
+
+    useEffect(() => {
+        dispatch(loadMileage(decodeSCID(id)));
+        dispatch(loadEngineType(decodeSCID(id)));
+        dispatch(loadMakes(decodeSCID(id)));
+    }, [id])
 
     useEffect(() => {
         window.addEventListener('beforeunload', handleLogin)
@@ -212,8 +233,7 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (selectedVehicle && customerLoadedData) {
             if (customerLoadedData.fromSearchByName && customerLoadedData.isUpdating) {
-                if (!selectedVehicle?.mileage) dispatch(setSideBarSteps([]));
-                onUpdateAppointment(selectedVehicle).then()
+                onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
             }
         }
     }, [customerLoadedData, selectedVehicle])
@@ -320,13 +340,8 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
             />,
-            appointmentTiming: <AppointmentTiming
-                onBack={handleChangeScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')}
-                onNext={handleChangeScreen('appointmentSelection')}
-            />,
-            appointmentSelection: <AppointmentSelection
-                handleSetScreen={handleSetScreen}
-            />,
+            appointmentTiming: <AppointmentTiming handleSetScreen={handleSetScreen}/>,
+            appointmentSelection: <AppointmentSelection handleSetScreen={handleSetScreen}/>,
             transportationNeeds: <TransportationNeeds
                 onBack={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmation')}
@@ -338,9 +353,7 @@ export const AppointmentFrameLayout = () => {
                 onChangeSlot={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
-            appointmentConfirmed: <AppointmentConfirmed
-                onModify={handleChangeScreen("serviceNeeds")}
-            />,
+            appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment}/>,
             location: <YourLocation
                 onBack={handleChangeScreen('carSelection')}
                 onNext={handleChangeScreen('serviceNeeds')}
@@ -354,6 +367,9 @@ export const AppointmentFrameLayout = () => {
                 lastCategory={lastSelectedCategory}
                 onChangeVehicle={handleChangeScreen('maintenanceDetails')}
             />,
+            manageAppointment: <ManageAppointment
+                onUpdateAppointment={onUpdateAppointment}
+                onChangeSlot={handleChangeScreen('appointmentSelection')}/>,
         }
         return carSelections[currentScreen];
     }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,
@@ -417,6 +433,9 @@ export const AppointmentFrameLayout = () => {
                     </SidebarWrapper> : component
                 }
             </Container>
+            <AskChangesCompleted />
+            <SlotImpactedWarning />
+            <ServiceImpactedWarning/>
         </MuiThemeProvider>
     );
 };

@@ -11,7 +11,7 @@ import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {ILoadedVehicle} from "../../../api/types";
 import {checkSelectedCar} from "./utils";
 import {
-    clearAppointmentData, setHashKey,
+    clearAppointmentData, setCurrentFrameScreen, setHashKey,
     setServiceTypeOption, setSideBarSteps, setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -93,7 +93,8 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         valueService,
         serviceTypeOption,
         consultants,
-        makes
+        makes,
+        isUsualFlowNeeded
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const { isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -140,7 +141,9 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
                 setNeedToShowServiceSelection(false);
                 handleServiceTypeSelection()
             } else {
-                handleSetScreen(getNextScreen());
+                if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+                    handleSetScreen("manageAppointment")
+                } else handleSetScreen(getNextScreen());
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -215,7 +218,9 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         dispatch(selectSR(null));
         clearAllData()
         if (car?.appointmentHashKeys.length) {
+            customerLoadedData && dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
             await onUpdateAppointment(car)
+            dispatch(setCurrentFrameScreen("manageAppointment"))
         } else {
             dispatch(setHashKey(''));
             if (needToShowServiceSelection) {

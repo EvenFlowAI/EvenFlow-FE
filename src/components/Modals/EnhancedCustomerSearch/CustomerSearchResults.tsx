@@ -65,7 +65,7 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
 
                 <CustomerSearchTable
                     redirect={redirect}
-                    onClose={onClose}
+                    onClose={onCancel}
                     loadData={loadData}
                     isNewVehicleMode={isNewVehicleMode}/>
             </DialogContent>

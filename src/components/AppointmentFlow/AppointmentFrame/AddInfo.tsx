@@ -5,6 +5,7 @@ import {TextField} from "../UI";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
+    checkCarIsValid,
     clearAppointmentSteps,
     selectCategoriesIds,
     setAdditionalServicesChosen,
@@ -12,7 +13,7 @@ import {
 } from '../../../store/reducers/appointmentFrameReducer/actions';
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
-import {useModal} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
 import {
     selectAppointment,
     selectServiceValetAppointment,
@@ -20,6 +21,7 @@ import {
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {useTranslation} from "react-i18next";
 import AddCommentPrompt from "../../Modals/AddCommentPrompt/AddCommentPrompt";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 type TProps = {
     handleSetScreen:TArgCallback<TScreen>;
@@ -28,23 +30,29 @@ type TProps = {
     loading?: boolean;
     onAddServices: () => void;
 };
+
 export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
     const [
         subService,
         scProfile,
         service,
         categoriesIds,
+        customerLoadedData,
+        isUsualFlowNeeded,
     ] = useSelector(({appointmentFrame, appointment}: RootState) => [
         appointmentFrame.subService,
         appointment.scProfile,
         appointmentFrame.service,
         appointmentFrame.categoriesIds,
+        appointment.customerLoadedData,
+        appointmentFrame.isUsualFlowNeeded,
     ]);
     const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const dispatch = useDispatch();
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isErrorOpen, onClose: onErrorClose, onOpen: onErrorOpen} = useModal();
     const {t} = useTranslation();
+    const showError = useException();
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setFrameDescription(value))
@@ -61,12 +69,20 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
         handleSetScreen('maintenanceDetails');
     }
 
+    const onCarIsValid = () => scProfile && dispatch(checkPodChanged(scProfile.id, showError));
+
+    const onCarIsInvalid = () => handleSetScreen('maintenanceDetails');
+
     const onSubmit = () => {
         const isCommentRequired = subService ? subService?.isCommentRequired : service?.isCommentRequired;
         if (isCommentRequired && !description.length) {
             return onErrorOpen();
         }
-        onOpen()
+        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+            dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid))
+        } else {
+            onOpen()
+        }
     }
 
     const removeLastCategory = () => {

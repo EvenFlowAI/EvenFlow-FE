@@ -11,7 +11,10 @@ import {RootState} from "../../../store/rootReducer";
 import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {ITransportation} from '../../../api/types';
 import {TArgCallback, TCallback} from "../../../types/types";
-import {setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setCurrentFrameScreen,
+    setTransportation
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import theme from "../../../theme/theme";
 import {Loading} from "../../UI/Loading";
@@ -20,6 +23,8 @@ import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import {ETransportColumn} from "../../../store/reducers/transportationNeeds/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import moment from "moment";
+import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
 
 const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
     width: 287,
@@ -144,6 +149,9 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         selectedVehicle,
         packageEMenuType,
         allCategories,
+        appointmentByKey,
+        isUsualFlowNeeded,
+        customerLoadedData,
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
@@ -159,15 +167,27 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointmentFrame.selectedVehicle,
         state.appointmentFrame.packageEMenuType,
         state.categories.allCategories,
+        state.appointmentFrame.appointmentByKey,
+        state.appointmentFrame.isUsualFlowNeeded,
+        state.appointment.customerLoadedData,
     ]);
+    const dispatch = useDispatch();
 
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(s, ss, null, individualOps);
     }, [s, ss, individualOps]);
     const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
     const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])
-
-    const dispatch = useDispatch();
+    const date = useMemo(() => {
+        if (appointmentByKey && customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+            const [hh, mm] = appointmentByKey.timeSlot.split(':');
+            return appointmentByKey
+                ? moment(appointmentByKey.dateInUtc).set('hour', +hh).set("minute", +mm).toISOString(true)
+                : undefined
+        } else {
+            return appointmentDate
+        }
+    }, [appointmentByKey, appointmentDate, customerLoadedData, isUsualFlowNeeded])
 
     const getCategories = useCallback((): number[] => {
         return allCategories
@@ -188,7 +208,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             const data: TTransportationData = {
                 serviceCenterId: decodeSCID(id),
                 serviceRequestIds,
-                slot: appointmentDate,
+                slot: date,
                 serviceCategoryIds: getCategories(),
                 recalls: mapRecallsForRequest(selectedRecalls),
                 maintenancePackageOption,
@@ -201,7 +221,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                     engineTypeId: selectedVehicle.engineTypeId,
                 },
             }
-            if (appointmentDate) data.slot = appointmentDate;
             if (hashKey) data.appointmentHashKey = hashKey;
             Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
                 .then(({data}) => {
@@ -212,7 +231,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                 })
         }
     }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls,
-        packagePricingType, packageEMenuType, appointmentDate, packageOpt, categoriesIds, hashKey]);
+        packagePricingType, packageEMenuType, packageOpt, categoriesIds, hashKey, date]);
 
     const handleNext = (transportation: ITransportation|null): void => {
         ReactGA.event({
@@ -220,7 +239,11 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             action: 'Selected Transportation Need',
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
         })
-        onNext();
+        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+            dispatch(setChangesCompletedOpen(true))
+        } else {
+            onNext();
+        }
     }
 
     const handleSelectOption = (o: ITransportation|null) => {
@@ -236,15 +259,18 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const handleBack = () => {
-        dispatch(setTransportation(null));
-        onBack();
+        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+             dispatch(setCurrentFrameScreen("manageAppointment"))
+        } else {
+            dispatch(setTransportation(null));
+            onBack();
+        }
     }
 
     return <StepWrapper>
         {loading ? <Loading/>
             : transportations.length ? <TransportationWrapper>
                     {transportationNo.length ? <TransportationCard
-                        //active={Boolean(transportationNo.find(item => item.id === transportation?.id))}
                         active
                         selectedTransportation={transportation}
                         transportation={`${t("No, I will")}:`}
@@ -253,7 +279,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                         onSelectOption={handleSelectOption}
                     /> : null}
                     {transportationYes.length ? <TransportationCard
-                        //active={Boolean(transportationYes.find(item => item.id === transportation?.id))}
                         active
                         options={transportationYes}
                         selectedTransportation={transportation}

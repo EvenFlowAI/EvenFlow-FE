@@ -9,7 +9,7 @@ import {TCallback} from "../../../types/types";
 import {IServiceConsultant} from '../../../api/types';
 import {
     loadConsultants,
-    setAdvisor,
+    setAdvisor, setCurrentFrameScreen,
     setSideBarActualSteps,
     setSideBarMenu,
     setSideBarStepsList
@@ -26,6 +26,9 @@ import {useTranslation} from "react-i18next";
 import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
 import {useParams} from "react-router-dom";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {useException} from "../../../utils/hooks";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
+import {decodeSCID} from "../../../utils/utils";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -114,13 +117,15 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         packagePricingType,
         serviceTypeOption,
         packageEMenuType,
+        isUsualFlowNeeded,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {selectedSR, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
     const {isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams();
     const {t} = useTranslation();
+    const showError = useException();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
@@ -140,18 +145,32 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage, serviceTypeOption])
 
     useEffect(() => {
-        dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable)))
+        dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable, Boolean(customerLoadedData?.isUpdating))))
     }, [serviceType, isAdvisorAvailable, isTransportationAvailable, getCurrentMenu])
 
     useEffect(() => {
         dispatch(setSideBarActualSteps(getStepsMap(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
-        dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
+        dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, Boolean(customerLoadedData?.isUpdating))))
     }, [serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, getStepsMap, getStepsScreen])
 
     const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
         dispatch(setAdvisor(c));
+        if (!customerLoadedData?.isUpdating) {
+            dispatch(selectAppointment(null));
+            dispatch(selectServiceValetAppointment(null));
+        }
+    }
+
+    const handleNext = () => {
+        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+            dispatch(checkPodChanged(decodeSCID(id), showError))
+        } else onNext()
+    }
+
+    const handleBack = () => {
+        customerLoadedData?.isUpdating && !isUsualFlowNeeded
+            ? dispatch(setCurrentFrameScreen("manageAppointment"))
+            : onBack()
     }
 
     return (<StepWrapper>
@@ -172,6 +191,6 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             </React.Fragment>
             }
         </ConsultantsWrapper>
-        <Actions onNext={onNext} onBack={onBack} nextLabel={t("Next")}/>
+        <Actions onNext={handleNext} onBack={handleBack} nextLabel={t("Next")}/>
     </StepWrapper>);
 };

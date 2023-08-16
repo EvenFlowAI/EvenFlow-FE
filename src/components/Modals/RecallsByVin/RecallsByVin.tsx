@@ -12,9 +12,14 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button, Divider, FormControlLabel, Switch, withStyles} from "@material-ui/core";
 import {IRecallByVin} from "../../AppointmentFlow/AppointmentFrame/types";
 import moment from "moment";
-import {setAdditionalServicesChosen, setSelectedRecalls} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    checkCarIsValid,
+    setAdditionalServicesChosen,
+    setSelectedRecalls
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import AskAddService from "../AskAddService/AskAddService";
-import {useModal} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 const useStyles = makeStyles(() => ({
     mainTitle: {
@@ -106,12 +111,14 @@ type TRecallsByVinProps = DialogProps & {
 
 const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
-    const {selectedVehicle, selectedRecalls, makes} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, selectedRecalls, makes, isUsualFlowNeeded} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
-    const {isOpen: isAddServiceOpen, onClose: onAddServiceClose, onOpen: onAddServiceOpen} = useModal();
     const {id} = useParams();
+    const showError = useException();
     const {t} = useTranslation();
     const classes = useStyles();
+    const {isOpen: isAddServiceOpen, onClose: onAddServiceClose, onOpen: onAddServiceOpen} = useModal();
 
     useEffect(() => {
         if (selectedVehicle) {
@@ -152,8 +159,19 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
         onClose();
     }
 
+    const onCarIsValid = () => dispatch(checkPodChanged(decodeSCID(id), showError))
+
+    const onCarIsInvalid = () => {
+        handleNext();
+        onClose();
+    }
+
     const handleSubmit = () => {
-        onAddServiceOpen()
+        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+            dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid))
+        } else {
+            onAddServiceOpen()
+        }
     }
 
     return (
