@@ -279,8 +279,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 })
             }
         }
+
         return list;
-    }, [appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption]);
+    }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption]);
 
     const getDateForCalendar = useCallback(() => {
         let dateString: string = '';
