@@ -28,8 +28,9 @@ export const SpecialLabel = styled('div')({
 
 export const SelectedPriceManage = () => {
     const {appointment, scProfile, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
-    const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceTypeOption, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
+
     return (
         <div>
             <ConfirmationTitle>{t("Selected Price")}</ConfirmationTitle>
