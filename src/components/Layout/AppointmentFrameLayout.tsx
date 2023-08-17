@@ -27,7 +27,7 @@ import {
     selectSR,
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
-import {encodeSCID} from "../../utils/utils";
+import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
 import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
@@ -59,6 +59,7 @@ import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
+import {loadMileage} from "../../store/reducers/vehicleDetails/actions";
 
 const Container = styled('div')({
     display: "flex",
@@ -267,6 +268,10 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         dispatch(getCurrentUser(true))
     }, [])
+
+    useEffect(() => {
+        dispatch(loadMileage(decodeSCID(id)));
+    }, [id])
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);
