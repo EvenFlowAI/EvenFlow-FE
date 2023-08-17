@@ -12,7 +12,7 @@ import {
     loadAncillaryPriceByZip,
     loadFilteredZip,
     setAddress,
-    setDefaultVisitCenterOption,
+    setDefaultVisitCenterOption, setServiceTypeOption,
     setShowServiceCentersList,
     setSideBarSteps,
     setWelcomeScreenView,
@@ -134,6 +134,12 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         ? t('Enter pick up address')
         : t('Enter your requested location'), [serviceTypeOption])
 
+    const mobileServiceSelected = useMemo(() => serviceTypeOption?.type === EServiceType.MobileService
+        && appointmentByKey?.serviceTypeOption
+        && appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
+    const mobileServiceChanged = useMemo(() => serviceTypeOption?.type !== EServiceType.MobileService
+        && appointmentByKey?.serviceTypeOption?.type === EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
+
     useEffect(() => {
         setZip(zipCodeValue ?? "")
     }, [zipCodeValue])
@@ -146,11 +152,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const handleManagingFlow = () => {
-        const mobileServiceSelected = serviceTypeOption?.type === EServiceType.MobileService
-            && appointmentByKey?.serviceTypeOption
-            && appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService;
-        const mobileServiceChanged = serviceTypeOption?.type !== EServiceType.MobileService
-            && appointmentByKey?.serviceTypeOption?.type === EServiceType.MobileService;
         if (mobileServiceSelected || mobileServiceChanged) {
             dispatch(setServiceWarningOpen(true))
         } else {
@@ -183,6 +184,12 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         setZip(option ?? "");
     }
 
+    const setPrevServiceType = () => {
+        if (mobileServiceSelected || mobileServiceChanged) {
+            dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+        }
+    }
+
     const onBackToFirstScreen = async () => {
         await dispatch(setShowServiceCentersList(false))
         await dispatch(setWelcomeScreenView("serviceSelect"));
@@ -191,6 +198,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const handleBack = () => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {
+            setPrevServiceType()
             onBackToFirstScreen()
         } else {
             clearAddress();
