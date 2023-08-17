@@ -23,6 +23,8 @@ export const Appointments = () => {
     const [viewItem, setViewItem] = useState<IAppointmentByQuery|undefined>(undefined);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [status, setStatus] = useState<EAppointmentStatus | '' | unknown>('');
+    const [scheduler, setScheduler] = useState<string| unknown>('');
+    const [serviceBook, setServiceBook] = useState<string| unknown>('');
     const [date, setDate] = useState<moment.Moment | null>(null);
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
     const [selectedView, setSelectedView] = useState<TView>("list");
@@ -47,11 +49,13 @@ export const Appointments = () => {
                 date: moment(date).add(moment(date).utcOffset(), 'minute'),
                 // @ts-ignore
                 status: EAppointmentStatus[status],
+                scheduler,
+                serviceBook,
                 searchTerm,
             }
              dispatch(loadAppointments(data));
         }
-    }, [selectedSC, pageData, order, searchTerm, date, status, selectedView]);
+    }, [selectedSC, pageData, order, searchTerm, date, status, selectedView, scheduler, serviceBook]);
 
     useEffect(() => {
         refresh();
@@ -67,6 +71,14 @@ export const Appointments = () => {
 
     const handleSelectStatus = (e: React.ChangeEvent<{value: unknown}>) => {
         setStatus(e.target.value);
+    }
+
+    const handleSelectServiceBook = (e: React.ChangeEvent<{value: unknown}>) => {
+        setServiceBook(e.target.value);
+    }
+
+    const handleSelectScheduler = (e: React.ChangeEvent<{value: unknown}>) => {
+        setScheduler(e.target.value);
     }
 
     const onDateChange = (date: moment.Moment | null): void => {
@@ -105,7 +117,16 @@ export const Appointments = () => {
                 onSearch={refresh}/>}
         />
         {isFiltersOpen ?
-            <AppointmentFilters status={status} handleSelectStatus={handleSelectStatus} selectedDate={date} onChange={onDateChange}/>
+            <AppointmentFilters
+                status={status}
+                handleSelectStatus={handleSelectStatus}
+                handleSelectServiceBook={handleSelectServiceBook}
+                handleSelectScheduler={handleSelectScheduler}
+                scheduler={scheduler}
+                serviceBook={serviceBook}
+                selectedDate={date}
+                onChange={onDateChange}
+            />
             : null}
         {selectedView === "list"
             ? <AppointmentsTable
