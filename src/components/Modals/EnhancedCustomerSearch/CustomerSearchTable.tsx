@@ -178,6 +178,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             year: item.year,
             appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
             mileage: item.mileage ?? null,
+            dmsId: item.vehicleDmsId,
         }
         const data: ICustomerLoadedData = {
             emails: item?.email ? [item.email] : [],
