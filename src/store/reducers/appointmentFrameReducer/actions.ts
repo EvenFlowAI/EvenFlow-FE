@@ -542,7 +542,6 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
 
     const vehicle = {
         dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
-        ...(appointmentFrame.selectedVehicle ?? {}),
         engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
         model,
         make,
@@ -591,7 +590,6 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
 
     const data = {
         id: appointmentFrame.id,
-        hashKey: appointmentFrame.hashKey,
         appointmentTimingType,
         customerId: appointment.customerLoadedData?.id ?? null,
         comment: appointmentFrame.description,
@@ -618,13 +616,13 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
     };
 
-    const endpoint = data?.hashKey
+    const endpoint = appointmentFrame.hashKey
         ? Api.endpoints.Appointments.UpdateByKey
         : Api.endpoints.Appointments.Create;
 
     dispatch(setAppointmentSaving(true))
 
-    Api.call<ICreateAppointmentResp>(endpoint, { data, urlParams: {id: data.hashKey} })
+    Api.call<ICreateAppointmentResp>(endpoint, { data, urlParams: {id: appointmentFrame.hashKey} })
         .then(({data}) => {
             dispatch(handleAppointmentResponse(data, endpoint, onNext))
         })
