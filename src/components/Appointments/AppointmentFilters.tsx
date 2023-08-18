@@ -12,6 +12,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadSchedulerList, loadServiceBookList} from "../../store/reducers/appointments/actions";
 import {RootState} from "../../store/rootReducer";
 import {TScheduler, TServiceBook} from "../../store/reducers/appointments/types";
+import {ReactComponent as CalendarIcon} from '../../assets/img/calendar_blue.svg';
 
 type TAppointmentFilterProps = {
     handleSelectStatus: (e: React.ChangeEvent<{value: unknown}>) => void;
@@ -90,13 +91,13 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         open={isOpen}
                         InputProps={{
                             label: "Date",
-                            placeholder: "All dates",
+                            placeholder: "Select date",
                             endAdornment:
                                 selectedDate
                                     ? (<IconButton onClick={(e) => handleClear(e)}>
                                     <Clear />
                                 </IconButton>)
-                                    : null }}
+                                    : <CalendarIcon/> }}
                         value={selectedDate}
                         onChange={handleDateChange}
                     />
