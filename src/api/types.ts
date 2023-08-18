@@ -275,6 +275,7 @@ export interface IAppointmentVehicle {
 export interface IAppointment {
     id: number;
     hashKey: string;
+    appointmentNumber: string;
     appointmentStatus: AppointmentStatus;
     createdDateTime: ParsableDate;
     dateTime: ParsableDate;
@@ -297,10 +298,6 @@ export interface IAppointment {
 
 export interface ISearchCustomerParams {
     serviceCenterId: number;
-    searchTerm: string;
-}
-
-export interface ISearchTerm {
     searchTerm: string;
 }
 
