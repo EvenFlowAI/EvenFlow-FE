@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Grid, MenuItem, Paper, Select, IconButton} from "@material-ui/core";
 import {Clear} from '@material-ui/icons';
 import {TextField} from "../UI/TextField";
@@ -7,14 +7,19 @@ import {DatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import moment from "moment";
 import {makeStyles} from "@material-ui/core/styles";
+import {useSCs} from "../../utils/hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {loadSchedulerList, loadServiceBookList} from "../../store/reducers/appointments/actions";
+import {RootState} from "../../store/rootReducer";
+import {TScheduler, TServiceBook} from "../../store/reducers/appointments/types";
 
 type TAppointmentFilterProps = {
     handleSelectStatus: (e: React.ChangeEvent<{value: unknown}>) => void;
     handleSelectScheduler: (e: React.ChangeEvent<{value: unknown}>) => void;
     handleSelectServiceBook: (e: React.ChangeEvent<{value: unknown}>) => void;
     status: EAppointmentStatus | '' | unknown;
-    scheduler: string | unknown;
-    serviceBook: string | unknown;
+    scheduler: TScheduler|null;
+    serviceBook: TServiceBook|null;
     selectedDate: moment.Moment | null;
     onChange: (date: moment.Moment | null) => void;
 }
@@ -39,8 +44,18 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                    scheduler,
                                                                    serviceBook,
                                                                }) => {
+    const {schedulerList, serviceBookList} = useSelector((state: RootState) => state.appointments)
     const [isOpen, setOpen] = useState<boolean>(false);
     const classes = useStyles()
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(loadServiceBookList(selectedSC.id))
+            dispatch(loadSchedulerList(selectedSC.id))
+        }
+    }, [selectedSC])
 
     const handleOpen = (s: boolean) => () => {
         setOpen(s);
@@ -101,14 +116,14 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         fullWidth
                         placeholder='Shceduler'
                         onChange={handleSelectScheduler}
-                        value={scheduler}
+                        value={scheduler?.id ?? null}
                         input={
                             <TextField label='Shceduler'/>
                         }
                     >
                         <MenuItem value=''>-</MenuItem>
-                        {Object.keys(EAppointmentStatus).filter(item => Number.isNaN(+item)).map(status => {
-                            return <MenuItem key={status} value={status}>{status}</MenuItem>
+                        {schedulerList.map(scheduler => {
+                            return <MenuItem key={scheduler.id} value={scheduler.id}>{scheduler.fullName}</MenuItem>
                         })}
                     </Select>
                 </Grid>
@@ -117,14 +132,14 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         fullWidth
                         placeholder='Service Book'
                         onChange={handleSelectServiceBook}
-                        value={serviceBook}
+                        value={serviceBook?.id ?? null}
                         input={
                             <TextField label='Service Book'/>
                         }
                     >
                         <MenuItem value=''>-</MenuItem>
-                        {Object.keys(EAppointmentStatus).filter(item => Number.isNaN(+item)).map(status => {
-                            return <MenuItem key={status} value={status}>{status}</MenuItem>
+                        {serviceBookList.map(serviceBook => {
+                            return <MenuItem key={serviceBook.id} value={serviceBook.id}>{serviceBook.name}</MenuItem>
                         })}
                     </Select>
                 </Grid>

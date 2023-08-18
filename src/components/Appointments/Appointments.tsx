@@ -7,7 +7,7 @@ import {EAppointmentStatus, IAppointment} from "../../api/types";
 import moment from "moment";
 import {IOrder} from "../../types/types";
 import AppointmentFilters from "./AppointmentFilters";
-import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
+import {IAppointmentsRequest, TScheduler, TServiceBook} from "../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";
 import {loadAppointments} from "../../store/reducers/appointments/actions";
 import AppointmentsCalendar from "./AppointmentsCalendar";
@@ -18,12 +18,12 @@ import {RootState} from "../../store/rootReducer";
 export type TView = "calendar" | "list";
 
 export const Appointments = () => {
-    const { isLoading } = useSelector((state: RootState) => state.appointments);
+    const { isLoading, schedulerList, serviceBookList } = useSelector((state: RootState) => state.appointments);
     const [viewItem, setViewItem] = useState<IAppointment|undefined>(undefined);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [status, setStatus] = useState<EAppointmentStatus | '' | unknown>('');
-    const [scheduler, setScheduler] = useState<string| unknown>('');
-    const [serviceBook, setServiceBook] = useState<string| unknown>('');
+    const [scheduler, setScheduler] = useState<TScheduler|null>(null);
+    const [serviceBook, setServiceBook] = useState<TServiceBook|null>(null);
     const [date, setDate] = useState<moment.Moment | null>(null);
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
     const [selectedView, setSelectedView] = useState<TView>("list");
@@ -39,18 +39,21 @@ export const Appointments = () => {
 
     const refresh = useCallback(() => {
          if (selectedSC && selectedView === 'list') {
-            const data: IAppointmentsRequest = {
-                pageIndex: pageData.pageIndex,
-                pageSize: pageData.pageSize,
-                serviceCenterId: selectedSC.id,
-                orderBy: order.orderBy,
-                isAscending: order.isAscending,
-                date: moment(date).add(moment(date).utcOffset(), 'minute'),
-                // @ts-ignore
-                status: EAppointmentStatus[status],
-                scheduler,
-                serviceBookId: 139,
-                searchTerm,
+             const serviceBookId = serviceBook?.id ?? null;
+             const isServiceBookServiceCenter = Boolean(serviceBook && !serviceBookId);
+             const data: IAppointmentsRequest = {
+                 pageIndex: pageData.pageIndex,
+                 pageSize: pageData.pageSize,
+                 serviceCenterId: selectedSC.id,
+                 orderBy: order.orderBy,
+                 isAscending: order.isAscending,
+                 date: moment(date).add(moment(date).utcOffset(), 'minute'),
+                 // @ts-ignore
+                 status: EAppointmentStatus[status],
+                 scheduler: scheduler ? {id: scheduler.id, type: scheduler.type} : null,
+                 serviceBookId,
+                 searchTerm,
+                 isServiceBookServiceCenter,
             }
              dispatch(loadAppointments(data));
         }
@@ -73,11 +76,21 @@ export const Appointments = () => {
     }
 
     const handleSelectServiceBook = (e: React.ChangeEvent<{value: unknown}>) => {
-        setServiceBook(e.target.value);
+        if (e.target.value) {
+            const selected = serviceBookList.find(item => item.id?.toString() === e.target.value)
+            setServiceBook(selected ?? null);
+        } else {
+            setServiceBook(null);
+        }
     }
 
     const handleSelectScheduler = (e: React.ChangeEvent<{value: unknown}>) => {
-        setScheduler(e.target.value);
+        if (e.target.value) {
+            const selected = schedulerList.find(item => item.id.toString() === e.target.value)
+            setScheduler(selected ?? null);
+        } else {
+            setScheduler(null);
+        }
     }
 
     const onDateChange = (date: moment.Moment | null): void => {

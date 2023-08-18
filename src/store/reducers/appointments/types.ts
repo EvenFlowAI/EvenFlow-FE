@@ -14,6 +14,7 @@ export interface IAppointmentsRequest {
     searchTerm?: string;
     serviceBookId?: number|unknown;
     scheduler?: string|unknown;
+    isServiceBookServiceCenter?: boolean,
 }
 
 export interface IVehicleDetails {
@@ -49,4 +50,19 @@ export interface ICheckPodRequest {
     vehicle: IVehicle;
     serviceTypeOptionId: number|null;
     consultantId: string|null;
+}
+
+export type TServiceBook = {
+    id?: number;
+    name: string;
+}
+
+export enum EScheduler {
+    SelfMobile,SelfWebsite
+}
+
+export type TScheduler = {
+    id: string;
+    type: EScheduler;
+    fullName: string;
 }

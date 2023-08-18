@@ -17,6 +17,7 @@ import {ETransportColumn} from "../store/reducers/transportationNeeds/types";
 import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
 import {EPricingDisplayType} from "../store/reducers/pricingSettings/types";
+import {TScheduler, TServiceBook} from "../store/reducers/appointments/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -271,21 +272,6 @@ export interface IAppointmentVehicle {
     year: number;
 }
 
-export type TSimple = {
-    id: number;
-    name: string;
-}
-
-export enum EScheduler {
-    SelfMobile,SelfWebsite
-}
-
-export type TScheduler = {
-    id: string;
-    type: EScheduler;
-    fullName: string;
-}
-
 export interface IAppointment {
     id: number;
     hashKey: string;
@@ -294,7 +280,7 @@ export interface IAppointment {
     dateTime: ParsableDate;
     customerInformation?: IAppointmentCustomerInfo;
     vehicle?: IAppointmentVehicle;
-    serviceBook: TSimple;
+    serviceBook: TServiceBook;
     servicesRequested: string[];
     isDefaultRecall: boolean;
     serviceOption?: string;
