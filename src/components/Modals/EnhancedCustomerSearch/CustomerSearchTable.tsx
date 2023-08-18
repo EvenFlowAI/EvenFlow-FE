@@ -147,6 +147,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
+    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [data, setData] = useState<ICustomerWithPhones[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<ICustomerWithPhones|null>(null);
@@ -169,6 +170,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const setCustomerData = async (item: ICustomerWithPhones, isUpdating: boolean) => {
         const phoneNumber = item.cellPhone ?? item.homePhone ?? item.otherPhone;
         const phoneNumbers = phoneNumber ? [phoneNumber] : [];
+        const selectedMileage = mileage.find(el => el.value.toString() === item?.mileage?.toString());
         const customerData = customers.find(el => el.vehicleId === item.vehicleId && el.customerId === item.customerId);
         if (customerData?.homePhone) phoneNumbers.push(customerData.homePhone);
         const vehicle = {
@@ -177,7 +179,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             model: item.model,
             year: item.year,
             appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
-            mileage: item.mileage ?? null,
+            mileage: selectedMileage?.value ?? null,
             dmsId: item.vehicleDmsId,
         }
         const data: ICustomerLoadedData = {
