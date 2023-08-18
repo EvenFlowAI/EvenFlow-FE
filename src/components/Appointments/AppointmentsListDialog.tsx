@@ -38,17 +38,17 @@ const AppointmentsListDialog: React.FC<TDialogProps> = ({
     useEffect(() => {
         if (selectedSC && props.open && date) {
             const data: IAppointmentsRequest = {
-                pageIndex: 0,
-                pageSize: 0,
+                pageIndex: pageData.pageIndex,
+                pageSize: pageData.pageSize,
                 date: moment(date).add(moment(date).utcOffset(), 'minute'),
                 serviceCenterId: selectedSC.id,
             }
             dispatch(loadAppointmentsForModal(data))
         }
-    }, [selectedSC, date, props.open])
+    }, [selectedSC, date, props.open, pageData])
 
     return (
-        <BaseModal {...props} width={850} onClose={props.onClose} onExit={props.onClose}>
+        <BaseModal {...props} width={1000} onClose={props.onClose} onExit={props.onClose}>
             <DialogTitle onClose={props.onClose}>Appointments for {date ? moment(date).format('YYYY-MM-DD') : ''}</DialogTitle>
             <DialogContent style={{ overflowY: 'auto' }}>
                 <AppointmentsTable
