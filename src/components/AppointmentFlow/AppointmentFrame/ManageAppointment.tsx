@@ -2,21 +2,21 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {UserData} from "./confirmationSections/UserData";
-import {styled} from "@material-ui/core";
+import {Button, styled} from "@material-ui/core";
 import {SelectedDate} from "./confirmationSections/SelectedDate";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TArgCallback, TCallback} from "../../../types/types";
-import {decodeSCID} from "../../../utils/utils";
+import {decodeSCID, getAppointmentDate} from "../../../utils/utils";
 import {
     clearAppointmentData,
-    createOrUpdateAppointment, loadConsultants,
+    createOrUpdateAppointment, loadConsultants, setAppointmentSaving,
     setCurrentFrameScreen,
     setReminders
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useParams} from "react-router-dom";
-import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
+import {useHistory, useParams} from "react-router-dom";
+import {useConfirm, useCurrentUser, useException, useMessage, useModal} from "../../../utils/hooks";
 import {
     loadAllServiceCategories, loadSRs,
 } from "../../../store/reducers/appointment/actions";
@@ -34,6 +34,8 @@ import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions"
 import {Loading} from "../../UI/Loading";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 import AddressManage from "./manageSections/AddressManage";
+import {API} from "../../../api/api";
+import {Routes} from "../../../config/routes";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -53,6 +55,15 @@ const Wrapper = styled('div')(({theme}) => ({
     [theme.breakpoints.down("sm")]: {
         gridTemplateColumns: "1fr"
     },
+}));
+
+const ButtonWrapper = styled('div')(({theme}) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    "& > button": {
+        color: "#142EA1"
+    }
 }));
 
 const ManageTitle = styled('div')({
@@ -76,15 +87,15 @@ type TProps = {
 };
 
 export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppointment}) => {
-    const [errors, setErrors] = useState<string[]>([]);
-    const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
-    const currentUser = useCurrentUser();
     const [appointment, appointmentFrame, saving] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame,
         state.appointmentFrame.isAppointmentSaving,
     ]);
+    const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
 
+    const [errors, setErrors] = useState<string[]>([]);
+    const currentUser = useCurrentUser();
     const {id} = useParams();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
@@ -93,6 +104,9 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     const showError = useException();
     const dispatch = useDispatch();
     const {t} = useTranslation();
+    const {askConfirm} = useConfirm();
+    const showMessage = useMessage();
+    const history = useHistory();
 
     const isEmailRequired = useMemo(() => {
         return currentUser
@@ -167,6 +181,43 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
         }
     }
 
+    const handleCancelAppointment = async () => {
+        if (appointmentFrame.appointmentByKey) {
+            dispatch(setAppointmentSaving(true))
+            try {
+                await API.appointment.cancelByKey(appointmentFrame.appointmentByKey.hashKey);
+                await showMessage(
+                    <div>
+                        Your appointment has been canceled. <br/>
+                        Please do not forget to update the appointment in your calendar.
+                    </div>
+                );
+                history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1")
+            } catch (e) {
+                showError(e);
+            }
+            finally {
+                dispatch(setAppointmentSaving(false))
+            }
+        }
+    }
+
+    const onCancelAppointment = () => {
+        if (appointmentFrame.appointmentByKey) {
+            askConfirm({
+                isRemove: true,
+                confirmContent: "Cancel appointment",
+                title: "Cancel appointment",
+                content: <span>
+                            Please confirm you want to cancel appointment on <br />
+                    {getAppointmentDate(appointmentFrame.appointmentByKey).format("LLL")}?
+                        </span>,
+                onConfirm: handleCancelAppointment
+            });
+        }
+
+    }
+
     return <StepWrapper>
         <ManageTitle>Manage Appointment</ManageTitle>
         <Wrapper>
@@ -207,6 +258,14 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
             nextLabel="Confirm Changes"
             prevLabel="Cancel Changes"
         />
+        <ButtonWrapper>
+            <Button
+                disabled={saving}
+                variant="text"
+                onClick={onCancelAppointment}>
+                Cancel Appointment
+            </Button>
+        </ButtonWrapper>
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
         <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
         <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
