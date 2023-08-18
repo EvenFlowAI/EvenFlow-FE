@@ -6,7 +6,7 @@ import {Button, styled} from "@material-ui/core";
 import {SelectedDate} from "./confirmationSections/SelectedDate";
 import {Reminders} from "./confirmationSections/Reminders";
 import {TArgCallback, TCallback} from "../../../types/types";
-import {decodeSCID, getAppointmentDate} from "../../../utils/utils";
+import {decodeSCID} from "../../../utils/utils";
 import {
     clearAppointmentData,
     createOrUpdateAppointment, loadConsultants, setAppointmentSaving,
@@ -37,6 +37,7 @@ import AddressManage from "./manageSections/AddressManage";
 import {API} from "../../../api/api";
 import {Routes} from "../../../config/routes";
 import {isMobile} from 'react-device-detect';
+import moment from "moment/moment";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -211,7 +212,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
                 title: "Cancel appointment",
                 content: <span>
                             Please confirm you want to cancel appointment on <br />
-                    {getAppointmentDate(appointmentFrame.appointmentByKey).format("LLL")}?
+                        {moment.utc(appointmentFrame.appointmentByKey.dateInUtc).format("LLL")}?
                         </span>,
                 onConfirm: handleCancelAppointment
             });
