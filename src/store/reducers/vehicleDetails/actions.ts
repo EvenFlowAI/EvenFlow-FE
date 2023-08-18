@@ -88,7 +88,6 @@ export const createMileage = (data: TCreateMileage): AppThunk => async dispatch 
         })
 }
 
-
 export const removeMileage = (id: number, serviceCenterId: number, onRemoveSuccess: () => void, onError: (e: string) => void): AppThunk => async dispatch => {
     Api.call(Api.endpoints.Vehicles.RemoveMileage, {urlParams: {id}})
         .then(result => {

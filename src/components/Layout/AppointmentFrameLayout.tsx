@@ -65,7 +65,7 @@ import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
 import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
-import {loadEngineType, loadMileage} from "../../store/reducers/vehicleDetails/actions";
+import {loadEngineType} from "../../store/reducers/vehicleDetails/actions";
 import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
@@ -216,7 +216,6 @@ export const AppointmentFrameLayout = () => {
     useStorage();
 
     useEffect(() => {
-        dispatch(loadMileage(decodeSCID(id)));
         dispatch(loadEngineType(decodeSCID(id)));
         dispatch(loadMakes(decodeSCID(id)));
     }, [id])

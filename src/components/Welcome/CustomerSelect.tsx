@@ -16,6 +16,7 @@ import ReturningSelfCustomer from "./ReturningSelfCustomer";
 import NewSelfCustomer from "./NewSelfCustomer";
 import ReturningCustomerForAdmin from "./ReturningCustomerForAdmin";
 import NewCustomerForAdmin from "./NewCustomerForAdmin";
+import {loadMileage} from "../../store/reducers/vehicleDetails/actions";
 
 export const mh400 = "@media (max-height: 400px)";
 export const mh600 = "@media (max-height: 600px)";
@@ -169,6 +170,10 @@ export const CustomerSelect: React.FC<TProps> = ({
             sessionStorage.setItem(LocalTokens.sessionId, '')
         })
     }, [sessionStorage])
+    
+    useEffect(() => {
+        scProfile && dispatch(loadMileage(scProfile.id))
+    }, [scProfile])
 
     useEffect(() => {
         dispatch(clearAppointmentData())
