@@ -4,15 +4,12 @@ import {frameTheme} from "../../../../theme/theme";
 import {YearModel} from "./YearModel";
 import {
     setCurrentFrameScreen,
-    setMaintenanceDetails,
-    setVehicle
+    setVehicleDataFromValueService
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory, useParams} from "react-router-dom";
 import ServiceSelection from "./ServiceSelection";
 import ServiceDetails from "./ServiceDetails";
-import {ILoadedVehicle} from "../../../../api/types";
-import {yearOptions} from "../MaintenanceDetails";
 import {RootState} from "../../../../store/rootReducer";
 import {TScreen} from "../../../Layout/types";
 import {loadSCProfile} from "../../../../store/reducers/appointment/actions";
@@ -42,7 +39,7 @@ type TValueServiceProps = {
 
 const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
     const [screen, setScreen] = useState<TValueServiceScreen>("vehicleDetails");
-    const {makes, valueService, selectedVehicle, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const { serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams();
@@ -57,38 +54,8 @@ const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
         dispatch(loadSCProfile(decodeSCID(id)));
     }, [id])
 
-    const setSelectedVehicle = () => {
-        if (valueService) {
-            const vehicle: ILoadedVehicle = {
-                vin: "",
-                make: "",
-                model: "",
-                year: null,
-                mileage: selectedVehicle?.mileage ?? null,
-                appointmentHashKeys: [],
-            };
-            const bmwMake = makes.find(item => item.name === "BMW");
-            if (bmwMake) {
-                dispatch(setMaintenanceDetails({make: bmwMake.name}));
-                vehicle.make = bmwMake.name;
-
-                if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
-                    dispatch(setMaintenanceDetails({year: valueService.year.year.toString()}));
-                    vehicle.year = Number(valueService.year.year)
-                }
-
-                const model = bmwMake.models.find(model => model === valueService.series?.name);
-                if (model) {
-                    dispatch(setMaintenanceDetails({model}));
-                    vehicle.model = model;
-                }
-                dispatch(setVehicle(vehicle));
-            }
-        }
-    }
-
     const onNext = async () => {
-        await setSelectedVehicle();
+        await dispatch(setVehicleDataFromValueService())
         await dispatch(setCurrentFrameScreen(nextScreen));
         history.push( "/f/appointment/" + id);
     };

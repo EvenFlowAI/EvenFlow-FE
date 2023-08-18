@@ -17,7 +17,7 @@ export interface IFirstScreenOption {
     orderIndex: number;
     description?: string;
     note?: string;
-    transportationOption: IFirstScreenTransportation;
+    transportationOption?: IFirstScreenTransportation;
     externalLink?: string;
     taglineText?: string;
     taglineFontColorHex?: string;

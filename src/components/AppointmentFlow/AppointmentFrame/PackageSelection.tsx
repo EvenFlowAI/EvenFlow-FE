@@ -39,7 +39,6 @@ import TotalComplimentary from "./PackageSelectionParts/TotalComplimentary";
 import {useTranslation} from "react-i18next";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
-import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
 import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
 import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
@@ -272,24 +271,24 @@ export const FeesText = styled('div')<Theme, { count: number }>(({theme, count})
 type TPackageSelectionProps = {
     onNext: TArgCallback<TScreen>;
     onBack: () => void;
-    currentConfig: TServiceTypeSettings|undefined;
     onAddServices: () => void;
 }
 
-export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices, currentConfig}) => {
-    const [loading, setLoading] = useState<boolean>(false);
-    const [loadedPackages, setPackages] = useState<IPackage[]>([]);
-    const {selectedSR, scProfile} = useSelector((state: RootState) => state.appointment);
+export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices}) => {
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {
         selectedPackage,
         selectedVehicle,
-        maintenanceDetails,
-        packageIsSelected,
-        service,
-        subService,
+        packagePricingType,
         packageOptionType,
         packageEMenuType,
     } = useSelector((state: RootState) => state.appointmentFrame);
+
+    const [loading, setLoading] = useState<boolean>(false);
+    const [loadedPackages, setPackages] = useState<IPackage[]>([]);
+    const [localSelectedPackage, setLocalSelectedPackage] = useState<IPackageOptions|null>(null);
+    const [localSelectedPricingType, setLocalSelectedPricingType] = useState<EPackagePricingType|null>(null);
 
     const theme = useTheme();
     const { isOpen, onOpen, onClose } = useModal();
@@ -299,13 +298,17 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
-    const isSanfordInfinity = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.SanfordInfiniti,[scProfile]);
 
     const [packages, services, complimentary, upsells]: [TPackage[], TService[], TComplimentary[], TUpsell[]] = useMemo(() => getPackagesData(loadedPackages),
         [loadedPackages]);
 
     const dispatch = useDispatch();
     const {id} = useParams();
+
+    useEffect(() => {
+        setLocalSelectedPackage(selectedPackage);
+        setLocalSelectedPricingType(packagePricingType);
+    }, [selectedPackage, packagePricingType])
 
     useEffect(() => {
         if (!scProfile?.eMenuEnabled) {
@@ -317,7 +320,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                         serviceCenterId: decodeSCID(id),
                         vehicle: {
                             ...selectedVehicle,
-                            mileage: selectedVehicle?.mileage ?? maintenanceDetails.mileage
+                            mileage: selectedVehicle?.mileage
                         }
                     }
                 }
@@ -332,10 +335,10 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 .finally(() => {setLoading(false)})
 
         }
-    }, [id, selectedVehicle, maintenanceDetails]);
+    }, [id, selectedVehicle]);
 
     const setClasses = (id: number, cls: string): string => {
-        if (id === selectedPackage?.id) {
+        if (id === localSelectedPackage?.id) {
             return `${cls} selected`;
         }
         return cls;
@@ -356,26 +359,17 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     }
 
     const handleNextScreen = (): void => {
-        onNext(currentConfig?.advisorSelection
+        onNext(isAdvisorAvailable
             ? 'consultantSelection'
-            : currentConfig?.appointmentSelection
+            : isAppointmentTimingAvailable
                 ? 'appointmentTiming'
                 : "appointmentSelection")
     }
 
-    const askAdditionalServices = (): void => {
-        const categoryChosen = service?.type === 0 || subService?.type === 0;
-        if (!categoryChosen || !selectedSR.length) {
-            onAdditionalOpen();
-        } else {
-            handleNextScreen();
-        }
-    }
-
     const onSave = async () => {
-        selectedPackage && dispatch(setSelectedPackageOptionType(selectedPackage.type));
+        localSelectedPackage && dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
         await onClose();
-        await askAdditionalServices();
+        await onAdditionalOpen();
     }
 
     const handleGA = (selectedPackage: IPackageOptions): void => {
@@ -387,15 +381,17 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         });
     }
 
-    const handleNext = (selectedPackage: IPackageOptions|null): void => {
-        if (selectedPackage) {
+    const handleNext = (localSelectedPackage: IPackageOptions|null): void => {
+        if (localSelectedPackage) {
             dispatch(setPackageIsSelected(true));
-            handleGA(selectedPackage);
-            if (packageIsSelected && packageOptionType !== null && packageOptionType !== selectedPackage.type) {
+            handleGA(localSelectedPackage);
+            if (selectedPackage && packageOptionType !== null && packageOptionType !== localSelectedPackage.type) {
                 onOpen();
             } else {
-                askAdditionalServices();
-                dispatch(setSelectedPackageOptionType(selectedPackage.type));
+                onAdditionalOpen();
+                dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
+                dispatch(setPackage(localSelectedPackage))
+                dispatch(setPackagePricingType(localSelectedPricingType))
             }
         }
     }
@@ -408,14 +404,12 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             action: `Selected eMenu Package`,
             label: `With ${packageEMenuType === firstOption ? 'Factory' : "Dealer"} Option`,
         });
-        askAdditionalServices();
-        //handleNextScreen();
+        onAdditionalOpen();
     }
 
     const handleClick = (p: IPackageOptions, pricing?: EPackagePricingType) => () => {
-        dispatch(setPackage(p));
-        dispatch(setPackagePricingType(pricing ?? EPackagePricingType.BasePrice));
-        //handleNext(p);
+        setLocalSelectedPackage(p)
+        setLocalSelectedPricingType(pricing ?? EPackagePricingType.BasePrice)
     }
 
     const handleDontChangeOption = (): void => {
@@ -464,6 +458,10 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                         withUpsells={!!upsells.length}
                         data={packages}
                         isBmWService={isBmWService}
+                        selectedPackage={localSelectedPackage}
+                        setLocalPackage={setLocalSelectedPackage}
+                        setLocalPricingType={setLocalSelectedPricingType}
+                        localSelectedPricingType={localSelectedPricingType}
                     />
                     : <React.Fragment>
                         <Wrapper count={packages.length}>
@@ -510,14 +508,6 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 isBmWService={isBmWService}
                             /> : null}
 
-                            {/*<Total*/}
-                            {/*    packages={packages}*/}
-                            {/*    handleClick={handleClick}*/}
-                            {/*    isSanfordInfinity={isSanfordInfinity}*/}
-                            {/*    isBmWService={isBmWService}*/}
-                            {/*    setClasses={setClasses}*/}
-                            {/*/>*/}
-
                         </Wrapper>
                         {loadedPackages[0].priceTitles?.length && Boolean(upsells.length)
                             ? <FeesText count={packages.length}>
@@ -529,10 +519,14 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                             title={getTitle(EPackagePricingType.BasePrice)}
                             isUpsells={Boolean(upsells.length)}
                             handleClick={handleClick}
+                            selectedPackage={localSelectedPackage}
+                            packagePricingType={localSelectedPricingType}
                         />
                         {upsells.length > 0
                             ? <TotalPriceWithFeeRow
                                 packages={packages}
+                                selectedPackage={localSelectedPackage}
+                                packagePricingType={localSelectedPricingType}
                                 title={getTitle(EPackagePricingType.PriceWithFee)}
                                 handleClick={handleClick}/>
                             : null}
@@ -551,10 +545,9 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 ? null
                 : <Actions
                 onBack={handleBack}
-                // hideNext={!isXs}
                 nextLabel={t("Next")}
-                nextDisabled={!selectedPackage}
-                onNext={() => handleNext(selectedPackage)}/>}
+                nextDisabled={!localSelectedPackage || localSelectedPricingType === null}
+                onNext={() => handleNext(localSelectedPackage)}/>}
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
         </PackagesStepWrapper>

@@ -65,6 +65,7 @@ export interface ICustomerWithVehicles {
     firstName: string;
     cellPhone: string;
     homePhone: string;
+    otherPhone: string;
     email: string;
     workPhone: string;
     city: string;
@@ -132,9 +133,15 @@ export type TSearchCustomerParams = {
     phoneOrEmail?: string;
     firstName?: string;
     lastName?: string;
+    companyName?: string;
+    address?: string;
+    lastVINCharacters?: string;
 }
 
 export type TCustomerSearchData = {
     firstName: string;
     lastName: string;
+    companyName: string;
+    address: string;
+    lastVINCharacters: string;
 }

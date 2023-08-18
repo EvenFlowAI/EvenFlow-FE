@@ -167,7 +167,8 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     }, [customers])
 
     const setCustomerData = async (item: ICustomerWithPhones, isUpdating: boolean) => {
-        const phoneNumbers = item.cellPhone ? [item.cellPhone] : [];
+        const phoneNumber = item.cellPhone ?? item.homePhone ?? item.otherPhone;
+        const phoneNumbers = phoneNumber ? [phoneNumber] : [];
         const customerData = customers.find(el => el.vehicleId === item.vehicleId && el.customerId === item.customerId);
         if (customerData?.homePhone) phoneNumbers.push(customerData.homePhone);
         const vehicle = {
@@ -264,27 +265,8 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const sortCustomers = (a: ICustomerWithPhones, b: ICustomerWithPhones) => a.sortOrder && b.sortOrder ? a.sortOrder - b.sortOrder : 0
 
     const onSuccess = () => {
-        // const edited = data.find(customer => customer.vehicleId === editingElement?.vehicleId)
-        // if (edited && editingElement) {
-        //     const customerData:Partial<ICustomerWithPhones> = {
-        //         cellPhone: editingElement.cellPhone,
-        //         homePhone: editingElement.homePhone,
-        //         otherPhone: editingElement.otherPhone,
-        //         firstName: editingElement.firstName,
-        //         lastName: editingElement.lastName,
-        //         email: editingElement.email,
-        //         address: editingElement.address,
-        //         city: editingElement.city,
-        //         state: editingElement.state,
-        //     }
-        //     const filtered = data.map(item => item.customerId === edited.customerId ? {...item, ...customerData} : item)
-        //     if (filtered[0].sortOrder !== undefined) {
-        //         setData(filtered.sort(sortCustomers))
-        //     } else setData(filtered)
-        // }
         setEditingElement(null);
         setEdit(false);
-        // loadData(isSearchByName);
     }
 
     const onSaveInfo = async () => {

@@ -28,6 +28,7 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
     const onCancel = async () => {
         await dispatch(setPaging({numberOfPages: 0, numberOfRecords: 0}));
         await dispatch(setPageData(defaultPageData))
+        setNewVehicleMode(false);
         onClose()
     }
 

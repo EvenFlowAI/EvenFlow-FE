@@ -61,22 +61,21 @@ const CustomerNotFound: React.FC<TCustomerNotFoundProps> = ({ open, onClose, onT
 
     const onSave = useCallback((): void => {
         onClose();
-        // todo check logic
         handleNew();
     }, [handleNew])
 
     return (
         <BaseModal open={open} width={700} onClose={onCancel}>
             <div className={classes.modalWrapper}>
-                <div className={classes.textWrapper}>{t("We are sorry but we cannot find any customers associated with that name")}</div>
-                <div className={classes.textWrapper}>{t("Would you like to try a different first & last name?")}</div>
+                <div className={classes.textWrapper}>{t("We cannot find any existing customers that met the search criteria you entered.")}</div>
+                <div className={classes.textWrapper}>{t("Would you like to try different search criteria?")}</div>
                 <div className={classes.wrapper}>
                     <div className={classes.buttonsWrapper}>
                         <LoadingButton
                             color="primary"
                             variant="outlined"
                             onClick={onCancel}>
-                            {t("Try other names")}
+                            {t("Try other search criteria")}
                         </LoadingButton>
                         <LoadingButton
                             onClick={onSave}

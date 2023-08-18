@@ -4,11 +4,7 @@ import {StepWrapper} from "./StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useDebounce, useModal} from "../../../utils/hooks";
-import {
-    handleSearch,
-    selectSR,
-    selectSRMultiple
-} from "../../../store/reducers/appointment/actions";
+import {handleSearch, selectSR, selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core";
 import {TextField} from "../UI";
 import {InfoOutlined, Search} from "@material-ui/icons";
@@ -22,13 +18,12 @@ import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {
     selectCategoriesIds,
-    selectService,
-    selectSubService,
     setAdditionalServicesChosen
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {Caption} from "../../UI/Caption";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceCategoryPage} from "../../../api/types";
 
 const Wrapper = styled('div')({
     width: "100%"
@@ -96,13 +91,12 @@ const Code = styled(FormControlLabel)({
 type TProps = {
     handleSetScreen: TArgCallback<TScreen>;
     onAddServices?: () => void;
+    page: EServiceCategoryPage;
 }
 
-export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
-    const [searchInput, setSearch] = useState<string>("");
-    const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
+export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices, page}) => {
     const [
-        selectedCode,
+        selectedSR,
         srList,
         search,
         vehicles,
@@ -111,7 +105,6 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         subService,
         service,
         allCategories,
-        selectedPackage,
         categoriesIds,
         serviceTypeOption,
         config,
@@ -125,17 +118,25 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         state.appointmentFrame.subService,
         state.appointmentFrame.service,
         state.categories.allCategories,
-        state.appointmentFrame.selectedPackage,
         state.appointmentFrame.categoriesIds,
         state.appointmentFrame.serviceTypeOption,
         state.bookingFlowConfig.config,
     ]);
+
+    const [searchInput, setSearch] = useState<string>("");
+    const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
+    const [selectedOpsCodes, setSelectedOpsCodes] = useState<number[]>([]);
+
     const dispatch = useDispatch();
     const isInit = useRef(true);
     const {t} = useTranslation();
     const debouncedSearch = useDebounce(searchInput);
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
+
+    useEffect(() => {
+        setSelectedOpsCodes(selectedSR);
+    }, [selectedSR])
 
     useEffect(() => {
         if (!isInit.current) {
@@ -161,7 +162,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         setInitialData()
     }, [subService, service])
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
         setSearch(e.target.value);
         const value = e?.target?.value?.toLowerCase().trim();
@@ -180,16 +181,17 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
     }
 
     const handleCategories = (value: string) => {
-        const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
+        const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose && item.page === page);
         const diagnoseCategoryRequestsIds = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
-        const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
+        const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices && item.page === page);
         const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
         let categories = [...categoriesIds];
-        if (Number(value) && selectedCode.includes(Number(value))) {
-            if (!selectedCode.filter(id => id !== Number(value)).find(code => diagnoseCategoryRequestsIds.includes(code))) {
+        if (Number(value) && selectedSR.includes(Number(value))) {
+            const filteredCodes = selectedSR.filter(id => id !== Number(value));
+            if (!filteredCodes.find(code => diagnoseCategoryRequestsIds.includes(code))) {
                 categories = categories.filter(id => id !== diagnoseCategory?.id);
             }
-            if (!selectedCode.filter(id => id !== Number(value)).find(code => individualRequestsIds.includes(code))) {
+            if (!filteredCodes.find(code => individualRequestsIds.includes(code))) {
                 categories = categories.filter(id => id !== individualCategory?.id);
             }
             dispatch(selectCategoriesIds(categories))
@@ -198,7 +200,11 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
 
     const handleSelectCode = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         handleCategories(value);
-        dispatch(selectSR(value ? Number(value) : null));
+        setSelectedOpsCodes(prev => {
+            return prev.includes(Number(value))
+                ? prev.filter(el => el !== Number(value))
+                : [...prev, Number(value)];
+        })
     }
 
     const goNext = () => {
@@ -217,62 +223,14 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
         ReactGA.event({
             category: 'EvenFlow User',
             action: 'Selected Individual Service Requests',
-            label: `With Codes ${srList.filter(item => selectedCode.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
+            label: `With Codes ${srList.filter(item => selectedOpsCodes.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
         })
-        const categoryChosen = service?.type === 0 || subService?.type === 0;
-        if (service?.type === EServiceCategoryType.Diagnose && (!selectedPackage || !categoryChosen)) {
-            return onAdditionalOpen();
-        }
-        goNext();
+        dispatch(selectSRMultiple(selectedOpsCodes))
+        onAdditionalOpen()
     }
-
-    const getIndCodes = (): number[] => {
-        let codes: number[];
-        const diagnoseCategory = allCategories.find(item => item.type === EServiceCategoryType.Diagnose);
-        const diagnoseCategoryRequestsIds: number[] = diagnoseCategory?.serviceRequests.map(item => item.id) || [];
-        codes = selectedCode.filter(item => {
-            return !subService?.serviceRequests.find(el => item === el.id)
-                || (diagnoseCategory && categoriesIds.includes(diagnoseCategory.id) && diagnoseCategoryRequestsIds.includes(item))
-        })
-        return codes;
-    }
-
-    const getDiagnoseCodes = (): number[] => {
-        let codes: number[];
-        const individualCategory = allCategories.find(item => item.type === EServiceCategoryType.IndividualServices);
-        const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
-        codes = selectedCode.filter(code => {
-            return !service?.serviceRequests.find(request => code === request.id)
-                || (individualCategory && categoriesIds.includes(individualCategory?.id) && individualRequestsIds.includes(code))
-        })
-        return codes;
-    }
-
 
     const handleBack = () => {
-        let codes: number[] = [];
-        if (subService?.type === EServiceCategoryType.IndividualServices) {
-            codes = getIndCodes();
-            dispatch(selectSubService(null));
-            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== subService?.id)));
-        } else if (service?.type === EServiceCategoryType.IndividualServices) {
-            codes = getIndCodes();
-            dispatch(selectService(null));
-            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));
-        } else if (subService?.type === EServiceCategoryType.Diagnose) {
-            codes = getDiagnoseCodes();
-            dispatch(selectSubService(null));
-            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== subService?.id)));
-        } else if (service?.type === EServiceCategoryType.Diagnose) {
-            codes = getDiagnoseCodes();
-            dispatch(selectService(null));
-            dispatch(selectCategoriesIds(categoriesIds.filter(item => item !== service?.id)));
-        }
-        dispatch(selectSRMultiple(codes));
-        handleSetScreen(service?.type === EServiceCategoryType.Diagnose
-        || service?.type === EServiceCategoryType.IndividualServices
-            ? 'serviceNeeds'
-            : 'serviceSelection');
+        handleSetScreen('serviceNeeds');
     }
 
     const addServices = () => {
@@ -296,7 +254,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
                 <SearchInput
                     placeholder={t("Type here")}
                     value={searchInput}
-                    onChange={handleChange}
+                    onChange={handleSearchChange}
                     style={{flexShrink: 0}}
                     InputProps={{
                         startAdornment: <IconButton
@@ -318,7 +276,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
                                     onChange={handleSelectCode}
                                     value={s.id}
                                     size={"small"}
-                                    checked={selectedCode.includes(s.id)}
+                                    checked={selectedOpsCodes.includes(s.id)}
                                     color="primary"
                                 />
                             }
@@ -339,7 +297,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices}
                 <Caption title={t("The price for the service will be quoted at the dealership")}/>
             </Wrapper>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
-            <Actions onBack={handleBack} nextDisabled={!selectedCode.length} onNext={handleNext} nextLabel={t("Next")}/>
+            <Actions onBack={handleBack} nextDisabled={!selectedOpsCodes.length} onNext={handleNext} nextLabel={t("Next")}/>
         </StepWrapper>
     );
 };

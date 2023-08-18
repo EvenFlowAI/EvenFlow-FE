@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
@@ -7,11 +7,11 @@ import {Actions} from "./Actions";
 import {useDispatch, useSelector} from "react-redux";
 import {EUserType, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
-    selectService,
-    setMaintenanceDetails,
-    setPackage,
-    setRecallsAreShown,
+    clearAppointmentSteps,
+    loadMakes,
+    setRecallsAreShown, setSelectedRecalls,
     setVehicle,
+    setVehicleDataFromValueService,
     updateVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -27,7 +27,6 @@ import {useTranslation} from "react-i18next";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
-import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import RecallsByVin from "../../Modals/RecallsByVin/RecallsByVin";
 import {Api} from "../../../config/requests";
 import {Loading} from "../../UI/Loading";
@@ -68,12 +67,10 @@ type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 type TMaintenanceDetailsProps = {
     onBack: TArgCallback<TScreen>;
     onNext: TArgCallback<TScreen>;
-    currentConfig: TServiceTypeSettings|undefined;
 }
 
-export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack, currentConfig}) => {
+export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack}) => {
     const {
-        maintenanceDetails,
         selectedVehicle,
         makes,
         service,
@@ -81,10 +78,12 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         subService,
         userType,
         recallsAreShown,
-        categoriesIds
+        categoriesIds,
+        selectedPackage,
     }= useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
+    const {currentConfig, isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [errors, setErrors] = useState<TKey[]>([]);
     const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
     const [currentModels, setCurrentModels] = useState<string[] | []>([]);
@@ -107,9 +106,14 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
-    const isNewVehicleView = useMemo(() => {
-        return !Boolean(customerLoadedData?.vehicles.find(v => {
-            return v.vin && selectedVehicle?.vin
+    const isExistingVin = useMemo(() => {
+        return Boolean(customerLoadedData?.vehicles.find(v => {
+            return (v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin)}));
+    }, [selectedVehicle, customerLoadedData])
+
+    const isExistingVehicle = useMemo(() => {
+        return Boolean(customerLoadedData?.vehicles.find(v => {
+            return (v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin)
                 || (v.make === selectedVehicle?.make
                     && v.model === selectedVehicle?.model
                     && v.year === selectedVehicle?.year)
@@ -125,26 +129,24 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         return isServiceRecall || isSubServiceRecall;
     }, [service, subService])
 
+    const onlyRecallsSelected = useMemo(() => {
+        const uniqueCategories = Array.from(new Set(categoriesIds));
+        return !selectedSR.length && !selectedPackage && isRecallsCategorySelected && uniqueCategories.length === 1
+    }, [selectedSR, selectedPackage, isRecallsCategorySelected, categoriesIds])
+
     const isNextDisabled = useMemo(() => {
-        return !Boolean(maintenanceDetails.make
-            && maintenanceDetails.model
-            && maintenanceDetails.year
-            && maintenanceDetails.mileage
-            && (currentConfig?.engineType ? maintenanceDetails.engineTypeId : true)
-            && (isRecallsCategorySelected ? maintenanceDetails.vin : true))
-    }, [maintenanceDetails, currentConfig, isRecallsCategorySelected])
+        return !Boolean(selectedVehicle?.make
+            && selectedVehicle?.model
+            && selectedVehicle?.year
+            && selectedVehicle?.mileage
+            && (currentConfig?.engineType ? selectedVehicle?.engineTypeId : true)
+            && (isRecallsCategorySelected ? selectedVehicle?.vin : true))
+    }, [selectedVehicle, currentConfig, isRecallsCategorySelected])
 
     useEffect(() => {
-        if (selectedVehicle) {
-            const selectedMileage = mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
-            dispatch(setMaintenanceDetails({
-                make: selectedVehicle.make,
-                model: selectedVehicle.model,
-                year: selectedVehicle.year ? String(selectedVehicle.year) : undefined,
-                mileage: selectedMileage?.value?.toString() ?? "",
-                engineTypeId: selectedVehicle.engineTypeId,
-                vin: selectedVehicle.vin,
-            }));
+        const selectedMileage = mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
+        if (selectedMileage && selectedVehicle && selectedMileage?.value.toString() !== selectedVehicle?.mileage?.toString()) {
+            dispatch(updateVehicle({mileage: selectedMileage.value}))
         }
     }, [dispatch, selectedVehicle, mileage]);
 
@@ -159,38 +161,8 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         }
     }, [selectedVehicle, engineTypes])
 
-    const setDataFromValueService = useCallback(() => {
-        const vehicle: ILoadedVehicle = {
-            vin: '',
-            make: "",
-            model: "",
-            year: null,
-            mileage: null,
-            appointmentHashKeys: [],
-        };
-        if (valueService && isBmWService) {
-            const bmwMake = makes.find(item => item.name === "BMW");
-            if (bmwMake) {
-                dispatch(setMaintenanceDetails({make: bmwMake.name}));
-                vehicle.make = bmwMake.name;
-
-                if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
-                    dispatch(setMaintenanceDetails({year: valueService.year.year.toString()}));
-                    vehicle.year = Number(valueService.year.year)
-                }
-
-                const model = bmwMake.models.find(model => model === valueService.series?.name);
-                if (model) {
-                    dispatch(setMaintenanceDetails({model}));
-                    vehicle.model = model;
-                }
-                dispatch(setVehicle(vehicle));
-            }
-        }
-    }, [valueService, makes, isBmWService])
-
     useEffect(() => {
-        setDataFromValueService();
+        dispatch(setVehicleDataFromValueService())
     }, [valueService, makes, isBmWService])
 
     useEffect(() => {
@@ -217,7 +189,6 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         if (!selectedVehicle?.make) {
             const defaultMake = makes.find(item => item.id === scProfile?.defaultVehicleMakeId)
             if (defaultMake) {
-                dispatch(setMaintenanceDetails({make: defaultMake.name}));
                 selectedVehicle && dispatch(setVehicle({...selectedVehicle, make: defaultMake.name}))
                 setCurrentModels(defaultMake.models);
             }
@@ -227,6 +198,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     useEffect(() => {
         dispatch(loadMileage(decodeSCID(id)));
         dispatch(loadEngineType(decodeSCID(id)));
+        dispatch(loadMakes(decodeSCID(id)));
     }, [id]);
 
     const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
@@ -234,7 +206,6 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         if (option && !skip) {
             if (["year", "model", "make", "mileage"].includes(name)) {
                 dispatch(updateVehicle({[name]: option}))
-                dispatch(setMaintenanceDetails({[name]: option ?? null}));
             }
             setErrors(e => e.filter(err => err !== name));
             if (name === 'make') {
@@ -253,14 +224,12 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const handleEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
         setSelectedEngine(option)
         dispatch(updateVehicle({engineTypeId: option?.id ?? null}));
-        dispatch(setMaintenanceDetails({engineTypeId: option?.id ?? null}));
         setErrors(e => e.filter(err => err !== "engineTypeId"))
     }
 
     const handleTextChange = (name: TKey) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setRecallsAreShown(false));
         dispatch(updateVehicle({[name]: value.trim()}));
-        dispatch(setMaintenanceDetails({[name]: value.trim()}));
         setErrors(e => e.filter(err => err !== name));
     }
 
@@ -293,25 +262,23 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         if (isValid()) {
             onNext(service?.type === EServiceCategoryType.MaintenancePackage
                 ? 'packageSelection'
-                : currentConfig?.advisorSelection
+                : isAdvisorAvailable
                     ? 'consultantSelection'
-                    : currentConfig?.appointmentSelection
+                    : isAppointmentTimingAvailable
                         ? 'appointmentTiming'
                         : "appointmentSelection");
         }
     }
 
     const handleBack = () => {
-        if (service?.type === EServiceCategoryType.MaintenancePackage) {
-            dispatch(setPackage(null))
-            dispatch(selectService(null));
-        }
         onBack(service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
             ? 'opsCode' : 'serviceNeeds');
     }
 
     const handleDeclineRecalls = () => {
+        dispatch(setSelectedRecalls([]));
         if (isRecallsCategorySelected) {
+            if (onlyRecallsSelected) dispatch(clearAppointmentSteps("serviceNeeds"))
             onBack('serviceNeeds');
         } else {
             handleNext()
@@ -339,26 +306,34 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         }
     }
 
+    const handleNoRecalls = () => {
+        if (categoriesIds.length < 2 && isRecallsCategorySelected) {
+            checkVINforRecallCategory()
+        } else {
+            handleNext()
+        }
+    }
+
     const handleSubmit = async () => {
-        const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn
-        if (selectedVehicle?.vin?.length === 17 && (recallsFromTheAdmin || isRecallsCategorySelected)) {
-            setLoading(true);
-            const make = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase());
-            if (selectedVehicle?.make && make?.id) {
-                const {data} = await Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId: decodeSCID(id), vin: selectedVehicle.vin, vehicleMakeId: make?.id}})
+        const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn;
+        const makeInTheList = makes.find(item => item.name.toLowerCase() === selectedVehicle?.make.toLowerCase());
+        if (selectedVehicle && makeInTheList) {
+            const {vin, make} = selectedVehicle;
+            if (vin?.length === 17 && make && (recallsFromTheAdmin || isRecallsCategorySelected)) {
+                setLoading(true);
+                const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
+                    {data: {serviceCenterId: decodeSCID(id), vin: vin, vehicleMakeId: makeInTheList?.id}})
                 dispatch(setRecallsAreShown(true));
                 if (data.length) {
                     await onOpen()
                 } else {
                     onEmptyRecalls()
                 }
-            } else handleNext();
-        } else {
-            if (categoriesIds.length < 2 && isRecallsCategorySelected) {
-                checkVINforRecallCategory()
             } else {
-                handleNext()
+                handleNoRecalls()
             }
+        } else {
+            handleNoRecalls()
         }
         setLoading(false);
     }
@@ -384,14 +359,14 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     fullWidth
                     disableClearable
                     autoComplete={true}
-                    disabled={!isNewVehicleView}
+                    disabled={isExistingVehicle}
                     renderInput={autocompleteRender({
                         label: t("Year"),
                         placeholder: errors.includes("year") ? `${t("Year")} ${t("required")}` : `${t("Select")} ${t("Year")}`,
                         error: errors.includes("year"),
                         required: requiredFields.includes('year')
                     })}
-                    value={maintenanceDetails.year ?? ''}
+                    value={selectedVehicle?.year ? selectedVehicle.year.toString() : ''}
                 />
                 <Autocomplete
                     key="mileage"
@@ -407,7 +382,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                         error: errors.includes("mileage"),
                         required: requiredFields.includes('mileage')
                     })}
-                    value={maintenanceDetails.mileage ?? ''}
+                    value={selectedVehicle?.mileage ? selectedVehicle.mileage.toString() : ''}
                 />
                 <Autocomplete
                     key="make"
@@ -417,14 +392,14 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     fullWidth
                     disableClearable
                     autoComplete={true}
-                    disabled={!isNewVehicleView}
+                    disabled={isExistingVehicle}
                     renderInput={autocompleteRender({
                         label: t("Make"),
                         placeholder: errors.includes("make") ? `${t("Make")} ${t("required")}` : `${t("Select")} ${t("Make")}`,
                         error: errors.includes("make"),
                         required: requiredFields.includes('make')
                     })}
-                    value={maintenanceDetails.make ?? ''}
+                    value={selectedVehicle?.make ? selectedVehicle.make.toString() : ''}
                 />
                 {currentConfig?.engineType
                     ? <Autocomplete
@@ -455,14 +430,14 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     fullWidth
                     disableClearable
                     autoComplete={true}
-                    disabled={!isNewVehicleView}
+                    disabled={isExistingVehicle}
                     renderInput={autocompleteRender({
                         label: t("Model"),
                         placeholder: errors.includes("model") ? `${t("Model")} ${t("required")}` : `${t("Select")} ${t("Model")}`,
                         error: errors.includes("model"),
                         required: requiredFields.includes('model')
                     })}
-                    value={maintenanceDetails.model ?? ''}
+                    value={selectedVehicle?.model ? selectedVehicle.model.toString() : ''}
                 />
                 {recallsToggledOn || isRecallsCategorySelected
                     ? <div key="vin"
@@ -478,7 +453,8 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                             error={errors.includes("vin")}
                             required={requiredFields.includes("vin") || isRecallsCategorySelected}
                             fullWidth
-                            disabled={recallsAreShown && !isRecallsCategorySelected}
+                            disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length && isExistingVin)}
+                            //disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length) || (recallsAreShown && !isRecallsCategorySelected)}
                             value={selectedVehicle ? selectedVehicle.vin : ""}
                             placeholder={errors.includes("vin")
                                 ? `${t("VIN")} ${t("required")}`

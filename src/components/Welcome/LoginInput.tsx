@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Paper, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../UI/EndUserInputs";
@@ -12,12 +12,10 @@ import {
 import {RootState} from "../../store/rootReducer";
 import {API} from "../../api/api";
 import {LoadingButton} from "../UI/Button";
-import {useException} from "../../utils/hooks";
+import {useException, useStorage} from "../../utils/hooks";
 import {TView} from "./types";
 import ReactGA from "react-ga4";
 //import ReactGA from "react-ga";
-import {LocalTokens} from "../../types/types";
-import {v4 as uuidv4} from "uuid";
 import {EServiceCenterName} from "../../api/types";
 import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
@@ -102,15 +100,7 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
     const isDominion = useMemo(() => serviceCenter?.serviceCenterFlag === EServiceCenterName.Dominion, [serviceCenter])
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
-    useEffect(() => {
-        if (!sessionStorage.getItem(LocalTokens.sessionId)) {
-            const uid = uuidv4();
-            sessionStorage.setItem(LocalTokens.sessionId, uid);
-        }
-        window.addEventListener('unload', () => {
-            sessionStorage.setItem(LocalTokens.sessionId, '')
-        })
-    }, [sessionStorage])
+    useStorage();
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setCustomerEnteredEmail(value));
@@ -124,9 +114,6 @@ export const LoginInput: React.FC<TProps> = ({onReturn, onComplete, view, onConf
             });
             dispatch(setCustomerLoadedData(data));
             dispatch(saveAppointmentReducer());
-            // dispatch(setSessionId(data));
-            // dispatch(saveAppointmentReducer());
-            // showMessage("We've send a code with an email for confirmation.");
             onComplete(serviceType);
             ReactGA.event({
                 category: 'EvenFlow User',

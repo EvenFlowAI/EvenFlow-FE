@@ -1,17 +1,20 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Tab, Tabs as Ts, withStyles} from "@material-ui/core";
 import {Done} from "@material-ui/icons";
 import {TabContext, TabPanel as Tp} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
 import {Info, TPackage} from "./PackageSelection";
-import {setPackage, setPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {useDispatch, useSelector} from "react-redux";
-import {EMaintenanceOptionType} from "../../../api/types";
+import {useSelector} from "react-redux";
+import {EMaintenanceOptionType, IPackageOptions} from "../../../api/types";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
-import {HtmlTooltip} from "./ServiceCard";
 import TotalPriceMobile from "./PackageSelectionParts/TotalPriceMobile";
 import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
+import ServiceRequestsMobile from "./PackageSelectionParts/ServiceRequestsMobile";
+import TotalMaintenanceMobile from "./PackageSelectionParts/TotalMaintenanceMobile";
+import IntervalUpsellsMobile from "./PackageSelectionParts/IntervalUpsellsMobile";
+import ComplimentaryMobile from "./PackageSelectionParts/ComplimentaryMobile";
+import TotalComplimentaryMobile from "./PackageSelectionParts/TotalComplimentaryMobile";
 
 const style = withStyles(() => ({
     root: {
@@ -56,9 +59,12 @@ type PackageSelectionMobileProps = {
     isBmWService: boolean;
     getTitle: (type: EPackagePricingType) => string;
     withUpsells: boolean;
+    selectedPackage: IPackageOptions|null;
+    setLocalPackage: Dispatch<SetStateAction<IPackageOptions|null>>;
+    setLocalPricingType: Dispatch<SetStateAction<EPackagePricingType|null>>;
+    localSelectedPricingType: EPackagePricingType|null;
 }
-
-const useStyles = makeStyles(() => ({
+export const usePackageMobileStyles = makeStyles(() => ({
     wrapper: {
         width: '100%',
         padding: 0,
@@ -107,7 +113,6 @@ const useStyles = makeStyles(() => ({
     serviceRequests: {
         display: 'flex',
         flexDirection: 'column',
-        // height: '33vh',
         padding: '10px 0',
         fontSize: 14,
         borderBottom: '1px solid black',
@@ -147,7 +152,6 @@ const useStyles = makeStyles(() => ({
         alignContent: 'center',
         padding: 10,
         background: '#E5F5FF',
-        // height: '15vh',
         overflow: 'auto',
     },
     complimentaryTotal: {
@@ -235,6 +239,9 @@ const useStyles = makeStyles(() => ({
         textTransform: "none",
         fontWeight: "bold",
         paddingTop: 12,
+    },
+    wrapperWithBorder: {
+        border: '1px solid rgba(0, 0, 0, 0.15)'
     }
 }))
 
@@ -260,7 +267,7 @@ const getTitleStyle = (index: number, isBMWService: boolean): TStyleProp => {
 }
 
 const TabLabel: React.FC<TTabLabelProps> = ({ text, isSelected }) => {
-    const classes = useStyles();
+    const classes = usePackageMobileStyles();
     return <div className={classes.iconWrapper}>{isSelected && <Done  className={classes.icon} htmlColor={'white'}/>} {text}</div>
 }
 
@@ -269,12 +276,14 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                                                                            data,
                                                                            isBmWService,
                                                                            withUpsells,
+                                                                           selectedPackage,
+    setLocalPackage,
+                                                                           setLocalPricingType,
+                                                                           localSelectedPricingType
                                                                        }) => {
     const [value, setValue] = useState<string>('1');
-    const {selectedPackage} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const dispatch = useDispatch();
-    const classes = useStyles();
+    const classes = usePackageMobileStyles();
     const {t} = useTranslation();
 
     useEffect(() => {
@@ -283,10 +292,10 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
         } else {
             const currentPackage = data[+value];
             if (currentPackage) {
-                dispatch(setPackage(currentPackage));
+                setLocalPackage(currentPackage)
             } else {
                 if (data.length) {
-                    dispatch(setPackage(data[0]))
+                    setLocalPackage(data[0])
                     setValue('0')
                 }
             }
@@ -296,13 +305,14 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
     const handleChange = (e: ChangeEvent<{}>, newValue: any): void => {
         setValue(newValue);
         const currentPackage = data[newValue];
-        currentPackage && dispatch(setPackage(currentPackage));
+        currentPackage && setLocalPackage(currentPackage);
+        setLocalPricingType(EPackagePricingType.BasePrice);
     }
 
     const handleClick = (type: EMaintenanceOptionType, pricing?: EPackagePricingType) => {
         const p = data.find(item => item.type === type);
-        if (p) dispatch(setPackage(p));
-        dispatch(setPackagePricingType(pricing ?? EPackagePricingType.BasePrice));
+        if (p) setLocalPackage(p);
+        setLocalPricingType(pricing ?? EPackagePricingType.BasePrice)
     }
 
     return (
@@ -325,133 +335,19 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
 
                     {data.map((item, index) => (
                         <TabPanel value={`${index}`} key={item.name}>
-                            <div style={{ border: '1px solid rgba(0, 0, 0, 0.15)'}}>
+                            <div className={classes.wrapperWithBorder}>
                                 <div className={classes.packageName} style={getTitleStyle(index, isBmWService)}>{item.name}</div>
-                                <div className={classes.serviceRequests} style={{paddingBottom: 36}}>
-                                    {item.serviceRequests
-                                        .slice()
-                                        .sort((a, b) => a.orderIndex - b.orderIndex)
-                                        .map(item => {
-                                            return item.detailedDescription?.length
-                                                ? <HtmlTooltip
-                                                    key={item.id}
-                                                    placement="top"
-                                                    enterTouchDelay={0}
-                                                    title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
-                                                >
-                                                    <p className={classes.serviceRequestUnderlined}
-                                                       style={isBmWService ? {fontSize: 18} : {}}>
-                                                        {item.description}
-                                                    </p>
-                                                </HtmlTooltip>
-                                                :  <p className={classes.serviceRequest}
-                                                      key={item.id}
-                                                      style={isBmWService ? {fontSize: 18} : {}}>
-                                                    {item.description}
-                                                </p>
-                                        })
-                                    }
-                                </div>
 
-                                { scProfile?.isShowPriceDetails
-                                    && <div className={classes.totalMaintenance}>
-                                <span className={classes.smallText}>
-                                  {t("Total Maintenance Value")}:
-                                </span>
-                                        <span className={classes.bigText}>${scProfile?.isRoundPrice ? item.totalMaintenanceValue : item.totalMaintenanceValue.toFixed(2)}</span>
-                                    </div>}
-                                {item.intervalUpsells?.length
-                                    ? <React.Fragment>
-                                        <div className={classes.upsellTitle} style={isBmWService ? {fontSize: 16} : {}}>
-                                            {t(t("Service Interval Upsell"))}
-                                        </div>
-                                        <div className={classes.intervalUpsells}>
-                                            {item.intervalUpsells
-                                                .slice()
-                                                .sort((a, b) => a.orderIndex - b.orderIndex)
-                                                .map(item => {
-                                                    return item.detailedDescription?.length
-                                                        ? <HtmlTooltip
-                                                            key={item.id}
-                                                            placement="top"
-                                                            enterTouchDelay={0}
-                                                            title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
-                                                        >
-                                                            <p className={classes.serviceRequestUnderlined}
-                                                               style={isBmWService ? {fontSize: 18} : {}}>
-                                                                {item.name}
-                                                            </p>
-                                                        </HtmlTooltip>
-                                                        :  <p className={classes.serviceRequest}
-                                                              key={item.id}
-                                                              style={isBmWService ? {fontSize: 18} : {}}>
-                                                            {item.name}
-                                                        </p>
-                                                })
-                                            }
-                                        </div>
-                                    </React.Fragment>
-                                    : null}
+                                <ServiceRequestsMobile isBmWService={isBmWService} serviceRequests={item.serviceRequests}/>
 
-                                <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>
-                                    {t("Complimentary")}
-                                </div>
+                                <TotalMaintenanceMobile item={item}/>
 
-                                <div className={classes.complimentaryServices}>
-                                    {item.complimentaryServices
-                                        .slice()
-                                        .sort((a, b) => a.orderIndex - b.orderIndex)
-                                        .map(item => {
-                                            return item.detailedDescription?.length
-                                                ? <HtmlTooltip
-                                                    key={item.id}
-                                                    placement="top"
-                                                    enterTouchDelay={0}
-                                                    title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
-                                                >
-                                                    <p className={classes.serviceRequestUnderlined}
-                                                       style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
-                                                </HtmlTooltip>
-                                                : <p className={classes.serviceRequest}
-                                                     key={item.id}
-                                                     style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
-                                        })}
-                                </div>
+                                <IntervalUpsellsMobile intervalUpsells={item.intervalUpsells} isBmWService={isBmWService}/>
 
-                                {scProfile?.isShowPriceDetails
-                                    ? <div className={classes.complimentaryTotal}>
-                                <span className={classes.smallText}>
-                                    {t("Total Complimentary Value")}:
-                                </span>
-                                        <span className={classes.bigText}>
-                                        {item.marketPriceComplimentaryServices
-                                            ? `$${scProfile?.isRoundPrice
-                                                ? item.marketPriceComplimentaryServices
-                                                : item.marketPriceComplimentaryServices.toFixed(2)}`
-                                            : ''}
-                                </span>
-                                    </div>
-                                    : null
-                                }
-                                {/*<div className={classes.totalSums}>*/}
-                                {/*    <div>*/}
-                                {/*        <span className={classes.totalName}>{t("Total")}</span><span className={classes.totalText} > ({t("excluding taxes")})</span>*/}
-                                {/*    </div>*/}
-                                {/*    <div className={classes.pricesWrapper}>*/}
-                                {/*        {scProfile?.isShowPriceDetails &&*/}
-                                {/*        <div className={classes.prevPrice}>*/}
-                                {/*          ${scProfile?.isRoundPrice*/}
-                                {/*            ? item.price + item.marketPriceComplimentaryServices*/}
-                                {/*            : (item.price + item.marketPriceComplimentaryServices).toFixed(2)}*/}
-                                {/*        </div>}*/}
+                                <ComplimentaryMobile isBmWService={isBmWService} complimentaryServices={item.complimentaryServices}/>
 
-                                {/*        <div className={classes.currentWrp}>*/}
-                                {/*            <div className={classes.current}>*/}
-                                {/*                ${scProfile?.isRoundPrice ? item.price : item.price.toFixed(2)}*/}
-                                {/*            </div>*/}
-                                {/*        </div>*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
+                                <TotalComplimentaryMobile item={item}/>
+
                             </div>
                         </TabPanel>
                     ))}
@@ -463,8 +359,10 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
             {selectedPackage ? <React.Fragment>
                 <TotalPriceMobile
                     withUpsells={withUpsells}
+                    selectedPackage={selectedPackage}
                     isUpsellPrice={false}
                     handleClick={handleClick}
+                    packagePricingType={localSelectedPricingType}
                     type={selectedPackage.type}
                     text={getTitle(EPackagePricingType.BasePrice)}
                     price={selectedPackage.price}
@@ -475,7 +373,9 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                     ? <TotalPriceMobile
                         isUpsellPrice
                         withUpsells={withUpsells}
+                        selectedPackage={selectedPackage}
                         handleClick={handleClick}
+                        packagePricingType={localSelectedPricingType}
                         type={selectedPackage.type}
                         text={getTitle(EPackagePricingType.PriceWithFee)}
                         price={selectedPackage.price}

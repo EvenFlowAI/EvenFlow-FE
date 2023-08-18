@@ -39,6 +39,13 @@ const Paper = styled('div')(({theme}) => ({
     },
 }))
 
+const ButtonsWrapper = styled('div')({
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    gap: "15px",
+    marginBottom: 20,
+})
+
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
@@ -279,17 +286,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 })
             }
         }
-        return list;
-    }, [appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption]);
 
-    // const getPrice = (): string => {
-    //     const price = isServiceValetApp
-    //         ? serviceValetAppointment?.price?.value
-    //         : appointment?.price?.value;
-    //     return price
-    //         ? `${t("Selected Price")}: $${scProfile?.isRoundPrice ? price : price.toFixed(2)}`
-    //         : t('Service price will be quoted at dealership');
-    // }
+        return list;
+    }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption]);
 
     const getDateForCalendar = useCallback(() => {
         let dateString: string = '';
@@ -348,14 +347,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
             text: `${scProfile?.name} ${t("Service Appointment")}`,
             location: scProfile?.address ? concatAddress(scProfile?.address) : "",
             details: calendarData.map(r => `${r.label}:\n${r.content}`).join("\n \n"),
-            // details: [
-            //     `${t("Contact number")}: ${scProfile?.phoneNumber}\n`,
-            //     ...data.slice(0, 2).map(r =>
-            //         `${r.label}: ${r.content}`
-            //     ),
-            //     `${t("Service type")}: ${servicesList.map(item => item.includes('Going') ? t('My Description Of Need') : item).join(', ')}`,
-            //     getPrice(),
-            // ].join("\n"),
         });
         window.open(url);
     }
@@ -372,7 +363,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         <Paper>
             <Wrapper>
                 <h2>Appointment Confirmed!</h2>
-                {data.map((item, index) => {
+                {data.filter(el => el.content).map((item, index) => {
                     if (!selectedPackage && item.label === t("Selected Price")) {
                         return null;
                     }
@@ -382,7 +373,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                         <div>{item.content}</div>
                     </React.Fragment>;
                 })}
-
+            </Wrapper>
+            <ButtonsWrapper>
                 <Button color="primary" fullWidth variant="outlined" onClick={onModify}>
                     {t("Modify Appointment")}
                 </Button>
@@ -390,7 +382,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                     {t("Add to Calendar")}
                 </Button>
                 <Divider />
-            </Wrapper>
+            </ButtonsWrapper>
             { !isFrame ? <Button color="primary" fullWidth variant="outlined" onClick={onMakeNew}>
                 {t("Make New Appointment")}
             </Button> : null}

@@ -18,7 +18,7 @@ import {
     setCurrentFrameScreen,
     setCustomer,
     setFilteredZipCodes,
-    setFrameDescription,
+    setFrameDescription, setHashKey,
     setHoursOfOperations,
     setLoadingPackages,
     setMaintenanceDetails,
@@ -200,7 +200,6 @@ const initialState: TState = {
     slotsConsultantId: null,
     shouldShowServiceCentersList: true,
     isAppointmentSaving: false
-
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -401,5 +400,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setAppointmentSaving, (state, {payload}) => {
         return {...state, isAppointmentSaving: payload}
+    })
+    .addCase(setHashKey, (state, {payload}) => {
+        return {...state, hashKey: payload}
     })
 )

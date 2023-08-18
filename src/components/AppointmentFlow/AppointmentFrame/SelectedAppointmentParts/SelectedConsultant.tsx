@@ -10,16 +10,12 @@ import {setAdvisor} from "../../../../store/reducers/appointmentFrameReducer/act
 import {useDispatch, useSelector} from "react-redux";
 import {useSelectedAppointmentStyles} from "../SelectedAppointment";
 import {RootState} from "../../../../store/rootReducer";
-import {TServiceTypeSettings} from "../../../../store/reducers/bookingFlowConfig/types";
 import {EServiceCenterName} from "../../../../api/types";
 
-type TSelectedConsultantProps = {
-    currentConfig: TServiceTypeSettings|undefined;
-}
-
-const SelectedConsultant: React.FC<TSelectedConsultantProps> = ({currentConfig}) => {
+const SelectedConsultant = () => {
     const { advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile } = useSelector((state: RootState) => state.appointment);
+    const { currentConfig, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const classes = useSelectedAppointmentStyles();
@@ -38,15 +34,15 @@ const SelectedConsultant: React.FC<TSelectedConsultantProps> = ({currentConfig})
         if (!consultant) dispatch(getSlotsConsultantId(null));
     }
 
-    return currentConfig?.advisorSelection && consultants.length
+    return isAdvisorAvailable && consultants.length
         ? <div className={classes.selectWrapper}>
             <div className={classes.selectWrapper}>
                 {t("Advisor")}: {isSm ? <br/> : null}
                 <Select
                     value={advisor?.id || "Any"}
                     className={classes.select}
-                    disabled={currentConfig && !currentConfig?.advisorSelection || !consultants.length}
-                    onChange={handleConsultantChange}>
+                    disabled={!!currentConfig && !consultants.length}
+                    onChange={handleConsultantChange}>`
                     {consultants
                         .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
                         .concat([<MenuItem value="Any" key="any">{t("Any Available")}</MenuItem>])}

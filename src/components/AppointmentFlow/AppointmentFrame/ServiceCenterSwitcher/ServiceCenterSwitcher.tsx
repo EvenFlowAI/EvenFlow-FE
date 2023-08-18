@@ -7,12 +7,14 @@ import {useCurrentUser, useException} from "../../../../utils/hooks";
 import {useHistory} from "react-router-dom";
 import {setCustomerEnteredEmail, setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
 import {
-    clearAppointmentData, setServiceTypeOption,
+    clearAppointmentData, setCurrentFrameScreen, setServiceTypeOption,
     setSideBarSteps,
     setVehicle, setWelcomeScreenView
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {encodeSCID} from "../../../../utils/utils";
 import {Routes} from "../../../../config/routes";
+import {setCustomerSearchData} from "../../../../store/reducers/enhancedCustomerSearch/actions";
+import {initialCustomerSearch} from "../../../../store/reducers/enhancedCustomerSearch/reducer";
 
 const useStyles = makeStyles((theme) => ({
     selectWrapper: {
@@ -45,6 +47,7 @@ export const ServiceCenterSwitcher = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory()
+    const isWelcomePage = useMemo(() => history.location.pathname.includes('welcome'), [history])
     const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
         [currentUser, scProfile])
 
@@ -53,7 +56,9 @@ export const ServiceCenterSwitcher = () => {
             if (shortSC?.length) {
                 dispatch(clearAppointmentData());
                 dispatch(setCustomerEnteredEmail(""))
+                dispatch(setCustomerSearchData(initialCustomerSearch))
                 dispatch(setSideBarSteps([]));
+                dispatch(setCurrentFrameScreen('serviceNeeds'))
                 dispatch(setVehicle(null));
                 dispatch(setCustomerLoadedData(null));
                 dispatch(setWelcomeScreenView('serviceCenterSelect'))
@@ -68,7 +73,7 @@ export const ServiceCenterSwitcher = () => {
         }
     }
 
-    return isAuthorized && (welcomeScreenView !== "serviceCenterSelect")
+    return isAuthorized && (welcomeScreenView !== "serviceCenterSelect" || !isWelcomePage)
         ? <div className={classes.selectWrapper}>
             { shortLoading
                 ? <Loading/>

@@ -33,7 +33,7 @@ const IntervalUpsells: React.FC<TComplimentaryProps> =
                 {upsell
                     .slice()
                     .sort((a, b) => a.orderIndex - b.orderIndex)
-                    .map(c => <React.Fragment key={c.name}>
+                    .map((c, i) => <React.Fragment key={c.name + c.id + i}>
                         <div className="serviceWithInfo" style={isBmWService ? {fontSize: 18} : {}}>
                             {c.name} {c.detailedDescription?.length
                             ? <HtmlTooltip
