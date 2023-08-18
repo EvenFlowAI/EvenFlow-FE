@@ -9,7 +9,7 @@ import {
     ListItemText
 } from "@material-ui/core";
 import {DialogProps} from "../Modals/types";
-import {AppointmentStatus, IAppointmentByQuery} from "../../api/types";
+import {AppointmentStatus, IAppointment, IAppointmentByQuery} from "../../api/types";
 import {Settings, LocalOffer, Schedule, MonetizationOn} from "@material-ui/icons";
 import {getOfferValue} from "../AppointmentFlow/AppointmentSelections/UI";
 import moment from "moment";
@@ -56,7 +56,7 @@ type TCallbackProps = {
     onEditAppointment: () => void;
     onCancelAppointment: () => void;
 }
-export const ViewAppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>&TCallbackProps> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
+export const ViewAppointmentDialog: React.FC<DialogProps<IAppointment>&TCallbackProps> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
     return <BaseModal {...props} width={500}>
         <DialogTitle onClose={props.onClose}>View Appointment</DialogTitle>
         <DialogContent>
@@ -64,60 +64,60 @@ export const ViewAppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>&TC
                 ? <CircularProgress />
                 : <>
                 <List dense>
-                    <ListItem>
-                        <ListItemIcon><Schedule /></ListItemIcon>
-                        <ListItemText
-                            primary={ `${moment(payload.dateInUtc).utc().format("LL")} ${moment(payload.timeSlot, timeSpanString).format(timeString)}`}
-                        />
-                    </ListItem>
-                    {payload.maintenancePackageOption
-                            ? <ListItem key={payload.maintenancePackageOption.name}>
-                                <ListItemIcon><Settings /></ListItemIcon>
-                                <ListItemText
-                                    primary={`Package Name: ${payload.maintenancePackageOption.maintenancePackageName}`}
-                                    secondary={payload.maintenancePackageOption.name} />
-                            </ListItem>
-                            : null
-                    }
-                    {payload.serviceRequests
-                        ? payload.serviceRequests.map(sr => {
-                            return <ListItem key={sr.id}>
-                                <ListItemIcon><Settings /></ListItemIcon>
-                                <ListItemText primary={sr.code} secondary={sr.description} />
-                            </ListItem>
-                        })
-                        : null}
-                    {payload.serviceCategories
-                        ? payload.serviceCategories.map(category => {
-                            return <ListItem key={category.id}>
-                                <ListItemIcon><Settings /></ListItemIcon>
-                                <ListItemText primary={category.name} />
-                            </ListItem>
-                        })
-                        : null}
-                    {payload.recallDescriptions
-                        ? payload.recallDescriptions.map(recall => {
-                            return <ListItem key={recall}>
-                                <ListItemIcon><Settings /></ListItemIcon>
-                                <ListItemText primary={recall} />
-                            </ListItem>
-                        })
-                        : null}
+                    {/*<ListItem>*/}
+                    {/*    <ListItemIcon><Schedule /></ListItemIcon>*/}
+                    {/*    <ListItemText*/}
+                    {/*        primary={ `${moment(payload.dateInUtc).utc().format("LL")} ${moment(payload.timeSlot, timeSpanString).format(timeString)}`}*/}
+                    {/*    />*/}
+                    {/*</ListItem>*/}
+                    {/*{payload.maintenancePackageOption*/}
+                    {/*        ? <ListItem key={payload.maintenancePackageOption.name}>*/}
+                    {/*            <ListItemIcon><Settings /></ListItemIcon>*/}
+                    {/*            <ListItemText*/}
+                    {/*                primary={`Package Name: ${payload.maintenancePackageOption.maintenancePackageName}`}*/}
+                    {/*                secondary={payload.maintenancePackageOption.name} />*/}
+                    {/*        </ListItem>*/}
+                    {/*        : null*/}
+                    {/*}*/}
+                    {/*{payload.serviceRequests*/}
+                    {/*    ? payload.serviceRequests.map(sr => {*/}
+                    {/*        return <ListItem key={sr.id}>*/}
+                    {/*            <ListItemIcon><Settings /></ListItemIcon>*/}
+                    {/*            <ListItemText primary={sr.code} secondary={sr.description} />*/}
+                    {/*        </ListItem>*/}
+                    {/*    })*/}
+                    {/*    : null}*/}
+                    {/*{payload.serviceCategories*/}
+                    {/*    ? payload.serviceCategories.map(category => {*/}
+                    {/*        return <ListItem key={category.id}>*/}
+                    {/*            <ListItemIcon><Settings /></ListItemIcon>*/}
+                    {/*            <ListItemText primary={category.name} />*/}
+                    {/*        </ListItem>*/}
+                    {/*    })*/}
+                    {/*    : null}*/}
+                    {/*{payload.recallDescriptions*/}
+                    {/*    ? payload.recallDescriptions.map(recall => {*/}
+                    {/*        return <ListItem key={recall}>*/}
+                    {/*            <ListItemIcon><Settings /></ListItemIcon>*/}
+                    {/*            <ListItemText primary={recall} />*/}
+                    {/*        </ListItem>*/}
+                    {/*    })*/}
+                    {/*    : null}*/}
 
-                    <Divider />
-                    <Info appointment={payload} />
-                    <Divider />
-                    <ContactInfo driver={payload.driver} />
-                    <Divider />
-                    <Offer offer={payload.offer}/>
-                    {payload.offer ? <Divider /> : null}
-                    <ListItem>
-                        <ListItemIcon><MonetizationOn /></ListItemIcon>
-                        <ListItemText
-                            primary="Total"
-                            secondary={`$${payload.transactionValue.toFixed(2)}`}
-                        />
-                    </ListItem>
+                    {/*<Divider />*/}
+                    {/*<Info appointment={payload} />*/}
+                    {/*<Divider />*/}
+                    {/*<ContactInfo driver={payload.driver} />*/}
+                    {/*<Divider />*/}
+                    {/*<Offer offer={payload.offer}/>*/}
+                    {/*{payload.offer ? <Divider /> : null}*/}
+                    {/*<ListItem>*/}
+                    {/*    <ListItemIcon><MonetizationOn /></ListItemIcon>*/}
+                    {/*    <ListItemText*/}
+                    {/*        primary="Total"*/}
+                    {/*        secondary={`$${payload.transactionValue.toFixed(2)}`}*/}
+                    {/*    />*/}
+                    {/*</ListItem>*/}
                 </List>
             </>}
         </DialogContent>

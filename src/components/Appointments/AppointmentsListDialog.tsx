@@ -6,7 +6,7 @@ import {useSCs, useStatePagination} from "../../utils/hooks";
 import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
 import {loadAppointmentsForModal} from "../../store/reducers/appointments/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {IAppointmentByQuery} from "../../api/types";
+import {IAppointment} from "../../api/types";
 import {AppointmentsTable} from "./AppointmentsTable";
 import {IOrder} from "../../types/types";
 import {RootState} from "../../store/rootReducer";
@@ -14,11 +14,11 @@ import {RootState} from "../../store/rootReducer";
 type TDialogProps = DialogProps & {
     date: moment.Moment | null;
     refresh: () => void;
-    order: IOrder<IAppointmentByQuery>;
-    setOrder: React.Dispatch<React.SetStateAction<IOrder<IAppointmentByQuery>>>
+    order: IOrder<IAppointment>;
+    setOrder: React.Dispatch<React.SetStateAction<IOrder<IAppointment>>>
     onEditOpen: () => void;
-    viewItem?: IAppointmentByQuery|undefined;
-    setViewItem?: Dispatch<SetStateAction<IAppointmentByQuery|undefined>>
+    viewItem?: IAppointment|undefined;
+    setViewItem?: Dispatch<SetStateAction<IAppointment|undefined>>
 }
 
 const AppointmentsListDialog: React.FC<TDialogProps> = ({

@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IAppointmentByQuery, IPackageAppointments} from "../../../api/types";
+import {IAppointment, IPackageAppointments} from "../../../api/types";
 import {IAppointmentsRequest, ICheckPodRequest, IPackageRequestData} from "./types";
 import {AppThunk, TArgCallback} from "../../../types/types";
 import {API} from "../../../api/api";
@@ -14,8 +14,8 @@ import {EAppointmentTimingType} from "../appointment/types";
 import {setAppointmentSaving} from "../appointmentFrameReducer/actions";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../modals/actions";
 
-export const getAppointments = createAction<IAppointmentByQuery[]>("Appointments/GetAppointments");
-export const getAllAppointments = createAction<IAppointmentByQuery[]>("Appointments/GetAllAppointments");
+export const getAppointments = createAction<IAppointment[]>("Appointments/GetAppointments");
+export const getAllAppointments = createAction<IAppointment[]>("Appointments/GetAllAppointments");
 export const setAppointmentsLoading = createAction<boolean>("Appointments/SetAppointmentsLoading");
 export const setAppointmentsModalLoading = createAction<boolean>("Appointments/SetAppointmentsModalLoading");
 export const setAppointmentsCount = createAction<number>("Appointments/SetAppointmentsCount");

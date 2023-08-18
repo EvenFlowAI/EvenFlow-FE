@@ -12,7 +12,7 @@ export interface IAppointmentsRequest {
     date?: moment.Moment | null;
     status?: EAppointmentStatus | null | unknown;
     searchTerm?: string;
-    serviceBook?: string|unknown;
+    serviceBookId?: number|unknown;
     scheduler?: string|unknown;
 }
 

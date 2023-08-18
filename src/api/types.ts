@@ -258,6 +258,57 @@ export interface IAppointmentByQuery extends IBaseAppointment {
     detailedPriceList?: TDetailedAppointmentPrice[];
 }
 
+export interface IAppointmentCustomerInfo {
+    fullName?: string;
+    email?: string;
+    phoneNumber?: string;
+}
+
+export interface IAppointmentVehicle {
+    vin: string;
+    make: string;
+    model: string;
+    year: number;
+}
+
+export type TSimple = {
+    id: number;
+    name: string;
+}
+
+export enum EScheduler {
+    SelfMobile,SelfWebsite
+}
+
+export type TScheduler = {
+    id: string;
+    type: EScheduler;
+    fullName: string;
+}
+
+export interface IAppointment {
+    id: number;
+    hashKey: string;
+    appointmentStatus: AppointmentStatus;
+    createdDateTime: ParsableDate;
+    dateTime: ParsableDate;
+    customerInformation?: IAppointmentCustomerInfo;
+    vehicle?: IAppointmentVehicle;
+    serviceBook: TSimple;
+    servicesRequested: string[];
+    isDefaultRecall: boolean;
+    serviceOption?: string;
+    totalValue: number;
+    ancillaryPrice: number;
+    advisor?: string;
+    transportation?: string;
+    address?: string;
+    zipCode?: string;
+    appointmentNotes?: string;
+    scheduler: TScheduler;
+    isEditable: boolean;
+}
+
 export interface ISearchCustomerParams {
     serviceCenterId: number;
     searchTerm: string;

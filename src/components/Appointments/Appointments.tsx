@@ -3,9 +3,8 @@ import {Titles} from "../../config/constants";
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
 import {AppointmentActions} from "./AppointmentDialog/AppointmentActions";
 import {useModal, useSCs, useStatePagination} from "../../utils/hooks";
-import {EAppointmentStatus, IAppointmentByQuery} from "../../api/types";
+import {EAppointmentStatus, IAppointment} from "../../api/types";
 import moment from "moment";
-import {AppointmentDialog} from "./AppointmentDialog/AppointmentDialog";
 import {IOrder} from "../../types/types";
 import AppointmentFilters from "./AppointmentFilters";
 import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
@@ -20,7 +19,7 @@ export type TView = "calendar" | "list";
 
 export const Appointments = () => {
     const { isLoading } = useSelector((state: RootState) => state.appointments);
-    const [viewItem, setViewItem] = useState<IAppointmentByQuery|undefined>(undefined);
+    const [viewItem, setViewItem] = useState<IAppointment|undefined>(undefined);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [status, setStatus] = useState<EAppointmentStatus | '' | unknown>('');
     const [scheduler, setScheduler] = useState<string| unknown>('');
@@ -28,7 +27,7 @@ export const Appointments = () => {
     const [date, setDate] = useState<moment.Moment | null>(null);
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
     const [selectedView, setSelectedView] = useState<TView>("list");
-    const [order, setOrder] = useState<IOrder<IAppointmentByQuery>>({
+    const [order, setOrder] = useState<IOrder<IAppointment>>({
         orderBy: "date",
         isAscending: true,
     })
@@ -50,7 +49,7 @@ export const Appointments = () => {
                 // @ts-ignore
                 status: EAppointmentStatus[status],
                 scheduler,
-                serviceBook,
+                serviceBookId: 139,
                 searchTerm,
             }
              dispatch(loadAppointments(data));
@@ -146,8 +145,8 @@ export const Appointments = () => {
                 selectedView={selectedView}
             />
         }
-        <AppointmentDialog
-            payload={viewItem} onAction={refresh} open={isEditOpen} onClose={onEditClose} />
+        {/*<AppointmentDialog*/}
+        {/*    payload={viewItem} onAction={refresh} open={isEditOpen} onClose={onEditClose} />*/}
         <AppointmentsListDialog
             open={isListOpen}
             date={date}
