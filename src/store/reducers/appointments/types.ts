@@ -1,5 +1,10 @@
 import moment from "moment";
-import {EAppointmentStatus, EMaintenanceOptionType, IListAppointment, IVehicle} from "../../../api/types";
+import {
+    EAppointmentStatus,
+    EMaintenanceOptionType,
+    IListAppointment,
+    IVehicle
+} from "../../../api/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType, TRecallForRequest} from "../appointment/types";
 

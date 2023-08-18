@@ -23,6 +23,8 @@ const cols: TableRowDataType<IAppointment>[] = [
     {header: "Time", val: el => el.dateTime ? moment(el.dateTime).format(timeString) : ""},
     {header: "Customer Name", val: el => el.customerInformation?.fullName ?? "", orderId: "fullName"},
     {header: "Vehicle", val: el => `${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${el.vehicle?.year ?? ''}`},
+    {header: "Service Book", val: el => el.serviceBook?.name ?? ''},
+    {header: "Scheduler", val: el => `${el.scheduler?.fullName ?? ''}`},
     {header: "Status", val: el => typeof el.appointmentStatus !== 'undefined' && Number.isInteger(el.appointmentStatus) ? appointmentStatuses[el.appointmentStatus] : "", orderId: "appointmentStatus"},
 ]
 
