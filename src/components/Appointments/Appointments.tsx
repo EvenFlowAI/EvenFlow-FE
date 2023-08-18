@@ -77,7 +77,7 @@ export const Appointments = () => {
 
     const handleSelectServiceBook = (e: React.ChangeEvent<{value: unknown}>) => {
         if (e.target.value) {
-            const selected = serviceBookList.find(item => item.id?.toString() === e.target.value)
+            const selected = serviceBookList.find(item => item.id === e.target.value || item.name === e.target.value)
             setServiceBook(selected ?? null);
         } else {
             setServiceBook(null);

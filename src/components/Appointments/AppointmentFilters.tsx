@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Grid, MenuItem, Paper, Select, IconButton} from "@material-ui/core";
+import {Grid, MenuItem, Paper, Select, IconButton, withStyles} from "@material-ui/core";
 import {Clear} from '@material-ui/icons';
 import {TextField} from "../UI/TextField";
 import {EAppointmentStatus} from "../../api/types";
@@ -33,6 +33,12 @@ const useStyles = makeStyles({
         transformOrigin: 'top left'
     }
 })
+
+const EmptyMenuItem = withStyles({
+    root: {
+        color: '#858585'
+    }
+})(MenuItem)
 
 const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                    handleSelectStatus,
@@ -84,7 +90,7 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         open={isOpen}
                         InputProps={{
                             label: "Date",
-                            placeholder: "Date",
+                            placeholder: "All dates",
                             endAdornment:
                                 selectedDate
                                     ? (<IconButton onClick={(e) => handleClear(e)}>
@@ -98,14 +104,15 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                 <Grid item xs={3}>
                     <Select
                         fullWidth
-                        placeholder='Status'
+                        displayEmpty
+                        style={{color: status ? "inherit" : '#858585'}}
                         onChange={handleSelectStatus}
                         value={status}
                         input={
                             <TextField label='Status'/>
                         }
                     >
-                        <MenuItem value=''>-</MenuItem>
+                        <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
                         {Object.keys(EAppointmentStatus).filter(item => Number.isNaN(+item)).map(status => {
                             return <MenuItem key={status} value={status}>{status}</MenuItem>
                         })}
@@ -114,14 +121,15 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                 <Grid item xs={3}>
                     <Select
                         fullWidth
-                        placeholder='Shceduler'
+                        displayEmpty
+                        style={{color: scheduler ? "inherit" : '#858585'}}
                         onChange={handleSelectScheduler}
-                        value={scheduler?.id ?? null}
+                        value={scheduler?.id ?? ''}
                         input={
                             <TextField label='Shceduler'/>
                         }
                     >
-                        <MenuItem value=''>-</MenuItem>
+                        <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
                         {schedulerList.map(scheduler => {
                             return <MenuItem key={scheduler.id} value={scheduler.id}>{scheduler.fullName}</MenuItem>
                         })}
@@ -130,16 +138,17 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                 <Grid item xs={3}>
                     <Select
                         fullWidth
-                        placeholder='Service Book'
+                        displayEmpty
+                        style={{color: serviceBook ? "inherit" : '#858585'}}
                         onChange={handleSelectServiceBook}
-                        value={serviceBook?.id ?? null}
+                        value={serviceBook?.id ?? serviceBook?.name ?? ''}
                         input={
-                            <TextField label='Service Book'/>
+                            <TextField label='Service Book' />
                         }
                     >
-                        <MenuItem value=''>-</MenuItem>
+                        <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
                         {serviceBookList.map(serviceBook => {
-                            return <MenuItem key={serviceBook.id} value={serviceBook.id}>{serviceBook.name}</MenuItem>
+                            return <MenuItem key={serviceBook.id} value={serviceBook.id ?? serviceBook.name}>{serviceBook.name}</MenuItem>
                         })}
                     </Select>
                 </Grid>
