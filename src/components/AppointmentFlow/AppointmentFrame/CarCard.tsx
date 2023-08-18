@@ -6,13 +6,14 @@ import {
 } from "@material-ui/core";
 import carImage from '../../../assets/img/car_icon.svg';
 import {ILoadedVehicle} from "../../../api/types";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setVehicle} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TArgCallback, TCallback} from "../../../types/types";
 import {useTranslation} from "react-i18next";
 import CarCardAction from "./CarCardAction";
 import {useCurrentUser, useModal} from "../../../utils/hooks";
 import VehicleRepairHistory from "../../Modals/VehicleRepairHistory/VehicleRepairHistory";
+import {RootState} from "../../../store/rootReducer";
 
 type TProps = {
     car: ILoadedVehicle;
@@ -84,10 +85,12 @@ export const CarCard: React.FC<TProps> = ({
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
+    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
 
     const onClick = useCallback(() => {
-        dispatch(setVehicle(car));
+        const selectedMileage = mileage.find(el => el.value.toString() === car?.mileage?.toString());
+        dispatch(setVehicle({...car, mileage: selectedMileage?.value ?? null}));
     }, [car])
 
     return (
