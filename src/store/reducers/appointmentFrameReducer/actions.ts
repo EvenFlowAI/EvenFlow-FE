@@ -547,7 +547,6 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
     const appointmentFrame = getState().appointmentFrame;
     const appointment = getState().appointment;
     const categories = getState().categories;
-    debugger
     const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
 
     const vehicle = {
