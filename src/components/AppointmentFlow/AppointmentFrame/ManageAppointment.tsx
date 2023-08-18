@@ -34,6 +34,7 @@ import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions"
 import {Loading} from "../../UI/Loading";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 import AddressManage from "./manageSections/AddressManage";
+import {isMobile} from 'react-device-detect';
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -155,7 +156,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
 
     const handleCreateAppointment = () => {
         if (checkIsValid()) {
-            dispatch(createOrUpdateAppointment(decodeSCID(id), onNext, handleError))
+            dispatch(createOrUpdateAppointment(decodeSCID(id), onNext, handleError, isMobile, Boolean(currentUser)))
         }
     }
 
