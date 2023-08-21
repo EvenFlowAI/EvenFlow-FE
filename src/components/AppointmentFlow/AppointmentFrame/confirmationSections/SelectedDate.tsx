@@ -21,9 +21,29 @@ type TProps = {
 }
 export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     const {appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
-    const { dropOffSettings } = useSelector((state: RootState) => state.appointment);
-    const {serviceTypeOption, isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
+    const { dropOffSettings, customerLoadedData } = useSelector((state: RootState) => state.appointment);
+    const {serviceTypeOption, isAppointmentSaving, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
+
+    const getDateForUpdate = (): string => {
+        if (customerLoadedData?.isUpdating && appointmentByKey) {
+            if (appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+                return moment.utc(appointmentByKey.dateInUtc).format('ddd, MMMM D')
+            } else {
+                const [hh, mm] = appointmentByKey.timeSlot.split(':')
+                return moment.utc(appointmentByKey.dateInUtc).set('hour', +hh).set('minute', +mm).format('ddd, MMMM D, hh:mm A')
+            }
+        }
+        return ''
+    }
+
+    const date = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
+        ? moment.utc(serviceValetAppointment?.date).format('ddd, MMMM D')
+        : customerLoadedData?.isUpdating && appointmentByKey
+            ? appointment?.date
+                ? moment.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')
+                : getDateForUpdate()
+            : moment.utc().format('ddd, MMMM D, hh:mm A')
 
     const handleChangeSlot = () => {
         if (!isAppointmentSaving) onChangeSlot();
@@ -36,8 +56,8 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
             <Edit htmlColor="#142EA1" fontSize="small" onClick={handleChangeSlot} style={{cursor: "pointer"}}/>
         </TitleWrapper>
         {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
-            ? <div><span style={{fontWeight: 'bold'}}>{t("Date")}</span>: {moment.utc(serviceValetAppointment?.date).format('ddd, MMMM D')}</div>
-            : moment.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')}
+            ? <div><span style={{fontWeight: 'bold'}}>{t("Date")}</span>: {date}</div>
+            : date}
         {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
             ? <div>
                 <div>
