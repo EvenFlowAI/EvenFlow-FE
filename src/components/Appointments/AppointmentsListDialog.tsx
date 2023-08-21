@@ -6,7 +6,7 @@ import {useSCs, useStatePagination} from "../../utils/hooks";
 import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
 import {loadAppointmentsForModal} from "../../store/reducers/appointments/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {IAppointmentByQuery} from "../../api/types";
+import {IAppointment} from "../../api/types";
 import {AppointmentsTable} from "./AppointmentsTable";
 import {IOrder} from "../../types/types";
 import {RootState} from "../../store/rootReducer";
@@ -14,11 +14,11 @@ import {RootState} from "../../store/rootReducer";
 type TDialogProps = DialogProps & {
     date: moment.Moment | null;
     refresh: () => void;
-    order: IOrder<IAppointmentByQuery>;
-    setOrder: React.Dispatch<React.SetStateAction<IOrder<IAppointmentByQuery>>>
+    order: IOrder<IAppointment>;
+    setOrder: React.Dispatch<React.SetStateAction<IOrder<IAppointment>>>
     onEditOpen: () => void;
-    viewItem?: IAppointmentByQuery|undefined;
-    setViewItem?: Dispatch<SetStateAction<IAppointmentByQuery|undefined>>
+    viewItem?: IAppointment|undefined;
+    setViewItem?: Dispatch<SetStateAction<IAppointment|undefined>>
 }
 
 const AppointmentsListDialog: React.FC<TDialogProps> = ({
@@ -38,17 +38,17 @@ const AppointmentsListDialog: React.FC<TDialogProps> = ({
     useEffect(() => {
         if (selectedSC && props.open && date) {
             const data: IAppointmentsRequest = {
-                pageIndex: 0,
-                pageSize: 0,
+                pageIndex: pageData.pageIndex,
+                pageSize: pageData.pageSize,
                 date: moment(date).add(moment(date).utcOffset(), 'minute'),
                 serviceCenterId: selectedSC.id,
             }
             dispatch(loadAppointmentsForModal(data))
         }
-    }, [selectedSC, date, props.open])
+    }, [selectedSC, date, props.open, pageData])
 
     return (
-        <BaseModal {...props} width={850} onClose={props.onClose} onExit={props.onClose}>
+        <BaseModal {...props} width={1000} onClose={props.onClose} onExit={props.onClose}>
             <DialogTitle onClose={props.onClose}>Appointments for {date ? moment(date).format('YYYY-MM-DD') : ''}</DialogTitle>
             <DialogContent style={{ overflowY: 'auto' }}>
                 <AppointmentsTable

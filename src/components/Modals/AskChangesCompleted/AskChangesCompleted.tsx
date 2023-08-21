@@ -13,7 +13,8 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {decodeSCID} from "../../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
-import {useException} from "../../../utils/hooks";
+import {useCurrentUser, useException} from "../../../utils/hooks";
+import {isMobile} from 'react-device-detect';
 
 const useStyles = makeStyles({
     wrapper: {
@@ -36,6 +37,7 @@ const useStyles = makeStyles({
 const AskChangesCompleted = () => {
     const {isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
     const {isChangesCompletedOpen} = useSelector((state: RootState) => state.modals);
+    const currentUser = useCurrentUser();
     const dispatch = useDispatch();
     const classes = useStyles();
     const showError = useException();
@@ -74,7 +76,7 @@ const AskChangesCompleted = () => {
     }
 
     const handleChangesCompleted = async () => {
-        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError))
+        dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError, isMobile, Boolean(currentUser)))
     }
 
     return (

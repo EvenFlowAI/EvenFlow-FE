@@ -28,6 +28,7 @@ import Address from "./confirmationSections/Address";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
 import ServiceType from "./confirmationSections/ServiceType";
 import {useTranslation} from "react-i18next";
+import {isMobile} from 'react-device-detect';
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -128,7 +129,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
 
     const handleCreateAppointment = () => {
         if (checkIsValid()) {
-            dispatch(createOrUpdateAppointment(decodeSCID(id), onNext, handleError))
+            dispatch(createOrUpdateAppointment(decodeSCID(id), onNext, handleError, isMobile, Boolean(currentUser)))
         }
     }
 

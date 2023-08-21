@@ -4,7 +4,7 @@ import {loadAppointments} from "../../store/reducers/appointments/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useSCs} from "../../utils/hooks";
 import moment, {Moment} from "moment";
-import {IAppointmentByQuery} from "../../api/types";
+import {IAppointment} from "../../api/types";
 import {TView} from "./Appointments";
 import {RootState} from "../../store/rootReducer";
 import {useCalendarStyles} from "../Optimizer/CapacitySettings/AvailableStaff/Calendar";
@@ -39,7 +39,7 @@ type TDay = {
     type: TDayType
 }
 
-type TAppointmentsByDate = {[key: string]: IAppointmentByQuery[]}
+type TAppointmentsByDate = {[key: string]: IAppointment[]}
 
 const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedView }) => {
     const { allAppointments, isLoading } = useSelector((state: RootState) => state.appointments);
@@ -100,7 +100,7 @@ const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedV
         setAppointmentsByDate(() => {
             const data: TAppointmentsByDate = {};
             allAppointments.forEach(item => {
-                const dateString = moment(item.dateInUtc).startOf('day').format('YYYY-MM-DD');
+                const dateString = moment(item.dateTime).startOf('day').format('YYYY-MM-DD');
                 data[dateString] = data[dateString] ? [...data[dateString], item] : [item];
             })
             return data

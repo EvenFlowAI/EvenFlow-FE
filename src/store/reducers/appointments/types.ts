@@ -1,5 +1,10 @@
 import moment from "moment";
-import {EAppointmentStatus, EMaintenanceOptionType, IListAppointment, IVehicle} from "../../../api/types";
+import {
+    EAppointmentStatus,
+    EMaintenanceOptionType,
+    IListAppointment,
+    IVehicle
+} from "../../../api/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType, TRecallForRequest} from "../appointment/types";
 
@@ -12,6 +17,9 @@ export interface IAppointmentsRequest {
     date?: moment.Moment | null;
     status?: EAppointmentStatus | null | unknown;
     searchTerm?: string;
+    serviceBookId?: number|unknown;
+    scheduler?: string|unknown;
+    isServiceBookServiceCenter?: boolean,
 }
 
 export interface IVehicleDetails {
@@ -47,4 +55,19 @@ export interface ICheckPodRequest {
     vehicle: IVehicle;
     serviceTypeOptionId: number|null;
     consultantId: string|null;
+}
+
+export type TServiceBook = {
+    id?: number;
+    name: string;
+}
+
+export enum EScheduler {
+    SelfMobile,SelfWebsite
+}
+
+export type TScheduler = {
+    id: string;
+    type: EScheduler;
+    fullName: string;
 }

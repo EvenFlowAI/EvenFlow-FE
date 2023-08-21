@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IAppointmentByQuery, IPackageAppointments} from "../../../api/types";
-import {IAppointmentsRequest, ICheckPodRequest, IPackageRequestData} from "./types";
+import {IAppointment, IPackageAppointments} from "../../../api/types";
+import {IAppointmentsRequest, ICheckPodRequest, IPackageRequestData, TScheduler, TServiceBook} from "./types";
 import {AppThunk, TArgCallback} from "../../../types/types";
 import {API} from "../../../api/api";
 import {Api} from "../../../config/requests";
@@ -14,13 +14,15 @@ import {EAppointmentTimingType} from "../appointment/types";
 import {setAppointmentSaving} from "../appointmentFrameReducer/actions";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../modals/actions";
 
-export const getAppointments = createAction<IAppointmentByQuery[]>("Appointments/GetAppointments");
-export const getAllAppointments = createAction<IAppointmentByQuery[]>("Appointments/GetAllAppointments");
+export const getAppointments = createAction<IAppointment[]>("Appointments/GetAppointments");
+export const getAllAppointments = createAction<IAppointment[]>("Appointments/GetAllAppointments");
 export const setAppointmentsLoading = createAction<boolean>("Appointments/SetAppointmentsLoading");
 export const setAppointmentsModalLoading = createAction<boolean>("Appointments/SetAppointmentsModalLoading");
 export const setAppointmentsCount = createAction<number>("Appointments/SetAppointmentsCount");
 export const setAllAppointmentsCount = createAction<number>("Appointments/SetAllAppointmentsCount");
 export const getPackageByVehicle = createAction<IPackageAppointments[]>("Appointments/GetPackageByVehicle");
+export const getServiceBookList = createAction<TServiceBook[]>("Appointments/GetServiceBookList");
+export const getScheduler = createAction<TScheduler[]>("Appointments/GetSchedulerList");
 
 export const loadAppointments = (data: IAppointmentsRequest): AppThunk => dispatch => {
     dispatch(setAppointmentsLoading(true));
@@ -144,4 +146,28 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
                 dispatch(setAppointmentSaving(false))
             })
     }
+}
+
+export const loadServiceBookList = (id: number): AppThunk => dispatch => {
+    dispatch(setAppointmentsLoading(true))
+    Api.call(Api.endpoints.Appointments.GetServiceBooks, {urlParams: {id}})
+        .then(result => {
+            if (result) dispatch(getServiceBookList(result.data))
+        })
+        .catch(e => {
+            console.log('get service book list error', e)
+        })
+        .finally(() => dispatch(setAppointmentsLoading(false)))
+}
+
+export const loadSchedulerList = (id: number): AppThunk => dispatch => {
+    dispatch(setAppointmentsLoading(true))
+    Api.call(Api.endpoints.Appointments.GetSchedulers, {urlParams: {id}})
+        .then(result => {
+            if (result) dispatch(getScheduler(result.data))
+        })
+        .catch(e => {
+            console.log('get scheduler list error', e)
+        })
+        .finally(() => dispatch(setAppointmentsLoading(false)))
 }
