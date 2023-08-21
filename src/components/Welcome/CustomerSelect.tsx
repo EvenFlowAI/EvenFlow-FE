@@ -176,6 +176,11 @@ export const CustomerSelect: React.FC<TProps> = ({
     }, [scProfile])
 
     useEffect(() => {
+        scProfile && dispatch(loadMileage(scProfile.id))
+    }, [scProfile])
+
+
+    useEffect(() => {
         dispatch(clearAppointmentData())
     }, [])
 

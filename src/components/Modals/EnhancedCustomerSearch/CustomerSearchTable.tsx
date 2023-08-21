@@ -170,9 +170,9 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const setCustomerData = async (item: ICustomerWithPhones, isUpdating: boolean) => {
         const phoneNumber = item.cellPhone ?? item.homePhone ?? item.otherPhone;
         const phoneNumbers = phoneNumber ? [phoneNumber] : [];
-        const selectedMileage = mileage.find(el => el.value.toString() === item?.mileage?.toString());
         const customerData = customers.find(el => el.vehicleId === item.vehicleId && el.customerId === item.customerId);
         if (customerData?.homePhone) phoneNumbers.push(customerData.homePhone);
+        const selectedMileage = mileage.find(el => el.value.toString() === item?.mileage?.toString());
         const vehicle = {
             vin: item.vin,
             make: item.make,
