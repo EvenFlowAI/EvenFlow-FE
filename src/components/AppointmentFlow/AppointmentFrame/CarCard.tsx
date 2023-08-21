@@ -86,7 +86,6 @@ export const CarCard: React.FC<TProps> = ({
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
-    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
 
     const onClick = useCallback(() => {
