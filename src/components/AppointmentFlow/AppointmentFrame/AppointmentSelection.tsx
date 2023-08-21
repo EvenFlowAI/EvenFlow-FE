@@ -29,7 +29,11 @@ import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector";
-import {clearAppointmentSteps, setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    clearAppointmentSteps,
+    setServiceTypeOption,
+    setWelcomeScreenView
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
 import {Routes} from "../../../config/routes";
@@ -148,11 +152,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         ? !serviceValetAppointment
         : !appointment,
         [appointment, serviceValetAppointment])
-    const mobileServiceSelected = useMemo(() => serviceTypeOption?.type === EServiceType.MobileService
-        && appointmentByKey?.serviceTypeOption
-        && appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
-    const mobileServiceChanged = useMemo(() => serviceTypeOption?.type !== EServiceType.MobileService
-        && appointmentByKey?.serviceTypeOption?.type === EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
+
     const fromServiceValetToVisitCenter = useMemo(() => {
         return serviceTypeOption?.type === EServiceType.VisitCenter
         && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff
@@ -356,8 +356,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const handleBack = useCallback((): void => {
         handleGABack();
         const prevScreen = definePrevScreen()
-        const differentServiceTypesUsed = fromServiceValetToVisitCenter || mobileServiceChanged || mobileServiceSelected
-        if (prevScreen === "appointmentSelection" || (differentServiceTypesUsed && !isAppointmentTimingAvailable)) {
+        if (prevScreen === "appointmentSelection" || (fromServiceValetToVisitCenter && !isAppointmentTimingAvailable)) {
+            dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
             dispatch(setWelcomeScreenView("serviceSelect"))
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
