@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {TCard} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
@@ -9,6 +9,7 @@ import {ReactComponent as OffersIcon} from "../../../assets/img/offersIcon.svg";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
+    setServiceTypeOption,
     setSideBarSteps,
     setTime,
     setTiming,
@@ -89,11 +90,16 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
     const {t} = useTranslation();
     const {id} = useParams();
     const history = useHistory();
+    const fromServiceValetToVisitCenter = useMemo(() => {
+        return serviceTypeOption?.type === EServiceType.VisitCenter
+            && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff
+    }, [serviceTypeOption, appointmentByKey])
 
     const onBack = () => {
-        if (serviceTypeOption?.type === EServiceType.VisitCenter && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+        if (fromServiceValetToVisitCenter) {
+            dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
             dispatch(setWelcomeScreenView('serviceSelect'));
-            history.push(Routes.EndUser.AppointmentFrame.replace(":id", id));
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
             handleSetScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')
         }

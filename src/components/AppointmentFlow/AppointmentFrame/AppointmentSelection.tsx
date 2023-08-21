@@ -29,7 +29,11 @@ import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector";
-import {clearAppointmentSteps, setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    clearAppointmentSteps,
+    setServiceTypeOption,
+    setWelcomeScreenView
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
 import {Routes} from "../../../config/routes";
@@ -148,6 +152,11 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         ? !serviceValetAppointment
         : !appointment,
         [appointment, serviceValetAppointment])
+
+    const fromServiceValetToVisitCenter = useMemo(() => {
+        return serviceTypeOption?.type === EServiceType.VisitCenter
+        && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff
+    }, [serviceTypeOption, appointmentByKey])
 
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(slots);
@@ -347,15 +356,14 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const handleBack = useCallback((): void => {
         handleGABack();
         const prevScreen = definePrevScreen()
-        const fromServiceValetToVisitCenter = serviceTypeOption?.type === EServiceType.VisitCenter
-            && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff;
         if (prevScreen === "appointmentSelection" || (fromServiceValetToVisitCenter && !isAppointmentTimingAvailable)) {
+            dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
             dispatch(setWelcomeScreenView("serviceSelect"))
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
             handleSetScreen(prevScreen);
         }
-    }, [currentConfig, history])
+    }, [currentConfig, history, fromServiceValetToVisitCenter])
 
     return (
         <StepWrapper>
