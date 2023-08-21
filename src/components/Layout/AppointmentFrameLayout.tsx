@@ -359,6 +359,7 @@ export const AppointmentFrameLayout = () => {
             />,
             appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment}/>,
             location: <YourLocation
+                onUpdateAppointment={onUpdateAppointment}
                 onBack={handleChangeScreen('carSelection')}
                 onNext={handleChangeScreen('serviceNeeds')}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}

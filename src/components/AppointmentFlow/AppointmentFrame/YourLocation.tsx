@@ -12,7 +12,7 @@ import {
     loadAncillaryPriceByZip,
     loadFilteredZip,
     setAddress,
-    setDefaultVisitCenterOption, setServiceTypeOption,
+    setDefaultVisitCenterOption,
     setShowServiceCentersList,
     setSideBarSteps,
     setWelcomeScreenView,
@@ -37,6 +37,7 @@ import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {setServiceWarningOpen} from "../../../store/reducers/modals/actions";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
+import {ILoadedVehicle} from "../../../api/types";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -58,6 +59,7 @@ export const SelectWrapper = styled('div')(({theme}) => ({
 type TYourLocationProps = TActionProps & {
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
     onGoToFirstScreen: TArgCallback<TView>;
+    onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
 }
 
 const useStyles = makeStyles(() => ({
@@ -104,7 +106,7 @@ const useAutocompleteStyles = makeStyles<Theme, TStyleProps>(() => ({
     },
 }))
 
-const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToShowServiceSelection, onGoToFirstScreen}) => {
+const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToShowServiceSelection, onGoToFirstScreen, onUpdateAppointment}) => {
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -186,7 +188,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const setPrevServiceType = () => {
         if (mobileServiceSelected || mobileServiceChanged) {
-            dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+            selectedVehicle && onUpdateAppointment(selectedVehicle)
         }
     }
 
