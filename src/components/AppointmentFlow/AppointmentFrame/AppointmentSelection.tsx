@@ -148,6 +148,15 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         ? !serviceValetAppointment
         : !appointment,
         [appointment, serviceValetAppointment])
+    const mobileServiceSelected = useMemo(() => serviceTypeOption?.type === EServiceType.MobileService
+        && appointmentByKey?.serviceTypeOption
+        && appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
+    const mobileServiceChanged = useMemo(() => serviceTypeOption?.type !== EServiceType.MobileService
+        && appointmentByKey?.serviceTypeOption?.type === EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
+    const fromServiceValetToVisitCenter = useMemo(() => {
+        return serviceTypeOption?.type === EServiceType.VisitCenter
+        && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff
+    }, [serviceTypeOption, appointmentByKey])
 
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(slots);
@@ -347,15 +356,14 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const handleBack = useCallback((): void => {
         handleGABack();
         const prevScreen = definePrevScreen()
-        const fromServiceValetToVisitCenter = serviceTypeOption?.type === EServiceType.VisitCenter
-            && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff;
-        if (prevScreen === "appointmentSelection" || (fromServiceValetToVisitCenter && !isAppointmentTimingAvailable)) {
+        const differentServiceTypesUsed = fromServiceValetToVisitCenter || mobileServiceChanged || mobileServiceSelected
+        if (prevScreen === "appointmentSelection" || (differentServiceTypesUsed && !isAppointmentTimingAvailable)) {
             dispatch(setWelcomeScreenView("serviceSelect"))
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
             handleSetScreen(prevScreen);
         }
-    }, [currentConfig, history])
+    }, [currentConfig, history, fromServiceValetToVisitCenter])
 
     return (
         <StepWrapper>

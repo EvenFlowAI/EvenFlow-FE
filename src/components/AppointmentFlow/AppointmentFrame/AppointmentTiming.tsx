@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {TCard} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
@@ -89,9 +89,19 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
     const {t} = useTranslation();
     const {id} = useParams();
     const history = useHistory();
+    const mobileServiceSelected = useMemo(() => serviceTypeOption?.type === EServiceType.MobileService
+        && appointmentByKey?.serviceTypeOption
+        && appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
+    const mobileServiceChanged = useMemo(() => serviceTypeOption?.type !== EServiceType.MobileService
+        && appointmentByKey?.serviceTypeOption?.type === EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
+    const fromServiceValetToVisitCenter = useMemo(() => {
+        return serviceTypeOption?.type === EServiceType.VisitCenter
+            && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff
+    }, [serviceTypeOption, appointmentByKey])
 
     const onBack = () => {
-        if (serviceTypeOption?.type === EServiceType.VisitCenter && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+        const differentServiceTypesUsed = fromServiceValetToVisitCenter || mobileServiceChanged || mobileServiceSelected
+        if (differentServiceTypesUsed) {
             dispatch(setWelcomeScreenView('serviceSelect'));
             history.push(Routes.EndUser.AppointmentFrame.replace(":id", id));
         } else {
