@@ -64,6 +64,7 @@ import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
+import {loadMileage} from "../../store/reducers/vehicleDetails/actions";
 import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
 import {loadEngineType} from "../../store/reducers/vehicleDetails/actions";
 import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
@@ -286,6 +287,10 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         dispatch(getCurrentUser(true))
     }, [])
+
+    useEffect(() => {
+        dispatch(loadMileage(decodeSCID(id)));
+    }, [id])
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);
