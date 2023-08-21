@@ -17,6 +17,7 @@ import {ETransportColumn} from "../store/reducers/transportationNeeds/types";
 import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
 import {EPricingDisplayType} from "../store/reducers/pricingSettings/types";
+import {TScheduler, TServiceBook} from "../store/reducers/appointments/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -258,12 +259,45 @@ export interface IAppointmentByQuery extends IBaseAppointment {
     detailedPriceList?: TDetailedAppointmentPrice[];
 }
 
-export interface ISearchCustomerParams {
-    serviceCenterId: number;
-    searchTerm: string;
+export interface IAppointmentCustomerInfo {
+    fullName?: string;
+    email?: string;
+    phoneNumber?: string;
 }
 
-export interface ISearchTerm {
+export interface IAppointmentVehicle {
+    vin: string;
+    make: string;
+    model: string;
+    year: number;
+}
+
+export interface IAppointment {
+    id: number;
+    hashKey: string;
+    appointmentNumber: string;
+    appointmentStatus: AppointmentStatus;
+    createdDateTime: ParsableDate;
+    dateTime: ParsableDate;
+    customerInformation?: IAppointmentCustomerInfo;
+    vehicle?: IAppointmentVehicle;
+    serviceBook: TServiceBook;
+    servicesRequested: string[];
+    isDefaultRecall: boolean;
+    serviceOption?: string;
+    totalValue: number;
+    ancillaryPrice: number;
+    advisor?: string;
+    transportation?: string;
+    address?: string;
+    zipCode?: string;
+    appointmentNotes?: string;
+    scheduler: TScheduler;
+    isEditable: boolean;
+}
+
+export interface ISearchCustomerParams {
+    serviceCenterId: number;
     searchTerm: string;
 }
 

@@ -136,7 +136,8 @@ type TApiRoute = {
 type ApiRoutes = {
     Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiRoute>,
     AncillaryPricing: Record<"GetZones" | "UpdateZone" | "GetDistances" | "UpdateDistance" | "CreateDistance" | "DeleteDistance" | "GetByZip", TApiRoute>,
-    Appointments: Record<"Create" | "Update" | "UpdateByKey" | "Cancel" | "CancelByKey" | "GetByKey" | "CheckPodChanged", TApiRoute>,
+    Appointments: Record<"Create" | "Update" | "UpdateByKey" | "Cancel" | "CancelByKey" | "GetByKey" | "CheckPodChanged"
+        | "GetServiceBooks" | "GetSchedulers", TApiRoute>,
     AppointmentAllocation: Record<"SetTimeWindows" | "GetTimeWindows"
         | "CreateDemandSegment" | "GetDemandSegments"
         | "GetTWEligibility" | "SetTWEligibility"
@@ -245,6 +246,8 @@ export class Api {
             CancelByKey: {route: "/appointments/{id}/cancel/by-key", method: "put"},
             GetByKey: {route: "/appointments/{key}/by-key", method: "get"},
             CheckPodChanged: {route: "/appointments/{key}/check-pod-changed", method: "post"},
+            GetServiceBooks: {route: "/appointments-filter/{id}/service-book-list", method: "get"},
+            GetSchedulers: {route: "/appointments-filter/{id}/scheduler-list", method: "get"},
         },
         AppointmentAllocation: {
             SetTimeWindows: {route: "/appointment-allocations/time-windows", method: "put"},

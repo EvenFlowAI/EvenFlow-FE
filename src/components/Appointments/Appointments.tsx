@@ -3,12 +3,11 @@ import {Titles} from "../../config/constants";
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
 import {AppointmentActions} from "./AppointmentDialog/AppointmentActions";
 import {useModal, useSCs, useStatePagination} from "../../utils/hooks";
-import {EAppointmentStatus, IAppointmentByQuery} from "../../api/types";
+import {EAppointmentStatus, IAppointment} from "../../api/types";
 import moment from "moment";
-import {AppointmentDialog} from "./AppointmentDialog/AppointmentDialog";
 import {IOrder} from "../../types/types";
 import AppointmentFilters from "./AppointmentFilters";
-import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
+import {IAppointmentsRequest, TScheduler, TServiceBook} from "../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";
 import {loadAppointments} from "../../store/reducers/appointments/actions";
 import AppointmentsCalendar from "./AppointmentsCalendar";
@@ -19,14 +18,16 @@ import {RootState} from "../../store/rootReducer";
 export type TView = "calendar" | "list";
 
 export const Appointments = () => {
-    const { isLoading } = useSelector((state: RootState) => state.appointments);
-    const [viewItem, setViewItem] = useState<IAppointmentByQuery|undefined>(undefined);
+    const { isLoading, schedulerList, serviceBookList } = useSelector((state: RootState) => state.appointments);
+    const [viewItem, setViewItem] = useState<IAppointment|undefined>(undefined);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [status, setStatus] = useState<EAppointmentStatus | '' | unknown>('');
+    const [scheduler, setScheduler] = useState<TScheduler|null>(null);
+    const [serviceBook, setServiceBook] = useState<TServiceBook|null>(null);
     const [date, setDate] = useState<moment.Moment | null>(null);
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
     const [selectedView, setSelectedView] = useState<TView>("list");
-    const [order, setOrder] = useState<IOrder<IAppointmentByQuery>>({
+    const [order, setOrder] = useState<IOrder<IAppointment>>({
         orderBy: "date",
         isAscending: true,
     })
@@ -38,20 +39,25 @@ export const Appointments = () => {
 
     const refresh = useCallback(() => {
          if (selectedSC && selectedView === 'list') {
-            const data: IAppointmentsRequest = {
-                pageIndex: pageData.pageIndex,
-                pageSize: pageData.pageSize,
-                serviceCenterId: selectedSC.id,
-                orderBy: order.orderBy,
-                isAscending: order.isAscending,
-                date: moment(date).add(moment(date).utcOffset(), 'minute'),
-                // @ts-ignore
-                status: EAppointmentStatus[status],
-                searchTerm,
+             const serviceBookId = serviceBook?.id ?? null;
+             const isServiceBookServiceCenter = Boolean(serviceBook && !serviceBookId);
+             const data: IAppointmentsRequest = {
+                 pageIndex: pageData.pageIndex,
+                 pageSize: pageData.pageSize,
+                 serviceCenterId: selectedSC.id,
+                 orderBy: order.orderBy,
+                 isAscending: order.isAscending,
+                 date: moment(date).add(moment(date).utcOffset(), 'minute'),
+                 // @ts-ignore
+                 status: EAppointmentStatus[status],
+                 scheduler: scheduler ? {id: scheduler.id, type: scheduler.type} : null,
+                 serviceBookId,
+                 searchTerm,
+                 isServiceBookServiceCenter,
             }
              dispatch(loadAppointments(data));
         }
-    }, [selectedSC, pageData, order, searchTerm, date, status, selectedView]);
+    }, [selectedSC, pageData, order, searchTerm, date, status, selectedView, scheduler, serviceBook]);
 
     useEffect(() => {
         refresh();
@@ -67,6 +73,24 @@ export const Appointments = () => {
 
     const handleSelectStatus = (e: React.ChangeEvent<{value: unknown}>) => {
         setStatus(e.target.value);
+    }
+
+    const handleSelectServiceBook = (e: React.ChangeEvent<{value: unknown}>) => {
+        if (e.target.value) {
+            const selected = serviceBookList.find(item => item.id === e.target.value || item.name === e.target.value)
+            setServiceBook(selected ?? null);
+        } else {
+            setServiceBook(null);
+        }
+    }
+
+    const handleSelectScheduler = (e: React.ChangeEvent<{value: unknown}>) => {
+        if (e.target.value) {
+            const selected = schedulerList.find(item => item.id.toString() === e.target.value)
+            setScheduler(selected ?? null);
+        } else {
+            setScheduler(null);
+        }
     }
 
     const onDateChange = (date: moment.Moment | null): void => {
@@ -105,7 +129,16 @@ export const Appointments = () => {
                 onSearch={refresh}/>}
         />
         {isFiltersOpen ?
-            <AppointmentFilters status={status} handleSelectStatus={handleSelectStatus} selectedDate={date} onChange={onDateChange}/>
+            <AppointmentFilters
+                status={status}
+                handleSelectStatus={handleSelectStatus}
+                handleSelectServiceBook={handleSelectServiceBook}
+                handleSelectScheduler={handleSelectScheduler}
+                scheduler={scheduler}
+                serviceBook={serviceBook}
+                selectedDate={date}
+                onChange={onDateChange}
+            />
             : null}
         {selectedView === "list"
             ? <AppointmentsTable
@@ -125,8 +158,8 @@ export const Appointments = () => {
                 selectedView={selectedView}
             />
         }
-        <AppointmentDialog
-            payload={viewItem} onAction={refresh} open={isEditOpen} onClose={onEditClose} />
+        {/*<AppointmentDialog*/}
+        {/*    payload={viewItem} onAction={refresh} open={isEditOpen} onClose={onEditClose} />*/}
         <AppointmentsListDialog
             open={isListOpen}
             date={date}

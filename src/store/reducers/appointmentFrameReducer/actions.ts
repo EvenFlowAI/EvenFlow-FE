@@ -1,9 +1,13 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    EMaintenanceOptionType, EServiceCenterName,
-    IAppointmentByQuery, IConsultantsRequestData, ICreateAppointmentResp,
+    EMaintenanceOptionType,
+    EServiceCenterName,
+    IAppointmentByQuery,
+    IConsultantsRequestData,
+    ICreateAppointmentResp,
     ICustomer,
-    ILoadedVehicle, IPackage,
+    ILoadedVehicle,
+    IPackage,
     IPackageOptions,
     IServiceCategory,
     IServiceConsultant,
@@ -14,10 +18,12 @@ import {EAppointmentTimingType, EReminderType, IMake, IVehicle} from "../appoint
 import {
     EPackagePricingType,
     EServiceType,
-    EUserType, IAncillaryByZipRequest,
+    EUserType,
+    IAncillaryByZipRequest,
     IAppointmentId,
     IServiceOffer,
-    IValueService, TAncillaryPriceByZip,
+    IValueService,
+    TAncillaryPriceByZip,
     TLanguage,
     TMaintenanceDetails,
     TYear
@@ -27,7 +33,8 @@ import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {TScreen} from "../../../components/Layout/types";
 import {
-    getSlotsConsultantId, saveCustomerCache,
+    getSlotsConsultantId,
+    saveCustomerCache,
     selectAppointment,
     selectServiceValetAppointment,
     selectSR,
@@ -41,11 +48,14 @@ import {TPackagePrice} from "../packages/types";
 import {updateSelectedRecalls} from "../recall/actions";
 import {EServiceCategoryType} from "../categories/types";
 import {
-    collectServiceRequestIds, getCategories, getVehicleData,
+    collectServiceRequestIds,
+    getCategories,
+    getVehicleData,
     mapRecallsForRequest
 } from "../../../components/AppointmentFlow/AppointmentFrame/utils";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
 import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import {EScheduler} from "../appointments/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -533,11 +543,10 @@ export const updateConsultant = (id: string, serviceTypeOption: IFirstScreenOpti
     dispatch(loadConsultants(id, serviceTypeOption?.id ?? null))
 }
 
-export const createOrUpdateAppointment = (id: number, onNext: () => void, onError: (e: any) => void): AppThunk => (dispatch, getState) => {
+export const createOrUpdateAppointment = (id: number, onNext: () => void, onError: (e: any) => void, isMobile: boolean, isAdmin: boolean): AppThunk => (dispatch, getState) => {
     const appointmentFrame = getState().appointmentFrame;
     const appointment = getState().appointment;
     const categories = getState().categories;
-
     const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
 
     const vehicle = {
@@ -614,7 +623,10 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         zipCode: appointmentFrame.zipCode ?? null,
         address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
         recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
+        createType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
     };
+
+    if (isAdmin) delete data.createType;
 
     const endpoint = appointmentFrame.hashKey
         ? Api.endpoints.Appointments.UpdateByKey

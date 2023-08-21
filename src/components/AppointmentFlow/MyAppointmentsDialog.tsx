@@ -5,34 +5,35 @@ import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {API} from "../../api/api";
-import {AppointmentStatus, appointmentStatuses, IAppointmentByQuery} from "../../api/types";
+import {AppointmentStatus, appointmentStatuses, IAppointment} from "../../api/types";
 import {Table} from "../UI/Table";
 import {TableRowDataType} from "../UI/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {useConfirm, useException, useMessage} from "../../utils/hooks";
-import {encodeSCID, getAppointmentDate, getAppointmentVehicle} from "../../utils/utils";
-import {loadEditAppointment, saveAppointmentReducer} from "../../store/reducers/appointment/actions";
+import {encodeSCID, getAppointmentDate} from "../../utils/utils";
+import {saveAppointmentReducer} from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";
 import {useHistory} from "react-router-dom";
+import moment from "moment";
 
 
-const cols: TableRowDataType<IAppointmentByQuery>[] = [
+const cols: TableRowDataType<IAppointment>[] = [
     {
         header: "Date",
         val: el =>
-            getAppointmentDate(el).format("LLL")
+            moment(el.dateTime).format("LLL")
     },
     {
         header: "Status",
         val: el => appointmentStatuses[el.appointmentStatus]
     },
-    {
-        header: "Vehicle",
-        val: el => getAppointmentVehicle(el)
-    },
+    // {
+    //     header: "Vehicle",
+    //     val: el => getAppointmentVehicle(el)
+    // },
     {
         header: "Price",
-        val: el => `$${el.transactionValue.toFixed(2)}`
+        val: el => `$${el.totalValue.toFixed(2)}`
     }
 ];
 
@@ -42,7 +43,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
         appointment.sessionId,
         appointment.scProfile
     ]);
-    const [editedItem, setEditedItem] = useState<IAppointmentByQuery|null>(null);
+    const [editedItem, setEditedItem] = useState<IAppointment|null>(null);
     const {askConfirm} = useConfirm();
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const showError = useException();
@@ -50,7 +51,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
     const dispatch = useDispatch();
     const showMessage = useMessage();
 
-    const [appointments, setAppointments] = useState<IAppointmentByQuery[]>([]);
+    const [appointments, setAppointments] = useState<IAppointment[]>([]);
 
     const loadAppointments = useCallback(async (sessionId: string, serviceCenterId: number) => {
         setLoading(true);
@@ -72,7 +73,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
         }
     }, [sessionId, props.open, loadAppointments, serviceCenter]);
 
-    const openMenu = (item: IAppointmentByQuery) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    const openMenu = (item: IAppointment) => (e: React.MouseEvent<HTMLButtonElement>) => {
         setEditedItem(item);
         setAnchorEl(e.currentTarget);
     }
@@ -80,7 +81,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
     const editAppointment = async () => {
         setAnchorEl(null);
         if (editedItem && serviceCenter) {
-            await dispatch(loadEditAppointment(editedItem));
+            //await dispatch(loadEditAppointment(editedItem));
             await dispatch(saveAppointmentReducer());
             history.replace(`${Routes.EndUser.AppointmentBase}/${encodeSCID(serviceCenter.id)}`);
             window.location.reload();
@@ -125,7 +126,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
         }
     }
 
-    const actions = (el: IAppointmentByQuery) => {
+    const actions = (el: IAppointment) => {
         return <IconButton
             disabled={
                 el.appointmentStatus === AppointmentStatus.Cancelled || !el.isEditable
@@ -139,7 +140,7 @@ export const MyAppointmentsDialog: React.FC<DialogProps> = ({onAction, payload, 
     return <BaseModal {...props}>
         <DialogTitle>My appointments</DialogTitle>
         <DialogContent>
-            <Table<IAppointmentByQuery>
+            <Table<IAppointment>
                 data={appointments}
                 noDataTitle="You have no appointments yet"
                 isLoading={loading}
