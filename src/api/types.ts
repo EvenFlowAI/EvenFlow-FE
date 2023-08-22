@@ -249,6 +249,13 @@ export type TDetailedAppointmentPrice = {
     pricingDisplayType?: EPricingDisplayType;
 }
 
+export type TServiceValetSlot = {
+    pickUpMin: string;
+    pickUpMax: string;
+    dropOffMin?: string;
+    dropOffMax?: string;
+}
+
 export interface IAppointmentByQuery extends IBaseAppointment {
     serviceCategories: ICategory[];
     jobType?: EJobType;
@@ -257,6 +264,7 @@ export interface IAppointmentByQuery extends IBaseAppointment {
     recallDescriptions?: string[];
     consultant?: Partial<IServiceConsultant>|null;
     detailedPriceList?: TDetailedAppointmentPrice[];
+    serviceValetTime?: TServiceValetSlot
 }
 
 export interface IAppointmentCustomerInfo {
