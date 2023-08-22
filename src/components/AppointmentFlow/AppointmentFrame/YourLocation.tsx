@@ -172,7 +172,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const handleManagingFlow = () => {
-        if (mobileServiceSelected || mobileServiceChanged) {
+        if ((mobileServiceSelected || mobileServiceChanged) && editingPosition === 'serviceOption') {
             dispatch(setServiceWarningOpen(true))
         } else if (changedToPickUp) {
             dispatch(setSlotsWarningOpen(true))
