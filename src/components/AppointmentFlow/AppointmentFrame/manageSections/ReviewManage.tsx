@@ -5,7 +5,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {Edit} from "@material-ui/icons";
-import {setAdvisor, setCurrentFrameScreen} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setAdvisor,
+    setCurrentFrameScreen,
+    setEditingPosition
+} from "../../../../store/reducers/appointmentFrameReducer/actions";
 
 const Wrapper = styled('ul')({
     display: "flex",
@@ -55,10 +59,12 @@ export const ReviewManage = () => {
     }, [appointmentByKey, consultants, consultant])
 
     const handleChangeAdvisor = () => {
+        dispatch(setEditingPosition('advisor'));
         dispatch(setCurrentFrameScreen("consultantSelection"));
     }
 
     const handleChangeTransportation = () => {
+        dispatch(setEditingPosition('transportation'));
         dispatch(setCurrentFrameScreen("transportationNeeds"));
     }
 

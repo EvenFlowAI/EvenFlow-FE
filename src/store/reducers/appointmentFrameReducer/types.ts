@@ -83,3 +83,5 @@ export enum EPackagePricingType {
     BasePrice,
     PriceWithFee
 }
+
+export type TEditingPosition = 'address' | 'serviceOption' | 'slot' | 'serviceRequests' | 'advisor' | 'transportation'

@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onClose, onNext, onBackToServiceOption, onVisitCenter}) => {
-    const {serviceTypeOption, ancillaryPrice, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
+    const {serviceTypeOption, ancillaryPrice, appointmentByKey, editingPosition} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
@@ -74,7 +74,10 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
         customerLoadedData?.isUpdating
             ? isSameServiceTypeOption
                 ? restorePrevData()
-                : onBackToServiceOption() : onVisitCenter()
+                : editingPosition  === 'address'
+                    ? onClose()
+                    : onBackToServiceOption()
+            : onVisitCenter()
         onClose();
     }
 

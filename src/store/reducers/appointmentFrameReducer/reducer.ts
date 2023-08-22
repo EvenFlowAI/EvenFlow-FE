@@ -48,7 +48,7 @@ import {
     setWelcomeScreenView,
     setZipCode,
     switchLanguage,
-    updateVehicle,
+    updateVehicle, setEditingPosition,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByQuery,
@@ -69,7 +69,7 @@ import {
     EUserType,
     IServiceOffer,
     IValueService,
-    TAncillaryPriceByZip,
+    TAncillaryPriceByZip, TEditingPosition,
     TLanguage,
     TMaintenanceDetails,
     TYear
@@ -143,6 +143,7 @@ type TState = {
     appointmentByKey: IAppointmentByQuery|null;
     carIsValidForUpdate: boolean;
     isUsualFlowNeeded: boolean;
+    editingPosition: TEditingPosition|null;
 }
 const initialState: TState = {
     service: null,
@@ -208,6 +209,7 @@ const initialState: TState = {
     appointmentByKey: null,
     carIsValidForUpdate: true,
     isUsualFlowNeeded: false,
+    editingPosition: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -421,5 +423,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setUsualFlowNeeded, (state, {payload}) => {
         return {...state, isUsualFlowNeeded: payload}
+    })
+    .addCase(setEditingPosition, (state, {payload}) => {
+        return {...state, editingPosition: payload}
     })
 )

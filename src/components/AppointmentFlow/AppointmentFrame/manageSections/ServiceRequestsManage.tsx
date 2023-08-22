@@ -4,7 +4,7 @@ import {ConfirmationTitle} from "../Title";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
-import {setCurrentFrameScreen} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {setCurrentFrameScreen, setEditingPosition} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {Edit} from "@material-ui/icons";
 import {getMaintenanceDescription} from "../uiUtils";
 
@@ -45,6 +45,7 @@ const ServiceRequestsManage = () => {
     const dispatch = useDispatch();
 
     const handleEditServiceRequests = () => {
+        dispatch(setEditingPosition('serviceRequests'));
         dispatch(setCurrentFrameScreen("serviceNeeds"));
     }
 

@@ -10,7 +10,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {
     clearAppointmentData,
     createOrUpdateAppointment, loadConsultants, setAppointmentSaving,
-    setCurrentFrameScreen,
+    setCurrentFrameScreen, setEditingPosition,
     setReminders
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -194,6 +194,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
                         Please do not forget to update the appointment in your calendar.
                     </div>
                 );
+                await dispatch(setEditingPosition(null))
                 history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1")
             } catch (e) {
                 showError(e);
