@@ -62,7 +62,7 @@ import {
     ITransportation
 } from "../../../api/types";
 import moment from "moment";
-import {EAppointmentTimingType, EReminderType} from "../appointment/types";
+import {EAppointmentTimingType, EReminderType, IServiceRequestPrice} from "../appointment/types";
 import {
     EPackagePricingType,
     EServiceType,
@@ -144,6 +144,7 @@ type TState = {
     carIsValidForUpdate: boolean;
     isUsualFlowNeeded: boolean;
     editingPosition: TEditingPosition|null;
+    appointmentRequestsPrices: IServiceRequestPrice[];
 }
 const initialState: TState = {
     service: null,
@@ -210,6 +211,7 @@ const initialState: TState = {
     carIsValidForUpdate: true,
     isUsualFlowNeeded: false,
     editingPosition: null,
+    appointmentRequestsPrices: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
