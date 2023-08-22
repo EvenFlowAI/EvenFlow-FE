@@ -9,9 +9,9 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {decodeSCID} from "../../../utils/utils";
 import {
     clearAppointmentData,
-    createOrUpdateAppointment, loadConsultants, setAppointmentSaving,
+    createOrUpdateAppointment, loadConsultants, setAppointmentByKey, setAppointmentSaving,
     setCurrentFrameScreen, setEditingPosition,
-    setReminders
+    setReminders, setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -195,6 +195,9 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
                     </div>
                 );
                 await dispatch(setEditingPosition(null))
+                await dispatch(setAppointmentByKey(null));
+                await clearAppointmentData();
+                await dispatch(setWelcomeScreenView("select"))
                 history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1")
             } catch (e) {
                 showError(e);
