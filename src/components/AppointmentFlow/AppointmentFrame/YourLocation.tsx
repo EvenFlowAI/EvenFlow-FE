@@ -184,7 +184,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     const handleChangeAddress = async (e: any) => {
         clearSelectedData();
         setFormChecked(false);
-        dispatch(setAddress(e));
+        dispatch(setAddress(e ?? null));
     }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
         clearSelectedData();
@@ -198,6 +198,11 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         }
     }
 
+    const restoreAddress = () => {
+        dispatch(setAddress(appointmentByKey?.address ?? null))
+        dispatch(setZipCode(appointmentByKey?.zipCode ?? ""))
+    }
+
     const onBackToFirstScreen = async () => {
         await dispatch(setShowServiceCentersList(false))
         await dispatch(setWelcomeScreenView("serviceSelect"));
@@ -209,6 +214,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         if (editingPosition === 'address') {
             dispatch(setCurrentFrameScreen('manageAppointment'))
         } else {
+            restoreAddress()
             onBackToFirstScreen()
         }
     }
@@ -271,7 +277,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const getPlaceholderLabel = (): string => {
-        if (typeof address === 'string') return address;
+        if (typeof address === 'string' && address.length) return address;
         if (address?.label) return address?.label;
         return isFormChecked ? t('Address is required') : placeholder
     }
@@ -296,8 +302,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                             }
                         }}
                         selectProps={{
-                            addressValue: typeof address === 'string' ? address : address?.label ?? '',
-                            className: typeof address === 'string'
+                            addressValue: typeof address === 'string' && address.length ? address : address?.label ?? null,
+                            className: typeof address === 'string' && address.length
                                 ? !address && isFormChecked
                                 : !address?.label && isFormChecked
                                     ? classes.errorSelect
@@ -307,7 +313,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                             placeholder: getPlaceholderLabel(),
                             isClearable: true,
                             isSearchable: true,
-                            defaultInputValue: typeof address === 'string' ? address : address?.label || "",
+                            defaultInputValue: typeof address === 'string' && address.length
+                                ? address
+                                : address?.label ?? null,
                             key: address?.label || 'label',
                         }}
                     />
