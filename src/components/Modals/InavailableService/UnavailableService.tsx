@@ -8,7 +8,7 @@ import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {DialogProps} from "../types";
-import {setAddress, setZipCode} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setAddress, setCurrentFrameScreen, setZipCode} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TCallback} from "../../../types/types";
 
 const useStyles = makeStyles((theme) => ({
@@ -76,6 +76,7 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
         dispatch(setAddress(appointmentByKey?.address ?? null))
         dispatch(setZipCode(appointmentByKey?.zipCode ?? ''))
         onClose()
+        dispatch(setCurrentFrameScreen('manageAppointment'))
     }
 
     const onVisitCenterClick = () => {
