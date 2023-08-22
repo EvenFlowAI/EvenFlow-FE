@@ -35,7 +35,7 @@ import {TArgCallback} from "../../../types/types";
 import {TView} from "../../Welcome/types";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
-import {setServiceWarningOpen} from "../../../store/reducers/modals/actions";
+import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 import {ILoadedVehicle} from "../../../api/types";
 
@@ -142,6 +142,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         && appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
     const mobileServiceChanged = useMemo(() => serviceTypeOption?.type !== EServiceType.MobileService
         && appointmentByKey?.serviceTypeOption?.type === EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
+    const changedToPickUp = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
+        && appointmentByKey?.serviceTypeOption
+        && appointmentByKey?.serviceTypeOption?.type !== EServiceType.PickUpDropOff, [serviceTypeOption, appointmentByKey])
 
     useEffect(() => {
         setZip(zipCodeValue ?? "")
@@ -157,6 +160,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     const handleManagingFlow = () => {
         if (mobileServiceSelected || mobileServiceChanged) {
             dispatch(setServiceWarningOpen(true))
+        } else if (changedToPickUp) {
+            dispatch(setSlotsWarningOpen(true))
         } else {
             scProfile && dispatch(checkPodChanged(scProfile.id, showError))
         }

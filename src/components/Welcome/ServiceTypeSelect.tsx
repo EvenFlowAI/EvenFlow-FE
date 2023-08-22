@@ -35,7 +35,7 @@ import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
 import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import {setServiceWarningOpen} from "../../store/reducers/modals/actions";
+import {setServiceWarningOpen, setSlotsWarningOpen} from "../../store/reducers/modals/actions";
 import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
 import {checkPodChanged} from "../../store/reducers/appointments/actions";
 
@@ -159,6 +159,8 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     const changeToVisitCenter = () => {
         if (serviceTypeOption?.type === EServiceType.MobileService) {
             dispatch(setServiceWarningOpen(true))
+        } else if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+            dispatch(setSlotsWarningOpen(true))
         } else {
             dispatch(checkPodChanged(decodeSCID(id), showError))
         }

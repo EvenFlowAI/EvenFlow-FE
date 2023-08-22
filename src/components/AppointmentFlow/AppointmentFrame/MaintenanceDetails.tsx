@@ -5,10 +5,11 @@ import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {useDispatch, useSelector} from "react-redux";
-import {EUserType, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
     clearAppointmentSteps,
-    setRecallsAreShown, setSelectedRecalls,
+    setRecallsAreShown,
+    setSelectedRecalls,
     setVehicle,
     setVehicleDataFromValueService,
     updateVehicle
@@ -79,6 +80,8 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         recallsAreShown,
         categoriesIds,
         selectedPackage,
+        serviceTypeOption,
+        appointmentByKey,
     }= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
@@ -262,9 +265,21 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }
 
     const handleUpdating = () => {
-        service?.type === EServiceCategoryType.MaintenancePackage
-            ? goToNextScreen()
-            : dispatch(setChangesCompletedOpen(true))
+        if (service?.type === EServiceCategoryType.MaintenancePackage) {
+            goToNextScreen()
+        } else {
+            const pickUpSelected = serviceTypeOption?.type === EServiceType.PickUpDropOff
+                && appointmentByKey?.serviceTypeOption
+                && appointmentByKey?.serviceTypeOption?.type !== EServiceType.PickUpDropOff;
+            const pickUpChanged = serviceTypeOption?.type !== EServiceType.PickUpDropOff
+                && appointmentByKey?.serviceTypeOption
+                && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff;
+            if (pickUpSelected || pickUpChanged) {
+                onNext(isAppointmentTimingAvailable ? "appointmentTiming" : "appointmentSelection")
+            } else {
+                dispatch(setChangesCompletedOpen(true))
+            }
+        }
     }
 
     const handleNext = () => {
