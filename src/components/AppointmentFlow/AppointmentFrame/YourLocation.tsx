@@ -71,10 +71,24 @@ const useStyles = makeStyles(() => ({
             border: "1px solid #DADADA",
             '& > div > div': {
                 fontSize: '1rem',
-                // color: 'rgba(0, 0, 0, 0.87)',
-                // opacity: 0.4
+                color: '#212121',
+                backgroundColor: 'transparent',
             },
         },
+    },
+    emptySelect: {
+        '& > div': {
+            borderRadius: 0,
+            backgroundColor: '#F7F8FB',
+            padding: 2,
+            border: "1px solid #DADADA",
+            '& > div > div': {
+                fontSize: '1rem',
+                color: 'rgba(0, 0, 0, 0.87)',
+                opacity: 0.5,
+                backgroundColor: 'transparent',
+            },
+        }
     },
     errorSelect: {
         '& > div': {
@@ -184,7 +198,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     const handleChangeAddress = async (e: any) => {
         clearSelectedData();
         setFormChecked(false);
-        dispatch(setAddress(e));
+        dispatch(setAddress(e ?? null));
     }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
         clearSelectedData();
@@ -198,6 +212,11 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         }
     }
 
+    const restoreAddress = () => {
+        dispatch(setAddress(appointmentByKey?.address ?? null))
+        dispatch(setZipCode(appointmentByKey?.zipCode ?? ""))
+    }
+
     const onBackToFirstScreen = async () => {
         await dispatch(setShowServiceCentersList(false))
         await dispatch(setWelcomeScreenView("serviceSelect"));
@@ -209,6 +228,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         if (editingPosition === 'address') {
             dispatch(setCurrentFrameScreen('manageAppointment'))
         } else {
+            restoreAddress()
             onBackToFirstScreen()
         }
     }
@@ -271,7 +291,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const getPlaceholderLabel = (): string => {
-        if (typeof address === 'string') return address;
+        if (typeof address === 'string' && address.length) return address;
         if (address?.label) return address?.label;
         return isFormChecked ? t('Address is required') : placeholder
     }
@@ -296,18 +316,23 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                             }
                         }}
                         selectProps={{
-                            addressValue: typeof address === 'string' ? address : address?.label ?? '',
-                            className: typeof address === 'string'
-                                ? !address && isFormChecked
-                                : !address?.label && isFormChecked
-                                    ? classes.errorSelect
+                            addressValue: typeof address === 'string' && address.length ? address : address?.label ?? null,
+                            className: typeof address === 'string' && address.length
+                                ? classes.select
+                                : !address?.label ?
+                                    isFormChecked
+                                        ? classes.errorSelect
+                                        // : classes.emptySelect
+                                        : classes.select
                                     : classes.select,
                             onChange: handleChangeAddress,
                             onFocus: () => setFormChecked(false),
                             placeholder: getPlaceholderLabel(),
                             isClearable: true,
                             isSearchable: true,
-                            defaultInputValue: typeof address === 'string' ? address : address?.label || "",
+                            // defaultInputValue: typeof address === 'string' && address.length
+                            //     ? address
+                            //     : address?.label ?? null,
                             key: address?.label || 'label',
                         }}
                     />
