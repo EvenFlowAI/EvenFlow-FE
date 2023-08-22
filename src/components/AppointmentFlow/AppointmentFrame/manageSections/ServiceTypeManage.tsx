@@ -8,6 +8,7 @@ import {useTranslation} from "react-i18next";
 import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
 import {Edit} from "@material-ui/icons";
 import {
+    setEditingPosition,
     setShowServiceCentersList,
     setWelcomeScreenView
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
@@ -45,6 +46,7 @@ const ServiceTypeManage = () => {
     }
 
     const onServiceOptionChange = async () => {
+        await dispatch(setEditingPosition('serviceOption'));
         await dispatch(setShowServiceCentersList(false))
         await dispatch(setWelcomeScreenView("serviceSelect"));
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");

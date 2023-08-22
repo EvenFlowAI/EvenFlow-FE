@@ -23,7 +23,7 @@ import {
     IAppointmentId,
     IServiceOffer,
     IValueService,
-    TAncillaryPriceByZip,
+    TAncillaryPriceByZip, TEditingPosition,
     TLanguage,
     TMaintenanceDetails,
     TYear
@@ -116,6 +116,7 @@ export const setHashKey = createAction<string>('fAppointment/SetHashKey');
 export const setAppointmentByKey = createAction<IAppointmentByQuery|null>("fAppointment/SetAppointmentByKey");
 export const setCarIsValidForUpdate = createAction<boolean>("fAppointment/SetCarIsValidForUpdate");
 export const setUsualFlowNeeded = createAction<boolean>("fAppointment/SetUsualFlowNeeded");
+export const setEditingPosition = createAction<TEditingPosition|null>("fAppointment/SetEditingPosition");
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -636,6 +637,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
 
     Api.call<ICreateAppointmentResp>(endpoint, { data, urlParams: {id: appointmentFrame.hashKey} })
         .then(({data}) => {
+            dispatch(setEditingPosition(null))
             dispatch(handleAppointmentResponse(data, endpoint, onNext))
         })
         .catch(e => {

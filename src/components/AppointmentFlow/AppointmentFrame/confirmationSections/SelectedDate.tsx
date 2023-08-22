@@ -3,11 +3,12 @@ import {ConfirmationTitle} from "../Title";
 import moment from "moment";
 import {Edit} from "@material-ui/icons";
 import {styled} from "@material-ui/core";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {TCallback} from "../../../../types/types";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {setEditingPosition} from "../../../../store/reducers/appointmentFrameReducer/actions";
 
 const TitleWrapper = styled('div')({
     display: "flex",
@@ -24,6 +25,7 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     const { dropOffSettings, customerLoadedData } = useSelector((state: RootState) => state.appointment);
     const {serviceTypeOption, isAppointmentSaving, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
+    const dispatch = useDispatch();
 
     const getDateForUpdate = (): string => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {
@@ -46,6 +48,7 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
             : moment.utc().format('ddd, MMMM D, hh:mm A')
 
     const handleChangeSlot = () => {
+        if (customerLoadedData?.isUpdating) dispatch(setEditingPosition('slot'))
         if (!isAppointmentSaving) onChangeSlot();
     }
     return <div>

@@ -11,7 +11,7 @@ import {
     clearAppointmentData,
     loadAncillaryPriceByZip,
     loadFilteredZip,
-    setAddress,
+    setAddress, setCurrentFrameScreen,
     setDefaultVisitCenterOption,
     setShowServiceCentersList,
     setSideBarSteps,
@@ -116,8 +116,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         filteredZipCodes,
         serviceTypeOption,
         selectedVehicle,
-        appointmentByKey
-        ,} = useSelector((state: RootState) => state.appointmentFrame);
+        appointmentByKey,
+        editingPosition,
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
@@ -198,10 +199,18 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     }
 
+    const onBackFromManage = () => {
+        setPrevServiceType()
+        if (editingPosition === 'address') {
+            dispatch(setCurrentFrameScreen('manageAppointment'))
+        } else {
+            onBackToFirstScreen()
+        }
+    }
+
     const handleBack = () => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {
-            setPrevServiceType()
-            onBackToFirstScreen()
+            onBackFromManage()
         } else {
             clearAddress();
             clearSelectedData();
