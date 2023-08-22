@@ -35,7 +35,7 @@ const useStyles = makeStyles({
 })
 
 const AskChangesCompleted = () => {
-    const {isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isAppointmentSaving, currentScreen} = useSelector((state: RootState) => state.appointmentFrame);
     const {isChangesCompletedOpen} = useSelector((state: RootState) => state.modals);
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();
@@ -71,7 +71,7 @@ const AskChangesCompleted = () => {
         showError(e)
         if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
             dispatch(setChangesCompletedOpen(false))
-            dispatch(setSlotsWarningOpen(true))
+            currentScreen !== "appointmentSelection" && dispatch(setSlotsWarningOpen(true))
         }
     }
 
