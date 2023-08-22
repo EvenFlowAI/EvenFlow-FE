@@ -9,9 +9,15 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {decodeSCID} from "../../../utils/utils";
 import {
     clearAppointmentData,
-    createOrUpdateAppointment, loadConsultants, setAppointmentByKey, setAppointmentSaving,
-    setCurrentFrameScreen, setEditingPosition,
-    setReminders, setWelcomeScreenView
+    createOrUpdateAppointment,
+    loadAppointmentRequestsPrices,
+    loadConsultants,
+    setAppointmentByKey,
+    setAppointmentSaving,
+    setCurrentFrameScreen,
+    setEditingPosition,
+    setReminders,
+    setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -21,7 +27,6 @@ import {
     loadAllServiceCategories, loadSRs,
 } from "../../../store/reducers/appointment/actions";
 import Vehicle from "./confirmationSections/Vehicle";
-import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
 import {useTranslation} from "react-i18next";
 import ServiceRequestsManage from "./manageSections/ServiceRequestsManage";
@@ -38,6 +43,7 @@ import {API} from "../../../api/api";
 import {Routes} from "../../../config/routes";
 import {isMobile} from 'react-device-detect';
 import moment from "moment/moment";
+import DetailedFeesManage from "../../Modals/DetailedFees/DetailedFeesManage";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -124,6 +130,12 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
             dispatch(loadSRs(appointment.scProfile.id))
         }
     }, [appointment.scProfile, appointmentFrame.serviceTypeOption, id])
+
+    useEffect(() => {
+        if (appointment?.scProfile && appointment.appointmentWasChanged) {
+            dispatch(loadAppointmentRequestsPrices(appointment.scProfile.id))
+        }
+    }, [appointment?.scProfile, appointment.appointmentWasChanged])
 
     useEffect(() => {
         dispatch(setReminders([0, 2]));
@@ -272,7 +284,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
                 Cancel Appointment
             </Button>
         </ButtonWrapper>
-        <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
+        <DetailedFeesManage open={isFeesOpen} onClose={onFeesClose}/>
         <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
         <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
     </StepWrapper>

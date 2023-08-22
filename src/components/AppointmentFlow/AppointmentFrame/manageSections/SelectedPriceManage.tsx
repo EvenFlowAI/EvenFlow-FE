@@ -4,7 +4,6 @@ import {styled} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
-import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 
 const Price = styled('div')({
     marginTop: 8,
@@ -27,27 +26,22 @@ export const SpecialLabel = styled('div')({
 })
 
 export const SelectedPriceManage = () => {
-    const {appointment, scProfile, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
-    const {serviceTypeOption, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {appointmentRequestsPrices} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
+    const price = appointmentRequestsPrices
+        .reduce((prev, current) => prev + (current.priceValue ?? 0),0)
 
     return (
         <div>
             <ConfirmationTitle>{t("Selected Price")}</ConfirmationTitle>
             <Price>
-                {serviceTypeOption?.type === EServiceType.PickUpDropOff
-                    ? serviceValetAppointment?.price.value ?
-                        <span>${scProfile?.isRoundPrice
-                            ? serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice
-                            : (serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice).toFixed(2)}
+                {price > 0
+                    ? <span>${scProfile?.isRoundPrice
+                        ? price
+                        : price.toFixed(2)}
                     </span>
-                        : t('Service items will be quoted at dealership')
-                    : appointment?.price.value ?
-                        <span>${scProfile?.isRoundPrice
-                            ? appointment.price.value + appointment.price.ancillaryPrice
-                            : (appointment.price.value + appointment.price.ancillaryPrice).toFixed(2)}
-                    </span>
-                        : t('Service items will be quoted at dealership')
+                    : t('Service items will be quoted at dealership')
                 }
                 {/*todo uncomment for offer new functionality*/}
                 {/*{appointment?.serviceRequestPrices?.find(item => !!item.offer)*/}

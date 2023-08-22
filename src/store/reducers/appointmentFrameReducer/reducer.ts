@@ -48,7 +48,7 @@ import {
     setWelcomeScreenView,
     setZipCode,
     switchLanguage,
-    updateVehicle, setEditingPosition,
+    updateVehicle, setEditingPosition, getAppointmentRequestsPrices,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByQuery,
@@ -286,6 +286,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             zipCode: payload.zipCode ?? "",
             serviceTypeOption: payload.serviceTypeOption ?? null,
             transportation: payload.transportationOption ?? null,
+            appointmentRequestsPrices: payload.detailedPriceList ?? [],
         };
     })
     .addCase(setLoadingPackages, (state, { payload}) => {
@@ -428,5 +429,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setEditingPosition, (state, {payload}) => {
         return {...state, editingPosition: payload}
+    })
+    .addCase(getAppointmentRequestsPrices, (state, {payload}) => {
+        return {...state, appointmentRequestsPrices: payload}
     })
 )

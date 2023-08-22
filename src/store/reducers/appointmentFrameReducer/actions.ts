@@ -37,7 +37,7 @@ import {
     saveCustomerCache,
     selectAppointment,
     selectServiceValetAppointment,
-    selectSR,
+    selectSR, setAppointmentWasChanged,
     setCustomerLoadedData
 } from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
@@ -254,6 +254,8 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setHashKey(''));
     dispatch(setAppointmentByKey(null));
     dispatch(setUsualFlowNeeded(false));
+    dispatch(setEditingPosition(null));
+    dispatch(setAppointmentWasChanged(false))
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
@@ -569,9 +571,9 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
 
     const date = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
         ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
-        : appointmentFrame.appointmentByKey
-            ? appointmentFrame.appointmentByKey.dateInUtc
-            : appointment.appointment?.id.split("|")[0] || "";
+        : appointment.appointment
+            ? appointment.appointment?.id.split("|")[0] || ""
+            : appointmentFrame.appointmentByKey?.dateInUtc || ""
 
     const appointmentTimingType = appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && appointmentFrame.selectedTiming
         ? appointmentFrame.selectedTiming
@@ -695,9 +697,9 @@ export const loadAppointmentRequestsPrices = (serviceCenterId: number): AppThunk
     }
     const date = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
         ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
-        : appointmentFrame.appointmentByKey
-            ? appointmentFrame.appointmentByKey.dateInUtc
-            : appointment.appointment?.id.split("|")[0] || "";
+        : appointment.appointment
+            ? appointment.appointment?.id.split("|")[0] || ""
+            : appointmentFrame.appointmentByKey?.dateInUtc || ""
 
     const appointmentTimingType = appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && appointmentFrame.selectedTiming
         ? appointmentFrame.selectedTiming
@@ -738,12 +740,16 @@ export const loadAppointmentRequestsPrices = (serviceCenterId: number): AppThunk
         serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
         vehicle,
     }
-    Api.call(Api.endpoints.AppointmentPricing.GetPriceList, {data})
-        .then(result => {
-            if (result) dispatch(getAppointmentRequestsPrices(result.data))
-        })
-        .catch(err => {
-            console.log('get appointment requests prices list err', err)
-        })
-        .finally(() => dispatch(setAppointmentsLoading(false)))
+    if (serviceRequestIds.length || data.serviceCategoryIds.length || data.valueServiceOfferIds.length
+        || data.recalls.length || maintenancePackageOption) {
+        Api.call(Api.endpoints.AppointmentPricing.GetPriceList, {data})
+            .then(result => {
+                if (result) dispatch(getAppointmentRequestsPrices(result.data))
+            })
+            .catch(err => {
+                console.log('get appointment requests prices list err', err)
+            })
+            .finally(() => dispatch(setAppointmentsLoading(false)))
+    }
+
 }

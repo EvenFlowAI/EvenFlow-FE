@@ -15,6 +15,7 @@ import {decodeSCID} from "../../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
 import {useCurrentUser, useException} from "../../../utils/hooks";
 import {isMobile} from 'react-device-detect';
+import {setAppointmentWasChanged} from "../../../store/reducers/appointment/actions";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -56,6 +57,7 @@ const AskChangesCompleted = () => {
     }
 
     const onAdditionalChanges = () => {
+        dispatch(setAppointmentWasChanged(true))
         dispatch(setChangesCompletedOpen(false))
         dispatch(setCurrentFrameScreen("manageAppointment"))
         redirectToAppointmentFrame()
