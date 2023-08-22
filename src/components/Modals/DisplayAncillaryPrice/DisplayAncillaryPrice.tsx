@@ -74,9 +74,7 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
         customerLoadedData?.isUpdating
             ? isSameServiceTypeOption
                 ? restorePrevData()
-                : editingPosition  === 'address'
-                    ? onClose()
-                    : onBackToServiceOption()
+            : onClose()
             : onVisitCenter()
         onClose();
     }
