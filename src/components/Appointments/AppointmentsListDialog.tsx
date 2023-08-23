@@ -16,7 +16,6 @@ type TDialogProps = DialogProps & {
     refresh: () => void;
     order: IOrder<IAppointment>;
     setOrder: React.Dispatch<React.SetStateAction<IOrder<IAppointment>>>
-    onEditOpen: () => void;
     viewItem?: IAppointment|undefined;
     setViewItem?: Dispatch<SetStateAction<IAppointment|undefined>>
 }
@@ -26,7 +25,6 @@ const AppointmentsListDialog: React.FC<TDialogProps> = ({
                                                             refresh,
                                                             order,
                                                             setOrder,
-                                                            onEditOpen,
                                                             viewItem,
                                                             setViewItem,
                                                             ...props}) => {
@@ -60,7 +58,6 @@ const AppointmentsListDialog: React.FC<TDialogProps> = ({
                     setOrder={setOrder}
                     onChangePage={onChangePage}
                     onChangeRowsPerPage={onChangeRowsPerPage}
-                    onEditOpen={onEditOpen}
                     setViewItem={setViewItem}
                 />
             </DialogContent>
