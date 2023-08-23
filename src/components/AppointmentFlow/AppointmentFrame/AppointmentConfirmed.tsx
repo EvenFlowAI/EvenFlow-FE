@@ -22,6 +22,7 @@ import {
 import {useCurrentUser} from "../../../utils/hooks";
 import {ILoadedVehicle} from "../../../api/types";
 import {setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
+import {Loading} from "../../UI/Loading";
 
 const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -119,6 +120,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         packagePriceTitles,
         dropOffSettings,
         customerLoadedData,
+        isAppointmentSaving,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -144,6 +146,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         state.appointmentFrame.packagePriceTitles,
         state.appointment.dropOffSettings,
         state.appointment.customerLoadedData,
+        state.appointmentFrame.isAppointmentSaving,
     ]);
 
     const {t} = useTranslation();
@@ -378,7 +381,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         <Paper>
             <Wrapper>
                 <h2>Appointment Confirmed!</h2>
-                {data.filter(el => el.content).map((item, index) => {
+                {isAppointmentSaving
+                    ? <Loading/>
+                    : data.filter(el => el.content).map((item, index) => {
                     if (!selectedPackage && item.label === t("Selected Price")) {
                         return null;
                     }
@@ -390,15 +395,15 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 })}
             </Wrapper>
             <ButtonsWrapper>
-                <Button color="primary" fullWidth variant="outlined" onClick={onModify}>
+                <Button color="primary" fullWidth variant="outlined" onClick={onModify} disabled={isAppointmentSaving}>
                     {t("Modify Appointment")}
                 </Button>
-                <Button color="primary" onClick={handleAddToCalendar} fullWidth variant="contained">
+                <Button color="primary" onClick={handleAddToCalendar} fullWidth variant="contained" disabled={isAppointmentSaving}>
                     {t("Add to Calendar")}
                 </Button>
                 <Divider />
             </ButtonsWrapper>
-            { !isFrame ? <Button color="primary" fullWidth variant="outlined" onClick={onMakeNew}>
+            { !isFrame ? <Button color="primary" fullWidth variant="outlined" onClick={onMakeNew} disabled={isAppointmentSaving}>
                 {t("Make New Appointment")}
             </Button> : null}
             <h3>{t("We will see you soon!")}</h3>
