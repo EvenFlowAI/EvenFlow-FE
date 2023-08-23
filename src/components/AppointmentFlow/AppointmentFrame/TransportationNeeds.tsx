@@ -239,7 +239,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
             action: 'Selected Transportation Need',
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
         })
-        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+        if (customerLoadedData?.isUpdating) {
             dispatch(setChangesCompletedOpen(true))
         } else {
             onNext();
