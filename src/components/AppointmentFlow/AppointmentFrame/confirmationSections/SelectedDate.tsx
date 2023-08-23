@@ -67,7 +67,7 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
             ? appointment?.date
                 ? moment.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')
                 : getDateForUpdate()
-            : moment.utc().format('ddd, MMMM D, hh:mm A')
+            : moment.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')
 
     const handleChangeSlot = () => {
         if (customerLoadedData?.isUpdating) dispatch(setEditingPosition('slot'))
