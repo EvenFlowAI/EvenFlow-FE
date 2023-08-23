@@ -36,7 +36,7 @@ const AppointmentDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
             />
             <DetailsItem
                 title="Scheduled Appointment"
-                text={moment(payload.dateTime).format(dateTimeFormat)}
+                text={moment.utc(payload.dateTime).format(dateTimeFormat)}
                 icon={<Clock/>}
             />
             <DetailsItem
