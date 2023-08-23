@@ -1,5 +1,5 @@
 import {makeStyles} from "@material-ui/core/styles";
-import React, {ReactComponentElement, DOMElement} from "react";
+import React, {ReactComponentElement} from "react";
 
 const useStyles = makeStyles({
     wrapper: {
