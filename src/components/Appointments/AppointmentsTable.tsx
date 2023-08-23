@@ -32,7 +32,6 @@ type TAppointmentsTable = {
     refresh: () => void;
     order: IOrder<IAppointment>;
     setOrder: React.Dispatch<React.SetStateAction<IOrder<IAppointment>>>
-    onEditOpen: () => void;
     onChangePage: (e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number) => void;
     onChangeRowsPerPage: (e: React.ChangeEvent<HTMLInputElement>) => void;
     pageData: IPageRequest;
@@ -41,7 +40,7 @@ type TAppointmentsTable = {
     setViewItem?: Dispatch<SetStateAction<IAppointment|undefined>>
 }
 
-export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setViewItem, isLoading, refresh, setOrder, order, onEditOpen, pageData, onChangeRowsPerPage, onChangePage }) => {
+export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setViewItem, isLoading, refresh, setOrder, order, pageData, onChangeRowsPerPage, onChangePage }) => {
     const { appointments, count } = useSelector((state: RootState) => state.appointments);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 

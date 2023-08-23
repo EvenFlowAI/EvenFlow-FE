@@ -125,14 +125,14 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         displayEmpty
                         style={{color: scheduler ? "inherit" : '#858585'}}
                         onChange={handleSelectScheduler}
-                        value={scheduler?.id ?? ''}
+                        value={scheduler?.id ?? scheduler?.fullName ?? ''}
                         input={
                             <TextField label='Shceduler'/>
                         }
                     >
                         <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
                         {schedulerList.map(scheduler => {
-                            return <MenuItem key={scheduler.id} value={scheduler.id}>{scheduler.fullName}</MenuItem>
+                            return <MenuItem key={scheduler.id ?? scheduler.fullName} value={scheduler.id ?? scheduler.fullName}>{scheduler.fullName}</MenuItem>
                         })}
                     </Select>
                 </Grid>

@@ -33,7 +33,6 @@ export const Appointments = () => {
     })
     const {selectedSC} = useSCs();
     const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
-    const {isOpen: isEditOpen, onClose: onEditClose, onOpen: onEditOpen} = useModal();
     const {isOpen: isListOpen, onClose: onListClose, onOpen: onListOpen} = useModal();
     const dispatch = useDispatch();
 
@@ -86,7 +85,9 @@ export const Appointments = () => {
 
     const handleSelectScheduler = (e: React.ChangeEvent<{value: unknown}>) => {
         if (e.target.value) {
-            const selected = schedulerList.find(item => item.id.toString() === e.target.value)
+            const selected = schedulerList.find(item => item.id
+                ? item.id.toString() === e.target.value
+            : item.fullName === e.target.value)
             setScheduler(selected ?? null);
         } else {
             setScheduler(null);
@@ -144,7 +145,6 @@ export const Appointments = () => {
             ? <AppointmentsTable
                 viewItem={viewItem}
                 setViewItem={setViewItem}
-                onEditOpen={onEditOpen}
                 isLoading={isLoading}
                 refresh={refresh}
                 order={order}
@@ -166,7 +166,6 @@ export const Appointments = () => {
             viewItem={viewItem}
             setViewItem={setViewItem}
             onClose={onListDialogClose}
-            onEditOpen={onEditOpen}
             refresh={refresh}
             order={order}
             setOrder={setOrder}/>
