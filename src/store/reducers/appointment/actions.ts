@@ -279,6 +279,7 @@ export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: m
             dispatch(getServiceValetSlots(items));
             if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange));
             if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings));
+            dispatch(getSlotsConsultantId(null));
             loadCB && loadCB();
         })
         .catch(err => {

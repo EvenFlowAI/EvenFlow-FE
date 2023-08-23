@@ -11,7 +11,7 @@ import {
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {
-    clearAppointmentData,
+    clearAppointmentData, loadConsultants,
     setCurrentFrameScreen,
     setServiceTypeOption,
     setSideBarSteps,
@@ -167,6 +167,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     }
 
     const handleUpdateOption = (serviceOption: IFirstScreenOption) => {
+        dispatch(loadConsultants(id, serviceOption.id));
         if (serviceOption?.type === EServiceType.VisitCenter) {
             changeToVisitCenter()
         } else {
