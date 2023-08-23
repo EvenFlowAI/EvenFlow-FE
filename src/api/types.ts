@@ -119,6 +119,7 @@ export interface ICustomerLoadedData {
     city?:string;
     fromSearchByName?: boolean;
     isUpdating?: boolean;
+    fullAddress?: string;
 }
 
 export interface IVehicle {
