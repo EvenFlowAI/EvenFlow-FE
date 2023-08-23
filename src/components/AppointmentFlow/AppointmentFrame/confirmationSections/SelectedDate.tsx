@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {ConfirmationTitle} from "../Title";
 import moment from "moment";
 import {Edit} from "@material-ui/icons";
@@ -9,6 +9,7 @@ import {TCallback} from "../../../../types/types";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {setEditingPosition} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {TServiceValetSlot} from "../../../../api/types";
 
 const TitleWrapper = styled('div')({
     display: "flex",
@@ -20,12 +21,33 @@ const TitleWrapper = styled('div')({
 type TProps = {
     onChangeSlot: TCallback;
 }
+
 export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     const {appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const { dropOffSettings, customerLoadedData } = useSelector((state: RootState) => state.appointment);
     const {serviceTypeOption, isAppointmentSaving, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
+    const [serviceValetTime, setServiceValetTime] = useState<TServiceValetSlot|null>(null);
     const {t} = useTranslation();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (serviceValetAppointment) {
+            setServiceValetTime({
+                pickUpMin: serviceValetAppointment.pickUpMin,
+                pickUpMax: serviceValetAppointment.pickUpMax,
+                dropOffMin: serviceValetAppointment.dropOffMin,
+                dropOffMax: serviceValetAppointment.dropOffMax,
+            })
+        } else if (appointmentByKey?.serviceValetTime) {
+            const {serviceValetTime} = appointmentByKey;
+            setServiceValetTime({
+                pickUpMin: serviceValetTime.pickUpMin,
+                pickUpMax: serviceValetTime.pickUpMax,
+                dropOffMin: serviceValetTime.dropOffMin,
+                dropOffMax: serviceValetTime.dropOffMax,
+            })
+        }
+    }, [serviceValetAppointment, appointmentByKey])
 
     const getDateForUpdate = (): string => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {
@@ -61,20 +83,20 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
         {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
             ? <div><span style={{fontWeight: 'bold'}}>{t("Date")}</span>: {date}</div>
             : date}
-        {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
+        {serviceTypeOption?.type === EServiceType.PickUpDropOff && (serviceValetAppointment || appointmentByKey?.serviceValetTime)
             ? <div>
                 <div>
                     <span style={{fontWeight: 'bold'}}>{t("Pick Up Time")}: </span>
-                    <span> {moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('hh:mm A')}</span>
+                    <span> {moment.utc(serviceValetTime?.pickUpMin, "HH:mm:ss").format('hh:mm A')}</span>
                     <span> {t("to")} </span>
-                    <span> {moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}</span>
+                    <span> {moment.utc(serviceValetTime?.pickUpMax, "HH:mm:ss").format('hh:mm A')}</span>
                 </div>
-                {dropOffSettings?.showDropOffTime && serviceValetAppointment?.dropOffMin && serviceValetAppointment?.dropOffMax
+                {dropOffSettings?.showDropOffTime && serviceValetTime?.dropOffMin && serviceValetTime?.dropOffMax
                     ? <div>
                         <span style={{fontWeight: 'bold'}}>{t("Drop Off Time")}: </span>
-                        <span> {moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('hh:mm A')}</span>
+                        <span> {moment.utc(serviceValetTime?.dropOffMin, "HH:mm:ss").format('hh:mm A')}</span>
                         <span> {t("to")} </span>
-                        <span> {moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('hh:mm A')}</span>
+                        <span> {moment.utc(serviceValetTime?.dropOffMax, "HH:mm:ss").format('hh:mm A')}</span>
                     </div>
                     : null}
             </div>

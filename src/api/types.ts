@@ -3,7 +3,7 @@ import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {
     EAppointmentTimingType,
     EReminderType, ETransportation,
-    IPersonalInformation,
+    IPersonalInformation, IServiceRequestPrice,
     IVehicleData, IVehicleForSlots, MPOptionShort, TRecallForRequest
 } from "../store/reducers/appointment/types";
 import {EOfferType, IOffer} from "../store/reducers/offers/types";
@@ -247,6 +247,14 @@ export type TDetailedAppointmentPrice = {
     requestName: string;
     priceValue: number;
     pricingDisplayType?: EPricingDisplayType;
+    offer?: IOfferForCategory;
+}
+
+export type TServiceValetSlot = {
+    pickUpMin: string;
+    pickUpMax: string;
+    dropOffMin?: string;
+    dropOffMax?: string;
 }
 
 export interface IAppointmentByQuery extends IBaseAppointment {
@@ -256,7 +264,8 @@ export interface IAppointmentByQuery extends IBaseAppointment {
     recalls?: string[];
     recallDescriptions?: string[];
     consultant?: Partial<IServiceConsultant>|null;
-    detailedPriceList?: TDetailedAppointmentPrice[];
+    detailedPriceList?: IServiceRequestPrice[];
+    serviceValetTime?: TServiceValetSlot
 }
 
 export interface IAppointmentCustomerInfo {

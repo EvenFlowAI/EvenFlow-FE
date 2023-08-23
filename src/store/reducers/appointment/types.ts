@@ -237,6 +237,7 @@ export type TAppointmentState = {
     allServiceCategories: IServiceCategoryShort[];
     isProfileLoading: boolean;
     dropOffSettings: IDropOffSettings|null;
+    appointmentWasChanged: boolean;
 };
 export enum EReminderType {
     Email, Phone, Sms

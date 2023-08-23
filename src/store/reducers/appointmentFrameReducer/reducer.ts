@@ -48,7 +48,7 @@ import {
     setWelcomeScreenView,
     setZipCode,
     switchLanguage,
-    updateVehicle, setEditingPosition,
+    updateVehicle, setEditingPosition, getAppointmentRequestsPrices,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByQuery,
@@ -62,7 +62,7 @@ import {
     ITransportation
 } from "../../../api/types";
 import moment from "moment";
-import {EAppointmentTimingType, EReminderType} from "../appointment/types";
+import {EAppointmentTimingType, EReminderType, IServiceRequestPrice} from "../appointment/types";
 import {
     EPackagePricingType,
     EServiceType,
@@ -144,6 +144,7 @@ type TState = {
     carIsValidForUpdate: boolean;
     isUsualFlowNeeded: boolean;
     editingPosition: TEditingPosition|null;
+    appointmentRequestsPrices: IServiceRequestPrice[];
 }
 const initialState: TState = {
     service: null,
@@ -210,6 +211,7 @@ const initialState: TState = {
     carIsValidForUpdate: true,
     isUsualFlowNeeded: false,
     editingPosition: null,
+    appointmentRequestsPrices: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -284,6 +286,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             zipCode: payload.zipCode ?? "",
             serviceTypeOption: payload.serviceTypeOption ?? null,
             transportation: payload.transportationOption ?? null,
+            appointmentRequestsPrices: payload.detailedPriceList ?? [],
         };
     })
     .addCase(setLoadingPackages, (state, { payload}) => {
@@ -426,5 +429,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setEditingPosition, (state, {payload}) => {
         return {...state, editingPosition: payload}
+    })
+    .addCase(getAppointmentRequestsPrices, (state, {payload}) => {
+        return {...state, appointmentRequestsPrices: payload}
     })
 )

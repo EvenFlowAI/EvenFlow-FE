@@ -14,7 +14,7 @@ import {
     ITransportation
 } from "../../../api/types";
 import moment from "moment";
-import {EAppointmentTimingType, EReminderType, IMake, IVehicle} from "../appointment/types";
+import {EAppointmentTimingType, EReminderType, IMake, IServiceRequestPrice, IVehicle} from "../appointment/types";
 import {
     EPackagePricingType,
     EServiceType,
@@ -37,7 +37,7 @@ import {
     saveCustomerCache,
     selectAppointment,
     selectServiceValetAppointment,
-    selectSR,
+    selectSR, setAppointmentWasChanged,
     setCustomerLoadedData
 } from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
@@ -56,6 +56,7 @@ import {
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
 import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
 import {EScheduler} from "../appointments/types";
+import {setAppointmentsLoading} from "../appointments/actions";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -117,6 +118,7 @@ export const setAppointmentByKey = createAction<IAppointmentByQuery|null>("fAppo
 export const setCarIsValidForUpdate = createAction<boolean>("fAppointment/SetCarIsValidForUpdate");
 export const setUsualFlowNeeded = createAction<boolean>("fAppointment/SetUsualFlowNeeded");
 export const setEditingPosition = createAction<TEditingPosition|null>("fAppointment/SetEditingPosition");
+export const getAppointmentRequestsPrices = createAction<IServiceRequestPrice[]>("fAppointment/GetAppointmentRequestsPrices");
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -252,6 +254,8 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setHashKey(''));
     dispatch(setAppointmentByKey(null));
     dispatch(setUsualFlowNeeded(false));
+    dispatch(setEditingPosition(null));
+    dispatch(setAppointmentWasChanged(false))
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
@@ -567,9 +571,9 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
 
     const date = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
         ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
-        : appointmentFrame.appointmentByKey
-            ? appointmentFrame.appointmentByKey.dateInUtc
-            : appointment.appointment?.id.split("|")[0] || "";
+        : appointment.appointment
+            ? appointment.appointment?.id.split("|")[0] || ""
+            : appointmentFrame.appointmentByKey?.dateInUtc || ""
 
     const appointmentTimingType = appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && appointmentFrame.selectedTiming
         ? appointmentFrame.selectedTiming
@@ -673,4 +677,79 @@ export const checkCarIsValid = (onCarIsValid = () => {}, onCarIsInvalid = () => 
         ? onCarIsValid()
         : onCarIsInvalid()
     dispatch(setCarIsValidForUpdate(carIsValid));
+}
+
+export const loadAppointmentRequestsPrices = (serviceCenterId: number): AppThunk => (dispatch, getState) =>{
+    const appointmentFrame = getState().appointmentFrame;
+    const appointment = getState().appointment;
+    const categories = getState().categories;
+    const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
+
+    dispatch(setAppointmentsLoading(true))
+
+    const vehicle = {
+        engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
+        model,
+        make,
+        year,
+        vin: appointmentFrame.selectedVehicle?.vin ?? '',
+        mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
+    }
+    const date = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
+        ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
+        : appointment.appointment
+            ? appointment.appointment?.id.split("|")[0] || ""
+            : appointmentFrame.appointmentByKey?.dateInUtc || ""
+
+    const appointmentTimingType = appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && appointmentFrame.selectedTiming
+        ? appointmentFrame.selectedTiming
+        : EAppointmentTimingType.FirstAvailable;
+
+    const serviceRequestIds = collectServiceRequestIds(
+        appointmentFrame.service,
+        appointmentFrame.subService,
+        appointmentFrame.selectedPackage,
+        appointment.selectedSR,
+    )
+
+    const time = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff
+        ? "00:00:00"
+        : appointment.appointment?.id
+            ? appointment.appointment?.id.split("|")[1]
+            : appointmentFrame.appointmentByKey?.timeSlot || "00:00:00"
+
+    const maintenancePackageOption = appointmentFrame.selectedPackage
+        ? {id: appointmentFrame.selectedPackage?.id, priceType: appointmentFrame.packagePricingType}
+        : appointmentFrame.packageEMenuType !== null
+            ? {optionType: appointmentFrame.packageEMenuType}
+            : null;
+    const data = {
+        serviceRequestIds,
+        serviceCategoryIds: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
+        valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
+            ? [appointmentFrame?.valueService?.selectedService.id]
+            : [],
+        recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
+        maintenancePackageOption,
+        date,
+        time,
+        serviceCenterId,
+        appointmentTimingType,
+        consultantId: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
+        zipCode: appointmentFrame.zipCode ?? null,
+        serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
+        vehicle,
+    }
+    if (serviceRequestIds.length || data.serviceCategoryIds.length || data.valueServiceOfferIds.length
+        || data.recalls.length || maintenancePackageOption) {
+        Api.call(Api.endpoints.AppointmentPricing.GetPriceList, {data})
+            .then(result => {
+                if (result) dispatch(getAppointmentRequestsPrices(result.data))
+            })
+            .catch(err => {
+                console.log('get appointment requests prices list err', err)
+            })
+            .finally(() => dispatch(setAppointmentsLoading(false)))
+    }
+
 }

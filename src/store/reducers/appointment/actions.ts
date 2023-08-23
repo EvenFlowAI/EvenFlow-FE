@@ -72,6 +72,7 @@ export const getAllServiceCategories = createAction<IServiceCategoryShort[]>("Ap
 export const setLoadedDateRange = createAction<ISearchedDateRange>("Appointment/SetLoadedDateRange");
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
 export const getSlotsConsultantId = createAction<string|null>("Appointment/GetSlotsConsultantId");
+export const setAppointmentWasChanged = createAction<boolean>("Appointment/SetAppointmentWasChanged");
 
 export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void, loadCB?: TCallback): AppThunk => async dispatch => {
     try {
