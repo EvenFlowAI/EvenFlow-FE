@@ -7,6 +7,8 @@ import {ReactComponent as Price} from "../../../../assets/img/price.svg";
 import {ReactComponent as Settings} from "../../../../assets/img/settings.svg";
 import {ReactComponent as SettingsChecked} from "../../../../assets/img/settings_checkmark.svg";
 import {ReactComponent as Transportation} from "../../../../assets/img/transportation.svg";
+import {ReactComponent as ConvenienceFees} from "../../../../assets/img/person_dollar.svg";
+import {ReactComponent as Address} from "../../../../assets/img/address.svg";
 import {makeStyles} from "@material-ui/core/styles";
 import {appointmentStatuses, IAppointment} from "../../../../api/types";
 import moment from "moment";
@@ -41,7 +43,7 @@ const AppointmentDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
             />
             <DetailsItem
                 title="Services Selected"
-                text={payload.servicesRequested.join('\n')}
+                text={payload.servicesRequested}
                 icon={<SettingsChecked/>}
             />
             <DetailsItem
@@ -51,8 +53,13 @@ const AppointmentDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
             />
             <DetailsItem
                 title="Total"
-                text={`$${payload.totalValue}`}
+                text={payload.totalValue ? `$${payload.totalValue}` : ''}
                 icon={<Price/>}
+            />
+            <DetailsItem
+                title="Convenience Fees"
+                text={payload.ancillaryPrice ? `$${payload.ancillaryPrice}` : ''}
+                icon={<ConvenienceFees/>}
             />
             <DetailsItem
                 title="Advisor"
@@ -63,6 +70,11 @@ const AppointmentDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
                 title="Transportation"
                 text={payload.transportation ?? ''}
                 icon={<Transportation/>}
+            />
+            <DetailsItem
+                title="Address"
+                text={payload.address ? `${payload.address}, ${payload.zipCode}` : ''}
+                icon={<Address/>}
             />
         </div>
     );
