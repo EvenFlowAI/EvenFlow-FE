@@ -84,9 +84,6 @@ const useStyles = makeStyles(() => ({
             border: "1px solid #DADADA",
             '& > div > div': {
                 fontSize: '1rem',
-                color: 'rgba(0, 0, 0, 0.87)',
-                opacity: 0.5,
-                backgroundColor: 'transparent',
             },
         }
     },
@@ -323,7 +320,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                                     isFormChecked
                                         ? classes.errorSelect
                                         // : classes.emptySelect
-                                        : classes.select
+                                        : classes.emptySelect
                                     : classes.select,
                             onChange: handleChangeAddress,
                             onFocus: () => setFormChecked(false),
