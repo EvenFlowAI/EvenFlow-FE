@@ -102,7 +102,7 @@ const AskChangesCompleted = () => {
                         onClick={handleChangesCompleted}
                         color="primary"
                         variant="contained">
-                        {t("Yes, no other changes needed")}
+                        {t("Yes")}
                     </LoadingButton>
                     <LoadingButton
                         loading={isAppointmentSaving}
