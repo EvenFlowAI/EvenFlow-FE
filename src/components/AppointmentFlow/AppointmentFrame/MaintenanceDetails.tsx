@@ -32,6 +32,7 @@ import {Loading} from "../../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
 import NoRecalls from "../../Modals/RecallsByVin/NoRecalls";
 import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -277,7 +278,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             if (pickUpSelected || pickUpChanged) {
                 onNext(isAppointmentTimingAvailable ? "appointmentTiming" : "appointmentSelection")
             } else {
-                dispatch(setChangesCompletedOpen(true))
+                scProfile && dispatch(checkPodChanged(scProfile.id, showError))
             }
         }
     }
