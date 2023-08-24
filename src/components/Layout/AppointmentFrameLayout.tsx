@@ -354,7 +354,7 @@ export const AppointmentFrameLayout = () => {
                 onBack={handleChangeScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption
                     ? 'transportationNeeds'
                     : 'appointmentSelection')}
-                onChangeSlot={handleChangeScreen('appointmentSelection')}
+                onChangeSlot={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
             appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment}/>,
@@ -374,7 +374,7 @@ export const AppointmentFrameLayout = () => {
             />,
             manageAppointment: <ManageAppointment
                 onUpdateAppointment={onUpdateAppointment}
-                onChangeSlot={handleChangeScreen('appointmentSelection')}/>,
+                onChangeSlot={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}/>,
         }
         return carSelections[currentScreen];
     }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,
