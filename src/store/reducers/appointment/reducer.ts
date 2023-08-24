@@ -22,7 +22,7 @@ import {
     handleSearch,
     selectAppointment, selectServiceValetAppointment,
     selectSR, selectSRMultiple,
-    setAppointmentFilters,
+    setAppointmentFilters, setAppointmentWasChanged,
     setCustomerEnteredEmail,
     setCustomerLoadedData,
     setCustomerVehicle, setEditAppointment, setLoadedDateRange,
@@ -88,6 +88,7 @@ const initialState: TAppointmentState = {
     allServiceCategories: [],
     isProfileLoading: false,
     dropOffSettings: null,
+    appointmentWasChanged: false,
 }
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {
@@ -254,5 +255,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(getDropOffSettings, (state, {payload}) => {
         return {...state, dropOffSettings: payload};
+    })
+    .addCase(setAppointmentWasChanged, (state, {payload}) => {
+        return {...state, appointmentWasChanged: payload};
     })
 );

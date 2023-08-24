@@ -12,8 +12,8 @@ import {
     setAddress,
     setAdvisor,
     setAncillaryPriceByZip,
-    setAncillaryPriceLoading,
-    setAppointmentId, setAppointmentSaving,
+    setAncillaryPriceLoading, setAppointmentByKey,
+    setAppointmentId, setAppointmentSaving, setCarIsValidForUpdate,
     setConsultants,
     setCurrentFrameScreen,
     setCustomer,
@@ -22,7 +22,7 @@ import {
     setHoursOfOperations,
     setLoadingPackages,
     setMaintenanceDetails,
-    setMobileServiceAvailability,
+    setMobileServiceAvailability, setUsualFlowNeeded,
     setOffersLoading,
     setPackage, setPackageEMenuType,
     setPackageIsSelected, setPackagePricingType,
@@ -48,10 +48,10 @@ import {
     setWelcomeScreenView,
     setZipCode,
     switchLanguage,
-    updateVehicle,
+    updateVehicle, setEditingPosition, getAppointmentRequestsPrices,
 } from "./actions";
 import {
-    EMaintenanceOptionType,
+    EMaintenanceOptionType, IAppointmentByQuery,
     ICustomer,
     ILoadedVehicle,
     IMake,
@@ -62,14 +62,14 @@ import {
     ITransportation
 } from "../../../api/types";
 import moment from "moment";
-import {EAppointmentTimingType, EReminderType} from "../appointment/types";
+import {EAppointmentTimingType, EReminderType, IServiceRequestPrice} from "../appointment/types";
 import {
     EPackagePricingType,
     EServiceType,
     EUserType,
     IServiceOffer,
     IValueService,
-    TAncillaryPriceByZip,
+    TAncillaryPriceByZip, TEditingPosition,
     TLanguage,
     TMaintenanceDetails,
     TYear
@@ -99,6 +99,7 @@ type TState = {
     isPackagesLoading: boolean;
     consultants: IServiceConsultant[];
     currentScreen: TScreen | '';
+    prevScreen: TScreen | '';
     makes: IMake[];
     models: string[];
     trackerCreated: boolean;
@@ -139,6 +140,11 @@ type TState = {
     slotsConsultantId: string|null;
     shouldShowServiceCentersList: boolean;
     isAppointmentSaving: boolean;
+    appointmentByKey: IAppointmentByQuery|null;
+    carIsValidForUpdate: boolean;
+    isUsualFlowNeeded: boolean;
+    editingPosition: TEditingPosition|null;
+    appointmentRequestsPrices: IServiceRequestPrice[];
 }
 const initialState: TState = {
     service: null,
@@ -162,6 +168,7 @@ const initialState: TState = {
     isPackagesLoading: false,
     consultants: [],
     currentScreen: '',
+    prevScreen: '',
     makes: [],
     models: [],
     trackerCreated: false,
@@ -199,7 +206,12 @@ const initialState: TState = {
     packageEMenuType: null,
     slotsConsultantId: null,
     shouldShowServiceCentersList: true,
-    isAppointmentSaving: false
+    isAppointmentSaving: false,
+    appointmentByKey: null,
+    carIsValidForUpdate: true,
+    isUsualFlowNeeded: false,
+    editingPosition: null,
+    appointmentRequestsPrices: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -273,6 +285,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             address: payload.address ?? null,
             zipCode: payload.zipCode ?? "",
             serviceTypeOption: payload.serviceTypeOption ?? null,
+            transportation: payload.transportationOption ?? null,
+            appointmentRequestsPrices: payload.detailedPriceList ?? [],
         };
     })
     .addCase(setLoadingPackages, (state, { payload}) => {
@@ -285,7 +299,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, consultants: payload};
     })
     .addCase(setCurrentFrameScreen, (state, { payload }) => {
-        return {...state, currentScreen: payload};
+        return {...state, prevScreen: state.currentScreen, currentScreen: payload};
     })
     .addCase(getMakes, (state, { payload }) => {
         return {...state, makes: payload }
@@ -403,5 +417,20 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setHashKey, (state, {payload}) => {
         return {...state, hashKey: payload}
+    })
+    .addCase(setAppointmentByKey, (state, {payload}) => {
+        return {...state, appointmentByKey: payload}
+    })
+    .addCase(setCarIsValidForUpdate, (state, {payload}) => {
+        return {...state, carIsValidForUpdate: payload}
+    })
+    .addCase(setUsualFlowNeeded, (state, {payload}) => {
+        return {...state, isUsualFlowNeeded: payload}
+    })
+    .addCase(setEditingPosition, (state, {payload}) => {
+        return {...state, editingPosition: payload}
+    })
+    .addCase(getAppointmentRequestsPrices, (state, {payload}) => {
+        return {...state, appointmentRequestsPrices: payload}
     })
 )

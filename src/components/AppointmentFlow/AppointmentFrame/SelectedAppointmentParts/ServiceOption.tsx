@@ -30,8 +30,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const wasSelectedSecondaryTypes = useMemo(() => {
-        return  selectedOptionTypes.includes(EServiceType.MobileService)
-        || selectedOptionTypes.includes(EServiceType.PickUpDropOff)
+        return selectedOptionTypes.includes(EServiceType.PickUpDropOff)
     }, [selectedOptionTypes]);
     const serviceValetIsPossibleToUse = useMemo(() => {
         return serviceTypeOption?.type !== EServiceType.MobileService && address && zipCode

@@ -180,6 +180,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             year: item.year,
             appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
             mileage: selectedMileage?.value ?? null,
+            dmsId: item.vehicleDmsId,
         }
         const data: ICustomerLoadedData = {
             emails: item?.email ? [item.email] : [],
@@ -192,7 +193,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             isUpdating,
         }
         if (customerData?.city) data.city = customerData.city;
-        if (customerData?.address) await dispatch(setAddress(customerData.address));
+        if (customerData?.fullAddress) await dispatch(setAddress(customerData.fullAddress));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(vehicle));

@@ -100,6 +100,7 @@ export const loadCustomersByPhoneOrEmail = (
                     vehicles: vehiclesData,
                 }
                 if (customer.city) data.city = customer.city;
+                if (customer.fullAddress) data.fullAddress = customer.fullAddress;
                 dispatch(setCustomerLoadedData(data));
                 dispatch(saveAppointmentReducer());
                 dispatch(setCurrentFrameScreen("carSelection"));

@@ -2,9 +2,7 @@ import React, {Dispatch, SetStateAction, useCallback, useState} from 'react';
 import {Table} from "../UI/Table";
 import {
     AppointmentStatus,
-    appointmentStatuses,
-    IAppointmentByQuery,
-    jobTypes
+    appointmentStatuses, IAppointment,
 } from "../../api/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {ViewAppointmentDialog} from "./ViewAppointmentDialog";
@@ -15,33 +13,34 @@ import {MoreHoriz} from "@material-ui/icons";
 import {IOrder, IPageRequest} from "../../types/types";
 import {useConfirm, useException, useMessage, useModal} from "../../utils/hooks";
 import {TableRowDataType} from "../UI/types";
-import {timeSpanString, timeString} from "../../config/constants";
+import {timeString} from "../../config/constants";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 
-const cols: TableRowDataType<IAppointmentByQuery>[] = [
-    {header: "Date", val: el => el.dateInUtc ? moment.utc(el.dateInUtc).format("LL") : "", orderId: "date"},
-    {header: "Time", val: el => el.timeSlot ? moment(el.timeSlot, timeSpanString).format(timeString) : ""},
-    {header: "Full Name", val: el => el.driver?.fullName ?? "", orderId: "fullName"},
-    {header: "Car Info", val: el => `${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${el.vehicle?.year ?? ''}`},
+const cols: TableRowDataType<IAppointment>[] = [
+    {header: "Date", val: el => el.dateTime ? moment.utc(el.dateTime).format("MMMM D, YYYY") : "", orderId: "date", width: 150},
+    {header: "Day", val: el => el.dateTime ? moment.utc(el.dateTime).format("ddd") : ""},
+    {header: "Time", val: el => el.dateTime ? moment.utc(el.dateTime).format(timeString) : ""},
+    {header: "Customer Name", val: el => el.customerInformation?.fullName ?? "", orderId: "fullName"},
+    {header: "Vehicle", val: el => `${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${el.vehicle?.year ?? ''}`},
+    {header: "Service Book", val: el => el.serviceBook?.name ?? ''},
+    {header: "Scheduler", val: el => `${el.scheduler?.fullName ?? ''}`},
     {header: "Status", val: el => typeof el.appointmentStatus !== 'undefined' && Number.isInteger(el.appointmentStatus) ? appointmentStatuses[el.appointmentStatus] : "", orderId: "appointmentStatus"},
-    {header: "Job Type", val: el => typeof el.jobType !== 'undefined' && Number.isInteger(el.jobType) ? jobTypes[el.jobType] : ""},
 ]
 
 type TAppointmentsTable = {
     refresh: () => void;
-    order: IOrder<IAppointmentByQuery>;
-    setOrder: React.Dispatch<React.SetStateAction<IOrder<IAppointmentByQuery>>>
-    onEditOpen: () => void;
+    order: IOrder<IAppointment>;
+    setOrder: React.Dispatch<React.SetStateAction<IOrder<IAppointment>>>
     onChangePage: (e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number) => void;
     onChangeRowsPerPage: (e: React.ChangeEvent<HTMLInputElement>) => void;
     pageData: IPageRequest;
     isLoading: boolean;
-    viewItem?: IAppointmentByQuery|undefined;
-    setViewItem?: Dispatch<SetStateAction<IAppointmentByQuery|undefined>>
+    viewItem?: IAppointment|undefined;
+    setViewItem?: Dispatch<SetStateAction<IAppointment|undefined>>
 }
 
-export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setViewItem, isLoading, refresh, setOrder, order, onEditOpen, pageData, onChangeRowsPerPage, onChangePage }) => {
+export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setViewItem, isLoading, refresh, setOrder, order, pageData, onChangeRowsPerPage, onChangePage }) => {
     const { appointments, count } = useSelector((state: RootState) => state.appointments);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 
@@ -50,7 +49,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
     const showError = useException();
     const {askConfirm} = useConfirm();
 
-    const handleOpen = (el: IAppointmentByQuery) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const handleOpen = (el: IAppointment) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         setViewItem && setViewItem(el);
         setAnchorEl(e.currentTarget)
     }
@@ -84,7 +83,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
                     title: "Cancel appointment",
                     content: <span>
                         Please confirm you want to cancel appointment on <br />
-                        {getAppointmentDate(viewItem).format("LLL")}?
+                        {moment(viewItem.dateTime).format("LLL")}?
                     </span>,
                     onConfirm: _handleCancel
                 });
@@ -114,7 +113,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
         handleCancel();
     }
 
-    const actions = (el: IAppointmentByQuery) => {
+    const actions = (el: IAppointment) => {
         return <IconButton
             size="small"
             onClick={handleOpen(el)}>
@@ -122,12 +121,12 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
         </IconButton>
     }
 
-    const handleSort = (data: IOrder<IAppointmentByQuery>) => () => {
+    const handleSort = (data: IOrder<IAppointment>) => () => {
         setOrder(data);
     }
 
     return <>
-        <Table<IAppointmentByQuery>
+        <Table<IAppointment>
             data={appointments}
             onSort={handleSort}
             order={order.orderBy}

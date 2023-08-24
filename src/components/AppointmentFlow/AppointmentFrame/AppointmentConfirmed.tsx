@@ -8,18 +8,24 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {concatAddress, getCalendarUrl} from "../../../utils/utils";
 import {G_CALENDAR_FORMAT} from "../../../config/constants";
-import {TCallback} from "../../../types/types";
+import {TArgCallback} from "../../../types/types";
 import {getMaintenanceDescription} from "./uiUtils";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {
-    clearAppointmentData, setSideBarSteps,
+    clearAppointmentData,
+    setCurrentFrameScreen,
+    setSideBarSteps,
+    setUserType,
     setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useCurrentUser} from "../../../utils/hooks";
+import {ILoadedVehicle} from "../../../api/types";
+import {setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
+import {Loading} from "../../UI/Loading";
 
 const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -68,6 +74,10 @@ const Wrapper = styled('div')(({theme}) => ({
         textTransform: "uppercase",
         color: "#9FA2B4",
         fontWeight: "bold"
+    },
+    "& > .emptyContainer": {
+        minHeight: 300,
+        minWidth: 300
     }
 }));
 
@@ -90,9 +100,9 @@ type TItem = {
 
 
 type TProps = {
-    onModify: TCallback;
+    onUpdateAppointment: TArgCallback<ILoadedVehicle>;
 }
-export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
+export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) => {
     const [
         appointment,
         serviceValetAppointment,
@@ -116,6 +126,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         advisor,
         packagePriceTitles,
         dropOffSettings,
+        customerLoadedData,
+        isAppointmentSaving,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -140,6 +152,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.advisor,
         state.appointmentFrame.packagePriceTitles,
         state.appointment.dropOffSettings,
+        state.appointment.customerLoadedData,
+        state.appointmentFrame.isAppointmentSaving,
     ]);
 
     const {t} = useTranslation();
@@ -359,11 +373,25 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
     }
 
+    const onModify = async () => {
+        if (vehicle) {
+            if (customerLoadedData) {
+                await dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
+                await dispatch(clearAppointmentData())
+                await dispatch(setUserType(EUserType.Existing))
+            }
+            await onUpdateAppointment(vehicle)
+            await dispatch(setCurrentFrameScreen("manageAppointment"))
+        }
+    }
+
     return <StepWrapper>
         <Paper>
             <Wrapper>
                 <h2>Appointment Confirmed!</h2>
-                {data.filter(el => el.content).map((item, index) => {
+                {isAppointmentSaving
+                    ? <div className="emptyContainer"><Loading/></div>
+                    : data.filter(el => el.content).map((item, index) => {
                     if (!selectedPackage && item.label === t("Selected Price")) {
                         return null;
                     }
@@ -375,15 +403,15 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 })}
             </Wrapper>
             <ButtonsWrapper>
-                <Button color="primary" fullWidth variant="outlined" onClick={onModify}>
+                <Button color="primary" fullWidth variant="outlined" onClick={onModify} disabled={isAppointmentSaving}>
                     {t("Modify Appointment")}
                 </Button>
-                <Button color="primary" onClick={handleAddToCalendar} fullWidth variant="contained">
+                <Button color="primary" onClick={handleAddToCalendar} fullWidth variant="contained" disabled={isAppointmentSaving}>
                     {t("Add to Calendar")}
                 </Button>
                 <Divider />
             </ButtonsWrapper>
-            { !isFrame ? <Button color="primary" fullWidth variant="outlined" onClick={onMakeNew}>
+            { !isFrame ? <Button color="primary" fullWidth variant="outlined" onClick={onMakeNew} disabled={isAppointmentSaving}>
                 {t("Make New Appointment")}
             </Button> : null}
             <h3>{t("We will see you soon!")}</h3>

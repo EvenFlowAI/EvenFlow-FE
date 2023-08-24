@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {TActionProps, TCard} from "./types";
+import React, {useCallback, useMemo, useState} from 'react';
+import {TCard} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
 import {styled, Theme} from '@material-ui/core';
@@ -8,27 +8,30 @@ import {ReactComponent as FirstAvailableIcon} from "../../../assets/img/firstAva
 import {ReactComponent as OffersIcon} from "../../../assets/img/offersIcon.svg";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {setSideBarSteps, setTime, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setServiceTypeOption,
+    setSideBarSteps,
+    setTime,
+    setTiming,
+    setWelcomeScreenView
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
 import {
     EAppointmentTimingType,
-    IAppointmentSlotsRequest,
-    MPOptionShort
 } from "../../../store/reducers/appointment/types";
 import {
-    loadAppointmentSlots,
     selectAppointment,
     selectServiceValetAppointment
 } from "../../../store/reducers/appointment/actions";
 //import ReactGA from "react-ga";
 import ReactGA from "react-ga4";
-import {decodeSCID} from "../../../utils/utils";
-import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
-import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {useParams} from "react-router-dom";
-import {EServiceCategoryType} from "../../../store/reducers/categories/types";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import AppointmentTimingCard from "./AppointmentTimingCard";
 import {useTranslation} from "react-i18next";
+import {TArgCallback} from "../../../types/types";
+import {TScreen} from "../../Layout/types";
+import {useHistory, useParams} from "react-router-dom";
+import {Routes} from "../../../config/routes";
 
 const TimingWrapper = styled('div')<Theme, {columns: number}>(({theme, columns}) => ({
     display: "grid",
@@ -61,107 +64,58 @@ const cards: TCard[] = [
 
 const timingTypes = ['Special Offers', 'Preferred Date', 'First Available Date'];
 
-export const AppointmentTiming: React.FC<TActionProps> = ({onNext, onBack}) => {
+export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>}> = ({handleSetScreen}) => {
     const [isLoading, setLoading] = useState<boolean>(false);
-    const dispatch = useDispatch();
-    const {id} = useParams();
     const [
         selectedType,
         selectedTime,
         appointment,
-        consultant,
-        selectedPackage,
-        customerData,
-        selectedVehicle,
-        service,
-        subService,
-        valueService,
-        customerEnteredEmail,
-        userType,
-        vehicle,
-        selectedOpsCodes,
-        categoriesIds,
-        allCategories,
         serviceTypeOption,
-        selectedRecalls,
-        packagePricingType,
         sideBarSteps,
+        isAdvisorAvailable,
+        consultants,
+        appointmentByKey,
+        editingPosition,
+        customerLoadedData,
     ] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
             state.appointmentFrame.selectedTime,
             state.appointment.appointment,
-            state.appointmentFrame.advisor,
-            state.appointmentFrame.selectedPackage,
-            state.appointment.customerLoadedData,
-            state.appointment.customerSelectedVehicle,
-            state.appointmentFrame.service,
-            state.appointmentFrame.subService,
-            state.appointmentFrame.valueService,
-            state.appointment.customerEnteredEmail,
-            state.appointmentFrame.userType,
-            state.appointmentFrame.selectedVehicle,
-            state.appointment.selectedSR,
-            state.appointmentFrame.categoriesIds,
-            state.categories.allCategories,
             state.appointmentFrame.serviceTypeOption,
-            state.appointmentFrame.selectedRecalls,
-            state.appointmentFrame.packagePricingType,
             state.appointmentFrame.sideBarSteps,
+            state.bookingFlowConfig.isAdvisorAvailable,
+            state.appointmentFrame.consultants,
+            state.appointmentFrame.appointmentByKey,
+            state.appointmentFrame.editingPosition,
+            state.appointment.customerLoadedData,
         ]);
+    const dispatch = useDispatch();
     const {t} = useTranslation();
+    const {id} = useParams();
+    const history = useHistory();
+    const fromServiceValetToVisitCenter = useMemo(() => {
+        return serviceTypeOption?.type === EServiceType.VisitCenter
+            && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff
+    }, [serviceTypeOption, appointmentByKey])
 
-    useEffect(() => {
-        // todo uncomment when the calendar dates disabling functionality will be ready
-        // setLoading(true);
-        // const date = moment();
-        // const maintenancePackageOption: MPOptionShort|null = selectedPackage
-        //     ? {id: selectedPackage?.id, priceType: packagePricingType}
-        //     : null;
-        // const dd: IAppointmentSlotsRequest = {
-        //     appointmentTimingType: EAppointmentTimingType.PreferredDate,
-        //     serviceCenterId: decodeSCID(id),
-        //     consultantId: consultant?.id ?? null,
-        //     fromDate: date.toISOString(),
-        //     maintenancePackageOption,
-        //     serviceRequestIds: collectServiceRequestIds(
-        //         service, subService, selectedPackage, selectedOpsCodes
-        //     ),
-        //     serviceCategoryIds: getCategories(),
-        //     customerId: customerData?.id,
-        //     warrantyExpiration: selectedVehicle?.warrantyExpiration,
-        //     serviceTypeOptionId: serviceTypeOption?.id ?? null,
-        //     recalls: mapRecallsForRequest(selectedRecalls),
-        // }
-        // if (valueService?.selectedService) {
-        //     dd.valueServiceOfferIds = [valueService.selectedService.id];
-        // }
-        // if (vehicle) {
-        //     dd.vehicle = {
-        //         vin: vehicle.vin,
-        //         year: vehicle.year,
-        //         make: vehicle.make,
-        //         model: vehicle.model,
-        //         mileage: vehicle.mileage,
-        //         engineTypeId: vehicle.engineTypeId,
-        //     }
-        // }
-        // if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
-        // if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-        //     // todo uncomment when the calendar dates disabling functionality will be ready
-        //     // dispatch(loadServiceValetSlots(dd, () => {}, () => setLoading(false)));
-        // } else {
-        //     dispatch(loadAppointmentSlots(dd, () => {}, () => setLoading(false)));
-        // }
-    }, [consultant, service, subService, selectedPackage, selectedOpsCodes, customerData, selectedVehicle, valueService, vehicle, userType, customerEnteredEmail])
+    const onBack = () => {
+        if (fromServiceValetToVisitCenter) {
+            dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+            dispatch(setWelcomeScreenView('serviceSelect'));
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        } else {
+            if (editingPosition === 'slot' && customerLoadedData?.isUpdating) {
+                handleSetScreen("manageAppointment")
+            } else {
+                handleSetScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')
+            }
+        }
+    }
 
-    const getCategories = useCallback((): number[] => {
-        return allCategories
-            .filter(category => {
-                return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
-            })
-            .map(item => item.id)
-    }, [allCategories, EServiceCategoryType, categoriesIds])
+    const onNext = () => {
+        handleSetScreen("appointmentSelection")
+    }
 
     const handleSelectTiming = useCallback((t: EAppointmentTimingType) => () => {
         dispatch(setTiming(t));

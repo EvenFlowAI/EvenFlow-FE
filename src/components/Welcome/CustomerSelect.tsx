@@ -170,6 +170,10 @@ export const CustomerSelect: React.FC<TProps> = ({
             sessionStorage.setItem(LocalTokens.sessionId, '')
         })
     }, [sessionStorage])
+    
+    useEffect(() => {
+        scProfile && dispatch(loadMileage(scProfile.id))
+    }, [scProfile])
 
     useEffect(() => {
         scProfile && dispatch(loadMileage(scProfile.id))

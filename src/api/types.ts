@@ -3,7 +3,7 @@ import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {
     EAppointmentTimingType,
     EReminderType, ETransportation,
-    IPersonalInformation,
+    IPersonalInformation, IServiceRequestPrice,
     IVehicleData, IVehicleForSlots, MPOptionShort, TRecallForRequest
 } from "../store/reducers/appointment/types";
 import {EOfferType, IOffer} from "../store/reducers/offers/types";
@@ -16,6 +16,8 @@ import {EPackagePricingType} from "../store/reducers/appointmentFrameReducer/typ
 import {ETransportColumn} from "../store/reducers/transportationNeeds/types";
 import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
+import {EPricingDisplayType} from "../store/reducers/pricingSettings/types";
+import {TScheduler, TServiceBook} from "../store/reducers/appointments/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
@@ -117,6 +119,7 @@ export interface ICustomerLoadedData {
     city?:string;
     fromSearchByName?: boolean;
     isUpdating?: boolean;
+    fullAddress?: string;
 }
 
 export interface IVehicle {
@@ -241,20 +244,70 @@ export interface IListAppointment extends IBaseAppointment {
     serviceCategory: ICategory|null;
 }
 
+export type TDetailedAppointmentPrice = {
+    requestName: string;
+    priceValue: number;
+    pricingDisplayType?: EPricingDisplayType;
+    offer?: IOfferForCategory;
+}
+
+export type TServiceValetSlot = {
+    pickUpMin: string;
+    pickUpMax: string;
+    dropOffMin?: string;
+    dropOffMax?: string;
+}
+
 export interface IAppointmentByQuery extends IBaseAppointment {
     serviceCategories: ICategory[];
     jobType?: EJobType;
     serviceTypeOption?: IFirstScreenOption;
     recalls?: string[];
     recallDescriptions?: string[];
+    consultant?: Partial<IServiceConsultant>|null;
+    detailedPriceList?: IServiceRequestPrice[];
+    serviceValetTime?: TServiceValetSlot
+}
+
+export interface IAppointmentCustomerInfo {
+    fullName?: string;
+    email?: string;
+    phoneNumber?: string;
+}
+
+export interface IAppointmentVehicle {
+    vin: string;
+    make: string;
+    model: string;
+    year: number;
+}
+
+export interface IAppointment {
+    id: number;
+    hashKey: string;
+    appointmentNumber: string;
+    appointmentStatus: AppointmentStatus;
+    createdDateTime: ParsableDate;
+    dateTime: ParsableDate;
+    customerInformation?: IAppointmentCustomerInfo;
+    vehicle?: IAppointmentVehicle;
+    serviceBook: TServiceBook;
+    servicesRequested: string[];
+    isDefaultRecall: boolean;
+    serviceOption?: string;
+    totalValue: number;
+    ancillaryPrice: number;
+    advisor?: string;
+    transportation?: string;
+    address?: string;
+    zipCode?: string;
+    appointmentNotes?: string;
+    scheduler: TScheduler;
+    isEditable: boolean;
 }
 
 export interface ISearchCustomerParams {
     serviceCenterId: number;
-    searchTerm: string;
-}
-
-export interface ISearchTerm {
     searchTerm: string;
 }
 
