@@ -11,8 +11,14 @@ import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import {ILoadedVehicle} from "../../../api/types";
 import {checkSelectedCar} from "./utils";
 import {
-    clearAppointmentData, setCurrentFrameScreen, setHashKey,
-    setServiceTypeOption, setSideBarSteps, setVehicle,
+    clearAppointmentData,
+    setAppointmentByKey,
+    setCurrentFrameScreen,
+    setEditingPosition,
+    setHashKey,
+    setServiceTypeOption,
+    setSideBarSteps,
+    setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
@@ -223,6 +229,8 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
             dispatch(setCurrentFrameScreen("manageAppointment"))
         } else {
             dispatch(setHashKey(''));
+            dispatch(setAppointmentByKey(null));
+            dispatch(setEditingPosition(null));
             if (needToShowServiceSelection) {
                 handleServiceTypeSelection()
             } else {
