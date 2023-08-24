@@ -60,7 +60,7 @@ export const Appointments = () => {
 
     useEffect(() => {
         refresh();
-    }, [refresh]);
+    }, []);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value)
