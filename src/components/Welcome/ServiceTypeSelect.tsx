@@ -226,15 +226,15 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
 
     const handleBack = () => {
         const userIsNew = (!customerLoadedData?.id && !selectedVehicle?.make) || userType === EUserType.New;
-        if (currentUser || userIsNew) {
-            if (customerLoadedData?.isUpdating) {
-                handleBackWhileUpdating()
-            } else {
-                dispatch(setWelcomeScreenView("select"))
-            }
+        if (customerLoadedData?.isUpdating) {
+            handleBackWhileUpdating()
         } else {
-            dispatch(setCurrentFrameScreen("carSelection"))
-            redirect()
+            if (currentUser || userIsNew) {
+                dispatch(setWelcomeScreenView("select"))
+            } else {
+                dispatch(setCurrentFrameScreen("carSelection"))
+                redirect()
+            }
         }
     }
 
