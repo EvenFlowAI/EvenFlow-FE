@@ -75,6 +75,8 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
         isAdvisorAvailable,
         consultants,
         appointmentByKey,
+        editingPosition,
+        customerLoadedData,
     ] = useSelector(
         (state: RootState) => [
             state.appointmentFrame.selectedTiming,
@@ -85,6 +87,8 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
             state.bookingFlowConfig.isAdvisorAvailable,
             state.appointmentFrame.consultants,
             state.appointmentFrame.appointmentByKey,
+            state.appointmentFrame.editingPosition,
+            state.appointment.customerLoadedData,
         ]);
     const dispatch = useDispatch();
     const {t} = useTranslation();
@@ -101,7 +105,11 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
             dispatch(setWelcomeScreenView('serviceSelect'));
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
-            handleSetScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')
+            if (editingPosition === 'slot' && customerLoadedData?.isUpdating) {
+                handleSetScreen("manageAppointment")
+            } else {
+                handleSetScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')
+            }
         }
     }
 
