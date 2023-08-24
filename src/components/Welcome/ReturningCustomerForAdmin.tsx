@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {TextField} from "../UI/EndUserInputs";
-import {Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
+import {CircularProgress, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {useStyles} from "./CustomerSelect";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
@@ -20,7 +20,6 @@ import CustomerNotFound from "../Modals/CustomerNotFound/CustomerNotFound";
 import {TCallback} from "../../types/types";
 import {defaultPageData} from "../../store/reducers/defaultInitials";
 import {TCustomerSearchData} from "../../store/reducers/enhancedCustomerSearch/types";
-import {Loading} from "../UI/Loading";
 import {KeyboardArrowDown, KeyboardArrowUp} from "@material-ui/icons";
 
 export const useReturningAdminStyles = makeStyles((theme) => ({
@@ -87,6 +86,10 @@ type TError = {
 const InputLabel: React.FC<{label: string}> = ({label}) => {
     const returningClasses = useReturningAdminStyles();
     return <div className={returningClasses.inputLabel}>{label}</div>
+}
+
+const InputLoading = () => {
+    return <div style={{marginRight: 8}}><CircularProgress size="1rem" /></div>
 }
 
 const ReturningCustomerForAdmin: React.FC<TProps> = ({
@@ -203,14 +206,13 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                 style={{ marginBottom: isSm ? 12 : 28 }}
                 error={formIsChecked && (errors.includes("PhoneOrEmail") || !formIsValid)}
                 placeholder={t("Enter Phone or Email")}
-                InputProps={{disableUnderline: true, endAdornment: isLoading && customerEnteredEmail.length ? <Loading size="1rem" /> : null }}
+                InputProps={{disableUnderline: true, endAdornment: isLoading && customerEnteredEmail.length ? <InputLoading /> : null }}
                 variant="standard"
                 name="phoneOrEmail"
                 onChange={handlePhoneOrEmailChange}
                 value={customerEnteredEmail}
                 disabled={isLoading}
                 fullWidth/>
-
             <InputLabel label={t("Search Customer by Name")}/>
             <div className={returningClasses.nameFieldsWrapper}>
                 <TextField
@@ -219,7 +221,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     placeholder={t("Enter First Name")}
                     error={formIsChecked && (customerSearchData.firstName.length === 1 || !formIsValid)}
                     onChange={onTextChange('firstName')}
-                    InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.firstName.length ? <Loading size="1rem" /> : null }}
+                    InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.firstName.length ?  <InputLoading /> : null }}
                     fullWidth
                     disabled={isLoading}
                     value={customerSearchData.firstName}/>
@@ -229,7 +231,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     placeholder={t("Enter Last Name")}
                     error={formIsChecked && (customerSearchData.lastName.length === 1 || !formIsValid)}
                     onChange={onTextChange('lastName')}
-                    InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.lastName.length ? <Loading size="1rem" /> : null }}
+                    InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.lastName.length ?  <InputLoading /> : null }}
                     fullWidth
                     disabled={isLoading}
                     value={customerSearchData.lastName}/>
@@ -256,7 +258,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                         placeholder={t("Enter Address")}
                         error={formIsChecked && (customerSearchData.address.length === 1 || !formIsValid)}
                         onChange={onTextChange('address')}
-                        InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.address.length ? <Loading size="1rem" /> : null }}
+                        InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.address.length ?  <InputLoading /> : null }}
                         fullWidth
                         name="address"
                         disabled={isLoading}
@@ -270,7 +272,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                             ((!!customerSearchData.lastVINCharacters.length && customerSearchData.lastVINCharacters.length < 8)
                                 || !formIsValid)}
                         onChange={onTextChange('lastVINCharacters')}
-                        InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.lastVINCharacters.length ? <Loading size="1rem" /> : null }}
+                        InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.lastVINCharacters.length ?  <InputLoading /> : null }}
                         name="lastVINCharacters"
                         fullWidth
                         disabled={isLoading}
@@ -278,17 +280,6 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                         value={customerSearchData.lastVINCharacters}/>
             </React.Fragment>
                 : null}
-            {/*<LoadingButton*/}
-            {/*    fullWidth={isSm}*/}
-            {/*    loading={isLoading}*/}
-            {/*    variant="contained"*/}
-            {/*    color="primary"*/}
-            {/*    classes={loadingClasses}*/}
-            {/*    className={classes.loadingButton}*/}
-            {/*    disabled={isLoading || !formIsValid}*/}
-            {/*    onClick={handleComplete}>*/}
-            {/*    {t("Search")}*/}
-            {/*</LoadingButton>*/}
             <CustomerSearchResults
                 handleNew={handleNew}
                 loadData={loadData}
