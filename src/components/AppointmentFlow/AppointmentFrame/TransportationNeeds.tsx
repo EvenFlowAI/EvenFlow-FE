@@ -140,7 +140,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         individualOps,
         categoriesIds,
         packageOpt,
-        appointmentDate,
+        appointment,
         hashKey,
         selectedRecalls,
         transportation,
@@ -158,7 +158,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         state.appointment.selectedSR,
         state.appointmentFrame.categoriesIds,
         state.appointmentFrame.selectedPackage,
-        state.appointment.appointment?.appointmentDate,
+        state.appointment.appointment,
         state.appointmentFrame.hashKey,
         state.appointmentFrame.selectedRecalls,
         state.appointmentFrame.transportation,
@@ -179,15 +179,17 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
     const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
     const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])
     const date = useMemo(() => {
-        if (appointmentByKey && customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-            const [hh, mm] = appointmentByKey.timeSlot.split(':');
-            return appointmentByKey
-                ? moment(appointmentByKey.dateInUtc).set('hour', +hh).set("minute", +mm).toISOString(true)
-                : undefined
-        } else {
-            return appointmentDate
+        let fullDateString = ''
+        if (appointmentByKey) {
+            const [hh, mm] = appointmentByKey?.timeSlot.split(":");
+            fullDateString = moment.utc(appointmentByKey?.dateInUtc).set('hour', hh ? +hh : 0).set('minute', mm ? +mm : 0).toISOString(true)
         }
-    }, [appointmentByKey, appointmentDate, customerLoadedData, isUsualFlowNeeded])
+        if (appointment) {
+            return appointment.appointmentDate
+        } else {
+            return appointmentByKey ? fullDateString : '';
+        }
+    }, [appointmentByKey, appointment])
 
     const getCategories = useCallback((): number[] => {
         return allCategories
@@ -205,6 +207,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                 : packageEMenuType !== null
                     ? {optionType: packageEMenuType}
                     : null;
+
             const data: TTransportationData = {
                 serviceCenterId: decodeSCID(id),
                 serviceRequestIds,
