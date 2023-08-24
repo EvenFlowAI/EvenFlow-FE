@@ -105,7 +105,6 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
         appointmentFrame.selectedPackage,
         appointment.selectedSR,
     )
-
     const maintenancePackageOption = appointmentFrame.selectedPackage
         ? {id: appointmentFrame.selectedPackage?.id, priceType: appointmentFrame.packagePricingType}
         : appointmentFrame.packageEMenuType !== null
