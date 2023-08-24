@@ -71,6 +71,10 @@ const Wrapper = styled('div')(({theme}) => ({
         textTransform: "uppercase",
         color: "#9FA2B4",
         fontWeight: "bold"
+    },
+    "& > .emptyContainer": {
+        minHeight: 300,
+        minWidth: 300
     }
 }));
 
@@ -382,7 +386,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
             <Wrapper>
                 <h2>Appointment Confirmed!</h2>
                 {isAppointmentSaving
-                    ? <Loading/>
+                    ? <div className="emptyContainer"><Loading/></div>
                     : data.filter(el => el.content).map((item, index) => {
                     if (!selectedPackage && item.label === t("Selected Price")) {
                         return null;
