@@ -399,10 +399,10 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             if (selectedPackage && packageOptionType !== null && packageOptionType !== localSelectedPackage.type) {
                 onOpen();
             } else {
-                onSelectionCompleted();
                 dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
                 dispatch(setPackage(localSelectedPackage))
                 dispatch(setPackagePricingType(localSelectedPricingType))
+                onSelectionCompleted();
             }
         }
     }

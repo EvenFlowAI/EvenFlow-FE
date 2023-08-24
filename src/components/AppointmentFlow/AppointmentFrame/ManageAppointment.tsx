@@ -44,6 +44,7 @@ import {Routes} from "../../../config/routes";
 import {isMobile} from 'react-device-detect';
 import moment from "moment/moment";
 import DetailedFeesManage from "../../Modals/DetailedFees/DetailedFeesManage";
+import {loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -128,6 +129,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
             dispatch(loadConsultants(id, appointmentFrame.serviceTypeOption?.id ?? null))
             dispatch(loadCategoriesByQuery(appointment.scProfile.id))
             dispatch(loadSRs(appointment.scProfile.id))
+            dispatch(loadFirstScreenOptionsByQuery(appointment.scProfile.id))
         }
     }, [appointment.scProfile, appointmentFrame.serviceTypeOption, id])
 
