@@ -10,12 +10,15 @@ import {concatAddress, getCalendarUrl} from "../../../utils/utils";
 import {G_CALENDAR_FORMAT} from "../../../config/constants";
 import {TArgCallback} from "../../../types/types";
 import {getMaintenanceDescription} from "./uiUtils";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {
-    clearAppointmentData, setCurrentFrameScreen, setSideBarSteps,
+    clearAppointmentData,
+    setCurrentFrameScreen,
+    setSideBarSteps,
+    setUserType,
     setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -375,6 +378,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
             if (customerLoadedData) {
                 await dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
                 await dispatch(clearAppointmentData())
+                await dispatch(setUserType(EUserType.Existing))
             }
             await onUpdateAppointment(vehicle)
             await dispatch(setCurrentFrameScreen("manageAppointment"))
