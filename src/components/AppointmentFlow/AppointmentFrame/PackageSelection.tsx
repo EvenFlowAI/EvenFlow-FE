@@ -378,7 +378,10 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     }
 
     const onSave = async () => {
-        localSelectedPackage && dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
+        if (localSelectedPackage) {
+            dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
+            dispatch(setPackage(localSelectedPackage))
+        }
         await onClose();
         await onSelectionCompleted();
     }
