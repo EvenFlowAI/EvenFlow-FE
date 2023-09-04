@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IAppointment, IPackageAppointments} from "../../../api/types";
+import {IAppointment, ILoadedVehicle, IPackageAppointments} from "../../../api/types";
 import {IAppointmentsRequest, ICheckPodRequest, IPackageRequestData, TScheduler, TServiceBook} from "./types";
 import {AppThunk, TArgCallback} from "../../../types/types";
 import {API} from "../../../api/api";
@@ -84,7 +84,7 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
 
     const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
 
-    const vehicle = {
+    const vehicle: ILoadedVehicle = {
         ...(appointmentFrame.selectedVehicle ?? {}),
         engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
         model: model ?? "",
@@ -92,7 +92,10 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
         year: year ? +year : null,
         vin: appointmentFrame.selectedVehicle?.vin ?? '',
         mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
+        appointmentHashKeys: [],
     }
+
+    delete vehicle.appointmentHashKeys;
 
     const appointmentTimingType = appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff
     && appointmentFrame.selectedTiming
@@ -120,7 +123,6 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
         maintenancePackageOption,
         appointmentTimingType,
         serviceCenterId,
-        appointmentHashKey: appointmentFrame?.appointmentByKey?.hashKey ?? "",
         serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
         zipCode: appointmentFrame.zipCode ?? null,
         address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
