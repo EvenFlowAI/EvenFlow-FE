@@ -33,19 +33,20 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
 import {
-    updateRecalls,
-    updatePackageOption,
+    checkCarIsValid,
+    handleSideBarAppointmentUpdate,
+    loadMakes,
+    setAppointmentByKey,
+    setAppointmentSaving,
     setCurrentFrameScreen,
     setServiceTypeOption,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
     setWelcomeScreenView,
-    handleSideBarAppointmentUpdate,
     updateConsultant,
-    setAppointmentByKey,
-    setAppointmentSaving,
-    checkCarIsValid, loadMakes
+    updatePackageOption,
+    updateRecalls
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {EServiceCategoryPage, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
@@ -64,9 +65,8 @@ import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
-import {loadMileage} from "../../store/reducers/vehicleDetails/actions";
+import {loadEngineType, loadMileage} from "../../store/reducers/vehicleDetails/actions";
 import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
-import {loadEngineType} from "../../store/reducers/vehicleDetails/actions";
 import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
@@ -189,6 +189,7 @@ export const AppointmentFrameLayout = () => {
         const trimmedKey = getTrimmedKey(key);
         setLoadingCar(true);
         dispatch(setAppointmentSaving(true))
+        setServiceCategoryPage(EServiceCategoryPage.Page1)
         try {
             const {data} = await API.appointment.getByKey(trimmedKey);
             await dispatch(updateRecalls(data, id));
