@@ -46,7 +46,8 @@ const Wrapper = styled('div')(({theme}) => ({
         textTransform: 'none',
     },
     [theme.breakpoints.down("sm")]: {
-        gridTemplateColumns: "1fr"
+        gridTemplateColumns: "1fr",
+        gap: "20px",
     }
 }));
 
