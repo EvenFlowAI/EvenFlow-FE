@@ -660,7 +660,7 @@ export const checkCarIsValid = (onCarIsValid = () => {}, onCarIsInvalid = () => 
     if (selectedVehicle) {
         const models = makes.map(item => item.models).flat();
         if (!selectedVehicle.mileage) carIsValid = false;
-        const existingMileage = mileage.find(item => item.value === selectedVehicle.mileage);
+        const existingMileage = mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
         if (!existingMileage) carIsValid = false;
         const existingEngineType = engineTypes.find(item => item.id === selectedVehicle.engineTypeId);
         if (currentConfig?.engineType && (!existingEngineType || !selectedVehicle.engineTypeId)) carIsValid = false;

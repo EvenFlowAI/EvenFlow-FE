@@ -31,7 +31,6 @@ import {Api} from "../../../config/requests";
 import {Loading} from "../../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
 import NoRecalls from "../../Modals/RecallsByVin/NoRecalls";
-import {setChangesCompletedOpen} from "../../../store/reducers/modals/actions";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 const SelectWrapper = styled('div')(({theme}) => ({
@@ -119,7 +118,8 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             return (v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin)
                 || (v.make === selectedVehicle?.make
                     && v.model === selectedVehicle?.model
-                    && v.year === selectedVehicle?.year)
+                    && v.year
+                    && v.year?.toString() === selectedVehicle?.year?.toString())
         }));
     }, [selectedVehicle, customerLoadedData])
 
