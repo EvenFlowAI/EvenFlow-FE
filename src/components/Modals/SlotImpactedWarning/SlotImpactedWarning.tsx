@@ -46,9 +46,9 @@ const SlotImpactedWarning = () => {
         <BaseModal
             width={450}
             open={isSlotsWarningOpen}
-            onClose={onNext}
+            onClose={onCancel}
         >
-            <DialogTitle onClose={onNext}>
+            <DialogTitle onClose={onCancel}>
                 <div>{t("Appointment availability depends on the service requested.")}</div>
                 <div>{t("Please continue to see available dates and times for you requested change")}</div>
             </DialogTitle>
