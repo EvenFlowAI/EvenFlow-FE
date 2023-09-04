@@ -76,8 +76,13 @@ const Wrapper = styled('div')(({theme}) => ({
         fontWeight: "bold"
     },
     "& > .emptyContainer": {
+        width: '100%',
         minHeight: 300,
-        minWidth: 300
+        minWidth: 300,
+        gridColumn: '1 / 3',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: "center",
     }
 }));
 
