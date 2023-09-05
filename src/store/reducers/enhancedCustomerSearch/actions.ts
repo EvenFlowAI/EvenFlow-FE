@@ -125,7 +125,6 @@ export const updateCustomer = (data: ICustomerWithPhones, onSuccess: () => void,
     Api.call(Api.endpoints.Customers.Update, {data})
         .then(res => {
             if (res.data) {
-                onSuccess();
                 const {customers} = getState().customers;
                 const customerData:Partial<ICustomerWithPhones> = {
                     cellPhone: res.data.cellPhone,
@@ -137,9 +136,11 @@ export const updateCustomer = (data: ICustomerWithPhones, onSuccess: () => void,
                     address: res.data.address,
                     city: res.data.city,
                     state: res.data.state,
+                    fullAddress: res.data.fullAddress,
                 }
                 const filtered = [...customers].map(item => item.customerId === data.customerId ? {...item, ...customerData} : item)
                 dispatch(getCustomers(filtered))
+                onSuccess();
             }
         })
         .catch(err => {

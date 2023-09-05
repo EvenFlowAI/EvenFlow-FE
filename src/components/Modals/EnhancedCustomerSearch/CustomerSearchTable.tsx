@@ -160,7 +160,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const history = useHistory();
     const [currentFirstItemIndex, currentLastItemIndex] = useMemo(() => {
         return [pageData.pageIndex * pageData.pageSize, (pageData.pageIndex + 1) * pageData.pageSize]
-    }, [pageData]) ;
+    }, [pageData]);
 
     useEffect(() => {
         const orderedData = customers.map((el, i) => ({...el, sortOrder: i}))
@@ -302,7 +302,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             fromSearchByName: true,
         }
         if (customer?.city) data.city = customer.city;
-        if (customer?.address) await dispatch(setAddress(customer.address));
+        if (customer?.fullAddress) await dispatch(setAddress(customer.fullAddress));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(getBlankVehicle()))
