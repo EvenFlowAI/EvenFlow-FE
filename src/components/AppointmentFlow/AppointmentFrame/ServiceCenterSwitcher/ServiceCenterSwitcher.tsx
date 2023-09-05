@@ -76,7 +76,7 @@ export const ServiceCenterSwitcher = () => {
     return isAuthorized && (welcomeScreenView !== "serviceCenterSelect" || !isWelcomePage)
         ? <div className={classes.selectWrapper}>
             { shortLoading
-                ? <Loading/>
+                ? <div style={{textAlign: 'right'}}><Loading/></div>
                 : <div className={classes.textWrapper} onClick={handleClick}>{scProfile?.name}</div>
             }
         </div>

@@ -230,7 +230,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
                 title: "Cancel appointment",
                 content: <span>
                             Please confirm you want to cancel appointment on <br />
-                        {moment.utc(appointmentFrame.appointmentByKey.dateInUtc).format("LLL")}?
+                    {moment.utc(appointmentFrame.appointmentByKey.dateInUtc).format("LLL")}?
                         </span>,
                 onConfirm: handleCancelAppointment
             });
@@ -267,25 +267,31 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
                         <Info>{t("terms of our Visitor Agreement")}.</Info>
                     </div>
                 </React.Fragment>
-}
+            }
 
         </Wrapper>
         {/*todo change to open payment window on next*/}
-        <Actions
-            loading={saving}
-            onBack={onCancelConfirmOpen}
-            onNext={handleCreateAppointment}
-            nextLabel="Confirm Changes"
-            prevLabel="Cancel Changes"
-        />
-        <ButtonWrapper>
-            <Button
-                disabled={saving}
-                variant="text"
-                onClick={onCancelAppointment}>
-                Cancel Appointment
-            </Button>
-        </ButtonWrapper>
+        {saving
+            ? null
+            :  <Actions
+                loading={saving}
+                onBack={onCancelConfirmOpen}
+                onNext={handleCreateAppointment}
+                nextLabel="Confirm Changes"
+                prevLabel="Cancel Changes"
+            />}
+
+        {saving
+            ? null
+            :  <ButtonWrapper>
+                <Button
+                    disabled={saving}
+                    variant="text"
+                    onClick={onCancelAppointment}>
+                    Cancel Appointment
+                </Button>
+            </ButtonWrapper>}
+
         <DetailedFeesManage open={isFeesOpen} onClose={onFeesClose}/>
         <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
         <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
