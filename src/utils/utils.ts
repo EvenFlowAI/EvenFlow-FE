@@ -307,7 +307,8 @@ export const getTrackerById = (id: string): string => {
         //if (origin.includes(parentOrigins.performancechryslerjeepcenterville)) return "UA-210743216-19";
         if (decodedId === ServiceCenters.PerformanceToyotaFairfield) return "G-HXLXXZQ4YB";
         //if (origin.includes(parentOrigins.performancetoyotastore)) return "UA-210743216-20";
-        if (decodedId === ServiceCenters.FremontMotorRiverton) return "G-FBF51NY0TY";
+        //if (decodedId === ServiceCenters.FremontMotorRiverton) return "G-FBF51NY0TY";
+        if (decodedId === ServiceCenters.FremontMotorRiverton) return "G-YT0WTD548Z";
         if (decodedId === ServiceCenters.FremontMotorCody) return "G-JZ5SG376SH";
         if (decodedId === ServiceCenters.FremontMotorPowell) return "G-4853N7VZ21";
         if (decodedId === ServiceCenters.FremontLanderFord) return "G-VSQ7H51M2D";
