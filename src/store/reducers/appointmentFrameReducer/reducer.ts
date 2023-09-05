@@ -289,7 +289,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             serviceTypeOption: payload.serviceTypeOption ?? null,
             transportation: payload.transportationOption ?? null,
             appointmentRequestsPrices: payload.detailedPriceList ?? [],
-            appointmentNotes: payload.appointmentNotes ?? '',
         };
     })
     .addCase(setLoadingPackages, (state, { payload}) => {

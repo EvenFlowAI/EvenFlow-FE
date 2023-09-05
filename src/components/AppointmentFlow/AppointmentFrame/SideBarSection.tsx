@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, styled} from "@material-ui/core";
+import {styled} from "@material-ui/core";
 import {useCurrentUser, useModal} from "../../../utils/hooks";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -9,12 +9,19 @@ import AppointmentNotes from "./AppointmentNotes";
 import VehicleRepairHistory from "../../Modals/VehicleRepairHistory/VehicleRepairHistory";
 import {useTranslation} from "react-i18next";
 
-const SectionWrapper = styled('div')(({theme}) => ({
+const SectionWrapper = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'column',
     gap: '30px',
     alignItems: "stretch",
     justifyContent: "center",
+}))
+
+const RoHistoryLink = styled('div')(() => ({
+    fontSize: 16,
+    fontWeight: 600,
+    color: "#142EA1",
+    cursor: 'pointer',
 }))
 
 type TProps = {
@@ -33,7 +40,7 @@ const SideBarSection: React.FC<TProps> = ({screen, handleSetScreen}) => {
         ? <SectionWrapper>
             <SideBar screen={screen} handleSetScreen={handleSetScreen}/>
             {selectedVehicle?.hasRepairOrders && selectedVehicle?.dmsId
-                ? <Button variant="text" onClick={onOpenHistory}>{t("See RO History")}</Button>
+                ? <RoHistoryLink onClick={onOpenHistory}>{t("See RO History")}</RoHistoryLink>
                 : null}
             <AppointmentNotes/>
             {selectedVehicle?.hasRepairOrders && selectedVehicle?.dmsId
