@@ -266,7 +266,8 @@ export interface IAppointmentByQuery extends IBaseAppointment {
     recallDescriptions?: string[];
     consultant?: Partial<IServiceConsultant>|null;
     detailedPriceList?: IServiceRequestPrice[];
-    serviceValetTime?: TServiceValetSlot
+    serviceValetTime?: TServiceValetSlot;
+    appointmentNotes?: string;
 }
 
 export interface IAppointmentCustomerInfo {

@@ -70,6 +70,7 @@ import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppoi
 import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
+import SideBarSection from "../AppointmentFlow/AppointmentFrame/SideBarSection";
 
 const Container = styled('div')({
     display: "flex",
@@ -434,7 +435,7 @@ export const AppointmentFrameLayout = () => {
                 {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? component
                     : !isSm ? <SidebarWrapper>
-                        <SideBar screen={currentScreen} handleSetScreen={handleSetScreen}/>
+                        <SideBarSection screen={currentScreen} handleSetScreen={handleSetScreen}/>
                         {component}
                     </SidebarWrapper> : component
                 }

@@ -48,7 +48,7 @@ import {
     setWelcomeScreenView,
     setZipCode,
     switchLanguage,
-    updateVehicle, setEditingPosition, getAppointmentRequestsPrices,
+    updateVehicle, setEditingPosition, getAppointmentRequestsPrices, setAppointmentNotes,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByQuery,
@@ -145,6 +145,7 @@ type TState = {
     isUsualFlowNeeded: boolean;
     editingPosition: TEditingPosition|null;
     appointmentRequestsPrices: IServiceRequestPrice[];
+    appointmentNotes: string;
 }
 const initialState: TState = {
     service: null,
@@ -212,6 +213,7 @@ const initialState: TState = {
     isUsualFlowNeeded: false,
     editingPosition: null,
     appointmentRequestsPrices: [],
+    appointmentNotes: '',
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -287,6 +289,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             serviceTypeOption: payload.serviceTypeOption ?? null,
             transportation: payload.transportationOption ?? null,
             appointmentRequestsPrices: payload.detailedPriceList ?? [],
+            appointmentNotes: payload.appointmentNotes ?? '',
         };
     })
     .addCase(setLoadingPackages, (state, { payload}) => {
@@ -432,5 +435,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(getAppointmentRequestsPrices, (state, {payload}) => {
         return {...state, appointmentRequestsPrices: payload}
+    })
+    .addCase(setAppointmentNotes, (state, {payload}) => {
+        return {...state, appointmentNotes: payload}
     })
 )
