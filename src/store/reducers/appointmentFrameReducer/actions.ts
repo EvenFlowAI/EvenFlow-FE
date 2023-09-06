@@ -257,6 +257,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setUsualFlowNeeded(false));
     dispatch(setEditingPosition(null));
     dispatch(setAppointmentWasChanged(false))
+    dispatch(setAppointmentNotes(''))
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
@@ -630,7 +631,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
         recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
         createType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
-        appointmentNotes: appointmentFrame.appointmentNotes,
+        notes: appointmentFrame.appointmentNotes,
     };
 
     if (isAdmin) delete data.createType;

@@ -204,7 +204,7 @@ export const AppointmentFrameLayout = () => {
             await dispatch(handleSideBarAppointmentUpdate());
             await dispatch(updateConsultant(id, option, data.consultant?.id ?? null))
             await dispatch(checkCarIsValid());
-            if (isAuth) dispatch(setAppointmentNotes(data.appointmentNotes ?? ''))
+            if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
         } catch (e) {
             showError(e);
         } finally {

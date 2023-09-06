@@ -267,7 +267,7 @@ export interface IAppointmentByQuery extends IBaseAppointment {
     consultant?: Partial<IServiceConsultant>|null;
     detailedPriceList?: IServiceRequestPrice[];
     serviceValetTime?: TServiceValetSlot;
-    appointmentNotes?: string;
+    notes?: string;
 }
 
 export interface IAppointmentCustomerInfo {
@@ -302,7 +302,7 @@ export interface IAppointment {
     transportation?: string;
     address?: string;
     zipCode?: string;
-    appointmentNotes?: string;
+    notes?: string;
     scheduler: TScheduler;
     isEditable: boolean;
 }
