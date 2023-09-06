@@ -36,7 +36,7 @@ import {
     checkCarIsValid,
     handleSideBarAppointmentUpdate,
     loadMakes,
-    setAppointmentByKey,
+    setAppointmentByKey, setAppointmentNotes,
     setAppointmentSaving,
     setCurrentFrameScreen,
     setServiceTypeOption,
@@ -70,6 +70,7 @@ import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppoi
 import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
+import SideBarSection from "../AppointmentFlow/AppointmentFrame/SideBarSection";
 
 const Container = styled('div')({
     display: "flex",
@@ -129,6 +130,8 @@ export const AppointmentFrameLayout = () => {
 
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
+
+    const isAuth = useMemo(() => currentUser?.dealershipId === scProfile?.dealershipId, [currentUser, scProfile]);
 
     const onGoToFirstScreen = useCallback((screen: TView) => {
         dispatch(setWelcomeScreenView(screen))
@@ -201,6 +204,7 @@ export const AppointmentFrameLayout = () => {
             await dispatch(handleSideBarAppointmentUpdate());
             await dispatch(updateConsultant(id, option, data.consultant?.id ?? null))
             await dispatch(checkCarIsValid());
+            if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
         } catch (e) {
             showError(e);
         } finally {
@@ -210,7 +214,7 @@ export const AppointmentFrameLayout = () => {
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
         handleServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
         updateRecalls, updatePackageOption, goToServiceTypeSelection,
-        isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes])
+        isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes, isAuth])
 
     // useAnalytics(trackerCreated, () => dispatch(setTrackerCreated(true)))
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
@@ -434,7 +438,7 @@ export const AppointmentFrameLayout = () => {
                 {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? component
                     : !isSm ? <SidebarWrapper>
-                        <SideBar screen={currentScreen} handleSetScreen={handleSetScreen}/>
+                        <SideBarSection screen={currentScreen} handleSetScreen={handleSetScreen}/>
                         {component}
                     </SidebarWrapper> : component
                 }

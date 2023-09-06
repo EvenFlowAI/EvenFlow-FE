@@ -28,53 +28,62 @@ const AppointmentDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
     return (
         <div>
             <div className={classes.blockTitle}>Appointment Details</div>
-            <DetailsItem title="Appointment Number" text={payload.appointmentNumber} icon={<NumberIcon/>}/>
+            <DetailsItem title="Appointment Number" text={payload.appointmentNumber} icon={<NumberIcon/>} key="number"/>
             <DetailsItem
                 title="Appointment Status"
                 text={typeof payload.appointmentStatus !== 'undefined' && Number.isInteger(payload.appointmentStatus)
                     ? appointmentStatuses[payload.appointmentStatus]
                     : ""}
                 icon={<Done/>}
+                key="Status"
             />
             <DetailsItem
                 title="Scheduled Appointment"
                 text={moment.utc(payload.dateTime).format(dateTimeFormat)}
                 icon={<Clock/>}
+                key="Scheduled"
             />
             <DetailsItem
                 title="Services Selected"
                 text={payload.servicesRequested}
                 icon={<SettingsChecked/>}
+                key="Services"
             />
             <DetailsItem
                 title="Service Option"
                 text={payload.serviceOption ?? ''}
                 icon={<Settings/>}
+                key="Option"
             />
             <DetailsItem
                 title="Total"
                 text={payload.totalValue ? `$${payload.totalValue}` : ''}
                 icon={<Price/>}
+                key="Total"
             />
             <DetailsItem
                 title="Convenience Fees"
                 text={payload.ancillaryPrice ? `$${payload.ancillaryPrice}` : ''}
                 icon={<ConvenienceFees/>}
+                key="Convenience"
             />
             <DetailsItem
                 title="Advisor"
                 text={payload.advisor ?? ''}
                 icon={<Advisor/>}
+                key="Advisor"
             />
             <DetailsItem
                 title="Transportation"
                 text={payload.transportation ?? ''}
                 icon={<Transportation/>}
+                key="Transportation"
             />
             <DetailsItem
                 title="Address"
                 text={payload.address ? `${payload.address}, ${payload.zipCode}` : ''}
                 icon={<Address/>}
+                key="Address"
             />
         </div>
     );
