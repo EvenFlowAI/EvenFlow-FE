@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {styled} from "@material-ui/core";
 import {useCurrentUser, useModal} from "../../../utils/hooks";
 import {useSelector} from "react-redux";
@@ -20,8 +20,6 @@ const SectionWrapper = styled('div')(() => ({
 const RoHistoryLink = styled('div')(() => ({
     fontSize: 16,
     fontWeight: 600,
-    color: "#142EA1",
-    cursor: 'pointer',
 }))
 
 type TProps = {
@@ -35,15 +33,20 @@ const SideBarSection: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
     const currentUser = useCurrentUser()
     const {t} = useTranslation();
+    const hasHistory = useMemo(() => {
+       return selectedVehicle?.hasRepairOrders && selectedVehicle?.dmsId
+    }, [selectedVehicle])
 
     return currentUser && currentUser.dealershipId === scProfile?.dealershipId
         ? <SectionWrapper>
             <SideBar screen={screen} handleSetScreen={handleSetScreen}/>
-            {selectedVehicle?.hasRepairOrders && selectedVehicle?.dmsId
-                ? <RoHistoryLink onClick={onOpenHistory}>{t("See RO History")}</RoHistoryLink>
-                : null}
+            <RoHistoryLink
+                onClick={onOpenHistory}
+                style={{color: hasHistory ? "#142EA1" : "grey", cursor: hasHistory ? "pointer" : "unset"}}>
+                {t("See RO History")}
+            </RoHistoryLink>
             <AppointmentNotes/>
-            {selectedVehicle?.hasRepairOrders && selectedVehicle?.dmsId
+            {hasHistory && selectedVehicle?.dmsId
                 ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={selectedVehicle.dmsId}/>
                 : null}
         </SectionWrapper>
