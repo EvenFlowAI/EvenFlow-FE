@@ -114,7 +114,11 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             setPage(EServiceCategoryPage.Page1);
         } else {
             if (isManagingAppointment) {
-                dispatch(setCurrentFrameScreen("manageAppointment"))
+                if (!selectedServices.length) {
+                    showError(t("You do not have any services selected in your appointment. Please add items you wish to have serviced"))
+                } else {
+                    dispatch(setCurrentFrameScreen("manageAppointment"))
+                }
             } else {
                 if (currentUser) dispatch(setShowServiceCentersList(false));
                 handleBackScreen()
@@ -238,7 +242,11 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const handleNext = () => {
         if (isManagingAppointment) {
-            dispatch(checkCarIsValid(onCarIsValid, goNext))
+            if (!selectedServices.length) {
+                showError(t("You do not have any services selected in your appointment. Please add items you wish to have serviced"))
+            } else {
+                dispatch(checkCarIsValid(onCarIsValid, goNext))
+            }
         } else {
             goNext()
         }
