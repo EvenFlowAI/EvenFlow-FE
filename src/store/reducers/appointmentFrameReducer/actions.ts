@@ -120,6 +120,7 @@ export const setUsualFlowNeeded = createAction<boolean>("fAppointment/SetUsualFl
 export const setEditingPosition = createAction<TEditingPosition|null>("fAppointment/SetEditingPosition");
 export const getAppointmentRequestsPrices = createAction<IServiceRequestPrice[]>("fAppointment/GetAppointmentRequestsPrices");
 export const setAppointmentNotes = createAction<string>("fAppointment/SetAppointmentNotes");
+export const setServiceOptionChanged = createAction<boolean>("fAppointment/SetServiceOptionChanged");
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;

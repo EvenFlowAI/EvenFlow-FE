@@ -12,7 +12,7 @@ import {
 } from "../../store/reducers/appointment/actions";
 import {
     clearAppointmentData, loadConsultants,
-    setCurrentFrameScreen,
+    setCurrentFrameScreen, setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps,
     setTransportation,
@@ -183,6 +183,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
         } else {
             if (serviceTypeOption?.id !== serviceOption.id) {
                 dispatch(clearAppointmentData());
+                dispatch(setServiceOptionChanged(false));
                 dispatch(setSideBarSteps([]))
             }
             const nextScreen = serviceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';

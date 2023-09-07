@@ -7,21 +7,22 @@ import {useTranslation} from "react-i18next";
 import {useSelectedAppointmentStyles} from "../SelectedAppointment";
 import {selectAppointment, selectServiceValetAppointment} from "../../../../store/reducers/appointment/actions";
 import {
-    loadConsultants, setAdvisor,
+    loadConsultants,
+    setAdvisor,
+    setCurrentFrameScreen, setServiceOptionChanged,
     setServiceTypeOption,
-    setSideBarSteps, setTransportation
+    setSideBarSteps,
+    setTransportation
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
 
 const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const {
         serviceTypeOption,
-        selectedOptionTypes,
-        address,
-        zipCode,
         sideBarSteps
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
+    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const {t} = useTranslation();
     const classes = useSelectedAppointmentStyles();
@@ -29,12 +30,11 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const {id} = useParams();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-    const wasSelectedSecondaryTypes = useMemo(() => {
-        return selectedOptionTypes.includes(EServiceType.PickUpDropOff)
-    }, [selectedOptionTypes]);
     const serviceValetIsPossibleToUse = useMemo(() => {
-        return serviceTypeOption?.type !== EServiceType.MobileService && address && zipCode
-    }, [serviceTypeOption, address, zipCode]);
+        return serviceTypeOption?.type !== EServiceType.MobileService
+            && firstScreenOptions.find(op => op.type === EServiceType.PickUpDropOff)
+            && config.find(item => item.serviceType === EServiceType.PickUpDropOff && item.available)
+    }, [serviceTypeOption, firstScreenOptions, config]);
 
     const getServiceName = () => {
         if (serviceTypeOption?.name) return serviceTypeOption.name
@@ -58,25 +58,26 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
 
     const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         dispatch(setTransportation(null));
+        dispatch(setServiceOptionChanged(true))
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {
             dispatch(setServiceTypeOption(option));
             dispatch(loadConsultants(id, option.id));
             dispatch(setAdvisor(null));
         }
-        if (e.target.value === EServiceType.PickUpDropOff) {
+        if (option?.type === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));
+            dispatch(setCurrentFrameScreen("location"))
         } else {
             dispatch(selectServiceValetAppointment(null));
         }
         handleSideBar();
     }
 
-    return wasSelectedSecondaryTypes
-        ? serviceValetIsPossibleToUse
+    return serviceValetIsPossibleToUse
             ? <div className={classes.selectWrapper}>
                 <div className={classes.selectWrapper}>
-                    {t("PROVIDED BY OUR")}: {isSm ? <br/> : null}
+                    {t("SERVICE OPTION")}: {isSm ? <br/> : null}
                     <Select
                         value={serviceTypeOption?.id}
                         className={classes.select}
@@ -88,9 +89,8 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
                 </div>
             </div>
             : <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
-                <div>{t("PROVIDED BY OUR")}: {getServiceName()}</div>
+                <div>{t("SERVICE OPTION")}: {getServiceName()}</div>
             </div>
-        : null
 };
 
 export default ServiceOption;

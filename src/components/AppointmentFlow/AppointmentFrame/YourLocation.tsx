@@ -11,7 +11,8 @@ import {
     clearAppointmentData,
     loadAncillaryPriceByZip,
     loadFilteredZip,
-    setAddress, setCurrentFrameScreen,
+    setAddress,
+    setCurrentFrameScreen,
     setDefaultVisitCenterOption,
     setShowServiceCentersList,
     setSideBarSteps,
@@ -129,6 +130,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         selectedVehicle,
         appointmentByKey,
         editingPosition,
+        serviceOptionChangedFromSlotPage,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {isOpen, onClose, onOpen} = useModal();
@@ -180,10 +182,14 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
 
     const onNextStep = () => {
-        if (customerLoadedData?.isUpdating) {
-            handleManagingFlow()
+        if (serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+            dispatch(setCurrentFrameScreen("appointmentSelection"))
         } else {
-            onNext();
+            if (customerLoadedData?.isUpdating) {
+                handleManagingFlow()
+            } else {
+                onNext();
+            }
         }
     }
 
@@ -193,12 +199,12 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const handleChangeAddress = async (e: any) => {
-        clearSelectedData();
+        if (!serviceOptionChangedFromSlotPage) clearSelectedData();
         setFormChecked(false);
         dispatch(setAddress(e ?? null));
     }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
-        clearSelectedData();
+        if (!serviceOptionChangedFromSlotPage) clearSelectedData();
         setFormChecked(false);
         setZip(option ?? "");
     }
