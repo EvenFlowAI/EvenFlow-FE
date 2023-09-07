@@ -64,7 +64,10 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const redirectToLocation = (option: IFirstScreenOption) => {
         const optionWasSelectedPreviously = selectedServiceOptions.find(el => el.id === option.id);
         const shouldRedirectToLocation = !address || !zipCode || !serviceOptionChangedFromSlotPage || !optionWasSelectedPreviously;
-        if (shouldRedirectToLocation) dispatch(setCurrentFrameScreen("location"))
+        if (shouldRedirectToLocation) {
+            dispatch(setCurrentFrameScreen("location"))
+            dispatch(setSideBarSteps([]))
+        }
     }
 
     const clearAppointment = (option: IFirstScreenOption) => {
@@ -83,16 +86,19 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
             dispatch(loadConsultants(id, option.id));
             dispatch(setAdvisor(null));
             clearAppointment(option);
-            if (option?.type === EServiceType.PickUpDropOff) redirectToLocation(option);
+            if (option?.type === EServiceType.PickUpDropOff) {
+                redirectToLocation(option);
+            } else {
+                handleSideBar();
+            }
         }
-        handleSideBar();
         dispatch(setServiceOptionChanged(true))
     }
 
     return serviceValetIsPossibleToUse
-            ? <div className={classes.selectWrapper}>
+            ? <div className={classes.selectWrapper} style={{marginTop: 10}}>
                 <div className={classes.selectWrapper}>
-                    {t("SERVICE OPTION")}: {isSm ? <br/> : null}
+                    <span style={{whiteSpace: 'nowrap'}}>{t("SERVICE OPTION")}: {isSm ? <br/> : null}</span>
                     <Select
                         value={serviceTypeOption?.id}
                         className={classes.select}
