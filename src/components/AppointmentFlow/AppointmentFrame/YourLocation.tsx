@@ -132,6 +132,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         editingPosition,
         serviceOptionChangedFromSlotPage,
         selectedServiceOptions,
+        ancillaryPriceLoading,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {isOpen, onClose, onOpen} = useModal();
@@ -222,6 +223,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const onBackToSelectSlotsForVisitCenter = () => {
+        // todo refactor
         if (selectedServiceOptions.length) {
             if (appointmentByKey) {
                 restoreAddress()
@@ -229,7 +231,6 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                 dispatch(setAddress(null))
                 dispatch(setZipCode(''))
             }
-            console.log(selectedServiceOptions)
             dispatch(setServiceTypeOption(selectedServiceOptions[selectedServiceOptions.length - 2]))
             dispatch(setCurrentFrameScreen("appointmentSelection"))
         }
@@ -257,6 +258,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         } else {
             clearAddress();
             clearSelectedData();
+            // todo refactor
             const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
             const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
             const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
@@ -379,7 +381,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                 />
 
             </SelectWrapper>
-            <Actions onBack={handleBack} onNext={handleNext} nextLabel={t("Next")}/>
+            <Actions onBack={handleBack} onNext={handleNext} nextLabel={t("Next")} loading={ancillaryPriceLoading}/>
             <DisplayAncillaryPrice
                 onNext={onNextStep}
                 open={isOpen}

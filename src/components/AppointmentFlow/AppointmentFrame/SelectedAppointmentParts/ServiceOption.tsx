@@ -19,7 +19,11 @@ import {useParams} from "react-router-dom";
 const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const {
         serviceTypeOption,
-        sideBarSteps
+        sideBarSteps,
+        serviceOptionChangedFromSlotPage,
+        address,
+        zipCode,
+        selectedServiceOptions,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -57,8 +61,8 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     }
 
     const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+        // todo refactor
         dispatch(setTransportation(null));
-        dispatch(setServiceOptionChanged(true))
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {
             dispatch(setServiceTypeOption(option));
@@ -67,11 +71,14 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         }
         if (option?.type === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));
-            dispatch(setCurrentFrameScreen("location"))
+            const optionWasSelectedPreviously = selectedServiceOptions.find(el => el.id === option.id);
+            const shouldRedirectToLocation = !address || !zipCode || !serviceOptionChangedFromSlotPage || !optionWasSelectedPreviously;
+             if (shouldRedirectToLocation) dispatch(setCurrentFrameScreen("location"))
         } else {
             dispatch(selectServiceValetAppointment(null));
         }
         handleSideBar();
+        dispatch(setServiceOptionChanged(true))
     }
 
     return serviceValetIsPossibleToUse

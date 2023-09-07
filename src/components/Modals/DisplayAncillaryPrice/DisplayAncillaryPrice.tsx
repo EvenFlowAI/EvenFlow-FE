@@ -119,7 +119,7 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({
                     onBack={onBack}
                     onNext={onSubmit}
                     nextLabel={`${t("Continue with")} ${serviceString}`}
-                    prevLabel={customerLoadedData?.isUpdating ? t("Back") : t("Visit Center instead")}
+                    prevLabel={customerLoadedData?.isUpdating && !serviceOptionChangedFromSlotPage ? t("Back") : t("Visit Center instead")}
                 />
             </div>
         </BaseModal>
