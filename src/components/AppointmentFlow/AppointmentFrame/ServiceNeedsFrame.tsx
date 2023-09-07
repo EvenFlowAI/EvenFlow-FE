@@ -114,11 +114,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             setPage(EServiceCategoryPage.Page1);
         } else {
             if (isManagingAppointment) {
-                if (!selectedServices.length) {
-                    showError(t("You do not have any services selected in your appointment. Please add items you wish to have serviced"))
-                } else {
-                    dispatch(setCurrentFrameScreen("manageAppointment"))
-                }
+                dispatch(setCurrentFrameScreen("manageAppointment"))
             } else {
                 if (currentUser) dispatch(setShowServiceCentersList(false));
                 handleBackScreen()
@@ -268,6 +264,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             <Actions
                 prevDisabled={history?.location?.search?.includes('view=unique')}
                 hideNext={!selectedServices?.length}
+                hidePrev={!selectedServices.length && isManagingAppointment}
                 nextLabel={t("Next")}
                 onNext={handleNext}
                 onBack={handleBack} />
