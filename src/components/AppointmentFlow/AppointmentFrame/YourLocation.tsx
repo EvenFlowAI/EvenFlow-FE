@@ -13,7 +13,7 @@ import {
     loadFilteredZip,
     setAddress,
     setCurrentFrameScreen,
-    setDefaultVisitCenterOption,
+    setDefaultVisitCenterOption, setServiceTypeOption,
     setShowServiceCentersList,
     setSideBarSteps,
     setWelcomeScreenView,
@@ -131,6 +131,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         appointmentByKey,
         editingPosition,
         serviceOptionChangedFromSlotPage,
+        selectedServiceOptions,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {isOpen, onClose, onOpen} = useModal();
@@ -218,6 +219,20 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     const restoreAddress = () => {
         dispatch(setAddress(appointmentByKey?.address ?? null))
         dispatch(setZipCode(appointmentByKey?.zipCode ?? ""))
+    }
+
+    const onBackToSelectSlotsForVisitCenter = () => {
+        if (selectedServiceOptions.length) {
+            if (appointmentByKey) {
+                restoreAddress()
+            } else {
+                dispatch(setAddress(null))
+                dispatch(setZipCode(''))
+            }
+            console.log(selectedServiceOptions)
+            dispatch(setServiceTypeOption(selectedServiceOptions[selectedServiceOptions.length - 2]))
+            dispatch(setCurrentFrameScreen("appointmentSelection"))
+        }
     }
 
     const onBackToFirstScreen = async () => {
@@ -369,13 +384,14 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                 onNext={onNextStep}
                 open={isOpen}
                 onClose={onClose}
-                onBackToServiceOption={onBackToFirstScreen}
+                onBackToSelectSlotsForVisitCenter={onBackToSelectSlotsForVisitCenter}
                 onVisitCenter={setDefaultVisitCenter}/>
             <UnavailableService
                 open={isUnavailableOpen}
                 onClose={onUnavailableClose}
                 setFormChecked={setFormChecked}
                 onBackToServiceOption={onBackToFirstScreen}
+                onBackToSelectSlotsForVisitCenter={onBackToSelectSlotsForVisitCenter}
                 onVisitCenter={setDefaultVisitCenter}/>
         </StepWrapper>
     );

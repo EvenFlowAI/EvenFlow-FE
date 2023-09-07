@@ -11,15 +11,13 @@ import {makeStyles} from "@material-ui/core/styles";
 import {TCallback} from "../../../types/types";
 import {
     setAddress,
-    setCurrentFrameScreen,
-    setServiceTypeOption,
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 
 type TDisplayAncillaryPriceProps = DialogProps & {
     onNext: TCallback;
-    onBackToServiceOption: TCallback;
     onVisitCenter: TCallback;
+    onBackToSelectSlotsForVisitCenter: TCallback;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -53,13 +51,19 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onClose, onNext, onBackToServiceOption, onVisitCenter}) => {
+const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({
+                                                                          open,
+                                                                          onClose,
+                                                                          onNext,
+                                                                          onVisitCenter,
+                                                                          onBackToSelectSlotsForVisitCenter,
+                                                                      }) => {
     const {
         serviceTypeOption,
         ancillaryPrice,
         appointmentByKey,
         serviceOptionChangedFromSlotPage,
-        selectedServiceOptions, } = useSelector((state: RootState) => state.appointmentFrame);
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
@@ -78,19 +82,6 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
     const restorePrevData = () => {
         if (appointmentByKey?.address) dispatch(setAddress(appointmentByKey?.address))
         if (appointmentByKey?.zipCode) dispatch(setZipCode(appointmentByKey?.zipCode))
-    }
-
-    const onBackToSelectSlotsForVisitCenter = () => {
-        if (selectedServiceOptions.length) {
-            if (appointmentByKey) {
-                restorePrevData()
-            } else {
-                dispatch(setAddress(null))
-                dispatch(setZipCode(''))
-            }
-            dispatch(setServiceTypeOption(selectedServiceOptions[selectedServiceOptions.length - 1]))
-            dispatch(setCurrentFrameScreen("appointmentSelection"))
-        }
     }
 
     const onBack = () => {

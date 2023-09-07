@@ -259,6 +259,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setEditingPosition(null));
     dispatch(setAppointmentWasChanged(false))
     dispatch(setAppointmentNotes(''))
+    dispatch(setConsultants([]));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
