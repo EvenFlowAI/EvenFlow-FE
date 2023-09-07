@@ -85,7 +85,7 @@ const AppointmentNotes = () => {
         setFocused(false)
     }
     const onSave = () => {
-        if (!text.includes("&") && !text.includes(">") && !text.includes("<")) {
+        if (text.match(/^[a-zA-Z0-9]/)) {
             setHasError(false)
             dispatch(setAppointmentNotes(text.trim()))
             setFocused(false)
