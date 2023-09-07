@@ -15,6 +15,7 @@ import {
     setTransportation
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
+import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
 
 const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const {
@@ -60,22 +61,29 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         }
     }
 
+    const redirectToLocation = (option: IFirstScreenOption) => {
+        const optionWasSelectedPreviously = selectedServiceOptions.find(el => el.id === option.id);
+        const shouldRedirectToLocation = !address || !zipCode || !serviceOptionChangedFromSlotPage || !optionWasSelectedPreviously;
+        if (shouldRedirectToLocation) dispatch(setCurrentFrameScreen("location"))
+    }
+
+    const clearAppointment = (option: IFirstScreenOption) => {
+        if (option?.type === EServiceType.PickUpDropOff) {
+            dispatch(selectAppointment(null));
+        } else {
+            dispatch(selectServiceValetAppointment(null));
+        }
+    }
+
     const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-        // todo refactor
         dispatch(setTransportation(null));
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {
             dispatch(setServiceTypeOption(option));
             dispatch(loadConsultants(id, option.id));
             dispatch(setAdvisor(null));
-        }
-        if (option?.type === EServiceType.PickUpDropOff) {
-            dispatch(selectAppointment(null));
-            const optionWasSelectedPreviously = selectedServiceOptions.find(el => el.id === option.id);
-            const shouldRedirectToLocation = !address || !zipCode || !serviceOptionChangedFromSlotPage || !optionWasSelectedPreviously;
-             if (shouldRedirectToLocation) dispatch(setCurrentFrameScreen("location"))
-        } else {
-            dispatch(selectServiceValetAppointment(null));
+            clearAppointment(option);
+            if (option?.type === EServiceType.PickUpDropOff) redirectToLocation(option);
         }
         handleSideBar();
         dispatch(setServiceOptionChanged(true))
