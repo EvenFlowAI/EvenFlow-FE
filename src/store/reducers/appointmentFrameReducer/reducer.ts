@@ -48,7 +48,7 @@ import {
     setWelcomeScreenView,
     setZipCode,
     switchLanguage,
-    updateVehicle, setEditingPosition, getAppointmentRequestsPrices, setAppointmentNotes,
+    updateVehicle, setEditingPosition, getAppointmentRequestsPrices, setAppointmentNotes, setPoliticalState, setCity,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByQuery,
@@ -112,6 +112,8 @@ type TState = {
     gap: number | undefined;
     userType: EUserType | undefined;
     address: any;
+    politicalState: string;
+    city: string;
     zipCode: string;
     valueService: IValueService | null;
     seriesModels: TYear[];
@@ -180,6 +182,8 @@ const initialState: TState = {
     gap: undefined,
     userType: undefined,
     address: null,
+    politicalState: '',
+    city: '',
     zipCode: "",
     valueService: null,
     seriesModels: [],
@@ -437,5 +441,11 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setAppointmentNotes, (state, {payload}) => {
         return {...state, appointmentNotes: payload}
+    })
+    .addCase(setPoliticalState, (state, {payload}) => {
+        return {...state, politicalState: payload}
+    })
+    .addCase(setCity, (state, {payload}) => {
+        return {...state, city: payload}
     })
 )

@@ -10,7 +10,7 @@ import {TComplimentary, TPackage, TService, TUpsell} from "./PackageSelection";
 import {EOfferType} from "../../../store/reducers/offers/types";
 import {EServiceType, IValueService} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TScreen} from "../../Layout/types";
-import {IRecallByVin} from "./types";
+import {IRecallByVin, TParsedAddress} from "./types";
 import {TRecallForRequest} from "../../../store/reducers/appointment/types";
 import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
 
@@ -319,4 +319,22 @@ export const prodParentLinks = [
 export const getTrimmedKey = (key: string): string => {
     const lastIndex = key.lastIndexOf('==');
     return lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
+}
+
+export const parseGeoCode = (data: any[], addressString: string): TParsedAddress => {
+    const city = data.find(el => el?.types?.includes("locality"))
+    const state = data.find(el => el?.types?.includes("administrative_area_level_1"))
+    let address = '';
+    if (city.long_name) {
+        const index = addressString.indexOf(city.long_name)
+        if (index > 0) {
+            address = addressString.slice(0, index)
+            const commaIndex = address.lastIndexOf(",")
+            if (commaIndex) {
+                address = address.slice(0, commaIndex)
+            }
+        }
+    }
+
+    return {city: city?.long_name ?? '', state: state?.long_name ?? '', address}
 }
