@@ -382,6 +382,7 @@ export const AppointmentFrameLayout = () => {
                 onChangeSlot={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}/>,
         }
         return carSelections[currentScreen];
+
     }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,
         needToShowServiceTypes, onUpdateAppointment, serviceCategoryPage, isTransportationAvailable,
         isAdvisorAvailable, isAppointmentTimingAvailable]);
