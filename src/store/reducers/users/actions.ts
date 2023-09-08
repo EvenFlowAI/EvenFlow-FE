@@ -17,7 +17,7 @@ export const getCurrentUser = (keepWelcomeScreen?: boolean): AppThunk => async (
         const result = await Api.call<ICurrentUser>(Api.endpoints.Accounts.Profile);
         if (result.data) {
             dispatch(_getCurrentUser(result.data));
-            const isAuthorized = result.data.dealershipId === scProfile?.dealershipId
+            const isAuthorized = scProfile ? result.data.dealershipId === scProfile?.dealershipId : true
             if (welcomeScreenView !== "serviceCenterSelect" && !keepWelcomeScreen && !customerLoadedData?.isUpdating && isAuthorized) {
                 if (shouldShowServiceCentersList) {
                     dispatch(setWelcomeScreenView("serviceCenterSelect"))

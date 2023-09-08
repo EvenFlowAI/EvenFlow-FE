@@ -49,7 +49,6 @@ export interface ICheckPodRequest {
     maintenancePackageOption: TPackageOptionRequest|null;
     appointmentTimingType: EAppointmentTimingType;
     serviceCenterId: number;
-    appointmentHashKey: string;
     address: string|null;
     zipCode: string|null;
     vehicle: IVehicle;

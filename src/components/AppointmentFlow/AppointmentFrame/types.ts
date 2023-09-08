@@ -16,6 +16,7 @@ export type TActionProps = {
     prevDisabled?: boolean;
     prevLabel?: string;
     hideNext?: boolean;
+    hidePrev?: boolean;
 };
 
 export type EMaintenanceItemType = 'category' | 'package' | 'service' | 'valueService' | 'recall'

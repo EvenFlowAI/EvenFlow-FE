@@ -119,6 +119,7 @@ export const setCarIsValidForUpdate = createAction<boolean>("fAppointment/SetCar
 export const setUsualFlowNeeded = createAction<boolean>("fAppointment/SetUsualFlowNeeded");
 export const setEditingPosition = createAction<TEditingPosition|null>("fAppointment/SetEditingPosition");
 export const getAppointmentRequestsPrices = createAction<IServiceRequestPrice[]>("fAppointment/GetAppointmentRequestsPrices");
+export const setAppointmentNotes = createAction<string>("fAppointment/SetAppointmentNotes");
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -256,6 +257,7 @@ export const clearAppointmentData = (): AppThunk => (dispatch) => {
     dispatch(setUsualFlowNeeded(false));
     dispatch(setEditingPosition(null));
     dispatch(setAppointmentWasChanged(false))
+    dispatch(setAppointmentNotes(''))
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
@@ -629,6 +631,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
         recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
         createType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
+        notes: appointmentFrame.appointmentNotes,
     };
 
     if (isAdmin) delete data.createType;
@@ -660,7 +663,7 @@ export const checkCarIsValid = (onCarIsValid = () => {}, onCarIsInvalid = () => 
     if (selectedVehicle) {
         const models = makes.map(item => item.models).flat();
         if (!selectedVehicle.mileage) carIsValid = false;
-        const existingMileage = mileage.find(item => item.value === selectedVehicle.mileage);
+        const existingMileage = mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
         if (!existingMileage) carIsValid = false;
         const existingEngineType = engineTypes.find(item => item.id === selectedVehicle.engineTypeId);
         if (currentConfig?.engineType && (!existingEngineType || !selectedVehicle.engineTypeId)) carIsValid = false;

@@ -238,7 +238,11 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
 
     const handleNext = () => {
         if (isManagingAppointment) {
-            dispatch(checkCarIsValid(onCarIsValid, goNext))
+            if (!selectedServices.length) {
+                showError(t("You do not have any services selected in your appointment. Please add items you wish to have serviced"))
+            } else {
+                dispatch(checkCarIsValid(onCarIsValid, goNext))
+            }
         } else {
             goNext()
         }
@@ -260,6 +264,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             <Actions
                 prevDisabled={history?.location?.search?.includes('view=unique')}
                 hideNext={!selectedServices?.length}
+                hidePrev={!selectedServices.length && isManagingAppointment}
                 nextLabel={t("Next")}
                 onNext={handleNext}
                 onBack={handleBack} />

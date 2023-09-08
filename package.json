@@ -36,6 +36,7 @@
     "notistack": "^0.9.17",
     "query-string": "^6.13.8",
     "react": "^16.13.1",
+    "react-click-away-listener": "^2.2.3",
     "react-device-detect": "^2.2.3",
     "react-dom": "^16.13.1",
     "react-draft-wysiwyg": "^1.15.0",

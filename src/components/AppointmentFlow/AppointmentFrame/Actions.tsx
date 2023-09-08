@@ -32,21 +32,22 @@ export const Actions: React.FC<TActionProps> = (
         loading,
         prevDisabled,
         prevLabel,
-        hideNext
+        hideNext,
+        hidePrev
     }
 ) => {
     const {t} = useTranslation();
     return (
         <ButtonsRow>
             {!loading ? <>
-                <Button
+                {!hidePrev && <Button
                     onClick={onBack}
                     color={'primary'}
                     variant='outlined'
                     disabled={prevDisabled}
                     style={{backgroundColor: '#F7F8FB'}}>
                     {prevLabel ?? t("Back")}
-                </Button>
+                </Button>}
                 {!hideNext && <Button
                     disabled={nextDisabled}
                     onClick={onNext}

@@ -17,10 +17,10 @@ const OperationalDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
     return (
         <div>
             <div className={classes.blockTitle}>Operational Details</div>
-            <DetailsItem title="Created Date" text={moment(payload.createdDateTime).format(dateTimeFormat)} />
-            <DetailsItem title="Scheduler" text={payload.scheduler.fullName ?? ''} />
-            <DetailsItem title="Service Book details" text={payload.serviceBook?.name ?? ''} />
-            <DetailsItem title="Appointment Notes" text={payload.appointmentNotes ?? ''} />
+            <DetailsItem title="Created Date" text={moment(payload.createdDateTime).format(dateTimeFormat)} key="date"/>
+            <DetailsItem title="Scheduler" text={payload.scheduler.fullName ?? ''} key="Scheduler"/>
+            <DetailsItem title="Service Book details" text={payload.serviceBook?.name ?? ''} key="Service"/>
+            <DetailsItem title="Appointment Notes" text={payload.notes ?? ''} key="Appointment"/>
         </div>
     );
 };

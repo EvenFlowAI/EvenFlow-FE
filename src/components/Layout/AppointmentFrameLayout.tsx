@@ -33,19 +33,20 @@ import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
 import {
-    updateRecalls,
-    updatePackageOption,
+    checkCarIsValid,
+    handleSideBarAppointmentUpdate,
+    loadMakes,
+    setAppointmentByKey, setAppointmentNotes,
+    setAppointmentSaving,
     setCurrentFrameScreen,
     setServiceTypeOption,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
     setWelcomeScreenView,
-    handleSideBarAppointmentUpdate,
     updateConsultant,
-    setAppointmentByKey,
-    setAppointmentSaving,
-    checkCarIsValid, loadMakes
+    updatePackageOption,
+    updateRecalls
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {EServiceCategoryPage, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
@@ -64,12 +65,12 @@ import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
-import {loadMileage} from "../../store/reducers/vehicleDetails/actions";
+import {loadEngineType, loadMileage} from "../../store/reducers/vehicleDetails/actions";
 import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
-import {loadEngineType} from "../../store/reducers/vehicleDetails/actions";
 import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
+import SideBarSection from "../AppointmentFlow/AppointmentFrame/SideBarSection";
 
 const Container = styled('div')({
     display: "flex",
@@ -130,6 +131,8 @@ export const AppointmentFrameLayout = () => {
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
 
+    const isAuth = useMemo(() => currentUser?.dealershipId === scProfile?.dealershipId, [currentUser, scProfile]);
+
     const onGoToFirstScreen = useCallback((screen: TView) => {
         dispatch(setWelcomeScreenView(screen))
         if (id) {
@@ -189,6 +192,7 @@ export const AppointmentFrameLayout = () => {
         const trimmedKey = getTrimmedKey(key);
         setLoadingCar(true);
         dispatch(setAppointmentSaving(true))
+        setServiceCategoryPage(EServiceCategoryPage.Page1)
         try {
             const {data} = await API.appointment.getByKey(trimmedKey);
             await dispatch(updateRecalls(data, id));
@@ -200,6 +204,7 @@ export const AppointmentFrameLayout = () => {
             await dispatch(handleSideBarAppointmentUpdate());
             await dispatch(updateConsultant(id, option, data.consultant?.id ?? null))
             await dispatch(checkCarIsValid());
+            if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
         } catch (e) {
             showError(e);
         } finally {
@@ -209,7 +214,7 @@ export const AppointmentFrameLayout = () => {
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
         handleServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
         updateRecalls, updatePackageOption, goToServiceTypeSelection,
-        isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes])
+        isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes, isAuth])
 
     // useAnalytics(trackerCreated, () => dispatch(setTrackerCreated(true)))
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
@@ -377,6 +382,7 @@ export const AppointmentFrameLayout = () => {
                 onChangeSlot={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}/>,
         }
         return carSelections[currentScreen];
+
     }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,
         needToShowServiceTypes, onUpdateAppointment, serviceCategoryPage, isTransportationAvailable,
         isAdvisorAvailable, isAppointmentTimingAvailable]);
@@ -433,7 +439,7 @@ export const AppointmentFrameLayout = () => {
                 {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? component
                     : !isSm ? <SidebarWrapper>
-                        <SideBar screen={currentScreen} handleSetScreen={handleSetScreen}/>
+                        <SideBarSection screen={currentScreen} handleSetScreen={handleSetScreen}/>
                         {component}
                     </SidebarWrapper> : component
                 }
