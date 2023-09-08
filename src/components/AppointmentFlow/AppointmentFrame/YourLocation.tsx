@@ -135,6 +135,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         ancillaryPriceLoading,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
+    const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
@@ -182,7 +183,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         }
     }
 
-    const goToSlotsSelection = () => dispatch(setCurrentFrameScreen("appointmentSelection"))
+    const goToSlotsSelection = () => {
+        dispatch(setCurrentFrameScreen(isAdvisorAvailable ? 'consultantSelection' : 'appointmentSelection'))
+    }
 
     const onNextStep = () => {
         if (serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff) {

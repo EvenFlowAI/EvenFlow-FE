@@ -83,8 +83,8 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {
             dispatch(setServiceTypeOption(option));
-            dispatch(loadConsultants(id, option.id));
             dispatch(setAdvisor(null));
+            if (address && zipCode) dispatch(loadConsultants(id, option.id));
             clearAppointment(option);
             if (option?.type === EServiceType.PickUpDropOff) {
                 redirectToLocation(option);

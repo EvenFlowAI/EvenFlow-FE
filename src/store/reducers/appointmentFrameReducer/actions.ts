@@ -77,6 +77,7 @@ export const setUpdateAppointment = createAction<IAppointmentByQuery>("fAppointm
 export const setLoadingPackages = createAction<boolean>("fAppointment/loadingPackages");
 export const setPackages = createAction<IPackage[]>('fAppointment/setPackages');
 export const setConsultants = createAction<IServiceConsultant[]>('fAppointment/setConsultants');
+export const setConsultantsLoading = createAction<boolean>('fAppointment/setConsultantsLoading');
 export const setCurrentFrameScreen = createAction<TScreen>('fAppointment/setCurrentScreen');
 export const getMakes = createAction<IMake[]>('fAppointment/GetMakes');
 export const getModels = createAction<string[]>('fAppointment/GetModels');
@@ -138,6 +139,7 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
 }
 
 export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void): AppThunk => async (dispatch, getState) => {
+    dispatch(setConsultantsLoading(true))
     const {selectedPackage, packagePricingType, packageEMenuType, selectedRecalls, selectedVehicle, address, zipCode, valueService,
         service, subService, categoriesIds, } = getState().appointmentFrame;
     const {selectedSR} = getState().appointment;
@@ -189,6 +191,7 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
                 }
             })
             .catch(err => console.log(err))
+            .finally(() => dispatch(setConsultantsLoading(false)))
     }
 }
 

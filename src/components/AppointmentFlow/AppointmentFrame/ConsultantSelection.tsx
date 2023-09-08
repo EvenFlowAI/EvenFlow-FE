@@ -9,7 +9,8 @@ import {TCallback} from "../../../types/types";
 import {IServiceConsultant} from '../../../api/types';
 import {
     loadConsultants,
-    setAdvisor, setCurrentFrameScreen,
+    setAdvisor,
+    setCurrentFrameScreen,
     setSideBarActualSteps,
     setSideBarMenu,
     setSideBarStepsList
@@ -17,10 +18,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
-import {
-    selectAppointment,
-    selectServiceValetAppointment,
-} from "../../../store/reducers/appointment/actions";
+import {selectAppointment, selectServiceValetAppointment,} from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
 import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
@@ -140,8 +138,17 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             .map(item => item.id)
     }, [allCategories, EServiceCategoryType, categoriesIds])
 
+    const handleEmptyList = () => {
+        onNext()
+        // if (serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+        //     onBack()
+        // } else {
+        //
+        // }
+    }
+
     useEffect(() => {
-        dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, onNext))
+        dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, handleEmptyList))
     }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage, serviceTypeOption])
 
     useEffect(() => {
