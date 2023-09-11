@@ -133,6 +133,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         dropOffSettings,
         customerLoadedData,
         isAppointmentSaving,
+        appointmentByKey,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -159,6 +160,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         state.appointment.dropOffSettings,
         state.appointment.customerLoadedData,
         state.appointmentFrame.isAppointmentSaving,
+        state.appointmentFrame.appointmentByKey,
     ]);
 
     const {t} = useTranslation();
@@ -242,10 +244,19 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     }
 
     const getDate = () => {
-        return isServiceValetApp
-            ? moment.utc(serviceValetAppointment?.date).format('ddd, MMM D')
-            : appointment?.date.format('ddd, MMM D, h:mm A')
-            ?? moment.utc().format('ddd, MMM D, h:mm A');
+        if (isServiceValetApp) {
+            return moment.utc(serviceValetAppointment?.date).format('ddd, MMM D')
+        } else if (appointment) {
+            return appointment?.date.format('ddd, MMM D, h:mm A')
+        } else if (appointmentByKey?.dateInUtc) {
+            if (appointmentByKey.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+                return moment(appointmentByKey.dateInUtc).utc().format('ddd, MMM D')
+            } else {
+                const [hh, mm] = appointmentByKey.timeSlot.split(":")
+                return moment(appointmentByKey.dateInUtc).utc().set('hour', +hh).set('minute', +mm).format('ddd, MMM D, h:mm A')
+            }
+        }
+        return moment.utc().format('ddd, MMM D, h:mm A');
     }
 
     const data: TItem[] = useMemo(() => {
@@ -307,7 +318,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         }
 
         return list;
-    }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption]);
+    }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption, isServiceValetApp]);
 
     const getDateForCalendar = useCallback(() => {
         let dateString: string = '';
