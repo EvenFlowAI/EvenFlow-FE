@@ -26,7 +26,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {ICustomerLoadedData} from "../../../api/types";
 import {
     clearAppointmentData,
-    setAddress,
+    setAddress, setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps,
     setUserType,
@@ -208,6 +208,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
 
     const onCreateNewForCar = async (item: ICustomerWithPhones) => {
         await dispatch(clearAppointmentData());
+        dispatch(setServiceOptionChanged(false));
         await dispatch(setSideBarSteps([]));
         await setCustomerData(item, false);
         await dispatch(setUserType(EUserType.Existing));
