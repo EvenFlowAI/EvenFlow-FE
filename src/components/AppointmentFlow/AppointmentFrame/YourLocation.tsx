@@ -39,6 +39,7 @@ import {useHistory, useParams} from "react-router-dom";
 import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 import {ILoadedVehicle} from "../../../api/types";
+import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -135,7 +136,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         ancillaryPriceLoading,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {isAdvisorAvailable, config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
@@ -183,8 +184,13 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         }
     }
 
-    const goToSlotsSelection = () => {
-        dispatch(setCurrentFrameScreen(isAdvisorAvailable ? 'consultantSelection' : 'appointmentSelection'))
+    const goToSlotsSelection = (prevOption?: IFirstScreenOption|undefined) => {
+        if (prevOption) {
+            const prevConfig = config.find(el => el.serviceType === prevOption.type)
+            dispatch(setCurrentFrameScreen(prevConfig?.advisorSelection ? 'consultantSelection' : 'appointmentSelection'))
+        } else {
+            dispatch(setCurrentFrameScreen(isAdvisorAvailable ? 'consultantSelection' : 'appointmentSelection'))
+        }
     }
 
     const onNextStep = () => {
@@ -229,7 +235,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
             const prevOption = selectedServiceOptions[selectedServiceOptions.length - 2];
             if (prevOption) {
                 dispatch(setServiceTypeOption(prevOption))
-                goToSlotsSelection()
+                goToSlotsSelection(prevOption)
             }
         }
     }
