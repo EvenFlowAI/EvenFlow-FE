@@ -254,7 +254,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         : packageEMenuType !== null
                             ? {optionType: packageEMenuType}
                             : null;
-                    const dd: IAppointmentSlotsRequest = {
+                    const data: IAppointmentSlotsRequest = {
                         appointmentTimingType: serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTimingType
                             ? EAppointmentTimingType.FirstAvailable
                             : selectedTimingType,
@@ -272,12 +272,12 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         recalls: mapRecallsForRequest(selectedRecalls),
                     }
                     if (valueService?.selectedService) {
-                        dd.valueServiceOfferIds = [valueService.selectedService.id];
+                        data.valueServiceOfferIds = [valueService.selectedService.id];
                     }
-                    if (zipCode?.length) dd.zipCode = zipCode;
-                    if (address?.label) dd.address = address.label;
+                    if (zipCode?.length) data.zipCode = zipCode;
+                    if (address?.label) data.address = address.label;
                     if (vehicle) {
-                        dd.vehicle = {
+                        data.vehicle = {
                             vin: vehicle.vin,
                             year: vehicle.year,
                             make: vehicle.make,
@@ -286,13 +286,13 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                             engineTypeId: vehicle.engineTypeId,
                         }
                     }
-                    if (hashKey) dd.appointmentHashKey = hashKey;
-                    if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
+                    if (hashKey) data.appointmentHashKey = hashKey;
+                    if (userType === EUserType.Existing && customerEnteredEmail) data.searchTerm = customerEnteredEmail;
                     if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                        await dispatch(loadServiceValetSlots(dd));
+                        if (data.address && data.zipCode) await dispatch(loadServiceValetSlots(data));
                     } else {
                         await dispatch(loadAppointmentSlots(
-                            dd,
+                            data,
                             setDateCallback,
                             () => handleDateRangeSet(false)
                         ));
