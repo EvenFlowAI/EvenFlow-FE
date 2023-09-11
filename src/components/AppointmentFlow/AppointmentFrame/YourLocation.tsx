@@ -293,12 +293,16 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const handleBack = () => {
-        if (customerLoadedData?.isUpdating && appointmentByKey) {
-            onBackFromManage()
+        if (serviceOptionChangedFromSlotPage) {
+            setPrevSelectedOption()
         } else {
-            clearAddress();
-            clearSelectedData();
-            handlePrevScreen();
+            if (customerLoadedData?.isUpdating && appointmentByKey) {
+                onBackFromManage()
+            } else {
+                clearAddress();
+                clearSelectedData();
+                handlePrevScreen();
+            }
         }
     }
 
