@@ -68,7 +68,7 @@ const AppointmentNotes = () => {
     const classes = useStyles();
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const showError = useException();
+    const showError = useException(true);
 
     useEffect(() => {
         setText(appointmentNotes)
@@ -96,7 +96,11 @@ const AppointmentNotes = () => {
         setFocused(false)
     }
     const onSave = () => {
-        dispatch(setAppointmentNotes(text.trim()))
+        if (text.match(/^[A-Za-z0-9\s,.?!-]+$/) || !text.length) {
+            dispatch(setAppointmentNotes(text.trim()))
+            setHasError(false)
+            setFocused(false)
+        }
     }
 
     const handleClickAway = () => {

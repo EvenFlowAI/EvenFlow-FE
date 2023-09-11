@@ -68,7 +68,7 @@ export const useSelectedPod = () => {
     return {selectedPod};
 }
 
-export function useException() {
+export function useException(preventDuplicate?: boolean) {
     const {enqueueSnackbar} = useSnackbar();
     return useCallback((e: any) => {
         if (e && e.response?.data?.errors && e.response.data.errors.length) {
@@ -76,9 +76,9 @@ export function useException() {
                 enqueueSnackbar(error.message, {variant: "error"});
             }
         } else if (typeof e === "string") {
-            enqueueSnackbar(e, {variant: "error"});
+            enqueueSnackbar(e, {variant: "error", preventDuplicate: Boolean(preventDuplicate)});
         } else {
-            enqueueSnackbar(getAPIException(e), {variant: "error"});
+            enqueueSnackbar(getAPIException(e), {variant: "error", preventDuplicate: Boolean(preventDuplicate)});
         }
     }, [enqueueSnackbar]);
 }
