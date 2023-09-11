@@ -85,13 +85,13 @@ const AppointmentNotes = () => {
         setFocused(false)
     }
     const onSave = () => {
-        if (text.match(/^[a-zA-Z0-9]/)) {
+        if (text.match(/[a-zA-Z0-9]/)) {
             setHasError(false)
             dispatch(setAppointmentNotes(text.trim()))
             setFocused(false)
         } else {
             setHasError(true)
-            showError('Appointment Notes must not contain characters "&", ">" and "<"')
+            showError('Special characters not allowed. Please remove them')
         }
     }
 
