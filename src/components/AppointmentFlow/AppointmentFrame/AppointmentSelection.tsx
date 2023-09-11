@@ -100,7 +100,9 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         isUsualFlowNeeded,
         prevScreen,
         appointmentByKey,
-        isAppointmentTimingAvailable
+        isAppointmentTimingAvailable,
+        isAdvisorAvailable,
+        isConsultantsLoading,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -135,6 +137,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.prevScreen,
         state.appointmentFrame.appointmentByKey,
         state.bookingFlowConfig.isAppointmentTimingAvailable,
+        state.bookingFlowConfig.isAdvisorAvailable,
+        state.appointmentFrame.isConsultantsLoading,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -341,17 +345,17 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         }
     }, [isTransportationAvailable, serviceTypeOption, handleTransportation, customerData, handleGANext])
 
-    const definePrevScreen = (): TScreen => {
+    const definePrevScreen = useCallback((): TScreen => {
         let previousLogicalScreen: TScreen = currentConfig?.appointmentSelection
             ? 'appointmentTiming'
-            : currentConfig?.advisorSelection && consultants.length
+            : isAdvisorAvailable
                 ? 'consultantSelection'
                 : "serviceNeeds"
         if (customerData?.isUpdating && !isUsualFlowNeeded && prevScreen) {
             previousLogicalScreen = prevScreen
         }
         return previousLogicalScreen
-    }
+    }, [currentConfig, isAdvisorAvailable, customerData, isUsualFlowNeeded, prevScreen])
 
     const handleBack = useCallback((): void => {
         handleGABack();
@@ -363,13 +367,13 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         } else {
             handleSetScreen(prevScreen);
         }
-    }, [currentConfig, history, fromServiceValetToVisitCenter])
+    }, [currentConfig, history, fromServiceValetToVisitCenter, definePrevScreen])
 
     return (
         <StepWrapper>
             <Wrapper>
                 <SelectedAppointment />
-                <Actions onBack={handleBack} onNext={handleNext} nextDisabled={nextDisabled} nextLabel={t("Next")}/>
+                <Actions onBack={handleBack} onNext={handleNext} nextDisabled={nextDisabled} nextLabel={t("Next")} loading={isConsultantsLoading}/>
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}

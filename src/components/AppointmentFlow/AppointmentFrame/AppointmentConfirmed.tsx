@@ -16,7 +16,7 @@ import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {
     clearAppointmentData,
-    setCurrentFrameScreen,
+    setCurrentFrameScreen, setServiceOptionChanged,
     setSideBarSteps,
     setUserType,
     setVehicle,
@@ -373,6 +373,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     const onMakeNew = async () => {
         await dispatch(setVehicle(null));
         await dispatch(clearAppointmentData());
+        await dispatch(setServiceOptionChanged(false));
         await dispatch(setSideBarSteps([]));
         await dispatch(setWelcomeScreenView(currentUser ? "serviceCenterSelect" : "select"));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
@@ -383,6 +384,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
             if (customerLoadedData) {
                 await dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
                 await dispatch(clearAppointmentData())
+                await dispatch(setServiceOptionChanged(false));
                 await dispatch(setUserType(EUserType.Existing))
             }
             await onUpdateAppointment(vehicle)

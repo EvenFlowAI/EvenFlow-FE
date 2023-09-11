@@ -42,10 +42,18 @@ type TUnavailableServiceProps = DialogProps & {
     setFormChecked: Dispatch<SetStateAction<boolean>>;
     onBackToServiceOption: TCallback;
     onVisitCenter: TCallback;
+    onBackToSelectSlotsForVisitCenter: TCallback;
 }
 
-const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, setFormChecked, onBackToServiceOption, onVisitCenter}) => {
-    const {serviceTypeOption, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
+const UnavailableService: React.FC<TUnavailableServiceProps> = ({
+                                                                    onClose,
+                                                                    open,
+                                                                    setFormChecked,
+                                                                    onBackToSelectSlotsForVisitCenter,
+                                                                    onBackToServiceOption,
+                                                                    onVisitCenter
+}) => {
+    const {serviceTypeOption, appointmentByKey, serviceOptionChangedFromSlotPage} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
@@ -60,7 +68,9 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
         ? t("Mobile Service")
         : t("Pick Up / Drop Off Service");
 
-    const backLabel = customerLoadedData?.isUpdating
+    const backLabel = serviceOptionChangedFromSlotPage
+        ? t("Back to Visit Center")
+        : customerLoadedData?.isUpdating
         ? isSameServiceTypeOption
             ? t("Keep Original Location")
             : t("Back") : t("Visit Center")
@@ -80,16 +90,20 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
     }
 
     const onVisitCenterClick = () => {
-        if (customerLoadedData?.isUpdating) {
-            if (isSameServiceTypeOption) {
-                keepOriginalLocation()
+        if (serviceOptionChangedFromSlotPage) {
+            onBackToSelectSlotsForVisitCenter()
+        } else {
+            if (customerLoadedData?.isUpdating) {
+                if (isSameServiceTypeOption) {
+                    keepOriginalLocation()
+                } else {
+                    onBackToServiceOption()
+                    clearLocation();
+                }
             } else {
-                onBackToServiceOption()
+                onVisitCenter()
                 clearLocation();
             }
-        } else {
-            onVisitCenter()
-            clearLocation();
         }
     }
 
@@ -98,7 +112,10 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({onClose, open, 
             <DialogTitle onClose={onClose}/>
             <DialogContent>
                 <div className={classes.info}>
-                    {t("We are sorry but we do not offer")} {serviceString} {t("to your area")}. {t("Would you like to book an appointment to visit our service center?")}
+                    {serviceOptionChangedFromSlotPage
+                        ? `${t("We are sorry but we do not offer")} ${serviceString} ${t("to your area")}`
+                        : `${t("We are sorry but we do not offer")} ${serviceString} ${t("to your area")}. ${t("Would you like to book an appointment to visit our service center?")}`
+                    }
                 </div>
             </DialogContent>
             <div className={classes.buttonWrapper}>

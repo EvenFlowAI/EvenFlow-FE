@@ -16,7 +16,7 @@ import {
     setAppointmentSaving,
     setCurrentFrameScreen,
     setEditingPosition,
-    setReminders,
+    setReminders, setServiceOptionChanged,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -193,6 +193,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
         if (appointmentFrame.selectedVehicle) {
             const vehicle = {...appointmentFrame.selectedVehicle};
             dispatch(clearAppointmentData())
+            dispatch(setServiceOptionChanged(false));
             onUpdateAppointment(vehicle)
         }
     }
