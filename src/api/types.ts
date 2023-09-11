@@ -258,6 +258,12 @@ export type TServiceValetSlot = {
     dropOffMax?: string;
 }
 
+export interface IAddressData {
+    address: string;
+    city: string;
+    state: string;
+}
+
 export interface IAppointmentByQuery extends IBaseAppointment {
     serviceCategories: ICategory[];
     jobType?: EJobType;
@@ -268,6 +274,7 @@ export interface IAppointmentByQuery extends IBaseAppointment {
     detailedPriceList?: IServiceRequestPrice[];
     serviceValetTime?: TServiceValetSlot;
     notes?: string;
+    addressData?: IAddressData;
 }
 
 export interface IAppointmentCustomerInfo {

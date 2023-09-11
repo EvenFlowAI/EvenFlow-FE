@@ -12,20 +12,27 @@ import {
     setAddress,
     setAdvisor,
     setAncillaryPriceByZip,
-    setAncillaryPriceLoading, setAppointmentByKey,
-    setAppointmentId, setAppointmentSaving, setCarIsValidForUpdate,
+    setAncillaryPriceLoading,
+    setAppointmentByKey,
+    setAppointmentId,
+    setAppointmentSaving,
+    setCarIsValidForUpdate,
     setConsultants,
     setCurrentFrameScreen,
     setCustomer,
     setFilteredZipCodes,
-    setFrameDescription, setHashKey,
+    setFrameDescription,
+    setHashKey,
     setHoursOfOperations,
     setLoadingPackages,
     setMaintenanceDetails,
-    setMobileServiceAvailability, setUsualFlowNeeded,
+    setMobileServiceAvailability,
+    setUsualFlowNeeded,
     setOffersLoading,
-    setPackage, setPackageEMenuType,
-    setPackageIsSelected, setPackagePricingType,
+    setPackage,
+    setPackageEMenuType,
+    setPackageIsSelected,
+    setPackagePricingType,
     setPackages,
     setPickUpDropOffAvailability,
     setRecallsAreShown,
@@ -33,9 +40,12 @@ import {
     setSelectedPackageOptionType,
     setSelectedPackagePriceTitles,
     setSelectedRecalls,
-    setServiceTypeOption, setShowServiceCentersList,
-    setSideBarActualSteps, setSideBarMenu,
-    setSideBarSteps, setSideBarStepsList,
+    setServiceTypeOption,
+    setShowServiceCentersList,
+    setSideBarActualSteps,
+    setSideBarMenu,
+    setSideBarSteps,
+    setSideBarStepsList,
     setTime,
     setTiming,
     setTrackerCreated,
@@ -48,7 +58,13 @@ import {
     setWelcomeScreenView,
     setZipCode,
     switchLanguage,
-    updateVehicle, setEditingPosition, getAppointmentRequestsPrices, setAppointmentNotes, setPoliticalState, setCity,
+    updateVehicle,
+    setEditingPosition,
+    getAppointmentRequestsPrices,
+    setAppointmentNotes,
+    setPoliticalState,
+    setCity,
+    setStreetName,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByQuery,
@@ -115,6 +131,7 @@ type TState = {
     politicalState: string;
     city: string;
     zipCode: string;
+    streetName: string;
     valueService: IValueService | null;
     seriesModels: TYear[];
     offersLoading: boolean;
@@ -185,6 +202,7 @@ const initialState: TState = {
     politicalState: '',
     city: '',
     zipCode: "",
+    streetName: "",
     valueService: null,
     seriesModels: [],
     offersLoading: false,
@@ -293,6 +311,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             serviceTypeOption: payload.serviceTypeOption ?? null,
             transportation: payload.transportationOption ?? null,
             appointmentRequestsPrices: payload.detailedPriceList ?? [],
+            city: payload?.addressData?.city ?? '',
+            politicalState: payload?.addressData?.state ?? ''
         };
     })
     .addCase(setLoadingPackages, (state, { payload}) => {
@@ -447,5 +467,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setCity, (state, {payload}) => {
         return {...state, city: payload}
+    })
+    .addCase(setStreetName, (state, {payload}) => {
+        return {...state, streetName: payload}
     })
 )

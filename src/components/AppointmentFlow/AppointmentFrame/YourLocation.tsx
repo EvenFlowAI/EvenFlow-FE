@@ -14,7 +14,7 @@ import {
     setAddress, setCity, setCurrentFrameScreen,
     setDefaultVisitCenterOption, setPoliticalState,
     setShowServiceCentersList,
-    setSideBarSteps,
+    setSideBarSteps, setStreetName,
     setWelcomeScreenView,
     setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -198,15 +198,14 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     const handleChangeAddress = async (e: any) => {
         clearSelectedData();
         setFormChecked(false);
+        dispatch(setAddress(e ?? null))
         if (e?.value?.place_id && e?.label) {
            geocodeByPlaceId(e.value.place_id).then(res => {
                const data = parseGeoCode(res[0].address_components, e.label)
                if (data.city) dispatch(setCity(data.city))
                if (data.state) dispatch(setPoliticalState(data.state))
-               if (data.address) dispatch(setAddress(data.address))
+               if (data.address) dispatch(setStreetName(data.address))
             })
-        } else {
-            dispatch(setAddress(e ?? null));
         }
     }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {

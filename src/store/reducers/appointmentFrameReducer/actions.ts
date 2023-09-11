@@ -93,6 +93,7 @@ export const setZipCode = createAction<string>('fAppointment/SetZipCode');
 export const setAddress = createAction<any>('fAppointment/SetAddress');
 export const setPoliticalState = createAction<string>('fAppointment/SetPoliticalState');
 export const setCity = createAction<string>('fAppointment/SetCity');
+export const setStreetName = createAction<string>('fAppointment/SetStreetName');
 export const setValueService = createAction<IValueService | null>('fAppointment/SetValueService');
 export const getSeriesModels = createAction<TYear[]>('fAppointment/GetSeriesModels');
 export const getValueServiceOffers = createAction<IServiceOffer[]>('fAppointment/GetValueServiceOffers');
@@ -634,6 +635,11 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
         createType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
         notes: appointmentFrame.appointmentNotes,
+        addressData: {
+            address: appointmentFrame.streetName ?? '',
+            city: appointmentFrame.city ?? '',
+            state: appointmentFrame.politicalState ?? '',
+        }
     };
 
     if (isAdmin) delete data.createType;
