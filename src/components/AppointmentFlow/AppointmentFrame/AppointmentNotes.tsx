@@ -75,8 +75,18 @@ const AppointmentNotes = () => {
     }, [appointmentNotes])
 
     const onNoteChange: React.ChangeEventHandler<HTMLTextAreaElement> = ({target: {value}}) => {
-        setHasError(false)
-        if (value.length <= maxNoteLength) setText(value)
+        if (!isFocused) setFocused(true)
+        if (value.length <= maxNoteLength) {
+            if (value.match(/^[A-Za-z0-9\s,.?!-]+$/) || !value.length) {
+                setText(value)
+                setText(value)
+            } else {
+                setHasError(true)
+                showError('Special characters not allowed')
+            }
+        } else {
+            showError('Only 250 characters allowed')
+        }
     }
 
     const onCancel = () => {
@@ -85,14 +95,7 @@ const AppointmentNotes = () => {
         setFocused(false)
     }
     const onSave = () => {
-        if (text.match(/[a-zA-Z0-9]/)) {
-            setHasError(false)
-            dispatch(setAppointmentNotes(text.trim()))
-            setFocused(false)
-        } else {
-            setHasError(true)
-            showError('Special characters not allowed. Please remove them')
-        }
+        dispatch(setAppointmentNotes(text.trim()))
     }
 
     const handleClickAway = () => {
