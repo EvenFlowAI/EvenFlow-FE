@@ -79,12 +79,13 @@ const AppointmentNotes = () => {
         if (value.length <= maxNoteLength) {
             if (value.match(/^[A-Za-z0-9\s,.?!-]+$/) || !value.length) {
                 setText(value)
-                setText(value)
+                setHasError(false)
             } else {
                 setHasError(true)
                 showError('Special characters not allowed')
             }
         } else {
+            setHasError(true)
             showError('Only 250 characters allowed')
         }
     }
