@@ -275,7 +275,13 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         data.valueServiceOfferIds = [valueService.selectedService.id];
                     }
                     if (zipCode?.length) data.zipCode = zipCode;
-                    if (address?.label) data.address = address.label;
+                    if (address) {
+                        if (address?.label) {
+                            data.address = address.label;
+                        } else if (typeof address === 'string') {
+                            data.address = address;
+                        }
+                    }
                     if (vehicle) {
                         data.vehicle = {
                             vin: vehicle.vin,
@@ -306,7 +312,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     }, [
         dispatch, id, selectedTimingType,
         selectedVehicle, customerData, service, vehicle, packagePricingType, packageEMenuType, serviceTypeOption,
-        subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode
+        subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode, address,
     ]);
 
     const handleGANext = useCallback(() => {
