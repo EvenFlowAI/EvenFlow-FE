@@ -20,7 +20,7 @@ import {
     setSideBarSteps,
     setStreetName,
     setWelcomeScreenView,
-    setZipCode
+    setZipCode, setDefaultVisitCenterOption
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {
