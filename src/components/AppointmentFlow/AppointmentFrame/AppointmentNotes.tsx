@@ -106,6 +106,7 @@ const AppointmentNotes = () => {
     const handleClickAway = () => {
         if (appointmentNotes === text) {
             setFocused(false)
+            setHasError(false)
         } else {
             setHasError(true)
             showError("Please save or cancel Appointment Notes changes")
