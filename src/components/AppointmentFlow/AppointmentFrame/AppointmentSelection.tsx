@@ -100,7 +100,9 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         isUsualFlowNeeded,
         prevScreen,
         appointmentByKey,
-        isAppointmentTimingAvailable
+        isAppointmentTimingAvailable,
+        isAdvisorAvailable,
+        isConsultantsLoading,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -135,6 +137,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.prevScreen,
         state.appointmentFrame.appointmentByKey,
         state.bookingFlowConfig.isAppointmentTimingAvailable,
+        state.bookingFlowConfig.isAdvisorAvailable,
+        state.appointmentFrame.isConsultantsLoading,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -250,7 +254,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         : packageEMenuType !== null
                             ? {optionType: packageEMenuType}
                             : null;
-                    const dd: IAppointmentSlotsRequest = {
+                    const data: IAppointmentSlotsRequest = {
                         appointmentTimingType: serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTimingType
                             ? EAppointmentTimingType.FirstAvailable
                             : selectedTimingType,
@@ -268,12 +272,18 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                         recalls: mapRecallsForRequest(selectedRecalls),
                     }
                     if (valueService?.selectedService) {
-                        dd.valueServiceOfferIds = [valueService.selectedService.id];
+                        data.valueServiceOfferIds = [valueService.selectedService.id];
                     }
-                    if (zipCode?.length) dd.zipCode = zipCode;
-                    if (address?.label) dd.address = address.label;
+                    if (zipCode?.length) data.zipCode = zipCode;
+                    if (address) {
+                        if (address?.label) {
+                            data.address = address.label;
+                        } else if (typeof address === 'string') {
+                            data.address = address;
+                        }
+                    }
                     if (vehicle) {
-                        dd.vehicle = {
+                        data.vehicle = {
                             vin: vehicle.vin,
                             year: vehicle.year,
                             make: vehicle.make,
@@ -282,13 +292,13 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                             engineTypeId: vehicle.engineTypeId,
                         }
                     }
-                    if (hashKey) dd.appointmentHashKey = hashKey;
-                    if (userType === EUserType.Existing && customerEnteredEmail) dd.searchTerm = customerEnteredEmail;
+                    if (hashKey) data.appointmentHashKey = hashKey;
+                    if (userType === EUserType.Existing && customerEnteredEmail) data.searchTerm = customerEnteredEmail;
                     if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                        await dispatch(loadServiceValetSlots(dd));
+                        if (data.address && data.zipCode) await dispatch(loadServiceValetSlots(data));
                     } else {
                         await dispatch(loadAppointmentSlots(
-                            dd,
+                            data,
                             setDateCallback,
                             () => handleDateRangeSet(false)
                         ));
@@ -302,7 +312,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     }, [
         dispatch, id, selectedTimingType,
         selectedVehicle, customerData, service, vehicle, packagePricingType, packageEMenuType, serviceTypeOption,
-        subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode
+        subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode, address,
     ]);
 
     const handleGANext = useCallback(() => {
@@ -341,17 +351,17 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         }
     }, [isTransportationAvailable, serviceTypeOption, handleTransportation, customerData, handleGANext])
 
-    const definePrevScreen = (): TScreen => {
+    const definePrevScreen = useCallback((): TScreen => {
         let previousLogicalScreen: TScreen = currentConfig?.appointmentSelection
             ? 'appointmentTiming'
-            : currentConfig?.advisorSelection && consultants.length
+            : isAdvisorAvailable
                 ? 'consultantSelection'
                 : "serviceNeeds"
         if (customerData?.isUpdating && !isUsualFlowNeeded && prevScreen) {
             previousLogicalScreen = prevScreen
         }
         return previousLogicalScreen
-    }
+    }, [currentConfig, isAdvisorAvailable, customerData, isUsualFlowNeeded, prevScreen])
 
     const handleBack = useCallback((): void => {
         handleGABack();
@@ -363,13 +373,13 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         } else {
             handleSetScreen(prevScreen);
         }
-    }, [currentConfig, history, fromServiceValetToVisitCenter])
+    }, [currentConfig, history, fromServiceValetToVisitCenter, definePrevScreen])
 
     return (
         <StepWrapper>
             <Wrapper>
                 <SelectedAppointment />
-                <Actions onBack={handleBack} onNext={handleNext} nextDisabled={nextDisabled} nextLabel={t("Next")}/>
+                <Actions onBack={handleBack} onNext={handleNext} nextDisabled={nextDisabled} nextLabel={t("Next")} loading={isConsultantsLoading}/>
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}

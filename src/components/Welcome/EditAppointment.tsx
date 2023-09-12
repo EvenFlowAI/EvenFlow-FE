@@ -20,6 +20,7 @@ import {encodeSCID} from "../../utils/utils";
 import {
     setCurrentFrameScreen,
     setUpdateAppointment,
+    setUserType,
     setVehicle
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import moment from "moment";
@@ -27,7 +28,7 @@ import {loadCategoriesByQuery} from "../../store/reducers/categories/actions";
 import {useTranslation} from "react-i18next";
 import {useStorage} from "../../utils/hooks";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
-import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -75,7 +76,7 @@ export const EditAppointment = () => {
         API.appointment.getByKey(trimmedKey)
             .then(async ({data}) => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
-                if (isFromAdmin) setFrameScreen(data.serviceTypeOption)
+                dispatch(setUserType(EUserType.Existing))
                 dispatch(setUpdateAppointment(data));
                 const vehicle: ILoadedVehicle = {
                     ...data.vehicle,
@@ -95,6 +96,7 @@ export const EditAppointment = () => {
                 dispatch(setCustomerLoadedData(customer));
                 dispatch(setVehicle({...vehicle}));
                 saveCustomerCache(customer);
+                if (isFromAdmin) setFrameScreen(data.serviceTypeOption)
                 if (data.appointmentStatus === AppointmentStatus.Cancelled) {
                     setState("canceled");
                     return;

@@ -68,15 +68,26 @@ const AppointmentNotes = () => {
     const classes = useStyles();
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const showError = useException();
+    const showError = useException(true);
 
     useEffect(() => {
         setText(appointmentNotes)
     }, [appointmentNotes])
 
     const onNoteChange: React.ChangeEventHandler<HTMLTextAreaElement> = ({target: {value}}) => {
-        setHasError(false)
-        if (value.length <= maxNoteLength) setText(value)
+        if (!isFocused) setFocused(true)
+        if (value.length <= maxNoteLength) {
+            if (value.match(/^[A-Za-z0-9\s,.?!-]+$/) || !value.length) {
+                setText(value)
+                setHasError(false)
+            } else {
+                setHasError(true)
+                showError('Special characters not allowed')
+            }
+        } else {
+            setHasError(true)
+            showError('Only 250 characters allowed')
+        }
     }
 
     const onCancel = () => {
@@ -85,19 +96,17 @@ const AppointmentNotes = () => {
         setFocused(false)
     }
     const onSave = () => {
-        if (text.match(/^[a-zA-Z0-9]/)) {
-            setHasError(false)
+        if (text.match(/^[A-Za-z0-9\s,.?!-]+$/) || !text.length) {
             dispatch(setAppointmentNotes(text.trim()))
+            setHasError(false)
             setFocused(false)
-        } else {
-            setHasError(true)
-            showError('Appointment Notes must not contain characters "&", ">" and "<"')
         }
     }
 
     const handleClickAway = () => {
         if (appointmentNotes === text) {
             setFocused(false)
+            setHasError(false)
         } else {
             setHasError(true)
             showError("Please save or cancel Appointment Notes changes")

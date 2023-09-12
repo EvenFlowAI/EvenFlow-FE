@@ -62,6 +62,8 @@ import {
     setEditingPosition,
     getAppointmentRequestsPrices,
     setAppointmentNotes,
+    setServiceOptionChanged,
+    setConsultantsLoading,
     setPoliticalState,
     setCity,
     setStreetName,
@@ -114,6 +116,7 @@ type TState = {
     packages: IPackage[];
     isPackagesLoading: boolean;
     consultants: IServiceConsultant[];
+    isConsultantsLoading: boolean;
     currentScreen: TScreen | '';
     prevScreen: TScreen | '';
     makes: IMake[];
@@ -153,6 +156,7 @@ type TState = {
     hoursOfOperations: IHOODataForm[];
     serviceTypeOption: IFirstScreenOption|null;
     selectedOptionTypes: EServiceType[];
+    selectedServiceOptions: IFirstScreenOption[];
     packagePricingType: EPackagePricingType | null;
     packagePriceTitles: TPackagePrice[];
     packageEMenuType: EMaintenanceOptionType|null;
@@ -165,6 +169,7 @@ type TState = {
     editingPosition: TEditingPosition|null;
     appointmentRequestsPrices: IServiceRequestPrice[];
     appointmentNotes: string;
+    serviceOptionChangedFromSlotPage: boolean;
 }
 const initialState: TState = {
     service: null,
@@ -187,6 +192,7 @@ const initialState: TState = {
     packages: [],
     isPackagesLoading: false,
     consultants: [],
+    isConsultantsLoading: false,
     currentScreen: '',
     prevScreen: '',
     makes: [],
@@ -224,6 +230,7 @@ const initialState: TState = {
     hoursOfOperations: [],
     serviceTypeOption: null,
     selectedOptionTypes: [],
+    selectedServiceOptions: [],
     packagePricingType: null,
     packagePriceTitles: [],
     packageEMenuType: null,
@@ -236,6 +243,7 @@ const initialState: TState = {
     editingPosition: null,
     appointmentRequestsPrices: [],
     appointmentNotes: '',
+    serviceOptionChangedFromSlotPage: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -412,7 +420,12 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         const optionsTypes = payload
             ?  Array.from(new Set([...state.selectedOptionTypes, payload.type]))
             : state.selectedOptionTypes;
-        return {...state, serviceTypeOption: payload, selectedOptionTypes: optionsTypes};
+        return {
+            ...state,
+            serviceTypeOption: payload,
+            selectedOptionTypes: optionsTypes,
+            selectedServiceOptions: payload ? [...state.selectedServiceOptions, payload] : state.selectedServiceOptions,
+        };
     })
     .addCase(setPackagePricingType, (state, {payload}) => {
         return {...state, packagePricingType: payload}
@@ -461,6 +474,12 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setAppointmentNotes, (state, {payload}) => {
         return {...state, appointmentNotes: payload}
+    })
+    .addCase(setServiceOptionChanged, (state, {payload}) => {
+        return {...state, serviceOptionChangedFromSlotPage: payload}
+    })
+    .addCase(setConsultantsLoading, (state, {payload}) => {
+        return {...state, isConsultantsLoading: payload}
     })
     .addCase(setPoliticalState, (state, {payload}) => {
         return {...state, politicalState: payload}
