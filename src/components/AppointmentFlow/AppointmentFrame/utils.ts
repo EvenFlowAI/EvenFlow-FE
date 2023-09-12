@@ -323,10 +323,12 @@ export const getTrimmedKey = (key: string): string => {
 
 export const parseGeoCode = (data: any[], addressString: string): TParsedAddress => {
     const city = data.find(el => el?.types?.includes("locality"))
+    const c = data.find(el => ['colloquial_area', 'locality', 'sublocality'].some(area => el.types?.includes(area)))
     const state = data.find(el => el?.types?.includes("administrative_area_level_1"))
     let address = '';
-    if (city.long_name) {
-        const index = addressString.indexOf(city.long_name)
+    const cityName = city?.long_name ?? c?.long_name ?? ''
+    if (cityName) {
+        const index = addressString.lastIndexOf(cityName)
         if (index > 0) {
             address = addressString.slice(0, index)
             const commaIndex = address.lastIndexOf(",")
@@ -336,5 +338,5 @@ export const parseGeoCode = (data: any[], addressString: string): TParsedAddress
         }
     }
 
-    return {city: city?.long_name ?? '', state: state?.long_name ?? '', address}
+    return {city: cityName ?? '', state: state?.long_name ?? '', address}
 }

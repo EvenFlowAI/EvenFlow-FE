@@ -117,9 +117,11 @@ export interface ICustomerLoadedData {
     phoneNumbers: string[];
     vehicles: ILoadedVehicle[];
     city?:string;
+    state?:string;
     fromSearchByName?: boolean;
     isUpdating?: boolean;
     fullAddress?: string;
+    zipCode?: string;
 }
 
 export interface IVehicle {
