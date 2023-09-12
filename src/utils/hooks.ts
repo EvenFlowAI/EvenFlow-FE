@@ -176,7 +176,10 @@ export const useLayout = () => {
     const {search} = useLocation<TLParams>();
     return useMemo(() => {
         const isFrame = new URLSearchParams(search).get('frame')?.toLowerCase();
-        return isFrame === 'true' || isFrame === '1';
+        if (isFrame) {
+            return isFrame.includes('true') || isFrame.includes('1')
+        }
+        return false
     }, [search]);
 }
 
