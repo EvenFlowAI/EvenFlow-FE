@@ -16,7 +16,7 @@ import {
     setAppointmentSaving,
     setCurrentFrameScreen,
     setEditingPosition,
-    setReminders, setServiceOptionChanged,
+    setReminders, setServiceOptionChanged, setSideBarSteps, setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -211,6 +211,9 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
                 );
                 await dispatch(setEditingPosition(null))
                 await dispatch(setAppointmentByKey(null));
+                await dispatch(setSideBarSteps([]));
+                await dispatch(setServiceOptionChanged(false));
+                await dispatch(setVehicle(null));
                 await clearAppointmentData();
                 await dispatch(setWelcomeScreenView("select"))
                 history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1")
