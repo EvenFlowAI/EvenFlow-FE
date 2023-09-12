@@ -9,7 +9,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {TRole} from "../../store/reducers/users/types";
 import {
     clearAppointmentData,
-    setAddress,
+    setAddress, setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps,
     setVehicle,
@@ -85,6 +85,7 @@ const ServiceCenterCard: React.FC<{sc: IServiceCenter}> = ({sc}) => {
     const onClick = () => {
         dispatch(loadSCProfile(sc.id));
         dispatch(clearAppointmentData())
+        dispatch(setServiceOptionChanged(false));
         dispatch(setCustomerEnteredEmail(""))
         dispatch(setCustomerSearchData(initialCustomerSearch))
         dispatch(setAddress(null));

@@ -9,12 +9,15 @@ import {RootState} from "../../../store/rootReducer";
 import {EAncillaryType, EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {TCallback} from "../../../types/types";
-import {setAddress, setZipCode} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setAddress,
+    setZipCode
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 type TDisplayAncillaryPriceProps = DialogProps & {
     onNext: TCallback;
-    onBackToServiceOption: TCallback;
     onVisitCenter: TCallback;
+    onBackToSelectSlotsForVisitCenter: TCallback;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -48,8 +51,19 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onClose, onNext, onBackToServiceOption, onVisitCenter}) => {
-    const {serviceTypeOption, ancillaryPrice, appointmentByKey, editingPosition} = useSelector((state: RootState) => state.appointmentFrame);
+const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({
+                                                                          open,
+                                                                          onClose,
+                                                                          onNext,
+                                                                          onVisitCenter,
+                                                                          onBackToSelectSlotsForVisitCenter,
+                                                                      }) => {
+    const {
+        serviceTypeOption,
+        ancillaryPrice,
+        appointmentByKey,
+        serviceOptionChangedFromSlotPage,
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dialogClasses = useDialogStyles();
     const classes = useStyles();
@@ -71,11 +85,15 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
     }
 
     const onBack = () => {
-        customerLoadedData?.isUpdating
-            ? isSameServiceTypeOption
-                ? restorePrevData()
-            : onClose()
-            : onVisitCenter()
+        if (serviceOptionChangedFromSlotPage) {
+            onBackToSelectSlotsForVisitCenter()
+        } else {
+            customerLoadedData?.isUpdating
+                ? isSameServiceTypeOption
+                    ? restorePrevData()
+                    : onClose()
+                : onVisitCenter()
+        }
         onClose();
     }
 
@@ -101,7 +119,7 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({open, onC
                     onBack={onBack}
                     onNext={onSubmit}
                     nextLabel={`${t("Continue with")} ${serviceString}`}
-                    prevLabel={customerLoadedData?.isUpdating ? t("Back") : t("Visit Center instead")}
+                    prevLabel={customerLoadedData?.isUpdating && !serviceOptionChangedFromSlotPage ? t("Back") : t("Visit Center instead")}
                 />
             </div>
         </BaseModal>
