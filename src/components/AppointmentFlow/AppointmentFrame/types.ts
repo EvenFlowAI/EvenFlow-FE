@@ -62,3 +62,10 @@ export interface TError {
     message: string
 }
 
+export type geoCodeType = "street_number" | "route" | "locality" | "administrative_area_level_1"
+
+export type TParsedAddress = {
+    city: string;
+    state: string;
+    address: string;
+}

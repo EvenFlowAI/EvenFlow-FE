@@ -11,7 +11,13 @@ import {Api} from "../../../config/requests";
 import {ActionCreator} from "redux";
 import {ICustomerLoadedData, ILoadedVehicle} from "../../../api/types";
 import {saveAppointmentReducer, setCustomerLoadedData} from "../appointment/actions";
-import {setCurrentFrameScreen} from "../appointmentFrameReducer/actions";
+import {
+    setAddress,
+    setCity,
+    setCurrentFrameScreen,
+    setPoliticalState,
+    setZipCode
+} from "../appointmentFrameReducer/actions";
 
 export const getCustomers = createAction<ICustomerWithPhones[]>("CustomerSearch/GetCustomers");
 export const setCurrentCustomer = createAction<ICustomerWithPhones|null>("CustomerSearch/SetCurrentCustomer");
@@ -99,8 +105,22 @@ export const loadCustomersByPhoneOrEmail = (
                     phoneNumbers: phoneNumber ? [phoneNumber] : [],
                     vehicles: vehiclesData,
                 }
-                if (customer.city) data.city = customer.city;
-                if (customer.fullAddress) data.fullAddress = customer.fullAddress;
+                if (customer.city) {
+                    data.city = customer.city;
+                    dispatch(setCity(customer.city))
+                }
+                if (customer.state) {
+                    data.state = customer.state;
+                    dispatch(setPoliticalState(customer.state));
+                }
+                if (customer.fullAddress) {
+                    data.fullAddress = customer.fullAddress;
+                    dispatch(setAddress(customer.fullAddress));
+                }
+                if (customer.zipCode) {
+                    data.zipCode = customer.zipCode;
+                    dispatch(setZipCode(customer.zipCode));
+                }
                 dispatch(setCustomerLoadedData(data));
                 dispatch(saveAppointmentReducer());
                 dispatch(setCurrentFrameScreen("carSelection"));
