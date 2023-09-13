@@ -2,7 +2,6 @@ import {createAction} from "@reduxjs/toolkit";
 import {
     EMaintenanceOptionType,
     EServiceCenterName, IAppointmentByKey,
-    IAppointmentByQuery,
     IConsultantsRequestData,
     ICreateAppointmentResp,
     ICustomer,
@@ -369,7 +368,7 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
     onNext && onNext()
 }
 
-export const updateRecalls = (data: IAppointmentByQuery, id: string): AppThunk => (dispatch, getState) => {
+export const updateRecalls = (data: IAppointmentByKey, id: string): AppThunk => (dispatch, getState) => {
     const {scProfile} = getState().appointment;
     const {
         vehicle,

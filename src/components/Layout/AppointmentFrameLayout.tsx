@@ -48,7 +48,12 @@ import {
     updatePackageOption,
     updateRecalls
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {EServiceCategoryPage, IAppointmentByQuery, ILoadedVehicle, IServiceCategory} from "../../api/types";
+import {
+    EServiceCategoryPage,
+    IAppointmentByKey,
+    ILoadedVehicle,
+    IServiceCategory
+} from "../../api/types";
 import './MaintenanceDetails.css';
 import ReactGA from "react-ga4";
 // import ReactGA from "react-ga";
@@ -159,7 +164,7 @@ export const AppointmentFrameLayout = () => {
         }
     }
 
-    const handleServiceTypeOption = useCallback((data:IAppointmentByQuery): IFirstScreenOption|null => {
+    const handleServiceTypeOption = useCallback((data:IAppointmentByKey): IFirstScreenOption|null => {
         let needToShowService = needToShowServiceTypes;
         let option: IFirstScreenOption|null = null;
         if (data.serviceTypeOption) {
