@@ -321,14 +321,20 @@ export const getTrimmedKey = (key: string): string => {
     return lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
 }
 
-export const parseGeoCode = (data: any[], addressString: string): TParsedAddress => {
-    const city = data.find(el => el?.types?.includes("locality"))
-    const c = data.find(el => ['colloquial_area', 'locality', 'sublocality'].some(area => el.types?.includes(area)))
+export const parseGeoCode = (data: any[], addressString: string, mainText?: string, secondaryText?: string): TParsedAddress => {
+    let city = data.find(el => el.types?.includes('locality'));
+    if (!city) city = data.find(el => el.types?.includes('sublocality'));
+    if (!city) city = data.find(el => el.types?.includes('colloquial_area'));
+
     const state = data.find(el => el?.types?.includes("administrative_area_level_1"))
-    let address = '';
-    const cityName = city?.long_name ?? c?.long_name ?? ''
-    if (cityName) {
-        const index = addressString.lastIndexOf(cityName)
+    let address = mainText;
+    let cityName = city?.short_name ?? '';
+
+    if (cityName && !addressString.includes(cityName)) cityName = city?.long_name ?? '';
+
+    if (city && secondaryText?.includes(city.long_name)) {
+        let index = addressString.lastIndexOf(city?.short_name)
+        if (index <=0) index = addressString.lastIndexOf(city?.long_name)
         if (index > 0) {
             address = addressString.slice(0, index)
             const commaIndex = address.lastIndexOf(",")
@@ -336,7 +342,12 @@ export const parseGeoCode = (data: any[], addressString: string): TParsedAddress
                 address = address.slice(0, commaIndex)
             }
         }
+    } else {
+        cityName = secondaryText?.split(',')[0].trim();
     }
 
-    return {city: cityName ?? '', state: state?.long_name ?? '', address}
+    console.log(`CITY: ${cityName}, STATE: ${state?.short_name}, ADDRESS: ${address}`)
+
+    console.log('FULL ADDRESS: ' + address + ', ' + cityName + ', ' + state?.short_name)
+    return {city: cityName ?? '', state: state?.short_name ?? '', address: address ?? ''}
 }

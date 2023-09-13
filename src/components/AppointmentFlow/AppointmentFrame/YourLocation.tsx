@@ -220,7 +220,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         dispatch(setAddress(e ?? null))
         if (e?.value?.place_id && e?.label) {
            geocodeByPlaceId(e.value.place_id).then(res => {
-               const data = parseGeoCode(res[0].address_components, e.label)
+               const data = parseGeoCode(res[0].address_components, e.label, e.value?.structured_formatting?.main_text, e.value?.structured_formatting?.secondary_text)
                if (data.city) dispatch(setCity(data.city))
                if (data.state) dispatch(setPoliticalState(data.state))
                if (data.address) dispatch(setStreetName(data.address))
