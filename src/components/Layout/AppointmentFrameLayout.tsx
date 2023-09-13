@@ -202,7 +202,7 @@ export const AppointmentFrameLayout = () => {
             await updateServiceRequests(data.serviceRequests);
             const option = handleServiceTypeOption(data);
             await dispatch(handleSideBarAppointmentUpdate());
-            await dispatch(updateConsultant(id, option, data.consultant?.id ?? null))
+            await dispatch(updateConsultant(id, option, data.advisor?.id ?? null))
             await dispatch(checkCarIsValid());
             if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
         } catch (e) {

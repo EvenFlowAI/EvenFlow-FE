@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EMaintenanceOptionType,
-    EServiceCenterName,
+    EServiceCenterName, IAppointmentByKey,
     IAppointmentByQuery,
     IConsultantsRequestData,
     ICreateAppointmentResp,
@@ -73,7 +73,7 @@ export const setReminders = createAction<EReminderType[]>("fAppointment/setRemin
 export const setAppointmentId = createAction<IAppointmentId>("fAppointment/setAppointmentId");
 export const setTransportation = createAction<ITransportation|null>("fAppointment/setTransportation");
 export const setMaintenanceDetails = createAction<Partial<TMaintenanceDetails>>("fAppointment/setMaintenanceDetails");
-export const setUpdateAppointment = createAction<IAppointmentByQuery>("fAppointment/setUpdateAppointment");
+export const setUpdateAppointment = createAction<IAppointmentByKey>("fAppointment/setUpdateAppointment");
 export const setLoadingPackages = createAction<boolean>("fAppointment/loadingPackages");
 export const setPackages = createAction<IPackage[]>('fAppointment/setPackages');
 export const setConsultants = createAction<IServiceConsultant[]>('fAppointment/setConsultants');
@@ -118,7 +118,7 @@ export const setPackageEMenuType = createAction<EMaintenanceOptionType|null>('fA
 export const setShowServiceCentersList = createAction<boolean>('fAppointment/SetShowServiceCentersList');
 export const setAppointmentSaving = createAction<boolean>('fAppointment/SetAppointmentSaving');
 export const setHashKey = createAction<string>('fAppointment/SetHashKey');
-export const setAppointmentByKey = createAction<IAppointmentByQuery|null>("fAppointment/SetAppointmentByKey");
+export const setAppointmentByKey = createAction<IAppointmentByKey|null>("fAppointment/SetAppointmentByKey");
 export const setCarIsValidForUpdate = createAction<boolean>("fAppointment/SetCarIsValidForUpdate");
 export const setUsualFlowNeeded = createAction<boolean>("fAppointment/SetUsualFlowNeeded");
 export const setEditingPosition = createAction<TEditingPosition|null>("fAppointment/SetEditingPosition");
@@ -623,6 +623,10 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         offerId: appointment.appointment?.offer?.id ?? null,
         reminderTypes: appointmentFrame.reminders,
         serviceCenterId: id,
+        advisor: {
+            id: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
+            isAnySelected: !(Boolean(appointmentFrame.advisor))
+        },
         consultantId: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
         transportationOptionId,
         slot,

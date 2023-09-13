@@ -266,6 +266,24 @@ export interface IAddressData {
     state: string;
 }
 
+export type TAppointmentAdvisor = {
+    isAnySelected: boolean;
+    id?: string;
+}
+
+export interface IAppointmentByKey extends IBaseAppointment {
+    serviceCategories: ICategory[];
+    jobType?: EJobType;
+    serviceTypeOption?: IFirstScreenOption;
+    recalls?: string[];
+    recallDescriptions?: string[];
+    advisor?: TAppointmentAdvisor|null;
+    detailedPriceList?: IServiceRequestPrice[];
+    serviceValetTime?: TServiceValetSlot;
+    notes?: string;
+    addressData?: IAddressData;
+}
+
 export interface IAppointmentByQuery extends IBaseAppointment {
     serviceCategories: ICategory[];
     jobType?: EJobType;
