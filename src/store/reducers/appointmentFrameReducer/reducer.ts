@@ -69,7 +69,7 @@ import {
     setStreetName,
 } from "./actions";
 import {
-    EMaintenanceOptionType, IAppointmentByQuery,
+    EMaintenanceOptionType, IAppointmentByKey,
     ICustomer,
     ILoadedVehicle,
     IMake,
@@ -163,7 +163,7 @@ type TState = {
     slotsConsultantId: string|null;
     shouldShowServiceCentersList: boolean;
     isAppointmentSaving: boolean;
-    appointmentByKey: IAppointmentByQuery|null;
+    appointmentByKey: IAppointmentByKey|null;
     carIsValidForUpdate: boolean;
     isUsualFlowNeeded: boolean;
     editingPosition: TEditingPosition|null;

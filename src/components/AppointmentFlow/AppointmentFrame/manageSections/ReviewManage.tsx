@@ -51,8 +51,8 @@ export const ReviewManage = () => {
 
     useEffect(() => {
         if (!consultant) {
-            const selectedPreviouslyConsultant = appointmentByKey?.consultant?.id
-                ? consultants.find(item => item.id === appointmentByKey?.consultant?.id)
+            const selectedPreviouslyConsultant = appointmentByKey?.advisor?.id
+                ? consultants.find(item => item.id === appointmentByKey?.advisor?.id)
                 : undefined
             selectedPreviouslyConsultant && dispatch(setAdvisor(selectedPreviouslyConsultant))
         }
