@@ -126,7 +126,10 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
         serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
         zipCode: appointmentFrame.zipCode ?? null,
         address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
-        consultantId: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
+        advisor: {
+            id: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
+            isAnySelected: !(Boolean(appointmentFrame.advisor))
+        },
         vehicle,
     }
     if (appointmentFrame?.appointmentByKey?.hashKey) {
