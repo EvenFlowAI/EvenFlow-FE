@@ -10,7 +10,7 @@ import {
     IPackageOptions,
     IServiceCategory,
     IServiceConsultant,
-    ITransportation, TAppointmentAdvisor
+    ITransportation
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IMake, IServiceRequestPrice, IVehicle} from "../appointment/types";
@@ -140,7 +140,7 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
     }
 }
 
-export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void, onSuccess?: (data: IServiceConsultant[]) => void): AppThunk => async (dispatch, getState) => {
+export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void): AppThunk => async (dispatch, getState) => {
     dispatch(setConsultantsLoading(true))
     const {selectedPackage, packagePricingType, packageEMenuType, selectedRecalls, selectedVehicle, address, zipCode, valueService,
         service, subService, categoriesIds, } = getState().appointmentFrame;
@@ -553,15 +553,8 @@ export const handleSideBarAppointmentUpdate = (): AppThunk => (dispatch, getStat
     dispatch(setSideBarSteps(steps));
 }
 
-export const updateConsultant = (id: string, serviceTypeOption: IFirstScreenOption|null, advisor: TAppointmentAdvisor|null): AppThunk => dispatch => {
-    const handleList = (data: IServiceConsultant[]) => {
-        // todo uncomment and check logic
-        // if (advisor?.id) {
-        //     const selected = data.find(el => el.id === advisor.id)
-        //     if (selected) dispatch(setAdvisor(selected));
-        // }
-    }
-    dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, () => {}, handleList))
+export const updateConsultant = (id: string, serviceTypeOption: IFirstScreenOption|null): AppThunk => dispatch => {
+    dispatch(loadConsultants(id, serviceTypeOption?.id ?? null))
 }
 
 export const createOrUpdateAppointment = (id: number, onNext: () => void, onError: (e: any) => void, isMobile: boolean, isAdmin: boolean): AppThunk => (dispatch, getState) => {
