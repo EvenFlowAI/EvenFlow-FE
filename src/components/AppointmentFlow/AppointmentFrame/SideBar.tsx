@@ -115,7 +115,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
         if (sideBarActualSteps) {
             const currentScreenNumberValue = sideBarActualSteps[screen];
             const lastStep = sideBarSteps[sideBarSteps.length - 2]
-            const lastPassedScreenNumberValue = sideBarActualSteps[lastStep];
+            const lastPassedScreenNumberValue = lastStep === 'manageAppointment' ? 0 : sideBarActualSteps[lastStep];
             return (currentScreenNumberValue < index + 1 && lastPassedScreenNumberValue < index + 1);
         }
         return false;

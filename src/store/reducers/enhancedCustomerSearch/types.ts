@@ -75,6 +75,7 @@ export interface ICustomerWithVehicles {
     fullAddress: string;
     communications: TCustomerCommunication[];
     vehicles: ICustomerVehicle[];
+    zipCode?: string;
 }
 
 export interface IRepairOrderPart {

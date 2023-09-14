@@ -10,7 +10,7 @@ import {TComplimentary, TPackage, TService, TUpsell} from "./PackageSelection";
 import {EOfferType} from "../../../store/reducers/offers/types";
 import {EServiceType, IValueService} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TScreen} from "../../Layout/types";
-import {IRecallByVin} from "./types";
+import {IRecallByVin, TParsedAddress} from "./types";
 import {TRecallForRequest} from "../../../store/reducers/appointment/types";
 import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
 
@@ -319,4 +319,35 @@ export const prodParentLinks = [
 export const getTrimmedKey = (key: string): string => {
     const lastIndex = key.lastIndexOf('==');
     return lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
+}
+
+export const parseGeoCode = (data: any[], addressString: string, mainText?: string, secondaryText?: string): TParsedAddress => {
+    let city = data.find(el => el.types?.includes('locality'));
+    if (!city) city = data.find(el => el.types?.includes('sublocality'));
+    if (!city) city = data.find(el => el.types?.includes('colloquial_area'));
+
+    const state = data.find(el => el?.types?.includes("administrative_area_level_1"))
+    let address = mainText;
+    let cityName = city?.short_name ?? '';
+
+    if (cityName && !addressString.includes(cityName)) cityName = city?.long_name ?? '';
+
+    if (city && secondaryText?.includes(city.long_name)) {
+        let index = addressString.lastIndexOf(city?.short_name)
+        if (index <=0) index = addressString.lastIndexOf(city?.long_name)
+        if (index > 0) {
+            address = addressString.slice(0, index)
+            const commaIndex = address.lastIndexOf(",")
+            if (commaIndex) {
+                address = address.slice(0, commaIndex)
+            }
+        }
+    } else {
+        cityName = secondaryText?.split(',')[0].trim();
+    }
+
+    console.log(`CITY: ${cityName}, STATE: ${state?.short_name}, ADDRESS: ${address}`)
+
+    console.log('FULL ADDRESS: ' + address + ', ' + cityName + ', ' + state?.short_name)
+    return {city: cityName ?? '', state: state?.short_name ?? '', address: address ?? ''}
 }

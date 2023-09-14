@@ -64,6 +64,9 @@ import {
     setAppointmentNotes,
     setServiceOptionChanged,
     setConsultantsLoading,
+    setPoliticalState,
+    setCity,
+    setStreetName,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByQuery,
@@ -128,7 +131,10 @@ type TState = {
     gap: number | undefined;
     userType: EUserType | undefined;
     address: any;
+    politicalState: string;
+    city: string;
     zipCode: string;
+    streetName: string;
     valueService: IValueService | null;
     seriesModels: TYear[];
     offersLoading: boolean;
@@ -199,7 +205,10 @@ const initialState: TState = {
     gap: undefined,
     userType: undefined,
     address: null,
+    politicalState: '',
+    city: '',
     zipCode: "",
+    streetName: "",
     valueService: null,
     seriesModels: [],
     offersLoading: false,
@@ -310,6 +319,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             serviceTypeOption: payload.serviceTypeOption ?? null,
             transportation: payload.transportationOption ?? null,
             appointmentRequestsPrices: payload.detailedPriceList ?? [],
+            city: payload?.addressData?.city ?? '',
+            politicalState: payload?.addressData?.state ?? ''
         };
     })
     .addCase(setLoadingPackages, (state, { payload}) => {
@@ -469,5 +480,14 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setConsultantsLoading, (state, {payload}) => {
         return {...state, isConsultantsLoading: payload}
+    })
+    .addCase(setPoliticalState, (state, {payload}) => {
+        return {...state, politicalState: payload}
+    })
+    .addCase(setCity, (state, {payload}) => {
+        return {...state, city: payload}
+    })
+    .addCase(setStreetName, (state, {payload}) => {
+        return {...state, streetName: payload}
     })
 )

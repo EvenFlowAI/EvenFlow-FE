@@ -6,18 +6,21 @@ import {Actions} from "./Actions";
 import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import GooglePlacesAutocomplete, {geocodeByPlaceId} from 'react-google-places-autocomplete';
 import {
     clearAppointmentData,
     loadAncillaryPriceByZip,
     loadFilteredZip,
+    setCity,
+    setPoliticalState,
     setAddress,
     setCurrentFrameScreen,
-    setDefaultVisitCenterOption, setServiceTypeOption,
+    setServiceTypeOption,
     setShowServiceCentersList,
     setSideBarSteps,
+    setStreetName,
     setWelcomeScreenView,
-    setZipCode
+    setZipCode, setDefaultVisitCenterOption
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {
@@ -40,6 +43,7 @@ import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../store/reducer
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 import {ILoadedVehicle} from "../../../api/types";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
+import {parseGeoCode} from "./utils";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -205,13 +209,23 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const clearAddress = () => {
         dispatch(setAddress(null));
+        dispatch(setPoliticalState(""))
+        dispatch(setCity(""))
         dispatch(setZipCode(""));
     }
 
     const handleChangeAddress = async (e: any) => {
         if (!serviceOptionChangedFromSlotPage) clearSelectedData();
         setFormChecked(false);
-        dispatch(setAddress(e ?? null));
+        dispatch(setAddress(e ?? null))
+        if (e?.value?.place_id && e?.label) {
+           geocodeByPlaceId(e.value.place_id).then(res => {
+               const data = parseGeoCode(res[0].address_components, e.label, e.value?.structured_formatting?.main_text, e.value?.structured_formatting?.secondary_text)
+               if (data.city) dispatch(setCity(data.city))
+               if (data.state) dispatch(setPoliticalState(data.state))
+               if (data.address) dispatch(setStreetName(data.address))
+            })
+        }
     }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
         if (!serviceOptionChangedFromSlotPage) clearSelectedData();
@@ -363,11 +377,11 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                     <p className="label">{t("Your Address")}</p>
                     <GooglePlacesAutocomplete
                         apiKey="AIzaSyCTy-LeuU4m1uoh1nhbUVZBC2G4HDUQQ04"
-                        apiOptions={{ language: 'en', region: 'us' }}
+                        apiOptions={{ language: 'en-GB', region: 'us' }}
                         autocompletionRequest={{
                             componentRestrictions: {
                                 country: ['us'],
-                            }
+                            },
                         }}
                         selectProps={{
                             addressValue: typeof address === 'string' && address.length ? address : address?.label ?? null,
