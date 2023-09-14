@@ -268,7 +268,7 @@ export interface IAddressData {
 
 export type TAppointmentAdvisor = {
     isAnySelected: boolean;
-    id?: string;
+    id?: string|null;
 }
 
 export interface IAppointmentByKey extends IBaseAppointment {

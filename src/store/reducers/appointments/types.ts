@@ -3,7 +3,7 @@ import {
     EAppointmentStatus,
     EMaintenanceOptionType,
     IListAppointment,
-    IVehicle
+    IVehicle, TAppointmentAdvisor
 } from "../../../api/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType, TRecallForRequest} from "../appointment/types";
@@ -53,7 +53,7 @@ export interface ICheckPodRequest {
     zipCode: string|null;
     vehicle: IVehicle;
     serviceTypeOptionId: number|null;
-    consultantId: string|null;
+    advisor: TAppointmentAdvisor;
 }
 
 export type TServiceBook = {
