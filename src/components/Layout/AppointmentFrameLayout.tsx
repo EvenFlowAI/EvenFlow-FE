@@ -35,7 +35,7 @@ import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../.
 import {
     checkCarIsValid,
     handleSideBarAppointmentUpdate, loadConsultants,
-    loadMakes,
+    loadMakes, setAnyAdvisorSelected,
     setAppointmentByKey, setAppointmentNotes,
     setAppointmentSaving,
     setCurrentFrameScreen,
@@ -43,7 +43,7 @@ import {
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
-    setWelcomeScreenView,
+    setWelcomeScreenView, updateConsultant,
     updatePackageOption,
     updateRecalls
 } from "../../store/reducers/appointmentFrameReducer/actions";
@@ -207,6 +207,8 @@ export const AppointmentFrameLayout = () => {
             const option = handleServiceTypeOption(data);
             await dispatch(handleSideBarAppointmentUpdate());
             await dispatch(loadConsultants(id, option?.id ?? null))
+            await dispatch(updateConsultant(data.advisor))
+            await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
             await dispatch(checkCarIsValid());
             if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
         } catch (e) {
