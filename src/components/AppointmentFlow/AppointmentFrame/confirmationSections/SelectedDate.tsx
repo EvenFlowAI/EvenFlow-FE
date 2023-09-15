@@ -8,7 +8,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {TCallback} from "../../../../types/types";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {setEditingPosition} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {setEditingPosition, setServiceOptionChanged} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {TServiceValetSlot} from "../../../../api/types";
 
 const TitleWrapper = styled('div')({
@@ -70,7 +70,10 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
             : moment.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')
 
     const handleChangeSlot = () => {
-        if (customerLoadedData?.isUpdating) dispatch(setEditingPosition('slot'))
+        if (customerLoadedData?.isUpdating) {
+            dispatch(setEditingPosition('slot'))
+            dispatch(setServiceOptionChanged(false))
+        }
         if (!isAppointmentSaving) onChangeSlot();
     }
     return <div>

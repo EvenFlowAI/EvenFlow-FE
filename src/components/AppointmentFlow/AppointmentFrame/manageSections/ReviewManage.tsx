@@ -8,7 +8,7 @@ import {Edit} from "@material-ui/icons";
 import {
     setAdvisor,
     setCurrentFrameScreen,
-    setEditingPosition
+    setEditingPosition, setServiceOptionChanged
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 
 const Wrapper = styled('ul')({
@@ -59,11 +59,13 @@ export const ReviewManage = () => {
     }, [appointmentByKey, consultants, consultant])
 
     const handleChangeAdvisor = () => {
+        dispatch(setServiceOptionChanged(false))
         dispatch(setEditingPosition('advisor'));
         dispatch(setCurrentFrameScreen("consultantSelection"));
     }
 
     const handleChangeTransportation = () => {
+        dispatch(setServiceOptionChanged(false))
         dispatch(setEditingPosition('transportation'));
         dispatch(setCurrentFrameScreen("transportationNeeds"));
     }

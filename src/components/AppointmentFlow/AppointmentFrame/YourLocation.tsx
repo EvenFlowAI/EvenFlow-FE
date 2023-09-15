@@ -198,13 +198,27 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const onNextStep = () => {
-        if (serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-            goToSlotsSelection()
+        const toPickUpFromSlots = serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff;
+        if (customerLoadedData?.isUpdating) {
+            if (toPickUpFromSlots) {
+                scProfile && dispatch(checkPodChanged(scProfile.id, showError))
+            } else {
+                handleManagingFlow()
+            }
         } else {
-            customerLoadedData?.isUpdating
-                ? handleManagingFlow()
-                : onNext();
+            if (toPickUpFromSlots) {
+                goToSlotsSelection()
+            } else {
+                onNext();
+            }
         }
+        // if (serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+        //     goToSlotsSelection()
+        // } else {
+        //     customerLoadedData?.isUpdating
+        //         ? handleManagingFlow()
+        //         : onNext();
+        // }
     }
 
     const clearAddress = () => {

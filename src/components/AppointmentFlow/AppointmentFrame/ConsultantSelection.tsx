@@ -116,6 +116,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         packageEMenuType,
         isUsualFlowNeeded,
         isConsultantsLoading,
+        serviceOptionChangedFromSlotPage,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
@@ -124,6 +125,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const {id} = useParams();
     const {t} = useTranslation();
     const showError = useException();
+    const isGoingFromManageScreen = customerLoadedData?.isUpdating && !isUsualFlowNeeded && !serviceOptionChangedFromSlotPage
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
@@ -169,13 +171,13 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const handleNext = () => {
-        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+        if (isGoingFromManageScreen) {
             dispatch(checkPodChanged(decodeSCID(id), showError))
         } else onNext()
     }
 
     const handleBack = () => {
-        customerLoadedData?.isUpdating && !isUsualFlowNeeded
+        isGoingFromManageScreen
             ? dispatch(setCurrentFrameScreen("manageAppointment"))
             : onBack()
     }
