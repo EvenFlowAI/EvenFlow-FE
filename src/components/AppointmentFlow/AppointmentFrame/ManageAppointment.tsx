@@ -11,7 +11,6 @@ import {
     clearAppointmentData,
     createOrUpdateAppointment,
     loadAppointmentRequestsPrices,
-    loadConsultants,
     setAppointmentByKey,
     setAppointmentSaving,
     setCurrentFrameScreen,
@@ -126,7 +125,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     useEffect(() => {
         if (appointment?.scProfile) {
             dispatch(loadAllServiceCategories(appointment.scProfile.id));
-            dispatch(loadConsultants(id, appointmentFrame.serviceTypeOption?.id ?? null))
+            // dispatch(loadConsultants(id, appointmentFrame.serviceTypeOption?.id ?? null))
             dispatch(loadCategoriesByQuery(appointment.scProfile.id))
             dispatch(loadSRs(appointment.scProfile.id))
             dispatch(loadFirstScreenOptionsByQuery(appointment.scProfile.id))

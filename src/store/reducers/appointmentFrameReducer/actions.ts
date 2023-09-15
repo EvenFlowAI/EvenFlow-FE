@@ -10,7 +10,7 @@ import {
     IPackageOptions,
     IServiceCategory,
     IServiceConsultant,
-    ITransportation
+    ITransportation, TAppointmentAdvisor
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IMake, IServiceRequestPrice, IVehicle} from "../appointment/types";
@@ -63,6 +63,7 @@ export const setFrameDescription = createAction<string>("fAppointment/setFrameDe
 export const setPackage = createAction<IPackageOptions|null>("fAppointment/setPackage");
 export const setPackagePricingType = createAction<EPackagePricingType|null>("fAppointment/setPackagePricingType");
 export const setAdvisor = createAction<IServiceConsultant|null>("fAppointment/setAdvisor");
+export const setAnyAdvisorSelected = createAction<boolean>("fAppointment/setAnyAdvisorSelected");
 export const setTiming = createAction<EAppointmentTimingType|null>("fAppointment/setTiming");
 export const setTime = createAction<moment.Moment|null>("fAppointment/setTime");
 export const setVehicle = createAction<ILoadedVehicle|null>("fAppointment/setVehicle");
@@ -553,8 +554,21 @@ export const handleSideBarAppointmentUpdate = (): AppThunk => (dispatch, getStat
     dispatch(setSideBarSteps(steps));
 }
 
-export const updateConsultant = (id: string, serviceTypeOption: IFirstScreenOption|null): AppThunk => dispatch => {
-    dispatch(loadConsultants(id, serviceTypeOption?.id ?? null))
+const findSelectedConsultant = (id: string): AppThunk => (dispatch, getState) => {
+    const {consultants} = getState().appointmentFrame;
+    const selected = consultants.find(item => item.id === id)
+    selected && dispatch(setAdvisor(selected))
+}
+
+export const updateConsultant = (advisor: TAppointmentAdvisor|null|undefined): AppThunk => dispatch => {
+    dispatch(setAnyAdvisorSelected(advisor?.isAnySelected ?? true))
+    if (advisor?.id) {
+        if (advisor?.isAnySelected) {
+            dispatch(getSlotsConsultantId(advisor.id))
+        } else {
+            dispatch(findSelectedConsultant(advisor.id))
+        }
+    }
 }
 
 export const createOrUpdateAppointment = (id: number, onNext: () => void, onError: (e: any) => void, isMobile: boolean, isAdmin: boolean): AppThunk => (dispatch, getState) => {
@@ -769,5 +783,4 @@ export const loadAppointmentRequestsPrices = (serviceCenterId: number): AppThunk
             })
             .finally(() => dispatch(setAppointmentsLoading(false)))
     }
-
 }
