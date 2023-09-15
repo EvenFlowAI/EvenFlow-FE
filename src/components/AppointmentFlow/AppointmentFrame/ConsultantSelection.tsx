@@ -9,7 +9,7 @@ import {TCallback} from "../../../types/types";
 import {IServiceConsultant} from '../../../api/types';
 import {
     loadConsultants,
-    setAdvisor,
+    setAdvisor, setAnyAdvisorSelected,
     setCurrentFrameScreen,
     setSideBarActualSteps,
     setSideBarMenu,
@@ -160,8 +160,9 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, Boolean(customerLoadedData?.isUpdating))))
     }, [serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, getStepsMap, getStepsScreen])
 
-    const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
-        dispatch(setAdvisor(c));
+    const handleSelectConsultant = (consultant: IServiceConsultant|null) => () => {
+        dispatch(setAdvisor(consultant));
+        dispatch(setAnyAdvisorSelected(!Boolean(consultant)))
         if (!customerLoadedData?.isUpdating) {
             dispatch(selectAppointment(null));
             dispatch(selectServiceValetAppointment(null));

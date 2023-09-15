@@ -27,7 +27,8 @@ const Wrapper = styled('ul')({
 
 export const ReviewManage = () => {
     const [
-        consultant,
+        advisor,
+        isAnyAdvisorSelected,
         transportation,
         serviceTypeOption,
         currentConfig,
@@ -37,6 +38,7 @@ export const ReviewManage = () => {
         appointmentByKey
     ] = useSelector((state: RootState) => [
         state.appointmentFrame.advisor,
+        state.appointmentFrame.isAnyAdvisorSelected,
         state.appointmentFrame.transportation,
         state.appointmentFrame.serviceTypeOption,
         state.bookingFlowConfig.currentConfig,
@@ -50,13 +52,13 @@ export const ReviewManage = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!consultant) {
+        if (!advisor && !appointmentByKey?.advisor?.isAnySelected && !isAnyAdvisorSelected) {
             const selectedPreviouslyConsultant = appointmentByKey?.advisor?.id
                 ? consultants.find(item => item.id === appointmentByKey?.advisor?.id)
                 : undefined
             selectedPreviouslyConsultant && dispatch(setAdvisor(selectedPreviouslyConsultant))
         }
-    }, [appointmentByKey, consultants, consultant])
+    }, [appointmentByKey, consultants, advisor, isAnyAdvisorSelected])
 
     const handleChangeAdvisor = () => {
         dispatch(setEditingPosition('advisor'));
@@ -78,7 +80,7 @@ export const ReviewManage = () => {
                     </li>
                     : null}
                 {currentConfig?.advisorSelection
-                    ? <li style={{display: "flex"}}>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}
+                    ? <li style={{display: "flex"}}>{t("Service Advisor")}: {advisor?.name ?? t("Any Available")}
                         {isAdvisorAvailable ? <Edit htmlColor="#142EA1" fontSize="small" onClick={handleChangeAdvisor} style={{cursor: "pointer"}}/> : null}
                 </li>
                     : null
