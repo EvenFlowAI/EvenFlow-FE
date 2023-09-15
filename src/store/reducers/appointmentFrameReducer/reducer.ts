@@ -66,7 +66,7 @@ import {
     setConsultantsLoading,
     setPoliticalState,
     setCity,
-    setStreetName,
+    setStreetName, setAnyAdvisorSelected,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByKey,
@@ -106,6 +106,7 @@ type TState = {
     description: string;
     selectedPackage: IPackageOptions|null;
     advisor: IServiceConsultant|null;
+    isAnyAdvisorSelected: boolean;
     selectedTiming: EAppointmentTimingType|null;
     selectedTime: moment.Moment|null;
     selectedVehicle: ILoadedVehicle|null;
@@ -177,6 +178,7 @@ const initialState: TState = {
     selectedPackage: null,
     description: "",
     advisor: null,
+    isAnyAdvisorSelected: false,
     selectedTime: null,
     selectedTiming: null,
     selectedVehicle: null,
@@ -265,6 +267,9 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setAdvisor, (state, {payload}) => {
         return {...state, advisor: payload, slotsConsultantId: payload ? null : state.slotsConsultantId};
+    })
+    .addCase(setAnyAdvisorSelected, (state, {payload}) => {
+        return {...state, isAnyAdvisorSelected: payload};
     })
     .addCase(setTiming, (state, {payload}) => {
         return {
