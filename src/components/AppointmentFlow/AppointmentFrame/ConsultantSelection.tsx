@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
@@ -103,7 +103,6 @@ const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick})
 }
 
 export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const [loading, setLoading] = useState<boolean>(false);
     const {
         advisor: selectedConsultant,
         consultants,
@@ -116,6 +115,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         serviceTypeOption,
         packageEMenuType,
         isUsualFlowNeeded,
+        isConsultantsLoading,
+        serviceOptionChangedFromSlotPage,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
@@ -124,6 +125,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const {id} = useParams();
     const {t} = useTranslation();
     const showError = useException();
+    const isGoingFromManageScreen = customerLoadedData?.isUpdating && !isUsualFlowNeeded && !serviceOptionChangedFromSlotPage
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
@@ -170,20 +172,21 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const handleNext = () => {
-        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+        if (isGoingFromManageScreen) {
             dispatch(checkPodChanged(decodeSCID(id), showError))
         } else onNext()
     }
 
     const handleBack = () => {
-        customerLoadedData?.isUpdating && !isUsualFlowNeeded
+        isGoingFromManageScreen
             ? dispatch(setCurrentFrameScreen("manageAppointment"))
             : onBack()
     }
 
     return (<StepWrapper>
-        <ConsultantsWrapper>
-            {loading || !isAdvisorAvailable ? <Loading /> : <React.Fragment>
+        {isConsultantsLoading || !isAdvisorAvailable
+            ? <div style={{display: 'flex', justifyContent: 'center', width: "100%"}}><Loading/></div>
+            : <ConsultantsWrapper>
                 <ConsultantCard
                     blank
                     onClick={handleSelectConsultant(null)}
@@ -196,9 +199,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
                         key={c.id}
                         active={selectedConsultant?.id === c.id} />
                 )}
-            </React.Fragment>
-            }
-        </ConsultantsWrapper>
+            </ConsultantsWrapper>
+        }
         <Actions onNext={handleNext} onBack={handleBack} nextLabel={t("Next")}/>
     </StepWrapper>);
 };

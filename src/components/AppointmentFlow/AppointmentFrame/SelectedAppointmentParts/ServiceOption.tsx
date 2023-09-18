@@ -9,13 +9,15 @@ import {selectAppointment, selectServiceValetAppointment} from "../../../../stor
 import {
     loadConsultants,
     setAdvisor,
-    setCurrentFrameScreen, setServiceOptionChanged,
+    setCurrentFrameScreen,
+    setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps,
     setTransportation
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
 import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
+import {setAdvisorAvailable} from "../../../../store/reducers/bookingFlowConfig/actions";
 
 const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const {
@@ -27,7 +29,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         selectedServiceOptions,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { config, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const {t} = useTranslation();
     const classes = useSelectedAppointmentStyles();
@@ -53,20 +55,39 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         }
     }
 
-    const handleSideBar = () => {
-        const index = sideBarSteps.indexOf("appointmentSelection");
+    const sliceSteps = (index: number) => {
         if (index > -1) {
             const slicedSteps = sideBarSteps.slice(0, index + 1);
             dispatch(setSideBarSteps(slicedSteps))
         }
     }
 
-    const redirectToLocation = (option: IFirstScreenOption) => {
+    const handleSideBar = (showAdvisorScreen: boolean) => {
+        const index = sideBarSteps.indexOf(showAdvisorScreen ? "consultantSelection" : "appointmentSelection");
+        if (index > -1) {
+            sliceSteps(index)
+        } else {
+            if (showAdvisorScreen) {
+                // todo find out why step "Service Needs" is missing
+                const index = sideBarSteps.indexOf("appointmentSelection")
+                sliceSteps(index)
+            }
+        }
+    }
+
+    const handleAdvisorSelection = (showAdvisorScreen: boolean) => {
+        handleSideBar(showAdvisorScreen);
+        if (showAdvisorScreen) dispatch(setCurrentFrameScreen('consultantSelection'))
+    }
+
+    const redirectToLocation = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
         const optionWasSelectedPreviously = selectedServiceOptions.find(el => el.id === option.id);
         const shouldRedirectToLocation = !address || !zipCode || !serviceOptionChangedFromSlotPage || !optionWasSelectedPreviously;
         if (shouldRedirectToLocation) {
             dispatch(setCurrentFrameScreen("location"))
             dispatch(setSideBarSteps([]))
+        } else {
+            handleAdvisorSelection(showAdvisorScreen)
         }
     }
 
@@ -82,14 +103,24 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         dispatch(setTransportation(null));
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {
+            let showAdvisorScreen = Boolean(config.find(item => item.serviceType === option.type)?.advisorSelection);
+            const shouldLoadAdvisors = option?.type === EServiceType.VisitCenter
+                || (option?.type === EServiceType.PickUpDropOff && address && zipCode)
+
             dispatch(setServiceTypeOption(option));
             dispatch(setAdvisor(null));
-            if (address && zipCode) dispatch(loadConsultants(id, option.id));
+
+            if (shouldLoadAdvisors) {
+                dispatch(loadConsultants(id, option.id, () => {
+                    showAdvisorScreen = false;
+                    dispatch(setAdvisorAvailable(false))
+                }));
+            }
             clearAppointment(option);
             if (option?.type === EServiceType.PickUpDropOff) {
-                redirectToLocation(option);
+                redirectToLocation(option, showAdvisorScreen);
             } else {
-                handleSideBar();
+                handleAdvisorSelection(showAdvisorScreen)
             }
         }
         dispatch(setServiceOptionChanged(true))
