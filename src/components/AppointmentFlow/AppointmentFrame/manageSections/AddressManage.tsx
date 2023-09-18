@@ -6,7 +6,11 @@ import {RootState} from "../../../../store/rootReducer";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {Edit} from "@material-ui/icons";
-import {setCurrentFrameScreen, setEditingPosition} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setCurrentFrameScreen,
+    setEditingPosition,
+    setServiceOptionChanged
+} from "../../../../store/reducers/appointmentFrameReducer/actions";
 
 const TitleWrapper = styled('div')({
     display: "flex",
@@ -36,6 +40,7 @@ const Address = () => {
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     const handleChangeAddress = () => {
+        dispatch(setServiceOptionChanged(false))
         dispatch(setEditingPosition('address'));
         dispatch(setCurrentFrameScreen("location"));
     }
