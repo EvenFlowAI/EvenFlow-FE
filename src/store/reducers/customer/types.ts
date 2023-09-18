@@ -22,8 +22,3 @@ export interface ICustomerByName {
 export interface ICustomerWithVehicles extends ICustomerByName{
     vehicles: ICustomerVehicle[];
 }
-
-export interface IRemappedCustomer extends ICustomerByName {
-    vehicle: ICustomerVehicle;
-    uniqueId: string;
-}

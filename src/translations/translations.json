@@ -318,7 +318,22 @@
       "Start": "Start",
       "We cannot find any existing customers that met the search criteria you entered.": "We cannot find any existing customers that met the search criteria you entered.",
       "Would you like to try different search criteria?": "Would you like to try different search criteria?",
-      "Try other search criteria": "Try other search criteria"
+      "Try other search criteria": "Try other search criteria",
+      "Are you satisfied with the appointment changes?": "Are you satisfied with the appointment changes?",
+      "I’d like to make additional changes": "I’d like to make additional changes",
+      "Yes, no other changes needed": "Yes, no other changes needed",
+      "Date and time of available appointments depends on the service requested.": "Date and time of available appointments depends on the service requested.",
+      "Please continue to see available dates and times for you requested change": "Please continue to see available dates and times for you requested change",
+      "Are you sure you want to undo your appointment changes?": "Are you sure you want to undo your appointment changes?",
+      "Yes, I’m good with the existing appointment": "Yes, I’m good with the existing appointment",
+      "No, i still want to make changes": "No, i still want to make changes",
+      "The available services supported with our mobile truck service may be different than when you visit our service center.": "The available services supported with our mobile truck service may be different than when you visit our service center.",
+      "Please continue to see the available services and the available appointment dates and times": "Please continue to see the available services and the available appointment dates and times",
+      "Appointment availability depends on the service requested.": "Appointment availability depends on the service requested.",
+      "The services our Mobile Truck offer may be different from our Service Center.": "The services our Mobile Truck offer may be different from our Service Center.",
+      "Please continue to see available services and appointment times": "Please continue to see available services and appointment times",
+      "You do not have any services selected in your appointment. Please add items you wish to have serviced": "You do not have any services selected in your appointment. Please add items you wish to have serviced",
+      "Back to Visit Center": "Back to Visit Center"
     }
   },
   "es": {

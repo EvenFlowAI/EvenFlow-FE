@@ -61,8 +61,8 @@ type TProps = {
 
 export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
-        const {appointment: selectedAppointment, scProfile} = useSelector((state: RootState) => state.appointment);
-        const {selectedTiming, gap, hoursOfOperations, sideBarSteps} = useSelector((state : RootState) => state.appointmentFrame);
+        const {appointment: selectedAppointment, scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
+        const {selectedTiming, gap, hoursOfOperations, sideBarSteps, appointmentByKey} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const titleRef = useRef<HTMLDivElement|null>(null);
         const classes = useStyles();
@@ -115,8 +115,11 @@ export const AppointmentTimeSelector: React.FC<TProps> =
             const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
             handleGA(a);
             dispatch(selectAppointment(data));
-            dispatch(setTransportation(null));
-            handleSideBar();
+            if (!customerLoadedData?.isUpdating && !appointmentByKey) {
+                // todo change logic
+                dispatch(setTransportation(null));
+                handleSideBar();
+            }
         }, [selectedTiming])
 
         return (

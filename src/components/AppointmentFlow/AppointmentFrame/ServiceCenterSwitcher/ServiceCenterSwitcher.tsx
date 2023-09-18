@@ -7,7 +7,7 @@ import {useCurrentUser, useException} from "../../../../utils/hooks";
 import {useHistory} from "react-router-dom";
 import {setCustomerEnteredEmail, setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
 import {
-    clearAppointmentData, setCurrentFrameScreen, setServiceTypeOption,
+    clearAppointmentData, setCurrentFrameScreen, setServiceOptionChanged, setServiceTypeOption,
     setSideBarSteps,
     setVehicle, setWelcomeScreenView
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
@@ -55,6 +55,7 @@ export const ServiceCenterSwitcher = () => {
         if (!isAppointmentSaving) {
             if (shortSC?.length) {
                 dispatch(clearAppointmentData());
+                dispatch(setServiceOptionChanged(false));
                 dispatch(setCustomerEnteredEmail(""))
                 dispatch(setCustomerSearchData(initialCustomerSearch))
                 dispatch(setSideBarSteps([]));
@@ -76,7 +77,7 @@ export const ServiceCenterSwitcher = () => {
     return isAuthorized && (welcomeScreenView !== "serviceCenterSelect" || !isWelcomePage)
         ? <div className={classes.selectWrapper}>
             { shortLoading
-                ? <Loading/>
+                ? <div style={{textAlign: 'right'}}><Loading/></div>
                 : <div className={classes.textWrapper} onClick={handleClick}>{scProfile?.name}</div>
             }
         </div>

@@ -6,14 +6,21 @@ import {Actions} from "./Actions";
 import {TActionProps} from "./types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import GooglePlacesAutocomplete, {geocodeByPlaceId} from 'react-google-places-autocomplete';
 import {
     clearAppointmentData,
     loadAncillaryPriceByZip,
     loadFilteredZip,
-    setAddress, setShowServiceCentersList,
+    setCity,
+    setPoliticalState,
+    setAddress,
+    setCurrentFrameScreen,
+    setServiceTypeOption,
+    setShowServiceCentersList,
     setSideBarSteps,
-    setZipCode
+    setStreetName,
+    setWelcomeScreenView,
+    setZipCode, setDefaultVisitCenterOption
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {
@@ -32,6 +39,11 @@ import {TArgCallback} from "../../../types/types";
 import {TView} from "../../Welcome/types";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
+import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
+import {ILoadedVehicle} from "../../../api/types";
+import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
+import {parseGeoCode} from "./utils";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -53,6 +65,7 @@ export const SelectWrapper = styled('div')(({theme}) => ({
 type TYourLocationProps = TActionProps & {
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
     onGoToFirstScreen: TArgCallback<TView>;
+    onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
 }
 
 const useStyles = makeStyles(() => ({
@@ -64,10 +77,21 @@ const useStyles = makeStyles(() => ({
             border: "1px solid #DADADA",
             '& > div > div': {
                 fontSize: '1rem',
-                // color: 'rgba(0, 0, 0, 0.87)',
-                // opacity: 0.4
+                color: '#212121',
+                backgroundColor: 'transparent',
             },
         },
+    },
+    emptySelect: {
+        '& > div': {
+            borderRadius: 0,
+            backgroundColor: '#F7F8FB',
+            padding: 2,
+            border: "1px solid #DADADA",
+            '& > div > div': {
+                fontSize: '1rem',
+            },
+        }
     },
     errorSelect: {
         '& > div': {
@@ -99,12 +123,24 @@ const useAutocompleteStyles = makeStyles<Theme, TStyleProps>(() => ({
     },
 }))
 
-const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToShowServiceSelection, onGoToFirstScreen}) => {
+const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToShowServiceSelection, onGoToFirstScreen, onUpdateAppointment}) => {
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {zipCode: zipCodeValue, address, filteredZipCodes, serviceTypeOption, hashKey, selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        zipCode: zipCodeValue,
+        address,
+        filteredZipCodes,
+        serviceTypeOption,
+        selectedVehicle,
+        appointmentByKey,
+        editingPosition,
+        serviceOptionChangedFromSlotPage,
+        selectedServiceOptions,
+        ancillaryPriceLoading,
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
+    const {isAdvisorAvailable, config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
@@ -118,71 +154,191 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     const history = useHistory();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
+
     const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? t('Enter pick up address')
         : t('Enter your requested location'), [serviceTypeOption])
+
+    const mobileServiceSelected = useMemo(() => serviceTypeOption?.type === EServiceType.MobileService
+        && appointmentByKey?.serviceTypeOption
+        && appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
+    const mobileServiceChanged = useMemo(() => serviceTypeOption?.type !== EServiceType.MobileService
+        && appointmentByKey?.serviceTypeOption?.type === EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
+    const managedToPickUp = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
+        && appointmentByKey?.serviceTypeOption
+        && appointmentByKey?.serviceTypeOption?.type !== EServiceType.PickUpDropOff, [serviceTypeOption, appointmentByKey]);
+    const changedToPickUpFromSlots = useMemo(() => serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff,
+        [serviceOptionChangedFromSlotPage, serviceTypeOption]);
 
     useEffect(() => {
         setZip(zipCodeValue ?? "")
     }, [zipCodeValue])
 
     const clearSelectedData = () => {
-        dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
-        dispatch(clearAppointmentData())
+        if (!customerLoadedData?.isUpdating) {
+            dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
+            dispatch(clearAppointmentData())
+        }
+    }
+
+    const handleManagingFlow = () => {
+        if ((mobileServiceSelected || mobileServiceChanged) && editingPosition === 'serviceOption') {
+            dispatch(setServiceWarningOpen(true))
+        } else if (managedToPickUp) {
+            dispatch(setSlotsWarningOpen(true))
+        } else {
+            scProfile && dispatch(checkPodChanged(scProfile.id, showError))
+        }
+    }
+
+    const goToSlotsSelection = (prevOption?: IFirstScreenOption|undefined) => {
+        if (prevOption) {
+            const prevConfig = config.find(el => el.serviceType === prevOption.type)
+            dispatch(setCurrentFrameScreen(prevConfig?.advisorSelection ? 'consultantSelection' : 'appointmentSelection'))
+        } else {
+            dispatch(setCurrentFrameScreen(isAdvisorAvailable ? 'consultantSelection' : 'appointmentSelection'))
+        }
+    }
+
+    const onNextStep = () => {
+        if (customerLoadedData?.isUpdating) {
+            changedToPickUpFromSlots
+                ? scProfile && dispatch(checkPodChanged(scProfile.id, showError))
+                : handleManagingFlow();
+        } else {
+            changedToPickUpFromSlots
+                ? goToSlotsSelection()
+                : onNext();
+        }
     }
 
     const clearAddress = () => {
         dispatch(setAddress(null));
+        dispatch(setPoliticalState(""))
+        dispatch(setCity(""))
         dispatch(setZipCode(""));
     }
 
     const handleChangeAddress = async (e: any) => {
-        clearSelectedData();
+        if (!serviceOptionChangedFromSlotPage) clearSelectedData();
         setFormChecked(false);
-        dispatch(setAddress(e));
+        dispatch(setAddress(e ?? null))
+        if (e?.value?.place_id && e?.label) {
+           geocodeByPlaceId(e.value.place_id).then(res => {
+               const data = parseGeoCode(res[0].address_components, e.label, e.value?.structured_formatting?.main_text, e.value?.structured_formatting?.secondary_text)
+               if (data.city) dispatch(setCity(data.city))
+               if (data.state) dispatch(setPoliticalState(data.state))
+               if (data.address) dispatch(setStreetName(data.address))
+            })
+        }
     }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
-        clearSelectedData();
+        if (!serviceOptionChangedFromSlotPage) clearSelectedData();
         setFormChecked(false);
         setZip(option ?? "");
     }
 
-    const handleBack = () => {
-        clearAddress();
-        clearSelectedData();
-        const isManagingAppointment = Boolean(hashKey?.length) && (!serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id))
+    const setPrevServiceType = () => {
+        if (mobileServiceSelected || mobileServiceChanged) {
+            selectedVehicle && onUpdateAppointment(selectedVehicle)
+        }
+    }
+
+    const restoreAddress = () => {
+        dispatch(setAddress(appointmentByKey?.address ?? null))
+        dispatch(setZipCode(appointmentByKey?.zipCode ?? ""))
+    }
+
+    const setPrevSelectedOption = () => {
+        if (selectedServiceOptions.length) {
+            const prevOption = selectedServiceOptions[selectedServiceOptions.length - 2];
+            if (prevOption) {
+                dispatch(setServiceTypeOption(prevOption))
+                goToSlotsSelection(prevOption)
+            }
+        }
+    }
+
+    const onGoToSlotsForVisitCenter = () => {
+        appointmentByKey
+            ? restoreAddress()
+            : clearAddress()
+        setPrevSelectedOption()
+    }
+
+    const goToFirstScreen = async () => {
+        await dispatch(setShowServiceCentersList(false))
+        await dispatch(setWelcomeScreenView("serviceSelect"));
+        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+    }
+
+    const onBackFromManage = () => {
+        setPrevServiceType()
+        if (editingPosition === 'address') {
+            dispatch(setCurrentFrameScreen('manageAppointment'))
+        } else {
+            restoreAddress()
+            goToFirstScreen().then()
+        }
+    }
+
+    const handleFirstScreenForCustomer = (shouldSkipServiceTypeSelect: boolean, prevScreen: TView) => {
+        setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
+        if (shouldSkipServiceTypeSelect) {
+            if (customerLoadedData && selectedVehicle) {
+                onBack()
+            } else {
+                history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+            }
+        } else {
+            onGoToFirstScreen(prevScreen)
+        }
+    }
+
+    const handleFirstScreenForAdmin = (prevScreen: TView) => {
+        dispatch(setShowServiceCentersList(false));
+        onGoToFirstScreen(prevScreen)
+    }
+
+    const handlePrevScreen = () => {
         const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
-        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists || isManagingAppointment;
+        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
         const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
         if (currentUser) {
-            dispatch(setShowServiceCentersList(false));
-            onGoToFirstScreen(prevScreen)
+            handleFirstScreenForAdmin(prevScreen)
         } else {
-            setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
-            if (shouldSkipServiceTypeSelect) {
-                if (customerLoadedData && selectedVehicle) {
-                    onBack()
-                } else {
-                    history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
-                }
+            handleFirstScreenForCustomer(shouldSkipServiceTypeSelect, prevScreen)
+        }
+    }
+
+    const handleBack = () => {
+        if (serviceOptionChangedFromSlotPage) {
+            setPrevSelectedOption()
+        } else {
+            if (customerLoadedData?.isUpdating && appointmentByKey) {
+                onBackFromManage()
             } else {
-                onGoToFirstScreen(prevScreen)
+                clearAddress();
+                clearSelectedData();
+                handlePrevScreen();
             }
         }
     }
 
     const onSuccess = (data: TAncillaryPriceByZip) => {
         if (data.feeAmount === 0 && data.feeType === EAncillaryType.Amount) {
-            onNext();
+            onNextStep();
         } else {
             onOpen();
         }
     }
 
-    const handleNext = () => {
-        setFormChecked(true);
+    const showValidationErrors = () => {
         if (!address) showError('"Address" is required');
         if (!zip?.length) showError('"Zip Code" is required');
+    }
+
+    const loadAncillaryPrice = () => {
         if (address && zip.length && scProfile) {
             dispatch(setZipCode(zip));
             const data: IAncillaryByZipRequest = {
@@ -195,6 +351,12 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         }
     }
 
+    const handleNext = () => {
+        setFormChecked(true);
+        showValidationErrors();
+        loadAncillaryPrice();
+    }
+
     const onInputChange = (e: React.ChangeEvent<{}>, value: string) => {
         if (scProfile) {
             dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: value}))
@@ -202,9 +364,15 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const getPlaceholderLabel = (): string => {
-        if (typeof address === 'string') return address;
+        if (typeof address === 'string' && address.length) return address;
         if (address?.label) return address?.label;
         return isFormChecked ? t('Address is required') : placeholder
+    }
+
+    const setDefaultVisitCenter = async () => {
+        await dispatch(setDefaultVisitCenterOption());
+        await dispatch(clearAppointmentData());
+        await dispatch(setSideBarSteps([]));
     }
 
     return (
@@ -214,25 +382,25 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                     <p className="label">{t("Your Address")}</p>
                     <GooglePlacesAutocomplete
                         apiKey="AIzaSyCTy-LeuU4m1uoh1nhbUVZBC2G4HDUQQ04"
-                        apiOptions={{ language: 'en', region: 'us' }}
+                        apiOptions={{ language: 'en-GB', region: 'us' }}
                         autocompletionRequest={{
                             componentRestrictions: {
                                 country: ['us'],
-                            }
+                            },
                         }}
                         selectProps={{
-                            addressValue: typeof address === 'string' ? address : address?.label ?? '',
-                            className: typeof address === 'string'
-                                ? !address && isFormChecked
-                                : !address?.label && isFormChecked
-                                    ? classes.errorSelect
+                            addressValue: typeof address === 'string' && address.length ? address : address?.label ?? null,
+                            className: typeof address === 'string' && address.length
+                                ? classes.select
+                                : !address?.label ?
+                                    isFormChecked
+                                        ? classes.errorSelect
+                                        : classes.emptySelect
                                     : classes.select,
                             onChange: handleChangeAddress,
-                            onFocus: () => setFormChecked(false),
                             placeholder: getPlaceholderLabel(),
                             isClearable: true,
                             isSearchable: true,
-                            defaultInputValue: typeof address === 'string' ? address : address?.label || "",
                             key: address?.label || 'label',
                         }}
                     />
@@ -261,9 +429,20 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                 />
 
             </SelectWrapper>
-            <Actions onBack={handleBack} onNext={handleNext} nextLabel={t("Next")}/>
-            <DisplayAncillaryPrice onNext={onNext} open={isOpen} onClose={onClose}/>
-            <UnavailableService open={isUnavailableOpen} onClose={onUnavailableClose} setFormChecked={setFormChecked}/>
+            <Actions onBack={handleBack} onNext={handleNext} nextLabel={t("Next")} loading={ancillaryPriceLoading}/>
+            <DisplayAncillaryPrice
+                onNext={onNextStep}
+                open={isOpen}
+                onClose={onClose}
+                onBackToSelectSlotsForVisitCenter={onGoToSlotsForVisitCenter}
+                onVisitCenter={setDefaultVisitCenter}/>
+            <UnavailableService
+                open={isUnavailableOpen}
+                onClose={onUnavailableClose}
+                setFormChecked={setFormChecked}
+                onBackToServiceOption={goToFirstScreen}
+                onBackToSelectSlotsForVisitCenter={onGoToSlotsForVisitCenter}
+                onVisitCenter={setDefaultVisitCenter}/>
         </StepWrapper>
     );
 };

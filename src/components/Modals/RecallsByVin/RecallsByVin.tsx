@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -12,9 +12,14 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button, Divider, FormControlLabel, Switch, withStyles} from "@material-ui/core";
 import {IRecallByVin} from "../../AppointmentFlow/AppointmentFrame/types";
 import moment from "moment";
-import {setAdditionalServicesChosen, setSelectedRecalls} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    checkCarIsValid,
+    setAdditionalServicesChosen,
+    setSelectedRecalls
+} from "../../../store/reducers/appointmentFrameReducer/actions";
 import AskAddService from "../AskAddService/AskAddService";
-import {useModal} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 const useStyles = makeStyles(() => ({
     mainTitle: {
@@ -106,12 +111,15 @@ type TRecallsByVinProps = DialogProps & {
 
 const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
-    const {selectedVehicle, selectedRecalls, makes} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, makes, isUsualFlowNeeded} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
+    const [recalls, setRecalls] = useState<IRecallByVin[]>([]);
     const dispatch = useDispatch();
-    const {isOpen: isAddServiceOpen, onClose: onAddServiceClose, onOpen: onAddServiceOpen} = useModal();
     const {id} = useParams();
+    const showError = useException();
     const {t} = useTranslation();
     const classes = useStyles();
+    const {isOpen: isAddServiceOpen, onClose: onAddServiceClose, onOpen: onAddServiceOpen} = useModal();
 
     useEffect(() => {
         if (selectedVehicle) {
@@ -123,18 +131,19 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
     }, [selectedVehicle, open, makes])
 
     useEffect(() => {
-        if (open) dispatch(setSelectedRecalls(recallsByVin));
+        if (open) setRecalls(recallsByVin);
     }, [recallsByVin, open])
 
     const onAddService = (item: IRecallByVin) => {
-        const data = selectedRecalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber)
-            ? selectedRecalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)
-            : [...selectedRecalls, item]
-        dispatch(setSelectedRecalls(data));
+        const data = recalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber)
+            ? recalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)
+            : [...recalls, item]
+        setRecalls(data)
     }
 
     const onDecline = () => {
         dispatch(setSelectedRecalls([]))
+        setRecalls([]);
         onDeclineRecalls()
         onClose();
     }
@@ -152,8 +161,20 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
         onClose();
     }
 
+    const onCarIsValid = () => dispatch(checkPodChanged(decodeSCID(id), showError))
+
+    const onCarIsInvalid = () => {
+        handleNext();
+        onClose();
+    }
+
     const handleSubmit = () => {
-        onAddServiceOpen()
+        dispatch(setSelectedRecalls(recalls))
+        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+            dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid))
+        } else {
+            onAddServiceOpen()
+        }
     }
 
     return (
@@ -176,9 +197,9 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
                                     </div>
                                     <div className={classes.serviceAddedBtn}>
                                         <Label
-                                            checked={Boolean(selectedRecalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber))}
+                                            checked={Boolean(recalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber))}
                                             onChange={() => onAddService(item)}
-                                            label={selectedRecalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber)
+                                            label={recalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber)
                                                 ? t("Service Added")
                                                 : t("Service Declined")}
                                             labelPlacement="start"
@@ -222,7 +243,7 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
                     <Button variant="outlined" onClick={onDecline}>
                         {t("Decline")}
                     </Button>
-                    <Button  variant="contained" onClick={handleSubmit} color="primary" disabled={!selectedRecalls.length}>
+                    <Button  variant="contained" onClick={handleSubmit} color="primary" disabled={!recalls.length}>
                         {t("Add Service")}
                     </Button>
                 </div>

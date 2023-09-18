@@ -12,7 +12,7 @@ import {
     ISecurityCode,
     ISessionId,
     IServiceCenterId,
-    ICustomerLoadedData, IAppointmentByQuery
+    ICustomerLoadedData, IAppointment, IAppointmentByKey
 } from "./types";
 import {Api, endUserRequest, request} from "../config/requests";
 import {ITokens, PaginatedAPIResponse} from "../types/types";
@@ -33,10 +33,10 @@ const appointment = {
     updateByKey: (data: IUpdateAppointment): TApiResponse<ICreateAppointmentResp> => request.put(
       `/appointments/${data.hashKey}/by-key`, data
     ),
-    list: (data: IListAppointmentRequest): TApiResponse<PaginatedAPIResponse<IAppointmentByQuery>> => request.post("/appointments/by-query", data),
+    list: (data: IListAppointmentRequest): TApiResponse<PaginatedAPIResponse<IAppointment>> => request.post("/appointments/by-query", data),
     customerList:
         (headers: ISessionId, params: IServiceCenterId):
-            TApiResponse<IAppointmentByQuery[]> =>
+            TApiResponse<IAppointment[]> =>
             endUserRequest.get("/appointments", {headers, params}),
     searchCustomer: (params: ISearchCustomerParams): TApiResponse<ICustomerLoadedData> => request.get("/customers", {params}),
     searchCustomerByKey: (headers: ISessionId, params: ISearchCustomerParams): TApiResponse => endUserRequest.get("/customers/by-session", {params, headers}),
@@ -44,7 +44,7 @@ const appointment = {
         '/sessions/activate', data, {headers}),
     cancelByKey: (key: string): TApiResponse => request.put(`/appointments/${key}/cancel/by-key`),
     cancel: (id: number): TApiResponse => request.put(`/appointments/${id}/cancel`),
-    getByKey: (key: string): TApiResponse<IAppointmentByQuery> => request.get(`/appointments/${key}/by-key`)
+    getByKey: (key: string): TApiResponse<IAppointmentByKey> => request.get(`/appointments/${key}/by-key`)
 };
 const authentication = {
     dealership: (dealershipId: number): TApiResponse<ITokens> =>

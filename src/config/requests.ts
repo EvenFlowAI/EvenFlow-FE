@@ -136,13 +136,15 @@ type TApiRoute = {
 type ApiRoutes = {
     Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiRoute>,
     AncillaryPricing: Record<"GetZones" | "UpdateZone" | "GetDistances" | "UpdateDistance" | "CreateDistance" | "DeleteDistance" | "GetByZip", TApiRoute>,
-    Appointments: Record<"Create" | "Update" | "UpdateByKey" | "Cancel" | "CancelByKey" | "GetByKey", TApiRoute>,
+    Appointments: Record<"Create" | "Update" | "UpdateByKey" | "Cancel" | "CancelByKey" | "GetByKey" | "CheckPodChanged"
+        | "GetServiceBooks" | "GetSchedulers", TApiRoute>,
     AppointmentAllocation: Record<"SetTimeWindows" | "GetTimeWindows"
         | "CreateDemandSegment" | "GetDemandSegments"
         | "GetTWEligibility" | "SetTWEligibility"
         | "BatchUpdateDemandSegments" | "RemoveDemandSegment"
         | "SetUnplanned" | "GetUnplanned" | "GetUnplannedSlotsByDay"
         | "UpdateUnplannedSlots", TApiRoute>,
+    AppointmentPricing: Record<"GetPriceList", TApiRoute>,
     AppointmentSlots: Record<"GetSlots" | "GetServiceValetSlots", TApiRoute>,
     Authentications: Record<"Request" | "Refresh", TApiRoute>,
     Bays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll" | "GetShort", TApiRoute>,
@@ -244,6 +246,9 @@ export class Api {
             Cancel: {route: "/appointments/{id}/cancel", method: "put"},
             CancelByKey: {route: "/appointments/{id}/cancel/by-key", method: "put"},
             GetByKey: {route: "/appointments/{key}/by-key", method: "get"},
+            CheckPodChanged: {route: "/appointments/{key}/check-pod-changed", method: "post"},
+            GetServiceBooks: {route: "/appointments-filter/{id}/service-book-list", method: "get"},
+            GetSchedulers: {route: "/appointments-filter/{id}/scheduler-list", method: "get"},
         },
         AppointmentAllocation: {
             SetTimeWindows: {route: "/appointment-allocations/time-windows", method: "put"},
@@ -262,6 +267,9 @@ export class Api {
         AppointmentSlots: {
             GetSlots: {route: "/appointment-slots/by-query", method: "post"},
             GetServiceValetSlots: {route: "/service-valet-appointment-slots/by-query", method: "post"},
+        },
+        AppointmentPricing: {
+            GetPriceList: {route: '/appointment-pricing/requests-price-list', method: 'post'}
         },
         Authentications: {
             Request: {route: "/authentications", method: "post"},

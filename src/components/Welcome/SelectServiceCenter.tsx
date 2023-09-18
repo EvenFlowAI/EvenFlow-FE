@@ -9,7 +9,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {TRole} from "../../store/reducers/users/types";
 import {
     clearAppointmentData,
-    setAddress,
+    setAddress, setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps,
     setVehicle,
@@ -22,17 +22,24 @@ import {
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {Routes} from "../../config/routes";
-import {useHistory} from "react-router-dom";
+import {NavLink, useHistory} from "react-router-dom";
 import {encodeSCID} from "../../utils/utils";
 import {setCustomerSearchData} from "../../store/reducers/enhancedCustomerSearch/actions";
 import {initialCustomerSearch} from "../../store/reducers/enhancedCustomerSearch/reducer";
 
 const useStyles = makeStyles(theme => ({
+    mainWrapper: {
+        marginTop: 48
+    },
+    btnWrapper: {
+       display:"flex",
+       justifyContent: 'flex-end',
+       marginBottom: 20
+    },
     wrapper: {
         display: 'grid',
         gridTemplateColumns: "1fr 1fr 1fr",
         gridGap: 20,
-        marginTop: 48,
         [theme.breakpoints.down("sm")]: {
             gridTemplateColumns: "1fr 1fr",
             marginBottom: 20,
@@ -58,7 +65,14 @@ const useStyles = makeStyles(theme => ({
         fontWeight: 700,
         textAlign: 'center',
         marginBottom: 20,
-    }
+    },
+    linkBtn: {
+        fontSize: 20,
+        fontWeight: 700,
+        color: "#142EA1",
+        textTransform: 'none',
+        textDecoration: 'none',
+}
 }));
 
 const restrictedRoles: TRole[] = ["Manager", "Advisor"];
@@ -71,6 +85,7 @@ const ServiceCenterCard: React.FC<{sc: IServiceCenter}> = ({sc}) => {
     const onClick = () => {
         dispatch(loadSCProfile(sc.id));
         dispatch(clearAppointmentData())
+        dispatch(setServiceOptionChanged(false));
         dispatch(setCustomerEnteredEmail(""))
         dispatch(setCustomerSearchData(initialCustomerSearch))
         dispatch(setAddress(null));
@@ -120,8 +135,13 @@ const SelectServiceCenter = () => {
 
     return !scProfile || isProfileLoading || shortLoading
         ? <Loading/>
-        : <div className={classes.wrapper}>
-            {centersList.map(item => <ServiceCenterCard key={item.name} sc={item}/>)}
+        : <div className={classes.mainWrapper}>
+            <div className={classes.btnWrapper}>
+                <NavLink to={Routes.Admin.Appointments} className={classes.linkBtn} target="_blank">View Appointments</NavLink>
+            </div>
+            <div className={classes.wrapper}>
+                {centersList.map(item => <ServiceCenterCard key={item.name} sc={item}/>)}
+            </div>
         </div>
 };
 

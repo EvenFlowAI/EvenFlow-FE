@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {TActionProps} from "./types";
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from './Actions';
@@ -9,7 +9,8 @@ import {TCallback} from "../../../types/types";
 import {IServiceConsultant} from '../../../api/types';
 import {
     loadConsultants,
-    setAdvisor,
+    setAdvisor, setAnyAdvisorSelected,
+    setCurrentFrameScreen,
     setSideBarActualSteps,
     setSideBarMenu,
     setSideBarStepsList
@@ -17,15 +18,15 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
-import {
-    selectAppointment,
-    selectServiceValetAppointment,
-} from "../../../store/reducers/appointment/actions";
+import {selectAppointment, selectServiceValetAppointment,} from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
 import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
 import {useParams} from "react-router-dom";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {useException} from "../../../utils/hooks";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
+import {decodeSCID} from "../../../utils/utils";
 
 const ConsultantsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -102,7 +103,6 @@ const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick})
 }
 
 export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const [loading, setLoading] = useState<boolean>(false);
     const {
         advisor: selectedConsultant,
         consultants,
@@ -114,13 +114,18 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         packagePricingType,
         serviceTypeOption,
         packageEMenuType,
+        isUsualFlowNeeded,
+        isConsultantsLoading,
+        serviceOptionChangedFromSlotPage,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {selectedSR, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
     const {isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams();
     const {t} = useTranslation();
+    const showError = useException();
+    const isGoingFromManageScreen = customerLoadedData?.isUpdating && !isUsualFlowNeeded && !serviceOptionChangedFromSlotPage
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
@@ -135,28 +140,53 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             .map(item => item.id)
     }, [allCategories, EServiceCategoryType, categoriesIds])
 
+    const handleEmptyList = () => {
+        onNext()
+        // if (serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+        //     onBack()
+        // } else {
+        //
+        // }
+    }
+
     useEffect(() => {
-        dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, onNext))
+        dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, handleEmptyList))
     }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage, serviceTypeOption])
 
     useEffect(() => {
-        dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable)))
+        dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable, Boolean(customerLoadedData?.isUpdating))))
     }, [serviceType, isAdvisorAvailable, isTransportationAvailable, getCurrentMenu])
 
     useEffect(() => {
         dispatch(setSideBarActualSteps(getStepsMap(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
-        dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
+        dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, Boolean(customerLoadedData?.isUpdating))))
     }, [serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, getStepsMap, getStepsScreen])
 
-    const handleSelectConsultant = (c: IServiceConsultant|null) => () => {
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
-        dispatch(setAdvisor(c));
+    const handleSelectConsultant = (consultant: IServiceConsultant|null) => () => {
+        dispatch(setAdvisor(consultant));
+        dispatch(setAnyAdvisorSelected(!Boolean(consultant)))
+        if (!customerLoadedData?.isUpdating) {
+            dispatch(selectAppointment(null));
+            dispatch(selectServiceValetAppointment(null));
+        }
+    }
+
+    const handleNext = () => {
+        if (isGoingFromManageScreen) {
+            dispatch(checkPodChanged(decodeSCID(id), showError))
+        } else onNext()
+    }
+
+    const handleBack = () => {
+        isGoingFromManageScreen
+            ? dispatch(setCurrentFrameScreen("manageAppointment"))
+            : onBack()
     }
 
     return (<StepWrapper>
-        <ConsultantsWrapper>
-            {loading || !isAdvisorAvailable ? <Loading /> : <React.Fragment>
+        {isConsultantsLoading || !isAdvisorAvailable
+            ? <div style={{display: 'flex', justifyContent: 'center', width: "100%"}}><Loading/></div>
+            : <ConsultantsWrapper>
                 <ConsultantCard
                     blank
                     onClick={handleSelectConsultant(null)}
@@ -169,9 +199,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
                         key={c.id}
                         active={selectedConsultant?.id === c.id} />
                 )}
-            </React.Fragment>
-            }
-        </ConsultantsWrapper>
-        <Actions onNext={onNext} onBack={onBack} nextLabel={t("Next")}/>
+            </ConsultantsWrapper>
+        }
+        <Actions onNext={handleNext} onBack={handleBack} nextLabel={t("Next")}/>
     </StepWrapper>);
 };

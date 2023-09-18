@@ -26,7 +26,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {ICustomerLoadedData} from "../../../api/types";
 import {
     clearAppointmentData,
-    setAddress,
+    setAddress, setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps,
     setUserType,
@@ -160,7 +160,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const history = useHistory();
     const [currentFirstItemIndex, currentLastItemIndex] = useMemo(() => {
         return [pageData.pageIndex * pageData.pageSize, (pageData.pageIndex + 1) * pageData.pageSize]
-    }, [pageData]) ;
+    }, [pageData]);
 
     useEffect(() => {
         const orderedData = customers.map((el, i) => ({...el, sortOrder: i}))
@@ -180,6 +180,8 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             year: item.year,
             appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
             mileage: selectedMileage?.value ?? null,
+            dmsId: item.vehicleDmsId,
+            hasRepairOrders: Boolean(item.hasOrders),
         }
         const data: ICustomerLoadedData = {
             emails: item?.email ? [item.email] : [],
@@ -192,7 +194,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             isUpdating,
         }
         if (customerData?.city) data.city = customerData.city;
-        if (customerData?.address) await dispatch(setAddress(customerData.address));
+        if (customerData?.fullAddress) await dispatch(setAddress(customerData.fullAddress));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(vehicle));
@@ -206,6 +208,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
 
     const onCreateNewForCar = async (item: ICustomerWithPhones) => {
         await dispatch(clearAppointmentData());
+        dispatch(setServiceOptionChanged(false));
         await dispatch(setSideBarSteps([]));
         await setCustomerData(item, false);
         await dispatch(setUserType(EUserType.Existing));
@@ -301,7 +304,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             fromSearchByName: true,
         }
         if (customer?.city) data.city = customer.city;
-        if (customer?.address) await dispatch(setAddress(customer.address));
+        if (customer?.fullAddress) await dispatch(setAddress(customer.fullAddress));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(getBlankVehicle()))

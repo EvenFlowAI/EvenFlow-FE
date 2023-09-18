@@ -12,6 +12,7 @@ export interface ICustomerByName {
     vehicleDmsId: string;
     vehicleInternalId: number;
     address: string;
+    fullAddress: string;
     city: string;
     state: string;
     make: string;
@@ -71,8 +72,10 @@ export interface ICustomerWithVehicles {
     city: string;
     state: string;
     address: string;
+    fullAddress: string;
     communications: TCustomerCommunication[];
     vehicles: ICustomerVehicle[];
+    zipCode?: string;
 }
 
 export interface IRepairOrderPart {

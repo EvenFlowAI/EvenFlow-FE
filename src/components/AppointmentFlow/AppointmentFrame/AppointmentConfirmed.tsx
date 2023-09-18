@@ -8,18 +8,24 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {concatAddress, getCalendarUrl} from "../../../utils/utils";
 import {G_CALENDAR_FORMAT} from "../../../config/constants";
-import {TCallback} from "../../../types/types";
+import {TArgCallback} from "../../../types/types";
 import {getMaintenanceDescription} from "./uiUtils";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {
-    clearAppointmentData, setSideBarSteps,
+    clearAppointmentData,
+    setCurrentFrameScreen, setServiceOptionChanged,
+    setSideBarSteps,
+    setUserType,
     setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useCurrentUser} from "../../../utils/hooks";
+import {ILoadedVehicle} from "../../../api/types";
+import {setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
+import {Loading} from "../../UI/Loading";
 
 const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -68,6 +74,15 @@ const Wrapper = styled('div')(({theme}) => ({
         textTransform: "uppercase",
         color: "#9FA2B4",
         fontWeight: "bold"
+    },
+    "& > .emptyContainer": {
+        width: '100%',
+        minHeight: 300,
+        minWidth: 300,
+        gridColumn: '1 / 3',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: "center",
     }
 }));
 
@@ -90,9 +105,9 @@ type TItem = {
 
 
 type TProps = {
-    onModify: TCallback;
+    onUpdateAppointment: TArgCallback<ILoadedVehicle>;
 }
-export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
+export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) => {
     const [
         appointment,
         serviceValetAppointment,
@@ -116,6 +131,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         advisor,
         packagePriceTitles,
         dropOffSettings,
+        customerLoadedData,
+        isAppointmentSaving,
+        appointmentByKey,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -140,6 +158,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         state.appointmentFrame.advisor,
         state.appointmentFrame.packagePriceTitles,
         state.appointment.dropOffSettings,
+        state.appointment.customerLoadedData,
+        state.appointmentFrame.isAppointmentSaving,
+        state.appointmentFrame.appointmentByKey,
     ]);
 
     const {t} = useTranslation();
@@ -223,10 +244,19 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     }
 
     const getDate = () => {
-        return isServiceValetApp
-            ? moment.utc(serviceValetAppointment?.date).format('ddd, MMM D')
-            : appointment?.date.format('ddd, MMM D, h:mm A')
-            ?? moment.utc().format('ddd, MMM D, h:mm A');
+        if (isServiceValetApp) {
+            return moment.utc(serviceValetAppointment?.date).format('ddd, MMM D')
+        } else if (appointment) {
+            return appointment?.date.format('ddd, MMM D, h:mm A')
+        } else if (appointmentByKey?.dateInUtc) {
+            if (appointmentByKey.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+                return moment(appointmentByKey.dateInUtc).utc().format('ddd, MMM D')
+            } else {
+                const [hh, mm] = appointmentByKey.timeSlot.split(":")
+                return moment(appointmentByKey.dateInUtc).utc().set('hour', +hh).set('minute', +mm).format('ddd, MMM D, h:mm A')
+            }
+        }
+        return moment.utc().format('ddd, MMM D, h:mm A');
     }
 
     const data: TItem[] = useMemo(() => {
@@ -288,7 +318,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
         }
 
         return list;
-    }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption]);
+    }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption, isServiceValetApp]);
 
     const getDateForCalendar = useCallback(() => {
         let dateString: string = '';
@@ -354,16 +384,32 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
     const onMakeNew = async () => {
         await dispatch(setVehicle(null));
         await dispatch(clearAppointmentData());
+        await dispatch(setServiceOptionChanged(false));
         await dispatch(setSideBarSteps([]));
         await dispatch(setWelcomeScreenView(currentUser ? "serviceCenterSelect" : "select"));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
+    }
+
+    const onModify = async () => {
+        if (vehicle) {
+            if (customerLoadedData) {
+                await dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
+                await dispatch(clearAppointmentData())
+                await dispatch(setServiceOptionChanged(false));
+                await dispatch(setUserType(EUserType.Existing))
+            }
+            await onUpdateAppointment(vehicle)
+            await dispatch(setCurrentFrameScreen("manageAppointment"))
+        }
     }
 
     return <StepWrapper>
         <Paper>
             <Wrapper>
                 <h2>Appointment Confirmed!</h2>
-                {data.filter(el => el.content).map((item, index) => {
+                {isAppointmentSaving
+                    ? <div className="emptyContainer"><Loading/></div>
+                    : data.filter(el => el.content).map((item, index) => {
                     if (!selectedPackage && item.label === t("Selected Price")) {
                         return null;
                     }
@@ -375,15 +421,15 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onModify}) => {
                 })}
             </Wrapper>
             <ButtonsWrapper>
-                <Button color="primary" fullWidth variant="outlined" onClick={onModify}>
+                <Button color="primary" fullWidth variant="outlined" onClick={onModify} disabled={isAppointmentSaving}>
                     {t("Modify Appointment")}
                 </Button>
-                <Button color="primary" onClick={handleAddToCalendar} fullWidth variant="contained">
+                <Button color="primary" onClick={handleAddToCalendar} fullWidth variant="contained" disabled={isAppointmentSaving}>
                     {t("Add to Calendar")}
                 </Button>
                 <Divider />
             </ButtonsWrapper>
-            { !isFrame ? <Button color="primary" fullWidth variant="outlined" onClick={onMakeNew}>
+            { !isFrame ? <Button color="primary" fullWidth variant="outlined" onClick={onMakeNew} disabled={isAppointmentSaving}>
                 {t("Make New Appointment")}
             </Button> : null}
             <h3>{t("We will see you soon!")}</h3>

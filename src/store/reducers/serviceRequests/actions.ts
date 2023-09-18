@@ -38,10 +38,7 @@ export const loadNonSelectedServiceRequests = (serviceCenterId: number, isAssign
                     ...nonSelectedPageData, ...nonSelectedFilter,
                     ...nonSelectedOrder,
                     status: EServiceStatus.None,
-                    serviceCenterFilter: {
-                        isAssigned: Boolean(isAssigned),
-                        id: serviceCenterId
-                    }
+                    serviceCenterId
                 }
             }
         )

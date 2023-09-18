@@ -11,9 +11,12 @@ import {
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {
-    clearAppointmentData,
-    setCurrentFrameScreen,
-    setServiceTypeOption, setSideBarSteps,
+    clearAppointmentData, loadConsultants,
+    setCurrentFrameScreen, setServiceOptionChanged,
+    setServiceTypeOption,
+    setSideBarSteps,
+    setTransportation,
+    setUsualFlowNeeded,
     setVehicle,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
@@ -26,17 +29,22 @@ import {InfoOutlined} from "@material-ui/icons";
 import {HtmlTooltip} from "../AppointmentFlow/AppointmentFrame/ServiceCard";
 import ServiceTypeIcon from "./ServiceTypeIcon";
 import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
-import {useCurrentUser} from "../../utils/hooks";
+import {useCurrentUser, useException} from "../../utils/hooks";
 import {Routes} from "../../config/routes";
-import {encodeSCID} from "../../utils/utils";
+import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
+import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
+import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import {setServiceWarningOpen, setSlotsWarningOpen} from "../../store/reducers/modals/actions";
+import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
+import {checkPodChanged} from "../../store/reducers/appointments/actions";
 
 type TProps = {
     handleValueServiceConfig: (serviceType: EServiceType) => void;
     loading: boolean;
 };
 
-const CardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Theme, {cardsAmount: number}>(({theme, cardsAmount}) => ({
+export const ServiceTypeCardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Theme, {cardsAmount: number}>(({theme, cardsAmount}) => ({
     display: 'grid',
     gridTemplateColumns: `repeat(${cardsAmount}, 1fr)`,
     gap: "18px",
@@ -56,7 +64,7 @@ const CardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Th
     }
 }));
 
-const Tagline = styled(({taglineColor, ...props}) => (<div {...props}/>))<Theme, {taglineColor?: string}>(({theme, taglineColor}) => ({
+export const Tagline = styled(({taglineColor, ...props}) => (<div {...props}/>))<Theme, {taglineColor?: string}>(({theme, taglineColor}) => ({
     minHeight: 40,
     width: '100%',
     display: 'flex',
@@ -67,7 +75,7 @@ const Tagline = styled(({taglineColor, ...props}) => (<div {...props}/>))<Theme,
     color: taglineColor ? `#${taglineColor}` : 'inherit',
 }))
 
-const Button = styled(({isTaglinePresent, ...props}) => (<div {...props}/>))<Theme, {isTaglinePresent: boolean}>(({theme, isTaglinePresent}) => ({
+export const ServiceTypeButton = styled(({isTaglinePresent, ...props}) => (<div {...props}/>))<Theme, {isTaglinePresent: boolean}>(({theme, isTaglinePresent}) => ({
     position: 'relative',
     height: "100%",
     maxHeight: 285,
@@ -110,7 +118,7 @@ const Button = styled(({isTaglinePresent, ...props}) => (<div {...props}/>))<The
     },
 }));
 
-const useStyles = makeStyles((theme) => ({
+export const useServiceTypeStyles = makeStyles((theme) => ({
     name: {
         width: "100%",
         fontSize: 28,
@@ -122,15 +130,16 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading }) => {
-    const {userType, selectedVehicle, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {userType, selectedVehicle, serviceTypeOption, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const currentUser = useCurrentUser();
 
     const {id} = useParams();
-    const classes = useStyles();
+    const classes = useServiceTypeStyles();
     const dispatch = useDispatch();
     const history = useHistory();
+    const showError = useException();
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
 
     const redirect = () => {
@@ -141,15 +150,46 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
         }
     }
 
-    const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
-        if (serviceTypeOption?.id !== serviceOption.id) {
-            dispatch(clearAppointmentData());
-            dispatch(setSideBarSteps([]))
+    const changeToMobileOrServiceValet = () => {
+        dispatch(setTransportation(null))
+        dispatch(setCurrentFrameScreen("location"));
+        redirect()
+    }
+
+    const changeToVisitCenter = () => {
+        if (serviceTypeOption?.type === EServiceType.MobileService) {
+            dispatch(setServiceWarningOpen(true))
+        } else if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+            dispatch(setSlotsWarningOpen(true))
+        } else {
+            dispatch(checkPodChanged(decodeSCID(id), showError))
         }
+    }
+
+    const handleUpdateOption = (serviceOption: IFirstScreenOption) => {
+        dispatch(loadConsultants(id, serviceOption.id));
+        if (serviceOption?.type === EServiceType.VisitCenter) {
+            changeToVisitCenter()
+        } else {
+            changeToMobileOrServiceValet()
+        }
+    }
+
+    const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
         handleValueServiceConfig(serviceOption.type);
-        const nextScreen = serviceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
-        dispatch(setCurrentFrameScreen(nextScreen));
-        redirect();
+        dispatch(setUsualFlowNeeded(false));
+        if (customerLoadedData?.isUpdating) {
+            handleUpdateOption(serviceOption)
+        } else {
+            if (serviceTypeOption?.id !== serviceOption.id) {
+                dispatch(clearAppointmentData());
+                dispatch(setServiceOptionChanged(false));
+                dispatch(setSideBarSteps([]))
+            }
+            const nextScreen = serviceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
+            dispatch(setCurrentFrameScreen(nextScreen));
+            redirect();
+        }
     }
 
     const createBlankUser = () => {
@@ -170,7 +210,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     }
 
     const handleSelectOption = (card: IFirstScreenOption) => {
-        dispatch(clearAppointmentData())
+        if (!customerLoadedData?.isUpdating) dispatch(clearAppointmentData())
         dispatch(setServiceTypeOption(card))
         if (card.type === EServiceType.General) {
             if (card.externalLink) window.location.href = card.externalLink;
@@ -179,26 +219,36 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
         }
     }
 
+    const handleBackWhileUpdating = () => {
+        dispatch(setCurrentFrameScreen("manageAppointment"))
+        dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+        redirect();
+    }
+
     const handleBack = () => {
         const userIsNew = (!customerLoadedData?.id && !selectedVehicle?.make) || userType === EUserType.New;
-        if (currentUser || userIsNew) {
-            dispatch(setWelcomeScreenView("select"))
+        if (customerLoadedData?.isUpdating) {
+            handleBackWhileUpdating()
         } else {
-            dispatch(setCurrentFrameScreen("carSelection"))
-            redirect()
+            if (currentUser || userIsNew) {
+                dispatch(setWelcomeScreenView("select"))
+            } else {
+                dispatch(setCurrentFrameScreen("carSelection"))
+                redirect()
+            }
         }
     }
 
     return isLoading || loading
         ? <Loading/>
         : <div className={classes.wrapper}>
-            <CardsWrapper cardsAmount={firstScreenOptions.length}>
+            <ServiceTypeCardsWrapper cardsAmount={firstScreenOptions.length}>
                 {[...firstScreenOptions]
                     .sort((a, b) => a && b ? a.orderIndex - b.orderIndex : 0)
                     .map((card) => {
                         if (card) {
                             return <Grid key={card.id}>
-                                <Button onClick={() => handleSelectOption(card)} isTaglinePresent={!!isTaglinePresent}>
+                                <ServiceTypeButton onClick={() => handleSelectOption(card)} isTaglinePresent={!!isTaglinePresent}>
                                     {card.description ? <HtmlTooltip
                                         enterTouchDelay={0}
                                         placement="right-end"
@@ -209,12 +259,15 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
                                     <div className={classes.name}>{card.name}</div>
                                     {isTaglinePresent ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
                                     <ServiceTypeIcon card={card}/>
-                                </Button>
+                                </ServiceTypeButton>
                             </Grid>
                         }
                     })}
-            </CardsWrapper>
+            </ServiceTypeCardsWrapper>
             <Actions onBack={handleBack} onNext={() => {}} hideNext/>
+            <AskChangesCompleted />
+            <SlotImpactedWarning />
+            <ServiceImpactedWarning />
         </div>
 };
 

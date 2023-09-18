@@ -74,8 +74,9 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
         sideBarActualSteps,
         sideBarStepsList,
         serviceTypeOption,
-        isAppointmentSaving
+        isAppointmentSaving,
     } = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {currentConfig, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const theme = useTheme();
     const dispatch = useDispatch();
@@ -85,12 +86,12 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useEffect(() => {
-        dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable)))
+        dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable, Boolean(customerLoadedData?.isUpdating))))
     }, [serviceType, isAdvisorAvailable, isTransportationAvailable, getCurrentMenu])
 
     useEffect(() => {
         dispatch(setSideBarActualSteps(getStepsMap(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
-        dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
+        dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, Boolean(customerLoadedData?.isUpdating))))
     }, [serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, getStepsMap])
 
     useEffect(() => {
@@ -109,16 +110,16 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     }
 
     const getButtonState = useCallback((index: number) => {
-        if (isAppointmentSaving) return true;
+        if (isAppointmentSaving || customerLoadedData?.isUpdating) return true;
         if (index > 0 && sideBarSteps.length < 2) return true;
         if (sideBarActualSteps) {
             const currentScreenNumberValue = sideBarActualSteps[screen];
             const lastStep = sideBarSteps[sideBarSteps.length - 2]
-            const lastPassedScreenNumberValue = sideBarActualSteps[lastStep];
+            const lastPassedScreenNumberValue = lastStep === 'manageAppointment' ? 0 : sideBarActualSteps[lastStep];
             return (currentScreenNumberValue < index + 1 && lastPassedScreenNumberValue < index + 1);
         }
         return false;
-    }, [serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, sideBarSteps, sideBarActualSteps, screen, isAppointmentSaving])
+    }, [customerLoadedData, serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, sideBarSteps, sideBarActualSteps, screen, isAppointmentSaving])
 
     const activeButtonStyles = {
         background: '#E6FCEC',

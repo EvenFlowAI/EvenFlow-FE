@@ -213,7 +213,7 @@ export const IntervalUpsell = () => {
             onChangePage={changePage}
             onChangeRowsPerPage={changeRowsPerPage}
             count={requestsCount}
-            hidePagination={requestsCount < pageSize && pageSize < 11}
+            hidePagination={requestsCount < 11}
             actions={actions}
             isLoading={isLoading}
         />

@@ -7,7 +7,7 @@ import {PERMISSIONS} from "../permissions";
 import {matchPath} from "react-router-dom";
 import {EAppointmentTimingType, IRemappedAppointmentSlot} from "../store/reducers/appointment/types";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {IAppointmentByQuery, IMake} from "../api/types";
+import {IAppointment, IMake} from "../api/types";
 import moment from "moment";
 import {encode, decode} from 'url-safe-base64';
 import {ETransportationType} from "../store/reducers/transportationNeeds/types";
@@ -93,12 +93,11 @@ export const validatePhoneNumber = (value: string): string => {
     return value;
 }
 
-export const getAppointmentDate = (appointment: IAppointmentByQuery) => {
-    const date = `${String(appointment.dateInUtc).split("T")[0]}T${appointment.timeSlot}Z`;
-    return moment.utc(date);
+export const getAppointmentDate = (appointment: IAppointment) => {
+    return moment.utc(appointment.dateTime);
 }
-export const getAppointmentVehicle = ({vehicle}: IAppointmentByQuery) => {
-    return `${vehicle.make} ${vehicle.model} ${vehicle.year}`;
+export const getAppointmentVehicle = ({vehicle}: IAppointment) => {
+    return `${vehicle?.make ?? ''} ${vehicle?.model ?? ''} ${vehicle?.year ?? ''}`;
 }
 
 export const encodeSCID = (id: number): string => {
@@ -266,6 +265,11 @@ const ServiceCenters = {
     LeeJanssenMotorCompanyChevrolet: 20,
     LakePowellFord: 35,
     TestBmwOfSchererville: 123,
+    FremontMotorRiverton: 22,
+    FremontMotorCody: 23,
+    FremontMotorPowell: 24,
+    FremontLanderFord: 26,
+    FremontLanderCDJR: 27
 }
 
 export const getTrackerById = (id: string): string => {
@@ -303,6 +307,12 @@ export const getTrackerById = (id: string): string => {
         //if (origin.includes(parentOrigins.performancechryslerjeepcenterville)) return "UA-210743216-19";
         if (decodedId === ServiceCenters.PerformanceToyotaFairfield) return "G-HXLXXZQ4YB";
         //if (origin.includes(parentOrigins.performancetoyotastore)) return "UA-210743216-20";
+        //if (decodedId === ServiceCenters.FremontMotorRiverton) return "G-FBF51NY0TY";
+        if (decodedId === ServiceCenters.FremontMotorRiverton) return "G-YT0WTD548Z";
+        if (decodedId === ServiceCenters.FremontMotorCody) return "G-JZ5SG376SH";
+        if (decodedId === ServiceCenters.FremontMotorPowell) return "G-4853N7VZ21";
+        if (decodedId === ServiceCenters.FremontLanderFord) return "G-VSQ7H51M2D";
+        if (decodedId === ServiceCenters.FremontLanderCDJR) return "G-5BV7X721KQ";
         return "G-DWX0X9CBTT";
         //return "UA-210743216-5";
     } else {

@@ -16,6 +16,7 @@ export type TActionProps = {
     prevDisabled?: boolean;
     prevLabel?: string;
     hideNext?: boolean;
+    hidePrev?: boolean;
 };
 
 export type EMaintenanceItemType = 'category' | 'package' | 'service' | 'valueService' | 'recall'
@@ -54,4 +55,17 @@ export type TCard = {
     description: string;
     name: EAppointmentTimingType;
     icon: JSX.Element;
+}
+
+export interface TError {
+    field: string,
+    message: string
+}
+
+export type geoCodeType = "street_number" | "route" | "locality" | "administrative_area_level_1"
+
+export type TParsedAddress = {
+    city: string;
+    state: string;
+    address: string;
 }

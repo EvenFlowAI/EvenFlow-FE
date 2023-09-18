@@ -27,7 +27,7 @@ import {
 import PackageSelectionMobile from "./PackageSelectionMobile";
 //import ReactGA from "react-ga";
 import ReactGA from "react-ga4";
-import {useModal} from "../../../utils/hooks";
+import {useException, useModal} from "../../../utils/hooks";
 import ConfirmChangeOption from "../../Modals/ConfirmChangeOption/ConfirmChangeOption";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {getPackagesData} from "./utils";
@@ -44,6 +44,7 @@ import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
 import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
 import {EPackagePricingType} from "../../../store/reducers/appointmentFrameReducer/types";
 import PackagesEmenu from "./PackagesEmenu";
+import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 const border = '1px solid #DADADA';
 
@@ -275,7 +276,7 @@ type TPackageSelectionProps = {
 }
 
 export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices}) => {
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {
         selectedPackage,
@@ -283,6 +284,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
         packagePricingType,
         packageOptionType,
         packageEMenuType,
+        isUsualFlowNeeded,
     } = useSelector((state: RootState) => state.appointmentFrame);
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -295,6 +297,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
     const isXs = useMediaQuery(theme.breakpoints.down('xs'));
     const {t} = useTranslation();
+    const showError = useException();
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
@@ -366,10 +369,21 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 : "appointmentSelection")
     }
 
+    const onSelectionCompleted = () => {
+        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+            dispatch(checkPodChanged(decodeSCID(id), showError))
+        } else {
+            onAdditionalOpen()
+        }
+    }
+
     const onSave = async () => {
-        localSelectedPackage && dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
+        if (localSelectedPackage) {
+            dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
+            dispatch(setPackage(localSelectedPackage))
+        }
         await onClose();
-        await onAdditionalOpen();
+        await onSelectionCompleted();
     }
 
     const handleGA = (selectedPackage: IPackageOptions): void => {
@@ -388,10 +402,10 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             if (selectedPackage && packageOptionType !== null && packageOptionType !== localSelectedPackage.type) {
                 onOpen();
             } else {
-                onAdditionalOpen();
                 dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
                 dispatch(setPackage(localSelectedPackage))
                 dispatch(setPackagePricingType(localSelectedPricingType))
+                onSelectionCompleted();
             }
         }
     }
@@ -404,7 +418,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             action: `Selected eMenu Package`,
             label: `With ${packageEMenuType === firstOption ? 'Factory' : "Dealer"} Option`,
         });
-        onAdditionalOpen();
+        onSelectionCompleted();
     }
 
     const handleClick = (p: IPackageOptions, pricing?: EPackagePricingType) => () => {
