@@ -134,6 +134,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         customerLoadedData,
         isAppointmentSaving,
         appointmentByKey,
+        appointmentRequestsPrices,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -161,6 +162,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         state.appointment.customerLoadedData,
         state.appointmentFrame.isAppointmentSaving,
         state.appointmentFrame.appointmentByKey,
+        state.appointmentFrame.appointmentRequestsPrices,
     ]);
 
     const {t} = useTranslation();
@@ -198,7 +200,11 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
             : ''
 
     const isServiceValetApp = useMemo(() => Boolean(serviceValetAppointment) && serviceTypeOption?.type === EServiceType.PickUpDropOff,
-        [serviceValetAppointment, serviceTypeOption])
+        [serviceValetAppointment, serviceTypeOption]);
+    const isServiceValetManage = useMemo(() => !Boolean(appointment) && serviceTypeOption?.type === EServiceType.PickUpDropOff && appointmentByKey,
+        [appointment, serviceTypeOption]);
+    const appointmentPrice = appointmentRequestsPrices
+        .reduce((prev, current) => prev + (current.priceValue ?? 0),0)
 
     useEffect(() => {
         ReactGA.event({
@@ -230,17 +236,21 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     }
 
     const getPriceContent = (): string => {
+        let price  = t('Will be quoted at the dealership');
         if (isServiceValetApp && serviceValetAppointment?.price?.value) {
-            return scProfile?.isRoundPrice
+            price = scProfile?.isRoundPrice
                 ? `$${serviceValetAppointment?.price?.value}`
                 : `$${serviceValetAppointment?.price?.value.toFixed(2)}`
-        }
-        if (appointment?.price?.value) {
-            return scProfile?.isRoundPrice
+        } else if (appointment?.price?.value) {
+            price = scProfile?.isRoundPrice
                 ? `$${appointment?.price?.value}`
                 : `$${appointment?.price?.value.toFixed(2)}`
+        } else if (appointmentPrice) {
+            price = scProfile?.isRoundPrice
+                ? `$${appointmentPrice}`
+                : `$${appointmentPrice.toFixed(2)}`
         }
-        return t('Will be quoted at the dealership')
+        return price
     }
 
     const getDate = () => {
@@ -259,10 +269,51 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         return moment.utc().format('ddd, MMM D, h:mm A');
     }
 
+    const insertPickUpTime = useCallback((list: TItem[]): TItem[] => {
+        if (isServiceValetApp) {
+            list.splice(
+                1,
+                0,
+                {
+                    label: t("Pick Up Time"),
+                    content: `${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('hh:mm A')}
+            ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
+                }
+            )
+            if (dropOffSettings?.showDropOffTime && serviceValetAppointment?.dropOffMin && serviceValetAppointment?.dropOffMax) {
+                list.splice(2, 0, {
+                    label: t("Drop Off Time"),
+                    content: `${moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('hh:mm A')}
+            ${t("to")} ${moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('hh:mm A')}`
+                })
+            }
+        } else if (isServiceValetManage) {
+            list.splice(
+                1,
+                0,
+                {
+                    label: t("Pick Up Time"),
+                    content: `${moment.utc(appointmentByKey?.serviceValetTime?.pickUpMin, "HH:mm:ss").format('hh:mm A')}
+            ${t("to")} ${moment.utc(appointmentByKey?.serviceValetTime?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
+                }
+            )
+            if (dropOffSettings?.showDropOffTime && appointmentByKey?.serviceValetTime?.dropOffMin && appointmentByKey?.serviceValetTime?.dropOffMax) {
+                list.splice(2, 0, {
+                    label: t("Drop Off Time"),
+                    content: `${moment.utc(appointmentByKey?.serviceValetTime?.dropOffMin, "HH:mm:ss").format('hh:mm A')}
+            ${t("to")} ${moment.utc(appointmentByKey?.serviceValetTime?.dropOffMax, "HH:mm:ss").format('hh:mm A')}`
+                })
+            }
+        }
+        return list;
+    }, [isServiceValetApp, serviceValetAppointment, dropOffSettings, isServiceValetManage, appointmentByKey])
+
     const data: TItem[] = useMemo(() => {
         const list: TItem[] = [
             {
-                label: isServiceValetApp ? t("Date") : t("Date and time"),
+                label: isServiceValetApp || isServiceValetManage
+                    ? t("Date")
+                    : t("Date and time"),
                 content: getDate(),
             },
             {
@@ -298,27 +349,10 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 content: customer.email
             },
         ]
-        if (isServiceValetApp) {
-            list.splice(
-                1,
-                0,
-                {
-                    label: t("Pick Up Time"),
-                    content: `${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('hh:mm A')}
-            ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
-                }
-            )
-            if (dropOffSettings?.showDropOffTime && serviceValetAppointment?.dropOffMin && serviceValetAppointment?.dropOffMax) {
-                list.splice(2, 0, {
-                    label: t("Drop Off Time"),
-                    content: `${moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('hh:mm A')}
-            ${t("to")} ${moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('hh:mm A')}`
-                })
-            }
-        }
 
-        return list;
-    }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR, serviceValetAppointment, serviceTypeOption, isServiceValetApp]);
+        return insertPickUpTime(list);
+    }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR,
+        isServiceValetApp, isServiceValetManage, insertPickUpTime]);
 
     const getDateForUpdate = (): moment.Moment => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {
@@ -395,7 +429,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
             data.splice(4, 1);
         }
         return data
-    }, [vehicleData, getServiceName, getDateForCalendar, isServiceValetApp, servicesList, advisor, scProfile, serviceTypeOption])
+    }, [vehicleData, getServiceName, getDateForCalendar, isServiceValetApp, servicesList, advisor, scProfile, serviceTypeOption, getDateForCalendar])
 
     const handleAddToCalendar = () => {
         const url = getCalendarUrl({
