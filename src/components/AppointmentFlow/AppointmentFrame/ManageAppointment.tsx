@@ -11,10 +11,8 @@ import {
     clearAppointmentData,
     createOrUpdateAppointment,
     loadAppointmentRequestsPrices,
-    setAppointmentByKey,
     setAppointmentSaving,
     setCurrentFrameScreen,
-    setEditingPosition,
     setReminders, setServiceOptionChanged, setSideBarSteps, setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -23,7 +21,7 @@ import {RootState} from "../../../store/rootReducer";
 import {useHistory, useParams} from "react-router-dom";
 import {useConfirm, useCurrentUser, useException, useMessage, useModal} from "../../../utils/hooks";
 import {
-    loadAllServiceCategories, loadSRs,
+    loadAllServiceCategories, loadSRs, setCustomerLoadedData,
 } from "../../../store/reducers/appointment/actions";
 import Vehicle from "./confirmationSections/Vehicle";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
@@ -208,12 +206,11 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
                         Please do not forget to update the appointment in your calendar.
                     </div>
                 );
-                await dispatch(setEditingPosition(null))
-                await dispatch(setAppointmentByKey(null));
                 await dispatch(setSideBarSteps([]));
                 await dispatch(setServiceOptionChanged(false));
                 await dispatch(setVehicle(null));
-                await clearAppointmentData();
+                await dispatch(clearAppointmentData());
+                await dispatch(setCustomerLoadedData(null));
                 await dispatch(setWelcomeScreenView("select"))
                 history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1")
             } catch (e) {
