@@ -48,7 +48,9 @@ const Address = () => {
     return address && (serviceType === EServiceType.MobileService || serviceType === EServiceType.PickUpDropOff)
         ? <div>
             <TitleWrapper>
-                <ConfirmationTitle>{t("Address")}</ConfirmationTitle>
+                <ConfirmationTitle>
+                    {serviceType === EServiceType.MobileService ? t("Service Address") : t("Pick Up Address")}
+                </ConfirmationTitle>
                 <Edit htmlColor="#142EA1" fontSize="small" onClick={handleChangeAddress} style={{cursor: "pointer"}}/>
             </TitleWrapper>
             <List>

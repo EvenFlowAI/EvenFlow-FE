@@ -346,8 +346,5 @@ export const parseGeoCode = (data: any[], addressString: string, mainText?: stri
         cityName = secondaryText?.split(',')[0].trim();
     }
 
-    console.log(`CITY: ${cityName}, STATE: ${state?.short_name}, ADDRESS: ${address}`)
-
-    console.log('FULL ADDRESS: ' + address + ', ' + cityName + ', ' + state?.short_name)
     return {city: cityName ?? '', state: state?.short_name ?? '', address: address ?? ''}
 }

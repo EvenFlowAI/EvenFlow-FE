@@ -34,7 +34,9 @@ const Address = () => {
     return address && (serviceType === EServiceType.MobileService || serviceType === EServiceType.PickUpDropOff)
         ? <div>
             <TitleWrapper>
-                <ConfirmationTitle>{t("Address")}</ConfirmationTitle>
+                <ConfirmationTitle>
+                    {serviceType === EServiceType.MobileService ? t("Service Address") : t("Pick Up Address")}
+                </ConfirmationTitle>
             </TitleWrapper>
             <List>
                 <li className="service-item">
