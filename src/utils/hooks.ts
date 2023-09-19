@@ -1,7 +1,7 @@
 import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
 import {useSnackbar} from "notistack";
 import {IPageRequest, LocalTokens, ValidationKeyPairs} from "../types/types";
-import {decodeSCID, getAPIException, getTracker, getTrackerById} from "./utils";
+import {getAPIException, getTracker, getTrackerById} from "./utils";
 import {RootState} from "../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {closeConfirmModal, openConfirmModal} from "../store/reducers/modals/actions";
@@ -257,7 +257,6 @@ export const useAnalyticsBySCId = (id: string, trackerCreated: boolean, setTrack
             TagManager.initialize({
                 gtmId: TRACKER
             })
-            console.log("On PROD tracker will be created for service center with ID ", decodeSCID(id))
             setTrackerCreated();
         }
     }
