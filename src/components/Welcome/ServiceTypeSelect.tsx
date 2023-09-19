@@ -14,7 +14,7 @@ import {
     clearAppointmentData, loadConsultants,
     setCurrentFrameScreen, setServiceOptionChanged,
     setServiceTypeOption,
-    setSideBarSteps,
+    setSideBarSteps, setTrackerCreated,
     setTransportation,
     setUsualFlowNeeded,
     setVehicle,
@@ -29,7 +29,7 @@ import {InfoOutlined} from "@material-ui/icons";
 import {HtmlTooltip} from "../AppointmentFlow/AppointmentFrame/ServiceCard";
 import ServiceTypeIcon from "./ServiceTypeIcon";
 import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
-import {useCurrentUser, useException} from "../../utils/hooks";
+import {useAnalyticsBySCId, useCurrentUser, useException} from "../../utils/hooks";
 import {Routes} from "../../config/routes";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
@@ -130,7 +130,7 @@ export const useServiceTypeStyles = makeStyles((theme) => ({
 }))
 
 const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading }) => {
-    const {userType, selectedVehicle, serviceTypeOption, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
+    const {trackerCreated, userType, selectedVehicle, serviceTypeOption, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const currentUser = useCurrentUser();
@@ -141,6 +141,8 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     const history = useHistory();
     const showError = useException();
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
+
+    useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
     const redirect = () => {
         if (id) {
