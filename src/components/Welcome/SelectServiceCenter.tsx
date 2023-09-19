@@ -11,7 +11,7 @@ import {
     clearAppointmentData,
     setAddress, setServiceOptionChanged,
     setServiceTypeOption,
-    setSideBarSteps,
+    setSideBarSteps, setTrackerCreated,
     setVehicle,
     setWelcomeScreenView,
     setZipCode
@@ -132,6 +132,10 @@ const SelectServiceCenter = () => {
             dispatch(setWelcomeScreenView('select'))
         }
     }, [currentUser, scProfile])
+
+    useEffect(() => {
+        dispatch(setTrackerCreated(false))
+    }, [])
 
     return !scProfile || isProfileLoading || shortLoading
         ? <Loading/>
