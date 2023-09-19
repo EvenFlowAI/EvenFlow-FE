@@ -235,6 +235,17 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         }
     }
 
+    const getAddressLabel = (): string => {
+        switch (serviceType) {
+            case EServiceType.MobileService:
+                return t("Service Address");
+            case EServiceType.PickUpDropOff:
+                return t("Pick Up Address");
+            default:
+                return t("Address");
+        }
+    }
+
     const getPriceContent = (): string => {
         let price  = t('Will be quoted at the dealership');
         if (isServiceValetApp && serviceValetAppointment?.price?.value) {
@@ -321,7 +332,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 content: serviceType !== EServiceType.VisitCenter ? getServiceName() : ""
             },
             {
-                label: serviceType === EServiceType.VisitCenter || address ? t("Address") : '',
+                label: getAddressLabel(),
                 content: getAddress(),
             },
             {

@@ -333,7 +333,9 @@
       "The services our Mobile Truck offer may be different from our Service Center.": "The services our Mobile Truck offer may be different from our Service Center.",
       "Please continue to see available services and appointment times": "Please continue to see available services and appointment times",
       "You do not have any services selected in your appointment. Please add items you wish to have serviced": "You do not have any services selected in your appointment. Please add items you wish to have serviced",
-      "Back to Visit Center": "Back to Visit Center"
+      "Back to Visit Center": "Back to Visit Center",
+      "Service Address": "Service Address",
+      "Pick Up Address": "Pick Up Address"
     }
   },
   "es": {
