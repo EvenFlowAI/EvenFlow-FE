@@ -20,9 +20,9 @@ type TUserDataProps = {
 };
 
 export const UserData: React.FC<TUserDataProps> = ({ errors, setErrors, isEmailRequired }) => {
-    const dispatch = useDispatch();
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
-    const customer = useSelector((state: RootState) => state.appointmentFrame.customer);
+    const {customer} = useSelector((state: RootState) => state.appointmentFrame);
+    const dispatch = useDispatch();
     const {t} = useTranslation();
 
     useEffect(() => {
