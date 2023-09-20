@@ -36,6 +36,10 @@ export const Reminders: React.FC<TRemindersProps> = ({isEmailRequired}) => {
         }
     }, [isEmailRequired, emailReminder, customer])
 
+    useEffect(() => {
+        if (customer?.email) dispatch(setReminders(Array.from(new Set([...reminders, EReminderType.Email]))))
+    }, [customer])
+
     const handleChange = (t: EReminderType) => () => {
         if (reminders.includes(t)) {
             dispatch(setReminders(reminders.filter(r => r !== t)));
