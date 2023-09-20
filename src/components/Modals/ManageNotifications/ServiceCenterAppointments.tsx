@@ -51,6 +51,7 @@ const ServiceCenterAppointments = () => {
                     <p className={classes.notificationsLabel}>on/off Service center appointments notifications</p>
                     <Switch
                         onChange={handleSwitch}
+                        disabled={loading}
                         checked={scNotifications.isActive}
                         color="primary"
                     />
@@ -58,8 +59,8 @@ const ServiceCenterAppointments = () => {
                 <div className={classes.selectWrapper}>
                     <Autocomplete
                         options={employeesList}
-                        fullWidth
-                        //style={{width: 290}}
+                        style={{width: 290}}
+                        disabled={loading}
                         getOptionLabel={i => i.fullName}
                         value={currentEmployee}
                         onChange={onEmployeeChange}
@@ -73,25 +74,26 @@ const ServiceCenterAppointments = () => {
                         startIcon={<PlusIcon/>}
                         onClick={onAddEmployee}
                         color="primary"
+                        disabled={loading}
                         className={classes.addButton}
                     >  Add</Button>
                 </div>
                 <div>
-                {selectedEmployees.map(item => (
-                    <div className={classes.employeeWrapper}>
-                        <div>{item.fullName}</div>
-                        <div>{item.email}</div>
-                        <IconButton onClick={() => deleteEmployee(item.id)}><DeleteIcon/></IconButton>
-                    </div>
-                ))}
+                    {selectedEmployees.sort((a, b) => a.fullName.localeCompare(b.fullName)).map(item => (
+                        <div className={classes.employeeWrapper}>
+                            <div>{item.fullName}</div>
+                            <div>{item.email}</div>
+                            <IconButton onClick={() => deleteEmployee(item.id)} disabled={loading}><DeleteIcon/></IconButton>
+                        </div>
+                    ))}
                 </div>
             </div>
             <Divider/>
             <DialogActions>
-                <Button onClick={onCancel} variant="outlined" color="primary">
+                <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading}>
                     Cancel
                 </Button>
-                <Button onClick={onSave} variant="contained" color="primary">
+                <Button onClick={onSave} variant="contained" color="primary" disabled={loading}>
                     Save
                 </Button>
             </DialogActions>

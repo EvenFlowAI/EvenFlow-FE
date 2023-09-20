@@ -1,20 +1,16 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {TabList} from "../../UI/Tabs";
-import {styled, Tab} from "@material-ui/core";
-import {Autocomplete, TabContext, TabPanel} from "@material-ui/lab";
+import {Tab} from "@material-ui/core";
+import {TabContext, TabPanel} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
-import {IEmployee} from "../../../store/reducers/employees/types";
-import {IPod} from "../../../store/reducers/pods/types";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {useDispatch} from "react-redux";
 import ServiceCenterAppointments from "./ServiceCenterAppointments";
 import PodAppointments from "./PodAppointments";
 import RecallAppointments from "./RecallAppointments";
 import {useSCs} from "../../../utils/hooks";
-import {loadByFilters, loadSCEmployees, setEmployeeFilters} from "../../../store/reducers/employees/actions";
+import {loadByFilters, setEmployeeFilters} from "../../../store/reducers/employees/actions";
 
 export const useNotificationStyles = makeStyles({
     tabTitle: {
@@ -26,10 +22,11 @@ export const useNotificationStyles = makeStyles({
         paddingBottom: 25
     },
     tabWrapper: {
+        width: 400,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: "center",
-        alignItems: 'center',
+        margin: 'auto'
     },
     notificationsLabel: {
         fontSize: 12,
@@ -78,9 +75,7 @@ export const initialData: TSCNotifications = {
 }
 
 const ManageNotifications:React.FC<DialogProps> = (props) => {
-    const {loading} = useSelector((state: RootState) => state.employees);
     const [currentTab, setCurrentTab] = useState<string>("0");
-    const classes = useNotificationStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
