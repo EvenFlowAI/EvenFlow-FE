@@ -104,7 +104,7 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
                 style={{textTransform: 'uppercase', color: "#252525", padding: '24px 0'}}>
                 Manage service center notifications
             </DialogTitle>
-            <DialogContent style={{padding: "25px 255px"}}>
+            <DialogContent>
                 <TabContext value={currentTab}>
                     <TabList
                         onChange={handleTabChange}

@@ -36,6 +36,7 @@ const ServiceCenterAppointments = () => {
     const onAddEmployee = () => {
         if (currentEmployee) {
             setScNotifications(prevState => ({...prevState, employeeIds: Array.from(new Set([...prevState.employeeIds, currentEmployee.id]))}))
+            setCurrentEmployee(null)
         }
     }
 

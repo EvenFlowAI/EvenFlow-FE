@@ -36,6 +36,7 @@ const RecallAppointments = () => {
     const onAddEmployee = () => {
         if (currentEmployee) {
             setRecallNotifications(prevState => ({...prevState, employeeIds: Array.from(new Set([...prevState.employeeIds, currentEmployee.id]))}))
+            setCurrentEmployee(null)
         }
     }
 
