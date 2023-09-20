@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {TabList} from "../../UI/Tabs";
@@ -7,11 +7,16 @@ import {Autocomplete, TabContext, TabPanel} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
 import {IEmployee} from "../../../store/reducers/employees/types";
 import {IPod} from "../../../store/reducers/pods/types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
+import ServiceCenterAppointments from "./ServiceCenterAppointments";
+import PodAppointments from "./PodAppointments";
+import RecallAppointments from "./RecallAppointments";
+import {useSCs} from "../../../utils/hooks";
+import {loadByFilters, loadSCEmployees, setEmployeeFilters} from "../../../store/reducers/employees/actions";
 
-const useStyles = makeStyles({
+export const useNotificationStyles = makeStyles({
     tabTitle: {
         fontSize: 16,
         fontWeight: 700,
@@ -23,62 +28,78 @@ const useStyles = makeStyles({
     tabWrapper: {
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems: 'center',
+    },
+    notificationsLabel: {
+        fontSize: 12,
+        fontWeight: 700,
+        textTransform: 'uppercase',
+        margin: 0,
+    },
+    switcherWrapper: {
+        display: 'flex',
+        alignItems: "center",
+        marginBottom: 10,
+    },
+    selectWrapper: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+    },
+    addButton: {
+        fontSize: 12,
+        textTransform: 'none',
+        marginLeft: 8,
+    },
+    employeeWrapper: {
+        display: 'grid',
+        gridTemplateColumns: '2fr 3fr 1fr',
+        alignItems: "center",
+        gap: '8px',
+        marginTop: 9,
     }
 })
 
-type TEmployee = {
+export type TEmployee = {
     id: string;
     name: string;
     email: string;
 }
 
-type TSCNotifications = {
+export type TSCNotifications = {
     isActive: boolean;
-    employees: TEmployee[];
+    employeeIds: string[];
 }
 
-type TPodNotifications = {
-    pod: IPod|null;
-    employees: TEmployee[];
-}
-
-const initialData: TSCNotifications = {
+export const initialData: TSCNotifications = {
     isActive: false,
-    employees: []
-}
-
-const podInitialData: TPodNotifications = {
-    pod: null,
-    employees: []
-}
-
-type TOption = {
-    value: number;
-    name: string;
+    employeeIds: []
 }
 
 const ManageNotifications:React.FC<DialogProps> = (props) => {
-    const {employeesList, loading} = useSelector((state: RootState) => state.employees);
-    const {podsList, podsLoading} = useSelector((state: RootState) => state.pods);
+    const {loading} = useSelector((state: RootState) => state.employees);
     const [currentTab, setCurrentTab] = useState<string>("0");
-    const [scNotifications, setScNotifications] = useState<TSCNotifications>(initialData)
-    const [recallNotifications, setRecallNotifications] = useState<TSCNotifications>(initialData)
-    const [podNotifications, setPodNotifications] = useState<TPodNotifications>(podInitialData)
-    const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
-    const classes = useStyles();
+    const classes = useNotificationStyles();
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(setEmployeeFilters({serviceCenterId: selectedSC.id}))
+        }
+    }, [selectedSC])
+
+    useEffect(() => {
+        selectedSC && dispatch(loadByFilters())
+    }, [selectedSC])
 
     const onCancel = () => {
         props.onClose();
     }
 
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
-        setCurrentEmployee(null);
         setCurrentTab(tab)
-    }
-
-    const onEmployeeChange = (tab: string) => (e: ChangeEvent<{}>, value: IEmployee|null) => {
-        setCurrentEmployee(value)
     }
 
     return (
@@ -100,30 +121,13 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
                         <Tab label="Recall Appointments" value="2"/>
                     </TabList>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="0">
-                        <div className={classes.tabWrapper}>
-                            <div className={classes.tabTitle}>Service Center Appointments</div>
-
-                            <Autocomplete
-                                options={employeesList}
-                                getOptionLabel={i => i.fullName}
-                                value={currentEmployee}
-                                onChange={onEmployeeChange(currentTab)}
-                                renderInput={autocompleteRender({
-                                    label: "Appointment Type",
-                                    placeholder: 'Appointment Type'
-                                })}
-                            />
-                        </div>
+                        <ServiceCenterAppointments/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="1">
-                        <div className={classes.tabWrapper}>
-                            <div className={classes.tabTitle}>POD Appointments</div>
-                        </div>
+                       <PodAppointments/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="2">
-                        <div className={classes.tabWrapper}>
-                            <div className={classes.tabTitle}>Recall Appointments</div>
-                        </div>
+                        <RecallAppointments/>
                     </TabPanel>
                 </TabContext>
             </DialogContent>
