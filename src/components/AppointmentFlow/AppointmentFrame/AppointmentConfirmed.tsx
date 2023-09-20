@@ -483,9 +483,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 {isAppointmentSaving
                     ? <div className="emptyContainer"><Loading/></div>
                     : data.filter(el => el.content).map((item, index) => {
-                    if (!selectedPackage && item.label === t("Selected Price")) {
-                        return null;
-                    }
                     if (!item.label.length && item.content.length) return null;
                     return <React.Fragment key={item.label + index}>
                         <div className="label">{item.label}</div>
