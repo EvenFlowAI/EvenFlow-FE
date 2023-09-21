@@ -29,7 +29,7 @@ const useStyles = makeStyles({
 
 const DetailsItem: React.FC<{title: string, text: string|string[], icon?: ReactComponentElement<any>}> = ({title, text, icon}) => {
     const classes = useStyles();
-    return text.length
+    return text?.length
         ? <div className={classes.wrapper}>
             {icon ? <div className={classes.icon}>{icon}</div> : null}
             <div className={classes.details}>
