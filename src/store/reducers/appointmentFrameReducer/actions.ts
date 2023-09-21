@@ -345,6 +345,7 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
     if (data.maintenancePackageOption?.priceType) {
         dispatch(setPackagePricingType(data.maintenancePackageOption.priceType))
     }
+    if (data.detailedPriceList) dispatch(getAppointmentRequestsPrices(data.detailedPriceList))
     if (customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
         const updatedData = {...customerLoadedData};
         let vehicle = updatedData.vehicles.find(
