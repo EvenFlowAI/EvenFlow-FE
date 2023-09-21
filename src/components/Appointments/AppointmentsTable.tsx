@@ -83,7 +83,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
                     title: "Cancel appointment",
                     content: <span>
                         Please confirm you want to cancel appointment on <br />
-                        {moment(viewItem.dateTime).format("LLL")}?
+                        {moment.utc(viewItem.dateTime).format("LLL")}?
                     </span>,
                     onConfirm: _handleCancel
                 });
