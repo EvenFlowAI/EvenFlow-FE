@@ -147,6 +147,7 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
         service, subService, categoriesIds, } = getState().appointmentFrame;
     const {selectedSR} = getState().appointment;
     const {allCategories} = getState().categories;
+    const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
     const serviceCategoryIds = allCategories
         .filter(category => {
             return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
@@ -191,6 +192,10 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
                 if (!result.length) {
                     onEmptyList && onEmptyList()
                     dispatch(setAdvisorAvailable(false));
+                } else {
+                    if (currentConfig?.advisorSelection && !isAdvisorAvailable){
+                        dispatch(setAdvisorAvailable(true));
+                    }
                 }
             })
             .catch(err => console.log(err))
