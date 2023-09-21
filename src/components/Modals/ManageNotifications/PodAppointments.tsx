@@ -12,11 +12,7 @@ import {ReactComponent as PlusIcon} from "../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
 import {useSCs} from "../../../utils/hooks";
 import {loadPods} from "../../../store/reducers/pods/actions";
-
-type TPodNotifications = {
-    pod: IPod|null;
-    employeeIds: string[];
-}
+import {TPodNotifications} from "../../../store/reducers/notifications/types";
 
 const podInitialData: TPodNotifications = {
     pod: null,

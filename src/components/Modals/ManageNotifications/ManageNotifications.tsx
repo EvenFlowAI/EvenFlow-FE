@@ -11,6 +11,7 @@ import PodAppointments from "./PodAppointments";
 import RecallAppointments from "./RecallAppointments";
 import {useSCs} from "../../../utils/hooks";
 import {loadByFilters, setEmployeeFilters} from "../../../store/reducers/employees/actions";
+import {TSCNotifications} from "../../../store/reducers/notifications/types";
 
 export const useNotificationStyles = makeStyles({
     tabTitle: {
@@ -57,17 +58,6 @@ export const useNotificationStyles = makeStyles({
         marginTop: 9,
     }
 })
-
-export type TEmployee = {
-    id: string;
-    name: string;
-    email: string;
-}
-
-export type TSCNotifications = {
-    isActive: boolean;
-    employeeIds: string[];
-}
 
 export const initialData: TSCNotifications = {
     isActive: false,
