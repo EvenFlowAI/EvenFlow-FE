@@ -107,8 +107,11 @@ export const AppointmentFrameLayout = () => {
         makes,
         serviceTypeOption,
         hashKey,
+        selectedPackage,
+        selectedRecalls,
+        categoriesIds,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const {currentConfig, isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -222,7 +225,6 @@ export const AppointmentFrameLayout = () => {
         updateRecalls, updatePackageOption, goToServiceTypeSelection,
         isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes, isAuth])
 
-    // useAnalytics(trackerCreated, () => dispatch(setTrackerCreated(true)))
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
     useStorage();
@@ -231,6 +233,11 @@ export const AppointmentFrameLayout = () => {
         dispatch(loadEngineType(decodeSCID(id)));
         dispatch(loadMakes(decodeSCID(id)));
     }, [id])
+
+    useEffect(() => {
+        const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
+        if (someRequestsSelected && selectedVehicle) dispatch(loadConsultants(id, serviceTypeOption?.id ?? null))
+    }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle])
 
     useEffect(() => {
         window.addEventListener('beforeunload', handleLogin)

@@ -20,7 +20,7 @@ import {RootState} from "../../store/rootReducer";
 const cols: TableRowDataType<IAppointment>[] = [
     {header: "Date", val: el => el.dateTime ? moment.utc(el.dateTime).format("MMMM D, YYYY") : "", orderId: "date", width: 150},
     {header: "Day", val: el => el.dateTime ? moment.utc(el.dateTime).format("ddd") : ""},
-    {header: "Time", val: el => el.dateTime ? moment.utc(el.dateTime).format(timeString) : ""},
+    {header: "Time", val: el => el.dateTime ? moment.utc(el.dateTime).format(timeString) : "", width: 100},
     {header: "Customer Name", val: el => el.customerInformation?.fullName ?? "", orderId: "fullName"},
     {header: "Vehicle", val: el => `${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${el.vehicle?.year ?? ''}`},
     {header: "Service Book", val: el => el.serviceBook?.name ?? ''},
@@ -83,7 +83,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
                     title: "Cancel appointment",
                     content: <span>
                         Please confirm you want to cancel appointment on <br />
-                        {moment(viewItem.dateTime).format("LLL")}?
+                        {moment.utc(viewItem.dateTime).format("LLL")}?
                     </span>,
                     onConfirm: _handleCancel
                 });
