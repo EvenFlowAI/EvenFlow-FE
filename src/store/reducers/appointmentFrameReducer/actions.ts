@@ -148,7 +148,7 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
 export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void): AppThunk => async (dispatch, getState) => {
     dispatch(setConsultantsLoading(true))
     const {selectedPackage, packagePricingType, packageEMenuType, selectedRecalls, selectedVehicle, address, zipCode, valueService,
-        service, subService, categoriesIds} = getState().appointmentFrame;
+        service, subService, categoriesIds, sideBarSteps} = getState().appointmentFrame;
     const {selectedSR} = getState().appointment;
     const {allCategories} = getState().categories;
     const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
@@ -197,7 +197,8 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
                     onEmptyList && onEmptyList()
                     dispatch(setAdvisorAvailable(false));
                 } else {
-                    if (currentConfig?.advisorSelection && !isAdvisorAvailable){
+                    if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
+                        dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
                         dispatch(setAdvisorAvailable(true));
                     }
                 }
