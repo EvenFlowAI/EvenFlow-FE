@@ -1,31 +1,21 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
-    setLoading, setSCNotifications,
+    setLoading, setPodNotifications, setRecallNotifications, setSCNotifications,
 } from "./actions";
 import {TPodNotifications, TSCNotifications} from "./types";
 
 type TState = {
     isLoading: boolean;
-    scNotifications: TSCNotifications;
-    podNotifications: TPodNotifications;
-    recallNotifications: TSCNotifications;
-}
-
-const initialSCNotifications: TSCNotifications = {
-    isActive: false,
-    employeeIds: []
-}
-
-const podInitialNotifications: TPodNotifications = {
-    pod: null,
-    employeeIds: []
+    scNotifications: TSCNotifications|null;
+    podNotifications: TPodNotifications|null;
+    recallNotifications: TSCNotifications|null;
 }
 
 const initialState: TState = {
     isLoading: false,
-    scNotifications: initialSCNotifications,
-    podNotifications: podInitialNotifications,
-    recallNotifications: initialSCNotifications,
+    scNotifications: null,
+    podNotifications: null,
+    recallNotifications: null,
 }
 
 export const notificationsReducer = createReducer<TState>(initialState, builder => builder
@@ -34,5 +24,11 @@ export const notificationsReducer = createReducer<TState>(initialState, builder 
     })
     .addCase(setSCNotifications, (state, {payload}) => {
         return {...state, scNotifications: payload}
+    })
+    .addCase(setPodNotifications, (state, {payload}) => {
+        return {...state, podNotifications: payload}
+    })
+    .addCase(setRecallNotifications, (state, {payload}) => {
+        return {...state, recallNotifications: payload}
     })
 )

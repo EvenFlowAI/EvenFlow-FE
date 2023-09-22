@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
-import {initialData, TSCNotifications, useNotificationStyles} from "./ManageNotifications";
+import {useNotificationStyles} from "./ManageNotifications";
 import {IEmployee} from "../../../store/reducers/employees/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -9,18 +9,29 @@ import {Button, Divider, IconButton, Switch} from "@material-ui/core";
 import {DialogActions} from "../BaseModal";
 import {ReactComponent as PlusIcon} from "../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
+import {TSCNotifications} from "../../../store/reducers/notifications/types";
+
+export const initialSCNotifications: TSCNotifications = {
+    isActive: false,
+    employeeIds: []
+}
 
 const ServiceCenterAppointments = () => {
     const {employeesList, loading} = useSelector((state: RootState) => state.employees);
+    const {scNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
-    const [scNotifications, setScNotifications] = useState<TSCNotifications>(initialData);
+    const [scData, setScData] = useState<TSCNotifications>(initialSCNotifications);
     const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
     const classes = useNotificationStyles();
 
     useEffect(() => {
-        const selected = employeesList.filter(el => scNotifications.employeeIds.includes(el.id))
+        setScData(scNotifications ? scNotifications : initialSCNotifications)
+    }, [scNotifications])
+
+    useEffect(() => {
+        const selected = employeesList.filter(el => scData?.employeeIds.includes(el.id))
         setSelectedEmployees(selected)
-    }, [employeesList, scNotifications])
+    }, [employeesList, scData])
 
     const onEmployeeChange = (e: ChangeEvent<{}>, value: IEmployee|null) => {
         setCurrentEmployee(value)
@@ -30,18 +41,18 @@ const ServiceCenterAppointments = () => {
     const onSave = () => {}
 
     const handleSwitch = () => {
-        setScNotifications(prevState => ({...prevState, isActive: !prevState.isActive}))
+        setScData(prevState => ({...prevState, isActive: !prevState.isActive}))
     }
 
     const onAddEmployee = () => {
         if (currentEmployee) {
-            setScNotifications(prevState => ({...prevState, employeeIds: Array.from(new Set([...prevState.employeeIds, currentEmployee.id]))}))
+            setScData(prevState => ({...prevState, employeeIds: Array.from(new Set([...prevState.employeeIds, currentEmployee.id]))}))
             setCurrentEmployee(null)
         }
     }
 
     const deleteEmployee = (id: string) => {
-        setScNotifications(prevState => ({...prevState, employeeIds: prevState.employeeIds.filter(el => el !== id)}))
+        setScData(prevState => ({...prevState, employeeIds: prevState.employeeIds.filter(el => el !== id)}))
     }
 
     return (
@@ -52,8 +63,8 @@ const ServiceCenterAppointments = () => {
                     <p className={classes.notificationsLabel}>on/off Service center appointments notifications</p>
                     <Switch
                         onChange={handleSwitch}
-                        disabled={loading}
-                        checked={scNotifications.isActive}
+                        disabled={loading || isLoading}
+                        checked={scData?.isActive}
                         color="primary"
                     />
                 </div>
@@ -61,7 +72,7 @@ const ServiceCenterAppointments = () => {
                     <Autocomplete
                         options={employeesList}
                         style={{width: 290}}
-                        disabled={loading}
+                        disabled={loading || isLoading}
                         getOptionLabel={i => i.fullName}
                         value={currentEmployee}
                         onChange={onEmployeeChange}
@@ -75,7 +86,7 @@ const ServiceCenterAppointments = () => {
                         startIcon={<PlusIcon/>}
                         onClick={onAddEmployee}
                         color="primary"
-                        disabled={loading}
+                        disabled={loading || isLoading}
                         className={classes.addButton}
                     >  Add</Button>
                 </div>
@@ -84,17 +95,17 @@ const ServiceCenterAppointments = () => {
                         <div className={classes.employeeWrapper}>
                             <div>{item.fullName}</div>
                             <div>{item.email}</div>
-                            <IconButton onClick={() => deleteEmployee(item.id)} disabled={loading}><DeleteIcon/></IconButton>
+                            <IconButton onClick={() => deleteEmployee(item.id)} disabled={loading || isLoading}><DeleteIcon/></IconButton>
                         </div>
                     ))}
                 </div>
             </div>
             <Divider/>
             <DialogActions>
-                <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading}>
+                <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || isLoading}>
                     Cancel
                 </Button>
-                <Button onClick={onSave} variant="contained" color="primary" disabled={loading}>
+                <Button onClick={onSave} variant="contained" color="primary" disabled={loading || isLoading}>
                     Save
                 </Button>
             </DialogActions>

@@ -14,7 +14,7 @@ import {useSCs} from "../../../utils/hooks";
 import {loadPods} from "../../../store/reducers/pods/actions";
 import {TPodNotifications} from "../../../store/reducers/notifications/types";
 
-const podInitialData: TPodNotifications = {
+const podInitialNotifications: TPodNotifications = {
     pod: null,
     employeeIds: []
 }
@@ -22,8 +22,9 @@ const podInitialData: TPodNotifications = {
 const PodAppointments = () => {
     const {employeesList, loading} = useSelector((state: RootState) => state.employees);
     const {podsList, podsLoading} = useSelector((state: RootState) => state.pods);
+    const {podNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
-    const [podNotifications, setPodNotifications] = useState<TPodNotifications>(podInitialData)
+    const [podData, setPodData] = useState<TPodNotifications>(podInitialNotifications)
     const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
     const [selectedPod, setSelectedPod] = useState<IPod|null>(null);
     const classes = useNotificationStyles();
@@ -31,13 +32,17 @@ const PodAppointments = () => {
     const {selectedSC} = useSCs();
 
     useEffect(() => {
+        setPodData(podNotifications ? podNotifications : podInitialNotifications)
+    }, [podNotifications])
+
+    useEffect(() => {
         if (selectedSC) dispatch(loadPods(selectedSC?.id))
     }, [selectedSC])
 
     useEffect(() => {
-        const selected = employeesList.filter(el => podNotifications.employeeIds.includes(el.id))
+        const selected = employeesList.filter(el => podData.employeeIds.includes(el.id))
         setSelectedEmployees(selected)
-    }, [employeesList, podNotifications])
+    }, [employeesList, podData])
 
     const onEmployeeChange = (e: ChangeEvent<{}>, value: IEmployee|null) => {
         setCurrentEmployee(value)
@@ -52,13 +57,13 @@ const PodAppointments = () => {
 
     const onAddEmployee = () => {
         if (currentEmployee) {
-            setPodNotifications(prevState => ({...prevState, employeeIds: Array.from(new Set([...prevState.employeeIds, currentEmployee.id]))}))
+            setPodData(prevState => ({...prevState, employeeIds: Array.from(new Set([...prevState.employeeIds, currentEmployee.id]))}))
             setCurrentEmployee(null)
         }
     }
 
     const deleteEmployee = (id: string) => {
-        setPodNotifications(prevState => ({...prevState, employeeIds: prevState.employeeIds.filter(el => el !== id)}))
+        setPodData(prevState => ({...prevState, employeeIds: prevState.employeeIds.filter(el => el !== id)}))
     }
 
     return (
@@ -68,7 +73,7 @@ const PodAppointments = () => {
                 <Autocomplete
                     options={podsList}
                     fullWidth
-                    disabled={loading || podsLoading}
+                    disabled={loading || podsLoading || isLoading}
                     getOptionLabel={i => i.name}
                     value={selectedPod}
                     onChange={onPodChange}
@@ -81,7 +86,7 @@ const PodAppointments = () => {
                 <div className={classes.selectWrapper}>
                 <Autocomplete
                     options={employeesList}
-                    disabled={loading || podsLoading}
+                    disabled={loading || podsLoading || isLoading}
                     fullWidth
                     getOptionLabel={i => i.fullName}
                     value={currentEmployee}
@@ -96,7 +101,7 @@ const PodAppointments = () => {
                         startIcon={<PlusIcon/>}
                         onClick={onAddEmployee}
                         color="primary"
-                        disabled={loading || podsLoading}
+                        disabled={loading || podsLoading || isLoading}
                         className={classes.addButton}
                     >  Add</Button>
                 </div>
@@ -105,17 +110,21 @@ const PodAppointments = () => {
                         <div className={classes.employeeWrapper}>
                             <div>{item.fullName}</div>
                             <div>{item.email}</div>
-                            <IconButton onClick={() => deleteEmployee(item.id)} disabled={loading || podsLoading}><DeleteIcon/></IconButton>
+                            <IconButton
+                                onClick={() => deleteEmployee(item.id)}
+                                disabled={loading || podsLoading || isLoading}>
+                                <DeleteIcon/>
+                            </IconButton>
                         </div>
                     ))}
                 </div>
             </div>
             <Divider/>
             <DialogActions>
-                <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || podsLoading}>
+                <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || podsLoading || isLoading}>
                     Cancel
                 </Button>
-                <Button onClick={onSave} variant="contained" color="primary" disabled={loading || podsLoading}>
+                <Button onClick={onSave} variant="contained" color="primary" disabled={loading || podsLoading || isLoading}>
                     Save
                 </Button>
             </DialogActions>
