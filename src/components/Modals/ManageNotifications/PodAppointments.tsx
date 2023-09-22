@@ -13,13 +13,15 @@ import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
 import {useSCs} from "../../../utils/hooks";
 import {loadPods} from "../../../store/reducers/pods/actions";
 import {TPodNotifications} from "../../../store/reducers/notifications/types";
+import {updatePodNotifications} from "../../../store/reducers/notifications/actions";
+import {TNotificatonsProps} from "./ServiceCenterAppointments";
 
 const podInitialNotifications: TPodNotifications = {
-    pod: null,
+    podId: null,
     employeeIds: []
 }
 
-const PodAppointments = () => {
+const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     const {employeesList, loading} = useSelector((state: RootState) => state.employees);
     const {podsList, podsLoading} = useSelector((state: RootState) => state.pods);
     const {podNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
@@ -27,12 +29,26 @@ const PodAppointments = () => {
     const [podData, setPodData] = useState<TPodNotifications>(podInitialNotifications)
     const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
     const [selectedPod, setSelectedPod] = useState<IPod|null>(null);
-    const classes = useNotificationStyles();
-    const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
+    const classes = useNotificationStyles();
 
     useEffect(() => {
-        setPodData(podNotifications ? podNotifications : podInitialNotifications)
+        let changesAreSaved = true;
+        const employeesListIsDifferent = podNotifications?.employeeIds?.find(el => !podData.employeeIds.includes(el))
+            || podData.employeeIds.find(el => !podNotifications?.employeeIds?.includes(el))
+        if (!podData.podId || podData.podId !== podNotifications?.podId) {
+            changesAreSaved = false;
+        } else if (podData.employeeIds.length && !podNotifications?.employeeIds?.length) {
+            changesAreSaved = false;
+        } else if (employeesListIsDifferent) {
+            changesAreSaved = false;
+        }
+        setChangesState(prevState => ({...prevState, podNotificationsSaved: changesAreSaved}))
+    }, [podData, podNotifications])
+
+    useEffect(() => {
+        setPodData(podNotifications ?? podInitialNotifications)
     }, [podNotifications])
 
     useEffect(() => {
@@ -52,8 +68,13 @@ const PodAppointments = () => {
         setSelectedPod(value)
     }
 
-    const onCancel = () => {}
-    const onSave = () => {}
+    const onCancel = () => {
+        setPodData(podNotifications ?? podInitialNotifications)
+    }
+
+    const onSave = () => {
+        if (selectedSC) dispatch(updatePodNotifications(selectedSC.id, podData))
+    }
 
     const onAddEmployee = () => {
         if (currentEmployee) {
@@ -119,8 +140,8 @@ const PodAppointments = () => {
                     ))}
                 </div>
             </div>
-            <Divider/>
-            <DialogActions>
+            <Divider style={{margin: '24px 0'}}/>
+            <DialogActions style={{padding: '0 24px 0 0'}}>
                 <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || podsLoading || isLoading}>
                     Cancel
                 </Button>

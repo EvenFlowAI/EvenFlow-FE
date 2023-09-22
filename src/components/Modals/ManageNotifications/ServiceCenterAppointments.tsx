@@ -1,31 +1,51 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
-import {useNotificationStyles} from "./ManageNotifications";
+import {TChangesState, useNotificationStyles} from "./ManageNotifications";
 import {IEmployee} from "../../../store/reducers/employees/types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Button, Divider, IconButton, Switch} from "@material-ui/core";
 import {DialogActions} from "../BaseModal";
 import {ReactComponent as PlusIcon} from "../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
 import {TSCNotifications} from "../../../store/reducers/notifications/types";
+import {updateNotificationsByType} from "../../../store/reducers/notifications/actions";
+import {useSCs} from "../../../utils/hooks";
 
 export const initialSCNotifications: TSCNotifications = {
     isActive: false,
     employeeIds: []
 }
 
-const ServiceCenterAppointments = () => {
+export type TNotificatonsProps = {setChangesState: Dispatch<SetStateAction<TChangesState>>}
+
+const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     const {employeesList, loading} = useSelector((state: RootState) => state.employees);
     const {scNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
     const [scData, setScData] = useState<TSCNotifications>(initialSCNotifications);
     const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
     const classes = useNotificationStyles();
 
     useEffect(() => {
-        setScData(scNotifications ? scNotifications : initialSCNotifications)
+        let changesAreSaved = true;
+        const employeesListIsDifferent = scNotifications?.employeeIds?.find(el => !scData.employeeIds.includes(el))
+            || scData.employeeIds.find(el => !scNotifications?.employeeIds?.includes(el))
+        if (scData.isActive !== scNotifications?.isActive) {
+            changesAreSaved = false;
+        } else if (scData.employeeIds.length && !scNotifications?.employeeIds?.length) {
+            changesAreSaved = false;
+        } else if (employeesListIsDifferent) {
+            changesAreSaved = false;
+        }
+        setChangesState(prevState => ({...prevState, scNotificationsSaved: changesAreSaved}))
+    }, [scData, scNotifications])
+
+    useEffect(() => {
+        setScData(scNotifications ?? initialSCNotifications)
     }, [scNotifications])
 
     useEffect(() => {
@@ -37,8 +57,13 @@ const ServiceCenterAppointments = () => {
         setCurrentEmployee(value)
     }
 
-    const onCancel = () => {}
-    const onSave = () => {}
+    const onCancel = () => {
+        setScData(scNotifications ?? initialSCNotifications);
+    }
+
+    const onSave = () => {
+        if (selectedSC) dispatch(updateNotificationsByType(selectedSC.id, scData))
+    }
 
     const handleSwitch = () => {
         setScData(prevState => ({...prevState, isActive: !prevState.isActive}))
@@ -100,8 +125,8 @@ const ServiceCenterAppointments = () => {
                     ))}
                 </div>
             </div>
-            <Divider/>
-            <DialogActions>
+            <Divider style={{margin: '24px 0'}}/>
+            <DialogActions style={{padding: '0 24px 0 0'}}>
                 <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || isLoading}>
                     Cancel
                 </Button>

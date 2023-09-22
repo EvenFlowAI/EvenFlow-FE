@@ -11,7 +11,7 @@ import PodAppointments from "./PodAppointments";
 import RecallAppointments from "./RecallAppointments";
 import {useSCs} from "../../../utils/hooks";
 import {loadByFilters, setEmployeeFilters} from "../../../store/reducers/employees/actions";
-import {TSCNotifications} from "../../../store/reducers/notifications/types";
+import {loadNotifications} from "../../../store/reducers/notifications/actions";
 
 export const useNotificationStyles = makeStyles({
     tabTitle: {
@@ -59,19 +59,26 @@ export const useNotificationStyles = makeStyles({
     }
 })
 
-export const initialData: TSCNotifications = {
-    isActive: false,
-    employeeIds: []
+export type TChangesState = {
+    scNotificationsSaved: boolean;
+    podNotificationsSaved: boolean;
+    recallNotificationsSaved: boolean;
 }
 
 const ManageNotifications:React.FC<DialogProps> = (props) => {
     const [currentTab, setCurrentTab] = useState<string>("0");
+    const [changesState, setChangesState] = useState<TChangesState>({
+        scNotificationsSaved: true,
+        podNotificationsSaved: true,
+        recallNotificationsSaved: true,
+    })
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (selectedSC) {
             dispatch(setEmployeeFilters({serviceCenterId: selectedSC.id}))
+            dispatch(loadNotifications(selectedSC.id))
         }
     }, [selectedSC])
 
@@ -83,8 +90,25 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
         props.onClose();
     }
 
+    const checkIfChangesSaved = (tab: string): boolean => {
+        switch (tab) {
+            case "0":
+                return changesState.scNotificationsSaved;
+            case "1":
+                return changesState.podNotificationsSaved;
+            case "2":
+                return changesState.recallNotificationsSaved;
+            default:
+                return true;
+        }
+    }
+
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
-        setCurrentTab(tab)
+        if (checkIfChangesSaved(currentTab)) {
+            setCurrentTab(tab)
+        } else {
+            // todo show popup
+        }
     }
 
     return (
@@ -94,9 +118,10 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
                 style={{textTransform: 'uppercase', color: "#252525", padding: '24px 0'}}>
                 Manage service center notifications
             </DialogTitle>
-            <DialogContent>
+            <DialogContent style={{padding: 0}}>
                 <TabContext value={currentTab}>
                     <TabList
+                        style={{width: "100%", margin: 0, padding: 0}}
                         onChange={handleTabChange}
                         indicatorColor="primary"
                         variant="fullWidth"
@@ -106,13 +131,13 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
                         <Tab label="Recall Appointments" value="2"/>
                     </TabList>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="0">
-                        <ServiceCenterAppointments/>
+                        <ServiceCenterAppointments setChangesState={setChangesState}/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="1">
-                       <PodAppointments/>
+                       <PodAppointments setChangesState={setChangesState}/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="2">
-                        <RecallAppointments/>
+                        <RecallAppointments setChangesState={setChangesState}/>
                     </TabPanel>
                 </TabContext>
             </DialogContent>

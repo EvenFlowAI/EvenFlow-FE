@@ -1,5 +1,3 @@
-import {IPod} from "../pods/types";
-
 export type TEmployee = {
     id: string;
     name: string;
@@ -12,6 +10,6 @@ export type TSCNotifications = {
 }
 
 export type TPodNotifications = {
-    pod: IPod|null;
+    podId: number|null;
     employeeIds: string[];
 }

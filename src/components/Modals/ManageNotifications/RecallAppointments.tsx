@@ -3,25 +3,43 @@ import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {useNotificationStyles} from "./ManageNotifications";
 import {IEmployee} from "../../../store/reducers/employees/types";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Button, Divider, IconButton, Switch} from "@material-ui/core";
 import {ReactComponent as PlusIcon} from "../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
 import {DialogActions} from "../BaseModal";
 import {TSCNotifications} from "../../../store/reducers/notifications/types";
-import {initialSCNotifications} from "./ServiceCenterAppointments";
+import {initialSCNotifications, TNotificatonsProps} from "./ServiceCenterAppointments";
+import {useSCs} from "../../../utils/hooks";
+import {updateNotificationsByType} from "../../../store/reducers/notifications/actions";
 
-const RecallAppointments = () => {
+const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     const {employeesList, loading} = useSelector((state: RootState) => state.employees);
     const {recallNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
     const [recallData, setRecallData] = useState<TSCNotifications>(initialSCNotifications);
     const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
     const classes = useNotificationStyles();
 
     useEffect(() => {
-        setRecallData(recallNotifications ? recallNotifications : initialSCNotifications)
+        let changesAreSaved = true;
+        const employeesListIsDifferent = recallNotifications?.employeeIds?.find(el => !recallData.employeeIds.includes(el))
+            || recallData.employeeIds.find(el => !recallNotifications?.employeeIds?.includes(el))
+        if (recallData.isActive !== recallNotifications?.isActive) {
+            changesAreSaved = false;
+        } else if (recallData.employeeIds.length && !recallNotifications?.employeeIds?.length) {
+            changesAreSaved = false;
+        } else if (employeesListIsDifferent) {
+            changesAreSaved = false;
+        }
+        setChangesState(prevState => ({...prevState, recallNotificationsSaved: changesAreSaved}))
+    }, [recallData, recallNotifications])
+
+    useEffect(() => {
+        setRecallData(recallNotifications ?? initialSCNotifications)
     }, [recallNotifications])
 
     useEffect(() => {
@@ -33,8 +51,12 @@ const RecallAppointments = () => {
         setCurrentEmployee(value)
     }
 
-    const onCancel = () => {}
-    const onSave = () => {}
+    const onCancel = () => {
+        setRecallData(recallNotifications ?? initialSCNotifications)
+    }
+    const onSave = () => {
+        if (selectedSC) dispatch(updateNotificationsByType(selectedSC.id, recallData))
+    }
 
     const handleSwitch = () => {
         setRecallData(prevState => ({...prevState, isActive: !prevState.isActive}))
@@ -96,8 +118,8 @@ const RecallAppointments = () => {
                     ))}
                 </div>
             </div>
-            <Divider/>
-            <DialogActions>
+            <Divider style={{margin: '24px 0'}}/>
+            <DialogActions style={{padding: '0 24px 0 0'}}>
                 <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || isLoading}>
                     Cancel
                 </Button>
