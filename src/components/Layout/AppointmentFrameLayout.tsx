@@ -225,7 +225,6 @@ export const AppointmentFrameLayout = () => {
         updateRecalls, updatePackageOption, goToServiceTypeSelection,
         isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes, isAuth])
 
-    // useAnalytics(trackerCreated, () => dispatch(setTrackerCreated(true)))
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
     useStorage();
