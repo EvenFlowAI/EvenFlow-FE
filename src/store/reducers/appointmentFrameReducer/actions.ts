@@ -1,7 +1,8 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EMaintenanceOptionType,
-    EServiceCenterName, IAppointmentByKey,
+    EServiceCenterName,
+    IAppointmentByKey,
     IConsultantsRequestData,
     ICreateAppointmentResp,
     ICustomer,
@@ -10,7 +11,8 @@ import {
     IPackageOptions,
     IServiceCategory,
     IServiceConsultant,
-    ITransportation, TAppointmentAdvisor
+    ITransportation,
+    TAppointmentAdvisor
 } from "../../../api/types";
 import moment from "moment";
 import {EAppointmentTimingType, EReminderType, IMake, IServiceRequestPrice, IVehicle} from "../appointment/types";
@@ -22,7 +24,8 @@ import {
     IAppointmentId,
     IServiceOffer,
     IValueService,
-    TAncillaryPriceByZip, TEditingPosition,
+    TAncillaryPriceByZip,
+    TEditingPosition,
     TLanguage,
     TMaintenanceDetails,
     TYear
@@ -36,7 +39,8 @@ import {
     saveCustomerCache,
     selectAppointment,
     selectServiceValetAppointment,
-    selectSR, setAppointmentWasChanged,
+    selectSR,
+    setAppointmentWasChanged,
     setCustomerLoadedData
 } from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
@@ -144,9 +148,10 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
 export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void): AppThunk => async (dispatch, getState) => {
     dispatch(setConsultantsLoading(true))
     const {selectedPackage, packagePricingType, packageEMenuType, selectedRecalls, selectedVehicle, address, zipCode, valueService,
-        service, subService, categoriesIds, } = getState().appointmentFrame;
+        service, subService, categoriesIds} = getState().appointmentFrame;
     const {selectedSR} = getState().appointment;
     const {allCategories} = getState().categories;
+    const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
     const serviceCategoryIds = allCategories
         .filter(category => {
             return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
@@ -191,6 +196,10 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
                 if (!result.length) {
                     onEmptyList && onEmptyList()
                     dispatch(setAdvisorAvailable(false));
+                } else {
+                    if (currentConfig?.advisorSelection && !isAdvisorAvailable){
+                        dispatch(setAdvisorAvailable(true));
+                    }
                 }
             })
             .catch(err => console.log(err))
