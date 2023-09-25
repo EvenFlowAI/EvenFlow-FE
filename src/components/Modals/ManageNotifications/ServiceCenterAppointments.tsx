@@ -35,9 +35,11 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
         if (scNotifications || scData) {
             const employeesListIsDifferent = scNotifications?.employeeIds?.find(el => !scData?.employeeIds?.includes(el))
                 || scData?.employeeIds?.find(el => !scNotifications?.employeeIds?.includes(el))
-            if (scData?.isActive !== scNotifications?.isActive) {
+            const listsLengthIsDifferent = Number(scData?.employeeIds?.length) !== Number(scNotifications?.employeeIds?.length)
+
+            if (Boolean(scData?.isActive) !== Boolean(scNotifications?.isActive)) {
                 changesAreSaved = false;
-            } else if (scData?.employeeIds?.length && !scNotifications?.employeeIds?.length) {
+            } else if (listsLengthIsDifferent) {
                 changesAreSaved = false;
             } else if (employeesListIsDifferent) {
                 changesAreSaved = false;

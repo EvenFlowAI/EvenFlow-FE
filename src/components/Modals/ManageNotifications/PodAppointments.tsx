@@ -21,7 +21,7 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     const {podsList, podsLoading} = useSelector((state: RootState) => state.pods);
     const {podNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
-    const [podData, setPodData] = useState<TPodNotifications|null>(null)
+    const [podData, setPodData] = useState<TPodNotifications|null>(null);
     const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
     const [selectedPod, setSelectedPod] = useState<IPod|null>(null);
     const {selectedSC} = useSCs();

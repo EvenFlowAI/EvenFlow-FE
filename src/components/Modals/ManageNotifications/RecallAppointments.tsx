@@ -29,9 +29,9 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
         if (recallNotifications || recallData) {
             const employeesListIsDifferent = recallNotifications?.employeeIds?.find(el => !recallData?.employeeIds?.includes(el))
                 || recallData?.employeeIds?.find(el => !recallNotifications?.employeeIds?.includes(el))
-            if (recallData?.isActive !== recallNotifications?.isActive) {
+            if (Boolean(recallData?.isActive) !== Boolean(recallNotifications?.isActive)) {
                 changesAreSaved = false;
-            } else if (recallData?.employeeIds?.length && !recallNotifications?.employeeIds?.length) {
+            } else if (recallData?.employeeIds?.length !== recallNotifications?.employeeIds?.length) {
                 changesAreSaved = false;
             } else if (employeesListIsDifferent) {
                 changesAreSaved = false;
