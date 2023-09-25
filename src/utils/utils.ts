@@ -269,7 +269,8 @@ const ServiceCenters = {
     FremontMotorCody: 23,
     FremontMotorPowell: 24,
     FremontLanderFord: 26,
-    FremontLanderCDJR: 27
+    FremontLanderCDJR: 27,
+    BeloitAutoAndTruck: 30,
 }
 
 export const getTrackerById = (id: string): string => {
@@ -284,40 +285,26 @@ export const getTrackerById = (id: string): string => {
         if (decodedId === ServiceCenters.HennessysRiverViewFordMainServiceDrive) return "G-NBXVY09B7S";
         if (origin.includes(parentOrigins.scherervilleEvenflow)) return "UA-210743216-8";
         if (decodedId === ServiceCenters.FremontCDJRCasper) return "G-FBF51NY0TY";
-        //if (origin.includes(parentOrigins.fremontchryslerdodgejeepcasper)) return "UA-210743216-9";
         if (decodedId === ServiceCenters.FremontCDJRRockSprings) return "G-9DVYXDJ45M";
-        //if (origin.includes(parentOrigins.fremontchryslerdodgejeeprocksprings)) return "UA-210743216-10";
         if (decodedId === ServiceCenters.JanssenCDJRofNorthPlatte) return "G-7177QY7LH2";
-        //if (origin.includes(parentOrigins.janssenchryslerjeepdodge)) return "UA-210743216-11";
         if (decodedId === ServiceCenters.JanssenSonsFord) return "G-YXMH70Q2JX";
-        //if (origin.includes(parentOrigins.janssenfordholdrege)) return "UA-210743216-12";
         if (decodedId === ServiceCenters.LakePowellFord) return "G-HS4HDY3376";
-        //if (origin.includes(parentOrigins.lakepowellford)) return "UA-210743216-13";
         if (decodedId === ServiceCenters.MorrisSmithFordOfLarned) return "G-4BFDSPFKH6";
-        //if (origin.includes(parentOrigins.larnedford)) return "UA-210743216-14";
         if (decodedId === ServiceCenters.PerformanceKingsHondaCincinnati) return "G-P3DH15MW8P";
-        //if (origin.includes(parentOrigins.performancekingshonda)) return "UA-210743216-15";
         if (decodedId === ServiceCenters.PerformanceHondaFairfield) return "G-JFFE7XLTF5";
-        //if (origin.includes(parentOrigins.performancehondastore)) return "UA-210743216-16";
         if (decodedId === ServiceCenters.PerformanceLexusRiverCenter) return "G-3074D59PM3";
-        //if (origin.includes(parentOrigins.performancelexusrivercenter)) return "UA-210743216-18";
         if (decodedId === ServiceCenters.PerformanceLexusCincinnati) return "G-5XJ8256YEZ";
-        //if (origin.includes(parentOrigins.performancelexus)) return "UA-210743216-17";
         if (decodedId === ServiceCenters.PerformanceCDJRCenterville) return "G-EEJPTXTVF2";
-        //if (origin.includes(parentOrigins.performancechryslerjeepcenterville)) return "UA-210743216-19";
         if (decodedId === ServiceCenters.PerformanceToyotaFairfield) return "G-HXLXXZQ4YB";
-        //if (origin.includes(parentOrigins.performancetoyotastore)) return "UA-210743216-20";
-        //if (decodedId === ServiceCenters.FremontMotorRiverton) return "G-FBF51NY0TY";
         if (decodedId === ServiceCenters.FremontMotorRiverton) return "G-YT0WTD548Z";
         if (decodedId === ServiceCenters.FremontMotorCody) return "G-JZ5SG376SH";
         if (decodedId === ServiceCenters.FremontMotorPowell) return "G-4853N7VZ21";
         if (decodedId === ServiceCenters.FremontLanderFord) return "G-VSQ7H51M2D";
         if (decodedId === ServiceCenters.FremontLanderCDJR) return "G-5BV7X721KQ";
+        if (decodedId === ServiceCenters.BeloitAutoAndTruck) return "G-0YK1QM06NR";
         return "G-DWX0X9CBTT";
-        //return "UA-210743216-5";
     } else {
         return "G-LS5EEY1SRM";
-        //return "UA-210743216-5";
     }
 }
 
