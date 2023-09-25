@@ -9,7 +9,7 @@ import {useDispatch} from "react-redux";
 import ServiceCenterAppointments from "./ServiceCenterAppointments";
 import PodAppointments from "./PodAppointments";
 import RecallAppointments from "./RecallAppointments";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useSCs} from "../../../utils/hooks";
 import {loadByFilters, setEmployeeFilters} from "../../../store/reducers/employees/actions";
 import {loadNotifications} from "../../../store/reducers/notifications/actions";
 
@@ -74,6 +74,7 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
     })
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const showError = useException()
 
     useEffect(() => {
         if (selectedSC) {
@@ -107,7 +108,7 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
         if (checkIfChangesSaved(currentTab)) {
             setCurrentTab(tab)
         } else {
-            // todo show popup
+            showError("Please save the changes first")
         }
     }
 

@@ -18,7 +18,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
     const {employeesList, loading} = useSelector((state: RootState) => state.employees);
     const {recallNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
-    const [recallData, setRecallData] = useState<TSCNotifications>(initialSCNotifications);
+    const [recallData, setRecallData] = useState<TSCNotifications|null>(initialSCNotifications);
     const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -26,24 +26,26 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
 
     useEffect(() => {
         let changesAreSaved = true;
-        const employeesListIsDifferent = recallNotifications?.employeeIds?.find(el => !recallData.employeeIds.includes(el))
-            || recallData.employeeIds.find(el => !recallNotifications?.employeeIds?.includes(el))
-        if (recallData.isActive !== recallNotifications?.isActive) {
-            changesAreSaved = false;
-        } else if (recallData.employeeIds.length && !recallNotifications?.employeeIds?.length) {
-            changesAreSaved = false;
-        } else if (employeesListIsDifferent) {
-            changesAreSaved = false;
+        if (recallNotifications || recallData) {
+            const employeesListIsDifferent = recallNotifications?.employeeIds?.find(el => !recallData?.employeeIds?.includes(el))
+                || recallData?.employeeIds?.find(el => !recallNotifications?.employeeIds?.includes(el))
+            if (recallData?.isActive !== recallNotifications?.isActive) {
+                changesAreSaved = false;
+            } else if (recallData?.employeeIds?.length && !recallNotifications?.employeeIds?.length) {
+                changesAreSaved = false;
+            } else if (employeesListIsDifferent) {
+                changesAreSaved = false;
+            }
         }
         setChangesState(prevState => ({...prevState, recallNotificationsSaved: changesAreSaved}))
     }, [recallData, recallNotifications])
 
     useEffect(() => {
-        setRecallData(recallNotifications ?? initialSCNotifications)
+        setRecallData(recallNotifications)
     }, [recallNotifications])
 
     useEffect(() => {
-        const selected = employeesList.filter(el => recallData.employeeIds.includes(el.id))
+        const selected = employeesList.filter(el => recallData?.employeeIds?.includes(el.id))
         setSelectedEmployees(selected)
     }, [employeesList, recallData])
 
@@ -52,25 +54,40 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
     }
 
     const onCancel = () => {
-        setRecallData(recallNotifications ?? initialSCNotifications)
+        setRecallData(recallNotifications)
     }
     const onSave = () => {
-        if (selectedSC) dispatch(updateNotificationsByType(selectedSC.id, recallData))
+        if (selectedSC && recallData) dispatch(updateNotificationsByType(selectedSC.id, recallData))
     }
 
     const handleSwitch = () => {
-        setRecallData(prevState => ({...prevState, isActive: !prevState.isActive}))
+        setRecallData(prevState => {
+            const data: TSCNotifications|null = {...prevState} ?? {}
+            return {...data, isActive: data ? !data.isActive : true}
+        })
     }
 
     const onAddEmployee = () => {
         if (currentEmployee) {
-            setRecallData(prevState => ({...prevState, employeeIds: Array.from(new Set([...prevState.employeeIds, currentEmployee.id]))}))
+            setRecallData(prevState => {
+                const data: TSCNotifications|null = {...prevState} ?? {}
+                return {...data, employeeIds: data?.employeeIds
+                        ? Array.from(new Set([...data.employeeIds, currentEmployee.id]))
+                        : [currentEmployee.id]
+                }
+            })
             setCurrentEmployee(null)
         }
     }
 
     const deleteEmployee = (id: string) => {
-        setRecallData(prevState => ({...prevState, employeeIds: prevState.employeeIds.filter(el => el !== id)}))
+        setRecallData(prevState => {
+            if (prevState) {
+                return {...prevState, employeeIds: prevState?.employeeIds ? prevState?.employeeIds.filter(el => el !== id) : []}
+            } else {
+                return prevState
+            }
+        })
     }
 
     return (
@@ -82,7 +99,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
                     <Switch
                         onChange={handleSwitch}
                         disabled={loading || isLoading}
-                        checked={recallData.isActive}
+                        checked={recallData?.isActive}
                         color="primary"
                     />
                 </div>

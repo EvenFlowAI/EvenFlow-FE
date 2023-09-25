@@ -24,7 +24,7 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     const {employeesList, loading} = useSelector((state: RootState) => state.employees);
     const {scNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
-    const [scData, setScData] = useState<TSCNotifications>(initialSCNotifications);
+    const [scData, setScData] = useState<TSCNotifications|null>(initialSCNotifications);
     const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -32,24 +32,26 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
 
     useEffect(() => {
         let changesAreSaved = true;
-        const employeesListIsDifferent = scNotifications?.employeeIds?.find(el => !scData.employeeIds.includes(el))
-            || scData.employeeIds.find(el => !scNotifications?.employeeIds?.includes(el))
-        if (scData.isActive !== scNotifications?.isActive) {
-            changesAreSaved = false;
-        } else if (scData.employeeIds.length && !scNotifications?.employeeIds?.length) {
-            changesAreSaved = false;
-        } else if (employeesListIsDifferent) {
-            changesAreSaved = false;
+        if (scNotifications || scData) {
+            const employeesListIsDifferent = scNotifications?.employeeIds?.find(el => !scData?.employeeIds?.includes(el))
+                || scData?.employeeIds?.find(el => !scNotifications?.employeeIds?.includes(el))
+            if (scData?.isActive !== scNotifications?.isActive) {
+                changesAreSaved = false;
+            } else if (scData?.employeeIds?.length && !scNotifications?.employeeIds?.length) {
+                changesAreSaved = false;
+            } else if (employeesListIsDifferent) {
+                changesAreSaved = false;
+            }
         }
         setChangesState(prevState => ({...prevState, scNotificationsSaved: changesAreSaved}))
     }, [scData, scNotifications])
 
     useEffect(() => {
-        setScData(scNotifications ?? initialSCNotifications)
+        setScData(scNotifications)
     }, [scNotifications])
 
     useEffect(() => {
-        const selected = employeesList.filter(el => scData?.employeeIds.includes(el.id))
+        const selected = employeesList.filter(el => scData?.employeeIds?.includes(el.id))
         setSelectedEmployees(selected)
     }, [employeesList, scData])
 
@@ -58,26 +60,41 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     }
 
     const onCancel = () => {
-        setScData(scNotifications ?? initialSCNotifications);
+        setScData(scNotifications);
     }
 
     const onSave = () => {
-        if (selectedSC) dispatch(updateNotificationsByType(selectedSC.id, scData))
+        if (selectedSC && scData) dispatch(updateNotificationsByType(selectedSC.id, scData))
     }
 
     const handleSwitch = () => {
-        setScData(prevState => ({...prevState, isActive: !prevState.isActive}))
+        setScData(prevState => {
+            const data: TSCNotifications|null = {...prevState} ?? {}
+            return {...data, isActive: data ? !data.isActive : true}
+        })
     }
 
     const onAddEmployee = () => {
         if (currentEmployee) {
-            setScData(prevState => ({...prevState, employeeIds: Array.from(new Set([...prevState.employeeIds, currentEmployee.id]))}))
+            setScData(prevState => {
+                const data: TSCNotifications|null = {...prevState} ?? {}
+                return {...data, employeeIds: data?.employeeIds
+                    ? Array.from(new Set([...data.employeeIds, currentEmployee.id]))
+                    : [currentEmployee.id]
+                }
+            })
             setCurrentEmployee(null)
         }
     }
 
     const deleteEmployee = (id: string) => {
-        setScData(prevState => ({...prevState, employeeIds: prevState.employeeIds.filter(el => el !== id)}))
+        setScData(prevState => {
+            if (prevState) {
+                return {...prevState, employeeIds: prevState?.employeeIds ? prevState?.employeeIds.filter(el => el !== id) : []}
+            } else {
+                return prevState
+            }
+        })
     }
 
     return (

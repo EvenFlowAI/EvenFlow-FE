@@ -16,17 +16,12 @@ import {TPodNotifications} from "../../../store/reducers/notifications/types";
 import {updatePodNotifications} from "../../../store/reducers/notifications/actions";
 import {TNotificatonsProps} from "./ServiceCenterAppointments";
 
-const podInitialNotifications: TPodNotifications = {
-    podId: null,
-    employeeIds: []
-}
-
 const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     const {employeesList, loading} = useSelector((state: RootState) => state.employees);
     const {podsList, podsLoading} = useSelector((state: RootState) => state.pods);
     const {podNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
-    const [podData, setPodData] = useState<TPodNotifications>(podInitialNotifications)
+    const [podData, setPodData] = useState<TPodNotifications|null>(null)
     const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
     const [selectedPod, setSelectedPod] = useState<IPod|null>(null);
     const {selectedSC} = useSCs();
@@ -35,20 +30,22 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
 
     useEffect(() => {
         let changesAreSaved = true;
-        const employeesListIsDifferent = podNotifications?.employeeIds?.find(el => !podData.employeeIds.includes(el))
-            || podData.employeeIds.find(el => !podNotifications?.employeeIds?.includes(el))
-        if (!podData.podId || podData.podId !== podNotifications?.podId) {
-            changesAreSaved = false;
-        } else if (podData.employeeIds.length && !podNotifications?.employeeIds?.length) {
-            changesAreSaved = false;
-        } else if (employeesListIsDifferent) {
-            changesAreSaved = false;
+        if (podNotifications || podData) {
+            const employeesListIsDifferent = podNotifications?.employeeIds?.find(el => !podData?.employeeIds?.includes(el))
+                || podData?.employeeIds?.find(el => !podNotifications?.employeeIds?.includes(el))
+            if (!podData?.podId || podData?.podId !== podNotifications?.podId) {
+                changesAreSaved = false;
+            } else if (podData?.employeeIds?.length && !podNotifications?.employeeIds?.length) {
+                changesAreSaved = false;
+            } else if (employeesListIsDifferent) {
+                changesAreSaved = false;
+            }
         }
         setChangesState(prevState => ({...prevState, podNotificationsSaved: changesAreSaved}))
     }, [podData, podNotifications])
 
     useEffect(() => {
-        setPodData(podNotifications ?? podInitialNotifications)
+        setPodData(podNotifications)
     }, [podNotifications])
 
     useEffect(() => {
@@ -56,8 +53,10 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     }, [selectedSC])
 
     useEffect(() => {
-        const selected = employeesList.filter(el => podData.employeeIds.includes(el.id))
-        setSelectedEmployees(selected)
+        if (podData?.employeeIds) {
+            const selected = employeesList.filter(el => podData?.employeeIds?.includes(el.id))
+            setSelectedEmployees(selected)
+        }
     }, [employeesList, podData])
 
     const onEmployeeChange = (e: ChangeEvent<{}>, value: IEmployee|null) => {
@@ -69,22 +68,33 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     }
 
     const onCancel = () => {
-        setPodData(podNotifications ?? podInitialNotifications)
+        setPodData(podNotifications)
     }
 
     const onSave = () => {
-        if (selectedSC) dispatch(updatePodNotifications(selectedSC.id, podData))
+        if (selectedSC && podData) dispatch(updatePodNotifications(selectedSC.id, podData))
     }
 
     const onAddEmployee = () => {
         if (currentEmployee) {
-            setPodData(prevState => ({...prevState, employeeIds: Array.from(new Set([...prevState.employeeIds, currentEmployee.id]))}))
+            setPodData(prevState => {
+                return {...prevState, employeeIds:
+                    prevState?.employeeIds
+                        ? Array.from(new Set([...prevState.employeeIds, currentEmployee.id]))
+                        : [currentEmployee.id]}
+            })
             setCurrentEmployee(null)
         }
     }
 
     const deleteEmployee = (id: string) => {
-        setPodData(prevState => ({...prevState, employeeIds: prevState.employeeIds.filter(el => el !== id)}))
+        if (podData){
+            setPodData(prevState => ({...prevState, employeeIds:
+                    prevState?.employeeIds
+                    ? prevState.employeeIds.filter(el => el !== id)
+                    : []
+            }))
+        }
     }
 
     return (

@@ -371,7 +371,7 @@ export class Api {
         },
         Notifications: {
           GetAll: {route: "", method: "get"},
-          UpdateForPod: {route: "", method: "put"},
+          UpdateForPod: {route: "/appointment-notifications/pods", method: "post"},
           UpdateByType: {route: "", method: "put"}
         },
         OptimizationWindows: {

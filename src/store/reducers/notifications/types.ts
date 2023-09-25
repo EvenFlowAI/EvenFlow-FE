@@ -5,11 +5,11 @@ export type TEmployee = {
 }
 
 export type TSCNotifications = {
-    isActive: boolean;
-    employeeIds: string[];
+    isActive?: boolean;
+    employeeIds?: string[];
 }
 
 export type TPodNotifications = {
-    podId: number|null;
-    employeeIds: string[];
+    podId?: number|null;
+    employeeIds?: string[];
 }
