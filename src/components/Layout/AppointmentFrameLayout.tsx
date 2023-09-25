@@ -35,7 +35,7 @@ import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../.
 import {
     checkCarIsValid,
     handleSideBarAppointmentUpdate, loadConsultants,
-    loadMakes, setAnyAdvisorSelected,
+    loadMakes, setAdvisor, setAnyAdvisorSelected,
     setAppointmentByKey, setAppointmentNotes,
     setAppointmentSaving,
     setCurrentFrameScreen,
@@ -236,7 +236,10 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
-        if (someRequestsSelected && selectedVehicle) dispatch(loadConsultants(id, serviceTypeOption?.id ?? null))
+        if (someRequestsSelected && selectedVehicle) {
+            dispatch(setAdvisor(null));
+            dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
+        }
     }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle])
 
     useEffect(() => {
