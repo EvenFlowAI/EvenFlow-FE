@@ -4,12 +4,18 @@ export type TEmployee = {
     email: string;
 }
 
+export enum ENotificationType {
+    ServiceCenter,
+    Recalls
+}
+
 export type TSCNotifications = {
     isActive?: boolean;
-    employeeIds?: string[];
+    employees?: string[];
+    notificationType?: ENotificationType;
 }
 
 export type TPodNotifications = {
     podId?: number|null;
-    employeeIds?: string[];
+    usersList?: string[];
 }

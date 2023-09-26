@@ -9,7 +9,7 @@ import {Button, Divider, IconButton, Switch} from "@material-ui/core";
 import {ReactComponent as PlusIcon} from "../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
 import {DialogActions} from "../BaseModal";
-import {TSCNotifications} from "../../../store/reducers/notifications/types";
+import {ENotificationType, TSCNotifications} from "../../../store/reducers/notifications/types";
 import {initialSCNotifications, TNotificatonsProps} from "./ServiceCenterAppointments";
 import {useSCs} from "../../../utils/hooks";
 import {updateNotificationsByType} from "../../../store/reducers/notifications/actions";
@@ -27,11 +27,11 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
     useEffect(() => {
         let changesAreSaved = true;
         if (recallNotifications || recallData) {
-            const employeesListIsDifferent = recallNotifications?.employeeIds?.find(el => !recallData?.employeeIds?.includes(el))
-                || recallData?.employeeIds?.find(el => !recallNotifications?.employeeIds?.includes(el))
+            const employeesListIsDifferent = recallNotifications?.employees?.find(el => !recallData?.employees?.includes(el))
+                || recallData?.employees?.find(el => !recallNotifications?.employees?.includes(el))
             if (Boolean(recallData?.isActive) !== Boolean(recallNotifications?.isActive)) {
                 changesAreSaved = false;
-            } else if (recallData?.employeeIds?.length !== recallNotifications?.employeeIds?.length) {
+            } else if (recallData?.employees?.length !== recallNotifications?.employees?.length) {
                 changesAreSaved = false;
             } else if (employeesListIsDifferent) {
                 changesAreSaved = false;
@@ -45,7 +45,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
     }, [recallNotifications])
 
     useEffect(() => {
-        const selected = employeesList.filter(el => recallData?.employeeIds?.includes(el.id))
+        const selected = employeesList.filter(el => recallData?.employees?.includes(el.id))
         setSelectedEmployees(selected)
     }, [employeesList, recallData])
 
@@ -57,7 +57,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
         setRecallData(recallNotifications)
     }
     const onSave = () => {
-        if (selectedSC && recallData) dispatch(updateNotificationsByType(selectedSC.id, recallData))
+        if (selectedSC && recallData) dispatch(updateNotificationsByType(selectedSC.id, {...recallData, notificationType: ENotificationType.Recalls}))
     }
 
     const handleSwitch = () => {
@@ -71,8 +71,8 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
         if (currentEmployee) {
             setRecallData(prevState => {
                 const data: TSCNotifications|null = {...prevState} ?? {}
-                return {...data, employeeIds: data?.employeeIds
-                        ? Array.from(new Set([...data.employeeIds, currentEmployee.id]))
+                return {...data, employees: data?.employees
+                        ? Array.from(new Set([...data.employees, currentEmployee.id]))
                         : [currentEmployee.id]
                 }
             })
@@ -83,7 +83,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
     const deleteEmployee = (id: string) => {
         setRecallData(prevState => {
             if (prevState) {
-                return {...prevState, employeeIds: prevState?.employeeIds ? prevState?.employeeIds.filter(el => el !== id) : []}
+                return {...prevState, employees: prevState?.employees ? prevState?.employees.filter(el => el !== id) : []}
             } else {
                 return prevState
             }
@@ -127,7 +127,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
                 </div>
                 <div>
                     {selectedEmployees.sort((a, b) => a.fullName.localeCompare(b.fullName)).map(item => (
-                        <div className={classes.employeeWrapper}>
+                        <div className={classes.employeeWrapper} key={item.id}>
                             <div>{item.fullName}</div>
                             <div>{item.email}</div>
                             <IconButton onClick={() => deleteEmployee(item.id)} disabled={loading || isLoading}><DeleteIcon/></IconButton>

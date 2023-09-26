@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {useNotificationStyles} from "./ManageNotifications";
@@ -21,31 +21,48 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     const {podsList, podsLoading} = useSelector((state: RootState) => state.pods);
     const {podNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
-    const [podData, setPodData] = useState<TPodNotifications|null>(null);
+    const [allPodData, setAllPodData] = useState<TPodNotifications[]>([]);
     const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
     const [selectedPod, setSelectedPod] = useState<IPod|null>(null);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useNotificationStyles();
+    const currentPodData = useMemo(() => allPodData.find(el => el.podId === selectedPod?.id), [allPodData, selectedPod])
 
     useEffect(() => {
         let changesAreSaved = true;
-        if (podNotifications || podData) {
-            const employeesListIsDifferent = podNotifications?.employeeIds?.find(el => !podData?.employeeIds?.includes(el))
-                || podData?.employeeIds?.find(el => !podNotifications?.employeeIds?.includes(el))
-            if (!podData?.podId || podData?.podId !== podNotifications?.podId) {
-                changesAreSaved = false;
-            } else if (podData?.employeeIds?.length && !podNotifications?.employeeIds?.length) {
-                changesAreSaved = false;
-            } else if (employeesListIsDifferent) {
-                changesAreSaved = false;
-            }
+        if (podNotifications.length !== allPodData.length) {
+            changesAreSaved = false;
+        } else {
+            allPodData.forEach(podData => {
+                const podExistsLocally = allPodData.find(el => el.podId === podData.podId)
+                const podExistsRemotely = podNotifications.find(el => el.podId === podData.podId)
+                if (!podExistsLocally || !podExistsRemotely) {
+                    changesAreSaved = false;
+                } else {
+                    const currentPod = podNotifications.find(el => el.podId === podData.podId)
+                    if (currentPod && podData.usersList) {
+                        if (currentPod.usersList?.length !== podData.usersList?.length) {
+                            changesAreSaved = false;
+                        } else {
+                            for (let userId of podData.usersList) {
+                                if (!currentPod.usersList?.includes(userId)) {
+                                    changesAreSaved = false;
+                                    return;
+                                }
+                            }
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            })
         }
         setChangesState(prevState => ({...prevState, podNotificationsSaved: changesAreSaved}))
-    }, [podData, podNotifications])
+    }, [allPodData, podNotifications])
 
     useEffect(() => {
-        setPodData(podNotifications)
+        setAllPodData(podNotifications)
     }, [podNotifications])
 
     useEffect(() => {
@@ -53,47 +70,57 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     }, [selectedSC])
 
     useEffect(() => {
-        if (podData?.employeeIds) {
-            const selected = employeesList.filter(el => podData?.employeeIds?.includes(el.id))
+        if (currentPodData?.usersList) {
+            const selected = employeesList.filter(el => currentPodData?.usersList?.includes(el.id))
             setSelectedEmployees(selected)
         }
-    }, [employeesList, podData])
+    }, [employeesList, currentPodData])
 
     const onEmployeeChange = (e: ChangeEvent<{}>, value: IEmployee|null) => {
         setCurrentEmployee(value)
     }
 
     const onPodChange = (e: ChangeEvent<{}>, value: IPod|null) => {
+        const podData = allPodData.find(el => el.podId === value?.id);
+        if (podData) {
+            const selected = employeesList.filter(el => podData.usersList?.includes(el.id))
+            setSelectedEmployees(selected)
+        } else {
+            if (value) {
+                setAllPodData(prevState => ([...prevState, {podId: value?.id, usersList: []}]))
+            } else {
+                setAllPodData(prevState => prevState.filter(item => item.podId !== selectedPod?.id))
+            }
+            setSelectedEmployees([])
+        }
         setSelectedPod(value)
     }
 
     const onCancel = () => {
-        setPodData(podNotifications)
+        setAllPodData(podNotifications)
     }
 
     const onSave = () => {
-        if (selectedSC && podData) dispatch(updatePodNotifications(selectedSC.id, podData))
+        if (selectedSC) dispatch(updatePodNotifications(selectedSC.id, allPodData))
     }
 
     const onAddEmployee = () => {
-        if (currentEmployee) {
-            setPodData(prevState => {
-                return {...prevState, employeeIds:
-                    prevState?.employeeIds
-                        ? Array.from(new Set([...prevState.employeeIds, currentEmployee.id]))
+        if (currentEmployee && selectedPod) {
+            if (currentPodData) {
+                const updated = {...currentPodData, usersList: currentPodData.usersList ? Array.from(new Set([...currentPodData.usersList, currentEmployee.id]))
                         : [currentEmployee.id]}
-            })
+                const data = allPodData.filter(el => el.podId !== currentPodData.podId)
+                setAllPodData([...data, updated])
+            }
             setCurrentEmployee(null)
         }
     }
 
     const deleteEmployee = (id: string) => {
-        if (podData){
-            setPodData(prevState => ({...prevState, employeeIds:
-                    prevState?.employeeIds
-                    ? prevState.employeeIds.filter(el => el !== id)
-                    : []
-            }))
+        if (currentPodData && currentPodData.usersList){
+            const updated = {...currentPodData, usersList: currentPodData.usersList.filter(el => el !== id)}
+            const data = allPodData.filter(el => el.podId !== currentPodData.podId)
+            setAllPodData([...data, updated])
         }
     }
 
@@ -138,7 +165,7 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
                 </div>
                 <div>
                     {selectedEmployees.sort((a, b) => a.fullName.localeCompare(b.fullName)).map(item => (
-                        <div className={classes.employeeWrapper}>
+                        <div className={classes.employeeWrapper} key={item.id}>
                             <div>{item.fullName}</div>
                             <div>{item.email}</div>
                             <IconButton

@@ -7,14 +7,14 @@ import {TPodNotifications, TSCNotifications} from "./types";
 type TState = {
     isLoading: boolean;
     scNotifications: TSCNotifications|null;
-    podNotifications: TPodNotifications|null;
+    podNotifications: TPodNotifications[];
     recallNotifications: TSCNotifications|null;
 }
 
 const initialState: TState = {
     isLoading: false,
     scNotifications: null,
-    podNotifications: null,
+    podNotifications: [],
     recallNotifications: null,
 }
 

@@ -9,13 +9,13 @@ import {Button, Divider, IconButton, Switch} from "@material-ui/core";
 import {DialogActions} from "../BaseModal";
 import {ReactComponent as PlusIcon} from "../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
-import {TSCNotifications} from "../../../store/reducers/notifications/types";
+import {ENotificationType, TSCNotifications} from "../../../store/reducers/notifications/types";
 import {updateNotificationsByType} from "../../../store/reducers/notifications/actions";
 import {useSCs} from "../../../utils/hooks";
 
 export const initialSCNotifications: TSCNotifications = {
     isActive: false,
-    employeeIds: []
+    employees: []
 }
 
 export type TNotificatonsProps = {setChangesState: Dispatch<SetStateAction<TChangesState>>}
@@ -33,9 +33,9 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     useEffect(() => {
         let changesAreSaved = true;
         if (scNotifications || scData) {
-            const employeesListIsDifferent = scNotifications?.employeeIds?.find(el => !scData?.employeeIds?.includes(el))
-                || scData?.employeeIds?.find(el => !scNotifications?.employeeIds?.includes(el))
-            const listsLengthIsDifferent = Number(scData?.employeeIds?.length) !== Number(scNotifications?.employeeIds?.length)
+            const employeesListIsDifferent = scNotifications?.employees?.find(el => !scData?.employees?.includes(el))
+                || scData?.employees?.find(el => !scNotifications?.employees?.includes(el))
+            const listsLengthIsDifferent = Number(scData?.employees?.length) !== Number(scNotifications?.employees?.length)
 
             if (Boolean(scData?.isActive) !== Boolean(scNotifications?.isActive)) {
                 changesAreSaved = false;
@@ -53,7 +53,7 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     }, [scNotifications])
 
     useEffect(() => {
-        const selected = employeesList.filter(el => scData?.employeeIds?.includes(el.id))
+        const selected = employeesList.filter(el => scData?.employees?.includes(el.id))
         setSelectedEmployees(selected)
     }, [employeesList, scData])
 
@@ -66,7 +66,7 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     }
 
     const onSave = () => {
-        if (selectedSC && scData) dispatch(updateNotificationsByType(selectedSC.id, scData))
+        if (selectedSC && scData) dispatch(updateNotificationsByType(selectedSC.id, {...scData, notificationType: ENotificationType.ServiceCenter}))
     }
 
     const handleSwitch = () => {
@@ -80,8 +80,8 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
         if (currentEmployee) {
             setScData(prevState => {
                 const data: TSCNotifications|null = {...prevState} ?? {}
-                return {...data, employeeIds: data?.employeeIds
-                    ? Array.from(new Set([...data.employeeIds, currentEmployee.id]))
+                return {...data, employees: data?.employees
+                    ? Array.from(new Set([...data.employees, currentEmployee.id]))
                     : [currentEmployee.id]
                 }
             })
@@ -92,7 +92,7 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     const deleteEmployee = (id: string) => {
         setScData(prevState => {
             if (prevState) {
-                return {...prevState, employeeIds: prevState?.employeeIds ? prevState?.employeeIds.filter(el => el !== id) : []}
+                return {...prevState, employees: prevState?.employees ? prevState?.employees.filter(el => el !== id) : []}
             } else {
                 return prevState
             }
@@ -136,7 +136,7 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
                 </div>
                 <div>
                     {selectedEmployees.sort((a, b) => a.fullName.localeCompare(b.fullName)).map(item => (
-                        <div className={classes.employeeWrapper}>
+                        <div className={classes.employeeWrapper} key={item.id}>
                             <div>{item.fullName}</div>
                             <div>{item.email}</div>
                             <IconButton onClick={() => deleteEmployee(item.id)} disabled={loading || isLoading}><DeleteIcon/></IconButton>

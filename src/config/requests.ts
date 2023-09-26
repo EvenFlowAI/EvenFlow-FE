@@ -370,9 +370,9 @@ export class Api {
             UpdatePriceTitles: {route: "/maintenance-packages/{id}/price-titles", method: "put"},
         },
         Notifications: {
-          GetAll: {route: "", method: "get"},
+          GetAll: {route: "/appointment-notifications/{id}/configurations", method: "get"},
           UpdateForPod: {route: "/appointment-notifications/pods", method: "post"},
-          UpdateByType: {route: "", method: "put"}
+          UpdateByType: {route: "/appointment-notifications", method: "post"}
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},
