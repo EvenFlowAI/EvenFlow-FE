@@ -140,17 +140,8 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             .map(item => item.id)
     }, [allCategories, EServiceCategoryType, categoriesIds])
 
-    const handleEmptyList = () => {
-        onNext()
-        // if (serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-        //     onBack()
-        // } else {
-        //
-        // }
-    }
-
     useEffect(() => {
-        dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, handleEmptyList))
+        dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, onNext))
     }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage, serviceTypeOption])
 
     useEffect(() => {

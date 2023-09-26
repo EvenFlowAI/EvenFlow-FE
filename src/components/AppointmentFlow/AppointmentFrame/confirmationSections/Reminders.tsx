@@ -22,7 +22,7 @@ type TRemindersProps = {
 }
 
 export const Reminders: React.FC<TRemindersProps> = ({isEmailRequired}) => {
-    const {reminders}= useSelector((state: RootState) => state.appointmentFrame);
+    const {reminders, customer}= useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const emailReminder = useMemo(() => {
@@ -31,10 +31,14 @@ export const Reminders: React.FC<TRemindersProps> = ({isEmailRequired}) => {
     }, [reminders])
 
     useEffect(() => {
-        if (!isEmailRequired && emailReminder) {
+        if (!isEmailRequired && emailReminder && !customer?.email) {
             dispatch(setReminders(reminders.filter(el => el.toString() !== EReminderType.Email.toString())));
         }
-    }, [isEmailRequired, emailReminder])
+    }, [isEmailRequired, emailReminder, customer])
+
+    useEffect(() => {
+        if (customer?.email) dispatch(setReminders(Array.from(new Set([...reminders, EReminderType.Email]))))
+    }, [customer])
 
     const handleChange = (t: EReminderType) => () => {
         if (reminders.includes(t)) {
@@ -57,7 +61,7 @@ export const Reminders: React.FC<TRemindersProps> = ({isEmailRequired}) => {
                 <FormControlLabel
                     label={t("E-mail")}
                     control={<Checkbox
-                        disabled={!isEmailRequired}
+                        disabled={!isEmailRequired && !customer?.email}
                         checked={reminders.includes(EReminderType.Email)}
                         onChange={handleChange(EReminderType.Email)}
                         color="primary" />}

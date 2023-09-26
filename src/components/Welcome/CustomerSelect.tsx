@@ -3,20 +3,21 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Grid} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    clearAppointmentData, setServiceOptionChanged,
+    clearAppointmentData, setServiceOptionChanged, setTrackerCreated,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens, TCallback} from "../../types/types";
 import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../store/rootReducer";
-import {useCurrentUser} from "../../utils/hooks";
+import {useAnalyticsBySCId, useCurrentUser} from "../../utils/hooks";
 import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
 import ReturningSelfCustomer from "./ReturningSelfCustomer";
 import NewSelfCustomer from "./NewSelfCustomer";
 import ReturningCustomerForAdmin from "./ReturningCustomerForAdmin";
 import NewCustomerForAdmin from "./NewCustomerForAdmin";
 import {loadMileage} from "../../store/reducers/vehicleDetails/actions";
+import {useParams} from "react-router-dom";
 
 export const mh400 = "@media (max-height: 400px)";
 export const mh600 = "@media (max-height: 600px)";
@@ -155,13 +156,17 @@ export const CustomerSelect: React.FC<TProps> = ({
     redirect,
                                                  }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {trackerCreated} = useSelector((state: RootState) => state.appointmentFrame);
     const {shortSC} = useSelector((state: RootState) => state.serviceCenters);
 
+    const {id} = useParams();
     const classes = useStyles();
     const dispatch = useDispatch();
     const currentUser = useCurrentUser();
     const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
         [currentUser, scProfile])
+
+    useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
     useEffect(() => {
         const uid = uuidv4();
