@@ -191,7 +191,6 @@ export const loadUsersShort = (serviceCenterId: number): AppThunk => dispatch =>
     Api.call(Api.endpoints.Users.GetShort, {data: {pageSize: 0, serviceCenterId}})
         .then(result => {
             if (result) {
-                debugger
                 dispatch(getUsersShort(result.data?.result))
             }
         })
