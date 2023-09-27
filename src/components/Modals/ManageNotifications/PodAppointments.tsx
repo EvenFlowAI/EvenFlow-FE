@@ -10,7 +10,7 @@ import {DialogActions} from "../BaseModal";
 import {IPodShort} from "../../../store/reducers/pods/types";
 import {ReactComponent as PlusIcon} from "../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
-import {useSCs} from "../../../utils/hooks";
+import {useConfirm, useSCs} from "../../../utils/hooks";
 import {loadPodsShort} from "../../../store/reducers/pods/actions";
 import {TPodNotifications} from "../../../store/reducers/notifications/types";
 import {setLoading, updatePodNotifications} from "../../../store/reducers/notifications/actions";
@@ -18,7 +18,7 @@ import {TNotificatonsProps} from "./ServiceCenterAppointments";
 import {Loading} from "../../UI/Loading";
 import {checkPodsAreTheSame} from "./utils";
 
-const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
+const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changesState}) => {
     const {employeesList, loading} = useSelector((state: RootState) => state.employees);
     const {shortPodsList, podsLoading} = useSelector((state: RootState) => state.pods);
     const {podNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
@@ -28,6 +28,7 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     const [selectedPod, setSelectedPod] = useState<IPodShort|null>(null);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const {askConfirm} = useConfirm();
     const classes = useNotificationStyles();
     const currentPodData = useMemo(() => allPodData.find(el => el.podId === selectedPod?.id), [allPodData, selectedPod])
 
@@ -81,7 +82,22 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     }
 
     const onCancel = () => {
-        setAllPodData(podNotifications)
+        if (changesState?.podNotificationsSaved) {
+            setAllPodData(podNotifications)
+        } else {
+            askConfirm({
+                isRemove: true,
+                confirmContent: "Cancel changes",
+                cancelContent: "Save changes",
+                title: "Cancel Pod Notifications changes",
+                content: <span>
+                       By clicking Cancel, your entries across all Pods will not be saved.<br />
+                     Click Save Changes to store your inputs.
+                    </span>,
+                onConfirm: () => setAllPodData(podNotifications),
+                onCancel: onSave
+            });
+        }
     }
 
     const onSave = () => {

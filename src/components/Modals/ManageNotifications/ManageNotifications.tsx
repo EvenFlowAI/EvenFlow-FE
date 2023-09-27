@@ -88,7 +88,11 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
     }, [selectedSC])
 
     const onCancel = () => {
-        props.onClose();
+        if (Object.values(changesState).some(value => !value)) {
+            showError("Please save your entries before closing the service center notifications window.")
+        } else {
+            props.onClose();
+        }
     }
 
     const checkIfChangesSaved = (tab: string): boolean => {
@@ -108,7 +112,7 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
         if (checkIfChangesSaved(currentTab)) {
             setCurrentTab(tab)
         } else {
-            showError("Please save the changes first")
+            showError("Please save your entries before switching to a different notification tab.")
         }
     }
 
@@ -135,7 +139,7 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
                         <ServiceCenterAppointments setChangesState={setChangesState}/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="1">
-                       <PodAppointments setChangesState={setChangesState}/>
+                       <PodAppointments setChangesState={setChangesState} changesState={changesState}/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="2">
                         <RecallAppointments setChangesState={setChangesState}/>

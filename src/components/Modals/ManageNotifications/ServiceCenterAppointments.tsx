@@ -18,7 +18,7 @@ export const initialSCNotifications: TSCNotifications = {
     employees: []
 }
 
-export type TNotificatonsProps = {setChangesState: Dispatch<SetStateAction<TChangesState>>}
+export type TNotificatonsProps = {setChangesState: Dispatch<SetStateAction<TChangesState>>, changesState?: TChangesState}
 
 const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     const {employeesList, loading} = useSelector((state: RootState) => state.employees);
