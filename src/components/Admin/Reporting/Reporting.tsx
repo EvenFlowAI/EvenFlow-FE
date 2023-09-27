@@ -3,8 +3,10 @@ import {Titles} from "../../../config/constants";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {IEndUserConfig} from "../../../qrveyEndUser/types";
 import QrveyEndUser from "../../../qrveyEndUser/QrvayEndUser";
+import {useHistory} from "react-router-dom";
 
 const Reporting = () => {
+    const history = useHistory();
     const configObject: IEndUserConfig = {
         domain: 'https://pcuxl.qrveyapp.com',
         appid: 'jjaR5hX2q',
@@ -16,7 +18,7 @@ const Reporting = () => {
             <TitleContainer
                 title={Titles.Reporting}
                 pad/>
-            <QrveyEndUser settings={configObject}/>
+            {window.origin.includes("apps.evenflow.ai") ? null : <QrveyEndUser settings={configObject}/>}
         </div>
     );
 };
