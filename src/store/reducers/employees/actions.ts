@@ -184,3 +184,18 @@ export const loadByFilters: ActionCreator<AppThunk> = () =>
     };
 
 export const setEmployeeFilters = createAction<Partial<IEmployeeFilters>>("Employees/ChangeFilters")
+
+export const getUsersShort = createAction<IAdvisorShort[]>("Employees/GetUsersShort");
+export const loadUsersShort = (serviceCenterId: number): AppThunk => dispatch => {
+    dispatch(loading(true))
+    Api.call(Api.endpoints.Users.GetShort, {data: {pageSize: 0, serviceCenterId}})
+        .then(result => {
+            if (result) {
+                dispatch(getUsersShort(result.data?.result))
+            }
+        })
+        .catch(err => {
+            console.log('load users short error')
+        })
+        .finally(() => dispatch(loading(false)))
+}
