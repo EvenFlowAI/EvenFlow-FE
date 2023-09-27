@@ -2,7 +2,6 @@ import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {useNotificationStyles} from "./ManageNotifications";
-import {IEmployee} from "../../../store/reducers/employees/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Button, Divider, IconButton} from "@material-ui/core";
@@ -17,14 +16,15 @@ import {setLoading, updatePodNotifications} from "../../../store/reducers/notifi
 import {TNotificatonsProps} from "./ServiceCenterAppointments";
 import {Loading} from "../../UI/Loading";
 import {checkPodsAreTheSame} from "./utils";
+import {IAdvisorShort} from "../../../store/reducers/users/types";
 
 const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changesState}) => {
-    const {employeesList, loading} = useSelector((state: RootState) => state.employees);
+    const {usersShort, loading} = useSelector((state: RootState) => state.employees);
     const {shortPodsList, podsLoading} = useSelector((state: RootState) => state.pods);
     const {podNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
-    const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
+    const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort|null>(null);
     const [allPodData, setAllPodData] = useState<TPodNotifications[]>([]);
-    const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
+    const [selectedEmployees, setSelectedEmployees] = useState<IAdvisorShort[]>([]);
     const [selectedPod, setSelectedPod] = useState<IPodShort|null>(null);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -56,19 +56,19 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
 
     useEffect(() => {
         if (currentPodData?.usersList) {
-            const selected = employeesList.filter(el => currentPodData?.usersList?.includes(el.id))
+            const selected = usersShort.filter(el => currentPodData?.usersList?.includes(el.id))
             setSelectedEmployees(selected)
         }
-    }, [employeesList, currentPodData])
+    }, [usersShort, currentPodData])
 
-    const onEmployeeChange = (e: ChangeEvent<{}>, value: IEmployee|null) => {
+    const onEmployeeChange = (e: ChangeEvent<{}>, value: IAdvisorShort|null) => {
         setCurrentEmployee(value)
     }
 
     const onPodChange = (e: ChangeEvent<{}>, value: IPodShort|null) => {
         const podData = allPodData.find(el => el.podId === value?.id);
         if (podData) {
-            const selected = employeesList.filter(el => podData.usersList?.includes(el.id))
+            const selected = usersShort.filter(el => podData.usersList?.includes(el.id))
             setSelectedEmployees(selected)
         } else {
             if (value) {
@@ -146,7 +146,7 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
                         />
                         <div className={classes.selectWrapper}>
                             <Autocomplete
-                                options={employeesList}
+                                options={usersShort}
                                 disabled={loading || podsLoading || isLoading}
                                 fullWidth
                                 getOptionLabel={i => i.fullName}

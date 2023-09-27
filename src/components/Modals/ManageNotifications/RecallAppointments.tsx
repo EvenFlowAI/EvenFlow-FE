@@ -2,7 +2,6 @@ import React, {ChangeEvent, useEffect, useState} from 'react';
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {useNotificationStyles} from "./ManageNotifications";
-import {IEmployee} from "../../../store/reducers/employees/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Button, Divider, IconButton, Switch} from "@material-ui/core";
@@ -13,13 +12,14 @@ import {ENotificationType, TSCNotifications} from "../../../store/reducers/notif
 import {initialSCNotifications, TNotificatonsProps} from "./ServiceCenterAppointments";
 import {useSCs} from "../../../utils/hooks";
 import {updateNotificationsByType} from "../../../store/reducers/notifications/actions";
+import {IAdvisorShort} from "../../../store/reducers/users/types";
 
 const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
-    const {employeesList, loading} = useSelector((state: RootState) => state.employees);
+    const {usersShort, loading} = useSelector((state: RootState) => state.employees);
     const {recallNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
-    const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
+    const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort|null>(null);
     const [recallData, setRecallData] = useState<TSCNotifications|null>(initialSCNotifications);
-    const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
+    const [selectedEmployees, setSelectedEmployees] = useState<IAdvisorShort[]>([]);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useNotificationStyles();
@@ -45,11 +45,11 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
     }, [recallNotifications])
 
     useEffect(() => {
-        const selected = employeesList.filter(el => recallData?.employees?.includes(el.id))
+        const selected = usersShort.filter(el => recallData?.employees?.includes(el.id))
         setSelectedEmployees(selected)
-    }, [employeesList, recallData])
+    }, [usersShort, recallData])
 
-    const onEmployeeChange = (e: ChangeEvent<{}>, value: IEmployee|null) => {
+    const onEmployeeChange = (e: ChangeEvent<{}>, value: IAdvisorShort|null) => {
         setCurrentEmployee(value)
     }
 
@@ -105,7 +105,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
                 </div>
                 <div className={classes.selectWrapper}>
                 <Autocomplete
-                    options={employeesList}
+                    options={usersShort}
                     fullWidth
                     disabled={loading || isLoading}
                     getOptionLabel={i => i.fullName}

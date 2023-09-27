@@ -27,6 +27,7 @@ export type TEmployeesState = {
     paging: IPagingResponse;
     pageData: IPageRequest;
     filters: IEmployeeFilters;
+    usersShort: IAdvisorShort[];
 }
 
 const initialState: TEmployeesState = {
@@ -44,6 +45,7 @@ const initialState: TEmployeesState = {
     paging: {...defaultPaging},
     pageData: {...defaultPageData},
     filters: {},
+    usersShort: [],
 }
 
 export const employeesReducer = (state=initialState, action: TEmployeeActions): TEmployeesState => {
@@ -72,6 +74,8 @@ export const employeesReducer = (state=initialState, action: TEmployeeActions): 
             return {...state, filters: {...state.filters, ...action.payload}};
             case "SCEmployees/LoadingDMSAdvisors":
             return {...state, loadingDMSAdvisors: action.payload};
+        case "Employees/GetUsersShort":
+            return {...state, usersShort: action.payload};
         case setEmplSearch.type:
             if (setEmplSearch.match(action)) {
                 return {...state, searchTerm: action.payload, pageData: {...state.pageData, pageIndex: 0}};

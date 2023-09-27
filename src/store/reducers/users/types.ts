@@ -32,6 +32,7 @@ export interface IAdvisorShort {
     lastName: string;
     fullName: string;
     avatarPath: string;
+    email?: string;
 }
 
 

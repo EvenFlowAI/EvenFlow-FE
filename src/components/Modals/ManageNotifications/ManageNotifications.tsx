@@ -10,7 +10,7 @@ import ServiceCenterAppointments from "./ServiceCenterAppointments";
 import PodAppointments from "./PodAppointments";
 import RecallAppointments from "./RecallAppointments";
 import {useException, useSCs} from "../../../utils/hooks";
-import {loadByFilters, setEmployeeFilters} from "../../../store/reducers/employees/actions";
+import {loadUsersShort} from "../../../store/reducers/employees/actions";
 import {loadNotifications} from "../../../store/reducers/notifications/actions";
 
 export const useNotificationStyles = makeStyles({
@@ -78,13 +78,9 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(setEmployeeFilters({serviceCenterId: selectedSC.id}))
+            dispatch(loadUsersShort(selectedSC.id))
             dispatch(loadNotifications(selectedSC.id))
         }
-    }, [selectedSC])
-
-    useEffect(() => {
-        selectedSC && dispatch(loadByFilters())
     }, [selectedSC])
 
     const onCancel = () => {

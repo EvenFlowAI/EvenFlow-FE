@@ -2,7 +2,6 @@ import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {TChangesState, useNotificationStyles} from "./ManageNotifications";
-import {IEmployee} from "../../../store/reducers/employees/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Button, Divider, IconButton, Switch} from "@material-ui/core";
@@ -12,6 +11,7 @@ import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
 import {ENotificationType, TSCNotifications} from "../../../store/reducers/notifications/types";
 import {updateNotificationsByType} from "../../../store/reducers/notifications/actions";
 import {useSCs} from "../../../utils/hooks";
+import {IAdvisorShort} from "../../../store/reducers/users/types";
 
 export const initialSCNotifications: TSCNotifications = {
     isActive: false,
@@ -21,11 +21,11 @@ export const initialSCNotifications: TSCNotifications = {
 export type TNotificatonsProps = {setChangesState: Dispatch<SetStateAction<TChangesState>>, changesState?: TChangesState}
 
 const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
-    const {employeesList, loading} = useSelector((state: RootState) => state.employees);
+    const {usersShort, loading} = useSelector((state: RootState) => state.employees);
     const {scNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
-    const [currentEmployee, setCurrentEmployee] = useState<IEmployee|null>(null);
+    const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort|null>(null);
     const [scData, setScData] = useState<TSCNotifications|null>(initialSCNotifications);
-    const [selectedEmployees, setSelectedEmployees] = useState<IEmployee[]>([]);
+    const [selectedEmployees, setSelectedEmployees] = useState<IAdvisorShort[]>([]);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useNotificationStyles();
@@ -53,11 +53,11 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     }, [scNotifications])
 
     useEffect(() => {
-        const selected = employeesList.filter(el => scData?.employees?.includes(el.id))
+        const selected = usersShort.filter(el => scData?.employees?.includes(el.id))
         setSelectedEmployees(selected)
-    }, [employeesList, scData])
+    }, [usersShort, scData])
 
-    const onEmployeeChange = (e: ChangeEvent<{}>, value: IEmployee|null) => {
+    const onEmployeeChange = (e: ChangeEvent<{}>, value: IAdvisorShort|null) => {
         setCurrentEmployee(value)
     }
 
@@ -114,7 +114,7 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
                 </div>
                 <div className={classes.selectWrapper}>
                     <Autocomplete
-                        options={employeesList}
+                        options={usersShort}
                         style={{width: 290}}
                         disabled={loading || isLoading}
                         getOptionLabel={i => i.fullName}
