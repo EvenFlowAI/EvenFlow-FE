@@ -10,7 +10,7 @@ import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
 import {DialogActions} from "../BaseModal";
 import {ENotificationType, TSCNotifications} from "../../../store/reducers/notifications/types";
 import {initialSCNotifications, TNotificatonsProps} from "./ServiceCenterAppointments";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {updateNotificationsByType} from "../../../store/reducers/notifications/actions";
 import {IAdvisorShort} from "../../../store/reducers/users/types";
 
@@ -23,6 +23,8 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useNotificationStyles();
+    const showError = useException();
+    const showMessage = useMessage();
 
     useEffect(() => {
         let changesAreSaved = true;
@@ -56,8 +58,15 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
     const onCancel = () => {
         setRecallData(recallNotifications)
     }
+
+    const onSuccess = () => showMessage("Notifications for Recall Appointments updated")
+
     const onSave = () => {
-        if (selectedSC && recallData) dispatch(updateNotificationsByType(selectedSC.id, {...recallData, notificationType: ENotificationType.Recalls}))
+        if (selectedSC && recallData) dispatch(updateNotificationsByType(
+            selectedSC.id,
+            {...recallData, notificationType: ENotificationType.Recalls},
+            onSuccess,
+            showError))
     }
 
     const handleSwitch = () => {
