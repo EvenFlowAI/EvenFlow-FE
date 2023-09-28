@@ -10,7 +10,7 @@ import {ReactComponent as PlusIcon} from "../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
 import {ENotificationType, TSCNotifications} from "../../../store/reducers/notifications/types";
 import {updateNotificationsByType} from "../../../store/reducers/notifications/actions";
-import {useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {IAdvisorShort} from "../../../store/reducers/users/types";
 
 export const initialSCNotifications: TSCNotifications = {
@@ -29,6 +29,8 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useNotificationStyles();
+    const showError = useException();
+    const showMessage = useMessage();
 
     useEffect(() => {
         let changesAreSaved = true;
@@ -65,8 +67,15 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
         setScData(scNotifications);
     }
 
+    const onSuccess = () => showMessage("Notifications for Service Center Appointments updated")
+
     const onSave = () => {
-        if (selectedSC && scData) dispatch(updateNotificationsByType(selectedSC.id, {...scData, notificationType: ENotificationType.ServiceCenter}))
+        if (selectedSC && scData) dispatch(updateNotificationsByType(
+            selectedSC.id,
+            {...scData, notificationType: ENotificationType.ServiceCenter},
+            onSuccess,
+            showError
+        ))
     }
 
     const handleSwitch = () => {

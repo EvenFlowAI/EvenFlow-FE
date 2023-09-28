@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {TPodNotifications, TSCNotifications} from "./types";
-import {AppThunk} from "../../../types/types";
+import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
 import {Api} from "../../../config/requests";
 
 export const setLoading = createAction<boolean>('Notifications/SetLoading');
@@ -22,20 +22,24 @@ export const loadNotifications = (id: number): AppThunk => dispatch => {
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const updatePodNotifications = (id: number, data: TPodNotifications[]): AppThunk => dispatch => {
+export const updatePodNotifications = (id: number, data: TPodNotifications[], onSuccess: TCallback, onError: TArgCallback<{err: string}>): AppThunk => dispatch => {
     dispatch(setLoading(true))
     Api.call(Api.endpoints.Notifications.UpdateForPod, {urlParams: {id}, data: {serviceCenterId: id, podEmployees: data}})
         .then(result => {
             if (result) dispatch(loadNotifications(id))
+            onSuccess()
         })
+        .catch(err => onError(err))
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const updateNotificationsByType = (id: number, data: TSCNotifications): AppThunk => dispatch => {
+export const updateNotificationsByType = (id: number, data: TSCNotifications, onSuccess: TCallback, onError: TArgCallback<{err: string}>): AppThunk => dispatch => {
     dispatch(setLoading(true))
     Api.call(Api.endpoints.Notifications.UpdateByType, {urlParams: {id}, data: {serviceCenterId: id, ...data}})
         .then(result => {
             if (result) dispatch(loadNotifications(id))
+            onSuccess()
         })
+        .catch(err => onError(err))
         .finally(() => dispatch(setLoading(false)))
 }

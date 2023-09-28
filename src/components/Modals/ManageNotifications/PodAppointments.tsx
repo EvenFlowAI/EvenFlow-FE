@@ -9,7 +9,7 @@ import {DialogActions} from "../BaseModal";
 import {IPodShort} from "../../../store/reducers/pods/types";
 import {ReactComponent as PlusIcon} from "../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
-import {useConfirm, useSCs} from "../../../utils/hooks";
+import {useConfirm, useException, useMessage, useSCs} from "../../../utils/hooks";
 import {loadPodsShort} from "../../../store/reducers/pods/actions";
 import {TPodNotifications} from "../../../store/reducers/notifications/types";
 import {setLoading, updatePodNotifications} from "../../../store/reducers/notifications/actions";
@@ -29,6 +29,8 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const {askConfirm} = useConfirm();
+    const showError = useException();
+    const showMessage = useMessage();
     const classes = useNotificationStyles();
     const currentPodData = useMemo(() => allPodData.find(el => el.podId === selectedPod?.id), [allPodData, selectedPod])
 
@@ -100,8 +102,10 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
         }
     }
 
+    const onSuccess = () => showMessage("Notifications for Pod Appointments updated")
+
     const onSave = () => {
-        if (selectedSC) dispatch(updatePodNotifications(selectedSC.id, allPodData))
+        if (selectedSC) dispatch(updatePodNotifications(selectedSC.id, allPodData, onSuccess, showError))
     }
 
     const onAddEmployee = () => {
