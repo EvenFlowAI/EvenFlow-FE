@@ -22,10 +22,12 @@ import {ReactComponent as EmployeeScheduleIcon} from "../../../assets/img/Subtra
 import {ReactComponent as BreaksIcon} from "../../../assets/img/Icon 4 Breaks.svg";
 import {ReactComponent as LockOutlined} from "../../../assets/img/Icon 5 Holidays.svg";
 import {ReactComponent as AdvisorIcon} from "../../../assets/img/advisor_assignment.svg";
+import {ReactComponent as NotificationsIcon} from "../../../assets/img/notifications.svg";
 import Reminders from "../../Modals/Reminders/Reminders";
 import LaborRate from "../../Modals/LaborRate/LaborRate";
 import {EmployeeSchedule} from "../../Modals/EmployeeSchedule/EmployeeSchedule";
 import AdvisorAssignment from "../../Modals/AdvisorAssignment/AdvisorAssignment";
+import ManageNotifications from "../../Modals/ManageNotifications/ManageNotifications";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -179,6 +181,11 @@ export const AdminDashboard: React.FC = () => {
         onOpen: onOpenAdvisorAssignment,
         isOpen: isOpenAdvisorAssignment,
     } = useModal();
+    const {
+        onClose: onCloseManageNotifications,
+        onOpen: onOpenManageNotifications,
+        isOpen: isOpenManageNotifications,
+    } = useModal();
 
     const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
         technicians: analytics.countOfTechnicians,
@@ -197,6 +204,7 @@ export const AdminDashboard: React.FC = () => {
         {label: "Labor Rate", icon: <LaborRateIcon />, action: onOpenLaborRate},
         {label: "Appointment Reminders", icon: <RemindersIcon />, action: onOpenReminders},
         {label: "Advisor Assignment", icon: <AdvisorIcon />, action: onOpenAdvisorAssignment},
+        {label: "Service Center Notifications", icon: <NotificationsIcon />, action: onOpenManageNotifications},
     ];
 
     const classes = useStyles();
@@ -241,5 +249,6 @@ export const AdminDashboard: React.FC = () => {
         <Reminders open={isOpenReminders} onClose={onCloseReminders}/>
         <LaborRate open={isOpenLaborRate} onClose={onCloseLaborRate}/>
         <AdvisorAssignment open={isOpenAdvisorAssignment} onClose={onCloseAdvisorAssignment}/>
+        <ManageNotifications open={isOpenManageNotifications} onClose={onCloseManageNotifications}/>
     </div>
 }

@@ -16,7 +16,7 @@ const Reporting = () => {
             <TitleContainer
                 title={Titles.Reporting}
                 pad/>
-            <QrveyEndUser settings={configObject}/>
+            {window.origin.includes("apps.evenflow.ai") ? null : <QrveyEndUser settings={configObject}/>}
         </div>
     );
 };

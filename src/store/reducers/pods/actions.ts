@@ -8,6 +8,8 @@ export const setPodsLoading = createAction<boolean>("Pods/Loading");
 export const setPodsPageData = createAction<Partial<IPageRequest>>("Pods/PageData");
 export const setPodsPaging = createAction<IPagingResponse>("Pods/Paging");
 export const setPodsFilters = createAction<Partial<IPodFilters>>("Pods/Filters");
+export const getPodsShort = createAction<IPodShort[]>("Pods/GetPodsShort");
+export const setSelectedPod = createAction<IPodShort|null>("Pods/SetSelectedPod");
 
 export const loadPods = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
     const {podsFilters, podsPageData} = getState().pods;
@@ -46,8 +48,7 @@ export const removePod = (id: number, serviceCenterId?: number): AppThunk => asy
     }
 }
 
-export const getPodsShort = createAction<IPodShort[]>("Pods/GetPodsShort");
-export const setSelectedPod = createAction<IPodShort|null>("Pods/SetSelectedPod");
+
 export const loadPodsShort = (serviceCenterId: number): AppThunk => async dispatch => {
     const {data: {result}} = await Api.call<PaginatedAPIResponse<IPodShort>>(
         Api.endpoints.Pods.GetShort,
