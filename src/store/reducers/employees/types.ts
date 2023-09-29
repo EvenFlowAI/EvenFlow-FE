@@ -1,6 +1,7 @@
 import {IDealershipGroupExtended} from "../dealershipGroups/types";
 import {IServiceCenter} from "../serviceCenters/types";
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../utils";
+import {IAdvisorShort} from "../users/types";
 
 export interface IEmployeeInfo {
     hourlyRate: number;
@@ -63,6 +64,7 @@ export type TChangeDPaging = TChangePagingGeneric<"Employees/ChangeDPaging">;
 export type TChangePaging = TChangePagingGeneric<"Employees/ChangePaging">;
 export type TChangePageData = TChangePageDataGeneric<"Employees/ChangePageData">;
 export type TLoadingDMSAdvisors = { type: "SCEmployees/LoadingDMSAdvisors", payload: boolean };
+export type TGetUsersShort = {type: "Employees/GetUsersShort", payload: IAdvisorShort[]};
 
 export type TEmployeeActions =
     | TGetDealershipEmployees
@@ -77,7 +79,8 @@ export type TEmployeeActions =
     | TChangePaging
     | TChangeFilters
     | TGetAll
-    | TLoadingDMSAdvisors;
+    | TLoadingDMSAdvisors
+    | TGetUsersShort;
 
 export type TDmsAdvisor = {
     id: string;
