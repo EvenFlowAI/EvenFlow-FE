@@ -571,6 +571,7 @@ export interface IPackageById {
     isShowSuggestedPrice?: boolean;
     isManualOverridePrice?: boolean;
     priceTitles: TPackagePrice[];
+    intervalUpsellName?: string;
 }
 
 export type TOptionServiceRequest = {

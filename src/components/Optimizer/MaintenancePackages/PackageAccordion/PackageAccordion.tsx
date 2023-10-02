@@ -3,7 +3,7 @@ import {
     Accordion as MuiAccordion,
     AccordionDetails,
     AccordionSummary, Button, Divider,
-    IconButton,
+    IconButton, Input,
     makeStyles, Menu, MenuItem,
     Typography
 } from "@material-ui/core";
@@ -103,6 +103,20 @@ const useStyles = makeStyles(() => ({
         color: 'white',
         fontWeight: 'bold',
         padding: '10px 16px',
+    },
+    greyInput: {
+        width: '100%',
+        background: 'rgba(37, 37, 37, 0.5)',
+        color: 'white',
+        fontWeight: 'bold',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        minHeight: 14,
+        padding: '10px 16px',
+        '& > input': {
+            padding: 3,
+            fontSize: 14,
+        }
     }
 }));
 
@@ -138,6 +152,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [complimentaryData, setComplimentaryData] = useState<TRequestRow[]>([]);
     const [upsellData, setUpsellData] = useState<TRequestRow[]>([]);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [intervalUpsellTitle, setIntervalUpsellTitle] = useState<string>('Interval Upsell');
+    const [isUpsellNameEdit, setUpsellNameEdit] = useState<boolean>(false);
     const [editingOption, setEditingOption] = useState<IPackageOptionDetailed | null>(null);
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const {isOpen: isRequestToDMSOpen, onOpen: onRequestToDMSOpen, onClose: onRequestToDMSClose} = useModal();
@@ -210,6 +226,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         if (packageData?.options) {
             getOptionsData(packageData);
         }
+        if (packageData?.intervalUpsellName) setIntervalUpsellTitle(packageData?.intervalUpsellName)
     }, [packageData])
 
     const onComplimentaryClick = useCallback((item: TCellData, requestId: number): void => {
@@ -290,6 +307,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             }
         }
     }, [packageData])
+
+
 
     const onMoreIconClick = () => {
         if (expanded && anchorRef?.current && packageData) setAnchorEl(anchorRef.current);
@@ -402,6 +421,14 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         onRequestToDMSClose();
     }
 
+    const onIntervalUpsellNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value && !e.target.value.match(/^[A-Za-z0-9 \s\-_]*[A-Za-z0-9][A-Za-z0-9 \s\-_]*$/)) {
+            showError('Please use only letters, digits, and whitespaces')
+        } else {
+            setPackageData(prev => prev ? ({...prev, intervalUpsellName: e.target.value}) : prev)
+        }
+    }
+
     return <MuiAccordion
         classes={accordClasses}
         defaultExpanded={defaultExpanded}
@@ -492,7 +519,14 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             // checked={currentPackage?.isManualOverridePrice}
                         />
 
-                        <div className={classes.complimentaryRow}>Interval Upsell</div>
+                        {isUpsellNameEdit
+                            ? <Input
+                                value={intervalUpsellTitle}
+                                onBlur={() => setUpsellNameEdit(false)}
+                                onChange={onIntervalUpsellNameChange}
+                                className={classes.greyInput}/>
+                            :  <div className={classes.complimentaryRow} onClick={() => setUpsellNameEdit(true)}>Interval Upsell</div>
+                        }
                         <div className={classes.tablesWrapper}>
                             {packageData && <IntervalUpsellAndOptions
                                 packageData={packageData}
