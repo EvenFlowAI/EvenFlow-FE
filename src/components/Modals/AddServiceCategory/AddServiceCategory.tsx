@@ -17,13 +17,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadAllAssignedServiceRequests, setAssignedFilter,} from "../../../store/reducers/serviceRequests/actions";
 import {useException, useSCs} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
-import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
+import {IAssignedServiceRequest, TOPsCodeWithIndex} from "../../../store/reducers/serviceRequests/types";
 import {createCategory, updateCategory, updateCategoryIcon} from "../../../store/reducers/categories/actions";
 import OpsCodesTable from "./OpsCodesTable";
 import FileInput from "./FileInput";
 import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {visitCenterTabs} from "../../Admin/ServiceOpsCodesMapping/ServiceOpsCodesMapping";
+import OpsCodesWithOrder from "./OpsCodesWithOrder";
 
 type TAddServiceCategoryProps = DialogProps & {
     editingItem: ICategory | null;
@@ -131,6 +132,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
     const [categoryType, setCategoryType] = useState<TOption | null>(null);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
+    const [selectedCodesWithOrder, setSelectedCodesWithOrder] = useState<TOPsCodeWithIndex[]>([]);
     const [orderIndex, setOrderIndex] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [selectedServiceType, setSelectedServiceType] = useState<EServiceType>(EServiceType.VisitCenter)
@@ -401,10 +403,15 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
                     onChange={onDescriptionChange}
                 />
                 <Divider/>
-                <OpsCodesTable
-                    selectedCodes={selectedCodes}
-                    setSelectedCodes={setSelectedCodes}
-                    disabled={disabledOpsCodes}/>
+                {categoryType?.value === EServiceCategoryType.IndividualServices
+                    ? <OpsCodesWithOrder
+                        selectedCodes={selectedCodesWithOrder}
+                        setSelectedCodes={setSelectedCodesWithOrder}
+                        disabled={disabledOpsCodes}/>
+                    :    <OpsCodesTable
+                        selectedCodes={selectedCodes}
+                        setSelectedCodes={setSelectedCodes}
+                        disabled={disabledOpsCodes}/>}
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel} className={classes.cancelButton}>

@@ -22,6 +22,7 @@ export interface IServiceRequestShort {
     description: string;
     priority: IServiceRequestPriority
     price: number;
+    orderIndex?: number;
 }
 export interface IServiceRequestNonAddedFilter {
     searchTerm: string;
@@ -137,4 +138,9 @@ export interface IUpsellServiceRequestUpdate {
     invoiceAmount: number|null;
     partsUnitCost: number|null;
     numberOfParts: number|null;
+}
+
+export type TOPsCodeWithIndex = {
+    id: number;
+    orderIndex: number;
 }
