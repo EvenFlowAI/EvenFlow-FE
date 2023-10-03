@@ -3,7 +3,7 @@ import {
     Accordion as MuiAccordion,
     AccordionDetails,
     AccordionSummary, Button, Divider,
-    IconButton, Input,
+    IconButton,
     makeStyles, Menu, MenuItem,
     Typography
 } from "@material-ui/core";
@@ -20,12 +20,12 @@ import {loadPackageById, removePackageById, updatePackageOptions} from "../../..
 import AssignOpsCodeModal from "../../../Modals/AssignOpsCodeModal/AssignOpsCodeModal";
 import SaveRequestToDms from "../../../Modals/SaveRequestToDMS/SaveRequestToDMS";
 import {ServiceRequestsWithOptions} from "../ServiceRequestsAndOptions/ServiceRequestsAndOptions";
-import {ComplimentaryAndOptions} from "../ComplimenteryAndOptions/ComplimentaryAndOptions";
 import Description from "../Description/Description";
 import OrderIndex from "../OrderIndex/OrderIndex";
-import {IntervalUpsellAndOptions} from "../IntervalUpsellAndOptions/IntervalUpsellAndOptions";
 import PricesBlock from "../PricesRow/PricesRow";
 import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import Upsells from "../Upsells/Upsells";
+import Complimentary from "../Complimentary/Complimentary";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -72,7 +72,7 @@ export type TRequestRow = {
     cellData: TCellData[];
 }
 
-const useStyles = makeStyles(() => ({
+export const usePackageAccordionStyles = makeStyles(() => ({
     title: {
         fontSize: 20,
     },
@@ -135,8 +135,8 @@ const useAccordionStyles = makeStyles(() => ({
     },
 }));
 
-const defaultUpsellTitle = "Interval Upsell";
-const defaultComplimentaryTitle = "Complimentary";
+export const defaultUpsellTitle = "Interval Upsell";
+export const defaultComplimentaryTitle = "Complimentary";
 
 export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const {
@@ -169,7 +169,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const showError = useException();
 
     const accordClasses = useAccordionStyles();
-    const classes = useStyles();
+    const classes = usePackageAccordionStyles();
     const iconStyles = useIconStyles();
 
     useEffect(() => {
@@ -353,6 +353,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             getOptionsData(currentPackage);
             setIsEdit(false);
             setEditingOption(null);
+            setComplimentaryNameEdit(false);
+            setUpsellNameEdit(false);
         }
     }, [currentPackage])
 
@@ -380,6 +382,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         } finally {
             setIsEdit(false);
             setEditingOption(null);
+            setComplimentaryNameEdit(false);
+            setUpsellNameEdit(false);
         }
     }, [dispatch, currentPackage, showError])
 
@@ -421,30 +425,6 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const onRequestToDmsSave = (data: IPackageById) => {
         sendRequest(data);
         onRequestToDMSClose();
-    }
-
-    const onIntervalUpsellNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value && !e.target.value.match(/^[A-Za-z0-9 \s\-_]*[A-Za-z0-9][A-Za-z0-9 \s\-_]*$/)) {
-            showError('Please use only letters, digits, and whitespaces')
-        } else {
-            setPackageData(prev => prev ? ({...prev, intervalUpsellTitle: e.target.value}) : prev)
-        }
-    }
-
-    const onComplimentaryNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value && !e.target.value.match(/^[A-Za-z0-9 \s\-_]*[A-Za-z0-9][A-Za-z0-9 \s\-_]*$/)) {
-            showError('Please use only letters, digits, and whitespaces')
-        } else {
-            setPackageData(prev => prev ? ({...prev, complimentaryTitle: e.target.value}) : prev)
-        }
-    }
-
-    const onUpsellKeyUp = (e: React.KeyboardEvent) => {
-        if (e.keyCode === 13) setUpsellNameEdit(false)
-    }
-
-    const onComplimentaryKeyUp = (e: React.KeyboardEvent) => {
-        if (e.keyCode === 13) setComplimentaryNameEdit(false)
     }
 
     return <MuiAccordion
@@ -537,21 +517,14 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             // checked={currentPackage?.isManualOverridePrice}
                         />
 
-                        {isUpsellNameEdit
-                            ? <Input
-                                onKeyUp={onUpsellKeyUp}
-                                value={packageData?.intervalUpsellTitle ?? defaultUpsellTitle}
-                                onBlur={() => setUpsellNameEdit(false)}
-                                onChange={onIntervalUpsellNameChange}
-                                className={classes.greyInput}/>
-                            :  <div className={classes.complimentaryRow} onClick={() => setUpsellNameEdit(true)}>Interval Upsell</div>
-                        }
-                        <div className={classes.tablesWrapper}>
-                            {packageData && <IntervalUpsellAndOptions
-                                packageData={packageData}
-                                data={upsellData}
-                                onCheckboxClick={onUpsellClick}/>}
-                        </div>
+                        <Upsells
+                            isUpsellNameEdit={isUpsellNameEdit}
+                            setPackageData={setPackageData}
+                            packageData={packageData}
+                            setUpsellNameEdit={setUpsellNameEdit}
+                            upsellData={upsellData}
+                            onUpsellClick={onUpsellClick}
+                            />
 
                         <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedUpsellHours}/>
                         <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedUpsellPrice}/>
@@ -575,21 +548,14 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             valuesArray={detailsData.intervalUpsellPrice}
                             onInputChange={onInputChange}/>
 
-                        {isComplimentaryNameEdit
-                            ? <Input
-                                value={packageData?.complimentaryTitle ?? defaultComplimentaryTitle}
-                                onBlur={() => setComplimentaryNameEdit(false)}
-                                onChange={onComplimentaryNameChange}
-                                onKeyUp={onComplimentaryKeyUp}
-                                className={classes.greyInput}/>
-                            :  <div className={classes.complimentaryRow} onClick={() => setComplimentaryNameEdit(true)}>Complimentary</div>
-                        }
-                        <div className={classes.tablesWrapper}>
-                            {packageData && <ComplimentaryAndOptions
-                                packageData={packageData}
-                                data={complimentaryData}
-                                onCheckboxClick={onComplimentaryClick}/>}
-                        </div>
+                        <Complimentary
+                            isComplimentaryNameEdit={isComplimentaryNameEdit}
+                            setPackageData={setPackageData}
+                            packageData={packageData}
+                            setComplimentaryNameEdit={setComplimentaryNameEdit}
+                            complimentaryData={complimentaryData}
+                            onComplimentaryClick={onComplimentaryClick}
+                            />
 
                         <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedComplimentaryHours}/>
                         <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedComplimentaryPrice}/>
