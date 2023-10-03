@@ -16,7 +16,12 @@ import {useConfirm, useException, useModal, useSCs} from "../../../../utils/hook
 import AccordionActions from "../AccordionActions/AccordionActions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {loadPackageById, removePackageById, updatePackageOptions} from "../../../../store/reducers/packages/actions";
+import {
+    loadPackageById,
+    removePackageById,
+    updatePackageOptions,
+    updateSegmentsTitles
+} from "../../../../store/reducers/packages/actions";
 import AssignOpsCodeModal from "../../../Modals/AssignOpsCodeModal/AssignOpsCodeModal";
 import SaveRequestToDms from "../../../Modals/SaveRequestToDMS/SaveRequestToDMS";
 import {ServiceRequestsWithOptions} from "../ServiceRequestsAndOptions/ServiceRequestsAndOptions";
@@ -376,6 +381,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 showError("Please save the Price Texts first")
             } else {
                 dispatch(updatePackageOptions(data.id, revisedData, showError));
+                if (data?.segmentTitles) dispatch(updateSegmentsTitles(data.id, data.segmentTitles, showError));
             }
         } catch (e){
             showError(e)

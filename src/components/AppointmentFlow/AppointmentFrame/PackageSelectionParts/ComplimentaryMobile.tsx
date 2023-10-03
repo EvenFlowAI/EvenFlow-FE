@@ -2,21 +2,23 @@ import React from 'react';
 import {HtmlTooltip} from "../ServiceCard";
 import {usePackageMobileStyles} from "../PackageSelectionMobile";
 import {useTranslation} from "react-i18next";
-import {TExtendedComplimentary} from "../../../../api/types";
+import {ESegmentTitle, IPackage, TExtendedComplimentary} from "../../../../api/types";
 
 type TProps = {
     isBmWService: boolean;
     complimentaryServices: TExtendedComplimentary[];
+    loadedPackages: IPackage[];
 }
 
-const ComplimentaryMobile: React.FC<TProps> = ({isBmWService, complimentaryServices}) => {
+const ComplimentaryMobile: React.FC<TProps> = ({isBmWService, complimentaryServices, loadedPackages}) => {
     const classes = usePackageMobileStyles();
     const {t} = useTranslation();
+    const title = loadedPackages[0]?.segmentTitles?.find(el => el.type === ESegmentTitle.Complimentary)?.title
 
     return (
         <React.Fragment>
             <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>
-                {t("Complimentary")}
+                {title ?? t("Complimentary")}
             </div>
 
             <div className={classes.complimentaryServices}>

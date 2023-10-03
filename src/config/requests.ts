@@ -164,7 +164,7 @@ type ApiRoutes = {
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType"
         | "UpdateSRDescription" | "UpdateComplimentaryDescription" | "UpdateSROrder" | "UpdateComplimentaryOrder"
-        | "SetShowSuggestedPrice" | "SetManualOverride" | "UpdatePriceTitles" | "UpdateUpsellOrder", TApiRoute>,
+        | "SetShowSuggestedPrice" | "SetManualOverride" | "UpdatePriceTitles" | "UpdateUpsellOrder" | "UpdateSegmentTitles", TApiRoute>,
     Notifications: Record<"GetAll" | "UpdateForPod" | "UpdateByType", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
@@ -368,6 +368,7 @@ export class Api {
             SetShowSuggestedPrice: {route: "/maintenance-packages/{id}/set-show-suggested-price", method: "patch"},
             SetManualOverride: {route: "/maintenance-packages/{id}/set-manual-override-price", method: "patch"},
             UpdatePriceTitles: {route: "/maintenance-packages/{id}/price-titles", method: "put"},
+            UpdateSegmentTitles: {route: "/maintenance-packages/{id}/segment-titles", method: "put"}
         },
         Notifications: {
           GetAll: {route: "/appointment-notifications/{id}/configurations", method: "get"},

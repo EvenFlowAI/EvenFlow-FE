@@ -7,7 +7,7 @@ import {
     TRequestRow,
     usePackageAccordionStyles
 } from "../PackageAccordion/PackageAccordion";
-import {IPackageById} from "../../../../api/types";
+import {ESegmentTitle, IPackageById} from "../../../../api/types";
 import {useException} from "../../../../utils/hooks";
 
 type TComplimentaryProps = {
@@ -29,12 +29,19 @@ const Complimentary: React.FC<TComplimentaryProps> = ({
                                                       }) => {
     const classes = usePackageAccordionStyles();
     const showError = useException();
+    const complimentaryTitle = packageData?.segmentTitles?.find(el => el.type === ESegmentTitle.Complimentary)
 
     const onComplimentaryNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value && !e.target.value.match(/^[A-Za-z0-9 \s\-_]*[A-Za-z0-9][A-Za-z0-9 \s\-_]*$/)) {
             showError('Please use only letters, digits, and whitespaces')
         } else {
-            setPackageData(prev => prev ? ({...prev, complimentaryTitle: e.target.value}) : prev)
+            setPackageData(prev => {
+                if (prev) {
+                    const updated = {type: ESegmentTitle.Complimentary, title: e.target.value}
+                    const filtered = prev.segmentTitles.filter(el => el.type !== ESegmentTitle.Complimentary);
+                    return {...prev, segmentTitles: [...filtered, updated]}
+                } else return prev
+            })
         }
     }
 
@@ -42,17 +49,19 @@ const Complimentary: React.FC<TComplimentaryProps> = ({
         if (e.keyCode === 13) setComplimentaryNameEdit(false)
     }
 
+    const onClick = () => setComplimentaryNameEdit(true)
+
     return (
         <React.Fragment>
             {isComplimentaryNameEdit
                 ? <Input
-                    value={packageData?.complimentaryTitle ?? defaultComplimentaryTitle}
+                    value={complimentaryTitle?.title ?? defaultComplimentaryTitle}
                     onBlur={() => setComplimentaryNameEdit(false)}
                     onChange={onComplimentaryNameChange}
                     onKeyUp={onComplimentaryKeyUp}
                     className={classes.greyInput}/>
-                :  <div className={classes.complimentaryRow} onClick={() => setComplimentaryNameEdit(true)}>
-                    {packageData?.complimentaryTitle ?? defaultComplimentaryTitle}
+                :  <div className={classes.complimentaryRow} onClick={onClick}>
+                    {complimentaryTitle?.title ?? defaultComplimentaryTitle}
             </div>
             }
             <div className={classes.tablesWrapper}>
