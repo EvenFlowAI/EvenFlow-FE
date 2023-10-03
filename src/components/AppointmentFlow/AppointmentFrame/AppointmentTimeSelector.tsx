@@ -69,7 +69,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
         const {t} = useTranslation();
 
         useEffect(() => {
-           if (titleRef?.current && date) titleRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
+           // if (firstCardRef?.current && date) firstCardRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
         }, [date, titleRef])
 
         useEffect(() => {

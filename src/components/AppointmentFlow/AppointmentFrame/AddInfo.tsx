@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from "./StepWrapper";
 import {TextField} from "../UI";
@@ -53,6 +53,11 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
     const {isOpen: isErrorOpen, onClose: onErrorClose, onOpen: onErrorOpen} = useModal();
     const {t} = useTranslation();
     const showError = useException();
+    const ref = useRef<HTMLDivElement|null>(null)
+
+    useEffect(() => {
+        if (ref) ref.current?.scrollIntoView({behavior: "smooth", block: "end"});
+    }, [ref])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {value}}) => {
         dispatch(setFrameDescription(value))
