@@ -16,16 +16,21 @@ import {useConfirm, useException, useModal, useSCs} from "../../../../utils/hook
 import AccordionActions from "../AccordionActions/AccordionActions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {loadPackageById, removePackageById, updatePackageOptions} from "../../../../store/reducers/packages/actions";
+import {
+    loadPackageById,
+    removePackageById,
+    updatePackageOptions,
+    updateSegmentsTitles
+} from "../../../../store/reducers/packages/actions";
 import AssignOpsCodeModal from "../../../Modals/AssignOpsCodeModal/AssignOpsCodeModal";
 import SaveRequestToDms from "../../../Modals/SaveRequestToDMS/SaveRequestToDMS";
 import {ServiceRequestsWithOptions} from "../ServiceRequestsAndOptions/ServiceRequestsAndOptions";
-import {ComplimentaryAndOptions} from "../ComplimenteryAndOptions/ComplimentaryAndOptions";
 import Description from "../Description/Description";
 import OrderIndex from "../OrderIndex/OrderIndex";
-import {IntervalUpsellAndOptions} from "../IntervalUpsellAndOptions/IntervalUpsellAndOptions";
 import PricesBlock from "../PricesRow/PricesRow";
 import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import Upsells from "../Upsells/Upsells";
+import Complimentary from "../Complimentary/Complimentary";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;
@@ -72,7 +77,7 @@ export type TRequestRow = {
     cellData: TCellData[];
 }
 
-const useStyles = makeStyles(() => ({
+export const usePackageAccordionStyles = makeStyles(() => ({
     title: {
         fontSize: 20,
     },
@@ -103,6 +108,20 @@ const useStyles = makeStyles(() => ({
         color: 'white',
         fontWeight: 'bold',
         padding: '10px 16px',
+    },
+    greyInput: {
+        width: '100%',
+        background: 'rgba(37, 37, 37, 0.5)',
+        color: 'white',
+        fontWeight: 'bold',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        minHeight: 14,
+        padding: '10px 16px',
+        '& > input': {
+            padding: 3,
+            fontSize: 14,
+        }
     }
 }));
 
@@ -121,6 +140,9 @@ const useAccordionStyles = makeStyles(() => ({
     },
 }));
 
+export const defaultUpsellTitle = "Interval Upsell";
+export const defaultComplimentaryTitle = "Complimentary";
+
 export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const {
         id,
@@ -138,6 +160,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const [complimentaryData, setComplimentaryData] = useState<TRequestRow[]>([]);
     const [upsellData, setUpsellData] = useState<TRequestRow[]>([]);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [isUpsellNameEdit, setUpsellNameEdit] = useState<boolean>(false);
+    const [isComplimentaryNameEdit, setComplimentaryNameEdit] = useState<boolean>(false);
     const [editingOption, setEditingOption] = useState<IPackageOptionDetailed | null>(null);
     const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
     const {isOpen: isRequestToDMSOpen, onOpen: onRequestToDMSOpen, onClose: onRequestToDMSClose} = useModal();
@@ -150,7 +174,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const showError = useException();
 
     const accordClasses = useAccordionStyles();
-    const classes = useStyles();
+    const classes = usePackageAccordionStyles();
     const iconStyles = useIconStyles();
 
     useEffect(() => {
@@ -291,6 +315,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }, [packageData])
 
+
+
     const onMoreIconClick = () => {
         if (expanded && anchorRef?.current && packageData) setAnchorEl(anchorRef.current);
     }
@@ -332,6 +358,8 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             getOptionsData(currentPackage);
             setIsEdit(false);
             setEditingOption(null);
+            setComplimentaryNameEdit(false);
+            setUpsellNameEdit(false);
         }
     }, [currentPackage])
 
@@ -353,12 +381,15 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 showError("Please save the Price Texts first")
             } else {
                 dispatch(updatePackageOptions(data.id, revisedData, showError));
+                if (data?.segmentTitles) dispatch(updateSegmentsTitles(data.id, data.segmentTitles, showError));
             }
         } catch (e){
             showError(e)
         } finally {
             setIsEdit(false);
             setEditingOption(null);
+            setComplimentaryNameEdit(false);
+            setUpsellNameEdit(false);
         }
     }, [dispatch, currentPackage, showError])
 
@@ -492,13 +523,14 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             // checked={currentPackage?.isManualOverridePrice}
                         />
 
-                        <div className={classes.complimentaryRow}>Interval Upsell</div>
-                        <div className={classes.tablesWrapper}>
-                            {packageData && <IntervalUpsellAndOptions
-                                packageData={packageData}
-                                data={upsellData}
-                                onCheckboxClick={onUpsellClick}/>}
-                        </div>
+                        <Upsells
+                            isUpsellNameEdit={isUpsellNameEdit}
+                            setPackageData={setPackageData}
+                            packageData={packageData}
+                            setUpsellNameEdit={setUpsellNameEdit}
+                            upsellData={upsellData}
+                            onUpsellClick={onUpsellClick}
+                            />
 
                         <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedUpsellHours}/>
                         <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedUpsellPrice}/>
@@ -522,13 +554,14 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             valuesArray={detailsData.intervalUpsellPrice}
                             onInputChange={onInputChange}/>
 
-                        <div className={classes.complimentaryRow}>Complimentary</div>
-                        <div className={classes.tablesWrapper}>
-                            {packageData && <ComplimentaryAndOptions
-                                packageData={packageData}
-                                data={complimentaryData}
-                                onCheckboxClick={onComplimentaryClick}/>}
-                        </div>
+                        <Complimentary
+                            isComplimentaryNameEdit={isComplimentaryNameEdit}
+                            setPackageData={setPackageData}
+                            packageData={packageData}
+                            setComplimentaryNameEdit={setComplimentaryNameEdit}
+                            complimentaryData={complimentaryData}
+                            onComplimentaryClick={onComplimentaryClick}
+                            />
 
                         <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedComplimentaryHours}/>
                         <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedComplimentaryPrice}/>

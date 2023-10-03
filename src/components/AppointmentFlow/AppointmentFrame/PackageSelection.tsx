@@ -468,6 +468,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 : packages.length ? <React.Fragment>
                 {isXs
                     ? <PackageSelectionMobile
+                        loadedPackages={loadedPackages}
                         getTitle={getTitle}
                         withUpsells={!!upsells.length}
                         data={packages}
@@ -505,9 +506,11 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 upsell={upsells}
                                 handleClick={handleClick}
                                 setClasses={setClasses}
+                                loadedPackages={loadedPackages}
                                 isBmWService={isBmWService}/>
 
                             <Complimentary
+                                loadedPackages={loadedPackages}
                                 packages={packages}
                                 services={services}
                                 complimentary={complimentary}

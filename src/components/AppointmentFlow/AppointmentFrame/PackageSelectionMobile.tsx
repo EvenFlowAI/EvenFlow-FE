@@ -5,7 +5,7 @@ import {TabContext, TabPanel as Tp} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
 import {Info, TPackage} from "./PackageSelection";
 import {useSelector} from "react-redux";
-import {EMaintenanceOptionType, IPackageOptions} from "../../../api/types";
+import {EMaintenanceOptionType, IPackage, IPackageOptions} from "../../../api/types";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import TotalPriceMobile from "./PackageSelectionParts/TotalPriceMobile";
@@ -63,6 +63,7 @@ type PackageSelectionMobileProps = {
     setLocalPackage: Dispatch<SetStateAction<IPackageOptions|null>>;
     setLocalPricingType: Dispatch<SetStateAction<EPackagePricingType|null>>;
     localSelectedPricingType: EPackagePricingType|null;
+    loadedPackages: IPackage[];
 }
 export const usePackageMobileStyles = makeStyles(() => ({
     wrapper: {
@@ -277,9 +278,10 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
                                                                            isBmWService,
                                                                            withUpsells,
                                                                            selectedPackage,
-    setLocalPackage,
+                                                                           setLocalPackage,
                                                                            setLocalPricingType,
-                                                                           localSelectedPricingType
+                                                                           localSelectedPricingType,
+                                                                           loadedPackages
                                                                        }) => {
     const [value, setValue] = useState<string>('1');
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -342,9 +344,9 @@ const PackageSelectionMobile: React.FC<PackageSelectionMobileProps> = ({
 
                                 <TotalMaintenanceMobile item={item}/>
 
-                                <IntervalUpsellsMobile intervalUpsells={item.intervalUpsells} isBmWService={isBmWService}/>
+                                <IntervalUpsellsMobile intervalUpsells={item.intervalUpsells} isBmWService={isBmWService} loadedPackages={loadedPackages}/>
 
-                                <ComplimentaryMobile isBmWService={isBmWService} complimentaryServices={item.complimentaryServices}/>
+                                <ComplimentaryMobile isBmWService={isBmWService} complimentaryServices={item.complimentaryServices} loadedPackages={loadedPackages}/>
 
                                 <TotalComplimentaryMobile item={item}/>
 
