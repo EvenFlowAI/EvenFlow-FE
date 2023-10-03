@@ -113,7 +113,7 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
             <div className={classes.tabWrapper}>
                 <div className={classes.tabTitle}>Service Center Appointments</div>
                 <div className={classes.switcherWrapper}>
-                    <p className={classes.notificationsLabel}>on/off Service center appointments notifications</p>
+                    <p className={classes.notificationsLabel}>on/off Service center and PODs notifications</p>
                     <Switch
                         onChange={handleSwitch}
                         disabled={loading || isLoading}

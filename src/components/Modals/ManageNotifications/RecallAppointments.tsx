@@ -104,7 +104,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
             <div className={classes.tabWrapper}>
                 <div className={classes.tabTitle}>Recall Appointments</div>
                 <div className={classes.switcherWrapper}>
-                    <p className={classes.notificationsLabel}>on/off Recall appointments notifications</p>
+                    <p className={classes.notificationsLabel}>on/off Recall notifications</p>
                     <Switch
                         onChange={handleSwitch}
                         disabled={loading || isLoading}
