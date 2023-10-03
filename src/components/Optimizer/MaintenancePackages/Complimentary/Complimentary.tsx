@@ -9,6 +9,7 @@ import {
 } from "../PackageAccordion/PackageAccordion";
 import {ESegmentTitle, IPackageById} from "../../../../api/types";
 import {useException} from "../../../../utils/hooks";
+import ClickAwayListener from "react-click-away-listener";
 
 type TComplimentaryProps = {
     isComplimentaryNameEdit: boolean;
@@ -54,12 +55,14 @@ const Complimentary: React.FC<TComplimentaryProps> = ({
     return (
         <React.Fragment>
             {isComplimentaryNameEdit
-                ? <Input
-                    value={complimentaryTitle?.title ?? defaultComplimentaryTitle}
-                    onBlur={() => setComplimentaryNameEdit(false)}
-                    onChange={onComplimentaryNameChange}
-                    onKeyUp={onComplimentaryKeyUp}
-                    className={classes.greyInput}/>
+                ? <ClickAwayListener onClickAway={() => setComplimentaryNameEdit(false)}>
+                    <Input
+                        value={complimentaryTitle?.title ?? defaultComplimentaryTitle}
+                        onBlur={() => setComplimentaryNameEdit(false)}
+                        onChange={onComplimentaryNameChange}
+                        onKeyUp={onComplimentaryKeyUp}
+                        className={classes.greyInput}/>
+                </ClickAwayListener>
                 :  <div className={classes.complimentaryRow} onClick={onClick}>
                     {complimentaryTitle?.title ?? defaultComplimentaryTitle}
             </div>

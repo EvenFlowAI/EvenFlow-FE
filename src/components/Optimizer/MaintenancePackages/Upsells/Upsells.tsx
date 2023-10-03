@@ -9,6 +9,7 @@ import {
 } from "../PackageAccordion/PackageAccordion";
 import {ESegmentTitle, IPackageById} from "../../../../api/types";
 import {useException} from "../../../../utils/hooks";
+import ClickAwayListener from "react-click-away-listener";
 
 type TUpsellTitleProps = {
     isUpsellNameEdit: boolean;
@@ -54,12 +55,14 @@ const Upsells: React.FC<TUpsellTitleProps> = ({
 
     return <React.Fragment>
         {isUpsellNameEdit
-        ? <Input
-            onKeyUp={onUpsellKeyUp}
-            value={upsellTitle?.title ?? defaultUpsellTitle}
-            onBlur={() => setUpsellNameEdit(false)}
-            onChange={onIntervalUpsellNameChange}
-            className={classes.greyInput}/>
+        ? <ClickAwayListener onClickAway={() => setUpsellNameEdit(false)}>
+                <Input
+                    onKeyUp={onUpsellKeyUp}
+                    value={upsellTitle?.title ?? defaultUpsellTitle}
+                    onBlur={() => setUpsellNameEdit(false)}
+                    onChange={onIntervalUpsellNameChange}
+                    className={classes.greyInput}/>
+        </ClickAwayListener>
         : <div className={classes.complimentaryRow} onClick={onClick}>
                 {upsellTitle?.title ?? defaultUpsellTitle}
             </div>
