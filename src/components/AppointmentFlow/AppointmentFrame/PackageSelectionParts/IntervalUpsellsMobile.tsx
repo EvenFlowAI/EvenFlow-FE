@@ -2,21 +2,23 @@ import React from 'react';
 import {HtmlTooltip} from "../ServiceCard";
 import {usePackageMobileStyles} from "../PackageSelectionMobile";
 import {useTranslation} from "react-i18next";
-import {TUpsellOfOption} from "../../../../api/types";
+import {ESegmentTitle, IPackage, TUpsellOfOption} from "../../../../api/types";
 
 type TProps = {
     intervalUpsells: TUpsellOfOption[];
-    isBmWService: boolean
+    isBmWService: boolean;
+    loadedPackages: IPackage[];
 }
 
-const IntervalUpsellsMobile: React.FC<TProps> = ({intervalUpsells, isBmWService}) => {
+const IntervalUpsellsMobile: React.FC<TProps> = ({intervalUpsells, isBmWService, loadedPackages}) => {
     const classes = usePackageMobileStyles();
     const {t} = useTranslation();
+    const title = loadedPackages[0]?.segmentTitles?.find(el => el.type === ESegmentTitle.IntervalUpsell)?.title
 
     return intervalUpsells?.length
             ? <React.Fragment>
                 <div className={classes.upsellTitle} style={isBmWService ? {fontSize: 16} : {}}>
-                    {t(t("Service Interval Upsell"))}
+                    {title ?? t("Service Interval Upsell")}
                 </div>
                 <div className={classes.intervalUpsells}>
                     {intervalUpsells

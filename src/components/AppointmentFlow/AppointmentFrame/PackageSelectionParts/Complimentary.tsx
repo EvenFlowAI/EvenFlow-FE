@@ -2,7 +2,7 @@ import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../assets/img/done_icon_black.svg";
 import {InfoOutlined} from "@material-ui/icons";
 import {TComplimentary, TPackage, TService} from "../PackageSelection";
-import {IPackageOptions} from "../../../../api/types";
+import {ESegmentTitle, IPackage, IPackageOptions} from "../../../../api/types";
 import {useTranslation} from "react-i18next";
 import {HtmlTooltip} from "../ServiceCard";
 import {useSelector} from "react-redux";
@@ -16,14 +16,17 @@ type TComplimentaryProps = {
     setClasses: (id: number, cls: string) => string;
     handleClick: (p: IPackageOptions, pricing?: EPackagePricingType) => () => void;
     isBmWService: boolean;
+    loadedPackages: IPackage[];
 }
 
 const Complimentary: React.FC<TComplimentaryProps> =
-    ({complimentary, packages, setClasses, isBmWService, handleClick}) => {
+    ({complimentary, packages, setClasses, isBmWService, handleClick, loadedPackages}) => {
         const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {t} = useTranslation();
+        const {t} = useTranslation();
+        const title = loadedPackages[0]?.segmentTitles?.find(el => el.type === ESegmentTitle.Complimentary)?.title
+
     return <React.Fragment>
-            <div className="green subtitle">{t("Complimentary")}</div>
+            <div className="green subtitle">{title ?? t("Complimentary")}</div>
         
             {packages.map(p =>
                 <div
