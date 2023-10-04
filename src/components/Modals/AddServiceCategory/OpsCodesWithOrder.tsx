@@ -30,7 +30,7 @@ const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({ selectedCodes, setSel
     const onSROrderChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const elementToChange = selectedCodes.find(item => item.id === id)
         if (elementToChange) {
-            const updated = {...elementToChange, orderIndex: e.target?.value ? + e.target.value :  0}
+            const updated = {...elementToChange, orderIndex: +e.target.value}
             setSelectedCodes(prev => {
                 const filtered = prev.filter(item => item.id !== id);
                 return [...filtered, updated]

@@ -181,8 +181,13 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
 
             const page = getPageOptions(selectedServiceType).find(option => option.value === +editingItem.page);
             page && setDefinedPage(page);
-
-            setSelectedCodes(allAssignedList.filter(item => editingItem.serviceRequests.find(el => el.id === item.id)));
+            if (editingItem.type === EServiceCategoryType.IndividualServices || editingItem.type === EServiceCategoryType.Diagnose) {
+                const requests = editingItem.serviceRequests
+                    .map(({id, orderIndex}) => ({id, orderIndex: orderIndex === undefined ? 0 : orderIndex}))
+                setSelectedCodesWithOrder(requests);
+            } else {
+                setSelectedCodes(allAssignedList.filter(item => editingItem.serviceRequests.find(el => el.id === item.id)));
+            }
 
             const currentType = categoryOptions.find(item => item.value === +editingItem.type);
             currentType && setCategoryType(currentType)
@@ -205,6 +210,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
         dispatch(setAssignedFilter({searchTerm: ''}));
         setFileState(initialFileState);
         setSelectedCodes([]);
+        setSelectedCodesWithOrder([]);
         setCategoryType(null);
         setOrderIndex('');
         setDescription('')
@@ -247,18 +253,18 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
                     serviceType: selectedServiceType,
                 }
                 if (description) data.description = description;
-                if (categoryType.value === EServiceCategoryType.GeneralCategory
-                    || categoryType.value === EServiceCategoryType.Diagnose
-                    || categoryType.value === EServiceCategoryType.IndividualServices) {
+                if (categoryType.value === EServiceCategoryType.GeneralCategory) {
                     if (!selectedCodes.length) {
                         return showError('Please choose service requests for category')
                     } else {
-                        if (categoryType.value === EServiceCategoryType.Diagnose
-                            || categoryType.value === EServiceCategoryType.IndividualServices) {
-                            data.serviceRequests = selectedCodesWithOrder.map(({id}) => ({id}));
-                        } else {
-                            data.serviceRequests = selectedCodes.map(({id}) => ({id}));
-                        }
+                        data.serviceRequests = selectedCodes.map(({id}) => ({id}));
+                    }
+                } else if (categoryType.value === EServiceCategoryType.Diagnose
+                    || categoryType.value === EServiceCategoryType.IndividualServices) {
+                    if (!selectedCodesWithOrder.length) {
+                        return showError('Please choose service requests for category')
+                    } else {
+                        data.serviceRequests = selectedCodesWithOrder;
                     }
                 }
                 if (editingItem) {
@@ -272,7 +278,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
             }
         }
     }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes,
-        editingItem, fileState, visitCenterConfig, description, isCommentRequired, selectedServiceType, tabServiceType])
+        editingItem, fileState, visitCenterConfig, description, isCommentRequired, selectedServiceType, tabServiceType, selectedCodesWithOrder])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);
@@ -293,6 +299,7 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
         setFormIsChecked(false);
         setCategoryType(value);
         setSelectedCodes([]);
+        setSelectedCodesWithOrder([]);
     }, [])
 
     const handleSearch = useCallback(() => {
