@@ -250,7 +250,11 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
 
     const getPriceContent = (): string => {
         let price  = t('Will be quoted at the dealership');
-        if (isServiceValetApp && serviceValetAppointment?.price?.value) {
+        if (!Number.isNaN(transactionValue)) {
+            price = scProfile?.isRoundPrice
+                ? `$${transactionValue}`
+                : `$${transactionValue.toFixed(2)}`
+        } else if (isServiceValetApp && serviceValetAppointment?.price?.value) {
             price = scProfile?.isRoundPrice
                 ? `$${serviceValetAppointment?.price?.value}`
                 : `$${serviceValetAppointment?.price?.value.toFixed(2)}`
@@ -258,10 +262,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
             price = scProfile?.isRoundPrice
                 ? `$${appointment?.price?.value}`
                 : `$${appointment?.price?.value.toFixed(2)}`
-        } else if (!Number.isNaN(transactionValue)) {
-            price = scProfile?.isRoundPrice
-                ? `$${transactionValue}`
-                : `$${transactionValue.toFixed(2)}`
         }
         return price
     }
