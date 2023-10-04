@@ -105,6 +105,7 @@ export interface IUpdateAppointment extends ICreateAppointment {
 export interface ICreateAppointmentResp extends IAppointmentByQuery {
     id: number;
     hashKey: string;
+    transactionValue: number;
 }
 
 export interface ICustomerLoadedData {

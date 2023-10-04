@@ -129,6 +129,7 @@ export const setEditingPosition = createAction<TEditingPosition|null>("fAppointm
 export const getAppointmentRequestsPrices = createAction<IServiceRequestPrice[]>("fAppointment/GetAppointmentRequestsPrices");
 export const setAppointmentNotes = createAction<string>("fAppointment/SetAppointmentNotes");
 export const setServiceOptionChanged = createAction<boolean>("fAppointment/SetServiceOptionChanged");
+export const getTransactionValue = createAction<number>('fAppointment/GetTransactionValue');
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -356,6 +357,7 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
         dispatch(setPackagePricingType(data.maintenancePackageOption.priceType))
     }
     if (data.detailedPriceList) dispatch(getAppointmentRequestsPrices(data.detailedPriceList))
+    if (data.transactionValue) dispatch(getTransactionValue(data.transactionValue))
     if (customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
         const updatedData = {...customerLoadedData};
         let vehicle = updatedData.vehicles.find(
