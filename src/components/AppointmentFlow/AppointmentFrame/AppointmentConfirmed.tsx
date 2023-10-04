@@ -134,7 +134,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         customerLoadedData,
         isAppointmentSaving,
         appointmentByKey,
-        appointmentRequestsPrices,
         transactionValue,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
@@ -163,7 +162,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         state.appointment.customerLoadedData,
         state.appointmentFrame.isAppointmentSaving,
         state.appointmentFrame.appointmentByKey,
-        state.appointmentFrame.appointmentRequestsPrices,
         state.appointmentFrame.transactionValue,
     ]);
 
