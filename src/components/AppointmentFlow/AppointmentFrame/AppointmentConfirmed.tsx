@@ -135,6 +135,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         isAppointmentSaving,
         appointmentByKey,
         appointmentRequestsPrices,
+        transactionValue,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -163,6 +164,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         state.appointmentFrame.isAppointmentSaving,
         state.appointmentFrame.appointmentByKey,
         state.appointmentFrame.appointmentRequestsPrices,
+        state.appointmentFrame.transactionValue,
     ]);
 
     const {t} = useTranslation();
@@ -203,8 +205,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         [serviceValetAppointment, serviceTypeOption]);
     const isServiceValetManage = useMemo(() => !Boolean(appointment) && serviceTypeOption?.type === EServiceType.PickUpDropOff && appointmentByKey,
         [appointment, serviceTypeOption]);
-    const appointmentPrice = appointmentRequestsPrices
-        .reduce((prev, current) => prev + (current.priceValue ?? 0),0)
+    // const appointmentPrice = appointmentRequestsPrices
+    //     .reduce((prev, current) => prev + (current.priceValue ?? 0),0)
 
     useEffect(() => {
         ReactGA.event({
@@ -256,10 +258,10 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
             price = scProfile?.isRoundPrice
                 ? `$${appointment?.price?.value}`
                 : `$${appointment?.price?.value.toFixed(2)}`
-        } else if (appointmentPrice) {
+        } else if (!Number.isNaN(transactionValue)) {
             price = scProfile?.isRoundPrice
-                ? `$${appointmentPrice}`
-                : `$${appointmentPrice.toFixed(2)}`
+                ? `$${transactionValue}`
+                : `$${transactionValue.toFixed(2)}`
         }
         return price
     }
