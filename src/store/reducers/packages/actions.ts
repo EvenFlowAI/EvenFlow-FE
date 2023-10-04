@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IPackageById, IPackageByQuery, IMake, IPackageOptionDetailed} from "../../../api/types";
+import {IPackageById, IPackageByQuery, IMake, IPackageOptionDetailed, TSegmentTitle} from "../../../api/types";
 import {AppThunk, IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {
@@ -267,6 +267,18 @@ export const updateUpsellOrderIndex = (id: number, items: TOrderIndex[], onError
         })
         .catch(err => {
             console.log('update package interval upsell order index err', err)
+            onError(err)
+        }).finally(() => dispatch(setPackageLoading(false)))
+}
+
+export const updateSegmentsTitles = (id: number, titles: TSegmentTitle[], onError: (err: string) => void): AppThunk => dispatch => {
+    dispatch(setPackageLoading(true))
+    Api.call(Api.endpoints.MaintenancePackages.UpdateSegmentTitles, {urlParams: {id}, data: {titles}})
+        .then(() => {
+
+        })
+        .catch(err => {
+            console.log('update package segment titles err', err)
             onError(err)
         }).finally(() => dispatch(setPackageLoading(false)))
 }

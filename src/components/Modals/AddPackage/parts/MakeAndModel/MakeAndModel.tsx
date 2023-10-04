@@ -41,6 +41,10 @@ export const useMakeAndModelStyles = makeStyles(() => ({
     },
 }))
 
+const upperCase = (array: string[]): string[] => {
+    return array.map(item => item.toUpperCase())
+}
+
 const MakeAndModel: React.FC<MakeAndModelProps> = ({
                                                        disabled,
                                                        setSelectedMakes,
@@ -54,14 +58,18 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
     const classes = useMakeAndModelStyles();
 
     useEffect(() => {
-        const filteredMakes = makesFromDB.filter(item => selectedMakes.includes(item.name));
+        const filteredMakes = makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase()));
         setModels(getSortedModels(filteredMakes))
     }, [makesFromDB])
 
     const getSortedMakes = useCallback((makesFromDB: IMake[]): string[] => {
         const data: string[] = makesFromDB
             .map(make => make.name)
-            .sort((a, b) => selectedMakes.includes(a) ? selectedMakes.includes(b) ? 0 : -1 : 1);
+            .sort((a, b) => upperCase(selectedMakes).includes(a.toUpperCase())
+                ? upperCase(selectedMakes).includes(b.toUpperCase())
+                    ? 0
+                    : -1
+                : 1);
         if (data.length) data.unshift('Apply To All');
         return data;
     }, [makesFromDB, selectedMakes])
@@ -70,7 +78,11 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
         const data: string[] = makesFromDB
             .map(make => make.models)
             .flat(1)
-            .sort((a, b) => selectedModels.includes(a) ? selectedModels.includes(b) ? 0 : -1 : 1);
+            .sort((a, b) => upperCase(selectedModels).includes(a.toUpperCase())
+                ? upperCase(selectedModels).includes(b.toUpperCase())
+                    ? 0
+                    : -1
+                : 1);
         if (data.length) data.unshift('Apply To All');
         return data;
     }, [makesFromDB, selectedModels])
@@ -81,15 +93,15 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
             setModels(getSortedModels(makesFromDB));
         } else {
             setSelectedMakes(value);
-            const filteredMakes = makesFromDB.filter(item => value.includes(item.name))
+            const filteredMakes = makesFromDB.filter(item => upperCase(value).includes(item.name.toUpperCase()))
             setModels(getSortedModels(filteredMakes));
-            setSelectedModels(prev => prev.filter(item => filteredMakes.find(make => make.models.includes(item))))
+            setSelectedModels(prev => prev.filter(item => filteredMakes.find(make => upperCase(make.models).includes(item.toUpperCase()))))
         }
     }, [makesFromDB, getSortedModels])
 
     const onModelChange = useCallback((e: ChangeEvent<{}>, value: string[]) => {
         if (value.includes('Apply To All')) {
-            const filteredMakes = makesFromDB.filter(item => selectedMakes.includes(item.name));
+            const filteredMakes = makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase()));
             setSelectedModels(() => filteredMakes
                 .map(item => item.models)
                 .flat(1));
@@ -103,7 +115,11 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                 let data = option === 'Apply To All' ? [] : prev;
                 return data
                     .filter(item => item !== option)
-                    .sort((a, b) => selectedMakes.includes(a) ? selectedMakes.includes(b) ? 0 : -1 : 1)
+                    .sort((a, b) => upperCase(selectedMakes).includes(a.toUpperCase())
+                        ? upperCase(selectedMakes).includes(b.toUpperCase())
+                            ? 0
+                            : -1
+                        : 1)
             })
         }
     }, [selectedMakes])
@@ -115,13 +131,18 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                 let data = option === 'Apply To All' ? [] : prev;
                 return data
                     .filter(item => item !== option)
-                    .sort((a, b) => selectedModels.includes(a) ? selectedModels.includes(b) ? 0 : -1 : 1)
+                    .sort((a, b) => upperCase(selectedModels).includes(a.toUpperCase())
+                        ? upperCase(selectedModels).includes(b.toUpperCase())
+                            ? 0
+                            : -1
+                        : 1)
             })
         }
     }, [selectedModels])
 
     const renderMakeOption = useCallback((option: string) => {
-        const checked = selectedMakes.includes(option) || Boolean(!makesFromDB.find(make => !selectedMakes.includes(make.name)));
+        const checked = upperCase(selectedMakes).includes(option.toUpperCase())
+            || Boolean(!makesFromDB.find(make => !upperCase(selectedMakes).includes(make.name.toUpperCase())));
         return <React.Fragment>
             <Checkbox
                 color="primary"
@@ -136,16 +157,16 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
     }, [makesFromDB, selectedMakes]);
 
     const renderModelOption = useCallback((option: string) => {
-        const filteredMakes = makesFromDB.filter(item => selectedMakes.includes(item.name));
+        const filteredMakes = makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase()));
 
         const allModelsSelected = filteredMakes.length
             ? Boolean(!filteredMakes
             .map(item => item.models)
             .flat(1)
-            .find(model => !selectedModels.includes(model)))
+            .find(model => !upperCase(selectedModels).includes(model.toUpperCase())))
             : false;
 
-        const checked = selectedModels.includes(option) || allModelsSelected;
+        const checked = upperCase(selectedModels).includes(option.toUpperCase()) || allModelsSelected;
         return <React.Fragment>
             <Checkbox
                 color="primary"
