@@ -15,6 +15,7 @@ export interface IServiceRequest {
     partsUnitCost: number;
     numberOfParts: number;
     offer?: IOfferForCategory;
+    orderIndex?: number;
 }
 export interface IServiceRequestShort {
     id: number;

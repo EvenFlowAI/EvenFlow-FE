@@ -250,10 +250,15 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
                 if (categoryType.value === EServiceCategoryType.GeneralCategory
                     || categoryType.value === EServiceCategoryType.Diagnose
                     || categoryType.value === EServiceCategoryType.IndividualServices) {
-                    if (selectedCodes.length) {
-                        data.serviceRequests = selectedCodes.map(item => item.id);
-                    } else {
+                    if (!selectedCodes.length) {
                         return showError('Please choose service requests for category')
+                    } else {
+                        if (categoryType.value === EServiceCategoryType.Diagnose
+                            || categoryType.value === EServiceCategoryType.IndividualServices) {
+                            data.serviceRequests = selectedCodesWithOrder.map(({id}) => ({id}));
+                        } else {
+                            data.serviceRequests = selectedCodes.map(({id}) => ({id}));
+                        }
                     }
                 }
                 if (editingItem) {
@@ -403,12 +408,12 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
                     onChange={onDescriptionChange}
                 />
                 <Divider/>
-                {categoryType?.value === EServiceCategoryType.IndividualServices
+                {categoryType?.value === EServiceCategoryType.IndividualServices || categoryType?.value === EServiceCategoryType.Diagnose
                     ? <OpsCodesWithOrder
                         selectedCodes={selectedCodesWithOrder}
                         setSelectedCodes={setSelectedCodesWithOrder}
                         disabled={disabledOpsCodes}/>
-                    :    <OpsCodesTable
+                    : <OpsCodesTable
                         selectedCodes={selectedCodes}
                         setSelectedCodes={setSelectedCodes}
                         disabled={disabledOpsCodes}/>}

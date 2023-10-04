@@ -258,7 +258,11 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
                     }}
                 />
                 <CodesWrapper>
-                    {opsCodesList.map(s => {
+                    {opsCodesList.sort((a, b) => {
+                        return a.orderIndex !== undefined && b.orderIndex !== undefined
+                            ? a.orderIndex - b.orderIndex
+                            : 0
+                    }).map(s => {
                         return <CodeWrapper key={`${s.code} ${s.id}`}>
                             <Code
                             key={s.id}
