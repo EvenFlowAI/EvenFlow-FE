@@ -268,13 +268,12 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
                     }
                 }
                 if (editingItem) {
-                    dispatch(updateCategory(editingItem.id, data, tabServiceType));
+                    dispatch(updateCategory(editingItem.id, data, tabServiceType, showError, onCancel));
                     if (fileState.file) dispatch(updateCategoryIcon(editingItem.id, fileState.file, tabServiceType));
                 } else {
                     const newData: TNewCategory = {...data, serviceCenterId: selectedSC.id};
-                    dispatch(createCategory(newData, onSuccessCreate, tabServiceType));
+                    dispatch(createCategory(newData, onSuccessCreate, tabServiceType, showError, onCancel));
                 }
-                onCancel();
             }
         }
     }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes,
