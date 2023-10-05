@@ -31,7 +31,7 @@ import {
     setSideBarSteps,
     setUserType,
     setVehicle,
-    setWelcomeScreenView
+    setWelcomeScreenView, setZipCode
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {getBlankVehicle, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {TArgCallback, TCallback} from "../../../types/types";
@@ -195,6 +195,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
         }
         if (customerData?.city) data.city = customerData.city;
         if (customerData?.fullAddress) await dispatch(setAddress(customerData.fullAddress));
+        if (customerData?.zipCode) await dispatch(setZipCode(customerData.zipCode));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(vehicle));
@@ -305,6 +306,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
         }
         if (customer?.city) data.city = customer.city;
         if (customer?.fullAddress) await dispatch(setAddress(customer.fullAddress));
+        if (customer?.zipCode) await dispatch(setZipCode(customer.zipCode));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(getBlankVehicle()))
