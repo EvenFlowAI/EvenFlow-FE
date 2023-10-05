@@ -4,9 +4,9 @@ import {ReactComponent as Create} from "../../../assets/img/create_appointment.s
 import {ReactComponent as Update} from "../../../assets/img/Manage appointment.svg";
 import {ReactComponent as Edit} from "../../../assets/img/editIcon.svg";
 import {ReactComponent as EditDisabled} from "../../../assets/img/Manage appointment_dis.svg";
-import {ReactComponent as Search} from "../../../assets/img/searchInfoIcon.svg";
+import {ReactComponent as Search} from "../../../assets/img/repair_history.svg";
 import {ReactComponent as SearchDisabled} from "../../../assets/img/searchInfoIconDisabled.svg";
-import {ReactComponent as CancelApp} from "../../../assets/img/Icon_16px_Cancel appointment.svg";
+import {ReactComponent as CancelApp} from "../../../assets/img/cancel_appointment.svg";
 import {ReactComponent as CancelAppDisabled} from "../../../assets/img/Disabled-Cancel-appointment.svg";
 import {
     Button,
