@@ -143,5 +143,5 @@ export interface IUpsellServiceRequestUpdate {
 
 export type TOPsCodeWithIndex = {
     id: number;
-    orderIndex: number;
+    orderIndex: string;
 }
