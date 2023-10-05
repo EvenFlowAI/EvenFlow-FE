@@ -13,6 +13,8 @@ type TOpsCodesTableProps = {
     selectedCodes: TOPsCodeWithIndex[];
     setSelectedCodes: Dispatch<SetStateAction<TOPsCodeWithIndex[]>>;
     disabled: boolean;
+    wrongOrderIndexes: number[];
+    setWrongOrderIndexes: Dispatch<SetStateAction<number[]>>;
 }
 
 const useStyles = makeStyles(() => ({
@@ -23,21 +25,33 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({ selectedCodes, setSelectedCodes, disabled }) => {
+const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({
+                                                             selectedCodes,
+                                                             setSelectedCodes,
+                                                             disabled,
+                                                             wrongOrderIndexes,
+                                                             setWrongOrderIndexes
+}) => {
     const { allAssignedList, assignedLoading } = useSelector((state: RootState) => state.serviceRequests);
     const classes = useStyles()
 
     const onSROrderChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.persist()
         const elementToChange = selectedCodes.find(item => item.id === id)
         if (elementToChange) {
-            const updated = {...elementToChange, orderIndex: +e.target.value}
+            const updated = {...elementToChange, orderIndex: e.target?.value ?? ''}
             setSelectedCodes(prev => {
                 const filtered = prev.filter(item => item.id !== id);
                 return [...filtered, updated]
             })
+            if (e.target?.value) setWrongOrderIndexes(prev => prev.filter(el => el !== +e.target?.value))
         }
     }
 
+    const checkError = (el: IAssignedServiceRequest): boolean => {
+        const codes = selectedCodes.filter(item => wrongOrderIndexes.includes(+item.orderIndex))
+        return !!codes.find(code => code.id === el.id)
+    }
 
     const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
         {
@@ -45,6 +59,7 @@ const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({ selectedCodes, setSel
             val: (el) => <TextField
                 fullWidth
                 type="number"
+                error={checkError(el)}
                 disabled={!selectedCodes.find(item => item.id === el.id)}
                 inputProps={{min: 1, step: 1, max: allAssignedList.length + 1}}
                 value={selectedCodes.find(item => item.id === el.id)?.orderIndex ?? 0}
@@ -86,7 +101,7 @@ const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({ selectedCodes, setSel
             setSelectedCodes(prev => {
                 return prev.find(item => item.id === el.id)
                     ? prev.filter(item => item.id !== el.id)
-                    : [...prev, {id: el.id, orderIndex: 0}]
+                    : [...prev, {id: el.id, orderIndex: '0'}]
             });
         }
     }, [setSelectedCodes, disabled])
