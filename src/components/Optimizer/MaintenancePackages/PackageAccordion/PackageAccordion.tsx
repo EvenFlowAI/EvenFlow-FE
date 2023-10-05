@@ -104,6 +104,9 @@ export const usePackageAccordionStyles = makeStyles(() => ({
         display: "block",
     },
     complimentaryRow: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         background: 'rgba(37, 37, 37, 0.5)',
         color: 'white',
         fontWeight: 'bold',

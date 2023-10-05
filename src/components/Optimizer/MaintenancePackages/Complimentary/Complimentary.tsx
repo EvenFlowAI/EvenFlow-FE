@@ -9,6 +9,7 @@ import {
 } from "../PackageAccordion/PackageAccordion";
 import {ESegmentTitle, IPackageById} from "../../../../api/types";
 import {useException} from "../../../../utils/hooks";
+import {Edit} from "@material-ui/icons";
 
 type TComplimentaryProps = {
     isComplimentaryNameEdit: boolean;
@@ -61,8 +62,9 @@ const Complimentary: React.FC<TComplimentaryProps> = ({
                     onKeyUp={onComplimentaryKeyUp}
                     className={classes.greyInput}/>
                 :  <div className={classes.complimentaryRow} onClick={onClick}>
-                    {complimentaryTitle?.title ?? defaultComplimentaryTitle}
-            </div>
+                        <div>{complimentaryTitle?.title ?? defaultComplimentaryTitle}</div>
+                        <Edit htmlColor="#FFFFFF" style={{cursor: "pointer", width: 20, height: 20}}/>
+                </div>
             }
             <div className={classes.tablesWrapper}>
                 {packageData && <ComplimentaryAndOptions
