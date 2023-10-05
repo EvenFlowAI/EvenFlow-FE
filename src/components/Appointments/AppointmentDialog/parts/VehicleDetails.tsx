@@ -19,6 +19,9 @@ export const VehicleDetails:React.FC<{payload: IAppointment}> = ({payload}) => {
             <DetailsItem
                 title={payload.vehicle?.vin ?? ''}
                 text={`${payload.vehicle?.make ?? ''} ${payload.vehicle?.model ?? ''} ${payload.vehicle?.year ?? ''}`}/>
+            {payload.vehicle?.id
+                ? <div style={{color: "#252733", fontSize: 14,}}>Vehicle ID: {payload.vehicle?.id}</div>
+                : null}
             <Divider style={{marginBottom: 24}}/>
         </div>
     );
@@ -32,6 +35,9 @@ export const CustomerInfo:React.FC<{payload: IAppointment}> = ({payload}) => {
             <DetailsItem
                 title={payload.customerInformation?.fullName ?? ''}
                 text={`${payload.customerInformation?.email ?? ''} ${payload.customerInformation?.phoneNumber ?? ''}`}/>
+            {payload.customerInformation?.id
+                ? <div style={{color: "#252733", fontSize: 14,}}>Customer ID: {payload.customerInformation?.id}</div>
+                : null}
             <Divider style={{marginBottom: 24}}/>
         </div>
     );

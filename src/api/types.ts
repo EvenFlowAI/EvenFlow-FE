@@ -302,6 +302,7 @@ export interface IAppointmentCustomerInfo {
     fullName?: string;
     email?: string;
     phoneNumber?: string;
+    id?: string;
 }
 
 export interface IAppointmentVehicle {
@@ -309,6 +310,7 @@ export interface IAppointmentVehicle {
     make: string;
     model: string;
     year: number;
+    id?: string;
 }
 
 export interface IAppointment {
