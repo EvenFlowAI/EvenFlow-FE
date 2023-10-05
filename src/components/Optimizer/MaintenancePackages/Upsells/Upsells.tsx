@@ -9,6 +9,7 @@ import {
 } from "../PackageAccordion/PackageAccordion";
 import {ESegmentTitle, IPackageById} from "../../../../api/types";
 import {useException} from "../../../../utils/hooks";
+import {Edit} from "@material-ui/icons";
 
 type TUpsellTitleProps = {
     isUpsellNameEdit: boolean;
@@ -61,7 +62,8 @@ const Upsells: React.FC<TUpsellTitleProps> = ({
                 onChange={onIntervalUpsellNameChange}
                 className={classes.greyInput}/>
         : <div className={classes.complimentaryRow} onClick={onClick}>
-                {upsellTitle?.title ?? defaultUpsellTitle}
+                <div>{upsellTitle?.title ?? defaultUpsellTitle}</div>
+                <Edit htmlColor="#FFFFFF" style={{cursor: "pointer", width: 20, height: 20}}/>
             </div>
 }
         <div className={classes.tablesWrapper}>
