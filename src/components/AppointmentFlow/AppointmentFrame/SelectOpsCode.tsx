@@ -94,6 +94,13 @@ type TProps = {
     page: EServiceCategoryPage;
 }
 
+const getSortedRequests = (requests: IServiceRequest[]): IServiceRequest[] => {
+    return [...requests].sort((a, b) => {
+        return a.orderIndex !== undefined && b.orderIndex !== undefined
+            ? a.orderIndex - b.orderIndex
+            : 0})
+}
+
 export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices, page}) => {
     const [
         selectedSR,
@@ -148,9 +155,9 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
 
     const setInitialData = useCallback(() => {
         if (service?.type === EServiceCategoryType.IndividualServices || service?.type === EServiceCategoryType.Diagnose) {
-            setOpsCodesList(() => service.serviceRequests);
+            setOpsCodesList(getSortedRequests(service.serviceRequests))
         } else if (subService?.type === EServiceCategoryType.IndividualServices || subService?.type === EServiceCategoryType.Diagnose) {
-            setOpsCodesList(() => subService.serviceRequests);
+            setOpsCodesList(getSortedRequests(subService.serviceRequests))
         }
     }, [subService, service])
 
@@ -258,11 +265,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
                     }}
                 />
                 <CodesWrapper>
-                    {opsCodesList.sort((a, b) => {
-                        return a.orderIndex !== undefined && b.orderIndex !== undefined
-                            ? a.orderIndex - b.orderIndex
-                            : 0
-                    }).map(s => {
+                    {opsCodesList.map(s => {
                         return <CodeWrapper key={`${s.code} ${s.id}`}>
                             <Code
                             key={s.id}
