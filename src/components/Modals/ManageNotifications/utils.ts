@@ -1,4 +1,4 @@
-import {TPodNotifications} from "../../../store/reducers/notifications/types";
+import {TPodNotifications, TTransportationNotifications} from "../../../store/reducers/notifications/types";
 
 export function checkPodsAreTheSame(localData: TPodNotifications[], remoteData: TPodNotifications[]): boolean {
     return (localData.length === remoteData.length)
@@ -6,6 +6,19 @@ export function checkPodsAreTheSame(localData: TPodNotifications[], remoteData: 
         localData.every(localItem => {
             return remoteData.find(remoteItem => {
                 return remoteItem.podId === localItem.podId
+                    && remoteItem.usersList?.length === localItem.usersList?.length
+                    && remoteItem.usersList?.every(remoteDataUsersList => localItem.usersList?.indexOf(remoteDataUsersList) !== -1);
+
+            });
+        })
+}
+
+export function checkTransportationAreTheSame(localData: TTransportationNotifications[], remoteData: TTransportationNotifications[]): boolean {
+    return (localData.length === remoteData.length)
+        &&
+        localData.every(localItem => {
+            return remoteData.find(remoteItem => {
+                return remoteItem.transportationId === localItem.transportationId
                     && remoteItem.usersList?.length === localItem.usersList?.length
                     && remoteItem.usersList?.every(remoteDataUsersList => localItem.usersList?.indexOf(remoteDataUsersList) !== -1);
 

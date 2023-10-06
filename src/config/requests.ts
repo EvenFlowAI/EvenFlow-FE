@@ -165,7 +165,7 @@ type ApiRoutes = {
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType"
         | "UpdateSRDescription" | "UpdateComplimentaryDescription" | "UpdateSROrder" | "UpdateComplimentaryOrder"
         | "SetShowSuggestedPrice" | "SetManualOverride" | "UpdatePriceTitles" | "UpdateUpsellOrder" | "UpdateSegmentTitles", TApiRoute>,
-    Notifications: Record<"GetAll" | "UpdateForPod" | "UpdateByType", TApiRoute>,
+    Notifications: Record<"GetAll" | "UpdateForPod" | "UpdateByType" | "UpdateForTransportation", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -371,9 +371,10 @@ export class Api {
             UpdateSegmentTitles: {route: "/maintenance-packages/{id}/segment-titles", method: "put"}
         },
         Notifications: {
-          GetAll: {route: "/appointment-notifications/{id}/configurations", method: "get"},
-          UpdateForPod: {route: "/appointment-notifications/pods", method: "post"},
-          UpdateByType: {route: "/appointment-notifications", method: "post"}
+            GetAll: {route: "/appointment-notifications/{id}/configurations", method: "get"},
+            UpdateForPod: {route: "/appointment-notifications/pods", method: "post"},
+            UpdateByType: {route: "/appointment-notifications", method: "post"},
+            UpdateForTransportation: {route: "/appointment-notifications/transportations", method: "post"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},

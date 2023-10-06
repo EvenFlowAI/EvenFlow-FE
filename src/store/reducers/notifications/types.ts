@@ -19,3 +19,8 @@ export type TPodNotifications = {
     podId?: number|null;
     usersList?: string[];
 }
+
+export type TTransportationNotifications = {
+    transportationId?: number|null;
+    usersList?: string[];
+}
