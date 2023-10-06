@@ -313,6 +313,11 @@ export interface IAppointmentVehicle {
     id?: string;
 }
 
+export type TDateAppointmentData = {
+    date: ParsableDate;
+    scheduler: TScheduler;
+}
+
 export interface IAppointment {
     id: number;
     hashKey: string;
@@ -335,6 +340,7 @@ export interface IAppointment {
     notes?: string;
     scheduler: TScheduler;
     isEditable: boolean;
+    modified: TDateAppointmentData[];
 }
 
 export interface ISearchCustomerParams {

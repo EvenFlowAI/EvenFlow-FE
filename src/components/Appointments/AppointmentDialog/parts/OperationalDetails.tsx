@@ -4,6 +4,7 @@ import {IAppointment} from "../../../../api/types";
 import DetailsItem from "./DetailsItem";
 import moment from "moment/moment";
 import {dateTimeFormat} from "./AppointmentDetails";
+import Modified from "./Modified";
 
 const useStyles = makeStyles({
     blockTitle: {
@@ -14,11 +15,13 @@ const useStyles = makeStyles({
 
 const OperationalDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
     const classes = useStyles();
+    const createdText = [moment(payload.createdDateTime).format(dateTimeFormat), `Scheduler: ${payload.scheduler.fullName}`]
+
     return (
         <div>
             <div className={classes.blockTitle}>Operational Details</div>
-            <DetailsItem title="Created Date" text={moment(payload.createdDateTime).format(dateTimeFormat)} key="date"/>
-            <DetailsItem title="Scheduler" text={payload.scheduler?.fullName ?? ''} key="Scheduler"/>
+            <DetailsItem title="Created" text={createdText} key="date"/>
+            <Modified data={payload.modified}/>
             <DetailsItem title="Service Book" text={payload.serviceBook?.name ?? ''} key="Service"/>
             <DetailsItem title="Appointment Notes" text={payload.notes ?? ''} key="Appointment"/>
         </div>
