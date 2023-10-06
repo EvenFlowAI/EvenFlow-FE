@@ -2,7 +2,7 @@ import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../assets/img/done_icon_black.svg";
 import {InfoOutlined} from "@material-ui/icons";
 import {TPackage, TService, TUpsell} from "../PackageSelection";
-import {IPackageOptions} from "../../../../api/types";
+import {ESegmentTitle, IPackage, IPackageOptions} from "../../../../api/types";
 import {useTranslation} from "react-i18next";
 import {HtmlTooltip} from "../ServiceCard";
 import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
@@ -14,14 +14,17 @@ type TComplimentaryProps = {
     setClasses: (id: number, cls: string) => string;
     handleClick: (p: IPackageOptions, pricing?: EPackagePricingType) => () => void;
     isBmWService: boolean;
+    loadedPackages: IPackage[];
 }
 
 const IntervalUpsells: React.FC<TComplimentaryProps> =
-    ({upsell, packages, setClasses, isBmWService, handleClick}) => {
+    ({upsell, packages, setClasses, isBmWService, handleClick, loadedPackages}) => {
         const {t} = useTranslation();
+        const title = loadedPackages[0]?.segmentTitles?.find(el => el.type === ESegmentTitle.IntervalUpsell)?.title
+
         return upsell.length
             ? <React.Fragment>
-                <div className="yellow subtitle">{t("Dashboard Indicator Services")}</div>
+                <div className="yellow subtitle">{title ?? t("Dashboard Indicator Services")}</div>
 
                 {packages.map(p =>
                     <div

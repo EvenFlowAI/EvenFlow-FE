@@ -66,7 +66,7 @@ import {
     setConsultantsLoading,
     setPoliticalState,
     setCity,
-    setStreetName, setAnyAdvisorSelected,
+    setStreetName, setAnyAdvisorSelected, getTransactionValue,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByKey,
@@ -171,6 +171,7 @@ type TState = {
     appointmentRequestsPrices: IServiceRequestPrice[];
     appointmentNotes: string;
     serviceOptionChangedFromSlotPage: boolean;
+    transactionValue: number;
 }
 const initialState: TState = {
     service: null,
@@ -246,6 +247,7 @@ const initialState: TState = {
     appointmentRequestsPrices: [],
     appointmentNotes: '',
     serviceOptionChangedFromSlotPage: false,
+    transactionValue: 0,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -494,5 +496,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setStreetName, (state, {payload}) => {
         return {...state, streetName: payload}
+    })
+    .addCase(getTransactionValue, (state, {payload}) => {
+        return {...state, transactionValue: payload}
     })
 )

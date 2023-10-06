@@ -105,6 +105,7 @@ export interface IUpdateAppointment extends ICreateAppointment {
 export interface ICreateAppointmentResp extends IAppointmentByQuery {
     id: number;
     hashKey: string;
+    transactionValue: number;
 }
 
 export interface ICustomerLoadedData {
@@ -489,6 +490,7 @@ export interface IPackage {
     maintenancePackageName?: string;
     options: IPackageOptions[];
     priceTitles: TPackagePrice[];
+    segmentTitles: TSegmentTitle[];
 }
 
 export interface IPackageAppointments extends IPackage{
@@ -556,6 +558,16 @@ export type TIntervalUpsellForPackage = {
     numberOfParts: number;
 }
 
+export enum ESegmentTitle {
+    IntervalUpsell,
+    Complimentary
+}
+
+export type TSegmentTitle = {
+    title: string;
+    type: ESegmentTitle;
+}
+
 export interface IPackageById {
     isApplyPricingOptimization: boolean;
     isApplyBusinessRules: boolean;
@@ -571,6 +583,7 @@ export interface IPackageById {
     isShowSuggestedPrice?: boolean;
     isManualOverridePrice?: boolean;
     priceTitles: TPackagePrice[];
+    segmentTitles: TSegmentTitle[];
 }
 
 export type TOptionServiceRequest = {
