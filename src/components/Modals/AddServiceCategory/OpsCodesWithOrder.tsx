@@ -99,9 +99,16 @@ const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({
     const handleSelect = useCallback((el: IAssignedServiceRequest) => {
         if (!disabled) {
             setSelectedCodes(prev => {
-                return prev.find(item => item.id === el.id)
-                    ? prev.filter(item => item.id !== el.id)
-                    : [...prev, {id: el.id, orderIndex: '0'}]
+                const codeToChange = prev.find(item => item.id === el.id);
+                if (codeToChange) {
+                    const data = prev.map(code => ({
+                        ...code,
+                        orderIndex: +code.orderIndex > +codeToChange.orderIndex ? `${+code.orderIndex - 1}` : code.orderIndex
+                    }))
+                    return data.filter(item => item.id !== el.id)
+                } else {
+                    return [...prev, {id: el.id, orderIndex: '0'}]
+                }
             });
         }
     }, [setSelectedCodes, disabled])
