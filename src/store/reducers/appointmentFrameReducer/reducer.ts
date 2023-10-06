@@ -327,7 +327,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             transportation: payload.transportationOption ?? null,
             appointmentRequestsPrices: payload.detailedPriceList ?? [],
             city: payload?.addressData?.city ?? '',
-            politicalState: payload?.addressData?.state ?? ''
+            politicalState: payload?.addressData?.state ?? '',
+            packagePricingType: payload?.maintenancePackageOption?.priceType ?? null,
         };
     })
     .addCase(setLoadingPackages, (state, { payload}) => {
