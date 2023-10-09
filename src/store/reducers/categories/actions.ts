@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {AppThunk} from "../../../types/types";
+import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {ICategory, TNewCategory, TSuccessCallback, TUpdateCategoryData} from "./types";
 import {EServiceType} from "../appointmentFrameReducer/types";
@@ -45,27 +45,31 @@ export const deleteCategoryById = (id: number, serviceType: EServiceType): AppTh
         })
 }
 
-export const updateCategory = (id: number, data: TUpdateCategoryData, serviceType: EServiceType): AppThunk => dispatch => {
+export const updateCategory = (id: number, data: TUpdateCategoryData, serviceType: EServiceType, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceCategories.Update, {urlParams: {id}, data})
         .then(result => {
             if (result) {
                 dispatch(loadCategoriesByPage(serviceType))
+                onSuccess()
             }
         })
         .catch(err => {
+            onError(err)
             console.log('update category error', err)
         })
 }
 
-export const createCategory = (data: TNewCategory, callback: TSuccessCallback, serviceType: EServiceType): AppThunk => dispatch => {
+export const createCategory = (data: TNewCategory, callback: TSuccessCallback, serviceType: EServiceType, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceCategories.Create, {data})
         .then(result => {
             if (result) {
                 dispatch(loadCategoriesByPage(serviceType))
                 if (result.data?.id) callback(result.data.id);
+                onSuccess()
             }
         })
         .catch(err => {
+            onError(err)
             console.log('create category error', err)
         })
 }

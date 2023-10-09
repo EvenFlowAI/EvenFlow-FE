@@ -81,7 +81,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                 label="Email"
                 id="email"
                 name="email"
-                disabled
+                disabled={props.isEdit}
                 placeholder="Type Email"
                 value={props.form.email}
                 onChange={props.onChange}
@@ -203,7 +203,7 @@ export const TechnicianForm: React.FC<TTFormProps> = props => {
                 id="email"
                 name="email"
                 fullWidth
-                disabled
+                disabled={props.isEdit}
                 placeholder="Type Email"
                 value={props.form.email}
                 error={Boolean(props.form.email?.length) && !checkEmail(props.form.email) && props.formIsChecked}

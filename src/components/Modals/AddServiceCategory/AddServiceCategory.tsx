@@ -17,13 +17,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadAllAssignedServiceRequests, setAssignedFilter,} from "../../../store/reducers/serviceRequests/actions";
 import {useException, useSCs} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
-import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
+import {IAssignedServiceRequest, TOPsCodeWithIndex} from "../../../store/reducers/serviceRequests/types";
 import {createCategory, updateCategory, updateCategoryIcon} from "../../../store/reducers/categories/actions";
 import OpsCodesTable from "./OpsCodesTable";
 import FileInput from "./FileInput";
 import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {visitCenterTabs} from "../../Admin/ServiceOpsCodesMapping/ServiceOpsCodesMapping";
+import OpsCodesWithOrder from "./OpsCodesWithOrder";
 
 type TAddServiceCategoryProps = DialogProps & {
     editingItem: ICategory | null;
@@ -119,6 +120,17 @@ const getOptionLabel = (option: TOption) => {
     }
     return array.join('');
 }
+
+const findMissingNumbers = (numbers: number[]): number[] => {
+    const missed: number[] = [];
+    numbers.sort((a, b) => a - b).forEach((number, index) => {
+        if (numbers.filter(el => el === number).length > 1) missed.push(number)
+        if (number > 0 && number - numbers[index - 1] !== 1) missed.push(number)
+    })
+    return Array.from(new Set(missed));
+}
+
+
 const initialFileState = {file: null, dataUrl: undefined};
 
 const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, tabValue, ...props}) => {
@@ -131,11 +143,13 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
     const [categoryType, setCategoryType] = useState<TOption | null>(null);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [selectedCodes, setSelectedCodes] = useState<IAssignedServiceRequest[]>([]);
+    const [selectedCodesWithOrder, setSelectedCodesWithOrder] = useState<TOPsCodeWithIndex[]>([]);
     const [orderIndex, setOrderIndex] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [selectedServiceType, setSelectedServiceType] = useState<EServiceType>(EServiceType.VisitCenter)
     const [isCommentRequired, setIsCommentRequired] = useState<boolean>(false);
     const tabServiceType = visitCenterTabs.includes(tabValue) ? EServiceType.VisitCenter : EServiceType.MobileService;
+    const [wrongOrderIndexes, setWrongOrderIndexes] = useState<number[]>([]);
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -179,8 +193,13 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
 
             const page = getPageOptions(selectedServiceType).find(option => option.value === +editingItem.page);
             page && setDefinedPage(page);
-
-            setSelectedCodes(allAssignedList.filter(item => editingItem.serviceRequests.find(el => el.id === item.id)));
+            if (editingItem.type === EServiceCategoryType.IndividualServices || editingItem.type === EServiceCategoryType.Diagnose) {
+                const requests = editingItem.serviceRequests
+                    .map(({id, orderIndex}) => ({id, orderIndex: orderIndex === undefined ? '0' : orderIndex.toString()}))
+                setSelectedCodesWithOrder(requests);
+            } else {
+                setSelectedCodes(allAssignedList.filter(item => editingItem.serviceRequests.find(el => el.id === item.id)));
+            }
 
             const currentType = categoryOptions.find(item => item.value === +editingItem.type);
             currentType && setCategoryType(currentType)
@@ -203,11 +222,13 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
         dispatch(setAssignedFilter({searchTerm: ''}));
         setFileState(initialFileState);
         setSelectedCodes([]);
+        setSelectedCodesWithOrder([]);
         setCategoryType(null);
         setOrderIndex('');
         setDescription('')
         setIsCommentRequired(false);
         setSelectedServiceType(filter);
+        setWrongOrderIndexes([])
         props.onClose();
     }, [])
 
@@ -218,6 +239,14 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
     const onSuccessCreate = useCallback((categoryId: number) => {
         if (fileState.file) dispatch(updateCategoryIcon(categoryId, fileState.file, tabServiceType));
     }, [fileState, tabServiceType])
+
+    const onError = (err: any) => {
+        if (categoryType?.value === EServiceCategoryType.IndividualServices || categoryType?.value === EServiceCategoryType.Diagnose) {
+            const orderIndexes = selectedCodesWithOrder.map(item => +item.orderIndex);
+            setWrongOrderIndexes(findMissingNumbers(orderIndexes))
+        }
+        showError(err)
+    }
 
     const onSave = useCallback(() => {
         if (selectedSC) {
@@ -245,27 +274,31 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
                     serviceType: selectedServiceType,
                 }
                 if (description) data.description = description;
-                if (categoryType.value === EServiceCategoryType.GeneralCategory
-                    || categoryType.value === EServiceCategoryType.Diagnose
-                    || categoryType.value === EServiceCategoryType.IndividualServices) {
-                    if (selectedCodes.length) {
-                        data.serviceRequests = selectedCodes.map(item => item.id);
-                    } else {
+                if (categoryType.value === EServiceCategoryType.GeneralCategory) {
+                    if (!selectedCodes.length) {
                         return showError('Please choose service requests for category')
+                    } else {
+                        data.serviceRequests = selectedCodes.map(({id}) => ({id}));
+                    }
+                } else if (categoryType.value === EServiceCategoryType.Diagnose
+                    || categoryType.value === EServiceCategoryType.IndividualServices) {
+                    if (!selectedCodesWithOrder.length) {
+                        return showError('Please choose service requests for category')
+                    } else {
+                        data.serviceRequests = selectedCodesWithOrder.map(el => ({...el, orderIndex: +el.orderIndex}));
                     }
                 }
                 if (editingItem) {
-                    dispatch(updateCategory(editingItem.id, data, tabServiceType));
+                    dispatch(updateCategory(editingItem.id, data, tabServiceType, onError, onCancel));
                     if (fileState.file) dispatch(updateCategoryIcon(editingItem.id, fileState.file, tabServiceType));
                 } else {
                     const newData: TNewCategory = {...data, serviceCenterId: selectedSC.id};
-                    dispatch(createCategory(newData, onSuccessCreate, tabServiceType));
+                    dispatch(createCategory(newData, onSuccessCreate, tabServiceType, onError, onCancel));
                 }
-                onCancel();
             }
         }
     }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes,
-        editingItem, fileState, visitCenterConfig, description, isCommentRequired, selectedServiceType, tabServiceType])
+        editingItem, fileState, visitCenterConfig, description, isCommentRequired, selectedServiceType, tabServiceType, selectedCodesWithOrder])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
         setFormIsChecked(false);
@@ -286,6 +319,8 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
         setFormIsChecked(false);
         setCategoryType(value);
         setSelectedCodes([]);
+        setSelectedCodesWithOrder([]);
+        setWrongOrderIndexes([]);
     }, [])
 
     const handleSearch = useCallback(() => {
@@ -401,10 +436,17 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
                     onChange={onDescriptionChange}
                 />
                 <Divider/>
-                <OpsCodesTable
-                    selectedCodes={selectedCodes}
-                    setSelectedCodes={setSelectedCodes}
-                    disabled={disabledOpsCodes}/>
+                {categoryType?.value === EServiceCategoryType.IndividualServices || categoryType?.value === EServiceCategoryType.Diagnose
+                    ? <OpsCodesWithOrder
+                        selectedCodes={selectedCodesWithOrder}
+                        setSelectedCodes={setSelectedCodesWithOrder}
+                        setWrongOrderIndexes={setWrongOrderIndexes}
+                        wrongOrderIndexes={wrongOrderIndexes}
+                        disabled={disabledOpsCodes}/>
+                    : <OpsCodesTable
+                        selectedCodes={selectedCodes}
+                        setSelectedCodes={setSelectedCodes}
+                        disabled={disabledOpsCodes}/>}
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel} className={classes.cancelButton}>

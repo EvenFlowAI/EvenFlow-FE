@@ -22,6 +22,7 @@ export interface ICustomerByName {
     mileage?: number|null;
     appointmentHashKey?: string;
     customerHasOrders?: boolean;
+    zipCode?: string;
 }
 
 export type TCustomerCommunication = {
