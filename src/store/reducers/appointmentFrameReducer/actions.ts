@@ -669,7 +669,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         zipCode: appointmentFrame.zipCode ?? null,
         address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
         recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
-        createType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
+        schedulerType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
         notes: appointmentFrame.appointmentNotes,
         addressData: {
             address: appointmentFrame.streetName ?? '',
@@ -678,7 +678,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         }
     };
 
-    if (isAdmin) delete data.createType;
+    if (isAdmin) delete data.schedulerType;
 
     const endpoint = appointmentFrame.hashKey
         ? Api.endpoints.Appointments.UpdateByKey

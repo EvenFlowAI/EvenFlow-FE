@@ -21,7 +21,7 @@ const OperationalDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
         <div>
             <div className={classes.blockTitle}>Operational Details</div>
             <DetailsItem title="Created" text={createdText} key="date"/>
-            <Modified data={payload.modified}/>
+            <Modified data={payload.modificationInfo}/>
             <DetailsItem title="Service Book" text={payload.serviceBook?.name ?? ''} key="Service"/>
             <DetailsItem title="Appointment Notes" text={payload.notes ?? ''} key="Appointment"/>
         </div>
