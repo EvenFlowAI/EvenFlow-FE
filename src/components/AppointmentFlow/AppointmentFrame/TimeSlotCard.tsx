@@ -5,6 +5,8 @@ import {TArgCallback} from "../../../types/types";
 import moment from "moment";
 import {TSlot} from "./AppointmentTimeSelector";
 import {useTranslation} from "react-i18next";
+import {ReactComponent as ClockIcon} from "../../../assets/img/clock-black.svg";
+import {ReactComponent as ClockIconWhite} from "../../../assets/img/clock-white.svg";
 
 type TSlotsWrapperProps = {
     available?: boolean,
@@ -22,18 +24,22 @@ const Wrapper = styled(({available, offPeak, selected, ...props}) => <div {...pr
     opacity: available ? 1 : .3,
     cursor: "pointer",
     '& .availability': {
+        minHeight: 80,
+        display: "flex",
+        flexDirection: 'column',
+        textAlign: "center",
+        alignItems: "center",
+        justifyContent: "center",
+        color: selected ? '#FFFFFF' : theme.palette.text.primary,
+        padding: '9px 20px',
         border: `1px solid ${(offPeak && selected)
             ? "#237243" : offPeak
                 ? "#89E5AB" : selected
                     ? '#000000' : '#DADADA'}`,
         background: selected ? "#000000" : offPeak ? "#DEFFDF" : "transparent",
-        padding: 20,
-        color: selected ? '#FFFFFF' : theme.palette.text.primary,
-        minHeight: 80,
-        display: "flex",
-        textAlign: "center",
-        alignItems: "center",
-        justifyContent: "center",
+        '& > svg': {
+            marginBottom: 4
+        },
     },
 }))
 
@@ -103,7 +109,10 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
                 onClick={() => timePassed ? {} : onSelect(slot ?? null)}
             >
                 <div>{timeSlot.label}</div>
-                <div className="availability">{getContent(timePassed)}</div>
+                <div className="availability">
+                    { selected ? <ClockIconWhite/>:<ClockIcon/>}
+                    {getContent(timePassed)}
+                </div>
             </Wrapper>
         );
     };
