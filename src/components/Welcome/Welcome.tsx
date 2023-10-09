@@ -22,13 +22,13 @@ import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
-    loadMakes,
+    loadMakes, setAddress,
     setServiceTypeOption, setShowServiceCentersList,
     setSideBarSteps,
     setUserType,
     setValueServiceAvailability,
     setVehicle,
-    setWelcomeScreenView
+    setWelcomeScreenView, setZipCode
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import ServiceTypeSelect from "./ServiceTypeSelect";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
@@ -187,6 +187,8 @@ export const Welcome = () => {
         handleReactGA('A New');
         dispatch(setCustomerEnteredEmail(''));
         dispatch(setCustomerSearchData(initialCustomerSearch))
+        dispatch(setAddress(null));
+        dispatch(setZipCode(''));
         dispatch(setShowServiceCentersList(false));
         if (firstScreenOptions.length) {
             handleFirstScreenOptions()
