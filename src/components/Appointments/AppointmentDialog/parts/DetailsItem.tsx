@@ -1,7 +1,7 @@
 import {makeStyles} from "@material-ui/core/styles";
 import React, {ReactComponentElement} from "react";
 
-const useStyles = makeStyles({
+export const useDetailsItemStyles = makeStyles({
     wrapper: {
         display: "flex",
         justifyContent: "flex-start",
@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 })
 
 const DetailsItem: React.FC<{title: string, text: string|string[], icon?: ReactComponentElement<any>}> = ({title, text, icon}) => {
-    const classes = useStyles();
+    const classes = useDetailsItemStyles();
     return text?.length
         ? <div className={classes.wrapper}>
             {icon ? <div className={classes.icon}>{icon}</div> : null}
