@@ -63,7 +63,7 @@ const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({
                 error={checkError(el)}
                 disabled={!selectedCodes.find(item => item.id === el.id)}
                 inputProps={{min: 1, step: 1, max: allAssignedList.length + 1}}
-                value={selectedCodes.find(item => item.id === el.id)?.orderIndex ?? 0}
+                value={selectedCodes.find(item => item.id === el.id)?.orderIndex ?? ''}
                 onChange={onSROrderChange(el.id)}
             />
         },
@@ -102,13 +102,17 @@ const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({
             setSelectedCodes(prev => {
                 const codeToChange = prev.find(item => item.id === el.id);
                 if (codeToChange) {
-                    const data = prev.map(code => ({
-                        ...code,
-                        orderIndex: +code.orderIndex > +codeToChange.orderIndex ? `${+code.orderIndex - 1}` : code.orderIndex
-                    }))
-                    return data.filter(item => item.id !== el.id)
+                    if (codeToChange.orderIndex) {
+                        const data = prev.map(code => ({
+                            ...code,
+                            orderIndex: +code.orderIndex > +codeToChange.orderIndex ? `${+code.orderIndex - 1}` : code.orderIndex
+                        }))
+                        return data.filter(item => item.id !== el.id)
+                    } else {
+                        return prev.filter(item => item.id !== el.id)
+                    }
                 } else {
-                    return [...prev, {id: el.id, orderIndex: '0'}]
+                    return [...prev, {id: el.id, orderIndex: ''}]
                 }
             });
         }
