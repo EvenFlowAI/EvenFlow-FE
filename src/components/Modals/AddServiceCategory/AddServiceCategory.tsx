@@ -285,7 +285,11 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
                     if (!selectedCodesWithOrder.length) {
                         return showError('Please choose service requests for category')
                     } else {
-                        data.serviceRequests = selectedCodesWithOrder.map(el => ({...el, orderIndex: +el.orderIndex}));
+                        if (selectedCodesWithOrder.every(el => el.orderIndex !== '')) {
+                            data.serviceRequests = selectedCodesWithOrder.map(el => ({...el, orderIndex: +el.orderIndex}));
+                        } else {
+                            setWrongOrderIndexes(selectedCodesWithOrder.filter(el => el.orderIndex === '').map(el => el.id))
+                        }
                     }
                 }
                 if (editingItem) {

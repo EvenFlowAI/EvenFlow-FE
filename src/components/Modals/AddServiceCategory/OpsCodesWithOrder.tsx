@@ -37,16 +37,17 @@ const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({
 
     const onSROrderChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
-        if (e?.target?.value.match(/^\d+$/)) {
-            const elementToChange = selectedCodes.find(item => item.id === id)
-            if (elementToChange) {
-                const updated = {...elementToChange, orderIndex: e.target?.value ?? ''}
-                setSelectedCodes(prev => {
-                    const filtered = prev.filter(item => item.id !== id);
-                    return [...filtered, updated]
-                })
-                if (e.target?.value) setWrongOrderIndexes(prev => prev.filter(el => el !== +e.target?.value))
+        const elementToChange = selectedCodes.find(item => item.id === id)
+        if (elementToChange) {
+            const updated = {
+                ...elementToChange,
+                orderIndex: e.target?.value && e?.target?.value.match(/^\d+$/) ? e.target?.value : ''
             }
+            setSelectedCodes(prev => {
+                const filtered = prev.filter(item => item.id !== id);
+                return [...filtered, updated]
+            })
+            if (e.target?.value) setWrongOrderIndexes(prev => prev.filter(el => el !== +e.target?.value))
         }
     }
 
