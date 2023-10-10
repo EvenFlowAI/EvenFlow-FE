@@ -60,7 +60,6 @@ const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({
             header: "Booking Flow Order",
             val: (el) => <TextField
                 fullWidth
-                type="number"
                 error={checkError(el)}
                 disabled={!selectedCodes.find(item => item.id === el.id)}
                 inputProps={{min: 1, step: 1, max: allAssignedList.length + 1}}
