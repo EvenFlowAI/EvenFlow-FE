@@ -12,6 +12,7 @@ import RecallAppointments from "./RecallAppointments";
 import {useException, useSCs} from "../../../utils/hooks";
 import {loadUsersShort} from "../../../store/reducers/employees/actions";
 import {loadNotifications} from "../../../store/reducers/notifications/actions";
+import TransportationNotifications from "./TransportationNotifications";
 
 export const useNotificationStyles = makeStyles({
     tabTitle: {
@@ -63,6 +64,7 @@ export type TChangesState = {
     scNotificationsSaved: boolean;
     podNotificationsSaved: boolean;
     recallNotificationsSaved: boolean;
+    transportationNotificationsSaved: boolean;
 }
 
 const ManageNotifications:React.FC<DialogProps> = (props) => {
@@ -71,6 +73,7 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
         scNotificationsSaved: true,
         podNotificationsSaved: true,
         recallNotificationsSaved: true,
+        transportationNotificationsSaved: true,
     })
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -99,6 +102,8 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
                 return changesState.podNotificationsSaved;
             case "2":
                 return changesState.recallNotificationsSaved;
+            case "3":
+                return changesState.transportationNotificationsSaved;
             default:
                 return true;
         }
@@ -130,6 +135,7 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
                         <Tab label="Service Center Appointments" value="0"/>
                         <Tab label="POD Appointments" value="1"/>
                         <Tab label="Recall Appointments" value="2"/>
+                        <Tab label="Transportation Requests" value="3"/>
                     </TabList>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="0">
                         <ServiceCenterAppointments setChangesState={setChangesState}/>
@@ -139,6 +145,9 @@ const ManageNotifications:React.FC<DialogProps> = (props) => {
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="2">
                         <RecallAppointments setChangesState={setChangesState}/>
+                    </TabPanel>
+                    <TabPanel style={{width: "100%", padding: "24px 0"}} value="3">
+                        <TransportationNotifications setChangesState={setChangesState} changesState={changesState}/>
                     </TabPanel>
                 </TabContext>
             </DialogContent>
