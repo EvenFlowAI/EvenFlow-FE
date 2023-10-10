@@ -54,8 +54,8 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     useEffect(() => {
         dispatch(setLoading(true))
         if (transportationNotifications.length) {
-            const pod = options.find(el => el.id === transportationNotifications[0].id)
-            pod && setSelectedTransportation(pod)
+            const option = options.find(el => el.id === transportationNotifications[0].id)
+            option && setSelectedTransportation(option)
         }
         dispatch(setLoading(false))
     }, [transportationNotifications, options])
