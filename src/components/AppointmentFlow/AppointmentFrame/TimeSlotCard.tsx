@@ -99,7 +99,7 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
             <Wrapper
                 available={Boolean(slot) && !timePassed}
                 selected={selected}
-                offPeak={isOffPeak}
+                offPeak={isOffPeak && !timePassed}
                 onClick={() => timePassed ? {} : onSelect(slot ?? null)}
             >
                 <div>{timeSlot.label}</div>

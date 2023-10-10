@@ -69,27 +69,37 @@ export const AppointmentTimeSelector: React.FC<TProps> =
         const {t} = useTranslation();
 
         useEffect(() => {
-           // if (firstCardRef?.current && date) firstCardRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
-        }, [date, titleRef])
-
-        useEffect(() => {
             if (scProfile) {
                 dispatch(loadHoursOfOperations(scProfile.id))
             }
         }, [scProfile])
 
-        const slots: TSlot[] = useMemo(() => {
+        const generateSlots = (startHours: number|string, startMinutes: number|string, endHours: number|string, endMinutes: number|string): TSlot[] => {
             const slots: TSlot[] = [];
+            let start = moment.utc(date).hour(+startHours).minutes(+startMinutes).second(0).millisecond(0);
+            const end  = moment.utc(date).hour(+endHours).minutes(+endMinutes).second(0).millisecond(0);
+            let cDate = moment.utc(start);
+            while (cDate.isSameOrBefore(end, 'minute')) {
+                slots.push({date: moment.utc(cDate), label: cDate.format("h:mm a")});
+                cDate = moment.utc(cDate).add(gap, 'minutes');
+            }
+            return slots;
+        }
+
+        const slots: TSlot[] = useMemo(() => {
+            let slots: TSlot[] = [];
             const currentSCSchedule = hoursOfOperations.find(item => item.dayOfWeek === moment(date).day())
-            if (gap && currentSCSchedule) {
-                const [startHours, startMinutes] = currentSCSchedule.from.split(':');
-                const [endHours, endMinutes] = currentSCSchedule.to.split(':');
-                let start = moment.utc(date).hour(+startHours).minutes(+startMinutes).second(0).millisecond(0);
-                const end  = moment.utc(date).hour(+endHours).minutes(+endMinutes).second(0).millisecond(0);
-                let cDate = moment.utc(start);
-                while (cDate.isSameOrBefore(end, 'minute')) {
-                    slots.push({date: moment.utc(cDate), label: cDate.format("h:mm a")});
-                    cDate = moment.utc(cDate).add(gap, 'minutes');
+            if (gap) {
+                if (currentSCSchedule) {
+                    const [startHours, startMinutes] = currentSCSchedule.from.split(':');
+                    const [endHours, endMinutes] = currentSCSchedule.to.split(':');
+                    slots = generateSlots(startHours, startMinutes, endHours, endMinutes)
+                } else if (hoursOfOperations.length) {
+                    const [startHours, startMinutes] = hoursOfOperations[0].from.split(':');
+                    const [endHours, endMinutes] = hoursOfOperations[0].to.split(':');
+                    slots = generateSlots(startHours, startMinutes, endHours, endMinutes)
+                } else {
+                    slots = generateSlots(8, 0, 17, 0)
                 }
             }
             return slots;

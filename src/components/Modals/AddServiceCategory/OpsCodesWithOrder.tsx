@@ -37,14 +37,16 @@ const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({
 
     const onSROrderChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
-        const elementToChange = selectedCodes.find(item => item.id === id)
-        if (elementToChange) {
-            const updated = {...elementToChange, orderIndex: e.target?.value ?? ''}
-            setSelectedCodes(prev => {
-                const filtered = prev.filter(item => item.id !== id);
-                return [...filtered, updated]
-            })
-            if (e.target?.value) setWrongOrderIndexes(prev => prev.filter(el => el !== +e.target?.value))
+        if (e?.target?.value.match(/^\d+$/)) {
+            const elementToChange = selectedCodes.find(item => item.id === id)
+            if (elementToChange) {
+                const updated = {...elementToChange, orderIndex: e.target?.value ?? ''}
+                setSelectedCodes(prev => {
+                    const filtered = prev.filter(item => item.id !== id);
+                    return [...filtered, updated]
+                })
+                if (e.target?.value) setWrongOrderIndexes(prev => prev.filter(el => el !== +e.target?.value))
+            }
         }
     }
 
@@ -58,7 +60,6 @@ const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({
             header: "Booking Flow Order",
             val: (el) => <TextField
                 fullWidth
-                type="number"
                 error={checkError(el)}
                 disabled={!selectedCodes.find(item => item.id === el.id)}
                 inputProps={{min: 1, step: 1, max: allAssignedList.length + 1}}
@@ -99,9 +100,16 @@ const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({
     const handleSelect = useCallback((el: IAssignedServiceRequest) => {
         if (!disabled) {
             setSelectedCodes(prev => {
-                return prev.find(item => item.id === el.id)
-                    ? prev.filter(item => item.id !== el.id)
-                    : [...prev, {id: el.id, orderIndex: '0'}]
+                const codeToChange = prev.find(item => item.id === el.id);
+                if (codeToChange) {
+                    const data = prev.map(code => ({
+                        ...code,
+                        orderIndex: +code.orderIndex > +codeToChange.orderIndex ? `${+code.orderIndex - 1}` : code.orderIndex
+                    }))
+                    return data.filter(item => item.id !== el.id)
+                } else {
+                    return [...prev, {id: el.id, orderIndex: '0'}]
+                }
             });
         }
     }, [setSelectedCodes, disabled])
