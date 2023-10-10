@@ -374,7 +374,7 @@ export class Api {
             GetAll: {route: "/appointment-notifications/{id}/configurations", method: "get"},
             UpdateForPod: {route: "/appointment-notifications/pods", method: "post"},
             UpdateByType: {route: "/appointment-notifications", method: "post"},
-            UpdateForTransportation: {route: "/appointment-notifications/transportations", method: "post"},
+            UpdateForTransportation: {route: "/appointment-notifications/transportation-options", method: "post"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},

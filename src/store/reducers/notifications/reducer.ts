@@ -2,13 +2,13 @@ import {createReducer} from "@reduxjs/toolkit";
 import {
     setLoading, setPodNotifications, setRecallNotifications, setSCNotifications, setTransportationNotifications,
 } from "./actions";
-import {TPodNotifications, TSCNotifications, TTransportationNotifications} from "./types";
+import {TSCNotifications, TNotifications} from "./types";
 
 type TState = {
     isLoading: boolean;
     scNotifications: TSCNotifications|null;
-    podNotifications: TPodNotifications[];
-    transportationNotifications: TTransportationNotifications[];
+    podNotifications: TNotifications[];
+    transportationNotifications: TNotifications[];
     recallNotifications: TSCNotifications|null;
 }
 

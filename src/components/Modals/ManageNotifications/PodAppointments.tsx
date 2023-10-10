@@ -11,7 +11,7 @@ import {ReactComponent as PlusIcon} from "../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
 import {useConfirm, useException, useMessage, useSCs} from "../../../utils/hooks";
 import {loadPodsShort} from "../../../store/reducers/pods/actions";
-import {TPodNotifications} from "../../../store/reducers/notifications/types";
+import {TNotifications} from "../../../store/reducers/notifications/types";
 import {setLoading, updatePodNotifications} from "../../../store/reducers/notifications/actions";
 import {TNotificatonsProps} from "./ServiceCenterAppointments";
 import {Loading} from "../../UI/Loading";
@@ -23,7 +23,7 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
     const {shortPodsList, podsLoading} = useSelector((state: RootState) => state.pods);
     const {podNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort|null>(null);
-    const [allPodData, setAllPodData] = useState<TPodNotifications[]>([]);
+    const [allPodData, setAllPodData] = useState<TNotifications[]>([]);
     const [selectedEmployees, setSelectedEmployees] = useState<IAdvisorShort[]>([]);
     const [selectedPod, setSelectedPod] = useState<IPodShort|null>(null);
     const {selectedSC} = useSCs();
@@ -32,7 +32,7 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
     const showError = useException();
     const showMessage = useMessage();
     const classes = useNotificationStyles();
-    const currentPodData = useMemo(() => allPodData.find(el => el.podId === selectedPod?.id), [allPodData, selectedPod])
+    const currentPodData = useMemo(() => allPodData.find(el => el.id === selectedPod?.id), [allPodData, selectedPod])
 
     useEffect(() => {
         const changesSaved = checkPodsAreTheSame(allPodData, podNotifications)
@@ -50,7 +50,7 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
     useEffect(() => {
         dispatch(setLoading(true))
         if (podNotifications.length) {
-            const pod = shortPodsList.find(el => el.id === podNotifications[0].podId)
+            const pod = shortPodsList.find(el => el.id === podNotifications[0].id)
             pod && setSelectedPod(pod)
         }
         dispatch(setLoading(false))
@@ -68,15 +68,15 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
     }
 
     const onPodChange = (e: ChangeEvent<{}>, value: IPodShort|null) => {
-        const podData = allPodData.find(el => el.podId === value?.id);
+        const podData = allPodData.find(el => el.id === value?.id);
         if (podData) {
             const selected = usersShort.filter(el => podData.usersList?.includes(el.id))
             setSelectedEmployees(selected)
         } else {
             if (value) {
-                setAllPodData(prevState => ([...prevState, {podId: value?.id, usersList: []}]))
+                setAllPodData(prevState => ([...prevState, {id: value?.id, usersList: []}]))
             } else {
-                setAllPodData(prevState => prevState.filter(item => item.podId !== selectedPod?.id))
+                setAllPodData(prevState => prevState.filter(item => item.id !== selectedPod?.id))
             }
             setSelectedEmployees([])
         }
@@ -113,7 +113,7 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
             if (currentPodData) {
                 const updated = {...currentPodData, usersList: currentPodData.usersList ? Array.from(new Set([...currentPodData.usersList, currentEmployee.id]))
                         : [currentEmployee.id]}
-                const data = allPodData.filter(el => el.podId !== currentPodData.podId)
+                const data = allPodData.filter(el => el.id !== currentPodData.id)
                 setAllPodData([...data, updated])
             }
             setCurrentEmployee(null)
@@ -123,7 +123,7 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
     const deleteEmployee = (id: string) => {
         if (currentPodData && currentPodData.usersList){
             const updated = {...currentPodData, usersList: currentPodData.usersList.filter(el => el !== id)}
-            const data = allPodData.filter(el => el.podId !== currentPodData.podId)
+            const data = allPodData.filter(el => el.id !== currentPodData.id)
             setAllPodData([...data, updated])
         }
     }
