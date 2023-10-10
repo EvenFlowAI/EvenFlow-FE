@@ -12,7 +12,7 @@ const Modified: React.FC<{data: TDateAppointmentData[]}> = ({data}) => {
                 <div className={classes.title}>Modified</div>
                 {data.map(el => <div className={classes.text} style={{marginBottom: 8}}>
                     <div>{moment(el.date).format(dateTimeFormat)}</div>
-                    <div>Scheduler: {el.scheduler}</div>
+                    <div>Scheduler: {el.scheduler?.fullName}</div>
                 </div>)}
             </div>
         </div>
