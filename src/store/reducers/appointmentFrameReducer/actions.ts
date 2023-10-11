@@ -220,46 +220,48 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
                 ? {optionType: packageEMenuType}
                 : null;
         const serviceRequestIds = collectServiceRequestIds(service, subService, null, selectedSR)
-        const data: IConsultantsRequestData = {
-            serviceCenterId: decodeSCID(id),
-            pageIndex: 0,
-            pageSize: 0,
-            serviceRequestIds,
-            recalls: mapRecallsForRequest(selectedRecalls),
-            serviceCategoryIds,
-            maintenancePackageOption,
-            serviceTypeOptionId,
-            searchTerm: "",
-            vehicle: {
-                vin: selectedVehicle.vin,
-                year: selectedVehicle.year,
-                make: selectedVehicle.make,
-                model: selectedVehicle.model,
-                mileage: selectedVehicle.mileage,
-                engineTypeId: selectedVehicle.engineTypeId,
-            },
-            address: typeof address === 'string' ? address : address?.label ?? '',
-            zipCode,
-        }
-        if (valueService?.selectedService) {
-            data.valueServiceOfferIds = [valueService.selectedService.id];
-        }
-        Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-            Api.endpoints.ServiceConsultants.GetByQuery, {data})
-            .then(({data: {result}}) => {
-                dispatch(setConsultants(result));
-                if (!result.length) {
-                    onEmptyList && onEmptyList()
-                    dispatch(setAdvisorAvailable(false));
-                } else {
-                    if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
-                        dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
-                        dispatch(setAdvisorAvailable(true));
+        if (serviceRequestIds.length || maintenancePackageOption || serviceCategoryIds.length || selectedRecalls.length) {
+            const data: IConsultantsRequestData = {
+                serviceCenterId: decodeSCID(id),
+                pageIndex: 0,
+                pageSize: 0,
+                serviceRequestIds,
+                recalls: mapRecallsForRequest(selectedRecalls),
+                serviceCategoryIds,
+                maintenancePackageOption,
+                serviceTypeOptionId,
+                searchTerm: "",
+                vehicle: {
+                    vin: selectedVehicle.vin,
+                    year: selectedVehicle.year,
+                    make: selectedVehicle.make,
+                    model: selectedVehicle.model,
+                    mileage: selectedVehicle.mileage,
+                    engineTypeId: selectedVehicle.engineTypeId,
+                },
+                address: typeof address === 'string' ? address : address?.label ?? '',
+                zipCode,
+            }
+            if (valueService?.selectedService) {
+                data.valueServiceOfferIds = [valueService.selectedService.id];
+            }
+            Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+                Api.endpoints.ServiceConsultants.GetByQuery, {data})
+                .then(({data: {result}}) => {
+                    dispatch(setConsultants(result));
+                    if (!result.length) {
+                        onEmptyList && onEmptyList()
+                        dispatch(setAdvisorAvailable(false));
+                    } else {
+                        if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
+                            dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
+                            dispatch(setAdvisorAvailable(true));
+                        }
                     }
-                }
-            })
-            .catch(err => console.log(err))
-            .finally(() => dispatch(setConsultantsLoading(false)))
+                })
+                .catch(err => console.log(err))
+                .finally(() => dispatch(setConsultantsLoading(false)))
+        }
     }
 }
 
