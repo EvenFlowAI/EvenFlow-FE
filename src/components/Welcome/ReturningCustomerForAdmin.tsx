@@ -148,6 +148,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
         setFormIsChecked(false);
         setErrors([]);
         dispatch(setCustomerSearchData(null))
+        dispatch(setCustomerEnteredEmail(''));
         dispatch(setPaging({numberOfPages: 0, numberOfRecords: 0}));
         dispatch(setPageData(defaultPageData))
     }
