@@ -34,7 +34,7 @@ import {API} from "../../api/api";
 import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
 import {
     checkCarIsValid,
-    handleSideBarAppointmentUpdate, loadConsultants,
+    handleSideBarAppointmentUpdate, loadConsultants, loadConsultantsForUpdating,
     loadMakes, setAdvisor, setAnyAdvisorSelected,
     setAppointmentByKey, setAppointmentNotes,
     setAppointmentSaving,
@@ -209,7 +209,7 @@ export const AppointmentFrameLayout = () => {
             await updateServiceRequests(data.serviceRequests);
             const option = handleServiceTypeOption(data);
             await dispatch(handleSideBarAppointmentUpdate());
-            await dispatch(loadConsultants(id, option?.id ?? null))
+            await dispatch(loadConsultantsForUpdating(id, option?.id ?? null, data))
             await dispatch(updateConsultant(data.advisor))
             await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
             await dispatch(checkCarIsValid());
