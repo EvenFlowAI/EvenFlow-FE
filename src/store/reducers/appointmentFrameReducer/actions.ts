@@ -146,6 +146,60 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
     }
 }
 
+export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: number|null, appointment: IAppointmentByKey): AppThunk => (dispatch, getState) => {
+    dispatch(setConsultantsLoading(true))
+    const {
+        maintenancePackageOption,
+        serviceRequests,
+        serviceCategories,
+        address,
+        zipCode
+    } = appointment;
+    const {selectedVehicle, selectedRecalls, valueService, sideBarSteps} = getState().appointmentFrame;
+    const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
+    if (selectedVehicle) {
+        const data: IConsultantsRequestData = {
+            serviceCenterId: decodeSCID(id),
+            pageIndex: 0,
+            pageSize: 0,
+            serviceRequestIds: serviceRequests.map(item => item.id),
+            recalls: mapRecallsForRequest(selectedRecalls),
+            serviceCategoryIds: serviceCategories.map(item => item.id),
+            maintenancePackageOption,
+            serviceTypeOptionId,
+            searchTerm: "",
+            vehicle: {
+                vin: selectedVehicle.vin,
+                year: selectedVehicle.year,
+                make: selectedVehicle.make,
+                model: selectedVehicle.model,
+                mileage: selectedVehicle.mileage,
+                engineTypeId: selectedVehicle.engineTypeId,
+            },
+            address,
+            zipCode,
+        }
+        if (valueService?.selectedService) {
+            data.valueServiceOfferIds = [valueService.selectedService.id];
+        }
+        Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+            Api.endpoints.ServiceConsultants.GetByQuery, {data})
+            .then(({data: {result}}) => {
+                dispatch(setConsultants(result));
+                if (!result.length) {
+                    dispatch(setAdvisorAvailable(false));
+                } else {
+                    if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
+                        dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
+                        dispatch(setAdvisorAvailable(true));
+                    }
+                }
+            })
+            .catch(err => console.log(err))
+            .finally(() => dispatch(setConsultantsLoading(false)))
+    }
+}
+
 export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void): AppThunk => async (dispatch, getState) => {
     dispatch(setConsultantsLoading(true))
     const {selectedPackage, packagePricingType, packageEMenuType, selectedRecalls, selectedVehicle, address, zipCode, valueService,
