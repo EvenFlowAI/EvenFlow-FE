@@ -125,7 +125,7 @@ const findMissingNumbers = (numbers: number[]): number[] => {
     const missed: number[] = [];
     numbers.sort((a, b) => a - b).forEach((number, index) => {
         if (numbers.filter(el => el === number).length > 1) missed.push(number)
-        if (number > 0 && number - numbers[index - 1] !== 1) missed.push(number)
+        if (number > 1 && number - numbers[index - 1] !== 1) missed.push(number)
     })
     return Array.from(new Set(missed));
 }
