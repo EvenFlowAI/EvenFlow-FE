@@ -123,7 +123,7 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
 
     useEffect(() => {
         if (selectedVehicle) {
-            const make = makes.find(item => item.name === selectedVehicle.make);
+            const make = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase());
             if (selectedVehicle.vin?.length && open && make?.id) {
                 dispatch(loadRecallsByVin(decodeSCID(id), selectedVehicle.vin, make.id))
             }
