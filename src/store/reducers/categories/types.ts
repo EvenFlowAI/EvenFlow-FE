@@ -16,9 +16,14 @@ export interface ICategory {
     taglineFontColorHex?: string;
 }
 
+export type TCategoryServiceRequest = {
+    id: number;
+    orderIndex?: number;
+}
+
 export type TUpdateCategoryData = {
     name: string;
-    serviceRequests?: number[];
+    serviceRequests?: TCategoryServiceRequest[];
     page: number;
     type: EServiceCategoryType;
     orderIndex?: number;

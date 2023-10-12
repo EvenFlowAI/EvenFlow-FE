@@ -361,13 +361,15 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
     if (customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
         const updatedData = {...customerLoadedData};
         let vehicle = updatedData.vehicles.find(
-            car => car.vin === data.vehicle.vin
+            car => car.vin === data.vehicle?.vin
         );
         if (vehicle) {
             vehicle = {...vehicle};
             vehicle.appointmentHashKeys = [...vehicle.appointmentHashKeys, data.hashKey]
         } else {
-            updatedData.vehicles = [...updatedData.vehicles, {...data.vehicle, appointmentHashKeys: [data.hashKey]}];
+            if (data.vehicle) {
+                updatedData.vehicles = [...updatedData.vehicles, {...data.vehicle, appointmentHashKeys: [data.hashKey]}];
+            }
         }
         if (!updatedData.emails?.length) {
             updatedData.emails = [customer.email];

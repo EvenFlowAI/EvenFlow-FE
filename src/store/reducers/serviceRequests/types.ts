@@ -15,6 +15,7 @@ export interface IServiceRequest {
     partsUnitCost: number;
     numberOfParts: number;
     offer?: IOfferForCategory;
+    orderIndex?: number;
 }
 export interface IServiceRequestShort {
     id: number;
@@ -22,6 +23,7 @@ export interface IServiceRequestShort {
     description: string;
     priority: IServiceRequestPriority
     price: number;
+    orderIndex?: number;
 }
 export interface IServiceRequestNonAddedFilter {
     searchTerm: string;
@@ -137,4 +139,9 @@ export interface IUpsellServiceRequestUpdate {
     invoiceAmount: number|null;
     partsUnitCost: number|null;
     numberOfParts: number|null;
+}
+
+export type TOPsCodeWithIndex = {
+    id: number;
+    orderIndex: string;
 }
