@@ -379,11 +379,15 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
 
     const onSort = (order: TSortColumn) => {
         setData(prev => [...prev].sort((a, b) => {
-            return a[order] && b[order]
-                ? sorting.isAscending
+            if (!a[order] && b[order]) return sorting.isAscending ? 1 : -1
+            if (!b[order] && a[order]) return sorting.isAscending ? -1 : 1
+            if (!a[order] && !b[order]) {
+                return sorting.isAscending ? 1 : -1
+            } else {
+                return sorting.isAscending
                     ? b[order].toString().localeCompare(a[order].toString())
                     : a[order].toString().localeCompare(b[order].toString())
-                : -1
+            }
         }))
         setSorting(prev => ({isAscending: !prev.isAscending, order}))
     }
