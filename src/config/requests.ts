@@ -177,6 +177,7 @@ type ApiRoutes = {
         | "DeleteServiceRequestPricingSettings" | "AddServiceRequests" | "GetPackagePricingSettings" | "ChangePackagePricingSettings"
         | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings"
         | "RemovePackagePricingSettings" | "UpdateMaxPrice", TApiRoute>,
+    Qrvey: Record<"GetToken", TApiRoute>,
     Recalls: Record<"GetAll" | "GetById" | "GetByVin" | "Create" | "Update" | "Remove", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>,
@@ -391,6 +392,9 @@ export class Api {
             Edit: {route: "/offers/{id}", method: "put"},
             ChangeStatus: {route: "/offers/{id}/status", method: "patch"},
             Remove: {route: "/offers/{id}", method: "delete"},
+        },
+        Qrvey: {
+          GetToken: {route: "/qrvey/token", method: "post"}
         },
         Pods: {
             Create: {route: "/pods", method: "post"},
