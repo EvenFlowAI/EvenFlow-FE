@@ -215,6 +215,7 @@ export const AppointmentFrameLayout = () => {
             await dispatch(checkCarIsValid());
             if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
         } catch (e) {
+            console.log(e)
             showError(e);
         } finally {
             setLoadingCar(false);

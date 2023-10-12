@@ -164,7 +164,7 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
             pageSize: 0,
             serviceRequestIds: serviceRequests.map(item => item.id),
             recalls: mapRecallsForRequest(selectedRecalls),
-            serviceCategoryIds: serviceCategories.map(item => item.id),
+            serviceCategoryIds: serviceCategories ? serviceCategories.map(item => item.id) : [],
             maintenancePackageOption,
             serviceTypeOptionId,
             searchTerm: "",
