@@ -45,9 +45,7 @@ const ReportingPage: React.FC<{}> = ({}) => {
     }, [selectedSC])
 
     return <div style={{display: "block", width: "100%"}}>
-        <TitleContainer
-            title={Titles.Reporting}
-            pad/>
+        <TitleContainer title={Titles.Reporting} pad/>
         {config.qv_token && !window.origin.includes("apps.evenflow.ai")
             ? <Switch>
                 <Route
