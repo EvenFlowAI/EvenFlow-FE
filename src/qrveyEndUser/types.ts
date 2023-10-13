@@ -3,5 +3,6 @@ export interface IEndUserConfig {
     appid?: string;
     domain: string;
     qv_token?: string;
+    dashboard_id?: string;
     styles?: {};
 }

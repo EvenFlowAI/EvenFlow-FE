@@ -95,7 +95,15 @@ const MainLinksWithSub: LinkTypeWithSub[] = [
             {to: Routes.BookingFlow.ScreenSettings, name: "Screen Settings", exact: true, sub: true, roles: ["Owner", "Manager"]},
         ]},
     {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
-    {to: Routes.Admin.Reporting, name: "Reporting", roles: ["Owner", "Manager"]},
+    {to: Routes.Admin.Reporting, name: "Reporting", roles: ["Owner", "Manager"], subLinks: [
+            {to: Routes.Reporting.AppointmentsSummary, name: "Appointments Summary", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Reporting.ShopLoading, name: "Shop Loading", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Reporting.ValetAppointments, name: "Valet Appointments", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Reporting.MobileServiceAppointments, name: "Mobile Service Appointments", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Reporting.CustomerBehavior, name: "Customer Behavior", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Reporting.RepairOrderPerformance, name: "Repair Order Performance", exact: true, sub: true, roles: ["Owner", "Manager"]},
+            {to: Routes.Reporting.CapacityManagementPerformance, name: "Capacity Management Performance", exact: true, sub: true, roles: ["Owner", "Manager"]},
+        ]},
 ]
 
 type TProps = {

@@ -61,6 +61,17 @@ enum BookingFlowConfigRoutes {
     ScreenSettings = "/admin/booking-flow-config/screen-settings",
 }
 
+enum ReportingRoutes {
+    Base = "/admin/reporting",
+    AppointmentsSummary = "/admin/reporting/summary",
+    ShopLoading = "/admin/reporting/shop-loading",
+    ValetAppointments = "/admin/reporting/valet-appointments",
+    MobileServiceAppointments = "/admin/reporting/mobile-service-appointments",
+    CustomerBehavior = "/admin/reporting/customer-behavior",
+    RepairOrderPerformance = "/admin/reporting/repair-order-performance",
+    CapacityManagementPerformance = "/admin/reporting/capacity-management-performance",
+}
+
 enum PricingRoutes {
     Base = "/admin/pricing",
     ServicePricingSettings = "/admin/pricing/service-pricing-settings",
@@ -94,4 +105,5 @@ export const Routes = {
     OfferManagement: OfferManagementRoutes,
     BookingFlow: BookingFlowConfigRoutes,
     Pricing: PricingRoutes,
+    Reporting: ReportingRoutes,
 }
