@@ -1,4 +1,4 @@
-import React, {useMemo} from "react";
+import React, {useEffect, useMemo} from "react";
 import {Button, Drawer, IconButton, List, useMediaQuery, useTheme} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import logo from '../../assets/img/logoSidebar.svg';
@@ -95,7 +95,6 @@ const MainLinksWithSub: LinkTypeWithSub[] = [
             {to: Routes.BookingFlow.ScreenSettings, name: "Screen Settings", exact: true, sub: true, roles: ["Owner", "Manager"]},
         ]},
     {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
-    {to: Routes.Admin.Reporting, name: "Reporting", roles: ["Owner", "Manager"]},
 ]
 
 type TProps = {
@@ -122,6 +121,23 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
         }
         return MainLinksWithSub;
     }, [currentUser, pathname]);
+
+    useEffect(() => {
+        if ((!window.origin.includes("apps.evenflow.ai") || currentUser?.isSuperUser)
+            && !MainLinksWithSub.find(el => el.to === Routes.Admin.Reporting)) {
+            MainLinksWithSub.push(
+                {to: Routes.Admin.Reporting, name: "Reporting", roles: ["Owner", "Manager"], subLinks: [
+                        {to: Routes.Reporting.AppointmentsSummary, name: "Appointments Summary", exact: true, sub: true, roles: ["Owner", "Manager"]},
+                        {to: Routes.Reporting.ShopLoading, name: "Shop Loading", exact: true, sub: true, roles: ["Owner", "Manager"]},
+                        {to: Routes.Reporting.ValetAppointments, name: "Valet Appointments", exact: true, sub: true, roles: ["Owner", "Manager"]},
+                        {to: Routes.Reporting.MobileServiceAppointments, name: "Mobile Service Appointments", exact: true, sub: true, roles: ["Owner", "Manager"]},
+                        {to: Routes.Reporting.CustomerBehavior, name: "Customer Behavior", exact: true, sub: true, roles: ["Owner", "Manager"]},
+                        {to: Routes.Reporting.RepairOrderPerformance, name: "Repair Order Performance", exact: true, sub: true, roles: ["Owner", "Manager"]},
+                        {to: Routes.Reporting.CapacityManagementPerformance, name: "Capacity Management Performance", exact: true, sub: true, roles: ["Owner", "Manager"]},
+                    ]},
+            )
+        }
+    }, [MainLinksWithSub, window, currentUser])
 
     const handleLogoClick = () => {
         history.push(Routes.Admin.Base);

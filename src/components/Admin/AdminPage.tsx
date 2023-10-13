@@ -12,7 +12,7 @@ import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDe
 import {Profile} from "./Profile/Profile";
 import {Appointments} from "../Appointments/Appointments";
 import PricingPage from "./Pricing/PricingPage";
-import Reporting from "./Reporting/Reporting";
+import ReportingPage from "./ReportingPage/ReportingPage";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";
 import {BookingFlowPage} from "./BookingFlow/BookingFlow";
 
@@ -51,7 +51,7 @@ export const AdminPage = () => {
                 ? <PrivateRoute path={Routes.BookingFlow.Base} component={BookingFlowPage}/>
                 : null}
             {!currentUser.isSuperUser && !hideDashboard
-                ? <PrivateRoute path={Routes.Admin.Reporting} exact component={Reporting}/>
+                ? <PrivateRoute path={Routes.Admin.Reporting} component={ReportingPage}/>
                 : null}
             <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>

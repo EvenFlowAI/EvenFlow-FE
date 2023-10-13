@@ -2,12 +2,13 @@ import React from 'react';
 import {IEndUserConfig} from "./types";
 
 const QrveyEndUser: React.FC<{ settings: IEndUserConfig }> = ({settings}) => {
-
     // @ts-ignore
     window['endUserConfig'] = settings;
 
+    console.log(settings)
+
     // @ts-ignore
-    return <qrvey-end-user settings={'endUserConfig'}/>;
+    return <qrvey-end-user settings={'endUserConfig'}/>
 };
 
 export default QrveyEndUser;
