@@ -3,7 +3,7 @@ import {Titles} from "../../../config/constants";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {IEndUserConfig} from "../../../qrveyEndUser/types";
 import {Api} from "../../../config/requests";
-import {useSCs} from "../../../utils/hooks";
+import {useCurrentUser, useSCs} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
 import {Redirect, Route, Switch} from "react-router-dom";
 import ShopLoading from "../../../qrveyEndUser/ShopLoading";
@@ -34,6 +34,7 @@ const ReportingPage: React.FC<{}> = ({}) => {
         domain: 'https://pcuxl.qrveyapp.com',
     })
     const {selectedSC} = useSCs();
+    const currentUser = useCurrentUser();
 
     useEffect(() => {
         if (selectedSC) {
@@ -46,7 +47,7 @@ const ReportingPage: React.FC<{}> = ({}) => {
 
     return <div style={{display: "block", width: "100%"}}>
         <TitleContainer title={Titles.Reporting} pad/>
-        {config.qv_token && !window.origin.includes("apps.evenflow.ai")
+        {config.qv_token && (!window.origin.includes("apps.evenflow.ai") || currentUser?.isSuperUser)
             ? <Switch>
                 <Route
                     exact
