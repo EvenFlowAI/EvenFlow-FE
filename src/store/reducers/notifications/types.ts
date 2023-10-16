@@ -13,3 +13,8 @@ export type TNotifications = {
     id?: number|null;
     usersList?: string[];
 }
+
+export type TTransportationNotifications = {
+    isActive?: boolean;
+    transportationOptions: TNotifications[];
+}

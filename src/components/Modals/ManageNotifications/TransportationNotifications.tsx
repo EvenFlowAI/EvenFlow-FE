@@ -4,12 +4,12 @@ import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {useNotificationStyles} from "./ManageNotifications";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {Button, Divider, IconButton} from "@material-ui/core";
+import {Button, Divider, IconButton, Switch} from "@material-ui/core";
 import {DialogActions} from "../BaseModal";
 import {ReactComponent as PlusIcon} from "../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
 import {useConfirm, useException, useMessage, useSCs} from "../../../utils/hooks";
-import {TNotifications} from "../../../store/reducers/notifications/types";
+import {TTransportationNotifications} from "../../../store/reducers/notifications/types";
 import {
     setLoading,
     updateTransportationNotifications
@@ -22,12 +22,17 @@ import {loadTransportationOptions} from "../../../store/reducers/transportationN
 import {ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
 import {getTransportationOptionString} from "../../../utils/utils";
 
+const initialTransportationNotifications: TTransportationNotifications = {
+    isActive: false,
+    transportationOptions: []
+}
+
 const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesState, changesState}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);
     const {options, isLoading} = useSelector((state: RootState) => state.transportation);
     const {transportationNotifications, isLoading: isSaving} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort|null>(null);
-    const [allTransportationData, setAllTransportationData] = useState<TNotifications[]>([]);
+    const [allTransportationData, setAllTransportationData] = useState<TTransportationNotifications|null>(initialTransportationNotifications);
     const [selectedEmployees, setSelectedEmployees] = useState<IAdvisorShort[]>([]);
     const [selectedTransportation, setSelectedTransportation] = useState<ITransportationOptionFull|null>(null);
     const {selectedSC} = useSCs();
@@ -36,10 +41,15 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     const showError = useException();
     const showMessage = useMessage();
     const classes = useNotificationStyles();
-    const currentTransportationData = useMemo(() => allTransportationData.find(el => el.id === selectedTransportation?.id), [allTransportationData, selectedTransportation])
+    const currentTransportationData = useMemo(() => allTransportationData?.transportationOptions?.find(el => el.id === selectedTransportation?.id), [allTransportationData, selectedTransportation])
 
     useEffect(() => {
-        const changesSaved = checkTransportationAreTheSame(allTransportationData, transportationNotifications)
+        let changesSaved = true
+        if (allTransportationData && transportationNotifications) {
+            changesSaved = checkTransportationAreTheSame(allTransportationData.transportationOptions, transportationNotifications.transportationOptions)
+        } else if ((allTransportationData && !transportationNotifications) || (!allTransportationData && transportationNotifications)) {
+            changesSaved = false
+        }
         setChangesState(prevState => ({...prevState, podNotificationsSaved: changesSaved}))
     }, [allTransportationData, transportationNotifications])
 
@@ -53,8 +63,8 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
 
     useEffect(() => {
         dispatch(setLoading(true))
-        if (transportationNotifications.length) {
-            const option = options.find(el => el.id === transportationNotifications[0].id)
+        if (transportationNotifications?.transportationOptions?.length) {
+            const option = options.find(el => el.id === transportationNotifications.transportationOptions[0].id)
             option && setSelectedTransportation(option)
         }
         dispatch(setLoading(false))
@@ -72,15 +82,19 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     }
 
     const onTransportationChange = (e: ChangeEvent<{}>, value: ITransportationOptionFull|null) => {
-        const transportationData = allTransportationData.find(el => el.id === value?.id);
+        const transportationData = allTransportationData?.transportationOptions.find(el => el.id === value?.id);
         if (transportationData) {
             const selected = usersShort.filter(el => transportationData.usersList?.includes(el.id))
             setSelectedEmployees(selected)
         } else {
             if (value) {
-                setAllTransportationData(prevState => ([...prevState, {id: value?.id, usersList: []}]))
+                setAllTransportationData(prev => prev
+                    ? {...prev, transportationOptions: [...prev.transportationOptions, {id: value?.id, usersList: []}]}
+                    : prev)
             } else {
-                setAllTransportationData(prevState => prevState.filter(item => item.id !== selectedTransportation?.id))
+                setAllTransportationData(prev => prev
+                    ? {...prev, transportationOptions: prev.transportationOptions.filter(item => item.id !== selectedTransportation?.id)}
+                    : prev)
             }
             setSelectedEmployees([])
         }
@@ -109,26 +123,34 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     const onSuccess = () => showMessage("Notifications for Transportations updated")
 
     const onSave = () => {
-        if (selectedSC) dispatch(updateTransportationNotifications(selectedSC.id, allTransportationData, onSuccess, showError))
+        if (selectedSC && allTransportationData) dispatch(updateTransportationNotifications(selectedSC.id, allTransportationData, onSuccess, showError))
     }
 
     const onAddEmployee = () => {
         if (currentEmployee && selectedTransportation) {
             if (currentTransportationData) {
-                const updated = {...currentTransportationData, usersList: currentTransportationData.usersList ? Array.from(new Set([...currentTransportationData.usersList, currentEmployee.id]))
-                        : [currentEmployee.id]}
-                const data = allTransportationData.filter(el => el.id !== currentTransportationData.id)
-                setAllTransportationData([...data, updated])
+                const updated = {
+                    ...currentTransportationData,
+                    usersList: currentTransportationData.usersList
+                        ? Array.from(new Set([...currentTransportationData.usersList, currentEmployee.id]))
+                        : [currentEmployee.id]
+                }
+                const data = allTransportationData?.transportationOptions.filter(el => el.id !== currentTransportationData.id)
+                data && setAllTransportationData(prev => prev ? {...prev, transportationOptions: [...data, updated]} : prev)
             }
             setCurrentEmployee(null)
         }
     }
 
+    const handleSwitch = () => {
+        setAllTransportationData(prev => prev ? {...prev, isActive: prev ? !prev.isActive : true} : prev)
+    }
+
     const deleteEmployee = (id: string) => {
-        if (currentTransportationData && currentTransportationData.usersList){
+        if (currentTransportationData && currentTransportationData.usersList) {
             const updated = {...currentTransportationData, usersList: currentTransportationData.usersList.filter(el => el !== id)}
-            const data = allTransportationData.filter(el => el.id !== currentTransportationData.id)
-            setAllTransportationData([...data, updated])
+            const data = allTransportationData?.transportationOptions.filter(el => el.id !== currentTransportationData.id)
+            data && setAllTransportationData(prev => prev ? {...prev, transportationOptions: [...data, updated]} : prev)
         }
     }
 
@@ -139,6 +161,15 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
                     ? <Loading/>
                     : <React.Fragment>
                         <div className={classes.tabTitle}>Transportation Requests</div>
+                        <div className={classes.switcherWrapper}>
+                            <p className={classes.notificationsLabel}>on/off Transportation notifications</p>
+                            <Switch
+                                onChange={handleSwitch}
+                                disabled={loading || isLoading}
+                                checked={allTransportationData?.isActive}
+                                color="primary"
+                            />
+                        </div>
                         <Autocomplete
                             options={options.filter(el => el.state === 1)}
                             fullWidth
