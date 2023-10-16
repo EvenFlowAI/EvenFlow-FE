@@ -16,5 +16,5 @@ export type TNotifications = {
 
 export type TTransportationNotifications = {
     isActive?: boolean;
-    data: TNotifications[];
+    transportationOptions: TNotifications[];
 }

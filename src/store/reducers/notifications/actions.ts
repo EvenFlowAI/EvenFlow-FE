@@ -14,11 +14,16 @@ export const loadNotifications = (id: number): AppThunk => dispatch => {
     Api.call(Api.endpoints.Notifications.GetAll, {urlParams: {id}})
         .then(result => {
             if (result?.data) {
-                const {pods, serviceCenter, recalls, transportationOptions} = result.data;
+                const {pods, serviceCenter, recalls, transportation} = result.data;
+                const {transportationOptions, isActive} = transportation;
                 dispatch(setPodNotifications(pods))
                 dispatch(setRecallNotifications(recalls))
                 dispatch(setSCNotifications(serviceCenter))
-                if (transportationOptions) dispatch(setTransportationNotifications(transportationOptions))
+                const transportationData: TTransportationNotifications = {
+                    isActive: Boolean(isActive),
+                    transportationOptions: transportationOptions ?? []
+                }
+                dispatch(setTransportationNotifications(transportationData))
             }
         })
         .finally(() => dispatch(setLoading(false)))
@@ -56,10 +61,11 @@ export const updateTransportationNotifications = (
     data: TTransportationNotifications,
     onSuccess: TCallback,
     onError: TArgCallback<{err: string}>): AppThunk => dispatch => {
+    const {isActive, transportationOptions} = data
     Api.call(Api.endpoints.Notifications.UpdateForTransportation, {
         urlParams: {id},
         // todo change name field
-        data: {serviceCenterId: id, transportationEmployees: data}
+        data: {serviceCenterId: id, transportationEmployees: transportationOptions, isActive}
     })
         .then(result => {
             if (result) dispatch(loadNotifications(id))
