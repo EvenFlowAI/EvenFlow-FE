@@ -63,8 +63,6 @@ const App = () => {
             names.forEach((name) => {
                 caches.delete(name);
             });
-        }).then(() => {
-            console.log('Cache cleared')
         })
     }, [])
 
