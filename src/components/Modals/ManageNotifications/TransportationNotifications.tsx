@@ -171,10 +171,11 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
                             />
                         </div>
                         <Autocomplete
-                            options={options.filter(el => el.state === 1)}
+                            options={options}
                             fullWidth
                             disabled={loading || isSaving || isLoading}
                             getOptionLabel={i => getTransportationOptionString(i.type)}
+                            renderOption={o => <span style={{color: o.state ? "inherit" : "slategrey"}}>{getTransportationOptionString(o.type)} {!o.state ? "(Turned Off)" : ""}</span>}
                             value={selectedTransportation}
                             onChange={onTransportationChange}
                             style={{marginBottom: 24}}
