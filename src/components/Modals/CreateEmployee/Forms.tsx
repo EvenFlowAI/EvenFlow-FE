@@ -7,9 +7,10 @@ import {TAdvisorForm, TDMSConsultantChange, TSelectChange, TTechnicianForm} from
 import {ToggleButtons} from "../../UI/ToggleButtons";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {TRole} from "../../../store/reducers/users/types";
-import {userRoles} from "../../../config/constants";
+import {userRoles, widerUserRoles} from "../../../config/constants";
 import {checkEmail} from "../../../utils/utils";
 import 'react-phone-number-input/style.css'
+import {useCurrentUser} from "../../../utils/hooks";
 
 export const initialAdvisorForm: TAdvisorForm = {
     firstName: '', lastName: '', email: '', phoneNumber: '', serviceCenter: null, role: "Manager", position: '',
@@ -50,7 +51,12 @@ type TTFormProps = {
     onDMSConsultantChange: TDMSConsultantChange;
     formIsChecked: boolean;
 };
+
+const superRoles = ["Super Admin", "Owner"]
+
 export const AdvisorForm: React.FC<TAFormProps> = props => {
+    const currentUser = useCurrentUser();
+
     return <Grid container spacing={3} justify="center">
         <Grid item xs={12} sm={6}>
             <TextField
@@ -117,7 +123,9 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
             />
         </Grid>
         <Grid item xs={12} sm={6}>
-            {(props.isEdit || (props.form.role && !userRoles.includes(props.form.role))) ?
+            {(props.isEdit || (props.form.role && currentUser && superRoles.includes(currentUser?.role)
+                ? !widerUserRoles.includes(props.form.role)
+                : !userRoles.includes(props.form.role))) ?
                 <TextField
                     disabled
                     value={props.form.role}
@@ -125,7 +133,7 @@ export const AdvisorForm: React.FC<TAFormProps> = props => {
                     label="Role"
                 />
                 : <Autocomplete
-                    options={userRoles}
+                    options={currentUser && superRoles.includes(currentUser?.role) ? widerUserRoles : userRoles}
                     onChange={props.onRoleChange}
                     loading={props.loading}
                     disableClearable

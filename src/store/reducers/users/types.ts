@@ -47,4 +47,4 @@ export type TRole =
     | "Advisor"
     | "Technician"
     | "Call Center Rep"
-    | "Super Manager"
+    | "Service Director"

@@ -15,7 +15,8 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-const restrictedRoles: TRole[] = ["Manager", "Advisor", "Super Admin"];
+const restrictedRoles: TRole[] = ["Advisor", "Super Admin"];
+//const restrictedRoles: TRole[] = ["Manager", "Advisor", "Super Admin"];
 
 export const ServiceCenterSelector = () => {
     const {selectSC, selectedSC, scList} = useSCs();
