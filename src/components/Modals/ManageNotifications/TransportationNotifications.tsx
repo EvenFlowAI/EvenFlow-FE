@@ -46,11 +46,15 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     useEffect(() => {
         let changesSaved = true
         if (allTransportationData && transportationNotifications) {
-            changesSaved = checkTransportationAreTheSame(allTransportationData.transportationOptions, transportationNotifications.transportationOptions)
+            if (allTransportationData.isActive !== transportationNotifications.isActive) {
+                changesSaved = false
+            } else {
+                changesSaved = checkTransportationAreTheSame(allTransportationData.transportationOptions, transportationNotifications.transportationOptions)
+            }
         } else if ((allTransportationData && !transportationNotifications) || (!allTransportationData && transportationNotifications)) {
             changesSaved = false
         }
-        setChangesState(prevState => ({...prevState, podNotificationsSaved: changesSaved}))
+        setChangesState(prevState => ({...prevState, transportationNotificationsSaved: changesSaved}))
     }, [allTransportationData, transportationNotifications])
 
     useEffect(() => {
