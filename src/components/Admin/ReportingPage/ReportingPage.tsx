@@ -47,7 +47,7 @@ const ReportingPage: React.FC<{}> = ({}) => {
 
     return <div style={{display: "block", width: "100%"}}>
         <TitleContainer title={Titles.Reporting} pad/>
-        {config.qv_token && (!window.origin.includes("apps.evenflow.ai") || currentUser?.isSuperUser)
+        {config.qv_token && (!window.origin.includes("apps.evenflow.ai") || currentUser?.role === "Super Admin")
             ? <Switch>
                 <Route
                     exact
