@@ -46,11 +46,15 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     useEffect(() => {
         let changesSaved = true
         if (allTransportationData && transportationNotifications) {
-            changesSaved = checkTransportationAreTheSame(allTransportationData.transportationOptions, transportationNotifications.transportationOptions)
+            if (allTransportationData.isActive !== transportationNotifications.isActive) {
+                changesSaved = false
+            } else {
+                changesSaved = checkTransportationAreTheSame(allTransportationData.transportationOptions, transportationNotifications.transportationOptions)
+            }
         } else if ((allTransportationData && !transportationNotifications) || (!allTransportationData && transportationNotifications)) {
             changesSaved = false
         }
-        setChangesState(prevState => ({...prevState, podNotificationsSaved: changesSaved}))
+        setChangesState(prevState => ({...prevState, transportationNotificationsSaved: changesSaved}))
     }, [allTransportationData, transportationNotifications])
 
     useEffect(() => {
@@ -175,7 +179,8 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
                             fullWidth
                             disabled={loading || isSaving || isLoading}
                             getOptionLabel={i => getTransportationOptionString(i.type)}
-                            renderOption={o => <span style={{color: o.state ? "inherit" : "slategrey"}}>{getTransportationOptionString(o.type)} {!o.state ? "(Turned Off)" : ""}</span>}
+                            getOptionDisabled={o => o.state === 0}
+                            //renderOption={o => <span style={{color: o.state ? "inherit" : "slategrey"}}>{getTransportationOptionString(o.type)} {!o.state ? "(Turned Off)" : ""}</span>}
                             value={selectedTransportation}
                             onChange={onTransportationChange}
                             style={{marginBottom: 24}}
