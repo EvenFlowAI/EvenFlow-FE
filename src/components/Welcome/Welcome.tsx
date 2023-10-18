@@ -52,8 +52,6 @@ export const Welcome = () => {
     const {isLoading} = useSelector((state: RootState) => state.customers);
     const {shortLoading} = useSelector((state: RootState) => state.serviceCenters);
 
-    alert('Hola')
-
     const [loading, setLoading] = useState<boolean>(false);
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
