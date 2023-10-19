@@ -9,7 +9,7 @@ import {DialogActions} from "../BaseModal";
 import {ReactComponent as PlusIcon} from "../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../assets/img/close.svg";
 import {useConfirm, useException, useMessage, useSCs} from "../../../utils/hooks";
-import {TNotifications, TTransportationNotifications} from "../../../store/reducers/notifications/types";
+import {TTransportationNotifications} from "../../../store/reducers/notifications/types";
 import {
     setLoading,
     updateTransportationNotifications
@@ -152,13 +152,6 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
         setFormChecked(false)
     }
 
-    const findInactiveOptionsNotifications = ():TNotifications[] => {
-        if (transportationNotifications?.transportationOptions) {
-            return transportationNotifications?.transportationOptions?.filter(el => inactiveOptionsIds.includes(el.id))
-        }
-       return [];
-    }
-
     const sendRequest = () => {
         if (allTransportationData) {
             const data: TTransportationNotifications = {
@@ -169,39 +162,12 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
         }
     }
 
-    const handleInactiveOptions = () => {
-        const inactiveOptions = findInactiveOptionsNotifications();
-        const inactiveOptionsIds = inactiveOptions.map(el => el.id);
-        const inactiveOptionsNames = options
-            .filter(el => inactiveOptionsIds.includes(el.id))
-            .map(op => getTransportationOptionString(op.type))
-        const namesString = inactiveOptionsNames.map((name, idx) => {
-            return `"${name}"${idx < inactiveOptionsNames.length - 1 ? ', ' : ''}`
-        })
-        //Here are employees, assigned to inactive Transportation Options.
-        askConfirm({
-            confirmContent: "Save changes",
-            cancelContent: "Cancel Saving",
-            title: "Clear Transportation Notifications changes",
-            content: <span>
-                       By clicking "Save", Notifications Settings for inactive options will be removed.<br />
-                     If you don`t want to remove them, please turn on the {namesString} {inactiveOptionsNames.length > 1 ? 'options' : 'option'} first.
-                    </span>,
-            onConfirm: sendRequest,
-            onCancel: () => setFormChecked(false)
-        });
-    }
-
     const onSave = () => {
         setFormChecked(true)
         if (currentEmployee && !currentTransportationData?.usersList?.includes(currentEmployee.id)) {
             showError("Please add or remove Selected Employee")
         } else {
-            if (inactiveOptionsIds.length){
-                handleInactiveOptions()
-            } else {
-                sendRequest()
-            }
+            sendRequest()
         }
     }
 
