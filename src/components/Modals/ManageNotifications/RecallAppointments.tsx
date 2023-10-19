@@ -20,6 +20,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
     const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort|null>(null);
     const [recallData, setRecallData] = useState<TSCNotifications|null>(initialSCNotifications);
     const [selectedEmployees, setSelectedEmployees] = useState<IAdvisorShort[]>([]);
+    const [formChecked, setFormChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useNotificationStyles();
@@ -29,18 +30,22 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
     useEffect(() => {
         let changesAreSaved = true;
         if (recallNotifications || recallData) {
-            const employeesListIsDifferent = recallNotifications?.employees?.find(el => !recallData?.employees?.includes(el))
-                || recallData?.employees?.find(el => !recallNotifications?.employees?.includes(el))
-            if (Boolean(recallData?.isActive) !== Boolean(recallNotifications?.isActive)) {
+            if (currentEmployee) {
                 changesAreSaved = false;
-            } else if (recallData?.employees?.length !== recallNotifications?.employees?.length) {
-                changesAreSaved = false;
-            } else if (employeesListIsDifferent) {
-                changesAreSaved = false;
+            } else {
+                const employeesListIsDifferent = recallNotifications?.employees?.find(el => !recallData?.employees?.includes(el))
+                    || recallData?.employees?.find(el => !recallNotifications?.employees?.includes(el))
+                if (Boolean(recallData?.isActive) !== Boolean(recallNotifications?.isActive)) {
+                    changesAreSaved = false;
+                } else if (recallData?.employees?.length !== recallNotifications?.employees?.length) {
+                    changesAreSaved = false;
+                } else if (employeesListIsDifferent) {
+                    changesAreSaved = false;
+                }
             }
         }
         setChangesState(prevState => ({...prevState, recallNotificationsSaved: changesAreSaved}))
-    }, [recallData, recallNotifications])
+    }, [recallData, recallNotifications, currentEmployee])
 
     useEffect(() => {
         setRecallData(recallNotifications)
@@ -53,23 +58,32 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
 
     const onEmployeeChange = (e: ChangeEvent<{}>, value: IAdvisorShort|null) => {
         setCurrentEmployee(value)
+        setFormChecked(false)
     }
 
     const onCancel = () => {
         setRecallData(recallNotifications)
+        setCurrentEmployee(null);
+        setFormChecked(false)
     }
 
     const onSuccess = () => showMessage("Notifications for Recall Appointments updated")
 
     const onSave = () => {
-        if (selectedSC && recallData) dispatch(updateNotificationsByType(
-            selectedSC.id,
-            {...recallData, notificationType: ENotificationType.Recalls},
-            onSuccess,
-            showError))
+        setFormChecked(true)
+        if (currentEmployee && !recallData?.employees?.includes(currentEmployee.id)) {
+            showError("Please add or remove Selected Employee")
+        } else {
+            if (selectedSC && recallData) dispatch(updateNotificationsByType(
+                selectedSC.id,
+                {...recallData, notificationType: ENotificationType.Recalls},
+                onSuccess,
+                showError))
+        }
     }
 
     const handleSwitch = () => {
+        setFormChecked(false)
         setRecallData(prevState => {
             const data: TSCNotifications|null = {...prevState} ?? {}
             return {...data, isActive: data ? !data.isActive : true}
@@ -77,6 +91,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
     }
 
     const onAddEmployee = () => {
+        setFormChecked(false)
         if (currentEmployee) {
             setRecallData(prevState => {
                 const data: TSCNotifications|null = {...prevState} ?? {}
@@ -90,6 +105,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
     }
 
     const deleteEmployee = (id: string) => {
+        setFormChecked(false)
         setRecallData(prevState => {
             if (prevState) {
                 return {...prevState, employees: prevState?.employees ? prevState?.employees.filter(el => el !== id) : []}
@@ -122,7 +138,8 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
                     onChange={onEmployeeChange}
                     renderInput={autocompleteRender({
                         label: "Assign Employee",
-                        placeholder: 'Select'
+                        placeholder: 'Select',
+                        error: Boolean(currentEmployee && !recallData?.employees?.includes(currentEmployee.id) && formChecked)
                     })}
                 />
                     <Button

@@ -34,6 +34,7 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort|null>(null);
     const [allTransportationData, setAllTransportationData] = useState<TTransportationNotifications|null>(initialTransportationNotifications);
     const [selectedEmployees, setSelectedEmployees] = useState<IAdvisorShort[]>([]);
+    const [formChecked, setFormChecked] = useState<boolean>(false);
     const [selectedTransportation, setSelectedTransportation] = useState<ITransportationOptionFull|null>(null);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -45,7 +46,9 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
 
     useEffect(() => {
         let changesSaved = true
-        if (allTransportationData && transportationNotifications) {
+        if (currentEmployee) {
+            changesSaved = false
+        } else if (allTransportationData && transportationNotifications) {
             if (allTransportationData.isActive !== transportationNotifications.isActive) {
                 changesSaved = false
             } else {
@@ -55,7 +58,7 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
             changesSaved = false
         }
         setChangesState(prevState => ({...prevState, transportationNotificationsSaved: changesSaved}))
-    }, [allTransportationData, transportationNotifications])
+    }, [allTransportationData, transportationNotifications, currentEmployee])
 
     useEffect(() => {
         setAllTransportationData(transportationNotifications)
@@ -82,10 +85,12 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     }, [usersShort, currentTransportationData])
 
     const onEmployeeChange = (e: ChangeEvent<{}>, value: IAdvisorShort|null) => {
+        setFormChecked(false)
         setCurrentEmployee(value)
     }
 
     const onTransportationChange = (e: ChangeEvent<{}>, value: ITransportationOptionFull|null) => {
+        setFormChecked(false)
         const transportationData = allTransportationData?.transportationOptions.find(el => el.id === value?.id);
         if (transportationData) {
             const selected = usersShort.filter(el => transportationData.usersList?.includes(el.id))
@@ -106,6 +111,8 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     }
 
     const onCancel = () => {
+        setFormChecked(false)
+        setCurrentEmployee(null);
         if (changesState?.transportationNotificationsSaved) {
             setAllTransportationData(transportationNotifications)
         } else {
@@ -127,10 +134,16 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     const onSuccess = () => showMessage("Notifications for Transportations updated")
 
     const onSave = () => {
-        if (selectedSC && allTransportationData) dispatch(updateTransportationNotifications(selectedSC.id, allTransportationData, onSuccess, showError))
+        setFormChecked(true)
+        if (currentEmployee && !currentTransportationData?.usersList?.includes(currentEmployee.id)) {
+            showError("Please add or remove Selected Employee")
+        } else {
+            if (selectedSC && allTransportationData) dispatch(updateTransportationNotifications(selectedSC.id, allTransportationData, onSuccess, showError))
+        }
     }
 
     const onAddEmployee = () => {
+        setFormChecked(false)
         if (currentEmployee && selectedTransportation) {
             if (currentTransportationData) {
                 const updated = {
@@ -147,10 +160,12 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     }
 
     const handleSwitch = () => {
+        setFormChecked(false)
         setAllTransportationData(prev => prev ? {...prev, isActive: prev ? !prev.isActive : true} : prev)
     }
 
     const deleteEmployee = (id: string) => {
+        setFormChecked(false)
         if (currentTransportationData && currentTransportationData.usersList) {
             const updated = {...currentTransportationData, usersList: currentTransportationData.usersList.filter(el => el !== id)}
             const data = allTransportationData?.transportationOptions.filter(el => el.id !== currentTransportationData.id)
@@ -199,7 +214,8 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
                                 onChange={onEmployeeChange}
                                 renderInput={autocompleteRender({
                                     label: "Assign Employee",
-                                    placeholder: 'Select'
+                                    placeholder: 'Select',
+                                    error: Boolean(currentEmployee && !currentTransportationData?.usersList?.includes(currentEmployee?.id) && formChecked)
                                 })}
                             />
                             <Button
