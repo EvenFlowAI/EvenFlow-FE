@@ -67,7 +67,11 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => 
         setFormChecked(false)
     }
 
-    const onSuccess = () => showMessage("Notifications for Recall Appointments updated")
+    const onSuccess = () => {
+        showMessage("Notifications for Recall Appointments updated")
+        setCurrentEmployee(null);
+        setFormChecked(false)
+    }
 
     const onSave = () => {
         setFormChecked(true)

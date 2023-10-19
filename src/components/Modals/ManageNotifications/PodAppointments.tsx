@@ -112,7 +112,11 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
         }
     }
 
-    const onSuccess = () => showMessage("Notifications for Pod Appointments updated")
+    const onSuccess = () => {
+        showMessage("Notifications for Pod Appointments updated")
+        setCurrentEmployee(null);
+        setFormChecked(false)
+    }
 
     const onSave = () => {
         setFormChecked(true)

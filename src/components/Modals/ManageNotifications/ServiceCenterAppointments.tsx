@@ -75,7 +75,11 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
         setCurrentEmployee(null);
     }
 
-    const onSuccess = () => showMessage("Notifications for Service Center Appointments updated")
+    const onSuccess = () => {
+        showMessage("Notifications for Service Center Appointments updated");
+        setCurrentEmployee(null);
+        setFormChecked(false)
+    }
 
     const onSave = () => {
         setFormChecked(true)
