@@ -22,7 +22,7 @@ import CapacityManagementPerformance from "../../../qrveyEndUser/CapacityManagem
 export const DashboardsIds = {
     AppointmentSummary: "Bioab5mEC",
     ShopLoading: "dXaJXN4Bx",
-    ValetAppointments: "p7lXERDK",
+    ValetAppointments: "-p7lXERDK",
     MobileServiceAppointments: "KILliymYmVIBMazCnOQMG",
     CustomerBehavior: "psDZZLXdRm3CJXaZUPbnm",
     RepairOrderPerformance: "oK0YxEfcoDkhsmMtFjGxo",
