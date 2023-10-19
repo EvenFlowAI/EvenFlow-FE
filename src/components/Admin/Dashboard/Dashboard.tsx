@@ -195,7 +195,7 @@ export const AdminDashboard: React.FC = () => {
     }));
 
     const items: TItem[] = [
-        {label: "Address HEllo OLeg", icon: <AddressIcon />, action: onOpenAddress},
+        {label: "Address", icon: <AddressIcon />, action: onOpenAddress},
         {label: "Hours of operation", icon: <HoursIcon />, action: onOpenHOO},
         {label: "Employee Schedule", icon: <EmployeeScheduleIcon />, action: onOpenEmployeeSchedule},
         {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
