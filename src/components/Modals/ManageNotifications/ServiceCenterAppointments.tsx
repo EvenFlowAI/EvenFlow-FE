@@ -26,6 +26,7 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort|null>(null);
     const [scData, setScData] = useState<TSCNotifications|null>(initialSCNotifications);
     const [selectedEmployees, setSelectedEmployees] = useState<IAdvisorShort[]>([]);
+    const [formChecked, setFormChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const classes = useNotificationStyles();
@@ -35,20 +36,24 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     useEffect(() => {
         let changesAreSaved = true;
         if (scNotifications || scData) {
-            const employeesListIsDifferent = scNotifications?.employees?.find(el => !scData?.employees?.includes(el))
-                || scData?.employees?.find(el => !scNotifications?.employees?.includes(el))
-            const listsLengthIsDifferent = Number(scData?.employees?.length) !== Number(scNotifications?.employees?.length)
+            if (currentEmployee) {
+                changesAreSaved = false
+            } else {
+                const employeesListIsDifferent = scNotifications?.employees?.find(el => !scData?.employees?.includes(el))
+                    || scData?.employees?.find(el => !scNotifications?.employees?.includes(el))
+                const listsLengthIsDifferent = Number(scData?.employees?.length) !== Number(scNotifications?.employees?.length)
 
-            if (Boolean(scData?.isActive) !== Boolean(scNotifications?.isActive)) {
-                changesAreSaved = false;
-            } else if (listsLengthIsDifferent) {
-                changesAreSaved = false;
-            } else if (employeesListIsDifferent) {
-                changesAreSaved = false;
+                if (Boolean(scData?.isActive) !== Boolean(scNotifications?.isActive)) {
+                    changesAreSaved = false;
+                } else if (listsLengthIsDifferent) {
+                    changesAreSaved = false;
+                } else if (employeesListIsDifferent) {
+                    changesAreSaved = false;
+                }
             }
         }
         setChangesState(prevState => ({...prevState, scNotificationsSaved: changesAreSaved}))
-    }, [scData, scNotifications])
+    }, [scData, scNotifications, currentEmployee])
 
     useEffect(() => {
         setScData(scNotifications)
@@ -60,25 +65,40 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     }, [usersShort, scData])
 
     const onEmployeeChange = (e: ChangeEvent<{}>, value: IAdvisorShort|null) => {
+        setFormChecked(false)
         setCurrentEmployee(value)
     }
 
     const onCancel = () => {
+        setFormChecked(false)
         setScData(scNotifications);
+        setCurrentEmployee(null);
     }
 
-    const onSuccess = () => showMessage("Notifications for Service Center Appointments updated")
+    const onSuccess = () => {
+        showMessage("Notifications for Service Center Appointments updated");
+        setCurrentEmployee(null);
+        setFormChecked(false)
+    }
 
     const onSave = () => {
-        if (selectedSC && scData) dispatch(updateNotificationsByType(
-            selectedSC.id,
-            {...scData, notificationType: ENotificationType.ServiceCenter},
-            onSuccess,
-            showError
-        ))
+        setFormChecked(true)
+        if (currentEmployee && !scData?.employees?.includes(currentEmployee.id)) {
+            showError("Please add or remove Selected Employee")
+        } else {
+            if (selectedSC && scData) {
+                dispatch(updateNotificationsByType(
+                    selectedSC.id,
+                    {...scData, notificationType: ENotificationType.ServiceCenter},
+                    onSuccess,
+                    showError
+                ))
+            }
+        }
     }
 
     const handleSwitch = () => {
+        setFormChecked(false)
         setScData(prevState => {
             const data: TSCNotifications|null = {...prevState} ?? {}
             return {...data, isActive: data ? !data.isActive : true}
@@ -86,6 +106,7 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     }
 
     const onAddEmployee = () => {
+        setFormChecked(false)
         if (currentEmployee) {
             setScData(prevState => {
                 const data: TSCNotifications|null = {...prevState} ?? {}
@@ -99,6 +120,7 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     }
 
     const deleteEmployee = (id: string) => {
+        setFormChecked(false)
         setScData(prevState => {
             if (prevState) {
                 return {...prevState, employees: prevState?.employees ? prevState?.employees.filter(el => el !== id) : []}
@@ -131,7 +153,8 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
                         onChange={onEmployeeChange}
                         renderInput={autocompleteRender({
                             label: "Assign Employee",
-                            placeholder: 'Select'
+                            placeholder: 'Select',
+                            error: Boolean(currentEmployee && !scData?.employees?.includes(currentEmployee?.id) && formChecked)
                         })}
                     />
                     <Button

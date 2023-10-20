@@ -58,6 +58,14 @@ const App = () => {
         }
     }, [scProfile])
 
+    useEffect(() => {
+        caches.keys().then((names) => {
+            names.forEach((name) => {
+                caches.delete(name);
+            });
+        })
+    }, [])
+
     const handleClose = (key: React.ReactText) => () => {
         notificationsRef?.current?.closeSnackbar(key);
     }

@@ -67,6 +67,6 @@ export enum EScheduler {
 
 export type TScheduler = {
     id?: string;
-    type: EScheduler;
+    type?: EScheduler;
     fullName: string;
 }

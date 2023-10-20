@@ -146,6 +146,60 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
     }
 }
 
+export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: number|null, appointment: IAppointmentByKey): AppThunk => (dispatch, getState) => {
+    dispatch(setConsultantsLoading(true))
+    const {
+        maintenancePackageOption,
+        serviceRequests,
+        serviceCategories,
+        address,
+        zipCode
+    } = appointment;
+    const {selectedVehicle, selectedRecalls, valueService, sideBarSteps} = getState().appointmentFrame;
+    const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
+    if (selectedVehicle) {
+        const data: IConsultantsRequestData = {
+            serviceCenterId: decodeSCID(id),
+            pageIndex: 0,
+            pageSize: 0,
+            serviceRequestIds: serviceRequests.map(item => item.id),
+            recalls: mapRecallsForRequest(selectedRecalls),
+            serviceCategoryIds: serviceCategories ? serviceCategories.map(item => item.id) : [],
+            maintenancePackageOption,
+            serviceTypeOptionId,
+            searchTerm: "",
+            vehicle: {
+                vin: selectedVehicle.vin,
+                year: selectedVehicle.year,
+                make: selectedVehicle.make,
+                model: selectedVehicle.model,
+                mileage: selectedVehicle.mileage,
+                engineTypeId: selectedVehicle.engineTypeId,
+            },
+            address,
+            zipCode,
+        }
+        if (valueService?.selectedService) {
+            data.valueServiceOfferIds = [valueService.selectedService.id];
+        }
+        Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+            Api.endpoints.ServiceConsultants.GetByQuery, {data})
+            .then(({data: {result}}) => {
+                dispatch(setConsultants(result));
+                if (!result.length) {
+                    dispatch(setAdvisorAvailable(false));
+                } else {
+                    if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
+                        dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
+                        dispatch(setAdvisorAvailable(true));
+                    }
+                }
+            })
+            .catch(err => console.log(err))
+            .finally(() => dispatch(setConsultantsLoading(false)))
+    }
+}
+
 export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void): AppThunk => async (dispatch, getState) => {
     dispatch(setConsultantsLoading(true))
     const {selectedPackage, packagePricingType, packageEMenuType, selectedRecalls, selectedVehicle, address, zipCode, valueService,
@@ -166,46 +220,48 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
                 ? {optionType: packageEMenuType}
                 : null;
         const serviceRequestIds = collectServiceRequestIds(service, subService, null, selectedSR)
-        const data: IConsultantsRequestData = {
-            serviceCenterId: decodeSCID(id),
-            pageIndex: 0,
-            pageSize: 0,
-            serviceRequestIds,
-            recalls: mapRecallsForRequest(selectedRecalls),
-            serviceCategoryIds,
-            maintenancePackageOption,
-            serviceTypeOptionId,
-            searchTerm: "",
-            vehicle: {
-                vin: selectedVehicle.vin,
-                year: selectedVehicle.year,
-                make: selectedVehicle.make,
-                model: selectedVehicle.model,
-                mileage: selectedVehicle.mileage,
-                engineTypeId: selectedVehicle.engineTypeId,
-            },
-            address: typeof address === 'string' ? address : address?.label ?? '',
-            zipCode,
-        }
-        if (valueService?.selectedService) {
-            data.valueServiceOfferIds = [valueService.selectedService.id];
-        }
-        Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-            Api.endpoints.ServiceConsultants.GetByQuery, {data})
-            .then(({data: {result}}) => {
-                dispatch(setConsultants(result));
-                if (!result.length) {
-                    onEmptyList && onEmptyList()
-                    dispatch(setAdvisorAvailable(false));
-                } else {
-                    if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
-                        dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
-                        dispatch(setAdvisorAvailable(true));
+        if (serviceRequestIds.length || maintenancePackageOption || serviceCategoryIds.length || selectedRecalls.length) {
+            const data: IConsultantsRequestData = {
+                serviceCenterId: decodeSCID(id),
+                pageIndex: 0,
+                pageSize: 0,
+                serviceRequestIds,
+                recalls: mapRecallsForRequest(selectedRecalls),
+                serviceCategoryIds,
+                maintenancePackageOption,
+                serviceTypeOptionId,
+                searchTerm: "",
+                vehicle: {
+                    vin: selectedVehicle.vin,
+                    year: selectedVehicle.year,
+                    make: selectedVehicle.make,
+                    model: selectedVehicle.model,
+                    mileage: selectedVehicle.mileage,
+                    engineTypeId: selectedVehicle.engineTypeId,
+                },
+                address: typeof address === 'string' ? address : address?.label ?? '',
+                zipCode,
+            }
+            if (valueService?.selectedService) {
+                data.valueServiceOfferIds = [valueService.selectedService.id];
+            }
+            Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+                Api.endpoints.ServiceConsultants.GetByQuery, {data})
+                .then(({data: {result}}) => {
+                    dispatch(setConsultants(result));
+                    if (!result.length) {
+                        onEmptyList && onEmptyList()
+                        dispatch(setAdvisorAvailable(false));
+                    } else {
+                        if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
+                            dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
+                            dispatch(setAdvisorAvailable(true));
+                        }
                     }
-                }
-            })
-            .catch(err => console.log(err))
-            .finally(() => dispatch(setConsultantsLoading(false)))
+                })
+                .catch(err => console.log(err))
+                .finally(() => dispatch(setConsultantsLoading(false)))
+        }
     }
 }
 
@@ -669,7 +725,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         zipCode: appointmentFrame.zipCode ?? null,
         address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
         recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
-        createType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
+        schedulerType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
         notes: appointmentFrame.appointmentNotes,
         addressData: {
             address: appointmentFrame.streetName ?? '',
@@ -678,7 +734,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         }
     };
 
-    if (isAdmin) delete data.createType;
+    if (isAdmin) delete data.schedulerType;
 
     const endpoint = appointmentFrame.hashKey
         ? Api.endpoints.Appointments.UpdateByKey
