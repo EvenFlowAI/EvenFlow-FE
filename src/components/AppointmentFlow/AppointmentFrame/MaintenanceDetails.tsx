@@ -55,8 +55,8 @@ const useStyles = makeStyles(() => ({
 }))
 
 let year = moment.utc().year()
-if (moment().month() > 9) year = moment.utc().add(1, 'year').year();
-const YEARS = 23;
+if (moment().month() > 6) year = moment.utc().add(1, 'year').year();
+const YEARS = year - 1982;
 export const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 
 type TOptionsState = {[s: string]: string[]};
