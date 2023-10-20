@@ -22,7 +22,7 @@ import CapacityManagementPerformance from "../../../qrveyEndUser/CapacityManagem
 export const DashboardsIds = {
     AppointmentSummary: "Bioab5mEC",
     ShopLoading: "dXaJXN4Bx",
-    ValetAppointments: "p7lXERDK",
+    ValetAppointments: "-p7lXERDK",
     MobileServiceAppointments: "KILliymYmVIBMazCnOQMG",
     CustomerBehavior: "psDZZLXdRm3CJXaZUPbnm",
     RepairOrderPerformance: "oK0YxEfcoDkhsmMtFjGxo",
@@ -47,7 +47,7 @@ const ReportingPage: React.FC<{}> = ({}) => {
 
     return <div style={{display: "block", width: "100%"}}>
         <TitleContainer title={Titles.Reporting} pad/>
-        {config.qv_token && (!window.origin.includes("apps.evenflow.ai") || currentUser?.isSuperUser)
+        {config.qv_token && (!window.origin.includes("apps.evenflow.ai") || currentUser?.role === "Super Admin")
             ? <Switch>
                 <Route
                     exact

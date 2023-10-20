@@ -10,7 +10,7 @@ export type TSCNotifications = {
 }
 
 export type TNotifications = {
-    id?: number|null;
+    id: number;
     usersList?: string[];
 }
 

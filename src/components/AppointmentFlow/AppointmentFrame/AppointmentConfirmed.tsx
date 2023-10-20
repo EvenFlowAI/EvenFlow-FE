@@ -248,7 +248,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
 
     const getPriceContent = (): string => {
         let price  = t('Will be quoted at the dealership');
-        if (!Number.isNaN(transactionValue)) {
+        if (!Number.isNaN(transactionValue) && transactionValue > 0) {
             price = scProfile?.isRoundPrice
                 ? `$${transactionValue}`
                 : `$${transactionValue.toFixed(2)}`

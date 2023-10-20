@@ -123,7 +123,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     }, [currentUser, pathname]);
 
     useEffect(() => {
-        if ((!window.origin.includes("apps.evenflow.ai") || currentUser?.isSuperUser)
+        if ((!window.origin.includes("apps.evenflow.ai") || currentUser?.role === "Super Admin")
             && !MainLinksWithSub.find(el => el.to === Routes.Admin.Reporting)) {
             MainLinksWithSub.push(
                 {to: Routes.Admin.Reporting, name: "Reporting", roles: ["Owner", "Manager", "Service Director", "Super Admin"], subLinks: [
