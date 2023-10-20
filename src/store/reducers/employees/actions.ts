@@ -90,7 +90,7 @@ export const changePaging = changePagingGeneric("Employees/ChangePaging");
 
 export const removeEmployee = (id: string): AppThunk => async (dispatch) => {
     await Api.call(Api.endpoints.Users.Remove, {urlParams: {id}});
-    dispatch(loadAll());
+    dispatch(loadByFilters())
 }
 export const updateEmployee = (data: IEmployeeForm, id: string, avatar?: File): AppThunk => async dispatch => {
     dispatch(saving(true));
@@ -195,7 +195,7 @@ export const loadUsersShort = (serviceCenterId: number): AppThunk => dispatch =>
             }
         })
         .catch(err => {
-            console.log('load users short error')
+            console.log('load users short error', err)
         })
         .finally(() => dispatch(loading(false)))
 }
