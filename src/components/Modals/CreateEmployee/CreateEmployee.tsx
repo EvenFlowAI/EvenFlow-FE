@@ -187,9 +187,11 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
         const isValid = checkIsValid();
         if (isValid) {
             let data: IEmployeeForm | IUserForm;
+            const advisorData = {...advisorForm};
+            delete advisorData.serviceCenter
             if (role !== Roles.Technician) {
                 data = {
-                    ...advisorForm,
+                    ...advisorData,
                     dmsId: advisorForm?.dmsId ?? null,
                     serviceCenterId: advisorForm.serviceCenter?.id || null
                 } as IUserForm;

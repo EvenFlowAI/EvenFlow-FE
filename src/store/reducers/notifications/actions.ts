@@ -63,8 +63,6 @@ export const updateTransportationNotifications = (
     onError: TArgCallback<{err: string}>): AppThunk => dispatch => {
     const {isActive, transportationOptions} = data
     Api.call(Api.endpoints.Notifications.UpdateForTransportation, {
-        urlParams: {id},
-        // todo change name field
         data: {serviceCenterId: id, transportationEmployees: transportationOptions, isActive}
     })
         .then(result => {
