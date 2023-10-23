@@ -28,7 +28,7 @@ import {INewPackage, IUpdatedPackage, TAssignedRequest} from "../../../store/red
 import AddComplimentary from "./parts/AddComplimentary/AddComplimentary";
 import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
 import {
-    loadAllAssignedServiceRequests,
+    loadAllAssignedServiceRequests, loadUpsellServiceRequests,
 } from "../../../store/reducers/serviceRequests/actions";
 import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import Mileage from "./parts/Mileage/Mileage";
@@ -245,12 +245,15 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     const dispatch = useDispatch();
     const showError = useException();
 
+    console.log(upsellCodes)
+
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadMakes(selectedSC.id));
             dispatch(loadMileage(selectedSC.id))
             dispatch(loadEngineType(selectedSC.id))
             isEditing && dispatch(loadAllAssignedServiceRequests(selectedSC.id));
+            dispatch(loadUpsellServiceRequests(selectedSC.id));
         }
     }, [dispatch, selectedSC, isEditing])
 
