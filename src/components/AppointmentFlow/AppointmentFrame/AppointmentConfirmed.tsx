@@ -467,7 +467,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         if (vehicle) {
             if (customerLoadedData) {
                 await dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
-                await dispatch(clearAppointmentData())
+                await dispatch(clearAppointmentData(true))
                 await dispatch(setServiceOptionChanged(false));
                 await dispatch(setUserType(EUserType.Existing))
             }

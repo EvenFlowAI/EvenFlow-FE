@@ -36,6 +36,10 @@ const ReturningSelfCustomer: React.FC<TProps> = ({loading, onComplete}) => {
         onComplete(serviceType, EUserType.Existing);
     }
 
+    const onKeyUp = (e: React.KeyboardEvent) => {
+        if (e.keyCode === 13) handleComplete().then()
+    }
+
     return <Grid item xs={12} sm={12} md={6}>
         <div className={classes.existing}>
             <span>{t("I`m a returning customer")}</span>
@@ -45,6 +49,7 @@ const ReturningSelfCustomer: React.FC<TProps> = ({loading, onComplete}) => {
                 InputProps={{disableUnderline: true}}
                 variant="standard"
                 onChange={handleChange}
+                onKeyUp={onKeyUp}
                 value={customerEnteredEmail}
                 fullWidth/>
             <LoadingButton
