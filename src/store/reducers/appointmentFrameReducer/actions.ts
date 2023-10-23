@@ -301,7 +301,8 @@ export const loadServiceOffers = (year: number, seriesId: number, modelId: numbe
         .finally(() => dispatch(setOffersLoading(false)))
 }
 
-export const clearSelectedServices = (): AppThunk => (dispatch) => {
+export const clearSelectedServices = (keepCategories?: boolean): AppThunk => (dispatch) => {
+    !keepCategories && dispatch(selectCategoriesIds([]));
     dispatch(setPackage(null));
     dispatch(setPackageIsSelected(false));
     dispatch(setSelectedPackageOptionType(null));
@@ -310,7 +311,6 @@ export const clearSelectedServices = (): AppThunk => (dispatch) => {
     dispatch(selectService(null));
     dispatch(selectSubService(null));
     dispatch(setValueService(null));
-    dispatch(selectCategoriesIds([]));
     dispatch(selectSR(null));
     dispatch(setAdvisor(null));
     dispatch(getSlotsConsultantId(null));
@@ -320,8 +320,8 @@ export const clearSelectedServices = (): AppThunk => (dispatch) => {
     dispatch(setAdditionalServicesChosen(false));
 }
 
-export const clearAppointmentData = (): AppThunk => (dispatch) => {
-    dispatch(clearSelectedServices());
+export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dispatch) => {
+    dispatch(clearSelectedServices(keepCategories));
     dispatch(selectAppointment(null));
     dispatch(selectServiceValetAppointment(null));
     dispatch(setTiming(null));
@@ -447,14 +447,16 @@ export const updateRecalls = (data: IAppointmentByKey, id: string): AppThunk => 
         recalls,
         maintenancePackageOption,
         serviceRequests,
-        serviceTypeOption
+        serviceTypeOption,
+        serviceCategories
     } = data;
     if (vehicle?.vin && scProfile && recalls?.length) {
         if (vehicle?.makeId) dispatch(updateSelectedRecalls(scProfile.id, vehicle.vin, vehicle.makeId, recalls))
         const serviceType = serviceTypeOption?.type === EServiceType.MobileService
             ? EServiceType.MobileService
             : EServiceType.VisitCenter;
-        if (!maintenancePackageOption && !serviceRequests.length) {
+        const recallCategorySelected = serviceCategories.length === 1 && serviceCategories[0]?.type === EServiceCategoryType.OpenRecalls
+        if (!maintenancePackageOption && !serviceRequests.length && recallCategorySelected) {
             Api.call<PaginatedAPIResponse<IServiceCategory>>(
                 Api.endpoints.ServiceCategories.GetByQuery,
                 {data: {
