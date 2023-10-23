@@ -68,6 +68,7 @@ export enum Roles {
     Technician='Technician',
     Owner='Owner',
     Manager='Manager',
+    ServiceDirector='Service Director'
 }
 
 export const userRoles: TRole[] = [
