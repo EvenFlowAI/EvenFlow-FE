@@ -1,27 +1,29 @@
 import React, {useEffect, useState} from 'react';
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
-import {styled, Theme} from "@material-ui/core";
+import {styled, Theme, Tooltip} from "@material-ui/core";
 import {TArgCallback} from "../../../types/types";
 import moment from "moment";
 import {TSlot} from "./AppointmentTimeSelector";
 import {useTranslation} from "react-i18next";
 import {ReactComponent as ClockIcon} from "../../../assets/img/clock-black.svg";
 import {ReactComponent as ClockIconWhite} from "../../../assets/img/clock-white.svg";
+import {HtmlTooltip} from "./ServiceCard";
 
 type TSlotsWrapperProps = {
     available?: boolean,
     selected?: boolean,
-    offPeak?: boolean
+    offPeak?: boolean,
+    isWaitList?: boolean,
 }
 
-const Wrapper = styled(({available, offPeak, selected, ...props}) => <div {...props}/>)<Theme, TSlotsWrapperProps>(({theme, available, offPeak, selected}) => ({
+const Wrapper = styled(({available, offPeak, selected, isWaitList, ...props}) => <div {...props}/>)<Theme, TSlotsWrapperProps>(({theme, available, offPeak, selected, isWaitList}) => ({
     display: "flex",
     alignItems: "center",
     fontWeight: "bold",
     textTransform: "uppercase",
     flexDirection: "column",
     gap: "6px",
-    opacity: available ? 1 : .3,
+    opacity: available || isWaitList ? 1 : .3,
     cursor: "pointer",
     '& .availability': {
         minHeight: 80,
@@ -34,9 +36,19 @@ const Wrapper = styled(({available, offPeak, selected, ...props}) => <div {...pr
         padding: '9px 20px',
         border: `1px solid ${(offPeak && selected)
             ? "#237243" : offPeak
-                ? "#89E5AB" : selected
-                    ? '#000000' : '#DADADA'}`,
-        background: selected ? "#000000" : offPeak ? "#DEFFDF" : "transparent",
+                ? "#89E5AB" 
+                : isWaitList
+                    ? "#CE690B"
+                    : selected
+                        ? '#000000'
+                        : '#DADADA'}`,
+        background: selected
+            ? "#000000"
+            : offPeak
+                ? "#DEFFDF"
+                : isWaitList
+                    ? "#FFE6CF"
+                    : "transparent",
         '& > svg': {
             marginBottom: 4
         },
@@ -73,6 +85,12 @@ type TProps = {
     date: moment.Moment|null;
 }
 
+export const TimeSlotWithTooltip: React.FC<TProps> = (props) => {
+    const {t} = useTranslation();
+    const title = t("Expected completion time for your vehicle cannot be provided with Waitlist Only appointments");
+    return <HtmlTooltip enterTouchDelay={0} title={title} placement="right-end"><TimeSlotCard {...props}/></HtmlTooltip>
+}
+
 export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selected, date}) => {
         const [timePassed, setTimePassed] = useState<boolean>(false);
         const {t} = useTranslation();
@@ -91,6 +109,9 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
         }, [slot, date])
 
         const getContent = (timePassed: boolean): string => {
+            if (slot?.isOverbookingApplied) {
+                return t ("Waitlist only")
+            }
             if (!slot || timePassed) {
                 return t("Not Available");
             }
@@ -101,9 +122,11 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
         }
 
         const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
+        const isWaitList = Boolean(slot?.isOverbookingApplied);
         return (
             <Wrapper
                 available={Boolean(slot) && !timePassed}
+                isWaitList={isWaitList}
                 selected={selected}
                 offPeak={isOffPeak && !timePassed}
                 onClick={() => timePassed ? {} : onSelect(slot ?? null)}

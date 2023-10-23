@@ -135,6 +135,7 @@ export interface IAppointmentSlot {
     priceWithOffer?: IPrice;
     offer?: IOffer;
     isShorterWaitTime: boolean;
+    isOverbookingApplied?: boolean;
 }
 export interface ISearchedDateRange {
     from: ParsableDate;

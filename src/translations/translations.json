@@ -335,7 +335,9 @@
       "You do not have any services selected in your appointment. Please add items you wish to have serviced": "You do not have any services selected in your appointment. Please add items you wish to have serviced",
       "Back to Visit Center": "Back to Visit Center",
       "Service Address": "Service Address",
-      "Pick Up Address": "Pick Up Address"
+      "Pick Up Address": "Pick Up Address",
+      "Waitlist only": "Waitlist only",
+      "Expected completion time for your vehicle cannot be provided with Waitlist Only appointments": "Expected completion time for your vehicle cannot \u2028be provided with Waitlist Only appointments"
     }
   },
   "es": {
