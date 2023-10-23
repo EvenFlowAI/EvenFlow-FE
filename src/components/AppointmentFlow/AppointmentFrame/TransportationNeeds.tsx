@@ -10,7 +10,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {ITransportation} from '../../../api/types';
-import {TArgCallback, TCallback} from "../../../types/types";
+import {TArgCallback} from "../../../types/types";
 import {
     setCurrentFrameScreen,
     setTransportation
@@ -100,10 +100,9 @@ type TTransportationProps = {
     selectedTransportation: ITransportation|null;
     active?: boolean;
     options: ITransportation[]|null;
-    onSelect: TCallback;
     onSelectOption: TArgCallback<ITransportation>;
 }
-const TransportationCard: React.FC<TTransportationProps> = ({selectedTransportation, transportation, active, options, onSelectOption, onSelect}) => {
+const TransportationCard: React.FC<TTransportationProps> = ({selectedTransportation, transportation, active, options, onSelectOption}) => {
     const {t} = useTranslation();
 
     const handleClick = (t: ITransportation) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -111,7 +110,7 @@ const TransportationCard: React.FC<TTransportationProps> = ({selectedTransportat
         onSelectOption(t);
     }
 
-    return <CardWrapper onClick={onSelect} active={active}>
+    return <CardWrapper active={active}>
         {transportation}
         {(active && options)
             ? <CardOptions>{options.map(option => {
@@ -254,12 +253,12 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         handleNext(o);
     }
 
-    const handleSelectGeneric = (column: ETransportColumn) => {
-        const options = transportations.filter(item => item.column === column);
-        if (options.length) {
-            dispatch(setTransportation(options[0]));
-        }
-    }
+    // const handleSelectGeneric = (column: ETransportColumn) => {
+    //     const options = transportations.filter(item => item.column === column);
+    //     if (options.length) {
+    //         dispatch(setTransportation(options[0]));
+    //     }
+    // }
 
     const handleBack = () => {
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
@@ -278,7 +277,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                         selectedTransportation={transportation}
                         transportation={`${t("No, I will")}:`}
                         options={transportationNo}
-                        onSelect={() => handleSelectGeneric(ETransportColumn.No)}
                         onSelectOption={handleSelectOption}
                     /> : null}
                     {transportationYes.length ? <TransportationCard
@@ -286,7 +284,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                         options={transportationYes}
                         selectedTransportation={transportation}
                         transportation={`${t("Yes, I would like")}:`}
-                        onSelect={() => handleSelectGeneric(ETransportColumn.Yes)}
                         onSelectOption={handleSelectOption}
                     /> : null}
             </TransportationWrapper>
