@@ -195,6 +195,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
                     dmsId: advisorForm?.dmsId ?? null,
                     serviceCenterId: advisorForm.serviceCenter?.id || null
                 } as IUserForm;
+                if (advisorData.role === "Service Director") delete data.serviceCenterId;
             } else {
                 data = {
                     firstName: technicianForm.firstName,
