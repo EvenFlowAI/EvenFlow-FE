@@ -104,18 +104,24 @@ const OrderIndex: React.FC<TOrderIndex> = ({onClose, open}) => {
 
     const onSubmit = () => {
         if (currentPackage) {
-            dispatch(updateComplimentaryOrderIndex(
-                currentPackage.id,
-                complimentary.map(item => ({id: item.id, orderIndex: item.orderIndex})),
-                showError))
-            dispatch(updateSROrderIndex(
-                currentPackage.id,
-                serviceRequests.map(item => ({id: item.id, orderIndex: item.orderIndex})),
-                showError))
-            dispatch(updateUpsellOrderIndex(
-                currentPackage.id,
-                upsell.map(item => ({id: item.id, orderIndex: item.orderIndex})),
-                showError))
+            if (complimentary.length) {
+                dispatch(updateComplimentaryOrderIndex(
+                    currentPackage.id,
+                    complimentary.map(item => ({id: item.id, orderIndex: item.orderIndex})),
+                    showError))
+            }
+            if (serviceRequests.length) {
+                dispatch(updateSROrderIndex(
+                    currentPackage.id,
+                    serviceRequests.map(item => ({id: item.id, orderIndex: item.orderIndex})),
+                    showError))
+            }
+            if (upsell.length) {
+                dispatch(updateUpsellOrderIndex(
+                    currentPackage.id,
+                    upsell.map(item => ({id: item.id, orderIndex: item.orderIndex})),
+                    showError))
+            }
         }
     }
 
