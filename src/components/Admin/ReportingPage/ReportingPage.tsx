@@ -3,7 +3,7 @@ import {Titles} from "../../../config/constants";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {IEndUserConfig} from "../../../qrveyEndUser/types";
 import {Api} from "../../../config/requests";
-import {useCurrentUser, useSCs} from "../../../utils/hooks";
+import {useSCs} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
 import {Redirect, Route, Switch} from "react-router-dom";
 import ShopLoading from "../../../qrveyEndUser/ShopLoading";
@@ -13,6 +13,8 @@ import MobileServiceAppointments from "../../../qrveyEndUser/MobileServiceAppoin
 import CustomerBehavior from "../../../qrveyEndUser/CustomerBehavior";
 import RepairOrderPerformance from "../../../qrveyEndUser/RepairOrderPerformance";
 import CapacityManagementPerformance from "../../../qrveyEndUser/CapacityManagementPerfomance";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 // const configObject = {
 //     appid: 'jjaR5hX2q',
@@ -29,14 +31,12 @@ export const DashboardsIds = {
     CapacityManagementPerformance: "nO0UhbMtl58MxO59VCC3x",
 }
 
-const superRoles = ["Super Admin", "Owner"]
-
 const ReportingPage: React.FC<{}> = ({}) => {
     const [config, setConfig] = useState<IEndUserConfig>({
         domain: 'https://pcuxl.qrveyapp.com',
     })
     const {selectedSC} = useSCs();
-    const currentUser = useCurrentUser();
+    const {isSuperAdmin} = useSelector((state: RootState) => state.users)
 
     useEffect(() => {
         if (selectedSC) {
@@ -49,7 +49,7 @@ const ReportingPage: React.FC<{}> = ({}) => {
 
     return <div style={{display: "block", width: "100%"}}>
         <TitleContainer title={Titles.Reporting} pad/>
-        {config.qv_token && (!window.origin.includes("apps.evenflow.ai") || (currentUser && superRoles.includes(currentUser?.role)))
+        {config.qv_token && (!window.origin.includes("apps.evenflow.ai") || isSuperAdmin)
             ? <Switch>
                 <Route
                     exact
