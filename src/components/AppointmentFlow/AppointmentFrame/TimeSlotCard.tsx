@@ -25,6 +25,7 @@ const Wrapper = styled(({available, offPeak, selected, isWaitList, ...props}) =>
     gap: "6px",
     opacity: available || isWaitList ? 1 : .3,
     cursor: "pointer",
+    userSelect: 'none',
     '& .availability': {
         minHeight: 80,
         display: "flex",
@@ -34,20 +35,26 @@ const Wrapper = styled(({available, offPeak, selected, isWaitList, ...props}) =>
         justifyContent: "center",
         color: selected ? '#FFFFFF' : theme.palette.text.primary,
         padding: '9px 20px',
-        border: `1px solid ${(offPeak && selected)
-            ? "#237243" : offPeak
-                ? "#89E5AB" 
-                : isWaitList
-                    ? "#CE690B"
-                    : selected
-                        ? '#000000'
-                        : '#DADADA'}`,
+        borderRadius: 2,
+        border: `1px solid ${selected
+            ? offPeak 
+                ? "#237243" 
+                : isWaitList 
+                    ? '' 
+                    : '#000000'
+            : isWaitList
+                ? "#CE690B"
+                : offPeak
+                    ? "#89E5AB"
+                    : '#DADADA'}`,
         background: selected
-            ? "#000000"
-            : offPeak
-                ? "#DEFFDF"
-                : isWaitList
-                    ? "#FFE6CF"
+            ? isWaitList
+                ? "#CE690B"
+                : "#000000"
+            : isWaitList
+                ? "#FFE6CF"
+                : offPeak
+                    ? "#DEFFDF"
                     : "transparent",
         '& > svg': {
             marginBottom: 4
@@ -85,45 +92,41 @@ type TProps = {
     date: moment.Moment|null;
 }
 
-export const TimeSlotWithTooltip: React.FC<TProps> = (props) => {
+export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selected, date}) => {
+    const [timePassed, setTimePassed] = useState<boolean>(false);
     const {t} = useTranslation();
     const title = t("Expected completion time for your vehicle cannot be provided with Waitlist Only appointments");
-    return <HtmlTooltip enterTouchDelay={0} title={title} placement="right-end"><TimeSlotCard {...props}/></HtmlTooltip>
-}
+    const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
+    const isWaitList = Boolean(slot?.isOverbookingApplied);
 
-export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selected, date}) => {
-        const [timePassed, setTimePassed] = useState<boolean>(false);
-        const {t} = useTranslation();
-
-        useEffect(() => {
-            if (slot?.date && moment(slot?.date).isSame(moment(), 'day') && moment(date).isSame(moment(), 'day')) {
-                const differenceInMSeconds = moment(slot?.date.format('YYYY-MM-DDTHH:mm:ss')).diff(moment());
-                if (differenceInMSeconds > 0) {
-                    setTimeout(() => setTimePassed(true), differenceInMSeconds);
-                } else {
-                    setTimePassed(true);
-                }
+    useEffect(() => {
+        if (slot?.date && moment(slot?.date).isSame(moment(), 'day') && moment(date).isSame(moment(), 'day')) {
+            const differenceInMSeconds = moment(slot?.date.format('YYYY-MM-DDTHH:mm:ss')).diff(moment());
+            if (differenceInMSeconds > 0) {
+                setTimeout(() => setTimePassed(true), differenceInMSeconds);
             } else {
-                setTimePassed(false);
+                setTimePassed(true);
             }
-        }, [slot, date])
-
-        const getContent = (timePassed: boolean): string => {
-            if (slot?.isOverbookingApplied) {
-                return t ("Waitlist only")
-            }
-            if (!slot || timePassed) {
-                return t("Not Available");
-            }
-            if (slot.price.amountOfSavingMoney) {
-                return `${t("Save")} $${slot.price.amountOfSavingMoney}`;
-            }
-            return t("Available");
+        } else {
+            setTimePassed(false);
         }
+    }, [slot, date])
 
-        const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
-        const isWaitList = Boolean(slot?.isOverbookingApplied);
-        return (
+    const getContent = (timePassed: boolean): string => {
+        if (slot?.isOverbookingApplied) {
+            return t ("Waitlist only")
+        }
+        if (!slot || timePassed) {
+            return t("Not Available");
+        }
+        if (slot.price.amountOfSavingMoney) {
+            return `${t("Save")} $${slot.price.amountOfSavingMoney}`;
+        }
+        return t("Available");
+    }
+
+    return isWaitList
+        ? <HtmlTooltip enterTouchDelay={0} title={title} placement="right-end">
             <Wrapper
                 available={Boolean(slot) && !timePassed}
                 isWaitList={isWaitList}
@@ -137,5 +140,18 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
                     {getContent(timePassed)}
                 </div>
             </Wrapper>
-        );
-    };
+        </HtmlTooltip>
+        : <Wrapper
+            available={Boolean(slot) && !timePassed}
+            isWaitList={isWaitList}
+            selected={selected}
+            offPeak={isOffPeak && !timePassed}
+            onClick={() => timePassed ? {} : onSelect(slot ?? null)}
+        >
+            <div>{timeSlot.label}</div>
+            <div className="availability">
+                { selected ? <ClockIconWhite/>:<ClockIcon/>}
+                {getContent(timePassed)}
+            </div>
+        </Wrapper>
+};

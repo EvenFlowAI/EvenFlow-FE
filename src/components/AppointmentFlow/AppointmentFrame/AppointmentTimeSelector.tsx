@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import moment from "moment";
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
-import {TimeSlotCard, TimeSlotWithTooltip} from "./TimeSlotCard";
+import {TimeSlotCard} from "./TimeSlotCard";
 import {styled} from "@material-ui/core";
 import {Loading} from "../../UI/Loading";
 import {TGroupedAppointment} from "../../../utils/types";
@@ -141,25 +141,15 @@ export const AppointmentTimeSelector: React.FC<TProps> =
                             const appointment = appointments?.appointments.find(
                                 a => a.date.isSame(timeSlot.date, 'minute')
                             );
-                            return appointment?.isOverbookingApplied
-                                ? <TimeSlotWithTooltip
-                                    date={date}
-                                    slot={appointment}
-                                    onSelect={handleSelect}
-                                    selected={Boolean(
-                                        selectedAppointment && appointment?.id === selectedAppointment.id
-                                    )}
-                                    timeSlot={timeSlot}
-                                    key={timeSlot.label}/>
-                                : <TimeSlotCard
-                                    date={date}
-                                    slot={appointment}
-                                    onSelect={handleSelect}
-                                    selected={Boolean(
-                                        selectedAppointment && appointment?.id === selectedAppointment.id
-                                    )}
-                                    timeSlot={timeSlot}
-                                    key={timeSlot.label}
+                            return <TimeSlotCard
+                                date={date}
+                                slot={appointment}
+                                onSelect={handleSelect}
+                                selected={Boolean(
+                                    selectedAppointment && appointment?.id === selectedAppointment.id
+                                )}
+                                timeSlot={timeSlot}
+                                key={timeSlot.label}
                             />
                         })}
                     </TimeSlotsWrapper>
