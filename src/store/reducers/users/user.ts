@@ -7,10 +7,12 @@ type IUsersState = {
     currentUser?: ICurrentUser,
     saving: boolean,
     loading: boolean;
+    isSuperAdmin: boolean;
 }
 const initialState: IUsersState = {
     saving: false,
     loading: false,
+    isSuperAdmin: false,
 }
 
 export function usersReducer(state=initialState, action: TUserActions): IUsersState {
@@ -25,7 +27,9 @@ export function usersReducer(state=initialState, action: TUserActions): IUsersSt
                     additional.isSuperUser = true;
                 }
             }
-            return {...state, currentUser: {
+            return {...state,
+                isSuperAdmin: action.payload.role === superUser,
+                currentUser: {
                 ...action.payload,
                 ...additional
             }};
