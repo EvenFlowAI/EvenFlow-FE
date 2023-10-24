@@ -151,6 +151,11 @@ export const DateWrapper = styled('div')(({theme}) => ({
     }
 }))
 
+const WaitListLabel = () => {
+    const { appointment} = useSelector((state: RootState) => state.appointment);
+    return appointment?.isOverbookingApplied ? <div style={{color: "#CE690B", fontWeight: 400, fontSize: 16}}>Waitlist Only</div> : null
+}
+
 export const SelectedAppointment = () => {
     const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
     const { appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
@@ -201,6 +206,7 @@ export const SelectedAppointment = () => {
                             : null}
                     <React.Fragment>
                         {!isSm && Boolean(price) && <Prices price={price} ancillaryPrice={ancillaryPrice}/>}
+                        <WaitListLabel/>
                         {/*todo uncomment for offer new functionality*/}
                         {/*{!isSm && Boolean(appointment?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">*/}
                         {/*  <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>*/}

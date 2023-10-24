@@ -129,7 +129,7 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
         ? <HtmlTooltip enterTouchDelay={0} title={title} placement="right-end">
             <Wrapper
                 available={Boolean(slot) && !timePassed}
-                isWaitList={isWaitList}
+                isWaitList={isWaitList && !timePassed}
                 selected={selected}
                 offPeak={isOffPeak && !timePassed}
                 onClick={() => timePassed ? {} : onSelect(slot ?? null)}
@@ -143,7 +143,7 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
         </HtmlTooltip>
         : <Wrapper
             available={Boolean(slot) && !timePassed}
-            isWaitList={isWaitList}
+            isWaitList={isWaitList && !timePassed}
             selected={selected}
             offPeak={isOffPeak && !timePassed}
             onClick={() => timePassed ? {} : onSelect(slot ?? null)}
