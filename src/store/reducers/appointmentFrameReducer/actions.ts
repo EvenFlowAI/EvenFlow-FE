@@ -455,7 +455,7 @@ export const updateRecalls = (data: IAppointmentByKey, id: string): AppThunk => 
         const serviceType = serviceTypeOption?.type === EServiceType.MobileService
             ? EServiceType.MobileService
             : EServiceType.VisitCenter;
-        const recallCategorySelected = serviceCategories.length === 1 && serviceCategories[0]?.type === EServiceCategoryType.OpenRecalls
+        const recallCategorySelected = serviceCategories?.length === 1 && serviceCategories[0]?.type === EServiceCategoryType.OpenRecalls
         if (!maintenancePackageOption && !serviceRequests.length && recallCategorySelected) {
             Api.call<PaginatedAPIResponse<IServiceCategory>>(
                 Api.endpoints.ServiceCategories.GetByQuery,
