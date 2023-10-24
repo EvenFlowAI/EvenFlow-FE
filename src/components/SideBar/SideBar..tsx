@@ -110,7 +110,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     const {onClose: onModalClose, isOpen, onOpen} = useModal();
 
     const currentUser = useCurrentUser();
-    const { loading } = useSelector((state: RootState) => state.users);
+    const { loading, isSuperAdmin } = useSelector((state: RootState) => state.users);
     const {pathname} = useLocation();
     const {selectedSC} = useSCs();
     const history = useHistory();
@@ -123,7 +123,7 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     }, [currentUser, pathname]);
 
     useEffect(() => {
-        if ((!window.origin.includes("apps.evenflow.ai") || currentUser?.role === "Super Admin")
+        if ((!window.origin.includes("apps.evenflow.ai") || isSuperAdmin)
             && !MainLinksWithSub.find(el => el.to === Routes.Admin.Reporting)) {
             MainLinksWithSub.push(
                 {to: Routes.Admin.Reporting, name: "Reporting", roles: ["Owner", "Manager", "Service Director", "Super Admin"], subLinks: [
