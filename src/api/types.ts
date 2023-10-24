@@ -302,6 +302,7 @@ export interface IAppointmentCustomerInfo {
     fullName?: string;
     email?: string;
     phoneNumber?: string;
+    dmsId?: string;
 }
 
 export interface IAppointmentVehicle {
@@ -309,6 +310,12 @@ export interface IAppointmentVehicle {
     make: string;
     model: string;
     year: number;
+    dmsId?: string;
+}
+
+export type TDateAppointmentData = {
+    date: ParsableDate;
+    scheduler: TScheduler;
 }
 
 export interface IAppointment {
@@ -333,6 +340,7 @@ export interface IAppointment {
     notes?: string;
     scheduler: TScheduler;
     isEditable: boolean;
+    modificationInfo: TDateAppointmentData[];
 }
 
 export interface ISearchCustomerParams {

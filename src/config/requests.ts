@@ -165,7 +165,7 @@ type ApiRoutes = {
         | "GetByQuery" | "PackageOptions" | "ByVehicle" | "GetShortByQuery" | "GetOptionsByQuery" | "ChangePricingDisplayType"
         | "UpdateSRDescription" | "UpdateComplimentaryDescription" | "UpdateSROrder" | "UpdateComplimentaryOrder"
         | "SetShowSuggestedPrice" | "SetManualOverride" | "UpdatePriceTitles" | "UpdateUpsellOrder" | "UpdateSegmentTitles", TApiRoute>,
-    Notifications: Record<"GetAll" | "UpdateForPod" | "UpdateByType", TApiRoute>,
+    Notifications: Record<"GetAll" | "UpdateForPod" | "UpdateByType" | "UpdateForTransportation", TApiRoute>,
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiRoute>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiRoute>,
@@ -177,6 +177,7 @@ type ApiRoutes = {
         | "DeleteServiceRequestPricingSettings" | "AddServiceRequests" | "GetPackagePricingSettings" | "ChangePackagePricingSettings"
         | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings"
         | "RemovePackagePricingSettings" | "UpdateMaxPrice", TApiRoute>,
+    Qrvey: Record<"GetToken", TApiRoute>,
     Recalls: Record<"GetAll" | "GetById" | "GetByVin" | "Create" | "Update" | "Remove", TApiRoute>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiRoute>,
@@ -371,9 +372,10 @@ export class Api {
             UpdateSegmentTitles: {route: "/maintenance-packages/{id}/segment-titles", method: "put"}
         },
         Notifications: {
-          GetAll: {route: "/appointment-notifications/{id}/configurations", method: "get"},
-          UpdateForPod: {route: "/appointment-notifications/pods", method: "post"},
-          UpdateByType: {route: "/appointment-notifications", method: "post"}
+            GetAll: {route: "/appointment-notifications/{id}/configurations", method: "get"},
+            UpdateForPod: {route: "/appointment-notifications/pods", method: "post"},
+            UpdateByType: {route: "/appointment-notifications", method: "post"},
+            UpdateForTransportation: {route: "/appointment-notifications/transportation-options", method: "post"},
         },
         OptimizationWindows: {
             GetParams: {route: "/optimization-windows", method: "get"},
@@ -390,6 +392,9 @@ export class Api {
             Edit: {route: "/offers/{id}", method: "put"},
             ChangeStatus: {route: "/offers/{id}/status", method: "patch"},
             Remove: {route: "/offers/{id}", method: "delete"},
+        },
+        Qrvey: {
+          GetToken: {route: "/qrvey/token", method: "post"}
         },
         Pods: {
             Create: {route: "/pods", method: "post"},

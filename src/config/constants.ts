@@ -68,10 +68,15 @@ export enum Roles {
     Technician='Technician',
     Owner='Owner',
     Manager='Manager',
+    ServiceDirector='Service Director'
 }
 
 export const userRoles: TRole[] = [
     "Manager", "Advisor", "Call Center Rep"
+];
+
+export const widerUserRoles: TRole[] = [
+    "Manager", "Advisor", "Call Center Rep", "Service Director"
 ];
 
 export enum Titles {

@@ -248,7 +248,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
 
     const getPriceContent = (): string => {
         let price  = t('Will be quoted at the dealership');
-        if (!Number.isNaN(transactionValue)) {
+        if (!Number.isNaN(transactionValue) && transactionValue > 0) {
             price = scProfile?.isRoundPrice
                 ? `$${transactionValue}`
                 : `$${transactionValue.toFixed(2)}`
@@ -467,7 +467,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         if (vehicle) {
             if (customerLoadedData) {
                 await dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
-                await dispatch(clearAppointmentData())
+                await dispatch(clearAppointmentData(true))
                 await dispatch(setServiceOptionChanged(false));
                 await dispatch(setUserType(EUserType.Existing))
             }
