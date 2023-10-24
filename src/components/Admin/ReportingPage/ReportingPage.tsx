@@ -29,6 +29,8 @@ export const DashboardsIds = {
     CapacityManagementPerformance: "nO0UhbMtl58MxO59VCC3x",
 }
 
+const superRoles = ["Super Admin", "Owner"]
+
 const ReportingPage: React.FC<{}> = ({}) => {
     const [config, setConfig] = useState<IEndUserConfig>({
         domain: 'https://pcuxl.qrveyapp.com',
@@ -47,7 +49,7 @@ const ReportingPage: React.FC<{}> = ({}) => {
 
     return <div style={{display: "block", width: "100%"}}>
         <TitleContainer title={Titles.Reporting} pad/>
-        {config.qv_token && (!window.origin.includes("apps.evenflow.ai") || currentUser?.role === "Super Admin")
+        {config.qv_token && (!window.origin.includes("apps.evenflow.ai") || (currentUser && superRoles.includes(currentUser?.role)))
             ? <Switch>
                 <Route
                     exact
