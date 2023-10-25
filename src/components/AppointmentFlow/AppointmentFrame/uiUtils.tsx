@@ -4,11 +4,12 @@ import {ISR} from "../../../store/reducers/appointment/types";
 import {IMaintenanceItem, IRecallByVin} from "./types";
 import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
 import {
-    EPackagePricingType,
+    EPackagePricingType, EServiceType,
     IValueService
 } from "../../../store/reducers/appointmentFrameReducer/types";
 import i18n from "../../../i18n";
 import {TPackagePrice} from "../../../store/reducers/packages/types";
+import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 
 export const getMaintenanceDescription = (
     srList: ISR[],
@@ -122,3 +123,27 @@ export const getMaintenanceList = (
     }
     return services;
 }
+
+export const getAddressLabel = (serviceType: EServiceType): string => {
+    switch (serviceType) {
+        case EServiceType.MobileService:
+            return i18n.t("Service Address");
+        case EServiceType.PickUpDropOff:
+            return i18n.t("Pick Up Address");
+        default:
+            return i18n.t("Address");
+    }
+}
+
+export const getServiceName = (serviceTypeOption: IFirstScreenOption|null, serviceType: EServiceType) => {
+    if (serviceTypeOption?.name) return serviceTypeOption?.name;
+    switch (serviceType) {
+        case EServiceType.MobileService:
+            return i18n.t("Mobile Service");
+        case EServiceType.PickUpDropOff:
+            return i18n.t("Pick Up / Drop Off Service");
+        default:
+            return i18n.t("Visit Center");
+    }
+}
+
