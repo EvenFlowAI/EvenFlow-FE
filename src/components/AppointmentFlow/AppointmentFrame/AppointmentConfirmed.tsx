@@ -265,19 +265,20 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     }
 
     const getDate = () => {
+        let date = moment.utc().format('ddd, MMM D, h:mm A');
         if (isServiceValetApp) {
-            return moment.utc(serviceValetAppointment?.date).format('ddd, MMM D')
+            date =  moment.utc(serviceValetAppointment?.date).format('ddd, MMM D')
         } else if (appointment) {
-            return appointment?.date.format('ddd, MMM D, h:mm A')
+            date = appointment?.date.format('ddd, MMM D, h:mm A')
         } else if (appointmentByKey?.dateInUtc) {
             if (appointmentByKey.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                return moment(appointmentByKey.dateInUtc).utc().format('ddd, MMM D')
+                date = moment(appointmentByKey.dateInUtc).utc().format('ddd, MMM D')
             } else {
                 const [hh, mm] = appointmentByKey.timeSlot.split(":")
-                return moment(appointmentByKey.dateInUtc).utc().set('hour', +hh).set('minute', +mm).format('ddd, MMM D, h:mm A')
+                date = moment(appointmentByKey.dateInUtc).utc().set('hour', +hh).set('minute', +mm).format('ddd, MMM D, h:mm A')
             }
         }
-        return moment.utc().format('ddd, MMM D, h:mm A');
+        return date;
     }
 
     const insertPickUpTime = useCallback((list: TItem[]): TItem[] => {
@@ -325,7 +326,12 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 label: isServiceValetApp || isServiceValetManage
                     ? t("Date")
                     : t("Date and time"),
-                content: getDate(),
+                content: appointment?.isOverbookingApplied
+                    ? [
+                        <div>{getDate()}</div>,
+                        <div style={{color: "#CE690B", marginTop: 12}}>{t("Waitlist only")}</div>
+                    ]
+                    : getDate(),
             },
             {
                 label: serviceType !== EServiceType.VisitCenter ? t("Location of service") : "",

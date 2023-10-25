@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
-import {styled, Theme, Tooltip} from "@material-ui/core";
+import {styled, Theme, Tooltip, withStyles} from "@material-ui/core";
 import {TArgCallback} from "../../../types/types";
 import moment from "moment";
 import {TSlot} from "./AppointmentTimeSelector";
 import {useTranslation} from "react-i18next";
 import {ReactComponent as ClockIcon} from "../../../assets/img/clock-black.svg";
 import {ReactComponent as ClockIconWhite} from "../../../assets/img/clock-white.svg";
-import {HtmlTooltip} from "./ServiceCard";
 
 type TSlotsWrapperProps = {
     available?: boolean,
@@ -36,17 +35,18 @@ const Wrapper = styled(({available, offPeak, selected, isWaitList, ...props}) =>
         color: selected ? '#FFFFFF' : theme.palette.text.primary,
         padding: '9px 20px',
         borderRadius: 2,
-        border: `1px solid ${selected
-            ? offPeak 
-                ? "#237243" 
-                : isWaitList 
-                    ? '' 
-                    : '#000000'
-            : isWaitList
-                ? "#CE690B"
-                : offPeak
-                    ? "#89E5AB"
-                    : '#DADADA'}`,
+        border: `1px solid ${
+            selected
+                ? isWaitList
+                    ? "#CE690B"
+                    : offPeak
+                        ? "#237243"
+                        : "#000000"
+                : isWaitList
+                    ? "#CE690B"
+                    : offPeak
+                        ? "#89E5AB"
+                        : '#DADADA'}`,
         background: selected
             ? isWaitList
                 ? "#CE690B"
@@ -92,6 +92,19 @@ type TProps = {
     date: moment.Moment|null;
 }
 
+const HtmlTooltip = withStyles({
+    tooltip: {
+        fontSize: 12,
+        color: '#202021',
+        background: '#F7F8FB',
+        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.25)',
+        padding: 8,
+    },
+    popper: {
+        borderRadius: 2,
+    }
+})(Tooltip);
+
 export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selected, date}) => {
     const [timePassed, setTimePassed] = useState<boolean>(false);
     const {t} = useTranslation();
@@ -126,8 +139,7 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
     }
 
     return isWaitList
-        ? <HtmlTooltip enterTouchDelay={0} title={title} placement="right-end">
-            <Wrapper
+        ? <Wrapper
                 available={Boolean(slot) && !timePassed}
                 isWaitList={isWaitList && !timePassed}
                 selected={selected}
@@ -135,12 +147,13 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
                 onClick={() => timePassed ? {} : onSelect(slot ?? null)}
             >
                 <div>{timeSlot.label}</div>
+                <HtmlTooltip title={title} placement="right-end" id={slot?.time} enterDelay={0} enterNextDelay={0} enterTouchDelay={0}>
                 <div className="availability">
                     { selected ? <ClockIconWhite/>:<ClockIcon/>}
                     {getContent(timePassed)}
                 </div>
+                </HtmlTooltip>
             </Wrapper>
-        </HtmlTooltip>
         : <Wrapper
             available={Boolean(slot) && !timePassed}
             isWaitList={isWaitList && !timePassed}

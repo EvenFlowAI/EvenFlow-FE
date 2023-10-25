@@ -104,5 +104,6 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
                     : null}
             </div>
             : null}
+        {appointment?.isOverbookingApplied ? <div style={{color: "#CE690B", marginTop: 8}}>{t("Waitlist only")}</div> : null}
     </div>
 };
