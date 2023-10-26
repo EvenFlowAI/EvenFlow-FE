@@ -131,7 +131,9 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         }
                     >
                         <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
-                        {schedulerList.map(scheduler => {
+                        {[...schedulerList]
+                            .sort((a, b) => a.fullName.localeCompare(b.fullName))
+                            .map(scheduler => {
                             return <MenuItem key={scheduler?.id ?? scheduler?.fullName} value={scheduler.id ?? scheduler?.fullName}>{scheduler?.fullName ?? ''}</MenuItem>
                         })}
                     </Select>
@@ -148,7 +150,9 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         }
                     >
                         <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
-                        {serviceBookList.map(serviceBook => {
+                        {[...serviceBookList]
+                            .sort((a, b) => a.name.localeCompare(b.name))
+                            .map(serviceBook => {
                             return <MenuItem key={serviceBook.id} value={serviceBook.id ?? serviceBook.name}>{serviceBook.name}</MenuItem>
                         })}
                     </Select>
