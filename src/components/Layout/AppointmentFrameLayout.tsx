@@ -63,11 +63,10 @@ import {useTranslation} from "react-i18next";
 import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPage";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 import {TView} from "../Welcome/types";
-import {getTrimmedKey, SCREENS} from "../AppointmentFlow/AppointmentFrame/utils";
+import {SCREENS} from "../AppointmentFlow/AppointmentFrame/utils";
 import {IServiceRequestShort} from "../../store/reducers/serviceRequests/types";
 import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig/actions";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
-import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
 import {loadEngineType, loadMileage} from "../../store/reducers/vehicleDetails/actions";
 import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
@@ -196,12 +195,11 @@ export const AppointmentFrameLayout = () => {
 
     const onUpdateAppointment = useCallback(async(car: ILoadedVehicle) => {
         const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
-        const trimmedKey = getTrimmedKey(key);
         setLoadingCar(true);
         dispatch(setAppointmentSaving(true))
         setServiceCategoryPage(EServiceCategoryPage.Page1)
         try {
-            const {data} = await API.appointment.getByKey(trimmedKey);
+            const {data} = await API.appointment.getByKey(key);
             await dispatch(updateRecalls(data, id));
             await dispatch(setUpdateAppointment(data));
             await dispatch(setAppointmentByKey(data));
@@ -226,6 +224,14 @@ export const AppointmentFrameLayout = () => {
         updateRecalls, updatePackageOption, goToServiceTypeSelection,
         isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes, isAuth])
 
+    const onCarIsValid = () => {
+        const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
+        if (someRequestsSelected) {
+            dispatch(setAdvisor(null));
+            dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
+        }
+    }
+
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
     useStorage();
@@ -236,11 +242,7 @@ export const AppointmentFrameLayout = () => {
     }, [id])
 
     useEffect(() => {
-        const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
-        if (someRequestsSelected && selectedVehicle) {
-            dispatch(setAdvisor(null));
-            dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
-        }
+        dispatch(checkCarIsValid(onCarIsValid))
     }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle])
 
     useEffect(() => {
@@ -301,10 +303,6 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (currentConfig && serviceTypeOption?.transportationOption) dispatch(setTransportationAvailable(false));
     }, [serviceTypeOption, currentConfig])
-
-    useEffect(() => {
-        if (currentUser && scProfile) dispatch(loadShortSC(false, scProfile.dealershipId));
-    }, [currentUser, scProfile])
 
     useEffect(() => {
         dispatch(getCurrentUser(true))

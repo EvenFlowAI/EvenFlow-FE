@@ -7,6 +7,7 @@ import {useTranslation} from "react-i18next";
 import {useSelectedAppointmentStyles} from "../SelectedAppointment";
 import {selectAppointment, selectServiceValetAppointment} from "../../../../store/reducers/appointment/actions";
 import {
+    checkCarIsValid,
     loadConsultants,
     setAdvisor,
     setCurrentFrameScreen,
@@ -29,7 +30,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         selectedServiceOptions,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-    const { config, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const {t} = useTranslation();
     const classes = useSelectedAppointmentStyles();
@@ -110,12 +111,14 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
             dispatch(setServiceTypeOption(option));
             dispatch(setAdvisor(null));
 
-            if (shouldLoadAdvisors) {
-                dispatch(loadConsultants(id, option.id, () => {
-                    showAdvisorScreen = false;
-                    dispatch(setAdvisorAvailable(false))
-                }));
-            }
+            dispatch(checkCarIsValid(() => {
+                if (shouldLoadAdvisors) {
+                    dispatch(loadConsultants(id, option.id, () => {
+                        showAdvisorScreen = false;
+                        dispatch(setAdvisorAvailable(false))
+                    }));
+                }
+            }))
             clearAppointment(option);
             if (option?.type === EServiceType.PickUpDropOff) {
                 redirectToLocation(option, showAdvisorScreen);
