@@ -157,46 +157,49 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
     } = appointment;
     const {selectedVehicle, selectedRecalls, valueService, sideBarSteps} = getState().appointmentFrame;
     const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
+    const recalls = mapRecallsForRequest(selectedRecalls);
     if (selectedVehicle) {
-        const data: IConsultantsRequestData = {
-            serviceCenterId: decodeSCID(id),
-            pageIndex: 0,
-            pageSize: 0,
-            serviceRequestIds: serviceRequests.map(item => item.id),
-            recalls: mapRecallsForRequest(selectedRecalls),
-            serviceCategoryIds: serviceCategories ? serviceCategories.map(item => item.id) : [],
-            maintenancePackageOption,
-            serviceTypeOptionId,
-            searchTerm: "",
-            vehicle: {
-                vin: selectedVehicle.vin,
-                year: selectedVehicle.year,
-                make: selectedVehicle.make,
-                model: selectedVehicle.model,
-                mileage: selectedVehicle.mileage,
-                engineTypeId: selectedVehicle.engineTypeId,
-            },
-            address,
-            zipCode,
-        }
-        if (valueService?.selectedService) {
-            data.valueServiceOfferIds = [valueService.selectedService.id];
-        }
-        Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-            Api.endpoints.ServiceConsultants.GetByQuery, {data})
-            .then(({data: {result}}) => {
-                dispatch(setConsultants(result));
-                if (!result.length) {
-                    dispatch(setAdvisorAvailable(false));
-                } else {
-                    if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
-                        dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
-                        dispatch(setAdvisorAvailable(true));
+        if (serviceRequests?.length || maintenancePackageOption || serviceCategories?.length || recalls?.length) {
+            const data: IConsultantsRequestData = {
+                serviceCenterId: decodeSCID(id),
+                pageIndex: 0,
+                pageSize: 0,
+                serviceRequestIds: serviceRequests.map(item => item.id),
+                recalls,
+                serviceCategoryIds: serviceCategories ? serviceCategories.map(item => item.id) : [],
+                maintenancePackageOption,
+                serviceTypeOptionId,
+                searchTerm: "",
+                vehicle: {
+                    vin: selectedVehicle.vin,
+                    year: selectedVehicle.year,
+                    make: selectedVehicle.make,
+                    model: selectedVehicle.model,
+                    mileage: selectedVehicle.mileage,
+                    engineTypeId: selectedVehicle.engineTypeId,
+                },
+                address,
+                zipCode,
+            }
+            if (valueService?.selectedService) {
+                data.valueServiceOfferIds = [valueService.selectedService.id];
+            }
+            Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+                Api.endpoints.ServiceConsultants.GetByQuery, {data})
+                .then(({data: {result}}) => {
+                    dispatch(setConsultants(result));
+                    if (!result.length) {
+                        dispatch(setAdvisorAvailable(false));
+                    } else {
+                        if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
+                            dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
+                            dispatch(setAdvisorAvailable(true));
+                        }
                     }
-                }
-            })
-            .catch(err => console.log(err))
-            .finally(() => dispatch(setConsultantsLoading(false)))
+                })
+                .catch(err => console.log(err))
+                .finally(() => dispatch(setConsultantsLoading(false)))
+        }
     }
 }
 
@@ -219,14 +222,15 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
             : packageEMenuType !== null
                 ? {optionType: packageEMenuType}
                 : null;
+        const recalls = mapRecallsForRequest(selectedRecalls);
         const serviceRequestIds = collectServiceRequestIds(service, subService, null, selectedSR)
-        if (serviceRequestIds.length || maintenancePackageOption || serviceCategoryIds.length || selectedRecalls.length) {
+        if (serviceRequestIds.length || maintenancePackageOption || serviceCategoryIds.length || recalls.length) {
             const data: IConsultantsRequestData = {
                 serviceCenterId: decodeSCID(id),
                 pageIndex: 0,
                 pageSize: 0,
                 serviceRequestIds,
-                recalls: mapRecallsForRequest(selectedRecalls),
+                recalls,
                 serviceCategoryIds,
                 maintenancePackageOption,
                 serviceTypeOptionId,
