@@ -127,7 +127,7 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         onChange={handleSelectScheduler}
                         value={scheduler?.id ?? scheduler?.fullName ?? ''}
                         input={
-                            <TextField label='Shceduler'/>
+                            <TextField label='Scheduler'/>
                         }
                     >
                         <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
