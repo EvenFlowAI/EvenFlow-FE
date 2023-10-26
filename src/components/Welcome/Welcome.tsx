@@ -22,7 +22,7 @@ import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
-    loadMakes, setAddress,
+    setAddress,
     setServiceTypeOption, setShowServiceCentersList,
     setSideBarSteps,
     setUserType,
@@ -66,9 +66,8 @@ export const Welcome = () => {
     useStorage();
 
     useEffect(() => {
-       if (id) {
-           if (config?.length) dispatch(loadFirstScreenOptionsByQuery(decodeSCID(id)))
-           dispatch(loadMakes(decodeSCID(id)))
+       if (id && config?.length) {
+           dispatch(loadFirstScreenOptionsByQuery(decodeSCID(id)))
        }
     }, [id, config])
 

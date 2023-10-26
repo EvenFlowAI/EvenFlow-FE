@@ -122,12 +122,17 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
 
     useEffect(() => {
         if (appointment?.scProfile) {
-            dispatch(loadAllServiceCategories(appointment.scProfile.id));
             dispatch(loadCategoriesByQuery(appointment.scProfile.id))
             dispatch(loadSRs(appointment.scProfile.id))
-            dispatch(loadFirstScreenOptionsByQuery(appointment.scProfile.id))
         }
-    }, [appointment.scProfile, appointmentFrame.serviceTypeOption, id])
+    }, [appointment.scProfile, appointmentFrame.serviceTypeOption])
+
+    useEffect(() => {
+        if (appointment.scProfile) {
+            dispatch(loadFirstScreenOptionsByQuery(appointment.scProfile.id))
+            dispatch(loadAllServiceCategories(appointment.scProfile.id));
+        }
+    }, [appointment.scProfile])
 
     useEffect(() => {
         if (appointment?.scProfile && appointment.appointmentWasChanged) {

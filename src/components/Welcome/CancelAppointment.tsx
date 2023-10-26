@@ -44,9 +44,7 @@ export const CancelAppointment = () => {
 
     useEffect(() => {
         setLoading(true);
-        const lastIndex = id.lastIndexOf('==');
-        const trimmedKey = lastIndex > 0 ? id.slice(0, lastIndex).concat('==') : id;
-        API.appointment.getByKey(trimmedKey)
+        API.appointment.getByKey(id)
             .then(({data}) => {
                 setAppointment(data);
                 if (data.appointmentStatus === AppointmentStatus.Cancelled) {
@@ -70,9 +68,7 @@ export const CancelAppointment = () => {
     const handleCancel = async () => {
         setSaving(true);
         try {
-            const lastIndex = id.lastIndexOf('==');
-            const trimmedKey = lastIndex > 0 ? id.slice(0, lastIndex).concat('==') : id;
-            await API.appointment.cancelByKey(trimmedKey);
+            await API.appointment.cancelByKey(id);
             setTState("canceled");
         } catch (e) {
             showError(e);

@@ -11,6 +11,7 @@ import {
     setCustomerLoadedData
 } from "../../store/reducers/appointment/actions";
 import {
+    checkCarIsValid,
     clearAppointmentData, loadConsultants,
     setCurrentFrameScreen, setServiceOptionChanged,
     setServiceTypeOption,
@@ -169,7 +170,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     }
 
     const handleUpdateOption = (serviceOption: IFirstScreenOption) => {
-        dispatch(loadConsultants(id, serviceOption.id));
+        dispatch(checkCarIsValid(() => dispatch(loadConsultants(id, serviceOption.id))))
         if (serviceOption?.type === EServiceType.VisitCenter) {
             changeToVisitCenter()
         } else {
