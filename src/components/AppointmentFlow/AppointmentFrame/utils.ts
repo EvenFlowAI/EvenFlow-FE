@@ -325,6 +325,8 @@ export const parseGeoCode = (data: any[], addressString: string, mainText?: stri
     let address = mainText;
     let cityName = city?.short_name ?? '';
 
+    const postalCode = data.find(el => el?.types?.includes("postal_code"));
+
     if (cityName && !addressString.includes(cityName)) cityName = city?.long_name ?? '';
 
     if (city && secondaryText?.includes(city.long_name)) {
@@ -341,5 +343,5 @@ export const parseGeoCode = (data: any[], addressString: string, mainText?: stri
         cityName = secondaryText?.split(',')[0].trim();
     }
 
-    return {city: cityName ?? '', state: state?.short_name ?? '', address: address ?? ''}
+    return {city: cityName ?? '', state: state?.short_name ?? '', address: address ?? '', postalCode: postalCode?.long_name ?? ''}
 }

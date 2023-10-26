@@ -359,11 +359,12 @@ export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess:
         .finally(() => dispatch(setAncillaryPriceLoading(false)))
 }
 
-export const loadFilteredZip = (data: {serviceCenterId: number; search: string}): AppThunk => dispatch => {
+export const loadFilteredZip = (data: {serviceCenterId: number; search: string}, onSuccess?: (list:string[], postalCode: string) => void): AppThunk => dispatch => {
     dispatch(setAncillaryPriceLoading(true))
     Api.call(Api.endpoints.ZipCodes.GetFiltered, {data})
         .then(result => {
             if (result?.data?.zipCodes) dispatch(setFilteredZipCodes(result.data.zipCodes))
+            if (onSuccess) onSuccess(result.data.zipCodes, data.search)
         })
         .catch(err => {
             console.log('get zip codes by filter error', err)
