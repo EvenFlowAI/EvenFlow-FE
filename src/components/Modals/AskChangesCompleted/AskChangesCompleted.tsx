@@ -80,10 +80,13 @@ const AskChangesCompleted = () => {
     }
 
     const handleError = (e: any) => {
-        showError(e)
-        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
+        const timeSlotUnavailable = e.response?.data?.message?.toLowerCase().includes("time slot");
+        const dateForZoneUnavailable = e.response?.data?.message?.toLowerCase().includes("is not available for this geographic zone or for the date");
+        if (timeSlotUnavailable || dateForZoneUnavailable) {
             dispatch(setChangesCompletedOpen(false))
             currentScreen !== "appointmentSelection" && dispatch(setSlotsWarningOpen(true))
+        } else {
+            showError(e)
         }
     }
 
