@@ -120,6 +120,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
             : Boolean(appointment.scProfile?.emailRequirement?.customerSelfServiceEnabled)
     }, [currentUser, appointment.scProfile])
 
+
     useEffect(() => {
         if (appointment?.scProfile) {
             dispatch(loadAllServiceCategories(appointment.scProfile.id));
