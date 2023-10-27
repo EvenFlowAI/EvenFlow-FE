@@ -168,7 +168,9 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
 
     const handleError = (e: any) => {
         showError(e);
-        if (e.response?.data?.message?.toLowerCase().includes("time slot")) {
+        const timeSlotUnavailable = e.response?.data?.message?.toLowerCase().includes("time slot");
+        const dateForZoneUnavailable = e.response?.data?.message?.toLowerCase().includes("is not available for this geographic zone or for the date");
+        if (timeSlotUnavailable || dateForZoneUnavailable) {
             dispatch(setChangesCompletedOpen(false))
             dispatch(setSlotsWarningOpen(true))
         }
