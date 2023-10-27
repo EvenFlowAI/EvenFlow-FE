@@ -202,7 +202,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const onNextStep = () => {
         if (customerLoadedData?.isUpdating) {
-            changedToPickUpFromSlots
+            changedToPickUpFromSlots || zipCodeValue !== appointmentByKey?.zipCode
                 ? scProfile && dispatch(checkPodChanged(scProfile.id, showError))
                 : handleManagingFlow();
         } else {
@@ -282,10 +282,10 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const onBackFromManage = () => {
         setPrevServiceType()
+        restoreAddress()
         if (editingPosition === 'address') {
             dispatch(setCurrentFrameScreen('manageAppointment'))
         } else {
-            restoreAddress()
             goToFirstScreen().then()
         }
     }
