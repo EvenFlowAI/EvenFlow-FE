@@ -203,7 +203,8 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
         if (appointmentFrame.appointmentByKey) {
             dispatch(setAppointmentSaving(true))
             try {
-                await API.appointment.cancelByKey(appointmentFrame.appointmentByKey.hashKey);
+                const key = appointmentFrame.appointmentByKey.hashKey;
+                await API.appointment.cancelByKey(key);
                 await showMessage(
                     <div>
                         Your appointment has been canceled. <br/>

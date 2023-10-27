@@ -54,7 +54,7 @@ const CancelAppointmentConfirm: React.FC<DialogProps&{hashKey: string, loadData:
     const dialogClasses = useDialogStyles();
 
     useEffect(() => {
-        if (open) {
+        if (open && hashKey) {
             setLoading(true)
             API.appointment.getByKey(hashKey)
                 .then((res) => {

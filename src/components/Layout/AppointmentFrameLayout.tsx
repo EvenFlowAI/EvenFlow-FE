@@ -198,26 +198,28 @@ export const AppointmentFrameLayout = () => {
         setLoadingCar(true);
         dispatch(setAppointmentSaving(true))
         setServiceCategoryPage(EServiceCategoryPage.Page1)
-        try {
-            const {data} = await API.appointment.getByKey(key);
-            await dispatch(updateRecalls(data, id));
-            await dispatch(setUpdateAppointment(data));
-            await dispatch(setAppointmentByKey(data));
-            await dispatch(updatePackageOption(data.maintenancePackageOption))
-            await updateServiceRequests(data.serviceRequests);
-            const option = handleServiceTypeOption(data);
-            await dispatch(handleSideBarAppointmentUpdate());
-            await dispatch(loadConsultantsForUpdating(id, option?.id ?? null, data))
-            await dispatch(updateConsultant(data.advisor))
-            await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
-            await dispatch(checkCarIsValid());
-            if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
-        } catch (e) {
-            console.log(e)
-            showError(e);
-        } finally {
-            setLoadingCar(false);
-            dispatch(setAppointmentSaving(false))
+        if (key) {
+            try {
+                const {data} = await API.appointment.getByKey(key);
+                await dispatch(updateRecalls(data, id));
+                await dispatch(setUpdateAppointment(data));
+                await dispatch(setAppointmentByKey(data));
+                await dispatch(updatePackageOption(data.maintenancePackageOption))
+                await updateServiceRequests(data.serviceRequests);
+                const option = handleServiceTypeOption(data);
+                await dispatch(handleSideBarAppointmentUpdate());
+                await dispatch(loadConsultantsForUpdating(id, option?.id ?? null, data))
+                await dispatch(updateConsultant(data.advisor))
+                await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
+                await dispatch(checkCarIsValid());
+                if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
+            } catch (e) {
+                console.log(e)
+                showError(e);
+            } finally {
+                setLoadingCar(false);
+                dispatch(setAppointmentSaving(false))
+            }
         }
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
         handleServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,

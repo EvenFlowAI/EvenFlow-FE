@@ -44,19 +44,21 @@ export const CancelAppointment = () => {
 
     useEffect(() => {
         setLoading(true);
-        API.appointment.getByKey(id)
-            .then(({data}) => {
-                setAppointment(data);
-                if (data.appointmentStatus === AppointmentStatus.Cancelled) {
-                    setTState("already_canceled");
-                } else {
-                    setTState("new");
-                }
-            })
-            .catch(() => {
-                setTState("error");
-            })
-            .finally(() => { setLoading(false); })
+        if (id) {
+            API.appointment.getByKey(id)
+                .then(({data}) => {
+                    setAppointment(data);
+                    if (data.appointmentStatus === AppointmentStatus.Cancelled) {
+                        setTState("already_canceled");
+                    } else {
+                        setTState("new");
+                    }
+                })
+                .catch(() => {
+                    setTState("error");
+                })
+                .finally(() => { setLoading(false); })
+        }
     }, [id]);
 
     useEffect(() => {
