@@ -78,11 +78,9 @@ export const EditAppointment = () => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
                 dispatch(setUserType(EUserType.Existing))
                 dispatch(setUpdateAppointment(data));
-                const selectedMileage = mileage.find(el => el.value.toString() === vehicle?.mileage?.toString());
                 const vehicle: ILoadedVehicle = {
                     ...data.vehicle,
                     appointmentHashKeys: [data.hashKey],
-                    mileage: selectedMileage?.value ?? null
                 }
                 const customer: ICustomerLoadedData = {
                     ...data.driver,
