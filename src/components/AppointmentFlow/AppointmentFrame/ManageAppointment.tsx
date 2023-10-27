@@ -98,7 +98,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
         state.appointmentFrame,
         state.appointmentFrame.isAppointmentSaving,
     ]);
-    const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {isAdvisorAvailable, currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const [errors, setErrors] = useState<string[]>([]);
     const currentUser = useCurrentUser();
@@ -129,10 +129,13 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
 
     useEffect(() => {
         if (appointment.scProfile) {
-            dispatch(loadFirstScreenOptionsByQuery(appointment.scProfile.id))
             dispatch(loadAllServiceCategories(appointment.scProfile.id));
         }
-    }, [appointment.scProfile])
+    }, [appointment.scProfile, id])
+
+    useEffect(() => {
+        if (currentConfig && appointment.scProfile) dispatch(loadFirstScreenOptionsByQuery(appointment.scProfile.id))
+    }, [currentConfig, appointment.scProfile])
 
     useEffect(() => {
         if (appointment?.scProfile && appointment.appointmentWasChanged) {
@@ -167,12 +170,13 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     }
 
     const handleError = (e: any) => {
-        showError(e);
         const timeSlotUnavailable = e.response?.data?.message?.toLowerCase().includes("time slot");
         const dateForZoneUnavailable = e.response?.data?.message?.toLowerCase().includes("is not available for this geographic zone or for the date");
         if (timeSlotUnavailable || dateForZoneUnavailable) {
             dispatch(setChangesCompletedOpen(false))
             dispatch(setSlotsWarningOpen(true))
+        } else {
+            showError(e);
         }
         if (e.response?.data?.errors) {
             const data = [...e.response.data.errors]
