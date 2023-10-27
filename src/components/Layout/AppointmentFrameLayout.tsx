@@ -165,20 +165,17 @@ export const AppointmentFrameLayout = () => {
         }
     }
 
-    const handleServiceTypeOption = useCallback((data:IAppointmentByKey): IFirstScreenOption|null => {
+    const handleServiceTypeOption = useCallback((data:IAppointmentByKey) => {
         let needToShowService = needToShowServiceTypes;
-        let option: IFirstScreenOption|null = null;
         if (data.serviceTypeOption) {
             const optionExists = Boolean(firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id))
             if (optionExists) {
-                option = data.serviceTypeOption;
                 needToShowService = false;
                 dispatch(setServiceTypeOption(data.serviceTypeOption));
                 handleTransportationScreen(data.serviceTypeOption);
             }
         }
         setNeedToShowServiceTypes(needToShowService)
-        return option;
     }, [needToShowServiceTypes, firstScreenOptions])
 
     const goToServiceTypeSelection = useCallback(() => {
@@ -201,14 +198,15 @@ export const AppointmentFrameLayout = () => {
         if (key) {
             try {
                 const {data} = await API.appointment.getByKey(key);
+                const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
                 await dispatch(updateRecalls(data, id));
                 await dispatch(setUpdateAppointment(data));
                 await dispatch(setAppointmentByKey(data));
                 await dispatch(updatePackageOption(data.maintenancePackageOption))
                 await updateServiceRequests(data.serviceRequests);
-                const option = handleServiceTypeOption(data);
+                handleServiceTypeOption(data)
                 await dispatch(handleSideBarAppointmentUpdate());
-                await dispatch(loadConsultantsForUpdating(id, option?.id ?? null, data))
+                option && await dispatch(loadConsultantsForUpdating(id, option.id, data))
                 await dispatch(updateConsultant(data.advisor))
                 await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
                 await dispatch(checkCarIsValid());
@@ -257,10 +255,8 @@ export const AppointmentFrameLayout = () => {
     }, [firstScreenOptions, onlyVisitCenterOptionExists, hashKey])
 
     useEffect(() => {
-        if (selectedVehicle && customerLoadedData) {
-            if (customerLoadedData.fromSearchByName && customerLoadedData.isUpdating) {
-                onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
-            }
+        if (selectedVehicle && customerLoadedData?.isUpdating && currentUser) {
+            onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
         }
     }, [customerLoadedData, selectedVehicle])
 
