@@ -255,7 +255,7 @@ export const AppointmentFrameLayout = () => {
     }, [firstScreenOptions, onlyVisitCenterOptionExists, hashKey])
 
     useEffect(() => {
-        if (selectedVehicle && customerLoadedData?.isUpdating && currentUser) {
+        if (selectedVehicle && customerLoadedData?.isUpdating && customerLoadedData.fromSearchByName) {
             onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
         }
     }, [customerLoadedData, selectedVehicle])
