@@ -63,11 +63,10 @@ import {useTranslation} from "react-i18next";
 import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPage";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 import {TView} from "../Welcome/types";
-import {getTrimmedKey, SCREENS} from "../AppointmentFlow/AppointmentFrame/utils";
+import {SCREENS} from "../AppointmentFlow/AppointmentFrame/utils";
 import {IServiceRequestShort} from "../../store/reducers/serviceRequests/types";
 import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig/actions";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
-import {loadShortSC} from "../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../store/reducers/users/actions";
 import {loadEngineType, loadMileage} from "../../store/reducers/vehicleDetails/actions";
 import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
@@ -166,20 +165,17 @@ export const AppointmentFrameLayout = () => {
         }
     }
 
-    const handleServiceTypeOption = useCallback((data:IAppointmentByKey): IFirstScreenOption|null => {
+    const handleServiceTypeOption = useCallback((data:IAppointmentByKey) => {
         let needToShowService = needToShowServiceTypes;
-        let option: IFirstScreenOption|null = null;
         if (data.serviceTypeOption) {
             const optionExists = Boolean(firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id))
             if (optionExists) {
-                option = data.serviceTypeOption;
                 needToShowService = false;
                 dispatch(setServiceTypeOption(data.serviceTypeOption));
                 handleTransportationScreen(data.serviceTypeOption);
             }
         }
         setNeedToShowServiceTypes(needToShowService)
-        return option;
     }, [needToShowServiceTypes, firstScreenOptions])
 
     const goToServiceTypeSelection = useCallback(() => {
@@ -196,35 +192,45 @@ export const AppointmentFrameLayout = () => {
 
     const onUpdateAppointment = useCallback(async(car: ILoadedVehicle) => {
         const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
-        const trimmedKey = getTrimmedKey(key);
         setLoadingCar(true);
         dispatch(setAppointmentSaving(true))
         setServiceCategoryPage(EServiceCategoryPage.Page1)
-        try {
-            const {data} = await API.appointment.getByKey(trimmedKey);
-            await dispatch(updateRecalls(data, id));
-            await dispatch(setUpdateAppointment(data));
-            await dispatch(setAppointmentByKey(data));
-            await dispatch(updatePackageOption(data.maintenancePackageOption))
-            await updateServiceRequests(data.serviceRequests);
-            const option = handleServiceTypeOption(data);
-            await dispatch(handleSideBarAppointmentUpdate());
-            await dispatch(loadConsultantsForUpdating(id, option?.id ?? null, data))
-            await dispatch(updateConsultant(data.advisor))
-            await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
-            await dispatch(checkCarIsValid());
-            if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
-        } catch (e) {
-            console.log(e)
-            showError(e);
-        } finally {
-            setLoadingCar(false);
-            dispatch(setAppointmentSaving(false))
+        if (key) {
+            try {
+                const {data} = await API.appointment.getByKey(key);
+                const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
+                await dispatch(updateRecalls(data, id));
+                await dispatch(setUpdateAppointment(data));
+                await dispatch(setAppointmentByKey(data));
+                await dispatch(updatePackageOption(data.maintenancePackageOption))
+                await updateServiceRequests(data.serviceRequests);
+                handleServiceTypeOption(data)
+                await dispatch(handleSideBarAppointmentUpdate());
+                option && await dispatch(loadConsultantsForUpdating(id, option.id, data))
+                await dispatch(updateConsultant(data.advisor))
+                await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
+                await dispatch(checkCarIsValid());
+                if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
+            } catch (e) {
+                console.log(e)
+                showError(e);
+            } finally {
+                setLoadingCar(false);
+                dispatch(setAppointmentSaving(false))
+            }
         }
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
         handleServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
         updateRecalls, updatePackageOption, goToServiceTypeSelection,
         isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes, isAuth])
+
+    const onCarIsValid = () => {
+        const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
+        if (someRequestsSelected) {
+            dispatch(setAdvisor(null));
+            dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
+        }
+    }
 
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
@@ -241,11 +247,7 @@ export const AppointmentFrameLayout = () => {
 
 
     useEffect(() => {
-        const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
-        if (someRequestsSelected && selectedVehicle) {
-            dispatch(setAdvisor(null));
-            dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
-        }
+        dispatch(checkCarIsValid(onCarIsValid))
     }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle])
 
     useEffect(() => {
@@ -258,10 +260,8 @@ export const AppointmentFrameLayout = () => {
     }, [firstScreenOptions, onlyVisitCenterOptionExists, hashKey])
 
     useEffect(() => {
-        if (selectedVehicle && customerLoadedData) {
-            if (customerLoadedData.fromSearchByName && customerLoadedData.isUpdating) {
-                onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
-            }
+        if (selectedVehicle && customerLoadedData?.isUpdating && customerLoadedData.fromSearchByName) {
+            onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
         }
     }, [customerLoadedData, selectedVehicle])
 
@@ -306,10 +306,6 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         if (currentConfig && serviceTypeOption?.transportationOption) dispatch(setTransportationAvailable(false));
     }, [serviceTypeOption, currentConfig])
-
-    useEffect(() => {
-        if (currentUser && scProfile) dispatch(loadShortSC(false, scProfile.dealershipId));
-    }, [currentUser, scProfile])
 
     useEffect(() => {
         dispatch(getCurrentUser(true))

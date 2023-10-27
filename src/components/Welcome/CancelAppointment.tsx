@@ -44,21 +44,21 @@ export const CancelAppointment = () => {
 
     useEffect(() => {
         setLoading(true);
-        const lastIndex = id.lastIndexOf('==');
-        const trimmedKey = lastIndex > 0 ? id.slice(0, lastIndex).concat('==') : id;
-        API.appointment.getByKey(trimmedKey)
-            .then(({data}) => {
-                setAppointment(data);
-                if (data.appointmentStatus === AppointmentStatus.Cancelled) {
-                    setTState("already_canceled");
-                } else {
-                    setTState("new");
-                }
-            })
-            .catch(() => {
-                setTState("error");
-            })
-            .finally(() => { setLoading(false); })
+        if (id) {
+            API.appointment.getByKey(id)
+                .then(({data}) => {
+                    setAppointment(data);
+                    if (data.appointmentStatus === AppointmentStatus.Cancelled) {
+                        setTState("already_canceled");
+                    } else {
+                        setTState("new");
+                    }
+                })
+                .catch(() => {
+                    setTState("error");
+                })
+                .finally(() => { setLoading(false); })
+        }
     }, [id]);
 
     useEffect(() => {
@@ -70,9 +70,7 @@ export const CancelAppointment = () => {
     const handleCancel = async () => {
         setSaving(true);
         try {
-            const lastIndex = id.lastIndexOf('==');
-            const trimmedKey = lastIndex > 0 ? id.slice(0, lastIndex).concat('==') : id;
-            await API.appointment.cancelByKey(trimmedKey);
+            await API.appointment.cancelByKey(id);
             setTState("canceled");
         } catch (e) {
             showError(e);
