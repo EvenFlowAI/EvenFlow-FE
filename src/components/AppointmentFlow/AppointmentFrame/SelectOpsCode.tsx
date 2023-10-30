@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from "./StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
@@ -136,6 +136,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
     const debouncedSearch = useDebounce(searchInput);
     const showError = useException();
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
+    const allRequestsHavePrice = useMemo(() => opsCodesList.every(el => Boolean(el.price)), [opsCodesList])
 
     useEffect(() => {
         setSelectedOpsCodes(selectedSR);
@@ -295,7 +296,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
                         </CodeWrapper>
                     })}
                 </CodesWrapper>
-                <Caption title={t("The price for the service will be quoted at the dealership")}/>
+                {allRequestsHavePrice ? null : <Caption title={t("The price for the service will be quoted at the dealership")}/>}
             </Wrapper>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
             <Actions onBack={handleBack} nextDisabled={!selectedOpsCodes.length} onNext={handleNext} nextLabel={t("Next")}/>

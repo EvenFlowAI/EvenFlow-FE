@@ -316,11 +316,6 @@ export const prodParentLinks = [
     "https://www.performancetoyotastore.com/",
 ];
 
-export const getTrimmedKey = (key: string): string => {
-    const lastIndex = key.lastIndexOf('==');
-    return lastIndex > 0 ? key.slice(0, lastIndex).concat('==') : key;
-}
-
 export const parseGeoCode = (data: any[], addressString: string, mainText?: string, secondaryText?: string): TParsedAddress => {
     let city = data.find(el => el.types?.includes('locality'));
     if (!city) city = data.find(el => el.types?.includes('sublocality'));
@@ -329,6 +324,8 @@ export const parseGeoCode = (data: any[], addressString: string, mainText?: stri
     const state = data.find(el => el?.types?.includes("administrative_area_level_1"))
     let address = mainText;
     let cityName = city?.short_name ?? '';
+
+    const postalCode = data.find(el => el?.types?.includes("postal_code"));
 
     if (cityName && !addressString.includes(cityName)) cityName = city?.long_name ?? '';
 
@@ -346,5 +343,5 @@ export const parseGeoCode = (data: any[], addressString: string, mainText?: stri
         cityName = secondaryText?.split(',')[0].trim();
     }
 
-    return {city: cityName ?? '', state: state?.short_name ?? '', address: address ?? ''}
+    return {city: cityName ?? '', state: state?.short_name ?? '', address: address ?? '', postalCode: postalCode?.long_name ?? ''}
 }
