@@ -48,7 +48,6 @@ export const EditAppointment = () => {
         return state.appointment.scProfile?.id
     });
     const { allCategories } = useSelector((state: RootState) => state.categories);
-    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
 
     const history = useHistory();
     const dispatch = useDispatch();
@@ -111,7 +110,7 @@ export const EditAppointment = () => {
             .catch((e) => {
                 setState("error");
             })
-    }, [id, dispatch, history, allCategories, mileage]);
+    }, [id, dispatch, history, allCategories]);
 
     const handleCreateNew = () => {
         if (selectedSC) {

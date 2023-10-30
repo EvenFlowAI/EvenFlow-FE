@@ -215,7 +215,6 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
             return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
         })
         .map(item => item.id);
-
     if (selectedVehicle) {
         const maintenancePackageOption = selectedPackage
             ? {id: selectedPackage?.id, priceType: packagePricingType}
@@ -771,7 +770,7 @@ export const checkCarIsValid = (onCarIsValid = () => {}, onCarIsInvalid = () => 
         const models = makes.map(item => item.models).flat();
         if (!selectedVehicle.mileage) carIsValid = false;
         const existingMileage = mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
-        if (!existingMileage) carIsValid = false;
+        if (mileage.length && !existingMileage) carIsValid = false;
         const existingEngineType = engineTypes.find(item => item.id === selectedVehicle.engineTypeId);
         if (currentConfig?.engineType && (!existingEngineType || !selectedVehicle.engineTypeId)) carIsValid = false;
 
