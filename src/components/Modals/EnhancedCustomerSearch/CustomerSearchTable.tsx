@@ -196,6 +196,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
+    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [data, setData] = useState<ICustomerWithPhones[]>([]);
     const [sorting, setSorting] = useState<TSortOrder>({isAscending: true, order: null});
     const [isEdit, setEdit] = useState<boolean>(false);
@@ -221,13 +222,14 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
         const phoneNumbers = phoneNumber ? [phoneNumber] : [];
         const customerData = customers.find(el => el.vehicleId === item.vehicleId && el.customerId === item.customerId);
         if (customerData?.homePhone) phoneNumbers.push(customerData.homePhone);
+        const selectedMileage = mileage.find(el => el.value.toString() === item?.mileage?.toString());
         const vehicle = {
             vin: item.vin,
             make: item.make,
             model: item.model,
             year: item.year,
             appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
-            mileage: item.mileage ?? null,
+            mileage: selectedMileage?.value ?? null,
             dmsId: item.vehicleDmsId,
             hasRepairOrders: Boolean(item.hasOrders),
         }
