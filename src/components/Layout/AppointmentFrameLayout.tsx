@@ -112,7 +112,7 @@ export const AppointmentFrameLayout = () => {
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
+    const {engineTypes, mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const {currentConfig, isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
@@ -224,13 +224,13 @@ export const AppointmentFrameLayout = () => {
         updateRecalls, updatePackageOption, goToServiceTypeSelection,
         isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes, isAuth])
 
-    const onCarIsValid = () => {
+    const onCarIsValid = useCallback(() => {
         const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
         if (someRequestsSelected) {
             dispatch(setAdvisor(null));
             dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
         }
-    }
+    }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id])
 
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
@@ -243,7 +243,7 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         dispatch(checkCarIsValid(onCarIsValid))
-    }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle])
+    }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle, mileage])
 
     useEffect(() => {
         window.addEventListener('beforeunload', handleLogin)
@@ -258,7 +258,7 @@ export const AppointmentFrameLayout = () => {
         if (selectedVehicle && customerLoadedData?.isUpdating && customerLoadedData.fromSearchByName) {
             onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
         }
-    }, [customerLoadedData, selectedVehicle])
+    }, [customerLoadedData, selectedVehicle, firstScreenOptions])
 
     useEffect(() => {
         if (!customerLoadedData) {

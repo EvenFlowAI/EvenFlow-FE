@@ -48,7 +48,6 @@ export const EditAppointment = () => {
         return state.appointment.scProfile?.id
     });
     const { allCategories } = useSelector((state: RootState) => state.categories);
-    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
 
     const history = useHistory();
     const dispatch = useDispatch();
@@ -78,11 +77,9 @@ export const EditAppointment = () => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
                 dispatch(setUserType(EUserType.Existing))
                 dispatch(setUpdateAppointment(data));
-                const selectedMileage = mileage.find(el => el.value.toString() === vehicle?.mileage?.toString());
                 const vehicle: ILoadedVehicle = {
                     ...data.vehicle,
                     appointmentHashKeys: [data.hashKey],
-                    mileage: selectedMileage?.value ?? null
                 }
                 const customer: ICustomerLoadedData = {
                     ...data.driver,
@@ -113,7 +110,7 @@ export const EditAppointment = () => {
             .catch((e) => {
                 setState("error");
             })
-    }, [id, dispatch, history, allCategories, mileage]);
+    }, [id, dispatch, history, allCategories]);
 
     const handleCreateNew = () => {
         if (selectedSC) {
