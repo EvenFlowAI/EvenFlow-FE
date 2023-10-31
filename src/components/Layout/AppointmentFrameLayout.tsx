@@ -242,6 +242,11 @@ export const AppointmentFrameLayout = () => {
     }, [id])
 
     useEffect(() => {
+        dispatch(loadMileage(decodeSCID(id)));
+    }, [id, selectedVehicle])
+
+
+    useEffect(() => {
         dispatch(checkCarIsValid(onCarIsValid))
     }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle, mileage])
 
@@ -305,10 +310,6 @@ export const AppointmentFrameLayout = () => {
     useEffect(() => {
         dispatch(getCurrentUser(true))
     }, [])
-
-    useEffect(() => {
-        dispatch(loadMileage(decodeSCID(id)));
-    }, [id])
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {
         setCurrentScreen(name);

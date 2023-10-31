@@ -62,9 +62,9 @@ export const createMake = (data: ICreateMake): AppThunk => async dispatch => {
             })
 }
 
-export const loadMileage = (serviceCenterId: number): AppThunk => async dispatch => {
+export const loadMileage = (serviceCenterId: number): AppThunk => async (dispatch) => {
     dispatch(setLoading(true));
-    Api.call(Api.endpoints.Vehicles.GetMileage, {params: {serviceCenterId}})
+    Api.call<IMileage[]>(Api.endpoints.Vehicles.GetMileage, {params: {serviceCenterId}})
         .then(result => {
             if (result?.data) {
                 dispatch(getMileage(result.data));
