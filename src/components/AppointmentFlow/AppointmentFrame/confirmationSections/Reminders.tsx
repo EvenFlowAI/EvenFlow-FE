@@ -23,6 +23,7 @@ type TRemindersProps = {
 
 export const Reminders: React.FC<TRemindersProps> = ({isEmailRequired}) => {
     const {reminders, customer}= useSelector((state: RootState) => state.appointmentFrame);
+    const {scProfile}= useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const emailReminder = useMemo(() => {
@@ -47,22 +48,24 @@ export const Reminders: React.FC<TRemindersProps> = ({isEmailRequired}) => {
             dispatch(setReminders([...reminders, t]));
         }
     }
+
     return (
         <div>
             <ConfirmationTitle>{t("Reminders")}</ConfirmationTitle>
             <FlexGroup>
                 <FormControlLabel
                     label={t("Text")}
+                    disabled={!scProfile?.isSendReminders}
                     control={<Checkbox
-                        checked={reminders.includes(EReminderType.Sms)}
+                        checked={scProfile?.isSendReminders && reminders.includes(EReminderType.Sms)}
                         onChange={handleChange(EReminderType.Sms)}
                         color="primary" />}
                 />
                 <FormControlLabel
                     label={t("E-mail")}
                     control={<Checkbox
-                        disabled={!isEmailRequired && !customer?.email}
-                        checked={reminders.includes(EReminderType.Email)}
+                        disabled={!scProfile?.isSendReminders || (!isEmailRequired && !customer?.email)}
+                        checked={scProfile?.isSendReminders && reminders.includes(EReminderType.Email)}
                         onChange={handleChange(EReminderType.Email)}
                         color="primary" />}
                 />

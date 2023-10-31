@@ -28,6 +28,7 @@ export interface IServiceCenterProfile {
     serviceCenterFlag: number;
     isRoundPrice: boolean;
     isAuthRequired: boolean;
+    isSendReminders?: boolean;
     maintenancePackageDisclaimer?: string;
     isShowPriceDetails?: boolean;
     defaultVehicleMakeId?: number|null;
