@@ -72,7 +72,7 @@ const List = styled('ul')(({theme}) => ({
                 textDecoration: "none"
             }
         }
-    }
+    },
 }));
 
 const PriceWrapper = styled('div')(({ theme }) => ({

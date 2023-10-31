@@ -245,8 +245,6 @@ const AddPackage: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     const dispatch = useDispatch();
     const showError = useException();
 
-    console.log(upsellCodes)
-
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadMakes(selectedSC.id));

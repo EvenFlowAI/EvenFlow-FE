@@ -1,31 +1,21 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
-//import ReactGA from 'react-ga4';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import {StepWrapper} from "./StepWrapper";
-import {Button, styled} from "@material-ui/core";
+import {styled} from "@material-ui/core";
 import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {concatAddress, getCalendarUrl} from "../../../utils/utils";
-import {G_CALENDAR_FORMAT} from "../../../config/constants";
+import {concatAddress} from "../../../utils/utils";
 import {TArgCallback} from "../../../types/types";
-import {getMaintenanceDescription} from "./uiUtils";
-import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {getAddressLabel, getMaintenanceDescription, getServiceName} from "./uiUtils";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
-import {Routes} from "../../../config/routes";
-import {useHistory, useParams} from "react-router-dom";
-import {
-    clearAppointmentData,
-    setCurrentFrameScreen, setServiceOptionChanged,
-    setSideBarSteps,
-    setUserType,
-    setVehicle,
-    setWelcomeScreenView
-} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {useCurrentUser} from "../../../utils/hooks";
+import {setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {ILoadedVehicle} from "../../../api/types";
-import {setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {Loading} from "../../UI/Loading";
+import AddToCalendarButton from "./confirmedButtons/AddToCalendarButton";
+import ModifyButton from "./confirmedButtons/ModifyButton";
+import MakeNewButton from "./confirmedButtons/MakeNewButton";
 
 const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -114,7 +104,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         srList,
         selectedSR,
         scProfile,
-        s, ss,
+        s,
+        ss,
         selectedPackage,
         packagePricingType,
         packageEMenuType,
@@ -128,7 +119,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         valueService,
         engineTypes,
         selectedRecalls,
-        advisor,
         packagePriceTitles,
         dropOffSettings,
         customerLoadedData,
@@ -156,7 +146,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         state.appointmentFrame.valueService,
         state.vehicleDetails.engineTypes,
         state.appointmentFrame.selectedRecalls,
-        state.appointmentFrame.advisor,
         state.appointmentFrame.packagePriceTitles,
         state.appointment.dropOffSettings,
         state.appointment.customerLoadedData,
@@ -166,11 +155,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     ]);
 
     const {t} = useTranslation();
-    const history = useHistory();
-    const isFrame = window.top !== window.self;
-    const {id} = useParams();
     const dispatch = useDispatch();
-    const currentUser = useCurrentUser();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const servicesList = useMemo(() => {
@@ -193,6 +178,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
 
     const engine = useMemo(() => engineTypes.find(item => item.id === Number(vehicle?.engineTypeId)), [engineTypes, vehicle])
 
+    const serviceName = useMemo(() => getServiceName(serviceTypeOption, serviceType), [serviceTypeOption, serviceType])
+
     const vehicleData = vehicle?.year
         ? `${vehicle.year} ${vehicle.make} ${vehicle.model} ${engine?.name ?? ""}`
         : valueService?.year
@@ -203,8 +190,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         [serviceValetAppointment, serviceTypeOption]);
     const isServiceValetManage = useMemo(() => !Boolean(appointment) && serviceTypeOption?.type === EServiceType.PickUpDropOff && appointmentByKey,
         [appointment, serviceTypeOption]);
-    // const appointmentPrice = appointmentRequestsPrices
-    //     .reduce((prev, current) => prev + (current.priceValue ?? 0),0)
 
     useEffect(() => {
         ReactGA.event({
@@ -215,34 +200,11 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         dispatch(setWelcomeScreenView("select"));
     }, [dispatch])
 
-    const getServiceName = () => {
-        if (serviceTypeOption?.name) return serviceTypeOption?.name;
-        switch (serviceType) {
-            case EServiceType.MobileService:
-                return t("Mobile Service");
-            case EServiceType.PickUpDropOff:
-                return t("Pick Up / Drop Off Service");
-            default:
-                return t("Visit Center");
-        }
-    }
-
     const getAddress = (): string => {
         if (serviceType === EServiceType.VisitCenter) {
             return scProfile?.address ? concatAddress(scProfile?.address) : ""
         } else {
             return address ? `${typeof address === 'string' ? address : address?.label ?? ""} ${zipCode ? zipCode : ""}` : ""
-        }
-    }
-
-    const getAddressLabel = (): string => {
-        switch (serviceType) {
-            case EServiceType.MobileService:
-                return t("Service Address");
-            case EServiceType.PickUpDropOff:
-                return t("Pick Up Address");
-            default:
-                return t("Address");
         }
     }
 
@@ -335,10 +297,10 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
             },
             {
                 label: serviceType !== EServiceType.VisitCenter ? t("Location of service") : "",
-                content: serviceType !== EServiceType.VisitCenter ? getServiceName() : ""
+                content: serviceType !== EServiceType.VisitCenter ? serviceName : ""
             },
             {
-                label: getAddressLabel(),
+                label: getAddressLabel(serviceType),
                 content: getAddress(),
             },
             {
@@ -369,7 +331,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
 
         return insertPickUpTime(list);
     }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR,
-        isServiceValetApp, isServiceValetManage, insertPickUpTime]);
+        isServiceValetApp, isServiceValetManage, insertPickUpTime, serviceName, serviceType]);
 
     const getDateForUpdate = (): moment.Moment => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {
@@ -391,97 +353,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 : getDateForUpdate()
             : moment.utc(appointment?.date)
 
-    const getDateForCalendar = useCallback(() => {
-        let dateString: string = '';
-        if (isServiceValetApp) {
-            dateString = moment(date).format('ddd, MMM D');
-            const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('hh:mm A')} ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
-            dateString = dateString.concat('\n')
-            dateString = dateString.concat(pickUpTime)
-        } else {
-            if (serviceTypeOption?.type === EServiceType.PickUpDropOff && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                dateString = moment(date).format('ddd, MMM D');
-                const pickUpMin = appointmentByKey?.serviceValetTime?.pickUpMin;
-                const pickUpMax = appointmentByKey?.serviceValetTime?.pickUpMax;
-                if (pickUpMin && pickUpMax) {
-                    const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(pickUpMin, "HH:mm:ss").format('hh:mm A')} ${t("to")} ${moment.utc(pickUpMax, "HH:mm:ss").format('hh:mm A')}`
-                    dateString = dateString.concat('\n')
-                    dateString = dateString.concat(pickUpTime)
-                }
-            } else {
-                dateString = date.format('ddd, MMM D, h:mm A') ?? moment.utc().format('ddd, MMM D, h:mm A');
-            }
-        }
-        return dateString;
-    }, [isServiceValetApp, serviceValetAppointment, appointment, date, appointmentByKey, serviceTypeOption])
-
-    const calendarData: TItem[] = useMemo(() => {
-        const data = [
-        {
-            label: t('VEHICLE DETAILS'),
-            content: vehicleData,
-        },
-        {
-            label: t('SERVICE OPTION'),
-            content: getServiceName()
-        },
-        {
-            label: t('SELECTED DATE & TIME'),
-            content: getDateForCalendar(),
-        },
-        {
-            label: t('SERVICE REQUESTS'),
-            content: servicesList.map(item => item.includes('Going') ? t('My Description Of Need') : item).join(', '),
-        },
-        {
-            label: t('APPOINTMENT DETAILS'),
-            content: `Service Advisor: ${advisor?.name ?? t('Any Advisor')}`
-        },
-        {
-            label: t('DEALERSHIP CONTACT NUMBER'),
-            content: scProfile?.phoneNumber ?? '',
-        }
-    ];
-        if (serviceTypeOption?.type === EServiceType.MobileService) {
-            data.splice(4, 1);
-        }
-        return data
-    }, [vehicleData, getServiceName, getDateForCalendar, isServiceValetApp, servicesList, advisor, scProfile, serviceTypeOption, getDateForCalendar])
-
-    const handleAddToCalendar = () => {
-        const url = getCalendarUrl({
-            dates: [
-                date.format(G_CALENDAR_FORMAT) + `${isServiceValetApp ? "000000" : appointment?.time.split(":").join("")}`,
-                date.add(1, "hour").format(G_CALENDAR_FORMAT) + `${isServiceValetApp ? "000000" : appointment?.time.split(":").join("")}`],
-            text: `${scProfile?.name} ${t("Service Appointment")}`,
-            location: scProfile?.address ? concatAddress(scProfile?.address) : "",
-            details: calendarData.map(r => `${r.label}:\n${r.content}`).join("\n \n"),
-        });
-        window.open(url);
-    }
-
-    const onMakeNew = async () => {
-        await dispatch(setVehicle(null));
-        await dispatch(clearAppointmentData());
-        await dispatch(setServiceOptionChanged(false));
-        await dispatch(setSideBarSteps([]));
-        await dispatch(setWelcomeScreenView(currentUser ? "serviceCenterSelect" : "select"));
-        history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
-    }
-
-    const onModify = async () => {
-        if (vehicle) {
-            if (customerLoadedData) {
-                await dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
-                await dispatch(clearAppointmentData(true))
-                await dispatch(setServiceOptionChanged(false));
-                await dispatch(setUserType(EUserType.Existing))
-            }
-            await onUpdateAppointment(vehicle)
-            await dispatch(setCurrentFrameScreen("manageAppointment"))
-        }
-    }
-
     return <StepWrapper>
         <Paper>
             <Wrapper>
@@ -497,17 +368,11 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 })}
             </Wrapper>
             <ButtonsWrapper>
-                <Button color="primary" fullWidth variant="outlined" onClick={onModify} disabled={isAppointmentSaving}>
-                    {t("Modify Appointment")}
-                </Button>
-                <Button color="primary" onClick={handleAddToCalendar} fullWidth variant="contained" disabled={isAppointmentSaving}>
-                    {t("Add to Calendar")}
-                </Button>
+                <ModifyButton onUpdateAppointment={onUpdateAppointment}/>
+                <AddToCalendarButton date={date} servicesList={servicesList} serviceName={serviceName}/>
                 <Divider />
             </ButtonsWrapper>
-            { !isFrame ? <Button color="primary" fullWidth variant="outlined" onClick={onMakeNew} disabled={isAppointmentSaving}>
-                {t("Make New Appointment")}
-            </Button> : null}
+           <MakeNewButton/>
             <h3>{t("We will see you soon!")}</h3>
         </Paper>
     </StepWrapper>

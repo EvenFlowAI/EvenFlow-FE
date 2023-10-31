@@ -148,10 +148,13 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
 
     useEffect(() => {
         const selectedMileage = mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
-        if (selectedMileage && selectedVehicle && selectedMileage?.value.toString() !== selectedVehicle?.mileage?.toString()) {
-            dispatch(updateVehicle({mileage: selectedMileage.value}))
+        const mileageIsValid = selectedMileage && selectedMileage?.value.toString() === selectedVehicle?.mileage?.toString();
+        if (selectedVehicle) {
+            if (selectedMileage?.value && mileageIsValid && selectedVehicle.mileage !== selectedMileage?.value) {
+                dispatch(updateVehicle({mileage: selectedMileage.value}))
+            }
         }
-    }, [dispatch, selectedVehicle, mileage]);
+    }, [dispatch, mileage, selectedVehicle]);
 
     useEffect(() => {
         if (isRecallsCategorySelected) requiredFields.push('vin')

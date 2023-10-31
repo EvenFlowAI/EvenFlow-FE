@@ -13,6 +13,7 @@ import MobileServiceAppointments from "../../../qrveyEndUser/MobileServiceAppoin
 import CustomerBehavior from "../../../qrveyEndUser/CustomerBehavior";
 import RepairOrderPerformance from "../../../qrveyEndUser/RepairOrderPerformance";
 import CapacityManagementPerformance from "../../../qrveyEndUser/CapacityManagementPerfomance";
+import {TRole} from "../../../store/reducers/users/types";
 
 // const configObject = {
 //     appid: 'jjaR5hX2q',
@@ -28,6 +29,8 @@ export const DashboardsIds = {
     RepairOrderPerformance: "oK0YxEfcoDkhsmMtFjGxo",
     CapacityManagementPerformance: "nO0UhbMtl58MxO59VCC3x",
 }
+
+export const reportingAllowedRoles: TRole[] = ["Manager", "Owner", "Super Admin"]
 
 const ReportingPage: React.FC<{}> = ({}) => {
     const [config, setConfig] = useState<IEndUserConfig>({
@@ -47,7 +50,7 @@ const ReportingPage: React.FC<{}> = ({}) => {
 
     return <div style={{display: "block", width: "100%"}}>
         <TitleContainer title={Titles.Reporting} pad/>
-        {config.qv_token && (!window.origin.includes("apps.evenflow.ai") || currentUser?.role === "Super Admin")
+        {config.qv_token && (!window.origin.includes("apps.evenflow.ai") || (currentUser && reportingAllowedRoles.includes(currentUser?.role)))
             ? <Switch>
                 <Route
                     exact

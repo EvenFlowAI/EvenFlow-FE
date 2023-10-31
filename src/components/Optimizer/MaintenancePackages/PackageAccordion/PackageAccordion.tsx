@@ -384,7 +384,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 showError("Please save the Price Texts first")
             } else {
                 dispatch(updatePackageOptions(data.id, revisedData, showError));
-                if (data?.segmentTitles) dispatch(updateSegmentsTitles(data.id, data.segmentTitles, showError));
+                if (data?.segmentTitles.length) dispatch(updateSegmentsTitles(data.id, data.segmentTitles, showError));
             }
         } catch (e){
             showError(e)

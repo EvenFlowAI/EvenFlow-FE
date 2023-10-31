@@ -7,6 +7,7 @@ import {useTranslation} from "react-i18next";
 import {useSelectedAppointmentStyles} from "../SelectedAppointment";
 import {selectAppointment, selectServiceValetAppointment} from "../../../../store/reducers/appointment/actions";
 import {
+    checkCarIsValid,
     loadConsultants,
     setAdvisor,
     setCurrentFrameScreen,
@@ -18,6 +19,7 @@ import {
 import {useParams} from "react-router-dom";
 import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
 import {setAdvisorAvailable} from "../../../../store/reducers/bookingFlowConfig/actions";
+import {IServiceConsultant} from "../../../../api/types";
 
 const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const {
@@ -27,9 +29,10 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         address,
         zipCode,
         selectedServiceOptions,
+        advisor
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-    const { config, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const {t} = useTranslation();
     const classes = useSelectedAppointmentStyles();
@@ -99,31 +102,44 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         }
     }
 
+    const redirectToNextScreen = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
+        if (option?.type === EServiceType.PickUpDropOff) {
+            redirectToLocation(option, showAdvisorScreen);
+        } else {
+            handleAdvisorSelection(showAdvisorScreen)
+        }
+    }
+
+    const onEmptyList = () =>  dispatch(setAdvisorAvailable(false))
+
+    const onFullList = (data: IServiceConsultant[], option: IFirstScreenOption) => {
+        let showAdvisorScreen = Boolean(config.find(item => item.serviceType === option.type)?.advisorSelection);
+        const prevAdvisor = advisor && data.map(el => el.id).includes(advisor?.id);
+        if (prevAdvisor) {
+            redirectToNextScreen(option, false)
+        } else {
+            dispatch(setAdvisor(null));
+            redirectToNextScreen(option, showAdvisorScreen)
+        }
+    }
+
     const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
         dispatch(setTransportation(null));
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {
-            let showAdvisorScreen = Boolean(config.find(item => item.serviceType === option.type)?.advisorSelection);
             const shouldLoadAdvisors = option?.type === EServiceType.VisitCenter
                 || (option?.type === EServiceType.PickUpDropOff && address && zipCode)
 
             dispatch(setServiceTypeOption(option));
-            dispatch(setAdvisor(null));
 
-            if (shouldLoadAdvisors) {
-                dispatch(loadConsultants(id, option.id, () => {
-                    showAdvisorScreen = false;
-                    dispatch(setAdvisorAvailable(false))
-                }));
-            }
+            dispatch(checkCarIsValid(() => {
+                if (shouldLoadAdvisors) {
+                    dispatch(loadConsultants(id, option.id, onEmptyList, (data) => onFullList(data, option)));
+                }
+            }))
             clearAppointment(option);
-            if (option?.type === EServiceType.PickUpDropOff) {
-                redirectToLocation(option, showAdvisorScreen);
-            } else {
-                handleAdvisorSelection(showAdvisorScreen)
-            }
+            dispatch(setServiceOptionChanged(true))
         }
-        dispatch(setServiceOptionChanged(true))
     }
 
     return serviceValetIsPossibleToUse

@@ -157,50 +157,53 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
     } = appointment;
     const {selectedVehicle, selectedRecalls, valueService, sideBarSteps} = getState().appointmentFrame;
     const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
+    const recalls = mapRecallsForRequest(selectedRecalls);
     if (selectedVehicle) {
-        const data: IConsultantsRequestData = {
-            serviceCenterId: decodeSCID(id),
-            pageIndex: 0,
-            pageSize: 0,
-            serviceRequestIds: serviceRequests.map(item => item.id),
-            recalls: mapRecallsForRequest(selectedRecalls),
-            serviceCategoryIds: serviceCategories ? serviceCategories.map(item => item.id) : [],
-            maintenancePackageOption,
-            serviceTypeOptionId,
-            searchTerm: "",
-            vehicle: {
-                vin: selectedVehicle.vin,
-                year: selectedVehicle.year,
-                make: selectedVehicle.make,
-                model: selectedVehicle.model,
-                mileage: selectedVehicle.mileage,
-                engineTypeId: selectedVehicle.engineTypeId,
-            },
-            address,
-            zipCode,
-        }
-        if (valueService?.selectedService) {
-            data.valueServiceOfferIds = [valueService.selectedService.id];
-        }
-        Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-            Api.endpoints.ServiceConsultants.GetByQuery, {data})
-            .then(({data: {result}}) => {
-                dispatch(setConsultants(result));
-                if (!result.length) {
-                    dispatch(setAdvisorAvailable(false));
-                } else {
-                    if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
-                        dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
-                        dispatch(setAdvisorAvailable(true));
+        if (serviceRequests?.length || maintenancePackageOption || serviceCategories?.length || recalls?.length) {
+            const data: IConsultantsRequestData = {
+                serviceCenterId: decodeSCID(id),
+                pageIndex: 0,
+                pageSize: 0,
+                serviceRequestIds: serviceRequests.map(item => item.id),
+                recalls,
+                serviceCategoryIds: serviceCategories ? serviceCategories.map(item => item.id) : [],
+                maintenancePackageOption,
+                serviceTypeOptionId,
+                searchTerm: "",
+                vehicle: {
+                    vin: selectedVehicle.vin,
+                    year: selectedVehicle.year,
+                    make: selectedVehicle.make,
+                    model: selectedVehicle.model,
+                    mileage: selectedVehicle.mileage,
+                    engineTypeId: selectedVehicle.engineTypeId,
+                },
+                address,
+                zipCode,
+            }
+            if (valueService?.selectedService) {
+                data.valueServiceOfferIds = [valueService.selectedService.id];
+            }
+            Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+                Api.endpoints.ServiceConsultants.GetByQuery, {data})
+                .then(({data: {result}}) => {
+                    dispatch(setConsultants(result));
+                    if (!result.length) {
+                        dispatch(setAdvisorAvailable(false));
+                    } else {
+                        if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
+                            dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
+                            dispatch(setAdvisorAvailable(true));
+                        }
                     }
-                }
-            })
-            .catch(err => console.log(err))
-            .finally(() => dispatch(setConsultantsLoading(false)))
+                })
+                .catch(err => console.log(err))
+                .finally(() => dispatch(setConsultantsLoading(false)))
+        }
     }
 }
 
-export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void): AppThunk => async (dispatch, getState) => {
+export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void, onSuccess?: (data: IServiceConsultant[]) => void): AppThunk => async (dispatch, getState) => {
     dispatch(setConsultantsLoading(true))
     const {selectedPackage, packagePricingType, packageEMenuType, selectedRecalls, selectedVehicle, address, zipCode, valueService,
         service, subService, categoriesIds, sideBarSteps} = getState().appointmentFrame;
@@ -212,21 +215,21 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
             return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
         })
         .map(item => item.id);
-
     if (selectedVehicle) {
         const maintenancePackageOption = selectedPackage
             ? {id: selectedPackage?.id, priceType: packagePricingType}
             : packageEMenuType !== null
                 ? {optionType: packageEMenuType}
                 : null;
+        const recalls = mapRecallsForRequest(selectedRecalls);
         const serviceRequestIds = collectServiceRequestIds(service, subService, null, selectedSR)
-        if (serviceRequestIds.length || maintenancePackageOption || serviceCategoryIds.length || selectedRecalls.length) {
+        if (serviceRequestIds.length || maintenancePackageOption || serviceCategoryIds.length || recalls.length) {
             const data: IConsultantsRequestData = {
                 serviceCenterId: decodeSCID(id),
                 pageIndex: 0,
                 pageSize: 0,
                 serviceRequestIds,
-                recalls: mapRecallsForRequest(selectedRecalls),
+                recalls,
                 serviceCategoryIds,
                 maintenancePackageOption,
                 serviceTypeOptionId,
@@ -252,7 +255,9 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
                     if (!result.length) {
                         onEmptyList && onEmptyList()
                         dispatch(setAdvisorAvailable(false));
+                        dispatch(setAdvisor(null))
                     } else {
+                        onSuccess && onSuccess(result);
                         if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
                             dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
                             dispatch(setAdvisorAvailable(true));
@@ -355,11 +360,12 @@ export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess:
         .finally(() => dispatch(setAncillaryPriceLoading(false)))
 }
 
-export const loadFilteredZip = (data: {serviceCenterId: number; search: string}): AppThunk => dispatch => {
+export const loadFilteredZip = (data: {serviceCenterId: number; search: string}, onSuccess?: (list:string[], postalCode: string) => void): AppThunk => dispatch => {
     dispatch(setAncillaryPriceLoading(true))
     Api.call(Api.endpoints.ZipCodes.GetFiltered, {data})
         .then(result => {
             if (result?.data?.zipCodes) dispatch(setFilteredZipCodes(result.data.zipCodes))
+            if (onSuccess) onSuccess(result.data.zipCodes, data.search)
         })
         .catch(err => {
             console.log('get zip codes by filter error', err)
@@ -455,7 +461,7 @@ export const updateRecalls = (data: IAppointmentByKey, id: string): AppThunk => 
         const serviceType = serviceTypeOption?.type === EServiceType.MobileService
             ? EServiceType.MobileService
             : EServiceType.VisitCenter;
-        const recallCategorySelected = serviceCategories.length === 1 && serviceCategories[0]?.type === EServiceCategoryType.OpenRecalls
+        const recallCategorySelected = serviceCategories?.length === 1 && serviceCategories[0]?.type === EServiceCategoryType.OpenRecalls
         if (!maintenancePackageOption && !serviceRequests.length && recallCategorySelected) {
             Api.call<PaginatedAPIResponse<IServiceCategory>>(
                 Api.endpoints.ServiceCategories.GetByQuery,
@@ -766,7 +772,7 @@ export const checkCarIsValid = (onCarIsValid = () => {}, onCarIsInvalid = () => 
         const models = makes.map(item => item.models).flat();
         if (!selectedVehicle.mileage) carIsValid = false;
         const existingMileage = mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
-        if (!existingMileage) carIsValid = false;
+        if (mileage.length && !existingMileage) carIsValid = false;
         const existingEngineType = engineTypes.find(item => item.id === selectedVehicle.engineTypeId);
         if (currentConfig?.engineType && (!existingEngineType || !selectedVehicle.engineTypeId)) carIsValid = false;
 
