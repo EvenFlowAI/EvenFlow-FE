@@ -35,7 +35,7 @@ import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../.
 import {
     checkCarIsValid,
     handleSideBarAppointmentUpdate, loadConsultants, loadConsultantsForUpdating,
-    loadMakes, setAdvisor, setAnyAdvisorSelected,
+    loadMakes, setAnyAdvisorSelected,
     setAppointmentByKey, setAppointmentNotes,
     setAppointmentSaving,
     setCurrentFrameScreen,
@@ -227,7 +227,7 @@ export const AppointmentFrameLayout = () => {
     const onCarIsValid = useCallback(() => {
         const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
         if (someRequestsSelected) {
-            dispatch(setAdvisor(null));
+            // dispatch(setAdvisor(null));
             dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
         }
     }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id])

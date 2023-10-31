@@ -203,7 +203,7 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
     }
 }
 
-export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void): AppThunk => async (dispatch, getState) => {
+export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void, onSuccess?: (data: IServiceConsultant[]) => void): AppThunk => async (dispatch, getState) => {
     dispatch(setConsultantsLoading(true))
     const {selectedPackage, packagePricingType, packageEMenuType, selectedRecalls, selectedVehicle, address, zipCode, valueService,
         service, subService, categoriesIds, sideBarSteps} = getState().appointmentFrame;
@@ -255,7 +255,9 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
                     if (!result.length) {
                         onEmptyList && onEmptyList()
                         dispatch(setAdvisorAvailable(false));
+                        dispatch(setAdvisor(null))
                     } else {
+                        onSuccess && onSuccess(result);
                         if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
                             dispatch(setSideBarSteps(sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== "appointmentSelection")))
                             dispatch(setAdvisorAvailable(true));
