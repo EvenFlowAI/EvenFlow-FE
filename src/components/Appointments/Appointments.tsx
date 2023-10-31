@@ -62,6 +62,17 @@ export const Appointments = () => {
         refresh();
     }, []);
 
+    const clearFilters = () => {
+        setServiceBook(null);
+        setScheduler(null);
+        setDate(null);
+        setStatus('')
+    }
+
+    useEffect(() => {
+        if (selectedSC) clearFilters()
+    }, [selectedSC])
+
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value)
     }
