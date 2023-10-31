@@ -43,16 +43,16 @@ export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selected
     return <Box>
             <NavLink to={url} className={classes.linkBtn} target="_blank">Book Appointment</NavLink>
             {selectedView === 'list' && <SearchInput onSearch={onSearch} onChange={handleSearchChange} value={searchTerm} placeholder="Search customer..."/>}
-            <ButtonGroup color="primary" style={{ marginLeft: 20 }}>
-                {views.map(view =>
-                    <Button
-                        key={view.type}
-                        onClick={handleChangeView(view.type)}
-                        variant={view.type === selectedView ? "contained" : "outlined"}>
-                        {view.label}
-                    </Button>
-                )}
-            </ButtonGroup>
+            {/*<ButtonGroup color="primary" style={{ marginLeft: 20 }}>*/}
+            {/*    {views.map(view =>*/}
+            {/*        <Button*/}
+            {/*            key={view.type}*/}
+            {/*            onClick={handleChangeView(view.type)}*/}
+            {/*            variant={view.type === selectedView ? "contained" : "outlined"}>*/}
+            {/*            {view.label}*/}
+            {/*        </Button>*/}
+            {/*    )}*/}
+            {/*</ButtonGroup>*/}
             <Button
                 onClick={onFilterOpen}
                 style={{ marginLeft: 20 }}
