@@ -38,7 +38,7 @@ const Upsells: React.FC<TUpsellTitleProps> = ({
         } else {
             setPackageData(prev => {
                 if (prev) {
-                    const updated = {type: ESegmentTitle.IntervalUpsell, title: e.target.value}
+                    const updated = {type: ESegmentTitle.IntervalUpsell, title: e.target?.value?.trim()}
                     const filtered = prev.segmentTitles.filter(el => el.type !== ESegmentTitle.IntervalUpsell);
                     return {...prev, segmentTitles: [...filtered, updated]}
                 } else return prev
@@ -62,7 +62,7 @@ const Upsells: React.FC<TUpsellTitleProps> = ({
                 onChange={onIntervalUpsellNameChange}
                 className={classes.greyInput}/>
         : <div className={classes.complimentaryRow} onClick={onClick}>
-                <div>{upsellTitle?.title ?? defaultUpsellTitle}</div>
+                <div>{upsellTitle?.title?.trim().length ? upsellTitle?.title?.trim() : defaultUpsellTitle}</div>
                 <Edit htmlColor="#FFFFFF" style={{cursor: "pointer", width: 20, height: 20}}/>
             </div>
 }
