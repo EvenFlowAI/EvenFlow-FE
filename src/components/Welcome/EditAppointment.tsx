@@ -72,15 +72,14 @@ export const EditAppointment = () => {
     }, [selectedSC])
 
     useEffect(() => {
-        let trimmedKey = id.replaceAll(',', '').replaceAll('.', '');
-        API.appointment.getByKey(trimmedKey)
+        API.appointment.getByKey(id)
             .then(async ({data}) => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
                 dispatch(setUserType(EUserType.Existing))
                 dispatch(setUpdateAppointment(data));
                 const vehicle: ILoadedVehicle = {
                     ...data.vehicle,
-                    appointmentHashKeys: [data.hashKey]
+                    appointmentHashKeys: [data.hashKey],
                 }
                 const customer: ICustomerLoadedData = {
                     ...data.driver,

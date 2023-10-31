@@ -69,7 +69,7 @@ export interface IVehicleShort {
     make: string;
     year: number;
     model: string;
-    mileage: number;
+    mileage: number|null;
 }
 
 export interface IVehicle extends IVehicleShort {
