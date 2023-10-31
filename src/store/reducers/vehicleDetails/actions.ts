@@ -4,7 +4,6 @@ import {Api} from "../../../config/requests";
 import {IMake, IMakeExtended} from "../../../api/types";
 import {ICreateMake, IEngineType, IMileage, TCreateEngineType, TCreateMileage} from "./types";
 import {loadAllSCs} from "../serviceCenters/actions";
-import {updateVehicle} from "../appointmentFrameReducer/actions";
 
 export const getMakes = createAction<IMake[]>('VehicleDetails/GetMakes');
 export const setCurrentMake = createAction<IMake | null>('VehicleDetails/SetCurrentMake');
@@ -63,18 +62,12 @@ export const createMake = (data: ICreateMake): AppThunk => async dispatch => {
             })
 }
 
-export const loadMileage = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
+export const loadMileage = (serviceCenterId: number): AppThunk => async (dispatch) => {
     dispatch(setLoading(true));
-    const {selectedVehicle} = getState().appointmentFrame;
     Api.call<IMileage[]>(Api.endpoints.Vehicles.GetMileage, {params: {serviceCenterId}})
         .then(result => {
             if (result?.data) {
                 dispatch(getMileage(result.data));
-
-                if (selectedVehicle?.mileage) {
-                    const selectedMileage = result.data.find(el => el.value.toString() === selectedVehicle?.mileage?.toString())
-                    if (!selectedMileage) dispatch(updateVehicle({mileage: null}))
-                }
             }
         })
         .catch(err => {
