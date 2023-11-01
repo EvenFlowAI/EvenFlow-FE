@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {MenuItem, Select} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,7 +10,7 @@ import {
     checkCarIsValid,
     loadConsultants,
     setAdvisor,
-    setCurrentFrameScreen,
+    setCurrentFrameScreen, setSelectedServiceTypeOptions,
     setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps,
@@ -46,6 +46,13 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
             && config.find(item => item.serviceType === EServiceType.PickUpDropOff && item.available)
     }, [serviceTypeOption, firstScreenOptions, config]);
 
+    useEffect(() => {
+        if (serviceTypeOption && !selectedServiceOptions.find(el => el.id === serviceTypeOption?.id)) {
+            const data = [serviceTypeOption, ...selectedServiceOptions]
+            dispatch(setSelectedServiceTypeOptions(data))
+        }
+    }, [selectedServiceOptions, serviceTypeOption])
+
     const getServiceName = () => {
         if (serviceTypeOption?.name) return serviceTypeOption.name
         switch (serviceType) {
@@ -71,7 +78,6 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
             sliceSteps(index)
         } else {
             if (showAdvisorScreen) {
-                // todo find out why step "Service Needs" is missing
                 const index = sideBarSteps.indexOf("appointmentSelection")
                 sliceSteps(index)
             }
@@ -112,11 +118,19 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
 
     const onEmptyList = () =>  dispatch(setAdvisorAvailable(false))
 
-    const onFullList = (data: IServiceConsultant[], option: IFirstScreenOption) => {
-        let showAdvisorScreen = Boolean(config.find(item => item.serviceType === option.type)?.advisorSelection);
+    const onFullList = (data: IServiceConsultant[], option: IFirstScreenOption, showAdvisorScreen: boolean) => {
         const prevAdvisor = advisor && data.map(el => el.id).includes(advisor?.id);
         if (prevAdvisor) {
             redirectToNextScreen(option, false)
+        } else {
+            dispatch(setAdvisor(null));
+            redirectToNextScreen(option, showAdvisorScreen)
+        }
+    }
+
+    const onCarIsValid = (option: IFirstScreenOption, shouldLoadAdvisors: boolean, showAdvisorScreen: boolean) => {
+        if (shouldLoadAdvisors) {
+            dispatch(loadConsultants(id, option.id, onEmptyList, (data) => onFullList(data, option, showAdvisorScreen)));
         } else {
             dispatch(setAdvisor(null));
             redirectToNextScreen(option, showAdvisorScreen)
@@ -127,16 +141,13 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         dispatch(setTransportation(null));
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {
-            const shouldLoadAdvisors = option?.type === EServiceType.VisitCenter
-                || (option?.type === EServiceType.PickUpDropOff && address && zipCode)
-
             dispatch(setServiceTypeOption(option));
 
-            dispatch(checkCarIsValid(() => {
-                if (shouldLoadAdvisors) {
-                    dispatch(loadConsultants(id, option.id, onEmptyList, (data) => onFullList(data, option)));
-                }
-            }))
+            const shouldLoadAdvisors = option?.type === EServiceType.VisitCenter
+                || Boolean(option?.type === EServiceType.PickUpDropOff && address && zipCode);
+            let showAdvisorScreen = Boolean(config.find(item => item.serviceType === option.type)?.advisorSelection);
+
+            dispatch(checkCarIsValid(() => onCarIsValid(option, shouldLoadAdvisors, showAdvisorScreen), undefined, true))
             clearAppointment(option);
             dispatch(setServiceOptionChanged(true))
         }

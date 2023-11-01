@@ -94,6 +94,7 @@ export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCa
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
 export const setServiceTypeOption = createAction<IFirstScreenOption|null>('fAppointment/SetServiceTypeOption');
+export const setSelectedServiceTypeOptions = createAction<IFirstScreenOption[]>('fAppointment/SetSelectedServiceTypeOptions');
 export const setZipCode = createAction<string>('fAppointment/SetZipCode');
 export const setAddress = createAction<any>('fAppointment/SetAddress');
 export const setPoliticalState = createAction<string>('fAppointment/SetPoliticalState');
@@ -763,7 +764,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         })
 }
 
-export const checkCarIsValid = (onCarIsValid = () => {}, onCarIsInvalid = () => {}): AppThunk => (dispatch, getState) => {
+export const checkCarIsValid = (onCarIsValid = () => {}, onCarIsInvalid = () => {}, skipEngineCheck?: boolean): AppThunk => (dispatch, getState) => {
     const {selectedVehicle, makes} = getState().appointmentFrame;
     const {engineTypes, mileage} = getState().vehicleDetails;
     const {currentConfig} = getState().bookingFlowConfig;
@@ -774,7 +775,7 @@ export const checkCarIsValid = (onCarIsValid = () => {}, onCarIsInvalid = () => 
         const existingMileage = mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
         if (mileage.length && !existingMileage) carIsValid = false;
         const existingEngineType = engineTypes.find(item => item.id === selectedVehicle.engineTypeId);
-        if (currentConfig?.engineType && (!existingEngineType || !selectedVehicle.engineTypeId)) carIsValid = false;
+        if (!skipEngineCheck && currentConfig?.engineType && (!existingEngineType || !selectedVehicle.engineTypeId)) carIsValid = false;
 
         if (!selectedVehicle.vin?.length) {
             const existingMake = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase())

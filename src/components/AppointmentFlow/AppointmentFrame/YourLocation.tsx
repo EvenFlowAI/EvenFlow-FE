@@ -138,6 +138,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         serviceOptionChangedFromSlotPage,
         selectedServiceOptions,
         ancillaryPriceLoading,
+        sideBarSteps,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {isAdvisorAvailable, config} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -194,7 +195,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     const goToSlotsSelection = (prevOption?: IFirstScreenOption|undefined) => {
         if (prevOption) {
             const prevConfig = config.find(el => el.serviceType === prevOption.type)
-            dispatch(setCurrentFrameScreen(prevConfig?.advisorSelection ? 'consultantSelection' : 'appointmentSelection'))
+            const advisorsStepNeeded = prevConfig?.advisorSelection && sideBarSteps[sideBarSteps.length - 1] === "consultantSelection";
+            dispatch(setCurrentFrameScreen( advisorsStepNeeded ? 'consultantSelection' : 'appointmentSelection'))
         } else {
             dispatch(setCurrentFrameScreen(isAdvisorAvailable ? 'consultantSelection' : 'appointmentSelection'))
         }
@@ -259,7 +261,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const setPrevSelectedOption = () => {
         if (selectedServiceOptions.length) {
-            const prevOption = selectedServiceOptions[selectedServiceOptions.length - 2];
+            const prevOption = selectedServiceOptions[selectedServiceOptions.length - (selectedServiceOptions.length > 1 ? 2 : 1)];
             if (prevOption) {
                 dispatch(setServiceTypeOption(prevOption))
                 goToSlotsSelection(prevOption)

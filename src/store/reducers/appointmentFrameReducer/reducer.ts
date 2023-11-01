@@ -66,7 +66,7 @@ import {
     setConsultantsLoading,
     setPoliticalState,
     setCity,
-    setStreetName, setAnyAdvisorSelected, getTransactionValue,
+    setStreetName, setAnyAdvisorSelected, getTransactionValue, setSelectedServiceTypeOptions,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByKey,
@@ -428,11 +428,12 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         const optionsTypes = payload
             ?  Array.from(new Set([...state.selectedOptionTypes, payload.type]))
             : state.selectedOptionTypes;
+        const optionIsInTheList = state.selectedServiceOptions.find(el => el.id === payload?.id);
         return {
             ...state,
             serviceTypeOption: payload,
             selectedOptionTypes: optionsTypes,
-            selectedServiceOptions: payload ? [...state.selectedServiceOptions, payload] : state.selectedServiceOptions,
+            selectedServiceOptions: payload && !optionIsInTheList ? [...state.selectedServiceOptions, payload] : state.selectedServiceOptions,
         };
     })
     .addCase(setPackagePricingType, (state, {payload}) => {
@@ -500,5 +501,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(getTransactionValue, (state, {payload}) => {
         return {...state, transactionValue: payload}
+    })
+    .addCase(setSelectedServiceTypeOptions, (state, {payload}) => {
+        return {...state, selectedServiceOptions: payload}
     })
 )
