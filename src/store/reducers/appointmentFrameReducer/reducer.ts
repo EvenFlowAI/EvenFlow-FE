@@ -428,11 +428,12 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         const optionsTypes = payload
             ?  Array.from(new Set([...state.selectedOptionTypes, payload.type]))
             : state.selectedOptionTypes;
+        const optionIsInTheList = state.selectedServiceOptions.find(el => el.id === payload?.id);
         return {
             ...state,
             serviceTypeOption: payload,
             selectedOptionTypes: optionsTypes,
-            selectedServiceOptions: payload ? [...state.selectedServiceOptions, payload] : state.selectedServiceOptions,
+            selectedServiceOptions: payload && !optionIsInTheList ? [...state.selectedServiceOptions, payload] : state.selectedServiceOptions,
         };
     })
     .addCase(setPackagePricingType, (state, {payload}) => {
