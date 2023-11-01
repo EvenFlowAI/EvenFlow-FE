@@ -263,6 +263,7 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         if (selectedVehicle && customerLoadedData?.isUpdating && customerLoadedData.fromSearchByName) {
+            dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
             onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
         }
     }, [customerLoadedData, selectedVehicle, firstScreenOptions])

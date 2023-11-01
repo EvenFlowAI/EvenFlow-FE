@@ -66,7 +66,7 @@ import {
     setConsultantsLoading,
     setPoliticalState,
     setCity,
-    setStreetName, setAnyAdvisorSelected, getTransactionValue,
+    setStreetName, setAnyAdvisorSelected, getTransactionValue, setSelectedServiceTypeOptions,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByKey,
@@ -501,5 +501,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(getTransactionValue, (state, {payload}) => {
         return {...state, transactionValue: payload}
+    })
+    .addCase(setSelectedServiceTypeOptions, (state, {payload}) => {
+        return {...state, selectedServiceOptions: payload}
     })
 )

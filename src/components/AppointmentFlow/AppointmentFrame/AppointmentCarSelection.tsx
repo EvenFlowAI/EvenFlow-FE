@@ -142,7 +142,6 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
 
     useEffect(() => {
         if (customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)) {
-            dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
             if (needToShowServiceSelection) {
                 setNeedToShowServiceSelection(false);
                 handleServiceTypeSelection()

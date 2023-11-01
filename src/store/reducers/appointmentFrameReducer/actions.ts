@@ -94,6 +94,7 @@ export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCa
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
 export const setServiceTypeOption = createAction<IFirstScreenOption|null>('fAppointment/SetServiceTypeOption');
+export const setSelectedServiceTypeOptions = createAction<IFirstScreenOption[]>('fAppointment/SetSelectedServiceTypeOptions');
 export const setZipCode = createAction<string>('fAppointment/SetZipCode');
 export const setAddress = createAction<any>('fAppointment/SetAddress');
 export const setPoliticalState = createAction<string>('fAppointment/SetPoliticalState');
