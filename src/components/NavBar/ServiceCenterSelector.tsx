@@ -34,7 +34,7 @@ export const ServiceCenterSelector = () => {
         handleMenuClose();
         selectSC(sc);
         if (history.location.pathname.includes('reporting')) {
-            setTimeout(() => window.location.reload(), 1000)
+            setTimeout(() => window.location.reload(), 500)
         }
     }
 
