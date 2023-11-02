@@ -35,7 +35,7 @@ const initialState: TState = {
     schedulerList: [],
     pageData: {
         pageIndex: 0,
-        pageSize: 0,
+        pageSize: 10,
     }
 }
 
