@@ -196,7 +196,11 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         if (prevOption) {
             const prevConfig = config.find(el => el.serviceType === prevOption.type)
             const advisorsStepNeeded = prevConfig?.advisorSelection && sideBarSteps[sideBarSteps.length - 1] === "consultantSelection";
-            dispatch(setCurrentFrameScreen( advisorsStepNeeded ? 'consultantSelection' : 'appointmentSelection'))
+            dispatch(setCurrentFrameScreen( advisorsStepNeeded
+                ? 'consultantSelection'
+                : prevConfig?.appointmentSelection
+                    ? "appointmentTiming"
+                    : 'appointmentSelection'))
         } else {
             dispatch(setCurrentFrameScreen(isAdvisorAvailable ? 'consultantSelection' : 'appointmentSelection'))
         }
