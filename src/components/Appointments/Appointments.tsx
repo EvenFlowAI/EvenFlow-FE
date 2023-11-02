@@ -81,6 +81,7 @@ export const Appointments = () => {
         await setScheduler(null);
         await setDate(null);
         await setStatus('')
+        await setSearchTerm('')
         await dispatch(getAppointmentsPageData({pageSize: 10, pageIndex: 0}))
     }
 
