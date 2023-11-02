@@ -17,6 +17,11 @@ import {RootState} from "../../store/rootReducer";
 
 export type TView = "calendar" | "list";
 
+const initialOrder = {
+    orderBy: "date",
+    isAscending: true,
+}
+
 export const Appointments = () => {
     const { isLoading, schedulerList, serviceBookList } = useSelector((state: RootState) => state.appointments);
     const [viewItem, setViewItem] = useState<IAppointment|undefined>(undefined);
@@ -27,19 +32,17 @@ export const Appointments = () => {
     const [date, setDate] = useState<moment.Moment | null>(null);
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
     const [selectedView, setSelectedView] = useState<TView>("list");
-    const [order, setOrder] = useState<IOrder<IAppointment>>({
-        orderBy: "date",
-        isAscending: true,
-    })
+    const [order, setOrder] = useState<IOrder<IAppointment>>(initialOrder)
     const {selectedSC} = useSCs();
     const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
     const {isOpen: isListOpen, onClose: onListClose, onOpen: onListOpen} = useModal();
     const dispatch = useDispatch();
 
-    const refresh = useCallback(() => {
+    const getAppointmentsByFilters = useCallback(() => {
          if (selectedSC && selectedView === 'list') {
-             const serviceBookId = serviceBook?.id ?? null;
+             const serviceBookId = serviceBook?.id ??  null;
              const isServiceBookServiceCenter = Boolean(serviceBook && !serviceBookId);
+
              const data: IAppointmentsRequest = {
                  pageIndex: pageData.pageIndex,
                  pageSize: pageData.pageSize,
@@ -59,18 +62,18 @@ export const Appointments = () => {
     }, [selectedSC, pageData, order, searchTerm, date, status, selectedView, scheduler, serviceBook]);
 
     useEffect(() => {
-        refresh();
+        getAppointmentsByFilters();
     }, []);
 
-    const clearFilters = () => {
-        setServiceBook(null);
-        setScheduler(null);
-        setDate(null);
-        setStatus('')
+    const clearFilters = async () => {
+        await setServiceBook(null);
+        await setScheduler(null);
+        await setDate(null);
+        await setStatus('')
     }
 
     useEffect(() => {
-        if (selectedSC) clearFilters()
+        clearFilters().then(() => getAppointmentsByFilters())
     }, [selectedSC])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,7 +141,7 @@ export const Appointments = () => {
                 handleChangeView={handleChangeView}
                 onFilterOpen={onFilterOpen}
                 handleSearchChange={handleSearchChange}
-                onSearch={refresh}/>}
+                onSearch={getAppointmentsByFilters}/>}
         />
         {isFiltersOpen ?
             <AppointmentFilters
@@ -157,7 +160,7 @@ export const Appointments = () => {
                 viewItem={viewItem}
                 setViewItem={setViewItem}
                 isLoading={isLoading}
-                refresh={refresh}
+                refresh={getAppointmentsByFilters}
                 order={order}
                 setOrder={setOrder}
                 pageData={pageData}
@@ -177,7 +180,7 @@ export const Appointments = () => {
             viewItem={viewItem}
             setViewItem={setViewItem}
             onClose={onListDialogClose}
-            refresh={refresh}
+            refresh={getAppointmentsByFilters}
             order={order}
             setOrder={setOrder}/>
     </>
