@@ -37,6 +37,19 @@ export const Appointments = () => {
     const {isOpen: isListOpen, onClose: onListClose, onOpen: onListOpen} = useModal();
     const dispatch = useDispatch();
 
+    const getAllAppointments = () => {
+        if (selectedSC && selectedView === 'list') {
+            const data: IAppointmentsRequest = {
+                pageIndex: 0,
+                pageSize: 10,
+                serviceCenterId: selectedSC.id,
+                isAscending: true,
+                orderBy: 'date'
+            }
+            dispatch(loadAppointments(data));
+        }
+    }
+
     const getAppointmentsByFilters = useCallback(() => {
          if (selectedSC && selectedView === 'list') {
              const serviceBookId = serviceBook?.id ??  null;
@@ -49,7 +62,7 @@ export const Appointments = () => {
                  isAscending: order.isAscending,
                  date: moment(date).add(moment(date).utcOffset(), 'minute'),
                  // @ts-ignore
-                 status: EAppointmentStatus[status],
+                 status: status ? EAppointmentStatus[status] : undefined,
                  scheduler: scheduler ? {id: scheduler.id, type: scheduler.type} : null,
                  serviceBookId,
                  searchTerm,
@@ -57,7 +70,7 @@ export const Appointments = () => {
             }
              dispatch(loadAppointments(data));
         }
-    }, [selectedSC, pageData, order, searchTerm, date, status, selectedView, scheduler, serviceBook]);
+    }, [pageData, order, searchTerm, date, status, selectedView, scheduler, serviceBook]);
 
     useEffect(() => {
         getAppointmentsByFilters();
@@ -72,7 +85,7 @@ export const Appointments = () => {
     }
 
     useEffect(() => {
-        clearFilters().then(() => getAppointmentsByFilters())
+        clearFilters().then(() => getAllAppointments())
     }, [selectedSC])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
