@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {MenuItem, Select} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,7 +10,7 @@ import {
     checkCarIsValid,
     loadConsultants,
     setAdvisor,
-    setCurrentFrameScreen, setSelectedServiceTypeOptions,
+    setCurrentFrameScreen,
     setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps,
@@ -45,13 +45,6 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
             && firstScreenOptions.find(op => op.type === EServiceType.PickUpDropOff)
             && config.find(item => item.serviceType === EServiceType.PickUpDropOff && item.available)
     }, [serviceTypeOption, firstScreenOptions, config]);
-
-    useEffect(() => {
-        if (serviceTypeOption && !selectedServiceOptions.find(el => el.id === serviceTypeOption?.id)) {
-            const data = [serviceTypeOption, ...selectedServiceOptions]
-            dispatch(setSelectedServiceTypeOptions(data))
-        }
-    }, [selectedServiceOptions, serviceTypeOption])
 
     const getServiceName = () => {
         if (serviceTypeOption?.name) return serviceTypeOption.name
