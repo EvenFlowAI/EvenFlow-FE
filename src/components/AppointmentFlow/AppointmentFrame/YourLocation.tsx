@@ -136,7 +136,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         appointmentByKey,
         editingPosition,
         serviceOptionChangedFromSlotPage,
-        selectedServiceOptions,
+        prevSelectedOption,
         ancillaryPriceLoading,
         sideBarSteps,
     } = useSelector((state: RootState) => state.appointmentFrame);
@@ -264,12 +264,9 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const setPrevSelectedOption = () => {
-        if (selectedServiceOptions.length) {
-            const prevOption = selectedServiceOptions[selectedServiceOptions.length - (selectedServiceOptions.length > 1 ? 2 : 1)];
-            if (prevOption) {
-                dispatch(setServiceTypeOption(prevOption))
-                goToSlotsSelection(prevOption)
-            }
+        if (prevSelectedOption) {
+            dispatch(setServiceTypeOption(prevSelectedOption))
+            goToSlotsSelection(prevSelectedOption)
         }
     }
 

@@ -158,6 +158,7 @@ type TState = {
     serviceTypeOption: IFirstScreenOption|null;
     selectedOptionTypes: EServiceType[];
     selectedServiceOptions: IFirstScreenOption[];
+    prevSelectedOption:  IFirstScreenOption|null;
     packagePricingType: EPackagePricingType | null;
     packagePriceTitles: TPackagePrice[];
     packageEMenuType: EMaintenanceOptionType|null;
@@ -232,6 +233,7 @@ const initialState: TState = {
     recallsAreShown: false,
     hoursOfOperations: [],
     serviceTypeOption: null,
+    prevSelectedOption: null,
     selectedOptionTypes: [],
     selectedServiceOptions: [],
     packagePricingType: null,
@@ -434,6 +436,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             serviceTypeOption: payload,
             selectedOptionTypes: optionsTypes,
             selectedServiceOptions: payload && !optionIsInTheList ? [...state.selectedServiceOptions, payload] : state.selectedServiceOptions,
+            prevSelectedOption: state.serviceTypeOption,
         };
     })
     .addCase(setPackagePricingType, (state, {payload}) => {

@@ -117,7 +117,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         isUsualFlowNeeded,
         isConsultantsLoading,
         serviceOptionChangedFromSlotPage,
-        selectedServiceOptions,
+        prevSelectedOption
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
@@ -170,15 +170,10 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const onBackToPrevServiceOption = () => {
-        if (selectedServiceOptions.length) {
-            const prevOption = selectedServiceOptions[selectedServiceOptions.length - (selectedServiceOptions.length > 1 ? 2 : 1)];
-            if (prevOption) {
-                dispatch(setServiceTypeOption(prevOption))
-            }
-            dispatch(setCurrentFrameScreen(isAppointmentTimingAvailable
-                ? "appointmentTiming"
-                : "appointmentSelection"))
-        }
+        if (prevSelectedOption) dispatch(setServiceTypeOption(prevSelectedOption))
+        dispatch(setCurrentFrameScreen(isAppointmentTimingAvailable
+            ? "appointmentTiming"
+            : "appointmentSelection"))
     }
 
     const handleBack = () => {
