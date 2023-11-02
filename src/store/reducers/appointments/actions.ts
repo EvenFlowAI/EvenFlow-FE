@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {IAppointment, ILoadedVehicle, IPackageAppointments} from "../../../api/types";
 import {IAppointmentsRequest, ICheckPodRequest, IPackageRequestData, TScheduler, TServiceBook} from "./types";
-import {AppThunk, TArgCallback} from "../../../types/types";
+import {AppThunk, IPageRequest, TArgCallback} from "../../../types/types";
 import {API} from "../../../api/api";
 import {Api} from "../../../config/requests";
 import {
@@ -23,6 +23,7 @@ export const setAllAppointmentsCount = createAction<number>("Appointments/SetAll
 export const getPackageByVehicle = createAction<IPackageAppointments[]>("Appointments/GetPackageByVehicle");
 export const getServiceBookList = createAction<TServiceBook[]>("Appointments/GetServiceBookList");
 export const getScheduler = createAction<TScheduler[]>("Appointments/GetSchedulerList");
+export const getAppointmentsPageData = createAction<Partial<IPageRequest>>("Appointments/GetPageData");
 
 export const loadAppointments = (data: IAppointmentsRequest): AppThunk => dispatch => {
     dispatch(setAppointmentsLoading(true));
