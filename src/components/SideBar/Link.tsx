@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ListItem, List, lighten, ListItemSecondaryAction} from "@material-ui/core";
 import clsx from "clsx";
-import {NavLink} from "react-router-dom";
+import {NavLink, useHistory} from "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
 import {LinkTypeWithSub} from "../../types/types";
 import {useCurrentUser} from "../../utils/hooks";
@@ -53,6 +53,13 @@ const Link: React.FC<TLinkProps> = ({link, closeSidebar}) => {
     const [isSubListOpen, setSubListOpen] = useState<boolean>(false);
     const currentUser = useCurrentUser();
     const classes = useStyles();
+    const history = useHistory();
+
+    useEffect(() => {
+        const subLinksPathNames = link.subLinks?.map(el => el.to);
+        const subLinkOpened = subLinksPathNames?.includes(history.location.pathname);
+        if (subLinkOpened) setSubListOpen(true)
+    }, [history, link])
 
     if (typeof link.roles === "boolean") {
         if (!link.roles) {

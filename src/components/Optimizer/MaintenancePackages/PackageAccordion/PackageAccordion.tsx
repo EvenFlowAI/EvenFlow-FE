@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import {ExpandMore, MoreHoriz}from '@material-ui/icons';
 import {Loading} from "../../../UI/Loading";
-import {IPackageById, IPackageOptionDetailed} from "../../../../api/types";
+import {IPackageById, IPackageOptionDetailed, TSegmentTitle} from "../../../../api/types";
 import SummaryRow from "../SummaryRow/SummaryRow";
 import {checkIsValid, getOptionsTableData} from "../../utils";
 import {useConfirm, useException, useModal, useSCs} from "../../../../utils/hooks";
@@ -366,6 +366,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         }
     }, [currentPackage])
 
+    const getTrimmedTitles = (titles: TSegmentTitle[]): TSegmentTitle[] => {
+        return titles.map(el => ({...el, title: el.title.trim()}))
+    }
+
     const sendRequest = useCallback((data: IPackageById) => {
         const revisedData = data.options.map(option => ({
             ...option,
@@ -384,7 +388,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                 showError("Please save the Price Texts first")
             } else {
                 dispatch(updatePackageOptions(data.id, revisedData, showError));
-                if (data?.segmentTitles) dispatch(updateSegmentsTitles(data.id, data.segmentTitles, showError));
+                if (data?.segmentTitles.length) {
+                    const segmentTitles = getTrimmedTitles(data.segmentTitles);
+                    dispatch(updateSegmentsTitles(data.id, segmentTitles, showError));
+                }
             }
         } catch (e){
             showError(e)

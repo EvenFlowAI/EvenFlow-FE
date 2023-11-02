@@ -2,12 +2,13 @@ import {IAppointment, IPackageAppointments} from "../../../api/types";
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getAllAppointments,
-    getAppointments, getPackageByVehicle, getScheduler, getServiceBookList,
+    getAppointments, getPackageByVehicle, getAppointmentsPageData, getScheduler, getServiceBookList,
     setAllAppointmentsCount,
     setAppointmentsCount,
     setAppointmentsLoading, setAppointmentsModalLoading
 } from "./actions";
 import {TScheduler, TServiceBook} from "./types";
+import {IPageRequest} from "../../../types/types";
 
 type TState = {
     appointments: IAppointment[];
@@ -19,6 +20,7 @@ type TState = {
     packages: IPackageAppointments[];
     serviceBookList: TServiceBook[];
     schedulerList: TScheduler[];
+    pageData: IPageRequest,
 }
 
 const initialState: TState = {
@@ -31,6 +33,10 @@ const initialState: TState = {
     packages: [],
     serviceBookList: [],
     schedulerList: [],
+    pageData: {
+        pageIndex: 0,
+        pageSize: 10,
+    }
 }
 
 export const appointmentsReducer = createReducer(initialState, builder => builder
@@ -60,5 +66,8 @@ export const appointmentsReducer = createReducer(initialState, builder => builde
     })
     .addCase(getScheduler, (state, { payload} ) => {
         return {...state, schedulerList: payload}
+    })
+    .addCase(getAppointmentsPageData, (state, { payload} ) => {
+        return {...state, pageData: {...state.pageData, ...payload}}
     })
 )

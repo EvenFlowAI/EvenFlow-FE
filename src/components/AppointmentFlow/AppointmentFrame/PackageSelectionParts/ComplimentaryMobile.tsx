@@ -18,7 +18,7 @@ const ComplimentaryMobile: React.FC<TProps> = ({isBmWService, complimentaryServi
     return (
         <React.Fragment>
             <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>
-                {title ?? t("Complimentary")}
+                {title?.trim().length ? title : t("Complimentary")}
             </div>
 
             <div className={classes.complimentaryServices}>

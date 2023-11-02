@@ -10,7 +10,7 @@ import {IServiceConsultant} from '../../../api/types';
 import {
     loadConsultants,
     setAdvisor, setAnyAdvisorSelected,
-    setCurrentFrameScreen,
+    setCurrentFrameScreen, setServiceTypeOption,
     setSideBarActualSteps,
     setSideBarMenu,
     setSideBarStepsList
@@ -117,6 +117,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         isUsualFlowNeeded,
         isConsultantsLoading,
         serviceOptionChangedFromSlotPage,
+        prevSelectedOption
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
@@ -125,7 +126,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const {id} = useParams();
     const {t} = useTranslation();
     const showError = useException();
-    const isGoingFromManageScreen = customerLoadedData?.isUpdating && !isUsualFlowNeeded && !serviceOptionChangedFromSlotPage
+    const isGoingFromManageScreen = customerLoadedData?.isUpdating && !isUsualFlowNeeded && !serviceOptionChangedFromSlotPage;
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
@@ -168,10 +169,19 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         } else onNext()
     }
 
+    const onBackToPrevServiceOption = () => {
+        if (prevSelectedOption) dispatch(setServiceTypeOption(prevSelectedOption))
+        dispatch(setCurrentFrameScreen(isAppointmentTimingAvailable
+            ? "appointmentTiming"
+            : "appointmentSelection"))
+    }
+
     const handleBack = () => {
         isGoingFromManageScreen
             ? dispatch(setCurrentFrameScreen("manageAppointment"))
-            : onBack()
+            : serviceOptionChangedFromSlotPage && customerLoadedData?.isUpdating
+                ? onBackToPrevServiceOption()
+                : onBack()
     }
 
     return (<StepWrapper>

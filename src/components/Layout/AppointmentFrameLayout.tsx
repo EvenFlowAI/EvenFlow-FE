@@ -34,25 +34,25 @@ import {API} from "../../api/api";
 import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
 import {
     checkCarIsValid,
-    handleSideBarAppointmentUpdate, loadConsultants, loadConsultantsForUpdating,
-    loadMakes, setAdvisor, setAnyAdvisorSelected,
-    setAppointmentByKey, setAppointmentNotes,
+    handleSideBarAppointmentUpdate,
+    loadConsultants,
+    loadConsultantsForUpdating,
+    loadMakes,
+    setAnyAdvisorSelected,
+    setAppointmentByKey,
+    setAppointmentNotes,
     setAppointmentSaving,
     setCurrentFrameScreen,
     setServiceTypeOption,
     setTrackerCreated,
     setUpdateAppointment,
     setVehicle,
-    setWelcomeScreenView, updateConsultant,
+    setWelcomeScreenView,
+    updateConsultant,
     updatePackageOption,
     updateRecalls
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {
-    EServiceCategoryPage,
-    IAppointmentByKey,
-    ILoadedVehicle,
-    IServiceCategory
-} from "../../api/types";
+import {EServiceCategoryPage, IAppointmentByKey, ILoadedVehicle, IServiceCategory} from "../../api/types";
 import './MaintenanceDetails.css';
 import ReactGA from "react-ga4";
 // import ReactGA from "react-ga";
@@ -109,6 +109,8 @@ export const AppointmentFrameLayout = () => {
         selectedPackage,
         selectedRecalls,
         categoriesIds,
+        address,
+        zipCode,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -226,11 +228,11 @@ export const AppointmentFrameLayout = () => {
 
     const onCarIsValid = useCallback(() => {
         const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
-        if (someRequestsSelected) {
-            dispatch(setAdvisor(null));
+        const requestDataIsValid = serviceTypeOption?.type === EServiceType.VisitCenter || Boolean(address && zipCode)
+        if (someRequestsSelected && requestDataIsValid) {
             dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
         }
-    }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id])
+    }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id, address, zipCode])
 
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
@@ -247,7 +249,7 @@ export const AppointmentFrameLayout = () => {
 
 
     useEffect(() => {
-        dispatch(checkCarIsValid(onCarIsValid))
+        dispatch(checkCarIsValid(onCarIsValid, undefined, true))
     }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle, mileage])
 
     useEffect(() => {
@@ -261,6 +263,7 @@ export const AppointmentFrameLayout = () => {
 
     useEffect(() => {
         if (selectedVehicle && customerLoadedData?.isUpdating && customerLoadedData.fromSearchByName) {
+            dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
             onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
         }
     }, [customerLoadedData, selectedVehicle, firstScreenOptions])
