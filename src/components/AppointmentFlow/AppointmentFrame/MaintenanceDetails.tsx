@@ -82,6 +82,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         selectedPackage,
         serviceTypeOption,
         appointmentByKey,
+        advisor
     }= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
@@ -279,7 +280,11 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 && appointmentByKey?.serviceTypeOption
                 && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff;
             if (pickUpSelected || pickUpChanged) {
-                onNext(isAppointmentTimingAvailable ? "appointmentTiming" : "appointmentSelection")
+                onNext(!advisor && isAdvisorAvailable
+                    ? "consultantSelection"
+                    : isAppointmentTimingAvailable
+                        ? "appointmentTiming"
+                        : "appointmentSelection")
             } else {
                 scProfile && dispatch(checkPodChanged(scProfile.id, showError))
             }
