@@ -18,7 +18,7 @@ const IntervalUpsellsMobile: React.FC<TProps> = ({intervalUpsells, isBmWService,
     return intervalUpsells?.length
             ? <React.Fragment>
                 <div className={classes.upsellTitle} style={isBmWService ? {fontSize: 16} : {}}>
-                    {title ?? t("Service Interval Upsell")}
+                    {title?.trim().length ? title : t("Service Interval Upsell")}
                 </div>
                 <div className={classes.intervalUpsells}>
                     {intervalUpsells

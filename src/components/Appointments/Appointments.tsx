@@ -2,14 +2,14 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Titles} from "../../config/constants";
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
 import {AppointmentActions} from "./AppointmentDialog/AppointmentActions";
-import {useModal, useSCs, useStatePagination} from "../../utils/hooks";
+import {useModal, useSCs} from "../../utils/hooks";
 import {EAppointmentStatus, IAppointment} from "../../api/types";
 import moment from "moment";
 import {IOrder} from "../../types/types";
 import AppointmentFilters from "./AppointmentFilters";
 import {IAppointmentsRequest, TScheduler, TServiceBook} from "../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";
-import {loadAppointments} from "../../store/reducers/appointments/actions";
+import {getAppointmentsPageData, loadAppointments} from "../../store/reducers/appointments/actions";
 import AppointmentsCalendar from "./AppointmentsCalendar";
 import AppointmentsListDialog from "./AppointmentsListDialog";
 import {AppointmentsTable} from "./AppointmentsTable";
@@ -17,8 +17,13 @@ import {RootState} from "../../store/rootReducer";
 
 export type TView = "calendar" | "list";
 
+const initialOrder = {
+    orderBy: "date",
+    isAscending: true,
+}
+
 export const Appointments = () => {
-    const { isLoading, schedulerList, serviceBookList } = useSelector((state: RootState) => state.appointments);
+    const { isLoading, schedulerList, serviceBookList, pageData } = useSelector((state: RootState) => state.appointments);
     const [viewItem, setViewItem] = useState<IAppointment|undefined>(undefined);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [status, setStatus] = useState<EAppointmentStatus | '' | unknown>('');
@@ -27,18 +32,27 @@ export const Appointments = () => {
     const [date, setDate] = useState<moment.Moment | null>(null);
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
     const [selectedView, setSelectedView] = useState<TView>("list");
-    const [order, setOrder] = useState<IOrder<IAppointment>>({
-        orderBy: "date",
-        isAscending: true,
-    })
+    const [order, setOrder] = useState<IOrder<IAppointment>>(initialOrder)
     const {selectedSC} = useSCs();
-    const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
     const {isOpen: isListOpen, onClose: onListClose, onOpen: onListOpen} = useModal();
     const dispatch = useDispatch();
 
-    const refresh = useCallback(() => {
+    const getAllAppointments = () => {
+        if (selectedSC && selectedView === 'list') {
+            const data: IAppointmentsRequest = {
+                pageIndex: 0,
+                pageSize: 10,
+                serviceCenterId: selectedSC.id,
+                isAscending: true,
+                orderBy: 'date'
+            }
+            dispatch(loadAppointments(data));
+        }
+    }
+
+    const getAppointmentsByFilters = useCallback(() => {
          if (selectedSC && selectedView === 'list') {
-             const serviceBookId = serviceBook?.id ?? null;
+             const serviceBookId = serviceBook?.id ??  null;
              const isServiceBookServiceCenter = Boolean(serviceBook && !serviceBookId);
              const data: IAppointmentsRequest = {
                  pageIndex: pageData.pageIndex,
@@ -48,7 +62,7 @@ export const Appointments = () => {
                  isAscending: order.isAscending,
                  date: moment(date).add(moment(date).utcOffset(), 'minute'),
                  // @ts-ignore
-                 status: EAppointmentStatus[status],
+                 status: status ? EAppointmentStatus[status] : undefined,
                  scheduler: scheduler ? {id: scheduler.id, type: scheduler.type} : null,
                  serviceBookId,
                  searchTerm,
@@ -56,13 +70,27 @@ export const Appointments = () => {
             }
              dispatch(loadAppointments(data));
         }
-    }, [selectedSC, pageData, order, searchTerm, date, status, selectedView, scheduler, serviceBook]);
+    }, [pageData, order, searchTerm, date, status, selectedView, scheduler, serviceBook]);
 
     useEffect(() => {
-        refresh();
+        getAppointmentsByFilters();
     }, []);
 
+    const clearFilters = async () => {
+        await setServiceBook(null);
+        await setScheduler(null);
+        await setDate(null);
+        await setStatus('')
+        await setSearchTerm('')
+        await dispatch(getAppointmentsPageData({pageSize: 10, pageIndex: 0}))
+    }
+
+    useEffect(() => {
+        clearFilters().then(() => getAllAppointments())
+    }, [selectedSC])
+
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(getAppointmentsPageData({pageIndex: 0, pageSize: 10}));
         setSearchTerm(e.target.value)
     }
 
@@ -71,10 +99,12 @@ export const Appointments = () => {
     }
 
     const handleSelectStatus = (e: React.ChangeEvent<{value: unknown}>) => {
+        dispatch(getAppointmentsPageData({pageIndex: 0, pageSize: 10}));
         setStatus(e.target.value);
     }
 
     const handleSelectServiceBook = (e: React.ChangeEvent<{value: unknown}>) => {
+        dispatch(getAppointmentsPageData({pageIndex: 0, pageSize: 10}));
         if (e.target.value) {
             const selected = serviceBookList.find(item => item.id === e.target.value || item.name === e.target.value)
             setServiceBook(selected ?? null);
@@ -84,6 +114,7 @@ export const Appointments = () => {
     }
 
     const handleSelectScheduler = (e: React.ChangeEvent<{value: unknown}>) => {
+        dispatch(getAppointmentsPageData({pageIndex: 0, pageSize: 10}));
         if (e.target.value) {
             const selected = schedulerList.find(item => item.id
                 ? item.id.toString() === e.target.value
@@ -94,8 +125,17 @@ export const Appointments = () => {
         }
     }
 
+    const onChangePage = useCallback((e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number): void => {
+        dispatch(getAppointmentsPageData({pageIndex}));
+    }, []);
+
+    const onChangeRowsPerPage = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
+        dispatch(getAppointmentsPageData({pageIndex: 0, pageSize: +e.target.value}));
+    }, []);
+
     const onDateChange = (date: moment.Moment | null): void => {
         setDate(date)
+        dispatch(getAppointmentsPageData({pageIndex: 0, pageSize: 10}));
     }
 
     const handleChangeView = (type: TView) => () => {
@@ -127,7 +167,7 @@ export const Appointments = () => {
                 handleChangeView={handleChangeView}
                 onFilterOpen={onFilterOpen}
                 handleSearchChange={handleSearchChange}
-                onSearch={refresh}/>}
+                onSearch={getAppointmentsByFilters}/>}
         />
         {isFiltersOpen ?
             <AppointmentFilters
@@ -146,7 +186,7 @@ export const Appointments = () => {
                 viewItem={viewItem}
                 setViewItem={setViewItem}
                 isLoading={isLoading}
-                refresh={refresh}
+                refresh={getAppointmentsByFilters}
                 order={order}
                 setOrder={setOrder}
                 pageData={pageData}
@@ -166,7 +206,7 @@ export const Appointments = () => {
             viewItem={viewItem}
             setViewItem={setViewItem}
             onClose={onListDialogClose}
-            refresh={refresh}
+            refresh={getAppointmentsByFilters}
             order={order}
             setOrder={setOrder}/>
     </>

@@ -24,7 +24,7 @@ const IntervalUpsells: React.FC<TComplimentaryProps> =
 
         return upsell.length
             ? <React.Fragment>
-                <div className="yellow subtitle">{title ?? t("Dashboard Indicator Services")}</div>
+                <div className="yellow subtitle">{title?.trim().length ? title : t("Dashboard Indicator Services")}</div>
 
                 {packages.map(p =>
                     <div
