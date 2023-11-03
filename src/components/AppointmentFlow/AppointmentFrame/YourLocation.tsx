@@ -213,7 +213,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const onNextStep = () => {
         if (customerLoadedData?.isUpdating) {
-            changedToPickUpFromSlots || zipCodeValue !== appointmentByKey?.zipCode
+            changedToPickUpFromSlots || (appointmentByKey?.zipCode && zipCodeValue !== appointmentByKey?.zipCode)
                 ? scProfile && dispatch(checkPodChanged(scProfile.id, showError))
                 : handleManagingFlow();
         } else {
