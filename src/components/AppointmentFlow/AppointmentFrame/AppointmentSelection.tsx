@@ -357,7 +357,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             : isAdvisorAvailable
                 ? 'consultantSelection'
                 : "serviceNeeds"
-        if (customerData?.isUpdating && !isUsualFlowNeeded && prevScreen) {
+        const isManageFlow = customerData?.isUpdating && !isUsualFlowNeeded
+        if (prevScreen && isManageFlow) {
             previousLogicalScreen = prevScreen
         }
         return previousLogicalScreen
