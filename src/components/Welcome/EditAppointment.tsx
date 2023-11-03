@@ -29,6 +29,7 @@ import {useTranslation} from "react-i18next";
 import {useStorage} from "../../utils/hooks";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
+import {dateTimeFormat} from "../Appointments/AppointmentDialog/parts/AppointmentDetails";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -101,7 +102,9 @@ export const EditAppointment = () => {
                     return;
                 }
                 const [hours, minutes] = data.timeSlot.split(":");
-                if (moment.utc().diff(moment(data.dateInUtc).hours(+hours).minutes(+minutes)) >= 0) {
+                const formattedDate = moment(data.dateInUtc).format()
+                const dateTime = moment.utc(formattedDate).hours(+hours).minutes(+minutes).format(dateTimeFormat)
+                if (moment.utc().diff(dateTime) >= 0) {
                     setState("passed");
                     return;
                 }
