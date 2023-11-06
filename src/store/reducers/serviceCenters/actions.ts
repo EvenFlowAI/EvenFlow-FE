@@ -197,7 +197,7 @@ export const loadAllSCs = (): AppThunk => async (dispatch, getState) => {
             const assignedTo = result.find(i => i.id === user?.serviceCenterId);
             if (prevSelected || assignedTo) {
                 const selected = result.find(i => i.id === Number(prevSelected));
-                if (assignedTo) {
+                if (assignedTo && user?.role !== "Service Director") {
                     dispatch(selectSC(assignedTo));
                 } else if (selected) {
                     dispatch(selectSC(selected));

@@ -26,7 +26,7 @@ const Complimentary: React.FC<TComplimentaryProps> =
         const title = loadedPackages[0]?.segmentTitles?.find(el => el.type === ESegmentTitle.Complimentary)?.title
 
     return <React.Fragment>
-            <div className="green subtitle">{title ?? t("Complimentary")}</div>
+            <div className="green subtitle">{title?.trim().length ? title : t("Complimentary")}</div>
         
             {packages.map(p =>
                 <div
