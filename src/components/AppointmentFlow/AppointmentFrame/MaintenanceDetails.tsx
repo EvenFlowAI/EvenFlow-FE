@@ -439,7 +439,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                         fullWidth
                         getOptionLabel={o => o.name}
                         getOptionSelected={o => o.id === selectedEngine?.id}
-                        // disabled={!isNewVehicleView && Boolean(selectedEngine)}
+                        disabled={Boolean(selectedEngine) && Boolean(appointmentByKey?.vehicle?.engineTypeId)}
                         renderInput={autocompleteRender({
                             label: scProfile?.engineTypeFieldName ?? t("Engine Type"),
                             placeholder: errors.includes("engineTypeId")
