@@ -78,7 +78,7 @@ export const loadPackageByVehicle = (data: IPackageRequestData): AppThunk => dis
         .finally(() => dispatch(setAppointmentsModalLoading(false)))
 }
 
-export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<any>): AppThunk => (dispatch, getState) => {
+export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<any>, onPodKept?: () => void): AppThunk => (dispatch, getState) => {
     const appointmentFrame = getState().appointmentFrame;
     const appointment = getState().appointment;
     const categories = getState().categories;
@@ -140,7 +140,11 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
                 if (result?.data) {
                     dispatch(setSlotsWarningOpen(true));
                 } else {
-                    dispatch(setChangesCompletedOpen(true))
+                    if (onPodKept) {
+                        onPodKept()
+                    } else {
+                        dispatch(setChangesCompletedOpen(true))
+                    }
                 }
             })
             .catch(e => {

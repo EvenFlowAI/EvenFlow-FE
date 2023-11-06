@@ -334,6 +334,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     }, [])
 
     const handleTransportation = useCallback(() => {
+        debugger
         if (serviceTypeOption?.transportationOption || !isTransportationAvailable) {
             dispatch(setChangesCompletedOpen(true))
         } else {

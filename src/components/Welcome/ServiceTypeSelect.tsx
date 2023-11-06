@@ -131,8 +131,15 @@ export const useServiceTypeStyles = makeStyles((theme) => ({
 }))
 
 const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading }) => {
-    const {trackerCreated, userType, selectedVehicle, serviceTypeOption, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        trackerCreated,
+        userType,
+        selectedVehicle,
+        serviceTypeOption,
+        appointmentByKey
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const currentUser = useCurrentUser();
 
@@ -159,20 +166,35 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
         redirect()
     }
 
-    const changeToVisitCenter = () => {
+    const redirectToTransportation = () => {
+        dispatch(setCurrentFrameScreen("transportationNeeds"))
+        redirect()
+    }
+
+    const handleVisitCenterSwitch = (newServiceOption: IFirstScreenOption) => {
+        const newConfigHasTransportation = config
+            .find(el => el.serviceType === newServiceOption.type)?.transportationNeeds
+        if (newConfigHasTransportation && !newServiceOption?.transportationOption) {
+            dispatch(checkPodChanged(decodeSCID(id), showError, redirectToTransportation))
+        } else {
+            dispatch(checkPodChanged(decodeSCID(id), showError))
+        }
+    }
+
+    const changeToVisitCenter = (newServiceOption: IFirstScreenOption) => {
         if (serviceTypeOption?.type === EServiceType.MobileService) {
             dispatch(setServiceWarningOpen(true))
         } else if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
             dispatch(setSlotsWarningOpen(true))
         } else {
-            dispatch(checkPodChanged(decodeSCID(id), showError))
+            handleVisitCenterSwitch(newServiceOption)
         }
     }
 
     const handleUpdateOption = (serviceOption: IFirstScreenOption) => {
         dispatch(checkCarIsValid(() => dispatch(loadConsultants(id, serviceOption.id))))
         if (serviceOption?.type === EServiceType.VisitCenter) {
-            changeToVisitCenter()
+            changeToVisitCenter(serviceOption)
         } else {
             changeToMobileOrServiceValet()
         }
@@ -182,6 +204,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
         handleValueServiceConfig(serviceOption.type);
         dispatch(setUsualFlowNeeded(false));
         if (customerLoadedData?.isUpdating) {
+            dispatch(setTransportation(null));
             handleUpdateOption(serviceOption)
         } else {
             if (serviceTypeOption?.id !== serviceOption.id) {
