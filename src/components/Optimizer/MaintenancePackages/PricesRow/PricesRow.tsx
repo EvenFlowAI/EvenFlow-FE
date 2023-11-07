@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {Dispatch, SetStateAction, useMemo} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import TitleEditable from "./TitleEditable";
 import PriceItem from "./PriceItem";
@@ -44,8 +44,13 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
+type TProps = {
+    packageData: IPackageById|null;
+    setPackageData: Dispatch<SetStateAction<IPackageById|null>>;
+    suggestedPrices: TSummaryCell[];
+}
 
-const PricesRow: React.FC<{packageData: IPackageById|null, suggestedPrices: TSummaryCell[]}> = ({packageData, suggestedPrices}) => {
+const PricesRow: React.FC<TProps> = ({packageData, suggestedPrices, setPackageData}) => {
     const {currentPackage} = useSelector((state: RootState) => state.packages);
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -120,17 +125,29 @@ const PricesRow: React.FC<{packageData: IPackageById|null, suggestedPrices: TSum
         return price;
     }, [bestOption, bestCorePrice])
 
-    const onPriceUpdated = () => showMessage("Package Price Title Updated")
+    const onPriceUpdated = (title: string, type: EPackagePricingType) => {
+        showMessage("Package Price Title Updated")
+        setPackageData(prev => {
+            if (prev) {
+                const priceTitles = prev.priceTitles.filter(el => el.type !== type)
+                priceTitles.push({title, type})
+                return {...prev, priceTitles}
+            }
+            return prev;
+        })
+    }
 
     const onSavePrice = (title: string) => {
         if (currentPackage && title.length) {
-            dispatch(updatePriceTitles(currentPackage.id, {title, type: EPackagePricingType.BasePrice}, onPriceUpdated))
+            const type: EPackagePricingType = EPackagePricingType.BasePrice;
+            dispatch(updatePriceTitles(currentPackage.id, {title, type}, () => onPriceUpdated(title, type)))
         }
     }
 
     const onSavePriceWithFee = (title: string) => {
         if (currentPackage && title.length) {
-            dispatch(updatePriceTitles(currentPackage.id, {title, type: EPackagePricingType.PriceWithFee}, onPriceUpdated))
+            const type: EPackagePricingType = EPackagePricingType.PriceWithFee;
+            dispatch(updatePriceTitles(currentPackage.id, {title, type}, () => onPriceUpdated(title, type)))
         }
     }
 
