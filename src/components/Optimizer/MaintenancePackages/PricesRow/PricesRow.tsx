@@ -8,6 +8,7 @@ import {EMaintenanceOptionType, IPackageById} from "../../../../api/types";
 import {updatePriceTitles} from "../../../../store/reducers/packages/actions";
 import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {TSummaryCell} from "../PackageAccordion/PackageAccordion";
+import {useMessage} from "../../../../utils/hooks";
 
 const useStyles = makeStyles(() => ({
     topLineWrapper: {
@@ -48,6 +49,7 @@ const PricesRow: React.FC<{packageData: IPackageById|null, suggestedPrices: TSum
     const {currentPackage} = useSelector((state: RootState) => state.packages);
     const classes = useStyles();
     const dispatch = useDispatch();
+    const showMessage = useMessage();
 
     const basePrice = useMemo(() => currentPackage?.priceTitles?.find(item => item.type === EPackagePricingType.BasePrice),
         [currentPackage])
@@ -118,15 +120,17 @@ const PricesRow: React.FC<{packageData: IPackageById|null, suggestedPrices: TSum
         return price;
     }, [bestOption, bestCorePrice])
 
+    const onPriceUpdated = () => showMessage("Package Price Title Updated")
+
     const onSavePrice = (title: string) => {
         if (currentPackage && title.length) {
-            dispatch(updatePriceTitles(currentPackage.id, {title, type: EPackagePricingType.BasePrice}))
+            dispatch(updatePriceTitles(currentPackage.id, {title, type: EPackagePricingType.BasePrice}, onPriceUpdated))
         }
     }
 
     const onSavePriceWithFee = (title: string) => {
         if (currentPackage && title.length) {
-            dispatch(updatePriceTitles(currentPackage.id, {title, type: EPackagePricingType.PriceWithFee}))
+            dispatch(updatePriceTitles(currentPackage.id, {title, type: EPackagePricingType.PriceWithFee}, onPriceUpdated))
         }
     }
 
