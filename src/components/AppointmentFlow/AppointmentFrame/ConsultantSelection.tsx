@@ -126,7 +126,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const {id} = useParams();
     const {t} = useTranslation();
     const showError = useException();
-    const isGoingFromManageScreen = customerLoadedData?.isUpdating && !isUsualFlowNeeded && !serviceOptionChangedFromSlotPage;
+    const isGoingFromManageScreen = customerLoadedData?.isUpdating && !serviceOptionChangedFromSlotPage;
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceRequestIds = useMemo(() => {
