@@ -105,6 +105,13 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const isXS = useMediaQuery(theme.breakpoints.down("xs"));
     const isSM = useMediaQuery(theme.breakpoints.down("sm"));
     const requiredFields: TKey[] = ["model", "year", "make", "mileage"];
+    const nextLogicalScreen = useMemo(() => {
+         return isAdvisorAvailable
+            ? 'consultantSelection'
+            : isAppointmentTimingAvailable
+                ? 'appointmentTiming'
+                : "appointmentSelection"
+    }, [isAdvisorAvailable, isAppointmentTimingAvailable])
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
@@ -262,17 +269,14 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const goToNextScreen = () => {
         onNext(service?.type === EServiceCategoryType.MaintenancePackage
             ? 'packageSelection'
-            : isAdvisorAvailable
-                ? 'consultantSelection'
-                : isAppointmentTimingAvailable
-                    ? 'appointmentTiming'
-                    : "appointmentSelection");
+            : nextLogicalScreen);
     }
 
     const handleUpdating = () => {
         if (service?.type === EServiceCategoryType.MaintenancePackage) {
             goToNextScreen()
         } else {
+            const advisorNotSelected = !advisor && isAdvisorAvailable;
             const pickUpSelected = serviceTypeOption?.type === EServiceType.PickUpDropOff
                 && appointmentByKey?.serviceTypeOption
                 && appointmentByKey?.serviceTypeOption?.type !== EServiceType.PickUpDropOff;
@@ -280,13 +284,13 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 && appointmentByKey?.serviceTypeOption
                 && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff;
             if (pickUpSelected || pickUpChanged) {
-                onNext(!advisor && isAdvisorAvailable
+                onNext(advisorNotSelected
                     ? "consultantSelection"
                     : isAppointmentTimingAvailable
                         ? "appointmentTiming"
                         : "appointmentSelection")
             } else {
-                if (!advisor && isAdvisorAvailable) {
+                if (advisorNotSelected) {
                     onNext("consultantSelection");
                 } else {
                     scProfile && dispatch(checkPodChanged(scProfile.id, showError))
