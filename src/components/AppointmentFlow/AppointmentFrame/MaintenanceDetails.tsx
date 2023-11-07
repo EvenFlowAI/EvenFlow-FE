@@ -286,7 +286,11 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                         ? "appointmentTiming"
                         : "appointmentSelection")
             } else {
-                scProfile && dispatch(checkPodChanged(scProfile.id, showError))
+                if (!advisor && isAdvisorAvailable) {
+                    onNext("consultantSelection");
+                } else {
+                    scProfile && dispatch(checkPodChanged(scProfile.id, showError))
+                }
             }
         }
     }
