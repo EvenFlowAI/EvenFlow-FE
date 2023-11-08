@@ -151,6 +151,9 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
         if (isInit.current) {
             setSearch(search);
         }
+        return () => {
+            dispatch(handleSearch(''))
+        }
     }, [search]);
     useEffect(() => {isInit.current = false}, []);
 
