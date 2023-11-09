@@ -52,3 +52,21 @@ export const SearchDB: React.FC<TProps> = ({onSearch, search, ...props}) => {
         {...props}
     />
 }
+
+export const SearchDebounced: React.FC<TSearchInputProps> = ({placeholder, onSearch, value, delay = 1000, ...props}) => {
+    const isInit = useRef(true);
+    const debouncedSearch = useDebounce(value, delay);
+    useEffect(() => {
+        if (!isInit.current && onSearch) {
+            onSearch();
+        }
+    }, [debouncedSearch]);
+    useEffect(() => {isInit.current = false}, []);
+
+    return <TextField
+        placeholder={placeholder ?? "Search..."}
+        endAdornment={<Search />}
+        value={value}
+        {...props}
+    />
+}

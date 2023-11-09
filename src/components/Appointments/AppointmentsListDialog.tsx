@@ -4,7 +4,6 @@ import moment from "moment";
 import {DialogProps} from "../Modals/types";
 import {useSCs, useStatePagination} from "../../utils/hooks";
 import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
-import {loadAppointmentsForModal} from "../../store/reducers/appointments/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {IAppointment} from "../../api/types";
 import {AppointmentsTable} from "./AppointmentsTable";
@@ -41,7 +40,8 @@ const AppointmentsListDialog: React.FC<TDialogProps> = ({
                 date: moment(date).add(moment(date).utcOffset(), 'minute'),
                 serviceCenterId: selectedSC.id,
             }
-            dispatch(loadAppointmentsForModal(data))
+            // todo uncomment for calendar functionality
+         //   dispatch(loadAppointmentsForModal(data))
         }
     }, [selectedSC, date, props.open, pageData])
 

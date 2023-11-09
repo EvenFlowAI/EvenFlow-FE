@@ -147,6 +147,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
             dispatch(handleSearch(debouncedSearch));
         }
     }, [debouncedSearch, dispatch]);
+
     useEffect(() => {
         if (isInit.current) {
             setSearch(search);
@@ -155,6 +156,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
             dispatch(handleSearch(''))
         }
     }, [search]);
+
     useEffect(() => {isInit.current = false}, []);
 
     const setInitialData = useCallback(() => {
