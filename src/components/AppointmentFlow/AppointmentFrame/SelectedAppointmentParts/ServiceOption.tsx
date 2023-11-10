@@ -82,7 +82,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         if (showAdvisorScreen) dispatch(setCurrentFrameScreen('consultantSelection'))
     }
 
-    const redirectToLocation = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
+    const onRedirectToLocation = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
         const optionWasSelectedPreviously = selectedServiceOptions.find(el => el.id === option.id);
         const shouldRedirectToLocation = !address || !zipCode || !serviceOptionChangedFromSlotPage || !optionWasSelectedPreviously;
         if (shouldRedirectToLocation) {
@@ -93,7 +93,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         }
     }
 
-    const clearAppointment = (option: IFirstScreenOption) => {
+    const clearAppointmentSlot = (option: IFirstScreenOption) => {
         if (option?.type === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));
         } else {
@@ -103,11 +103,13 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
 
     const redirectToNextScreen = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
         if (option?.type === EServiceType.PickUpDropOff) {
-            redirectToLocation(option, showAdvisorScreen);
+            onRedirectToLocation(option, showAdvisorScreen);
         } else {
             handleAdvisorSelection(showAdvisorScreen)
         }
     }
+
+    const clearAdvisor = () => dispatch(setAdvisor(null));
 
     const onEmptyList = () =>  dispatch(setAdvisorAvailable(false))
 
@@ -116,7 +118,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         if (prevAdvisor) {
             redirectToNextScreen(option, false)
         } else {
-            dispatch(setAdvisor(null));
+            clearAdvisor();
             redirectToNextScreen(option, showAdvisorScreen)
         }
     }
@@ -125,23 +127,29 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         if (shouldLoadAdvisors) {
             dispatch(loadConsultants(id, option.id, onEmptyList, (data) => onFullList(data, option, showAdvisorScreen)));
         } else {
-            dispatch(setAdvisor(null));
+            if (!showAdvisorScreen) dispatch(setAdvisor(null));
             redirectToNextScreen(option, showAdvisorScreen)
         }
     }
 
-    const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    const clearTransportation = ()=> {
         dispatch(setTransportation(null));
+    }
+
+    const handleAdvisors = (option: IFirstScreenOption) => {
+        const shouldLoadAdvisors = option?.type === EServiceType.VisitCenter
+            || Boolean(option?.type === EServiceType.PickUpDropOff && address && zipCode);
+        let isAdvisorSelectionOn = Boolean(config.find(item => item.serviceType === option.type)?.advisorSelection);
+        dispatch(checkCarIsValid(() => onCarIsValid(option, shouldLoadAdvisors, isAdvisorSelectionOn), undefined, true))
+    }
+
+    const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+        clearTransportation()
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {
             dispatch(setServiceTypeOption(option));
-
-            const shouldLoadAdvisors = option?.type === EServiceType.VisitCenter
-                || Boolean(option?.type === EServiceType.PickUpDropOff && address && zipCode);
-            let showAdvisorScreen = Boolean(config.find(item => item.serviceType === option.type)?.advisorSelection);
-
-            dispatch(checkCarIsValid(() => onCarIsValid(option, shouldLoadAdvisors, showAdvisorScreen), undefined, true))
-            clearAppointment(option);
+            handleAdvisors(option);
+            clearAppointmentSlot(option);
             dispatch(setServiceOptionChanged(true))
         }
     }

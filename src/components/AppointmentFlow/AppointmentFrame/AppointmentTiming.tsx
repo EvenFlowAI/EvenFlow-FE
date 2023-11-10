@@ -94,18 +94,24 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
     const {t} = useTranslation();
     const {id} = useParams();
     const history = useHistory();
+
     const fromServiceValetToVisitCenter = useMemo(() => {
         return serviceTypeOption?.type === EServiceType.VisitCenter
             && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff
     }, [serviceTypeOption, appointmentByKey])
 
+    const redirectToServiceTypeOptions = () => {
+        dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+        dispatch(setWelcomeScreenView('serviceSelect'));
+        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+    }
+
     const onBack = () => {
         if (fromServiceValetToVisitCenter) {
-            dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
-            dispatch(setWelcomeScreenView('serviceSelect'));
-            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+            redirectToServiceTypeOptions()
         } else {
-            if (editingPosition === 'slot' && customerLoadedData?.isUpdating) {
+            const fromSlotEditing = editingPosition === 'slot' && customerLoadedData?.isUpdating
+            if (fromSlotEditing) {
                 handleSetScreen("manageAppointment")
             } else {
                 handleSetScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')
@@ -121,25 +127,20 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
         dispatch(setTiming(t));
     }, [])
 
+    const clearAppointmentSlots = () => {
+        dispatch(selectAppointment(null));
+        dispatch(selectServiceValetAppointment(null));
+    }
+
     const handleChangeTime = useCallback((t: moment.Moment|null) => {
         dispatch(setTime(t));
-        if (!moment(selectedTime).isSame(t, 'date')) {
-            dispatch(selectAppointment(null));
-            dispatch(selectServiceValetAppointment(null));
-        }
+        if (!moment(selectedTime).isSame(t, 'date')) clearAppointmentSlots()
     }, [selectedTime])
 
-    const isValid = Boolean(
+    const isTimingValid = Boolean(
         selectedType !== null
         && (selectedType !== EAppointmentTimingType.PreferredDate || selectedTime)
     );
-
-    const clearAppointments = useCallback(() => {
-        if (appointment?.timingType !== selectedType) {
-            dispatch(selectAppointment(null))
-            dispatch(selectServiceValetAppointment(null));
-        }
-    }, [appointment, selectedType])
 
     const handleSideBar = () => {
         const index = sideBarSteps.indexOf("appointmentSelection");
@@ -157,7 +158,7 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
                 label: `Selected ${timingTypes[selectedType]}`,
             });
         }
-        clearAppointments();
+        if (appointment?.timingType !== selectedType) clearAppointmentSlots()
         handleSideBar();
         onNext();
     }, [appointment, dispatch, onNext, selectedType])
@@ -183,7 +184,7 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
                         key={card.name}/>
                 })}
             </TimingWrapper>
-            <Actions onBack={onBack} onNext={onSubmit} nextDisabled={!isValid} nextLabel={t("Next")}/>
+            <Actions onBack={onBack} onNext={onSubmit} nextDisabled={!isTimingValid} nextLabel={t("Next")}/>
         </StepWrapper>
     );
 };
