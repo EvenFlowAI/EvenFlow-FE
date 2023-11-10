@@ -1,14 +1,14 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Button, FormControlLabel, styled, Switch, withStyles} from "@material-ui/core";
 import {
-    loadWaitListSettings,
     toggleWaitListFunctionality
 } from "../../../store/reducers/optimizationWindows/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useSCs, useSelectedPod} from "../../../utils/hooks";
+import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
+import WaitListSlotSettings from "../../Modals/WaitListSlotSettings/WaitListSlotSettings";
 
-const Label = withStyles({
+export const SwitcherLabel = withStyles({
     root: {
         justifyContent: "flex-end",
         marginLeft: 0,
@@ -37,30 +37,28 @@ const WaitlistSwitcher = () => {
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch()
-
-    useEffect(() => {
-        if (selectedSC) dispatch(loadWaitListSettings(selectedSC.id, selectedPod?.id))
-    }, [selectedSC, selectedPod])
+    const {onOpen, onClose, isOpen} = useModal();
 
     const handleSwitch = (e: any, value: boolean) => {
         if (selectedSC) dispatch(toggleWaitListFunctionality(selectedSC.id, value, selectedPod?.id ?? undefined))
     }
 
     const onEditClick = () => {
-
+        onOpen();
     }
 
     return (
         <Wrapper>
-            <Label
+            <SwitcherLabel
                 control={<Switch
                     onChange={handleSwitch}
-                    checked={waitListSettings?.isEnabled}
+                    checked={!!waitListSettings?.isEnabled}
                     color="primary"
                 />}
                 label="WaitList Functionality"
                 labelPlacement="start"/>
             <Button variant="text" onClick={onEditClick} color="primary">EDIT</Button>
+            <WaitListSlotSettings open={isOpen} onClose={onClose}/>
         </Wrapper>
     );
 };

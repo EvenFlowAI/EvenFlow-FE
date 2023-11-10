@@ -4,7 +4,7 @@ import {
     IAppointmentCutoff,
     IOptimizationWindow,
     IOverbookingFactor,
-    IWaitlistConfig, TWaitListRequest, TWaitlistRequest
+    IWaitListSettings
 } from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
@@ -93,7 +93,7 @@ export const updateMaxPriceDateRange = (id: number, daysCount: number): AppThunk
         })
 }
 
-export const getWaitListSettings = createAction<IWaitlistConfig>("OptimizationWindows/GetWaitListSettings");
+export const getWaitListSettings = createAction<IWaitListSettings>("OptimizationWindows/GetWaitListSettings");
 export const setWaitListLoading = createAction<boolean>("OptimizationWindows/SetWaitListLoading");
 
 export const loadWaitListSettings = (serviceCenterId: number, podId?: number): AppThunk => dispatch => {
@@ -124,15 +124,17 @@ export const toggleWaitListFunctionality = (serviceCenterId: number, isEnabled: 
         .finally(() => dispatch(setWaitListLoading(false)))
 }
 
-export const updateWaitListSettings = (data: TWaitListRequest): AppThunk => dispatch => {
+export const updateWaitListSettings = (data: IWaitListSettings, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
     dispatch(setWaitListLoading(true))
     Api.call(Api.endpoints.WaitListSettings.Update, {data})
         .then(res => {
             if (res?.data) {
                 dispatch(loadWaitListSettings(data.serviceCenterId, data.podId ?? undefined))
+                onSuccess()
             }
         })
         .catch(err => {
+            onError(err)
             console.log('toggle waitlist functionality error', err)
         })
         .finally(() => dispatch(setWaitListLoading(false)))

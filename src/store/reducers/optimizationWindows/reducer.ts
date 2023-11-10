@@ -1,5 +1,5 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IAppointmentCutoff, IOptimizationWindow, IOverbookingFactor, IWaitlistConfig} from "./types";
+import {IAppointmentCutoff, IOptimizationWindow, IOverbookingFactor, IWaitListSettings} from "./types";
 import {
     getAppointmentCutoff,
     getMaxPriceDateRange,
@@ -13,7 +13,7 @@ type TState = {
     overbookingFactor: IOverbookingFactor[],
     appointmentCutoff: IAppointmentCutoff[],
     maxPriceDateRange: number | undefined,
-    waitListSettings: IWaitlistConfig;
+    waitListSettings: IWaitListSettings|null;
     isWaitListLoading: boolean;
 }
 
@@ -22,10 +22,7 @@ const initialState: TState = {
     overbookingFactor: [],
     appointmentCutoff: [],
     maxPriceDateRange: undefined,
-    waitListSettings: {
-        isEnabled: false,
-        slotSettings: null
-    },
+    waitListSettings: null,
     isWaitListLoading: false
 }
 export const optimizationWindowsReducer = createReducer(initialState, builder => builder

@@ -46,25 +46,12 @@ export interface IAppointmentCutoff {
     podId?: number;
 }
 
-export type TSlotSettings = {
+export interface IWaitListSettings {
+    isEnabled: boolean;
     serviceCenterId: number;
     appointmentSlotText: string;
     podId?: number|null;
     appointmentSlotTextHex?: string;
     appointmentSlotBoxHex?: string;
     rolloverDescriptionText?: string;
-}
-
-export interface IWaitlistConfig {
-    isEnabled: boolean;
-    slotSettings: TSlotSettings|null;
-}
-
-export type TWaitlistRequest = {
-    serviceCenterId: number;
-    podId?: number
-}
-
-export interface TWaitListRequest extends TSlotSettings {
-    isEnabled: boolean;
 }

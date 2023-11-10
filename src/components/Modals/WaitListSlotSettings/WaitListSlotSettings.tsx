@@ -1,34 +1,59 @@
-import React, {useEffect, useState} from 'react';
-import {TWaitListRequest} from "../../../store/reducers/optimizationWindows/types";
+import React, {useCallback, useEffect, useState} from 'react';
+import {IWaitListSettings} from "../../../store/reducers/optimizationWindows/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useSCs, useSelectedPod} from "../../../utils/hooks";
+import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {updateWaitListSettings} from "../../../store/reducers/optimizationWindows/actions";
+import {TextField} from "../../UI/TextField";
+import {Button, Switch} from "@material-ui/core";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
+import {makeStyles} from "@material-ui/core/styles";
+import {DialogProps} from "../types";
+import {SwitcherLabel} from "../../Optimizer/AppointmentAllocation/WaitlistSwitcher";
 
-const WaitListSlotSettings = () => {
-    const {waitListSettings} = useSelector((state: RootState) => state.optimizationWindows);
+const useStyles = makeStyles(() => ({
+    inputWrapper: {
+      marginBottom: 24
+    },
+    cancelButton: {
+        color: '#9FA2B4'
+    },
+}))
+
+const WaitListSlotSettings: React.FC<DialogProps> = (props) => {
+    const {waitListSettings, isWaitListLoading} = useSelector((state: RootState) => state.optimizationWindows);
     const [slotText, setSlotText] = useState<string>('');
     const [slotTextHex, setSlotTextHex] = useState<string>('');
     const [slotTextBoxHex, setSlotTextBoxHex] = useState<string>('');
     const [rolloverDescriptionText, setRolloverDescriptionText] = useState<string>('');
     const [isEnabled, setEnabled] = useState<boolean>(false);
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch()
+    const showError = useException();
+    const showMessage = useMessage();
+    const classes = useStyles();
 
     useEffect(() => {
-        if (waitListSettings) {
-            setSlotText(waitListSettings.slotSettings?.appointmentSlotText ?? '')
-            setSlotTextHex(waitListSettings.slotSettings?.appointmentSlotTextHex ?? '')
-            setSlotTextBoxHex(waitListSettings.slotSettings?.appointmentSlotBoxHex ?? '')
-            setRolloverDescriptionText(waitListSettings?.slotSettings?.rolloverDescriptionText ?? '')
+        if (waitListSettings && props.open) {
+            setSlotText(waitListSettings.appointmentSlotText ?? '')
+            setSlotTextHex(waitListSettings.appointmentSlotTextHex ?? '')
+            setSlotTextBoxHex(waitListSettings.appointmentSlotBoxHex ?? '')
+            setRolloverDescriptionText(waitListSettings.rolloverDescriptionText ?? '')
             setEnabled(waitListSettings?.isEnabled)
         }
-    }, [waitListSettings])
+    }, [waitListSettings, props.open])
+
+    const onSuccess = () => {
+        showMessage("Waitlist Settings updated")
+        onCancel()
+    }
 
     const onSave = () => {
+        setFormIsChecked(true)
         if (slotText.trim().length && selectedSC) {
-            const data: TWaitListRequest = {
+            const data: IWaitListSettings = {
                 serviceCenterId: selectedSC.id,
                 podId: selectedPod?.id ?? null,
                 appointmentSlotText: slotText,
@@ -43,14 +68,127 @@ const WaitListSlotSettings = () => {
             if (rolloverDescriptionText.trim().length) {
                 data.rolloverDescriptionText = rolloverDescriptionText.trim()
             }
-            dispatch(updateWaitListSettings(data))
+            dispatch(updateWaitListSettings(data, showError, onSuccess))
         }
     }
 
-    return (
-        <div>
+    const onSlotTextColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormIsChecked(false);
+        if (e.target.value.match(/^[a-zA-Z0-9]*$/)) {
+            setSlotTextHex(e.target.value.trim())
+        } else {
+            showError('Appointment Slot Text Hex must consist letters and digits only')
+        }
+    }
 
-        </div>
+    const onSlotBoxColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormIsChecked(false);
+        if (e.target.value.match(/^[a-zA-Z0-9]*$/)) {
+            setSlotTextBoxHex(e.target.value.trim())
+        } else {
+            showError('Appointment Slot Box Hex must consist letters and digits only')
+        }
+    }
+
+    const onSlotTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
+        setFormIsChecked(false);
+        setSlotText(e.target.value);
+    }, [])
+
+    const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormIsChecked(false);
+        setRolloverDescriptionText(e.target.value)
+    }
+
+    const clearData = () => {
+        setSlotText('');
+        setSlotTextHex('');
+        setSlotTextBoxHex('');
+        setRolloverDescriptionText('');
+        setEnabled(false);
+        setFormIsChecked(false);
+    }
+
+    const onCancel = () => {
+        clearData();
+        props.onClose();
+    }
+
+    const handleSwitch = (e: any, value: boolean) => {
+        setFormIsChecked(false);
+        setEnabled(value)
+    }
+
+    return (
+        <BaseModal {...props} width={590} onClose={onCancel}>
+            <DialogTitle onClose={onCancel}>Edit Waitlist Functionality</DialogTitle>
+            <DialogContent>
+                <SwitcherLabel
+                    control={<Switch
+                        onChange={handleSwitch}
+                        checked={isEnabled}
+                        color="primary"
+                    />}
+                    disabled={isWaitListLoading}
+                    style={{marginBottom: 24}}
+                    label="WaitList Functionality"
+                    labelPlacement="start"/>
+                <div className={classes.inputWrapper}>
+                    <TextField
+                        fullWidth
+                        disabled={isWaitListLoading}
+                        label='Appointment Slot Text'
+                        placeholder='Waitlist Only'
+                        error={formIsChecked && !slotText}
+                        onChange={onSlotTextChange}
+                        value={slotText}/>
+                </div>
+                <div className={classes.inputWrapper}>
+                    <TextField
+                        fullWidth
+                        disabled={isWaitListLoading}
+                        value={slotTextHex}
+                        inputProps={{maxLength: 6}}
+                        startAdornment="#"
+                        label="Appointment Slot Text Hex"
+                        placeholder="Enter font color 6 symbols"
+                        onChange={onSlotTextColorChange}
+                    />
+                </div>
+                <div className={classes.inputWrapper}>
+                    <TextField
+                        fullWidth
+                        disabled={isWaitListLoading}
+                        value={slotTextBoxHex}
+                        inputProps={{maxLength: 6}}
+                        startAdornment="#"
+                        label="Appointment Slot Box Hex"
+                        placeholder="Enter shading color (6 symbols)"
+                        onChange={onSlotBoxColorChange}
+                    />
+                </div>
+                <div className={classes.inputWrapper} style={{marginBottom: 20}}>
+                    <TextField
+                        disabled={isWaitListLoading}
+                        fullWidth
+                        multiline
+                        rows={4}
+                        value={rolloverDescriptionText}
+                        label="Rollover description text"
+                        placeholder="Rollover description text"
+                        onChange={onDescriptionChange}
+                    />
+                </div>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onCancel} className={classes.cancelButton} disabled={isWaitListLoading}>
+                    Cancel
+                </Button>
+                <Button onClick={onSave} color="primary" variant="contained" disabled={isWaitListLoading}>
+                    Save
+                </Button>
+            </DialogActions>
+        </BaseModal>
     );
 };
 
