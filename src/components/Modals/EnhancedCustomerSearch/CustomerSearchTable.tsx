@@ -161,6 +161,9 @@ const columns: TColumn[] = [
         name: "State",
     },
     {
+        name: 'ZIP'
+    },
+    {
         name: "Year",
     },
     {
@@ -566,6 +569,14 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="state"
+                                    isEdit={isEdit}
+                                    onFieldChange={onFieldChange}/>
+                            </TableCell>
+                            <TableCell key="zip" className={classes.bodyCell} width={150}>
+                                <CustomerInputField
+                                    editingElement={editingElement}
+                                    customer={customer}
+                                    fieldName="zipCode"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
                             </TableCell>
