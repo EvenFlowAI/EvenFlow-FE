@@ -83,7 +83,10 @@ export const Appointments = () => {
     }, [getAppointments]);
 
     useEffect(() => {
-        if (selectedSC) setFilters({...initialFilters, scId: selectedSC?.id})
+        if (selectedSC) {
+            setFilters({...initialFilters, scId: selectedSC?.id})
+            setSearch('')
+        }
     }, [selectedSC, selectedView])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
