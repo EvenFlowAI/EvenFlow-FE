@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Button, FormControlLabel, styled, Switch, withStyles} from "@material-ui/core";
-import {updateManualOverride, updateShowSuggestedPrice} from "../../../store/reducers/packages/actions";
-import {loadWaitListSettings, toggleWaitListFunctionality} from "../../../store/reducers/optimizationWindows/actions";
+import {
+    loadWaitListSettings,
+    toggleWaitListFunctionality
+} from "../../../store/reducers/optimizationWindows/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useSCs, useSelectedPod} from "../../../utils/hooks";
@@ -32,9 +34,13 @@ const Wrapper = styled('div')({
 
 const WaitlistSwitcher = () => {
     const {waitListSettings} = useSelector((state: RootState) => state.optimizationWindows);
-    const dispatch = useDispatch()
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (selectedSC) dispatch(loadWaitListSettings(selectedSC.id, selectedPod?.id))
+    }, [selectedSC, selectedPod])
 
     const handleSwitch = (e: any, value: boolean) => {
         if (selectedSC) dispatch(toggleWaitListFunctionality(selectedSC.id, value, selectedPod?.id ?? undefined))
