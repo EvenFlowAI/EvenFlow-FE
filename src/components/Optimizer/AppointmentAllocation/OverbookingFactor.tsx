@@ -6,10 +6,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {DemandTable, SaveEditBlock, TableCell, TableRow} from "./UI";
 import moment from "moment";
 import {TextField} from "../../UI/TextField";
-import {loadOverbookingFactor, setOverbookingFactor} from "../../../store/reducers/optimizationWindows/actions";
+import {
+    loadOverbookingFactor,
+    loadWaitListSettings,
+    setOverbookingFactor
+} from "../../../store/reducers/optimizationWindows/actions";
 import {RootState} from "../../../store/rootReducer";
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {IOverbookingFactor} from "../../../store/reducers/optimizationWindows/types";
+import WaitlistSwitcher from "./WaitlistSwitcher";
 
 const tableHead: string[] = [
     "Day", "No Show Rate (%)", "Day of Cancelations (%)", "Combined (%)", "Overbooking Factor"
@@ -48,6 +53,7 @@ export const OverbookingFactor = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadOverbookingFactor(selectedSC.id, selectedPod?.id));
+            dispatch(loadWaitListSettings(selectedSC.id, selectedPod?.id))
         }
     }, [selectedSC, selectedPod, dispatch]);
 
@@ -99,6 +105,7 @@ export const OverbookingFactor = () => {
     }
 
     return <div>
+        <WaitlistSwitcher/>
             <DemandTable>
                 <TableHead>
                     <TableRow>

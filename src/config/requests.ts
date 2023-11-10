@@ -210,6 +210,7 @@ type ApiRoutes = {
         | "GetMileage" | "RemoveMileage" | "CreateMileage" | "MakesModels" | "GetEngineType" | "RemoveEngineType"
         | "CreateEngineType", TApiRoute>,
     ValueService: Record<"GetSeriesModels" | "GetValueServiceOffers", TApiRoute>,
+    WaitListSettings: Record<"Get" | "Update" | "Toggle", TApiRoute>,
     ZipCodes: Record<"GetFiltered", TApiRoute>
 }
 
@@ -604,6 +605,11 @@ export class Api {
         ValueService: {
             GetSeriesModels: {route: "/value-service-offers/vehicle-models", method: "get"},
             GetValueServiceOffers: {route: "/value-service-offers", method: "get"},
+        },
+        WaitListSettings: {
+            Get: {route: "/waitlist-settings", method: "get"},
+            Update: {route: "/waitlist-settings", method: "put"},
+            Toggle: {route: "/waitlist-settings/toggle", method: "put"},
         },
         ZipCodes: {
             GetFiltered: {route: "/zip-codes/by-query/", method: "post"}
