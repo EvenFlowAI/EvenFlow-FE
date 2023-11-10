@@ -1,5 +1,11 @@
 import {createAction} from "@reduxjs/toolkit";
-import {EOptimizationWindowType, IAppointmentCutoff, IOptimizationWindow, IOverbookingFactor} from "./types";
+import {
+    EOptimizationWindowType,
+    IAppointmentCutoff,
+    IOptimizationWindow,
+    IOverbookingFactor,
+    IWaitListSettings
+} from "./types";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import moment from "moment";
@@ -85,4 +91,51 @@ export const updateMaxPriceDateRange = (id: number, daysCount: number): AppThunk
         .catch(err => {
             console.log('update max price date range error', err)
         })
+}
+
+export const getWaitListSettings = createAction<IWaitListSettings>("OptimizationWindows/GetWaitListSettings");
+export const setWaitListLoading = createAction<boolean>("OptimizationWindows/SetWaitListLoading");
+
+export const loadWaitListSettings = (serviceCenterId: number, podId?: number): AppThunk => dispatch => {
+    dispatch(setWaitListLoading(true))
+    Api.call(Api.endpoints.WaitListSettings.Get, {params: {serviceCenterId, podId}})
+        .then(res => {
+            if (res?.data) {
+                dispatch(getWaitListSettings(res.data))
+            }
+        })
+        .catch(err => {
+            console.log('get waitlist settings error', err)
+        })
+        .finally(() => dispatch(setWaitListLoading(false)))
+}
+
+export const toggleWaitListFunctionality = (serviceCenterId: number, isEnabled: boolean, podId?: number): AppThunk => dispatch => {
+    dispatch(setWaitListLoading(true))
+    Api.call(Api.endpoints.WaitListSettings.Toggle, {data: {serviceCenterId, podId, isEnabled}})
+        .then(res => {
+            if (res?.data) {
+                dispatch(loadWaitListSettings(serviceCenterId, podId))
+            }
+        })
+        .catch(err => {
+            console.log('toggle waitlist functionality error', err)
+        })
+        .finally(() => dispatch(setWaitListLoading(false)))
+}
+
+export const updateWaitListSettings = (data: IWaitListSettings, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
+    dispatch(setWaitListLoading(true))
+    Api.call(Api.endpoints.WaitListSettings.Update, {data})
+        .then(res => {
+            if (res?.data) {
+                dispatch(loadWaitListSettings(data.serviceCenterId, data.podId ?? undefined))
+                onSuccess()
+            }
+        })
+        .catch(err => {
+            onError(err)
+            console.log('toggle waitlist functionality error', err)
+        })
+        .finally(() => dispatch(setWaitListLoading(false)))
 }
