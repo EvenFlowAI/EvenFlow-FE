@@ -129,6 +129,14 @@ export interface IPrice {
     amountOfSavingMoney?: number;
     ancillaryPrice: number;
 }
+
+export interface IWaitListData {
+    text: string;
+    textHex?: string;
+    boxHex?: string;
+    rolloverText?: string;
+}
+
 export interface IAppointmentSlot {
     date: ParsableDate;
     time: string;
@@ -137,7 +145,7 @@ export interface IAppointmentSlot {
     offer?: IOffer;
     isShorterWaitTime: boolean;
     isOverbookingApplied?: boolean;
-    
+    waitlistSettings?: IWaitListData;
 }
 export interface ISearchedDateRange {
     from: ParsableDate;
