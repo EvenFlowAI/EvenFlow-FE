@@ -61,7 +61,11 @@ type TProps = {
 
 export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
-        const {appointment: selectedAppointment, scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
+        const {
+            appointment: selectedAppointment,
+            scProfile,
+            customerLoadedData,
+        } = useSelector((state: RootState) => state.appointment);
         const {selectedTiming, gap, hoursOfOperations, sideBarSteps, appointmentByKey} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const titleRef = useRef<HTMLDivElement|null>(null);

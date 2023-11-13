@@ -129,6 +129,14 @@ export interface IPrice {
     amountOfSavingMoney?: number;
     ancillaryPrice: number;
 }
+
+export interface IWaitListData {
+    text: string;
+    textHex?: string;
+    boxHex?: string;
+    rolloverText?: string;
+}
+
 export interface IAppointmentSlot {
     date: ParsableDate;
     time: string;
@@ -136,6 +144,7 @@ export interface IAppointmentSlot {
     priceWithOffer?: IPrice;
     offer?: IOffer;
     isShorterWaitTime: boolean;
+    isOverbookingApplied?: boolean;
 }
 export interface ISearchedDateRange {
     from: ParsableDate;
@@ -146,6 +155,7 @@ export interface IAppointmentResponse {
     searchedDateRange: ISearchedDateRange;
     slotGapMinutes: number;
     consultantId?: string;
+    waitlistSettings?: IWaitListData;
 }
 export enum EAppointmentTimingType {
     SpecialOffers, PreferredDate, FirstAvailable
@@ -239,6 +249,7 @@ export type TAppointmentState = {
     isProfileLoading: boolean;
     dropOffSettings: IDropOffSettings|null;
     appointmentWasChanged: boolean;
+    waitListSettings: IWaitListData|null;
 };
 export enum EReminderType {
     Email, Phone, Sms

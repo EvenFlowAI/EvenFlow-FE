@@ -98,6 +98,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
 
     const clearData = () => {
         dispatch(selectAppointment(null));
+        //dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(clearAppointmentSteps("serviceNeeds"));
     }

@@ -125,6 +125,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         isAppointmentSaving,
         appointmentByKey,
         transactionValue,
+        waitListSettings,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -152,6 +153,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         state.appointmentFrame.isAppointmentSaving,
         state.appointmentFrame.appointmentByKey,
         state.appointmentFrame.transactionValue,
+        state.appointment.waitListSettings,
     ]);
 
     const {t} = useTranslation();
@@ -227,19 +229,20 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     }
 
     const getDate = () => {
+        let date = moment.utc().format('ddd, MMM D, h:mm A');
         if (isServiceValetApp) {
-            return moment.utc(serviceValetAppointment?.date).format('ddd, MMM D')
+            date =  moment.utc(serviceValetAppointment?.date).format('ddd, MMM D')
         } else if (appointment) {
-            return appointment?.date.format('ddd, MMM D, h:mm A')
+            date = appointment?.date.format('ddd, MMM D, h:mm A')
         } else if (appointmentByKey?.dateInUtc) {
             if (appointmentByKey.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                return moment(appointmentByKey.dateInUtc).utc().format('ddd, MMM D')
+                date = moment(appointmentByKey.dateInUtc).utc().format('ddd, MMM D')
             } else {
                 const [hh, mm] = appointmentByKey.timeSlot.split(":")
-                return moment(appointmentByKey.dateInUtc).utc().set('hour', +hh).set('minute', +mm).format('ddd, MMM D, h:mm A')
+                date = moment(appointmentByKey.dateInUtc).utc().set('hour', +hh).set('minute', +mm).format('ddd, MMM D, h:mm A')
             }
         }
-        return moment.utc().format('ddd, MMM D, h:mm A');
+        return date;
     }
 
     const insertPickUpTime = useCallback((list: TItem[]): TItem[] => {
@@ -282,12 +285,20 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     }, [isServiceValetApp, serviceValetAppointment, dropOffSettings, isServiceValetManage, appointmentByKey])
 
     const data: TItem[] = useMemo(() => {
+        const isWaitList = appointment ? appointment?.isOverbookingApplied && waitListSettings : appointmentByKey?.isWaitlist
         const list: TItem[] = [
             {
                 label: isServiceValetApp || isServiceValetManage
                     ? t("Date")
                     : t("Date and time"),
-                content: getDate(),
+                content: isWaitList
+                    ? [
+                        <div>{getDate()}</div>,
+                        <div style={{color: waitListSettings?.textHex ?? "#CE690B", marginTop: 12}}>
+                            {waitListSettings?.text ?? t("Waitlist only")}
+                        </div>
+                    ]
+                    : getDate(),
             },
             {
                 label: serviceType !== EServiceType.VisitCenter ? t("Location of service") : "",
@@ -325,7 +336,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
 
         return insertPickUpTime(list);
     }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR,
-        isServiceValetApp, isServiceValetManage, insertPickUpTime, serviceName, serviceType]);
+        isServiceValetApp, isServiceValetManage, insertPickUpTime, serviceName, serviceType, waitListSettings, appointmentByKey]);
 
     const getDateForUpdate = (): moment.Moment => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {
