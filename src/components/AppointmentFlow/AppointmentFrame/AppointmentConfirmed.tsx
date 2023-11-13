@@ -285,15 +285,18 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     }, [isServiceValetApp, serviceValetAppointment, dropOffSettings, isServiceValetManage, appointmentByKey])
 
     const data: TItem[] = useMemo(() => {
+        const isWaitList = appointment ? appointment?.isOverbookingApplied && waitListSettings : appointmentByKey?.isWaitlist
         const list: TItem[] = [
             {
                 label: isServiceValetApp || isServiceValetManage
                     ? t("Date")
                     : t("Date and time"),
-                content: appointment?.isOverbookingApplied && waitListSettings
+                content: isWaitList
                     ? [
                         <div>{getDate()}</div>,
-                        <div style={{color: "#CE690B", marginTop: 12}}>{t("Waitlist only")}</div>
+                        <div style={{color: waitListSettings?.textHex ?? "#CE690B", marginTop: 12}}>
+                            {waitListSettings?.text ?? t("Waitlist only")}
+                        </div>
                     ]
                     : getDate(),
             },
@@ -333,7 +336,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
 
         return insertPickUpTime(list);
     }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR,
-        isServiceValetApp, isServiceValetManage, insertPickUpTime, serviceName, serviceType, waitListSettings]);
+        isServiceValetApp, isServiceValetManage, insertPickUpTime, serviceName, serviceType, waitListSettings, appointmentByKey]);
 
     const getDateForUpdate = (): moment.Moment => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {

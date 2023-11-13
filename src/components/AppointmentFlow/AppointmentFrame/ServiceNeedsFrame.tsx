@@ -32,7 +32,6 @@ import {useTranslation} from "react-i18next";
 import {
     selectAppointment,
     selectServiceValetAppointment,
-    setWaitListSettings
 } from "../../../store/reducers/appointment/actions";
 import {useCurrentUser, useException} from "../../../utils/hooks";
 import {getMaintenanceList} from "./uiUtils";
@@ -167,7 +166,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const clearData = () => {
         dispatch(setAdditionalServicesChosen(false));
         dispatch(selectAppointment(null));
-        dispatch(setWaitListSettings(null));
+       // dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(clearAppointmentSteps("appointmentSelection"));
     }

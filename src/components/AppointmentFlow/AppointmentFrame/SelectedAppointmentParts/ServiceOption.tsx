@@ -8,7 +8,6 @@ import {useSelectedAppointmentStyles} from "../SelectedAppointment";
 import {
     selectAppointment,
     selectServiceValetAppointment,
-    setWaitListSettings
 } from "../../../../store/reducers/appointment/actions";
 import {
     checkCarIsValid,
@@ -100,7 +99,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const clearAppointmentSlot = (option: IFirstScreenOption) => {
         if (option?.type === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));
-            dispatch(setWaitListSettings(null));
+            //dispatch(setWaitListSettings(null));
         } else {
             dispatch(selectServiceValetAppointment(null));
         }

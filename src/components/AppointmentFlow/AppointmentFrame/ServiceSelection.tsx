@@ -28,8 +28,7 @@ import {useTranslation} from "react-i18next";
 import {
     selectAppointment,
     selectServiceValetAppointment,
-    setWaitListSettings
-} from "../../../store/reducers/appointment/actions";
+    } from "../../../store/reducers/appointment/actions";
 
 type TProps = {
     onNext: TArgCallback<TScreen>;
@@ -85,7 +84,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
     const clearData = () => {
         dispatch(setAdditionalServicesChosen(false));
         dispatch(selectAppointment(null));
-        dispatch(setWaitListSettings(null));
+        //dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(clearAppointmentSteps("serviceNeeds"));
     }

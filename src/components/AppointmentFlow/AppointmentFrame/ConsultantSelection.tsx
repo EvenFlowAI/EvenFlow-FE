@@ -21,7 +21,6 @@ import {Loading} from "../../UI/Loading";
 import {
     selectAppointment,
     selectServiceValetAppointment,
-    setWaitListSettings,
 } from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
@@ -162,7 +161,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         dispatch(setAnyAdvisorSelected(!Boolean(consultant)))
         if (!customerLoadedData?.isUpdating) {
             dispatch(selectAppointment(null));
-            dispatch(setWaitListSettings(null));
+          //  dispatch(setWaitListSettings(null));
             dispatch(selectServiceValetAppointment(null));
         }
     }

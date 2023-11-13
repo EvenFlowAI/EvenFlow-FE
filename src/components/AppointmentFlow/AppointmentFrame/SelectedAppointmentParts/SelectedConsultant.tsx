@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {
     getSlotsConsultantId,
     selectAppointment,
-    selectServiceValetAppointment, setWaitListSettings
+    selectServiceValetAppointment,
 } from "../../../../store/reducers/appointment/actions";
 import {setAdvisor, setAnyAdvisorSelected} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -28,7 +28,7 @@ const SelectedConsultant = () => {
         const consultant = consultants.find(item => item.id === e.target.value);
         if (isBmWService && e.target.value !== advisor?.id) {
             dispatch(selectAppointment(null));
-            dispatch(setWaitListSettings(null));
+            //dispatch(setWaitListSettings(null));
             dispatch(selectServiceValetAppointment(null));
         }
         dispatch(setAdvisor(consultant ? consultant : null))

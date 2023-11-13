@@ -283,6 +283,7 @@ export interface IAppointmentByKey extends IBaseAppointment {
     serviceValetTime?: TServiceValetSlot;
     notes?: string;
     addressData?: IAddressData;
+    isWaitlist?: boolean;
 }
 
 export interface IAppointmentByQuery extends IBaseAppointment {

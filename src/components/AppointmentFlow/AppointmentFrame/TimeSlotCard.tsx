@@ -186,7 +186,7 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
                 <div>{timeSlot.label}</div>
                 <HtmlTooltip
                     title={waitListSettings?.rolloverText ?? title}
-                    placement="right-end"
+                    placement="right"
                     id={slot?.time}
                     enterDelay={0}
                     enterNextDelay={0}

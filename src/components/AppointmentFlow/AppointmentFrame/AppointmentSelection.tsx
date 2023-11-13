@@ -17,7 +17,7 @@ import {
 import {
     loadAppointmentSlots,
     loadServiceValetSlots,
-    selectAppointment, selectServiceValetAppointment, setWaitListSettings
+    selectAppointment, selectServiceValetAppointment,
 } from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
@@ -213,7 +213,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
 
     const clearData = () => {
         dispatch(selectAppointment(null));
-        dispatch(setWaitListSettings(null));
+        //dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(clearAppointmentSteps("appointmentSelection"));
     }

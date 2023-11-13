@@ -15,7 +15,6 @@ import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameRed
 import {
     selectAppointment,
     selectServiceValetAppointment,
-    setWaitListSettings
 } from "../../../store/reducers/appointment/actions";
 
 export const DaySelectorWrapper = styled('div')(({ theme }) => ({
@@ -159,7 +158,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     const handleYes = () => {
         dispatch(setCurrentFrameScreen('appointmentTiming'));
         dispatch(selectAppointment(null));
-        dispatch(setWaitListSettings(null));
+        //dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
     }
 

@@ -21,7 +21,7 @@ import {
 } from "../../../store/reducers/appointment/types";
 import {
     selectAppointment,
-    selectServiceValetAppointment, setWaitListSettings
+    selectServiceValetAppointment,
 } from "../../../store/reducers/appointment/actions";
 //import ReactGA from "react-ga";
 import ReactGA from "react-ga4";
@@ -129,7 +129,7 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
 
     const clearAppointmentSlots = () => {
         dispatch(selectAppointment(null));
-        dispatch(setWaitListSettings(null));
+        //dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
     }
 
