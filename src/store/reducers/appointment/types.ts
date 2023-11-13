@@ -137,6 +137,7 @@ export interface IAppointmentSlot {
     offer?: IOffer;
     isShorterWaitTime: boolean;
     isOverbookingApplied?: boolean;
+    
 }
 export interface ISearchedDateRange {
     from: ParsableDate;

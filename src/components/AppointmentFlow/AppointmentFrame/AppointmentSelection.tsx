@@ -144,6 +144,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
     const [month, setMonth] = useState<moment.Moment>(moment.utc());
     const [loading, setLoading] = useState<boolean>(false);
+    const [waitListIsOn, setWaitListIsOn] = useState<boolean>(false)
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const {id} = useParams();

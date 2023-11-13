@@ -116,8 +116,6 @@ export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAp
     for (let slot of slots) {
         const date = moment(slot.date);
         const idx = slot.id.split("|")[0];
-        // todo delete
-        slot = {...slot, isOverbookingApplied: true};
         if (appointments[idx]) {
             appointments[idx].appointments.push(slot);
             if (slot.offer) {
