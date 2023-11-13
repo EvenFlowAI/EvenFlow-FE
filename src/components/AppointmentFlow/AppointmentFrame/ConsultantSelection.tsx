@@ -18,7 +18,11 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
-import {selectAppointment, selectServiceValetAppointment,} from "../../../store/reducers/appointment/actions";
+import {
+    selectAppointment,
+    selectServiceValetAppointment,
+    setWaitListSettings,
+} from "../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
 import {collectServiceRequestIds, getCurrentMenu, getStepsMap, getStepsScreen, mapRecallsForRequest} from "./utils";
@@ -114,7 +118,6 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         packagePricingType,
         serviceTypeOption,
         packageEMenuType,
-        isUsualFlowNeeded,
         isConsultantsLoading,
         serviceOptionChangedFromSlotPage,
         prevSelectedOption
@@ -159,6 +162,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         dispatch(setAnyAdvisorSelected(!Boolean(consultant)))
         if (!customerLoadedData?.isUpdating) {
             dispatch(selectAppointment(null));
+            dispatch(setWaitListSettings(null));
             dispatch(selectServiceValetAppointment(null));
         }
     }

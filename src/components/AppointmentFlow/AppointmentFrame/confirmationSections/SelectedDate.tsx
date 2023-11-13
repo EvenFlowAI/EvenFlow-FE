@@ -23,7 +23,7 @@ type TProps = {
 }
 
 export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
-    const {appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
+    const {appointment, serviceValetAppointment, waitListSettings} = useSelector((state: RootState) => state.appointment);
     const { dropOffSettings, customerLoadedData } = useSelector((state: RootState) => state.appointment);
     const {serviceTypeOption, isAppointmentSaving, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
     const [serviceValetTime, setServiceValetTime] = useState<TServiceValetSlot|null>(null);
@@ -104,6 +104,8 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
                     : null}
             </div>
             : null}
-        {appointment?.isOverbookingApplied ? <div style={{color: "#CE690B", marginTop: 8}}>{t("Waitlist only")}</div> : null}
+        {appointment?.isOverbookingApplied && waitListSettings
+            ? <div style={{color: "#CE690B", marginTop: 8}}>{t("Waitlist only")}</div>
+            : null}
     </div>
 };

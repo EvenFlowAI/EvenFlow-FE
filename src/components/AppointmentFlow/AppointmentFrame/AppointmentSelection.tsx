@@ -17,7 +17,7 @@ import {
 import {
     loadAppointmentSlots,
     loadServiceValetSlots,
-    selectAppointment, selectServiceValetAppointment
+    selectAppointment, selectServiceValetAppointment, setWaitListSettings
 } from "../../../store/reducers/appointment/actions";
 import {TGroupedAppointments} from "../../../utils/types";
 import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
@@ -144,7 +144,6 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
     const [month, setMonth] = useState<moment.Moment>(moment.utc());
     const [loading, setLoading] = useState<boolean>(false);
-    const [waitListIsOn, setWaitListIsOn] = useState<boolean>(false)
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const {id} = useParams();
@@ -214,6 +213,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
 
     const clearData = () => {
         dispatch(selectAppointment(null));
+        dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(clearAppointmentSteps("appointmentSelection"));
     }

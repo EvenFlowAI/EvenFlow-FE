@@ -125,6 +125,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         isAppointmentSaving,
         appointmentByKey,
         transactionValue,
+        waitListSettings,
     ] = useSelector((state: RootState) => [
         state.appointment.appointment,
         state.appointment.serviceValetAppointment,
@@ -152,6 +153,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         state.appointmentFrame.isAppointmentSaving,
         state.appointmentFrame.appointmentByKey,
         state.appointmentFrame.transactionValue,
+        state.appointment.waitListSettings,
     ]);
 
     const {t} = useTranslation();
@@ -288,7 +290,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 label: isServiceValetApp || isServiceValetManage
                     ? t("Date")
                     : t("Date and time"),
-                content: appointment?.isOverbookingApplied
+                content: appointment?.isOverbookingApplied && waitListSettings
                     ? [
                         <div>{getDate()}</div>,
                         <div style={{color: "#CE690B", marginTop: 12}}>{t("Waitlist only")}</div>
@@ -331,7 +333,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
 
         return insertPickUpTime(list);
     }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR,
-        isServiceValetApp, isServiceValetManage, insertPickUpTime, serviceName, serviceType]);
+        isServiceValetApp, isServiceValetManage, insertPickUpTime, serviceName, serviceType, waitListSettings]);
 
     const getDateForUpdate = (): moment.Moment => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {

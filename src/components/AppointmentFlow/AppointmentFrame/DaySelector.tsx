@@ -12,7 +12,11 @@ import {EAppointmentTimingType} from "../../../store/reducers/appointment/types"
 import {useModal} from "../../../utils/hooks";
 import PromptNewSearchRange from "../../Modals/PromptNewSearchRange/PromptNewSearchRange";
 import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
+import {
+    selectAppointment,
+    selectServiceValetAppointment,
+    setWaitListSettings
+} from "../../../store/reducers/appointment/actions";
 
 export const DaySelectorWrapper = styled('div')(({ theme }) => ({
     marginTop: 20,
@@ -155,6 +159,7 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     const handleYes = () => {
         dispatch(setCurrentFrameScreen('appointmentTiming'));
         dispatch(selectAppointment(null));
+        dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
     }
 

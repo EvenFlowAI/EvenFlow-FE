@@ -16,7 +16,7 @@ import {TScreen} from "../../Layout/types";
 import {useException, useModal} from "../../../utils/hooks";
 import {
     selectAppointment,
-    selectServiceValetAppointment,
+    selectServiceValetAppointment, setWaitListSettings,
 } from "../../../store/reducers/appointment/actions";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {useTranslation} from "react-i18next";
@@ -98,6 +98,7 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
 
     const clearData = () => {
         dispatch(selectAppointment(null));
+        dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(clearAppointmentSteps("serviceNeeds"));
     }

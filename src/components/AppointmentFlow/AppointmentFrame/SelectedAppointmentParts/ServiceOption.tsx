@@ -5,7 +5,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {useSelectedAppointmentStyles} from "../SelectedAppointment";
-import {selectAppointment, selectServiceValetAppointment} from "../../../../store/reducers/appointment/actions";
+import {
+    selectAppointment,
+    selectServiceValetAppointment,
+    setWaitListSettings
+} from "../../../../store/reducers/appointment/actions";
 import {
     checkCarIsValid,
     loadConsultants,
@@ -96,6 +100,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const clearAppointmentSlot = (option: IFirstScreenOption) => {
         if (option?.type === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));
+            dispatch(setWaitListSettings(null));
         } else {
             dispatch(selectServiceValetAppointment(null));
         }

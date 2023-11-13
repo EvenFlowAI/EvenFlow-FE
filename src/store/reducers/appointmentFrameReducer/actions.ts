@@ -41,7 +41,7 @@ import {
     selectServiceValetAppointment,
     selectSR,
     setAppointmentWasChanged,
-    setCustomerLoadedData
+    setCustomerLoadedData, setWaitListSettings
 } from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IMaintenanceItem, IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
@@ -339,6 +339,7 @@ export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dis
     dispatch(setAppointmentWasChanged(false))
     dispatch(setAppointmentNotes(''))
     dispatch(setConsultants([]));
+    dispatch(setWaitListSettings(null));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
@@ -740,7 +741,8 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             address: appointmentFrame.streetName ?? '',
             city: appointmentFrame.city ?? '',
             state: appointmentFrame.politicalState ?? '',
-        }
+        },
+        isWaitlist: appointment.appointment?.isOverbookingApplied && Boolean(appointment.waitListSettings)
     };
 
     if (isAdmin) delete data.schedulerType;
