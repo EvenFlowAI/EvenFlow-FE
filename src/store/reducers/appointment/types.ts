@@ -156,6 +156,7 @@ export interface IAppointmentResponse {
     searchedDateRange: ISearchedDateRange;
     slotGapMinutes: number;
     consultantId?: string;
+    waitlistSettings?: IWaitListData;
 }
 export enum EAppointmentTimingType {
     SpecialOffers, PreferredDate, FirstAvailable
@@ -249,6 +250,7 @@ export type TAppointmentState = {
     isProfileLoading: boolean;
     dropOffSettings: IDropOffSettings|null;
     appointmentWasChanged: boolean;
+    waitListSettings: IWaitListData|null;
 };
 export enum EReminderType {
     Email, Phone, Sms

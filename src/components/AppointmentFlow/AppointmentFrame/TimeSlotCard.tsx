@@ -1,66 +1,100 @@
 import React, {useEffect, useState} from 'react';
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
-import {styled, Theme, Tooltip, withStyles} from "@material-ui/core";
+import {darken, lighten, styled, Theme, Tooltip, withStyles} from "@material-ui/core";
 import {TArgCallback} from "../../../types/types";
 import moment from "moment";
 import {TSlot} from "./AppointmentTimeSelector";
 import {useTranslation} from "react-i18next";
 import {ReactComponent as ClockIcon} from "../../../assets/img/clock-black.svg";
 import {ReactComponent as ClockIconWhite} from "../../../assets/img/clock-white.svg";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
 
 type TSlotsWrapperProps = {
     available?: boolean,
     selected?: boolean,
     offPeak?: boolean,
     isWaitList?: boolean,
+    waitListTextColor?: string;
+    waitListBackground?: string;
 }
 
-const Wrapper = styled(({available, offPeak, selected, isWaitList, ...props}) => <div {...props}/>)<Theme, TSlotsWrapperProps>(({theme, available, offPeak, selected, isWaitList}) => ({
-    display: "flex",
-    alignItems: "center",
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    flexDirection: "column",
-    gap: "6px",
-    opacity: available || isWaitList ? 1 : .3,
-    cursor: "pointer",
-    userSelect: 'none',
-    '& .availability': {
-        minHeight: 80,
+const Wrapper = styled(({
+                            available,
+                            offPeak,
+                            selected,
+                            isWaitList,
+                            waitListTextColor,
+                            waitListBackground,
+                            ...props
+}) => <div {...props}/>)<Theme, TSlotsWrapperProps>(({
+                                                                               theme,
+                                                                               available,
+                                                                               offPeak,
+                                                                               selected,
+                                                                               isWaitList,
+                                                                               waitListTextColor,
+                                                                               waitListBackground,
+}) =>{
+    return  {
         display: "flex",
-        flexDirection: 'column',
-        textAlign: "center",
         alignItems: "center",
-        justifyContent: "center",
-        color: selected ? '#FFFFFF' : theme.palette.text.primary,
-        padding: '9px 20px',
-        borderRadius: 2,
-        border: `1px solid ${
-            selected
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        flexDirection: "column",
+        gap: "6px",
+        opacity: available || isWaitList ? 1 : .3,
+        cursor: "pointer",
+        userSelect: 'none',
+        '& .availability': {
+            minHeight: 80,
+            display: "flex",
+            flexDirection: 'column',
+            textAlign: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            color: selected
+                ? isWaitList && waitListTextColor
+                    ? lighten(`#${waitListTextColor}`, 0.5)
+                    : '#FFFFFF'
+                : isWaitList && waitListTextColor
+                    ? `#${waitListTextColor}`
+                    : theme.palette.text.primary,
+            padding: '9px 20px',
+            borderRadius: 2,
+            border: `1px solid ${
+                selected
+                    ? isWaitList
+                        ? waitListBackground
+                            ? `#${waitListBackground}`
+                            : "#CE690B"
+                        : offPeak
+                            ? "#237243"
+                            : "#000000"
+                    : isWaitList
+                        ? waitListBackground 
+                            ? darken(`#${waitListBackground}`, 0.5)
+                            : "#CE690B"
+                        : offPeak
+                            ? "#89E5AB"
+                            : '#DADADA'}`,
+            background: selected
                 ? isWaitList
-                    ? "#CE690B"
-                    : offPeak
-                        ? "#237243"
-                        : "#000000"
+                    ? waitListBackground
+                        ? darken(`#${waitListBackground}`, 0.5)
+                        : "#CE690B"
+                    : "#000000"
                 : isWaitList
-                    ? "#CE690B"
+                    ? waitListBackground ? `#${waitListBackground}` : "#FFE6CF"
                     : offPeak
-                        ? "#89E5AB"
-                        : '#DADADA'}`,
-        background: selected
-            ? isWaitList
-                ? "#CE690B"
-                : "#000000"
-            : isWaitList
-                ? "#FFE6CF"
-                : offPeak
-                    ? "#DEFFDF"
-                    : "transparent",
-        '& > svg': {
-            marginBottom: 4
+                        ? "#DEFFDF"
+                        : "transparent",
+            '& > svg': {
+                marginBottom: 4
+            },
         },
-    },
-}))
+    }
+})
 
 const PickUpWrapper = styled(({available, offPeak, selected, ...props}) => <div {...props}/>)<Theme, TSlotsWrapperProps>(({theme, available, offPeak, selected}) => ({
     display: "grid",
@@ -106,11 +140,12 @@ const HtmlTooltip = withStyles({
 })(Tooltip);
 
 export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selected, date}) => {
+    const {waitListSettings} = useSelector((state: RootState) => state.appointment);
     const [timePassed, setTimePassed] = useState<boolean>(false);
     const {t} = useTranslation();
     const title = t("Expected completion time for your vehicle cannot be provided with Waitlist Only appointments");
     const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
-    const isWaitList = Boolean(slot?.isOverbookingApplied);
+    const isWaitList = Boolean(slot?.isOverbookingApplied && waitListSettings);
 
     useEffect(() => {
         if (slot?.date && moment(slot?.date).isSame(moment(), 'day') && moment(date).isSame(moment(), 'day')) {
@@ -126,8 +161,8 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
     }, [slot, date])
 
     const getContent = (timePassed: boolean): string => {
-        if (slot?.isOverbookingApplied) {
-            return t ("Waitlist only")
+        if (slot?.isOverbookingApplied && waitListSettings) {
+            return waitListSettings?.text ?? t ("Waitlist only")
         }
         if (!slot || timePassed) {
             return t("Not Available");
@@ -142,14 +177,22 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
         ? <Wrapper
                 available={Boolean(slot) && !timePassed}
                 isWaitList={isWaitList && !timePassed}
+                waitListBackground={waitListSettings?.boxHex}
+                waitListTextColor={waitListSettings?.textHex}
                 selected={selected}
                 offPeak={isOffPeak && !timePassed}
                 onClick={() => timePassed ? {} : onSelect(slot ?? null)}
             >
                 <div>{timeSlot.label}</div>
-                <HtmlTooltip title={title} placement="right-end" id={slot?.time} enterDelay={0} enterNextDelay={0} enterTouchDelay={0}>
+                <HtmlTooltip
+                    title={waitListSettings?.rolloverText ?? title}
+                    placement="right-end"
+                    id={slot?.time}
+                    enterDelay={0}
+                    enterNextDelay={0}
+                    enterTouchDelay={0}>
                 <div className="availability">
-                    { selected ? <ClockIconWhite/>:<ClockIcon/>}
+                    {selected ? <ClockIconWhite /> : <ClockIcon/>}
                     {getContent(timePassed)}
                 </div>
                 </HtmlTooltip>

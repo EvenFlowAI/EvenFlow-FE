@@ -152,8 +152,10 @@ export const DateWrapper = styled('div')(({theme}) => ({
 }))
 
 const WaitListLabel = () => {
-    const { appointment} = useSelector((state: RootState) => state.appointment);
-    return appointment?.isOverbookingApplied ? <div style={{color: "#CE690B", fontWeight: 400, fontSize: 16}}>Waitlist Only</div> : null
+    const { appointment, waitListSettings} = useSelector((state: RootState) => state.appointment);
+    return appointment?.isOverbookingApplied && waitListSettings
+        ? <div style={{color: "#CE690B", fontWeight: 400, fontSize: 16}}>Waitlist Only</div>
+        : null
 }
 
 export const SelectedAppointment = () => {
