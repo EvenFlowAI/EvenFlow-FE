@@ -77,7 +77,7 @@ const WaitListSlotSettings: React.FC<DialogProps> = (props) => {
         if (e.target.value.match(/^[a-zA-Z0-9]*$/)) {
             setSlotTextHex(e.target.value.trim())
         } else {
-            showError('Appointment Slot Text Hex must consist letters and digits only')
+            showError('Appointment Slot Text Color must consist letters and digits only')
         }
     }
 
@@ -86,7 +86,7 @@ const WaitListSlotSettings: React.FC<DialogProps> = (props) => {
         if (e.target.value.match(/^[a-zA-Z0-9]*$/)) {
             setSlotTextBoxHex(e.target.value.trim())
         } else {
-            showError('Appointment Slot Box Hex must consist letters and digits only')
+            showError('Appointment Slot Background Color must consist letters and digits only')
         }
     }
 
@@ -150,8 +150,8 @@ const WaitListSlotSettings: React.FC<DialogProps> = (props) => {
                         value={slotTextHex}
                         inputProps={{maxLength: 6}}
                         startAdornment="#"
-                        label="Appointment Slot Text Hex"
-                        placeholder="Enter font color 6 symbols"
+                        label="Appointment Slot Text Color"
+                        placeholder="Enter font color 6 symbols (HEX)"
                         onChange={onSlotTextColorChange}
                     />
                 </div>
@@ -162,8 +162,8 @@ const WaitListSlotSettings: React.FC<DialogProps> = (props) => {
                         value={slotTextBoxHex}
                         inputProps={{maxLength: 6}}
                         startAdornment="#"
-                        label="Appointment Slot Box Hex"
-                        placeholder="Enter shading color (6 symbols)"
+                        label="Appointment Slot Background Color"
+                        placeholder="Enter background color 6 symbols (HEX)"
                         onChange={onSlotBoxColorChange}
                     />
                 </div>
