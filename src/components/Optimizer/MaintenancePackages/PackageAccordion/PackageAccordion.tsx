@@ -381,10 +381,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             intervalUpsellServicePrice: +option.intervalUpsellServicePrice,
         }))
         try {
-            const upsellPriceText = currentPackage?.priceTitles?.find(item => item.type === EPackagePricingType.PriceWithFee)?.title;
-            const priceText = currentPackage?.priceTitles?.find(item => item.type === EPackagePricingType.BasePrice)?.title;
+            const upsellPriceText = packageData?.priceTitles?.find(item => item.type === EPackagePricingType.PriceWithFee)?.title;
+            const priceText = packageData?.priceTitles?.find(item => item.type === EPackagePricingType.BasePrice)?.title;
             const upsellsAreIncluded = data.options.find(opt => opt.intervalUpsells.length);
-            if (upsellsAreIncluded && (!upsellPriceText|| !priceText)) {
+            if (upsellsAreIncluded && (!upsellPriceText || !priceText)) {
                 showError("Please save the Price Texts first")
             } else {
                 dispatch(updatePackageOptions(data.id, revisedData, showError));
@@ -401,7 +401,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
             setComplimentaryNameEdit(false);
             setUpsellNameEdit(false);
         }
-    }, [dispatch, currentPackage, showError])
+    }, [dispatch, currentPackage, showError, packageData])
 
     const handleSave = useCallback((): void => {
         const [isValid, messages] = checkIsValid(packageData);
@@ -595,7 +595,10 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
                             valuesArray={detailsData.complimentaryPrice}
                             onInputChange={onInputChange}/>
 
-                      <PricesBlock packageData={packageData} suggestedPrices={detailsData.suggestedRequestPrice}/>
+                      <PricesBlock
+                          packageData={packageData}
+                          suggestedPrices={detailsData.suggestedRequestPrice}
+                          setPackageData={setPackageData}/>
 
                     </React.Fragment>}
 

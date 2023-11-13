@@ -139,9 +139,10 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         prevSelectedOption,
         ancillaryPriceLoading,
         sideBarSteps,
+        advisor,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const {isAdvisorAvailable, config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {isAdvisorAvailable, isAppointmentTimingAvailable, config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
@@ -202,13 +203,17 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                     ? "appointmentTiming"
                     : 'appointmentSelection'))
         } else {
-            dispatch(setCurrentFrameScreen(isAdvisorAvailable ? 'consultantSelection' : 'appointmentSelection'))
+            dispatch(setCurrentFrameScreen(isAdvisorAvailable && !advisor
+                ? 'consultantSelection'
+                : isAppointmentTimingAvailable
+                    ? "appointmentTiming"
+                    : 'appointmentSelection'))
         }
     }
 
     const onNextStep = () => {
         if (customerLoadedData?.isUpdating) {
-            changedToPickUpFromSlots || zipCodeValue !== appointmentByKey?.zipCode
+            changedToPickUpFromSlots || (appointmentByKey?.zipCode && zipCodeValue !== appointmentByKey?.zipCode)
                 ? scProfile && dispatch(checkPodChanged(scProfile.id, showError))
                 : handleManagingFlow();
         } else {

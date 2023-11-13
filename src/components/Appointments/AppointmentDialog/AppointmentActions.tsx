@@ -1,6 +1,6 @@
 import React from 'react';
-import {Button, Box, ButtonGroup} from "@material-ui/core";
-import {SearchInput} from "../../UI/SearchInput";
+import {Button, Box} from "@material-ui/core";
+import {SearchDebounced} from "../../UI/SearchInput";
 import {TView} from "../Appointments";
 import {Routes} from "../../../config/routes";
 import {NavLink} from "react-router-dom";
@@ -42,17 +42,12 @@ export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selected
 
     return <Box>
             <NavLink to={url} className={classes.linkBtn} target="_blank">Book Appointment</NavLink>
-            {selectedView === 'list' && <SearchInput onSearch={onSearch} onChange={handleSearchChange} value={searchTerm} placeholder="Search customer..."/>}
-            {/*<ButtonGroup color="primary" style={{ marginLeft: 20 }}>*/}
-            {/*    {views.map(view =>*/}
-            {/*        <Button*/}
-            {/*            key={view.type}*/}
-            {/*            onClick={handleChangeView(view.type)}*/}
-            {/*            variant={view.type === selectedView ? "contained" : "outlined"}>*/}
-            {/*            {view.label}*/}
-            {/*        </Button>*/}
-            {/*    )}*/}
-            {/*</ButtonGroup>*/}
+            {selectedView === 'list' && <SearchDebounced
+                onSearch={onSearch}
+                onChange={handleSearchChange}
+                value={searchTerm}
+                placeholder="Search customer..."/>
+            }
             <Button
                 onClick={onFilterOpen}
                 style={{ marginLeft: 20 }}

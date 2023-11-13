@@ -30,7 +30,7 @@ export const DashboardsIds = {
     CapacityManagementPerformance: "nO0UhbMtl58MxO59VCC3x",
 }
 
-export const reportingAllowedRoles: TRole[] = ["Service Director", "Owner", "Super Admin"]
+export const reportingAllowedRoles: TRole[] = ["Service Director", "Owner", "Super Admin", "Manager"]
 
 const ReportingPage: React.FC<{}> = ({}) => {
     const [config, setConfig] = useState<IEndUserConfig>({

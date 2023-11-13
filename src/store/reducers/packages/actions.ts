@@ -247,11 +247,11 @@ export const updateManualOverride = (id: number,  isManualOverridePrice: boolean
         }).finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const updatePriceTitles = (id: number, data: TPackagePrice): AppThunk => dispatch => {
+export const updatePriceTitles = (id: number, data: TPackagePrice, onSuccess: () => void): AppThunk => dispatch => {
     dispatch(setPackageLoading(true));
     Api.call(Api.endpoints.MaintenancePackages.UpdatePriceTitles, {urlParams: {id}, data})
         .then(result => {
-            if (result) dispatch(loadPackageById(id))
+            if (result) onSuccess()
         })
         .catch(err => {
             console.log('update is manual override err', err)
