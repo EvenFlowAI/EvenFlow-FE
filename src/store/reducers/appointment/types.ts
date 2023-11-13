@@ -145,7 +145,6 @@ export interface IAppointmentSlot {
     offer?: IOffer;
     isShorterWaitTime: boolean;
     isOverbookingApplied?: boolean;
-    waitlistSettings?: IWaitListData;
 }
 export interface ISearchedDateRange {
     from: ParsableDate;
