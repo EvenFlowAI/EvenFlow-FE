@@ -106,7 +106,11 @@ export const SelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
             </div>
             : null}
         {isWaitList
-            ? <div style={{color: waitListSettings?.textHex ?? "#CE690B", marginTop: 8}}>{waitListSettings?.text ?? t("Waitlist only")}</div>
+            ? <div style={{color: waitListSettings?.textHex
+                    ? `#${waitListSettings?.textHex}`
+                    : "#CE690B", marginTop: 8}}>
+                {waitListSettings?.text ?? t("Waitlist only")}
+        </div>
             : null}
     </div>
 };

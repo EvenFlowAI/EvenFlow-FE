@@ -55,7 +55,7 @@ const Wrapper = styled(({
             justifyContent: "center",
             color: selected
                 ? isWaitList && waitListTextColor
-                    ? lighten(`#${waitListTextColor}`, 0.5)
+                    ? lighten(`#${waitListTextColor}`, 1)
                     : '#FFFFFF'
                 : isWaitList && waitListTextColor
                     ? `#${waitListTextColor}`
@@ -90,33 +90,18 @@ const Wrapper = styled(({
                         ? "#DEFFDF"
                         : "transparent",
             '& > svg': {
-                marginBottom: 4
+                marginBottom: 4,
+                fill: selected
+                    ? isWaitList && waitListTextColor
+                        ? lighten(`#${waitListTextColor}`, 1)
+                        : '#FFFFFF'
+                    : isWaitList && waitListTextColor
+                        ? `#${waitListTextColor}`
+                        : theme.palette.text.primary,
             },
         },
     }
 })
-
-const PickUpWrapper = styled(({available, offPeak, selected, ...props}) => <div {...props}/>)<Theme, TSlotsWrapperProps>(({theme, available, offPeak, selected}) => ({
-    display: "grid",
-    gridTemplateColumns: '4fr 6fr',
-    alignItems: "center",
-    fontWeight: "bold",
-    gap: "6px",
-    opacity: available ? 1 : .3,
-    cursor: "pointer",
-    border: '1px solid #000000',
-    borderRadius: 2,
-    [theme.breakpoints.down('sm')]: {
-        gridTemplateColumns: '1fr',
-        gridTemplateRows: '1fr 1fr',
-    },
-    '& .pickUp': {
-        display: 'grid',
-        gridTemplateColumns: '1fr 5fr',
-        backgroundColor: selected ? '#202021' : '#E0E0E0',
-        color: selected ? '#FFFFFF' : '#202021'
-    }
-}))
 
 type TProps = {
     timeSlot: TSlot;
@@ -192,7 +177,7 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
                     enterNextDelay={0}
                     enterTouchDelay={0}>
                 <div className="availability">
-                    {selected ? <ClockIconWhite /> : <ClockIcon/>}
+                    <ClockIcon/>
                     {getContent(timePassed)}
                 </div>
                 </HtmlTooltip>
@@ -206,7 +191,7 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
         >
             <div>{timeSlot.label}</div>
             <div className="availability">
-                { selected ? <ClockIconWhite/>:<ClockIcon/>}
+                { selected ? <ClockIconWhite/> : <ClockIcon/>}
                 {getContent(timePassed)}
             </div>
         </Wrapper>
