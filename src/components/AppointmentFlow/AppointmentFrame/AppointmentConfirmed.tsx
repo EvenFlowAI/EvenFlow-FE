@@ -294,7 +294,12 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 content: isWaitList
                     ? [
                         <div>{getDate()}</div>,
-                        <div style={{color: waitListSettings?.textHex ?? "#CE690B", marginTop: 12}}>
+                        <div
+                            style={{
+                                color: waitListSettings?.textHex
+                                    ? `#${waitListSettings?.textHex}`
+                                    : "#CE690B",
+                                marginTop: 12}}>
                             {waitListSettings?.text ?? t("Waitlist only")}
                         </div>
                     ]
