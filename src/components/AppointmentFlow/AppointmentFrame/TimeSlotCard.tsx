@@ -50,6 +50,7 @@ const Wrapper = styled(({
             minHeight: 80,
             display: "flex",
             flexDirection: 'column',
+            flexGrow: 1,
             textAlign: "center",
             alignItems: "center",
             alignSelf: "stretch",

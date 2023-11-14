@@ -22,7 +22,7 @@ const TimeSlotsWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "repeat(6, 1fr)",
     gap: "20px 12px",
-    alignItems: "center",
+    // alignItems: "stretch",
     justifyContent: "center",
     "&>div": {
         flexGrow: 1
