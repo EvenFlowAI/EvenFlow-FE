@@ -97,6 +97,7 @@ export const OverbookingFactor = () => {
                 await dispatch(setOverbookingFactor(data));
                 setSaving(false);
                 showMessage("Saved");
+                setEdit(false);
             } catch (e) {
                 setSaving(false)
                 showError(e);
