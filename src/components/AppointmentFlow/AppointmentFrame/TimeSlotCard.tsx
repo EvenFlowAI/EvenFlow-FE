@@ -52,6 +52,7 @@ const Wrapper = styled(({
             flexDirection: 'column',
             textAlign: "center",
             alignItems: "center",
+            alignSelf: "stretch",
             justifyContent: "center",
             color: selected
                 ? isWaitList && waitListTextColor
