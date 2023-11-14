@@ -235,6 +235,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             mileage: selectedMileage?.value ?? null,
             dmsId: item.vehicleDmsId,
             hasRepairOrders: Boolean(item.hasOrders),
+            engineTypeId: item.engineTypeId ?? null,
         }
         const data: ICustomerLoadedData = {
             emails: item?.email ? [item.email] : [],
