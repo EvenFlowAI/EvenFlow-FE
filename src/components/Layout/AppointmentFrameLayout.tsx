@@ -25,7 +25,7 @@ import {
     getBlankVehicle,
     getCustomerCache,
     selectSRMultiple,
-    setCustomerLoadedData
+    setCustomerLoadedData, setWaitListSettings
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
@@ -201,6 +201,12 @@ export const AppointmentFrameLayout = () => {
             try {
                 const {data} = await API.appointment.getByKey(key);
                 const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
+                if (data.waitlistTextSettings) {
+                    dispatch(setWaitListSettings({
+                        text: data.waitlistTextSettings.text ?? '',
+                        textHex: data.waitlistTextSettings.textHex ?? ''
+                    }))
+                }
                 await dispatch(updateRecalls(data, id));
                 await dispatch(setUpdateAppointment(data));
                 await dispatch(setAppointmentByKey(data));
