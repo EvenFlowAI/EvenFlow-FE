@@ -41,7 +41,8 @@ import {
     selectServiceValetAppointment,
     selectSR,
     setAppointmentWasChanged,
-    setCustomerLoadedData, setWaitListSettings
+    setCustomerLoadedData,
+    setWaitListSettings
 } from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IMaintenanceItem, IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
@@ -705,9 +706,11 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         : appointment.appointment?.id
             ? appointment.appointment?.id.split("|")[1]
             : appointmentFrame.appointmentByKey?.timeSlot || "00:00:00"
+    const isWaitListManaging = Boolean(appointmentFrame.appointmentByKey?.isWaitlist && appointmentFrame.hashKey)
+    const isWaitListCreating = appointment.appointment?.isOverbookingApplied && Boolean(appointment.waitListSettings)
+    const isVisitCenterAppointment = appointmentFrame?.serviceTypeOption?.type === EServiceType.VisitCenter;
 
-    const isWaitlist =  appointment.appointment?.isOverbookingApplied && Boolean(appointment.waitListSettings) ||
-        (appointmentFrame.appointmentByKey?.isWaitlist && appointmentFrame.hashKey);
+    const isWaitlist = isVisitCenterAppointment && (isWaitListCreating || isWaitListManaging);
 
     const data = {
         id: appointmentFrame.id,
