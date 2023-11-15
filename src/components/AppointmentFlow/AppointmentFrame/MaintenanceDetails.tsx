@@ -354,7 +354,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const handleSubmit = async () => {
         const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn;
         const makeInTheList = makes.find(item => item.name.toLowerCase() === selectedVehicle?.make.toLowerCase());
-        if (selectedVehicle && makeInTheList && !customerLoadedData?.isUpdating) {
+        if (selectedVehicle && makeInTheList && (!customerLoadedData?.isUpdating || isRecallsCategorySelected)) {
             const {vin, make} = selectedVehicle;
             if (vin?.length === 17 && make && (recallsFromTheAdmin || isRecallsCategorySelected)) {
                 setLoading(true);
