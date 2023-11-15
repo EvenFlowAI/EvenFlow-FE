@@ -354,7 +354,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const handleSubmit = async () => {
         const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn;
         const makeInTheList = makes.find(item => item.name.toLowerCase() === selectedVehicle?.make.toLowerCase());
-        if (selectedVehicle && makeInTheList) {
+        if (selectedVehicle && makeInTheList && (!customerLoadedData?.isUpdating || isRecallsCategorySelected)) {
             const {vin, make} = selectedVehicle;
             if (vin?.length === 17 && make && (recallsFromTheAdmin || isRecallsCategorySelected)) {
                 setLoading(true);
@@ -447,7 +447,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                         fullWidth
                         getOptionLabel={o => o.name}
                         getOptionSelected={o => o.id === selectedEngine?.id}
-                        // disabled={!isNewVehicleView && Boolean(selectedEngine)}
+                        disabled={Boolean(selectedEngine) && Boolean(appointmentByKey?.vehicle?.engineTypeId)}
                         renderInput={autocompleteRender({
                             label: scProfile?.engineTypeFieldName ?? t("Engine Type"),
                             placeholder: errors.includes("engineTypeId")

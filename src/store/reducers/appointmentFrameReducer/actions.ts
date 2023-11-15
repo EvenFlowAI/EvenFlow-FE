@@ -41,7 +41,8 @@ import {
     selectServiceValetAppointment,
     selectSR,
     setAppointmentWasChanged,
-    setCustomerLoadedData
+    setCustomerLoadedData,
+    setWaitListSettings
 } from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IMaintenanceItem, IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
@@ -339,6 +340,7 @@ export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dis
     dispatch(setAppointmentWasChanged(false))
     dispatch(setAppointmentNotes(''))
     dispatch(setConsultants([]));
+    dispatch(setWaitListSettings(null));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
@@ -704,6 +706,11 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         : appointment.appointment?.id
             ? appointment.appointment?.id.split("|")[1]
             : appointmentFrame.appointmentByKey?.timeSlot || "00:00:00"
+    const isWaitListManaging = Boolean(appointmentFrame.appointmentByKey?.isWaitlist && appointmentFrame.hashKey)
+    const isWaitListCreating = appointment.appointment?.isOverbookingApplied && Boolean(appointment.waitListSettings)
+    const isVisitCenterAppointment = appointmentFrame?.serviceTypeOption?.type === EServiceType.VisitCenter;
+
+    const isWaitlist = isVisitCenterAppointment && (isWaitListCreating || isWaitListManaging);
 
     const data = {
         id: appointmentFrame.id,
@@ -740,7 +747,8 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             address: appointmentFrame.streetName ?? '',
             city: appointmentFrame.city ?? '',
             state: appointmentFrame.politicalState ?? '',
-        }
+        },
+        isWaitlist,
     };
 
     if (isAdmin) delete data.schedulerType;

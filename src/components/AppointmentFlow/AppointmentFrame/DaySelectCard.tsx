@@ -6,6 +6,8 @@ import {TGroupedAppointment, TGroupedAppointments} from "../../../utils/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
+import {ReactComponent as CalendarIcon} from "../../../assets/img/empty_calendar.svg";
+import {ReactComponent as CalendarIconWhite} from "../../../assets/img/empty_calendar_white.svg";
 
 type TDayCardProps = {
     available?: boolean;
@@ -24,26 +26,30 @@ export const DayCard = styled(({available, isCurrent, isOffPeak, ...props}) => (
     alignItems: "center",
     justifyContent: "center",
     "& .day": {
-        border: isCurrent ? "1px solid #000000" : "1px solid #DADADA",
-        padding: 12,
+        height: "auto",
+        minHeight: 80,
         display: "flex",
+        flexDirection: 'column',
         width: "100%",
         alignItems: "center",
-        background: isCurrent ? "#000000" : "#FAFAFA",
-        color: isCurrent ? "#FFFFFF" : "#252733",
         justifyContent: "center",
         textAlign: "center",
-        minHeight: 80,
+        padding: '4px 12px',
+        border: isCurrent ? "1px solid #000000" : "1px solid #DADADA",
+        background: isCurrent ? "#000000" : "#FAFAFA",
+        color: isCurrent ? "#FFFFFF" : "#252733",
         fontWeight: "bold",
         textTransform: "uppercase",
         cursor: "pointer",
-        height: "auto",
+        '& > svg': {
+            marginBottom: 4
+        },
         [theme.breakpoints.down("xs")]: {
-            borderRadius: "50%",
-            minHeight: "auto",
             width: 50,
             height: 50,
+            minHeight: "auto",
             border: isCurrent ? "1px solid #000000" : (isOffPeak ? "1px solid #237243" : "1px solid #DADADA"),
+            borderRadius: "50%",
             background: isCurrent ? "#000000" : isOffPeak ? "#89E5AB" : "#FAFAFA",
         }
     },
@@ -124,6 +130,7 @@ export const DaySelectCard: React.FC<TProps> = ({
         <div className="dayName">{getDayNameString()}</div>
         <div>{moment.utc(day).format(isXs ? XsMontFormat : monthFormat)}</div>
         <div className="day" onClick={onClick}>
+            {isCurrent ? <CalendarIconWhite/> : <CalendarIcon/>}
             {getLabel()}
             {isXs ? <div className="padding" /> : null}
         </div>

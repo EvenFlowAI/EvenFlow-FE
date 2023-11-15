@@ -51,7 +51,7 @@ const EmployeesFilters = () => {
     }
 
     useEffect(() => {
-        if (filters.role) setSelectedRole(filters.role)
+        setSelectedRole(filters.role ?? null)
     }, [filters])
 
     const handleSelectRole = (e: React.ChangeEvent<{value: unknown}>) => {
