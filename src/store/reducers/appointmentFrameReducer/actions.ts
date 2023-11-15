@@ -706,6 +706,9 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             ? appointment.appointment?.id.split("|")[1]
             : appointmentFrame.appointmentByKey?.timeSlot || "00:00:00"
 
+    const isWaitlist =  appointment.appointment?.isOverbookingApplied && Boolean(appointment.waitListSettings) ||
+        (appointmentFrame.appointmentByKey?.isWaitlist && appointmentFrame.hashKey);
+
     const data = {
         id: appointmentFrame.id,
         appointmentTimingType,
@@ -742,7 +745,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             city: appointmentFrame.city ?? '',
             state: appointmentFrame.politicalState ?? '',
         },
-        isWaitlist: appointment.appointment?.isOverbookingApplied && Boolean(appointment.waitListSettings)
+        isWaitlist,
     };
 
     if (isAdmin) delete data.schedulerType;
