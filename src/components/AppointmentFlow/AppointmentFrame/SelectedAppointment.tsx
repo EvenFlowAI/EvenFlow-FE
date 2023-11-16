@@ -154,7 +154,7 @@ export const DateWrapper = styled('div')(({theme}) => ({
 const WaitListLabel = () => {
     const { appointment, waitListSettings} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
-    return appointment?.isOverbookingApplied && waitListSettings
+    return appointment?.isOverbookingApplied && waitListSettings?.isEnabled
         ? <div
             style={{
                 color: waitListSettings?.textHex
