@@ -159,7 +159,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     const {t} = useTranslation();
     const dispatch = useDispatch();
 
-    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
+    const serviceType = useMemo(() => serviceTypeOption
+        ? serviceTypeOption.type
+        : EServiceType.VisitCenter, [serviceTypeOption]);
     const servicesList = useMemo(() => {
             return getMaintenanceDescription(
                 srList,
@@ -285,7 +287,9 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     }, [isServiceValetApp, serviceValetAppointment, dropOffSettings, isServiceValetManage, appointmentByKey])
 
     const data: TItem[] = useMemo(() => {
-        const isWaitList = appointment ? appointment?.isOverbookingApplied && waitListSettings : appointmentByKey?.isWaitlist
+        const isWaitList = appointment
+            ? appointment?.isOverbookingApplied && waitListSettings
+            : appointmentByKey?.isWaitlist && serviceType === EServiceType.VisitCenter
         const list: TItem[] = [
             {
                 label: isServiceValetApp || isServiceValetManage
