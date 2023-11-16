@@ -785,7 +785,7 @@ export const checkCarIsValid = (onCarIsValid = () => {}, onCarIsInvalid = () => 
         const existingEngineType = engineTypes.find(item => item.id === selectedVehicle.engineTypeId);
         if (!skipEngineCheck && currentConfig?.engineType && (!existingEngineType || !selectedVehicle.engineTypeId)) carIsValid = false;
 
-        if (!selectedVehicle.vin?.length) {
+        if (!selectedVehicle.vin?.length && selectedVehicle.make && selectedVehicle.model) {
             const existingMake = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase())
             const existingModel = models.find(item => item.toLowerCase() === selectedVehicle.model.toLowerCase())
             if (!existingMake || !existingModel) carIsValid = false;
