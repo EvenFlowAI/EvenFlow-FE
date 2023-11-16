@@ -706,11 +706,11 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         : appointment.appointment?.id
             ? appointment.appointment?.id.split("|")[1]
             : appointmentFrame.appointmentByKey?.timeSlot || "00:00:00"
-    const isWaitListManaging = Boolean(appointmentFrame.appointmentByKey?.isWaitlist && appointmentFrame.hashKey)
-    const isWaitListCreating = appointment.appointment?.isOverbookingApplied && Boolean(appointment.waitListSettings)
+    const isWaitListSlotSelected = appointment.appointment?.isOverbookingApplied && Boolean(appointment.waitListSettings)
+    const isWaitListManaging = !isWaitListSlotSelected && Boolean(appointmentFrame.appointmentByKey?.isWaitlist && appointmentFrame.hashKey)
     const isVisitCenterAppointment = appointmentFrame?.serviceTypeOption?.type === EServiceType.VisitCenter;
 
-    const isWaitlist = isVisitCenterAppointment && (isWaitListCreating || isWaitListManaging);
+    const isWaitlist = isVisitCenterAppointment && (isWaitListSlotSelected || isWaitListManaging);
 
     const data = {
         id: appointmentFrame.id,
