@@ -329,6 +329,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             transportation: payload.transportationOption ?? null,
             appointmentRequestsPrices: payload.detailedPriceList ?? [],
             city: payload?.addressData?.city ?? '',
+            streetName: payload?.addressData?.address ?? '',
             politicalState: payload?.addressData?.state ?? '',
             packagePricingType: payload?.maintenancePackageOption?.priceType ?? null,
         };
