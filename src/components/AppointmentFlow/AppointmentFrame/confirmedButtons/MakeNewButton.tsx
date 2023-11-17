@@ -3,8 +3,8 @@ import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
-    clearAppointmentData, setAddress,
-    setServiceOptionChanged, setSideBarSteps,
+    clearAppointmentData, setAddress, setCity, setPoliticalState,
+    setServiceOptionChanged, setSideBarSteps, setStreetName,
     setVehicle, setWelcomeScreenView, setZipCode
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {Routes} from "../../../../config/routes";
@@ -21,12 +21,19 @@ const MakeNewButton = () => {
     const {id} = useParams();
     const history = useHistory();
 
+    const clearAddress = async () => {
+        await dispatch(setStreetName(''))
+        await dispatch(setCity(''))
+        await dispatch(setPoliticalState(''))
+        await dispatch(setAddress(null));
+        await dispatch(setZipCode(''));
+    }
+
     const onMakeNew = async () => {
         await dispatch(setVehicle(null));
         await dispatch(clearAppointmentData());
+        await clearAddress()
         await dispatch(setServiceOptionChanged(false));
-        await dispatch(setAddress(null));
-        await dispatch(setZipCode(''));
         await dispatch(setSideBarSteps([]));
         await dispatch(setWelcomeScreenView(currentUser ? "serviceCenterSelect" : "select"));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
