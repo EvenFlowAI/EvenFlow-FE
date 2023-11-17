@@ -29,12 +29,15 @@ const AddToCalendarButton: React.FC<TProps> = ({date, serviceName, servicesList}
         appointmentByKey
     } = useSelector((state: RootState) => state.appointmentFrame)
     const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails)
-    const { serviceValetAppointment, appointment, scProfile } = useSelector((state: RootState) => state.appointment)
+    const { serviceValetAppointment, appointment, scProfile, waitListSettings } = useSelector((state: RootState) => state.appointment)
     const {t} = useTranslation();
     const engine = useMemo(() => engineTypes.find(item => item.id === Number(selectedVehicle?.engineTypeId)), [engineTypes, selectedVehicle])
 
     const isServiceValetApp = useMemo(() => Boolean(serviceValetAppointment) && serviceTypeOption?.type === EServiceType.PickUpDropOff,
         [serviceValetAppointment, serviceTypeOption]);
+
+    const isWaitList = useMemo(() => waitListSettings?.isEnabled && (appointment?.isOverbookingApplied || appointmentByKey?.isWaitlist),
+        [waitListSettings, appointment, appointmentByKey])
 
     const vehicleData = selectedVehicle?.year
         ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} ${engine?.name ?? ""}`
@@ -64,7 +67,7 @@ const AddToCalendarButton: React.FC<TProps> = ({date, serviceName, servicesList}
             }
         }
         return dateString;
-    }, [isServiceValetApp, serviceValetAppointment, appointment, date, appointmentByKey, serviceTypeOption])
+    }, [isServiceValetApp, serviceValetAppointment, appointment, date, appointmentByKey, serviceTypeOption, waitListSettings])
 
     const calendarData: TItem[] = useMemo(() => {
         const data = [
@@ -78,7 +81,9 @@ const AddToCalendarButton: React.FC<TProps> = ({date, serviceName, servicesList}
             },
             {
                 label: t('SELECTED DATE & TIME'),
-                content: getDateForCalendar(),
+                content: isWaitList
+                    ? `${getDateForCalendar()}\n${waitListSettings?.text ?? t("Waitlist Only")}`
+                    : getDateForCalendar(),
             },
             {
                 label: t('SERVICE REQUESTS'),
@@ -94,7 +99,8 @@ const AddToCalendarButton: React.FC<TProps> = ({date, serviceName, servicesList}
             }
         ];
         if (serviceTypeOption?.type === EServiceType.MobileService) {
-            data.splice(4, 1);
+            const advisorIndex = data.findIndex(el => el.label === t('APPOINTMENT DETAILS'))
+            if (advisorIndex > -1) data.splice(advisorIndex, 1);
         }
         return data
     }, [vehicleData, serviceName, getDateForCalendar, isServiceValetApp, servicesList, advisor, scProfile, serviceTypeOption, getDateForCalendar])

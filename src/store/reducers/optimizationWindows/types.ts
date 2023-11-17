@@ -45,3 +45,13 @@ export interface IAppointmentCutoff {
     serviceCenterId: number;
     podId?: number;
 }
+
+export interface IWaitListSettings {
+    isEnabled: boolean;
+    serviceCenterId: number;
+    appointmentSlotText: string;
+    podId?: number|null;
+    appointmentSlotTextHex?: string;
+    appointmentSlotBoxHex?: string;
+    rolloverDescriptionText?: string;
+}

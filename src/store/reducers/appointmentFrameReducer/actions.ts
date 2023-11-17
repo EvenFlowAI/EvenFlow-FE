@@ -41,7 +41,8 @@ import {
     selectServiceValetAppointment,
     selectSR,
     setAppointmentWasChanged,
-    setCustomerLoadedData
+    setCustomerLoadedData,
+    setWaitListSettings
 } from "../appointment/actions";
 import {TView} from "../../../components/Welcome/types";
 import {IMaintenanceItem, IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
@@ -339,6 +340,7 @@ export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dis
     dispatch(setAppointmentWasChanged(false))
     dispatch(setAppointmentNotes(''))
     dispatch(setConsultants([]));
+    dispatch(setWaitListSettings(null));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
@@ -704,6 +706,14 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         : appointment.appointment?.id
             ? appointment.appointment?.id.split("|")[1]
             : appointmentFrame.appointmentByKey?.timeSlot || "00:00:00"
+    const settingsEnabled = Boolean(appointment.waitListSettings?.isEnabled)
+    const isWaitListSlotSelected = appointment.appointment?.isOverbookingApplied && settingsEnabled;
+    const isWaitListManaging = !isWaitListSlotSelected
+        && Boolean(appointmentFrame.appointmentByKey?.isWaitlist && appointmentFrame.hashKey)
+        && settingsEnabled
+    const isVisitCenterAppointment = appointmentFrame?.serviceTypeOption?.type === EServiceType.VisitCenter;
+
+    const isWaitlist = isVisitCenterAppointment && (isWaitListSlotSelected || isWaitListManaging);
 
     const data = {
         id: appointmentFrame.id,
@@ -740,7 +750,8 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             address: appointmentFrame.streetName ?? '',
             city: appointmentFrame.city ?? '',
             state: appointmentFrame.politicalState ?? '',
-        }
+        },
+        isWaitlist,
     };
 
     if (isAdmin) delete data.schedulerType;
@@ -777,7 +788,7 @@ export const checkCarIsValid = (onCarIsValid = () => {}, onCarIsInvalid = () => 
         const existingEngineType = engineTypes.find(item => item.id === selectedVehicle.engineTypeId);
         if (!skipEngineCheck && currentConfig?.engineType && (!existingEngineType || !selectedVehicle.engineTypeId)) carIsValid = false;
 
-        if (!selectedVehicle.vin?.length) {
+        if (!selectedVehicle.vin?.length && selectedVehicle.make && selectedVehicle.model) {
             const existingMake = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase())
             const existingModel = models.find(item => item.toLowerCase() === selectedVehicle.model.toLowerCase())
             if (!existingMake || !existingModel) carIsValid = false;

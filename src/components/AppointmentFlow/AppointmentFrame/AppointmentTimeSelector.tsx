@@ -22,7 +22,7 @@ const TimeSlotsWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "repeat(6, 1fr)",
     gap: "20px 12px",
-    alignItems: "center",
+    // alignItems: "stretch",
     justifyContent: "center",
     "&>div": {
         flexGrow: 1
@@ -61,7 +61,11 @@ type TProps = {
 
 export const AppointmentTimeSelector: React.FC<TProps> =
     ({date, loading, appointments}) => {
-        const {appointment: selectedAppointment, scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
+        const {
+            appointment: selectedAppointment,
+            scProfile,
+            customerLoadedData,
+        } = useSelector((state: RootState) => state.appointment);
         const {selectedTiming, gap, hoursOfOperations, sideBarSteps, appointmentByKey} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const titleRef = useRef<HTMLDivElement|null>(null);

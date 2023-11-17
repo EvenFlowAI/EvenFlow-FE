@@ -4,7 +4,7 @@ import {
     EAppointmentTimingType,
     EReminderType, ETransportation,
     IPersonalInformation, IServiceRequestPrice,
-    IVehicleData, IVehicleForSlots, MPOptionShort, TRecallForRequest
+    IVehicleData, IVehicleForSlots, IWaitListData, MPOptionShort, TRecallForRequest
 } from "../store/reducers/appointment/types";
 import {EOfferType, IOffer} from "../store/reducers/offers/types";
 import {IServiceRequest, IServiceRequestShort} from "../store/reducers/serviceRequests/types";
@@ -272,6 +272,11 @@ export type TAppointmentAdvisor = {
     id?: string|null;
 }
 
+export type TWaitListTextSettings = {
+    text?: string;
+    textHex?: string;
+}
+
 export interface IAppointmentByKey extends IBaseAppointment {
     serviceCategories: ICategory[];
     jobType?: EJobType;
@@ -283,6 +288,8 @@ export interface IAppointmentByKey extends IBaseAppointment {
     serviceValetTime?: TServiceValetSlot;
     notes?: string;
     addressData?: IAddressData;
+    isWaitlist?: boolean;
+    waitlistTextSettings?: Partial<IWaitListData>;
 }
 
 export interface IAppointmentByQuery extends IBaseAppointment {

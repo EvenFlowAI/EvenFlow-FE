@@ -25,7 +25,10 @@ import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {Routes} from "../../../config/routes";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
-import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
+import {
+    selectAppointment,
+    selectServiceValetAppointment,
+    } from "../../../store/reducers/appointment/actions";
 
 type TProps = {
     onNext: TArgCallback<TScreen>;
@@ -81,6 +84,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
     const clearData = () => {
         dispatch(setAdditionalServicesChosen(false));
         dispatch(selectAppointment(null));
+        //dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(clearAppointmentSteps("serviceNeeds"));
     }
