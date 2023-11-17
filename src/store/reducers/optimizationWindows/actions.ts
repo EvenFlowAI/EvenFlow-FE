@@ -37,8 +37,8 @@ export const loadOverbookingFactor = (serviceCenterId: number, podId?: number): 
     );
     dispatch(getOverbookingFactor(data));
 }
-export const setOverbookingFactor = (data: IOverbookingFactor[]): AppThunk => async dispatch => {
-    await Api.call(
+export const setOverbookingFactor = (data: IOverbookingFactor[], onSuccess?: () => void, onError?: (err: string) => void): AppThunk => dispatch => {
+    Api.call(
         Api.endpoints.OptimizationWindows.SetOverbooking,
         {
             data: {
@@ -47,8 +47,15 @@ export const setOverbookingFactor = (data: IOverbookingFactor[]): AppThunk => as
                 items: data
             }
         }
-    )
-    dispatch(loadOptimizationWindows(data[0].serviceCenterId, data[0].podId));
+    ).then(res => {
+        if (res) {
+            onSuccess && onSuccess()
+            dispatch(loadOverbookingFactor(data[0].serviceCenterId, data[0].podId))
+        }
+    }).catch(err => {
+        onError && onError(err)
+        console.log('set overbooking factor error', err)
+    })
 }
 export const getAppointmentCutoff = createAction<IAppointmentCutoff[]>("OptimizationWindows/GetAppointmentCutoff");
 export const loadAppointmentCutoff = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
