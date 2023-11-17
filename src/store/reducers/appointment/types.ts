@@ -131,6 +131,7 @@ export interface IPrice {
 }
 
 export interface IWaitListData {
+    isEnabled?: boolean;
     text: string;
     textHex?: string;
     boxHex?: string;

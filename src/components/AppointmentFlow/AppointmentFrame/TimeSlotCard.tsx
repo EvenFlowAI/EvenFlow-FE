@@ -132,7 +132,7 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
     const {t} = useTranslation();
     const title = t("Expected completion time for your vehicle cannot be provided with Waitlist Only appointments");
     const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
-    const isWaitList = Boolean(slot?.isOverbookingApplied && waitListSettings);
+    const isWaitList = Boolean(slot?.isOverbookingApplied && waitListSettings?.isEnabled);
 
     useEffect(() => {
         if (slot?.date && moment(slot?.date).isSame(moment(), 'day') && moment(date).isSame(moment(), 'day')) {
@@ -148,7 +148,7 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
     }, [slot, date])
 
     const getContent = (timePassed: boolean): string => {
-        if (slot?.isOverbookingApplied && waitListSettings) {
+        if (slot?.isOverbookingApplied && waitListSettings?.isEnabled) {
             return waitListSettings?.text ?? t ("Waitlist only")
         }
         if (!slot || timePassed) {

@@ -436,7 +436,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                         error: errors.includes("make"),
                         required: requiredFields.includes('make')
                     })}
-                    value={selectedVehicle?.make ? selectedVehicle.make.toString() : ''}
+                    value={selectedVehicle?.make ? selectedVehicle.make?.toString() : ''}
                 />
                 {currentConfig?.engineType
                     ? <Autocomplete

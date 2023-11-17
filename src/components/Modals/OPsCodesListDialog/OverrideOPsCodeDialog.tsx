@@ -90,10 +90,11 @@ export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest
                 await dispatch(updateAssignedServiceRequest(
                     data,
                     payload.id,
-                    payload.serviceCenterId
+                    payload.serviceCenterId,
+                    () => showMessage("Service Request updated"),
+                    (err) => showError(err)
                 ));
                 setLoading(false);
-                showMessage("Saved");
                 props.onClose();
             } catch (e) {
                 setLoading(false);

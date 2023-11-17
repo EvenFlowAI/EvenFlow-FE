@@ -116,13 +116,21 @@ export const loadAllAssignedServiceRequests = (serviceCenterId: number): AppThun
 }
 
 export const updateAssignedServiceRequest = (
-    data: IServiceRequestOverrideEditRequest, id: number, serviceCenterId?: number,
-): AppThunk =>
-    async dispatch => {
-    await Api.call(Api.endpoints.ServiceRequests.EditOverrides, {data, urlParams: {id}});
-    if (serviceCenterId) {
-        dispatch(loadAssignedServiceRequests(serviceCenterId));
-    }
+    data: IServiceRequestOverrideEditRequest, id: number, serviceCenterId?: number, onSuccess?: () => void, onError?: (err: string) => void
+): AppThunk => dispatch => {
+    Api.call(Api.endpoints.ServiceRequests.EditOverrides, {data, urlParams: {id}})
+        .then(res => {
+            if (res) {
+                onSuccess && onSuccess()
+                if (serviceCenterId) {
+                    dispatch(loadAssignedServiceRequests(serviceCenterId));
+                }
+            }
+        })
+        .catch(err => {
+            onError && onError(err)
+            console.log('update assigned service request error', err)
+        })
 }
 export const setRequiredSkills = (
     requiredData: IRequiredSkillData, serviceCenterId?: number

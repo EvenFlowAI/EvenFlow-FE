@@ -36,7 +36,7 @@ const AddToCalendarButton: React.FC<TProps> = ({date, serviceName, servicesList}
     const isServiceValetApp = useMemo(() => Boolean(serviceValetAppointment) && serviceTypeOption?.type === EServiceType.PickUpDropOff,
         [serviceValetAppointment, serviceTypeOption]);
 
-    const isWaitList = useMemo(() => waitListSettings && (appointment?.isOverbookingApplied || appointmentByKey?.isWaitlist),
+    const isWaitList = useMemo(() => waitListSettings?.isEnabled && (appointment?.isOverbookingApplied || appointmentByKey?.isWaitlist),
         [waitListSettings, appointment, appointmentByKey])
 
     const vehicleData = selectedVehicle?.year

@@ -706,11 +706,14 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         : appointment.appointment?.id
             ? appointment.appointment?.id.split("|")[1]
             : appointmentFrame.appointmentByKey?.timeSlot || "00:00:00"
-    const isWaitListManaging = Boolean(appointmentFrame.appointmentByKey?.isWaitlist && appointmentFrame.hashKey)
-    const isWaitListCreating = appointment.appointment?.isOverbookingApplied && Boolean(appointment.waitListSettings)
+    const settingsEnabled = Boolean(appointment.waitListSettings?.isEnabled)
+    const isWaitListSlotSelected = appointment.appointment?.isOverbookingApplied && settingsEnabled;
+    const isWaitListManaging = !isWaitListSlotSelected
+        && Boolean(appointmentFrame.appointmentByKey?.isWaitlist && appointmentFrame.hashKey)
+        && settingsEnabled
     const isVisitCenterAppointment = appointmentFrame?.serviceTypeOption?.type === EServiceType.VisitCenter;
 
-    const isWaitlist = isVisitCenterAppointment && (isWaitListCreating || isWaitListManaging);
+    const isWaitlist = isVisitCenterAppointment && (isWaitListSlotSelected || isWaitListManaging);
 
     const data = {
         id: appointmentFrame.id,
@@ -785,7 +788,7 @@ export const checkCarIsValid = (onCarIsValid = () => {}, onCarIsInvalid = () => 
         const existingEngineType = engineTypes.find(item => item.id === selectedVehicle.engineTypeId);
         if (!skipEngineCheck && currentConfig?.engineType && (!existingEngineType || !selectedVehicle.engineTypeId)) carIsValid = false;
 
-        if (!selectedVehicle.vin?.length) {
+        if (!selectedVehicle.vin?.length && selectedVehicle.make && selectedVehicle.model) {
             const existingMake = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase())
             const existingModel = models.find(item => item.toLowerCase() === selectedVehicle.model.toLowerCase())
             if (!existingMake || !existingModel) carIsValid = false;
