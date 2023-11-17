@@ -29,6 +29,7 @@ import PaymentType from "../../Modals/PaymentType/PaymentType";
 import ServiceType from "./confirmationSections/ServiceType";
 import {useTranslation} from "react-i18next";
 import {isMobile} from 'react-device-detect';
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -113,6 +114,12 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
             isValid = false;
             localErrors.push('phonenumber')
             showError('"Phone Number" must not be empty')
+        }
+        const invalidServiceValetSlot = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && !appointment.serviceValetAppointment;
+        const invalidSlot = appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && !appointment.appointment;
+        if (invalidServiceValetSlot || invalidSlot) {
+            isValid = false;
+            showError('Selected date and time are not correct. Please select correct date and time or cancel all changes')
         }
         setErrors(localErrors)
         return isValid;
