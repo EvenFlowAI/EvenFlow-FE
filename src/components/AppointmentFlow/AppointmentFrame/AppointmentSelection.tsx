@@ -31,7 +31,7 @@ import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector";
 import {
     clearAppointmentSteps,
-    setServiceTypeOption,
+    setServiceTypeOption, setTransportation,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
@@ -345,6 +345,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
 
     const handleNext = useCallback((): void => {
         handleGANext();
+        dispatch(setTransportation(null))
         if (customerData?.isUpdating) {
             handleTransportation()
         } else {
