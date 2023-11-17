@@ -174,9 +174,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const onBackToPrevServiceOption = () => {
         if (prevSelectedOption) dispatch(setServiceTypeOption(prevSelectedOption))
-        dispatch(setCurrentFrameScreen(isAppointmentTimingAvailable
-            ? "appointmentTiming"
-            : "appointmentSelection"))
+        dispatch(setCurrentFrameScreen("appointmentSelection"))
     }
 
     const handleBack = () => {
