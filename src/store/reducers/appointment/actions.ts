@@ -83,7 +83,7 @@ export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: mo
         );
         const res = dispatch(getAppointmentSlots(items));
         if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
-        if (consultantId) dispatch(getSlotsConsultantId(consultantId))
+        dispatch(getSlotsConsultantId(consultantId ?? null))
         dispatch(setWaitListSettings(waitlistSettings ?? null))
         if (loadCB) {
             loadCB();
