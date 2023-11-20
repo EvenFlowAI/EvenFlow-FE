@@ -5,11 +5,11 @@ import {useTranslation} from "react-i18next";
 import {useReturningAdminStyles} from "./ReturningCustomerForAdmin";
 import {makeStyles} from "@material-ui/core/styles";
 import {mh400, mh600} from "./CustomerSelect";
+import {ReactComponent as UserIcon} from "../../assets/img/user_big.svg";
 
 const useStyles = makeStyles(theme => ({
     button: {
         height: "100%",
-        maxHeight: 400,
         // display: "flex",
         // flexDirection: "column",
         // alignItems: "center",
@@ -65,7 +65,8 @@ const NewCustomerForAdmin: React.FC<{ handleNew: () => void}> = ({ handleNew }) 
             {isSm
                 ? null
                 : <div className={returningClasses.greyText}>{t("Click button to start", {button: `"${t("Submit")}"`})}</div>}
-            <Divider style={{marginBottom: isSm ? 12 : 72, marginTop: isSm ? 12 : 17}}/>
+            <Divider style={{marginBottom: isSm ? 12 : 50, marginTop: isSm ? 12 : 17}}/>
+            <div style={{marginBottom: isSm ? 12 : 60}}><UserIcon/></div>
             <Button
                 variant="contained"
                 color="primary"
