@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {loadMoreRepairHistory, loadRepairHistory} from "../../../store/reducers/enhancedCustomerSearch/actions";
+import {loadRepairHistory} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {Button, Divider, Table, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
@@ -150,14 +150,14 @@ const HCell = withStyles({
 
 const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({vehicleDmsId, open, onClose}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {repairHistoryLoading, repairHistory, repairHistoryPaging} = useSelector((state: RootState) => state.customers);
+    const {repairHistoryLoading, repairHistory} = useSelector((state: RootState) => state.customers);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const dispatch = useDispatch();
     const classes = useStyles();
 
     useEffect(() => {
         if (scProfile && vehicleDmsId && open) {
-            dispatch(loadRepairHistory(scProfile.id, vehicleDmsId, 0, 2));
+            dispatch(loadRepairHistory(scProfile.id, vehicleDmsId, 0, 0));
         }
     }, [scProfile, vehicleDmsId, open])
 
@@ -168,7 +168,7 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
     const onLoadMore = () => {
         const index = pageIndex + 1;
         setPageIndex(index);
-        scProfile && dispatch(loadMoreRepairHistory(scProfile.id, vehicleDmsId, index, 2))
+        // scProfile && dispatch(loadMoreRepairHistory(scProfile.id, vehicleDmsId, index, 1))
     }
 
     return (
@@ -208,7 +208,7 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
                                 </div>
                             </div>
                             <div className={classes.textBig} style={{paddingBottom: 16}}>Prior Repair Orders:</div>
-                            {repairHistory?.repairOrders.map(item => <div className={classes.orderWrapper} key={item.date}>
+                            {repairHistory?.repairOrders.slice(0, (pageIndex + 1) * 2).map(item => <div className={classes.orderWrapper} key={item.date}>
                                 <div className={classes.orderMainData}>
                                     <div className={classnames(classes.gridTableHead)}>
                                         <div className={classnames(classes.titleNonUpperCase, classes.padding)}>{item.number ? `#${item.number}` : ''}</div>
@@ -307,7 +307,7 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
                                     {item.comments && item.comments.map(comment => <div>{comment}</div>)}
                                 </div>
                             </div>)}
-                            {repairHistoryPaging.numberOfPages > 1 && repairHistoryPaging.numberOfPages > pageIndex + 1
+                            {repairHistory?.repairOrders.length > (pageIndex + 1) * 2
                                 ? <div className={classes.centered}>
                                     <Button
                                         variant="text"
