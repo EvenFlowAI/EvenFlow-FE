@@ -205,7 +205,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
             <span style={{fontSize: isSm ? 28 : 32}}>{t("Search Customer")}</span>
             {isSm
                 ? null
-                : <div className={returningClasses.greyText}>{t("Add Data and hit enter to search", {button: `"${t("Enter")}"`})}</div>}
+                : <div className={returningClasses.greyText}>{t("Add Data and hit enter to search", {button: `"${t("Enter")}"`, button1: `"${t("Submit")}"`})}</div>}
             <Divider style={{marginBottom: isSm ? 8 : 16, marginTop: 17}}/>
             <InputLabel label={t("Search Customer by Phone or Email")}/>
             <TextField
