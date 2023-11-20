@@ -7,8 +7,6 @@ import {NavLink} from "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";
 import {encodeSCID} from "../../../utils/utils";
 import {useSCs} from "../../../utils/hooks";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
 
 type TProps = {
     searchTerm: string;
@@ -37,7 +35,6 @@ const useStyles = makeStyles({
 })
 
 export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selectedView, searchTerm, handleSearchChange, onSearch, onFilterOpen}) => {
-    const { isLoading } = useSelector((state: RootState) => state.appointments);
     const classes = useStyles();
     const {selectedSC} = useSCs();
     const encoded = encodeSCID(selectedSC?.id??0);
@@ -47,7 +44,6 @@ export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selected
             <NavLink to={url} className={classes.linkBtn} target="_blank">Book Appointment</NavLink>
             {selectedView === 'list' && <SearchDebounced
                 onSearch={onSearch}
-                disabled={isLoading}
                 onChange={handleSearchChange}
                 value={searchTerm}
                 placeholder="Search customer..."/>
