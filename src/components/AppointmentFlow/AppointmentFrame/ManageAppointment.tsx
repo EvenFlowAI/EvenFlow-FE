@@ -167,11 +167,11 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
             localErrors.push('phonenumber')
             showError('"Phone Number" must not be empty')
         }
-        if (appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && !appointment.serviceValetAppointment) {
+        if (appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && !appointment.serviceValetAppointment && !appointmentFrame.appointmentByKey?.serviceValetTime) {
             isValid = false;
             showError('Please select correct Appointment Date and Time')
         }
-        if (appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && !appointment.appointment) {
+        if (appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && !appointment.appointment && appointmentFrame.appointmentByKey?.serviceValetTime) {
             isValid = false;
             showError('Please select correct Appointment Date and Time')
         }
