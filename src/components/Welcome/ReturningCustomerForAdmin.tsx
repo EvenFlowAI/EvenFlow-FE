@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {TextField} from "../UI/EndUserInputs";
-import {CircularProgress, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
+import {Button, CircularProgress, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {useStyles} from "./CustomerSelect";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
@@ -69,7 +69,8 @@ export const useReturningAdminStyles = makeStyles((theme) => ({
         color: "#142EA1",
         fontSize: 16,
         fontWeight: 600,
-        cursor: "pointer"
+        cursor: "pointer",
+        marginBottom: 16
     }
 }))
 
@@ -185,6 +186,11 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
 
     const onExpandClick = () => setExpanded(prev => !prev)
 
+    const onSubmit = () => {
+        onSave()
+        handleComplete().then()
+    }
+
     // const checkPhoneOrEmailValid = () => {
     //     if (customerEnteredEmail.length) {
     //         return Number.isNaN(+customerEnteredEmail)
@@ -237,10 +243,21 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     disabled={isLoading}
                     value={customerSearchData.lastName}/>
             </div>
-            <div className={returningClasses.expandBtn} onClick={onExpandClick} style={{marginBottom: isExpanded ? 16 : 0}}>
+            <div className={returningClasses.expandBtn} onClick={onExpandClick}>
                 {isExpanded ? t("Collapse expanded search criteria") : t("Expand advanced search criteria")}
                 {isExpanded ? <KeyboardArrowUp htmlColor="#142EA1"/> : <KeyboardArrowDown htmlColor="#142EA1"/> }
             </div>
+            {!isExpanded
+                ?  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={!formIsValid}
+                    className={classes.submitButton}
+                    onClick={onSubmit}
+                >
+                    {t("Submit")}
+                </Button>
+            : null }
             {isExpanded
                 ? <React.Fragment>
                     {/*<InputLabel label={t("Search by Company Name")}/>*/}
@@ -279,6 +296,16 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                         disabled={isLoading}
                         style={{ marginBottom: 16 }}
                         value={customerSearchData.lastVINCharacters}/>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        disabled={!formIsValid}
+                        className={classes.submitButton}
+                        onClick={onSubmit}
+                    >
+                        {t("Submit")}
+                    </Button>
+
             </React.Fragment>
                 : null}
             <CustomerSearchResults
