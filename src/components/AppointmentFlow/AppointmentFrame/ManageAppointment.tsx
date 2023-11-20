@@ -42,6 +42,7 @@ import {isMobile} from 'react-device-detect';
 import moment from "moment/moment";
 import DetailedFeesManage from "../../Modals/DetailedFees/DetailedFeesManage";
 import {loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -165,6 +166,14 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
             isValid = false;
             localErrors.push('phonenumber')
             showError('"Phone Number" must not be empty')
+        }
+        if (appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && !appointment.serviceValetAppointment) {
+            isValid = false;
+            showError('Please select correct Appointment Date and Time')
+        }
+        if (appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && !appointment.appointment) {
+            isValid = false;
+            showError('Please select correct Appointment Date and Time')
         }
         setErrors(localErrors)
         return isValid;
