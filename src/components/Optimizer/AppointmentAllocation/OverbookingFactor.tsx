@@ -82,26 +82,29 @@ export const OverbookingFactor = () => {
         setForm({...form, [day]: {...form[day], [name]: Number(value)}});
     }
 
+    const onSuccess = () => {
+        setSaving(false);
+        showMessage("Saved");
+        setEdit(false);
+    }
+
+    const onError = (err: string) => {
+        setSaving(false)
+        showError(err);
+    }
+
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
-            try {
-                setSaving(true);
-                const data: IOverbookingFactor[] = Object.values(form).map(di => ({
-                    ...di,
-                    serviceCenterId: selectedSC.id,
-                    podId: selectedPod?.id,
-                    overbookingFactorValue: di.overbookingFactorValue || 0
-                }));
-                await dispatch(setOverbookingFactor(data));
-                setSaving(false);
-                showMessage("Saved");
-                setEdit(false);
-            } catch (e) {
-                setSaving(false)
-                showError(e);
-            }
+            setSaving(true);
+            const data: IOverbookingFactor[] = Object.values(form).map(di => ({
+                ...di,
+                serviceCenterId: selectedSC.id,
+                podId: selectedPod?.id,
+                overbookingFactorValue: di.overbookingFactorValue || 0
+            }));
+            dispatch(setOverbookingFactor(data, onSuccess, onError));
         }
     }
 

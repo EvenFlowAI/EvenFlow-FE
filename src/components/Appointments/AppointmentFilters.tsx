@@ -51,7 +51,7 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                    scheduler,
                                                                    serviceBook,
                                                                }) => {
-    const {schedulerList, serviceBookList} = useSelector((state: RootState) => state.appointments)
+    const {schedulerList, serviceBookList, isLoading} = useSelector((state: RootState) => state.appointments)
     const [isOpen, setOpen] = useState<boolean>(false);
     const classes = useStyles()
     const {selectedSC} = useSCs();
@@ -89,6 +89,7 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         onOpen={handleOpen(true)}
                         onClose={handleOpen(false)}
                         open={isOpen}
+                        disabled={isLoading}
                         InputProps={{
                             label: "Date",
                             placeholder: "Select date",
@@ -106,6 +107,7 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                     <Select
                         fullWidth
                         displayEmpty
+                        disabled={isLoading}
                         style={{color: status ? "inherit" : '#858585'}}
                         onChange={handleSelectStatus}
                         value={status}
@@ -123,6 +125,7 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                     <Select
                         fullWidth
                         displayEmpty
+                        disabled={isLoading}
                         style={{color: scheduler ? "inherit" : '#858585'}}
                         onChange={handleSelectScheduler}
                         value={scheduler?.id ?? scheduler?.fullName ?? ''}
@@ -142,6 +145,7 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                     <Select
                         fullWidth
                         displayEmpty
+                        disabled={isLoading}
                         style={{color: serviceBook ? "inherit" : '#858585'}}
                         onChange={handleSelectServiceBook}
                         value={serviceBook?.id ?? serviceBook?.name ?? ''}
