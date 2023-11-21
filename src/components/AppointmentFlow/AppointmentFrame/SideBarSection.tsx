@@ -8,6 +8,7 @@ import {TScreen} from "../../Layout/types";
 import AppointmentNotes from "./AppointmentNotes";
 import VehicleRepairHistory from "../../Modals/VehicleRepairHistory/VehicleRepairHistory";
 import {useTranslation} from "react-i18next";
+import CustomerInfo from "./CustomerInfo";
 
 const SectionWrapper = styled('div')(() => ({
     display: 'flex',
@@ -45,6 +46,7 @@ const SideBarSection: React.FC<TProps> = ({screen, handleSetScreen}) => {
                 style={{color: hasHistory ? "#142EA1" : "grey", cursor: hasHistory ? "pointer" : "unset"}}>
                 {t("See RO History")}
             </RoHistoryLink>
+            <CustomerInfo/>
             <AppointmentNotes/>
             {hasHistory && selectedVehicle?.dmsId
                 ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={selectedVehicle.dmsId}/>
