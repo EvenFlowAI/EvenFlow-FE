@@ -49,8 +49,10 @@ import CancelAppointmentConfirm from "../CancelAppoitntmentConfirm/CancelAppoint
 
 const useStyles = makeStyles({
     wrapper: {
+        minWidth: 2000,
         border: '1px solid #DADADA',
         marginTop: 16,
+        overflowX: 'auto',
     },
     emptyWrapper: {
         height: 500,
@@ -549,7 +551,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
                             </TableCell>
-                            <TableCell key="address" className={classes.bodyCell}>
+                            <TableCell key="address" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
@@ -557,7 +559,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
                             </TableCell>
-                            <TableCell key="city" className={classes.bodyCell}>
+                            <TableCell key="city" className={classes.bodyCell} width={120}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
@@ -565,7 +567,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
                             </TableCell>
-                            <TableCell key="state" className={classes.bodyCell}>
+                            <TableCell key="state" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
