@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
         // flexDirection: "column",
         // alignItems: "center",
         // justifyContent: "space-between",
+        maxHeight: 465,
         fontWeight: "bold",
         fontSize: 32,
         textAlign: "center",
