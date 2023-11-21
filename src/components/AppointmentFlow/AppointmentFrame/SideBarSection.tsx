@@ -41,12 +41,12 @@ const SideBarSection: React.FC<TProps> = ({screen, handleSetScreen}) => {
     return currentUser && currentUser.dealershipId === scProfile?.dealershipId
         ? <SectionWrapper>
             <SideBar screen={screen} handleSetScreen={handleSetScreen}/>
+            <CustomerInfo/>
             <RoHistoryLink
                 onClick={onOpenHistory}
                 style={{color: hasHistory ? "#142EA1" : "grey", cursor: hasHistory ? "pointer" : "unset"}}>
                 {t("See RO History")}
             </RoHistoryLink>
-            <CustomerInfo/>
             <AppointmentNotes/>
             {hasHistory && selectedVehicle?.dmsId
                 ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={selectedVehicle.dmsId}/>
