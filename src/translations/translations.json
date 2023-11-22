@@ -299,7 +299,7 @@
       "New Search": "New Search",
       "Create Appointment for New Customer": "Create Appointment for New Customer",
       "Check for Recalls": "Check for Recalls",
-      "Add Data and hit enter to search": "Add Data and Hit {{button}} or {{button1}} to Search",
+      "Add Data and hit enter to search": "Add Data and Hit {{button}} or Click {{button1}}",
       "Enter": "Enter",
       "Enter Phone or Email": "Enter Phone or Email",
       "Search Customer by Phone or Email": "Phone or Email",
@@ -337,7 +337,8 @@
       "Service Address": "Service Address",
       "Pick Up Address": "Pick Up Address",
       "Waitlist only": "Waitlist only",
-      "Expected completion time for your vehicle cannot be provided with Waitlist Only appointments": "Expected completion time for your vehicle cannot \u2028be provided with Waitlist Only appointments"
+      "Expected completion time for your vehicle cannot be provided with Waitlist Only appointments": "Expected completion time for your vehicle cannot \u2028be provided with Waitlist Only appointments",
+      "Existing Customer": "Existing Customer"
     }
   },
   "es": {
