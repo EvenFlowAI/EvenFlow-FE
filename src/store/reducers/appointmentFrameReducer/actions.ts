@@ -157,7 +157,6 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
         serviceRequests,
         serviceCategories,
         address,
-        zipCode
     } = appointment;
     const {selectedVehicle, selectedRecalls, valueService, sideBarSteps} = getState().appointmentFrame;
     const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
@@ -182,8 +181,8 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
                     mileage: selectedVehicle.mileage,
                     engineTypeId: selectedVehicle.engineTypeId,
                 },
-                address,
-                zipCode,
+                address: address?.fullAddress ?? '',
+                zipCode: address?.zipCode ?? '',
             }
             if (valueService?.selectedService) {
                 data.valueServiceOfferIds = [valueService.selectedService.id];

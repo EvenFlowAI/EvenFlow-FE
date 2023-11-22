@@ -330,14 +330,14 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             categoriesIds: payload.serviceCategories ? payload.serviceCategories?.map(item => item.id) : [],
             description: payload.comment,
             serviceType: payload.serviceTypeOption?.type ?? EServiceType.VisitCenter,
-            address: payload.address ?? null,
-            zipCode: payload.zipCode ?? "",
+            address: payload.address?.fullAddress ?? null,
+            zipCode: payload.address?.zipCode ?? "",
             serviceTypeOption: payload.serviceTypeOption ?? null,
             transportation: payload.transportationOption ?? null,
             appointmentRequestsPrices: payload.detailedPriceList ?? [],
-            city: payload?.addressData?.city ?? '',
-            streetName: payload?.addressData?.address ?? '',
-            politicalState: payload?.addressData?.state ?? '',
+            city: payload?.address?.city ?? '',
+            streetName: payload?.address?.address ?? '',
+            politicalState: payload?.address?.state ?? '',
             packagePricingType: payload?.maintenancePackageOption?.priceType ?? null,
         };
     })
@@ -351,7 +351,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, consultants: payload};
     })
     .addCase(setCurrentFrameScreen, (state, { payload }) => {
-        const filteredScreens = state.passedScreens.filter(el => el !== payload)
         return {
             ...state,
             prevScreen: state.currentScreen,
