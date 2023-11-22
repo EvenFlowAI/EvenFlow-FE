@@ -202,10 +202,10 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
 
     return <Grid item xs={12} sm={12} md={6} style={{maxWidth: 440, padding: isSm ? '16px 0' : 16}}>
         <div className={classes.existing}>
-            <span style={{fontSize: isSm ? 28 : 32}}>{t("Search Customer")}</span>
+            <span style={{fontSize: isSm ? 28 : 32}}>{t("Existing Customer")}</span>
             {isSm
                 ? null
-                : <div className={returningClasses.greyText}>{t("Add Data and hit enter to search", {button: `"${t("Enter")}"`, button1: `"${t("Submit")}"`})}</div>}
+                : <div className={returningClasses.greyText}>{t("Add Data and hit enter to search", {button: `"${t("Enter")}"`, button1: `"${t("Search")}"`})}</div>}
             <Divider style={{marginBottom: isSm ? 8 : 16, marginTop: 17}}/>
             <InputLabel label={t("Search Customer by Phone or Email")}/>
             <TextField
@@ -255,7 +255,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     className={classes.submitButton}
                     onClick={onSubmit}
                 >
-                    {t("Submit")}
+                    {t("Search")}
                 </Button>
             : null }
             {isExpanded
@@ -303,7 +303,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                         className={classes.submitButton}
                         onClick={onSubmit}
                     >
-                        {t("Submit")}
+                        {t("Search")}
                     </Button>
 
             </React.Fragment>
