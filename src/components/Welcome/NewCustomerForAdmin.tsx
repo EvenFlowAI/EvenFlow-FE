@@ -5,15 +5,16 @@ import {useTranslation} from "react-i18next";
 import {useReturningAdminStyles} from "./ReturningCustomerForAdmin";
 import {makeStyles} from "@material-ui/core/styles";
 import {mh400, mh600} from "./CustomerSelect";
+import {ReactComponent as UserIcon} from "../../assets/img/user_big.svg";
 
 const useStyles = makeStyles(theme => ({
     button: {
         height: "100%",
-        maxHeight: 400,
         // display: "flex",
         // flexDirection: "column",
         // alignItems: "center",
         // justifyContent: "space-between",
+        maxHeight: 465,
         fontWeight: "bold",
         fontSize: 32,
         textAlign: "center",
@@ -64,15 +65,16 @@ const NewCustomerForAdmin: React.FC<{ handleNew: () => void}> = ({ handleNew }) 
             <span style={{fontSize : isSm ? 28 : 32}}>{t("New customer")}</span>
             {isSm
                 ? null
-                : <div className={returningClasses.greyText}>{t("Click button to start", {button: `"${t("Submit")}"`})}</div>}
-            <Divider style={{marginBottom: isSm ? 12 : 72, marginTop: isSm ? 12 : 17}}/>
+                : <div className={returningClasses.greyText}>{t("Click button to start", {button: `"${t("Next")}"`})}</div>}
+            <Divider style={{marginBottom: isSm ? 12 : 50, marginTop: isSm ? 12 : 17}}/>
+            <div style={{marginBottom: isSm ? 12 : 60}}><UserIcon/></div>
             <Button
                 variant="contained"
                 color="primary"
                 className={classes.submitButton}
                 onClick={handleNew}
             >
-                {t("Submit")}
+                {t("Next")}
             </Button>
         </div>
     </Grid>

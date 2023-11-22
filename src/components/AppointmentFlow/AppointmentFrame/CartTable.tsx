@@ -5,7 +5,7 @@ import {getMaintenanceList} from "./uiUtils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as TrashBin} from "../../../assets/img/trash_bin.svg";
-import {loadSRs} from "../../../store/reducers/appointment/actions";
+import {loadSRs, setAppointmentWasChanged} from "../../../store/reducers/appointment/actions";
 import {IMaintenanceItem} from "./types";
 import {ExpandLess, ExpandMore} from '@material-ui/icons';
 import {
@@ -77,7 +77,7 @@ const CartTable = () => {
         selectedRecalls,
         packageEMenuType
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const { scProfile, selectedSR, serviceRequests } = useSelector((state: RootState) => state.appointment);
+    const { scProfile, selectedSR, serviceRequests, customerLoadedData } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
 
     const [isOpen, setOpen] = useState<boolean>(true);
@@ -119,25 +119,34 @@ const CartTable = () => {
         }
     }, [sideBarSteps, serviceType])
 
+    const setAppointmentChanged = () => {
+        if (customerLoadedData?.isUpdating) dispatch(setAppointmentWasChanged(true))
+    }
+
     const deleteService = (item: IMaintenanceItem) => {
         switch (item.type) {
             case 'service':
                 dispatch(deleteIndService(item));
+                setAppointmentChanged();
                 handleSideBarSteps()
                 return;
             case 'package':
                 dispatch(deletePackage())
+                setAppointmentChanged();
                 handleSideBarSteps();
                 return;
             case 'valueService':
                 dispatch(deleteValueService())
+                setAppointmentChanged();
                 handleSideBarSteps();
                 return;
             case 'recall':
                 dispatch(deleteRecall(item))
+                setAppointmentChanged();
                 return;
             default:
                 dispatch(deleteGeneralService(item))
+                setAppointmentChanged();
                 handleSideBarSteps();
                 return;
         }

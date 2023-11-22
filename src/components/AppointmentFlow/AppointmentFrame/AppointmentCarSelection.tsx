@@ -29,13 +29,16 @@ import {useException} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 
-const CarsWrapper = styled('div')({
+const CarsWrapper = styled('div')(({theme}) =>  ({
+    width: "100%",
     display: "flex",
     alignItems: "center",
     gap: "20px",
-    width: "100%",
-    justifyContent: "stretch"
-});
+    justifyContent: "stretch",
+    [theme.breakpoints.down("sm")]: {
+        height: 350,
+    }
+}));
 
 const Info = styled('div')({
     fontSize: 18,
