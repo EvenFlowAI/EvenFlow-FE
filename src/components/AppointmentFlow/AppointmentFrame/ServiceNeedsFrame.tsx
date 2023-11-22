@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
     checkCarIsValid,
-    clearAppointmentSteps,
+    clearAppointmentSteps, deleteLastScreen,
     selectCategoriesIds,
     selectService,
     selectSubService,
@@ -106,7 +106,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         const firstScreenOptionsUnavailable = !firstScreenOptions.length || onlyVisitCenterOptionExists || isManagingAppointment;
         const needsToShowCarsSelection = userType === EUserType.Existing && !currentUser && firstScreenOptionsUnavailable;
         if (notVisitCenterSelected || needsToShowCarsSelection) {
-            onBack()
+            dispatch(deleteLastScreen())
+            //onBack()
         } else {
             history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
         }
@@ -117,7 +118,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             setPage(EServiceCategoryPage.Page1);
         } else {
             if (isManagingAppointment) {
-                dispatch(setCurrentFrameScreen("manageAppointment"))
+                dispatch(deleteLastScreen())
+                //dispatch(setCurrentFrameScreen("manageAppointment"))
             } else {
                 if (currentUser) dispatch(setShowServiceCentersList(false));
                 handleBackScreen()

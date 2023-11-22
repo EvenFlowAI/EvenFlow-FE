@@ -66,7 +66,12 @@ import {
     setConsultantsLoading,
     setPoliticalState,
     setCity,
-    setStreetName, setAnyAdvisorSelected, getTransactionValue, setSelectedServiceTypeOptions,
+    setStreetName,
+    setAnyAdvisorSelected,
+    getTransactionValue,
+    setSelectedServiceTypeOptions,
+    setPassedScreens,
+    deleteLastScreen,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByKey,
@@ -173,6 +178,7 @@ type TState = {
     appointmentNotes: string;
     serviceOptionChangedFromSlotPage: boolean;
     transactionValue: number;
+    passedScreens: TScreen[];
 }
 const initialState: TState = {
     service: null,
@@ -250,6 +256,7 @@ const initialState: TState = {
     appointmentNotes: '',
     serviceOptionChangedFromSlotPage: false,
     transactionValue: 0,
+    passedScreens: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -344,7 +351,13 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, consultants: payload};
     })
     .addCase(setCurrentFrameScreen, (state, { payload }) => {
-        return {...state, prevScreen: state.currentScreen, currentScreen: payload};
+        const filteredScreens = state.passedScreens.filter(el => el !== payload)
+        return {
+            ...state,
+            prevScreen: state.currentScreen,
+            currentScreen: payload,
+            passedScreens: [...state.passedScreens, payload]
+        };
     })
     .addCase(getMakes, (state, { payload }) => {
         return {...state, makes: payload }
@@ -508,5 +521,12 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setSelectedServiceTypeOptions, (state, {payload}) => {
         return {...state, selectedServiceOptions: payload}
+    })
+    .addCase(setPassedScreens, (state, {payload}) => {
+        return {...state, passedScreens: payload}
+    })
+    .addCase(deleteLastScreen, (state) => {
+        const screens = state.passedScreens.slice(0, state.passedScreens.length - 1)
+        return {...state, passedScreens: screens, currentScreen: screens[screens.length - 1]}
     })
 )

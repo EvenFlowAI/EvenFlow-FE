@@ -132,6 +132,8 @@ export const getAppointmentRequestsPrices = createAction<IServiceRequestPrice[]>
 export const setAppointmentNotes = createAction<string>("fAppointment/SetAppointmentNotes");
 export const setServiceOptionChanged = createAction<boolean>("fAppointment/SetServiceOptionChanged");
 export const getTransactionValue = createAction<number>('fAppointment/GetTransactionValue');
+export const setPassedScreens = createAction<TScreen[]>('fAppointment/SetPassedScreens');
+export const deleteLastScreen = createAction('fAppointment/DeleteLastScreen')
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;

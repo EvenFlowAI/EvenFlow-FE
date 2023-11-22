@@ -20,7 +20,7 @@ import {
     setSideBarSteps,
     setStreetName,
     setWelcomeScreenView,
-    setZipCode, setDefaultVisitCenterOption
+    setZipCode, setDefaultVisitCenterOption, deleteLastScreen
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {
@@ -292,7 +292,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         setPrevServiceType()
         restoreAddress()
         if (editingPosition === 'address') {
-            dispatch(setCurrentFrameScreen('manageAppointment'))
+            dispatch(deleteLastScreen())
+           // dispatch(setCurrentFrameScreen('manageAppointment'))
         } else {
             goToFirstScreen().then()
         }
