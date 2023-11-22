@@ -8,7 +8,6 @@ import {ReactComponent as ConsultantIcon} from '../../../assets/img/advisor_grey
 import {TCallback} from "../../../types/types";
 import {IServiceConsultant} from '../../../api/types';
 import {
-    deleteLastScreen,
     loadConsultants,
     setAdvisor, setAnyAdvisorSelected,
     setCurrentFrameScreen, setServiceTypeOption,
@@ -179,12 +178,11 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const handleBack = () => {
-        dispatch(deleteLastScreen())
-        // isGoingFromManageScreen
-        //     ? dispatch(setCurrentFrameScreen("manageAppointment"))
-        //     : serviceOptionChangedFromSlotPage && customerLoadedData?.isUpdating
-        //         ? onBackToPrevServiceOption()
-        //         : onBack()
+        isGoingFromManageScreen
+            ? dispatch(setCurrentFrameScreen("manageAppointment"))
+            : serviceOptionChangedFromSlotPage && customerLoadedData?.isUpdating
+                ? onBackToPrevServiceOption()
+                : onBack()
     }
 
     return (<StepWrapper>

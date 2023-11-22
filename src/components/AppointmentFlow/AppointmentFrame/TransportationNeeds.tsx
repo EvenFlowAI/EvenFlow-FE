@@ -12,7 +12,6 @@ import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {ITransportation} from '../../../api/types';
 import {TArgCallback} from "../../../types/types";
 import {
-    deleteLastScreen,
     setCurrentFrameScreen,
     setTransportation
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -263,12 +262,10 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const handleBack = () => {
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-            dispatch(deleteLastScreen())
-            //dispatch(setCurrentFrameScreen("manageAppointment"))
+            dispatch(setCurrentFrameScreen("manageAppointment"))
         } else {
             dispatch(setTransportation(null));
-            dispatch(deleteLastScreen())
-           // onBack();
+            onBack();
         }
     }
 

@@ -7,7 +7,7 @@ import {Actions} from "./Actions";
 import {useDispatch, useSelector} from "react-redux";
 import {EServiceType, EUserType, TMaintenanceDetails} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
-    clearAppointmentSteps, deleteLastScreen,
+    clearAppointmentSteps,
     setRecallsAreShown,
     setSelectedRecalls,
     setVehicle,
@@ -308,9 +308,8 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }
 
     const handleBack = () => {
-        dispatch(deleteLastScreen())
-        // onBack(service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
-        //     ? 'opsCode' : 'serviceNeeds');
+        onBack(service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
+            ? 'opsCode' : 'serviceNeeds');
     }
 
     const handleDeclineRecalls = () => {
