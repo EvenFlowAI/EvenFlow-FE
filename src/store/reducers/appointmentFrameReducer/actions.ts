@@ -716,6 +716,14 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
 
     const isWaitlist = isVisitCenterAppointment && (isWaitListSlotSelected || isWaitListManaging);
 
+    const addressData = {
+        address: appointmentFrame.streetName ?? '',
+        city: appointmentFrame.city ?? '',
+        state: appointmentFrame.politicalState ?? '',
+        originalFullAddress: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
+        zipCode: appointmentFrame.zipCode ?? null,
+    }
+
     const data = {
         id: appointmentFrame.id,
         appointmentTimingType,
@@ -742,16 +750,13 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             : [],
         searchTerm: appointment.customerEnteredEmail,
         serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
-        zipCode: appointmentFrame.zipCode ?? null,
-        address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
         recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
         schedulerType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
         notes: appointmentFrame.appointmentNotes,
-        addressData: {
-            address: appointmentFrame.streetName ?? '',
-            city: appointmentFrame.city ?? '',
-            state: appointmentFrame.politicalState ?? '',
-        },
+        address: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff
+            || appointmentFrame.serviceTypeOption?.type === EServiceType.MobileService
+            ? addressData
+            : null,
         isWaitlist,
     };
 
