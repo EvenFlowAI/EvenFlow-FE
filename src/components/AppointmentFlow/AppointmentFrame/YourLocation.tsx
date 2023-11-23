@@ -20,7 +20,7 @@ import {
     setSideBarSteps,
     setStreetName,
     setWelcomeScreenView,
-    setZipCode, setDefaultVisitCenterOption, deleteLastScreen
+    setZipCode, setDefaultVisitCenterOption, showPrevScreen
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {
@@ -197,17 +197,19 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         if (prevOption) {
             const prevConfig = config.find(el => el.serviceType === prevOption.type)
             const advisorsStepNeeded = prevConfig?.advisorSelection && sideBarSteps[sideBarSteps.length - 1] === "consultantSelection";
-            dispatch(setCurrentFrameScreen( advisorsStepNeeded
-                ? 'consultantSelection'
-                : prevConfig?.appointmentSelection
-                    ? "appointmentTiming"
-                    : 'appointmentSelection'))
+            dispatch(showPrevScreen())
+            // dispatch(setCurrentFrameScreen( advisorsStepNeeded
+            //     ? 'consultantSelection'
+            //     : prevConfig?.appointmentSelection
+            //         ? "appointmentTiming"
+            //         : 'appointmentSelection'))
         } else {
-            dispatch(setCurrentFrameScreen(isAdvisorAvailable && !advisor
-                ? 'consultantSelection'
-                : isAppointmentTimingAvailable
-                    ? "appointmentTiming"
-                    : 'appointmentSelection'))
+            dispatch(showPrevScreen())
+            // dispatch(setCurrentFrameScreen(isAdvisorAvailable && !advisor
+            //     ? 'consultantSelection'
+            //     : isAppointmentTimingAvailable
+            //         ? "appointmentTiming"
+            //         : 'appointmentSelection'))
         }
     }
 
@@ -292,7 +294,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         setPrevServiceType()
         restoreAddress()
         if (editingPosition === 'address') {
-            dispatch(deleteLastScreen())
+            dispatch(showPrevScreen())
            // dispatch(setCurrentFrameScreen('manageAppointment'))
         } else {
             goToFirstScreen().then()

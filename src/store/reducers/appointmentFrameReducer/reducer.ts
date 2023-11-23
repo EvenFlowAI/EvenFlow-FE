@@ -71,7 +71,7 @@ import {
     getTransactionValue,
     setSelectedServiceTypeOptions,
     setPassedScreens,
-    deleteLastScreen,
+    showPrevScreen,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByKey,
@@ -351,12 +351,14 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, consultants: payload};
     })
     .addCase(setCurrentFrameScreen, (state, { payload }) => {
-        const filteredScreens = state.passedScreens.filter(el => el !== payload)
+        const lastScreen = state.passedScreens[state.passedScreens.length - 1]
         return {
             ...state,
             prevScreen: state.currentScreen,
             currentScreen: payload,
-            passedScreens: [...state.passedScreens, payload]
+            passedScreens:lastScreen && lastScreen === payload
+                ? state.passedScreens
+                : [...state.passedScreens, payload]
         };
     })
     .addCase(getMakes, (state, { payload }) => {
@@ -525,7 +527,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     .addCase(setPassedScreens, (state, {payload}) => {
         return {...state, passedScreens: payload}
     })
-    .addCase(deleteLastScreen, (state) => {
+    .addCase(showPrevScreen, (state) => {
         const screens = state.passedScreens.slice(0, state.passedScreens.length - 1)
         return {...state, passedScreens: screens, currentScreen: screens[screens.length - 1]}
     })

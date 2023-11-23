@@ -16,7 +16,7 @@ import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import AskAddService from "../../Modals/AskAddService/AskAddService";
 import {
-    checkCarIsValid, deleteLastScreen,
+    checkCarIsValid, showPrevScreen,
     selectCategoriesIds,
     setAdditionalServicesChosen,
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -237,7 +237,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
     }
 
     const handleBack = () => {
-        dispatch(deleteLastScreen())
+        dispatch(showPrevScreen())
        // handleSetScreen('serviceNeeds');
     }
 

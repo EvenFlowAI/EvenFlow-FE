@@ -3,7 +3,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Grid} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    clearAppointmentData, setServiceOptionChanged, setTrackerCreated,
+    clearAppointmentData, setPassedScreens, setServiceOptionChanged, setTrackerCreated,
     setWelcomeScreenView
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {LocalTokens, TCallback} from "../../types/types";
@@ -182,6 +182,7 @@ export const CustomerSelect: React.FC<TProps> = ({
 
     useEffect(() => {
         dispatch(clearAppointmentData())
+        dispatch(setPassedScreens([]));
         dispatch(setServiceOptionChanged(false));
     }, [])
 

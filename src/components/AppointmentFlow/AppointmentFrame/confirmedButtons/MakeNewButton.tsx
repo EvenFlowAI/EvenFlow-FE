@@ -3,7 +3,7 @@ import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
-    clearAppointmentData, setAddress, setCity, setPoliticalState,
+    clearAppointmentData, setAddress, setCity, setPassedScreens, setPoliticalState,
     setServiceOptionChanged, setSideBarSteps, setStreetName,
     setVehicle, setWelcomeScreenView, setZipCode
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
@@ -34,6 +34,7 @@ const MakeNewButton = () => {
         await dispatch(clearAppointmentData());
         await clearAddress()
         await dispatch(setServiceOptionChanged(false));
+        await dispatch(setPassedScreens([]));
         await dispatch(setSideBarSteps([]));
         await dispatch(setWelcomeScreenView(currentUser ? "serviceCenterSelect" : "select"));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)

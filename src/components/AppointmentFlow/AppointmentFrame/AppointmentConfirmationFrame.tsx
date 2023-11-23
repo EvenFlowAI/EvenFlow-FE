@@ -11,7 +11,7 @@ import {Reminders} from "./confirmationSections/Reminders";
 import {TCallback} from "../../../types/types";
 import {decodeSCID} from "../../../utils/utils";
 import {
-    createOrUpdateAppointment,
+    createOrUpdateAppointment, showPrevScreen,
     setReminders
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -141,6 +141,8 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
         }
     }
 
+    const handleBack = () => dispatch(showPrevScreen())
+
     return <StepWrapper>
         <Wrapper>
             <div>
@@ -168,7 +170,7 @@ export const AppointmentConfirmationFrame: React.FC<TProps> = ({onBack, onChange
 
         </Wrapper>
         {/*todo change to open payment window on next*/}
-        <Actions loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
+        <Actions loading={saving} onBack={handleBack} onNext={handleCreateAppointment} />
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
         <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
     </StepWrapper>

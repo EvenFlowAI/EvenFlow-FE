@@ -15,7 +15,7 @@ import {
     setAppointmentByKey,
     setCurrentFrameScreen,
     setEditingPosition,
-    setHashKey, setServiceOptionChanged,
+    setHashKey, setPassedScreens, setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps,
     setVehicle,
@@ -176,6 +176,7 @@ export const AppointmentCarSelection: React.FC<TProps> = ({
         dispatch(clearAppointmentData())
         dispatch(setServiceTypeOption(null))
         dispatch(setSideBarSteps([]));
+        dispatch(setPassedScreens(["carSelection"]));
         dispatch(setServiceOptionChanged(false));
     },[])
 

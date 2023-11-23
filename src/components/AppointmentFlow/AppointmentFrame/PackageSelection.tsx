@@ -5,7 +5,7 @@ import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
-    deleteLastScreen,
+    showPrevScreen,
     setAdditionalServicesChosen,
     setPackage,
     setPackageIsSelected,
@@ -354,7 +354,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             action: 'Went back',
             label: 'From Selection Package Page',
         })
-        dispatch(deleteLastScreen())
+        dispatch(showPrevScreen())
         // onBack();
     }
 

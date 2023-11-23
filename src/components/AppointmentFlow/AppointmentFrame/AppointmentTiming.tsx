@@ -9,7 +9,7 @@ import {ReactComponent as OffersIcon} from "../../../assets/img/offersIcon.svg";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
-    deleteLastScreen,
+    showPrevScreen,
     setCurrentFrameScreen,
     setServiceTypeOption,
     setSideBarSteps,
@@ -112,7 +112,7 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
         if (fromServiceValetToVisitCenter) {
             redirectToServiceTypeOptions()
         } else {
-            dispatch(deleteLastScreen())
+            dispatch(showPrevScreen())
             // const fromSlotEditing = editingPosition === 'slot' && customerLoadedData?.isUpdating
             // if (fromSlotEditing) {
             //     handleSetScreen("manageAppointment")
