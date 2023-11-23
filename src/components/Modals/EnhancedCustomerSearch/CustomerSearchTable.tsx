@@ -46,14 +46,18 @@ import {encodeSCID} from "../../../utils/utils";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
 import CancelAppointmentConfirm from "../CancelAppoitntmentConfirm/CancelAppointmentConfirm";
+import {TColumn, TSortColumn} from "./CustomerSearchResults";
 
-const useStyles = makeStyles({
-    wrapper: {
-        minWidth: 2000,
+const useStyles = makeStyles(theme => ({
+    tableWrapper: {
+        width: 'fit-content'
+    },
+    wrapper: ({columnsCount}: {columnsCount: number}) => ({
+        width: columnsCount * 150,
+        overflowX: 'auto',
         border: '1px solid #DADADA',
         marginTop: 16,
-        overflowX: 'auto',
-    },
+    }),
     emptyWrapper: {
         height: 500,
         display: 'flex',
@@ -82,7 +86,7 @@ const useStyles = makeStyles({
     greyRow: {
         height: 24,
         width: "100%",
-        backgroundColor: "#DADADA",
+        //backgroundColor: "#DADADA",
     },
     input: {
         padding: 0,
@@ -93,7 +97,27 @@ const useStyles = makeStyles({
         flexShrink: 0,
         width: "100%",
     },
-})
+    stickyLeftCell: {
+        position: 'sticky',
+        left: -25,
+        zIndex: 2,
+        fontSize: 12,
+        color: "#202021",
+        padding: '12px 8px',
+        backgroundColor: "#F7F8FB",
+    },
+    stickyTHeadCell: {
+        position: 'sticky',
+        left: -25,
+        zIndex: 1,
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: "#202021",
+        textTransform: "uppercase",
+        backgroundColor: "#F7F8FB",
+        padding: '16px 8px',
+    },
+}))
 
 const IconsBlock = styled('div')({
     display: 'flex',
@@ -122,82 +146,17 @@ const HtmlTooltip = withStyles({
     }
 })(Tooltip);
 
-type TColumn = {
-    name: string;
-    order?: TSortColumn;
-}
-
-const columns: TColumn[] = [
-    {
-        name: "Last Name",
-        order: "lastName",
-
-    },
-    {
-        name: "First Name",
-        order: "firstName",
-    },
-    {
-        name: "Home",
-        order: "homePhone",
-    },
-    {
-        name: "Cell",
-        order: "cellPhone",
-    },
-    {
-        name: "Other",
-        order: "otherPhone",
-    },
-    {
-        name: "Email",
-        order: "email",
-    },
-    {
-        name: "Address",
-    },
-    {
-        name: "City",
-    },
-    {
-        name: "State",
-    },
-    {
-        name: 'ZIP'
-    },
-    {
-        name: "Year",
-    },
-    {
-        name: "Make",
-    },
-    {
-        name: "Model",
-    },
-    {
-        name: "VIN",
-        order: "vin"
-    },
-]
-
-type TSortColumn = "lastName" |
-    "firstName" |
-    "homePhone" |
-    "cellPhone" |
-    "otherPhone" |
-    "email" |
-    "vin"
-
 type TCustomerSearchTableProps = {
     onClose: TCallback;
     loadData: TArgCallback<boolean>;
     isNewVehicleMode: boolean;
     redirect: TCallback;
+    selectedColumns: TColumn[];
 }
 
 type TSortOrder = {isAscending: boolean, order: TSortColumn|null }
 
-const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, loadData, isNewVehicleMode, redirect}) => {
+const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColumns, onClose, loadData, isNewVehicleMode, redirect}) => {
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -209,7 +168,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
     const {onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm} = useModal();
-    const classes = useStyles();
+    const classes = useStyles({columnsCount: 14});
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory();
@@ -400,13 +359,17 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
 
     return isLoading
         ? <div className={classes.emptyWrapper}><Loading/></div>
-        : <>
+        : <div className={classes.tableWrapper}>
             <Table className={classes.wrapper}>
                 <TableHead>
                     <TableRow>
-                        <TableCell/>
-                        {columns.map(({name, order}, index) => {
-                            return <TableCell key={name} className={classes.headerCell} width={index < 5 ? 150 : 'auto'}>
+                        <TableCell className={classes.stickyTHeadCell}/>
+                        {selectedColumns.map(({name, order}, index) => {
+                            return <TableCell
+                                key={name}
+                                className={index < 2 ? classes.stickyTHeadCell : classes.headerCell}
+                                style={{left: index === 0 ? 125 : index === 1 ? 275 : 'unset'}}
+                                width={index > 0 && index < 5 ? 150 : 'auto'}>
                                 {order
                                     ? <TableSortLabel
                                         direction={sorting.isAscending ? "desc" : "asc"}
@@ -420,10 +383,14 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    <TableRow className={classes.greyRow}/>
+                    <TableRow className={classes.greyRow}>
+                        <TableCell className={classes.stickyTHeadCell} style={{border: 0}} width={150}/>
+                        <TableCell className={classes.stickyTHeadCell}  width={150} style={{left: 125, border: 0}} />
+                        <TableCell className={classes.stickyTHeadCell} width={150} style={{left: 275, border: 0}}/>
+                    </TableRow>
                     {data.slice(currentFirstItemIndex, currentLastItemIndex).map((customer, index) =>
                         (<TableRow key={customer.vin + index}>
-                            <TableCell key="icon" className={classes.bodyCell}>
+                            <TableCell key="icon" className={classes.stickyLeftCell} width={150}>
                                 { isNewVehicleMode
                                     ? <IconsBlock>
                                         <Button
@@ -503,7 +470,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                                             </HtmlTooltip>
                                         </IconsBlock>}
                             </TableCell>
-                            <TableCell key="last" className={classes.bodyCell} width={150}>
+                            <TableCell key="last" className={classes.stickyLeftCell} width={150} style={{left: 125 }}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
@@ -511,7 +478,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
                             </TableCell>
-                            <TableCell key="first" className={classes.bodyCell} width={150}>
+                            <TableCell key="first" className={classes.stickyLeftCell} width={150} style={{left: 275}}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
@@ -608,7 +575,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                     loadData={loadData}
                     hashKey={editingElement.appointmentHashKey}/>
                 : null}
-        </>
+        </div>
 };
 
 export default CustomerSearchTable;
