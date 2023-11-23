@@ -65,7 +65,7 @@ const NewCustomerForAdmin: React.FC<{ handleNew: () => void}> = ({ handleNew }) 
             <span style={{fontSize : isSm ? 28 : 32}}>{t("New customer")}</span>
             {isSm
                 ? null
-                : <div className={returningClasses.greyText}>{t("Click button to start", {button: `"${t("Submit")}"`})}</div>}
+                : <div className={returningClasses.greyText}>{t("Click button to start", {button: `"${t("Next")}"`})}</div>}
             <Divider style={{marginBottom: isSm ? 12 : 50, marginTop: isSm ? 12 : 17}}/>
             <div style={{marginBottom: isSm ? 12 : 60}}><UserIcon/></div>
             <Button
@@ -74,7 +74,7 @@ const NewCustomerForAdmin: React.FC<{ handleNew: () => void}> = ({ handleNew }) 
                 className={classes.submitButton}
                 onClick={handleNew}
             >
-                {t("Submit")}
+                {t("Next")}
             </Button>
         </div>
     </Grid>

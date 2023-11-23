@@ -8,6 +8,7 @@ import {TScreen} from "../../Layout/types";
 import AppointmentNotes from "./AppointmentNotes";
 import VehicleRepairHistory from "../../Modals/VehicleRepairHistory/VehicleRepairHistory";
 import {useTranslation} from "react-i18next";
+import CustomerInfo from "./CustomerInfo";
 
 const SectionWrapper = styled('div')(() => ({
     display: 'flex',
@@ -40,6 +41,7 @@ const SideBarSection: React.FC<TProps> = ({screen, handleSetScreen}) => {
     return currentUser && currentUser.dealershipId === scProfile?.dealershipId
         ? <SectionWrapper>
             <SideBar screen={screen} handleSetScreen={handleSetScreen}/>
+            <CustomerInfo/>
             <RoHistoryLink
                 onClick={onOpenHistory}
                 style={{color: hasHistory ? "#142EA1" : "grey", cursor: hasHistory ? "pointer" : "unset"}}>
