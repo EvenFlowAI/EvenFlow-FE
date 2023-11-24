@@ -7,6 +7,7 @@ import {ReactComponent as SelectColumns} from "../../../assets/img/select_column
 import {useModal} from "../../../utils/hooks";
 import {TSearchColumnName} from "./types";
 import ColumnsSelection from "./ColumnsSelection";
+import {InfoOutlined} from "@material-ui/icons";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -105,6 +106,12 @@ const CustomerSearchResultsActions: React.FC<TCustomerSearchResultsActionsProps>
                     onClick={onNewSearch}>
                     {t("New Search")}
                 </Button>
+                {isNewVehicleMode
+                    ? <div className={classes.newVehicleMode}>
+                        <InfoOutlined htmlColor="#142EA1"/>
+                        <div className="text">Select Customer with new vehicle</div>
+                    </div>
+                    : null}
             </div>
                 <Button
                     variant="outlined"
