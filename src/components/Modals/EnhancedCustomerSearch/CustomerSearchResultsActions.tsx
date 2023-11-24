@@ -3,10 +3,10 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 import {TCallback} from "../../../types/types";
-import {InfoOutlined} from "@material-ui/icons";
-import {TColumn} from "./CustomerSearchResults";
 import {ReactComponent as SelectColumns} from "../../../assets/img/select_columns.svg";
 import {useModal} from "../../../utils/hooks";
+import {TSearchColumnName} from "./types";
+import ColumnsSelection from "./ColumnsSelection";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -72,8 +72,8 @@ type TCustomerSearchResultsActionsProps = {
     onCreateNewAppointment: TCallback;
     onAppointmentForNewVehicle: TCallback;
     isNewVehicleMode: boolean;
-    selectedColumns: TColumn[];
-    setSelectedColumns: Dispatch<SetStateAction<TColumn[]>>;
+    selectedColumns: TSearchColumnName[];
+    setSelectedColumns: Dispatch<SetStateAction<TSearchColumnName[]>>;
 }
 
 const CustomerSearchResultsActions: React.FC<TCustomerSearchResultsActionsProps> = ({
@@ -88,10 +88,6 @@ const CustomerSearchResultsActions: React.FC<TCustomerSearchResultsActionsProps>
     const classes = useStyles();
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
-
-    const onSelectColumns = () => {
-
-    }
 
     return (
         <div className={classes.wrapper}>
@@ -115,7 +111,7 @@ const CustomerSearchResultsActions: React.FC<TCustomerSearchResultsActionsProps>
                     color="primary"
                     startIcon={<SelectColumns/>}
                     className={classes.selectColumnsButton}
-                    onClick={onSelectColumns}>
+                    onClick={onOpen}>
                     {t("Select Columns")}
                 </Button>
                 {/*{isNewVehicleMode*/}
@@ -141,6 +137,12 @@ const CustomerSearchResultsActions: React.FC<TCustomerSearchResultsActionsProps>
                     {t("Create Appointment for New Customer")}
                 </Button>
             </div>
+            <ColumnsSelection
+                open={isOpen}
+                onClose={onClose}
+                selectedColumns={selectedColumns}
+                setSelectedColumns={setSelectedColumns}
+            />
         </div>
     );
 };

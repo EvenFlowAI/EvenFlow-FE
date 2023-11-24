@@ -46,14 +46,14 @@ import {encodeSCID} from "../../../utils/utils";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
 import CancelAppointmentConfirm from "../CancelAppoitntmentConfirm/CancelAppointmentConfirm";
-import {TColumn, TSortColumn} from "./CustomerSearchResults";
+import {TColumn, TSortColumn} from "./types";
 
 const useStyles = makeStyles(theme => ({
     tableWrapper: {
         width: 'fit-content'
     },
     wrapper: ({columnsCount}: {columnsCount: number}) => ({
-        width: columnsCount * 150,
+        width: columnsCount > 10 ? columnsCount * 150 : 1550,
         overflowX: 'auto',
         border: '1px solid #DADADA',
         marginTop: 16,
@@ -168,7 +168,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
     const {onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm} = useModal();
-    const classes = useStyles({columnsCount: 14});
+    const classes = useStyles({columnsCount: selectedColumns.length});
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory();
@@ -470,90 +470,98 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             </HtmlTooltip>
                                         </IconsBlock>}
                             </TableCell>
-                            <TableCell key="last" className={classes.stickyLeftCell} width={150} style={{left: 125 }}>
+                            {selectedColumns.find(el => el.name === "Last Name") ? <TableCell key="last" className={classes.stickyLeftCell} width={150} style={{left: 125}}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="lastName"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="first" className={classes.stickyLeftCell} width={150} style={{left: 275}}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "First Name") ? <TableCell key="first" className={classes.stickyLeftCell} width={150} style={{left: 275}}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="firstName"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="home" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "Home") ? <TableCell key="home" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="homePhone"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="cell" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "Cell") ? <TableCell key="cell" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="cellPhone"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="otherPhone" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "Other") ? <TableCell key="otherPhone" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="otherPhone"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="email" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "Email") ? <TableCell key="email" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="email"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="address" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "Address") ? <TableCell key="address" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="address"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="city" className={classes.bodyCell} width={120}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "City") ? <TableCell key="city" className={classes.bodyCell} width={120}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="city"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="state" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "State") ? <TableCell key="state" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="state"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="zip" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "ZIP") ? <TableCell key="zip" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="zipCode"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="year" className={classes.bodyCell}>{customer.year ?? ""}</TableCell>
-                            <TableCell key="make" className={classes.bodyCell}>{customer.make ?? ""}</TableCell>
-                            <TableCell key="model" className={classes.bodyCell}>{customer.model ?? ""}</TableCell>
-                            <TableCell key="vin" className={classes.bodyCell}>{customer.vin ?? ""}</TableCell>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "Year")
+                                ? <TableCell key="year" className={classes.bodyCell}>{customer.year ?? ""}</TableCell>
+                                : null}
+                            {selectedColumns.find(el => el.name === "Make")
+                                ? <TableCell key="make" className={classes.bodyCell}>{customer.make ?? ""}</TableCell>
+                                : null}
+                            {selectedColumns.find(el => el.name === "Model") ?
+                                <TableCell key="model" className={classes.bodyCell}>{customer.model ?? ""}</TableCell>
+                                : null}
+                            {selectedColumns.find(el => el.name === "VIN") ?
+                                <TableCell key="vin" className={classes.bodyCell}>{customer.vin ?? ""}</TableCell>
+                                : null}
                         </TableRow>))}
                 </TableBody>
             </Table>
