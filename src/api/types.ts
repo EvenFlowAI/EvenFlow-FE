@@ -339,8 +339,7 @@ export interface IAppointment {
     ancillaryPrice: number;
     advisor?: string;
     transportation?: string;
-    address?: string;
-    zipCode?: string;
+    address?: IAddressData;
     notes?: string;
     scheduler: TScheduler;
     isEditable: boolean;
