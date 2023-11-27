@@ -50,7 +50,6 @@ import {TColumn, TSortColumn} from "./types";
 
 const useStyles = makeStyles(theme => ({
     tableWrapper: {
-        // width: 'fit-content'
     },
     wrapper: ({columnsCount}: {columnsCount: number}) => ({
         width: columnsCount > 10 ? columnsCount * 150 : 1550,
@@ -65,7 +64,6 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        //border: '0.5px solid #DADADA',
         marginTop: 16,
     },
     headerCell: {
@@ -101,8 +99,8 @@ const useStyles = makeStyles(theme => ({
     },
     stickyLeftCell: {
         position: 'sticky',
-        left: -25,
-        zIndex: 2,
+        left: 1,
+        zIndex: 1,
         fontSize: 12,
         color: "#202021",
         padding: '12px 8px',
@@ -111,7 +109,7 @@ const useStyles = makeStyles(theme => ({
     },
     stickyTHeadCell: {
         position: 'sticky',
-        left: -25,
+        left: 1,
         zIndex: 1,
         fontSize: 12,
         fontWeight: 'bold',
@@ -374,7 +372,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                     key={name}
                                     className={index < 2 ? classes.stickyTHeadCell : classes.headerCell}
                                     style={{
-                                        left: index === 0 ? 123 : index === 1 ? 262 : 'unset',
+                                        left: index === 0 ? 148 : index === 1 ? 287 : 'unset',
                                         borderRight: index === 1 ? '1px solid #828282' : '1px solid #DADADA'}}
                                     width={index > 0 && index < 5 ? 150 : 'auto'}>
                                     {order
@@ -392,8 +390,8 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                     <TableBody>
                         <TableRow className={classes.greyRow}>
                             <TableCell className={classes.stickyTHeadCell} width={150} style={{borderBottom: 0, borderRight: '1px solid #DADADA'}}/>
-                            <TableCell className={classes.stickyTHeadCell} width={150} style={{left: 123, borderBottom: 0, borderRight: '1px solid #DADADA'}} />
-                            <TableCell className={classes.stickyTHeadCell} width={150} style={{left: 262, borderBottom: 0, borderRight: '0.5px solid #828282'}}/>
+                            <TableCell className={classes.stickyTHeadCell} width={150} style={{left: 148, borderBottom: 0, borderRight: '1px solid #DADADA'}} />
+                            <TableCell className={classes.stickyTHeadCell} width={150} style={{left: 287, borderBottom: 0, borderRight: '0.5px solid #828282'}}/>
                             {selectedColumns
                                 .slice(0, selectedColumns.length - 2)
                                 .map(() => <TableCell className={classes.bodyCell} width={150} style={{borderBottom: 0}}/>)}
@@ -481,7 +479,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             </IconsBlock>}
                                 </TableCell>
                                 {selectedColumns.find(el => el.name === "Last Name")
-                                    ? <TableCell key="last" className={classes.stickyLeftCell} width={150} style={{left: 123}}>
+                                    ? <TableCell key="last" className={classes.stickyLeftCell} width={150} style={{left: 148}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -494,7 +492,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                         key="first"
                                         className={classes.stickyLeftCell}
                                         width={150}
-                                        style={{left: 262, borderRight: '0.5px solid #828282'}}>
+                                        style={{left: 287, borderRight: '0.5px solid #828282'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
