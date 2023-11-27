@@ -6,8 +6,9 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import CustomerSearchTable from "./CustomerSearchTable";
 import {setPageData, setPaging} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {defaultPageData} from "../../../store/reducers/defaultInitials";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {TColumn, TSearchColumnName} from "./types";
+import {RootState} from "../../../store/rootReducer";
 
 type TCustomerSearchResultsProps = DialogProps & {
     onClearSearchForm: TCallback;
@@ -78,6 +79,7 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
                                                                           handleNew,
                                                                           onClearSearchForm,
                                                                       redirect}) => {
+    const {customerSearchData} = useSelector((state: RootState) => state.customers);
     const [isNewVehicleMode, setNewVehicleMode] = useState<boolean>(false);
     const [selectedColumns, setSelectedColumns] = useState<TSearchColumnName[]>(columnsNames);
     const visibleColumns = useMemo(() => customerDataColumns.filter(el => selectedColumns.includes(el.name)), [selectedColumns])
@@ -86,9 +88,19 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
     useEffect(() => {
         if (open) {
             const columns = localStorage.getItem('columns')
-            if (columns?.length) setSelectedColumns(JSON.parse(columns));
+            if (columns?.length) {
+                let parsed = JSON.parse(columns)
+                if (customerSearchData?.lastVINCharacters && !parsed.includes("VIN")) {
+                    parsed = [...parsed, "VIN"]
+                }
+                if (customerSearchData?.address && !parsed.includes("Address")) {
+                    parsed = [...parsed, "Address"]
+                }
+                localStorage.setItem('columns', JSON.stringify(parsed))
+                setSelectedColumns(parsed);
+            }
         }
-    }, [open])
+    }, [open, customerSearchData])
 
     const onCancel = async () => {
         await dispatch(setPaging({numberOfPages: 0, numberOfRecords: 0}));
