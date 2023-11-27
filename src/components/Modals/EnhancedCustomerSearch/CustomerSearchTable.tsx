@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {ReactComponent as Create} from "../../../assets/img/create_appointment.svg";
 import {ReactComponent as Update} from "../../../assets/img/Manage appointment.svg";
@@ -99,7 +99,7 @@ const useStyles = makeStyles(theme => ({
     },
     stickyLeftCell: {
         position: 'sticky',
-        left: 1,
+        left: 0,
         zIndex: 1,
         fontSize: 12,
         color: "#202021",
@@ -109,7 +109,7 @@ const useStyles = makeStyles(theme => ({
     },
     stickyTHeadCell: {
         position: 'sticky',
-        left: 1,
+        left: 0,
         zIndex: 1,
         fontSize: 12,
         fontWeight: 'bold',
@@ -157,6 +157,12 @@ type TCustomerSearchTableProps = {
 }
 
 type TSortOrder = {isAscending: boolean, order: TSortColumn|null }
+type TOffset = {secondColumn: number, thirdColumn: number}
+
+const initialOffset = {
+    secondColumn: 150,
+    thirdColumn: 150
+}
 
 const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColumns, onClose, loadData, isNewVehicleMode, redirect}) => {
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
@@ -167,6 +173,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
     const [sorting, setSorting] = useState<TSortOrder>({isAscending: true, order: null});
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<ICustomerWithPhones|null>(null);
+    const [offset, setOffset] = useState<TOffset>(initialOffset);
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
     const {onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm} = useModal();
@@ -177,6 +184,27 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
     const [currentFirstItemIndex, currentLastItemIndex] = useMemo(() => {
         return [pageData.pageIndex * pageData.pageSize, (pageData.pageIndex + 1) * pageData.pageSize]
     }, [pageData]);
+    const firstColumn = useRef();
+    const secondColumn = useRef();
+
+    useEffect(() => {
+        let width1= 0;
+        let width2= 0;
+        if (firstColumn.current) {
+            // @ts-ignore
+            width1 = firstColumn.current?.offsetWidth;
+        }
+        if (secondColumn.current) {
+            // @ts-ignore
+            width2 = secondColumn.current?.offsetWidth;
+        }
+        if (width1 && width2) {
+            setOffset(() => ({
+                secondColumn: width1,
+                thirdColumn: width1 + width2,
+            }))
+        }
+    }, [firstColumn.current, secondColumn.current, selectedColumns])
 
     useEffect(() => {
         const orderedData = customers.map((el, i) => ({...el, sortOrder: i}))
@@ -372,7 +400,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                     key={name}
                                     className={index < 2 ? classes.stickyTHeadCell : classes.headerCell}
                                     style={{
-                                        left: index === 0 ? 149 : index === 1 ? 288 : 'unset',
+                                        left: index === 0 ? offset.secondColumn : index === 1 ? offset.thirdColumn : 'unset',
                                         borderRight: index === 1 ? '1px solid #828282' : '1px solid #DADADA'}}
                                     width={index > 0 && index < 5 ? 150 : 'auto'}>
                                     {order
@@ -389,9 +417,23 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                     </TableHead>
                     <TableBody>
                         <TableRow className={classes.greyRow}>
-                            <TableCell className={classes.stickyTHeadCell} width={150} style={{borderBottom: 0, borderRight: '1px solid #DADADA'}}/>
-                            <TableCell className={classes.stickyTHeadCell} width={150} style={{left: 149, borderBottom: 0, borderRight: '1px solid #DADADA'}} />
-                            <TableCell className={classes.stickyTHeadCell} width={150} style={{left: 288, borderBottom: 0, borderRight: '0.5px solid #828282'}}/>
+                            <TableCell
+                                key="firstColumn"
+                                ref={firstColumn}
+                                className={classes.stickyTHeadCell}
+                                width={150}
+                                style={{borderBottom: 0, borderRight: '1px solid #DADADA'}}/>
+                            <TableCell
+                                key="secondColumn"
+                                ref={secondColumn}
+                                className={classes.stickyTHeadCell}
+                                width={150}
+                                style={{left: offset.secondColumn, borderBottom: 0, borderRight: '1px solid #DADADA'}} />
+                            <TableCell
+                                key="thirdColumn"
+                                className={classes.stickyTHeadCell}
+                                width={150}
+                                style={{left: offset.thirdColumn, borderBottom: 0, borderRight: '0.5px solid #828282'}}/>
                             {selectedColumns
                                 .slice(0, selectedColumns.length - 2)
                                 .map(() => <TableCell className={classes.bodyCell} width={150} style={{borderBottom: 0}}/>)}
@@ -479,7 +521,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             </IconsBlock>}
                                 </TableCell>
                                 {selectedColumns.find(el => el.name === "Last Name")
-                                    ? <TableCell key="last" className={classes.stickyLeftCell} width={150} style={{left: 149}}>
+                                    ? <TableCell key="last" className={classes.stickyLeftCell} width={150} style={{left: offset.secondColumn}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -492,7 +534,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                         key="first"
                                         className={classes.stickyLeftCell}
                                         width={150}
-                                        style={{left: 288, borderRight: '0.5px solid #828282'}}>
+                                        style={{left: offset.thirdColumn, borderRight: '0.5px solid #828282'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
