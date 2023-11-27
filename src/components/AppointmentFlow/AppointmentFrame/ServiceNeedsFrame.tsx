@@ -270,7 +270,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             <Actions
                 prevDisabled={history?.location?.search?.includes('view=unique')}
                 hideNext={!selectedServices?.length}
-                hidePrev={!selectedServices.length && isManagingAppointment}
+                hidePrev={!selectedServices.length && customerLoadedData?.isUpdating}
                 nextLabel={t("Next")}
                 onNext={handleNext}
                 onBack={handleBack} />
