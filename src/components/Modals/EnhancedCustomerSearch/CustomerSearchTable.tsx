@@ -46,12 +46,18 @@ import {encodeSCID} from "../../../utils/utils";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
 import CancelAppointmentConfirm from "../CancelAppoitntmentConfirm/CancelAppointmentConfirm";
+import {TColumn, TSortColumn} from "./types";
 
-const useStyles = makeStyles({
-    wrapper: {
+const useStyles = makeStyles(theme => ({
+    tableWrapper: {
+        width: 'fit-content'
+    },
+    wrapper: ({columnsCount}: {columnsCount: number}) => ({
+        width: columnsCount > 10 ? columnsCount * 150 : 1550,
+        overflowX: 'auto',
         border: '1px solid #DADADA',
         marginTop: 16,
-    },
+    }),
     emptyWrapper: {
         height: 500,
         display: 'flex',
@@ -80,7 +86,7 @@ const useStyles = makeStyles({
     greyRow: {
         height: 24,
         width: "100%",
-        backgroundColor: "#DADADA",
+        //backgroundColor: "#DADADA",
     },
     input: {
         padding: 0,
@@ -91,7 +97,27 @@ const useStyles = makeStyles({
         flexShrink: 0,
         width: "100%",
     },
-})
+    stickyLeftCell: {
+        position: 'sticky',
+        left: -25,
+        zIndex: 2,
+        fontSize: 12,
+        color: "#202021",
+        padding: '12px 8px',
+        backgroundColor: "#F7F8FB",
+    },
+    stickyTHeadCell: {
+        position: 'sticky',
+        left: -25,
+        zIndex: 1,
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: "#202021",
+        textTransform: "uppercase",
+        backgroundColor: "#F7F8FB",
+        padding: '16px 8px',
+    },
+}))
 
 const IconsBlock = styled('div')({
     display: 'flex',
@@ -120,82 +146,17 @@ const HtmlTooltip = withStyles({
     }
 })(Tooltip);
 
-type TColumn = {
-    name: string;
-    order?: TSortColumn;
-}
-
-const columns: TColumn[] = [
-    {
-        name: "Last Name",
-        order: "lastName",
-
-    },
-    {
-        name: "First Name",
-        order: "firstName",
-    },
-    {
-        name: "Home",
-        order: "homePhone",
-    },
-    {
-        name: "Cell",
-        order: "cellPhone",
-    },
-    {
-        name: "Other",
-        order: "otherPhone",
-    },
-    {
-        name: "Email",
-        order: "email",
-    },
-    {
-        name: "Address",
-    },
-    {
-        name: "City",
-    },
-    {
-        name: "State",
-    },
-    {
-        name: 'ZIP'
-    },
-    {
-        name: "Year",
-    },
-    {
-        name: "Make",
-    },
-    {
-        name: "Model",
-    },
-    {
-        name: "VIN",
-        order: "vin"
-    },
-]
-
-type TSortColumn = "lastName" |
-    "firstName" |
-    "homePhone" |
-    "cellPhone" |
-    "otherPhone" |
-    "email" |
-    "vin"
-
 type TCustomerSearchTableProps = {
     onClose: TCallback;
     loadData: TArgCallback<boolean>;
     isNewVehicleMode: boolean;
     redirect: TCallback;
+    selectedColumns: TColumn[];
 }
 
 type TSortOrder = {isAscending: boolean, order: TSortColumn|null }
 
-const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, loadData, isNewVehicleMode, redirect}) => {
+const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColumns, onClose, loadData, isNewVehicleMode, redirect}) => {
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -207,7 +168,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
     const {onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm} = useModal();
-    const classes = useStyles();
+    const classes = useStyles({columnsCount: selectedColumns.length});
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory();
@@ -398,13 +359,17 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
 
     return isLoading
         ? <div className={classes.emptyWrapper}><Loading/></div>
-        : <>
+        : <div className={classes.tableWrapper}>
             <Table className={classes.wrapper}>
                 <TableHead>
                     <TableRow>
-                        <TableCell/>
-                        {columns.map(({name, order}, index) => {
-                            return <TableCell key={name} className={classes.headerCell} width={index < 5 ? 150 : 'auto'}>
+                        <TableCell className={classes.stickyTHeadCell}/>
+                        {selectedColumns.map(({name, order}, index) => {
+                            return <TableCell
+                                key={name}
+                                className={index < 2 ? classes.stickyTHeadCell : classes.headerCell}
+                                style={{left: index === 0 ? 125 : index === 1 ? 275 : 'unset'}}
+                                width={index > 0 && index < 5 ? 150 : 'auto'}>
                                 {order
                                     ? <TableSortLabel
                                         direction={sorting.isAscending ? "desc" : "asc"}
@@ -418,10 +383,14 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    <TableRow className={classes.greyRow}/>
+                    <TableRow className={classes.greyRow}>
+                        <TableCell className={classes.stickyTHeadCell} style={{border: 0}} width={150}/>
+                        <TableCell className={classes.stickyTHeadCell}  width={150} style={{left: 125, border: 0}} />
+                        <TableCell className={classes.stickyTHeadCell} width={150} style={{left: 275, border: 0}}/>
+                    </TableRow>
                     {data.slice(currentFirstItemIndex, currentLastItemIndex).map((customer, index) =>
                         (<TableRow key={customer.vin + index}>
-                            <TableCell key="icon" className={classes.bodyCell}>
+                            <TableCell key="icon" className={classes.stickyLeftCell} width={150}>
                                 { isNewVehicleMode
                                     ? <IconsBlock>
                                         <Button
@@ -501,90 +470,98 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                                             </HtmlTooltip>
                                         </IconsBlock>}
                             </TableCell>
-                            <TableCell key="last" className={classes.bodyCell} width={150}>
+                            {selectedColumns.find(el => el.name === "Last Name") ? <TableCell key="last" className={classes.stickyLeftCell} width={150} style={{left: 125}}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="lastName"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="first" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "First Name") ? <TableCell key="first" className={classes.stickyLeftCell} width={150} style={{left: 275}}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="firstName"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="home" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "Home") ? <TableCell key="home" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="homePhone"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="cell" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "Cell") ? <TableCell key="cell" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="cellPhone"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="otherPhone" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "Other") ? <TableCell key="otherPhone" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="otherPhone"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="email" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "Email") ? <TableCell key="email" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="email"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="address" className={classes.bodyCell}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "Address") ? <TableCell key="address" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="address"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="city" className={classes.bodyCell}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "City") ? <TableCell key="city" className={classes.bodyCell} width={120}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="city"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="state" className={classes.bodyCell}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "State") ? <TableCell key="state" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="state"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="zip" className={classes.bodyCell} width={150}>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "ZIP") ? <TableCell key="zip" className={classes.bodyCell} width={150}>
                                 <CustomerInputField
                                     editingElement={editingElement}
                                     customer={customer}
                                     fieldName="zipCode"
                                     isEdit={isEdit}
                                     onFieldChange={onFieldChange}/>
-                            </TableCell>
-                            <TableCell key="year" className={classes.bodyCell}>{customer.year ?? ""}</TableCell>
-                            <TableCell key="make" className={classes.bodyCell}>{customer.make ?? ""}</TableCell>
-                            <TableCell key="model" className={classes.bodyCell}>{customer.model ?? ""}</TableCell>
-                            <TableCell key="vin" className={classes.bodyCell}>{customer.vin ?? ""}</TableCell>
+                            </TableCell> : null}
+                            {selectedColumns.find(el => el.name === "Year")
+                                ? <TableCell key="year" className={classes.bodyCell}>{customer.year ?? ""}</TableCell>
+                                : null}
+                            {selectedColumns.find(el => el.name === "Make")
+                                ? <TableCell key="make" className={classes.bodyCell}>{customer.make ?? ""}</TableCell>
+                                : null}
+                            {selectedColumns.find(el => el.name === "Model") ?
+                                <TableCell key="model" className={classes.bodyCell}>{customer.model ?? ""}</TableCell>
+                                : null}
+                            {selectedColumns.find(el => el.name === "VIN") ?
+                                <TableCell key="vin" className={classes.bodyCell}>{customer.vin ?? ""}</TableCell>
+                                : null}
                         </TableRow>))}
                 </TableBody>
             </Table>
@@ -606,7 +583,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
                     loadData={loadData}
                     hashKey={editingElement.appointmentHashKey}/>
                 : null}
-        </>
+        </div>
 };
 
 export default CustomerSearchTable;

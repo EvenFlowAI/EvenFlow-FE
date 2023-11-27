@@ -1,20 +1,28 @@
-import React from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 import {TCallback} from "../../../types/types";
+import {ReactComponent as SelectColumns} from "../../../assets/img/select_columns.svg";
+import {useModal} from "../../../utils/hooks";
+import {TSearchColumnName} from "./types";
+import ColumnsSelection from "./ColumnsSelection";
 import {InfoOutlined} from "@material-ui/icons";
 
 const useStyles = makeStyles({
     wrapper: {
+        position: 'sticky',
+        left: 0,
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
     },
     leftWrapper: {
         display: "flex",
+        flexGrow: 1,
         justifyContent: "space-between",
         alignItems: "center",
+        marginRight: 44,
     },
     buttonsWrapper: {
         display: "flex",
@@ -25,7 +33,7 @@ const useStyles = makeStyles({
         },
         "& > button:first-child": {
             marginRight: 20,
-        }
+        },
     },
     horizontalBtnsWrapper: {
       display: "flex",
@@ -53,7 +61,10 @@ const useStyles = makeStyles({
             marginLeft: 8,
             textTransform: "uppercase",
         }
-}
+},
+    selectColumnsButton: {
+        fontWeight: 400
+    }
 })
 
 type TCustomerSearchResultsActionsProps = {
@@ -62,11 +73,22 @@ type TCustomerSearchResultsActionsProps = {
     onCreateNewAppointment: TCallback;
     onAppointmentForNewVehicle: TCallback;
     isNewVehicleMode: boolean;
+    selectedColumns: TSearchColumnName[];
+    setSelectedColumns: Dispatch<SetStateAction<TSearchColumnName[]>>;
 }
 
-const CustomerSearchResultsActions: React.FC<TCustomerSearchResultsActionsProps> = ({onBack, onNewSearch, isNewVehicleMode, onCreateNewAppointment, onAppointmentForNewVehicle}) => {
+const CustomerSearchResultsActions: React.FC<TCustomerSearchResultsActionsProps> = ({
+                                                                                        onBack,
+                                                                                        onNewSearch,
+                                                                                        isNewVehicleMode,
+                                                                                        onCreateNewAppointment,
+                                                                                        onAppointmentForNewVehicle,
+                                                                                        selectedColumns,
+                                                                                        setSelectedColumns
+}) => {
     const classes = useStyles();
     const {t} = useTranslation();
+    const {isOpen, onOpen, onClose} = useModal();
 
     return (
         <div className={classes.wrapper}>
@@ -84,13 +106,27 @@ const CustomerSearchResultsActions: React.FC<TCustomerSearchResultsActionsProps>
                     onClick={onNewSearch}>
                     {t("New Search")}
                 </Button>
-            </div>
                 {isNewVehicleMode
                     ? <div className={classes.newVehicleMode}>
                         <InfoOutlined htmlColor="#142EA1"/>
                         <div className="text">Select Customer with new vehicle</div>
                     </div>
-                : null}
+                    : null}
+            </div>
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<SelectColumns/>}
+                    className={classes.selectColumnsButton}
+                    onClick={onOpen}>
+                    {t("Select Columns")}
+                </Button>
+                {/*{isNewVehicleMode*/}
+                {/*    ? <div className={classes.newVehicleMode}>*/}
+                {/*        <InfoOutlined htmlColor="#142EA1"/>*/}
+                {/*        <div className="text">Select Customer with new vehicle</div>*/}
+                {/*    </div>*/}
+                {/*: null}*/}
             </div>
             <div className={classes.horizontalBtnsWrapper}>
                 <Button
@@ -108,6 +144,12 @@ const CustomerSearchResultsActions: React.FC<TCustomerSearchResultsActionsProps>
                     {t("Create Appointment for New Customer")}
                 </Button>
             </div>
+            <ColumnsSelection
+                open={isOpen}
+                onClose={onClose}
+                selectedColumns={selectedColumns}
+                setSelectedColumns={setSelectedColumns}
+            />
         </div>
     );
 };
