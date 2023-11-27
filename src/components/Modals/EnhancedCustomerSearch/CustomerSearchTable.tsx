@@ -372,7 +372,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                     key={name}
                                     className={index < 2 ? classes.stickyTHeadCell : classes.headerCell}
                                     style={{
-                                        left: index === 0 ? 148 : index === 1 ? 287 : 'unset',
+                                        left: index === 0 ? 149 : index === 1 ? 288 : 'unset',
                                         borderRight: index === 1 ? '1px solid #828282' : '1px solid #DADADA'}}
                                     width={index > 0 && index < 5 ? 150 : 'auto'}>
                                     {order
@@ -390,8 +390,8 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                     <TableBody>
                         <TableRow className={classes.greyRow}>
                             <TableCell className={classes.stickyTHeadCell} width={150} style={{borderBottom: 0, borderRight: '1px solid #DADADA'}}/>
-                            <TableCell className={classes.stickyTHeadCell} width={150} style={{left: 148, borderBottom: 0, borderRight: '1px solid #DADADA'}} />
-                            <TableCell className={classes.stickyTHeadCell} width={150} style={{left: 287, borderBottom: 0, borderRight: '0.5px solid #828282'}}/>
+                            <TableCell className={classes.stickyTHeadCell} width={150} style={{left: 149, borderBottom: 0, borderRight: '1px solid #DADADA'}} />
+                            <TableCell className={classes.stickyTHeadCell} width={150} style={{left: 288, borderBottom: 0, borderRight: '0.5px solid #828282'}}/>
                             {selectedColumns
                                 .slice(0, selectedColumns.length - 2)
                                 .map(() => <TableCell className={classes.bodyCell} width={150} style={{borderBottom: 0}}/>)}
@@ -479,7 +479,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             </IconsBlock>}
                                 </TableCell>
                                 {selectedColumns.find(el => el.name === "Last Name")
-                                    ? <TableCell key="last" className={classes.stickyLeftCell} width={150} style={{left: 148}}>
+                                    ? <TableCell key="last" className={classes.stickyLeftCell} width={150} style={{left: 149}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -492,7 +492,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                         key="first"
                                         className={classes.stickyLeftCell}
                                         width={150}
-                                        style={{left: 287, borderRight: '0.5px solid #828282'}}>
+                                        style={{left: 288, borderRight: '0.5px solid #828282'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
