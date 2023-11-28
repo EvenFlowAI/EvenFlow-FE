@@ -248,8 +248,8 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             isUpdating,
         }
         if (customerData?.address) data.address = customerData.address;
-        if (customerData?.address.fullAddress) await dispatch(setAddress(customerData.address.fullAddress));
-        if (customerData?.address.zipCode) await dispatch(setZipCode(customerData.address.zipCode));
+        if (customerData?.address?.fullAddress) await dispatch(setAddress(customerData.address.fullAddress));
+        if (customerData?.address?.zipCode) await dispatch(setZipCode(customerData.address.zipCode));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(vehicle));
@@ -315,11 +315,16 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
 
     const onAddressChange = (fieldName: keyof IAddressData) => (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
-        setEditingElement(prevState => {
-            return prevState
-                ? {...prevState, address: {...prevState.address, [fieldName]: e.target.value}}
-                : prevState;
-        });
+        if (editingElement) {
+            setEditingElement(prevState => {
+                if (prevState) {
+                    return {
+                        ...prevState,
+                        address: prevState.address ? {...prevState.address, [fieldName]: e.target.value} : {[fieldName]: e.target.value}
+                    }
+                } else return prevState
+            });
+        }
     }
 
     const onFieldChange = (fieldName: keyof ICustomerWithPhones) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -368,8 +373,8 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({onClose, load
             fromSearchByName: true,
         }
         if (customer?.address) data.address = customer.address;
-        if (customer?.address.fullAddress) await dispatch(setAddress(customer.address.fullAddress));
-        if (customer?.address.zipCode) await dispatch(setZipCode(customer.address.zipCode));
+        if (customer?.address?.fullAddress) await dispatch(setAddress(customer.address.fullAddress));
+        if (customer?.address?.zipCode) await dispatch(setZipCode(customer.address.zipCode));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(getBlankVehicle()))

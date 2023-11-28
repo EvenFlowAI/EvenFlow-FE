@@ -44,7 +44,7 @@ export const AddressInputField:React.FC<TAddressInputFieldProps> = ({
                                                                      }) => {
     return isEdit && editingElement?.vehicleId === customer.vehicleId && editingElement?.customerId === customer.customerId
         ? <CustomerInput
-            value={editingElement.address[fieldName] ?? ""}
+            value={editingElement.address ? editingElement.address[fieldName] ?? "" : ""}
             onChange={onFieldChange(fieldName)}/>
-        : <React.Fragment>{customer.address[fieldName] ?? ""}</React.Fragment>;
+        : <React.Fragment>{customer.address ? customer.address[fieldName] ?? "" : ""}</React.Fragment>;
 };

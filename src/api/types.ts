@@ -257,7 +257,7 @@ export type TServiceValetSlot = {
 }
 
 export interface IAddressData {
-    address: string;
+    address?: string;
     city?: string;
     state?: string;
     zipCode?: string;

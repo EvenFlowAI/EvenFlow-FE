@@ -12,7 +12,8 @@ export interface ICustomerByName {
     vehicleId: string;
     vehicleDmsId: string;
     vehicleInternalId: number;
-    address: IAddressData;
+    address: IAddressData|null;
+    appointmentAddress: IAddressData|null;
     make: string;
     model: string;
     vin: string;
