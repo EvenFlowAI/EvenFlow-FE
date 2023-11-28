@@ -72,7 +72,6 @@ const useStyles = makeStyles(theme => ({
         color: "#202021",
         textTransform: "uppercase",
         padding: '16px 8px',
-        // border: '0.5px solid #DADADA',
     },
     bodyCell: {
         fontSize: 12,
@@ -534,7 +533,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                         key="first"
                                         className={classes.stickyLeftCell}
                                         width={150}
-                                        style={{left: offset.thirdColumn, borderRight: '0.5px solid #828282'}}>
+                                        style={{left: offset.thirdColumn, borderRight: '1px solid #828282'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
