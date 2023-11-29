@@ -1,4 +1,5 @@
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {IAddressData} from "../../../api/types";
 
 export interface ICustomerByName {
     customerId: number;
@@ -11,10 +12,8 @@ export interface ICustomerByName {
     vehicleId: string;
     vehicleDmsId: string;
     vehicleInternalId: number;
-    address: string;
-    fullAddress: string;
-    city: string;
-    state: string;
+    address: IAddressData|null;
+    appointmentAddress: IAddressData|null;
     make: string;
     model: string;
     vin: string;
@@ -22,7 +21,6 @@ export interface ICustomerByName {
     mileage?: number|null;
     appointmentHashKey?: string;
     customerHasOrders?: boolean;
-    zipCode?: string;
 }
 
 export type TCustomerCommunication = {
@@ -70,13 +68,9 @@ export interface ICustomerWithVehicles {
     otherPhone: string;
     email: string;
     workPhone: string;
-    city: string;
-    state: string;
-    address: string;
-    fullAddress: string;
     communications: TCustomerCommunication[];
     vehicles: ICustomerVehicle[];
-    zipCode?: string;
+    address: IAddressData;
 }
 
 export interface IRepairOrderPart {

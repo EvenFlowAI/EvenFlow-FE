@@ -20,7 +20,7 @@ import {
     setSideBarSteps,
     setStreetName,
     setWelcomeScreenView,
-    setZipCode, setDefaultVisitCenterOption
+    setZipCode, setDefaultVisitCenterOption,
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {
@@ -213,7 +213,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const onNextStep = () => {
         if (customerLoadedData?.isUpdating) {
-            changedToPickUpFromSlots || (appointmentByKey?.zipCode && zipCodeValue !== appointmentByKey?.zipCode)
+            changedToPickUpFromSlots || (appointmentByKey?.address?.zipCode && zipCodeValue !== appointmentByKey?.address?.zipCode)
                 ? scProfile && dispatch(checkPodChanged(scProfile.id, showError))
                 : handleManagingFlow();
         } else {
@@ -264,8 +264,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const restoreAddress = () => {
-        dispatch(setAddress(appointmentByKey?.address ?? null))
-        dispatch(setZipCode(appointmentByKey?.zipCode ?? ""))
+        dispatch(setAddress(appointmentByKey?.address?.fullAddress ?? null))
+        dispatch(setZipCode(appointmentByKey?.address?.zipCode ?? ""))
     }
 
     const setPrevSelectedOption = () => {
@@ -292,7 +292,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         setPrevServiceType()
         restoreAddress()
         if (editingPosition === 'address') {
-            dispatch(setCurrentFrameScreen('manageAppointment'))
+           dispatch(setCurrentFrameScreen('manageAppointment'))
         } else {
             goToFirstScreen().then()
         }
