@@ -593,39 +593,39 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Address")
                                     ? <TableCell key="address" className={classes.bodyCell} width={150}>
-                                        <CustomerInputField
+                                        <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
                                             fieldName="address"
                                             isEdit={isEdit}
-                                            onFieldChange={onFieldChange}/>
+                                            onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "City")
                                     ? <TableCell key="city" className={classes.bodyCell} width={120}>
-                                        <CustomerInputField
+                                        <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
                                             fieldName="city"
                                             isEdit={isEdit}
-                                            onFieldChange={onFieldChange}/>
+                                            onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "State")
                                     ? <TableCell key="state" className={classes.bodyCell} width={150}>
-                                        <CustomerInputField
+                                        <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
                                             fieldName="state"
                                             isEdit={isEdit}
-                                            onFieldChange={onFieldChange}/>
+                                            onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "ZIP")
                                     ? <TableCell key="zip" className={classes.bodyCell} width={150}>
-                                        <CustomerInputField
+                                        <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
                                             fieldName="zipCode"
                                             isEdit={isEdit}
-                                            onFieldChange={onFieldChange}/>
+                                            onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Year")
                                     ? <TableCell key="year" className={classes.bodyCell}>{customer.year ?? ""}</TableCell>
