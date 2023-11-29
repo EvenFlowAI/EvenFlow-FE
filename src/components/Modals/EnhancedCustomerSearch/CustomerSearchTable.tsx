@@ -237,9 +237,12 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
             fromSearchByName: true,
             isUpdating,
         }
-        if (customerData?.address) data.address = customerData.address;
-        if (customerData?.address?.fullAddress) await dispatch(setAddress(customerData.address.fullAddress));
-        if (customerData?.address?.zipCode) await dispatch(setZipCode(customerData.address.zipCode));
+       const addressData: IAddressData|null = isUpdating && customerData?.appointmentAddress
+           ? customerData?.appointmentAddress
+           : customerData?.address ?? null;
+        data.address = addressData
+        if (addressData?.fullAddress) await dispatch(setAddress(addressData.fullAddress));
+        if (addressData?.zipCode) await dispatch(setZipCode(addressData.zipCode));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(vehicle));

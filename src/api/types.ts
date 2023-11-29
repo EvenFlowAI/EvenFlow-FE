@@ -119,7 +119,7 @@ export interface ICustomerLoadedData {
     vehicles: ILoadedVehicle[];
     fromSearchByName?: boolean;
     isUpdating?: boolean;
-    address?: IAddressData;
+    address?: IAddressData|null;
 }
 
 export interface IVehicle {
