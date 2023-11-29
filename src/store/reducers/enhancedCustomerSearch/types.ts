@@ -3,7 +3,6 @@ import {IAddressData} from "../../../api/types";
 
 export interface ICustomerByName {
     customerId: number;
-    customerInternalId: number;
     lastName: string;
     firstName: string;
     cellPhone: string;
@@ -60,7 +59,6 @@ export interface ICustomerVehicle {
 
 export interface ICustomerWithVehicles {
     customerId: number;
-    customerInternalId: number;
     lastName: string;
     firstName: string;
     cellPhone: string;
