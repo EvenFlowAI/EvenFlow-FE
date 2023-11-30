@@ -34,19 +34,15 @@ const App = () => {
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
 
-    const reload = () => {
-        console.log('last reloaded time', moment().toISOString())
-        window.location.reload(true)
-    }
-
     useEffect(() => {
         const timeNow = moment();
-        const timeNew = moment().add(2, 'minute');
         const timeToReload = moment().set('hour', 3).set('minute', 0).set("second", 0)
         if (timeNow.isAfter(timeToReload)) timeToReload.add(1, 'day')
-        //const difference = moment(timeToReload).diff(timeNow, "millisecond", true)
-        const difference = moment(timeNew).diff(timeNow, "millisecond", true)
-        setTimeout(reload, difference)
+        const difference = moment(timeToReload).diff(timeNow, "millisecond", true)
+        setTimeout(() => {
+            localStorage.setItem('timestamp', moment().toISOString())
+            window.location.reload(true)
+        }, difference)
     }, [])
 
     useEffect(() => {
