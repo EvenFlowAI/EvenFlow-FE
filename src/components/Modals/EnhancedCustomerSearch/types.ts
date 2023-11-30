@@ -1,0 +1,29 @@
+export type TSearchColumnName =
+    "Last Name"
+    | "First Name"
+    | "Home"
+    | "Cell"
+    | "Other"
+    | "Email"
+    | "Address"
+    | "City"
+    | "State"
+    | "ZIP"
+    | "Year"
+    | "Make"
+    | "Model"
+    | "VIN"
+
+export type TSortColumn =
+    "lastName" |
+    "firstName" |
+    "homePhone" |
+    "cellPhone" |
+    "otherPhone" |
+    "email" |
+    "vin"
+
+export type TColumn = {
+    name: TSearchColumnName;
+    order?: TSortColumn;
+}

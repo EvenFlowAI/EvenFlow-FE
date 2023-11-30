@@ -101,26 +101,18 @@ export const loadCustomersByPhoneOrEmail = (
                     firstName: customer.firstName,
                     lastName: customer.lastName,
                     fullName: `${customer.firstName} ${customer.lastName}`,
-                    id: customer.customerInternalId ? customer.customerInternalId.toString() : '',
+                    id: customer.customerId
+                        ? customer.customerId.toString()
+                        : '',
                     phoneNumbers: phoneNumber ? [phoneNumber] : [],
                     vehicles: vehiclesData,
                 }
-                if (customer.city) {
-                    data.city = customer.city;
-                    dispatch(setCity(customer.city))
-                }
-                if (customer.state) {
-                    data.state = customer.state;
-                    dispatch(setPoliticalState(customer.state));
-                }
-                if (customer.fullAddress) {
-                    data.fullAddress = customer.fullAddress;
-                    dispatch(setAddress(customer.fullAddress));
-                }
-                if (customer.zipCode) {
-                    data.zipCode = customer.zipCode;
-                    dispatch(setZipCode(customer.zipCode));
-                }
+                if (customer.address) data.address = customer.address;
+                const {city, state, zipCode, fullAddress} = customer.address;
+                dispatch(setCity(city ?? ''))
+                dispatch(setPoliticalState(state ?? ''));
+                dispatch(setAddress(fullAddress ?? null));
+                dispatch(setZipCode(zipCode ?? ''));
                 dispatch(setCustomerLoadedData(data));
                 dispatch(saveAppointmentReducer());
                 dispatch(setCurrentFrameScreen("carSelection"));
@@ -154,10 +146,6 @@ export const updateCustomer = (data: ICustomerWithPhones, onSuccess: () => void,
                     lastName: res.data.lastName,
                     email: res.data.email,
                     address: res.data.address,
-                    city: res.data.city,
-                    state: res.data.state,
-                    fullAddress: res.data.fullAddress,
-                    zipCode: res.data.zipCode,
                 }
                 const filtered = [...customers].map(item => item.customerId === data.customerId ? {...item, ...customerData} : item)
                 dispatch(getCustomers(filtered))

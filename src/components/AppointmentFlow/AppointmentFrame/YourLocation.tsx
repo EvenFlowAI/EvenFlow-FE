@@ -176,6 +176,15 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         setZip(zipCodeValue ?? "")
     }, [zipCodeValue])
 
+    useEffect(() => {
+        if (customerLoadedData?.address && !address) {
+            dispatch(setAddress(customerLoadedData?.address?.originalFullAddress ?? customerLoadedData?.address?.fullAddress ?? null))
+        }
+        if (customerLoadedData?.address?.zipCode && !zipCodeValue) {
+            dispatch(setZipCode(customerLoadedData?.address?.zipCode))
+        }
+    }, [customerLoadedData, address, zipCodeValue])
+
     const clearSelectedData = () => {
         if (!customerLoadedData?.isUpdating) {
             dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
@@ -215,7 +224,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const onNextStep = () => {
         if (customerLoadedData?.isUpdating) {
-            changedToPickUpFromSlots || (appointmentByKey?.zipCode && zipCodeValue !== appointmentByKey?.zipCode)
+            changedToPickUpFromSlots || (appointmentByKey?.address?.zipCode && zipCodeValue !== appointmentByKey?.address?.zipCode)
                 ? scProfile && dispatch(checkPodChanged(scProfile.id, showError))
                 : handleManagingFlow();
         } else {
@@ -266,8 +275,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     }
 
     const restoreAddress = () => {
-        dispatch(setAddress(appointmentByKey?.address ?? null))
-        dispatch(setZipCode(appointmentByKey?.zipCode ?? ""))
+        dispatch(setAddress(appointmentByKey?.address?.fullAddress ?? null))
+        dispatch(setZipCode(appointmentByKey?.address?.zipCode ?? ""))
     }
 
     const setPrevSelectedOption = () => {
