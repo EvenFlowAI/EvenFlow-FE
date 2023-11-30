@@ -262,6 +262,7 @@ export interface IAddressData {
     state?: string;
     zipCode?: string;
     fullAddress?: string;
+    originalFullAddress?: string;
 }
 
 export type TAppointmentAdvisor = {

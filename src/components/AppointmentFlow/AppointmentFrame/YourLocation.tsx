@@ -176,6 +176,15 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         setZip(zipCodeValue ?? "")
     }, [zipCodeValue])
 
+    useEffect(() => {
+        if (customerLoadedData?.address && !address) {
+            dispatch(setAddress(customerLoadedData?.address?.originalFullAddress ?? customerLoadedData?.address?.fullAddress ?? null))
+        }
+        if (customerLoadedData?.address?.zipCode && !zipCodeValue) {
+            dispatch(setZipCode(customerLoadedData?.address?.zipCode))
+        }
+    }, [customerLoadedData, address, zipCodeValue])
+
     const clearSelectedData = () => {
         if (!customerLoadedData?.isUpdating) {
             dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
