@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import CustomerSearchResultsActions from "./CustomerSearchResultsActions";
@@ -6,7 +6,9 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import CustomerSearchTable from "./CustomerSearchTable";
 import {setPageData, setPaging} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {defaultPageData} from "../../../store/reducers/defaultInitials";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {TColumn, TSearchColumnName} from "./types";
+import {RootState} from "../../../store/rootReducer";
 
 type TCustomerSearchResultsProps = DialogProps & {
     onClearSearchForm: TCallback;
@@ -15,6 +17,61 @@ type TCustomerSearchResultsProps = DialogProps & {
     loadData: TArgCallback<boolean>;
 };
 
+export const customerDataColumns: TColumn[] = [
+    {
+        name: "Last Name",
+        order: "lastName",
+
+    },
+    {
+        name: "First Name",
+        order: "firstName",
+    },
+    {
+        name: "Home",
+        order: "homePhone",
+    },
+    {
+        name: "Cell",
+        order: "cellPhone",
+    },
+    {
+        name: "Other",
+        order: "otherPhone",
+    },
+    {
+        name: "Email",
+        order: "email",
+    },
+    {
+        name: "Address",
+    },
+    {
+        name: "City",
+    },
+    {
+        name: "State",
+    },
+    {
+        name: 'ZIP'
+    },
+    {
+        name: "Year",
+    },
+    {
+        name: "Make",
+    },
+    {
+        name: "Model",
+    },
+    {
+        name: "VIN",
+        order: "vin"
+    },
+]
+
+export const columnsNames: TSearchColumnName[] = customerDataColumns.map(el => el.name);
+
 const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
                                                                           loadData,
                                                                           open,
@@ -22,8 +79,28 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
                                                                           handleNew,
                                                                           onClearSearchForm,
                                                                       redirect}) => {
+    const {customerSearchData} = useSelector((state: RootState) => state.customers);
     const [isNewVehicleMode, setNewVehicleMode] = useState<boolean>(false);
+    const [selectedColumns, setSelectedColumns] = useState<TSearchColumnName[]>(columnsNames);
+    const visibleColumns = useMemo(() => customerDataColumns.filter(el => selectedColumns.includes(el.name)), [selectedColumns])
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (open) {
+            const columns = localStorage.getItem('columns')
+            if (columns?.length) {
+                let parsed = JSON.parse(columns)
+                if (customerSearchData?.lastVINCharacters && !parsed.includes("VIN")) {
+                    parsed = [...parsed, "VIN"]
+                }
+                if (customerSearchData?.address && !parsed.includes("Address")) {
+                    parsed = [...parsed, "Address"]
+                }
+                localStorage.setItem('columns', JSON.stringify(parsed))
+                setSelectedColumns(parsed);
+            }
+        }
+    }, [open, customerSearchData])
 
     const onCancel = async () => {
         await dispatch(setPaging({numberOfPages: 0, numberOfRecords: 0}));
@@ -57,6 +134,8 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
             <DialogTitle onClose={onCancel}>Customer Search results</DialogTitle>
             <DialogContent>
                 <CustomerSearchResultsActions
+                    selectedColumns={selectedColumns}
+                    setSelectedColumns={setSelectedColumns}
                     onBack={onBack}
                     onNewSearch={onNewSearch}
                     isNewVehicleMode={isNewVehicleMode}
@@ -64,6 +143,7 @@ const CustomerSearchResults: React.FC<TCustomerSearchResultsProps> = ({
                     onAppointmentForNewVehicle={onAppointmentForNewVehicle}/>
 
                 <CustomerSearchTable
+                    selectedColumns={visibleColumns}
                     redirect={redirect}
                     onClose={onCancel}
                     loadData={loadData}
