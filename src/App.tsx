@@ -40,7 +40,7 @@ const App = () => {
         if (timeNow.isAfter(timeToReload)) timeToReload.add(1, 'day')
         const difference = moment(timeToReload).diff(timeNow, "millisecond", true)
         setTimeout(() => {
-            localStorage.setItem('timestamp', moment().toISOString())
+            localStorage.setItem('timestamp', moment().utc(true).toISOString())
             window.location.reload(true)
         }, difference)
     }, [])
