@@ -46,7 +46,7 @@ const App = () => {
         if (timeNow.isAfter(timeToReload)) timeToReload.add(1, 'day')
         //const difference = moment(timeToReload).diff(timeNow, "millisecond", true)
         const difference = moment(timeNew).diff(timeNow, "millisecond", true)
-        setTimeout(() => reload, difference)
+        setTimeout(reload, difference)
     }, [])
 
     useEffect(() => {
