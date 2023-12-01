@@ -218,6 +218,7 @@ export const AppointmentFrameLayout = () => {
                 await dispatch(updateConsultant(data.advisor))
                 await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
                 await dispatch(checkCarIsValid());
+                //await dispatch(setVehicle(car));
                 if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
             } catch (e) {
                 console.log(e)
