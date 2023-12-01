@@ -117,9 +117,12 @@ export interface ICustomerLoadedData {
     sessionId?: string;
     phoneNumbers: string[];
     vehicles: ILoadedVehicle[];
+    city?:string;
+    state?:string;
     fromSearchByName?: boolean;
     isUpdating?: boolean;
-    address?: IAddressData|null;
+    fullAddress?: string;
+    zipCode?: string;
 }
 
 export interface IVehicle {
@@ -235,6 +238,8 @@ export interface IBaseAppointment {
     createdBy: string;
     user?: ICurrentUser;
     serviceTypeOption?: IFirstScreenOption|null;
+    address?: string;
+    zipCode?: string;
     ancillaryPrice: number;
 }
 
@@ -257,12 +262,9 @@ export type TServiceValetSlot = {
 }
 
 export interface IAddressData {
-    address?: string;
-    city?: string;
-    state?: string;
-    zipCode?: string;
-    fullAddress?: string;
-    originalFullAddress?: string;
+    address: string;
+    city: string;
+    state: string;
 }
 
 export type TAppointmentAdvisor = {
@@ -285,7 +287,7 @@ export interface IAppointmentByKey extends IBaseAppointment {
     detailedPriceList?: IServiceRequestPrice[];
     serviceValetTime?: TServiceValetSlot;
     notes?: string;
-    address?: IAddressData;
+    addressData?: IAddressData;
     isWaitlist?: boolean;
     waitlistTextSettings?: Partial<IWaitListData>;
 }
@@ -300,7 +302,7 @@ export interface IAppointmentByQuery extends IBaseAppointment {
     detailedPriceList?: IServiceRequestPrice[];
     serviceValetTime?: TServiceValetSlot;
     notes?: string;
-    address?: IAddressData;
+    addressData?: IAddressData;
 }
 
 export interface IAppointmentCustomerInfo {
@@ -340,7 +342,8 @@ export interface IAppointment {
     ancillaryPrice: number;
     advisor?: string;
     transportation?: string;
-    address?: IAddressData;
+    address?: string;
+    zipCode?: string;
     notes?: string;
     scheduler: TScheduler;
     isEditable: boolean;

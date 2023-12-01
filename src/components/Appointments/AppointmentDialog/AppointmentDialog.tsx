@@ -174,10 +174,8 @@ export const AppointmentDialog: React.FC<DialogProps<IAppointmentByQuery>> = ({o
                     const engine = engineTypes.find(item => item.id === payload.vehicle.engineTypeId)
                     engine && setSelectedEngine(engine);
                 }
-                if (payload.address) {
-                    setAddress(payload.address?.fullAddress);
-                    if (payload.address?.zipCode) setZipCode(payload.address?.zipCode);
-                }
+                if (payload.address) setAddress(payload.address);
+                if (payload.zipCode) setZipCode(payload.zipCode);
                 payload.serviceRequests && setSelectedSR(payload.serviceRequests);
                 payload.serviceCategories && setSelectedCategories(payload.serviceCategories);
                 if (typeof payload.jobType !== 'undefined') {

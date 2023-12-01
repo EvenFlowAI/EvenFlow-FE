@@ -83,8 +83,8 @@ const UnavailableService: React.FC<TUnavailableServiceProps> = ({
     }
 
     const keepOriginalLocation = () => {
-        dispatch(setAddress(appointmentByKey?.address?.fullAddress ?? null))
-        dispatch(setZipCode(appointmentByKey?.address?.zipCode ?? ''))
+        dispatch(setAddress(appointmentByKey?.address ?? null))
+        dispatch(setZipCode(appointmentByKey?.zipCode ?? ''))
         onClose()
         dispatch(setCurrentFrameScreen('manageAppointment'))
     }

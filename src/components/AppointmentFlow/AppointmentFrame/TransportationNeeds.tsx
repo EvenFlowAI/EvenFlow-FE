@@ -262,7 +262,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const handleBack = () => {
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-            dispatch(setCurrentFrameScreen("manageAppointment"))
+             dispatch(setCurrentFrameScreen("manageAppointment"))
         } else {
             dispatch(setTransportation(null));
             onBack();
