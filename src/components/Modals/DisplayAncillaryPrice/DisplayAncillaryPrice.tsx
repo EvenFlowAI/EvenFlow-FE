@@ -80,8 +80,8 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({
         : t("Pick Up / Drop Off Service");
 
     const restorePrevData = () => {
-        if (appointmentByKey?.address) dispatch(setAddress(appointmentByKey?.address?.fullAddress ?? null))
-        if (appointmentByKey?.address?.zipCode) dispatch(setZipCode(appointmentByKey?.address?.zipCode ?? ''))
+        if (appointmentByKey?.address) dispatch(setAddress(appointmentByKey?.address))
+        if (appointmentByKey?.zipCode) dispatch(setZipCode(appointmentByKey?.zipCode))
     }
 
     const onBack = () => {

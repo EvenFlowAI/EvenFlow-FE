@@ -198,7 +198,6 @@ export const ProfilePODs:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMo
             onChangeRowsPerPage={changeRowsPerPage}
             count={podsCount}
             actions={actions}
-            startActions={actions}
             isLoading={isLoading}
         />
         <PODModal open={isOpen} onClose={onClose} payload={editedItem} />

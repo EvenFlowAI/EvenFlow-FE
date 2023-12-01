@@ -132,8 +132,6 @@ export const getAppointmentRequestsPrices = createAction<IServiceRequestPrice[]>
 export const setAppointmentNotes = createAction<string>("fAppointment/SetAppointmentNotes");
 export const setServiceOptionChanged = createAction<boolean>("fAppointment/SetServiceOptionChanged");
 export const getTransactionValue = createAction<number>('fAppointment/GetTransactionValue');
-export const setPassedScreens = createAction<TScreen[]>('fAppointment/SetPassedScreens');
-export const deleteLastScreen = createAction('fAppointment/DeleteLastScreen')
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -157,6 +155,7 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
         serviceRequests,
         serviceCategories,
         address,
+        zipCode
     } = appointment;
     const {selectedVehicle, selectedRecalls, valueService, sideBarSteps} = getState().appointmentFrame;
     const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
@@ -181,8 +180,8 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
                     mileage: selectedVehicle.mileage,
                     engineTypeId: selectedVehicle.engineTypeId,
                 },
-                address: address?.fullAddress ?? '',
-                zipCode: address?.zipCode ?? '',
+                address,
+                zipCode,
             }
             if (valueService?.selectedService) {
                 data.valueServiceOfferIds = [valueService.selectedService.id];
@@ -716,14 +715,6 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
 
     const isWaitlist = isVisitCenterAppointment && (isWaitListSlotSelected || isWaitListManaging);
 
-    const addressData = {
-        address: appointmentFrame.streetName ?? '',
-        city: appointmentFrame.city ?? '',
-        state: appointmentFrame.politicalState ?? '',
-        originalFullAddress: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
-        zipCode: appointmentFrame.zipCode ?? null,
-    }
-
     const data = {
         id: appointmentFrame.id,
         appointmentTimingType,
@@ -750,13 +741,16 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             : [],
         searchTerm: appointment.customerEnteredEmail,
         serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
+        zipCode: appointmentFrame.zipCode ?? null,
+        address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
         recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
         schedulerType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
         notes: appointmentFrame.appointmentNotes,
-        address: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff
-            || appointmentFrame.serviceTypeOption?.type === EServiceType.MobileService
-            ? addressData
-            : null,
+        addressData: {
+            address: appointmentFrame.streetName ?? '',
+            city: appointmentFrame.city ?? '',
+            state: appointmentFrame.politicalState ?? '',
+        },
         isWaitlist,
     };
 

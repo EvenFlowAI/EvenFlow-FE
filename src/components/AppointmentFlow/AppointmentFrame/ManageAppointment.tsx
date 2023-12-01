@@ -208,13 +208,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
 
     const onCancelChanges = () => {
         if (appointmentFrame.selectedVehicle) {
-            const vehicle = {
-                ...appointmentFrame.selectedVehicle,
-                vin: appointmentFrame.appointmentByKey?.vehicle?.vin ?? '',
-                mileage: appointmentFrame.appointmentByKey?.vehicle?.mileage ?? null,
-                engineTypeId: appointmentFrame.appointmentByKey?.vehicle?.engineTypeId ?? null,
-            };
-            dispatch(setVehicle(vehicle));
+            const vehicle = {...appointmentFrame.selectedVehicle};
             dispatch(clearAppointmentData())
             dispatch(setServiceOptionChanged(false));
             onUpdateAppointment(vehicle)

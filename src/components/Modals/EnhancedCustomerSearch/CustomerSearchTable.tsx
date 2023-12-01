@@ -23,7 +23,7 @@ import {
 } from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {useDispatch, useSelector} from "react-redux";
-import {IAddressData, ICustomerLoadedData} from "../../../api/types";
+import {ICustomerLoadedData} from "../../../api/types";
 import {
     clearAppointmentData,
     setAddress, setServiceOptionChanged,
@@ -37,7 +37,7 @@ import {getBlankVehicle, setCustomerLoadedData} from "../../../store/reducers/ap
 import {TArgCallback, TCallback} from "../../../types/types";
 import {RootState} from "../../../store/rootReducer";
 import {ICustomerWithPhones} from "../../../store/reducers/enhancedCustomerSearch/types";
-import {CustomerInputField, AddressInputField} from "./CustomerInputField";
+import CustomerInputField from "./CustomerInputField";
 import {changePageData, updateCustomer} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {useException, useModal, usePagination} from "../../../utils/hooks";
 import {Loading} from "../../UI/Loading";
@@ -231,18 +231,15 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
             emails: item?.email ? [item.email] : [],
             firstName: item?.firstName ?? "",
             lastName: item?.lastName ?? "",
-            id: item.customerId?.toString() ?? null,
+            id: item.customerInternalId?.toString() ?? null,
             phoneNumbers,
             vehicles: [vehicle],
             fromSearchByName: true,
             isUpdating,
         }
-       const addressData: IAddressData|null = isUpdating && customerData?.appointmentAddress
-           ? customerData?.appointmentAddress
-           : customerData?.address ?? null;
-        data.address = addressData
-        if (addressData?.fullAddress) await dispatch(setAddress(addressData.fullAddress));
-        if (addressData?.zipCode) await dispatch(setZipCode(addressData.zipCode));
+        if (customerData?.city) data.city = customerData.city;
+        if (customerData?.fullAddress) await dispatch(setAddress(customerData.fullAddress));
+        if (customerData?.zipCode) await dispatch(setZipCode(customerData.zipCode));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(vehicle));
@@ -306,20 +303,6 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
         }
     }
 
-    const onAddressChange = (fieldName: keyof IAddressData) => (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.persist()
-        if (editingElement) {
-            setEditingElement(prevState => {
-                if (prevState) {
-                    return {
-                        ...prevState,
-                        address: prevState.address ? {...prevState.address, [fieldName]: e.target.value} : {[fieldName]: e.target.value}
-                    }
-                } else return prevState
-            });
-        }
-    }
-
     const onFieldChange = (fieldName: keyof ICustomerWithPhones) => (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
         setEditingElement(prevState => {
@@ -360,14 +343,14 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
             emails: customer?.email ? [customer.email] : [],
             firstName: customer?.firstName ?? "",
             lastName: customer?.lastName ?? "",
-            id: customer.customerId?.toString() ?? null,
+            id: customer.customerInternalId?.toString() ?? null,
             phoneNumbers: phoneNumber ? [phoneNumber] : [],
             vehicles: [],
             fromSearchByName: true,
         }
-        if (customer?.address) data.address = customer.address;
-        if (customer?.address?.fullAddress) await dispatch(setAddress(customer.address.fullAddress));
-        if (customer?.address?.zipCode) await dispatch(setZipCode(customer.address.zipCode));
+        if (customer?.city) data.city = customer.city;
+        if (customer?.fullAddress) await dispatch(setAddress(customer.fullAddress));
+        if (customer?.zipCode) await dispatch(setZipCode(customer.zipCode));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(getBlankVehicle()))
@@ -596,39 +579,39 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Address")
                                     ? <TableCell key="address" className={classes.bodyCell} width={150}>
-                                        <AddressInputField
+                                        <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
                                             fieldName="address"
                                             isEdit={isEdit}
-                                            onFieldChange={onAddressChange}/>
+                                            onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "City")
                                     ? <TableCell key="city" className={classes.bodyCell} width={120}>
-                                        <AddressInputField
+                                        <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
                                             fieldName="city"
                                             isEdit={isEdit}
-                                            onFieldChange={onAddressChange}/>
+                                            onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "State")
                                     ? <TableCell key="state" className={classes.bodyCell} width={150}>
-                                        <AddressInputField
+                                        <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
                                             fieldName="state"
                                             isEdit={isEdit}
-                                            onFieldChange={onAddressChange}/>
+                                            onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "ZIP")
                                     ? <TableCell key="zip" className={classes.bodyCell} width={150}>
-                                        <AddressInputField
+                                        <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
                                             fieldName="zipCode"
                                             isEdit={isEdit}
-                                            onFieldChange={onAddressChange}/>
+                                            onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Year")
                                     ? <TableCell key="year" className={classes.bodyCell}>{customer.year ?? ""}</TableCell>
