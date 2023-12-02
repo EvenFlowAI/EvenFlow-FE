@@ -21,6 +21,7 @@ import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
 import {loadBookingFlowConfig, setConfiguration} from "./store/reducers/bookingFlowConfig/actions";
 import PaymentBill from "./components/AppointmentFlow/PaymentBill/PaymentBill";
 import {EServiceCenterName} from "./api/types";
+import moment from "moment";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -32,6 +33,17 @@ const App = () => {
     const dispatch = useDispatch();
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
+
+    useEffect(() => {
+        const timeNow = moment();
+        const timeToReload = moment().set('hour', 3).set('minute', 0).set("second", 0)
+        if (timeNow.isAfter(timeToReload)) timeToReload.add(1, 'day')
+        const difference = moment(timeToReload).diff(timeNow, "millisecond", true)
+        setTimeout(() => {
+            localStorage.setItem('timestamp', moment().utc(true).toISOString())
+            window.location.reload(true)
+        }, difference > 0 ? difference : 0)
+    }, [])
 
     useEffect(() => {
         const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;

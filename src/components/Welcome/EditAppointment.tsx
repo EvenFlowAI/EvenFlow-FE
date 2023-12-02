@@ -89,10 +89,10 @@ export const EditAppointment = () => {
                     phoneNumbers: [data.driver.phoneNumber],
                     emails: [data.driver.email],
                     fullName: data.driver.fullName,
-                    city: data.driver.city ?? "",
                     fromSearchByName: isFromAdmin,
                     isUpdating: true,
                 }
+                if (data.address) customer.address = data.address
                 dispatch(setCustomerLoadedData(customer));
                 dispatch(setVehicle({...vehicle}));
                 saveCustomerCache(customer);
