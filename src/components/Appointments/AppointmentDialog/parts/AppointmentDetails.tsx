@@ -81,7 +81,7 @@ const AppointmentDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
             />
             <DetailsItem
                 title="Address"
-                text={payload.address ? `${payload.address}, ${payload.zipCode}` : ''}
+                text={payload.address ? `${payload.address?.fullAddress}, ${payload.address?.zipCode}` : ''}
                 icon={<Address/>}
                 key="Address"
             />

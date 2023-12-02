@@ -99,7 +99,6 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const clearAppointmentSlot = (option: IFirstScreenOption) => {
         if (option?.type === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));
-            //dispatch(setWaitListSettings(null));
         } else {
             dispatch(selectServiceValetAppointment(null));
         }
