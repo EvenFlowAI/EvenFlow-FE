@@ -36,9 +36,13 @@ const App = () => {
 
     useEffect(() => {
         const timeNow = moment();
-        let timeToReload = moment().set('hour', 3).set('minute', 0).set("second", 0)
-        if (timeNow.isAfter(timeToReload)) timeToReload = timeToReload.add(1, 'day')
-        setTimeout(() => window.location.reload(true), moment(timeToReload).diff(timeNow))
+        const timeToReload = moment().set('hour', 3).set('minute', 0).set("second", 0)
+        if (timeNow.isAfter(timeToReload)) timeToReload.add(1, 'day')
+        const difference = moment(timeToReload).diff(timeNow, "millisecond", true)
+        setTimeout(() => {
+            localStorage.setItem('timestamp', moment().utc(true).toISOString())
+            window.location.reload(true)
+        }, difference > 0 ? difference : 0)
     }, [])
 
     useEffect(() => {

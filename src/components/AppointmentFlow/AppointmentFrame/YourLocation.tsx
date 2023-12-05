@@ -178,7 +178,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     useEffect(() => {
         if (customerLoadedData?.address && !address) {
-            dispatch(setAddress(customerLoadedData?.address?.originalFullAddress ?? customerLoadedData?.address?.fullAddress ?? null))
+            dispatch(setAddress(customerLoadedData?.address?.fullAddress  ?? customerLoadedData?.address?.originalFullAddress ?? null))
         }
         if (customerLoadedData?.address?.zipCode && !zipCodeValue) {
             dispatch(setZipCode(customerLoadedData?.address?.zipCode))
