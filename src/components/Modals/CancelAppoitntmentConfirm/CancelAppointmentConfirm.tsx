@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {DialogProps} from "../types";
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
-import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions";
+import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions/Actions";
 import {IAppointmentByQuery} from "../../../api/types";
 import {API} from "../../../api/api";
 import moment from "moment";

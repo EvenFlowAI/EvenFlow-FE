@@ -3,7 +3,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {CarName, ChangeButton, PageWrapper, SubTitle} from "./ServiceSelection";
 import {styled} from "@material-ui/core";
-import {Actions} from "../Actions";
+import {Actions} from "../Actions/Actions";
 import {IServiceCategory} from "../../../../api/types";
 import Price from "./Price";
 

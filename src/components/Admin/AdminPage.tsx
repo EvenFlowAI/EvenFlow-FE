@@ -30,10 +30,6 @@ export const AdminPage = () => {
             {currentUser.isSuperUser
                 ? <PrivateRoute path={`${Routes.Admin.DealershipGroups}/:id`} component={DealershipGroupDetail} />
                 : null}
-            {/*{currentUser.isSuperUser*/}
-            {/*    ? <PrivateRoute*/}
-            {/*        path={`${Routes.Admin.ServiceRequests}`} component={ServiceRequests} />*/}
-            {/*    : null}*/}
             {!hideDashboard && <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>}
             {!currentUser.isSuperUser ?
                 <PrivateRoute path={Routes.Admin.Appointments} component={Appointments} />

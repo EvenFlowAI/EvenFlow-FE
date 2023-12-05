@@ -8,7 +8,6 @@ import {Table} from "../../../UI/Table";
 import {TableRowDataType} from "../../../UI/types";
 import {concatAddress} from "../../../../utils/utils";
 
-
 const rowData: TableRowDataType<IEmployee>[] = [
     {header: "Name", val: v => v.fullName},
     {header: "Role", val: v => v.role},

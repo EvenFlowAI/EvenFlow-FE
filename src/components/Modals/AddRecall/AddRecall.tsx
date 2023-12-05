@@ -14,7 +14,7 @@ import {IMakeExtended, IModel} from "../../../api/types";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
 import {createRecall, updateRecall} from "../../../store/reducers/recall/actions";
-import {yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import {yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDetails/MaintenanceDetails";
 
 const Textarea = styled(TextField)({
     "& textarea": {

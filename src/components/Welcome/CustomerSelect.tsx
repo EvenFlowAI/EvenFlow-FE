@@ -11,7 +11,7 @@ import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../store/rootReducer";
 import {useAnalyticsBySCId, useCurrentUser} from "../../utils/hooks";
-import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions";
+import {Actions} from "../AppointmentFlow/AppointmentFrame/Actions/Actions";
 import ReturningSelfCustomer from "./ReturningSelfCustomer";
 import NewSelfCustomer from "./NewSelfCustomer";
 import ReturningCustomerForAdmin from "./ReturningCustomerForAdmin";

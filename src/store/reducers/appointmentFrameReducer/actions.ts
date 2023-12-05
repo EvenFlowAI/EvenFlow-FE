@@ -58,7 +58,7 @@ import {
     mapRecallsForRequest
 } from "../../../components/AppointmentFlow/AppointmentFrame/utils";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
-import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails/MaintenanceDetails";
 import {EScheduler} from "../appointments/types";
 import {setAppointmentsLoading} from "../appointments/actions";
 

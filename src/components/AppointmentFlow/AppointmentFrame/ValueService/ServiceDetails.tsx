@@ -4,7 +4,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {CarName, ChangeButton, PageWrapper, SubTitle} from "./ServiceSelection";
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {Loading} from "../../../UI/Loading";
-import {Actions} from "../Actions";
+import {Actions} from "../Actions/Actions";
 import {useTranslation} from "react-i18next";
 
 type TServiceDetails = {
