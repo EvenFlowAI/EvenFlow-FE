@@ -38,10 +38,9 @@ const App = () => {
         const timeNow = moment();
         const timeToReload = moment().set('hour', 3).set('minute', 0).set("second", 0)
         if (timeNow.diff(timeToReload) > 0) timeToReload.add(1, 'day')
-        //const difference = moment(timeToReload).diff(timeNow, "millisecond", true)
-        const difference = 60000
+        const difference = moment(timeToReload).diff(timeNow, "millisecond", true)
         setTimeout(() => {
-            localStorage.setItem('timestamp', moment().utc(true).toISOString())
+            localStorage.setItem('lastReloading', moment().utc(true).toISOString())
             window.location.reload(true)
         }, difference > 0 ? difference : 0)
     }, [])
