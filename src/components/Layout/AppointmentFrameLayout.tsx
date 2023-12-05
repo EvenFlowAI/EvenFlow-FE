@@ -13,7 +13,6 @@ import {AppointmentSelection} from '../AppointmentFlow/AppointmentFrame/Appointm
 import {TransportationNeeds} from '../AppointmentFlow/AppointmentFrame/TransportationNeeds';
 import {AppointmentConfirmationFrame} from '../AppointmentFlow/AppointmentFrame/AppointmentConfirmationFrame';
 import {AddInfo} from "../AppointmentFlow/AppointmentFrame/AddInfo";
-import {ServiceSelection} from "../AppointmentFlow/AppointmentFrame/ServiceSelection";
 import {PackageSelection} from "../AppointmentFlow/AppointmentFrame/PackageSelection";
 import {SelectOpsCode} from "../AppointmentFlow/AppointmentFrame/SelectOpsCode";
 import {Routes} from "../../config/routes";
@@ -29,7 +28,6 @@ import {
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
-import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
 import {API} from "../../api/api";
 import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
 import {
@@ -342,11 +340,6 @@ export const AppointmentFrameLayout = () => {
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
                 onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
-            serviceSelection: <ServiceSelection
-                setLastSelectedCategory={setLastSelectedCategory}
-                onBack={handleChangeScreen('serviceNeeds')}
-                onNext={handleSetScreen}
-            />,
             maintenanceDetails: <MaintenanceDetails
                 onBack={handleSetScreen}
                 onNext={handleSetScreen}
@@ -364,10 +357,6 @@ export const AppointmentFrameLayout = () => {
                 onAddServices={handleChangeScreen('serviceNeeds')}
                 handleSetScreen={handleSetScreen}
                 page={serviceCategoryPage}
-            />,
-            vehicleData: <VehicleData
-                onBack={handleChangeScreen('describeMore')}
-                onNext={handleSetScreen}
             />,
             consultantSelection: <ConsultantSelection
                 onBack={handleChangeScreen('serviceNeeds')}
@@ -417,8 +406,8 @@ export const AppointmentFrameLayout = () => {
                 return null;
             case "maintenanceDetails":
             case "serviceNeeds":
-            case "serviceSelection":
-                return t("How can we help you?");
+            // case "serviceSelection":
+            //     return t("How can we help you?");
             case "describeMore":
                 return t("Please describe what’s going on");
             case "opsCode":

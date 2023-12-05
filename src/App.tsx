@@ -10,7 +10,6 @@ import {ConfirmDialog} from './components/UI/ConfirmDialog';
 import {ProviderContext, SnackbarProvider} from "notistack";
 import {Close} from "@material-ui/icons";
 import {EndUserLayout} from "./components/Layout/EndUserLayout";
-import {AppointmentConfirmation} from "./components/AppointmentFlow/AppointmentConfirmation";
 import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
 import ValueService from "./components/AppointmentFlow/AppointmentFrame/ValueService/ValueService";
 import {useDispatch, useSelector} from "react-redux";
@@ -109,7 +108,6 @@ const App = () => {
                 <ConfirmDialog/>
                 <Switch>
                     <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentFrameLayout} />
-                    <Route path={Routes.EndUser.Confirmation} exact component={AppointmentConfirmation} />
                     <Route path={Routes.EndUser.CancelAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.EditAppointment} exact component={EndUserLayout} />
                     <Route path={Routes.EndUser.Base} exact component={EndUserLayout} />
