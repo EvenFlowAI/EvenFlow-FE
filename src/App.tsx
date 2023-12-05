@@ -37,8 +37,9 @@ const App = () => {
     useEffect(() => {
         const timeNow = moment();
         const timeToReload = moment().set('hour', 3).set('minute', 0).set("second", 0)
-        if (timeNow.isAfter(timeToReload)) timeToReload.add(1, 'day')
-        const difference = moment(timeToReload).diff(timeNow, "millisecond", true)
+        if (timeNow.diff(timeToReload) > 0) timeToReload.add(1, 'day')
+        //const difference = moment(timeToReload).diff(timeNow, "millisecond", true)
+        const difference = 60000
         setTimeout(() => {
             localStorage.setItem('timestamp', moment().utc(true).toISOString())
             window.location.reload(true)
