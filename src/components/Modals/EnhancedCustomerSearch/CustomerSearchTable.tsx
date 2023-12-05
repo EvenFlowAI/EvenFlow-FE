@@ -26,7 +26,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {IAddressData, ICustomerLoadedData} from "../../../api/types";
 import {
     clearAppointmentData,
-    setAddress, setServiceOptionChanged,
+    setAddress, setPassedScreens, setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps,
     setUserType,
@@ -258,6 +258,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
         await dispatch(clearAppointmentData());
         dispatch(setServiceOptionChanged(false));
         await dispatch(setSideBarSteps([]));
+        dispatch(setPassedScreens([]));
         await setCustomerData(item, false);
         await dispatch(setUserType(EUserType.Existing));
         if (firstScreenOptions?.length) {

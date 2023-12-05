@@ -9,7 +9,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {TRole} from "../../store/reducers/users/types";
 import {
     clearAppointmentData,
-    setAddress, setServiceOptionChanged,
+    setAddress, setPassedScreens, setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps, setTrackerCreated,
     setVehicle,
@@ -91,6 +91,7 @@ const ServiceCenterCard: React.FC<{sc: IServiceCenter}> = ({sc}) => {
         dispatch(setAddress(null));
         dispatch(setZipCode(''));
         dispatch(setSideBarSteps([]));
+        dispatch(setPassedScreens([]));
         dispatch(setVehicle(null));
         dispatch(setCustomerLoadedData(null));
         dispatch(setServiceTypeOption(null));

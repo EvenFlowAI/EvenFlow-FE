@@ -12,7 +12,7 @@ import {
     createOrUpdateAppointment,
     loadAppointmentRequestsPrices,
     setAppointmentSaving,
-    setCurrentFrameScreen,
+    setCurrentFrameScreen, setPassedScreens,
     setReminders, setServiceOptionChanged, setSideBarSteps, setVehicle,
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -216,6 +216,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
             };
             dispatch(setVehicle(vehicle));
             dispatch(clearAppointmentData())
+            dispatch(setPassedScreens([]));
             dispatch(setServiceOptionChanged(false));
             onUpdateAppointment(vehicle)
         }
@@ -234,6 +235,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
                     </div>
                 );
                 await dispatch(setSideBarSteps([]));
+                dispatch(setPassedScreens([]));
                 await dispatch(setServiceOptionChanged(false));
                 await dispatch(setVehicle(null));
                 await dispatch(clearAppointmentData());

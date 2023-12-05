@@ -12,6 +12,7 @@ import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
 import {ITransportation} from '../../../api/types';
 import {TArgCallback} from "../../../types/types";
 import {
+    showPrevScreen,
     setCurrentFrameScreen,
     setTransportation
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -253,19 +254,14 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         handleNext(o);
     }
 
-    // const handleSelectGeneric = (column: ETransportColumn) => {
-    //     const options = transportations.filter(item => item.column === column);
-    //     if (options.length) {
-    //         dispatch(setTransportation(options[0]));
-    //     }
-    // }
-
     const handleBack = () => {
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-            dispatch(setCurrentFrameScreen("manageAppointment"))
+            dispatch(showPrevScreen())
+            //dispatch(setCurrentFrameScreen("manageAppointment"))
         } else {
             dispatch(setTransportation(null));
-            onBack();
+            dispatch(showPrevScreen())
+           // onBack();
         }
     }
 

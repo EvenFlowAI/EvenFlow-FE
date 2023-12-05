@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
     checkCarIsValid,
-    clearAppointmentSteps,
+    clearAppointmentSteps, showPrevScreen,
     selectCategoriesIds,
     setAdditionalServicesChosen,
     setFrameDescription
@@ -106,7 +106,8 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
     const handleBack = () => {
         removeLastCategory();
         clearData();
-        handleSetScreen("serviceNeeds");
+        dispatch(showPrevScreen())
+        //handleSetScreen("serviceNeeds");
     }
 
     return (

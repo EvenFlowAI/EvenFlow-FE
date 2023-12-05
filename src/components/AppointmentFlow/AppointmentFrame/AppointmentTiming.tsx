@@ -9,6 +9,8 @@ import {ReactComponent as OffersIcon} from "../../../assets/img/offersIcon.svg";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
+    showPrevScreen,
+    setCurrentFrameScreen,
     setServiceTypeOption,
     setSideBarSteps,
     setTime,
@@ -110,12 +112,13 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
         if (fromServiceValetToVisitCenter) {
             redirectToServiceTypeOptions()
         } else {
-            const fromSlotEditing = editingPosition === 'slot' && customerLoadedData?.isUpdating
-            if (fromSlotEditing) {
-                handleSetScreen("manageAppointment")
-            } else {
-                handleSetScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')
-            }
+            dispatch(showPrevScreen())
+            // const fromSlotEditing = editingPosition === 'slot' && customerLoadedData?.isUpdating
+            // if (fromSlotEditing) {
+            //     handleSetScreen("manageAppointment")
+            // } else {
+            //     handleSetScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')
+            // }
         }
     }
 

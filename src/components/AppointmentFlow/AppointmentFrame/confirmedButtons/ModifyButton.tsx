@@ -1,7 +1,7 @@
 import React from 'react';
 import {setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
 import {
-    clearAppointmentData, setCurrentFrameScreen,
+    clearAppointmentData, setCurrentFrameScreen, setPassedScreens,
     setServiceOptionChanged, setUserType
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
@@ -27,6 +27,7 @@ const ModifyButton: React.FC<TProps> = ({onUpdateAppointment}) => {
             if (customerLoadedData) {
                 await dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
                 await dispatch(clearAppointmentData(true))
+                dispatch(setPassedScreens([]));
                 await dispatch(setServiceOptionChanged(false));
                 await dispatch(setUserType(EUserType.Existing))
             }

@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
     checkCarIsValid,
-    clearAppointmentSteps,
+    clearAppointmentSteps, showPrevScreen,
     selectCategoriesIds,
     selectService,
     selectSubService,
@@ -106,7 +106,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         const firstScreenOptionsUnavailable = !firstScreenOptions.length || onlyVisitCenterOptionExists || isManagingAppointment;
         const needsToShowCarsSelection = userType === EUserType.Existing && !currentUser && firstScreenOptionsUnavailable;
         if (notVisitCenterSelected || needsToShowCarsSelection) {
-            onBack()
+            dispatch(showPrevScreen())
+            //onBack()
         } else {
             history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
         }
@@ -117,7 +118,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             setPage(EServiceCategoryPage.Page1);
         } else {
             if (isManagingAppointment) {
-                dispatch(setCurrentFrameScreen("manageAppointment"))
+                dispatch(showPrevScreen())
+                //dispatch(setCurrentFrameScreen("manageAppointment"))
             } else {
                 if (currentUser) dispatch(setShowServiceCentersList(false));
                 handleBackScreen()
@@ -268,7 +270,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             <Actions
                 prevDisabled={history?.location?.search?.includes('view=unique')}
                 hideNext={!selectedServices?.length}
-                hidePrev={!selectedServices.length && isManagingAppointment}
+                hidePrev={!selectedServices.length && customerLoadedData?.isUpdating}
                 nextLabel={t("Next")}
                 onNext={handleNext}
                 onBack={handleBack} />

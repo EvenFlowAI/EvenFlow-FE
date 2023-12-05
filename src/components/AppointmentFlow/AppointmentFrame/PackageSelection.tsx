@@ -5,6 +5,7 @@ import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
+    showPrevScreen,
     setAdditionalServicesChosen,
     setPackage,
     setPackageIsSelected,
@@ -353,7 +354,8 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             action: 'Went back',
             label: 'From Selection Package Page',
         })
-        onBack();
+        dispatch(showPrevScreen())
+        // onBack();
     }
 
     const addServices = (): void => {

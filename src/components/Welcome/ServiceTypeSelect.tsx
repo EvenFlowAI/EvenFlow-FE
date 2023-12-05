@@ -13,7 +13,7 @@ import {
 import {
     checkCarIsValid,
     clearAppointmentData, loadConsultants,
-    setCurrentFrameScreen, setServiceOptionChanged,
+    setCurrentFrameScreen, setPassedScreens, setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps, setTrackerCreated,
     setTransportation,
@@ -236,7 +236,10 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     }
 
     const handleSelectOption = (card: IFirstScreenOption) => {
-        if (!customerLoadedData?.isUpdating) dispatch(clearAppointmentData())
+        if (!customerLoadedData?.isUpdating) {
+            dispatch(clearAppointmentData())
+            dispatch(setPassedScreens([]));
+        }
         dispatch(setServiceTypeOption(card))
         if (card.type === EServiceType.General) {
             if (card.externalLink) window.location.href = card.externalLink;
