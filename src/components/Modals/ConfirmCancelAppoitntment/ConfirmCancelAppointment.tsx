@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const CancelAppointmentConfirm: React.FC<DialogProps&{hashKey: string, loadData: TArgCallback<boolean>}> = ({open, onClose, hashKey, loadData}) => {
+const ConfirmCancelAppointment: React.FC<DialogProps&{hashKey: string, loadData: TArgCallback<boolean>}> = ({open, onClose, hashKey, loadData}) => {
     const {customerSearchData} = useSelector((state: RootState) => state.customers);
     const [data, setData] = useState<IAppointmentByQuery|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -111,4 +111,4 @@ const CancelAppointmentConfirm: React.FC<DialogProps&{hashKey: string, loadData:
     );
 };
 
-export default CancelAppointmentConfirm;
+export default ConfirmCancelAppointment;

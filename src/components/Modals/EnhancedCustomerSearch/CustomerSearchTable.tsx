@@ -45,7 +45,7 @@ import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../utils/utils";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
-import CancelAppointmentConfirm from "../CancelAppoitntmentConfirm/CancelAppointmentConfirm";
+import ConfirmCancelAppointment from "../ConfirmCancelAppoitntment/ConfirmCancelAppointment";
 import {TColumn, TSortColumn} from "./types";
 
 const useStyles = makeStyles(theme => ({
@@ -649,7 +649,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
 
                 {editingElement ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={editingElement.vehicleDmsId}/> : null}
                 {editingElement?.appointmentHashKey
-                    ? <CancelAppointmentConfirm
+                    ? <ConfirmCancelAppointment
                         open={isOpenConfirm}
                         onClose={onCloseConfirm}
                         loadData={loadData}
