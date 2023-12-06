@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef} from 'react';
 import moment from "moment";
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "./TimeSlotCard";
@@ -57,10 +57,12 @@ type TProps = {
     date: moment.Moment;
     loading: boolean;
     appointments?: TGroupedAppointment;
+    selectedSlot: IRemappedAppointmentSlot|null;
+    setSelectedSlot: Dispatch<SetStateAction<IRemappedAppointmentSlot|null>>;
 }
 
 export const AppointmentTimeSelector: React.FC<TProps> =
-    ({date, loading, appointments}) => {
+    ({date, loading, appointments, selectedSlot, setSelectedSlot}) => {
         const {
             appointment: selectedAppointment,
             scProfile,
@@ -128,7 +130,8 @@ export const AppointmentTimeSelector: React.FC<TProps> =
         const handleSelect = useCallback((a: IRemappedAppointmentSlot|null) => {
             const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
             handleGA(a);
-            dispatch(selectAppointment(data));
+            setSelectedSlot(data)
+            //dispatch(selectAppointment(data));
             if (!customerLoadedData?.isUpdating && !appointmentByKey) {
                 // todo change logic
                 dispatch(setTransportation(null));
@@ -150,7 +153,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
                                 slot={appointment}
                                 onSelect={handleSelect}
                                 selected={Boolean(
-                                    selectedAppointment && appointment?.id === selectedAppointment.id
+                                    selectedSlot && appointment?.id === selectedSlot.id
                                 )}
                                 timeSlot={timeSlot}
                                 key={timeSlot.label}
