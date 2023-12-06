@@ -103,7 +103,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         isAppointmentTimingAvailable,
         isAdvisorAvailable,
         isConsultantsLoading,
-        serviceOptionChangedFromSlotPage
+        serviceOptionChangedFromSlotPage,
+        passedScreens,
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -141,6 +142,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.bookingFlowConfig.isAdvisorAvailable,
         state.appointmentFrame.isConsultantsLoading,
         state.appointmentFrame.serviceOptionChangedFromSlotPage,
+        state.appointmentFrame.passedScreens,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -381,22 +383,22 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         }
     }, [setNextScreen, handleTransportation, customerData, handleGANext, saveSelectedSlot])
 
-    // const definePrevScreen = useCallback((): TScreen => {
-    //     let previousLogicalScreen: TScreen = currentConfig?.appointmentSelection
-    //         ? 'appointmentTiming'
-    //         : isAdvisorAvailable
-    //             ? 'consultantSelection'
-    //             : "serviceNeeds"
-    //     const isManageFlow = customerData?.isUpdating && !isUsualFlowNeeded
-    //     if (prevScreen && isManageFlow) {
-    //         previousLogicalScreen = prevScreen
-    //     }
-    //     return previousLogicalScreen
-    // }, [currentConfig, isAdvisorAvailable, customerData, isUsualFlowNeeded, prevScreen])
+    const definePrevScreen = useCallback((): TScreen => {
+        let previousLogicalScreen: TScreen = currentConfig?.appointmentSelection
+            ? 'appointmentTiming'
+            : isAdvisorAvailable
+                ? 'consultantSelection'
+                : "serviceNeeds"
+        const isManageFlow = customerData?.isUpdating && !isUsualFlowNeeded
+        if (prevScreen && isManageFlow) {
+            previousLogicalScreen = prevScreen
+        }
+        return previousLogicalScreen
+    }, [currentConfig, isAdvisorAvailable, customerData, isUsualFlowNeeded, prevScreen])
 
     const handleBack = useCallback((): void => {
         handleGABack();
-        // const prevScreen = definePrevScreen()
+        const prevScreen = definePrevScreen()
 
         if (fromServiceValetToVisitCenter && !isAppointmentTimingAvailable && !serviceOptionChangedFromSlotPage) {
             dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
@@ -404,9 +406,19 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
             dispatch(showPrevScreen())
-          //  handleSetScreen(prevScreen);
+            // if (serviceOptionChangedFromSlotPage) {
+            //     const lastScreen =  passedScreens[passedScreens.length - 1]
+            //     if (lastScreen === 'consultantSelection' && !isAdvisorAvailable) {
+            //         dispatch(setPassedScreens(passedScreens.slice(0, passedScreens.length - 2)))
+            //     } else {
+            //         dispatch(setPassedScreens(passedScreens.slice(0, passedScreens.length - 1)))
+            //     }
+            //     handleSetScreen(prevScreen);
+            // } else {
+            //
+            // }
         }
-    }, [currentConfig, history, fromServiceValetToVisitCenter])
+    }, [currentConfig, history, fromServiceValetToVisitCenter, passedScreens, serviceOptionChangedFromSlotPage])
 
     return (
         <StepWrapper>
