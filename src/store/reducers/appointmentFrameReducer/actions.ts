@@ -133,7 +133,7 @@ export const setAppointmentNotes = createAction<string>("fAppointment/SetAppoint
 export const setServiceOptionChanged = createAction<boolean>("fAppointment/SetServiceOptionChanged");
 export const getTransactionValue = createAction<number>('fAppointment/GetTransactionValue');
 export const setPassedScreens = createAction<TScreen[]>('fAppointment/SetPassedScreens');
-export const showPrevScreen = createAction('fAppointment/DeleteLastScreen')
+export const showPrevScreen = createAction('fAppointment/ShowPrevScreen')
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -328,7 +328,7 @@ export const clearSelectedServices = (keepCategories?: boolean): AppThunk => (di
     dispatch(setAdditionalServicesChosen(false));
 }
 
-export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dispatch, getState) => {
+export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dispatch) => {
     dispatch(clearSelectedServices(keepCategories));
     dispatch(selectAppointment(null));
     dispatch(selectServiceValetAppointment(null));

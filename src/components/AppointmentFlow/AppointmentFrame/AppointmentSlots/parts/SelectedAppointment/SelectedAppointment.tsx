@@ -12,6 +12,7 @@ import Prices from "./parts/Prices";
 import ServiceOption from "./parts/ServiceOption";
 import Address from "./parts/Address";
 import Info from "./parts/Info";
+import {IRemappedAppointmentSlot, IServiceValetAppointment} from "../../../../../../store/reducers/appointment/types";
 
 const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -167,20 +168,32 @@ const WaitListLabel = () => {
         : null
 }
 
-export const SelectedAppointment = () => {
+type TProps = {
+    selectedSlot: IRemappedAppointmentSlot|null,
+    selectedSVSlot: IServiceValetAppointment|null,
+}
+
+export const SelectedAppointment: React.FC<TProps> = ({selectedSlot, selectedSVSlot}) => {
     const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
-    const { appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
+   // const { appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const classes = useSelectedAppointmentStyles();
     const theme = useTheme();
     const {t} = useTranslation();
     const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    //
+    // const price = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
+    //     ? serviceValetAppointment?.price.value ?? 0
+    //     : appointment?.price.value ?? 0;
+    // const ancillaryPrice = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
+    //     ? serviceValetAppointment?.price.ancillaryPrice ?? 0
+    //     : appointment?.price.ancillaryPrice ?? 0;
 
-    const price = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
-        ? serviceValetAppointment?.price.value ?? 0
-        : appointment?.price.value ?? 0;
-    const ancillaryPrice = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
-        ? serviceValetAppointment?.price.ancillaryPrice ?? 0
-        : appointment?.price.ancillaryPrice ?? 0;
+    const price = serviceTypeOption?.type === EServiceType.PickUpDropOff && selectedSVSlot
+        ? selectedSVSlot?.price.value ?? 0
+        : selectedSlot?.price.value ?? 0;
+    const ancillaryPrice = serviceTypeOption?.type === EServiceType.PickUpDropOff && selectedSVSlot
+        ? selectedSVSlot?.price.ancillaryPrice ?? 0
+        : selectedSlot?.price.ancillaryPrice ?? 0;
 
     return (
         <div>
@@ -197,30 +210,30 @@ export const SelectedAppointment = () => {
                         <SelectedConsultant />
                         <Address />
                         <ServiceOption isSm={isSm}/>
-                        {appointment && isSm
+                        {selectedSlot && isSm
                             ? <DateWrapper>
-                                {appointment.date.format('ddd, MMMM D, h:mm A')}
+                                {selectedSlot.date.format('ddd, MMMM D, h:mm A')}
                                 <WaitListLabel/>
                         </DateWrapper>
-                            : serviceValetAppointment && isSm
-                                ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/>
+                            : selectedSVSlot && isSm
+                                ? <ServiceValetDateTime serviceValetAppointment={selectedSVSlot}/>
                                 : null}
                     </li>
                 </List>
                 </div>
                 <PriceWrapper>
-                    {appointment && !isSm
+                    {selectedSlot && !isSm
                         ? <DateWrapper>
-                            {t("Date & Time")}: <br /> {appointment.date.format('ddd, MMMM D, h:mm A')}
+                            {t("Date & Time")}: <br /> {selectedSlot.date.format('ddd, MMMM D, h:mm A')}
                         </DateWrapper>
-                        : serviceValetAppointment && !isSm
-                            ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/>
+                        : selectedSVSlot && !isSm
+                            ? <ServiceValetDateTime serviceValetAppointment={selectedSVSlot}/>
                             : null}
                     <React.Fragment>
                         {!isSm && Boolean(price) && <Prices price={price} ancillaryPrice={ancillaryPrice}/>}
                         {!isSm ? <WaitListLabel/> : null}
                         {/*todo uncomment for offer new functionality*/}
-                        {/*{!isSm && Boolean(appointment?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">*/}
+                        {/*{!isSm && Boolean(selectedSlot?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">*/}
                         {/*  <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>*/}
                         {/*</div> : null}*/}
                         <Info/>

@@ -1,6 +1,7 @@
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef} from 'react';
 import moment from "moment";
 import {
+    IRemappedAppointmentSlot,
     IServiceValetAppointment,
 } from "../../../../../../store/reducers/appointment/types";
 import {styled} from "@material-ui/core";
@@ -44,10 +45,12 @@ export type TSlot = {
 type TProps = {
     date: moment.Moment;
     loading: boolean;
+    selectedSlot: IServiceValetAppointment|null;
+    setSelectedSlot: Dispatch<SetStateAction<IServiceValetAppointment|null>>;
 }
 
 export const SVAppointmentTimeSelector: React.FC<TProps> =
-    ({date, loading}) => {
+    ({date, loading, selectedSlot, setSelectedSlot}) => {
         const {serviceValetAppointment: selectedAppointment, serviceValetSlots} = useSelector((state: RootState) => state.appointment);
         const {selectedTiming, sideBarSteps} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
@@ -57,10 +60,6 @@ export const SVAppointmentTimeSelector: React.FC<TProps> =
         const currentSlots = useMemo(() => {
             return serviceValetSlots.filter(slot => moment(slot.date).isSame(date, 'date'))
         }, [serviceValetSlots, date])
-
-        useEffect(() => {
-           // if (firstCardRef?.current && date) firstCardRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
-        }, [date, firstCardRef])
 
         const handleGA = useCallback((a: IServiceValetAppointment|null) => {
             ReactGA.event({
@@ -81,7 +80,8 @@ export const SVAppointmentTimeSelector: React.FC<TProps> =
         const handleSelect = useCallback((a: IServiceValetAppointment|null) => {
             const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
             handleGA(a);
-            dispatch(selectServiceValetAppointment(data));
+            setSelectedSlot(data)
+            //dispatch(selectServiceValetAppointment(data));
             dispatch(setTransportation(null));
             handleSideBar();
         }, [selectedTiming])
@@ -96,7 +96,7 @@ export const SVAppointmentTimeSelector: React.FC<TProps> =
                                         date={date}
                                         onSelect={handleSelect}
                                         selected={Boolean(
-                                            selectedAppointment && timeSlot?.date === selectedAppointment.date
+                                            selectedSlot && timeSlot?.date === selectedSlot.date
                                         )}
                                         timeSlot={timeSlot}
                                         key={moment(timeSlot.date).toISOString()}

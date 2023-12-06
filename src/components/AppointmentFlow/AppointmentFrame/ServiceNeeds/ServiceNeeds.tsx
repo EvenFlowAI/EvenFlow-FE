@@ -149,7 +149,6 @@ export const ServiceNeeds: React.FC<TProps> = ({
         if (!userType) dispatch(setUserType(EUserType.New))
     }, [userType])
 
-
     const handleGA = (selectedCategory: IServiceCategory) => {
         const requestsString = selectedCategory.serviceRequests.map(item => `${item.code} (${item.description})`).join(', ');
         ReactGA.event({
@@ -168,7 +167,6 @@ export const ServiceNeeds: React.FC<TProps> = ({
     const clearData = () => {
         dispatch(setAdditionalServicesChosen(false));
         dispatch(selectAppointment(null));
-       // dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(clearAppointmentSteps("appointmentSelection"));
     }
@@ -213,21 +211,17 @@ export const ServiceNeeds: React.FC<TProps> = ({
         if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage || (packageEMenuType !== null));
         if (card.type === EServiceCategoryType.ValueService) return Boolean(valueService?.selectedService);
         if (card.type === EServiceCategoryType.OpenRecalls) {
-            return Boolean(selectedRecalls.length
-                // && categoriesIds?.includes(card.id)
-            );
+            return Boolean(selectedRecalls.length);
         }
         if (card.type === EServiceCategoryType.IndividualServices) {
             return Boolean(serviceCategories
                 .find(cat => cat.type === EServiceCategoryType.IndividualServices
-                    // && categoriesIds.includes(card.id)
                     && card.id === cat.id
                     && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
         }
         if (card.type === EServiceCategoryType.Diagnose) {
             return Boolean(serviceCategories
                 .find(cat => cat.type === EServiceCategoryType.Diagnose
-                    // && categoriesIds.includes(card.id)
                     && card.id === cat.id
                     && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
         }
