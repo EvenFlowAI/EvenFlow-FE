@@ -41,7 +41,7 @@ const App = () => {
             const lastReloading = localStorage.getItem('timestamp')
             const isBefore = moment(lastReloading).utc().isBefore(timeNow, 'day')
 
-            if (isBefore) {
+            if (isBefore || !lastReloading) {
                 localStorage.setItem('timestamp', moment().utc(true).toISOString())
                 history.go(0)
             }
