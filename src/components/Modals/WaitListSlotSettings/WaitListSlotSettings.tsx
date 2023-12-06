@@ -9,7 +9,7 @@ import {Button, Switch} from "@material-ui/core";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {makeStyles} from "@material-ui/core/styles";
 import {DialogProps} from "../types";
-import {SwitcherLabel} from "../../Optimizer/AppointmentAllocation/WaitlistSwitcher";
+import {SwitcherLabel} from "../../Optimizer/AppointmentAllocation/OverbookingFactor/WaitlistSwitcher";
 
 const useStyles = makeStyles(() => ({
     inputWrapper: {

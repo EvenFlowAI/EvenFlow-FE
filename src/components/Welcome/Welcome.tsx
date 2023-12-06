@@ -1,11 +1,11 @@
 import React, {useEffect, useMemo, useState} from 'react';
 
-import {CustomerSelect} from "./CustomerSelect";
+import {CustomerSelect} from "./CustomerSelect/CustomerSelect";
 import {useHistory, useParams} from 'react-router-dom';
 import {Routes} from "../../config/routes";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
-import {WelcomeLayout} from "./WelcomeLayout";
+import {WelcomeLayout} from "./Layouts/WelcomeLayout";
 import {TView} from "./types";
 import {
     clearStorage,
@@ -18,7 +18,7 @@ import {
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {useException, useLayout, useModal, useStorage} from "../../utils/hooks";
-import {FrameWelcomeLayout} from "./FrameWelcomeLayout";
+import {FrameWelcomeLayout} from "./Layouts/FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../theme/theme";
 import {
@@ -30,7 +30,7 @@ import {
     setVehicle,
     setWelcomeScreenView, setZipCode
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import ServiceTypeSelect from "./ServiceTypeSelect";
+import ServiceTypeSelect from "./ServiceTypeSelect/ServiceTypeSelect";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
 import ReactGA from "react-ga4";
 //import ReactGA from "react-ga";
@@ -41,7 +41,7 @@ import {loadFirstScreenOptionsByQuery} from "../../store/reducers/serviceTypes/a
 import {
     loadCustomersByPhoneOrEmail, setCustomerSearchData,
 } from "../../store/reducers/enhancedCustomerSearch/actions";
-import SelectServiceCenter from "./SelectServiceCenter";
+import ServiceCenterSelect from "./ServiceCenterSelect/ServiceCenterSelect";
 import {initialCustomerSearch} from "../../store/reducers/enhancedCustomerSearch/reducer";
 
 export const Welcome = () => {
@@ -200,7 +200,7 @@ export const Welcome = () => {
     const getComponent = () => {
         switch (welcomeScreenView) {
             case "serviceCenterSelect":
-                return <SelectServiceCenter/>
+                return <ServiceCenterSelect/>
             case "search":
             case "serviceSelect":
                 return <ServiceTypeSelect loading={loading} handleValueServiceConfig={handleValueServiceConfig}/>;

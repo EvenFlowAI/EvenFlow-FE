@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {Titles} from "../../../config/constants";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {IEndUserConfig} from "../../../qrveyEndUser/types";
+import {IEndUserConfig} from "../../../QrveyEndUser/types";
 import {Api} from "../../../config/requests";
 import {useCurrentUser, useSCs} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
 import {Redirect, Route, Switch} from "react-router-dom";
-import ShopLoading from "../../../qrveyEndUser/ShopLoading";
-import AppointmentsSummary from "../../../qrveyEndUser/AppointmentSummary";
-import ValetAppointments from "../../../qrveyEndUser/ValetAppointments";
-import MobileServiceAppointments from "../../../qrveyEndUser/MobileServiceAppointments";
-import CustomerBehavior from "../../../qrveyEndUser/CustomerBehavior";
-import RepairOrderPerformance from "../../../qrveyEndUser/RepairOrderPerformance";
-import CapacityManagementPerformance from "../../../qrveyEndUser/CapacityManagementPerfomance";
+import ShopLoading from "../../../QrveyEndUser/ShopLoading";
+import AppointmentsSummary from "../../../QrveyEndUser/AppointmentSummary";
+import ValetAppointments from "../../../QrveyEndUser/ValetAppointments";
+import MobileServiceAppointments from "../../../QrveyEndUser/MobileServiceAppointments";
+import CustomerBehavior from "../../../QrveyEndUser/CustomerBehavior";
+import RepairOrderPerformance from "../../../QrveyEndUser/RepairOrderPerformance";
+import CapacityManagementPerformance from "../../../QrveyEndUser/CapacityManagementPerfomance";
 import {TRole} from "../../../store/reducers/users/types";
 
 // const configObject = {

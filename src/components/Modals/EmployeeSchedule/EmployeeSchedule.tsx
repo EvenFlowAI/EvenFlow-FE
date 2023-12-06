@@ -1,6 +1,6 @@
 import React from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
-import {ScheduleCalendar} from "../../Optimizer/EmployeeSchedule/ScheduleCalendar";
+import {ScheduleCalendar} from "../../Optimizer/EmployeeSchedule/parts/ScheduleCalendar";
 import {DialogProps} from "../types";
 
 export const EmployeeSchedule: React.FC<DialogProps> = (props) => {
