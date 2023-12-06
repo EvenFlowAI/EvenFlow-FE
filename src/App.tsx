@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
-import {Route, Switch} from 'react-router-dom';
+import {Route, Switch, useHistory} from 'react-router-dom';
 import {Layout} from "./components/Layout/Layout";
 import {Routes} from "./config/routes";
 import {PrivateRoute} from "./utils/Routes";
@@ -31,18 +31,22 @@ const App = () => {
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
     const notificationsRef = useRef<ProviderContext>();
     const dispatch = useDispatch();
+    const history = useHistory()
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
 
     useEffect(() => {
         const timeNow = moment();
-        const timeToReload = moment().set('hour', 3).set('minute', 0).set("second", 0)
-        if (timeNow.diff(timeToReload) > 0) timeToReload.add(1, 'day')
-        const difference = moment(timeToReload).diff(timeNow, "millisecond", true)
-        setTimeout(() => {
-            localStorage.setItem('lastReloading', moment().utc(true).toISOString())
-            window.location.reload(true)
-        }, difference > 0 ? difference : 0)
+        const intervalId = setInterval(() => {
+            const lastReloading = localStorage.getItem('timestamp')
+            const isBefore = moment(lastReloading).utc().isBefore(timeNow, 'day')
+
+            if (isBefore || !lastReloading) {
+                localStorage.setItem('timestamp', moment().utc(true).toISOString())
+                history.go(0)
+            }
+        }, 10000)
+        return () => clearInterval(intervalId);
     }, [])
 
     useEffect(() => {
