@@ -20,7 +20,7 @@ import {
     setSideBarSteps,
     setStreetName,
     setWelcomeScreenView,
-    setZipCode, setDefaultVisitCenterOption, showPrevScreen
+    setZipCode, setDefaultVisitCenterOption, showPrevScreen, setPassedScreens
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {
@@ -140,6 +140,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         ancillaryPriceLoading,
         sideBarSteps,
         advisor,
+        passedScreens
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {isAdvisorAvailable, isAppointmentTimingAvailable, config} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -202,23 +203,24 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         }
     }
 
-    const goToSlotsSelection = (prevOption?: IFirstScreenOption|undefined) => {
+    const goForwardToSlots = () => {
+        dispatch(setCurrentFrameScreen(isAdvisorAvailable && !advisor
+            ? 'consultantSelection'
+            : isAppointmentTimingAvailable
+                ? "appointmentTiming"
+                : 'appointmentSelection'))
+    }
+
+    const goBackToSlots = (prevOption?: IFirstScreenOption|undefined) => {
         if (prevOption) {
             const prevConfig = config.find(el => el.serviceType === prevOption.type)
             const advisorsStepNeeded = prevConfig?.advisorSelection && sideBarSteps[sideBarSteps.length - 1] === "consultantSelection";
-            dispatch(showPrevScreen())
-            // dispatch(setCurrentFrameScreen( advisorsStepNeeded
-            //     ? 'consultantSelection'
-            //     : prevConfig?.appointmentSelection
-            //         ? "appointmentTiming"
-            //         : 'appointmentSelection'))
-        } else {
-            dispatch(showPrevScreen())
-            // dispatch(setCurrentFrameScreen(isAdvisorAvailable && !advisor
-            //     ? 'consultantSelection'
-            //     : isAppointmentTimingAvailable
-            //         ? "appointmentTiming"
-            //         : 'appointmentSelection'))
+            dispatch(setPassedScreens(passedScreens.slice(0, passedScreens.length - 1)))
+            dispatch(setCurrentFrameScreen( advisorsStepNeeded
+                ? 'consultantSelection'
+                : prevConfig?.appointmentSelection
+                    ? "appointmentTiming"
+                    : 'appointmentSelection'))
         }
     }
 
@@ -229,7 +231,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                 : handleManagingFlow();
         } else {
             changedToPickUpFromSlots
-                ? goToSlotsSelection()
+                ? goForwardToSlots()
                 : onNext();
         }
     }
@@ -282,7 +284,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     const setPrevSelectedOption = () => {
         if (prevSelectedOption) {
             dispatch(setServiceTypeOption(prevSelectedOption))
-            goToSlotsSelection(prevSelectedOption)
+            goBackToSlots(prevSelectedOption)
         }
     }
 
