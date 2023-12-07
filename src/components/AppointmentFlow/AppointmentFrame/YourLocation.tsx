@@ -214,13 +214,17 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     const goBackToSlots = (prevOption?: IFirstScreenOption|undefined) => {
         if (prevOption) {
             const prevConfig = config.find(el => el.serviceType === prevOption.type)
-            const advisorsStepNeeded = prevConfig?.advisorSelection && sideBarSteps[sideBarSteps.length - 1] === "consultantSelection";
-            dispatch(setPassedScreens(passedScreens.slice(0, passedScreens.length - 1)))
-            dispatch(setCurrentFrameScreen( advisorsStepNeeded
-                ? 'consultantSelection'
-                : prevConfig?.appointmentSelection
-                    ? "appointmentTiming"
-                    : 'appointmentSelection'))
+            const advisorsStepNeeded = prevConfig?.advisorSelection
+                && sideBarSteps[sideBarSteps.length - 1] === "consultantSelection"
+            advisorsStepNeeded
+                ? dispatch(setCurrentFrameScreen( 'consultantSelection'))
+                : dispatch(showPrevScreen())
+            // dispatch(setPassedScreens(passedScreens.slice(0, passedScreens.length - 1)))
+            // dispatch(setCurrentFrameScreen( advisorsStepNeeded
+            //     ? 'consultantSelection'
+            //     : prevConfig?.appointmentSelection
+            //         ? "appointmentTiming"
+            //         : 'appointmentSelection'))
         }
     }
 
