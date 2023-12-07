@@ -226,9 +226,9 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
     }, [slots, selectedTime, appointment, serviceTypeOption, serviceValetSlots, serviceValetAppointment]);
 
     const clearData = () => {
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
-        dispatch(clearAppointmentSteps("appointmentSelection"));
+        // dispatch(selectAppointment(null));
+        // dispatch(selectServiceValetAppointment(null));
+        // dispatch(clearAppointmentSteps("appointmentSelection"));
         setSelectedSlot(null);
         setSelectedSVSlot(null);
     }
@@ -375,6 +375,7 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
     const handleNext = useCallback((): void => {
         handleGANext();
         saveSelectedSlot();
+        dispatch(clearAppointmentSteps("appointmentSelection"));
         dispatch(setTransportation(null))
         if (customerData?.isUpdating) {
             handleTransportation()
