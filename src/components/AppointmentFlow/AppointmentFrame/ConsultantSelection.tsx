@@ -120,7 +120,9 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         packageEMenuType,
         isConsultantsLoading,
         serviceOptionChangedFromSlotPage,
-        prevSelectedOption
+        prevSelectedOption,
+        passedScreens,
+        prevScreen
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
@@ -144,8 +146,28 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             .map(item => item.id)
     }, [allCategories, EServiceCategoryType, categoriesIds])
 
+    const handleBack = useCallback(() => {
+        if (serviceOptionChangedFromSlotPage && customerLoadedData?.isUpdating && prevSelectedOption) {
+            dispatch(setServiceTypeOption(prevSelectedOption))
+        }
+        dispatch(showPrevScreen())
+        // isGoingFromManageScreen
+        //     ? dispatch(setCurrentFrameScreen("manageAppointment"))
+        //     : serviceOptionChangedFromSlotPage && customerLoadedData?.isUpdating
+        //         ? onBackToPrevServiceOption()
+        //         : onBack()
+    }, [serviceOptionChangedFromSlotPage, customerLoadedData, prevSelectedOption])
+
+    const handleNextScreen = useCallback(() => {
+        if (prevScreen === 'appointmentSelection'  || prevScreen === 'consultantSelection'  || (prevScreen === "appointmentTiming" && isAppointmentTimingAvailable)) {
+            handleBack()
+        } else {
+            onNext()
+        }
+    }, [handleBack, prevScreen])
+
     useEffect(() => {
-        dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, onNext))
+        dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, handleNextScreen))
     }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage, serviceTypeOption])
 
     useEffect(() => {
@@ -176,18 +198,6 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     const onBackToPrevServiceOption = () => {
         if (prevSelectedOption) dispatch(setServiceTypeOption(prevSelectedOption))
         dispatch(setCurrentFrameScreen("appointmentSelection"))
-    }
-
-    const handleBack = () => {
-        if (serviceOptionChangedFromSlotPage && customerLoadedData?.isUpdating && prevSelectedOption) {
-            dispatch(setServiceTypeOption(prevSelectedOption))
-        }
-        dispatch(showPrevScreen())
-        // isGoingFromManageScreen
-        //     ? dispatch(setCurrentFrameScreen("manageAppointment"))
-        //     : serviceOptionChangedFromSlotPage && customerLoadedData?.isUpdating
-        //         ? onBackToPrevServiceOption()
-        //         : onBack()
     }
 
     return (<StepWrapper>
