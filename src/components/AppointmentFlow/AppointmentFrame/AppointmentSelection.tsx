@@ -105,6 +105,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         isConsultantsLoading,
         serviceOptionChangedFromSlotPage,
         passedScreens,
+        sideBarStepsList
     ] = useSelector((state: RootState) => [
         state.appointment.appointmentSlots,
         state.appointment.serviceValetSlots,
@@ -143,6 +144,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
         state.appointmentFrame.isConsultantsLoading,
         state.appointmentFrame.serviceOptionChangedFromSlotPage,
         state.appointmentFrame.passedScreens,
+        state.appointmentFrame.sideBarStepsList,
     ]);
 
     const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
@@ -391,11 +393,13 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
                 ? 'consultantSelection'
                 : "serviceNeeds"
         const isManageFlow = customerData?.isUpdating && !isUsualFlowNeeded
+
         if (prevScreen && isManageFlow) {
-            previousLogicalScreen = prevScreen
+            const prevScreenIsAvailable = sideBarStepsList.includes(prevScreen)
+            if (prevScreenIsAvailable) previousLogicalScreen = prevScreen
         }
         return previousLogicalScreen
-    }, [currentConfig, isAdvisorAvailable, customerData, isUsualFlowNeeded, prevScreen])
+    }, [currentConfig, isAdvisorAvailable, customerData, isUsualFlowNeeded, prevScreen, sideBarStepsList])
 
     const handleBack = useCallback((): void => {
         handleGABack();
@@ -409,7 +413,7 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
            // dispatch(showPrevScreen())
             handleSetScreen(prevScreen);
         }
-    }, [currentConfig, history, fromServiceValetToVisitCenter, passedScreens, serviceOptionChangedFromSlotPage])
+    }, [currentConfig, history, fromServiceValetToVisitCenter, serviceOptionChangedFromSlotPage])
 
     return (
         <StepWrapper>

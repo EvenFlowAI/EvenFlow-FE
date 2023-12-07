@@ -347,7 +347,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const handleBack = () => {
         if (serviceOptionChangedFromSlotPage) {
-            setPrevSelectedOption()
+             setPrevSelectedOption()
         } else {
             if (customerLoadedData?.isUpdating && appointmentByKey) {
                 onBackFromManage()
