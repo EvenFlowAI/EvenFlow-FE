@@ -154,7 +154,7 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
     }
 
     const handleBack = useCallback(() => {
-        if (serviceOptionChangedFromSlotPage && customerLoadedData?.isUpdating && prevSelectedOption) {
+        if (serviceOptionChangedFromSlotPage && prevSelectedOption) {
             dispatch(setPrevServiceTypeOption())
             isGoingFromManageScreen
                 ? dispatch(setCurrentFrameScreen("manageAppointment"))
