@@ -406,18 +406,8 @@ export const AppointmentSelection: React.FC<TAppointmentSelectionProps> = ({hand
             dispatch(setWelcomeScreenView("serviceSelect"))
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
-            dispatch(showPrevScreen())
-            // if (serviceOptionChangedFromSlotPage) {
-            //     const lastScreen =  passedScreens[passedScreens.length - 1]
-            //     if (lastScreen === 'consultantSelection' && !isAdvisorAvailable) {
-            //         dispatch(setPassedScreens(passedScreens.slice(0, passedScreens.length - 2)))
-            //     } else {
-            //         dispatch(setPassedScreens(passedScreens.slice(0, passedScreens.length - 1)))
-            //     }
-            //     handleSetScreen(prevScreen);
-            // } else {
-            //
-            // }
+           // dispatch(showPrevScreen())
+            handleSetScreen(prevScreen);
         }
     }, [currentConfig, history, fromServiceValetToVisitCenter, passedScreens, serviceOptionChangedFromSlotPage])
 

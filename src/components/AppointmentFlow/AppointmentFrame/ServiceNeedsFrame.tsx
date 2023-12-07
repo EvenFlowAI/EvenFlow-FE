@@ -106,8 +106,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         const firstScreenOptionsUnavailable = !firstScreenOptions.length || onlyVisitCenterOptionExists || isManagingAppointment;
         const needsToShowCarsSelection = userType === EUserType.Existing && !currentUser && firstScreenOptionsUnavailable;
         if (notVisitCenterSelected || needsToShowCarsSelection) {
-            dispatch(showPrevScreen())
-            //onBack()
+            onBack()
         } else {
             history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
         }
@@ -118,8 +117,8 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
             setPage(EServiceCategoryPage.Page1);
         } else {
             if (isManagingAppointment) {
-                dispatch(showPrevScreen())
-                //dispatch(setCurrentFrameScreen("manageAppointment"))
+                //dispatch(showPrevScreen())
+                dispatch(setCurrentFrameScreen("manageAppointment"))
             } else {
                 if (currentUser) dispatch(setShowServiceCentersList(false));
                 handleBackScreen()

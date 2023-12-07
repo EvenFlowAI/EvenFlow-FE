@@ -237,8 +237,8 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
     }
 
     const handleBack = () => {
-        dispatch(showPrevScreen())
-       // handleSetScreen('serviceNeeds');
+       // dispatch(showPrevScreen())
+       handleSetScreen('serviceNeeds');
     }
 
     const addServices = () => {

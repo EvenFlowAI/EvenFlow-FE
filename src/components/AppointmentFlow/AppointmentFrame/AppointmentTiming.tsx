@@ -112,13 +112,13 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
         if (fromServiceValetToVisitCenter) {
             redirectToServiceTypeOptions()
         } else {
-            dispatch(showPrevScreen())
-            // const fromSlotEditing = editingPosition === 'slot' && customerLoadedData?.isUpdating
-            // if (fromSlotEditing) {
-            //     handleSetScreen("manageAppointment")
-            // } else {
-            //     handleSetScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')
-            // }
+            //dispatch(showPrevScreen())
+            const fromSlotEditing = editingPosition === 'slot' && customerLoadedData?.isUpdating
+            if (fromSlotEditing) {
+                handleSetScreen("manageAppointment")
+            } else {
+                handleSetScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')
+            }
         }
     }
 

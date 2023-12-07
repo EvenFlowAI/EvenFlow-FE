@@ -20,7 +20,7 @@ import {
     setSideBarSteps,
     setStreetName,
     setWelcomeScreenView,
-    setZipCode, setDefaultVisitCenterOption, showPrevScreen, setPassedScreens
+    setZipCode, setDefaultVisitCenterOption, showPrevScreen, setPassedScreens, setPrevServiceTypeOption
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {makeStyles} from "@material-ui/core/styles";
 import {
@@ -216,15 +216,15 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
             const prevConfig = config.find(el => el.serviceType === prevOption.type)
             const advisorsStepNeeded = prevConfig?.advisorSelection
                 && sideBarSteps[sideBarSteps.length - 1] === "consultantSelection"
-            advisorsStepNeeded
-                ? dispatch(setCurrentFrameScreen( 'consultantSelection'))
-                : dispatch(showPrevScreen())
-            // dispatch(setPassedScreens(passedScreens.slice(0, passedScreens.length - 1)))
-            // dispatch(setCurrentFrameScreen( advisorsStepNeeded
-            //     ? 'consultantSelection'
-            //     : prevConfig?.appointmentSelection
-            //         ? "appointmentTiming"
-            //         : 'appointmentSelection'))
+            // advisorsStepNeeded
+            //     ? dispatch(setCurrentFrameScreen( 'consultantSelection'))
+            //     : dispatch(showPrevScreen())
+            //dispatch(setPassedScreens(passedScreens.slice(0, passedScreens.length - 1)))
+            dispatch(setCurrentFrameScreen( advisorsStepNeeded
+                ? 'consultantSelection'
+                : prevConfig?.appointmentSelection
+                    ? "appointmentTiming"
+                    : 'appointmentSelection'))
         }
     }
 
@@ -287,7 +287,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
     const setPrevSelectedOption = () => {
         if (prevSelectedOption) {
-            dispatch(setServiceTypeOption(prevSelectedOption))
+            dispatch(setPrevServiceTypeOption())
             goBackToSlots(prevSelectedOption)
         }
     }
@@ -309,8 +309,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         setPrevServiceType()
         restoreAddress()
         if (editingPosition === 'address') {
-            dispatch(showPrevScreen())
-           // dispatch(setCurrentFrameScreen('manageAppointment'))
+            //dispatch(showPrevScreen())
+           dispatch(setCurrentFrameScreen('manageAppointment'))
         } else {
             goToFirstScreen().then()
         }

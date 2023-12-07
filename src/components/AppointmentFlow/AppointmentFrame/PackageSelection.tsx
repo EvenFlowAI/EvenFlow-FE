@@ -354,8 +354,8 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
             action: 'Went back',
             label: 'From Selection Package Page',
         })
-        dispatch(showPrevScreen())
-        // onBack();
+        //dispatch(showPrevScreen())
+        onBack();
     }
 
     const addServices = (): void => {

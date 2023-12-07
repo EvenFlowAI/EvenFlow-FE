@@ -308,9 +308,9 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     }
 
     const handleBack = () => {
-        dispatch(showPrevScreen())
-        // onBack(service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
-        //     ? 'opsCode' : 'serviceNeeds');
+       // dispatch(showPrevScreen())
+        onBack(service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
+            ? 'opsCode' : 'serviceNeeds');
     }
 
     const handleDeclineRecalls = () => {

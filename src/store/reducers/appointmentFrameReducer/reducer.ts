@@ -71,7 +71,7 @@ import {
     getTransactionValue,
     setSelectedServiceTypeOptions,
     setPassedScreens,
-    showPrevScreen,
+    showPrevScreen, setPrevServiceTypeOption,
 } from "./actions";
 import {
     EMaintenanceOptionType, IAppointmentByKey,
@@ -454,6 +454,9 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
             selectedServiceOptions: payload && !optionIsInTheList ? [...state.selectedServiceOptions, payload] : state.selectedServiceOptions,
             prevSelectedOption: state.serviceTypeOption,
         };
+    })
+    .addCase(setPrevServiceTypeOption, (state) => {
+        return {...state, serviceTypeOption: state.prevSelectedOption, prevSelectedOption: null}
     })
     .addCase(setPackagePricingType, (state, {payload}) => {
         return {...state, packagePricingType: payload}

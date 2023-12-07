@@ -256,12 +256,12 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     const handleBack = () => {
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-            dispatch(showPrevScreen())
-            //dispatch(setCurrentFrameScreen("manageAppointment"))
+            //dispatch(showPrevScreen())
+            dispatch(setCurrentFrameScreen("manageAppointment"))
         } else {
             dispatch(setTransportation(null));
-            dispatch(showPrevScreen())
-           // onBack();
+            //dispatch(showPrevScreen())
+           onBack();
         }
     }
 

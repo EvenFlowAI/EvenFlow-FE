@@ -106,8 +106,8 @@ export const AddInfo: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
     const handleBack = () => {
         removeLastCategory();
         clearData();
-        dispatch(showPrevScreen())
-        //handleSetScreen("serviceNeeds");
+        //dispatch(showPrevScreen())
+        handleSetScreen("serviceNeeds");
     }
 
     return (

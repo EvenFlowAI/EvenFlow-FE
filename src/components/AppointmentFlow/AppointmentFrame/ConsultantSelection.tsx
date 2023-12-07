@@ -14,7 +14,7 @@ import {
     setCurrentFrameScreen, setServiceTypeOption,
     setSideBarActualSteps,
     setSideBarMenu,
-    setSideBarStepsList
+    setSideBarStepsList, setPrevServiceTypeOption
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -146,28 +146,40 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
             .map(item => item.id)
     }, [allCategories, EServiceCategoryType, categoriesIds])
 
+    const onBackToPrevServiceOption = () => {
+        if (prevSelectedOption) {
+            dispatch(setPrevServiceTypeOption())
+        }
+        dispatch(setCurrentFrameScreen("appointmentSelection"))
+    }
+
     const handleBack = useCallback(() => {
         if (serviceOptionChangedFromSlotPage && customerLoadedData?.isUpdating && prevSelectedOption) {
-            dispatch(setServiceTypeOption(prevSelectedOption))
+            dispatch(setPrevServiceTypeOption())
+            isGoingFromManageScreen
+                ? dispatch(setCurrentFrameScreen("manageAppointment"))
+                : dispatch(setCurrentFrameScreen("appointmentSelection"))
+        } else {
+            isGoingFromManageScreen
+                ? dispatch(setCurrentFrameScreen("manageAppointment"))
+                : onBack()
         }
-        dispatch(showPrevScreen())
-        // isGoingFromManageScreen
-        //     ? dispatch(setCurrentFrameScreen("manageAppointment"))
-        //     : serviceOptionChangedFromSlotPage && customerLoadedData?.isUpdating
-        //         ? onBackToPrevServiceOption()
-        //         : onBack()
-    }, [serviceOptionChangedFromSlotPage, customerLoadedData, prevSelectedOption])
 
-    const handleNextScreen = useCallback(() => {
-        if (prevScreen === 'appointmentSelection'  || prevScreen === 'consultantSelection'  || (prevScreen === "appointmentTiming" && isAppointmentTimingAvailable)) {
+    }, [serviceOptionChangedFromSlotPage, customerLoadedData, prevSelectedOption, isGoingFromManageScreen])
+
+    const handleEmptyScreen = useCallback(() => {
+        const isGoingBack = prevScreen === 'appointmentSelection'
+            || prevScreen === 'consultantSelection'
+            || (prevScreen === "appointmentTiming" && isAppointmentTimingAvailable)
+        if (isGoingBack) {
             handleBack()
         } else {
             onNext()
         }
-    }, [handleBack, prevScreen])
+    }, [handleBack, prevScreen, isAppointmentTimingAvailable])
 
     useEffect(() => {
-        dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, handleNextScreen))
+        dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, handleEmptyScreen))
     }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage, serviceTypeOption])
 
     useEffect(() => {
@@ -193,11 +205,6 @@ export const ConsultantSelection: React.FC<TActionProps> = ({onNext, onBack}) =>
         if (isGoingFromManageScreen) {
             dispatch(checkPodChanged(decodeSCID(id), showError))
         } else onNext()
-    }
-
-    const onBackToPrevServiceOption = () => {
-        if (prevSelectedOption) dispatch(setServiceTypeOption(prevSelectedOption))
-        dispatch(setCurrentFrameScreen("appointmentSelection"))
     }
 
     return (<StepWrapper>
