@@ -107,12 +107,14 @@ export const loadCustomersByPhoneOrEmail = (
                     phoneNumbers: phoneNumber ? [phoneNumber] : [],
                     vehicles: vehiclesData,
                 }
-                if (customer.address) data.address = customer.address;
-                const {city, state, zipCode, fullAddress} = customer.address;
-                dispatch(setCity(city ?? ''))
-                dispatch(setPoliticalState(state ?? ''));
-                dispatch(setAddress(fullAddress ?? null));
-                dispatch(setZipCode(zipCode ?? ''));
+                if (customer.address) {
+                    data.address = customer.address;
+                    const {city, state, zipCode, fullAddress} = customer.address;
+                    dispatch(setCity(city ?? ''))
+                    dispatch(setPoliticalState(state ?? ''));
+                    dispatch(setAddress(fullAddress ?? null));
+                    dispatch(setZipCode(zipCode ?? ''));
+                }
                 dispatch(setCustomerLoadedData(data));
                 dispatch(saveAppointmentReducer());
                 dispatch(setCurrentFrameScreen("carSelection"));
