@@ -5,8 +5,8 @@ import {pricingRoot} from "../utils";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TabList} from "../../UI/Tabs";
-import GeographicZones from "./GeographicZones";
-import GeographicZonesMap from "./GeographicZonesMap";
+import GeographicZones from "./GeograficZones/GeographicZones";
+import GeographicZonesMap from "./GeograficZonesMap/GeographicZonesMap";
 import AddEditGeographicZone from "../../Modals/EditGeographicZone/AddEditGeographicZone";
 import AncillaryPrice from "./AncillaryPrice/AncillaryPrice";
 

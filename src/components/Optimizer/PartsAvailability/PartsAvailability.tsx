@@ -4,8 +4,8 @@ import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
 import {TabList} from "../../UI/Tabs";
 import {Tab} from "@material-ui/core";
-import RecallParts from "./RecallParts";
-import AllOtherParts from "./AllOtherParts";
+import RecallParts from "./RecallParts/RecallParts";
+import AllOtherParts from "./AllOtherParts/AllOtherParts";
 
 const PartsAvailability = () => {
     const [selectedTab, setTab] = useState<string>("0");

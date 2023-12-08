@@ -4,10 +4,10 @@ import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
 import {TabList} from "../../UI/Tabs";
 import {Tab} from "@material-ui/core";
-import {ScheduledAppointments} from "./ScheduledAppointments";
-import RoPredictionParameters from "./RoPredictionParameters";
-import {OverbookingFactor} from "./OverbookingFactor";
-import {UnplannedDemand} from "./UnplannedDemand";
+import {ScheduledAppointments} from "./ScheduledAppointments/ScheduledAppointments";
+import RoPredictionParameters from "./RoPredictionParameters/RoPredictionParameters";
+import {OverbookingFactor} from "./OverbookingFactor/OverbookingFactor";
+import {UnplannedDemand} from "./UnplannedDemand/UnplannedDemand";
 
 export const AppointmentAllocationPage = () => {
     const [selectedTab, setTab] = useState<string>("0");

@@ -1,3 +1,6 @@
+import {IRemappedAppointmentSlot} from "../appointment/types";
+import React from "react";
+
 export interface IAppointmentId {
     id: number;
     hashKey: string;
@@ -85,3 +88,8 @@ export enum EPackagePricingType {
 }
 
 export type TEditingPosition = 'address' | 'serviceOption' | 'slot' | 'serviceRequests' | 'advisor' | 'transportation'
+
+export type TPopoverProps = {
+    onPopoverOpen: (appointment: IRemappedAppointmentSlot) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+    onPopoverClose: () => void;
+}

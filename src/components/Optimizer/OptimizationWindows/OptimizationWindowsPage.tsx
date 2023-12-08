@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
-import {OptimizationPlate} from "./OptimizationPlate";
+import {OptimizationPlate} from "./parts/OptimizationPlate";
 import {Grid} from "@material-ui/core";
 import {DemandSegments} from "../../Modals/DemandSegments/DemandSegments";
 import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
@@ -15,12 +15,12 @@ import {
     optimizationWindowsList,
     TOptContent
 } from "../../../store/reducers/optimizationWindows/types";
-import {OptimizationDialog} from "./OptimizationWindowDialog";
-import {AppointmentCutoffDialog} from "./AppointmentCutoffDialog";
+import {OptimizationDialog} from "./parts/OptimizationWindowDialog";
+import {AppointmentCutoffDialog} from "./parts/AppointmentCutoffDialog";
 import moment from "moment";
 import {timeSpanString} from "../../../config/constants";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
-import {MaxPriceDateRangeDialog} from "./MaxPriceDateRangeDialog";
+import {MaxPriceDateRangeDialog} from "./parts/MaxPriceDateRangeDialog";
 
 type TOptParam = {
     [k in EOptimizationWindowType]: IOptimizationWindow;

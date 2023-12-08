@@ -26,7 +26,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {IAddressData, ICustomerLoadedData} from "../../../api/types";
 import {
     clearAppointmentData,
-    setAddress, setServiceOptionChanged,
+    setAddress, setPassedScreens, setServiceOptionChanged,
     setServiceTypeOption,
     setSideBarSteps,
     setUserType,
@@ -45,7 +45,7 @@ import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../utils/utils";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import VehicleRepairHistory from "../VehicleRepairHistory/VehicleRepairHistory";
-import CancelAppointmentConfirm from "../CancelAppoitntmentConfirm/CancelAppointmentConfirm";
+import ConfirmCancelAppointment from "../ConfirmCancelAppoitntment/ConfirmCancelAppointment";
 import {TColumn, TSortColumn} from "./types";
 
 const useStyles = makeStyles(theme => ({
@@ -258,6 +258,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
         await dispatch(clearAppointmentData());
         dispatch(setServiceOptionChanged(false));
         await dispatch(setSideBarSteps([]));
+        dispatch(setPassedScreens([]));
         await setCustomerData(item, false);
         await dispatch(setUserType(EUserType.Existing));
         if (firstScreenOptions?.length) {
@@ -648,7 +649,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
 
                 {editingElement ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={editingElement.vehicleDmsId}/> : null}
                 {editingElement?.appointmentHashKey
-                    ? <CancelAppointmentConfirm
+                    ? <ConfirmCancelAppointment
                         open={isOpenConfirm}
                         onClose={onCloseConfirm}
                         loadData={loadData}

@@ -16,14 +16,10 @@ import {EPackagePricingType} from "../store/reducers/appointmentFrameReducer/typ
 import {ETransportColumn} from "../store/reducers/transportationNeeds/types";
 import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
-import {EPricingDisplayType} from "../store/reducers/pricingSettings/types";
 import {TScheduler, TServiceBook} from "../store/reducers/appointments/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 export type TApiEndpoint<T = any, R = any> = (arg: T) => TApiResponse<R>;
-export type TApiView = Record<string, TApiEndpoint>;
-
-export type TApi = Record<string, TApiView>;
 
 export type TServiceRequestAssigned = {
     type: number;
@@ -48,10 +44,6 @@ export enum EServiceCenterName {
     LexusCincinnati,
     LexusRiverCenter,
     DealerBuilt,
-}
-
-export enum EVehiclePropType {
-    Make, Model, Transmission, DriveType, EngineType
 }
 
 export enum ECustomerCriteria {
@@ -193,19 +185,6 @@ export const jobTypes: TEnumKeyLabel<EJobType> = {
     [EJobType.Recall]: "Recall",
 }
 
-export interface IMaintenancePackageOption {
-    name: string;
-    maintenancePackageName: string;
-    maintenancePackageId?: number;
-    id?: number;
-}
-
-export type TAppointmentRecall = {
-    number: string;
-    serviceRequestId: number;
-    shortDescription: string;
-}
-
 export interface IBaseAppointment {
     id: number;
     hashKey: string;
@@ -242,13 +221,6 @@ export interface IListAppointment extends IBaseAppointment {
     serviceCategory: ICategory|null;
 }
 
-export type TDetailedAppointmentPrice = {
-    requestName: string;
-    priceValue: number;
-    pricingDisplayType?: EPricingDisplayType;
-    offer?: IOfferForCategory;
-}
-
 export type TServiceValetSlot = {
     pickUpMin: string;
     pickUpMax: string;
@@ -268,11 +240,6 @@ export interface IAddressData {
 export type TAppointmentAdvisor = {
     isAnySelected: boolean;
     id?: string|null;
-}
-
-export type TWaitListTextSettings = {
-    text?: string;
-    textHex?: string;
 }
 
 export interface IAppointmentByKey extends IBaseAppointment {

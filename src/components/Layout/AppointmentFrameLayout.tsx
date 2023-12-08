@@ -1,21 +1,20 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {MuiThemeProvider, styled, useMediaQuery, useTheme} from "@material-ui/core";
-import {AppointmentCarSelection} from "../AppointmentFlow/AppointmentFrame/AppointmentCarSelection";
+import {CarSelection} from "../AppointmentFlow/AppointmentFrame/CarSelection/CarSelection";
 import {frameTheme} from "../../theme/theme";
 import {TMobileScreen, TScreen} from "./types";
-import {ServiceNeedsFrame} from "../AppointmentFlow/AppointmentFrame/ServiceNeedsFrame";
-import {SideBar} from "../AppointmentFlow/AppointmentFrame/SideBar";
+import {ServiceNeeds} from "../AppointmentFlow/AppointmentFrame/ServiceNeeds/ServiceNeeds";
+import {SideBarSteps} from "../AppointmentFlow/AppointmentFrame/SideBarSteps/SideBarSteps";
 import {Subtitle, Title} from "../AppointmentFlow/AppointmentFrame/Title";
-import {MaintenanceDetails} from "../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
-import {ConsultantSelection} from '../AppointmentFlow/AppointmentFrame/ConsultantSelection';
-import {AppointmentTiming} from '../AppointmentFlow/AppointmentFrame/AppointmentTiming';
-import {AppointmentSelection} from '../AppointmentFlow/AppointmentFrame/AppointmentSelection';
-import {TransportationNeeds} from '../AppointmentFlow/AppointmentFrame/TransportationNeeds';
-import {AppointmentConfirmationFrame} from '../AppointmentFlow/AppointmentFrame/AppointmentConfirmationFrame';
-import {AddInfo} from "../AppointmentFlow/AppointmentFrame/AddInfo";
-import {ServiceSelection} from "../AppointmentFlow/AppointmentFrame/ServiceSelection";
-import {PackageSelection} from "../AppointmentFlow/AppointmentFrame/PackageSelection";
-import {SelectOpsCode} from "../AppointmentFlow/AppointmentFrame/SelectOpsCode";
+import {MaintenanceDetails} from "../AppointmentFlow/AppointmentFrame/MaintenanceDetails/MaintenanceDetails";
+import {AdvisorSelection} from '../AppointmentFlow/AppointmentFrame/AdvisorSelection/AdvisorSelection';
+import {AppointmentTiming} from '../AppointmentFlow/AppointmentFrame/AppointmentTiming/AppointmentTiming';
+import {AppointmentSlots} from '../AppointmentFlow/AppointmentFrame/AppointmentSlots/AppointmentSlots';
+import {TransportationNeeds} from '../AppointmentFlow/AppointmentFrame/TransportationNeeds/TransportationNeeds';
+import {AppointmentConfirmationScreen} from '../AppointmentFlow/AppointmentFrame/AppointmentConfirmation/AppointmentConfirmationScreen';
+import {CommentScreen} from "../AppointmentFlow/AppointmentFrame/CommentScreen/CommentScreen";
+import {MaintenancePackage} from "../AppointmentFlow/AppointmentFrame/MaintenancePackage/MaintenancePackage";
+import {OpsCodes} from "../AppointmentFlow/AppointmentFrame/OpsCodes/OpsCodes";
 import {Routes} from "../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -28,8 +27,7 @@ import {
     setCustomerLoadedData, setWaitListSettings
 } from "../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
-import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed";
-import {VehicleData} from "../AppointmentFlow/AppointmentFrame/VehicleData";
+import {AppointmentConfirmed} from "../AppointmentFlow/AppointmentFrame/AppointmentConfirmed/AppointmentConfirmed";
 import {API} from "../../api/api";
 import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../utils/hooks";
 import {
@@ -53,14 +51,14 @@ import {
     updateRecalls
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {EServiceCategoryPage, IAppointmentByKey, ILoadedVehicle, IServiceCategory} from "../../api/types";
-import './MaintenanceDetails.css';
+import '../AppointmentFlow/AppointmentFrame/MaintenanceDetails/MaintenanceDetails.css';
 import ReactGA from "react-ga4";
 // import ReactGA from "react-ga";
-import YourLocation from "../AppointmentFlow/AppointmentFrame/YourLocation";
+import LocationScreen from "../AppointmentFlow/AppointmentFrame/LocationScreen/LocationScreen";
 import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
-import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen";
+import PaymentScreen from "../AppointmentFlow/AppointmentFrame/PaymentScreen/PaymentScreen";
 import {useTranslation} from "react-i18next";
-import OfferProductPage from "../AppointmentFlow/AppointmentFrame/OfferProductPage";
+import OfferProductPage from "../AppointmentFlow/AppointmentFrame/Offers/OfferProductPage";
 import {ServiceCenterSwitcher} from "../AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 import {TView} from "../Welcome/types";
 import {SCREENS} from "../AppointmentFlow/AppointmentFrame/utils";
@@ -69,11 +67,11 @@ import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {getCurrentUser} from "../../store/reducers/users/actions";
 import {loadEngineType, loadMileage} from "../../store/reducers/vehicleDetails/actions";
-import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
+import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment/ManageAppointment";
 import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
-import SideBarSection from "../AppointmentFlow/AppointmentFrame/SideBarSection";
+import SideBarSection from "../AppointmentFlow/AppointmentFrame/SideBarSteps/parts/SideBarSection";
 
 const Container = styled('div')({
     display: "flex",
@@ -328,58 +326,49 @@ export const AppointmentFrameLayout = () => {
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]: JSX.Element} = {
-            carSelection: <AppointmentCarSelection
+            carSelection: <CarSelection
                 onBack={handleLogin}
                 loading={loadingCar}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
                 needToShowServiceSelection={needToShowServiceTypes}
                 handleSetScreen={handleSetScreen}
                 onUpdateAppointment={onUpdateAppointment}/>,
-            serviceNeeds: <ServiceNeedsFrame
+            serviceNeeds: <ServiceNeeds
                 page={serviceCategoryPage}
                 setPage={setServiceCategoryPage}
                 setLastSelectedCategory={setLastSelectedCategory}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
                 onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
-            serviceSelection: <ServiceSelection
-                setLastSelectedCategory={setLastSelectedCategory}
-                onBack={handleChangeScreen('serviceNeeds')}
-                onNext={handleSetScreen}
-            />,
             maintenanceDetails: <MaintenanceDetails
                 onBack={handleSetScreen}
                 onNext={handleSetScreen}
             />,
-            packageSelection: <PackageSelection
+            packageSelection: <MaintenancePackage
                 onBack={handleChangeScreen('maintenanceDetails')}
                 onNext={handleSetScreen}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
-            describeMore: <AddInfo
+            describeMore: <CommentScreen
                 handleSetScreen={handleSetScreen}
                 onAddServices={handleChangeScreen('serviceNeeds')}
             />,
-            opsCode: <SelectOpsCode
+            opsCode: <OpsCodes
                 onAddServices={handleChangeScreen('serviceNeeds')}
                 handleSetScreen={handleSetScreen}
                 page={serviceCategoryPage}
             />,
-            vehicleData: <VehicleData
-                onBack={handleChangeScreen('describeMore')}
-                onNext={handleSetScreen}
-            />,
-            consultantSelection: <ConsultantSelection
+            consultantSelection: <AdvisorSelection
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
             />,
             appointmentTiming: <AppointmentTiming handleSetScreen={handleSetScreen}/>,
-            appointmentSelection: <AppointmentSelection handleSetScreen={handleSetScreen}/>,
+            appointmentSelection: <AppointmentSlots handleSetScreen={handleSetScreen}/>,
             transportationNeeds: <TransportationNeeds
                 onBack={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmation')}
             />,
-            appointmentConfirmation: <AppointmentConfirmationFrame
+            appointmentConfirmation: <AppointmentConfirmationScreen
                 onBack={handleChangeScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption
                     ? 'transportationNeeds'
                     : 'appointmentSelection')}
@@ -387,7 +376,7 @@ export const AppointmentFrameLayout = () => {
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
             appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment}/>,
-            location: <YourLocation
+            location: <LocationScreen
                 onUpdateAppointment={onUpdateAppointment}
                 onBack={handleChangeScreen('carSelection')}
                 onNext={handleChangeScreen('serviceNeeds')}
@@ -417,8 +406,8 @@ export const AppointmentFrameLayout = () => {
                 return null;
             case "maintenanceDetails":
             case "serviceNeeds":
-            case "serviceSelection":
-                return t("How can we help you?");
+            // case "serviceSelection":
+            //     return t("How can we help you?");
             case "describeMore":
                 return t("Please describe what’s going on");
             case "opsCode":
@@ -450,7 +439,7 @@ export const AppointmentFrameLayout = () => {
             <Container>
                 <ServiceCenterSwitcher/>
                 {isSm && !['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
-                    ? <SideBar screen={currentScreen} handleSetScreen={handleSetScreen}/> : null}
+                    ? <SideBarSteps screen={currentScreen} handleSetScreen={handleSetScreen}/> : null}
                 {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)
                     ? <Title>{getTitle()}</Title> : null}
                 {isXs && currentScreen === 'packageSelection'
