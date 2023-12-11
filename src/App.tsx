@@ -35,14 +35,16 @@ const App = () => {
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
 
-    window.addEventListener('focus', () => {
-        const itIsTimeToReload = moment().utc(true).get('hour') > 2;
-        const isBefore = moment(lastLoadingTime).utc().isBefore(moment().utc(), 'day')
-        if (isBefore && itIsTimeToReload) {
-            localStorage.setItem('timestamp', moment().utc(true).toISOString())
-            history.go(0)
-        }
-    })
+    useEffect(() => {
+        window.addEventListener('focus', () => {
+            const itIsTimeToReload = moment().utc(true).get('hour') > 2;
+            const isBefore = moment(lastLoadingTime).utc().isBefore(moment().utc(), 'day')
+            if (isBefore && itIsTimeToReload) {
+                localStorage.setItem('timestamp', moment().utc(true).toISOString())
+                history.go(0)
+            }
+        })
+    }, [lastLoadingTime, history])
 
     useEffect(() => {
         const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
