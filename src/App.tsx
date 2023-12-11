@@ -32,18 +32,18 @@ const App = () => {
     const notificationsRef = useRef<ProviderContext>();
     const dispatch = useDispatch();
     const history = useHistory();
+    const lastLoadingTime = useMemo(() => moment().utc().toISOString(), []);
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
 
-    window.onfocus = function() {
-        const timeNow = moment();
-        const lastReloading = localStorage.getItem('timestamp')
-        const isBefore = moment(lastReloading).utc(true).isBefore(timeNow, 'day')
-        if (isBefore || !lastReloading) {
-            localStorage.setItem('timestamp', moment().utc(true).toISOString())
+    window.addEventListener('focus', () => {
+        const itIsTimeToReload = moment().utc().get('hour') > 2;
+        const isBefore = moment(lastLoadingTime).utc().isBefore(moment().utc(), 'day')
+        if (isBefore && itIsTimeToReload) {
+            localStorage.setItem('timestamp', moment().utc().toISOString())
             history.go(0)
         }
-    }
+    })
 
     useEffect(() => {
         const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
