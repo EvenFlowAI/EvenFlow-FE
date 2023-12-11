@@ -3,7 +3,7 @@ import {useDialogStyles} from "../DetailedFees/DetailedFees";
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
 import {DialogProps} from "../types";
 import {useTranslation} from "react-i18next";
-import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions";
+import {Actions} from "../../AppointmentFlow/AppointmentFrame/Actions/Actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAncillaryType, EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";

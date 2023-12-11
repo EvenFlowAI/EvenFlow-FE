@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {TextField} from "../../UI/TextField";
 import {DialogProps} from "../types";
-import {TPricingLevel} from "../../Optimizer/PricingSettings/PricingLevels/PricingLevelsByOpsCode";
+import {TPricingLevel} from "../../Optimizer/PricingSettings/PricingLevels/PricingLevelsBy/PricingLevelsByOpsCode";
 import {Box, Button, Divider} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";

@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../BaseModal";
 import {DialogProps} from "../types";
-import {SliderRange} from "../../Optimizer/PricingSettings/VariableDemand/DayOfWeekOpsCode";
+import {SliderRange} from "../../Optimizer/PricingSettings/VariableDemand/DayOfWeekTabs/DayOfWeekOpsCode";
 import {TextField} from "../../UI/TextField";
 import {Box, Button, Divider} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
@@ -9,7 +9,7 @@ import {EDemandCategory, IPackagePricingSettings} from "../../../store/reducers/
 import {updatePackagePricingSettings} from "../../../store/reducers/pricingSettings/actions";
 import {useException, useSCs} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
-import {TMPackage} from "../../Optimizer/PricingSettings/VariableDemand/DayOfWeekPackage";
+import {TMPackage} from "../../Optimizer/PricingSettings/VariableDemand/DayOfWeekTabs/DayOfWeekPackage";
 
 type TEditDayOfWeekOpsCodeProps = DialogProps & {
     editingItem: TMPackage | null;

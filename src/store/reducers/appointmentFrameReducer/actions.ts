@@ -58,7 +58,7 @@ import {
     mapRecallsForRequest
 } from "../../../components/AppointmentFlow/AppointmentFrame/utils";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
-import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails/MaintenanceDetails";
 import {EScheduler} from "../appointments/types";
 import {setAppointmentsLoading} from "../appointments/actions";
 
@@ -133,7 +133,7 @@ export const setAppointmentNotes = createAction<string>("fAppointment/SetAppoint
 export const setServiceOptionChanged = createAction<boolean>("fAppointment/SetServiceOptionChanged");
 export const getTransactionValue = createAction<number>('fAppointment/GetTransactionValue');
 export const setPassedScreens = createAction<TScreen[]>('fAppointment/SetPassedScreens');
-export const deleteLastScreen = createAction('fAppointment/DeleteLastScreen')
+export const showPrevScreen = createAction('fAppointment/ShowPrevScreen')
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;

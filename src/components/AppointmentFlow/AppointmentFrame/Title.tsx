@@ -28,6 +28,7 @@ const SubtitleWrapper = styled('h3')(({theme}) => ({
         top: -20,
     }
 }))
+
 export const Title: React.FC = ({children}) => {
     return (
         <Wrapper>

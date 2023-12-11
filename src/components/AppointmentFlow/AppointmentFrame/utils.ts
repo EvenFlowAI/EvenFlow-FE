@@ -6,7 +6,7 @@ import {
     IPackageOptions,
     IServiceCategory,
 } from "../../../api/types";
-import {TComplimentary, TPackage, TService, TUpsell} from "./PackageSelection";
+import {TComplimentary, TPackage, TService, TUpsell} from "./MaintenancePackage/MaintenancePackage";
 import {EOfferType} from "../../../store/reducers/offers/types";
 import {EServiceType, IValueService} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TScreen} from "../../Layout/types";
@@ -198,11 +198,9 @@ export const getStepsMap = (serviceType: EServiceType, isAdvisorAvailable: boole
         carSelection: 0,
         serviceNeeds: serviceType === EServiceType.VisitCenter ? 1 : 2,
         maintenanceDetails: serviceType === EServiceType.VisitCenter ? 1 : 2,
-        serviceSelection: serviceType === EServiceType.VisitCenter ? 1 : 2,
         packageSelection: serviceType === EServiceType.VisitCenter ? 1 : 2,
         describeMore: serviceType === EServiceType.VisitCenter ? 1 : 2,
         opsCode: serviceType === EServiceType.VisitCenter ? 1 : 2,
-        vehicleData: serviceType === EServiceType.VisitCenter ? 1 : 2,
         serviceOfferProductPage: serviceType === EServiceType.VisitCenter ? 1 : 2,
         consultantSelection: serviceType === EServiceType.VisitCenter ? 2 : serviceType === EServiceType.MobileService ? -1 : 3,
         appointmentTiming: serviceType === EServiceType.PickUpDropOff ? 4 : 3,

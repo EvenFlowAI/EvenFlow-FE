@@ -2,7 +2,7 @@ import React from 'react';
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
 import {Button} from "@material-ui/core";
-import {ScheduleCalendar} from "./ScheduleCalendar";
+import {ScheduleCalendar} from "./parts/ScheduleCalendar";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {switchScheduleFilters} from "../../../store/reducers/schedules/actions";

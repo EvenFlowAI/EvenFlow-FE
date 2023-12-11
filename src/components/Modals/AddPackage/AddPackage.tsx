@@ -8,7 +8,7 @@ import {IconButton, Button, Divider} from "@material-ui/core";
 import OpsCode from "./parts/OpsCodeLabel";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../UI/AutocompleteRender";
-import {yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import {yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDetails/MaintenanceDetails";
 import {useException, useModal, useSCs} from "../../../utils/hooks";
 import AssignOpsCode from "./parts/AssignOpsCode/AssignOpsCode";
 import AddOpsCode from "./parts/AddOpsCode/AddOpsCode";

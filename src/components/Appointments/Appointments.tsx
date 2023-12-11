@@ -1,18 +1,18 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Titles} from "../../config/constants";
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
-import {AppointmentActions} from "./AppointmentDialog/AppointmentActions";
+import {AppointmentActions} from "./parts/AppointmentActions";
 import {useModal, useSCs} from "../../utils/hooks";
 import {EAppointmentStatus, IAppointment} from "../../api/types";
 import moment from "moment";
 import {IOrder, IPageRequest} from "../../types/types";
-import AppointmentFilters from "./AppointmentFilters";
+import AppointmentFilters from "./parts/AppointmentFilters";
 import {IAppointmentsRequest, TScheduler, TServiceBook} from "../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";
 import {loadAppointments} from "../../store/reducers/appointments/actions";
-import AppointmentsCalendar from "./AppointmentsCalendar";
-import AppointmentsListDialog from "./AppointmentsListDialog";
-import {AppointmentsTable} from "./AppointmentsTable";
+import AppointmentsCalendar from "./parts/AppointmentsCalendar/AppointmentsCalendar";
+import AppointmentsListDialog from "./parts/AppointmentsListDialog";
+import {AppointmentsTable} from "./parts/AppointmentsTable";
 import {RootState} from "../../store/rootReducer";
 
 export type TView = "calendar" | "list";

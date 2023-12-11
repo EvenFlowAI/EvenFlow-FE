@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {SideBar} from "../SideBar/SideBar.";
+import {SideBar} from "../SideBar/SideBar";
 import {makeStyles} from "@material-ui/core/styles";
 import { Redirect, Switch } from "react-router-dom";
 import {AdminPage} from "../Admin/AdminPage";
