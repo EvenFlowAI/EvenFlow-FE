@@ -36,10 +36,10 @@ const App = () => {
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
 
     window.addEventListener('focus', () => {
-        const itIsTimeToReload = moment().utc().get('hour') > 2;
+        const itIsTimeToReload = moment().utc(true).get('hour') > 2;
         const isBefore = moment(lastLoadingTime).utc().isBefore(moment().utc(), 'day')
         if (isBefore && itIsTimeToReload) {
-            localStorage.setItem('timestamp', moment().utc().toISOString())
+            localStorage.setItem('timestamp', moment().utc(true).toISOString())
             history.go(0)
         }
     })
