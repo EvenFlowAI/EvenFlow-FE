@@ -167,7 +167,7 @@ export interface IListAppointmentRequest {
     orderBy?: string;
     isAscending?: boolean;
     searchTerm?: string;
-    status?: EAppointmentStatus | unknown;
+    reportingStatus? :EReportingStatus | null | unknown;
 }
 
 export interface IDriverInfo {
@@ -328,6 +328,7 @@ export interface IAppointment {
     hashKey: string;
     appointmentNumber: string;
     appointmentStatus: AppointmentStatus;
+    reportingStatus: EReportingStatus;
     createdDateTime: ParsableDate;
     dateTime: ParsableDate;
     customerInformation?: IAppointmentCustomerInfo;
@@ -620,5 +621,32 @@ export interface IPackageOptionDetailed {
     name?: string;
     serviceRequestAssignedId?: number;
 }
+export enum EReportingStatus {
+    Active,
+    Rescheduled,
+    Cancelled,
+    Showed,
+    WalkInWithAppointment,
+    NoShowed,
+    WaitlistActive,
+    WaitlistReschedule,
+    WaitlistCancelled,
+    WaitlistShowed,
+    WaitlistWalkInWithAppointment,
+    WaitlistNoShowed
+}
 
-export enum EAppointmentStatus {Active, Canceled}
+export const reportingStatuses: TEnumKeyLabel<EReportingStatus> = {
+    [EReportingStatus.Active]: "Active",
+    [EReportingStatus.Rescheduled]: "Rescheduled",
+    [EReportingStatus.Cancelled]: "Canceled",
+    [EReportingStatus.Showed]: "Showed",
+    [EReportingStatus.WalkInWithAppointment]: "Walk In With Appointment",
+    [EReportingStatus.NoShowed]: "No Showed",
+    [EReportingStatus.WaitlistActive]: "Waitlist Active",
+    [EReportingStatus.WaitlistReschedule]: "Waitlist Reschedule",
+    [EReportingStatus.WaitlistCancelled]: "Waitlist Cancelled",
+    [EReportingStatus.WaitlistShowed]: "Waitlist Showed",
+    [EReportingStatus.WaitlistWalkInWithAppointment]: "Waitlist Walk In With Appointment",
+    [EReportingStatus.WaitlistNoShowed]: "Waitlist No Showed",
+}

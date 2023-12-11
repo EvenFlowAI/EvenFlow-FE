@@ -3,7 +3,7 @@ import {Titles} from "../../config/constants";
 import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
 import {AppointmentActions} from "./AppointmentDialog/AppointmentActions";
 import {useModal, useSCs} from "../../utils/hooks";
-import {EAppointmentStatus, IAppointment} from "../../api/types";
+import {EReportingStatus, IAppointment} from "../../api/types";
 import moment from "moment";
 import {IOrder, IPageRequest} from "../../types/types";
 import AppointmentFilters from "./AppointmentFilters";
@@ -28,7 +28,7 @@ type TFilters = {
     searchTerm: string;
     serviceBook: TServiceBook|null;
     scheduler: TScheduler|null;
-    status: EAppointmentStatus | '' | unknown;
+    reportingStatus: EReportingStatus | '' | unknown;
     date: moment.Moment | null;
     scId: number|null;
     pageData: IPageRequest;
@@ -38,7 +38,7 @@ const initialFilters = {
     searchTerm: '',
     serviceBook: null,
     scheduler: null,
-    status: '',
+    reportingStatus: '',
     date: null,
     scId: null,
     pageData: initialPaging,
@@ -68,7 +68,7 @@ export const Appointments = () => {
                 isAscending: order.isAscending,
                 date: moment(filters.date).add(moment(filters.date).utcOffset(), 'minute'),
                 // @ts-ignore
-                status: filters.status ? EAppointmentStatus[filters.status] : undefined,
+                reportingStatus: filters.reportingStatus ? +filters.reportingStatus : undefined,
                 scheduler: filters.scheduler ? {id: filters.scheduler.id, type: filters.scheduler.type} : null,
                 serviceBookId,
                 searchTerm: filters.searchTerm,
@@ -98,7 +98,7 @@ export const Appointments = () => {
     }
 
     const handleSelectStatus = (e: React.ChangeEvent<{value: unknown}>) => {
-        setFilters(prev => ({...prev, status: e.target.value, pageData: initialPaging}))
+        setFilters(prev => ({...prev, reportingStatus: e.target.value, pageData: initialPaging}))
     }
 
     const handleSelectServiceBook = (e: React.ChangeEvent<{value: unknown}>) => {
@@ -168,7 +168,7 @@ export const Appointments = () => {
         />
         {isFiltersOpen ?
             <AppointmentFilters
-                status={filters.status}
+                status={filters.reportingStatus}
                 handleSelectStatus={handleSelectStatus}
                 handleSelectServiceBook={handleSelectServiceBook}
                 handleSelectScheduler={handleSelectScheduler}

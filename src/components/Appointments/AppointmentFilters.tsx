@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Grid, MenuItem, Paper, Select, IconButton, withStyles} from "@material-ui/core";
 import {Clear} from '@material-ui/icons';
 import {TextField} from "../UI/TextField";
-import {EAppointmentStatus} from "../../api/types";
+import {EReportingStatus, reportingStatuses} from "../../api/types";
 import {DatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import moment from "moment";
@@ -18,7 +18,7 @@ type TAppointmentFilterProps = {
     handleSelectStatus: (e: React.ChangeEvent<{value: unknown}>) => void;
     handleSelectScheduler: (e: React.ChangeEvent<{value: unknown}>) => void;
     handleSelectServiceBook: (e: React.ChangeEvent<{value: unknown}>) => void;
-    status: EAppointmentStatus | '' | unknown;
+    status: EReportingStatus | '' | unknown;
     scheduler: TScheduler|null;
     serviceBook: TServiceBook|null;
     selectedDate: moment.Moment | null;
@@ -116,8 +116,8 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         }
                     >
                         <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
-                        {Object.keys(EAppointmentStatus).filter(item => Number.isNaN(+item)).map(status => {
-                            return <MenuItem key={status} value={status}>{status}</MenuItem>
+                        {Object.entries(reportingStatuses).map(([number, status]) => {
+                            return <MenuItem key={number} value={number}>{status}</MenuItem>
                         })}
                     </Select>
                 </Grid>
