@@ -59,7 +59,6 @@ const Holiday = styled("div")(({theme}) => ({
     textAlign: "center",
     padding: "0 4px",
     maxWidth: "100%",
-    // whiteSpace: "nowrap"
 }));
 const HeadCell = styled(TableCell)(({theme}) => ({
     width: "12%",

@@ -1,7 +1,6 @@
 import React from 'react';
 import {Paper} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import bg from "../../assets/img/welcomeBg.jpg";
 
 const mh400 = "@media (max-height: 400px)";
 const mh600 = "@media (max-height: 600px)";
@@ -14,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: `url('${bg}') top center no-repeat`,
         backgroundSize: "cover",
         flex: 1,
         [mh600]: {

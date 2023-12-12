@@ -29,7 +29,7 @@ import {
 } from "./styledComponents";
 
 export const timeWindowOptions = getOptions(Object.keys(ETimeWindows).filter(key => Number.isNaN(+key)))
-
+// todo check if it`s needed
 const ZoneTimeWindows = () => {
     const {zones, isLoading: isZonesLoading} = useSelector((state: RootState) => state.serviceValet);
     const {zoneTimeWindows, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
