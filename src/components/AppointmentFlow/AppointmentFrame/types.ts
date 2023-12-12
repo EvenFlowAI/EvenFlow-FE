@@ -57,13 +57,6 @@ export type TCard = {
     icon: JSX.Element;
 }
 
-export interface TError {
-    field: string,
-    message: string
-}
-
-export type geoCodeType = "street_number" | "route" | "locality" | "administrative_area_level_1"
-
 export type TParsedAddress = {
     city: string;
     state: string;

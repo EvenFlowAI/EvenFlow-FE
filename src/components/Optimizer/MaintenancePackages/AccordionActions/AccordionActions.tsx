@@ -8,7 +8,6 @@ type TAccordionProps = {
     onAddOpsCode: () => void;
 }
 
-
 const useStyles = makeStyles(() => ({
     wrapper: {
         display: 'flex',

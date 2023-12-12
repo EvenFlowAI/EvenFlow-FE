@@ -34,7 +34,6 @@ export const nonFrameStyles = {
 }
 export const frameStyles = {
     display: 'flex',
-    // alignItems: 'center',
     justifyContent: 'center',
     width: '100%'
 }

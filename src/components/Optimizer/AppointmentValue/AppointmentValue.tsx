@@ -11,7 +11,6 @@ import {ValueIndicators} from "./ValueIndicators/ValueIndicators";
 import {optimizerRoot} from "../utils";
 import {UrgentRequests} from "./UrgentRequests/UrgentRequests";
 
-
 const useStyles = makeStyles(theme => ({
     panel: {
         width: "100%",

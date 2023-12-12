@@ -32,5 +32,3 @@ export type TOption = {
     value: number;
     name: string;
 }
-
-export type TGroupedAppointmentsList = [keyof TGroupedAppointments, TGroupedAppointment];

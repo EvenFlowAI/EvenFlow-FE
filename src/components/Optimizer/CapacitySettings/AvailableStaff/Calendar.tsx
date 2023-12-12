@@ -7,7 +7,6 @@ import moment, {Moment} from "moment";
 import clsx from "clsx";
 import {Star, SupervisorAccount} from "@material-ui/icons";
 
-
 export const useCalendarStyles = makeStyles(theme => ({
     title: {
         textAlign: "center",

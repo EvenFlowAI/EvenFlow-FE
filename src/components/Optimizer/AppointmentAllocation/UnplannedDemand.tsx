@@ -1,11 +1,10 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {DemandTable, TableCell, TableRow} from "./UI";
 import {TableBody, TableHead, Button} from "@material-ui/core";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
-import {SC_UNDEFINED} from "../../../config/constants";
+import {useSCs, useSelectedPod} from "../../../utils/hooks";
 import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
-import {loadUnplannedDemand, setUnplannedDemand} from "../../../store/reducers/demandSegments/actions";
+import {loadUnplannedDemand} from "../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../store/rootReducer";
 import {EDay, IUnplannedDemand} from "../../../store/reducers/demandSegments/types";
 import {TextField} from "../../UI/TextField";
@@ -27,11 +26,8 @@ const remapSegments = (sl: IUnplannedDemand[]): IUnplannedDemand[] => {
 
 export const UnplannedDemand = () => {
     const [form, setForm] = useState<TForm>([]);
-    const [isSaving, setSaving] = useState<boolean>(false);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<IUnplannedDemand|null>(null);
-    const showError = useException();
-    const showMessage = useMessage();
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch();
@@ -57,35 +53,6 @@ export const UnplannedDemand = () => {
         setForm(nForm);
     }
 
-    const handleCancel = () => {
-        setForm(segments.map(s => s.optimizerSetting || 0));
-        setEdit(false);
-    }
-
-    const handleSave = async () => {
-        if (!selectedSC) {
-            showError(SC_UNDEFINED);
-        } else {
-            setSaving(true);
-            try {
-                await dispatch(setUnplannedDemand({
-                    serviceCenterId: selectedSC.id,
-                    podId: selectedPod?.id,
-                    items: form.map((v, idx) => ({
-                        day: idx as EDay,
-                        optimizerSetting: v
-                    }))
-                }));
-                setSaving(false);
-                setEdit(false);
-                showMessage("Saved");
-            } catch (e) {
-                setSaving(false);
-                showError(e);
-            }
-        }
-    }
-
     const onEdit = async (d: number) => {
         const el = unplannedSegments.find(item => item.day === d as EDay);
         if (el) await setEditingElement(el);
@@ -99,16 +66,7 @@ export const UnplannedDemand = () => {
                     <TableCell>Day</TableCell>
                     <TableCell>Historical Walk-in Schedule Blocks</TableCell>
                     <TableCell>Optimizer Setting</TableCell>
-                    <TableCell width={200} style={{textAlign: "right"}}>
-                        {/*<SaveEditBlock*/}
-                        {/*    isLowerCase*/}
-                        {/*    onSave={handleSave}*/}
-                        {/*    onEdit={() => setEdit(true)}*/}
-                        {/*    onCancel={handleCancel}*/}
-                        {/*    isEdit={isEdit}*/}
-                        {/*    isSaving={isSaving}*/}
-                        {/*/>*/}
-                    </TableCell>
+                    <TableCell width={200} style={{textAlign: "right"}}/>
                 </TableRow>
             </TableHead>
             <TableBody>

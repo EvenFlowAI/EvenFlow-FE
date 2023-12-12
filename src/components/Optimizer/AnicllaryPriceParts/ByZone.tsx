@@ -148,9 +148,6 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
             } else {
                 onUpdate(editedItem)
             }
-            // if (editedItem.serviceMultiplier === 0 && editedItem.flatFee === 0) {
-            //     showError( "Service Multiplier' or 'Flat Fee' must be greater than 0")
-            // } else
         }
     }
 
