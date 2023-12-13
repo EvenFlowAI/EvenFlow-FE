@@ -14,7 +14,7 @@ import {
 import {makeStyles} from "@material-ui/core/styles";
 import {EDesirabilityState, ETimeSlotType} from "../../../store/reducers/slotScoring/types";
 import {generateSlots, TSlot} from "./utils";
-import {DesirabilityButton} from "../../UI/ConfigButton";
+import {DesirabilityButton} from "../../UI/DesirabilityButton";
 import {useDispatch, useSelector} from "react-redux";
 import {SC_UNDEFINED, timeString} from "../../../config/constants";
 import {

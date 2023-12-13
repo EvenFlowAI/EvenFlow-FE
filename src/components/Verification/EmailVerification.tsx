@@ -10,7 +10,6 @@ import {Routes} from "../../config/routes";
 import {Api} from "../../config/requests";
 import {useException, useMessage} from "../../utils/hooks";
 
-
 const InvalidData: React.FC = () => {
     return <>
         <LoginTextContent content="Invalid url" />

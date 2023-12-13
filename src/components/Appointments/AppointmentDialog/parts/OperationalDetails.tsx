@@ -15,7 +15,10 @@ const useStyles = makeStyles({
 
 const OperationalDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
     const classes = useStyles();
-    const createdText = [moment(payload.createdDateTime).utc().format(dateTimeFormat), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
+    const date = payload.createdDateTime
+        ? payload.createdDateTime.toString().split('.')[0]
+        : payload.createdDateTime
+    const createdText = [moment(date).format(dateTimeFormat), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
 
     return (
         <div>
