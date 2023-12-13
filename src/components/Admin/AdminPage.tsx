@@ -10,7 +10,7 @@ import {useCurrentUser} from "../../utils/hooks";
 import {AdminDashboard} from "./Dashboard/Dashboard";
 import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDetail";
 import {Profile} from "./Profile/Profile";
-import {Appointments} from "../../features/Appointments";
+import AppointmentsPage from "../../pages/admin/Appointments/AppointmentsPage";
 import PricingPage from "./Pricing/PricingPage";
 import ReportingPage from "./ReportingPage/ReportingPage";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";
@@ -36,7 +36,7 @@ export const AdminPage = () => {
             {/*    : null}*/}
             {!hideDashboard && <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>}
             {!currentUser.isSuperUser ?
-                <PrivateRoute path={Routes.Admin.Appointments} component={Appointments} />
+                <PrivateRoute path={Routes.Admin.Appointments} component={AppointmentsPage} />
                 : null}
             {!currentUser.isSuperUser && !hideDashboard
                 ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
