@@ -1,20 +1,20 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
-import {loadAppointments} from "../../store/reducers/appointments/actions";
+import {IAppointmentsRequest} from "../../../store/reducers/appointments/types";
+import {loadAppointments} from "../../../store/reducers/appointments/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {useSCs} from "../../utils/hooks";
+import {useSCs} from "../../../utils/hooks";
 import moment, {Moment} from "moment";
-import {IAppointment} from "../../api/types";
-import {TView} from "./Appointments";
-import {RootState} from "../../store/rootReducer";
-import {useCalendarStyles} from "../Optimizer/CapacitySettings/AvailableStaff/Calendar";
-import {CalendarControls} from "../Optimizer/CapacitySettings/AvailableStaff/CalendarControls";
-import {WeekDayNames} from "../../config/constants";
+import {IAppointment} from "../../../api/types";
+import {TView} from "../types";
+import {RootState} from "../../../store/rootReducer";
+import {useCalendarStyles} from "../../../components/Optimizer/CapacitySettings/AvailableStaff/Calendar";
+import {CalendarControls} from "../../../components/Optimizer/CapacitySettings/AvailableStaff/CalendarControls";
+import {WeekDayNames} from "../../../config/constants";
 import clsx from "clsx";
 import {Paper} from '@material-ui/core';
-import {ReactComponent as Active} from "../../assets/img/date_1.svg";
-import {ReactComponent as FreeSlots} from "../../assets/img/date_2.svg";
-import {Loading} from "../UI/Loading";
+import {ReactComponent as Active} from "../../../assets/img/date_1.svg";
+import {ReactComponent as FreeSlots} from "../../../assets/img/date_2.svg";
+import {Loading} from "../../../components/UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({
@@ -41,7 +41,7 @@ type TDay = {
 
 type TAppointmentsByDate = {[key: string]: IAppointment[]}
 
-const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedView }) => {
+export const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedView }) => {
     const { allAppointments, isLoading } = useSelector((state: RootState) => state.appointments);
     const [startDate, setStartDate] = useState<Moment>(moment());
     const [appointmentsByDate, setAppointmentsByDate] = useState<TAppointmentsByDate>({})
@@ -143,5 +143,3 @@ const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedV
         </Paper>
         </div>
 };
-
-export default AppointmentsCalendar;

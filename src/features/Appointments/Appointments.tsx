@@ -1,38 +1,27 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Titles} from "../../config/constants";
-import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
-import {AppointmentActions} from "./AppointmentDialog/AppointmentActions";
-import {useModal, useSCs} from "../../utils/hooks";
-import {EAppointmentStatus, IAppointment} from "../../api/types";
-import moment from "moment";
-import {IOrder, IPageRequest} from "../../types/types";
-import AppointmentFilters from "./AppointmentFilters";
-import {IAppointmentsRequest, TScheduler, TServiceBook} from "../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";
+import moment from "moment";
+import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
+import {Titles} from "../../config/constants";
+import {useModal, useSCs} from "../../utils/hooks";
 import {loadAppointments} from "../../store/reducers/appointments/actions";
-import AppointmentsCalendar from "./AppointmentsCalendar";
-import AppointmentsListDialog from "./AppointmentsListDialog";
-import {AppointmentsTable} from "./AppointmentsTable";
+import {AppointmentActions} from "./";
+import {AppointmentFilters} from "./";
+import {AppointmentsCalendar} from "./";
+import {AppointmentsListModal} from "./";
+import {AppointmentsTable} from "./";
 import {RootState} from "../../store/rootReducer";
-
-export type TView = "calendar" | "list";
+import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
+import {EAppointmentStatus, IAppointment} from "../../api/types";
+import {IOrder} from "../../types/types";
+import {TFilters, TView} from "./types";
 
 const initialOrder = {
     orderBy: "date",
     isAscending: true,
 }
 
-const initialPaging = {pageIndex: 0, pageSize: 10}
-
-type TFilters = {
-    searchTerm: string;
-    serviceBook: TServiceBook|null;
-    scheduler: TScheduler|null;
-    status: EAppointmentStatus | '' | unknown;
-    date: moment.Moment | null;
-    scId: number|null;
-    pageData: IPageRequest;
-}
+export const initialPaging = {pageIndex: 0, pageSize: 10}
 
 const initialFilters = {
     searchTerm: '',
@@ -45,7 +34,7 @@ const initialFilters = {
 }
 
 export const Appointments = () => {
-    const { isLoading, schedulerList, serviceBookList } = useSelector((state: RootState) => state.appointments);
+    const { isLoading } = useSelector((state: RootState) => state.appointments);
     const [viewItem, setViewItem] = useState<IAppointment|undefined>(undefined);
     const [filters, setFilters] = useState<TFilters>(initialFilters)
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
@@ -97,30 +86,6 @@ export const Appointments = () => {
         setFiltersOpen(prev => !prev);
     }
 
-    const handleSelectStatus = (e: React.ChangeEvent<{value: unknown}>) => {
-        setFilters(prev => ({...prev, status: e.target.value, pageData: initialPaging}))
-    }
-
-    const handleSelectServiceBook = (e: React.ChangeEvent<{value: unknown}>) => {
-        if (e.target.value) {
-            const selected = serviceBookList.find(item => item.id === e.target.value || item.name === e.target.value)
-            setFilters(prev => ({...prev, serviceBook: selected ?? null, pageData: initialPaging}))
-        } else {
-            setFilters(prev => ({...prev, serviceBook: null, pageData: initialPaging}))
-        }
-    }
-
-    const handleSelectScheduler = (e: React.ChangeEvent<{value: unknown}>) => {
-        if (e.target.value) {
-            const selected = schedulerList.find(item => item.id
-                ? item.id.toString() === e.target.value
-            : item.fullName === e.target.value)
-            setFilters(prev => ({...prev, scheduler: selected ?? null, pageData: initialPaging}))
-        } else {
-            setFilters(prev => ({...prev, scheduler: null, pageData: initialPaging}))
-        }
-    }
-
     const onChangePage = useCallback((e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number): void => {
         setFilters(prev => ({...prev, pageData: {...prev.pageData, pageIndex}}))
     }, []);
@@ -169,9 +134,7 @@ export const Appointments = () => {
         {isFiltersOpen ?
             <AppointmentFilters
                 status={filters.status}
-                handleSelectStatus={handleSelectStatus}
-                handleSelectServiceBook={handleSelectServiceBook}
-                handleSelectScheduler={handleSelectScheduler}
+                setFilters={setFilters}
                 scheduler={filters.scheduler}
                 serviceBook={filters.serviceBook}
                 selectedDate={filters.date}
@@ -195,7 +158,7 @@ export const Appointments = () => {
                 selectedView={selectedView}
             />
         }
-        <AppointmentsListDialog
+        <AppointmentsListModal
             open={isListOpen}
             date={filters.date}
             viewItem={viewItem}

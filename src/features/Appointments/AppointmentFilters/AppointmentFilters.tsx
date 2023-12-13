@@ -1,28 +1,28 @@
-import React, {useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Grid, MenuItem, Paper, Select, IconButton, withStyles} from "@material-ui/core";
 import {Clear} from '@material-ui/icons';
-import {TextField} from "../UI/TextField";
-import {EAppointmentStatus} from "../../api/types";
+import {TextField} from "../../../components/UI/TextField";
+import {EAppointmentStatus} from "../../../api/types";
 import {DatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import moment from "moment";
 import {makeStyles} from "@material-ui/core/styles";
-import {useSCs} from "../../utils/hooks";
+import {useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {loadSchedulerList, loadServiceBookList} from "../../store/reducers/appointments/actions";
-import {RootState} from "../../store/rootReducer";
-import {TScheduler, TServiceBook} from "../../store/reducers/appointments/types";
-import {ReactComponent as CalendarIcon} from '../../assets/img/calendar_blue.svg';
+import {loadSchedulerList, loadServiceBookList} from "../../../store/reducers/appointments/actions";
+import {RootState} from "../../../store/rootReducer";
+import {TScheduler, TServiceBook} from "../../../store/reducers/appointments/types";
+import {ReactComponent as CalendarIcon} from '../../../assets/img/calendar_blue.svg';
+import {TFilters} from "../types";
+import {initialPaging} from "../Appointments";
 
 type TAppointmentFilterProps = {
-    handleSelectStatus: (e: React.ChangeEvent<{value: unknown}>) => void;
-    handleSelectScheduler: (e: React.ChangeEvent<{value: unknown}>) => void;
-    handleSelectServiceBook: (e: React.ChangeEvent<{value: unknown}>) => void;
     status: EAppointmentStatus | '' | unknown;
     scheduler: TScheduler|null;
     serviceBook: TServiceBook|null;
     selectedDate: moment.Moment | null;
     onChange: (date: moment.Moment | null) => void;
+    setFilters: Dispatch<SetStateAction<TFilters>>;
 }
 
 const useStyles = makeStyles({
@@ -41,15 +41,13 @@ const EmptyMenuItem = withStyles({
     }
 })(MenuItem)
 
-const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
-                                                                   handleSelectStatus,
-                                                                   status,
-                                                                   selectedDate,
-                                                                   onChange,
-                                                                   handleSelectScheduler,
-                                                                   handleSelectServiceBook,
-                                                                   scheduler,
-                                                                   serviceBook,
+export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
+                                                                          status,
+                                                                          selectedDate,
+                                                                          onChange,
+                                                                          setFilters,
+                                                                          scheduler,
+                                                                          serviceBook,
                                                                }) => {
     const {schedulerList, serviceBookList, isLoading} = useSelector((state: RootState) => state.appointments)
     const [isOpen, setOpen] = useState<boolean>(false);
@@ -75,6 +73,30 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     const handleClear = (e: any) => {
         e.stopPropagation();
         onChange(null);
+    }
+
+    const handleSelectStatus = (e: React.ChangeEvent<{value: unknown}>) => {
+        setFilters(prev => ({...prev, status: e.target.value, pageData: initialPaging}))
+    }
+
+    const handleSelectServiceBook = (e: React.ChangeEvent<{value: unknown}>) => {
+        if (e.target.value) {
+            const selected = serviceBookList.find(item => item.id === e.target.value || item.name === e.target.value)
+            setFilters(prev => ({...prev, serviceBook: selected ?? null, pageData: initialPaging}))
+        } else {
+            setFilters(prev => ({...prev, serviceBook: null, pageData: initialPaging}))
+        }
+    }
+
+    const handleSelectScheduler = (e: React.ChangeEvent<{value: unknown}>) => {
+        if (e.target.value) {
+            const selected = schedulerList.find(item => item.id
+                ? item.id.toString() === e.target.value
+                : item.fullName === e.target.value)
+            setFilters(prev => ({...prev, scheduler: selected ?? null, pageData: initialPaging}))
+        } else {
+            setFilters(prev => ({...prev, scheduler: null, pageData: initialPaging}))
+        }
     }
 
     return (
@@ -165,5 +187,3 @@ const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         </Paper>
     );
 };
-
-export default AppointmentFilters;

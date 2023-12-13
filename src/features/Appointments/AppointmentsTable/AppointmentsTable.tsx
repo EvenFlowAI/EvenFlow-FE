@@ -1,21 +1,21 @@
 import React, {Dispatch, SetStateAction, useCallback, useState} from 'react';
-import {Table} from "../UI/Table";
+import {Table} from "../../../components/UI/Table";
 import {
     AppointmentStatus,
     appointmentStatuses, IAppointment,
-} from "../../api/types";
+} from "../../../api/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
-import {ViewAppointmentDialog} from "./ViewAppointmentDialog";
+import {ViewAppointmentsModal} from "../ViewAppointmentsModal/ViewAppointmentsModal";
 import moment from "moment";
-import {getAppointmentDate} from "../../utils/utils";
-import {API} from "../../api/api";
+import {getAppointmentDate} from "../../../utils/utils";
+import {API} from "../../../api/api";
 import {MoreHoriz} from "@material-ui/icons";
-import {IOrder, IPageRequest} from "../../types/types";
-import {useConfirm, useException, useMessage, useModal} from "../../utils/hooks";
-import {TableRowDataType} from "../UI/types";
-import {timeString} from "../../config/constants";
+import {IOrder, IPageRequest} from "../../../types/types";
+import {useConfirm, useException, useMessage, useModal} from "../../../utils/hooks";
+import {TableRowDataType} from "../../../components/UI/types";
+import {timeString} from "../../../config/constants";
 import {useSelector} from "react-redux";
-import {RootState} from "../../store/rootReducer";
+import {RootState} from "../../../store/rootReducer";
 
 const cols: TableRowDataType<IAppointment>[] = [
     {header: "Date", val: el => el.dateTime ? moment.utc(el.dateTime).format("MMMM D, YYYY") : "", orderId: "date", width: 150},
@@ -158,7 +158,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
                 }
                 onClick={handleCancel}>Cancel</MenuItem>
         </Menu>
-        <ViewAppointmentDialog
+        <ViewAppointmentsModal
             onEditAppointment={handleEditCallback} onCancelAppointment={handleCancelCallback}
             open={isOpen} payload={viewItem} onClose={onClose} />
             </>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Box} from "@material-ui/core";
-import {SearchDebounced} from "../../UI/SearchInput";
-import {TView} from "../Appointments";
+import {SearchDebounced} from "../../../components/UI/SearchInput";
+import {TView} from "../types";
 import {Routes} from "../../../config/routes";
 import {NavLink} from "react-router-dom";
 import {makeStyles} from "@material-ui/core/styles";

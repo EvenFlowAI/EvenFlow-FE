@@ -10,7 +10,7 @@ import {useCurrentUser} from "../../utils/hooks";
 import {AdminDashboard} from "./Dashboard/Dashboard";
 import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDetail";
 import {Profile} from "./Profile/Profile";
-import {Appointments} from "../Appointments/Appointments";
+import {Appointments} from "../../features/Appointments";
 import PricingPage from "./Pricing/PricingPage";
 import ReportingPage from "./ReportingPage/ReportingPage";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";

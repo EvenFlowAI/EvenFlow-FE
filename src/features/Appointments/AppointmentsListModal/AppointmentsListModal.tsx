@@ -1,14 +1,14 @@
 import React, {Dispatch, SetStateAction, useEffect} from 'react';
-import {DialogTitle, BaseModal, DialogContent} from "../Modals/BaseModal";
+import {DialogTitle, BaseModal, DialogContent} from "../../../components/Modals/BaseModal";
 import moment from "moment";
-import {DialogProps} from "../Modals/types";
-import {useSCs, useStatePagination} from "../../utils/hooks";
-import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
+import {DialogProps} from "../../../components/Modals/types";
+import {useSCs, useStatePagination} from "../../../utils/hooks";
+import {IAppointmentsRequest} from "../../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";
-import {IAppointment} from "../../api/types";
-import {AppointmentsTable} from "./AppointmentsTable";
-import {IOrder} from "../../types/types";
-import {RootState} from "../../store/rootReducer";
+import {IAppointment} from "../../../api/types";
+import {AppointmentsTable} from "../AppointmentsTable/AppointmentsTable";
+import {IOrder} from "../../../types/types";
+import {RootState} from "../../../store/rootReducer";
 
 type TDialogProps = DialogProps & {
     date: moment.Moment | null;
@@ -19,7 +19,7 @@ type TDialogProps = DialogProps & {
     setViewItem?: Dispatch<SetStateAction<IAppointment|undefined>>
 }
 
-const AppointmentsListDialog: React.FC<TDialogProps> = ({
+export const AppointmentsListModal: React.FC<TDialogProps> = ({
                                                             date,
                                                             refresh,
                                                             order,
@@ -64,5 +64,3 @@ const AppointmentsListDialog: React.FC<TDialogProps> = ({
         </BaseModal>
     );
 };
-
-export default AppointmentsListDialog;
