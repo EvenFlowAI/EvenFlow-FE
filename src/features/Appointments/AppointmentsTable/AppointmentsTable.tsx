@@ -159,7 +159,10 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
                 onClick={handleCancel}>Cancel</MenuItem>
         </Menu>
         <ViewAppointmentsModal
-            onEditAppointment={handleEditCallback} onCancelAppointment={handleCancelCallback}
-            open={isOpen} payload={viewItem} onClose={onClose} />
+            onEditAppointment={handleEditCallback}
+            onCancelAppointment={handleCancelCallback}
+            open={isOpen}
+            payload={viewItem}
+            onClose={onClose} />
             </>
 };

@@ -4,9 +4,9 @@ import {SearchDebounced} from "../../../components/UI/SearchInput";
 import {TView} from "../types";
 import {Routes} from "../../../config/routes";
 import {NavLink} from "react-router-dom";
-import {makeStyles} from "@material-ui/core/styles";
 import {encodeSCID} from "../../../utils/utils";
 import {useSCs} from "../../../utils/hooks";
+import {useStyles} from "./styles";
 
 type TProps = {
     searchTerm: string;
@@ -16,23 +16,6 @@ type TProps = {
     selectedView: TView;
     handleChangeView: (type: TView) => () => void;
 }
-
-type TButton = { label: string, type: TView };
-const views: TButton[] = [
-    {type: "calendar", label: "Calendar View"},
-    {type: "list", label: "List View"}
-];
-
-const useStyles = makeStyles({
-    linkBtn: {
-        fontSize: 14,
-        fontWeight: 700,
-        color: "#7898FF",
-        textTransform: 'uppercase',
-        textDecoration: 'none',
-        marginRight: 20
-    }
-})
 
 export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selectedView, searchTerm, handleSearchChange, onSearch, onFilterOpen}) => {
     const classes = useStyles();

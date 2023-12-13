@@ -1,21 +1,13 @@
 import React from 'react';
-import {makeStyles} from "@material-ui/core/styles";
 import {IAppointment} from "../../../../api/types";
 import DetailsItem from "./DetailsItem";
 import {Divider} from "@material-ui/core";
-
-const useStyles = makeStyles({
-    blockTitle: {
-        marginBottom: 24,
-        fontSize: 14
-    },
-})
+import {TitleWrapper} from "./styles";
 
 export const VehicleDetails:React.FC<{payload: IAppointment}> = ({payload}) => {
-    const classes = useStyles();
     return (
         <div>
-            <div className={classes.blockTitle}>Vehicle Details</div>
+            <TitleWrapper>Vehicle Details</TitleWrapper>
             <DetailsItem
                 title={payload.vehicle?.vin ?? ''}
                 text={`${payload.vehicle?.make ?? ''} ${payload.vehicle?.model ?? ''} ${payload.vehicle?.year ?? ''}`}/>
@@ -28,10 +20,9 @@ export const VehicleDetails:React.FC<{payload: IAppointment}> = ({payload}) => {
 };
 
 export const CustomerInfo:React.FC<{payload: IAppointment}> = ({payload}) => {
-    const classes = useStyles();
     return (
         <div>
-            <div className={classes.blockTitle}>Customer Information</div>
+            <TitleWrapper>Customer Information</TitleWrapper>
             <DetailsItem
                 title={payload.customerInformation?.fullName ?? ''}
                 text={`${payload.customerInformation?.email ?? ''} ${payload.customerInformation?.phoneNumber ?? ''}`}/>

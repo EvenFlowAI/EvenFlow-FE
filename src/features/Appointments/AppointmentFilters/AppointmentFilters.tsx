@@ -1,12 +1,11 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {Grid, MenuItem, Paper, Select, IconButton, withStyles} from "@material-ui/core";
+import {Grid, MenuItem, Paper, Select, IconButton} from "@material-ui/core";
 import {Clear} from '@material-ui/icons';
 import {TextField} from "../../../components/UI/TextField";
 import {EAppointmentStatus} from "../../../api/types";
 import {DatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import moment from "moment";
-import {makeStyles} from "@material-ui/core/styles";
 import {useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadSchedulerList, loadServiceBookList} from "../../../store/reducers/appointments/actions";
@@ -15,6 +14,7 @@ import {TScheduler, TServiceBook} from "../../../store/reducers/appointments/typ
 import {ReactComponent as CalendarIcon} from '../../../assets/img/calendar_blue.svg';
 import {TFilters} from "../types";
 import {initialPaging} from "../Appointments";
+import {useStyles, EmptyMenuItem} from "./styles";
 
 type TAppointmentFilterProps = {
     status: EAppointmentStatus | '' | unknown;
@@ -24,22 +24,6 @@ type TAppointmentFilterProps = {
     onChange: (date: moment.Moment | null) => void;
     setFilters: Dispatch<SetStateAction<TFilters>>;
 }
-
-const useStyles = makeStyles({
-    label: {
-        fontWeight: "bold",
-        fontSize: 16,
-        textTransform: "uppercase",
-        transform: 'translate(0, 1.5px) scale(0.75)',
-        transformOrigin: 'top left'
-    }
-})
-
-const EmptyMenuItem = withStyles({
-    root: {
-        color: '#858585'
-    }
-})(MenuItem)
 
 export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                           status,

@@ -9,25 +9,17 @@ import {ReactComponent as SettingsChecked} from "../../../../assets/img/settings
 import {ReactComponent as Transportation} from "../../../../assets/img/transportation.svg";
 import {ReactComponent as ConvenienceFees} from "../../../../assets/img/person_dollar.svg";
 import {ReactComponent as Address} from "../../../../assets/img/address.svg";
-import {makeStyles} from "@material-ui/core/styles";
 import {appointmentStatuses, IAppointment} from "../../../../api/types";
 import moment from "moment";
 import DetailsItem from "./DetailsItem";
-
-const useStyles = makeStyles({
-    blockTitle: {
-        marginBottom: 24,
-        fontSize: 14
-    },
-})
+import {TitleWrapper} from "./styles";
 
 export const dateTimeFormat = "ddd, MMM DD, YYYY h:mm a"
 
 const AppointmentDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
-    const classes = useStyles();
     return (
         <div>
-            <div className={classes.blockTitle}>Appointment Details</div>
+            <TitleWrapper>Appointment Details</TitleWrapper>
             <DetailsItem title="Appointment Number" text={payload.appointmentNumber} icon={<NumberIcon/>} key="number"/>
             <DetailsItem
                 title="Appointment Status"

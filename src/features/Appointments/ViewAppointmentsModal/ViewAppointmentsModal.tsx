@@ -3,24 +3,19 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../com
 import {
     Button,
     CircularProgress,
-    styled
 } from "@material-ui/core";
 import {DialogProps} from "../../../components/Modals/types";
 import {AppointmentStatus, IAppointment} from "../../../api/types";
 import AppointmentDetails from "./parts/AppointmentDetails";
 import {CustomerInfo, VehicleDetails} from "./parts/VehicleDetails";
 import OperationalDetails from "./parts/OperationalDetails";
-
-const Wrapper = styled('div')({
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gridGap: 24,
-})
+import {Wrapper} from "./styles";
 
 type TCallbackProps = {
     onEditAppointment: () => void;
     onCancelAppointment: () => void;
 }
+
 export const ViewAppointmentsModal: React.FC<DialogProps<IAppointment>&TCallbackProps> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
     return <BaseModal {...props} width={940}>
         <DialogTitle onClose={props.onClose}>View Appointment</DialogTitle>

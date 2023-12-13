@@ -4,8 +4,7 @@ import {loadAppointments} from "../../../store/reducers/appointments/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useSCs} from "../../../utils/hooks";
 import moment, {Moment} from "moment";
-import {IAppointment} from "../../../api/types";
-import {TView} from "../types";
+import {TAppointmentsByDate, TDay, TView} from "../types";
 import {RootState} from "../../../store/rootReducer";
 import {useCalendarStyles} from "../../../components/Optimizer/CapacitySettings/AvailableStaff/Calendar";
 import {CalendarControls} from "../../../components/Optimizer/CapacitySettings/AvailableStaff/CalendarControls";
@@ -15,31 +14,12 @@ import {Paper} from '@material-ui/core';
 import {ReactComponent as Active} from "../../../assets/img/date_1.svg";
 import {ReactComponent as FreeSlots} from "../../../assets/img/date_2.svg";
 import {Loading} from "../../../components/UI/Loading";
-import {makeStyles} from "@material-ui/core/styles";
-
-const useStyles = makeStyles(() => ({
-    number: {
-        '& > span': {
-            fontSize: 14,
-            marginLeft: 3,
-        }
-    }
-}))
+import {useStyles} from "./styles";
 
 type TCalendarProps = {
     selectedView: TView;
     openDetails: (date: moment.Moment | null) => void;
 }
-
-type TDayType = "prev" | "cur" | "next"
-
-type TDay = {
-    date: Moment,
-    day: number,
-    type: TDayType
-}
-
-type TAppointmentsByDate = {[key: string]: IAppointment[]}
 
 export const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedView }) => {
     const { allAppointments, isLoading } = useSelector((state: RootState) => state.appointments);
