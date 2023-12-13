@@ -14,7 +14,7 @@ import {loadDealershipProfile} from "../../store/reducers/dealershipGroups/actio
 import {loadAllSCs, loadSCAnalytics} from "../../store/reducers/serviceCenters/actions";
 import {useSCs, useSideBar} from "../../utils/hooks";
 import {getPodsShort, loadPodsShort} from "../../store/reducers/pods/actions";
-import {OfferManagementPage} from "../OfferManagement/OfferManagementPage";
+import {OfferManagementPage} from "../../pages/admin/OfferManagement/OfferManagementPage";
 import {sideBarWidth} from "../../theme/theme";
 import clsx from "clsx";
 

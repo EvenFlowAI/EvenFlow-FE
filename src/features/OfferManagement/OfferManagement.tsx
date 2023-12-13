@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {TitleContainer} from "../Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TabList} from "../UI/Tabs";
+import {TabList} from "../../components/UI/Tabs";
 import {Tab} from "@material-ui/core";
-import {ActiveOffers} from "./Offers/ActiveOffers";
-import {ArchiveOffers} from "./Offers/ArchiveOffers";
-import {pricingRoot} from "../Optimizer/utils";
+import {ActiveOffers} from "./ActiveOffers/ActiveOffers";
+import {ArchiveOffers} from "./ArchiveOffers/ArchiveOffers";
+import {pricingRoot} from "../../components/Optimizer/utils";
 
 export const OfferManagement = () => {
     const [selectedTab, setTab] = useState<string>("0");

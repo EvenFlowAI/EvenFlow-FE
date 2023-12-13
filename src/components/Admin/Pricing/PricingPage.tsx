@@ -6,7 +6,7 @@ import {Routes} from "../../../config/routes";
 import {PricingSettingsPage} from "../../Optimizer/PricingSettings/PricingSettingsPage";
 import MobileServicePage from "../../Optimizer/MobileService/MobileServicePage";
 import ServiceValetPage from "../../Optimizer/ServiceValet/ServiceValetPage";
-import {OfferManagementPage} from "../../OfferManagement/OfferManagementPage";
+import {OfferManagementPage} from "../../../pages/admin/OfferManagement/OfferManagementPage";
 import {useCurrentUser} from "../../../utils/hooks";
 
 const PricingPage = () => {

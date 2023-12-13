@@ -1,28 +1,20 @@
 import React from 'react';
-import {DialogContent} from "../../Modals/BaseModal";
+import {DialogContent} from "../../../../components/Modals/BaseModal";
 import {
     customerSegmentsMap,
     dayOfWeekMap,
     EOfferStatus,
     EOfferType,
     IOffer
-} from "../../../store/reducers/offers/types";
-import {FormControlLabel, Grid, Switch, withStyles} from "@material-ui/core";
-import {TextField} from "../../UI/TextField";
+} from "../../../../store/reducers/offers/types";
+import {Grid, Switch} from "@material-ui/core";
+import {TextField} from "../../../../components/UI/TextField";
 import moment from "moment";
-import {timeSpanString, timeString} from "../../../config/constants";
-import {calendarDateFormat} from "../../Optimizer/EmployeeSchedule/utils";
+import {timeSpanString, timeString} from "../../../../config/constants";
+import {calendarDateFormat} from "../../../../components/Optimizer/EmployeeSchedule/utils";
+import {Label} from "./styles";
 
-const Label = withStyles({
-    root: {
-        marginLeft: 0,
-    },
-    label: {
-        fontWeight: "bold"
-    }
-})(FormControlLabel);
-
-export const ViewOfferContent: React.FC<{
+export const ViewOffer: React.FC<{
     onArchive: () => void, archiving: boolean, offer: IOffer}> = ({offer, onArchive, archiving}) => {
     const getOfferValue = () => {
         return offer.type !== EOfferType.FreeService ?

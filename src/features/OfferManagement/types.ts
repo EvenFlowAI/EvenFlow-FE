@@ -2,15 +2,14 @@ import {
     ECustomerPresence,
     ECustomerSegment,
     EDayOfWeek,
-    EOfferType,
-    IServiceType
-} from "../../../store/reducers/offers/types";
-import {IAssignedServiceRequestShort, IServiceRequestPriority} from "../../../store/reducers/serviceRequests/types";
-import {TEnumMap} from "../../../store/reducers/utils";
+    EOfferType, IOffer,
+} from "../../store/reducers/offers/types";
+import {IAssignedServiceRequestShort, IServiceRequestPriority} from "../../store/reducers/serviceRequests/types";
+import {TEnumMap} from "../../store/reducers/utils";
 import moment from "moment";
-import {ICategory} from "../../../store/reducers/categories/types";
+import {ICategory} from "../../store/reducers/categories/types";
+import React from "react";
 
-export type TServiceTypeWithCustom = IServiceType & {inputValue?: string};
 export type TOfferForm = {
     offerValue?: string;
     offerTitle?: string;
@@ -33,3 +32,24 @@ export const selectAllSR: IAssignedServiceRequestShort = {
     priority: IServiceRequestPriority.Default,
     description: ""
 }
+
+export enum EAudience {
+    All,
+    New,
+    NewWarranty,
+    HighCustomerValue,
+    MediumCustomerValue,
+    LastVisit90
+}
+
+export enum EChannel {
+    Text, Email, Both
+}
+
+export type TForm = {
+    offer?: IOffer,
+    audience?: EAudience,
+    channel: EChannel,
+}
+
+export type TAutoChangeEvent = React.ChangeEvent<{name?: string, value: unknown}>;

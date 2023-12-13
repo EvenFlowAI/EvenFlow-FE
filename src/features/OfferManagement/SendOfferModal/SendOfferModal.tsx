@@ -1,33 +1,18 @@
 import React, {useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
-import {DialogProps} from "../../Modals/types";
-import {Button, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, withStyles} from "@material-ui/core";
-import {LoadingButton} from "../../UI/Button";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
+import {Button, FormControlLabel, Grid, Radio, RadioGroup} from "@material-ui/core";
+import {LoadingButton} from "../../../components/UI/Button";
 import {useException, useMessage} from "../../../utils/hooks";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../../components/UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IOffer} from "../../../store/reducers/offers/types";
 import {TEnumKeyLabel} from "../../../store/reducers/utils";
+import {EAudience, EChannel, TForm} from "../types";
+import {Label} from "./styles";
 
-const Label = withStyles(theme => ({
-    root: {
-        textTransform: "uppercase",
-        fontSize: 12,
-        fontWeight: "bold",
-        color: theme.palette.text.primary
-    }
-}))(FormLabel);
-
-enum EAudience {
-    All,
-    New,
-    NewWarranty,
-    HighCustomerValue,
-    MediumCustomerValue,
-    LastVisit90
-}
 const audienceLabels: TEnumKeyLabel<EAudience> = {
     [EAudience.All]: "All",
     [EAudience.New]: "New",
@@ -36,25 +21,18 @@ const audienceLabels: TEnumKeyLabel<EAudience> = {
     [EAudience.MediumCustomerValue]: "Medium Customer Value",
     [EAudience.LastVisit90]: "Last Visit > 90 days",
 }
-enum EChannel {
-    Text, Email, Both
-}
+
 const channelLabels: TEnumKeyLabel<EChannel> = {
     [EChannel.Both]: "Both",
     [EChannel.Email]: "Email",
     [EChannel.Text]: "Text"
 }
 
-type TForm = {
-    offer?: IOffer,
-    audience?: EAudience,
-    channel: EChannel,
-}
 const initialForm: TForm = {
     channel: EChannel.Text
 }
 
-export const SendOffer: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export const SendOfferModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const offers = useSelector((state: RootState) => state.offers.offersList);
@@ -127,7 +105,7 @@ export const SendOffer: React.FC<DialogProps> = ({onAction, payload, ...props}) 
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Label >Channel</Label>
+                    <Label>Channel</Label>
                     <RadioGroup row value={form.channel} onChange={handleChannel}>
                         {Object.values(EChannel).filter(v => !isNaN(Number(v)))
                             .map(c => {

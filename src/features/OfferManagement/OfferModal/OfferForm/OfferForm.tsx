@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../../../../components/UI/TextField";
 import {Button, FormControlLabel, MenuItem, Radio, RadioGroup, Select, Switch} from "@material-ui/core";
 import {
     customerPresence,
@@ -9,74 +9,23 @@ import {
     EDayOfWeek,
     EOfferType,
     offerTypes
-} from "../../../store/reducers/offers/types";
+} from "../../../../store/reducers/offers/types";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteOptionsRender, autocompleteRender} from "../../UI/AutocompleteRender";
+import {autocompleteOptionsRender, autocompleteRender} from "../../../../components/UI/AutocompleteRender";
 import clsx from "clsx";
-import {DatePicker, TimePicker} from "../../UI/DateTimePickers";
+import {DatePicker, TimePicker} from "../../../../components/UI/DateTimePickers";
 import {DateRange, QueryBuilder} from "@material-ui/icons";
-import {DialogContent} from "../../Modals/BaseModal";
-import {makeStyles} from "@material-ui/core/styles";
-import {selectAllSR, TOfferForm} from "./types";
+import {DialogContent} from "../../../../components/Modals/BaseModal";
+import {selectAllSR, TAutoChangeEvent, TOfferForm} from "../../types";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
+import {RootState} from "../../../../store/rootReducer";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import {TEnumMap} from "../../../store/reducers/utils";
-import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
-import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";
-import {useModal} from "../../../utils/hooks";
-import HtmlEditor from "../../Modals/HTMLEditor/HTMLEditor";
-
-
-const useStyles = makeStyles(theme => ({
-    inputContainer: {
-        marginTop: 10,
-        "&:first-child": {
-            marginTop: 0
-        }
-    },
-    rowContainer: {
-        display: "flex",
-        alignItems: "flex-end",
-        justifyContent: "space-between",
-        flexFlow: "row nowrap",
-        [theme.breakpoints.down("xs")]: {
-            flexDirection: "column",
-            alignItems: "stretch",
-            marginTop: theme.spacing(4)
-        }
-    },
-    lastRowContainer: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexFlow: "row nowrap",
-        [theme.breakpoints.down("xs")]: {
-            flexDirection: "column",
-            alignItems: "stretch",
-            marginTop: theme.spacing(4)
-        }
-    },
-    innerContainer: {
-        flexGrow: 1,
-        flexBasis: 0
-    },
-    divider: {
-        padding: 10,
-        [theme.breakpoints.down("xs")]: {
-            visibility: "hidden",
-            height: theme.spacing(1)
-        }
-    },
-    text: {
-        textTransform: "uppercase",
-        fontWeight: "bold",
-    }
-}));
-
-// const filter = createFilterOptions<TServiceTypeWithCustom>();
-
-type TAutoChangeEvent = React.ChangeEvent<{name?: string, value: unknown}>;
+import {TEnumMap} from "../../../../store/reducers/utils";
+import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
+import {EServiceCategoryType, ICategory} from "../../../../store/reducers/categories/types";
+import {useModal} from "../../../../utils/hooks";
+import HtmlEditor from "../../../../components/Modals/HTMLEditor/HTMLEditor";
+import {useStyles} from "./styles";
 
 type TProps = {
     form: TOfferForm;
@@ -91,7 +40,8 @@ type TProps = {
     onCategoryChange: (e: any, value: ICategory[]) => void;
     formIsChecked: boolean;
 }
-export const OfferEditContent: React.FC<TProps> = ({
+
+export const OfferForm: React.FC<TProps> = ({
     form,
     onSelect,
     onChange,
@@ -104,35 +54,18 @@ export const OfferEditContent: React.FC<TProps> = ({
     onSRChange,
     formIsChecked,
 }) => {
-    // const [options, setOptions] = useState<TServiceTypeWithCustom[]>([]);
     const serviceRequests = useSelector((state: RootState) => state.serviceRequests.scRequestsShort);
     const {allCategories} = useSelector((state: RootState) => state.categories);
     const srWithAll: IAssignedServiceRequestShort[] = useMemo(() => {
         return [selectAllSR, ...serviceRequests];
     }, [serviceRequests]);
     const {isOpen, onOpen, onClose} = useModal();
-
-    // const handleChangeServiceType = (event: any, values: TServiceTypeWithCustom[]) => {
-    //     if (values.length) {
-    //         // Add option to list and activate
-    //         for (let i = 0; i < values.length; i++) {
-    //             let v = values[i];
-    //             if (v.inputValue) {
-    //                 const newValue = {name: v.inputValue};
-    //                 setOptions([...options, {name: v.inputValue}]);
-    //                 values[i] = newValue;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     onValueChange("serviceType", values);
-    // }
+    const classes = useStyles();
 
     const handleSwitch = (e: any, value: boolean) => {
         onValueChange('isProductPageOn', value);
     }
 
-    const classes = useStyles();
     return <DialogContent>
         <div className={classes.inputContainer}>
             <TextField
@@ -173,46 +106,6 @@ export const OfferEditContent: React.FC<TProps> = ({
                     fullWidth
                     onChange={onChange}
                 />
-                {/*<Autocomplete
-                    multiple
-                    value={form.serviceType || []}
-                    options={options}
-                    ChipProps={{
-                        color: "primary",
-                        style: {borderRadius: 4},
-                        size: "small"
-                    }}
-                    onChange={handleChangeServiceType}
-                    filterOptions={(options, params) => {
-                        const filtered = filter(options, params);
-
-                        // Suggest the creation of a new value
-                        if (params.inputValue !== '' && !filtered.length) {
-                            filtered.push({
-                                name: `Add "${params.inputValue}"`,
-                                inputValue: params.inputValue
-                            });
-                        }
-
-                        return filtered;
-                    }}
-                    getOptionSelected={((option, value) => option.name === value.name)}
-                    selectOnFocus
-                    clearOnBlur
-                    fullWidth
-                    handleHomeEndKeys
-                    id="offer_type"
-                    getOptionLabel={(option) => {
-                        // Add "xxx" option created dynamically
-                        if (option.inputValue) {
-                            return option.inputValue;
-                        }
-                        // Regular option
-                        return option.name;
-                    }}
-                    renderOption={autocompleteOptionsRender(e => e.name)}
-                    renderInput={autocompleteRender({label: "Offer type"})}
-                />*/}
             </div> :
             <div className={classes.inputContainer}>
                 <TextField

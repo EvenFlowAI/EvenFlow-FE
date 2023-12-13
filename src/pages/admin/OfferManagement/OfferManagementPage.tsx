@@ -1,6 +1,6 @@
 import React from 'react';
-import {ContentContainer} from "../Content/ContentContainer/ContentContainer";
-import {OfferManagement} from "./OfferManagement";
+import {ContentContainer} from "../../../components/Content/ContentContainer/ContentContainer";
+import {OfferManagement} from "../../../features/OfferManagement";
 
 export const OfferManagementPage = () => {
     return (

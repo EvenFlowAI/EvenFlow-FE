@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../../Modals/types";
-import {BaseModal, DialogActions, DialogTitle} from "../../Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
+import {BaseModal, DialogActions, DialogTitle} from "../../../components/Modals/BaseModal";
 import {Button} from "@material-ui/core";
-import {LoadingButton} from "../../UI/Button";
+import {LoadingButton} from "../../../components/UI/Button";
 import {useConfirm, useException, useMessage, useSCs} from "../../../utils/hooks";
 import {
     customerSegments,
@@ -22,14 +22,14 @@ import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actio
 import {TEnumMap} from "../../../store/reducers/utils";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import moment from "moment";
-import {ViewOfferContent} from "./ViewOfferContent";
-import {OfferEditContent} from "./OfferEditContent";
-import {selectAllSR, TOfferForm} from "./types";
+import {ViewOffer} from "./ViewOffer/ViewOffer";
+import {OfferForm} from "./OfferForm/OfferForm";
+import {selectAllSR, TOfferForm} from "../types";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 import {ICategory} from "../../../store/reducers/categories/types";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 
-const clearForm: TOfferForm = {
+const initialForm: TOfferForm = {
     offerValue: undefined,
     offerTitle: undefined,
     offerType: EOfferType.AmountOff,
@@ -43,8 +43,8 @@ const clearForm: TOfferForm = {
     isProductPageOn: false,
 }
 
-export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAction, archive, payload, ...props}) => {
-    const [form, setForm] = useState<TOfferForm>(clearForm);
+export const OfferModal:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAction, archive, payload, ...props}) => {
+    const [form, setForm] = useState<TOfferForm>(initialForm);
     const [archiving, setArchiving] = useState<boolean>(false);
     const [viewMode, setViewMode] = useState<boolean>(false);
     const [isSaving, setSaving] = useState<boolean>(false);
@@ -92,7 +92,7 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
                     serviceCategories: payload.serviceCategories,
                 })
             } else {
-                setForm(clearForm);
+                setForm(initialForm);
             }
         }
     }, [props.open, payload]);
@@ -305,12 +305,12 @@ export const NewOffer:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAc
     }
     return (
         <BaseModal {...props} width={600} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>{
-                viewMode ? "" : payload ? "Edit" : "Add"
-            } Offer</DialogTitle>
+            <DialogTitle onClose={onCancel}>
+                {viewMode ? "" : payload ? "Edit" : "Add"} Offer
+            </DialogTitle>
             {(viewMode && payload)
-                ? <ViewOfferContent offer={payload} archiving={archiving} onArchive={handleArchive} />
-                : <OfferEditContent
+                ? <ViewOffer offer={payload} archiving={archiving} onArchive={handleArchive} />
+                : <OfferForm
                     formIsChecked={formIsChecked}
                     form={form}
                     onValueChange={handleValueChange}

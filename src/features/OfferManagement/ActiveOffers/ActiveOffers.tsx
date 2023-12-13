@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {Button, CircularProgress, Grid, TablePagination} from "@material-ui/core";
 import {useModal, usePagination, useSCs} from "../../../utils/hooks";
-import {NewOffer} from "./NewOffer";
+import {OfferModal} from "../OfferModal/OfferModal";
 import {useDispatch, useSelector} from "react-redux";
 import {loadOffers, setOffersPageData} from "../../../store/reducers/offers/actions";
 import {RootState} from "../../../store/rootReducer";
-import {OfferPlate} from "./OfferPlate";
+import {OfferPlate} from "../OfferPlate/OfferPlate";
 import {EOfferStatus, IOffer} from "../../../store/reducers/offers/types";
-import {NoItemsLoading} from "../../UI/NoItemsLoading";
-import {SendOffer} from "./SendOffer";
+import {NoItemsLoading} from "../../../components/UI/NoItemsLoading";
+import {SendOfferModal} from "../SendOfferModal/SendOfferModal";
 import {defaultRowsPerPageOptions} from "../../../config/config";
 
 export const ActiveOffers = () => {
@@ -75,11 +75,13 @@ export const ActiveOffers = () => {
             <Grid container spacing={2} style={{marginTop: 16}}>
                 {offersLoading
                     ? <Grid item xs={12} style={{textAlign: "center"}}><CircularProgress /></Grid>
-                    : offers.length ? offers.map(offer => {
-                    return <Grid key={offer.id} item xs={12} sm={6} md={4}>
-                        <OfferPlate offer={offer} onClick={handleEdit} />
-                    </Grid>
-                }) : <NoItemsLoading items={offers} label={"There are no active offers."} />}
+                    : offers.length
+                        ? offers.map(offer => {
+                            return <Grid key={offer.id} item xs={12} sm={6} md={4}>
+                                <OfferPlate offer={offer} onClick={handleEdit} />
+                            </Grid>
+                        })
+                        : <NoItemsLoading items={offers} label={"There are no active offers."} />}
                 <Grid item xs={12}>
                     <TablePagination
                         component="div"
@@ -92,8 +94,8 @@ export const ActiveOffers = () => {
                     />
                 </Grid>
             </Grid>
-            <NewOffer open={isOpen} payload={editedItem} onClose={onClose} />
-            <SendOffer open={isOfferOpen} onClose={onOfferClose} />
+            <OfferModal open={isOpen} payload={editedItem} onClose={onClose} />
+            <SendOfferModal open={isOfferOpen} onClose={onOfferClose} />
         </div>
     );
 };

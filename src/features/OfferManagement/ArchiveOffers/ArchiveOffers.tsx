@@ -4,10 +4,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadArchivedOffers, setArchivedOffersPageData} from "../../../store/reducers/offers/actions";
 import {Grid, TablePagination} from "@material-ui/core";
-import {NoItemsLoading} from "../../UI/NoItemsLoading";
-import {OfferPlate} from "./OfferPlate";
+import {NoItemsLoading} from "../../../components/UI/NoItemsLoading";
+import {OfferPlate} from "../OfferPlate/OfferPlate";
 import {EOfferStatus, IOffer} from "../../../store/reducers/offers/types";
-import {NewOffer} from "./NewOffer";
+import {OfferModal} from "../OfferModal/OfferModal";
 import {defaultRowsPerPageOptions} from "../../../config/config";
 
 export const ArchiveOffers = () => {
@@ -68,6 +68,6 @@ export const ArchiveOffers = () => {
                 rowsPerPageOptions={defaultRowsPerPageOptions}
             />
         </Grid>
-        <NewOffer open={isOpen} payload={editedItem} archive onClose={onClose} />
+        <OfferModal open={isOpen} payload={editedItem} archive onClose={onClose} />
     </Grid>
 };
