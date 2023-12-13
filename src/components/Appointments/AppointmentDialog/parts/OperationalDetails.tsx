@@ -2,9 +2,9 @@ import {makeStyles} from "@material-ui/core/styles";
 import React from "react";
 import {IAppointment} from "../../../../api/types";
 import DetailsItem from "./DetailsItem";
-import moment from "moment/moment";
 import {dateTimeFormat} from "./AppointmentDetails";
 import Modified from "./Modified";
+import moment from "moment";
 
 const useStyles = makeStyles({
     blockTitle: {
@@ -15,7 +15,10 @@ const useStyles = makeStyles({
 
 const OperationalDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
     const classes = useStyles();
-    const createdText = [moment(payload.createdDateTime).format(dateTimeFormat), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
+    const date = payload.createdDateTime
+        ? payload.createdDateTime.toString().split('.')[0]
+        : payload.createdDateTime
+    const createdText = [moment(date).format(dateTimeFormat), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
 
     return (
         <div>
