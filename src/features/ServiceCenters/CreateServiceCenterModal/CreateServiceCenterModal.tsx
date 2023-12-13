@@ -1,14 +1,14 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {AvatarContainer, BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {DialogProps} from "../types";
+import {AvatarContainer, BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
 import {states} from "../../../config/constants";
 import {Button} from "@material-ui/core";
-import {ModalForm, TFormItem, TSelectChange} from "../ModalForm";
+import {ModalForm, TFormItem, TSelectChange} from "../../../components/Modals/ModalForm";
 import {useDispatch, useSelector} from "react-redux";
 import {IServiceCenterForm} from "../../../store/reducers/serviceCenters/types";
 import {useException, useMessage} from "../../../utils/hooks";
 import {createSC, updateSC} from "../../../store/reducers/serviceCenters/actions";
-import {LoadingButton} from "../../UI/Button";
+import {LoadingButton} from "../../../components/UI/Button";
 import {RootState} from "../../../store/rootReducer";
 import {API} from "../../../api/api";
 import {checkEmail, validatePhoneNumber} from "../../../utils/utils";
@@ -37,7 +37,7 @@ const initialFormState: TSCFormState = {
     timeZoneId: ""
 }
 
-export const CreateServiceCenter:
+export const CreateServiceCenterModal:
     React.FC<DialogProps<IServiceCenterForm>&{readOnly?: boolean}> =
     ({payload, readOnly, ...props}) => {
         const saving = useSelector((state: RootState) => state.serviceCenters.saving);

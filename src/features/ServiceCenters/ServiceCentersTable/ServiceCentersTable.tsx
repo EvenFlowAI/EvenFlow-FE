@@ -1,19 +1,16 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {TableRowDataType} from "../../UI/types";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
-import {MoreHoriz, Visibility} from "@material-ui/icons";
-import {TableAvatar} from "../TableAvatar";
-import {Table} from "../../UI/Table";
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
+import {Table} from "../../../components/UI/Table";
 import {IServiceCenterExtended, IServiceCenterForm} from "../../../store/reducers/serviceCenters/types";
-import {useDispatch, useSelector} from "react-redux";
+import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {useConfirm, useCurrentUser, useException, useMessage, usePagination} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
 import {changePageData, loadAll, removeSC, setSCOrder} from "../../../store/reducers/serviceCenters/actions";
-import {useConfirm, useCurrentUser, useException, useMessage, useModal, usePagination} from "../../../utils/hooks";
-import {CreateServiceCenter} from "../../Modals/CreateServiceCenter/CreateServiceCenter";
+import {MoreHoriz, Visibility} from "@material-ui/icons";
+import {TableAvatar} from "../../../components/Admin/TableAvatar";
+import {IOrder, TCallback} from "../../../types/types";
+import {useDispatch, useSelector} from "react-redux";
+import {TableRowDataType} from "../../../components/UI/types";
 import {concatAddress} from "../../../utils/utils";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {Titles} from "../../../config/constants";
-import {IOrder} from "../../../types/types";
 
 const rowDataSU: TableRowDataType<IServiceCenterExtended>[] = [
     {val: (el: IServiceCenterExtended) => el.dealership.name, header: "Dealership group"},
@@ -29,7 +26,13 @@ const rowDataA: TableRowDataType<IServiceCenterExtended>[] = [
     {val: v => v.countOfBays.toString(), header: "Bays", align: "center", orderId: "countOfBays"}
 ];
 
-export const ServiceCenters = () => {
+type TProps = {
+    setEditedItem: Dispatch<SetStateAction<IServiceCenterForm|undefined>>;
+    editedItem: IServiceCenterForm|undefined;
+    onOpen: TCallback;
+}
+
+const ServiceCentersTable: React.FC<TProps> = ({setEditedItem, editedItem, onOpen}) => {
     const [data, loading, count, order, search] = useSelector((state: RootState) => [
         state.serviceCenters.serviceCenters,
         state.serviceCenters.loading,
@@ -37,15 +40,13 @@ export const ServiceCenters = () => {
         state.serviceCenters.order,
         state.serviceCenters.searchTerm
     ]);
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement & EventTarget | null>(null);
-    const [editedItem, setEditedItem] = useState<IServiceCenterForm|undefined>();
 
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement & EventTarget | null>(null);
+    const currentUser = useCurrentUser();
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
     const {askConfirm} = useConfirm();
-    const currentUser = useCurrentUser();
-    const {onOpen, onClose, isOpen} = useModal();
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceCenters.pageData,
         changePageData
@@ -106,35 +107,32 @@ export const ServiceCenters = () => {
     const handleSort = (d: IOrder<IServiceCenterExtended>) => () => {
         dispatch(setSCOrder(d));
     }
+    return (
+        <>
+            <Table<IServiceCenterExtended>
+                data={data}
+                order={order.orderBy}
+                onSort={handleSort}
+                isAscending={order.isAscending}
+                noDataTitle="No Service Centers present"
+                isLoading={loading}
+                rowData={rowData}
+                onChangePage={changePage}
+                onChangeRowsPerPage={changeRowsPerPage}
+                count={count}
+                page={pageIndex}
+                rowsPerPage={pageSize}
+                startActions={startActions}
+                index="id"
+                actions={viewActions}
+            />
 
-    return <>
-        <TitleContainer title={Titles.ServiceCenters} actions pad />
-        <Table<IServiceCenterExtended>
-            data={data}
-            order={order.orderBy}
-            onSort={handleSort}
-            isAscending={order.isAscending}
-            noDataTitle="No Service Centers present"
-            isLoading={loading}
-            rowData={rowData}
-            onChangePage={changePage}
-            onChangeRowsPerPage={changeRowsPerPage}
-            count={count}
-            page={pageIndex}
-            rowsPerPage={pageSize}
-            startActions={startActions}
-            index="id"
-            actions={viewActions}
-        />
+            <Menu onClose={() => setAnchorEl(null)} anchorEl={anchorEl} open={Boolean(anchorEl)}>
+                <MenuItem onClick={openEdit}>Edit</MenuItem>
+                <MenuItem onClick={openRemove}>Remove</MenuItem>
+            </Menu>
+        </>
+    );
+};
 
-        <Menu onClose={() => setAnchorEl(null)} anchorEl={anchorEl} open={Boolean(anchorEl)}>
-            <MenuItem onClick={openEdit}>Edit</MenuItem>
-            <MenuItem onClick={openRemove}>Remove</MenuItem>
-        </Menu>
-        <CreateServiceCenter
-            readOnly={currentUser?.isSuperUser}
-            open={isOpen}
-            onClose={onClose}
-            payload={editedItem} />
-    </>
-}
+export default ServiceCentersTable;

@@ -1,30 +1,16 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Button} from "@material-ui/core";
 import {useCurrentUser, useModal} from "../../../utils/hooks";
-import {CreateServiceCenter} from "../../Modals/CreateServiceCenter/CreateServiceCenter";
+import {CreateServiceCenterModal} from "../CreateServiceCenterModal/CreateServiceCenterModal";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {SearchDB, SearchInput} from "../../UI/SearchInput";
+import {SearchDB, SearchInput} from "../../../components/UI/SearchInput";
 import {loadAll, setSCSearch, setSelectedDealershipGroupId} from "../../../store/reducers/serviceCenters/actions";
 import {changePageData} from "../../../store/reducers/dealershipGroups/actions";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
-import {makeStyles} from "@material-ui/core/styles";
-
-type TSelectedGroup = {
-    name: string;
-    id: number;
-}
-
-const useStyles = makeStyles(() => ({
-   filtersWrapper: {
-       display: 'flex',
-       alignItems: 'center',
-   },
-    autocomplete: {
-       marginLeft: 20,
-    }
-}))
+import {autocompleteRender} from "../../../components/UI/AutocompleteRender";
+import {useStyles} from "./styles";
+import {TSelectedGroup} from "../types";
 
 export const ServiceCenterActions = () => {
     const search = useSelector((state: RootState) => state.serviceCenters.searchTerm);
@@ -83,6 +69,6 @@ export const ServiceCenterActions = () => {
                 variant="contained">
                 Add Service Center
             </Button>
-            <CreateServiceCenter open={isOpen} onClose={onClose} />
+            <CreateServiceCenterModal open={isOpen} onClose={onClose} />
         </>;
 }

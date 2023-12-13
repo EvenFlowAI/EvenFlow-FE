@@ -3,7 +3,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Switch, Route} from "react-router-dom";
 import {Routes} from "../../../config/routes";
 import {DealershipActions} from "../../Admin/DealershipGroups/DealershipActions";
-import {ServiceCenterActions} from "../../Admin/ServiceCenters/ServiceCenterActions";
+import {ServiceCenterActions} from "../../../features/ServiceCenters";
 
 
 const useStyles = makeStyles({
