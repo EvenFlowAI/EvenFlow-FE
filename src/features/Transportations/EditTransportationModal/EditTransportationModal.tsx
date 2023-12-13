@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {DialogProps} from "../types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
 import {
     ECustomerSegment, ETransportationDays,
     ITransportationOptionFull, ITransportationOptionRules,
@@ -12,115 +12,25 @@ import {
 } from "../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../../components/UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
-import {makeStyles} from "@material-ui/core/styles";
-import {DatePicker, TimePicker} from "../../UI/DateTimePickers";
+import {DatePicker, TimePicker} from "../../../components/UI/DateTimePickers";
 import { ReactComponent as Calendar } from "../../../assets/img/date_range.svg";
 import { ReactComponent as Watch } from "../../../assets/img/watch_round.svg";
-import Checkbox from "../../UI/Checkbox";
+import Checkbox from "../../../components/UI/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {Button, Divider} from "@material-ui/core";
 import {editTransportationOptionRules} from "../../../store/reducers/transportationNeeds/actions";
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../../../components/UI/TextField";
 import {getOptions} from "../../../utils/utils";
+import {useAutocompleteStyles, useMultipleACStyles, useStyles} from "./styles";
+import {TOption, TTimeObject} from "../types";
 
 type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;
 }
 
-type TTimeObject = {
-    start?: string | moment.Moment;
-    end?: string | moment.Moment;
-}
-
-const useAutocompleteStyles = makeStyles(() => ({
-    clearIndicator: {
-        width: 0,
-    }
-}))
-
-type TOption = {
-    value: number;
-    name: string;
-}
-
-const useStyles = makeStyles(() => ({
-    wrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '24px 48px',
-    },
-    input: {
-        marginBottom: 20,
-    },
-    smallWrapper: {
-        display: 'flex',
-        justifyContent: 'space-between'
-    },
-    label: {
-        textTransform: 'uppercase',
-        fontWeight: 'bold',
-        fontSize: 12,
-        marginBottom: 5,
-    },
-    bigLabel: {
-        fontWeight: 'bold',
-        fontSize: 16,
-        marginBottom: 5,
-    },
-    actionsWrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-    cancelButton: {
-        color: '#9FA2B4',
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-    },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        }
-    },
-}));
-
-const useMultipleACStyles = makeStyles(() => ({
-    tag: {
-        display: 'flex',
-        alignItems: 'center',
-        backgroundColor: '#7898FF',
-        borderRadius: 4,
-        color: 'white',
-        fontWeight: 'bold',
-        margin: '1px 2px',
-        '& > svg': {
-            color: 'white',
-        }
-    },
-    option: {
-        padding: 0,
-        fontSize: 15,
-        height: 28,
-    },
-    inputRoot: {
-        padding: 5,
-        paddingRight: 8,
-    },
-}))
-
-const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOptionDialogProps> = ({ editingElement, ...props}) => {
+export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOptionDialogProps> = ({ editingElement, ...props}) => {
     const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
     const [customerSegment, setCustomerSegment] = useState<TOption | null>(null);
     const [daysOfWeek, setDaysOfWeek] = useState<TOption[]>([]);
@@ -528,5 +438,3 @@ const EditTransportationOptionDialog:React.FC<DialogProps&TEditTransportationOpt
         </DialogActions>
     </BaseModal>;
 };
-
-export default EditTransportationOptionDialog;

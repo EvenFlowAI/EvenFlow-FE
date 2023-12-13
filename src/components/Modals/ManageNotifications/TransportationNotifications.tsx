@@ -147,7 +147,7 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     }
 
     const onSuccess = () => {
-        showMessage("Notifications for Transportations updated")
+        showMessage("Notifications for TransportationOptions updated")
         setCurrentEmployee(null);
         setFormChecked(false)
     }

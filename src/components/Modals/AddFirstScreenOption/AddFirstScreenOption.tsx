@@ -20,10 +20,9 @@ import {
     updateFirstScreenOption,
     updateFirstScreenOptionIcon
 } from "../../../store/reducers/serviceTypes/actions";
-import {ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
+import {ETransportationType, ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
 import {RootState} from "../../../store/rootReducer";
 import {loadTransportationOptions} from "../../../store/reducers/transportationNeeds/actions";
-import {getOptionString} from "../../Admin/TransportationOptions/TransportationOptions";
 
 const initialFileState = {file: null, dataUrl: undefined};
 
@@ -80,6 +79,20 @@ const useStyles = makeStyles(() => ({
         marginTop: 18,
     },
 }))
+
+const getOptionString = (option: string) => {
+    const string = ETransportationType[+option];
+    const array = [];
+    if (string) {
+        for (let i = 0; i < string.length; i++) {
+            if (string[i] === string[i].toUpperCase() && i > 0) {
+                array.push(' ')
+            }
+            array.push(string[i])
+        }
+    }
+    return array.join('');
+}
 
 const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem, ...props}) => {
     const {options} = useSelector((state: RootState) => state.transportation);

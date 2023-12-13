@@ -1,55 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {DialogProps} from "../types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
 import {
     ETransportColumn,
     ITransportationOptionFull
 } from "../../../store/reducers/transportationNeeds/types";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../../components/UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../../../components/UI/TextField";
 import {Button} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
 import {updateTransportationDescription} from "../../../store/reducers/transportationNeeds/actions";
 import {useException} from "../../../utils/hooks";
-
-type TOption = {
-    value: number;
-    name: string;
-}
+import {useStyles} from "./styles";
+import {TOption} from "../types";
 
 const initialColumn = {name: "Yes", value: ETransportColumn.Yes}
 
-const useStyles = makeStyles(() => ({
-        actionsWrapper: {
-            display: 'flex',
-            justifyContent: 'flex-end',
-            paddingTop: 14,
-        },
-        buttonsWrapper: {
-            display: 'flex',
-            justifyContent: "space-between",
-            alignItems: 'center',
-        },
-        cancelButton: {
-            color: '#9FA2B4',
-            marginRight: 20,
-            border: 'none',
-            outline: 'none',
-        },
-        saveButton: {
-            background: '#7898FF',
-            color: 'white',
-            border: '1px solid #7898FF',
-            outline: 'none',
-            '&:hover': {
-                color: '#7898FF'
-            }
-        },
-}))
-
-const EditTransportationDescription: React.FC<DialogProps & {editingElement: ITransportationOptionFull|null}> = (props) => {
+export const EditTransportationDescriptionModal: React.FC<DialogProps & {editingElement: ITransportationOptionFull|null}> = (props) => {
     const [description, setDescription] = useState<string>('')
     const [column, setColumn] = useState<TOption>(initialColumn);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
@@ -143,5 +111,3 @@ const EditTransportationDescription: React.FC<DialogProps & {editingElement: ITr
         </BaseModal>
     );
 };
-
-export default EditTransportationDescription;
