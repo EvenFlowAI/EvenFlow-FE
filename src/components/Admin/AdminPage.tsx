@@ -2,7 +2,7 @@ import React from "react";
 import {Switch, Redirect} from "react-router-dom";
 import {DealershipGroups} from "./DealershipGroups/DealershipGroups";
 import {ServiceCenters} from "./ServiceCenters/ServiceCenters";
-import {Employees} from "./Employees/Employees";
+import {Employees} from "../../features/Employees";
 import {ContentContainer} from "../Content/ContentContainer/ContentContainer";
 import {Routes} from "../../config/routes";
 import {PrivateRoute} from "../../utils/Routes";

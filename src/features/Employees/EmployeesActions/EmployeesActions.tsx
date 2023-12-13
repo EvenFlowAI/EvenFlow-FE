@@ -1,26 +1,18 @@
 import React, {Dispatch, SetStateAction, useCallback} from "react";
-import {Button, styled} from "@material-ui/core";
+import {Button} from "@material-ui/core";
 import {useCurrentUser, useModal} from "../../../utils/hooks";
-import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
-import {SearchDB} from "../../UI/SearchInput";
+import {CreateEmployee} from "../../../components/Modals/CreateEmployee/CreateEmployee";
+import {SearchDB} from "../../../components/UI/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setEmplSearch} from "../../../store/reducers/employees/actions";
+import {ActionsWrapper} from "./styles";
 
-const ActionsWrapper = styled('div')({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: "flex-end",
-    '& > button': {
-        marginLeft: 20,
-    }
-})
-
-type TEmployeesActions = {
+type TActionsProps = {
     setFiltersOpen: Dispatch<SetStateAction<boolean>>
 }
 
-export const EmployeesActions: React.FC<TEmployeesActions> = ({setFiltersOpen}) => {
+export const EmployeesActions: React.FC<TActionsProps> = ({setFiltersOpen}) => {
     const search = useSelector((state: RootState) => state.employees.searchTerm);
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();

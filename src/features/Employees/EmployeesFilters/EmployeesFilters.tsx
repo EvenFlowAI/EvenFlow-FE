@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Button, MenuItem, Select, styled} from "@material-ui/core";
+import {Button, MenuItem, Select} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../../../components/UI/TextField";
 import {
     loadByFilters,
     loadAll,
@@ -10,27 +10,7 @@ import {
     changePageData
 } from "../../../store/reducers/employees/actions";
 import {useCurrentUser, usePagination} from "../../../utils/hooks";
-
-const FiltersWrapper = styled('div')({
-    width: '100%',
-    display: "flex",
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    marginBottom: 20,
-    '& > div:first-child': {
-        marginRight: 20
-    }
-});
-
-const ButtonsWrapper = styled('div')({
-    width: '100%',
-    display: "flex",
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    '& > button:first-child': {
-        marginRight: 20
-    }
-})
+import {ButtonsWrapper, FiltersWrapper} from "./styles";
 
 const roles = ['Advisor', 'Technician', 'Call Center Rep', 'Manager', 'Owner'];
 const widerRoles = ['Advisor', 'Owner'];

@@ -1,35 +1,17 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {Table} from "../../UI/Table";
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
+import {Table} from "../../../components/UI/Table";
+import {IEmployee} from "../../../store/reducers/employees/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz, Visibility} from "@material-ui/icons";
-import {TableRowDataType} from "../../UI/types";
-import {TableAvatar} from "../TableAvatar";
-import {IEmployee} from "../../../store/reducers/employees/types";
-import {useDispatch, useSelector} from "react-redux";
+import {Roles} from "../../../config/constants";
+import {TableAvatar} from "../../../components/Admin/TableAvatar";
+import {IOrder, TCallback} from "../../../types/types";
+import {changePageData, loadByFilters, removeEmployee, setEmplOrder} from "../../../store/reducers/employees/actions";
+import {TableRowDataType} from "../../../components/UI/types";
+import {useConfirm, useCurrentUser, useException, useMessage, usePagination, useSCs} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
-import {
-    loadByFilters,
-    removeEmployee,
-    setEmplOrder,
-    setEmployeeFilters
-} from "../../../store/reducers/employees/actions";
-import {
-    useConfirm,
-    useCurrentUser,
-    useException,
-    useMessage,
-    useModal,
-    usePagination,
-    useSCs
-} from "../../../utils/hooks";
-import {changePageData} from "../../../store/reducers/employees/actions";
+import {useDispatch, useSelector} from "react-redux";
 import {concatAddress} from "../../../utils/utils";
-import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
-import {Roles, Titles} from "../../../config/constants";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {IOrder} from "../../../types/types";
-import {EmployeesActions} from "./EmployeesActions";
-import EmployeesFilters from "./EmployeesFilters";
 
 const SURowData: TableRowDataType<IEmployee>[] = [
     {val: (el: IEmployee) => el.fullName, header: "Name"},
@@ -46,43 +28,40 @@ const AdminRowData: TableRowDataType<IEmployee>[] = [
     {val: el => el.phoneNumber, header: "Phone Number", orderId: "phoneNumber", width: 170}
 ];
 
-export const Employees = () => {
-    const [data, isLoading, count,  order, search] = useSelector((state: RootState) => [
+type TProps = {
+    editedItem: IEmployee|undefined;
+    setEditedItem: Dispatch<SetStateAction<IEmployee|undefined>>;
+    onOpen: TCallback;
+}
+
+const EmployeesTable:React.FC<TProps> = ({editedItem, setEditedItem, onOpen}) => {
+    const [data, isLoading, count,  order, searchTerm] = useSelector((state: RootState) => [
         state.employees.employeesList,
         state.employees.loading,
         state.employees.paging.numberOfRecords,
         state.employees.order,
         state.employees.searchTerm,
     ]);
-    const [editedItem, setEditedItem] = useState<IEmployee|undefined>();
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
-    const [isFiltersOpen, setFiltersOpen] = useState<boolean>(true);
-
     const {selectedSC} = useSCs();
-    const dispatch = useDispatch();
+    const currentUser = useCurrentUser();
     const {askConfirm} = useConfirm();
     const showError = useException();
     const showMessage = useMessage();
-    const currentUser = useCurrentUser();
-    const {onOpen, isOpen, onClose} = useModal();
+    const dispatch = useDispatch();
+
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.employees.pageData,
         changePageData
     );
+
     const rowData = useMemo<TableRowDataType<IEmployee>[]>(() => {
         return currentUser?.isSuperUser ? SURowData : AdminRowData;
     }, [currentUser]);
 
     useEffect(() => {
-        if (selectedSC) {
-            dispatch(setEmployeeFilters({serviceCenterId: selectedSC.id}))
-        }
-    }, [selectedSC])
-
-    useEffect(() => {
         selectedSC && dispatch(loadByFilters())
-    }, [order, search, selectedSC])
-
+    }, [order, searchTerm, selectedSC])
 
     const handleMenuOpen = (item: IEmployee) => (e: React.MouseEvent<HTMLButtonElement>) => {
         setEditedItem(item);
@@ -101,7 +80,7 @@ export const Employees = () => {
             showError(e);
         }
     }
-    const deleteEmployee = () => {
+    const onDeleteEmployee = () => {
         setAnchorEl(null);
         if (editedItem?.role === 'Owner') {
             showError("You cannot remove dealership account");
@@ -118,6 +97,7 @@ export const Employees = () => {
     }
 
     const handleView = (el: IEmployee) => () => alert(`View ${el.fullName}`);
+
     const viewActions = (el: IEmployee) => (
         currentUser?.isSuperUser
             ? <IconButton size="small" onClick={handleView(el)}><Visibility /></IconButton>
@@ -128,35 +108,37 @@ export const Employees = () => {
                 <MoreHoriz />
             </IconButton>
     );
+
     const startActions = (el: IEmployee) => (
         <TableAvatar name={el.fullName} src={el?.avatarPath} />
     )
 
-    return <>
-        <TitleContainer title={Titles.Employees} pad actions={<EmployeesActions setFiltersOpen={setFiltersOpen}/>} />
-        {isFiltersOpen && <EmployeesFilters/>}
-        <Table<IEmployee>
-            data={data}
-            order={order.orderBy}
-            isAscending={order.isAscending}
-            onSort={handleOrder}
-            noDataTitle="No employees present"
-            isLoading={isLoading}
-            rowData={rowData}
-            onChangePage={changePage}
-            onChangeRowsPerPage={changeRowsPerPage}
-            count={count}
-            page={pageIndex}
-            rowsPerPage={pageSize}
-            startActions={startActions}
-            index="id"
-            actions={viewActions}
-            hidePagination={count < 11}
-        />
-        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
-            <MenuItem onClick={editEmployee}>Edit</MenuItem>
-            <MenuItem onClick={deleteEmployee}>Delete</MenuItem>
-        </Menu>
-        <CreateEmployee open={isOpen} payload={editedItem} onClose={onClose} />
-    </>
-}
+    return (
+        <>
+            <Table<IEmployee>
+                data={data}
+                order={order.orderBy}
+                isAscending={order.isAscending}
+                onSort={handleOrder}
+                noDataTitle="No employees present"
+                isLoading={isLoading}
+                rowData={rowData}
+                onChangePage={changePage}
+                onChangeRowsPerPage={changeRowsPerPage}
+                count={count}
+                page={pageIndex}
+                rowsPerPage={pageSize}
+                startActions={startActions}
+                index="id"
+                actions={viewActions}
+                hidePagination={count < 11}
+            />
+            <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
+                <MenuItem onClick={editEmployee}>Edit</MenuItem>
+                <MenuItem onClick={onDeleteEmployee}>Delete</MenuItem>
+            </Menu>
+        </>
+    );
+};
+
+export default EmployeesTable;
