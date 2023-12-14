@@ -1,70 +1,19 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {makeStyles} from "@material-ui/core/styles";
-import {SquarePaper} from "../../UI/Paper";
-import {TableContainer} from "../../Optimizer/PricingSettings/UI";
+import {SquarePaper} from "../../components/UI/Paper";
+import {TableContainer} from "../../components/Optimizer/PricingSettings/UI";
 import {Box, Button, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {DenseTable} from "../../Optimizer/AppointmentAllocation/UI";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
+import {DenseTable} from "../../components/Optimizer/AppointmentAllocation/UI";
+import {useException, useMessage, useSCs} from "../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
-import {RootState} from "../../../store/rootReducer";
-import {LoadingButton} from "../../UI/Button";
-import {loadBookingFlowConfig, updateBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
-import {Loading} from "../../UI/Loading";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {bookingFlowRoot} from "../../Optimizer/utils";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {TServiceTypeSettings} from "../../store/reducers/bookingFlowConfig/types";
+import {RootState} from "../../store/rootReducer";
+import {LoadingButton} from "../../components/UI/Button";
+import {loadBookingFlowConfig, updateBookingFlowConfig} from "../../store/reducers/bookingFlowConfig/actions";
+import {Loading} from "../../components/UI/Loading";
+import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
+import {useStyles} from "./styles";
 
-const useStyles = makeStyles(theme => ({
-    switchCell: {
-        fontSize: "12px !important",
-        padding: "2px 12px !important"
-    },
-    tableWrapper: {
-        width: "100%",
-        "& .MuiTableCell-root": {
-            [theme.breakpoints.down("xs")]: {
-                fontSize: "12px !important"
-            }
-        }
-    },
-    headerCell: {
-        [theme.breakpoints.down("xs")]: {
-            fontSize: "12px !important"
-        }
-    },
-    serviceTypeCell: {
-        fontSize: "18px !important",
-        fontWeight: "bold",
-    },
-    wrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    cancelButton: {
-        color: '#9FA2B4',
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-    },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        }
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-}));
-
-const BookingFlowConfig = () => {
+export const BookingFlowConfig = () => {
     const [configuration, setConfiguration] = useState<TServiceTypeSettings[]>([]);
     const {config, isLoading} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {selectedSC} = useSCs();
@@ -145,9 +94,7 @@ const BookingFlowConfig = () => {
         }
     }
 
-    return <div style={{width: '100%'}}>
-        <TitleContainer title="Booking Flow Configuration" pad parent={bookingFlowRoot}/>
-        <SquarePaper variant="outlined">
+    return <SquarePaper variant="outlined">
             <TableContainer>
                 <div className={classes.tableWrapper}>
                     {isLoading
@@ -390,7 +337,4 @@ const BookingFlowConfig = () => {
                 </Box>
             </TableContainer>
         </SquarePaper>
-    </div>
 };
-
-export default BookingFlowConfig;

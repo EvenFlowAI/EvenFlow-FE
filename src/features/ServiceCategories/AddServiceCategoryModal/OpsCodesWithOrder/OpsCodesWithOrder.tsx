@@ -1,13 +1,13 @@
 import React, {Dispatch, SetStateAction, useCallback} from 'react';
-import {TableRowDataType} from "../../UI/types";
-import {IAssignedServiceRequest, TOPsCodeWithIndex} from "../../../store/reducers/serviceRequests/types";
-import {TextField} from "../../UI/TextField";
+import {TableRowDataType} from "../../../../components/UI/types";
+import {IAssignedServiceRequest, TOPsCodeWithIndex} from "../../../../store/reducers/serviceRequests/types";
+import {TextField} from "../../../../components/UI/TextField";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
-import Checkbox from "../../UI/Checkbox";
+import {RootState} from "../../../../store/rootReducer";
+import Checkbox from "../../../../components/UI/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
-import {Table} from "../../UI/Table";
-import {makeStyles} from "@material-ui/core/styles";
+import {Table} from "../../../../components/UI/Table";
+import {useStyles} from "./styles";
 
 type TOpsCodesTableProps = {
     selectedCodes: TOPsCodeWithIndex[];
@@ -17,15 +17,7 @@ type TOpsCodesTableProps = {
     setWrongOrderIndexes: Dispatch<SetStateAction<number[]>>;
 }
 
-const useStyles = makeStyles(() => ({
-    scrollableTable: {
-        maxHeight: 300,
-        overflowY: 'auto',
-        marginBottom: 20,
-    }
-}))
-
-const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({
+export const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({
                                                              selectedCodes,
                                                              setSelectedCodes,
                                                              disabled,
@@ -146,5 +138,3 @@ const OpsCodesWithOrder:React.FC<TOpsCodesTableProps> = ({
         </div>
     );
 };
-
-export default OpsCodesWithOrder;

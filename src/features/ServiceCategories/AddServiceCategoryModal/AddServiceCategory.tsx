@@ -1,139 +1,41 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {DialogProps} from "../types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
 import {
     EServiceCategoryType,
     ICategory,
     TNewCategory,
     TUpdateCategoryData
 } from "../../../store/reducers/categories/types";
-import {makeStyles} from "@material-ui/core/styles";
-import {Button, Divider, FormControlLabel, Radio, RadioGroup, Switch, withStyles} from "@material-ui/core";
-import {TextField} from "../../UI/TextField";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {Button, Divider, FormControlLabel, Radio, RadioGroup, Switch} from "@material-ui/core";
+import {TextField} from "../../../components/UI/TextField";
+import {autocompleteRender} from "../../../components/UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
-import {SearchInput} from "../../UI/SearchInput";
+import {SearchInput} from "../../../components/UI/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
 import {loadAllAssignedServiceRequests, setAssignedFilter,} from "../../../store/reducers/serviceRequests/actions";
 import {useException, useSCs} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
 import {IAssignedServiceRequest, TOPsCodeWithIndex} from "../../../store/reducers/serviceRequests/types";
 import {createCategory, updateCategory, updateCategoryIcon} from "../../../store/reducers/categories/actions";
-import OpsCodesTable from "./OpsCodesTable";
-import FileInput from "./FileInput";
+import {OpsCodesTable} from "./OpsCodesTable";
+import {FileInput} from "../../../components/FormControls/FileInput";
 import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {visitCenterTabs} from "../../Admin/ServiceOpsCodesMapping/ServiceOpsCodesMapping";
-import OpsCodesWithOrder from "./OpsCodesWithOrder";
+import {visitCenterTabs} from "../../../pages/admin/ServiceCategories/ServiceCategoriesPage";
+import {OpsCodesWithOrder} from "./OpsCodesWithOrder";
+import {IIconState, TOption} from "./types";
+import {Label, useStyles} from "./styles";
+import {categoryOptions, findMissingNumbers, getOptionLabel, getPageOptions} from "./utils";
 
 type TAddServiceCategoryProps = DialogProps & {
     editingItem: ICategory | null;
     tabValue: string;
 }
 
-const useStyles = makeStyles(() => ({
-    inputsWrapper: {
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr",
-        gridGap: 18,
-        marginBottom: 18,
-    },
-    uploadBtn: {
-        width: '100%',
-        textTransform: 'none',
-        padding: 10,
-        border: 'none',
-        borderRadius: 4,
-        color: 'white',
-        fontWeight: 'bold',
-        backgroundColor: '#7898FF',
-        cursor: 'pointer',
-    },
-    label: {
-        textTransform: "uppercase",
-        fontWeight: 'bold',
-        marginBottom: 4,
-        fontSize: 12,
-    },
-    buttonWrapper: {
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'stretch',
-    },
-    inputWrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    cancelButton: {
-        color: '#9FA2B4'
-    },
-    radioGroup: {
-        display: 'flex',
-        justifyContent: 'flex-end'
-    },
-}))
-
-type TOption = {
-    value: number;
-    name: string;
-}
-
-const getPageOptions = (serviceType: EServiceType): TOption[] => {
-    const typeName = serviceType === EServiceType.MobileService ? "Mobile Service" : "Visit Center";
-    return [
-        {name: `Owned By ${typeName} (Page 1)`, value: 0},
-        {name: `Owned By ${typeName} (Page 2)`, value: 1}
-    ]
-}
-
-const categoryOptions = Object.keys(EServiceCategoryType)
-    .filter(item => Number.isNaN(+item))
-    // @ts-ignore
-    .map(item => ({name: item, value: EServiceCategoryType[item]}));
-
-export interface IIconState {
-    file: File | null;
-    dataUrl?: string;
-}
-
-const Label = withStyles({
-    root: {
-        justifyContent: "flex-end",
-        marginLeft: 0,
-        marginRight: 0,
-    },
-    label: {
-        fontWeight: "bold",
-        fontSize: 12,
-        textTransform: "uppercase",
-        //transform: "translate(0, 1.5px) scale(0.75)",
-    }
-})(FormControlLabel);
-
-const getOptionLabel = (option: TOption) => {
-    const array = [];
-    for (let i = 0; i < option.name.length; i++) {
-        if (option.name[i] === option.name[i].toUpperCase() && i > 0) {
-            array.push(' ');
-        }
-        array.push(option.name[i]);
-    }
-    return array.join('');
-}
-
-const findMissingNumbers = (numbers: number[]): number[] => {
-    const missed: number[] = [];
-    numbers.sort((a, b) => a - b).forEach((number, index) => {
-        if (numbers.filter(el => el === number).length > 1) missed.push(number)
-        if (number > 1 && number - numbers[index - 1] !== 1) missed.push(number)
-    })
-    return Array.from(new Set(missed));
-}
-
-
 const initialFileState = {file: null, dataUrl: undefined};
 
-const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, tabValue, ...props}) => {
+export const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, tabValue, ...props}) => {
     const {allAssignedList, assignedFilter} = useSelector((state: RootState) => state.serviceRequests);
     const {categories, page, filter} = useSelector((state: RootState) => state.categories);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -463,5 +365,3 @@ const AddServiceCategory: React.FC<TAddServiceCategoryProps> = ({editingItem, ta
         </BaseModal>
     );
 };
-
-export default AddServiceCategory;

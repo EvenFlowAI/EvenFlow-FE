@@ -1,11 +1,7 @@
 import React, {ChangeEventHandler, createRef, Dispatch, SetStateAction, useCallback} from 'react';
 import {useException, useMessage} from "../../../utils/hooks";
-import {makeStyles} from "@material-ui/core/styles";
-
-interface IIconState {
-    file: File | null;
-    dataUrl?: string;
-}
+import {useStyles} from "./styles";
+import {IIconState} from "../types";
 
 const allowedFileTypes = ['image/svg+xml', 'image/svg', 'image/png', 'image/jpeg', 'image/jpg'];
 
@@ -14,36 +10,7 @@ type TFileInputProps = {
     label: string;
 }
 
-const useStyles = makeStyles(() => ({
-    buttonWrapper: {
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'stretch',
-    },
-    uploadBtn: {
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        fontSize: 15,
-        fontWeight: 'bold',
-        textTransform: 'none',
-        color: 'white',
-        backgroundColor: '#7898FF',
-        padding: 10,
-        border: 'none',
-        borderRadius: 4,
-        cursor: 'pointer',
-    },
-    fileInput: {
-        display: 'none'
-    },
-    fileLabel: {
-        width: '100%'
-    }
-}))
-
-
-const FileInput: React.FC<TFileInputProps> = ({ setState, label }) => {
+export const FileInput: React.FC<TFileInputProps> = ({ setState, label }) => {
     const ref = createRef<HTMLInputElement>();
     const showError = useException();
     const showMessage = useMessage();
@@ -89,5 +56,3 @@ const FileInput: React.FC<TFileInputProps> = ({ setState, label }) => {
         </div>
     );
 };
-
-export default FileInput;

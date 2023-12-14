@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
 import {TabContext} from "@material-ui/lab";
-import {TabList} from "../../UI/Tabs";
+import {TabList} from "../../../components/UI/Tabs";
 import {Tab} from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import {
@@ -10,8 +10,8 @@ import {
     setCategoriesPage
 } from "../../../store/reducers/categories/actions";
 import {useSCs} from "../../../utils/hooks";
-import {bookingFlowRoot} from "../../Optimizer/utils";
-import CategoriesTablePage from "./CategoriesTablePage";
+import {bookingFlowRoot} from "../../../components/Optimizer/utils";
+import {ServiceCategoriesTable} from "../../../features/ServiceCategories";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const tabNames = [
@@ -23,7 +23,7 @@ const tabNames = [
 
 export const visitCenterTabs = ["0", "1"];
 
-const ServiceOpsCodesMapping = () => {
+export const ServiceCategoriesPage = () => {
     const [selectedTab, setTab] = useState<string>("0");
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
@@ -55,9 +55,7 @@ const ServiceOpsCodesMapping = () => {
             >
                 {tabNames.map((name, index) => <Tab label={name} value={`${index}`} key={name}/>)}
             </TabList>
-                {tabNames.map((name, index) => <CategoriesTablePage tabValue={`${index}`} key={name}/>)}
+                {tabNames.map((name, index) => <ServiceCategoriesTable tabValue={`${index}`} key={name}/>)}
         </TabContext>
     );
 };
-
-export default ServiceOpsCodesMapping;

@@ -1,24 +1,24 @@
 import React, {useState} from 'react';
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {Table} from "../../UI/Table";
+import {Table} from "../../../components/UI/Table";
 import {TabPanel} from "@material-ui/lab";
-import {TableRowDataType} from "../../UI/types";
+import {TableRowDataType} from "../../../components/UI/types";
 import {ICategory} from "../../../store/reducers/categories/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
 import {deleteCategoryById} from "../../../store/reducers/categories/actions";
 import {useConfirm, useException, useMessage, useModal} from "../../../utils/hooks";
-import AddServiceCategory from "../../Modals/AddServiceCategory/AddServiceCategory";
+import {AddServiceCategory} from "../AddServiceCategoryModal";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {visitCenterTabs} from "./ServiceOpsCodesMapping";
+import {visitCenterTabs} from "../../../pages/admin/ServiceCategories/ServiceCategoriesPage";
 
 const RowData: TableRowDataType<ICategory>[] = [
     {val: (el: ICategory) => el.name, header: "Service Category Name",  width: 300},
     {val: (el: ICategory) => el.orderIndex?.toString() ?? '', header: "Order Index", align: 'center', width: 150},
 ];
 
-const CategoriesTablePage: React.FC<{tabValue: string}> = ({tabValue}) => {
+export const ServiceCategoriesTable: React.FC<{tabValue: string}> = ({tabValue}) => {
     const { categories, isLoading } = useSelector((state: RootState) => state.categories);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [currentItem, setCurrentItem] = useState<ICategory | null>(null);
@@ -109,5 +109,3 @@ const CategoriesTablePage: React.FC<{tabValue: string}> = ({tabValue}) => {
         </TabPanel>
     );
 };
-
-export default CategoriesTablePage;

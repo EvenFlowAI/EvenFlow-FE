@@ -14,7 +14,7 @@ import AppointmentsPage from "../../pages/admin/Appointments/AppointmentsPage";
 import PricingPage from "./Pricing/PricingPage";
 import ReportingPage from "./ReportingPage/ReportingPage";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";
-import {BookingFlowPage} from "./BookingFlow/BookingFlow";
+import {BookingFlowPage} from "../../pages/admin/BookingFlow/BookingFlowPage";
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();

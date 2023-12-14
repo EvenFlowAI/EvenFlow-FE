@@ -1,12 +1,12 @@
 import React, {useCallback, Dispatch, SetStateAction} from 'react';
-import {Table} from "../../UI/Table";
-import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
+import {Table} from "../../../../components/UI/Table";
+import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
-import {TableRowDataType} from "../../UI/types";
-import Checkbox from "../../UI/Checkbox";
+import {RootState} from "../../../../store/rootReducer";
+import {TableRowDataType} from "../../../../components/UI/types";
+import Checkbox from "../../../../components/UI/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
-import {makeStyles} from "@material-ui/core/styles";
+import {useStyles} from "./styles";
 
 const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {
@@ -39,21 +39,13 @@ const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     },
 ]
 
-const useStyles = makeStyles(() => ({
-    scrollableTable: {
-        maxHeight: 300,
-        overflowY: 'auto',
-        marginBottom: 20,
-    }
-}))
-
 type TOpsCodesTableProps = {
     selectedCodes: IAssignedServiceRequest[];
     setSelectedCodes: Dispatch<SetStateAction<IAssignedServiceRequest[]>>;
     disabled: boolean;
 }
 
-const OpsCodesTable: React.FC<TOpsCodesTableProps> = ({ selectedCodes, setSelectedCodes, disabled }) => {
+export const OpsCodesTable: React.FC<TOpsCodesTableProps> = ({ selectedCodes, setSelectedCodes, disabled }) => {
     const { allAssignedList, assignedLoading } = useSelector((state: RootState) => state.serviceRequests);
     const classes = useStyles()
 
@@ -92,5 +84,3 @@ const OpsCodesTable: React.FC<TOpsCodesTableProps> = ({ selectedCodes, setSelect
         </div>
     );
 };
-
-export default OpsCodesTable;
