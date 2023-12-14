@@ -94,10 +94,6 @@ export const Appointments = () => {
         setFilters(prev => ({...prev, pageData: {pageIndex: 0, pageSize: +e.target.value}}))
     }, []);
 
-    const onDateChange = (date: moment.Moment | null): void => {
-        setFilters(prev => ({...prev, date, pageData: initialPaging}))
-    }
-
     const handleChangeView = (type: TView) => () => {
         if (type === "calendar") {
             setFiltersOpen(false);
@@ -138,7 +134,6 @@ export const Appointments = () => {
                 scheduler={filters.scheduler}
                 serviceBook={filters.serviceBook}
                 selectedDate={filters.date}
-                onChange={onDateChange}
             />
             : null}
         {selectedView === "list"

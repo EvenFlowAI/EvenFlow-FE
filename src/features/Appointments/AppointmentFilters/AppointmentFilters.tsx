@@ -21,14 +21,12 @@ type TAppointmentFilterProps = {
     scheduler: TScheduler|null;
     serviceBook: TServiceBook|null;
     selectedDate: moment.Moment | null;
-    onChange: (date: moment.Moment | null) => void;
     setFilters: Dispatch<SetStateAction<TFilters>>;
 }
 
 export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                           status,
                                                                           selectedDate,
-                                                                          onChange,
                                                                           setFilters,
                                                                           scheduler,
                                                                           serviceBook,
@@ -48,6 +46,10 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
 
     const handleOpen = (s: boolean) => () => {
         setOpen(s);
+    }
+
+    const onChange = (date: moment.Moment | null): void => {
+        setFilters(prev => ({...prev, date, pageData: initialPaging}))
     }
 
     const handleDateChange = (date: MaterialUiPickersDate) => {
