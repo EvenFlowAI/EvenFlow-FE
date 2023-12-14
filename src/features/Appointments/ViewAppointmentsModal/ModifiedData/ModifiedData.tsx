@@ -1,10 +1,10 @@
 import React from 'react';
 import {TDateAppointmentData} from "../../../../api/types";
 import moment from "moment";
-import {dateTimeFormat} from "./AppointmentDetails";
-import {useDetailsItemStyles} from "./DetailsItem";
+import {dateTimeFormat} from "../AppointmentDetails/AppointmentDetails";
+import {useDetailsItemStyles} from "../DetailsItem/styles";
 
-const ModifiedData: React.FC<{data: TDateAppointmentData[]}> = ({data}) => {
+export const ModifiedData: React.FC<{data: TDateAppointmentData[]}> = ({data}) => {
     const classes = useDetailsItemStyles();
     return data?.length
         ? <div className={classes.wrapper}>
@@ -17,6 +17,4 @@ const ModifiedData: React.FC<{data: TDateAppointmentData[]}> = ({data}) => {
             </div>
         </div>
         : null
-}
-
-export default ModifiedData;
+};

@@ -11,7 +11,7 @@ import {deleteCategoryById} from "../../../store/reducers/categories/actions";
 import {useConfirm, useException, useMessage, useModal} from "../../../utils/hooks";
 import {AddServiceCategory} from "../AddServiceCategoryModal";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {visitCenterTabs} from "../../../pages/admin/ServiceCategories/ServiceCategoriesPage";
+import {visitCenterTabs} from "../constants";
 
 const RowData: TableRowDataType<ICategory>[] = [
     {val: (el: ICategory) => el.name, header: "Service Category Name",  width: 300},

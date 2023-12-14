@@ -13,6 +13,7 @@ import {useSCs} from "../../../utils/hooks";
 import {bookingFlowRoot} from "../../../components/Optimizer/utils";
 import {ServiceCategoriesTable} from "../../../features/ServiceCategories";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {visitCenterTabs} from "../../../features/ServiceCategories/constants";
 
 const tabNames = [
     "Visit Center (Page 1)",
@@ -20,8 +21,6 @@ const tabNames = [
     "Mobile Service (Page 1)",
     "Mobile Service (Page 2)"
 ];
-
-export const visitCenterTabs = ["0", "1"];
 
 export const ServiceCategoriesPage = () => {
     const [selectedTab, setTab] = useState<string>("0");

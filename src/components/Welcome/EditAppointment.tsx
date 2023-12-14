@@ -29,7 +29,7 @@ import {useTranslation} from "react-i18next";
 import {useStorage} from "../../utils/hooks";
 import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
 import {EServiceType, EUserType} from "../../store/reducers/appointmentFrameReducer/types";
-import {dateTimeFormat} from "../../features/Appointments/ViewAppointmentsModal/parts/AppointmentDetails";
+import {dateTimeFormat} from "../../features/Appointments/ViewAppointmentsModal/AppointmentDetails/AppointmentDetails";
 
 const ContentContainer = styled("div")({
     fontSize: 22,

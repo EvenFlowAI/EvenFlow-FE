@@ -22,11 +22,11 @@ import {OpsCodesTable} from "./OpsCodesTable";
 import {FileInput} from "../../../components/FormControls/FileInput";
 import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {visitCenterTabs} from "../../../pages/admin/ServiceCategories/ServiceCategoriesPage";
 import {OpsCodesWithOrder} from "./OpsCodesWithOrder";
 import {IIconState, TOption} from "./types";
 import {Label, useStyles} from "./styles";
 import {categoryOptions, findMissingNumbers, getOptionLabel, getPageOptions} from "./utils";
+import {visitCenterTabs} from "../constants";
 
 type TAddServiceCategoryProps = DialogProps & {
     editingItem: ICategory | null;

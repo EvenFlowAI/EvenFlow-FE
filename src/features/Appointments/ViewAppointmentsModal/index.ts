@@ -1,0 +1,1 @@
+export {ViewAppointmentsModal} from './ViewAppointmentsModal';

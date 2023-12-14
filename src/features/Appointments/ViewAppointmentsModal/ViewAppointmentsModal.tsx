@@ -6,9 +6,10 @@ import {
 } from "@material-ui/core";
 import {DialogProps} from "../../../components/Modals/types";
 import {AppointmentStatus, IAppointment} from "../../../api/types";
-import AppointmentDetails from "./parts/AppointmentDetails";
-import {CustomerInfo, VehicleDetails} from "./parts/VehicleDetails";
-import OperationalDetails from "./parts/OperationalDetails";
+import {AppointmentDetails} from "./AppointmentDetails";
+import {VehicleDetails} from "./VehicleDetails";
+import {CustomerInfo} from "./CustomerInfo";
+import {OperationalDetails} from "./OperationalDetails";
 import {Wrapper} from "./styles";
 
 type TCallbackProps = {

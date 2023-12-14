@@ -11,12 +11,12 @@ import {ReactComponent as ConvenienceFees} from "../../../../assets/img/person_d
 import {ReactComponent as Address} from "../../../../assets/img/address.svg";
 import {appointmentStatuses, IAppointment} from "../../../../api/types";
 import moment from "moment";
-import DetailsItem from "./DetailsItem";
-import {TitleWrapper} from "./styles";
+import {DetailsItem} from "../DetailsItem";
+import {TitleWrapper} from "../styles";
 
 export const dateTimeFormat = "ddd, MMM DD, YYYY h:mm a"
 
-const AppointmentDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
+export const AppointmentDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
     return (
         <div>
             <TitleWrapper>Appointment Details</TitleWrapper>
@@ -80,5 +80,3 @@ const AppointmentDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
         </div>
     );
 };
-
-export default AppointmentDetails;

@@ -1,26 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {TableRowDataType} from "../../UI/types";
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {Table} from "../../../components/UI/Table";
+import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
+import {MoreHoriz} from "@material-ui/icons";
+import {deleteFirstScreenOptionById, loadFirstScreenOptionsList} from "../../../store/reducers/serviceTypes/actions";
+import {useConfirm, useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {MoreHoriz} from "@material-ui/icons";
-import {
-    deleteFirstScreenOptionById,
-    loadFirstScreenOptionsList
-} from "../../../store/reducers/serviceTypes/actions";
-import {Table} from "../../UI/Table";
-import {bookingFlowRoot} from "../../Optimizer/utils";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import AddFirstScreenOption from "../../Modals/AddFirstScreenOption/AddFirstScreenOption";
-
-export const serviceTypeNames = {
-    0: 'Visit Center',
-    1: 'Mobile Service',
-    2: 'Pick Up Drop Off',
-    3: 'General',
-}
+import {TableRowDataType} from "../../../components/UI/types";
+import {TCallback} from "../../../types/types";
+import {serviceTypeNames} from "../constants";
 
 const RowData: TableRowDataType<IFirstScreenOption>[] = [
     {val: (el: IFirstScreenOption) => el.name, header: "First Screen Option",  width: 300},
@@ -29,17 +18,20 @@ const RowData: TableRowDataType<IFirstScreenOption>[] = [
     {val: (el: IFirstScreenOption) => el.transportationOption?.name ?? '-', header: "Default Transportation Option"},
 ]
 
-const FirstScreen = () => {
+type TProps = {
+    setCurrentItem: Dispatch<SetStateAction<IFirstScreenOption | null>>;
+    currentItem: IFirstScreenOption | null;
+    onOpen: TCallback;
+}
+
+export const FirstScreenOptionsTable: React.FC<TProps> = ({setCurrentItem, currentItem, onOpen}) => {
     const { firstScreenOptions, isLoading } = useSelector((state: RootState) => state.serviceTypes);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const [currentItem, setCurrentItem] = useState<IFirstScreenOption | null>(null);
-
-    const dispatch = useDispatch();
+    const {selectedSC} = useSCs();
     const showMessage = useMessage();
     const showError = useException();
     const {askConfirm} = useConfirm();
-    const {selectedSC} = useSCs();
-    const {isOpen, onOpen, onClose} = useModal();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         selectedSC && dispatch(loadFirstScreenOptionsList(selectedSC.id));
@@ -88,23 +80,8 @@ const FirstScreen = () => {
         onOpen();
     }
 
-    const onOpenAdd = async () => {
-        await setCurrentItem(null);
-        await onOpen();
-    }
-
     return (
-        <React.Fragment>
-            <TitleContainer title="First Screen" pad parent={bookingFlowRoot}/>
-            <div style={{width: '100%', display: "flex", alignItems: "center", justifyContent: 'flex-end', marginBottom: 20}}>
-                <Button
-                    style={{marginLeft: 16}}
-                    color="primary"
-                    onClick={onOpenAdd}
-                    variant="contained">
-                    Add Service Option
-                </Button>
-            </div>
+        <>
             <Table
                 data={firstScreenOptions}
                 index="name"
@@ -121,9 +98,6 @@ const FirstScreen = () => {
                 <MenuItem onClick={openEdit}>Edit</MenuItem>
                 <MenuItem onClick={askRemove}>Remove</MenuItem>
             </Menu>
-            <AddFirstScreenOption open={isOpen} editingItem={currentItem} onClose={onClose}/>
-        </React.Fragment>
+        </>
     );
 };
-
-export default FirstScreen;

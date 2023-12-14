@@ -1,12 +1,12 @@
 import React from "react";
 import {IAppointment} from "../../../../api/types";
-import DetailsItem from "./DetailsItem";
-import {dateTimeFormat} from "./AppointmentDetails";
-import ModifiedData from "./ModifiedData";
+import {DetailsItem} from "../DetailsItem";
+import {dateTimeFormat} from "../AppointmentDetails/AppointmentDetails";
+import {ModifiedData} from "../ModifiedData";
 import moment from "moment";
-import {TitleWrapper} from "./styles";
+import {TitleWrapper} from "../styles";
 
-const OperationalDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
+export const OperationalDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
     const createdText = [moment(payload.createdDateTime).utc().format(dateTimeFormat), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
 
     return (
@@ -19,5 +19,3 @@ const OperationalDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
         </div>
     );
 };
-
-export default OperationalDetails;

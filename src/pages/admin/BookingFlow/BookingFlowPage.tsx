@@ -7,7 +7,7 @@ import {BookingFlowConfigPage} from "../BookingFlowConfig/BookingFlowConfigPage"
 import {TransportationOptions} from "../TransportationOptions";
 import {ServiceCategoriesPage} from "../ServiceCategories/ServiceCategoriesPage";
 import {VehicleDetails} from "../../../components/Admin/VehicleDetails/VehicleDetails";
-import FirstScreen from "../../../components/Admin/FirstScreen/FirstScreen";
+import {FirstScreenOptionsPage} from "../FirstScreenOptions/FirstScreenOptionsPage";
 import ScreenSettings from "../../../components/Admin/ScreenSettings/ScreenSettings";
 
 export const BookingFlowPage = () => {
@@ -17,7 +17,7 @@ export const BookingFlowPage = () => {
             <PrivateRoute path={Routes.BookingFlow.ServiceOpsCodesMapping} component={ServiceCategoriesPage} />
             <PrivateRoute path={Routes.BookingFlow.VehicleDetails} component={VehicleDetails} />
             <PrivateRoute path={Routes.BookingFlow.BookingFlowConfigDetails} component={BookingFlowConfigPage} />
-            <PrivateRoute path={Routes.BookingFlow.FirstScreen} component={FirstScreen} />
+            <PrivateRoute path={Routes.BookingFlow.FirstScreen} component={FirstScreenOptionsPage} />
             <PrivateRoute path={Routes.BookingFlow.ScreenSettings} component={ScreenSettings} />
             <Redirect to={Routes.BookingFlow.BookingFlowConfigDetails} />
         </Switch>

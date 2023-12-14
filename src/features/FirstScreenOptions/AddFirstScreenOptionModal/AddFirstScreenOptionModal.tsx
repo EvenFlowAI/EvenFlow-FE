@@ -1,28 +1,29 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
 import {Button} from "@material-ui/core";
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../../../components/UI/TextField";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
-import {FileInput} from "../../FormControls/FileInput";
+import {autocompleteRender} from "../../../components/UI/AutocompleteRender";
+import {FileInput} from "../../../components/FormControls/FileInput";
 import {setAssignedFilter} from "../../../store/reducers/serviceRequests/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useException, useSCs} from "../../../utils/hooks";
-import {IIconState} from "../../../features/ServiceCategories/AddServiceCategoryModal/types";
-import {DialogProps} from "../types";
+import {IIconState} from "../../ServiceCategories/AddServiceCategoryModal/types";
+import {DialogProps} from "../../../components/Modals/types";
 import {IFirstScreenOption, TNewFirstScreenOption, TUpdateFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
-import {makeStyles} from "@material-ui/core/styles";
 import {TOption} from "../../../types/types";
-import {serviceTypeNames} from "../../Admin/FirstScreen/FirstScreen";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
     createFirstScreenOption,
     updateFirstScreenOption,
     updateFirstScreenOptionIcon
 } from "../../../store/reducers/serviceTypes/actions";
-import {ETransportationType, ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
+import {ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
 import {RootState} from "../../../store/rootReducer";
 import {loadTransportationOptions} from "../../../store/reducers/transportationNeeds/actions";
+import {useStyles} from "./styles";
+import {getTransportationOptionString} from "../../../utils/utils";
+import {serviceTypeNames} from "../constants";
 
 const initialFileState = {file: null, dataUrl: undefined};
 
@@ -30,71 +31,7 @@ type TAddFirstScreenOptionProps = DialogProps & {
     editingItem: IFirstScreenOption | null;
 }
 
-const useStyles = makeStyles(() => ({
-    inputsWrapper: {
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr",
-        gridGap: 18,
-        marginBottom: 18,
-    },
-    uploadBtn: {
-        width: '100%',
-        textTransform: 'none',
-        padding: 10,
-        border: 'none',
-        borderRadius: 4,
-        color: 'white',
-        fontWeight: 'bold',
-        backgroundColor: '#7898FF',
-        cursor: 'pointer',
-    },
-    label: {
-        textTransform: "uppercase",
-        fontWeight: 'bold',
-        marginBottom: 4,
-        fontSize: 12,
-    },
-    buttonWrapper: {
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'stretch',
-    },
-    inputWrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    cancelButton: {
-        color: '#9FA2B4'
-    },
-    radioGroup: {
-        display: 'flex',
-        justifyContent: 'flex-end'
-    },
-    twoInputsWrapper: {
-        width: '100%',
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gridGap: 18,
-        marginBottom: 18,
-        marginTop: 18,
-    },
-}))
-
-const getOptionString = (option: string) => {
-    const string = ETransportationType[+option];
-    const array = [];
-    if (string) {
-        for (let i = 0; i < string.length; i++) {
-            if (string[i] === string[i].toUpperCase() && i > 0) {
-                array.push(' ')
-            }
-            array.push(string[i])
-        }
-    }
-    return array.join('');
-}
-
-const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem, ...props}) => {
+export const AddFirstScreenOptionModal: React.FC<TAddFirstScreenOptionProps> = ({editingItem, ...props}) => {
     const {options} = useSelector((state: RootState) => state.transportation);
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
     const [firstScreenOptionName, setFirstScreenOptionName] = useState<string>('');
@@ -306,7 +243,7 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
                     <Autocomplete
                         options={enabledTransportationOptions}
                         getOptionSelected={(option) => option.id === defaultTransportation?.id}
-                        getOptionLabel={o => getOptionString(o.type)}
+                        getOptionLabel={o => getTransportationOptionString(o.type)}
                         value={defaultTransportation}
                         onChange={onTransportationChange}
                         disabled={isTransportationDisabled}
@@ -377,5 +314,3 @@ const AddFirstScreenOption: React.FC<TAddFirstScreenOptionProps> = ({editingItem
         </BaseModal>
     );
 };
-
-export default AddFirstScreenOption;
