@@ -5,11 +5,11 @@ import {TitleContainer} from "../../components/Content/TitleContainer/TitleConta
 import {Titles} from "../../config/constants";
 import {useModal, useSCs} from "../../utils/hooks";
 import {loadAppointments} from "../../store/reducers/appointments/actions";
-import {AppointmentActions} from "./";
-import {AppointmentFilters} from "./";
-import {AppointmentsCalendar} from "./";
-import {AppointmentsListModal} from "./";
-import {AppointmentsTable} from "./";
+import {AppointmentActions} from "./AppointmentActions";
+import {AppointmentFilters} from "./AppointmentFilters";
+import {AppointmentsCalendar} from "./AppointmentsCalendar";
+import {AppointmentsListModal} from "./AppointmentsListModal";
+import {AppointmentsTable} from "./AppointmentsTable";
 import {RootState} from "../../store/rootReducer";
 import {IAppointmentsRequest} from "../../store/reducers/appointments/types";
 import {EAppointmentStatus, IAppointment} from "../../api/types";

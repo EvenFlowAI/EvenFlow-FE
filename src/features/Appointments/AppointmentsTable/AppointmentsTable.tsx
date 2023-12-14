@@ -5,7 +5,7 @@ import {
     appointmentStatuses, IAppointment,
 } from "../../../api/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
-import {ViewAppointmentsModal} from "../ViewAppointmentsModal/ViewAppointmentsModal";
+import {ViewAppointmentsModal} from "../ViewAppointmentsModal";
 import moment from "moment";
 import {getAppointmentDate} from "../../../utils/utils";
 import {API} from "../../../api/api";
