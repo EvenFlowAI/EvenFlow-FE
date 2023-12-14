@@ -9,7 +9,7 @@ import {RootState} from "../../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
 import {deleteCategoryById} from "../../../store/reducers/categories/actions";
 import {useConfirm, useException, useMessage, useModal} from "../../../utils/hooks";
-import {AddServiceCategory} from "../AddServiceCategoryModal";
+import {AddServiceCategoryModal} from "../AddServiceCategoryModal";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {visitCenterTabs} from "../constants";
 
@@ -105,7 +105,7 @@ export const ServiceCategoriesTable: React.FC<{tabValue: string}> = ({tabValue})
                 <MenuItem onClick={openEdit}>Edit</MenuItem>
                 <MenuItem onClick={askRemove}>Remove</MenuItem>
             </Menu>
-            <AddServiceCategory open={isOpen} editingItem={currentItem} onClose={onClose} tabValue={tabValue}/>
+            <AddServiceCategoryModal open={isOpen} editingItem={currentItem} onClose={onClose} tabValue={tabValue}/>
         </TabPanel>
     );
 };

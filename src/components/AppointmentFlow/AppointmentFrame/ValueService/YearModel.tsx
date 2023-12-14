@@ -192,7 +192,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                 className={classes.input}
                 renderInput={autocompleteRender({
                     label: t("Model"),
-                    placeholder: t("Select Model"),
+                    placeholder: t("Select Chip"),
                     required: true
                 })}
                 value={valueService.model || undefined}

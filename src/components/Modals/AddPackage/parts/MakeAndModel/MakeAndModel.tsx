@@ -213,7 +213,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                     renderInput={autocompleteRender({
                         label: "Model",
                         //error: !selectedMakes.length && isApplyBusinessRules && formIsChecked,
-                        placeholder: 'Select Model'
+                        placeholder: 'Select Chip'
                     })}
                 />
             </div>

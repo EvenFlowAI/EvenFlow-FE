@@ -9,7 +9,7 @@ import {TimePicker} from "../../UI/DateTimePickers";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {useException, useSCs} from "../../../utils/hooks";
 import {TextField} from "../../UI/TextField";
-import {useStyles} from "../AddMakeModel/AddMakeModel";
+import {useStyles} from "../../../features/MakesModels/AddMakeModelModal/styles";
 import {useDispatch} from "react-redux";
 import {createTimeRange, updateTimeRange} from "../../../store/reducers/capacityServiceValet/actions";
 

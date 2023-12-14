@@ -1,0 +1,29 @@
+import React from "react";
+import {ContentContainer} from "../../../components/Content/ContentContainer/ContentContainer";
+import {Redirect, Switch} from "react-router-dom";
+import {PrivateRoute} from "../../../utils/Routes";
+import {Routes} from "../../../config/routes";
+import {PricingSettingsPage} from "../../../components/Optimizer/PricingSettings/PricingSettingsPage";
+import MobileServicePage from "../../../components/Optimizer/MobileService/MobileServicePage";
+import ServiceValetPage from "../../../components/Optimizer/ServiceValet/ServiceValetPage";
+import {OfferManagementPage} from "../OfferManagement/OfferManagementPage";
+import {useCurrentUser} from "../../../utils/hooks";
+
+const PricingPage = () => {
+    const currentUser = useCurrentUser();
+    return <ContentContainer>
+        <Switch>
+            <PrivateRoute path={Routes.Pricing.MobileService} component={MobileServicePage} />
+            <PrivateRoute path={Routes.Pricing.ServiceValet} component={ServiceValetPage} />
+            <PrivateRoute path={Routes.Pricing.OfferManagement} component={OfferManagementPage} />
+            <PrivateRoute path={Routes.Pricing.ServicePricingSettings} component={PricingSettingsPage} />
+            <Redirect
+                to={currentUser && ["Advisor", "Call Center Rep"].includes(currentUser?.role)
+                ? Routes.Pricing.OfferManagement
+                    : Routes.Pricing.ServicePricingSettings}
+            />
+        </Switch>
+    </ContentContainer>
+}
+
+export default PricingPage;

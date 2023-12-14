@@ -1,1 +1,1 @@
-export {AddServiceCategory} from './AddServiceCategory';
+export {AddServiceCategoryModal} from './AddServiceCategoryModal';

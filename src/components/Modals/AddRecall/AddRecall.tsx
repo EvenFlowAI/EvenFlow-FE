@@ -128,7 +128,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
     const isValid = () => {
         if (!form.recallCampaignNumber.length) showError('"Recall Campaign Number" must not be empty')
         if (!form.make) showError('"Make" must not be empty')
-        if (!form.model) showError('"Model" must not be empty')
+        if (!form.model) showError('"Chip" must not be empty')
         if (!form.yearTo?.length) showError('"Year To" must not be empty')
         if (!form.yearFrom?.length) showError('"Year From" must not be empty')
         if (!form.recallComponent.length) showError('"Recall Component" must not be empty')
@@ -249,7 +249,7 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
                     renderInput={autocompleteRender({
                         label: "Model",
                         error: formIsChecked && !form.model,
-                        placeholder: 'Select Model'
+                        placeholder: 'Select Chip'
                     })}
                 />
                 <Autocomplete

@@ -6,7 +6,7 @@ import {Routes} from "../../../config/routes";
 import {BookingFlowConfigPage} from "../BookingFlowConfig/BookingFlowConfigPage";
 import {TransportationOptions} from "../TransportationOptions";
 import {ServiceCategoriesPage} from "../ServiceCategories/ServiceCategoriesPage";
-import {VehicleDetails} from "../../../components/Admin/VehicleDetails/VehicleDetails";
+import {VehicleDetails} from "../VehicleDetails/VehicleDetails";
 import {FirstScreenOptionsPage} from "../FirstScreenOptions/FirstScreenOptionsPage";
 import ScreenSettings from "../../../components/Admin/ScreenSettings/ScreenSettings";
 
