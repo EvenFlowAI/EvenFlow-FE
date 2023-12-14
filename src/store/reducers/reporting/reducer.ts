@@ -1,5 +1,5 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IEndUserConfig} from "../../../qrveyEndUser/types";
+import {IEndUserConfig} from "../../../features/Reporting/types";
 import {getConfig, setLoading} from "./actions";
 
 type TState = {

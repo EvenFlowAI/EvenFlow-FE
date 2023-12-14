@@ -12,7 +12,7 @@ import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDe
 import {Profile} from "./Profile/Profile";
 import AppointmentsPage from "../../pages/admin/Appointments/AppointmentsPage";
 import PricingPage from "../../pages/admin/Pricing/PricingPage";
-import ReportingPage from "./ReportingPage/ReportingPage";
+import ReportingPage from "../../pages/admin/Reporting/ReportingPage";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";
 import {BookingFlowPage} from "../../pages/admin/BookingFlow/BookingFlowPage";
 

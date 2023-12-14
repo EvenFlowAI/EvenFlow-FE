@@ -1,0 +1,1 @@
+export {AppointmentsSummary} from './AppointmentSummary'

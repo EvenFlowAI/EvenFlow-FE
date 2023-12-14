@@ -13,7 +13,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {Loading} from "../UI/Loading";
 import Link from "./Link";
-import {reportingAllowedRoles} from "../Admin/ReportingPage/ReportingPage";
+import {reportingAllowedRoles} from "../../pages/admin/Reporting/constants";
 
 const useStyles = makeStyles(theme => ({
     drawer: {
