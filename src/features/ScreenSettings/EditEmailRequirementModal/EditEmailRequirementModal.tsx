@@ -1,47 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {Loading} from "../../UI/Loading";
-import {TableCell} from "../../Modals/AdvisorAssignment/AdvisorAssignment";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
-import {DemandTable, TableRow} from "../../Optimizer/AppointmentAllocation/UI";
+import {Loading} from "../../../components/UI/Loading";
+import {TableCell} from "../../../components/Modals/AdvisorAssignment/AdvisorAssignment";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {DemandTable, TableRow} from "../../../components/Optimizer/AppointmentAllocation/UI";
 import {Button, TableBody, TableHead} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
-import {DialogProps} from "../../Modals/types";
+import {DialogProps} from "../../../components/Modals/types";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {TEmailRequirement} from "../../../store/reducers/screenSettings/types";
-import {makeStyles} from "@material-ui/core/styles";
 import {updateEmailRequirement} from "../../../store/reducers/screenSettings/actions";
+import {useStyles} from "./styles";
 
-const useStyles = makeStyles(() => ({
-    actionsWrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-    cancelButton: {
-        color: '#9FA2B4',
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-    },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        }
-    },
-}))
-
-const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, ...props}) => {
+export const EditEmailRequirementModal: React.FC<DialogProps> = ({onClose, ...props}) => {
     const {emailRequirement, isEmailRequirementLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
     const [data, setData] = useState<TEmailRequirement|null>(null);
     const {selectedSC} = useSCs();
@@ -168,5 +140,3 @@ const EditEmailRequirementDialog: React.FC<DialogProps> = ({onClose, ...props}) 
         </BaseModal>
     );
 };
-
-export default EditEmailRequirementDialog;

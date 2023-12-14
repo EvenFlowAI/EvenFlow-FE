@@ -1,21 +1,22 @@
 import React, {useEffect} from 'react';
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {bookingFlowRoot} from "../../Optimizer/utils";
 import {Grid} from "@material-ui/core";
-import {useModal, useSCs} from "../../../utils/hooks";
+import {useSCs} from "../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {loadEmailRequirement} from "../../../store/reducers/screenSettings/actions";
-import {screenSettingsList, TOptContent} from "../../../store/reducers/screenSettings/types";
-import {RootState} from "../../../store/rootReducer";
-import {EScreenSettingsType} from "../../../store/reducers/screenSettings/types";
-import {CenterSettingsPlate} from "../../Optimizer/CapacityServiceValet/CenterSettingsPlate";
-import EditEmailRequirementDialog from "./EditEmailRequirementDialog";
+import {loadEmailRequirement} from "../../store/reducers/screenSettings/actions";
+import {screenSettingsList, TOptContent} from "../../store/reducers/screenSettings/types";
+import {RootState} from "../../store/rootReducer";
+import {EScreenSettingsType} from "../../store/reducers/screenSettings/types";
+import {CenterSettingsPlate} from "../../components/Optimizer/CapacityServiceValet/CenterSettingsPlate";
+import {TCallback} from "../../types/types";
 
-const ScreenSettings = () => {
+type TProps = {
+    onEmailEditOpen: TCallback;
+}
+
+export const ScreenSettings: React.FC<TProps> = ({onEmailEditOpen}) => {
     const {emailRequirement, isEmailRequirementLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const {onOpen: onEmailEditOpen, isOpen: isEmailEditOpen, onClose: onEmailEditClose} = useModal();
 
     useEffect(() => {
         if (selectedSC) {
@@ -63,7 +64,6 @@ const ScreenSettings = () => {
 
     return (
         <>
-            <TitleContainer title="Screen Settings" pad parent={bookingFlowRoot} />
             <Grid container spacing={3}>
                 {screenSettingsList.map(k => {
                     const plate = optContent[k];
@@ -80,9 +80,7 @@ const ScreenSettings = () => {
                     />
                 })}
             </Grid>
-            <EditEmailRequirementDialog open={isEmailEditOpen} onClose={onEmailEditClose}/>
+
         </>
     );
 };
-
-export default ScreenSettings;

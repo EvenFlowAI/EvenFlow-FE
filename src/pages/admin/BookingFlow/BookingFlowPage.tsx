@@ -8,7 +8,7 @@ import {TransportationOptions} from "../TransportationOptions";
 import {ServiceCategoriesPage} from "../ServiceCategories/ServiceCategoriesPage";
 import {VehicleDetails} from "../VehicleDetails/VehicleDetails";
 import {FirstScreenOptionsPage} from "../FirstScreenOptions/FirstScreenOptionsPage";
-import ScreenSettings from "../../../components/Admin/ScreenSettings/ScreenSettings";
+import {ScreenSettings} from "../../../features/ScreenSettings";
 
 export const BookingFlowPage = () => {
     return <ContentContainer>
