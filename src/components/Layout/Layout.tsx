@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {SideBar} from "../SideBar/SideBar.";
 import {makeStyles} from "@material-ui/core/styles";
 import { Redirect, Switch } from "react-router-dom";
-import {AdminPage} from "../Admin/AdminPage";
+import {AdminPage} from "../../pages/admin/AdminPage/AdminPage";
 import {NavBar} from "../NavBar/NavBar";
 import {Toolbar} from "@material-ui/core";
 import {Routes} from "../../config/routes";

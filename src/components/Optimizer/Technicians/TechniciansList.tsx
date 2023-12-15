@@ -7,7 +7,7 @@ import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../u
 import {loadTechnicians, removeEmployee} from "../../../store/reducers/employees/actions";
 import {RootState} from "../../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
-import {TableAvatar} from "../../Admin/TableAvatar";
+import {TableAvatar} from "../../TableAvatar/TableAvatar";
 import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
 import {TableRowDataTypeResp} from "../../UI/types";
 

@@ -1,17 +1,16 @@
 import React, {useMemo} from "react";
 import {Box, Grid, Paper} from "@material-ui/core";
 import {useSelector} from "react-redux";
-import {makeStyles} from "@material-ui/core/styles";
-import {EditAddress} from "../../Modals/EditAddress/EditAddress";
-import {HourOfOperations} from "../../Modals/HourOfOperations/HourOfOperations";
-import {Holidays} from "../../Modals/Holydays/Holidays";
-import {Break} from "../../Modals/Breaks/Break";
+import {EditAddress} from "../../../components/Modals/EditAddress/EditAddress";
+import {HourOfOperations} from "../../../components/Modals/HourOfOperations/HourOfOperations";
+import {Holidays} from "../../../components/Modals/Holydays/Holidays";
+import {Break} from "../../../components/Modals/Breaks/Break";
 import {useCurrentUser, useModal, useSCs} from "../../../utils/hooks";
-import {Technicians} from "../../Modals/Technicians/Technicians";
-import {Bays} from "../../Modals/Bays/Bays";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import {Technicians} from "../../../components/Modals/Technicians/Technicians";
+import {Bays} from "../../../components/Modals/Bays/Bays";
+import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
 import {concatAddress} from "../../../utils/utils";
-import {SquarePaper} from "../../UI/Paper";
+import {SquarePaper} from "../../../components/UI/Paper";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as LaborRateIcon} from "../../../assets/img/labor_rate.svg";
 import {ReactComponent as HoursIcon} from "../../../assets/img/Icon 2 Hours of operation.svg";
@@ -23,102 +22,14 @@ import {ReactComponent as BreaksIcon} from "../../../assets/img/Icon 4 Breaks.sv
 import {ReactComponent as LockOutlined} from "../../../assets/img/Icon 5 Holidays.svg";
 import {ReactComponent as AdvisorIcon} from "../../../assets/img/advisor_assignment.svg";
 import {ReactComponent as NotificationsIcon} from "../../../assets/img/notifications.svg";
-import Reminders from "../../Modals/Reminders/Reminders";
-import LaborRate from "../../Modals/LaborRate/LaborRate";
-import {EmployeeSchedule} from "../../Modals/EmployeeSchedule/EmployeeSchedule";
-import AdvisorAssignment from "../../Modals/AdvisorAssignment/AdvisorAssignment";
-import ManageNotifications from "../../Modals/ManageNotifications/ManageNotifications";
+import Reminders from "../../../components/Modals/Reminders/Reminders";
+import LaborRate from "../../../components/Modals/LaborRate/LaborRate";
+import {EmployeeSchedule} from "../../../components/Modals/EmployeeSchedule/EmployeeSchedule";
+import AdvisorAssignment from "../../../components/Modals/AdvisorAssignment/AdvisorAssignment";
+import ManageNotifications from "../../../components/Modals/ManageNotifications/ManageNotifications";
+import {useStyles} from "./styles";
+import {TCountData, TDataMap, TItem} from "./types";
 
-const useStyles = makeStyles(theme => ({
-    paper: {
-        display: "flex",
-        padding: theme.spacing(2),
-        minHeight: 120,
-        flexFlow: "row nowrap",
-        justifyContent: "space-between",
-        alignItems: "center",
-        position: "relative",
-        borderRadius: 0,
-        gap: '8px',
-    },
-    container: {
-        width: "100%",
-        maxWidth: theme.breakpoints.values.lg
-    },
-    icon: {
-        "& .MuiSvgIcon-root": {
-            fontSize: 40
-        }
-    },
-    label: {
-        fontSize: 16,
-        fontWeight: "bold",
-        textTransform: "uppercase",
-        textAlign: "center",
-        margin: 0,
-        [theme.breakpoints.down("sm")]: {
-            fontSize: 14
-        }
-    },
-    edit: {
-        cursor: "pointer",
-        alignSelf: "flex-start",
-        fontSize: 14,
-        padding: 0,
-        display: "inline-block",
-        fontWeight: "bold",
-        color: theme.palette.primary.main,
-        transition: theme.transitions.create(["color"]),
-        "&:hover": {
-            color: theme.palette.primary.dark
-        },
-        [theme.breakpoints.down("sm")]: {
-            alignSelf: "center"
-        }
-    },
-    address: {
-        fontSize: 18,
-        color: theme.palette.text.disabled,
-        [theme.breakpoints.down("sm")]: {
-            textAlign: "center"
-        }
-    },
-    countWrapper: {
-        display: "flex",
-        justifyContent: "space-around",
-        [theme.breakpoints.down("sm")]: {
-            flexWrap: "wrap",
-            "&>*": {
-                textAlign: "center",
-                padding: theme.spacing(1),
-                width: "50%"
-            }
-        }
-    }
-}));
-
-const DashboardTitle = () => {
-    const {selectedSC} = useSCs();
-    if (!selectedSC) return null;
-
-    return <TitleContainer pad title={selectedSC.name}/>;
-}
-
-type TItem = {
-    label: string;
-    icon: JSX.Element;
-    action: () => void;
-}
-type TCountData = {
-    technicians: number;
-    bays: number;
-    pods: number;
-    appointments: number;
-}
-type TDataMap = {
-    label: string;
-    value: keyof TCountData;
-}
 const overallData: TDataMap[] = [
     {label: "Technicians", value: "technicians"},
     {label: "Bays", value: "bays"},
@@ -127,11 +38,20 @@ const overallData: TDataMap[] = [
 ];
 
 export const AdminDashboard: React.FC = () => {
+    const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
+        technicians: analytics.countOfTechnicians,
+        bays: analytics.countOfBays,
+        appointments: analytics.countOfAppointmentsToday,
+        pods: analytics.countOfPods
+    }));
     const {selectedSC} = useSCs();
     const currentUser = useCurrentUser();
+    const classes = useStyles();
+
     const isCCRView: boolean = useMemo(() => {
         return ["Call Center Rep", "Advisor"].includes(currentUser?.role || "")
     }, [currentUser]);
+
     const isManager: boolean = useMemo(() => {
         return ["Manager"].includes(currentUser?.role || "")
     }, [currentUser]);
@@ -187,13 +107,6 @@ export const AdminDashboard: React.FC = () => {
         isOpen: isOpenManageNotifications,
     } = useModal();
 
-    const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
-        technicians: analytics.countOfTechnicians,
-        bays: analytics.countOfBays,
-        appointments: analytics.countOfAppointmentsToday,
-        pods: analytics.countOfPods
-    }));
-
     const items: TItem[] = [
         {label: "Address", icon: <AddressIcon />, action: onOpenAddress},
         {label: "Hours of operation", icon: <HoursIcon />, action: onOpenHOO},
@@ -207,9 +120,8 @@ export const AdminDashboard: React.FC = () => {
         {label: "Service Center Notifications", icon: <NotificationsIcon />, action: onOpenManageNotifications},
     ];
 
-    const classes = useStyles();
     return <div className={classes.container}>
-        <DashboardTitle />
+        {selectedSC ? <TitleContainer pad title={selectedSC.name}/> : null}
         <Box mb={2} className={classes.address}>
             {selectedSC ? concatAddress(selectedSC.address) : null}
         </Box>
