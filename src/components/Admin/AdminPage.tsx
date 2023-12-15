@@ -1,6 +1,5 @@
 import React from "react";
 import {Switch, Redirect} from "react-router-dom";
-import {DealershipGroups} from "./DealershipGroups/DealershipGroups";
 import {ServiceCenters} from "../../features/ServiceCenters/ServiceCenters";
 import {Employees} from "../../features/Employees/Employees";
 import {ContentContainer} from "../Content/ContentContainer/ContentContainer";
@@ -8,13 +7,14 @@ import {Routes} from "../../config/routes";
 import {PrivateRoute} from "../../utils/Routes";
 import {useCurrentUser} from "../../utils/hooks";
 import {AdminDashboard} from "./Dashboard/Dashboard";
-import {DealershipGroupDetail} from "./DealershipGroups/Detail/DealershipGroupDetail";
+import {DealershipGroupDetails} from "../../pages/admin/DealerShipGroupDetails/DealershipGroupDetails";
 import {Profile} from "./Profile/Profile";
 import AppointmentsPage from "../../pages/admin/Appointments/AppointmentsPage";
 import PricingPage from "../../pages/admin/Pricing/PricingPage";
 import ReportingPage from "../../pages/admin/Reporting/ReportingPage";
 import {OptimizerPage} from "../Optimizer/OptimizerPage";
 import {BookingFlowPage} from "../../pages/admin/BookingFlow/BookingFlowPage";
+import DealershipGroups from "../../pages/admin/DealershipGroups/DealershipGroups";
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();
@@ -28,7 +28,7 @@ export const AdminPage = () => {
                 ? <PrivateRoute path={Routes.Admin.DealershipGroups} exact component={DealershipGroups}/>
                 : null}
             {currentUser.isSuperUser
-                ? <PrivateRoute path={`${Routes.Admin.DealershipGroups}/:id`} component={DealershipGroupDetail} />
+                ? <PrivateRoute path={`${Routes.Admin.DealershipGroups}/:id`} component={DealershipGroupDetails} />
                 : null}
             {/*{currentUser.isSuperUser*/}
             {/*    ? <PrivateRoute*/}

@@ -1,32 +1,26 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {TitleContainer} from "../../../Content/TitleContainer/TitleContainer";
-import {Api} from "../../../../config/requests";
-import {IDealershipGroupExtended} from "../../../../store/reducers/dealershipGroups/types";
-import {concatAddress} from "../../../../utils/utils";
+import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
+import {Api} from "../../../config/requests";
+import {IDealershipGroupExtended} from "../../../store/reducers/dealershipGroups/types";
+import {concatAddress} from "../../../utils/utils";
 import {Tab} from "@material-ui/core";
-import {TabList} from "../../../UI/Tabs";
+import {TabList} from "../../../components/UI/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {DetailSC} from "./DetailSC";
-import {DetailEmployees} from "./DetailEmployees";
+import {DetailsServiceCenters} from "../../../features/DealershipGroupDetails/DetailsServiceCenters/DetailsServiceCenters";
+import {DetailsEmployees} from "../../../features/DealershipGroupDetails/DetailsEmployees/DetailsEmployees";
 import {useDispatch} from "react-redux";
-import {loadDealershipEmployees} from "../../../../store/reducers/employees/actions";
-import {TDetailComponentProps} from "./types";
-import {useStatePagination} from "../../../../utils/hooks";
-import {loadDealershipSCs} from "../../../../store/reducers/serviceCenters/actions";
-
-type TTab = {
-    id: string;
-    label: string;
-    component: React.FC<TDetailComponentProps>;
-}
+import {loadDealershipEmployees} from "../../../store/reducers/employees/actions";
+import {useStatePagination} from "../../../utils/hooks";
+import {loadDealershipSCs} from "../../../store/reducers/serviceCenters/actions";
+import {TTab} from "./types";
 
 const tabs: TTab[] = [
-    {id: "1", label: "Service centers", component: DetailSC},
-    {id: "2", label: "Employees", component: DetailEmployees}
+    {id: "1", label: "Service centers", component: DetailsServiceCenters},
+    {id: "2", label: "Employees", component: DetailsEmployees}
 ];
 
-export const DealershipGroupDetail = () => {
+export const DealershipGroupDetails = () => {
     const {id} = useParams();
     const [dealership, setDS] = useState<IDealershipGroupExtended | undefined>();
     const [selectedTab, setTab] = useState<string>("1");

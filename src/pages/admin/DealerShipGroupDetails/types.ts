@@ -6,3 +6,9 @@ export type TDetailComponentProps = {
     page: number;
     rowsPerPage: number
 }
+
+export type TTab = {
+    id: string;
+    label: string;
+    component: React.FC<TDetailComponentProps>;
+}

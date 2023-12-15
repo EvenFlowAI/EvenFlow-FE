@@ -1,21 +1,18 @@
 import React, {useState, useEffect} from "react";
-import {Table} from "../../UI/Table";
+import {Table} from "../../../components/UI/Table";
 import {IconButton, Menu, MenuItem, Typography} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
-import {TableRowDataType} from "../../UI/types";
+import {TableRowDataType} from "../../../components/UI/types";
 import {IDealershipGroupExtended} from "../../../store/reducers/dealershipGroups/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import * as dealershipActions from "../../../store/reducers/dealershipGroups/actions";
 import {changePageData, remove as removeDealership} from "../../../store/reducers/dealershipGroups/actions";
 import {useConfirm, useException, useMessage, usePagination} from "../../../utils/hooks";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {Titles} from "../../../config/constants";
 import {useHistory} from "react-router-dom";
 import {Routes} from "../../../config/routes";
 import {concatAddress} from "../../../utils/utils";
 import {authService} from "../../../config/requests";
-
 
 const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
     {val: el => el.name, header: "Dealership name"},
@@ -24,8 +21,7 @@ const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
     {val: el => concatAddress(el.address), header: "Address"}
 ];
 
-
-export const DealershipGroups = () => {
+export const DealershipGroupsTable = () => {
     const {count, data, isLoading} = useSelector((state: RootState) => ({
         count: state.dealershipGroups.paging.numberOfRecords,
         data: state.dealershipGroups.dealershipList,
@@ -104,7 +100,6 @@ export const DealershipGroups = () => {
     ;
 
     return <>
-        <TitleContainer title={Titles.DealershipGroups} actions pad />
         <Table<IDealershipGroupExtended>
             data={data}
             noDataTitle="No Dealership Groups are present"

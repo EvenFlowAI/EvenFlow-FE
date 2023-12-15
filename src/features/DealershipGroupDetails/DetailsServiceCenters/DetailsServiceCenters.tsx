@@ -1,11 +1,11 @@
 import React from "react";
-import {TDetailComponentProps} from "./types";
-import {Table} from "../../../UI/Table";
-import {TableRowDataType} from "../../../UI/types";
-import {IServiceCenterExtended} from "../../../../store/reducers/serviceCenters/types";
+import {Table} from "../../../components/UI/Table";
+import {TableRowDataType} from "../../../components/UI/types";
+import {IServiceCenterExtended} from "../../../store/reducers/serviceCenters/types";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
-import {concatAddress} from "../../../../utils/utils";
+import {RootState} from "../../../store/rootReducer";
+import {concatAddress} from "../../../utils/utils";
+import {TDetailComponentProps} from "../../../pages/admin/DealerShipGroupDetails/types";
 
 const rowData: TableRowDataType<IServiceCenterExtended>[] = [
     {header: "Name", val: v => v.name},
@@ -13,7 +13,8 @@ const rowData: TableRowDataType<IServiceCenterExtended>[] = [
     {header: "Employees", val: v => String(v.countOfEmployees), align: "center"},
     {header: "Bays", val: v => String(v.countOfBays) || '-', align: "center"}
 ];
-export const DetailSC: React.FC<TDetailComponentProps> = (props) => {
+
+export const DetailsServiceCenters: React.FC<TDetailComponentProps> = (props) => {
     const [data, size, loading] = useSelector((state: RootState) => [
         state.serviceCenters.dealershipSCs,
         state.serviceCenters.dealershipPaging.numberOfRecords,

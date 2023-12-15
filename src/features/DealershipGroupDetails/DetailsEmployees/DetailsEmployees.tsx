@@ -1,13 +1,12 @@
 import React from "react";
-import {TDetailComponentProps} from "./types";
-import {IEmployee} from "../../../../store/reducers/employees/types";
-import {IPagingResponse} from "../../../../types/types";
+import {IEmployee} from "../../../store/reducers/employees/types";
+import {IPagingResponse} from "../../../types/types";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
-import {Table} from "../../../UI/Table";
-import {TableRowDataType} from "../../../UI/types";
-import {concatAddress} from "../../../../utils/utils";
-
+import {RootState} from "../../../store/rootReducer";
+import {Table} from "../../../components/UI/Table";
+import {TableRowDataType} from "../../../components/UI/types";
+import {concatAddress} from "../../../utils/utils";
+import {TDetailComponentProps} from "../../../pages/admin/DealerShipGroupDetails/types";
 
 const rowData: TableRowDataType<IEmployee>[] = [
     {header: "Name", val: v => v.fullName},
@@ -16,7 +15,7 @@ const rowData: TableRowDataType<IEmployee>[] = [
     {header: "Service center address", val: v => concatAddress(v.serviceCenter?.address)}
 ];
 
-export const DetailEmployees: React.FC<TDetailComponentProps> = (props) => {
+export const DetailsEmployees: React.FC<TDetailComponentProps> = (props) => {
     const [employees, employeesLoading, employeesPaging]: [IEmployee[], boolean, IPagingResponse] = useSelector((state: RootState) => [
         state.employees.dealershipEmployeesList,
         state.employees.loadingDealership,

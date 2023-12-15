@@ -1,8 +1,8 @@
 import React, {useCallback} from "react";
 import {Button} from "@material-ui/core";
-import {CreateDealershipGroup} from "../../Modals/CreateDealershipGroup/CreateDealershipGroup";
+import {CreateDealershipGroup} from "../../../components/Modals/CreateDealershipGroup/CreateDealershipGroup";
 import {useModal} from "../../../utils/hooks";
-import {SearchInput} from "../../UI/SearchInput";
+import {SearchInput} from "../../../components/UI/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadAll, setSearchTerm} from "../../../store/reducers/dealershipGroups/actions";

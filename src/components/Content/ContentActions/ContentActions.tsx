@@ -2,7 +2,7 @@ import React from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Switch, Route} from "react-router-dom";
 import {Routes} from "../../../config/routes";
-import {DealershipActions} from "../../Admin/DealershipGroups/DealershipActions";
+import {DealershipActions} from "../../../features/DealershipGroups/DealershipActions/DealershipActions";
 import {ServiceCenterActions} from "../../../features/ServiceCenters";
 
 const useStyles = makeStyles({
