@@ -1,29 +1,29 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../utils";
-import {SearchInput} from "../../UI/SearchInput";
+import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
+import {optimizerRoot} from "../../components/Optimizer/utils";
+import {SearchInput} from "../../components/UI/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {
     changeComplimentaryPageData,
     loadComplimentary, setComplimentaryPageData,
     setComplimentarySearchTerm,
     setComplimentarySort
-} from "../../../store/reducers/packages/actions";
+} from "../../store/reducers/packages/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
-import {TableRowDataType} from "../../UI/types";
-import {IComplimentaryServiceByQuery} from "../../../store/reducers/packages/types";
-import {Table} from "../../UI/Table";
-import {RootState} from "../../../store/rootReducer";
+import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../utils/hooks";
+import {TableRowDataType} from "../../components/UI/types";
+import {IComplimentaryServiceByQuery} from "../../store/reducers/packages/types";
+import {Table} from "../../components/UI/Table";
+import {RootState} from "../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
-import {Api} from "../../../config/requests";
-import {SC_UNDEFINED} from "../../../config/constants";
-import AddServiceManually from "../../Modals/AddServiceManually/AddServiceManually";
-import {OPsCodesListDialog} from "../../Modals/OPsCodesListDialog/OPsCodesListDialog";
-import {addOpsCodeFromList, loadAllComplimentary} from "../../../store/reducers/complimentary/actions";
-import {IOrder} from "../../../types/types";
+import {Api} from "../../config/requests";
+import {SC_UNDEFINED} from "../../config/constants";
+import AddServiceManually from "../../components/Modals/AddServiceManually/AddServiceManually";
+import {OPsCodesListDialog} from "../../components/Modals/OPsCodesListDialog/OPsCodesListDialog";
+import {addOpsCodeFromList, loadAllComplimentary} from "../../store/reducers/complimentary/actions";
+import {IOrder} from "../../types/types";
 
-const ComplimentaryServices = () => {
+export const ComplimentaryServices = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [editedItem, setEditedItem] = useState<IComplimentaryServiceByQuery|undefined>(undefined);
     const [selectedOpsCodes, setSelectedOpsCodes] = useState<number[]>([]);
@@ -229,5 +229,3 @@ const ComplimentaryServices = () => {
         </div>
     );
 };
-
-export default ComplimentaryServices;

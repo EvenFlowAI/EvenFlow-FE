@@ -23,7 +23,7 @@ export const PERMISSIONS: TRouteRoleMap[] = [
     {route: Routes.Optimizer.OptimizationWindows, roles: ["Owner", "Manager", "Service Director"]},
     {route: Routes.Optimizer.PricingSettings, roles: ["Owner", "Manager", "Service Director"]},
     {route: Routes.Optimizer.ServiceRequests, roles: ["Owner", "Manager", "Service Director"]},
-    // {route: Routes.Optimizer.ServiceRequests, roles: ["Owner", "Manager", "Advisor"]},
+    // {route: Routes.Optimizer.ServiceRequestsScreen, roles: ["Owner", "Manager", "Advisor"]},
 
     {route: Routes.OfferManagement.Base, roles: ["Owner", "Manager", "Service Director"]},
 

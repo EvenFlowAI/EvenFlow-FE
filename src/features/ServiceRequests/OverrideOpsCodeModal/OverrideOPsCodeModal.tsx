@@ -1,28 +1,19 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps} from "../types";
+import {DialogProps} from "../../../components/Modals/types";
 import {
     IAssignedServiceRequest, IServiceRequestOverride,
     IServiceRequestOverrideEditRequest
 } from "../../../store/reducers/serviceRequests/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
 import {Button, Grid} from "@material-ui/core";
-import {TextField} from "../../UI/TextField";
-import {LoadingButton} from "../../UI/Button";
+import {TextField} from "../../../components/UI/TextField";
+import {LoadingButton} from "../../../components/UI/Button";
 import {useException, useMessage} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {updateAssignedServiceRequest} from "../../../store/reducers/serviceRequests/actions";
-import {ToggleButtons} from "../../UI/ToggleButtons";
+import {ToggleButtons} from "../../../components/UI/ToggleButtons";
+import {TForm} from "./types";
 
-type TForm = {
-    description: string;
-    durationInHours: string;
-    countOfTechnicians: string;
-    skillLevelOfTechnicians: number;
-    invoiceAmount: string;
-    warrantyInvoiceAmount: string;
-    partsUnitCost: string;
-    numberOfParts: string;
-}
 const initialForm: TForm = {
     description: "",
     durationInHours: "",
@@ -33,7 +24,8 @@ const initialForm: TForm = {
     partsUnitCost: "",
     numberOfParts: "",
 };
-export const OverrideOPsCodeDialog: React.FC<DialogProps<IAssignedServiceRequest>> = ({onAction, payload, ...props}) => {
+
+export const OverrideOPsCodeModal: React.FC<DialogProps<IAssignedServiceRequest>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [isLoading, setLoading] = useState<boolean>(false);
     const showMessage = useMessage();

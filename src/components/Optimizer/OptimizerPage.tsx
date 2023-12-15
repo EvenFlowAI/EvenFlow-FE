@@ -8,7 +8,7 @@ import {AppointmentValue} from "./AppointmentValue/AppointmentValue";
 import {AppointmentSlotScoring} from "./AppointmentSlotScoring/AppointmentSlotScoring";
 import { OptimizationWindowsPage } from "./OptimizationWindows/OptimizationWindowsPage";
 import {AppointmentAllocationPage} from "./AppointmentAllocation/AppointmentAllocationPage";
-import {ServiceRequests} from "./ServiceRequests/ServiceRequests";
+import {ServiceRequests} from "../../pages/admin/ServiceRequests/ServiceRequests";
 import ManageAppointments from "./ManageAppointments/ManageAppointments";
 import Pods from "./Pods/Pods";
 import PartsAvailability from "./PartsAvailability/PartsAvailability";

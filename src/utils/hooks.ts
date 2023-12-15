@@ -114,7 +114,7 @@ export function useValidation<U>(
 }
 
 type TPageCallback = (state: RootState) => IPageRequest
-type IPageRequestActionCreator = (payload: Partial<IPageRequest>) => void;
+export type IPageRequestActionCreator = (payload: Partial<IPageRequest>) => void;
 export const usePagination = (cb: TPageCallback, changePageData: IPageRequestActionCreator) => {
     const {pageIndex, pageSize} = useSelector(cb);
     const dispatch = useDispatch();

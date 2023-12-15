@@ -32,7 +32,7 @@ export const AdminPage = () => {
                 : null}
             {/*{currentUser.isSuperUser*/}
             {/*    ? <PrivateRoute*/}
-            {/*        path={`${Routes.Admin.ServiceRequests}`} component={ServiceRequests} />*/}
+            {/*        path={`${Routes.Admin.ServiceRequestsScreen}`} component={ServiceRequestsScreen} />*/}
             {/*    : null}*/}
             {!hideDashboard && <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>}
             {!currentUser.isSuperUser ?
