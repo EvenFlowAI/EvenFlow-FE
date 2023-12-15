@@ -8,7 +8,6 @@ import {
     useMediaQuery, useTheme,
     withStyles
 } from "@material-ui/core";
-import {AppointmentTable} from "../AppointmentValue/UI";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {loadTimeWindow, setTimeWindow} from "../../../store/reducers/demandSegments/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -16,6 +15,7 @@ import {RootState} from "../../../store/rootReducer";
 import {ITimeWindow} from "../../../store/reducers/demandSegments/types";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {TextField} from "../../UI/TextField";
+import {StyledTable} from "../../styled/StyledTable";
 
 const TableCell = withStyles({
     root: {
@@ -171,7 +171,7 @@ export const TimeWindows = () => {
         }
     }
 
-    return <AppointmentTable>
+    return <StyledTable>
         <TableBody>
             <TableRow>
                 <TableCell style={theadStyle}>Time windows</TableCell>
@@ -210,5 +210,5 @@ export const TimeWindows = () => {
                 </TableRow>
             )}
         </TableBody>
-    </AppointmentTable>
+    </StyledTable>
 }

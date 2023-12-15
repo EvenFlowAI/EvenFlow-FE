@@ -12,7 +12,7 @@ import {Api} from "../../../config/requests";
 
 export const getCustomerLifetimes = createAction<ICustomerLifetime|undefined>("Value/SetLifetime");
 export const getNewLostCustomers = createAction<INewLostCustomer[]>("Value/NewLostCustomer");
-export const getEndOfWarranty = createAction<IEndOfWarranty|undefined>("Value/EndOfWarranty");
+export const getEndOfWarranty = createAction<IEndOfWarranty|undefined>("Value/EndOfWarrantyModal");
 export const getValueSettings = createAction<IValueSettings[]>("Value/Settings");
 export const getConfiguredValues = createAction<number[]>("Value/ConfiguredValues");
 export const loadCustomerLifetimes = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {

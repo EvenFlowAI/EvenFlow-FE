@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Box, Button, TableBody, TableCell, TableHead, TableRow, withStyles,} from "@material-ui/core";
 import {useConfirm, useException, useModal, useSCs} from "../../../../utils/hooks";
-import {ValueSlider} from "../../AppointmentValue/UI";
+import {ValueSlider} from "../../../styled/ValueSlider";
 import {makeStyles} from "@material-ui/core/styles";
 import {DenseTable} from "../../AppointmentAllocation/UI";
 import {useDispatch, useSelector} from "react-redux";

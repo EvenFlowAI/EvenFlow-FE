@@ -9,7 +9,8 @@ import {
     TableRow,
     withStyles
 } from "@material-ui/core";
-import {AppointmentTable, ValueSlider} from "../AppointmentValue/UI";
+import {ValueSlider} from "../../styled/ValueSlider";
+import {StyledTable} from '../../styled/StyledTable'
 import {makeStyles} from "@material-ui/core/styles";
 import {useException, useMessage, useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {EditDemandSegments} from './EditDemandSegments';
@@ -189,7 +190,7 @@ export const DemandSegmentsDesirability = () => {
 
     const classes = useStyles();
     return <Paper variant="outlined" style={{borderRadius: 0, overflowX: "auto"}}>
-        <AppointmentTable className={classes.table}>
+        <StyledTable className={classes.table}>
             <TableHead>
                 <TableRow>
                     <TableCell className={classes.buttonCell} colSpan={2}>
@@ -310,7 +311,7 @@ export const DemandSegmentsDesirability = () => {
                     </React.Fragment>
                 )}
             </TableBody>
-        </AppointmentTable>
+        </StyledTable>
         <EditDemandSegments payload={optSettings} onClose={onClose} open={isOpen} />
     </Paper>
 };

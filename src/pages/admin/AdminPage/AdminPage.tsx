@@ -8,11 +8,11 @@ import {PrivateRoute} from "../../../utils/Routes";
 import {useCurrentUser} from "../../../utils/hooks";
 import {AdminDashboard} from "../Dashboard/Dashboard";
 import {DealershipGroupDetails} from "../DealerShipGroupDetails/DealershipGroupDetails";
-import {Profile} from "../../../components/Admin/Profile/Profile";
+import {Profile} from "../Profile/Profile";
 import AppointmentsPage from "../Appointments/AppointmentsPage";
 import PricingPage from "../Pricing/PricingPage";
 import ReportingPage from "../Reporting/ReportingPage";
-import {OptimizerPage} from "../../../components/Optimizer/OptimizerPage";
+import {CapacityManagement} from "../ CapacityManagement/CapacityManagement";
 import {BookingFlowPage} from "../BookingFlow/BookingFlowPage";
 import DealershipGroups from "../DealershipGroups/DealershipGroups";
 
@@ -38,7 +38,7 @@ export const AdminPage = () => {
                 ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
                 : null}
             {!currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.CapacityOptimization} component={OptimizerPage}/>
+                ? <PrivateRoute path={Routes.Admin.CapacityOptimization} component={CapacityManagement}/>
                 : null}
             {!currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.Pricing.Base} component={PricingPage}/>

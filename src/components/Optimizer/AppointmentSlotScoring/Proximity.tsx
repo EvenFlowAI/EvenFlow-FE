@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {AppointmentTable, ValueSlider} from "../AppointmentValue/UI";
+import {ValueSlider} from "../../styled/ValueSlider";
 import {
     Box,
     Button,
@@ -17,6 +17,7 @@ import {createProximity, loadProximity} from "../../../store/reducers/slotScorin
 import {RootState} from "../../../store/rootReducer";
 import {EProximityType, IProximity} from "../../../store/reducers/slotScoring/types";
 import {SOMETHING_WRONG} from "../../../config/constants";
+import {StyledTable} from "../../styled/StyledTable";
 
 enum SliderRange {
     Min= 0,
@@ -146,7 +147,7 @@ export const Proximity = () => {
     }
 
     return <div>
-        <AppointmentTable>
+        <StyledTable>
             <TableHead>
                 <TableRow>
                     {!isXS ? <TableCell>Proximity Search</TableCell> : null}
@@ -181,6 +182,6 @@ export const Proximity = () => {
                     </TableRow>
                 )}
             </TableBody>
-        </AppointmentTable>
+        </StyledTable>
     </div>
 }

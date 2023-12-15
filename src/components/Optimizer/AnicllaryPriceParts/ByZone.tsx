@@ -10,7 +10,7 @@ import {
     Button
 } from "@material-ui/core";
 import {DemandTable, TableRow} from "../AppointmentAllocation/UI";
-import {ValueSlider} from "../AppointmentValue/UI";
+import {ValueSlider} from "../../styled/ValueSlider";
 import {MoreHoriz} from "@material-ui/icons";
 import {TextField} from "../../UI/TextField";
 import {HeaderTableCell, FirstCell, TableCell} from "./ByDistance";

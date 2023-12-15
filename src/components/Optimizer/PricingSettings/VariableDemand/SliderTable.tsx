@@ -12,7 +12,7 @@ import {
     withStyles
 } from "@material-ui/core";
 import {dayDemands, EDayDemand, EDemandCategory, EDemandType} from "../../../../store/reducers/pricingSettings/types";
-import {ValueSlider} from "../../AppointmentValue/UI";
+import {ValueSlider} from "../../../styled/ValueSlider";
 import {EditButton} from "../../../UI/Button";
 import {TableContainer} from "../UI";
 import {SC_UNDEFINED} from "../../../../config/constants";

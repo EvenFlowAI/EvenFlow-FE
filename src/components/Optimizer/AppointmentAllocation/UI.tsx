@@ -1,12 +1,12 @@
 import React from "react";
-import {AppointmentTable} from "../AppointmentValue/UI";
 import {TableRow as TR, TableCell as TC, withStyles, Button, CircularProgress} from "@material-ui/core";
+import {StyledTable} from "../../styled/StyledTable";
 
 export const DemandTable = withStyles(theme => ({
     root: {
         border: `1px solid ${theme.palette.divider}`
     }
-}))(AppointmentTable);
+}))(StyledTable);
 
 export const DenseTable = withStyles({
     root: {

@@ -9,7 +9,7 @@ import {Routes} from "../../config/routes";
 import {PrivateRoute} from "../../utils/Routes";
 import {useDispatch} from "react-redux";
 import {getCurrentUser} from "../../store/reducers/users/actions";
-import {OptimizerPage} from "../Optimizer/OptimizerPage";
+import {CapacityManagement} from "../../pages/admin/ CapacityManagement/CapacityManagement";
 import {loadDealershipProfile} from "../../store/reducers/dealershipGroups/actions";
 import {loadAllSCs, loadSCAnalytics} from "../../store/reducers/serviceCenters/actions";
 import {useSCs, useSideBar} from "../../utils/hooks";
@@ -91,7 +91,7 @@ export const Layout = () => {
             <Toolbar id="backToTopAnchor" style={{height: navBarHeight || undefined}} />
             <Switch>
                 <PrivateRoute path={Routes.Admin.Base} component={AdminPage} />
-                <PrivateRoute path={Routes.Optimizer.Base} component={OptimizerPage} />
+                <PrivateRoute path={Routes.Optimizer.Base} component={CapacityManagement} />
                 <PrivateRoute path={Routes.OfferManagement.Base} component={OfferManagementPage} />
                 <Redirect to={Routes.Admin.Base} />
             </Switch>
