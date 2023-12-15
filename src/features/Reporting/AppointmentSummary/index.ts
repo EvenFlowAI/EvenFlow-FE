@@ -1,1 +1,0 @@
-export {AppointmentsSummary} from './AppointmentSummary'

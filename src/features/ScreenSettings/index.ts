@@ -1,1 +1,0 @@
-export {ScreenSettings} from './ScreenSettings'

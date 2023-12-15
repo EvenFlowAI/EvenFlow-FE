@@ -1,5 +1,5 @@
 import React from 'react';
-import {Appointments} from "../../../features/Appointments";
+import {Appointments} from "../../../features/Appointments/Appointments";
 
 const AppointmentsPage = () => {
     return (

@@ -9,7 +9,7 @@ import {RootState} from "../../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
 import {deleteCategoryById} from "../../../store/reducers/categories/actions";
 import {useConfirm, useException, useMessage, useModal} from "../../../utils/hooks";
-import {AddServiceCategoryModal} from "../AddServiceCategoryModal";
+import {AddServiceCategoryModal} from "../AddServiceCategoryModal/AddServiceCategoryModal";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {visitCenterTabs} from "../constants";
 

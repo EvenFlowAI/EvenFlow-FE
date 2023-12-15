@@ -1,1 +1,0 @@
-export {MakesModelsTable} from './MakesModelsTable';

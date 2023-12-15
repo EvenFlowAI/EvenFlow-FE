@@ -11,7 +11,7 @@ import {ReactComponent as ConvenienceFees} from "../../../../assets/img/person_d
 import {ReactComponent as Address} from "../../../../assets/img/address.svg";
 import {appointmentStatuses, IAppointment} from "../../../../api/types";
 import moment from "moment";
-import {DetailsItem} from "../DetailsItem";
+import {DetailsItem} from "../DetailsItem/DetailsItem";
 import {TitleWrapper} from "../styles";
 
 export const dateTimeFormat = "ddd, MMM DD, YYYY h:mm a"

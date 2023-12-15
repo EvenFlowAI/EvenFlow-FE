@@ -4,10 +4,10 @@ import {useModal, useSCs} from "../../utils/hooks";
 import {loadMakes} from "../../store/reducers/vehicleDetails/actions";
 import {RootState} from "../../store/rootReducer";
 import {Button} from "@material-ui/core";
-import {AddMakeModelModal} from "./AddMakeModelModal";
+import {AddMakeModelModal} from "./AddMakeModelModal/AddMakeModelModal";
 import {useStyles} from "./styles";
-import {DefaultMake} from "./DefaultMake";
-import {MakesModelsTable} from "./MakesModelsTable";
+import {DefaultMake} from "./DefaultMake/DefaultMake";
+import {MakesModelsTable} from "./MakesModelsTable/MakesModelsTable";
 
 export const MakesModels = () => {
     const {currentMake} = useSelector((state: RootState) => state.vehicleDetails);

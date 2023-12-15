@@ -1,7 +1,7 @@
 import React from "react";
 import {IAppointment} from "../../../../api/types";
 import {TitleWrapper} from "../styles";
-import {DetailsItem} from "../DetailsItem";
+import {DetailsItem} from "../DetailsItem/DetailsItem";
 import {Divider} from "@material-ui/core";
 
 export const CustomerInfo:React.FC<{payload: IAppointment}> = ({payload}) => {

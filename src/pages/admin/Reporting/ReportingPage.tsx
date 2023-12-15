@@ -6,13 +6,13 @@ import {Api} from "../../../config/requests";
 import {useCurrentUser, useSCs} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
 import {Redirect, Route, Switch} from "react-router-dom";
-import {ShopLoading} from "../../../features/Reporting/ShopLoading";
-import {AppointmentsSummary} from "../../../features/Reporting/AppointmentSummary";
-import {ValetAppointments} from "../../../features/Reporting/ValetAppointments";
-import {MobileServiceAppointments} from "../../../features/Reporting/MobileServiceAppointments";
-import {CustomerBehavior} from "../../../features/Reporting/CustomerBehavior";
-import {RepairOrderPerformance} from "../../../features/Reporting/RepairOrderPerformance";
-import {CapacityManagementPerformance} from "../../../features/Reporting/CapacityManagementPerfomance";
+import {ShopLoading} from "../../../features/Reporting/ShopLoading/ShopLoading";
+import {AppointmentsSummary} from "../../../features/Reporting/AppointmentSummary/AppointmentSummary";
+import {ValetAppointments} from "../../../features/Reporting/ValetAppointments/ValetAppointments";
+import {MobileServiceAppointments} from "../../../features/Reporting/MobileServiceAppointments/MobileServiceAppointments";
+import {CustomerBehavior} from "../../../features/Reporting/CustomerBehavior/CustomerBehavior";
+import {RepairOrderPerformance} from "../../../features/Reporting/RepairOrderPerformance/RepairOrderPerformance";
+import {CapacityManagementPerformance} from "../../../features/Reporting/CapacityManagementPerfomance/CapacityManagementPerfomance";
 import {reportingAllowedRoles} from "./constants";
 
 const ReportingPage: React.FC<{}> = ({}) => {

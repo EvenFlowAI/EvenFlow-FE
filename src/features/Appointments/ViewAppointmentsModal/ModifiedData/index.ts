@@ -1,1 +1,0 @@
-export {ModifiedData} from './ModifiedData';

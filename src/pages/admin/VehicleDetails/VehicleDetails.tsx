@@ -3,10 +3,10 @@ import {TabContext, TabPanel} from "@material-ui/lab";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/UI/Tabs";
 import {Tab} from "@material-ui/core";
-import {Mileage} from "../../../features/Mileage";
+import {Mileage} from "../../../features/Mileage/Mileage";
 import {bookingFlowRoot} from "../../../components/Optimizer/utils";
-import {EngineTypes} from "../../../features/EngineTypes";
-import {MakesModels} from "../../../features/MakesModels";
+import {EngineTypes} from "../../../features/EngineTypes/EngineTypes";
+import {MakesModels} from "../../../features/MakesModels/MakesModels";
 
 export const VehicleDetails = () => {
     const [selectedTab, setTab] = useState<string>("0");

@@ -1,1 +1,0 @@
-export {CapacityManagementPerformance} from './CapacityManagementPerfomance'

@@ -15,8 +15,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {useException, useModal, useSCs} from "../../utils/hooks";
 import {headCellStyles, TableWrapper} from "./styles";
-import {EditTransportationModal} from "./EditTransportationModal";
-import {EditTransportationDescriptionModal} from "./EditTransportationDescriptionModal";
+import {EditTransportationModal} from "./EditTransportationModal/EditTransportationModal";
+import {EditTransportationDescriptionModal} from "./EditTransportationDescriptionModal/EditTransportationDescriptionModal";
 
 const leftAlign = {
     textAlign: "left" as const

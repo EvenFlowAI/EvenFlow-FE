@@ -4,8 +4,8 @@ import {useModal} from "../../../utils/hooks";
 import {Button} from "@material-ui/core";
 import {bookingFlowRoot} from "../../../components/Optimizer/utils";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
-import {AddFirstScreenOptionModal} from "../../../features/FirstScreenOptions/AddFirstScreenOptionModal";
-import {FirstScreenOptionsTable} from "../../../features/FirstScreenOptions/FirstScreenOptionsTable";
+import {AddFirstScreenOptionModal} from "../../../features/FirstScreenOptions/AddFirstScreenOptionModal/AddFirstScreenOptionModal";
+import {FirstScreenOptionsTable} from "../../../features/FirstScreenOptions/FirstScreenOptionsTable/FirstScreenOptionsTable";
 
 export const FirstScreenOptionsPage = () => {
     const [currentItem, setCurrentItem] = useState<IFirstScreenOption | null>(null);

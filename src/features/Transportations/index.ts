@@ -1,1 +1,0 @@
-export {Transportations} from './Transportations';

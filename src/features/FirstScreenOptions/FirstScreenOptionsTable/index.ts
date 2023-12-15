@@ -1,1 +1,0 @@
-export {FirstScreenOptionsTable} from './FirstScreenOptionsTable'

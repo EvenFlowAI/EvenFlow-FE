@@ -5,7 +5,6 @@ import {Routes} from "../../../config/routes";
 import {DealershipActions} from "../../Admin/DealershipGroups/DealershipActions";
 import {ServiceCenterActions} from "../../../features/ServiceCenters";
 
-
 const useStyles = makeStyles({
     wrapper: {
         "& > button": {
@@ -13,7 +12,6 @@ const useStyles = makeStyles({
         }
     }
 });
-
 
 export const ContentActions = () => {
     const classes = useStyles();

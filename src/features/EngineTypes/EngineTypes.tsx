@@ -3,9 +3,10 @@ import {useDispatch} from "react-redux";
 import {useModal, useSCs} from "../../utils/hooks";
 import {loadEngineType} from "../../store/reducers/vehicleDetails/actions";
 import {Button} from "@material-ui/core";
-import {AddEngineTypeModal} from "./AddEngineTypeModal";
-import {EditFieldNameModal} from "./EditFieldNameModal";
+import {AddEngineTypeModal} from "./AddEngineTypeModal/AddEngineTypeModal";
+import {EditFieldNameModal} from "./EditFieldNameModal/EditFieldNameModal";
 import {Wrapper} from "./styles";
+import {EngineTypesTable} from "./EngineTypesTable/EngineTypesTable";
 
 export const EngineTypes = () => {
     const { selectedSC } = useSCs();
@@ -37,7 +38,7 @@ export const EngineTypes = () => {
                     Add Engine Type
                 </Button>
             </Wrapper>
-
+            <EngineTypesTable/>
             <AddEngineTypeModal open={isOpen} onClose={onClose}/>
             <EditFieldNameModal open={isFieldNameOpen} onClose={onFieldNameClose}/>
         </div>

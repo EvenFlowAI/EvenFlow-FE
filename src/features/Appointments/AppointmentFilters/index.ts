@@ -1,1 +1,0 @@
-export {AppointmentFilters} from './AppointmentFilters'

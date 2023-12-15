@@ -1,8 +1,8 @@
 import React from 'react';
 import {useModal} from "../../utils/hooks";
 import {Button} from "@material-ui/core";
-import {AddMileageModal} from "./AddMileageModal";
-import {MileageTable} from "./MileageTable";
+import {AddMileageModal} from "./AddMileageModal/AddMileageModal";
+import {MileageTable} from "./MileageTable/MileageTable";
 import {Wrapper} from "./styles";
 
 export const Mileage = () => {

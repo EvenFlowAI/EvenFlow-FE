@@ -4,11 +4,11 @@ import {Redirect, Switch} from "react-router-dom";
 import {PrivateRoute} from "../../../utils/Routes";
 import {Routes} from "../../../config/routes";
 import {BookingFlowConfigPage} from "../BookingFlowConfig/BookingFlowConfigPage";
-import {TransportationOptions} from "../TransportationOptions";
+import {TransportationOptions} from "../TransportationOptions/TransportationOptions";
 import {ServiceCategoriesPage} from "../ServiceCategories/ServiceCategoriesPage";
 import {VehicleDetails} from "../VehicleDetails/VehicleDetails";
 import {FirstScreenOptionsPage} from "../FirstScreenOptions/FirstScreenOptionsPage";
-import {ScreenSettings} from "../../../features/ScreenSettings";
+import ScreenSettingsPage from "../ScreenSettings/ScreenSettingsPage";
 
 export const BookingFlowPage = () => {
     return <ContentContainer>
@@ -18,7 +18,7 @@ export const BookingFlowPage = () => {
             <PrivateRoute path={Routes.BookingFlow.VehicleDetails} component={VehicleDetails} />
             <PrivateRoute path={Routes.BookingFlow.BookingFlowConfigDetails} component={BookingFlowConfigPage} />
             <PrivateRoute path={Routes.BookingFlow.FirstScreen} component={FirstScreenOptionsPage} />
-            <PrivateRoute path={Routes.BookingFlow.ScreenSettings} component={ScreenSettings} />
+            <PrivateRoute path={Routes.BookingFlow.ScreenSettings} component={ScreenSettingsPage} />
             <Redirect to={Routes.BookingFlow.BookingFlowConfigDetails} />
         </Switch>
     </ContentContainer>

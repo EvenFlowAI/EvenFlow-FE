@@ -1,1 +1,0 @@
-export {ServiceCategoriesTable} from './ServiceCategoriesTable/ServiceCategoriesTable';

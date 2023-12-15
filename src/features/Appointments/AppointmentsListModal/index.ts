@@ -1,1 +1,0 @@
-export {AppointmentsListModal} from './AppointmentsListModal'

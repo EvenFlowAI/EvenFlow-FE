@@ -1,6 +1,6 @@
 import React from 'react';
 import {IAppointment} from "../../../../api/types";
-import {DetailsItem} from "../DetailsItem";
+import {DetailsItem} from "../DetailsItem/DetailsItem";
 import {Divider} from "@material-ui/core";
 import {TitleWrapper} from "../styles";
 

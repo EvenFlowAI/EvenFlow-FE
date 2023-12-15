@@ -1,8 +1,8 @@
 import React from "react";
 import {IAppointment} from "../../../../api/types";
-import {DetailsItem} from "../DetailsItem";
+import {DetailsItem} from "../DetailsItem/DetailsItem";
 import {dateTimeFormat} from "../AppointmentDetails/AppointmentDetails";
-import {ModifiedData} from "../ModifiedData";
+import {ModifiedData} from "../ModifiedData/ModifiedData";
 import moment from "moment";
 import {TitleWrapper} from "../styles";
 

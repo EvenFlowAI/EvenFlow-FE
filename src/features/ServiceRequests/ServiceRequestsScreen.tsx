@@ -13,9 +13,9 @@ import {
     setAssignedPageData
 } from "../../store/reducers/serviceRequests/actions";
 import {IAssignedServiceRequest} from "../../store/reducers/serviceRequests/types";
-import {OverrideOPsCodeModal} from "./OverrideOpsCodeModal";
+import {OverrideOPsCodeModal} from "./OverrideOpsCodeModal/OverrideOPsCodeModal";
 import {SearchInput} from "../../components/UI/SearchInput";
-import {ServiceRequestsTable} from "./ServiceRequestsTable";
+import {ServiceRequestsTable} from "./ServiceRequestsTable/ServiceRequestsTable";
 
 export const ServiceRequestsScreen = () => {
     const [

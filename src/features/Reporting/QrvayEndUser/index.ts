@@ -1,1 +1,0 @@
-export {QrveyEndUser} from './QrvayEndUser'

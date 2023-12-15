@@ -1,1 +1,0 @@
-export {MobileServiceAppointments} from './MobileServiceAppointments'
