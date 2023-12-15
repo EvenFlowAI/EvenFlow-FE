@@ -10,7 +10,7 @@ import {ComplimentaryServices} from "../../../features/ComplimentaryServices/Com
 import {setServiceRequestsPageActiveTab} from "../../../store/reducers/serviceRequests/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {IntervalUpsell} from "../../../components/Optimizer/IntervallUpsell/IntervalUpsell";
+import {IntervalUpsell} from "../../../features/IntervallUpsell/IntervalUpsell";
 
 export const ServiceRequests = () => {
     const {srPageActiveTab} = useSelector((state: RootState) => state.serviceRequests);

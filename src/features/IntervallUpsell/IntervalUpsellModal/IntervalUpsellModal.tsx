@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
-import {DialogProps} from "../../Modals/types";
+import {DialogProps} from "../../../components/Modals/types";
 import {IUpsellServiceRequest, IUpsellServiceRequestUpdate} from "../../../store/reducers/serviceRequests/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
 import {Button, Grid} from "@material-ui/core";
-import {TextField} from "../../UI/TextField";
-import {LoadingButton} from "../../UI/Button";
+import {TextField} from "../../../components/UI/TextField";
+import {LoadingButton} from "../../../components/UI/Button";
 import {updateUpsellServiceRequest} from "../../../store/reducers/serviceRequests/actions";
 
 type TForm = {
@@ -16,6 +16,7 @@ type TForm = {
     partsUnitCost: string;
     numberOfParts: string;
 }
+
 const initialForm: TForm = {
     description: "",
     durationInHours: "",
@@ -24,7 +25,7 @@ const initialForm: TForm = {
     numberOfParts: "",
 };
 
-const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({payload, ...props}) => {
+const IntervalUpsellModal: React.FC<DialogProps<IUpsellServiceRequest>> = ({payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [isLoading, setLoading] = useState<boolean>(false);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
@@ -195,4 +196,4 @@ const IntervalUpsellDialog: React.FC<DialogProps<IUpsellServiceRequest>> = ({pay
     </BaseModal>
 };
 
-export default IntervalUpsellDialog;
+export default IntervalUpsellModal;

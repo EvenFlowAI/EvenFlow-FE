@@ -1,25 +1,26 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../utils";
-import {Button, IconButton, Menu, MenuItem, Tooltip} from "@material-ui/core";
-import {OPsCodesListDialog} from "../../Modals/OPsCodesListDialog/OPsCodesListDialog";
-import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
+import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
+import {optimizerRoot} from "../../components/Optimizer/utils";
+import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {OPsCodesListDialog} from "../../components/Modals/OPsCodesListDialog/OPsCodesListDialog";
+import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
+import {RootState} from "../../store/rootReducer";
 import {
     addUpsellServiceRequests,
     loadUpsellServiceRequests,
     setUpsellFilter, setUpsellOrdering, setUpsellPageData
-} from "../../../store/reducers/serviceRequests/actions";
-import {TableRowDataType} from "../../UI/types";
-import {IUpsellServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import {Table} from "../../UI/Table";
+} from "../../store/reducers/serviceRequests/actions";
+import {TableRowDataType} from "../../components/UI/types";
+import {IUpsellServiceRequest} from "../../store/reducers/serviceRequests/types";
+import {Table} from "../../components/UI/Table";
 import {MoreHoriz} from "@material-ui/icons";
-import {Api} from "../../../config/requests";
-import {SC_UNDEFINED} from "../../../config/constants";
-import {SearchInput} from "../../UI/SearchInput";
-import {IOrder} from "../../../types/types";
-import IntervalUpsellDialog from "./IntervalUpsellDialog";
+import {Api} from "../../config/requests";
+import {SC_UNDEFINED} from "../../config/constants";
+import {SearchInput} from "../../components/UI/SearchInput";
+import {IOrder} from "../../types/types";
+import IntervalUpsellModal from "./IntervalUpsellModal/IntervalUpsellModal";
+import {ServiceRequestCellData} from "../../components/ServiceRequestCellData/ServiceRequestCellData";
 
 const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {
@@ -28,13 +29,13 @@ const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     },
     {
         header: "Description",
-        val: el => <CellData data={el.serviceRequest?.description} override={el.description}/>,
+        val: el => <ServiceRequestCellData data={el.serviceRequest?.description} override={el.description}/>,
         orderId: "description"
     },
     {
         header: "Duration (hours)",
         align: "center",
-        val: el => <CellData
+        val: el => <ServiceRequestCellData
             override={el.durationInHours?.toFixed(1)}
             data={el.serviceRequest?.durationInHours?.toFixed(1)}
         />,
@@ -43,7 +44,7 @@ const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {
         header: "Regular Invoice",
         align: "center",
-        val: el => <CellData
+        val: el => <ServiceRequestCellData
             prefix="$"
             override={el.invoiceAmount?.toFixed(2)}
             data={el.serviceRequest?.invoiceAmount?.toFixed(2)}
@@ -53,7 +54,7 @@ const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {
         header: "Parts Unit Cost",
         align: "center",
-        val: el => <CellData
+        val: el => <ServiceRequestCellData
             prefix="$"
             override={el.partsUnitCost?.toFixed(2)}
             data={el.serviceRequest?.partsUnitCost?.toFixed(2)}
@@ -62,20 +63,12 @@ const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {
         header: "Number of Parts",
         align: "center",
-        val: el => <CellData
+        val: el => <ServiceRequestCellData
             override={el.numberOfParts?.toString()}
             data={el.serviceRequest?.numberOfParts?.toString()}
         />,
     }
 ]
-
-const CellData: React.FC<{
-    data: string; override?: string, prefix?: string; suffix?: string;
-}> = ({data, override, prefix, suffix}) => {
-    return override ? <Tooltip placement="top" title={`Default value: ${prefix || ""}${data}${suffix || ""}`}>
-        <strong style={{cursor: "pointer", userSelect: "none"}}>{prefix}{override}{suffix}</strong>
-    </Tooltip> : <span>{prefix}{data}{suffix}</span>;
-}
 
 export const IntervalUpsell = () => {
     const {isOpen, onOpen, onClose} = useModal();
@@ -222,6 +215,6 @@ export const IntervalUpsell = () => {
             <MenuItem onClick={askRemove}>Remove</MenuItem>
         </Menu>
         <OPsCodesListDialog open={isOpen} onClose={onClose} onSave={onRequestAssign}/>
-        <IntervalUpsellDialog payload={editedItem} open={isOOpen} onClose={onOClose}/>
+        <IntervalUpsellModal payload={editedItem} open={isOOpen} onClose={onOClose}/>
     </>;
 }

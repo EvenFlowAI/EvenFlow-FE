@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import {Table} from "../../../components/UI/Table";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import {IconButton, Menu, MenuItem, Tooltip} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {Api} from "../../../config/requests";
 import {
     loadAssignedServiceRequests,
@@ -19,20 +19,13 @@ import {
 import {RootState} from "../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {TableRowDataType} from "../../../components/UI/types";
-
-const CellData: React.FC<{
-    data: string; override?: string, prefix?: string; suffix?: string;
-}> = ({data, override, prefix, suffix}) => {
-    return override ? <Tooltip placement="top" title={`Default value: ${prefix || ""}${data}${suffix || ""}`}>
-        <strong style={{cursor: "pointer", userSelect: "none"}}>{prefix}{override}{suffix}</strong>
-    </Tooltip> : <span>{prefix}{data}{suffix}</span>;
-}
+import {ServiceRequestCellData} from "../../../components/ServiceRequestCellData/ServiceRequestCellData";
 
 const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {header: "Service Ops Code", val: el => el.serviceRequest.code, orderId: "code"},
     {
         header: "Description",
-        val: el => <CellData
+        val: el => <ServiceRequestCellData
             data={el.serviceRequest.description}
             override={el.serviceRequestOverride?.description}
         />,
@@ -41,7 +34,7 @@ const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {
         header: "Duration (hours)",
         align: "center",
-        val: el => <CellData
+        val: el => <ServiceRequestCellData
             data={el.serviceRequest.durationInHours.toFixed(1)}
             override={el.serviceRequestOverride?.durationInHours?.toFixed(1)}
         />,
@@ -50,7 +43,7 @@ const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {
         header: "Number of Technicians",
         align: "center",
-        val: el => <CellData
+        val: el => <ServiceRequestCellData
             data={el.serviceRequest.countOfTechnicians.toString()}
             override={el.serviceRequestOverride?.countOfTechnicians?.toString()}
         />,
@@ -59,7 +52,7 @@ const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {
         header: "Skill Level of Technicians",
         align: "center",
-        val: el => <CellData
+        val: el => <ServiceRequestCellData
             data={el.serviceRequest.skillLevelOfTechnicians.toString()}
             override={el.serviceRequestOverride?.skillLevelOfTechnicians?.toString()}
         />,
@@ -68,7 +61,7 @@ const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {
         header: "Warranty Invoice",
         align: "center",
-        val: el => <CellData
+        val: el => <ServiceRequestCellData
             prefix="$"
             data={el.serviceRequest.warrantyInvoiceAmount.toFixed(2)}
             override={el.serviceRequestOverride?.warrantyInvoiceAmount?.toFixed(2)}
@@ -78,7 +71,7 @@ const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {
         header: "Regular Invoice",
         align: "center",
-        val: el => <CellData
+        val: el => <ServiceRequestCellData
             prefix="$"
             data={el.serviceRequest.invoiceAmount.toFixed(2)}
             override={el.serviceRequestOverride?.invoiceAmount?.toFixed(2)}
@@ -88,7 +81,7 @@ const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {
         header: "Parts Unit Cost",
         align: "center",
-        val: el => <CellData
+        val: el => <ServiceRequestCellData
             prefix="$"
             data={el.serviceRequest.partsUnitCost?.toFixed(2)}
             override={el.serviceRequestOverride?.partsUnitCost?.toFixed(2)}
@@ -98,7 +91,7 @@ const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {
         header: "Number of Parts",
         align: "center",
-        val: el => <CellData
+        val: el => <ServiceRequestCellData
             data={el.serviceRequest.numberOfParts?.toString()}
             override={el.serviceRequestOverride?.numberOfParts?.toString()}
         />,
