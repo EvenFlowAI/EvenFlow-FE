@@ -7,13 +7,10 @@ import {
     TableCell,
     TableHead,
     TableRow,
-    withStyles
 } from "@material-ui/core";
-import {ValueSlider} from "../../styled/ValueSlider";
-import {StyledTable} from '../../styled/StyledTable'
-import {makeStyles} from "@material-ui/core/styles";
+import {StyledTable} from '../../../components/styled/StyledTable'
 import {useException, useMessage, useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
-import {EditDemandSegments} from './EditDemandSegments';
+import {EditDemandSegmentsModal} from '../EditDemandSegmentsModal/EditDemandSegmentsModal';
 import {useDispatch, useSelector} from "react-redux";
 import {loadOptimizationSettings, setSettingValues} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -23,85 +20,9 @@ import {
     IOptimizationSettingValueForm
 } from "../../../store/reducers/slotScoring/types";
 import {SC_UNDEFINED} from "../../../config/constants";
-
-enum SliderRange {
-    Min = -10,
-    Max = 10
-}
-
-const Slider = withStyles({
-    root: {
-        margin: "0 25px",
-        width: "calc(100% - 50px)"
-    },
-    markLabel: {
-        top: 5,
-        left: "-12px !important",
-        "& ~ .MuiSlider-mark ~ .MuiSlider-markLabel": {
-            left: "unset !important",
-            right: -25
-        }
-    },
-})(ValueSlider);
-
-const useStyles = makeStyles({
-    table: {
-        "& .MuiTableCell-head": {
-            textAlign: "center"
-        },
-        "& .MuiTableCell-body": {
-            textAlign: "center",
-            padding: "10px !important",
-            fontSize: 12
-        }
-    },
-    segment: {
-        fontWeight: "bold"
-    },
-    subtitleCell: {
-        padding: "8px !important",
-        fontSize: "12px !important",
-        color: "#9FA2B4"
-    },
-    edit: {
-        fontSize: 14,
-        textTransform: "none",
-        padding: 5,
-        position: "absolute",
-        top: "50%",
-        transform: "translate(0, -50%)",
-        right: 0
-    },
-    editN: {
-        fontSize: 14,
-        textTransform: "none",
-        padding: 5,
-    },
-    editWrapper: {
-        position: "absolute",
-        top: "50%",
-        right: 0,
-        transform: "translate(0, -50%)"
-    },
-    buttonCell: {
-        position: "relative",
-        paddingRight: "56px !important"
-    }
-});
-
-type TForm = {
-    undesirable: number;
-    desirable: number;
-    id: number;
-}
-const initialForm: TForm[] = [
-    {undesirable: 0, desirable: 0, id: 0},
-    {undesirable: 0, desirable: 0, id: 0},
-    {undesirable: 0, desirable: 0, id: 0},
-    {undesirable: 0, desirable: 0, id: 0},
-    {undesirable: 0, desirable: 0, id: 0},
-    {undesirable: 0, desirable: 0, id: 0},
-]
+import {Slider, useStyles} from "./styles";
+import {SliderRange, TForm} from "./types";
+import {initialForm} from "./constants";
 
 export const DemandSegmentsDesirability = () => {
     const {onOpen, onClose, isOpen} = useModal();
@@ -114,6 +35,7 @@ export const DemandSegmentsDesirability = () => {
     const optSettings = useSelector((state: RootState) => state.slotScoring.optimizationSettings);
     const showError = useException();
     const showMessage = useMessage();
+    const classes = useStyles();
 
     useEffect(() => {
         if (selectedSC) {
@@ -188,7 +110,6 @@ export const DemandSegmentsDesirability = () => {
         }
     }
 
-    const classes = useStyles();
     return <Paper variant="outlined" style={{borderRadius: 0, overflowX: "auto"}}>
         <StyledTable className={classes.table}>
             <TableHead>
@@ -312,6 +233,6 @@ export const DemandSegmentsDesirability = () => {
                 )}
             </TableBody>
         </StyledTable>
-        <EditDemandSegments payload={optSettings} onClose={onClose} open={isOpen} />
+        <EditDemandSegmentsModal payload={optSettings} onClose={onClose} open={isOpen} />
     </Paper>
 };

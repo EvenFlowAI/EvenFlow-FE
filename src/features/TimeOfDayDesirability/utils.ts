@@ -1,5 +1,5 @@
 import moment from "moment";
-import {EDesirabilityState, ETimeSlotType, IDesirability} from "../../../store/reducers/slotScoring/types";
+import {EDesirabilityState, ETimeSlotType, IDesirability} from "../../store/reducers/slotScoring/types";
 
 const inpFormat: string = "HH:mm:ss";
 

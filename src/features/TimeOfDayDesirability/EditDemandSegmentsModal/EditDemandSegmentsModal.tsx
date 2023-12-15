@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../../Modals/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
 import {Button} from "@material-ui/core";
-import {LoadingButton} from "../../UI/Button";
+import {LoadingButton} from "../../../components/UI/Button";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {useDispatch} from "react-redux";
@@ -11,40 +11,19 @@ import {
     IOptimizationSettingsCreateForm,
     IOptimizationSettingsItem
 } from "../../../store/reducers/slotScoring/types";
-import {TextField} from "../../UI/TextField";
-import {makeStyles} from "@material-ui/core/styles";
+import {TextField} from "../../../components/UI/TextField";
 import {setOptimizationSettings} from "../../../store/reducers/slotScoring/actions";
-
-const useStyles = makeStyles({
-    row: {
-        display: "flex",
-        flexFlow: "row nowrap",
-        alignItems: "flex-end",
-        marginBottom: 12,
-        "&:last-child": {
-            marginBottom: 0
-        }
-    },
-    inputContainer: {
-        flexBasis: 0,
-        flexGrow: 1
-    },
-    divider: {
-        textTransform: "uppercase",
-        padding: 12,
-        fontWeight: "bold",
-        fontSize: 12
-    }
-})
+import {useStyles} from "./styles";
 
 type TForm = IOptimizationSettingsItem[];
+
 const initialForm: TForm = [
     {from: 1, to: 1},
     {from: 2, to: 2},
     {from: 3, to: 3}
 ]
 
-export const EditDemandSegments:React.FC<DialogProps<IOptimizationSetting[]>> = ({onAction, payload, ...props}) => {
+export const EditDemandSegmentsModal:React.FC<DialogProps<IOptimizationSetting[]>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [isSaving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
@@ -52,6 +31,7 @@ export const EditDemandSegments:React.FC<DialogProps<IOptimizationSetting[]>> = 
     const showMessage = useMessage();
     const showError = useException();
     const dispatch = useDispatch();
+    const classes = useStyles();
 
     useEffect(() => {
         if (props.open) {
@@ -103,7 +83,6 @@ export const EditDemandSegments:React.FC<DialogProps<IOptimizationSetting[]>> = 
         }
     }
 
-    const classes = useStyles();
     return <BaseModal {...props} width={500}>
         <DialogTitle onClose={props.onClose}>Edit Demand Segment</DialogTitle>
         <DialogContent>

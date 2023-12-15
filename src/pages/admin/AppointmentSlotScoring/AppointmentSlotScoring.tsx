@@ -1,11 +1,11 @@
 import React, {useState} from "react";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {TabList} from "../../UI/Tabs";
+import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
+import {TabList} from "../../../components/UI/Tabs";
 import {Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {optimizerRoot} from "../utils";
-import {Proximity} from "./Proximity";
-import {TODDesirability} from "./TODDesirability";
+import {optimizerRoot} from "../../../components/Optimizer/utils";
+import {ProximityTable} from "../../../features/ProximityTable/ProximityTable";
+import {TimeOfDayDesirability} from "../../../features/TimeOfDayDesirability/TimeOfDayDesirability";
 
 export const AppointmentSlotScoring = () => {
     const [selectedTab, setTab] = useState<string>("0");
@@ -25,7 +25,7 @@ export const AppointmentSlotScoring = () => {
             <Tab label="Proximity" value="0" />
             <Tab label="Time of Day Desirability" value="1" />
         </TabList>
-        <TabPanel style={{width: "100%", padding: "24px 0"}} value="0"><Proximity /></TabPanel>
-        <TabPanel style={{width: "100%", padding: "24px 0"}} value="1"><TODDesirability /></TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="0"><ProximityTable /></TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="1"><TimeOfDayDesirability /></TabPanel>
     </TabContext>
 }

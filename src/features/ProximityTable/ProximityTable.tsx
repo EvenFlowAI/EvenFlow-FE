@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {ValueSlider} from "../../styled/ValueSlider";
+import {ValueSlider} from "../../components/styled/ValueSlider";
 import {
     Box,
     Button,
@@ -11,48 +11,17 @@ import {
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
+import {useException, useMessage, useSCs, useSelectedPod} from "../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {createProximity, loadProximity} from "../../../store/reducers/slotScoring/actions";
-import {RootState} from "../../../store/rootReducer";
-import {EProximityType, IProximity} from "../../../store/reducers/slotScoring/types";
-import {SOMETHING_WRONG} from "../../../config/constants";
-import {StyledTable} from "../../styled/StyledTable";
+import {createProximity, loadProximity} from "../../store/reducers/slotScoring/actions";
+import {RootState} from "../../store/rootReducer";
+import {EProximityType, IProximity} from "../../store/reducers/slotScoring/types";
+import {SOMETHING_WRONG} from "../../config/constants";
+import {StyledTable} from "../../components/styled/StyledTable";
+import {SliderRange, TForm} from "./types";
+import {blankSlider, initialForm, rows} from "./constants";
 
-enum SliderRange {
-    Min= 0,
-    Max = 10,
-    Default= 0
-}
-type TProximity = {
-    point: number;
-}
-type TForm = {
-    [T in EProximityType]: TProximity;
-}
-const blankSlider: TProximity = {point: SliderRange.Default};
-const initialForm: TForm = {
-    [EProximityType.Closest]: {...blankSlider},
-    [EProximityType.Earliest]: {...blankSlider},
-}
-
-type TRow = {
-    id: EProximityType;
-    label: string;
-};
-
-const rows: TRow[] = [
-    {
-        id: EProximityType.Closest,
-        label: "Closest available"
-    },
-    {
-        id: EProximityType.Earliest,
-        label: "Earliest available"
-    }
-]
-
-export const Proximity = () => {
+export const ProximityTable = () => {
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch();

@@ -5,7 +5,7 @@ import {PrivateRoute} from "../../../utils/Routes";
 import {Routes} from "../../../config/routes";
 import {CapacitySettings} from "../../../components/Optimizer/CapacitySettings/CapacitySettings";
 import {AppointmentValueSettings} from "../AppointmentValueSettings/AppointmentValueSettings";
-import {AppointmentSlotScoring} from "../../../components/Optimizer/AppointmentSlotScoring/AppointmentSlotScoring";
+import {AppointmentSlotScoring} from "../AppointmentSlotScoring/AppointmentSlotScoring";
 import { OptimizationWindowsPage } from "../../../components/Optimizer/OptimizationWindows/OptimizationWindowsPage";
 import {AppointmentAllocationPage} from "../../../components/Optimizer/AppointmentAllocation/AppointmentAllocationPage";
 import {ServiceRequests} from "../ServiceRequests/ServiceRequests";

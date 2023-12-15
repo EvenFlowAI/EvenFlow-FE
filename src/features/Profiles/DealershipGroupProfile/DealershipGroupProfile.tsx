@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
 import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../../../components/UI/TextField";
 import {AvatarUpload} from "../../../components/UI/AvatarUpload";
