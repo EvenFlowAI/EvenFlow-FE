@@ -128,8 +128,10 @@ const IconsBlock = styled('div')({
 
 export const CustomerInput = withStyles({
     root: {
+        width: '100%',
         '& input': {
-            padding: 4
+            padding: 4,
+            fontSize: 12,
         }
     }
 })(TextField)
@@ -403,6 +405,10 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
         setSorting(prev => ({isAscending: !prev.isAscending, order}))
     }
 
+    const getIsEdit = (customer: ICustomerWithPhones) => {
+        return  isEdit && editingElement?.vehicleId === customer.vehicleId && editingElement?.customerId === customer.customerId
+    }
+
     return isLoading
         ? <div className={classes.emptyWrapper}><Loading/></div>
         : <div style={{overflow: 'auto'}}>
@@ -438,18 +444,29 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                 ref={firstColumn}
                                 className={classes.stickyTHeadCell}
                                 width={150}
-                                style={{borderBottom: 0, borderRight: '1px solid #DADADA'}}/>
+                                style={{
+                                    borderBottom: 0,
+                                    borderRight: '1px solid #DADADA',
+                            }}/>
                             <TableCell
                                 key="secondColumn"
                                 ref={secondColumn}
                                 className={classes.stickyTHeadCell}
                                 width={150}
-                                style={{left: offset.secondColumn, borderBottom: 0, borderRight: '1px solid #DADADA'}} />
+                                style={{
+                                    left: offset.secondColumn,
+                                    borderBottom: 0,
+                                    borderRight: '1px solid #DADADA',
+                            }} />
                             <TableCell
                                 key="thirdColumn"
                                 className={classes.stickyTHeadCell}
                                 width={150}
-                                style={{left: offset.thirdColumn, borderBottom: 0, borderRight: '0.5px solid #828282'}}/>
+                                style={{
+                                    left: offset.thirdColumn,
+                                    borderBottom: 0,
+                                    borderRight: '0.5px solid #828282',
+                            }}/>
                             {selectedColumns
                                 .slice(0, selectedColumns.length - 2)
                                 .map(() => <TableCell className={classes.bodyCell} width={150} style={{borderBottom: 0}}/>)}
@@ -467,7 +484,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                                 SELECT
                                             </Button>
                                         </IconsBlock>
-                                        : isEdit && editingElement?.vehicleId === customer.vehicleId && editingElement?.customerId === customer.customerId
+                                        : getIsEdit(customer)
                                             ? <IconsBlock>
                                                 <Button
                                                     style={{fontSize: 11, minWidth: 46}}
@@ -537,7 +554,11 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             </IconsBlock>}
                                 </TableCell>
                                 {selectedColumns.find(el => el.name === "Last Name")
-                                    ? <TableCell key="last" className={classes.stickyLeftCell} width={150} style={{left: offset.secondColumn}}>
+                                    ? <TableCell
+                                        key="last"
+                                        className={classes.stickyLeftCell}
+                                        width={150}
+                                        style={{left: offset.secondColumn, padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -550,7 +571,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                         key="first"
                                         className={classes.stickyLeftCell}
                                         width={150}
-                                        style={{left: offset.thirdColumn, borderRight: '1px solid #828282'}}>
+                                        style={{left: offset.thirdColumn, borderRight: '1px solid #828282', padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -559,7 +580,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Home")
-                                    ? <TableCell key="home" className={classes.bodyCell} width={150}>
+                                    ? <TableCell key="home" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -568,7 +589,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Cell")
-                                    ? <TableCell key="cell" className={classes.bodyCell} width={150}>
+                                    ? <TableCell key="cell" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -577,7 +598,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Other")
-                                    ? <TableCell key="otherPhone" className={classes.bodyCell} width={150}>
+                                    ? <TableCell key="otherPhone" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -586,7 +607,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Email")
-                                    ? <TableCell key="email" className={classes.bodyCell} width={150}>
+                                    ? <TableCell key="email" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -595,7 +616,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Address")
-                                    ? <TableCell key="address" className={classes.bodyCell} width={150}>
+                                    ? <TableCell key="address" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -604,7 +625,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "City")
-                                    ? <TableCell key="city" className={classes.bodyCell} width={120}>
+                                    ? <TableCell key="city" className={classes.bodyCell} width={120} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -613,7 +634,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "State")
-                                    ? <TableCell key="state" className={classes.bodyCell} width={150}>
+                                    ? <TableCell key="state" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -622,7 +643,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                             onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "ZIP")
-                                    ? <TableCell key="zip" className={classes.bodyCell} width={150}>
+                                    ? <TableCell key="zip" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
