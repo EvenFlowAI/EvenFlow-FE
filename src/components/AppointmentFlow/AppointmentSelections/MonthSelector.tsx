@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from "moment";
 import {styled} from "@material-ui/core";
-import {SquarePaper} from "../../UI/Paper";
+import {SquarePaper} from "../../styled/Paper";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 
 const Paper = styled(SquarePaper)(({theme}) => ({

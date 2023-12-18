@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import {SquarePaper} from "../../../components/UI/Paper";
+import {SquarePaper} from "../../../components/styled/Paper";
 import {PaperTitle} from "../../../pages/admin/PricingSettings/UI";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TabList} from "../../../components/UI/Tabs";
+import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import DayOfWeekOpsCode from "./DayOfWeekOpsCode/DayOfWeekOpsCode";
 import DayOfWeekPackage from "./DayOfWeekPackage/DayOfWeekPackage";

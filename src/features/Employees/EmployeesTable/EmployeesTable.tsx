@@ -4,7 +4,7 @@ import {IEmployee} from "../../../store/reducers/employees/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz, Visibility} from "@material-ui/icons";
 import {Roles} from "../../../config/constants";
-import {TableAvatar} from "../../../components/TableAvatar/TableAvatar";
+import {TableAvatar} from "../../../components/UI/TableAvatar";
 import {IOrder, TCallback} from "../../../types/types";
 import {changePageData, loadByFilters, removeEmployee, setEmplOrder} from "../../../store/reducers/employees/actions";
 import {TableRowDataType} from "../../../components/UI/types";

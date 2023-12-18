@@ -19,7 +19,7 @@ import {
 import {RootState} from "../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {TableRowDataType} from "../../../components/UI/types";
-import {ServiceRequestCellData} from "../../../components/ServiceRequestCellData/ServiceRequestCellData";
+import {ServiceRequestCellData} from "../../../components/UI/ServiceRequestCellData";
 
 const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {header: "Service Ops Code", val: el => el.serviceRequest.code, orderId: "code"},

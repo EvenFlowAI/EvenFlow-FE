@@ -10,7 +10,7 @@ import {Technicians} from "../../../components/Modals/Technicians/Technicians";
 import {Bays} from "../../../components/Modals/Bays/Bays";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
 import {concatAddress} from "../../../utils/utils";
-import {SquarePaper} from "../../../components/UI/Paper";
+import {SquarePaper} from "../../../components/styled/Paper";
 import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as LaborRateIcon} from "../../../assets/img/labor_rate.svg";
 import {ReactComponent as HoursIcon} from "../../../assets/img/Icon 2 Hours of operation.svg";

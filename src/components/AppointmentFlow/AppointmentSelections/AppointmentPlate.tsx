@@ -2,7 +2,7 @@ import React from 'react';
 import {styled} from "@material-ui/core";
 import {timeString} from "../../../config/constants";
 import moment from "moment";
-import {SquarePaper} from "../../UI/Paper";
+import {SquarePaper} from "../../styled/Paper";
 import {CalendarOfferChip, CalendarWaitChip} from "./UI";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";

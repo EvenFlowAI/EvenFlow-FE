@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef} from 'react';
 import {Box, Button, Grid, styled, Typography, useMediaQuery, useTheme} from "@material-ui/core";
-import {SquarePaper} from "../UI/Paper";
+import {SquarePaper} from "../styled/Paper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import moment from "moment";

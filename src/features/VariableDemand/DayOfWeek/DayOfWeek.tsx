@@ -1,5 +1,5 @@
 import React from 'react';
-import {SquarePaper} from "../../../components/UI/Paper";
+import {SquarePaper} from "../../../components/styled/Paper";
 import {PaperTitle} from "../../../pages/admin/PricingSettings/UI";
 import {Box, Button, Divider} from "@material-ui/core";
 import {useSelector} from "react-redux";

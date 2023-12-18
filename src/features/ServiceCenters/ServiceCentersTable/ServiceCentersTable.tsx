@@ -6,7 +6,7 @@ import {useConfirm, useCurrentUser, useException, useMessage, usePagination} fro
 import {RootState} from "../../../store/rootReducer";
 import {changePageData, loadAll, removeSC, setSCOrder} from "../../../store/reducers/serviceCenters/actions";
 import {MoreHoriz, Visibility} from "@material-ui/icons";
-import {TableAvatar} from "../../../components/TableAvatar/TableAvatar";
+import {TableAvatar} from "../../../components/UI/TableAvatar";
 import {IOrder, TCallback} from "../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {TableRowDataType} from "../../../components/UI/types";

@@ -1,6 +1,6 @@
 import React from "react";
 import {Tab} from "@material-ui/core";
-import {TabList} from "../../../components/UI/Tabs";
+import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../../../components/Optimizer/utils";

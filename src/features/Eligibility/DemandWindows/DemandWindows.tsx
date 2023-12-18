@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {SquarePaper} from "../../../components/UI/Paper";
+import {SquarePaper} from "../../../components/styled/Paper";
 import {PaperTitle, TableContainer} from "../../../pages/admin/PricingSettings/UI";
 import {Box, Divider, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {DenseTable} from "../../../components/Optimizer/AppointmentAllocation/UI";

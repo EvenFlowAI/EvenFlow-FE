@@ -3,8 +3,8 @@ import {Tab} from "@material-ui/core";
 import {ServiceCodes} from "../ServiceCodes/ServiceCodes";
 import MaintenancePackages from "../MaintenancePackages/MaintenancePackages";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TabList} from "../../../components/UI/Tabs";
-import {SquarePaper} from "../../../components/UI/Paper";
+import {TabList} from "../../../components/styled/Tabs";
+import {SquarePaper} from "../../../components/styled/Paper";
 import {PaperTitle} from "../../../pages/admin/PricingSettings/UI";
 
 type Tab = {

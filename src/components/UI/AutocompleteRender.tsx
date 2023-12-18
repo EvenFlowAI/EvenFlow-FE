@@ -15,6 +15,7 @@ type TTextParams = {
     required?: boolean;
     key?: string;
 };
+
 export const autocompleteRender = (props: TTextParams) => (params: AutocompleteRenderInputParams) => {
     return <TextField
         label={props.label}

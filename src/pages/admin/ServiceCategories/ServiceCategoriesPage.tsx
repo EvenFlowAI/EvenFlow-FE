@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
 import {TabContext} from "@material-ui/lab";
-import {TabList} from "../../../components/UI/Tabs";
+import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import {

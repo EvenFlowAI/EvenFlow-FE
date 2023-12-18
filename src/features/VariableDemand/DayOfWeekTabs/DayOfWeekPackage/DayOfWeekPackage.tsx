@@ -13,7 +13,7 @@ import {DenseTable} from "../../../../components/Optimizer/AppointmentAllocation
 import EditDayOFWeekPackage from "../../EditDayOFWeekPackageModal/EditDayOFWeekPackageModal";
 import {TMPackage, SliderObject, SliderRange} from "../../types";
 import {useStyles} from "./styles";
-import {Slider} from "../../../../components/UI/Slider";
+import {Slider} from "../../../../components/styled/Slider";
 import AddPackageToPricingModal from "../../AddPackageToPricingModal/AddPackageToPricingModal";
 
 const DayOfWeekPackage = () => {

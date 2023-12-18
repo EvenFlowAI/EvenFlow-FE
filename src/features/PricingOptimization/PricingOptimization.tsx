@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SquarePaper} from "../../components/UI/Paper";
+import {SquarePaper} from "../../components/styled/Paper";
 import {loadPricingCalculations} from "../../store/reducers/pricingSettings/actions";
 import {IAssignedServiceRequestShort} from "../../store/reducers/serviceRequests/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -15,7 +15,7 @@ import {
     EPricingDisplayType
 } from "../../store/reducers/pricingSettings/types";
 import {Autocomplete} from "@material-ui/lab";
-import {TextField} from "../../components/UI/EndUserInputs";
+import {TextField} from "../../components/styled/EndUserInputs";
 import {Label} from "../../components/AppointmentFlow/UI";
 import {KeyboardArrowDown} from "@material-ui/icons";
 import {useException, useSCs} from "../../utils/hooks";

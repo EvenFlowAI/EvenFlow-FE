@@ -12,8 +12,8 @@ import {
     setCurrentZone
 } from "../../../store/reducers/serviceValet/actions";
 import GeographicZonesButtons from "../../../components/GeographicZonesButtons/GeographicZonesButtons";
-import {EligibleTitle} from "../../../components/UI/EligibleTitle";
-import {GeographicZonesWrapper, TabHeaderWrapper} from "../../../components/UI/GeographicZonesWrappers";
+import {EligibleTitle} from "../../../components/styled/EligibleTitle";
+import {GeographicZonesWrapper, TabHeaderWrapper} from "../../../components/styled/GeographicZonesWrappers";
 
 type TGeographicZonesProps = {
     onAddZoneOpen: () => void;

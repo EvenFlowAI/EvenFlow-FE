@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Tab} from "@material-ui/core";
-import {TabList} from "../../UI/Tabs";
+import {TabList} from "../../styled/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {AvailableStaff} from "./AvailableStaff/AvailableStaff";
 import {RequiredEquipment} from "./RequiredEquipment";

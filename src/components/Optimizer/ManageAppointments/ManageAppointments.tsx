@@ -7,7 +7,7 @@ import {RootState} from "../../../store/rootReducer";
 import {updateAdvisor} from "../../../store/reducers/serviceCenters/actions";
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
-import {SquarePaper} from "../../UI/Paper";
+import {SquarePaper} from "../../styled/Paper";
 
 const useStyles = makeStyles(() => ({
     switchWrapper: {

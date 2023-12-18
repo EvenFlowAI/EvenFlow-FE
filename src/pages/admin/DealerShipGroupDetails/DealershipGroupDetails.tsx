@@ -5,7 +5,7 @@ import {Api} from "../../../config/requests";
 import {IDealershipGroupExtended} from "../../../store/reducers/dealershipGroups/types";
 import {concatAddress} from "../../../utils/utils";
 import {Tab} from "@material-ui/core";
-import {TabList} from "../../../components/UI/Tabs";
+import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {DetailsServiceCenters} from "../../../features/DealershipGroupDetails/DetailsServiceCenters/DetailsServiceCenters";
 import {DetailsEmployees} from "../../../features/DealershipGroupDetails/DetailsEmployees/DetailsEmployees";

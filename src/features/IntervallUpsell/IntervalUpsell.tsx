@@ -20,7 +20,7 @@ import {SC_UNDEFINED} from "../../config/constants";
 import {SearchInput} from "../../components/UI/SearchInput";
 import {IOrder} from "../../types/types";
 import IntervalUpsellModal from "./IntervalUpsellModal/IntervalUpsellModal";
-import {ServiceRequestCellData} from "../../components/ServiceRequestCellData/ServiceRequestCellData";
+import {ServiceRequestCellData} from "../../components/UI/ServiceRequestCellData";
 
 const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {

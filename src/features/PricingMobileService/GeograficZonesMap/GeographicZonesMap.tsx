@@ -7,8 +7,8 @@ import {useDispatch} from "react-redux";
 import {saveLinkToMobServiceMap} from "../../../store/reducers/mobileService/actions";
 import {useStyles} from "./styles";
 import {ButtonsWrapper} from "../../../components/GeographicZonesButtons/styles";
-import {EligibleTitle} from "../../../components/UI/EligibleTitle";
-import {GeographicZonesWrapper, TabHeaderWrapper} from "../../../components/UI/GeographicZonesWrappers";
+import {EligibleTitle} from "../../../components/styled/EligibleTitle";
+import {GeographicZonesWrapper, TabHeaderWrapper} from "../../../components/styled/GeographicZonesWrappers";
 
 const mockSRC = 'https://app.mapline.com/map/map_36c1b7f/Pz8UPz4ZIEJDfz8UPxAUP1kAMD8vJT8UPz8UPz8GQkxGCD8tPz'
 

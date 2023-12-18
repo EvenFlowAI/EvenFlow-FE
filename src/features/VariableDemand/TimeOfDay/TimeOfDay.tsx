@@ -4,7 +4,7 @@ import {Box, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {Caption} from "../../../components/UI/Caption";
 import {TextLink} from "../../../components/UI/TextLink";
 import {Routes} from "../../../config/routes";
-import {SquarePaper} from "../../../components/UI/Paper";
+import {SquarePaper} from "../../../components/styled/Paper";
 import {SwitchButtons, TSwitchButton} from "../../../components/UI/Button";
 import {useStyles} from "./styles";
 

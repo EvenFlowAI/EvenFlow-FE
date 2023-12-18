@@ -1,6 +1,6 @@
 import React from 'react';
 import {styled} from "@material-ui/core";
-import {SquarePaper} from "../../UI/Paper";
+import {SquarePaper} from "../../styled/Paper";
 import moment from "moment";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 

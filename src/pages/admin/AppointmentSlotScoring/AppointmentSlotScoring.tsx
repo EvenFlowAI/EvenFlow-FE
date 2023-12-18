@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
-import {TabList} from "../../../components/UI/Tabs";
+import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {optimizerRoot} from "../../../components/Optimizer/utils";

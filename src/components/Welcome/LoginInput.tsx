@@ -1,7 +1,7 @@
 import React, {useMemo, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Paper, useMediaQuery, useTheme} from "@material-ui/core";
-import {TextField} from "../UI/EndUserInputs";
+import {TextField} from "../styled/EndUserInputs";
 import {useDispatch, useSelector} from "react-redux";
 import {
     getBlankCustomer,

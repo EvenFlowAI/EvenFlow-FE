@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../types";
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
-import {TabList} from "../../UI/Tabs";
+import {TabList} from "../../styled/Tabs";
 import {Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";

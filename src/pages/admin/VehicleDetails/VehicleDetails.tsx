@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
-import {TabList} from "../../../components/UI/Tabs";
+import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import {Mileage} from "../../../features/Mileage/Mileage";
 import {bookingFlowRoot} from "../../../components/Optimizer/utils";

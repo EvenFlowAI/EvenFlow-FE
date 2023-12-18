@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {TextField} from "../UI/EndUserInputs";
+import {TextField} from "../styled/EndUserInputs";
 import {LoadingButton} from "../UI/Button";
 import {Grid, useMediaQuery} from "@material-ui/core";
 import {useLoadingStyles, useStyles} from "./CustomerSelect";

@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadPricingLevels} from "../../../store/reducers/pricingSettings/actions";
 import {RootState} from "../../../store/rootReducer";
 import {PaperTitle, TableContainer} from "../../../pages/admin/PricingSettings/UI";
-import {SquarePaper} from "../../../components/UI/Paper";
+import {SquarePaper} from "../../../components/styled/Paper";
 import {useStyles} from "./styles";
 
 export const DemandWindows = () => {

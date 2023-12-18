@@ -9,7 +9,7 @@ import {
     TextFieldProps, useMediaQuery, useTheme,
     withStyles
 } from "@material-ui/core";
-import {TextField as TF} from "../UI/EndUserInputs";
+import {TextField as TF} from "../styled/EndUserInputs";
 import {InputProps as StandardInputProps} from "@material-ui/core/Input/Input";
 import {LoadingButton} from "../UI/Button";
 

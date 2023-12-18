@@ -20,7 +20,7 @@ import {Loading} from "../../../../components/UI/Loading";
 import {loadAssignedServiceRequests, setAssignedPageData} from "../../../../store/reducers/serviceRequests/actions";
 import EditDayOfWeekOpsCode from "../../EditDayOFWeekOpsCode/EditDayOFWeekOpsCode";
 import {SliderObject, SliderRange, TOpsCode} from "../../types";
-import {Slider} from "../../../../components/UI/Slider";
+import {Slider} from "../../../../components/styled/Slider";
 import {useStyles} from "./styles";
 
 const DayOfWeekOpsCode = () => {

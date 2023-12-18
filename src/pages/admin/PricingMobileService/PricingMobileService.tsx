@@ -4,7 +4,7 @@ import {Tab} from "@material-ui/core";
 import {pricingRoot} from "../../../components/Optimizer/utils";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TabList} from "../../../components/UI/Tabs";
+import {TabList} from "../../../components/styled/Tabs";
 import GeographicZones from "../../../features/PricingMobileService/GeograficZones/GeographicZones";
 import GeographicZonesMap from "../../../features/PricingMobileService/GeograficZonesMap/GeographicZonesMap";
 import AddEditGeographicZone from "../../../components/Modals/EditGeographicZone/AddEditGeographicZone";

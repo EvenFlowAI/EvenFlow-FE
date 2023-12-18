@@ -1,9 +1,8 @@
 import React from "react";
-import {Button, ButtonClassKey, ButtonProps, CircularProgress, styled, withStyles} from "@material-ui/core";
+import {Button, ButtonClassKey, ButtonProps, CircularProgress, withStyles} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
-import {DesirabilityButton} from "./DesirabilityButton";
-import { useHistory } from "react-router-dom";
+import {DesirabilityButton} from "../styled/DesirabilityButton";
 
 type TStyleProps = {
     fw: boolean;
@@ -44,14 +43,6 @@ export const LoadingButton: React.FC<Props> = ({loading, classes, ...props}) => 
     </div>;
 }
 
-export const SquareIconButton = withStyles({
-    root: {
-        padding: "5px 0",
-        minWidth: 40
-    }
-})((props: ButtonProps) => {
-    return <Button {...props} />
-})
 export const EditButton = withStyles({
     root: {
         textTransform: "none"
@@ -83,16 +74,4 @@ export const SwitchButtons
             </DesirabilityButton>
         })}
     </>
-}
-
-const StyledLinkButton = styled(Button)({
-    textDecoration: "underline"
-});
-
-export const LinkButton: React.FC<ButtonProps&{to: string}> = ({to, ...props}) => {
-    const history = useHistory();
-    const handleClick = () => {
-        history.push(to);
-    }
-    return <StyledLinkButton onClick={handleClick} {...props} />;
 }

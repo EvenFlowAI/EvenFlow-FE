@@ -1,5 +1,5 @@
 import {withStyles} from "@material-ui/core";
-import {ValueSlider} from "../styled/ValueSlider";
+import {ValueSlider} from "./ValueSlider";
 
 export const Slider = withStyles({
     root: {

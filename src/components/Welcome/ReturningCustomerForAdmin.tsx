@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {TextField} from "../UI/EndUserInputs";
+import {TextField} from "../styled/EndUserInputs";
 import {Button, CircularProgress, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {useStyles} from "./CustomerSelect";
 import {useTranslation} from "react-i18next";

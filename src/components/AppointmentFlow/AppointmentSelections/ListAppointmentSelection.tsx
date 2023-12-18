@@ -1,6 +1,6 @@
 import React, {FunctionComponent, memo, useEffect, useMemo, useRef, useState} from 'react';
 import {Box, Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
-import {SquarePaper} from "../../UI/Paper";
+import {SquarePaper} from "../../styled/Paper";
 import {timeString} from "../../../config/constants";
 import {DirectionsCar} from "@material-ui/icons";
 import {LoanerCarChip, OfferChip, ShortWaitChip} from "./UI";

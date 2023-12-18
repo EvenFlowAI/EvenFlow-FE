@@ -1,7 +1,16 @@
 import React from "react";
 import {Avatar} from "@material-ui/core";
 import {getInitials} from "../../utils/utils";
-import {useStyles} from "./styles";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles(theme => ({
+    root: {
+        backgroundColor: theme.palette.primary.main,
+        fontSize: 12,
+        width: 30,
+        height: 30
+    }
+}));
 
 type Props = {
     name: string;

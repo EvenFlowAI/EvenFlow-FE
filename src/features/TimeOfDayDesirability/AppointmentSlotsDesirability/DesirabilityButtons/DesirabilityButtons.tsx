@@ -1,5 +1,5 @@
 import React from "react";
-import {DesirabilityButton} from "../../../../components/UI/DesirabilityButton";
+import {DesirabilityButton} from "../../../../components/styled/DesirabilityButton";
 import {EDesirabilityState} from "../../../../store/reducers/slotScoring/types";
 import {TButton} from "./types";
 import {getColor} from "./utils";

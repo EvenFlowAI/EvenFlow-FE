@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {FormControlLabel, Radio, RadioGroup, Tab} from "@material-ui/core";
-import {TabList} from "../../../components/UI/Tabs";
+import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import ByZone from "../../../components/Optimizer/AnicllaryPriceParts/ByZone";
 import ByDistance from "../../../components/Optimizer/AnicllaryPriceParts/ByDistance";
@@ -21,7 +21,7 @@ import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../../components/UI/Loading";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EAncillaryPriceType} from "../../../store/reducers/mobileService/types";
-import {TablesWrapper} from "../../../components/UI/TablesWrapper";
+import {TablesWrapper} from "../../../components/styled/TablesWrapper";
 import {useStyles} from "./styles";
 
 type TTab = {
