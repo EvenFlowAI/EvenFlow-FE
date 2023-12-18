@@ -23,10 +23,9 @@ import {
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {autocompleteRender, useAutocompleteStyles} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {loadFilteredZip, setFilteredZipCodes} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {useMakeAndModelStyles} from "../AddPackage/parts/MakeAndModel/MakeAndModel";
 
 const useStyles = makeStyles(() => ({
     text: {
@@ -123,7 +122,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
     const {onOpen, onClose, isOpen} = useModal();
     const dispatch = useDispatch();
     const classes = useStyles();
-    const autocompleteClasses = useMakeAndModelStyles();
+    const autocompleteClasses = useAutocompleteStyles();
     const showError = useException();
     const showMessage = useMessage();
     const zonesList = useMemo(() => serviceType === 'serviceValet' ? valetZones : mobileZones, [serviceType, valetZones, mobileZones]);

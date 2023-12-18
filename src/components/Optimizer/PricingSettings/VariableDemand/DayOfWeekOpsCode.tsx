@@ -16,7 +16,7 @@ import {
     IRequestPricingSettings,
     TNewRequestsToPricing
 } from "../../../../store/reducers/pricingSettings/types";
-import AddOpsCodeModal from "../../../Modals/AddPackage/parts/AddOpsCode/AddOpsCode";
+import AddOpsCodeModal from "../../../Modals/AddOpsCode/AddOpsCode";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Loading} from "../../../UI/Loading";
 import {loadAssignedServiceRequests, setAssignedPageData} from "../../../../store/reducers/serviceRequests/actions";

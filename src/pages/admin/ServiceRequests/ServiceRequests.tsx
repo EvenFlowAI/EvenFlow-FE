@@ -5,7 +5,7 @@ import {TabContext, TabPanel} from "@material-ui/lab";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../../../components/Optimizer/utils";
 import {ServiceRequestsScreen} from "../../../features/ServiceRequests/ServiceRequestsScreen";
-import {MaintenancePackages} from "../../../components/Optimizer/MaintenancePackages/MaintenancePackages";
+import {MaintenancePackages} from "../../../features/MaintenancePackages/MaintenancePackages";
 import {ComplimentaryServices} from "../../../features/ComplimentaryServices/ComplimentaryServices";
 import {setServiceRequestsPageActiveTab} from "../../../store/reducers/serviceRequests/actions";
 import {useDispatch, useSelector} from "react-redux";

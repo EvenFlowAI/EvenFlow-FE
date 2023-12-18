@@ -4,6 +4,7 @@ import {TextField} from "./TextField";
 import {Checkbox} from "@material-ui/core";
 import {AutocompleteRenderOptionState} from "@material-ui/lab/Autocomplete/Autocomplete";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {makeStyles} from "@material-ui/core/styles";
 
 type TTextParams = {
     label: string;
@@ -97,3 +98,27 @@ export const ASelectMulti = <
         }
         {...props} />
 }
+
+export const useAutocompleteStyles = makeStyles(() => ({
+    tag: {
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: '#7898FF',
+        borderRadius: 4,
+        color: 'white',
+        fontWeight: 'bold',
+        margin: '1px 2px',
+        '& > svg': {
+            color: 'white',
+        }
+    },
+    option: {
+        padding: 0,
+        fontSize: 15,
+        height: 28,
+    },
+    inputRoot: {
+        padding: 5,
+        paddingRight: 8,
+    },
+}))
