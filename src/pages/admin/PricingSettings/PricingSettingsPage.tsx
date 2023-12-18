@@ -6,7 +6,7 @@ import {Switch, Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import { PricingLevels } from '../../../features/PricingLevels/PricingLevels';
 import {Eligibility} from "../../../features/Eligibility/Eligibility";
-import {PricingOptimization} from "../../../features/PricingOptimization";
+import {PricingOptimization} from "../../../features/PricingOptimization/PricingOptimization";
 import {VariableDemand} from "../../../features/VariableDemand/VariableDemand";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import { changePricingOpt } from '../../../store/reducers/serviceCenters/actions';

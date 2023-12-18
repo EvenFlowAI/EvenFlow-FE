@@ -119,3 +119,11 @@ export enum EPricingDisplayType {
     Static,
     Dynamic
 }
+
+export type TTimeWindow = {
+    [k in EWindowType]: ITimeWindowEl;
+}
+
+export type TPricingLevels = {
+    [k in EDemandCategory]: IPricingLevel;
+}

@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {SquarePaper} from "../../components/UI/Paper";
-import {PaperTitle} from "../../pages/admin/PricingSettings/UI";
+import {SquarePaper} from "../../../components/UI/Paper";
+import {PaperTitle} from "../../../pages/admin/PricingSettings/UI";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TabList} from "../../components/UI/Tabs";
+import {TabList} from "../../../components/UI/Tabs";
 import {Tab} from "@material-ui/core";
-import PricingLevelsByOpsCode from "./PricingLevelsByOpsCode";
-import PricingLevelsByPackage from "./PricingLevelsByPackage";
+import PricingLevelsByOpsCode from "../PricingLevelsByOpsCode/PricingLevelsByOpsCode";
+import PricingLevelsByPackage from "../PricingLevelsByPackage/PricingLevelsByPackage";
 
 type Tab = {
     id: string;

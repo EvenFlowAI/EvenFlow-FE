@@ -1,23 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {Button} from "@material-ui/core";
-import {TableRowDataType} from "../../components/UI/types";
-import {Table} from "../../components/UI/Table";
-import {makeStyles} from "@material-ui/core/styles";
-import EditPricingLevel from "../../components/Modals/EditPricingLevel/EditPricingLevel";
-import {useModal, useSCs} from "../../utils/hooks";
+import {TableRowDataType} from "../../../components/UI/types";
+import {Table} from "../../../components/UI/Table";
+import EditPricingLevelModal from "../EditPricingLevelModal/EditPricingLevelModal";
+import {useModal, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {loadAssignedServiceRequests, setAssignedPageData} from "../../store/reducers/serviceRequests/actions";
-import {RootState} from "../../store/rootReducer";
-import {loadRequestsPricingLevels} from "../../store/reducers/pricingSettings/actions";
-import {EDemandCategory} from "../../store/reducers/pricingSettings/types";
-
-export type TPricingLevel = {
-    id: number;
-    serviceRequest: string;
-    opsCode: string;
-    discount: string | null;
-    premium: string | null;
-};
+import {loadAssignedServiceRequests, setAssignedPageData} from "../../../store/reducers/serviceRequests/actions";
+import {RootState} from "../../../store/rootReducer";
+import {loadRequestsPricingLevels} from "../../../store/reducers/pricingSettings/actions";
+import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
+import {useStyles} from "./styles";
+import {TPricingLevel} from "../types";
 
 const RowData: TableRowDataType<TPricingLevel>[] = [
     {val: (el: TPricingLevel, index: number) => `${index + 1}`, header: "#"},
@@ -26,18 +19,6 @@ const RowData: TableRowDataType<TPricingLevel>[] = [
     {val: (el: TPricingLevel) => el.discount ? `${el.discount} %` : 'Default', header: "DISCOUNT"},
     {val: (el: TPricingLevel) => el.premium ? `${el.premium} %` : 'Default', header: "PREMIUM"},
 ];
-
-const useStyles = makeStyles(() => ({
-    button: {
-        textTransform: 'none',
-    },
-    tableWrapper: {
-        border: '1px solid #DADADA',
-        borderRadius: 1,
-        margin: 27,
-    }
-}))
-
 
 const PricingLevelsByOpsCode = () => {
     const { assignedList } = useSelector((state: RootState) => state.serviceRequests);
@@ -117,7 +98,7 @@ const PricingLevelsByOpsCode = () => {
             borderHeader
             compact
         />
-        <EditPricingLevel open={isOpen} prisingLevel={editElement} onClose={onClose}/>
+        <EditPricingLevelModal open={isOpen} prisingLevel={editElement} onClose={onClose}/>
     </div>
 };
 

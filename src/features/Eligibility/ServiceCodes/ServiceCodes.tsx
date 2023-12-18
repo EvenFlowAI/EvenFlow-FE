@@ -1,37 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {TableContainer} from "../../pages/admin/PricingSettings/UI";
+import {TableContainer} from "../../../pages/admin/PricingSettings/UI";
 import {useDispatch, useSelector} from "react-redux";
-import {useException, useSCs} from "../../utils/hooks";
-import {RootState} from "../../store/rootReducer";
+import {useException, useSCs} from "../../../utils/hooks";
+import {RootState} from "../../../store/rootReducer";
 import {
     changeSRPrisingDisplayType,
     loadSrList,
-} from "../../store/reducers/pricingSettings/actions";
-import {NoItemsLoading} from "../../components/UI/NoItemsLoading";
-import {styled, TableBody, TableHead, Radio, RadioGroup, FormControlLabel} from "@material-ui/core";
-import {DemandTable, TableCell, TableRow} from "../../components/Optimizer/AppointmentAllocation/UI";
-import {EPricingDisplayType} from "../../store/reducers/pricingSettings/types";
-
-
-const headCellStyles = {
-    fontSize: 12,
-    lineHeight: "16px",
-    color: "#9FA2B4"
-}
-const leftAlign = {
-    textAlign: "left" as const
-}
-
-const TableWrapper = styled("div")(({theme}) => ({
-    width: "100%",
-    overflowX: "auto",
-    "& .MuiTableCell-root": {
-        [theme.breakpoints.down("xs")]: {
-            fontSize: "10px !important",
-            padding: "6px !important"
-        }
-    }
-}))
+} from "../../../store/reducers/pricingSettings/actions";
+import {NoItemsLoading} from "../../../components/UI/NoItemsLoading";
+import {TableBody, TableHead, Radio, RadioGroup, FormControlLabel} from "@material-ui/core";
+import {DemandTable, TableCell, TableRow} from "../../../components/Optimizer/AppointmentAllocation/UI";
+import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
+import {headCellStyles, leftAlign, TableWrapper} from "../styles";
 
 export const ServiceCodes = () => {
     const [loading, setLoading] = useState<boolean>(false);

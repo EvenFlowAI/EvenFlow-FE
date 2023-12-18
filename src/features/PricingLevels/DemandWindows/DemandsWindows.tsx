@@ -1,44 +1,25 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
-import {DenseTable} from "../../components/Optimizer/AppointmentAllocation/UI";
-import {EditButton} from "../../components/UI/Button";
-import {PriceLevelsDialog} from "./PriceLevelsDialog";
-import {useModal, useSCs} from "../../utils/hooks";
-import {EDemandCategory, IPricingLevel} from "../../store/reducers/pricingSettings/types";
+import {DenseTable} from "../../../components/Optimizer/AppointmentAllocation/UI";
+import {EditButton} from "../../../components/UI/Button";
+import {PriceLevelsModal} from "../PriceLevelsModal/PriceLevelsModal";
+import {useModal, useSCs} from "../../../utils/hooks";
+import {EDemandCategory, IPricingLevel, TPricingLevels} from "../../../store/reducers/pricingSettings/types";
 import {useDispatch, useSelector} from "react-redux";
-import {loadPricingLevels} from "../../store/reducers/pricingSettings/actions";
-import {RootState} from "../../store/rootReducer";
-import {PaperTitle, TableContainer} from "../../pages/admin/PricingSettings/UI";
-import {SquarePaper} from "../../components/UI/Paper";
-
-const useStyles = makeStyles(theme => ({
-    inputCell: {
-        fontSize: 16,
-        fontWeight: "bold",
-        color: theme.palette.primary.main
-    },
-    editCell: {
-        display: "flex",
-        width: "100%",
-        height: "100%",
-        flexFlow: "row nowrap",
-        alignItems: "center",
-        justifyContent: "space-between"
-    }
-}));
-type TPricingLevels = {
-    [k in EDemandCategory]: IPricingLevel;
-}
+import {loadPricingLevels} from "../../../store/reducers/pricingSettings/actions";
+import {RootState} from "../../../store/rootReducer";
+import {PaperTitle, TableContainer} from "../../../pages/admin/PricingSettings/UI";
+import {SquarePaper} from "../../../components/UI/Paper";
+import {useStyles} from "./styles";
 
 export const DemandWindows = () => {
+    const {pricingLevels} = useSelector((state: RootState) => state.pricingSettings)
     const [editedItem, setEditedItem] = useState<IPricingLevel|undefined>(undefined);
     const {onClose, onOpen, isOpen} = useModal();
     const {selectedSC} = useSCs();
-    const pricingLevels = useSelector((state: RootState) => {
-        return state.pricingSettings.pricingLevels;
-    })
     const dispatch = useDispatch();
+    const classes = useStyles();
+
     const mappedPricingLevels: TPricingLevels = useMemo(() => {
         return pricingLevels.reduce((acc, item) => {
             acc[item.demandCategory] = item;
@@ -63,7 +44,6 @@ export const DemandWindows = () => {
         }
     }
 
-    const classes = useStyles();
     return <SquarePaper variant="outlined">
         <PaperTitle>Demand Windows Eligibility Status</PaperTitle>
         <Divider />
@@ -116,6 +96,6 @@ export const DemandWindows = () => {
                 </TableBody>
             </DenseTable>
         </TableContainer>
-        <PriceLevelsDialog payload={editedItem} open={isOpen} onClose={onClose} />
+        <PriceLevelsModal payload={editedItem} open={isOpen} onClose={onClose} />
     </SquarePaper>
 };

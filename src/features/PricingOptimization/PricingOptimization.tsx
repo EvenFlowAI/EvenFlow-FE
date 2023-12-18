@@ -1,37 +1,28 @@
 import React, {useEffect, useState} from 'react';
-import {SquarePaper} from "../components/UI/Paper";
-import {loadPricingCalculations} from "../store/reducers/pricingSettings/actions";
-import {IAssignedServiceRequestShort} from "../store/reducers/serviceRequests/types";
+import {SquarePaper} from "../../components/UI/Paper";
+import {loadPricingCalculations} from "../../store/reducers/pricingSettings/actions";
+import {IAssignedServiceRequestShort} from "../../store/reducers/serviceRequests/types";
 import {useDispatch, useSelector} from "react-redux";
-import {PaperTitle, TableContainer} from "../pages/admin/PricingSettings/UI";
-import {Box, Divider, styled, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {DenseTable} from "../components/Optimizer/AppointmentAllocation/UI";
+import {PaperTitle, TableContainer} from "../../pages/admin/PricingSettings/UI";
+import {Box, Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {DenseTable} from "../../components/Optimizer/AppointmentAllocation/UI";
 import moment from "moment";
-import {mappedCalculationsSelector} from "../store/reducers/pricingSettings/selectors";
+import {mappedCalculationsSelector} from "../../store/reducers/pricingSettings/selectors";
 import {
     demandCategories,
     EDay,
     EDemandCategory,
     EPricingDisplayType
-} from "../store/reducers/pricingSettings/types";
+} from "../../store/reducers/pricingSettings/types";
 import {Autocomplete} from "@material-ui/lab";
-import {TextField} from "../components/UI/EndUserInputs";
-import {Label} from "../components/AppointmentFlow/UI";
+import {TextField} from "../../components/UI/EndUserInputs";
+import {Label} from "../../components/AppointmentFlow/UI";
 import {KeyboardArrowDown} from "@material-ui/icons";
-import {useException, useSCs} from "../utils/hooks";
-import {loadSCRequestsShort} from "../store/reducers/serviceRequests/actions";
-import {RootState} from "../store/rootReducer";
-import {TEnumMap} from "../store/reducers/utils";
-
-const TableWrapper = styled("div")(({theme}) => ({
-    width: "100%",
-    overflowX: "auto",
-    "& .MuiTableCell-root": {
-        [theme.breakpoints.down("xs")]: {
-            fontSize: "10px !important"
-        }
-    }
-}))
+import {useException, useSCs} from "../../utils/hooks";
+import {loadSCRequestsShort} from "../../store/reducers/serviceRequests/actions";
+import {RootState} from "../../store/rootReducer";
+import {TEnumMap} from "../../store/reducers/utils";
+import {TableWrapper} from "./styles";
 
 export const PricingOptimization = () => {
     const [sr, setSr] = useState<IAssignedServiceRequestShort|null>(null);

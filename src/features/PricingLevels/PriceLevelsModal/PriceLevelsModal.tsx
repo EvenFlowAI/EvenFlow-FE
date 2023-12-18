@@ -1,17 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../components/Modals/BaseModal";
-import {DialogProps} from "../../components/Modals/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
 import {Button} from "@material-ui/core";
-import {LoadingButton} from "../../components/UI/Button";
+import {LoadingButton} from "../../../components/UI/Button";
 import {useDispatch} from "react-redux";
-import {useException, useMessage} from "../../utils/hooks";
-import {TextField} from "../../components/UI/TextField";
-import {EDemandCategory, IPricingLevel} from "../../store/reducers/pricingSettings/types";
-import {SC_UNDEFINED} from "../../config/constants";
-import {setPricingLevels} from "../../store/reducers/pricingSettings/actions";
+import {useException, useMessage} from "../../../utils/hooks";
+import {TextField} from "../../../components/UI/TextField";
+import {EDemandCategory, IPricingLevel} from "../../../store/reducers/pricingSettings/types";
+import {SC_UNDEFINED} from "../../../config/constants";
+import {setPricingLevels} from "../../../store/reducers/pricingSettings/actions";
 
-
-export const PriceLevelsDialog: React.FC<DialogProps<IPricingLevel>>
+export const PriceLevelsModal: React.FC<DialogProps<IPricingLevel>>
     = ({onAction, payload, ...props}) => {
     const [priceSetting, setSetting] = useState<string>("100");
     const [saving, setSaving] = useState<boolean>(false);

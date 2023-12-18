@@ -1,56 +1,32 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {makeStyles} from "@material-ui/core/styles";
-import {SquarePaper} from "../../components/UI/Paper";
-import {PaperTitle, TableContainer} from "../../pages/admin/PricingSettings/UI";
+import {SquarePaper} from "../../../components/UI/Paper";
+import {PaperTitle, TableContainer} from "../../../pages/admin/PricingSettings/UI";
 import {Box, Divider, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {DenseTable} from "../../components/Optimizer/AppointmentAllocation/UI";
-import {useException, useSCs} from "../../utils/hooks";
-import {loadTimeWindows, setTimeWindows} from "../../store/reducers/pricingSettings/actions";
+import {DenseTable} from "../../../components/Optimizer/AppointmentAllocation/UI";
+import {useException, useSCs} from "../../../utils/hooks";
+import {loadTimeWindows, setTimeWindows} from "../../../store/reducers/pricingSettings/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../store/rootReducer";
-import {EWindowType, ITimeWindowEl} from "../../store/reducers/pricingSettings/types";
-import {Caption} from "../../components/UI/Caption";
-import {TextLink} from "../../components/UI/TextLink";
-import {Routes} from "../../config/routes";
+import {RootState} from "../../../store/rootReducer";
+import {EWindowType, TTimeWindow} from "../../../store/reducers/pricingSettings/types";
+import {Caption} from "../../../components/UI/Caption";
+import {TextLink} from "../../../components/UI/TextLink";
+import {Routes} from "../../../config/routes";
+import {useStyles} from "./styles";
 
-const useStyles = makeStyles(theme => ({
-    switchCell: {
-        fontSize: "12px !important",
-        padding: "2px 12px !important"
-    },
-    tableWrapper: {
-        overflowX: "auto",
-        width: "100%",
-        "& .MuiTableCell-root": {
-            [theme.breakpoints.down("xs")]: {
-                fontSize: "12px !important"
-            }
-        }
-    },
-    headerCell: {
-        [theme.breakpoints.down("xs")]: {
-            fontSize: "12px !important"
-        }
-    }
-}));
-
-type TTW = {
-    [k in EWindowType]: ITimeWindowEl;
-}
 export const DemandWindows = () => {
+    const {timeWindows} = useSelector((state: RootState) => state.pricingSettings);
     const [saving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const showError = useException();
-    const timeWindows = useSelector((state: RootState) => {
-        return state.pricingSettings.timeWindows;
-    });
+    const dispatch = useDispatch();
+    const classes = useStyles();
+
     const mappedTW = useMemo(() => {
         return timeWindows.reduce((acc, item) => {
             acc[item.type] = item;
             return acc;
-        }, {} as TTW);
+        }, {} as TTimeWindow);
     }, [timeWindows]);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         if (selectedSC) {
@@ -76,7 +52,6 @@ export const DemandWindows = () => {
         }
     }
 
-    const classes = useStyles();
     return <SquarePaper variant="outlined">
         <PaperTitle>Demand windows Eligibility status</PaperTitle>
         <Divider />

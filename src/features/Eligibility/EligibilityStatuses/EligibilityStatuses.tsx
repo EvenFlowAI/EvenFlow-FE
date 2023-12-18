@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import {Tab} from "@material-ui/core";
-import {ServiceCodes} from "./ServiceCodes";
-import MaintenancePackages from "./MaintenancePackages";
+import {ServiceCodes} from "../ServiceCodes/ServiceCodes";
+import MaintenancePackages from "../MaintenancePackages/MaintenancePackages";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TabList} from "../../components/UI/Tabs";
-import {SquarePaper} from "../../components/UI/Paper";
-import {PaperTitle} from "../../pages/admin/PricingSettings/UI";
+import {TabList} from "../../../components/UI/Tabs";
+import {SquarePaper} from "../../../components/UI/Paper";
+import {PaperTitle} from "../../../pages/admin/PricingSettings/UI";
 
 type Tab = {
     id: string;

@@ -1,39 +1,19 @@
 import React, {useEffect} from 'react';
-import {NoItemsLoading} from "../../components/UI/NoItemsLoading";
-import {DemandTable, TableCell, TableRow} from "../../components/Optimizer/AppointmentAllocation/UI";
-import {Box, FormControlLabel, Radio, RadioGroup, styled, TableBody, TableHead} from "@material-ui/core";
-import {TableContainer} from "../../pages/admin/PricingSettings/UI";
-import {useException, useSCs} from "../../utils/hooks";
+import {NoItemsLoading} from "../../../components/UI/NoItemsLoading";
+import {DemandTable, TableCell, TableRow} from "../../../components/Optimizer/AppointmentAllocation/UI";
+import {Box, FormControlLabel, Radio, RadioGroup, TableBody, TableHead} from "@material-ui/core";
+import {TableContainer} from "../../../pages/admin/PricingSettings/UI";
+import {useException, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {
     changeMPPrisingDisplayType,
     loadMPList,
-} from "../../store/reducers/pricingSettings/actions";
-import {RootState} from "../../store/rootReducer";
-import {Caption} from "../../components/UI/Caption";
-import {EPricingDisplayType} from "../../store/reducers/pricingSettings/types";
-
-const headCellStyles = {
-    fontSize: 12,
-    lineHeight: "16px",
-    color: "#9FA2B4"
-}
-const leftAlign = {
-    textAlign: "left" as const
-}
-
-const TableWrapper = styled("div")(({theme}) => ({
-    width: "100%",
-    overflowX: "auto",
-    overflowY: "auto",
-    maxHeight: "40vh",
-    "& .MuiTableCell-root": {
-        [theme.breakpoints.down("xs")]: {
-            fontSize: "10px !important",
-            padding: "6px !important"
-        }
-    }
-}))
+} from "../../../store/reducers/pricingSettings/actions";
+import {RootState} from "../../../store/rootReducer";
+import {Caption} from "../../../components/UI/Caption";
+import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
+import {headCellStyles, leftAlign} from "../styles";
+import {TableWrapper} from "./styles";
 
 const MaintenancePackages = () => {
     const {isLoading, mpList} = useSelector((state: RootState) => state.pricingSettings);
