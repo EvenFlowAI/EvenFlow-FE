@@ -1,18 +1,12 @@
 import React, {useState} from 'react';
-import {TextField} from "../../UI/TextField";
-import {Button, styled} from "@material-ui/core";
+import {Button} from "@material-ui/core";
 import {DialogProps} from "../types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {LoadingButton} from "../../UI/Button";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useException} from "../../../utils/hooks";
-
-const Textarea = styled(TextField)({
-    "& textarea": {
-        padding: "8px 11px"
-    },
-});
+import {Textarea} from "./styles";
 
 type TMapIframeLinkProps = DialogProps & {
     onSave: (link: string) => void;

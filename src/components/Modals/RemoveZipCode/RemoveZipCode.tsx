@@ -2,52 +2,18 @@ import React from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider} from "@material-ui/core";
 import {DialogProps} from "../types";
-import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch} from "react-redux";
 import {removeZipFromMobServiceZone} from "../../../store/reducers/mobileService/actions";
 import {useSCs} from "../../../utils/hooks";
 import {TZipCode, TZone, TZonesServiceType} from "../../../store/reducers/mobileService/types";
 import {removeZipFromServiceValetZone} from "../../../store/reducers/serviceValet/actions";
+import {useStyles} from "./styles";
 
 type TRemoveGeographicZoneProps = DialogProps & {
     zone: TZone|null;
     zip: TZipCode|null;
     serviceType: TZonesServiceType;
 }
-
-const useStyles = makeStyles(() => ({
-    text: {
-        display: 'flex',
-        justifyContent: 'center',
-        padding: '16px 0 36px 0',
-        fontWeight: 'bold'
-    },
-    wrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-    cancelButton: {
-        color: '#9FA2B4',
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-    },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        }
-    },
-}))
 
 const RemoveZipCode: React.FC<TRemoveGeographicZoneProps> = ({serviceType, zip, zone, ...props}) => {
     const classes = useStyles();

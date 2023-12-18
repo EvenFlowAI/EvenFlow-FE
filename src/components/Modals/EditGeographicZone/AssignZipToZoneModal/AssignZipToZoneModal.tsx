@@ -1,51 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {makeStyles} from "@material-ui/core/styles";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {DialogProps} from "../types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
+import {DialogProps} from "../../types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal";
 import {Button, Divider, MenuItem, Select} from "@material-ui/core";
-import {TReassignZip, TZipCode, TZone, TZonesServiceType} from "../../../store/reducers/mobileService/types";
-import {TextField} from "../../UI/TextField";
-import {assignZipToMobServiceZone} from "../../../store/reducers/mobileService/actions";
+import {TReassignZip, TZipCode, TZone, TZonesServiceType} from "../../../../store/reducers/mobileService/types";
+import {TextField} from "../../../UI/TextField";
+import {assignZipToMobServiceZone} from "../../../../store/reducers/mobileService/actions";
 import {
     reassignZipToServiceValetZone,
-} from "../../../store/reducers/serviceValet/actions";
-import {RootState} from "../../../store/rootReducer";
-
-const useStyles = makeStyles(() => ({
-    text: {
-        display: 'flex',
-        justifyContent: 'center',
-        padding: '16px 0 36px 0',
-        fontWeight: 'bold'
-    },
-    wrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-    cancelButton: {
-        color: '#9FA2B4',
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-    },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        }
-    },
-}))
+} from "../../../../store/reducers/serviceValet/actions";
+import {RootState} from "../../../../store/rootReducer";
+import {useStyles} from "./styles";
 
 type TAssignZipToZoneProps = DialogProps & {
     serviceType: TZonesServiceType;
@@ -53,7 +19,7 @@ type TAssignZipToZoneProps = DialogProps & {
     zone?: TZone|null;
 }
 
-const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType, ...props}) => {
+const AssignZipToZoneModal:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType, ...props}) => {
     const {zones: serviceValetZones, currentZone: currentValetZone, isLoading: isValetLoading} = useSelector((state: RootState) => state.serviceValet);
     const {zones: mobileServiceZones, currentZone: currentMobileZone, isLoading: isMobileLoading} = useSelector((state: RootState) => state.mobileService);
     const [selectedZone, setSelectedZone] = useState<TZone|null>(null);
@@ -141,4 +107,4 @@ const AssignZipToZone:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType
     );
 };
 
-export default AssignZipToZone;
+export default AssignZipToZoneModal;

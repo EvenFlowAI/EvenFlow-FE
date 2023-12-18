@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import {useModal} from "../../../utils/hooks";
 import {Tab} from "@material-ui/core";
-import {pricingRoot} from "../utils";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
+import {pricingRoot} from "../../../components/Optimizer/utils";
+import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TabList} from "../../UI/Tabs";
-import GeographicZones from "./GeographicZones";
-import GeographicZonesMap from "./GeographicZonesMap";
-import AddEditGeographicZone from "../../Modals/EditGeographicZone/AddEditGeographicZone";
-import AncillaryPrice from "./AncillaryPrice/AncillaryPrice";
+import {TabList} from "../../../components/UI/Tabs";
+import GeographicZones from "../../../features/PricingMobileService/GeograficZones/GeographicZones";
+import GeographicZonesMap from "../../../features/PricingMobileService/GeograficZonesMap/GeographicZonesMap";
+import AddEditGeographicZone from "../../../components/Modals/EditGeographicZone/AddEditGeographicZone";
+import AncillaryPrice from "../../../features/PricingMobileService/AncillaryPrice/AncillaryPrice";
 
 type TTab = {
     id: string;
@@ -16,7 +16,7 @@ type TTab = {
     component: JSX.Element
 }
 
-const MobileServicePage = () => {
+const PricingMobileService = () => {
     const [selectedTab, selectTab] = useState<string>("0");
     const {onOpen: onAddZoneOpen, onClose: onAddZoneClose, isOpen: isAddZoneOpen} = useModal();
 
@@ -54,4 +54,4 @@ const MobileServicePage = () => {
         </TabContext>
 };
 
-export default MobileServicePage;
+export default PricingMobileService;

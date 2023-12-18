@@ -1,25 +1,12 @@
 import React from 'react';
-import {ButtonsWrapper, TabHeaderWrapper, ZonesWrapper, Title} from "./styledComponents";
+import {ButtonsWrapper, TabHeaderWrapper, ZonesWrapper, Title} from "../styles";
 import {Button} from "@material-ui/core";
-import EligibleCustomerSegment from "./EligibleCustomerSegment";
+import EligibleCustomerSegment from "../EligibleCustomerSegment/EligibleCustomerSegment";
 import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
-import MapIframeLink from "../../Modals/MapIframeLink/MapIframeLink";
-import {makeStyles} from "@material-ui/core/styles";
+import MapIframeLink from "../../../components/Modals/MapIframeLink/MapIframeLink";
 import {useDispatch} from "react-redux";
 import {saveLinkToMobServiceMap} from "../../../store/reducers/mobileService/actions";
-
-const useStyles = makeStyles(() => ({
-    wrapper: {
-        width: '70%',
-        '& > iframe': {
-            width: '100%',
-            height: 548,
-        },
-        '& > div': {
-            fontSize: 10
-        }
-    }
-}))
+import {useStyles} from "./styles";
 
 const mockSRC = 'https://app.mapline.com/map/map_36c1b7f/Pz8UPz4ZIEJDfz8UPxAUP1kAMD8vJT8UPz8UPz8GQkxGCD8tPz'
 

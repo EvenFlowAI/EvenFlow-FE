@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadPackageOptionsList, loadPackagePricingLevels,} from "../../../store/reducers/pricingSettings/actions";
 import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
-import EditPackagePricingLevelModal from "../EditPackagePricingLevel/EditPackagePricingLevelModal";
+import EditPackagePricingLevelModal from "../EditPackagePricingLevelModal/EditPackagePricingLevelModal";
 import {TPackagePricingLevel} from "../types";
 import {useStyles} from "./styles";
 

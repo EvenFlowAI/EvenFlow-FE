@@ -1,19 +1,10 @@
-import React, {Dispatch, SetStateAction, useState} from 'react';
-import Zone from "./Zone";
-import {TZipCode, TZone} from "../../../../store/reducers/mobileService/types";
-import {makeStyles} from "@material-ui/core/styles";
+import React, {Dispatch, SetStateAction} from 'react';
+import Zone from "../Zone/Zone";
+import {TZipCode, TZone} from "../../../store/reducers/mobileService/types";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../UI/Loading";
-
-const useStyles = makeStyles(() => ({
-    wrapper: {
-        width: '70%',
-        display: "grid",
-        gridTemplateColumns: '1fr 1fr',
-        gridGap: 24,
-    }
-}))
+import {RootState} from "../../../store/rootReducer";
+import {Loading} from "../../../components/UI/Loading";
+import {useStyles} from "./styles";
 
 type TZonesProps = {
     onRemoveZip: () => void;

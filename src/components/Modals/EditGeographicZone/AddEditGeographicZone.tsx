@@ -1,5 +1,4 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
-import {makeStyles} from "@material-ui/core/styles";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Divider, IconButton} from "@material-ui/core";
 import {DialogProps} from "../types";
@@ -14,7 +13,7 @@ import {
 } from "../../../store/reducers/serviceValet/actions";
 import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {ReactComponent as ChangeZone} from "../../../assets/img/changeZipZone.svg";
-import AssignZipToZone from "../AssignZipToZone/AssignZipToZone";
+import AssignZipToZoneModal from "./AssignZipToZoneModal/AssignZipToZoneModal";
 import {
     addMobServiceZone,
     getMobileZoneById,
@@ -26,72 +25,7 @@ import {Loading} from "../../UI/Loading";
 import {autocompleteRender, useAutocompleteStyles} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {loadFilteredZip, setFilteredZipCodes} from "../../../store/reducers/appointmentFrameReducer/actions";
-
-const useStyles = makeStyles(() => ({
-    text: {
-        display: 'flex',
-        justifyContent: 'center',
-        padding: '16px 0 36px 0',
-        fontWeight: 'bold'
-    },
-    wrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-    cancelButton: {
-        color: '#9FA2B4',
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-    },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        }
-    },
-    addZipBtn: {
-        textTransform: 'none',
-        marginLeft: 16,
-        backgroundColor: '#F7F8FB',
-        color: '#AEBEF2',
-    },
-    fieldWrapper: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
-        marginTop: 16,
-    },
-    zipsWrapper: {
-        marginTop: 8,
-    },
-    zip: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: "center",
-    },
-    zipCode: {
-        fontSize: 15,
-    },
-    zipActions: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: "center",
-        '& > svg': {
-            marginLeft: 8,
-            cursor: 'pointer',
-        }
-    }
-}))
+import {useStyles} from "./styles";
 
 type TEditZoneProps = DialogProps & {
     isEdit: boolean;
@@ -301,7 +235,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                     </div>
                 </DialogActions>
             </BaseModal>
-            <AssignZipToZone open={isOpen} zip={currentZip} zone={zone} onClose={onClose} serviceType={serviceType}/>
+            <AssignZipToZoneModal open={isOpen} zip={currentZip} zone={zone} onClose={onClose} serviceType={serviceType}/>
         </div>
     );
 };

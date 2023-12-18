@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {Button} from "@material-ui/core";
-import EligibleCustomerSegment from "./EligibleCustomerSegment";
-import Zones from "./Zones/Zones";
+import EligibleCustomerSegment from "../EligibleCustomerSegment/EligibleCustomerSegment";
+import Zones from "../Zones/Zones";
 import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {TZipCode, TZone} from "../../../store/reducers/mobileService/types";
-import AddEditGeographicZone from "../../Modals/EditGeographicZone/AddEditGeographicZone";
-import RemoveZipCode from "../../Modals/RemoveZipCode/RemoveZipCode";
-import {ButtonsWrapper, TabHeaderWrapper, TextButton, Title, ZonesWrapper} from './styledComponents';
+import AddEditGeographicZone from "../../../components/Modals/EditGeographicZone/AddEditGeographicZone";
+import RemoveZipCode from "../../../components/Modals/RemoveZipCode/RemoveZipCode";
+import {ButtonsWrapper, TabHeaderWrapper, TextButton, Title, ZonesWrapper} from '../styles';
 import {useDispatch} from "react-redux";
 import {loadMobServiceZones, removeMobServiceZone} from "../../../store/reducers/mobileService/actions";
 import {setCurrentZone} from "../../../store/reducers/serviceValet/actions";
@@ -58,7 +58,13 @@ const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => 
                 <ButtonsWrapper>
                     <TextButton variant="text" onClick={onEditZoneOpen} disabled={!selectedZone}>Edit</TextButton>
                     <TextButton variant="text" onClick={askRemove} disabled={!selectedZone}>Remove</TextButton>
-                    <Button onClick={onAddZoneOpen} variant="contained" color="primary" style={{width: 160}}>Add Zone</Button>
+                    <Button
+                        onClick={onAddZoneOpen}
+                        variant="contained"
+                        color="primary"
+                        style={{width: 160}}>
+                        Add Zone
+                    </Button>
                 </ButtonsWrapper>
             </TabHeaderWrapper>
             <Title>Eligible Customer Type</Title>
@@ -83,7 +89,12 @@ const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => 
                 setCurrentZip={setCurrentZip}
                 currentZip={currentZip}
             />
-            <RemoveZipCode open={isRemoveZipOpen} zone={selectedZone} onClose={onRemoveZipClose} zip={currentZip} serviceType="mobileService"/>
+            <RemoveZipCode
+                open={isRemoveZipOpen}
+                zone={selectedZone}
+                onClose={onRemoveZipClose}
+                zip={currentZip}
+                serviceType="mobileService"/>
         </div>
     );
 };

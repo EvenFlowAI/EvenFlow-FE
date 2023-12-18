@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {FormControlLabel, Radio, RadioGroup, styled, Tab} from "@material-ui/core";
-import {TabList} from "../../../UI/Tabs";
+import {FormControlLabel, Radio, RadioGroup, Tab} from "@material-ui/core";
+import {TabList} from "../../../components/UI/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {makeStyles} from "@material-ui/core/styles";
 import {
     addMobileServiceDistanceRange,
     changeMobileServicePriceSettings,
@@ -12,57 +11,24 @@ import {
     loadMobileServicePrisingByZones,
     updateMobileServicePrisingByDistance,
     updateMobileServicePrisingByZones
-} from "../../../../store/reducers/mobileService/actions";
-import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
+} from "../../../store/reducers/mobileService/actions";
+import {useConfirm, useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {IZonePriceSettings, TDistanceRange, TDistanceRangeUpdate} from "../../../../store/reducers/serviceValet/types";
-import {RootState} from "../../../../store/rootReducer";
-import ByDistance from "../../AnicllaryPriceParts/ByDistance";
-import ByZone from "../../AnicllaryPriceParts/ByZone";
-import {Loading} from "../../../UI/Loading";
-import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {EAncillaryPriceType} from "../../../../store/reducers/mobileService/types";
-
-export const TablesWrapper = styled('div')({
-    display: 'flex',
-    flexDirection: 'column',
-    padding: 24,
-    border: '1px solid #DADADA',
-    backgroundColor: "#FFFFFF",
-})
+import {IZonePriceSettings, TDistanceRange, TDistanceRangeUpdate} from "../../../store/reducers/serviceValet/types";
+import {RootState} from "../../../store/rootReducer";
+import ByDistance from "../../../components/Optimizer/AnicllaryPriceParts/ByDistance";
+import ByZone from "../../../components/Optimizer/AnicllaryPriceParts/ByZone";
+import {Loading} from "../../../components/UI/Loading";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EAncillaryPriceType} from "../../../store/reducers/mobileService/types";
+import {TablesWrapper} from "../../../components/UI/TablesWrapper";
+import {useStyles} from "./styles";
 
 type TTab = {
     id: string;
     label: string;
     component: JSX.Element
 }
-
-const useStyles = makeStyles(() => ({
-    wrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-    },
-    optionsTitleWrapper: {
-        display: 'flex',
-        alignItems: 'center',
-        marginRight: 20,
-        fontSize: 14,
-        fontWeight: "bold",
-        textTransform: 'uppercase',
-    },
-    title: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        padding: 8,
-        textTransform: 'uppercase',
-    },
-    text: {
-        fontSize: 16,
-        padding: 8,
-        marginBottom: 15,
-    }
-}))
 
 const AncillaryPrice = () => {
     const {pricingByDistance, pricingByZones, ancillaryPriceType, isPricingByZoneLoading, isLoading} = useSelector((state: RootState) => state.mobileService)

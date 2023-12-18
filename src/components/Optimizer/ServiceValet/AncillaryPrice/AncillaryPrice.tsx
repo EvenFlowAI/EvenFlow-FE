@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FormControlLabel, Radio, RadioGroup, styled, Tab} from "@material-ui/core";
+import {FormControlLabel, Radio, RadioGroup, Tab} from "@material-ui/core";
 import {TabList} from "../../../UI/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import ByZone from "../../AnicllaryPriceParts/ByZone";
@@ -22,14 +22,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {Loading} from "../../../UI/Loading";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {EAncillaryPriceType} from "../../../../store/reducers/mobileService/types";
-
-export const TablesWrapper = styled('div')({
-    display: 'flex',
-    flexDirection: 'column',
-    padding: 24,
-    border: '1px solid #DADADA',
-    backgroundColor: "#FFFFFF",
-})
+import {TablesWrapper} from "../../../UI/TablesWrapper";
 
 type TTab = {
     id: string;
