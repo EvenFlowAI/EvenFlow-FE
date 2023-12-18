@@ -1,17 +1,17 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../BaseModal";
-import {DialogProps} from "../types";
-import {SliderRange, TOpsCode} from "../../../features/VariableDemand/types";
-import {TextField} from "../../UI/TextField";
-import {Button, Divider} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
-import {EDemandCategory, IRequestPricingSettings} from "../../../store/reducers/pricingSettings/types";
-import {updateSRPricingSettings} from "../../../store/reducers/pricingSettings/actions";
+import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../../../components/Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
+import {TextField} from "../../../components/UI/TextField";
+import {Box, Button, Divider} from "@material-ui/core";
+import {EDemandCategory, IPackagePricingSettings} from "../../../store/reducers/pricingSettings/types";
+import {updatePackagePricingSettings} from "../../../store/reducers/pricingSettings/actions";
 import {useException, useSCs} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
+import {TMPackage, SliderRange} from "../types";
+import {useStyles} from "./styles";
 
 type TEditDayOfWeekOpsCodeProps = DialogProps & {
-    editingItem: TOpsCode | null;
+    editingItem: TMPackage | null;
 };
 
 type TState = {
@@ -19,39 +19,12 @@ type TState = {
     high: number | undefined;
 }
 
-const useStyles = makeStyles(() => ({
-    wrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-    cancelButton: {
-        color: '#9FA2B4',
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-    },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        }
-    },
-}))
+const initialValues: TState = {
+    low: undefined,
+    high: undefined
+}
 
-const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem, ...props}) => {
-    const initialValues: TState = {
-        low: undefined,
-        high: undefined
-    }
+const EditDayOFWeekPackageModal: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem, ...props}) => {
     const [values, setValues] = useState<TState>(initialValues);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -69,7 +42,7 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem
 
     const onSave = useCallback(() => {
         if (selectedSC && editingItem) {
-            const data: Partial<IRequestPricingSettings> = {
+            const data: Partial<IPackagePricingSettings> = {
                 serviceCenterId: selectedSC.id,
                 values: [],
             }
@@ -100,7 +73,7 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem
                 }
             }
             try {
-                dispatch(updateSRPricingSettings(editingItem.id, data))
+                dispatch(updatePackagePricingSettings(editingItem.optionId, data))
             } catch (e) {
                 showError(e)
             } finally {
@@ -113,9 +86,27 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem
         e.persist();
         setValues(prev => ({...prev, [type]: e.target.value}))
     }
-    return <BaseModal  {...props} width={340} onClose={onCancel}>
-        <DialogTitle onClose={onCancel}>Edit Day of Week Ops Code</DialogTitle>
+    return <BaseModal  {...props} width={440} onClose={onCancel}>
+        <DialogTitle onClose={onCancel}>Edit Day of Week Maintenance Package</DialogTitle>
         <DialogContent>
+            <TextField
+                fullWidth
+                label='Package Name'
+                disabled
+                value={editingItem?.name || ''}/>
+            <Box p={1}/>
+            <TextField
+                fullWidth
+                label='Package ID'
+                disabled
+                value={editingItem?.id || ''}/>
+            <Box p={1}/>
+            <TextField
+                fullWidth
+                label='Package Level'
+                disabled
+                value={editingItem?.optionName || ''}/>
+            <Box p={1}/>
             <TextField type="number"
                        fullWidth
                        label="Low"
@@ -135,7 +126,7 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem
                        onChange={onInputChange("high")}
             />
         </DialogContent>
-        <Divider style={{ margin: 0}}/>
+        <Divider style={{ margin: 0 }}/>
         <DialogActions>
             <div className={classes.wrapper}>
                 <div className={classes.buttonsWrapper}>
@@ -155,4 +146,4 @@ const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem
     </BaseModal>
 };
 
-export default EditDayOfWeekOpsCode;
+export default EditDayOFWeekPackageModal;

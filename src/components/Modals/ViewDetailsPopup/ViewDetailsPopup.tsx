@@ -5,7 +5,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Paper} from "@material-ui/core";
-import {PaperTitle} from "../../Optimizer/PricingSettings/UI";
+import {PaperTitle} from "../../../pages/admin/PricingSettings/UI";
 
 type TProps = {
 

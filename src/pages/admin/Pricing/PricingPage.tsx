@@ -3,7 +3,7 @@ import {ContentContainer} from "../../../components/Content/ContentContainer/Con
 import {Redirect, Switch} from "react-router-dom";
 import {PrivateRoute} from "../../../utils/Routes";
 import {Routes} from "../../../config/routes";
-import {PricingSettingsPage} from "../../../components/Optimizer/PricingSettings/PricingSettingsPage";
+import {PricingSettingsPage} from "../PricingSettings/PricingSettingsPage";
 import MobileServicePage from "../../../components/Optimizer/MobileService/MobileServicePage";
 import ServiceValetPage from "../../../components/Optimizer/ServiceValet/ServiceValetPage";
 import {OfferManagementPage} from "../OfferManagement/OfferManagementPage";

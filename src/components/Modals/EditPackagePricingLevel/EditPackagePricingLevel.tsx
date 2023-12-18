@@ -7,7 +7,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal
 import {TextField} from "../../UI/TextField";
 import {Box, Button, Divider} from "@material-ui/core";
 import {DialogProps} from "../types";
-import {TPackagePricingLevel} from "../../Optimizer/PricingSettings/PricingLevels/PricingLevelsByPackage";
+import {TPackagePricingLevel} from "../../../features/PricingLevels/PricingLevelsByPackage";
 import {useEditPricingLevelStyles} from "../EditPricingLevel/EditPricingLevel";
 
 type TEditPricingLevelsProps = DialogProps & {

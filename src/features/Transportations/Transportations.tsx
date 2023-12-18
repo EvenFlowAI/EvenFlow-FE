@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {SquarePaper} from "../../components/UI/Paper";
-import {TableContainer} from "../../components/Optimizer/PricingSettings/UI";
+import {TableContainer} from "../../pages/admin/PricingSettings/UI";
 import {NoItemsLoading} from "../../components/UI/NoItemsLoading";
 import {DemandTable, TableCell, TableRow} from "../../components/Optimizer/AppointmentAllocation/UI";
 import {IconButton, Menu, MenuItem, Switch, TableBody, TableHead} from "@material-ui/core";
