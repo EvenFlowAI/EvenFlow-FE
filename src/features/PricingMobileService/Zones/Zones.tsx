@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction} from 'react';
-import Zone from "../Zone/Zone";
+import GeographicZone from "../../../components/GeographicZone/GeographicZone";
 import {TZipCode, TZone} from "../../../store/reducers/mobileService/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -21,7 +21,7 @@ const Zones: React.FC<TZonesProps> = ({ setCurrentZip, onRemoveZip, setSelectedZ
         <div className={classes.wrapper}>
             {isLoading
                 ? <Loading/>
-                : zones.map(item => <Zone
+                : zones.map(item => <GeographicZone
                     zone={item}
                     key={item.id}
                     setCurrentZip={setCurrentZip}

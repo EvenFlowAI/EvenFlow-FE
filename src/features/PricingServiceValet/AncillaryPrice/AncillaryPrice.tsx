@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {FormControlLabel, Radio, RadioGroup, Tab} from "@material-ui/core";
-import {TabList} from "../../../UI/Tabs";
+import {TabList} from "../../../components/UI/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import ByZone from "../../AnicllaryPriceParts/ByZone";
-import {makeStyles} from "@material-ui/core/styles";
-import ByDistance from "../../AnicllaryPriceParts/ByDistance";
-import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
+import ByZone from "../../../components/Optimizer/AnicllaryPriceParts/ByZone";
+import ByDistance from "../../../components/Optimizer/AnicllaryPriceParts/ByDistance";
+import {useConfirm, useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addServiceValetDistanceRange,
@@ -16,46 +15,20 @@ import {
     loadServiceValetPrisingByZones,
     updateServiceValetPrisingByDistance,
     updateServiceValetPrisingByZones
-} from "../../../../store/reducers/serviceValet/actions";
-import {IZonePriceSettings, TDistanceRange, TDistanceRangeUpdate} from "../../../../store/reducers/serviceValet/types";
-import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../UI/Loading";
-import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {EAncillaryPriceType} from "../../../../store/reducers/mobileService/types";
-import {TablesWrapper} from "../../../UI/TablesWrapper";
+} from "../../../store/reducers/serviceValet/actions";
+import {IZonePriceSettings, TDistanceRange, TDistanceRangeUpdate} from "../../../store/reducers/serviceValet/types";
+import {RootState} from "../../../store/rootReducer";
+import {Loading} from "../../../components/UI/Loading";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {EAncillaryPriceType} from "../../../store/reducers/mobileService/types";
+import {TablesWrapper} from "../../../components/UI/TablesWrapper";
+import {useStyles} from "./styles";
 
 type TTab = {
     id: string;
     label: string;
     component: JSX.Element
 }
-
-const useStyles = makeStyles(() => ({
-    wrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-    },
-    optionsTitleWrapper: {
-        display: 'flex',
-        alignItems: 'center',
-        marginRight: 20,
-        fontSize: 14,
-        fontWeight: "bold",
-        textTransform: 'uppercase',
-    },
-    title: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        padding: 8,
-        textTransform: 'uppercase',
-    },
-    text: {
-        fontSize: 16,
-        padding: 8,
-        marginBottom: 15,
-    }
-}))
 
 const AncillaryPrice = () => {
     const {pricingByDistance, pricingByZones, ancillaryPriceType, isPricingByZoneLoading, isLoading} = useSelector((state: RootState) => state.serviceValet);

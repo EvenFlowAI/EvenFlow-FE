@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction} from 'react';
-import {TZipCode, TZone} from "../../../store/reducers/mobileService/types";
-import Checkbox from "../../../components/UI/Checkbox";
+import {TZipCode, TZone} from "../../store/reducers/mobileService/types";
+import Checkbox from "../UI/Checkbox";
 import {CloseOutlined} from "@material-ui/icons";
 import {useStyles, ZipCode} from "./styles";
 
@@ -13,7 +13,7 @@ type TZoneProps = {
     setSelectedZone: Dispatch<SetStateAction<TZone|null>>;
 }
 
-const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setCurrentZip, onRemoveZip, setSelectedZone}) => {
+const GeographicZone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setCurrentZip, onRemoveZip, setSelectedZone}) => {
     const classes = useStyles({isSelected});
 
     const onClick = () => {
@@ -41,4 +41,4 @@ const Zone: React.FC<TZoneProps> = ({isSelected, zone, zipCodes, setCurrentZip, 
     );
 };
 
-export default Zone;
+export default GeographicZone;

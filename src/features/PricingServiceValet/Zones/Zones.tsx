@@ -1,19 +1,10 @@
 import React, {Dispatch, SetStateAction} from 'react';
-import Zone from "./Zone";
-import {TZipCode, TZone} from "../../../../store/reducers/mobileService/types";
-import {makeStyles} from "@material-ui/core/styles";
+import {TZipCode, TZone} from "../../../store/reducers/mobileService/types";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../UI/Loading";
-
-const useStyles = makeStyles(() => ({
-    wrapper: {
-        width: '70%',
-        display: "grid",
-        gridTemplateColumns: '1fr 1fr',
-        gridGap: 24,
-    }
-}))
+import {RootState} from "../../../store/rootReducer";
+import {Loading} from "../../../components/UI/Loading";
+import GeographicZone from "../../../components/GeographicZone/GeographicZone";
+import {useStyles} from "./styles";
 
 type TZonesProps = {
     onRemoveZip: () => void;
@@ -30,7 +21,7 @@ const Zones: React.FC<TZonesProps> = ({setCurrentZip, onRemoveZip, setSelectedZo
         <div className={classes.wrapper}>
             {isLoading
                 ? <Loading/>
-                : zones.map(item => <Zone
+                : zones.map(item => <GeographicZone
                 zone={item}
                 key={item.id}
                 setSelectedZone={setSelectedZone}

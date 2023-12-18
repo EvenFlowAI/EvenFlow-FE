@@ -1,40 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {DemandTable, TableRow} from "../AppointmentAllocation/UI";
-import {TableBody, TableHead, Switch, withStyles, TableCell as TC} from '@material-ui/core';
-
-const TableCell = withStyles({
-    root: {
-        border: "none !important",
-        padding: "12px 16px !important",
-        // textAlign: "left",
-    }
-})(TC);
-
-const HeaderTableCell = withStyles({
-    root: {
-        color: '#9FA2B4',
-        textTransform: "none",
-    }
-})(TableCell)
-
-const EligibleSegmentTable = withStyles({
-    root: {
-        "& .MuiTableCell-root": {
-            textTransform: "none",
-        }
-    }
-})(DemandTable)
-
-enum ECustomerSegmentMobileService {
-    New, Lost, Existing, HighValue, MediumValue, LowValue, EndOfWarranty, PostWarranty
-}
-
-type TSegmentType = {
-    type: ECustomerSegmentMobileService,
-    name: string,
-    enabled: boolean,
-    order: number,
-}
+import {TableRow} from "../../../components/Optimizer/AppointmentAllocation/UI";
+import {TableBody, TableHead, Switch} from '@material-ui/core';
+import {ECustomerSegmentMobileService, TSegmentType} from "./types";
+import {EligibleSegmentTable, HeaderTableCell, TableCell} from "./styles";
 
 const data = [
     {
