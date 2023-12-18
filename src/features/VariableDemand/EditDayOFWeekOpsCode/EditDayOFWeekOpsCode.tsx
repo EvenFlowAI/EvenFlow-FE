@@ -1,14 +1,14 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../BaseModal";
-import {DialogProps} from "../types";
-import {SliderRange, TOpsCode} from "../../../features/VariableDemand/types";
-import {TextField} from "../../UI/TextField";
+import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../../../components/Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
+import {SliderRange, TOpsCode} from "../types";
+import {TextField} from "../../../components/UI/TextField";
 import {Button, Divider} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
 import {EDemandCategory, IRequestPricingSettings} from "../../../store/reducers/pricingSettings/types";
 import {updateSRPricingSettings} from "../../../store/reducers/pricingSettings/actions";
 import {useException, useSCs} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
+import {useStyles} from "./styles";
 
 type TEditDayOfWeekOpsCodeProps = DialogProps & {
     editingItem: TOpsCode | null;
@@ -19,39 +19,12 @@ type TState = {
     high: number | undefined;
 }
 
-const useStyles = makeStyles(() => ({
-    wrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-    cancelButton: {
-        color: '#9FA2B4',
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-    },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        }
-    },
-}))
+const initialValues: TState = {
+    low: undefined,
+    high: undefined
+}
 
 const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem, ...props}) => {
-    const initialValues: TState = {
-        low: undefined,
-        high: undefined
-    }
     const [values, setValues] = useState<TState>(initialValues);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();

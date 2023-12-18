@@ -18,7 +18,7 @@ import AddOpsCodeModal from "../../../../components/Modals/AddOpsCode/AddOpsCode
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Loading} from "../../../../components/UI/Loading";
 import {loadAssignedServiceRequests, setAssignedPageData} from "../../../../store/reducers/serviceRequests/actions";
-import EditDayOfWeekOpsCode from "../../../../components/Modals/EditDayOFWeekOpsCode/EditDayOFWeekOpsCode";
+import EditDayOfWeekOpsCode from "../../EditDayOFWeekOpsCode/EditDayOFWeekOpsCode";
 import {SliderObject, SliderRange, TOpsCode} from "../../types";
 import {Slider} from "../../../../components/UI/Slider";
 import {useStyles} from "./styles";

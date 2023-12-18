@@ -11,10 +11,10 @@ import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@material-
 import {Loading} from "../../../../components/UI/Loading";
 import {DenseTable} from "../../../../components/Optimizer/AppointmentAllocation/UI";
 import EditDayOFWeekPackage from "../../EditDayOFWeekPackageModal/EditDayOFWeekPackageModal";
-import AddPackageToPricingSettings from "../../../../components/Modals/AddPackageToPricingSettings/AddPackageToPricingSettings";
 import {TMPackage, SliderObject, SliderRange} from "../../types";
 import {useStyles} from "./styles";
 import {Slider} from "../../../../components/UI/Slider";
+import AddPackageToPricingModal from "../../AddPackageToPricingModal/AddPackageToPricingModal";
 
 const DayOfWeekPackage = () => {
     const { mpPricingSettings, isLoading } = useSelector((state: RootState) => state.pricingSettings);
@@ -201,7 +201,7 @@ const DayOfWeekPackage = () => {
             }
         </Box>
         <EditDayOFWeekPackage open={isEditOpen} editingItem={editingItem} onClose={onEditClose}/>
-        <AddPackageToPricingSettings open={isOpen} onClose={onClose}/>
+        <AddPackageToPricingModal open={isOpen} onClose={onClose}/>
     </div>
 };
 

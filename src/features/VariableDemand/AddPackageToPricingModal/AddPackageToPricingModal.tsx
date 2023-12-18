@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {Table} from "../../UI/Table";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {Table} from "../../../components/UI/Table";
 import {Button} from "@material-ui/core";
 import {TNewPackagesToPricing} from "../../../store/reducers/pricingSettings/types";
 import {addPackageToPricing} from "../../../store/reducers/pricingSettings/actions";
@@ -8,9 +8,9 @@ import {IPackageOptionShort} from "../../../store/reducers/packages/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useException, useSCs} from "../../../utils/hooks";
-import {DialogProps} from "../types";
-import {TableRowDataType} from "../../UI/types";
-import Checkbox from "../../UI/Checkbox";
+import {DialogProps} from "../../../components/Modals/types";
+import {TableRowDataType} from "../../../components/UI/types";
+import Checkbox from "../../../components/UI/Checkbox";
 
 const tableData: TableRowDataType<IPackageOptionShort>[] = [
     {header: "PACKAGE LEVEL", val: el => el.maintenancePackageOptionName.toString(), align: "left"},
@@ -18,7 +18,7 @@ const tableData: TableRowDataType<IPackageOptionShort>[] = [
     {header: "PACKAGE NAME", val: el => el.maintenancePackageName, align: "left"},
 ]
 
-const AddPackageToPricingSettings: React.FC<DialogProps> = (props) => {
+const AddPackageToPricingModal: React.FC<DialogProps> = (props) => {
     const {mpOptionsList, mpPricingSettings} = useSelector((state: RootState) => state.pricingSettings);
     const [selectedPackages, setSelectedPackages] = useState<IPackageOptionShort[]>([]);
     const [filteredPackages, setFilteredPackages] = useState<IPackageOptionShort[]>([]);
@@ -104,4 +104,4 @@ const AddPackageToPricingSettings: React.FC<DialogProps> = (props) => {
     );
 };
 
-export default AddPackageToPricingSettings;
+export default AddPackageToPricingModal;
