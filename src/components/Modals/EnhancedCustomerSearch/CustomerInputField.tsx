@@ -11,7 +11,6 @@ type TCustomerInputFieldProps = {
     onFieldChange: (fieldName: keyof ICustomerWithPhones) => (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-
 type TAddressInputFieldProps = {
     editingElement: ICustomerWithPhones|null;
     isEdit: boolean;
@@ -19,7 +18,6 @@ type TAddressInputFieldProps = {
     customer: ICustomerWithPhones;
     onFieldChange: (fieldName: keyof IAddressData) => (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
-
 
 export const CustomerInputField: React.FC<TCustomerInputFieldProps> = ({
                                                                     editingElement,
