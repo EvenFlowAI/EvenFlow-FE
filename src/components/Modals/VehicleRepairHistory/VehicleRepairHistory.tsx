@@ -211,8 +211,12 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
                             {repairHistory?.repairOrders.slice(0, (pageIndex + 1) * 2).map(item => <div className={classes.orderWrapper} key={item.date}>
                                 <div className={classes.orderMainData}>
                                     <div className={classnames(classes.gridTableHead)}>
-                                        <div className={classnames(classes.titleNonUpperCase, classes.padding)}>{item.number ? `#${item.number}` : ''}</div>
-                                        <div className={classnames(classes.titleNonUpperCase, classes.padding)}>{moment(item.date).format('dddd, MMMM DD, YYYY')}</div>
+                                        <div className={classnames(classes.titleNonUpperCase, classes.padding)}>
+                                            {item.number ? `#${item.number}` : ''}
+                                        </div>
+                                        <div className={classnames(classes.titleNonUpperCase, classes.padding)}>
+                                            {moment(item.date.split('T')[0]).format('dddd, MMMM DD, YYYY')}
+                                        </div>
                                     </div>
                                     <div className={classes.padding}>
                                         <span className={classes.titleNonUpperCase}>Repair Order:</span><span className={classnames(classes.uppercase, classes.textSmaller)}> total/tax </span>
