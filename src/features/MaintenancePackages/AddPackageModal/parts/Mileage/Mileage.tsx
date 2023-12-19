@@ -1,10 +1,11 @@
 import React, {ChangeEvent, Dispatch, SetStateAction, useCallback} from 'react';
-import {autocompleteRender, useAutocompleteStyles} from "../../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../../components/UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import Checkbox from "../../../../../components/UI/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
+import {useAutocompleteStyles} from "../../../../../sharedStyles/autocompleteStyles";
 
 type TMileageProps = {
     disabled: boolean;

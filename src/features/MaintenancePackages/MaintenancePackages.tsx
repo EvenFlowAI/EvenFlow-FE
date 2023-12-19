@@ -12,11 +12,12 @@ import {useConfirm, useException, useModal, useSCs} from "../../utils/hooks";
 import LaborRate from "./LaborRate/LaborRate";
 import Disclaimer from "./Disclaimer/Disclaimer";
 import {Loading} from "../../components/UI/Loading";
-import {autocompleteRender, useAutocompleteStyles} from "../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../components/UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {useMaintenancePackagesStyles} from "./styles";
 import {MaintenanceOptionTypes} from "./constants";
 import {TExpandedState, TOption} from "./types";
+import {useAutocompleteStyles} from "../../sharedStyles/autocompleteStyles";
 
 export const MaintenancePackages = () => {
     const {packages: allPackages} = useSelector((state: RootState) => state.packages);

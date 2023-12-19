@@ -12,7 +12,7 @@ import {Profile} from "../Profile/Profile";
 import AppointmentsPage from "../Appointments/AppointmentsPage";
 import PricingPage from "../Pricing/PricingPage";
 import ReportingPage from "../Reporting/ReportingPage";
-import {CapacityManagement} from "../ CapacityManagement/CapacityManagement";
+import {CapacityManagement} from "../CapacityManagement/CapacityManagement";
 import {BookingFlowPage} from "../BookingFlow/BookingFlowPage";
 import DealershipGroups from "../DealershipGroups/DealershipGroups";
 

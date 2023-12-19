@@ -18,7 +18,7 @@ import {RootState} from "../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
 import {Api} from "../../config/requests";
 import {SC_UNDEFINED} from "../../config/constants";
-import AddServiceManually from "../../components/Modals/AddServiceManually/AddServiceManually";
+import AddServiceManually from "./AddServiceManually/AddServiceManually";
 import {OPsCodesListDialog} from "../../components/Modals/OPsCodesListDialog/OPsCodesListDialog";
 import {addOpsCodeFromList, loadAllComplimentary} from "../../store/reducers/complimentary/actions";
 import {IOrder} from "../../types/types";

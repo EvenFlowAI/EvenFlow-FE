@@ -6,7 +6,7 @@ import {loadEmailRequirement} from "../../store/reducers/screenSettings/actions"
 import {screenSettingsList, TOptContent} from "../../store/reducers/screenSettings/types";
 import {RootState} from "../../store/rootReducer";
 import {EScreenSettingsType} from "../../store/reducers/screenSettings/types";
-import {CenterSettingsPlate} from "../../components/Optimizer/CapacityServiceValet/CenterSettingsPlate";
+import {CenterSettingsPlate} from "../CenterSettings/CenterSettingsPlate/CenterSettingsPlate";
 import {TCallback} from "../../types/types";
 
 type TProps = {

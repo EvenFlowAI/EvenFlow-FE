@@ -22,10 +22,11 @@ import {
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../UI/Loading";
-import {autocompleteRender, useAutocompleteStyles} from "../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {loadFilteredZip, setFilteredZipCodes} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useStyles} from "./styles";
+import {useAutocompleteStyles} from "../../../sharedStyles/autocompleteStyles";
 
 type TEditZoneProps = DialogProps & {
     isEdit: boolean;

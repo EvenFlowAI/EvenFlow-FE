@@ -8,7 +8,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadShortSC} from "../../../store/reducers/serviceCenters/actions";
 import {TAdvisorForm, TDMSConsultantChange, TSelectChange, TTechnicianForm} from "./types";
-import {AdvisorForm, initialAdvisorForm, initialTechnicianForm, TechnicianForm} from "./Forms";
 import {IEmployee, IEmployeeForm} from "../../../store/reducers/employees/types";
 import {
     createEmployee,
@@ -21,6 +20,9 @@ import {createUser, updateUser} from "../../../store/reducers/users/actions";
 import {LoadingButton} from "../../UI/Button";
 import {Roles} from "../../../config/constants";
 import {checkEmail, validatePhoneNumber} from "../../../utils/utils";
+import {AdvisorForm} from "./AdvisorForm/AdvisorForm";
+import {TechnicianForm} from "./TechnicianForm/TechnicianForm";
+import {initialAdvisorForm, initialTechnicianForm} from "./constants";
 
 export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAction, ...props}) => {
     const [shortSC, shortLoading, savingE, savingU, DmsAdvisors, loadingDMSAdvisors] = useSelector((state: RootState) => [

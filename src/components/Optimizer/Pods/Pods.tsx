@@ -2,7 +2,7 @@ import React from 'react';
 import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
 import {optimizerRoot} from "../utils";
 import {SquarePaper} from "../../styled/Paper";
-import {PodsTable} from "../../PodsTable/PodsTable";
+import {PodsTable} from "../../../features/PodsTable/PodsTable";
 
 const Pods = () => {
     return (

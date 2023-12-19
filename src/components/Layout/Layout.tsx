@@ -9,7 +9,7 @@ import {Routes} from "../../config/routes";
 import {PrivateRoute} from "../../utils/Routes";
 import {useDispatch} from "react-redux";
 import {getCurrentUser} from "../../store/reducers/users/actions";
-import {CapacityManagement} from "../../pages/admin/ CapacityManagement/CapacityManagement";
+import {CapacityManagement} from "../../pages/admin/CapacityManagement/CapacityManagement";
 import {loadDealershipProfile} from "../../store/reducers/dealershipGroups/actions";
 import {loadAllSCs, loadSCAnalytics} from "../../store/reducers/serviceCenters/actions";
 import {useSCs, useSideBar} from "../../utils/hooks";

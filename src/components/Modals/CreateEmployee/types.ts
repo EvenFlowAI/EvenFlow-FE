@@ -3,7 +3,11 @@ import {TTechnicianLevel} from "../../../types/types";
 import React from "react";
 import {Value} from "@material-ui/lab";
 import {TRole} from "../../../store/reducers/users/types";
-import {TConsultantOption} from "./Forms";
+
+export type TConsultantOption = {
+    id: string;
+    name: string;
+}
 
 export type TAdvisorForm = {
     firstName: string;
@@ -16,6 +20,7 @@ export type TAdvisorForm = {
     position: string;
     showOnBooking: boolean;
 }
+
 export type TTechnicianForm = {
     firstName: string;
     lastName: string;
@@ -27,5 +32,7 @@ export type TTechnicianForm = {
     technicianLevel: TTechnicianLevel;
     dmsId: string | null;
 }
+
 export type TSelectChange = (e: React.ChangeEvent<{}>, value: Value<IServiceCenter, false, any, any>) => void;
+
 export type TDMSConsultantChange = (e: React.ChangeEvent<{}>, value: TConsultantOption | null) => void;

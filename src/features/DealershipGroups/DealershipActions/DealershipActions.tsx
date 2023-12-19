@@ -1,6 +1,6 @@
 import React, {useCallback} from "react";
 import {Button} from "@material-ui/core";
-import {CreateDealershipGroup} from "../../../components/Modals/CreateDealershipGroup/CreateDealershipGroup";
+import {CreateDealershipGroupModal} from "../CreateDealershipGroupModal/CreateDealershipGroupModal";
 import {useModal} from "../../../utils/hooks";
 import {SearchInput} from "../../../components/UI/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
@@ -28,6 +28,6 @@ export const DealershipActions = () => {
             color="primary">
             Create new
         </Button>
-        <CreateDealershipGroup open={isOpen} onClose={onClose} />
+        <CreateDealershipGroupModal open={isOpen} onClose={onClose} />
     </>;
 }

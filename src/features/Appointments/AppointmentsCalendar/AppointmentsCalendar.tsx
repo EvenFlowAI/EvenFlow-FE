@@ -6,8 +6,7 @@ import {useSCs} from "../../../utils/hooks";
 import moment, {Moment} from "moment";
 import {TAppointmentsByDate, TDay, TView} from "../types";
 import {RootState} from "../../../store/rootReducer";
-import {useCalendarStyles} from "../../../components/Optimizer/CapacitySettings/AvailableStaff/Calendar";
-import {CalendarControls} from "../../../components/Optimizer/CapacitySettings/AvailableStaff/CalendarControls";
+import {CalendarControls} from "../../AvailableStaffCalendar/CalendarControls/CalendarControls";
 import {WeekDayNames} from "../../../config/constants";
 import clsx from "clsx";
 import {Paper} from '@material-ui/core';
@@ -15,6 +14,7 @@ import {ReactComponent as Active} from "../../../assets/img/date_1.svg";
 import {ReactComponent as FreeSlots} from "../../../assets/img/date_2.svg";
 import {Loading} from "../../../components/UI/Loading";
 import {useStyles} from "./styles";
+import {useCalendarStyles} from "../../../sharedStyles/calendarStyles";
 
 type TCalendarProps = {
     selectedView: TView;

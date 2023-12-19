@@ -5,7 +5,7 @@ import {optimizerRoot} from "../../../components/Optimizer/utils";
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import RecallParts from "../../../features/RecallsParts/RecallParts";
-import AllOtherParts from "../../../features/AllOtherParts/AllOtherParts";
+import RecallsAllOtherParts from "../../../features/RecallsAllOtherParts/RecallsAllOtherParts";
 
 const Recalls = () => {
     const [selectedTab, setTab] = useState<string>("0");
@@ -26,7 +26,7 @@ const Recalls = () => {
             <Tab label="All Other Parts" value="1" />
         </TabList>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="0"><RecallParts /></TabPanel>
-        <TabPanel style={{width: "100%", padding: "24px 0"}} value="1"><AllOtherParts /></TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="1"><RecallsAllOtherParts /></TabPanel>
     </TabContext>
 };
 

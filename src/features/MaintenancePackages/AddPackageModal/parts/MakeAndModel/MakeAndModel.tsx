@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useCallback, Dispatch, SetStateAction, useState, useEffect} from 'react';
-import {autocompleteRender, useAutocompleteStyles} from "../../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../../components/UI/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
@@ -7,6 +7,7 @@ import Checkbox from "../../../../../components/UI/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {IMake} from "../../../../../api/types";
 import {upperCase} from "./utils";
+import {useAutocompleteStyles} from "../../../../../sharedStyles/autocompleteStyles";
 
 type MakeAndModelProps = {
     setSelectedMakes: Dispatch<SetStateAction<string[]>>;
