@@ -16,13 +16,12 @@ import {
 } from "../../store/reducers/pricingSettings/types";
 import {Autocomplete} from "@material-ui/lab";
 import {TextField} from "../../components/styled/EndUserInputs";
-import {Label} from "../../components/AppointmentFlow/UI";
 import {KeyboardArrowDown} from "@material-ui/icons";
 import {useException, useSCs} from "../../utils/hooks";
 import {loadSCRequestsShort} from "../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../store/rootReducer";
 import {TEnumMap} from "../../store/reducers/utils";
-import {TableWrapper} from "./styles";
+import {TableWrapper, Label} from "./styles";
 
 export const PricingOptimization = () => {
     const [sr, setSr] = useState<IAssignedServiceRequestShort|null>(null);

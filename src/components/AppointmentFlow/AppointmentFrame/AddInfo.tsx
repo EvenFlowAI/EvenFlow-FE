@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {Actions} from "./Actions";
 import {StepWrapper} from "./StepWrapper";
-import {TextField} from "../UI";
+import {TextField} from "../../FormControls/TextField/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {

@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {FormLabel, styled, withStyles} from "@material-ui/core";
 
 export const TableWrapper = styled("div")(({theme}) => ({
     width: "100%",
@@ -9,3 +9,13 @@ export const TableWrapper = styled("div")(({theme}) => ({
         }
     }
 }))
+
+export const Label = withStyles({
+    root: {
+        fontSize: 15,
+        fontWeight: "bold",
+        textAlign: "right",
+        textTransform: "uppercase",
+        color: "#9FA2B4",
+    }
+})(FormLabel);

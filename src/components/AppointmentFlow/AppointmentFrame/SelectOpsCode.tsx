@@ -6,7 +6,7 @@ import {RootState} from "../../../store/rootReducer";
 import {useDebounce, useException, useModal} from "../../../utils/hooks";
 import {handleSearch, selectSRMultiple} from "../../../store/reducers/appointment/actions";
 import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core";
-import {TextField} from "../UI";
+import {TextField} from "../../FormControls/TextField/TextField";
 import {InfoOutlined, Search} from "@material-ui/icons";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
