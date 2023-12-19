@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../../components/Optimizer/utils";
 import {SearchInput} from "../../components/UI/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {
@@ -17,7 +16,7 @@ import {Table} from "../../components/UI/Table";
 import {RootState} from "../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
 import {Api} from "../../config/requests";
-import {SC_UNDEFINED} from "../../config/constants";
+import {optimizerRoot, SC_UNDEFINED} from "../../config/constants";
 import AddServiceManually from "./AddServiceManually/AddServiceManually";
 import {OPsCodesListDialog} from "../../components/Modals/OPsCodesListDialog/OPsCodesListDialog";
 import {addOpsCodeFromList, loadAllComplimentary} from "../../store/reducers/complimentary/actions";

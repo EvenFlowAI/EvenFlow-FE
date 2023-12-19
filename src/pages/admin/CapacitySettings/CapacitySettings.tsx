@@ -6,8 +6,8 @@ import {RequiredEquipment} from "../../../features/RequiredEquipment/RequiredEqu
 import {RequiredSkills} from "../../../features/RequiredSkills/RequiredSkills";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
 import {makeStyles} from "@material-ui/core/styles";
-import {optimizerRoot} from "../../../components/Optimizer/utils";
 import {AvailableStaffCalendar} from "../../../features/AvailableStaffCalendar/AvailableStaffCalendar";
+import {optimizerRoot} from "../../../config/constants";
 
 const useStyles = makeStyles(theme => ({
     panel: {

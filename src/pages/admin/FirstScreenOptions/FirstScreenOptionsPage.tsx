@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {useModal} from "../../../utils/hooks";
 import {Button} from "@material-ui/core";
-import {bookingFlowRoot} from "../../../components/Optimizer/utils";
+import {bookingFlowRoot} from "../../../config/constants";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
 import {AddFirstScreenOptionModal} from "../../../features/FirstScreenOptions/AddFirstScreenOptionModal/AddFirstScreenOptionModal";
 import {FirstScreenOptionsTable} from "../../../features/FirstScreenOptions/FirstScreenOptionsTable/FirstScreenOptionsTable";

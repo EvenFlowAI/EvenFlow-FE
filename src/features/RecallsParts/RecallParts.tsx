@@ -1,7 +1,6 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import {useException, useModal, useSCs} from "../../utils/hooks";
 import RecallTable from "./RecallTable/RecallTable";
-import {optimizerRoot} from "../../components/Optimizer/utils";
 import {Button} from "@material-ui/core";
 import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
 import AddRecallModal from "./AddRecallModal/AddRecallModal";
@@ -14,6 +13,7 @@ import {RootState} from "../../store/rootReducer";
 import {loadAllAssignedServiceRequests} from "../../store/reducers/serviceRequests/actions";
 import {IAssignedServiceRequest} from "../../store/reducers/serviceRequests/types";
 import {updateDefaultRecallOpsCode} from "../../store/reducers/serviceCenters/actions";
+import {optimizerRoot} from "../../config/constants";
 
 const useStyles = makeStyles(() => ({
     wrapper: {

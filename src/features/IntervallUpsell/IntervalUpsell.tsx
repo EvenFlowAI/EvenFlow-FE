@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../../components/Optimizer/utils";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {OPsCodesListDialog} from "../../components/Modals/OPsCodesListDialog/OPsCodesListDialog";
 import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../utils/hooks";
@@ -16,7 +15,7 @@ import {IUpsellServiceRequest} from "../../store/reducers/serviceRequests/types"
 import {Table} from "../../components/UI/Table";
 import {MoreHoriz} from "@material-ui/icons";
 import {Api} from "../../config/requests";
-import {SC_UNDEFINED} from "../../config/constants";
+import {optimizerRoot, SC_UNDEFINED} from "../../config/constants";
 import {SearchInput} from "../../components/UI/SearchInput";
 import {IOrder} from "../../types/types";
 import IntervalUpsellModal from "./IntervalUpsellModal/IntervalUpsellModal";

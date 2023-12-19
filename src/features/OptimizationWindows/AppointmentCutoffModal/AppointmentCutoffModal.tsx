@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../../Modals/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
 import {Button} from "@material-ui/core";
-import {LoadingButton} from "../../UI/Button";
+import {LoadingButton} from "../../../components/UI/Button";
 import {SC_UNDEFINED, timeSpanString} from "../../../config/constants";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,7 +11,7 @@ import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import moment from "moment";
 import {loadAppointmentCutoff, setAppointmentCutoff} from "../../../store/reducers/optimizationWindows/actions";
 import {RootState} from "../../../store/rootReducer";
-import {TimePicker} from "../../UI/DateTimePickers";
+import {TimePicker} from "../../../components/UI/DateTimePickers";
 import {IAppointmentCutoff} from "../../../store/reducers/optimizationWindows/types";
 import {AccessTime} from "@material-ui/icons";
 
@@ -24,7 +24,7 @@ const initialState: TForm = moment.weekdays().reduce((acc, d, dayOfWeek) => {
     return acc;
 }, {} as TForm);
 
-export const AppointmentCutoffDialog: React.FC<DialogProps> = ({payload, onAction, ...props}) => {
+export const AppointmentCutoffModal: React.FC<DialogProps> = ({payload, onAction, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>(initialState);
 

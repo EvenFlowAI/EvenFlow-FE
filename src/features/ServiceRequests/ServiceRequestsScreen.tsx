@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../../components/Optimizer/utils";
 import {Button} from "@material-ui/core";
 import {OPsCodesListDialog} from "../../components/Modals/OPsCodesListDialog/OPsCodesListDialog";
 import {useException, useMessage, useModal, usePagination, useSCs} from "../../utils/hooks";
@@ -16,6 +15,7 @@ import {IAssignedServiceRequest} from "../../store/reducers/serviceRequests/type
 import {OverrideOPsCodeModal} from "./OverrideOpsCodeModal/OverrideOPsCodeModal";
 import {SearchInput} from "../../components/UI/SearchInput";
 import {ServiceRequestsTable} from "./ServiceRequestsTable/ServiceRequestsTable";
+import {optimizerRoot} from "../../config/constants";
 
 export const ServiceRequestsScreen = () => {
     const [

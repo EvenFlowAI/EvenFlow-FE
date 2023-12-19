@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../../../components/Optimizer/utils";
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import RecallParts from "../../../features/RecallsParts/RecallParts";
 import RecallsAllOtherParts from "../../../features/RecallsAllOtherParts/RecallsAllOtherParts";
+import {optimizerRoot} from "../../../config/constants";
 
 const Recalls = () => {
     const [selectedTab, setTab] = useState<string>("0");

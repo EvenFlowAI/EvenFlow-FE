@@ -3,7 +3,6 @@ import {Tab} from "@material-ui/core";
 import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../../../components/Optimizer/utils";
 import {ServiceRequestsScreen} from "../../../features/ServiceRequests/ServiceRequestsScreen";
 import {MaintenancePackages} from "../../../features/MaintenancePackages/MaintenancePackages";
 import {ComplimentaryServices} from "../../../features/ComplimentaryServices/ComplimentaryServices";
@@ -11,6 +10,7 @@ import {setServiceRequestsPageActiveTab} from "../../../store/reducers/serviceRe
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IntervalUpsell} from "../../../features/IntervallUpsell/IntervalUpsell";
+import {optimizerRoot} from "../../../config/constants";
 
 export const ServiceRequests = () => {
     const {srPageActiveTab} = useSelector((state: RootState) => state.serviceRequests);

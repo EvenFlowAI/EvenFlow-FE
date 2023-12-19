@@ -1,6 +1,6 @@
 import React from 'react';
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
-import {bookingFlowRoot} from "../../../components/Optimizer/utils";
+import {bookingFlowRoot} from "../../../config/constants";
 import {EditEmailRequirementModal} from "../../../features/ScreenSettings/EditEmailRequirementModal/EditEmailRequirementModal";
 import {useModal} from "../../../utils/hooks";
 import {ScreenSettings} from "../../../features/ScreenSettings/ScreenSettings";

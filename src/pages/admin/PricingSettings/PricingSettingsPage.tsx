@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
-import {pricingRoot} from "../../../components/Optimizer/utils";
 import {TabList} from "../../../components/styled/Tabs";
 import {Switch, Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";
@@ -15,6 +14,7 @@ import {LoadingButton} from "../../../components/UI/Button";
 import {RootState} from "../../../store/rootReducer";
 import {updateMaxPrice} from "../../../store/reducers/pricingSettings/actions";
 import {ButtonsWrapper, ControlLabel} from "./styles";
+import {pricingRoot} from "../../../config/constants";
 
 type Tab = {
     id: string;

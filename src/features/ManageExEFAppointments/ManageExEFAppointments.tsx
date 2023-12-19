@@ -1,55 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Divider, Switch} from "@material-ui/core";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
+import {useException, useMessage, useSCs} from "../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {makeStyles} from "@material-ui/core/styles";
-import {RootState} from "../../../store/rootReducer";
-import {updateAdvisor} from "../../../store/reducers/serviceCenters/actions";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../utils";
-import {SquarePaper} from "../../styled/Paper";
+import {RootState} from "../../store/rootReducer";
+import {updateAdvisor} from "../../store/reducers/serviceCenters/actions";
+import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
+import {SquarePaper} from "../../components/styled/Paper";
+import {useStyles} from "./styles";
+import {optimizerRoot} from "../../config/constants";
 
-const useStyles = makeStyles(() => ({
-    switchWrapper: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    text: {
-        fontSize: 16,
-    },
-    actionsWrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-    cancelButton: {
-        color: '#9FA2B4',
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-    },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        }
-    },
-    label: {
-        fontWeight: "bold",
-        fontSize: 20,
-    }
-}))
-
-const ManageAppointments = () => {
+const ManageExEFAppointments = () => {
     const [isManageOn, setManageOn] = useState<boolean>(false);
     const { remindersLoading } = useSelector((state: RootState) => state.serviceCenters);
     const {selectedSC} = useSCs();
@@ -127,4 +87,4 @@ const ManageAppointments = () => {
     );
 };
 
-export default ManageAppointments;
+export default ManageExEFAppointments;

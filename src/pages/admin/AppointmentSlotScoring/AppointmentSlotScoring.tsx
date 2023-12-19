@@ -3,9 +3,9 @@ import {TitleContainer} from "../../../components/Content/TitleContainer/TitleCo
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {optimizerRoot} from "../../../components/Optimizer/utils";
 import {ProximityTable} from "../../../features/ProximityTable/ProximityTable";
 import {TimeOfDayDesirability} from "../../../features/TimeOfDayDesirability/TimeOfDayDesirability";
+import {optimizerRoot} from "../../../config/constants";
 
 export const AppointmentSlotScoring = () => {
     const [selectedTab, setTab] = useState<string>("0");

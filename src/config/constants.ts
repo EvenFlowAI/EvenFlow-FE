@@ -1,4 +1,6 @@
 import {TRole} from "../store/reducers/users/types";
+import {TTitle} from "../components/Content/ContentTitle/ContentTitle";
+import {Routes} from "./routes";
 
 export enum States {
     AL = "Alabama",
@@ -101,3 +103,18 @@ export const SOMETHING_WRONG = "Something wrong";
 export const VIN_LENGTH = 17;
 export const G_CALENDAR_FORMAT = "YYYYMMDDT";
 export const calendarDateFormat = "ddd, MMM D";
+
+export const optimizerRoot: TTitle = {
+    to: Routes.Optimizer.Base,
+    title: "Capacity Optimization"
+}
+
+export const bookingFlowRoot: TTitle = {
+    to: Routes.BookingFlow.Base,
+    title: "Booking Flow"
+}
+
+export const pricingRoot: TTitle = {
+    to: Routes.Pricing.Base,
+    title: "Pricing"
+}

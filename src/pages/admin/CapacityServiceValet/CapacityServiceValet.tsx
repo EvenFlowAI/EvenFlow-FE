@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../../../components/Optimizer/utils";
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import ZoneRouting from "../../../features/ZoneRouting/ZoneRouting";
@@ -11,6 +10,7 @@ import {useDispatch} from "react-redux";
 import {loadHoursOfOperations} from "../../../store/reducers/slotScoring/actions";
 import TimeRangesAndCapacity from "../../../features/TimeRangesAndCapacity/TimeRangesAndCapacity";
 import CenterSettings from "../../../features/CenterSettings/CenterSettings";
+import {optimizerRoot} from "../../../config/constants";
 
 const CapacityServiceValet = () => {
     const [selectedTab, setTab] = useState<string>("0");

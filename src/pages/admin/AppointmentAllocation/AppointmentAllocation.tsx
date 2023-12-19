@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../../../components/Optimizer/utils";
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import {ScheduledAppointments} from "../../../features/ScheduledAppointments/ScheduledAppointments";
 import RoPredictionParameters from "../../../features/RoPredictionParameters/RoPredictionParameters";
 import {OverbookingFactor} from "../../../features/OverbookingFactor/OverbookingFactor";
 import {UnplannedDemand} from "../../../features/UnplannedDemand/UnplannedDemand";
+import {optimizerRoot} from "../../../config/constants";
 
 export const AppointmentAllocation = () => {
     const [selectedTab, setTab] = useState<string>("0");

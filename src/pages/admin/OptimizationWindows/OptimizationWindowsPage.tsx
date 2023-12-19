@@ -1,9 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../utils";
-import {OptimizationPlate} from "./OptimizationPlate";
+import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
+import {OptimizationWindowCard} from "../../../components/OptimizationWindowCard/OptimizationWindowCard";
 import {Grid} from "@material-ui/core";
-import {DemandSegments} from "../../Modals/DemandSegments/DemandSegments";
+import {DemandSegments} from "../../../components/Modals/DemandSegments/DemandSegments";
 import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -11,67 +10,17 @@ import {loadDemandSegments} from "../../../store/reducers/demandSegments/actions
 import {loadMaxPriceDateRange, loadOptimizationWindows} from "../../../store/reducers/optimizationWindows/actions";
 import {
     EOptimizationWindowType,
-    IOptimizationWindow,
     optimizationWindowsList,
-    TOptContent
 } from "../../../store/reducers/optimizationWindows/types";
-import {OptimizationDialog} from "./OptimizationWindowDialog";
-import {AppointmentCutoffDialog} from "./AppointmentCutoffDialog";
+import {OptimizationModal} from "../../../features/OptimizationWindows/OptimizationModal/OptimizationModal";
+import {AppointmentCutoffModal} from "../../../features/OptimizationWindows/AppointmentCutoffModal/AppointmentCutoffModal";
 import moment from "moment";
-import {timeSpanString} from "../../../config/constants";
+import {optimizerRoot, timeSpanString} from "../../../config/constants";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
-import {MaxPriceDateRangeDialog} from "./MaxPriceDateRangeDialog";
+import {MaxPriceDateRangeModal} from "../../../features/OptimizationWindows/MaxPriceDateRangeModal/MaxPriceDateRangeModal";
+import {TOptParam} from "./types";
+import {blankWindowParam, optContent} from "./constants";
 
-type TOptParam = {
-    [k in EOptimizationWindowType]: IOptimizationWindow;
-}
-
-const optContent: TOptContent = {
-    [EOptimizationWindowType.FirstAvailable]: {
-        helperText: "Set the optimization window for available time slots when first available date search is entered",
-        label: "Days",
-        title: "First Available Search",
-    },
-    [EOptimizationWindowType.SpecificDate]: {
-        prefix: "+/- ",
-        helperText: "Set the optimization window for available time slots when a specific date search is entered",
-        label: "Days",
-        title: "Specific Date Search",
-    },
-    [EOptimizationWindowType.DemandSegments]: {
-        helperText: "Set the number of demand segments to group service requests of equal value",
-        label: "Segments",
-        title: "Demand Segments",
-    },
-    [EOptimizationWindowType.OverbookingFactor]: {
-        helperText: "Set the percent of appointments the center is willing to overbook beyond capacity.",
-        suffix: "%",
-        label: "percent per day",
-        title: "Overbooking factor",
-    },
-    [EOptimizationWindowType.AppointmentsPerSlot]: {
-        helperText: "Set the number of max scheduled appointments per appointment time slot",
-        label: "Appointments",
-        title: "Appointments per Slot",
-    },
-    [EOptimizationWindowType.AppointmentCutoff]: {
-        helperText: "Set the hour that the last appointment will be accepted",
-        label: "pm",
-        title: "Appointment Cutoff"
-    },
-    [EOptimizationWindowType.MaxPriceDateRange]: {
-        helperText: "Set the date range for which the Max Price will be calculated",
-        label: "Days",
-        title: "Max Price Date Range",
-    },
-}
-
-
-const blankWindowParam: IOptimizationWindow = {
-    serviceCenterId: 0,
-    type: EOptimizationWindowType.OverbookingFactor,
-    value: 0
-}
 export const OptimizationWindowsPage = () => {
     const [selectedOpt, setSelectedOpt] = useState<EOptimizationWindowType>(EOptimizationWindowType.DemandSegments);
     const {isOpen: isDemandOpen, onClose: onDemandClose, onOpen: onDemandOpen} = useModal();
@@ -128,7 +77,7 @@ export const OptimizationWindowsPage = () => {
             {optimizationWindowsList.map(k => {
                 const plate = optContent[k];
                     return <Grid item xs={12} sm={6} md={4} key={plate.title}>
-                        <OptimizationPlate
+                        <OptimizationWindowCard
                             onEdit={getPlateEdit(k)}
                             title={plate.title}
                             count={
@@ -154,15 +103,15 @@ export const OptimizationWindowsPage = () => {
                     </Grid>;
                 }
             )}
-            <OptimizationDialog
+            <OptimizationModal
                 open={isOptOpen}
                 content={optContent[selectedOpt]}
                 payload={optMapped[selectedOpt]}
                 onClose={onOptClose}
             />
             <DemandSegments open={isDemandOpen} onClose={onDemandClose} />
-            <AppointmentCutoffDialog open={isCutoffOpen} onClose={onCutoffClose} />
-            <MaxPriceDateRangeDialog open={isMaxPriceOpen} onClose={onMaxPriceClose}/>
+            <AppointmentCutoffModal open={isCutoffOpen} onClose={onCutoffClose} />
+            <MaxPriceDateRangeModal open={isMaxPriceOpen} onClose={onMaxPriceClose}/>
         </Grid>
     </>
 }

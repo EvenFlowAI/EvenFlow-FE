@@ -1,8 +1,8 @@
 import React from 'react';
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../utils";
-import {SquarePaper} from "../../styled/Paper";
+import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
+import {SquarePaper} from "../../../components/styled/Paper";
 import {PodsTable} from "../../../features/PodsTable/PodsTable";
+import {optimizerRoot} from "../../../config/constants";
 
 const Pods = () => {
     return (

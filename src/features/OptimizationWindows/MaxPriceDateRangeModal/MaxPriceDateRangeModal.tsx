@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../../Modals/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
 import {Button} from "@material-ui/core";
-import {LoadingButton} from "../../UI/Button";
+import {LoadingButton} from "../../../components/UI/Button";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../../../components/UI/TextField";
 import {updateMaxPriceDateRange} from "../../../store/reducers/optimizationWindows/actions";
 
-export const MaxPriceDateRangeDialog: React.FC<DialogProps> = ({payload, onAction, ...props}) => {
+export const MaxPriceDateRangeModal: React.FC<DialogProps> = ({payload, onAction, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [val, setVal] = useState<number>(0);
 

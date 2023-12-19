@@ -7,10 +7,10 @@ import {CustomerLifetimeRules} from "../../../features/CustomerLifetimeRules/Cus
 import {NewLostCustomer} from "../../../features/NewLostCustomer/NewLostCustomer";
 import {EndOfWarranty} from "../../../features/EndOfWarranty/EndOfWarranty";
 import {ValueIndicatorsTable} from "../../../features/ValueIndicatorsTable/ValueIndicatorsTable";
-import {optimizerRoot} from "../../../components/Optimizer/utils";
 import {UrgentRequests} from "../../../features/UrgentRequests/UrgentRequests";
 import {TTab} from "./types";
 import {useStyles} from "./styles";
+import {optimizerRoot} from "../../../config/constants";
 
 const tabs: TTab[] = [
     {label: "Value Indicators", id: "0", component: ValueIndicatorsTable},

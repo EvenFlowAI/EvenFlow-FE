@@ -1,15 +1,15 @@
 import React, {useState} from "react";
-import {Table} from "../../UI/Table";
-import {IEmployee} from "../../../store/reducers/employees/types";
+import {Table} from "../../components/UI/Table";
+import {IEmployee} from "../../store/reducers/employees/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
-import {loadTechnicians, removeEmployee} from "../../../store/reducers/employees/actions";
-import {RootState} from "../../../store/rootReducer";
+import {useConfirm, useException, useMessage, useModal, useSCs} from "../../utils/hooks";
+import {loadTechnicians, removeEmployee} from "../../store/reducers/employees/actions";
+import {RootState} from "../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
-import {TableAvatar} from "../../UI/TableAvatar";
-import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
-import {TableRowDataTypeResp} from "../../UI/types";
+import {TableAvatar} from "../../components/UI/TableAvatar";
+import {CreateEmployee} from "../../components/Modals/CreateEmployee/CreateEmployee";
+import {TableRowDataTypeResp} from "../../components/UI/types";
 
 const rowData: TableRowDataTypeResp<IEmployee>[] = [
     {header: "Technician Name", val: v => v.fullName},
@@ -18,7 +18,7 @@ const rowData: TableRowDataTypeResp<IEmployee>[] = [
     {header: "Overtime Rate", val: v => `$${v.employeeInfo?.overtimeRate || 0}`, align: "right", xsHidden: true}
 ]
 
-export const TechniciansList = () => {
+export const TechniciansTable = () => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);

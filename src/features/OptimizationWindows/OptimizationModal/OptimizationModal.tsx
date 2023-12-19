@@ -1,19 +1,20 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps} from "../../Modals/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
 import {Button} from "@material-ui/core";
 import {IOptimizationWindow, TOptContentData} from "../../../store/reducers/optimizationWindows/types";
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../../../components/UI/TextField";
 import {useDispatch} from "react-redux";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {SC_UNDEFINED} from "../../../config/constants";
-import {LoadingButton} from "../../UI/Button";
+import {LoadingButton} from "../../../components/UI/Button";
 import {setOptimizationWindow} from "../../../store/reducers/optimizationWindows/actions";
 
 type TProps = DialogProps<IOptimizationWindow> & {
     content: TOptContentData
 }
-export const OptimizationDialog: React.FC<TProps> = ({
+
+export const OptimizationModal: React.FC<TProps> = ({
     onAction,
     content,
     payload,

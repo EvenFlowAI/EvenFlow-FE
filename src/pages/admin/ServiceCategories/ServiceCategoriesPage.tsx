@@ -10,10 +10,10 @@ import {
     setCategoriesPage
 } from "../../../store/reducers/categories/actions";
 import {useSCs} from "../../../utils/hooks";
-import {bookingFlowRoot} from "../../../components/Optimizer/utils";
 import {ServiceCategoriesTable} from "../../../features/ServiceCategories/ServiceCategoriesTable/ServiceCategoriesTable";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {visitCenterTabs} from "../../../features/ServiceCategories/constants";
+import {bookingFlowRoot} from "../../../config/constants";
 
 const tabNames = [
     "Visit Center (Page 1)",
