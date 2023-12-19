@@ -1,43 +1,25 @@
 import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
 import {ICreateUpdateRecall, IRecall} from "../../../store/reducers/recall/types";
-import {DialogProps} from "../types";
-import {Button, styled} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import {DialogProps} from "../../../components/Modals/types";
+import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {useException, useSCs} from "../../../utils/hooks";
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../../../components/UI/TextField";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../../components/UI/AutocompleteRender";
 import {RootState} from "../../../store/rootReducer";
 import {IMakeExtended, IModel} from "../../../api/types";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
 import {createRecall, updateRecall} from "../../../store/reducers/recall/actions";
-import {yearOptions} from "../../AppointmentFlow/AppointmentFrame/MaintenanceDetails";
-
-const Textarea = styled(TextField)({
-    "& textarea": {
-        padding: "8px 11px"
-    },
-});
+import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import {Textarea, useStyles} from "./styles";
+import {TForm} from "./types";
 
 type TAddRecallProps = DialogProps & {
     editingItem: IRecall|null;
     setEditingItem: Dispatch<SetStateAction<IRecall|null>>;
-}
-
-type TForm = {
-    recallCampaignNumber: string;
-    make: IMakeExtended|null;
-    model: IModel|null;
-    yearTo: string;
-    yearFrom: string;
-    recallComponent: string;
-    recallSummary: string;
-    partLeadDaysCount: string;
-    dailyPartsCount: string;
-    serviceRequest: IAssignedServiceRequest|null;
 }
 
 const initialForm: TForm = {
@@ -53,35 +35,7 @@ const initialForm: TForm = {
     serviceRequest: null,
 }
 
-const useStyles = makeStyles(() => ({
-    actionsWrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-    cancelButton: {
-        color: '#9FA2B4',
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-    },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        }
-    },
-}))
-
-const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEditingItem}) => {
+const AddRecallModal: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEditingItem}) => {
     const {makesModels} = useSelector((state: RootState) => state.vehicleDetails);
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
     const [form, setForm] = useState<TForm>(initialForm);
@@ -358,4 +312,4 @@ const AddRecall: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEd
     );
 };
 
-export default AddRecall;
+export default AddRecallModal;

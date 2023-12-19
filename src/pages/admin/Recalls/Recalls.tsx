@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../utils";
-import {TabList} from "../../styled/Tabs";
+import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
+import {optimizerRoot} from "../../../components/Optimizer/utils";
+import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
-import RecallParts from "./RecallParts";
-import AllOtherParts from "./AllOtherParts";
+import RecallParts from "../../../features/RecallsParts/RecallParts";
+import AllOtherParts from "../../../features/AllOtherParts/AllOtherParts";
 
-const PartsAvailability = () => {
+const Recalls = () => {
     const [selectedTab, setTab] = useState<string>("0");
 
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
@@ -30,4 +30,4 @@ const PartsAvailability = () => {
     </TabContext>
 };
 
-export default PartsAvailability;
+export default Recalls;

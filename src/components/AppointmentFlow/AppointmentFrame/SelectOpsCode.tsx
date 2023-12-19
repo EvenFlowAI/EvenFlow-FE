@@ -11,7 +11,6 @@ import {InfoOutlined, Search} from "@material-ui/icons";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
 import ReactGA from "react-ga4";
-//import ReactGA from "react-ga";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import AskAddService from "../../Modals/AskAddService/AskAddService";

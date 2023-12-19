@@ -1,19 +1,19 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
-import {useException, useModal, useSCs} from "../../../utils/hooks";
-import RecallTable from "./RecallTable";
-import {optimizerRoot} from "../utils";
+import {useException, useModal, useSCs} from "../../utils/hooks";
+import RecallTable from "./RecallTable/RecallTable";
+import {optimizerRoot} from "../../components/Optimizer/utils";
 import {Button} from "@material-ui/core";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import AddRecall from "../../Modals/AddRecall/AddRecall";
-import {IRecall} from "../../../store/reducers/recall/types";
+import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
+import AddRecallModal from "./AddRecallModal/AddRecallModal";
+import {IRecall} from "../../store/reducers/recall/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../components/UI/AutocompleteRender";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
-import {loadAllAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
-import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import {updateDefaultRecallOpsCode} from "../../../store/reducers/serviceCenters/actions";
+import {RootState} from "../../store/rootReducer";
+import {loadAllAssignedServiceRequests} from "../../store/reducers/serviceRequests/actions";
+import {IAssignedServiceRequest} from "../../store/reducers/serviceRequests/types";
+import {updateDefaultRecallOpsCode} from "../../store/reducers/serviceCenters/actions";
 
 const useStyles = makeStyles(() => ({
     wrapper: {
@@ -105,8 +105,8 @@ const RecallParts = () => {
                     </Button>
                 </div>}
             />
-        <RecallTable onOpenModal={handleAddRecall} currentItem={currentItem} setCurrentItem={setCurrentItem}/>
-            <AddRecall open={isOpen} editingItem={currentItem} onClose={onClose} setEditingItem={setCurrentItem}/>
+            <RecallTable onOpenModal={handleAddRecall} currentItem={currentItem} setCurrentItem={setCurrentItem}/>
+            <AddRecallModal open={isOpen} editingItem={currentItem} onClose={onClose} setEditingItem={setCurrentItem}/>
         </>
     );
 };

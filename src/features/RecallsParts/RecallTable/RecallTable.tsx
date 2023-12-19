@@ -1,29 +1,19 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {TableRowDataType} from "../../UI/types";
+import {TableRowDataType} from "../../../components/UI/types";
 import {IRecall} from "../../../store/reducers/recall/types";
-import {Table} from "../../UI/Table";
+import {Table} from "../../../components/UI/Table";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
 import {useConfirm, useException, useModal, usePagination, useSCs} from "../../../utils/hooks";
-import {BaseModal, DialogContent, DialogTitle} from "../../Modals/BaseModal";
-import {DialogProps} from "../../Modals/types";
 import {deleteRecall, loadRecalls, setRecallPageData} from "../../../store/reducers/recall/actions";
+import {RecallSummary} from "../RecallSummary/RecallSummary";
 
 type TRecallTableProps = {
     onOpenModal: () => void;
     currentItem: IRecall|null;
     setCurrentItem: Dispatch<SetStateAction<IRecall|null>>;
-}
-
-const RecallSummary: React.FC<DialogProps & {summary: string}> = ({summary, open, onClose}) => {
-    return <BaseModal open={open} onClose={onClose} width={600}>
-        <DialogTitle onClose={onClose}>Recall Summary</DialogTitle>
-        <DialogContent style={{marginBottom: 20}}>
-            {summary}
-        </DialogContent>
-    </BaseModal>
 }
 
 const RecallTable: React.FC<TRecallTableProps> = ({onOpenModal, currentItem, setCurrentItem}) => {
