@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../Modals/BaseModal";
-import {DialogProps} from "../../Modals/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
 import {
     Button,
     Grid,
@@ -9,27 +9,28 @@ import {
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
-import {LoadingButton} from "../../UI/Button";
+import {LoadingButton} from "../../../components/UI/Button";
 import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../../../components/UI/TextField";
 import moment from "moment";
 import {IEmployee} from "../../../store/reducers/employees/types";
 import {ISchedule, IScheduleForm, IScheduleForWeek} from "../../../store/reducers/schedules/types";
-import {TimePicker} from "../../UI/DateTimePickers";
+import {TimePicker} from "../../../components/UI/DateTimePickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {timeSpanString} from "../../../config/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEmployeesSchedule, setEmployeesSchedule} from "../../../store/reducers/schedules/actions";
 import {RootState} from "../../../store/rootReducer";
-import {CreateEmployee} from "../../Modals/CreateEmployee/CreateEmployee";
+import {CreateEmployee} from "../../../components/Modals/CreateEmployee/CreateEmployee";
 import {Close} from "@material-ui/icons";
 import {API} from "../../../api/api";
-import {TIds} from "./types";
+import {TIds} from "../types";
 import {Api} from "../../../config/requests";
-import {getStartEndDates} from "./utils";
+import {getRequestDate} from "../utils";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {loadWeeklyHolidaysList} from "../../../store/reducers/holidays/actions";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {getStartEndDates} from "../../../utils/utils";
+import {TForm} from "./types";
 
 type TProps = DialogProps<ISchedule> & {
     selectedDate: moment.Moment;
@@ -41,24 +42,7 @@ type TProps = DialogProps<ISchedule> & {
     onClear: (t: keyof TIds) => void;
 }
 
-type TForm = {
-    timeStart: moment.Moment|null;
-    timeEnd: moment.Moment|null;
-    podId?: number;
-}
-
-const getRequestDate = (date: moment.Moment | ParsableDate): {fromDate: ParsableDate, toDate: ParsableDate} => {
-    const dayOfWeek = moment(date).day();
-    let fromDate = moment(date).day("Monday").toISOString();
-    let toDate = moment(date).day("Friday").toISOString();
-    if (dayOfWeek === 0) {
-        fromDate = moment(date).subtract(1, 'day').startOf('week').add(1, 'day').toISOString()
-        toDate = moment(date).subtract(1, 'day').day("Friday").toISOString()
-    }
-    return {fromDate, toDate};
-}
-
-export const EditSchedule: React.FC<TProps> = ({selectedDate, date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
+export const EditScheduleModal: React.FC<TProps> = ({selectedDate, date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
     const [isCleared, setCleared] = useState<boolean>(false);

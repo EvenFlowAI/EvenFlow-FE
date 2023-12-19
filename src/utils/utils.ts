@@ -359,3 +359,20 @@ export const getTransportationOptionString = (option: string) => {
     }
     return array.join('');
 }
+
+export const getStartEndDates = (date: moment.Moment, isXS: boolean): [string, string] => {
+    const utcOffset = moment(date).utcOffset();
+    if (isXS) {
+        return [
+            moment(date).startOf("day").add(utcOffset, 'minutes').toISOString(),
+            moment(date).endOf("day").add(utcOffset, 'minutes').toISOString()
+        ]
+    }
+    let correctedDate = date;
+    const dayOfWeek = moment(date).day();
+    if (dayOfWeek === 0) correctedDate = moment(date).subtract('1', 'days');
+    return [
+        moment(correctedDate).startOf("week").add(1, 'days').add(utcOffset, 'minutes').toISOString(),
+        moment(correctedDate).endOf("week").add(1, 'days').add(utcOffset, 'minutes').toISOString(),
+    ]
+}

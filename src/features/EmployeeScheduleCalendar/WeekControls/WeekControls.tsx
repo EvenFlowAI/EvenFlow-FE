@@ -1,49 +1,34 @@
 import React, {useState} from 'react';
-import {makeStyles} from "@material-ui/core/styles";
 import {Button} from "@material-ui/core";
 import {ChevronLeft, ChevronRight} from "@material-ui/icons";
 import moment from "moment";
-import {getFirstLastDaysOfWeek} from "./utils";
+import {getFirstLastDaysOfWeek} from "../utils";
 import {DatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-
-const useStyles = makeStyles({
-    container: {
-        display: "inline-flex",
-        alignSelf: 'flex-end',
-        "&>*": {
-            marginLeft: 8,
-        }
-    },
-    arrowButton: {
-        minWidth: 10,
-        padding: 5,
-        background: "#ffffff"
-    },
-    dateButton: {
-        background: "#ffffff",
-        textTransform: "none",
-        minWidth: 140
-    }
-});
+import {useStyles} from "./styles";
 
 type TProps = {
     isXS: boolean;
     selectedDate: moment.Moment;
     onChange: (date: moment.Moment) => void;
 }
+
 export const WeekControls: React.FC<TProps> = ({selectedDate, isXS, onChange}) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const classes = useStyles();
+
     const handleLeft = () => {
         onChange(moment(selectedDate).subtract(!isXS ? 7 : 1, "days"));
     }
+
     const handleRight = () => {
         onChange(moment(selectedDate).add(!isXS ? 7 : 1, "days"));
     }
+
     const handleOpen = (s: boolean) => () => {
         setIsOpen(s);
     }
+
     const handleDateChange = (date: MaterialUiPickersDate) => {
         onChange(moment(date));
     }

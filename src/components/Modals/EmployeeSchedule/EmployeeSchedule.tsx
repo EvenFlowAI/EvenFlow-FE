@@ -1,6 +1,6 @@
 import React from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
-import {ScheduleCalendar} from "../../Optimizer/EmployeeSchedule/ScheduleCalendar";
+import {EmployeeScheduleCalendar} from "../../../features/EmployeeScheduleCalendar/EmployeeScheduleCalendar";
 import {DialogProps} from "../types";
 
 export const EmployeeSchedule: React.FC<DialogProps> = (props) => {
@@ -8,7 +8,7 @@ export const EmployeeSchedule: React.FC<DialogProps> = (props) => {
         <BaseModal {...props} width={1280}>
             <DialogTitle onClose={props.onClose}>Employee Schedule</DialogTitle>
             <DialogContent>
-                <ScheduleCalendar />
+                <EmployeeScheduleCalendar />
             </DialogContent>
         </BaseModal>
     );

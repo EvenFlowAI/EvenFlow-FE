@@ -10,8 +10,7 @@ import {
 import {Grid, Switch} from "@material-ui/core";
 import {TextField} from "../../../../components/UI/TextField";
 import moment from "moment";
-import {timeSpanString, timeString} from "../../../../config/constants";
-import {calendarDateFormat} from "../../../../components/Optimizer/EmployeeSchedule/utils";
+import {calendarDateFormat, timeSpanString, timeString} from "../../../../config/constants";
 import {Label} from "./styles";
 
 export const ViewOffer: React.FC<{

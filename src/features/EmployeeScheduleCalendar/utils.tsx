@@ -1,7 +1,8 @@
 import React from "react";
 import moment from "moment";
-import {ISchedule} from "../../../store/reducers/schedules/types";
-import {timeSpanString, timeString} from "../../../config/constants";
+import {ISchedule} from "../../store/reducers/schedules/types";
+import {timeSpanString, timeString} from "../../config/constants";
+import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 
 export const getDaysOfWeek = (date: moment.Moment, isXS: boolean): moment.Moment[] => {
     if (isXS) {
@@ -42,20 +43,13 @@ export const findScheduleDates = (date: moment.Moment, schedules: ISchedule[], i
     return "-"
 }
 
-export const calendarDateFormat = "ddd, MMM D";
-export const getStartEndDates = (date: moment.Moment, isXS: boolean): [string, string] => {
-    const utcOffset = moment(date).utcOffset();
-    if (isXS) {
-        return [
-            moment(date).startOf("day").add(utcOffset, 'minutes').toISOString(),
-            moment(date).endOf("day").add(utcOffset, 'minutes').toISOString()
-        ]
-    }
-    let correctedDate = date;
+export const getRequestDate = (date: moment.Moment | ParsableDate): {fromDate: ParsableDate, toDate: ParsableDate} => {
     const dayOfWeek = moment(date).day();
-    if (dayOfWeek === 0) correctedDate = moment(date).subtract('1', 'days');
-    return [
-        moment(correctedDate).startOf("week").add(1, 'days').add(utcOffset, 'minutes').toISOString(),
-        moment(correctedDate).endOf("week").add(1, 'days').add(utcOffset, 'minutes').toISOString(),
-    ]
+    let fromDate = moment(date).day("Monday").toISOString();
+    let toDate = moment(date).day("Friday").toISOString();
+    if (dayOfWeek === 0) {
+        fromDate = moment(date).subtract(1, 'day').startOf('week').add(1, 'day').toISOString()
+        toDate = moment(date).subtract(1, 'day').day("Friday").toISOString()
+    }
+    return {fromDate, toDate};
 }

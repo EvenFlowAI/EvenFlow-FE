@@ -1,9 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {calendarDateFormat, findScheduleDates, getDaysOfWeek, getSchedule, getStartEndDates} from "./utils";
-import {ScheduleTable} from "./UI";
+import {findScheduleDates, getDaysOfWeek, getSchedule} from "./utils";
 import {
     CircularProgress,
-    styled,
     TableBody,
     TableCell,
     TableHead,
@@ -12,75 +10,26 @@ import {
     useMediaQuery, useTheme
 } from "@material-ui/core";
 import moment, {Moment} from "moment";
-import {WeekControls} from "./WeekControls";
-import {useModal, useSCs} from "../../../utils/hooks";
+import {WeekControls} from "./WeekControls/WeekControls";
+import {useModal, useSCs} from "../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {loadEmployeesSchedule} from "../../../store/reducers/schedules/actions";
-import {RootState} from "../../../store/rootReducer";
-import {NameCell} from "./NameCell";
-import {IEmployee} from "../../../store/reducers/employees/types";
-import {ISchedule} from "../../../store/reducers/schedules/types";
-import {EditSchedule} from "./EditSchedule";
-import {ScheduleFilters} from "./ScheduleFilters";
-import {Api} from "../../../config/requests";
-import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
-import {EDay} from "../../../store/reducers/demandSegments/types";
-import {noop} from "../../../utils/utils";
-import {loadWeeklyHolidaysList} from "../../../store/reducers/holidays/actions";
+import {loadEmployeesSchedule} from "../../store/reducers/schedules/actions";
+import {RootState} from "../../store/rootReducer";
+import {NameCell} from "./NameCell/NameCell";
+import {IEmployee} from "../../store/reducers/employees/types";
+import {ISchedule} from "../../store/reducers/schedules/types";
+import {EditScheduleModal} from "./EditScheduleModal/EditScheduleModal";
+import {ScheduleFilters} from "./ScheduleFilters/ScheduleFilters";
+import {Api} from "../../config/requests";
+import {loadWorkingDays} from "../../store/reducers/serviceCenters/actions";
+import {EDay} from "../../store/reducers/demandSegments/types";
+import {getStartEndDates, noop} from "../../utils/utils";
+import {loadWeeklyHolidaysList} from "../../store/reducers/holidays/actions";
 import { TIds } from './types';
+import {ControlWrapper, HeadCell, Holiday, nonWorkingStyle, ScheduleTable} from "./styles";
+import {calendarDateFormat} from "../../config/constants";
 
-const ControlWrapper = styled("div")(({theme}) => ({
-    display: "flex",
-    flexFlow: "row nowrap",
-    justifyContent: "flex-end",
-    marginBottom: 10,
-    [theme.breakpoints.down("xs")]: {
-        justifyContent: "center"
-    }
-}));
-
-const nonWorkingStyle = {
-    background: `repeating-linear-gradient(
-        45deg,
-        #ffffff,
-        #ffffff 2px,
-        #F7F8FB 2px,
-        #F7F8FB 4px
-    )`,
-    cursor: "default"
-};
-
-const Holiday = styled("div")(({theme}) => ({
-    backgroundColor: theme.palette.secondary.main,
-    borderRadius: 2,
-    color: "#fff",
-    textOverflow: "ellipsis",
-    overflow: "auto",
-    textAlign: "center",
-    padding: "0 4px",
-    maxWidth: "100%",
-    // whiteSpace: "nowrap"
-}));
-const HeadCell = styled(TableCell)(({theme}) => ({
-    width: "12%",
-    maxWidth: 0,
-    overflow: "hidden",
-    verticalAlign: "bottom",
-    "&>.content": {
-        minWidth: 0,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-end",
-        alignItems: "center",
-        maxWidth: "100%"
-    },
-    [theme.breakpoints.down("xs")]: {
-        width: "35%"
-    }
-}));
-
-
-export const ScheduleCalendar = () => {
+export const EmployeeScheduleCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
     const [editedDate, setEditedDate] = useState<moment.Moment>(moment());
     const [editedEmployee, setEditedEmployee] = useState<IEmployee>({} as IEmployee);
@@ -238,7 +187,7 @@ export const ScheduleCalendar = () => {
                     }
                 </TableBody>
             </ScheduleTable>
-            <EditSchedule
+            <EditScheduleModal
                 selectedDate={selectedDate}
                 date={editedDate}
                 employee={editedEmployee}

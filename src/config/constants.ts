@@ -100,3 +100,4 @@ export const SC_UNDEFINED = "Service center is not loaded";
 export const SOMETHING_WRONG = "Something wrong";
 export const VIN_LENGTH = 17;
 export const G_CALENDAR_FORMAT = "YYYYMMDDT";
+export const calendarDateFormat = "ddd, MMM D";
