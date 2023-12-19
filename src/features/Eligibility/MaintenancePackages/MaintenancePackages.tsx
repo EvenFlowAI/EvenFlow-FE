@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {NoItemsLoading} from "../../../components/UI/NoItemsLoading";
-import {DemandTable, TableCell, TableRow} from "../../../components/Optimizer/AppointmentAllocation/UI";
 import {Box, FormControlLabel, Radio, RadioGroup, TableBody, TableHead} from "@material-ui/core";
 import {TableContainer} from "../../../pages/admin/PricingSettings/UI";
 import {useException, useSCs} from "../../../utils/hooks";
@@ -14,6 +13,9 @@ import {Caption} from "../../../components/UI/Caption";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 import {headCellStyles, leftAlign} from "../styles";
 import {TableWrapper} from "./styles";
+import {DemandTable} from "../../../components/styled/DemandTable";
+import {TableRow} from "../../../components/styled/TableRow";
+import {TableCell} from "../../../components/styled/TableCell";
 
 const MaintenancePackages = () => {
     const {isLoading, mpList} = useSelector((state: RootState) => state.pricingSettings);

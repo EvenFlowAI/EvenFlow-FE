@@ -1,39 +1,18 @@
 import React, {Dispatch, SetStateAction} from "react";
 import {IUnplannedDemandBySlot} from "../../../store/reducers/demandSegments/types";
-import {makeStyles} from "@material-ui/core/styles";
 import {Table, TableBody, TableHead} from "@material-ui/core";
-import {TableCell, TableRow} from "./UI";
 import moment from "moment";
 import {timeSpanString, timeString} from "../../../config/constants";
-import {sortSlots} from "./UnplannedDemandEditing";
-import DemandInput from "./DemandInput";
+import {sortSlots} from "../utils";
+import DemandInput from "../../AppointmentAllocation/DemandInput";
+import {useStyles} from "./styles";
+import {TableRow} from "../../../components/styled/TableRow";
+import {TableCell} from "../../../components/styled/TableCell";
 
 type TTableProps = {
     setDemandSlots: Dispatch<SetStateAction<IUnplannedDemandBySlot[]>>;
     slots: IUnplannedDemandBySlot[];
 }
-
-const useStyles = makeStyles({
-    headCell: {
-        fontSize: 12,
-        fontWeight: 700,
-        color: "#9FA2B4",
-        textTransform: 'uppercase',
-        borderTop: '1px solid #D9D9D9',
-        borderBottom: '1px solid #D9D9D9',
-        padding: '18px 36px',
-    },
-    cell: {
-        fontSize: 16
-    },
-    row: {
-        borderRight: "1px solid #D9D9D9 !important"
-    },
-    rowTop: {
-        borderRight: "1px solid #D9D9D9 !important",
-        borderTop: "1px solid #D9D9D9 !important"
-    },
-})
 
 const UnplannedDemandSlots: React.FC<TTableProps> = ({ slots, setDemandSlots }) => {
     const classes = useStyles();

@@ -4,61 +4,20 @@ import {
     IUnplannedDemandBySlot, IUnplannedDemandSlotsRequest
 } from "../../../store/reducers/demandSegments/types";
 import moment from "moment";
-import {SaveEditBlock} from "./UI";
-import {makeStyles} from "@material-ui/core/styles";
-import UnplannedDemandSlots from "./UnplannedDemandSlots";
-import {timeSpanString} from "../../../config/constants";
+import UnplannedDemandSlots from "../UnplannedDemandSlots/UnplannedDemandSlots";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {changeUnplannedSlots, loadUnplannedSlots} from "../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../store/rootReducer";
-import {Loading} from "../../UI/Loading";
+import {Loading} from "../../../components/UI/Loading";
 import {Divider} from "@material-ui/core";
+import {useStyles} from "./styles";
+import {SaveEditBlock} from "../../../components/UI/SaveEditBlock";
 
 type TUnplannedDemandEditingProps = {
     isEdit: boolean;
     setEdit: Dispatch<SetStateAction<boolean>>;
     editingElement: IUnplannedDemand|null;
-}
-
-const useStyles = makeStyles(() => ({
-    wrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: "#FFFFFF",
-        border: '1px solid #DADADA',
-        overflowX: 'auto',
-    },
-    titleLine: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-        padding: '12px 36px 0 36px',
-    },
-    title: {
-        fontSize: 16,
-        fontWeight: 700,
-        textTransform: 'uppercase',
-    },
-    tablesWrapper: {
-        display: 'flex',
-    },
-    dayName:{
-        fontSize: 16,
-        fontWeight: 700,
-    },
-    text: {
-        fontSize: 16,
-        fontWeight: "bold",
-        textAlign: "center",
-        paddingBottom: 36,
-    }
-}))
-
-export const sortSlots = (slots: IUnplannedDemandBySlot[]): IUnplannedDemandBySlot[] => {
-    return slots.sort((a, b) => {
-        return moment(a.start, timeSpanString).diff(moment(b.start, timeSpanString)) > 0 ? 1 : -1
-    })
 }
 
 const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdit, isEdit, editingElement }) => {

@@ -1,26 +1,15 @@
 import React from "react";
-import {TimeWindows} from "./TimeWindows";
-import {DemandSegments} from "./DemandSegments";
-import {Caption} from "../../UI/Caption";
-import {Routes} from "../../../config/routes";
-import {TextLink} from "../../UI/TextLink";
-import {styled} from "@material-ui/core";
-import {LoadingButton} from "../../UI/Button";
+import {TimeWindows} from "../AppointmentAllocation/TimeWindows";
+import {DemandSegments} from "../AppointmentAllocation/DemandSegments";
+import {Caption} from "../../components/UI/Caption";
+import {Routes} from "../../config/routes";
+import {TextLink} from "../../components/UI/TextLink";
+import {LoadingButton} from "../../components/UI/Button";
 import {useDispatch, useSelector} from "react-redux";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
-import {recalculateCapacity} from "../../../store/reducers/demandSegments/actions";
-import {RootState} from "../../../store/rootReducer";
-
-const TableContainer = styled("div")({
-    overflowX: "auto"
-});
-
-const ButtonContainer = styled('div')({
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    paddingBottom: 24,
-})
+import {useException, useMessage, useSCs} from "../../utils/hooks";
+import {recalculateCapacity} from "../../store/reducers/demandSegments/actions";
+import {RootState} from "../../store/rootReducer";
+import {ButtonContainer, TableContainer} from "./styles";
 
 export const ScheduledAppointments = () => {
     const {isRecalculationLoading} = useSelector((state: RootState) => state.demandSegments);

@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {useConfirm, useException, useModal, useSCs} from "../../../../utils/hooks";
-import {DenseTable} from "../../../../components/Optimizer/AppointmentAllocation/UI";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addServiceRequestsToPricing,
@@ -22,6 +21,7 @@ import EditDayOfWeekOpsCode from "../../EditDayOFWeekOpsCode/EditDayOFWeekOpsCod
 import {SliderObject, SliderRange, TOpsCode} from "../../types";
 import {Slider} from "../../../../components/styled/Slider";
 import {useStyles} from "./styles";
+import {DenseTable} from "../../../../components/styled/DemandTable";
 
 const DayOfWeekOpsCode = () => {
     const { onOpen, onClose, isOpen } = useModal();

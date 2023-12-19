@@ -1,5 +1,5 @@
 import {TableCell as TC, withStyles} from "@material-ui/core";
-import {DemandTable} from "../../../components/Optimizer/AppointmentAllocation/UI";
+import {DemandTable} from "../../../components/styled/DemandTable";
 
 export const TableCell = withStyles({
     root: {

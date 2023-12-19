@@ -6,13 +6,15 @@ import {LoadingButton} from "../../UI/Button";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {DemandTable, TableCell, TableRow} from "../AppointmentAllocation/UI";
 import moment from "moment";
 import {TextField} from "../../UI/TextField";
 import {loadOverbookingFactor, setOverbookingFactor} from "../../../store/reducers/optimizationWindows/actions";
 import {RootState} from "../../../store/rootReducer";
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {IOverbookingFactor} from "../../../store/reducers/optimizationWindows/types";
+import {DemandTable} from "../../styled/DemandTable";
+import {TableRow} from "../../styled/TableRow";
+import {TableCell} from "../../styled/TableCell";
 
 const tableHead: string[] = [
     "Day", "No Show Rate (%)", "Day of Cancelations (%)", "Combined (%)", "Overbooking Factor"

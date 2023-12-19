@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {FormControlLabel, Radio, RadioGroup, Tab} from "@material-ui/core";
 import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import ByZone from "../../../components/Optimizer/AnicllaryPriceParts/ByZone";
-import ByDistance from "../../../components/Optimizer/AnicllaryPriceParts/ByDistance";
+import AncillaryPriceByZone from "../../AncillaryPriceByZone/AncillaryPriceByZone";
+import AncillaryPriceByDistance from "../../AncillaryPriceByDistance/AncillaryPriceByDistance";
 import {useConfirm, useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -87,12 +87,12 @@ const AncillaryPrice = () => {
         {
             id: "0",
             label: "Ancillary Price By Zone",
-            component: <ByZone onUpdate={onSaveZonePricing} data={pricingByZones} isLoading={isLoading}/>
+            component: <AncillaryPriceByZone onUpdate={onSaveZonePricing} data={pricingByZones} isLoading={isLoading}/>
         },
         {
             id: "1",
             label: "Ancillary Price By Distance",
-            component: <ByDistance
+            component: <AncillaryPriceByDistance
                 data={pricingByDistance}
                 isLoading={isLoading}
                 onItemDelete={onDeleteDistanceRange}

@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {DenseTable} from "../../../components/Optimizer/AppointmentAllocation/UI";
 import {
     Box,
     TableBody,
@@ -20,6 +19,7 @@ import {TMappedDemands} from "../../../store/reducers/pricingSettings/selectors"
 import {InvertedSlider, Slider} from "./styles";
 import {initialForm, sliderMarks, sliderRange} from "./constants";
 import {TForm} from "./types";
+import {DenseTable} from "../../../components/styled/DemandTable";
 
 type TProps = {
     demand: TMappedDemands,

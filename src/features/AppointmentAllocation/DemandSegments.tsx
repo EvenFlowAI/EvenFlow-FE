@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {TableHead, TableBody, CircularProgress} from "@material-ui/core";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
+import {useException, useMessage, useSCs, useSelectedPod} from "../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {loadDemandSegments, setDemandSegments} from "../../../store/reducers/demandSegments/actions";
-import {RootState} from "../../../store/rootReducer";
-import {SC_UNDEFINED} from "../../../config/constants";
-import {TextField} from "../../UI/TextField";
-import {ISetDemandSegmentForm} from "../../../store/reducers/demandSegments/types";
-import {DemandTable, TableRow, TableCell, SaveEditBlock} from "./UI";
+import {loadDemandSegments, setDemandSegments} from "../../store/reducers/demandSegments/actions";
+import {RootState} from "../../store/rootReducer";
+import {SC_UNDEFINED} from "../../config/constants";
+import {TextField} from "../../components/UI/TextField";
+import {ISetDemandSegmentForm} from "../../store/reducers/demandSegments/types";
+import {DemandTable} from "../../components/styled/DemandTable";
+import {TableRow} from "../../components/styled/TableRow";
+import {TableCell} from "../../components/styled/TableCell";
+import {SaveEditBlock} from "../../components/UI/SaveEditBlock";
 
 type TForm = number[][];
 export const DemandSegments = () => {

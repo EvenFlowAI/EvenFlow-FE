@@ -1,118 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import {
-    styled,
-    TableCell as TC,
     TableHead,
-    withStyles,
     TableBody,
     Menu,
     MenuItem,
     IconButton,
     Button
 } from "@material-ui/core";
-import {DemandTable, TableRow} from "../AppointmentAllocation/UI";
-import {ValueSlider} from "../../styled/ValueSlider";
 import {MoreHoriz} from "@material-ui/icons";
-import {TextField} from "../../UI/TextField";
-import {useException, useModal} from "../../../utils/hooks";
-import AddDistanceRange from "../../Modals/AddDistanceRange/AddDistanceRange";
-import {IDistancePriceSettings, TDistanceRange} from "../../../store/reducers/serviceValet/types";
-import {Loading} from "../../UI/Loading";
-import {NoData} from "../../UI/NoData";
-
-const STextField = styled(TextField)({
-    maxWidth: 100
-});
-
-export const TableCell = withStyles({
-    root: {
-        border: "none !important",
-        padding: "12px 16px !important",
-    }
-})(TC);
-
-export const HeaderTableCell = withStyles({
-    root: {
-        color: '#9FA2B4',
-        '& .distanceCell': {
-            display: 'flex',
-            flexDirection: 'column',
-            fontSize: 12,
-            lineHeight: '15px',
-            '& > span': {
-                fontWeight: 400
-            }
-        }
-    }
-})(TableCell)
-
-export const FirstCell = withStyles(({
-    root: {
-        color: '#9FA2B4',
-    }
-}))(TableCell)
-
-export const ButtonWrapper = styled('div')(() => ({
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginBottom: 20,
-}));
-
-export const WideButton = withStyles(() => ({
-    root: {
-        padding: '9px 42px'
-    }
-}))(Button)
-
-const Slider = withStyles((theme) => ({
-    rail: {
-        background: "#3261FB",
-        opacity: 1
-    },
-    track: {
-        background: "transparent",
-    },
-    mark: {
-        height: 4,
-        width: 1,
-    },
-    markLabel: {
-        top: 25,
-        color: "#9FA2B4",
-        fontWeight: 'bold',
-        fontSize: 12,
-    },
-    thumb: {
-        width: 18,
-        height: 18,
-        background: "#3261FB",
-        border: '2px solid #FFFFFF',
-        marginTop: -7,
-    },
-    valueLabel: {
-        top: -20,
-        left: -8,
-        transition: theme.transitions.create(["box-shadow"]),
-        '&:focus, &:hover, &:active': {
-            boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.2),0 0 0 1px rgba(0,0,0,0.02)',
-            '@media (hover: none)': {
-                boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)',
-            },
-        },
-        "&>span": {
-            boxShadow: "1px 4px 10px rgba(0, 44, 131, 0.3)",
-            width: 'fit-content',
-            height: 22,
-            transform: "none",
-            padding: 6,
-            "&>span": {
-                transform: "none",
-                color: theme.palette.text.primary,
-            },
-        }
-    }
-}))(ValueSlider);
+import {useException, useModal} from "../../utils/hooks";
+import AddDistanceRangeModal from "./AddDistanceRangeModal/AddDistanceRangeModal";
+import {IDistancePriceSettings, TDistanceRange} from "../../store/reducers/serviceValet/types";
+import {Loading} from "../../components/UI/Loading";
+import {NoData} from "../../components/UI/NoData";
+import {AncillaryPriceSlider} from "../../components/UI/AncillaryPriceSlider";
+import {FirstCell, HeaderTableCell, TableCell} from "../../components/styled/AncillaryPriceComponents";
+import {ButtonWrapper, STextField, WideButton} from "./styles";
+import {DemandTable} from "../../components/styled/DemandTable";
+import {TableRow} from "../../components/styled/TableRow";
 
 type TByDistanceProps = {
     data: IDistancePriceSettings[];
@@ -122,7 +27,7 @@ type TByDistanceProps = {
     isLoading: boolean;
 }
 
-const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave, onAddRange, isLoading }) => {
+const AncillaryPriceByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave, onAddRange, isLoading }) => {
     const [distanceData, setDistanceData] = useState<IDistancePriceSettings[]>([]);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<IDistancePriceSettings|null>(null);
@@ -330,7 +235,7 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                                             : item.costPerMile.toFixed(2)}
                                     </TableCell>
                                     <TableCell size="small">
-                                        <Slider
+                                        <AncillaryPriceSlider
                                             min={0}
                                             max={1}
                                             valueLabelDisplay="on"
@@ -365,9 +270,9 @@ const ByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave
                         </Menu>
                     </DemandTable>
             }
-            <AddDistanceRange open={isOpen} onClose={onClose} onAddRange={onAddRange}/>
+            <AddDistanceRangeModal open={isOpen} onClose={onClose} onAddRange={onAddRange}/>
         </div>
     );
 };
 
-export default ByDistance;
+export default AncillaryPriceByDistance;

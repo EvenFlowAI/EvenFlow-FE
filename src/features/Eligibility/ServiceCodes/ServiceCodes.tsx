@@ -9,9 +9,11 @@ import {
 } from "../../../store/reducers/pricingSettings/actions";
 import {NoItemsLoading} from "../../../components/UI/NoItemsLoading";
 import {TableBody, TableHead, Radio, RadioGroup, FormControlLabel} from "@material-ui/core";
-import {DemandTable, TableCell, TableRow} from "../../../components/Optimizer/AppointmentAllocation/UI";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
 import {headCellStyles, leftAlign, TableWrapper} from "../styles";
+import {DemandTable} from "../../../components/styled/DemandTable";
+import {TableRow} from "../../../components/styled/TableRow";
+import {TableCell} from "../../../components/styled/TableCell";
 
 export const ServiceCodes = () => {
     const [loading, setLoading] = useState<boolean>(false);

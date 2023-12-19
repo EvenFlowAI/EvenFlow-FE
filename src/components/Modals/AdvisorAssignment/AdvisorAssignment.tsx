@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {DemandTable, TableRow} from "../../Optimizer/AppointmentAllocation/UI";
 import {Button, TableBody, TableCell as TC, TableHead, withStyles} from "@material-ui/core";
 import {DialogProps} from "../types";
 import {makeStyles} from "@material-ui/core/styles";
@@ -11,6 +10,8 @@ import {EAdvisorAssignMethod, IAdvisorAssignment} from "../../../store/reducers/
 import {Loading} from "../../UI/Loading";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {loadAdvisorAssignment, updateAdvisorAssignment} from "../../../store/reducers/serviceCenters/actions";
+import {DemandTable} from "../../styled/DemandTable";
+import {TableRow} from "../../styled/TableRow";
 
 const useStyles = makeStyles(() => ({
     actionsWrapper: {

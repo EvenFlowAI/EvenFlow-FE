@@ -2,7 +2,6 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {SquarePaper} from "../../../components/styled/Paper";
 import {PaperTitle, TableContainer} from "../../../pages/admin/PricingSettings/UI";
 import {Box, Divider, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {DenseTable} from "../../../components/Optimizer/AppointmentAllocation/UI";
 import {useException, useSCs} from "../../../utils/hooks";
 import {loadTimeWindows, setTimeWindows} from "../../../store/reducers/pricingSettings/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -12,6 +11,7 @@ import {Caption} from "../../../components/UI/Caption";
 import {TextLink} from "../../../components/UI/TextLink";
 import {Routes} from "../../../config/routes";
 import {useStyles} from "./styles";
+import {DenseTable} from "../../../components/styled/DemandTable";
 
 export const DemandWindows = () => {
     const {timeWindows} = useSelector((state: RootState) => state.pricingSettings);

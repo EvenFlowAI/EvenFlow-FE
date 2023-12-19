@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {TableRow} from "../../../components/Optimizer/AppointmentAllocation/UI";
 import {TableBody, TableHead, Switch} from '@material-ui/core';
 import {EligibleSegmentTable, HeaderTableCell, TableCell} from "./styles";
 import {ECustomerSegmentMobileService, TSegmentType} from "./types";
+import {TableRow} from "../../../components/styled/TableRow";
 
 const data = [
     {

@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Loading} from "../../../components/UI/Loading";
 import {TableCell} from "../../../components/Modals/AdvisorAssignment/AdvisorAssignment";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
-import {DemandTable, TableRow} from "../../../components/Optimizer/AppointmentAllocation/UI";
 import {Button, TableBody, TableHead} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -12,6 +11,8 @@ import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {TEmailRequirement} from "../../../store/reducers/screenSettings/types";
 import {updateEmailRequirement} from "../../../store/reducers/screenSettings/actions";
 import {useStyles} from "./styles";
+import {DemandTable} from "../../../components/styled/DemandTable";
+import {TableRow} from "../../../components/styled/TableRow";
 
 export const EditEmailRequirementModal: React.FC<DialogProps> = ({onClose, ...props}) => {
     const {emailRequirement, isEmailRequirementLoading} = useSelector((state: RootState) => state.screenSettingsBooking);

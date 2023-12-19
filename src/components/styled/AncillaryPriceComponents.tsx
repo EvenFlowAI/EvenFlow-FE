@@ -1,5 +1,4 @@
 import {TableCell as TC, withStyles} from "@material-ui/core";
-import {DemandTable} from "../../../components/styled/DemandTable";
 
 export const TableCell = withStyles({
     root: {
@@ -11,14 +10,20 @@ export const TableCell = withStyles({
 export const HeaderTableCell = withStyles({
     root: {
         color: '#9FA2B4',
-        textTransform: "none",
+        '& .distanceCell': {
+            display: 'flex',
+            flexDirection: 'column',
+            fontSize: 12,
+            lineHeight: '15px',
+            '& > span': {
+                fontWeight: 400
+            }
+        }
     }
 })(TableCell)
 
-export const EligibleSegmentTable = withStyles({
+export const FirstCell = withStyles(({
     root: {
-        "& .MuiTableCell-root": {
-            textTransform: "none",
-        }
+        color: '#9FA2B4',
     }
-})(DemandTable)
+}))(TableCell)

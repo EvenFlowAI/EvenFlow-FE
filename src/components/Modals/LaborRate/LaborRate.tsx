@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {DemandTable, TableCell, TableRow} from "../../Optimizer/AppointmentAllocation/UI";
 import {Button, TableBody, TableHead} from "@material-ui/core";
 import {TextField} from "../../UI/TextField";
 import {DialogProps} from "../types";
@@ -11,6 +10,9 @@ import {useException, useMessage} from "../../../utils/hooks";
 import {loadLaborRate, updateLaborRate} from "../../../store/reducers/serviceCenters/actions";
 import {ILaborRate} from "../../../store/reducers/serviceCenters/types";
 import {Loading} from "../../UI/Loading";
+import {DemandTable} from "../../styled/DemandTable";
+import {TableRow} from "../../styled/TableRow";
+import {TableCell} from "../../styled/TableCell";
 
 const useStyles = makeStyles(() => ({
     actionsWrapper: {

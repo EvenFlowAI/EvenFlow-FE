@@ -16,8 +16,8 @@ import {useConfirm, useException, useMessage, useSCs} from "../../../utils/hooks
 import {useDispatch, useSelector} from "react-redux";
 import {IZonePriceSettings, TDistanceRange, TDistanceRangeUpdate} from "../../../store/reducers/serviceValet/types";
 import {RootState} from "../../../store/rootReducer";
-import ByDistance from "../../../components/Optimizer/AnicllaryPriceParts/ByDistance";
-import ByZone from "../../../components/Optimizer/AnicllaryPriceParts/ByZone";
+import AncillaryPriceByDistance from "../../AncillaryPriceByDistance/AncillaryPriceByDistance";
+import AncillaryPriceByZone from "../../AncillaryPriceByZone/AncillaryPriceByZone";
 import {Loading} from "../../../components/UI/Loading";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EAncillaryPriceType} from "../../../store/reducers/mobileService/types";
@@ -87,12 +87,12 @@ const AncillaryPrice = () => {
         {
             id: "0",
             label: "Ancillary Price By Zone",
-            component: <ByZone onUpdate={onSaveZonePricing} data={pricingByZones} isLoading={isLoading}/>
+            component: <AncillaryPriceByZone onUpdate={onSaveZonePricing} data={pricingByZones} isLoading={isLoading}/>
         },
         {
             id: "1",
             label: "Ancillary Price By Distance",
-            component: <ByDistance
+            component: <AncillaryPriceByDistance
                 data={pricingByDistance}
                 onItemSave={onSave}
                 onItemDelete={onDelete}

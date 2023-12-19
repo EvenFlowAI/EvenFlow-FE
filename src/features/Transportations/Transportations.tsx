@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {SquarePaper} from "../../components/styled/Paper";
 import {TableContainer} from "../../pages/admin/PricingSettings/UI";
 import {NoItemsLoading} from "../../components/UI/NoItemsLoading";
-import {DemandTable, TableCell, TableRow} from "../../components/Optimizer/AppointmentAllocation/UI";
 import {IconButton, Menu, MenuItem, Switch, TableBody, TableHead} from "@material-ui/core";
 import {getTransportationOptionString} from "../../utils/utils";
 import {ETransportColumn, ITransportationOptionFull} from "../../store/reducers/transportationNeeds/types";
@@ -17,6 +16,9 @@ import {useException, useModal, useSCs} from "../../utils/hooks";
 import {headCellStyles, TableWrapper} from "./styles";
 import {EditTransportationModal} from "./EditTransportationModal/EditTransportationModal";
 import {EditTransportationDescriptionModal} from "./EditTransportationDescriptionModal/EditTransportationDescriptionModal";
+import {DemandTable} from "../../components/styled/DemandTable";
+import {TableRow} from "../../components/styled/TableRow";
+import {TableCell} from "../../components/styled/TableCell";
 
 const leftAlign = {
     textAlign: "left" as const
@@ -88,7 +90,6 @@ export const Transportations = () => {
                             <TableHead>
                                 <TableRow>
                                     <TableCell
-                                        // width={360}
                                         key="1"
                                         style={{...headCellStyles, ...leftAlign}}>
                                         Service needs

@@ -5,7 +5,6 @@ import {IAssignedServiceRequestShort} from "../../store/reducers/serviceRequests
 import {useDispatch, useSelector} from "react-redux";
 import {PaperTitle, TableContainer} from "../../pages/admin/PricingSettings/UI";
 import {Box, Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {DenseTable} from "../../components/Optimizer/AppointmentAllocation/UI";
 import moment from "moment";
 import {mappedCalculationsSelector} from "../../store/reducers/pricingSettings/selectors";
 import {
@@ -22,6 +21,7 @@ import {loadSCRequestsShort} from "../../store/reducers/serviceRequests/actions"
 import {RootState} from "../../store/rootReducer";
 import {TEnumMap} from "../../store/reducers/utils";
 import {TableWrapper, Label} from "./styles";
+import {DenseTable} from "../../components/styled/DemandTable";
 
 export const PricingOptimization = () => {
     const [sr, setSr] = useState<IAssignedServiceRequestShort|null>(null);

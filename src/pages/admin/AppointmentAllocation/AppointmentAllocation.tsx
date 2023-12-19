@@ -1,15 +1,15 @@
 import React, {useState} from "react";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TitleContainer} from "../../Content/TitleContainer/TitleContainer";
-import {optimizerRoot} from "../utils";
-import {TabList} from "../../styled/Tabs";
+import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
+import {optimizerRoot} from "../../../components/Optimizer/utils";
+import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
-import {ScheduledAppointments} from "./ScheduledAppointments";
-import RoPredictionParameters from "./RoPredictionParameters";
-import {OverbookingFactor} from "./OverbookingFactor";
-import {UnplannedDemand} from "./UnplannedDemand";
+import {ScheduledAppointments} from "../../../features/ScheduledAppointments/ScheduledAppointments";
+import RoPredictionParameters from "../../../features/RoPredictionParameters/RoPredictionParameters";
+import {OverbookingFactor} from "../../../features/OverbookingFactor/OverbookingFactor";
+import {UnplannedDemand} from "../../../features/UnplannedDemand/UnplannedDemand";
 
-export const AppointmentAllocationPage = () => {
+export const AppointmentAllocation = () => {
     const [selectedTab, setTab] = useState<string>("0");
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
         setTab(tab);

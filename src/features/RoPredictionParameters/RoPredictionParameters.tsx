@@ -1,42 +1,17 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {DemandTable, SaveEditBlock, TableCell, TableRow} from "./UI";
 import {TableBody, TableHead} from "@material-ui/core";
-import {TextField} from "../../UI/TextField";
-import {makeStyles} from "@material-ui/core/styles";
+import {TextField} from "../../components/UI/TextField";
 import {useDispatch, useSelector} from "react-redux";
-import {useException, useMessage} from "../../../utils/hooks";
-import {RootState} from "../../../store/rootReducer";
-import {loadPredictionParams, updatePredictionParams} from "../../../store/reducers/serviceCenters/actions";
-import {IPredictionParams} from "../../../store/reducers/serviceCenters/types";
-import {Loading} from "../../UI/Loading";
-
-const useStyles = makeStyles(() => ({
-    laborPerHour: {
-        width: 'fit-content',
-        fontSize: 18,
-        fontWeight: "bold",
-        background: "#FFFFFF",
-        borderRadius: 3,
-        padding: 16,
-        marginBottom: 30,
-    },
-    note: {
-        display: "flex",
-        alignItems: 'center',
-        marginBottom: 30,
-    },
-    text: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginLeft: 16,
-    },
-    link: {
-        color: "blue",
-        textDecoration: "underline",
-        marginLeft: 10,
-        cursor: "pointer",
-    }
-}))
+import {useException, useMessage} from "../../utils/hooks";
+import {RootState} from "../../store/rootReducer";
+import {loadPredictionParams, updatePredictionParams} from "../../store/reducers/serviceCenters/actions";
+import {IPredictionParams} from "../../store/reducers/serviceCenters/types";
+import {Loading} from "../../components/UI/Loading";
+import {useStyles} from "./styles";
+import {DemandTable} from "../../components/styled/DemandTable";
+import {TableRow} from "../../components/styled/TableRow";
+import {TableCell} from "../../components/styled/TableCell";
+import {SaveEditBlock} from "../../components/UI/SaveEditBlock";
 
 const fixedToTwo = /(^-?\d*\.?\d{1,2}?)$/;
 
@@ -245,8 +220,8 @@ const RoPredictionParameters = () => {
                     </TableBody>
                 </DemandTable>
             }
-                </div>
-                );
-            };
+        </div>
+    );
+};
 
-            export default RoPredictionParameters;
+export default RoPredictionParameters;

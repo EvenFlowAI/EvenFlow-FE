@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {DenseTable} from "../../../components/Optimizer/AppointmentAllocation/UI";
 import {EditButton} from "../../../components/UI/Button";
 import {PriceLevelsModal} from "../PriceLevelsModal/PriceLevelsModal";
 import {useModal, useSCs} from "../../../utils/hooks";
@@ -11,6 +10,7 @@ import {RootState} from "../../../store/rootReducer";
 import {PaperTitle, TableContainer} from "../../../pages/admin/PricingSettings/UI";
 import {SquarePaper} from "../../../components/styled/Paper";
 import {useStyles} from "./styles";
+import {DenseTable} from "../../../components/styled/DemandTable";
 
 export const DemandWindows = () => {
     const {pricingLevels} = useSelector((state: RootState) => state.pricingSettings)

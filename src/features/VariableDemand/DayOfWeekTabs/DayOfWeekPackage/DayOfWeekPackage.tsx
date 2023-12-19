@@ -9,12 +9,12 @@ import {
 } from "../../../../store/reducers/pricingSettings/actions";
 import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {Loading} from "../../../../components/UI/Loading";
-import {DenseTable} from "../../../../components/Optimizer/AppointmentAllocation/UI";
 import EditDayOFWeekPackage from "../../EditDayOFWeekPackageModal/EditDayOFWeekPackageModal";
 import {TMPackage, SliderObject, SliderRange} from "../../types";
 import {useStyles} from "./styles";
 import {Slider} from "../../../../components/styled/Slider";
 import AddPackageToPricingModal from "../../AddPackageToPricingModal/AddPackageToPricingModal";
+import {DenseTable} from "../../../../components/styled/DemandTable";
 
 const DayOfWeekPackage = () => {
     const { mpPricingSettings, isLoading } = useSelector((state: RootState) => state.pricingSettings);

@@ -7,7 +7,7 @@ import {CapacitySettings} from "../../../components/Optimizer/CapacitySettings/C
 import {AppointmentValueSettings} from "../AppointmentValueSettings/AppointmentValueSettings";
 import {AppointmentSlotScoring} from "../AppointmentSlotScoring/AppointmentSlotScoring";
 import { OptimizationWindowsPage } from "../../../components/Optimizer/OptimizationWindows/OptimizationWindowsPage";
-import {AppointmentAllocationPage} from "../../../components/Optimizer/AppointmentAllocation/AppointmentAllocationPage";
+import {AppointmentAllocation} from "../AppointmentAllocation/AppointmentAllocation";
 import {ServiceRequests} from "../ServiceRequests/ServiceRequests";
 import ManageAppointments from "../../../components/Optimizer/ManageAppointments/ManageAppointments";
 import Pods from "../../../components/Optimizer/Pods/Pods";
@@ -21,7 +21,7 @@ export const CapacityManagement = () => {
             <PrivateRoute path={Routes.Optimizer.AppointmentValue} component={AppointmentValueSettings} />
             <PrivateRoute path={Routes.Optimizer.CapacitySettings} component={CapacitySettings} />
             <PrivateRoute path={Routes.Optimizer.AppointmentSlotScoring} component={AppointmentSlotScoring} />
-            <PrivateRoute path={Routes.Optimizer.AppointmentAllocation} component={AppointmentAllocationPage} />
+            <PrivateRoute path={Routes.Optimizer.AppointmentAllocation} component={AppointmentAllocation} />
             <PrivateRoute path={Routes.Optimizer.OptimizationWindows} component={OptimizationWindowsPage} />
             <PrivateRoute path={Routes.Optimizer.Pods} component={Pods} />
             <PrivateRoute path={Routes.Optimizer.ManageEXEvenFlowAppointments} component={ManageAppointments} />

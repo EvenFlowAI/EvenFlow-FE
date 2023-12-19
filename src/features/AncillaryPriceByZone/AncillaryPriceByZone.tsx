@@ -1,82 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import {
-    styled,
     TableHead,
-    withStyles,
     TableBody,
     Menu,
     MenuItem,
     IconButton,
     Button
 } from "@material-ui/core";
-import {DemandTable, TableRow} from "../AppointmentAllocation/UI";
-import {ValueSlider} from "../../styled/ValueSlider";
 import {MoreHoriz} from "@material-ui/icons";
-import {TextField} from "../../UI/TextField";
-import {HeaderTableCell, FirstCell, TableCell} from "./ByDistance";
-import {IZonePriceSettings} from "../../../store/reducers/serviceValet/types";
-import {NoData} from "../../UI/NoData";
-import {Loading} from "../../UI/Loading";
-import {useException} from "../../../utils/hooks";
-
-export const TablesWrapper = styled('div')({
-    padding: 24,
-    border: '1px solid #DADADA',
-    backgroundColor: "#FFFFFF",
-})
-
-const STextField = styled(TextField)({
-    maxWidth: 100
-});
-
-const Slider = withStyles((theme) => ({
-    rail: {
-        background: "#3261FB",
-        opacity: 1
-    },
-    track: {
-        background: "transparent",
-    },
-    mark: {
-        height: 4,
-        width: 1,
-    },
-    markLabel: {
-        top: 25,
-        color: "#9FA2B4",
-        fontWeight: 'bold',
-        fontSize: 12,
-    },
-    thumb: {
-        width: 18,
-        height: 18,
-        background: "#3261FB",
-        border: '2px solid #FFFFFF',
-        marginTop: -7,
-    },
-    valueLabel: {
-        top: -20,
-        left: -8,
-        transition: theme.transitions.create(["box-shadow"]),
-        '&:focus, &:hover, &:active': {
-            boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.2),0 0 0 1px rgba(0,0,0,0.02)',
-            '@media (hover: none)': {
-                boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)',
-            },
-        },
-        "&>span": {
-            boxShadow: "1px 4px 10px rgba(0, 44, 131, 0.3)",
-            width: 'fit-content',
-            height: 22,
-            transform: "none",
-            padding: 6,
-            "&>span": {
-                transform: "none",
-                color: theme.palette.text.primary,
-            },
-        }
-    }
-}))(ValueSlider);
+import {HeaderTableCell, FirstCell, TableCell} from "../../components/styled/AncillaryPriceComponents";
+import {IZonePriceSettings} from "../../store/reducers/serviceValet/types";
+import {NoData} from "../../components/UI/NoData";
+import {Loading} from "../../components/UI/Loading";
+import {useException} from "../../utils/hooks";
+import {STextField} from "../AncillaryPriceByDistance/styles";
+import {AncillaryPriceSlider} from "../../components/UI/AncillaryPriceSlider";
+import {DemandTable} from "../../components/styled/DemandTable";
+import {TableRow} from "../../components/styled/TableRow";
 
 type TByZoneProps = {
     data: IZonePriceSettings[];
@@ -84,7 +24,7 @@ type TByZoneProps = {
     isLoading: boolean;
 }
 
-const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
+const AncillaryPriceByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
     const [zonesData, setZonesData] = useState<IZonePriceSettings[]>([]);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<IZonePriceSettings|null>(null);
@@ -148,9 +88,6 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
             } else {
                 onUpdate(editedItem)
             }
-            // if (editedItem.serviceMultiplier === 0 && editedItem.flatFee === 0) {
-            //     showError( "Service Multiplier' or 'Flat Fee' must be greater than 0")
-            // } else
         }
     }
 
@@ -213,7 +150,7 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
                                     : item.flatFee.toFixed(2)}
                             </TableCell>
                             <TableCell size="small">
-                                <Slider
+                                <AncillaryPriceSlider
                                     min={0}
                                     max={1}
                                     valueLabelDisplay="on"
@@ -243,4 +180,4 @@ const ByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
             : <NoData/>
 };
 
-export default ByZone;
+export default AncillaryPriceByZone;

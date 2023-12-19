@@ -1,47 +1,12 @@
 import React, {useState} from 'react';
-import {TextField} from "../../UI/TextField";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {DialogProps} from "../types";
+import {TextField} from "../../../components/UI/TextField";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {DialogProps} from "../../../components/Modals/types";
 import {Button, Divider} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
 import {TDistanceRange} from "../../../store/reducers/serviceValet/types";
+import {useStyles} from "./styles";
 
-const useStyles = makeStyles(() => ({
-    label: {
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        fontSize: 12,
-        marginBottom: 10,
-        color: 'black',
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-    wrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    cancelButton: {
-        color: '#9FA2B4',
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-    },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        }
-    },
-}))
-
-const AddDistanceRange: React.FC<DialogProps & {onAddRange: (data: TDistanceRange) => void}> = (props) => {
+const AddDistanceRangeModal: React.FC<DialogProps & {onAddRange: (data: TDistanceRange) => void}> = (props) => {
     const [rangeMin, setRangeMin] = useState<number|''>('');
     const [rangeMax, setRangeMax] = useState<number|''>('');
     const [costPerMile, setCostPerMile] = useState<number|''>('');
@@ -139,4 +104,4 @@ const AddDistanceRange: React.FC<DialogProps & {onAddRange: (data: TDistanceRang
     );
 };
 
-export default AddDistanceRange;
+export default AddDistanceRangeModal;
