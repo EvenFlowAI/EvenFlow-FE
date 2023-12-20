@@ -4,7 +4,7 @@ import Zones from "../Zones/Zones";
 import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {TZipCode, TZone} from "../../../store/reducers/mobileService/types";
 import AddEditGeographicZone from "../../../components/Modals/admin/EditGeographicZone/AddEditGeographicZone";
-import RemoveZipCode from "../../../components/Modals/RemoveZipCode/RemoveZipCode";
+import RemoveZipCode from "../../../components/Modals/admin/RemoveZipCode/RemoveZipCode";
 import {useDispatch} from "react-redux";
 import {
     loadServiceValetZones,

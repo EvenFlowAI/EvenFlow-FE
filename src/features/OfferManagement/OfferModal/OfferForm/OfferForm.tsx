@@ -15,7 +15,7 @@ import {autocompleteOptionsRender, autocompleteRender} from "../../../../compone
 import clsx from "clsx";
 import {DatePicker, TimePicker} from "../../../../components/UI/DateTimePickers";
 import {DateRange, QueryBuilder} from "@material-ui/icons";
-import {DialogContent} from "../../../../components/Modals/BaseModal";
+import {DialogContent} from "../../../../components/BaseModal/BaseModal";
 import {selectAllSR, TAutoChangeEvent, TOfferForm} from "../../types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";

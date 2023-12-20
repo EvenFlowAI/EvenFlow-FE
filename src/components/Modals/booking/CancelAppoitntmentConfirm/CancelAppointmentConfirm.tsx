@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../../types";
-import {BaseModal, DialogContent, DialogTitle} from "../../BaseModal";
+import {DialogProps} from "../../../BaseModal/types";
+import {BaseModal, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {Actions} from "../../../AppointmentFlow/AppointmentFrame/Actions";
 import {IAppointmentByQuery} from "../../../../api/types";
 import {API} from "../../../../api/api";

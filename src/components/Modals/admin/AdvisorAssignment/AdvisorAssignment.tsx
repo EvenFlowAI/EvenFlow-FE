@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {Button, TableBody, TableHead} from "@material-ui/core";
-import {DialogProps} from "../../types";
+import {DialogProps} from "../../../BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useException, useMessage} from "../../../../utils/hooks";

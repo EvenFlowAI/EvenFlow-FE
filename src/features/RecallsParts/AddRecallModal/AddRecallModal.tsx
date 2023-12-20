@@ -1,7 +1,7 @@
 import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
 import {ICreateUpdateRecall, IRecall} from "../../../store/reducers/recall/types";
-import {DialogProps} from "../../../components/Modals/types";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {useException, useSCs} from "../../../utils/hooks";

@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {Button, Divider, IconButton} from "@material-ui/core";
-import {DialogProps} from "../../types";
+import {DialogProps} from "../../../BaseModal/types";
 import {TZipCode, TZone, TZoneNew, TZonesServiceType, TZoneUpdate} from "../../../../store/reducers/mobileService/types";
 import {TextField} from "../../../UI/TextField";
 import {Close} from "@material-ui/icons";

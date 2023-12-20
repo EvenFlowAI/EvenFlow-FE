@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../BaseModal";
-import {DialogProps} from "../types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
+import {DialogProps} from "../../BaseModal/types";
 import {Editor} from "react-draft-wysiwyg";
 import {convertToRaw, EditorState} from "draft-js";
 import {convertToHTML, convertFromHTML} from "draft-convert";

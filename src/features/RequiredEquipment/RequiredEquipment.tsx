@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {loadBays, removeBay, setPageData} from "../../store/reducers/bays/actions";
 import {CreateBayModal} from "./CreateBayModal/CreateBayModal";
-import {TViewMode} from "../../components/Modals/types";
+import {TViewMode} from "../../components/BaseModal/types";
 import {useStyles} from "./styles";
 
 const rowData: TableRowDataType<IBay>[] = [

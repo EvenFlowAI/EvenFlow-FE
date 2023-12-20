@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {DialogProps} from "../../../components/Modals/types";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {TableRowDataType} from "../../../components/UI/types";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {Button, Radio} from "@material-ui/core";
@@ -12,7 +12,7 @@ import {
     setNonSelectedFilter,
     setNonSelectedPageData
 } from "../../../store/reducers/serviceRequests/actions";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
 import {SearchInput} from "../../../components/UI/SearchInput";
 import {LoadingButton} from "../../../components/UI/Button";
 import {updatePackageOptions} from "../../../store/reducers/packages/actions";

@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, SetStateAction, Dispatch} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Button} from "@material-ui/core";
-import {DialogProps} from "../../types";
+import {DialogProps} from "../../../BaseModal/types";
 import {TableRowDataType} from "../../../UI/types";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../store/rootReducer";
 import {Table} from "../../../UI/Table";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {SearchInput} from "../../../UI/SearchInput";
 import {usePagination, useSCs} from "../../../../utils/hooks";
 import {

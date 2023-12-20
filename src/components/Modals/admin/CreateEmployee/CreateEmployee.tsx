@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {AvatarContainer, BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal";
-import {DialogProps} from "../../types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
+import {DialogProps} from "../../../BaseModal/types";
 import {Button, Divider, Grid} from "@material-ui/core";
 import {TTechnicianLevel} from "../../../../types/types";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
@@ -23,6 +23,7 @@ import {checkEmail, validatePhoneNumber} from "../../../../utils/utils";
 import {AdvisorForm} from "./AdvisorForm/AdvisorForm";
 import {TechnicianForm} from "./TechnicianForm/TechnicianForm";
 import {initialAdvisorForm, initialTechnicianForm} from "./constants";
+import {AvatarWrapper} from "../../../AvatarWrapper/AvatarWrapper";
 
 export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAction, ...props}) => {
     const [shortSC, shortLoading, savingE, savingU, DmsAdvisors, loadingDMSAdvisors] = useSelector((state: RootState) => [
@@ -274,7 +275,7 @@ export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAct
                 </Grid>
             </Grid> : null}
             {isEdit ? null : <Divider />}
-            <AvatarContainer onChange={(f) => setAvatar(f)} dataUrl={payload?.avatarPath} />
+            <AvatarWrapper onChange={(f) => setAvatar(f)} dataUrl={payload?.avatarPath} />
             {role === Roles.Advisor
                 ? <AdvisorForm
                     formIsChecked={formIsChecked}

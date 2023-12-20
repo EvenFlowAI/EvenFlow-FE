@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {BaseModal, DialogTitle} from "../../BaseModal";
+import {BaseModal, DialogTitle} from "../../../BaseModal/BaseModal";
 import {LoadingButton} from "../../../UI/Button";
 import {useTranslation} from "react-i18next";
 import {Button} from "@material-ui/core";

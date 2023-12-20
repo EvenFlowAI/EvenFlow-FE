@@ -2,11 +2,10 @@ import React, {useEffect, useState} from "react";
 import {
     BaseModal,
     DialogContent,
-    DialogContentTitle,
     DialogTitle,
-    DialogActions, AvatarContainer
-} from "../../../components/Modals/BaseModal";
-import {DialogProps} from "../../../components/Modals/types";
+    DialogActions
+} from "../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {
     Divider, Button
 } from "@material-ui/core";
@@ -23,6 +22,8 @@ import {LoadingButton} from "../../../components/UI/Button";
 import {validatePhoneNumber} from "../../../utils/utils";
 import {FormElements} from "./FormElements/FormElements";
 import {initialCPState, initialStateDealershipState, requiredFields, elementsGroup1, elementsGroup2} from "./constants";
+import {DialogContentTitle} from "../DialogContentTitle/DialogContentTitle";
+import {AvatarWrapper} from "../../../components/AvatarWrapper/AvatarWrapper";
 
 export const CreateDealershipGroupModal: React.FC<DialogProps> = props => {
     const [dealership, setDealership] = useState<IDealershipForm>({...initialStateDealershipState});
@@ -70,7 +71,7 @@ export const CreateDealershipGroupModal: React.FC<DialogProps> = props => {
     return <BaseModal {...props} onClose={props.onClose}>
         <DialogTitle onClose={props.onClose}>Add Dealership Group</DialogTitle>
         <DialogContent>
-            <AvatarContainer />
+            <AvatarWrapper />
 
             <DialogContentTitle
                 title="Dealership group info"

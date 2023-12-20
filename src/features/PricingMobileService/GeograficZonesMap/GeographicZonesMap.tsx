@@ -2,7 +2,7 @@ import React from 'react';
 import {Button} from "@material-ui/core";
 import EligibleCustomerSegment from "../EligibleCustomerSegment/EligibleCustomerSegment";
 import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
-import MapIframeLink from "../../../components/Modals/MapIframeLink/MapIframeLink";
+import MapIframeLink from "../../../components/Modals/admin/MapIframeLink/MapIframeLink";
 import {useDispatch} from "react-redux";
 import {saveLinkToMobServiceMap} from "../../../store/reducers/mobileService/actions";
 import {useStyles} from "./styles";

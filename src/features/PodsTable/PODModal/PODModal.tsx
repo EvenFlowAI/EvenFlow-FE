@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
-import {DialogProps} from "../../../components/Modals/types";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {EAppointmentType, EJobType, IPod, IPodForm} from "../../../store/reducers/pods/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
 import {useException, useMessage, useModal, useSCs} from "../../../utils/hooks";
 import {Button, Grid, Switch} from "@material-ui/core";
 import {LoadingButton} from "../../../components/UI/Button";

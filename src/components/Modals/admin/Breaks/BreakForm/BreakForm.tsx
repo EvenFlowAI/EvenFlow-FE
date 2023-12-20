@@ -1,6 +1,6 @@
 import React from "react";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import {TViewMode} from "../../../types";
+import {TViewMode} from "../../../../BaseModal/types";
 import {Button, Grid, IconButton, useMediaQuery, useTheme} from "@material-ui/core";
 import moment from "moment/moment";
 import {TimePicker} from "../../../../UI/DateTimePickers";

@@ -2,6 +2,8 @@ import {ThunkAction} from "redux-thunk";
 import {RootState} from "../store/rootReducer";
 import {Action} from "redux";
 import {TRole} from "../store/reducers/users/types";
+import React from "react";
+import {AutocompleteChangeDetails, AutocompleteChangeReason} from "@material-ui/lab";
 
 export type LinkType = {
     to: string;
@@ -93,3 +95,10 @@ export type TOption = {
 }
 export type TCallback = () => void;
 export type TArgCallback<T> = (arg: T) => void;
+
+export type TSelectChange = (
+    e: React.ChangeEvent<{}>,
+    value: string | null,
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<string> | undefined
+) => void;

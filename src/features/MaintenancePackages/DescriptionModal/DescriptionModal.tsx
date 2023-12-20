@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {BaseModal, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
-import {DialogProps} from "../../../components/Modals/types";
+import {BaseModal, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Delete, EditOutlined} from "@material-ui/icons";

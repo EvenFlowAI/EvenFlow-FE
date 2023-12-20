@@ -1,7 +1,7 @@
 import React from 'react';
 import {useTranslation} from "react-i18next";
-import {DialogProps} from "../../types";
-import {BaseModal, DialogTitle} from "../../BaseModal";
+import {DialogProps} from "../../../BaseModal/types";
+import {BaseModal, DialogTitle} from "../../../BaseModal/BaseModal";
 import {LoadingButton} from "../../../UI/Button";
 import {TCallback} from "../../../../types/types";
 import {useStyles} from "./styles";

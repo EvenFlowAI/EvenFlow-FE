@@ -6,8 +6,8 @@ import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/h
 import {updateWaitListSettings} from "../../../store/reducers/optimizationWindows/actions";
 import {TextField} from "../../../components/UI/TextField";
 import {Button, Switch} from "@material-ui/core";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
-import {DialogProps} from "../../../components/Modals/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {SwitcherLabel} from "../styles";
 import {useStyles} from "./styles";
 

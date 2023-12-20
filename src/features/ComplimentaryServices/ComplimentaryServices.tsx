@@ -18,7 +18,7 @@ import {MoreHoriz} from "@material-ui/icons";
 import {Api} from "../../config/requests";
 import {optimizerRoot, SC_UNDEFINED} from "../../config/constants";
 import AddServiceManually from "./AddServiceManually/AddServiceManually";
-import {OPsCodesListDialog} from "../../components/Modals/OPsCodesListDialog/OPsCodesListDialog";
+import {OPsCodesListDialog} from "../../components/Modals/admin/OPsCodesListDialog/OPsCodesListDialog";
 import {addOpsCodeFromList, loadAllComplimentary} from "../../store/reducers/complimentary/actions";
 import {IOrder} from "../../types/types";
 

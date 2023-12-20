@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useException, useMessage, useSCs} from "../../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
-import {DialogProps} from "../../../types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal";
+import {DialogProps} from "../../../../BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../BaseModal/BaseModal";
 import {Button, Divider, MenuItem, Select} from "@material-ui/core";
 import {TReassignZip, TZipCode, TZone, TZonesServiceType} from "../../../../../store/reducers/mobileService/types";
 import {TextField} from "../../../../UI/TextField";

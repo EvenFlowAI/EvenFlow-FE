@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
 import {Button, Divider, IconButton} from "@material-ui/core";
-import {DialogProps} from "../../../components/Modals/types";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {AddCircleOutline} from "@material-ui/icons";
 import {TextField} from "../../../components/UI/TextField";
 import {Chip} from "../../../components/Chip/Chip";

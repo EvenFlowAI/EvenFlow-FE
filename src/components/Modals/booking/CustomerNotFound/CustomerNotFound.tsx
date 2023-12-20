@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
-import {BaseModal} from "../../BaseModal";
-import {DialogProps} from "../../types";
+import {BaseModal} from "../../../BaseModal/BaseModal";
+import {DialogProps} from "../../../BaseModal/types";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../../UI/Button";
 import {useStyles} from "./styles";

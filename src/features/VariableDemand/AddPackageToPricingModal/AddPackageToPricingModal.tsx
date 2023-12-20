@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
 import {Table} from "../../../components/UI/Table";
 import {Button} from "@material-ui/core";
 import {TNewPackagesToPricing} from "../../../store/reducers/pricingSettings/types";
@@ -8,7 +8,7 @@ import {IPackageOptionShort} from "../../../store/reducers/packages/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useException, useSCs} from "../../../utils/hooks";
-import {DialogProps} from "../../../components/Modals/types";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {TableRowDataType} from "../../../components/UI/types";
 import Checkbox from "../../../components/UI/Checkbox";
 

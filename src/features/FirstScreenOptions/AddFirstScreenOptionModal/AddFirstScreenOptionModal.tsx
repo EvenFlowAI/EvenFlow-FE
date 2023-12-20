@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import {TextField} from "../../../components/UI/TextField";
 import {Autocomplete} from "@material-ui/lab";
@@ -9,7 +9,7 @@ import {setAssignedFilter} from "../../../store/reducers/serviceRequests/actions
 import {useDispatch, useSelector} from "react-redux";
 import {useException, useSCs} from "../../../utils/hooks";
 import {IIconState} from "../../ServiceCategories/AddServiceCategoryModal/types";
-import {DialogProps} from "../../../components/Modals/types";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {IFirstScreenOption, TNewFirstScreenOption, TUpdateFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {TOption} from "../../../types/types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";

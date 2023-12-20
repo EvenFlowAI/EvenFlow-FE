@@ -1,6 +1,6 @@
 import React, {useEffect, useState, Dispatch, SetStateAction, useCallback} from 'react';
-import {BaseModal, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
-import {DialogProps} from "../../../components/Modals/types";
+import {BaseModal, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {IPackageById, IPackageOptionDetailed, TExtendedService, TIntervalUpsellForPackage} from "../../../api/types";
 import {TableContainer, TableRow, Table, TableHead, TableCell, TableBody, IconButton, Button} from "@material-ui/core";
 import {CheckBoxOutlineBlank, CheckBoxOutlined, Close} from "@material-ui/icons";

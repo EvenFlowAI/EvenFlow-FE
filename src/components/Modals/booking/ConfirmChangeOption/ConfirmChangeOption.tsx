@@ -1,7 +1,7 @@
 import React from 'react';
-import {BaseModal, DialogTitle, DialogActions} from "../../BaseModal";
+import {BaseModal, DialogTitle, DialogActions} from "../../../BaseModal/BaseModal";
 import {LoadingButton} from "../../../UI/Button";
-import {DialogProps} from "../../types";
+import {DialogProps} from "../../../BaseModal/types";
 import {useTranslation} from "react-i18next";
 
 type TConfirmProps = DialogProps & {

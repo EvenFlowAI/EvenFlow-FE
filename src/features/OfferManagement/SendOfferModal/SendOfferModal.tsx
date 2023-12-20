@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
-import {DialogProps} from "../../../components/Modals/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {Button, FormControlLabel, Grid, Radio, RadioGroup} from "@material-ui/core";
 import {LoadingButton} from "../../../components/UI/Button";
 import {useException, useMessage} from "../../../utils/hooks";

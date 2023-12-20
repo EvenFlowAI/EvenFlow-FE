@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps} from "../../../components/Modals/types";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {
     IAssignedServiceRequest, IServiceRequestOverride,
     IServiceRequestOverrideEditRequest
 } from "../../../store/reducers/serviceRequests/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
 import {Button, Grid} from "@material-ui/core";
 import {TextField} from "../../../components/UI/TextField";
 import {LoadingButton} from "../../../components/UI/Button";

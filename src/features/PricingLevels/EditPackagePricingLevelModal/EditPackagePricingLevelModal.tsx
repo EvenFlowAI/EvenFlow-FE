@@ -3,10 +3,10 @@ import {useDispatch} from "react-redux";
 import {useException, useSCs} from "../../../utils/hooks";
 import {EDemandCategory} from "../../../store/reducers/pricingSettings/types";
 import {updateMPPricingLevels} from "../../../store/reducers/pricingSettings/actions";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
 import {TextField} from "../../../components/UI/TextField";
 import {Box, Button, Divider} from "@material-ui/core";
-import {DialogProps} from "../../../components/Modals/types";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {TPackagePricingLevel, TUpdatedSettings} from "../types";
 import {useEditPricingLevelStyles} from "../styles";
 

@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from "react";
 import {Button, Divider, Grid} from "@material-ui/core";
-import {BaseModal, DialogContent, DialogTitle, DialogActions} from '../Modals/BaseModal';
+import {BaseModal, DialogContent, DialogTitle, DialogActions} from '../BaseModal/BaseModal';
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {useConfirm} from "../../utils/hooks";

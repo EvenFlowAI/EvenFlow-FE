@@ -25,7 +25,7 @@ import Vehicle from "./confirmationSections/Vehicle";
 import ServiceRequests from "./confirmationSections/ServiceRequests";
 import DetailedFees from "../../Modals/booking/DetailedFees/DetailedFees";
 import Address from "./confirmationSections/Address";
-import PaymentType from "../../Modals/PaymentType/PaymentType";
+import PaymentType from "../../Modals/booking/PaymentType/PaymentType";
 import ServiceType from "./confirmationSections/ServiceType";
 import {useTranslation} from "react-i18next";
 import {isMobile} from 'react-device-detect';

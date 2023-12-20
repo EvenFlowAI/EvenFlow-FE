@@ -1,7 +1,7 @@
 import React from 'react';
-import {BaseModal, DialogContent, DialogTitle} from "../../BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {EmployeeScheduleCalendar} from "../../../../features/EmployeeScheduleCalendar/EmployeeScheduleCalendar";
-import {DialogProps} from "../../types";
+import {DialogProps} from "../../../BaseModal/types";
 
 export const EmployeeSchedule: React.FC<DialogProps> = (props) => {
     return (

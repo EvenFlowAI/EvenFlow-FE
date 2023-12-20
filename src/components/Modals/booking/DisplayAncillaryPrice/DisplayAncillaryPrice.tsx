@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {useDialogStyles} from "../../../../sharedStyles/useDialogStyles";
-import {BaseModal, DialogContent, DialogTitle} from "../../BaseModal";
-import {DialogProps} from "../../types";
+import {BaseModal, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
+import {DialogProps} from "../../../BaseModal/types";
 import {useTranslation} from "react-i18next";
 import {Actions} from "../../../AppointmentFlow/AppointmentFrame/Actions";
 import {useDispatch, useSelector} from "react-redux";

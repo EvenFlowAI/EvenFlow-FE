@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
-import {DialogProps} from "../../../components/Modals/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
+import {DialogProps} from "../../../components/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
 import {makeStyles} from "@material-ui/core/styles";
 import {TextField} from "../../../components/UI/TextField";
 import {AddCircleOutline} from "@material-ui/icons";

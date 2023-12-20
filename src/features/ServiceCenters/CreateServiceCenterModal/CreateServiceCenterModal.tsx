@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {AvatarContainer, BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
-import {DialogProps} from "../../../components/Modals/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {states} from "../../../config/constants";
 import {Button} from "@material-ui/core";
-import {ModalForm, TFormItem, TSelectChange} from "../../../components/Modals/ModalForm";
+import {CreateServiceCenterForm} from "../CreateServiceCenterForm/CreateServiceCenterForm";
 import {useDispatch, useSelector} from "react-redux";
 import {IServiceCenterForm} from "../../../store/reducers/serviceCenters/types";
 import {useException, useMessage} from "../../../utils/hooks";
@@ -12,6 +12,9 @@ import {LoadingButton} from "../../../components/UI/Button";
 import {RootState} from "../../../store/rootReducer";
 import {API} from "../../../api/api";
 import {checkEmail, validatePhoneNumber} from "../../../utils/utils";
+import {AvatarWrapper} from "../../../components/AvatarWrapper/AvatarWrapper";
+import {TSelectChange} from "../../../types/types";
+import {TFormItem} from "../types";
 
 type TSCFormState = {
     scName: string;
@@ -181,8 +184,8 @@ export const CreateServiceCenterModal:
                         ? "Update" : "Add"} Service Center
             </DialogTitle>
             <DialogContent>
-                <AvatarContainer disabled={readOnly} dataUrl={payload?.avatarPath} onChange={(f: File) => setAvatar(f)} />
-                <ModalForm
+                <AvatarWrapper disabled={readOnly} dataUrl={payload?.avatarPath} onChange={(f: File) => setAvatar(f)} />
+                <CreateServiceCenterForm
                     formIsChecked={formIsChecked}
                     readOnly={readOnly}
                     items={formItems}

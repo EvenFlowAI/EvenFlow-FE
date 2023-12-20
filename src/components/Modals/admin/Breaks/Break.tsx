@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps, TViewMode} from "../../types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal";
+import {DialogProps, TViewMode} from "../../../BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import moment from "moment";
 import {LoadingButton} from "../../../UI/Button";

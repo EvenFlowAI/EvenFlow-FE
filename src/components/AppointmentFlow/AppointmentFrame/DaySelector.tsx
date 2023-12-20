@@ -10,7 +10,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import {useModal} from "../../../utils/hooks";
-import PromptNewSearchRange from "../../Modals/PromptNewSearchRange/PromptNewSearchRange";
+import PromptNewSearchRange from "../../Modals/booking/PromptNewSearchRange/PromptNewSearchRange";
 import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {
     selectAppointment,

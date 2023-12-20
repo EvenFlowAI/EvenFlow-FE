@@ -35,9 +35,9 @@ import {Routes} from "../../config/routes";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
 import AskChangesCompleted from "../Modals/booking/AskChangesCompleted/AskChangesCompleted";
-import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
+import SlotImpactedWarning from "../Modals/booking/SlotImpactedWarning/SlotImpactedWarning";
 import {setServiceWarningOpen, setSlotsWarningOpen} from "../../store/reducers/modals/actions";
-import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
+import ServiceImpactedWarning from "../Modals/booking/ServiceImpactedWarning/ServiceImpactedWarning";
 import {checkPodChanged} from "../../store/reducers/appointments/actions";
 
 type TProps = {

@@ -2,151 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadRepairHistory} from "../../../store/reducers/enhancedCustomerSearch/actions";
-import {BaseModal, DialogContent, DialogTitle} from "../BaseModal";
-import {DialogProps} from "../types";
-import {Button, Divider, Table, TableBody, TableCell, TableHead, TableRow, withStyles} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import {BaseModal, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
+import {DialogProps} from "../../BaseModal/types";
+import {Button, Divider, Table, TableBody, TableHead, TableRow} from "@material-ui/core";
 import moment from "moment";
 import {Loading} from "../../UI/Loading";
 import classnames from 'classnames';
 import {NoData} from "../../UI/NoData";
-
-const useStyles = makeStyles({
-    wrapper: {
-
-    },
-    rightHeaderPart: {
-        width: '60%',
-    },
-    nameLineGrid: {
-        display: 'grid',
-        gridTemplateColumns: '2fr 1fr 1fr',
-        gridGap: 8,
-    },
-    carDataGrid: {
-        display: 'grid',
-        gridTemplateColumns: '120px 1fr 1fr 1fr',
-        gridGap: 8,
-        marginBottom: 20,
-    },
-    titleBig: {
-        fontWeight: 600,
-        fontSize: 20
-    },
-    name: {
-        fontWeight: 600,
-        fontSize: 16,
-    },
-    titleSmall: {
-        fontWeight: 600,
-        fontSize: 14,
-        textTransform: "uppercase",
-        paddingBottom: 8,
-    },
-    titleNonUpperCase: {
-        fontWeight: 600,
-        fontSize: 14,
-        paddingBottom: 4,
-    },
-    textBig: {
-        fontSize: 20
-    },
-    textMd: {
-        fontSize: 16
-    },
-    textSmall: {
-        fontSize: 14,
-    },
-    textSmaller: {
-        fontSize: 12,
-    },
-    orderWrapper: {
-        border: '1px solid #DADADA',
-        marginBottom: 36,
-    },
-    gridTableHead: {
-        display: 'grid',
-        gridTemplateColumns: '120px 5fr ',
-        borderRight: '1px solid #DADADA',
-        "& > div:first-child": {
-            borderRight: '1px solid #DADADA',
-        }
-    },
-    greyRow: {
-        width: "100%",
-        height: 12,
-        backgroundColor: '#DADADA',
-    },
-    orderMainDataLeft: {
-        borderRight: '1px solid #DADADA',
-    },
-    orderMainDataLeftTop: {
-        display: 'grid',
-        gridTemplateColumns: '120px 1fr 1fr 1fr',
-        borderBottom: '1px solid #DADADA',
-        "& > div:first-child": {
-            borderRight: '1px solid #DADADA',
-        }
-    },
-    orderMainDataRightTop: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr 1fr',
-        borderBottom: '1px solid #DADADA',
-    },
-    orderMainData: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr'
-    },
-    italic: {
-        fontStyle: "italic",
-    },
-    serviceItem: {
-        padding: 8,
-        "&::marker": {
-            fontWeight: "bold"
-        }
-    },
-    centered: {
-        display: 'flex',
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    uppercase: {
-        textTransform: 'uppercase'
-    },
-    borderRight: {
-        borderRight: '1px solid #DADADA'
-    },
-    borderTop: {
-        borderTop: '1px solid #DADADA'
-    },
-    padding: {
-        padding: '16px 24px'
-    },
-    smallPadding: {
-        padding: '8px 24px'
-    },
-    threePartsGrid: {
-        display: "grid",
-        gridTemplateColumns: '1fr 1fr 1fr'
-    }
-})
-
-const TCell = withStyles({
-    root: {
-        padding: 2,
-        borderBottom: "none"
-    }
-})(TableCell)
-
-const HCell = withStyles({
-    root: {
-        color: "grey",
-        textTransform: "uppercase",
-        fontSize: 10,
-        fontWeight: 600
-    }
-})(TCell)
+import {HCell, TCell, useStyles} from "./styles";
 
 const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({vehicleDmsId, open, onClose}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -168,7 +31,6 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
     const onLoadMore = () => {
         const index = pageIndex + 1;
         setPageIndex(index);
-        // scProfile && dispatch(loadMoreRepairHistory(scProfile.id, vehicleDmsId, index, 1))
     }
 
     return (

@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useEffect} from 'react';
-import {DialogTitle, BaseModal, DialogContent} from "../../../components/Modals/BaseModal";
+import {DialogTitle, BaseModal, DialogContent} from "../../../components/BaseModal/BaseModal";
 import moment from "moment";
-import {DialogProps} from "../../../components/Modals/types";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {useSCs, useStatePagination} from "../../../utils/hooks";
 import {IAppointmentsRequest} from "../../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";

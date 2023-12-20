@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogTitle, DialogContent} from "../../../components/Modals/BaseModal";
-import {DialogProps} from "../../../components/Modals/types";
+import {BaseModal, DialogTitle, DialogContent} from "../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {Button, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";

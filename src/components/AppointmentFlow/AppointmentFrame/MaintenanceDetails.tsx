@@ -26,11 +26,11 @@ import {useTranslation} from "react-i18next";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../../Layout/types";
-import RecallsByVin from "../../Modals/RecallsByVin/RecallsByVin";
+import RecallsByVin from "../../Modals/booking/RecallsByVin/RecallsByVin";
 import {Api} from "../../../config/requests";
 import {Loading} from "../../UI/Loading";
 import {makeStyles} from "@material-ui/core/styles";
-import NoRecalls from "../../Modals/RecallsByVin/NoRecalls";
+import NoRecalls from "../../Modals/booking/RecallsByVin/NoRecalls/NoRecalls";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 const SelectWrapper = styled('div')(({theme}) => ({

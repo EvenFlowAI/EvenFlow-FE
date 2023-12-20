@@ -71,8 +71,8 @@ import {getCurrentUser} from "../../store/reducers/users/actions";
 import {loadEngineType, loadMileage} from "../../store/reducers/vehicleDetails/actions";
 import {ManageAppointment} from "../AppointmentFlow/AppointmentFrame/ManageAppointment";
 import AskChangesCompleted from "../Modals/booking/AskChangesCompleted/AskChangesCompleted";
-import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
-import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";
+import SlotImpactedWarning from "../Modals/booking/SlotImpactedWarning/SlotImpactedWarning";
+import ServiceImpactedWarning from "../Modals/booking/ServiceImpactedWarning/ServiceImpactedWarning";
 import SideBarSection from "../AppointmentFlow/AppointmentFrame/SideBarSection";
 
 const Container = styled('div')({

@@ -1,8 +1,8 @@
 import React, {useMemo} from 'react';
-import {DialogContent, DialogTitle} from "../../BaseModal";
+import {DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {DialogProps} from "../../types";
+import {DialogProps} from "../../../BaseModal/types";
 import {Dialog} from "@material-ui/core";
 import {ErrorOutline} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";

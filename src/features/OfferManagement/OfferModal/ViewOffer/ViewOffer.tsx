@@ -1,5 +1,5 @@
 import React from 'react';
-import {DialogContent} from "../../../../components/Modals/BaseModal";
+import {DialogContent} from "../../../../components/BaseModal/BaseModal";
 import {
     customerSegmentsMap,
     dayOfWeekMap,

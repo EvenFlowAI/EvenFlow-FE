@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../../../components/Modals/BaseModal";
-import {DialogProps} from "../../../components/Modals/types";
+import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {TextField} from "../../../components/UI/TextField";
 import {Box, Button, Divider} from "@material-ui/core";
 import {EDemandCategory, IPackagePricingSettings} from "../../../store/reducers/pricingSettings/types";

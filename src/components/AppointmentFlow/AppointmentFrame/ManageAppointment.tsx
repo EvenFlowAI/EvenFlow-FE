@@ -24,7 +24,7 @@ import {
     loadAllServiceCategories, loadSRs, setCustomerLoadedData,
 } from "../../../store/reducers/appointment/actions";
 import Vehicle from "./confirmationSections/Vehicle";
-import PaymentType from "../../Modals/PaymentType/PaymentType";
+import PaymentType from "../../Modals/booking/PaymentType/PaymentType";
 import {useTranslation} from "react-i18next";
 import ServiceRequestsManage from "./manageSections/ServiceRequestsManage";
 import {SelectedPriceManage} from "./manageSections/SelectedPriceManage";

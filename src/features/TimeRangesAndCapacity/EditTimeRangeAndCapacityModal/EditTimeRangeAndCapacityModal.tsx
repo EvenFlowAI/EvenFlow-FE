@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {DialogTitle, DialogContent, BaseModal, DialogActions} from "../../../components/Modals/BaseModal";
-import {DialogProps} from "../../../components/Modals/types";
+import {DialogTitle, DialogContent, BaseModal, DialogActions} from "../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../components/BaseModal/types";
 import {ITimeRangeAndCapacity} from "../../../store/reducers/capacityServiceValet/types";
 import moment from "moment";
 import {Button, Divider, Grid} from "@material-ui/core";

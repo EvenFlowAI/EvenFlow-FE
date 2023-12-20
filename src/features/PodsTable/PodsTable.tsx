@@ -9,7 +9,7 @@ import {RootState} from "../../store/rootReducer";
 import {TableRowDataTypeResp} from "../../components/UI/types";
 import {Table} from "../../components/UI/Table";
 import {MoreHoriz} from "@material-ui/icons";
-import {TViewMode} from "../../components/Modals/types";
+import {TViewMode} from "../../components/BaseModal/types";
 import {getTransportationOptionString} from "../../utils/utils";
 import {getNameFromEnum} from "./utils";
 
