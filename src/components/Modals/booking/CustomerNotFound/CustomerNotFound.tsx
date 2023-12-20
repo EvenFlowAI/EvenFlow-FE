@@ -2,8 +2,8 @@ import React, {useCallback} from 'react';
 import {BaseModal} from "../../../BaseModal/BaseModal";
 import {DialogProps} from "../../../BaseModal/types";
 import {useTranslation} from "react-i18next";
-import {LoadingButton} from "../../../UI/Button";
 import {useStyles} from "./styles";
+import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 type TCustomerNotFoundProps = DialogProps & {
     handleNew: () => void;

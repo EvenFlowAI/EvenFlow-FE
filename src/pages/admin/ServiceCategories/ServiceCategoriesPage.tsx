@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {TabContext} from "@material-ui/lab";
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
@@ -10,9 +10,9 @@ import {
     setCategoriesPage
 } from "../../../store/reducers/categories/actions";
 import {useSCs} from "../../../utils/hooks";
-import {ServiceCategoriesTable} from "../../../features/ServiceCategories/ServiceCategoriesTable/ServiceCategoriesTable";
+import {ServiceCategoriesTable} from "../../../features/admin/ServiceCategories/ServiceCategoriesTable/ServiceCategoriesTable";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {visitCenterTabs} from "../../../features/ServiceCategories/constants";
+import {visitCenterTabs} from "../../../features/admin/ServiceCategories/constants";
 import {bookingFlowRoot} from "../../../config/constants";
 
 const tabNames = [

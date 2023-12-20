@@ -1,7 +1,7 @@
 import React from 'react';
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {SquarePaper} from "../../../components/styled/Paper";
-import {PodsTable} from "../../../features/PodsTable/PodsTable";
+import {PodsTable} from "../../../features/admin/PodsTable/PodsTable";
 import {optimizerRoot} from "../../../config/constants";
 
 const Pods = () => {

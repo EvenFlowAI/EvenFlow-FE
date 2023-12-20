@@ -1,6 +1,5 @@
 import React from 'react';
 import {BaseModal, DialogTitle} from "../../../BaseModal/BaseModal";
-import {LoadingButton} from "../../../UI/Button";
 import {useTranslation} from "react-i18next";
 import {setServiceWarningOpen} from "../../../../store/reducers/modals/actions";
 import {
@@ -14,6 +13,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useHistory, useParams} from "react-router-dom";
 import {useStyles} from "./styles";
+import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 const ServiceImpactedWarning = () => {
     const {isServiceWarningOpen} = useSelector((state: RootState) => state.modals);

@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {Titles} from "../../../config/constants";
-import {TitleContainer} from "../../../components/UI/TitleContainer";
-import {IEndUserConfig} from "../../../features/Reporting/types";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {IEndUserConfig} from "../../../features/admin/Reporting/types";
 import {Api} from "../../../config/requests";
 import {useCurrentUser, useSCs} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
 import {Redirect, Route, Switch} from "react-router-dom";
-import {ShopLoading} from "../../../features/Reporting/ShopLoading/ShopLoading";
-import {AppointmentsSummary} from "../../../features/Reporting/AppointmentSummary/AppointmentSummary";
-import {ValetAppointments} from "../../../features/Reporting/ValetAppointments/ValetAppointments";
-import {MobileServiceAppointments} from "../../../features/Reporting/MobileServiceAppointments/MobileServiceAppointments";
-import {CustomerBehavior} from "../../../features/Reporting/CustomerBehavior/CustomerBehavior";
-import {RepairOrderPerformance} from "../../../features/Reporting/RepairOrderPerformance/RepairOrderPerformance";
-import {CapacityManagementPerformance} from "../../../features/Reporting/CapacityManagementPerfomance/CapacityManagementPerfomance";
+import {ShopLoading} from "../../../features/admin/Reporting/ShopLoading/ShopLoading";
+import {AppointmentsSummary} from "../../../features/admin/Reporting/AppointmentSummary/AppointmentSummary";
+import {ValetAppointments} from "../../../features/admin/Reporting/ValetAppointments/ValetAppointments";
+import {MobileServiceAppointments} from "../../../features/admin/Reporting/MobileServiceAppointments/MobileServiceAppointments";
+import {CustomerBehavior} from "../../../features/admin/Reporting/CustomerBehavior/CustomerBehavior";
+import {RepairOrderPerformance} from "../../../features/admin/Reporting/RepairOrderPerformance/RepairOrderPerformance";
+import {CapacityManagementPerformance} from "../../../features/admin/Reporting/CapacityManagementPerfomance/CapacityManagementPerfomance";
 import {reportingAllowedRoles} from "./constants";
 
 const ReportingPage: React.FC<{}> = ({}) => {

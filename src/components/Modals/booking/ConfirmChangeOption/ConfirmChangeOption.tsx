@@ -1,8 +1,8 @@
 import React from 'react';
 import {BaseModal, DialogTitle, DialogActions} from "../../../BaseModal/BaseModal";
-import {LoadingButton} from "../../../UI/Button";
 import {DialogProps} from "../../../BaseModal/types";
 import {useTranslation} from "react-i18next";
+import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 type TConfirmProps = DialogProps & {
     onSave: () => void;

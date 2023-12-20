@@ -1,9 +1,9 @@
 import React from 'react';
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {bookingFlowRoot} from "../../../config/constants";
-import {EditEmailRequirementModal} from "../../../features/ScreenSettings/EditEmailRequirementModal/EditEmailRequirementModal";
+import {EditEmailRequirementModal} from "../../../features/admin/ScreenSettings/EditEmailRequirementModal/EditEmailRequirementModal";
 import {useModal} from "../../../utils/hooks";
-import {ScreenSettings} from "../../../features/ScreenSettings/ScreenSettings";
+import {ScreenSettings} from "../../../features/admin/ScreenSettings/ScreenSettings";
 
 const ScreenSettingsPage = () => {
     const {onOpen: onEmailEditOpen, isOpen: isEmailEditOpen, onClose: onEmailEditClose} = useModal();

@@ -16,7 +16,7 @@ import {TNotificatonsProps} from "../types";
 import {Loading} from "../../../../UI/Loading";
 import {checkPodsAreTheSame} from "../utils";
 import {IAdvisorShort} from "../../../../../store/reducers/users/types";
-import {useNotificationStyles} from "../../../../../sharedStyles/useNotificationStyles";
+import {useNotificationStyles} from "../../../../../commonStyles/useNotificationStyles";
 
 const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changesState}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);

@@ -7,8 +7,8 @@ import {TSelectChange} from "../../../../types/types";
 import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {Api} from "../../../../config/requests";
 import {IServiceCenterExtended} from "../../../../store/reducers/serviceCenters/types";
-import {LoadingButton} from "../../../UI/Button";
 import {EditForm} from "./EditForm/EditForm";
+import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 const initialAddress: IAddress = {
     street: "",

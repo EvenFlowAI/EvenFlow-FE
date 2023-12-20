@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
-import {Mileage} from "../../../features/Mileage/Mileage";
+import {Mileage} from "../../../features/admin/Mileage/Mileage";
 import {bookingFlowRoot} from "../../../config/constants";
-import {EngineTypes} from "../../../features/EngineTypes/EngineTypes";
-import {MakesModels} from "../../../features/MakesModels/MakesModels";
+import {EngineTypes} from "../../../features/admin/EngineTypes/EngineTypes";
+import {MakesModels} from "../../../features/admin/MakesModels/MakesModels";
 
 export const VehicleDetails = () => {
     const [selectedTab, setTab] = useState<string>("0");

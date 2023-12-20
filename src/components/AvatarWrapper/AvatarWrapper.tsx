@@ -1,5 +1,5 @@
 import React from "react";
-import {AvatarUpload, TAvatarProps} from "../UI/AvatarUpload";
+import {AvatarUpload, TAvatarProps} from "../AvatarUpload/AvatarUpload";
 import {Container} from "@material-ui/core";
 import {useStyles} from "./styles";
 

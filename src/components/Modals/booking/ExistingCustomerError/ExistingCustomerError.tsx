@@ -1,5 +1,5 @@
 import React from 'react';
-import {useDialogStyles} from "../../../../sharedStyles/useDialogStyles";
+import {useDialogStyles} from "../../../../commonStyles/useDialogStyles";
 import {BaseModal, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {DialogProps} from "../../../BaseModal/types";
 import {useTranslation} from "react-i18next";

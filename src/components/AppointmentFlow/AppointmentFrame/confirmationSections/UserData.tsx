@@ -1,7 +1,7 @@
 import React, {useEffect, Dispatch, SetStateAction} from 'react';
 import {styled} from "@material-ui/core";
 import {ConfirmationTitle} from "../Title";
-import {TextField} from "../../../UI/TextField";
+import {TextField} from "../../../FormControls/TextFieldStyled/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {setCustomer} from "../../../../store/reducers/appointmentFrameReducer/actions";

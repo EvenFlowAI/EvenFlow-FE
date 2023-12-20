@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {AppThunk} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {IEndUserConfig} from "../../../features/Reporting/types";
+import {IEndUserConfig} from "../../../features/admin/Reporting/types";
 
 export const getConfig  = createAction<IEndUserConfig>('Reporting/GetConfig');
 export const setLoading  = createAction<boolean>('Reporting/SetLoading');

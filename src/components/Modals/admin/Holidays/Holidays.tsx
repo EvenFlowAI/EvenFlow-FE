@@ -1,0 +1,147 @@
+import React, {useEffect, useState} from "react";
+import {DialogProps, TViewMode} from "../../../BaseModal/types";
+import {BaseModal, DialogActions, DialogTitle} from "../../../BaseModal/BaseModal";
+import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {Table} from "../../../Table/Table";
+import {TableRowDataType} from "../../../UI/types";
+import {MoreHoriz} from "@material-ui/icons";
+import {AddHolidayModal} from "./AddHolidayModal/AddHolidayModal";
+import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../../utils/hooks";
+import {IHoliday} from "../../../../store/reducers/holidays/types";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../../store/rootReducer";
+import {loadAllHolidays} from "../../../../store/reducers/holidays/actions";
+import moment from "moment";
+import {setHolidayPageData} from "../../../../store/reducers/holidays/actions";
+import {Api} from "../../../../config/requests";
+import {Roles} from "../../../../config/constants";
+import {useStyles} from "./styles";
+
+const rowData: TableRowDataType<IHoliday>[] = [
+    {header: "Description Title", val: v => v.description.length > 40 ? v.description.slice(0, 39).concat('...') : v.description},
+    {header: "Date", val: v => moment.utc(v.date).format("MMMM D")},
+    {header: "Recurring", val: v => v.isRecurring ? "Repeat" : "No Repeat"}
+]
+
+export const Holidays: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
+    const [
+        holidays,
+        isLoading,
+        currentUser,
+    ] = useSelector((state: RootState) => [
+        state.holidays.holidaysList,
+        state.holidays.loading,
+        state.users.currentUser,
+    ]);
+    const [editedItem, setEditedItem] = useState<IHoliday|undefined>();
+    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+    const {selectedSC} = useSCs();
+    const {askConfirm, closeConfirm} = useConfirm();
+    const {onOpen, onClose, isOpen} = useModal();
+    const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
+        (s: RootState) => s.holidays.pageData,
+        setHolidayPageData
+    );
+    const dispatch = useDispatch();
+    const showMessage = useMessage();
+    const showError = useException()
+    const classes = useStyles();
+
+    useEffect(() => {
+        if (props.open && selectedSC) {
+            dispatch(loadAllHolidays(selectedSC.id));
+        }
+    }, [dispatch, props.open, selectedSC]);
+
+    const reloadHolidays = () => {
+        if (selectedSC) {
+            dispatch(loadAllHolidays(selectedSC.id));
+        }
+    }
+
+    const openMenu = (el: IHoliday) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setEditedItem(el);
+        setAnchorEl(e.currentTarget);
+    }
+
+    const closeMenu = () => {
+        setAnchorEl(null);
+    }
+
+    const handleRemove = async () => {
+        if (editedItem) {
+            try {
+                await Api.call(
+                    Api.endpoints.Holidays.Remove,
+                    {urlParams: {id: editedItem.id}}
+                ).then(res => {
+                    if (res) showMessage("Holiday removed");
+                })
+            } catch (e) {
+                showError(e);
+            }
+        }
+        closeConfirm();
+        reloadHolidays();
+    }
+
+    const askRemove = () => {
+        closeMenu();
+        if (editedItem) {
+            askConfirm({
+                isRemove: true,
+                title: `Please confirm you want to remove Holiday ${editedItem.description}?`,
+                onConfirm: handleRemove
+            })
+        }
+    }
+
+    const openEdit = () => {
+        closeMenu();
+        onOpen();
+    }
+
+    const actions = (el: IHoliday) => {
+        return <IconButton onClick={openMenu(el)} disabled={currentUser?.role === Roles.Manager}>
+            <MoreHoriz />
+        </IconButton>
+    }
+
+    const handleOpenCreate = () => {
+        setEditedItem(undefined);
+        onOpen();
+    }
+
+    return <BaseModal {...props} width={720}>
+        <DialogTitle onClose={props.onClose}>Holidays</DialogTitle>
+        {!viewMode && currentUser?.role !== Roles.Manager ? <div className={classes.addHoliday}>
+            <Button variant="contained" color="primary" onClick={handleOpenCreate}>Add Holiday</Button>
+        </div> : null}
+        <Table<IHoliday>
+            onChangePage={changePage}
+            page={pageIndex}
+            viewMode={viewMode}
+            rowsPerPage={pageSize}
+            onChangeRowsPerPage={changeRowsPerPage}
+            compact
+            isLoading={isLoading}
+            data={holidays}
+            index={"id"}
+            rowData={rowData}
+            actions={actions}
+        />
+        <DialogActions>
+            <Button onClick={props.onClose} variant="contained" color="primary">
+                Close
+            </Button>
+        </DialogActions>
+        <Menu
+            onClose={closeMenu}
+            open={Boolean(anchorEl)}
+            anchorEl={anchorEl}>
+            <MenuItem onClick={openEdit}>Edit</MenuItem>
+            <MenuItem onClick={askRemove}>Remove</MenuItem>
+        </Menu>
+        <AddHolidayModal open={isOpen} payload={editedItem} onAction={reloadHolidays} onClose={onClose} />
+    </BaseModal>
+}

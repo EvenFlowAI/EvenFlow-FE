@@ -40,7 +40,7 @@ import {Loading} from "../../../../../components/UI/Loading";
 import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../../../utils/utils";
 import {EServiceType, EUserType} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import VehicleRepairHistory from "../../../../../components/Modals/VehicleRepairHistory/VehicleRepairHistory";
+import VehicleRepairHistory from "../../../../../components/Modals/common/VehicleRepairHistory/VehicleRepairHistory";
 import CancelAppointmentConfirm from "../../../../../components/Modals/booking/CancelAppoitntmentConfirm/CancelAppointmentConfirm";
 import {TColumn, TOffset, TSortColumn, TSortOrder} from "../types";
 import {initialColumnOffset} from "../constants";

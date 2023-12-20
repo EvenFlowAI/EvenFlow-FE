@@ -1,5 +1,5 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IEndUserConfig} from "../../../features/Reporting/types";
+import {IEndUserConfig} from "../../../features/admin/Reporting/types";
 import {getConfig, setLoading} from "./actions";
 
 type TState = {

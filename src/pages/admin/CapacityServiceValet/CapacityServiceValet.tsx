@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
-import ZoneRouting from "../../../features/ZoneRouting/ZoneRouting";
+import ZoneRouting from "../../../features/admin/ZoneRouting/ZoneRouting";
 import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
 import {useSCs} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {loadHoursOfOperations} from "../../../store/reducers/slotScoring/actions";
-import TimeRangesAndCapacity from "../../../features/TimeRangesAndCapacity/TimeRangesAndCapacity";
-import CenterSettings from "../../../features/CenterSettings/CenterSettings";
+import TimeRangesAndCapacity from "../../../features/admin/TimeRangesAndCapacity/TimeRangesAndCapacity";
+import CenterSettings from "../../../features/admin/CenterSettings/CenterSettings";
 import {optimizerRoot} from "../../../config/constants";
 
 const CapacityServiceValet = () => {

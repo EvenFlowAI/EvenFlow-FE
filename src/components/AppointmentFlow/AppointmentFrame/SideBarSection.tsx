@@ -6,7 +6,7 @@ import {RootState} from "../../../store/rootReducer";
 import {SideBar} from "./SideBar";
 import {TScreen} from "../types";
 import AppointmentNotes from "./AppointmentNotes";
-import VehicleRepairHistory from "../../Modals/VehicleRepairHistory/VehicleRepairHistory";
+import VehicleRepairHistory from "../../Modals/common/VehicleRepairHistory/VehicleRepairHistory";
 import {useTranslation} from "react-i18next";
 import CustomerInfo from "./CustomerInfo";
 

@@ -1,6 +1,6 @@
 import {TRole} from "../store/reducers/users/types";
-import {TTitle} from "../components/UI/ContentTitle";
 import {Routes} from "./routes";
+import {TTitle} from "../types/types";
 
 export enum States {
     AL = "Alabama",

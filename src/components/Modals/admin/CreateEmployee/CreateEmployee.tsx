@@ -17,13 +17,13 @@ import {
 import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {IUserForm, TRole} from "../../../../store/reducers/users/types";
 import {createUser, updateUser} from "../../../../store/reducers/users/actions";
-import {LoadingButton} from "../../../UI/Button";
 import {Roles} from "../../../../config/constants";
 import {checkEmail, validatePhoneNumber} from "../../../../utils/utils";
 import {AdvisorForm} from "./AdvisorForm/AdvisorForm";
 import {TechnicianForm} from "./TechnicianForm/TechnicianForm";
 import {initialAdvisorForm, initialTechnicianForm} from "./constants";
 import {AvatarWrapper} from "../../../AvatarWrapper/AvatarWrapper";
+import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAction, ...props}) => {
     const [shortSC, shortLoading, savingE, savingU, DmsAdvisors, loadingDMSAdvisors] = useSelector((state: RootState) => [

@@ -1,8 +1,8 @@
 import React from 'react';
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {Titles} from "../../../config/constants";
-import {DealershipGroupsTable} from "../../../features/DealershipGroups/DealershipGroupsTable/DealershipGroupsTable";
-import {DealershipActions} from "../../../features/DealershipGroups/DealershipActions/DealershipActions";
+import {DealershipGroupsTable} from "../../../features/admin/DealershipGroups/DealershipGroupsTable/DealershipGroupsTable";
+import {DealershipActions} from "../../../features/admin/DealershipGroups/DealershipActions/DealershipActions";
 
 const DealershipGroups = () => {
     return (

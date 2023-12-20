@@ -8,10 +8,10 @@ import {
 } from "../../../utils/hooks";
 import {CreateEmployee} from "../../../components/Modals/admin/CreateEmployee/CreateEmployee";
 import {Titles} from "../../../config/constants";
-import {TitleContainer} from "../../../components/UI/TitleContainer";
-import {EmployeesActions} from "../../../features/Employees/EmployeesActions/EmployeesActions";
-import EmployeesFilters from "../../../features/Employees/EmployeesFilters/EmployeesFilters";
-import EmployeesTable from "../../../features/Employees/EmployeesTable/EmployeesTable";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {EmployeesActions} from "../../../features/admin/Employees/EmployeesActions/EmployeesActions";
+import EmployeesFilters from "../../../features/admin/Employees/EmployeesFilters/EmployeesFilters";
+import EmployeesTable from "../../../features/admin/Employees/EmployeesTable/EmployeesTable";
 
 export const Employees = () => {
     const [editedItem, setEditedItem] = useState<IEmployee|undefined>();

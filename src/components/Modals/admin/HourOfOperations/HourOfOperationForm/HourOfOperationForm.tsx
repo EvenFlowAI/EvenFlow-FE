@@ -5,8 +5,8 @@ import React from "react";
 import {Button, Grid, Switch, useMediaQuery, useTheme} from "@material-ui/core";
 import moment from "moment/moment";
 import {blankRow} from "../constants";
-import {TimePicker} from "../../../../UI/DateTimePickers";
 import {useStyles} from "./styles";
+import {TimePicker} from "../../../../UI/TimePicker";
 
 type THOOFormProps = TViewMode & {
     form: THOOForm[];

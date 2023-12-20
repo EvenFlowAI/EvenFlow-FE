@@ -5,7 +5,7 @@ import {MenuItem, Select, styled} from "@material-ui/core";
 import {switchLanguage} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {changeLanguage} from "i18next";
 import {makeStyles} from "@material-ui/core/styles";
-import {TextField} from "../../../UI/TextField";
+import {TextField} from "../../../FormControls/TextFieldStyled/TextField";
 
 const Wrapper = styled('div')({
     width: "100%",

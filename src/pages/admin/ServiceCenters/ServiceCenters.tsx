@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import {IServiceCenterForm} from "../../../store/reducers/serviceCenters/types";
 import {useCurrentUser, useModal} from "../../../utils/hooks";
-import {CreateServiceCenterModal} from "../../../features/ServiceCenters";
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {CreateServiceCenterModal} from "../../../features/admin/ServiceCenters";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {Titles} from "../../../config/constants";
-import ServiceCentersTable from "../../../features/ServiceCenters/ServiceCentersTable/ServiceCentersTable";
-import {ServiceCenterActions} from "../../../features/ServiceCenters";
+import ServiceCentersTable from "../../../features/admin/ServiceCenters/ServiceCentersTable/ServiceCentersTable";
+import {ServiceCenterActions} from "../../../features/admin/ServiceCenters";
 
 export const ServiceCenters = () => {
     const [editedItem, setEditedItem] = useState<IServiceCenterForm|undefined>();

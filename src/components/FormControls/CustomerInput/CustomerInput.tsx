@@ -1,5 +1,5 @@
 import {withStyles} from "@material-ui/core";
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../TextFieldStyled/TextField";
 
 export const CustomerInput = withStyles({
     root: {

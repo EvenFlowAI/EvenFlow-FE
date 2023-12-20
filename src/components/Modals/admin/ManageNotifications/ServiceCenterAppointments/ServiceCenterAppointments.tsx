@@ -11,7 +11,7 @@ import {ENotificationType, TSCNotifications} from "../../../../../store/reducers
 import {updateNotificationsByType} from "../../../../../store/reducers/notifications/actions";
 import {useException, useMessage, useSCs} from "../../../../../utils/hooks";
 import {IAdvisorShort} from "../../../../../store/reducers/users/types";
-import {useNotificationStyles} from "../../../../../sharedStyles/useNotificationStyles";
+import {useNotificationStyles} from "../../../../../commonStyles/useNotificationStyles";
 import {TNotificatonsProps} from "../types";
 import {initialSCNotifications} from "../constants";
 

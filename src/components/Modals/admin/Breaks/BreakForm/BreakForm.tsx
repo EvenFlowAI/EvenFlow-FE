@@ -3,11 +3,11 @@ import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {TViewMode} from "../../../../BaseModal/types";
 import {Button, Grid, IconButton, useMediaQuery, useTheme} from "@material-ui/core";
 import moment from "moment/moment";
-import {TimePicker} from "../../../../UI/DateTimePickers";
 import {DeleteOutline} from "@material-ui/icons";
 import {TBreak} from "../types";
 import {useStyles} from "./styles";
 import {blankRow} from "../constants";
+import {TimePicker} from "../../../../UI/TimePicker";
 
 type TProps = {
     form: TBreak[],

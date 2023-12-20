@@ -19,7 +19,7 @@ import {
     selectCategoriesIds,
     setAdditionalServicesChosen,
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import {Caption} from "../../UI/Caption";
+import {Caption} from "../../Caption/Caption";
 import {useTranslation} from "react-i18next";
 import {EServiceCategoryPage} from "../../../api/types";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";

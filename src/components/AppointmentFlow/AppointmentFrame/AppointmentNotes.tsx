@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import {Button, Divider, styled} from "@material-ui/core";
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../../FormControls/TextFieldStyled/TextField";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";

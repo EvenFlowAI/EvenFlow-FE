@@ -20,7 +20,7 @@ import {IAdvisorShort} from "../../../../../store/reducers/users/types";
 import {loadTransportationOptions} from "../../../../../store/reducers/transportationNeeds/actions";
 import {ITransportationOptionFull} from "../../../../../store/reducers/transportationNeeds/types";
 import {getTransportationOptionString} from "../../../../../utils/utils";
-import {useNotificationStyles} from "../../../../../sharedStyles/useNotificationStyles";
+import {useNotificationStyles} from "../../../../../commonStyles/useNotificationStyles";
 
 const initialTransportationNotifications: TTransportationNotifications = {
     isActive: false,

@@ -7,12 +7,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {createDemandSegment, loadDemandSegments} from "../../../../store/reducers/demandSegments/actions";
 import {defaultDemandSegment} from "../../../../store/reducers/demandSegments/reducer";
 import {SC_UNDEFINED} from "../../../../config/constants";
-import {LoadingButton} from "../../../UI/Button";
 import {RootState} from "../../../../store/rootReducer";
-import {Table} from "../../../UI/Table";
+import {Table} from "../../../Table/Table";
 import {IDemandSegment} from "../../../../store/reducers/demandSegments/types";
 import {TableRowDataType} from "../../../UI/types";
 import {Api} from "../../../../config/requests";
+import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 const rowData: TableRowDataType<IDemandSegment>[] = [
     {header: "Demand Segments",

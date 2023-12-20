@@ -2,11 +2,11 @@ import React, {useState} from "react";
 import {Tab} from "@material-ui/core";
 import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {RequiredEquipment} from "../../../features/RequiredEquipment/RequiredEquipment";
-import {RequiredSkills} from "../../../features/RequiredSkills/RequiredSkills";
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {RequiredEquipment} from "../../../features/admin/RequiredEquipment/RequiredEquipment";
+import {RequiredSkills} from "../../../features/admin/RequiredSkills/RequiredSkills";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {makeStyles} from "@material-ui/core/styles";
-import {AvailableStaffCalendar} from "../../../features/AvailableStaffCalendar/AvailableStaffCalendar";
+import {AvailableStaffCalendar} from "../../../features/admin/AvailableStaffCalendar/AvailableStaffCalendar";
 import {optimizerRoot} from "../../../config/constants";
 
 const useStyles = makeStyles(theme => ({

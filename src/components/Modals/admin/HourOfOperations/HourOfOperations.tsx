@@ -6,12 +6,12 @@ import moment from "moment";
 import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {Api} from "../../../../config/requests";
 import {IHOODataForm} from "../../../../store/reducers/serviceCenters/types";
-import {LoadingButton} from "../../../UI/Button";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {timeSpanString} from "../../../../config/constants";
 import {THOOForm} from "./types";
 import {initialForm} from "./constants";
 import {HourOfOperationForm} from "./HourOfOperationForm/HourOfOperationForm";
+import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 export const HourOfOperations: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
     const {selectedSC} = useSCs();

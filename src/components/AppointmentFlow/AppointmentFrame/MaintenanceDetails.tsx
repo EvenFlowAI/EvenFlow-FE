@@ -18,7 +18,7 @@ import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryPage, EServiceCenterName, ILoadedVehicle} from "../../../api/types";
 import moment from "moment";
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../../FormControls/TextFieldStyled/TextField";
 import {useException, useModal} from "../../../utils/hooks";
 import {decodeSCID} from "../../../utils/utils";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";

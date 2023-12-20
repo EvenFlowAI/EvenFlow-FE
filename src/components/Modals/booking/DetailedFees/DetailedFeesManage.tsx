@@ -9,7 +9,7 @@ import {useTranslation} from "react-i18next";
 import {EOfferType} from "../../../../store/reducers/offers/types";
 import {getOfferString} from "../../../AppointmentFlow/AppointmentFrame/utils";
 import {DetailedFeesInfo, DetailedFeesList, useStyles} from "./styles";
-import {useDialogStyles} from "../../../../sharedStyles/useDialogStyles";
+import {useDialogStyles} from "../../../../commonStyles/useDialogStyles";
 
 const DetailedFeesManage: React.FC<DialogProps> = ({ open, onClose, }) => {
     const { scProfile} = useSelector((state: RootState) => state.appointment);

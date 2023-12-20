@@ -1,7 +1,7 @@
 import React from "react";
 import {useCurrentUser} from "../../../../../utils/hooks";
 import {Divider, FormControlLabel, Grid, Switch} from "@material-ui/core";
-import {TextField} from "../../../../UI/TextField";
+import {TextField} from "../../../../FormControls/TextFieldStyled/TextField";
 import {checkEmail} from "../../../../../utils/utils";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../../UI/AutocompleteRender";

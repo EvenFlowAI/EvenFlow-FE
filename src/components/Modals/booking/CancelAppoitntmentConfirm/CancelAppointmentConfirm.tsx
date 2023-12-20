@@ -8,7 +8,7 @@ import moment from "moment";
 import {useException} from "../../../../utils/hooks";
 import {Loading} from "../../../UI/Loading";
 import {NoData} from "../../../UI/NoData";
-import {useDialogStyles} from "../../../../sharedStyles/useDialogStyles";
+import {useDialogStyles} from "../../../../commonStyles/useDialogStyles";
 import {TArgCallback} from "../../../../types/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";

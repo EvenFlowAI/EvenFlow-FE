@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {Api} from "../../../config/requests";
 import {IDealershipGroupExtended} from "../../../store/reducers/dealershipGroups/types";
 import {concatAddress} from "../../../utils/utils";
 import {Tab} from "@material-ui/core";
 import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {DetailsServiceCenters} from "../../../features/DealershipGroupDetails/DetailsServiceCenters/DetailsServiceCenters";
-import {DetailsEmployees} from "../../../features/DealershipGroupDetails/DetailsEmployees/DetailsEmployees";
+import {DetailsServiceCenters} from "../../../features/admin/DealershipGroupDetails/DetailsServiceCenters/DetailsServiceCenters";
+import {DetailsEmployees} from "../../../features/admin/DealershipGroupDetails/DetailsEmployees/DetailsEmployees";
 import {useDispatch} from "react-redux";
 import {loadDealershipEmployees} from "../../../store/reducers/employees/actions";
 import {useStatePagination} from "../../../utils/hooks";

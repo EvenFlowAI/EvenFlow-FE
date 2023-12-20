@@ -1,12 +1,12 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
-import {Login} from "./components/Login/Login";
+import {Login} from "./pages/admin/Login/Login";
 import {Route, Switch, useHistory} from 'react-router-dom';
 import {AdminPanel} from "./pages/admin/AdminPanel/AdminPanel";
 import {Routes} from "./config/routes";
 import {PrivateRoute} from "./utils/Routes";
-import {ConfirmDialog} from './components/UI/ConfirmDialog';
+import {Confirm} from './components/Modals/common/Confirm/Confirm';
 import {ProviderContext, SnackbarProvider} from "notistack";
 import {Close} from "@material-ui/icons";
 import {BookingFlowPage} from "./pages/booking/BookingFlow/BookingFlowPage";
@@ -107,7 +107,7 @@ const App = () => {
                 style={{
                     height: isTopAligning ? "auto" : "100vh",
                     maxHeight: "-webkit-fill-available"}}>
-                <ConfirmDialog/>
+                <Confirm/>
                 <Switch>
                     <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentFrameLayout} />
                     <Route path={Routes.EndUser.CancelAppointment} exact component={BookingFlowPage} />

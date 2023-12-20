@@ -3,7 +3,6 @@ import {DialogProps, TViewMode} from "../../../BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import moment from "moment";
-import {LoadingButton} from "../../../UI/Button";
 import {Api} from "../../../../config/requests";
 import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {IBreak, IBreakFrom} from "../../../../store/reducers/serviceCenters/types";
@@ -12,6 +11,7 @@ import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {TBreak} from "./types";
 import {initialBreaks} from "./constants";
 import {BreakForm} from "./BreakForm/BreakForm";
+import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 export const Break: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);

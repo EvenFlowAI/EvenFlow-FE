@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {DialogProps} from "../../BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {Box, Button, ButtonGroup} from "@material-ui/core";
-import {TextField} from "../../UI/TextField";
+import {TextField} from "../../FormControls/TextFieldStyled/TextField";
 import {copyTextToClipboard, encodeSCID} from "../../../utils/utils";
 import {Routes} from "../../../config/routes";
 import {useCurrentUser, useMessage, useSCs} from "../../../utils/hooks";

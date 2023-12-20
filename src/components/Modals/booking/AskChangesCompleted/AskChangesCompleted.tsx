@@ -1,6 +1,5 @@
 import React, {useMemo} from 'react';
 import {BaseModal, DialogTitle} from "../../../BaseModal/BaseModal";
-import {LoadingButton} from "../../../UI/Button";
 import {useTranslation} from "react-i18next";
 import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -16,6 +15,7 @@ import {useCurrentUser, useException} from "../../../../utils/hooks";
 import {isMobile} from 'react-device-detect';
 import {setAppointmentWasChanged} from "../../../../store/reducers/appointment/actions";
 import {useStyles} from "./styles";
+import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 const AskChangesCompleted = () => {
     const {

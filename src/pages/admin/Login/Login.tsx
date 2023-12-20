@@ -1,0 +1,31 @@
+import {Grid, ThemeProvider} from "@material-ui/core";
+import {AdminLogin} from "../../../features/admin/AdminLogin/AdminLogin";
+import React from "react";
+import {Switch, Route, Redirect} from "react-router-dom";
+import {ForgotPassword} from "../../../features/admin/ForgotPassword/ForgotPassword";
+import {LoginSideBar} from "../../../components/LoginSideBar/LoginSideBar";
+import {ResetPassword} from "../../../features/admin/ResetPassword/ResetPassword";
+import {loginTheme} from "../../../theme/theme";
+import {Routes} from "../../../config/routes";
+import {EmailVerification} from "../../../features/admin/EmailVerification/EmailVerification";
+
+export const Login = () => {
+    return <ThemeProvider theme={loginTheme}>
+        <Grid container alignItems="stretch" style={{height: "100%", background: "#ffffff"}}>
+            <Grid item xs={12} sm={4}><LoginSideBar/></Grid>
+            <Grid item xs={12} sm={8} style={{justifyContent: "center"}}>
+                <Grid container alignItems="center" justify="center" style={{height: "100%"}}>
+                    <Grid item xs={10} sm={10} md={6} style={{padding: "16px 0"}}>
+                        <Switch>
+                            <Route path={Routes.Login.Base} exact component={AdminLogin}/>
+                            <Route path={Routes.Login.ForgotPassword} component={ForgotPassword}/>
+                            <Route path={Routes.Account.ResetPassword} component={ResetPassword}/>
+                            <Route path={Routes.Account.Verification} component={EmailVerification} />
+                            <Redirect to="/login"/>
+                        </Switch>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </ThemeProvider>
+}

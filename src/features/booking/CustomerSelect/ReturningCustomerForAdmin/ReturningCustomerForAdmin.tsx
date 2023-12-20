@@ -21,7 +21,7 @@ import {defaultPageData} from "../../../../store/reducers/defaultInitials";
 import {TCustomerSearchData} from "../../../../store/reducers/enhancedCustomerSearch/types";
 import {KeyboardArrowDown, KeyboardArrowUp} from "@material-ui/icons";
 import {useStyles} from "../styles";
-import {useCustomerSelectStyles} from "../../../../sharedStyles/useCustomerSelectStyles";
+import {useCustomerSelectStyles} from "../../../../commonStyles/useCustomerSelectStyles";
 import {TError} from "./types";
 import {InputLabel} from "../InputLabel/InputLabel";
 import {LoadingProcess} from "../LoadingProcess/LoadingProcess";

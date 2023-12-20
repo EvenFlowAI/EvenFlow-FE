@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import {Button} from "@material-ui/core";
 import {DialogProps} from "../../../BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
-import {LoadingButton} from "../../../UI/Button";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useException} from "../../../../utils/hooks";
 import {Textarea} from "./styles";
+import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 type TMapIframeLinkProps = DialogProps & {
     onSave: (link: string) => void;

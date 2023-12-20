@@ -3,7 +3,7 @@ import React from "react";
 import {TSelectChange} from "../../../../../types/types";
 import {IAddress} from "../../../../../store/reducers/dealershipGroups/types";
 import {Grid} from "@material-ui/core";
-import {TextField} from "../../../../UI/TextField";
+import {TextField} from "../../../../FormControls/TextFieldStyled/TextField";
 import {Autocomplete} from "@material-ui/lab";
 import {states} from "../../../../../config/constants";
 import {autocompleteRender} from "../../../../UI/AutocompleteRender";

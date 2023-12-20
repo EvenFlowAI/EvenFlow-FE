@@ -13,7 +13,7 @@ import {initialSCNotifications} from "../constants";
 import {useException, useMessage, useSCs} from "../../../../../utils/hooks";
 import {updateNotificationsByType} from "../../../../../store/reducers/notifications/actions";
 import {IAdvisorShort} from "../../../../../store/reducers/users/types";
-import {useNotificationStyles} from "../../../../../sharedStyles/useNotificationStyles";
+import {useNotificationStyles} from "../../../../../commonStyles/useNotificationStyles";
 
 const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);

@@ -1,20 +1,20 @@
 import React, {useState} from 'react';
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/styled/Tabs";
 import {Switch, Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import { PricingLevels } from '../../../features/PricingLevels/PricingLevels';
-import {Eligibility} from "../../../features/Eligibility/Eligibility";
-import {PricingOptimization} from "../../../features/PricingOptimization/PricingOptimization";
-import {VariableDemand} from "../../../features/VariableDemand/VariableDemand";
+import { PricingLevels } from '../../../features/admin/PricingLevels/PricingLevels';
+import {Eligibility} from "../../../features/admin/Eligibility/Eligibility";
+import {PricingOptimization} from "../../../features/admin/PricingOptimization/PricingOptimization";
+import {VariableDemand} from "../../../features/admin/VariableDemand/VariableDemand";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import { changePricingOpt } from '../../../store/reducers/serviceCenters/actions';
 import {useDispatch, useSelector} from "react-redux";
-import {LoadingButton} from "../../../components/UI/Button";
 import {RootState} from "../../../store/rootReducer";
 import {updateMaxPrice} from "../../../store/reducers/pricingSettings/actions";
 import {ButtonsWrapper, ControlLabel} from "./styles";
 import {pricingRoot} from "../../../config/constants";
+import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
 
 type Tab = {
     id: string;

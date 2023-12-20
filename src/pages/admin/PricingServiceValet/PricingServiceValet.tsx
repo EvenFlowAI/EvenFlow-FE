@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {useModal} from "../../../utils/hooks";
 import {Tab} from "@material-ui/core";
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TabList} from "../../../components/styled/Tabs";
-import GeographicZones from "../../../features/PricingServiceValet/GeographicZones/GeographicZones";
-import GeographicZonesMap from "../../../features/PricingServiceValet/GeographicZonesMap/GeographicZonesMap";
+import GeographicZones from "../../../features/admin/PricingServiceValet/GeographicZones/GeographicZones";
+import GeographicZonesMap from "../../../features/admin/PricingServiceValet/GeographicZonesMap/GeographicZonesMap";
 import AddEditGeographicZone from "../../../components/Modals/admin/EditGeographicZone/AddEditGeographicZone";
-import AncillaryPrice from "../../../features/PricingServiceValet/AncillaryPrice/AncillaryPrice";
+import AncillaryPrice from "../../../features/admin/PricingServiceValet/AncillaryPrice/AncillaryPrice";
 import {pricingRoot} from "../../../config/constants";
 
 type TTab = {

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {OptimizationWindowCard} from "../../../components/OptimizationWindowCard/OptimizationWindowCard";
 import {Grid} from "@material-ui/core";
 import {DemandSegments} from "../../../components/Modals/admin/DemandSegments/DemandSegments";
@@ -12,12 +12,12 @@ import {
     EOptimizationWindowType,
     optimizationWindowsList,
 } from "../../../store/reducers/optimizationWindows/types";
-import {OptimizationModal} from "../../../features/OptimizationWindows/OptimizationModal/OptimizationModal";
-import {AppointmentCutoffModal} from "../../../features/OptimizationWindows/AppointmentCutoffModal/AppointmentCutoffModal";
+import {OptimizationModal} from "../../../features/admin/OptimizationWindows/OptimizationModal/OptimizationModal";
+import {AppointmentCutoffModal} from "../../../features/admin/OptimizationWindows/AppointmentCutoffModal/AppointmentCutoffModal";
 import moment from "moment";
 import {optimizerRoot, timeSpanString} from "../../../config/constants";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
-import {MaxPriceDateRangeModal} from "../../../features/OptimizationWindows/MaxPriceDateRangeModal/MaxPriceDateRangeModal";
+import {MaxPriceDateRangeModal} from "../../../features/admin/OptimizationWindows/MaxPriceDateRangeModal/MaxPriceDateRangeModal";
 import {TOptParam} from "./types";
 import {blankWindowParam, optContent} from "./constants";
 

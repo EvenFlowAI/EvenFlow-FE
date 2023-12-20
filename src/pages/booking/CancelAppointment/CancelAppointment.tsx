@@ -4,7 +4,6 @@ import {useHistory, useParams} from "react-router-dom";
 import {API} from "../../../api/api";
 import {AppointmentStatus, IAppointmentByQuery} from "../../../api/types";
 import {useException, useStorage} from "../../../utils/hooks";
-import {LoadingButton} from "../../../components/UI/Button";
 import {Loading} from "../../../components/UI/Loading";
 import {useDispatch} from "react-redux";
 import {clearStorage, loadSCProfile} from "../../../store/reducers/appointment/actions";
@@ -15,6 +14,7 @@ import {Routes} from "../../../config/routes";
 import {NotFoundError} from "../../../components/UI/NotFoundError";
 import {encodeSCID} from "../../../utils/utils";
 import {useTranslation} from "react-i18next";
+import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
 
 type TState = "loading" | "new" | "canceled" | "already_canceled" | "error";
 

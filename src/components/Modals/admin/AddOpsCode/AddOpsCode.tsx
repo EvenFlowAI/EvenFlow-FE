@@ -5,9 +5,9 @@ import {DialogProps} from "../../../BaseModal/types";
 import {TableRowDataType} from "../../../UI/types";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../store/rootReducer";
-import {Table} from "../../../UI/Table";
+import {Table} from "../../../Table/Table";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
-import {SearchInput} from "../../../UI/SearchInput";
+import {SearchInput} from "../../../FormControls/SearchInput/SearchInput";
 import {usePagination, useSCs} from "../../../../utils/hooks";
 import {
     loadAssignedServiceRequests,

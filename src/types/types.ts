@@ -5,6 +5,8 @@ import {TRole} from "../store/reducers/users/types";
 import React from "react";
 import {AutocompleteChangeDetails, AutocompleteChangeReason} from "@material-ui/lab";
 
+import {TextInputProps} from "../components/FormControls/types";
+
 export type LinkType = {
     to: string;
     name: string;
@@ -104,3 +106,24 @@ export type TSelectChange = (
 ) => void;
 
 export type TView = "select" | "search" | "confirm" | "serviceSelect" | "serviceCenterSelect";
+
+export type TSwitchButton<U> = { label: string; type: U };
+
+export type TSwitchButtonsProps<U = string> = {
+    onClick: (s: U) => () => void,
+    active: U,
+    buttons: TSwitchButton<U>[]
+}
+
+export type TTitle = {
+    title: string;
+    to: string;
+    parent?: TTitle;
+}
+
+export type TSearchInputProps = TextInputProps & {
+    onSearch: () => void;
+    delay?: number;
+    value?: string;
+    placeholder?: string;
+};

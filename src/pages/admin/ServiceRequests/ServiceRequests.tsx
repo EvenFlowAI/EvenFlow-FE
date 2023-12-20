@@ -2,14 +2,14 @@ import React from "react";
 import {Tab} from "@material-ui/core";
 import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TitleContainer} from "../../../components/UI/TitleContainer";
-import {ServiceRequestsScreen} from "../../../features/ServiceRequests/ServiceRequestsScreen";
-import {MaintenancePackages} from "../../../features/MaintenancePackages/MaintenancePackages";
-import {ComplimentaryServices} from "../../../features/ComplimentaryServices/ComplimentaryServices";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {ServiceRequestsScreen} from "../../../features/admin/ServiceRequests/ServiceRequestsScreen";
+import {MaintenancePackages} from "../../../features/admin/MaintenancePackages/MaintenancePackages";
+import {ComplimentaryServices} from "../../../features/admin/ComplimentaryServices/ComplimentaryServices";
 import {setServiceRequestsPageActiveTab} from "../../../store/reducers/serviceRequests/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {IntervalUpsell} from "../../../features/IntervallUpsell/IntervalUpsell";
+import {IntervalUpsell} from "../../../features/admin/IntervallUpsell/IntervalUpsell";
 import {optimizerRoot} from "../../../config/constants";
 
 export const ServiceRequests = () => {

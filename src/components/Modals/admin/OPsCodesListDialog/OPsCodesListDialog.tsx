@@ -11,11 +11,11 @@ import {
 import {useException, usePagination, useSCs} from "../../../../utils/hooks";
 import {TableRowDataType} from "../../../UI/types";
 import {IServiceRequest} from "../../../../store/reducers/serviceRequests/types";
-import {Table} from "../../../UI/Table";
-import {LoadingButton} from "../../../UI/Button";
+import {Table} from "../../../Table/Table";
 import {SC_UNDEFINED} from "../../../../config/constants";
-import {SearchInput} from "../../../UI/SearchInput";
+import {SearchInput} from "../../../FormControls/SearchInput/SearchInput";
 import {IOrder} from "../../../../types/types";
+import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "Ops Code", val: el => el.code, orderId: "code"},

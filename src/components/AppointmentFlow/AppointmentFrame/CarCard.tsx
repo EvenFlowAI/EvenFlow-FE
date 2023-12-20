@@ -12,7 +12,7 @@ import {TArgCallback, TCallback} from "../../../types/types";
 import {useTranslation} from "react-i18next";
 import CarCardAction from "./CarCardAction";
 import {useCurrentUser, useModal} from "../../../utils/hooks";
-import VehicleRepairHistory from "../../Modals/VehicleRepairHistory/VehicleRepairHistory";
+import VehicleRepairHistory from "../../Modals/common/VehicleRepairHistory/VehicleRepairHistory";
 import {RootState} from "../../../store/rootReducer";
 
 type TProps = {

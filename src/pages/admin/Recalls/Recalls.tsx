@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TitleContainer} from "../../../components/UI/TitleContainer";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
-import RecallParts from "../../../features/RecallsParts/RecallParts";
-import RecallsAllOtherParts from "../../../features/RecallsAllOtherParts/RecallsAllOtherParts";
+import RecallParts from "../../../features/admin/RecallsParts/RecallParts";
+import RecallsAllOtherParts from "../../../features/admin/RecallsAllOtherParts/RecallsAllOtherParts";
 import {optimizerRoot} from "../../../config/constants";
 
 const Recalls = () => {

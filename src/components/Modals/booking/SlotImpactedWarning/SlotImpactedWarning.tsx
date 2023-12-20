@@ -1,6 +1,5 @@
 import React from 'react';
 import {BaseModal, DialogTitle} from "../../../BaseModal/BaseModal";
-import {LoadingButton} from "../../../UI/Button";
 import {useTranslation} from "react-i18next";
 import {setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";
 import {setCurrentFrameScreen} from "../../../../store/reducers/appointmentFrameReducer/actions";
@@ -8,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useHistory, useParams} from "react-router-dom";
 import {useStyles} from "./styles";
+import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 const SlotImpactedWarning = () => {
     const {isSlotsWarningOpen} = useSelector((state: RootState) => state.modals);

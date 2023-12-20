@@ -3,7 +3,7 @@ import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core"
 
 import {useTranslation} from "react-i18next";
 import {ReactComponent as UserIcon} from "../../../../assets/img/user_big.svg";
-import {useCustomerSelectStyles} from "../../../../sharedStyles/useCustomerSelectStyles";
+import {useCustomerSelectStyles} from "../../../../commonStyles/useCustomerSelectStyles";
 import {useStyles} from "./styles";
 
 const NewCustomerForAdmin: React.FC<{ handleNew: () => void}> = ({ handleNew }) => {

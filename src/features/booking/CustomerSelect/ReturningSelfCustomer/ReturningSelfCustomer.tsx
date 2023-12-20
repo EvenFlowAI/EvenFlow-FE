@@ -1,6 +1,5 @@
 import React, {useMemo} from 'react';
 import {TextField} from "../../../../components/styled/EndUserInputs";
-import {LoadingButton} from "../../../../components/UI/Button";
 import {Grid, useMediaQuery} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
@@ -8,8 +7,9 @@ import {RootState} from "../../../../store/rootReducer";
 import {setCustomerEnteredEmail} from "../../../../store/reducers/appointment/actions";
 import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {setUserType} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {useLoadingStyles} from "../../../../sharedStyles/useLoadingStyles";
+import {useLoadingStyles} from "../../../../commonStyles/useLoadingStyles";
 import {useStyles} from "../styles";
+import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 
 type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;

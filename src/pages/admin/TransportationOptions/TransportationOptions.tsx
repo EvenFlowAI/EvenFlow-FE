@@ -1,6 +1,6 @@
 import React from "react";
-import {TitleContainer} from "../../../components/UI/TitleContainer";
-import {Transportations} from "../../../features/Transportations/Transportations";
+import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {Transportations} from "../../../features/admin/Transportations/Transportations";
 import {bookingFlowRoot} from "../../../config/constants";
 
 export const TransportationOptions = () => {
