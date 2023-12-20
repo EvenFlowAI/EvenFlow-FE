@@ -3,7 +3,7 @@ import {TimeWindows} from "../AppointmentAllocation/TimeWindows";
 import {DemandSegments} from "../AppointmentAllocation/DemandSegments";
 import {Caption} from "../../../components/Caption/Caption";
 import {Routes} from "../../../config/routes";
-import {TextLink} from "../../../components/UI/TextLink";
+import {TextLink} from "../../../components/TextLink/TextLink";
 import {useDispatch, useSelector} from "react-redux";
 import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {recalculateCapacity} from "../../../store/reducers/demandSegments/actions";

@@ -1,7 +1,7 @@
 import React from "react";
 import {useHistory} from "react-router-dom";
 import {LoginContainer} from "../../../../components/styled/LoginContainer";
-import {LoginHeader} from "../../../../components/UI/LoginHeader";
+import {LoginHeader} from "../../../../components/LoginHeader/LoginHeader";
 import {LoginTextContent} from "../../../../components/LoginTextContent/LoginTextContent";
 import {LoginButton} from "../../../../components/styled/LoginButton";
 

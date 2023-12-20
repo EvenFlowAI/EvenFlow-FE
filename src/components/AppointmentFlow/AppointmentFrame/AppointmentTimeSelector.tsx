@@ -3,7 +3,7 @@ import moment from "moment";
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "./TimeSlotCard";
 import {styled} from "@material-ui/core";
-import {Loading} from "../../UI/Loading";
+import {Loading} from "../../Loading/Loading";
 import {TGroupedAppointment} from "../../../utils/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";

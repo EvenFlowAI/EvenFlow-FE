@@ -6,7 +6,7 @@ import {Button, Grid, Switch, useMediaQuery, useTheme} from "@material-ui/core";
 import moment from "moment/moment";
 import {blankRow} from "../constants";
 import {useStyles} from "./styles";
-import {TimePicker} from "../../../../UI/TimePicker";
+import {TimePicker} from "../../../../TimePicker/TimePicker";
 
 type THOOFormProps = TViewMode & {
     form: THOOForm[];

@@ -30,7 +30,7 @@ import {loadWeeklyHolidaysList} from "../../../../store/reducers/holidays/action
 import {getStartEndDates} from "../../../../utils/utils";
 import {TForm} from "./types";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
-import {TimePicker} from "../../../../components/UI/TimePicker";
+import {TimePicker} from "../../../../components/TimePicker/TimePicker";
 
 type TProps = DialogProps<ISchedule> & {
     selectedDate: moment.Moment;

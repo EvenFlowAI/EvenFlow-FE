@@ -12,7 +12,7 @@ import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
 import {useDispatch} from "react-redux";
 import {createTimeRange, updateTimeRange} from "../../../../store/reducers/capacityServiceValet/actions";
 import {timeFormat, timeWithSecond} from "../constants";
-import {TimePicker} from "../../../../components/UI/TimePicker";
+import {TimePicker} from "../../../../components/TimePicker/TimePicker";
 
 type TProps = DialogProps & {
     editingElement: ITimeRangeAndCapacity;

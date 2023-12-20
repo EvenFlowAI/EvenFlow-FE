@@ -10,7 +10,6 @@ import {
 } from "../../../store/reducers/packages/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
-import {TableRowDataType} from "../../../components/UI/types";
 import {IComplimentaryServiceByQuery} from "../../../store/reducers/packages/types";
 import {Table} from "../../../components/Table/Table";
 import {RootState} from "../../../store/rootReducer";
@@ -20,7 +19,7 @@ import {optimizerRoot, SC_UNDEFINED} from "../../../config/constants";
 import AddServiceManually from "./AddServiceManually/AddServiceManually";
 import {OPsCodesListDialog} from "../../../components/Modals/admin/OPsCodesListDialog/OPsCodesListDialog";
 import {addOpsCodeFromList, loadAllComplimentary} from "../../../store/reducers/complimentary/actions";
-import {IOrder} from "../../../types/types";
+import {IOrder, TableRowDataType} from "../../../types/types";
 
 export const ComplimentaryServices = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);

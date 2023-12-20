@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IServiceOffer} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {loadServiceOffers, setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {Loading} from "../../../UI/Loading";
+import {Loading} from "../../../Loading/Loading";
 
 export const PageWrapper = styled('div')(({theme}) => ({
     // maxWidth: '80vw',

@@ -4,12 +4,11 @@ import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/ho
 import {deleteMake, setCurrentMake} from "../../../../store/reducers/vehicleDetails/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
-import {TableRowDataType} from "../../../../components/UI/types";
 import {IMake} from "../../../../api/types";
 import {Table} from "../../../../components/Table/Table";
 import {MoreHoriz} from "@material-ui/icons";
 import {truncateMakes} from "../../../../utils/utils";
-import {TCallback} from "../../../../types/types";
+import {TableRowDataType, TCallback} from "../../../../types/types";
 
 const RowData: TableRowDataType<IMake>[] = [
     {val: (el: IMake) => <span style={{fontWeight: 'bold'}}>{el.name}</span>, header: "Make"},

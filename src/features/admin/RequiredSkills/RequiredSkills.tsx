@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Table} from "../../../components/Table/Table";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import {TableRowDataType} from "../../../components/UI/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -13,7 +12,8 @@ import {
 } from "../../../store/reducers/serviceRequests/actions";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {RequiredSkillsModal} from "./RequiredSkillsModal/RequiredSkillsModal";
-import {CheckmarkCircle} from "../../../components/UI/ChekmarkCircle";
+import {CheckmarkCircle} from "../../../components/ChekmarkCircle/ChekmarkCircle";
+import {TableRowDataType} from "../../../types/types";
 
 const rowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {

@@ -4,7 +4,7 @@ import {Divider, FormControlLabel, Grid, Switch} from "@material-ui/core";
 import {TextField} from "../../../../FormControls/TextFieldStyled/TextField";
 import {checkEmail} from "../../../../../utils/utils";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../../utils/AutocompleteRender";
 import {superRoles} from "../constants";
 import {userRoles, widerUserRoles} from "../../../../../config/constants";
 import {TRole} from "../../../../../store/reducers/users/types";

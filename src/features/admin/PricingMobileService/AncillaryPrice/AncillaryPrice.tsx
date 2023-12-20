@@ -18,7 +18,7 @@ import {IZonePriceSettings, TDistanceRange, TDistanceRangeUpdate} from "../../..
 import {RootState} from "../../../../store/rootReducer";
 import AncillaryPriceByDistance from "../../AncillaryPriceByDistance/AncillaryPriceByDistance";
 import AncillaryPriceByZone from "../../AncillaryPriceByZone/AncillaryPriceByZone";
-import {Loading} from "../../../../components/UI/Loading";
+import {Loading} from "../../../../components/Loading/Loading";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {EAncillaryPriceType} from "../../../../store/reducers/mobileService/types";
 import {TablesWrapper} from "../../../../components/styled/TablesWrapper";

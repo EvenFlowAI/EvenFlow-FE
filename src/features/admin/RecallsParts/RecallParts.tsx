@@ -7,7 +7,7 @@ import AddRecallModal from "./AddRecallModal/AddRecallModal";
 import {IRecall} from "../../../store/reducers/recall/types";
 import {makeStyles} from "@material-ui/core/styles";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../utils/AutocompleteRender";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadAllAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";

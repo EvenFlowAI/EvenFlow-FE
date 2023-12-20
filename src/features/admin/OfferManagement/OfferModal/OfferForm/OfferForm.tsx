@@ -11,7 +11,7 @@ import {
     offerTypes
 } from "../../../../../store/reducers/offers/types";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteOptionsRender, autocompleteRender} from "../../../../../components/UI/AutocompleteRender";
+import {autocompleteOptionsRender, autocompleteRender} from "../../../../../utils/AutocompleteRender";
 import clsx from "clsx";
 import {DateRange, QueryBuilder} from "@material-ui/icons";
 import {DialogContent} from "../../../../../components/BaseModal/BaseModal";
@@ -25,8 +25,8 @@ import {EServiceCategoryType, ICategory} from "../../../../../store/reducers/cat
 import {useModal} from "../../../../../utils/hooks";
 import HtmlEditor from "../../../../../components/Modals/admin/HTMLEditor/HTMLEditor";
 import {useStyles} from "./styles";
-import {DatePicker} from "../../../../../components/UI/DatePicker";
-import {TimePicker} from "../../../../../components/UI/TimePicker";
+import {DatePicker} from "../../../../../components/DatePicker/DatePicker";
+import {TimePicker} from "../../../../../components/TimePicker/TimePicker";
 
 type TProps = {
     form: TOfferForm;

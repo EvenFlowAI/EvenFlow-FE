@@ -5,7 +5,7 @@ import {Grid} from "@material-ui/core";
 import {TextField} from "../../../../FormControls/TextFieldStyled/TextField";
 import {TConsultantOption, TDMSConsultantChange, TSelectChange, TTechnicianForm} from "../types";
 import {ToggleButtons} from "../../../../ToggleButtons/ToggleButtons";
-import {autocompleteRender} from "../../../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../../utils/AutocompleteRender";
 import {checkEmail} from "../../../../../utils/utils";
 import 'react-phone-number-input/style.css'
 

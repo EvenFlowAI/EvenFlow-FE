@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {EditButton} from "../../../../components/UI/EditButton";
+import {EditButton} from "../../../../components/EditButton/EditButton";
 import {PriceLevelsModal} from "../PriceLevelsModal/PriceLevelsModal";
 import {useModal, useSCs} from "../../../../utils/hooks";
 import {EDemandCategory, IPricingLevel, TPricingLevels} from "../../../../store/reducers/pricingSettings/types";

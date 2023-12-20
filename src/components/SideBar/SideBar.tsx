@@ -8,7 +8,7 @@ import {matchPath, useHistory, useLocation} from "react-router-dom";
 import {ArrowForwardIos, Close} from "@material-ui/icons";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
-import {Loading} from "../UI/Loading";
+import {Loading} from "../Loading/Loading";
 import Link from "./Link/Link";
 import {reportingAllowedRoles} from "../../pages/admin/Reporting/constants";
 import {useStyles} from "./styles";

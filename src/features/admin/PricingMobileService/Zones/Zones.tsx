@@ -3,7 +3,7 @@ import GeographicZone from "../../../../components/GeographicZone/GeographicZone
 import {TZipCode, TZone} from "../../../../store/reducers/mobileService/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../../components/UI/Loading";
+import {Loading} from "../../../../components/Loading/Loading";
 import {useStyles} from "./styles";
 
 type TZonesProps = {

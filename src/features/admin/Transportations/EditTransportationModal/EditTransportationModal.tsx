@@ -12,11 +12,11 @@ import {
 } from "../../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../../store/rootReducer";
 import moment from "moment";
-import {autocompleteRender} from "../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import { ReactComponent as Calendar } from "../../../../assets/img/date_range.svg";
 import { ReactComponent as Watch } from "../../../../assets/img/watch_round.svg";
-import Checkbox from "../../../../components/UI/Checkbox";
+import Checkbox from "../../../../components/Checkbox/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {Button, Divider} from "@material-ui/core";
 import {editTransportationOptionRules} from "../../../../store/reducers/transportationNeeds/actions";
@@ -24,8 +24,8 @@ import {TextField} from "../../../../components/FormControls/TextFieldStyled/Tex
 import {getOptions} from "../../../../utils/utils";
 import {useAutocompleteStyles, useMultipleACStyles, useStyles} from "./styles";
 import {TOption, TTimeObject} from "../types";
-import {DatePicker} from "../../../../components/UI/DatePicker";
-import {TimePicker} from "../../../../components/UI/TimePicker";
+import {DatePicker} from "../../../../components/DatePicker/DatePicker";
+import {TimePicker} from "../../../../components/TimePicker/TimePicker";
 
 type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;

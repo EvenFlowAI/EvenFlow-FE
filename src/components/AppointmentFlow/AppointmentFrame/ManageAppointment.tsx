@@ -33,7 +33,7 @@ import {ReviewManage} from "./manageSections/ReviewManage";
 import ConfirmCancelUpdate from "../../Modals/booking/ConfirmCancelUpdate/ConfirmCancelUpdate";
 import {ILoadedVehicle} from "../../../api/types";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
-import {Loading} from "../../UI/Loading";
+import {Loading} from "../../Loading/Loading";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";
 import AddressManage from "./manageSections/AddressManage";
 import {API} from "../../../api/api";

@@ -9,12 +9,11 @@ import {
     setNonSelectedPageData
 } from "../../../../store/reducers/serviceRequests/actions";
 import {useException, usePagination, useSCs} from "../../../../utils/hooks";
-import {TableRowDataType} from "../../../UI/types";
 import {IServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Table} from "../../../Table/Table";
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {SearchInput} from "../../../FormControls/SearchInput/SearchInput";
-import {IOrder} from "../../../../types/types";
+import {IOrder, TableRowDataType} from "../../../../types/types";
 import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [

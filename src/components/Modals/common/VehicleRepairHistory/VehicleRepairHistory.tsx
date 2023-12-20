@@ -6,9 +6,9 @@ import {BaseModal, DialogContent, DialogTitle} from "../../../BaseModal/BaseModa
 import {DialogProps} from "../../../BaseModal/types";
 import {Button, Divider, Table, TableBody, TableHead, TableRow} from "@material-ui/core";
 import moment from "moment";
-import {Loading} from "../../../UI/Loading";
+import {Loading} from "../../../Loading/Loading";
 import classnames from 'classnames';
-import {NoData} from "../../../UI/NoData";
+import {NoData} from "../../../NoData/NoData";
 import {HCell, TCell, useStyles} from "./styles";
 
 const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({vehicleDmsId, open, onClose}) => {

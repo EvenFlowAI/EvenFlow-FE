@@ -3,7 +3,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {Button, FormControlLabel, Grid, Radio, RadioGroup} from "@material-ui/core";
 import {useException, useMessage} from "../../../../utils/hooks";
-import {autocompleteRender} from "../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";

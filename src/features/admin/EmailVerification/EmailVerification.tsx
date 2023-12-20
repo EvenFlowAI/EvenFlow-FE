@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useLocation, useHistory} from "react-router-dom";
-import {LoginHeader} from "../../../components/UI/LoginHeader";
+import {LoginHeader} from "../../../components/LoginHeader/LoginHeader";
 import {LoginContainer} from "../../../components/styled/LoginContainer";
 import {LoginButton} from "../../../components/styled/LoginButton";
 import {Routes} from "../../../config/routes";

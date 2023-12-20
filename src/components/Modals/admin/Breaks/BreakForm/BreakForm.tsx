@@ -7,7 +7,7 @@ import {DeleteOutline} from "@material-ui/icons";
 import {TBreak} from "../types";
 import {useStyles} from "./styles";
 import {blankRow} from "../constants";
-import {TimePicker} from "../../../../UI/TimePicker";
+import {TimePicker} from "../../../../TimePicker/TimePicker";
 
 type TProps = {
     form: TBreak[],

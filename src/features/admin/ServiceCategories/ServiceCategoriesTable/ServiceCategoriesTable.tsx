@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {Table} from "../../../../components/Table/Table";
 import {TabPanel} from "@material-ui/lab";
-import {TableRowDataType} from "../../../../components/UI/types";
 import {ICategory} from "../../../../store/reducers/categories/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -12,6 +11,7 @@ import {useConfirm, useException, useMessage, useModal} from "../../../../utils/
 import {AddServiceCategoryModal} from "../AddServiceCategoryModal/AddServiceCategoryModal";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {visitCenterTabs} from "../constants";
+import {TableRowDataType} from "../../../../types/types";
 
 const RowData: TableRowDataType<ICategory>[] = [
     {val: (el: ICategory) => el.name, header: "Service Category Name",  width: 300},

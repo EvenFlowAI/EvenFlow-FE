@@ -18,7 +18,7 @@ import {
 } from "../../../../store/reducers/serviceValet/actions";
 import {IZonePriceSettings, TDistanceRange, TDistanceRangeUpdate} from "../../../../store/reducers/serviceValet/types";
 import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../../components/UI/Loading";
+import {Loading} from "../../../../components/Loading/Loading";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {EAncillaryPriceType} from "../../../../store/reducers/mobileService/types";
 import {TablesWrapper} from "../../../../components/styled/TablesWrapper";

@@ -3,7 +3,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {Button} from "@material-ui/core";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {FileInput} from "../../../../components/FormControls/FileInput/FileInput";
 import {setAssignedFilter} from "../../../../store/reducers/serviceRequests/actions";
 import {useDispatch, useSelector} from "react-redux";

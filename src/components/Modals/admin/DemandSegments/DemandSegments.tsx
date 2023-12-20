@@ -10,9 +10,9 @@ import {SC_UNDEFINED} from "../../../../config/constants";
 import {RootState} from "../../../../store/rootReducer";
 import {Table} from "../../../Table/Table";
 import {IDemandSegment} from "../../../../store/reducers/demandSegments/types";
-import {TableRowDataType} from "../../../UI/types";
 import {Api} from "../../../../config/requests";
 import {LoadingButton} from "../../../LoadingButton/LoadingButton";
+import {TableRowDataType} from "../../../../types/types";
 
 const rowData: TableRowDataType<IDemandSegment>[] = [
     {header: "Demand Segments",

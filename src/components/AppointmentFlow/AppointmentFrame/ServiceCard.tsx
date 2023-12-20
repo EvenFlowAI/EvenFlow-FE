@@ -3,7 +3,7 @@ import {TCallback} from "../../../types/types";
 import {IServiceCategory} from "../../../api/types";
 import {ReactComponent as Icon} from "../../../assets/img/oil-icon.svg";
 import axios from "axios";
-import {Loading} from "../../UI/Loading";
+import {Loading} from "../../Loading/Loading";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";

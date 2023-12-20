@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Grid, Paper} from "@material-ui/core";
-import {Loading} from "../../../../components/UI/Loading";
+import {Loading} from "../../../../components/Loading/Loading";
 import {useStyles} from "./styles";
 
 type TCenterSettingsPlateProps = {

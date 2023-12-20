@@ -8,7 +8,7 @@ import {SearchInput} from "../../../../components/FormControls/SearchInput/Searc
 import {loadAll, setSCSearch, setSelectedDealershipGroupId} from "../../../../store/reducers/serviceCenters/actions";
 import {changePageData} from "../../../../store/reducers/dealershipGroups/actions";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {useStyles} from "./styles";
 import {TSelectedGroup} from "../types";
 import {SearchDB} from "../../../../components/FormControls/SearchDebounced/SearchDB";

@@ -4,7 +4,7 @@ import {
     IServiceValetAppointment,
 } from "../../../store/reducers/appointment/types";
 import {styled} from "@material-ui/core";
-import {Loading} from "../../UI/Loading";
+import {Loading} from "../../Loading/Loading";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";

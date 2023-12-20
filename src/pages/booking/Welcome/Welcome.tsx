@@ -34,7 +34,7 @@ import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameR
 import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import ExistingCustomerError from "../../../components/Modals/booking/ExistingCustomerError/ExistingCustomerError";
-import {Loading} from "../../../components/UI/Loading";
+import {Loading} from "../../../components/Loading/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
 import {
     loadCustomersByPhoneOrEmail, setCustomerSearchData,

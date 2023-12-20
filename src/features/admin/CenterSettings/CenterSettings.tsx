@@ -12,7 +12,7 @@ import {RootState} from "../../../store/rootReducer";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {TDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/types";
 import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
-import {TimePicker} from "../../../components/UI/TimePicker";
+import {TimePicker} from "../../../components/TimePicker/TimePicker";
 
 const CenterSettings = () => {
     const {centerSettings, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);

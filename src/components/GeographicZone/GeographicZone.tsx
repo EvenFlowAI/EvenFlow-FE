@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import {TZipCode, TZone} from "../../store/reducers/mobileService/types";
-import Checkbox from "../UI/Checkbox";
+import Checkbox from "../Checkbox/Checkbox";
 import {CloseOutlined} from "@material-ui/icons";
 import {useStyles, ZipCode} from "./styles";
 

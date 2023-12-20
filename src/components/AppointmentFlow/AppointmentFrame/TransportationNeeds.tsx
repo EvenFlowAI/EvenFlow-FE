@@ -17,7 +17,7 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import theme from "../../../theme/theme";
-import {Loading} from "../../UI/Loading";
+import {Loading} from "../../Loading/Loading";
 import ReactGA from "react-ga4";
 //import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";

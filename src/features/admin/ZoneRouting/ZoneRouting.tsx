@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {TableRowDataType} from "../../../components/UI/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import Checkbox from "../../../components/UI/Checkbox";
+import Checkbox from "../../../components/Checkbox/Checkbox";
 import {EDaysFromMonday, IZonesRoutingByDay} from "../../../store/reducers/capacityServiceValet/types";
 import {Table} from "../../../components/Table/Table";
-import {Loading} from "../../../components/UI/Loading";
+import {Loading} from "../../../components/Loading/Loading";
 import {useSCs} from "../../../utils/hooks";
 import {loadZonesRouting, updateZonesRouting} from "../../../store/reducers/capacityServiceValet/actions";
 import {EDay} from "../../../store/reducers/demandSegments/types";
+import {TableRowDataType} from "../../../types/types";
 
 const dayNames = Object.keys(EDay).filter(key => Number.isNaN(+key));
 

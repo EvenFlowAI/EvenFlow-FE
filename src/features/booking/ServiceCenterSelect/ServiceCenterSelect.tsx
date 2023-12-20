@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Loading} from "../../../components/UI/Loading";
+import {Loading} from "../../../components/Loading/Loading";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useCurrentUser} from "../../../utils/hooks";

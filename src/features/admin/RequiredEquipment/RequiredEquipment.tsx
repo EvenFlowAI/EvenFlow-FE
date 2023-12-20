@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from "react";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {Table} from "../../../components/Table/Table";
-import {TableRowDataType} from "../../../components/UI/types";
 import {IBay} from "../../../store/reducers/bays/types";
 import {CheckCircle, MoreHoriz} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,6 +10,7 @@ import {loadBays, removeBay, setPageData} from "../../../store/reducers/bays/act
 import {CreateBayModal} from "./CreateBayModal/CreateBayModal";
 import {TViewMode} from "../../../components/BaseModal/types";
 import {useStyles} from "./styles";
+import {TableRowDataType} from "../../../types/types";
 
 const rowData: TableRowDataType<IBay>[] = [
     {header: "", val: v => v.name},

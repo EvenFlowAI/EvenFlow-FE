@@ -3,10 +3,10 @@ import {Table} from "../../../../../components/Table/Table";
 import {IAssignedServiceRequest} from "../../../../../store/reducers/serviceRequests/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
-import {TableRowDataType} from "../../../../../components/UI/types";
-import Checkbox from "../../../../../components/UI/Checkbox";
+import Checkbox from "../../../../../components/Checkbox/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {useStyles} from "./styles";
+import {TableRowDataType} from "../../../../../types/types";
 
 const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {

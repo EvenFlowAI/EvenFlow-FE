@@ -1,9 +1,9 @@
 import React, {ChangeEvent, useCallback, Dispatch, SetStateAction} from 'react';
-import {autocompleteRender} from "../../../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../../../utils/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
-import Checkbox from "../../../../../../components/UI/Checkbox";
+import Checkbox from "../../../../../../components/Checkbox/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {IEngineType} from "../../../../../../store/reducers/vehicleDetails/types";
 import {useAutocompleteStyles} from "../../../../../../commonStyles/useAutocompleteStyles";

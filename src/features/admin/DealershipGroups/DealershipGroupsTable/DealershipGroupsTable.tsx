@@ -2,7 +2,6 @@ import React, {useState, useEffect} from "react";
 import {Table} from "../../../../components/Table/Table";
 import {IconButton, Menu, MenuItem, Typography} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
-import {TableRowDataType} from "../../../../components/UI/types";
 import {IDealershipGroupExtended} from "../../../../store/reducers/dealershipGroups/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -13,6 +12,7 @@ import {useHistory} from "react-router-dom";
 import {Routes} from "../../../../config/routes";
 import {concatAddress} from "../../../../utils/utils";
 import {authService} from "../../../../config/requests";
+import {TableRowDataType} from "../../../../types/types";
 
 const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
     {val: el => el.name, header: "Dealership name"},

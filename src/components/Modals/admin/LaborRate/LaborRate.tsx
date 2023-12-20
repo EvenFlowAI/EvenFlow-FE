@@ -8,7 +8,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {useException, useMessage} from "../../../../utils/hooks";
 import {loadLaborRate, updateLaborRate} from "../../../../store/reducers/serviceCenters/actions";
 import {ILaborRate} from "../../../../store/reducers/serviceCenters/types";
-import {Loading} from "../../../UI/Loading";
+import {Loading} from "../../../Loading/Loading";
 import {DemandTable} from "../../../styled/DemandTable";
 import {TableRow} from "../../../styled/TableRow";
 import {TableCell} from "../../../styled/TableCell";

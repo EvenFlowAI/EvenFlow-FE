@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {WelcomeLayout} from "../../../features/booking/WelcomeLayout/WelcomeLayout";
-import {Loading} from "../../../components/UI/Loading";
+import {Loading} from "../../../components/Loading/Loading";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import {API} from "../../../api/api";
 import {Button, styled} from "@material-ui/core";
@@ -15,7 +15,7 @@ import {Routes} from "../../../config/routes";
 import {AppointmentStatus, ICustomerLoadedData, ILoadedVehicle} from "../../../api/types";
 import {Edit} from "@material-ui/icons";
 import {RootState} from "../../../store/rootReducer";
-import {NotFoundError} from "../../../components/UI/NotFoundError";
+import {NotFoundError} from "../../../components/NotFoundError/NotFoundError";
 import {encodeSCID} from "../../../utils/utils";
 import {
     setCurrentFrameScreen,

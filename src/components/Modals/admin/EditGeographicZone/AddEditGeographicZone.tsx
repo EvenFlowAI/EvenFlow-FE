@@ -21,8 +21,8 @@ import {
 } from "../../../../store/reducers/mobileService/actions";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../UI/Loading";
-import {autocompleteRender} from "../../../UI/AutocompleteRender";
+import {Loading} from "../../../Loading/Loading";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {loadFilteredZip, setFilteredZipCodes} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useStyles} from "./styles";

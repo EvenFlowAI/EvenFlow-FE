@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {NoItemsLoading} from "../../../../components/UI/NoItemsLoading";
+import {NoItemsLoading} from "../../../../components/NoItemsLoading/NoItemsLoading";
 import {Box, FormControlLabel, Radio, RadioGroup, TableBody, TableHead} from "@material-ui/core";
 import {TableContainer} from "../../../../pages/admin/PricingSettings/UI";
 import {useException, useSCs} from "../../../../utils/hooks";

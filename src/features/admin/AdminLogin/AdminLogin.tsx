@@ -3,7 +3,7 @@ import {TextField} from "../../../components/FormControls/TextFieldStyled/TextFi
 import {Link as RLink, useHistory, useLocation} from "react-router-dom";
 import {LockOpen} from "@material-ui/icons";
 import React, {useState} from "react";
-import {LoginHeader} from "../../../components/UI/LoginHeader";
+import {LoginHeader} from "../../../components/LoginHeader/LoginHeader";
 import {LoginContainer} from "../../../components/styled/LoginContainer";
 import {LoginButton} from "../../../components/styled/LoginButton";
 import {ICredentials} from "../../../types/types";

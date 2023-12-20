@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {Autocomplete} from "@material-ui/lab";
 import {styled} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {autocompleteRender} from "../../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {StepWrapper} from "../StepWrapper";
 import {Actions} from "../Actions";
 import {TActionProps} from "../types";
@@ -11,7 +11,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {makeStyles} from "@material-ui/core/styles";
 import {TModel, TSeries} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {useException} from "../../../../utils/hooks";
-import {Loading} from "../../../UI/Loading";
+import {Loading} from "../../../Loading/Loading";
 import {useTranslation} from "react-i18next";
 
 const SelectsTitle = styled('div')(() => ({

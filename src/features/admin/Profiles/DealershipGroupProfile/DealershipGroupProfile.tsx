@@ -6,7 +6,7 @@ import {useDealershipProfile, useException, useMessage} from "../../../../utils/
 import {updateDealership, updateDealershipAvatar} from "../../../../store/reducers/dealershipGroups/actions";
 import {useDispatch} from "react-redux";
 import {states} from "../../../../config/constants";
-import {autocompleteRender} from "../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {validatePhoneNumber} from "../../../../utils/utils";
 import {useStyles} from "./styles";

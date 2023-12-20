@@ -8,7 +8,7 @@ import {
     setAssignedOrdering,
 } from "../../../../store/reducers/serviceRequests/actions";
 import {SC_UNDEFINED} from "../../../../config/constants";
-import {IOrder, TCallback} from "../../../../types/types";
+import {IOrder, TableRowDataType, TCallback} from "../../../../types/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {
     useConfirm,
@@ -18,8 +18,7 @@ import {
 } from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {TableRowDataType} from "../../../../components/UI/types";
-import {ServiceRequestCellData} from "../../../../components/UI/ServiceRequestCellData";
+import {ServiceRequestCellData} from "../../../../components/ServiceRequestCellData/ServiceRequestCellData";
 
 const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {header: "Service Ops Code", val: el => el.serviceRequest.code, orderId: "code"},

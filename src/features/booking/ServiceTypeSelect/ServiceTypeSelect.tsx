@@ -25,7 +25,7 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga4";
 //import ReactGA from "react-ga";
-import {Loading} from "../../../components/UI/Loading";
+import {Loading} from "../../../components/Loading/Loading";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {InfoOutlined} from "@material-ui/icons";
 import {HtmlTooltip} from "../../../components/AppointmentFlow/AppointmentFrame/ServiceCard";

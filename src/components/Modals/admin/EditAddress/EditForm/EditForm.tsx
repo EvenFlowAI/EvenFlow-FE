@@ -6,7 +6,7 @@ import {Grid} from "@material-ui/core";
 import {TextField} from "../../../../FormControls/TextFieldStyled/TextField";
 import {Autocomplete} from "@material-ui/lab";
 import {states} from "../../../../../config/constants";
-import {autocompleteRender} from "../../../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../../utils/AutocompleteRender";
 
 type TEditFormProps = TViewMode & {
     onChange: React.ChangeEventHandler<HTMLInputElement>;

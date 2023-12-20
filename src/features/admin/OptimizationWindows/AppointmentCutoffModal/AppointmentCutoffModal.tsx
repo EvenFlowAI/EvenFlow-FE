@@ -13,7 +13,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {IAppointmentCutoff} from "../../../../store/reducers/optimizationWindows/types";
 import {AccessTime} from "@material-ui/icons";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
-import {TimePicker} from "../../../../components/UI/TimePicker";
+import {TimePicker} from "../../../../components/TimePicker/TimePicker";
 
 type TForm = {
     [k in EDay]: ParsableDate;

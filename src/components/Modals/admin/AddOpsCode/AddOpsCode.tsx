@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, SetStateAction, Dispatch} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Button} from "@material-ui/core";
 import {DialogProps} from "../../../BaseModal/types";
-import {TableRowDataType} from "../../../UI/types";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../store/rootReducer";
 import {Table} from "../../../Table/Table";
@@ -14,8 +13,9 @@ import {
     setAssignedFilter, setAssignedPageData,
 } from "../../../../store/reducers/serviceRequests/actions";
 
-import Checkbox from "../../../UI/Checkbox";
+import Checkbox from "../../../Checkbox/Checkbox";
 import {useStyles} from "./styles";
+import {TableRowDataType} from "../../../../types/types";
 
 type TAssignOpsCodeModalProps = DialogProps & {
     selectedCodes: IAssignedServiceRequest[];

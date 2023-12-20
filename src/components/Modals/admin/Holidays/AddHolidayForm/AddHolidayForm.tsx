@@ -4,7 +4,7 @@ import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {FormControlLabel, Grid, Switch} from "@material-ui/core";
 import {TextField} from "../../../../FormControls/TextFieldStyled/TextField";
 import {useStyles} from "./styles";
-import {DatePicker} from "../../../../UI/DatePicker";
+import {DatePicker} from "../../../../DatePicker/DatePicker";
 
 type TProps = {
     form: THolidayForm

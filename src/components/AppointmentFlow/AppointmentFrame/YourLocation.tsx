@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "./StepWrapper";
-import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../../utils/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {Actions} from "./Actions";
 import {TActionProps} from "./types";

@@ -12,7 +12,7 @@ import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/type
 import {useTranslation} from "react-i18next";
 import {setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {ILoadedVehicle} from "../../../api/types";
-import {Loading} from "../../UI/Loading";
+import {Loading} from "../../Loading/Loading";
 import AddToCalendarButton from "./confirmedButtons/AddToCalendarButton";
 import ModifyButton from "./confirmedButtons/ModifyButton";
 import MakeNewButton from "./confirmedButtons/MakeNewButton";

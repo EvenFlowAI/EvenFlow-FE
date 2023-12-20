@@ -21,11 +21,11 @@ import {
     IPrioritizeRequest,
     IServiceRequestPriority
 } from "../../../store/reducers/serviceRequests/types";
-import {TableRowDataType} from "../../../components/UI/types";
 import {UrgentRequestModal} from "./UrgentRequestsModal/UrgentRequestModal";
 import {Api} from "../../../config/requests";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {DeleteOutline} from "@material-ui/icons";
+import {TableRowDataType} from "../../../types/types";
 
 const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
     {header: "Service Ops Code", val: el => el.code},

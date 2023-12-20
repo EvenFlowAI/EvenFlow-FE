@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useException, useMessage} from "../../../../utils/hooks";
 import {EAdvisorAssignMethod, IAdvisorAssignment} from "../../../../store/reducers/serviceCenters/types";
-import {Loading} from "../../../UI/Loading";
+import {Loading} from "../../../Loading/Loading";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {loadAdvisorAssignment, updateAdvisorAssignment} from "../../../../store/reducers/serviceCenters/actions";
 import {DemandTable} from "../../../styled/DemandTable";

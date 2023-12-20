@@ -1,10 +1,9 @@
 import React from "react";
 import {IEmployee} from "../../../../store/reducers/employees/types";
-import {IPagingResponse} from "../../../../types/types";
+import {IPagingResponse, TableRowDataType} from "../../../../types/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Table} from "../../../../components/Table/Table";
-import {TableRowDataType} from "../../../../components/UI/types";
 import {concatAddress} from "../../../../utils/utils";
 import {TDetailComponentProps} from "../../../../pages/admin/DealerShipGroupDetails/types";
 

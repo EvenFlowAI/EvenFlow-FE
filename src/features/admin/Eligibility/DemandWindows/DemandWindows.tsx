@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EWindowType, TTimeWindow} from "../../../../store/reducers/pricingSettings/types";
 import {Caption} from "../../../../components/Caption/Caption";
-import {TextLink} from "../../../../components/UI/TextLink";
+import {TextLink} from "../../../../components/TextLink/TextLink";
 import {Routes} from "../../../../config/routes";
 import {useStyles} from "./styles";
 import {DenseTable} from "../../../../components/styled/DemandTable";

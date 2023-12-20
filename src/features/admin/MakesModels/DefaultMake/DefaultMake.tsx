@@ -6,7 +6,7 @@ import {IMake} from "../../../../api/types";
 import {useException, useSCs} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
 import {updateDefaultMake} from "../../../../store/reducers/serviceCenters/actions";
-import {autocompleteRender} from "../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 
 export const DefaultMake = () => {
     const { makes, isLoading } = useSelector((state: RootState) => state.vehicleDetails);

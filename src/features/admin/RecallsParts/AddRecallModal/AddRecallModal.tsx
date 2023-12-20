@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useException, useSCs} from "../../../../utils/hooks";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {RootState} from "../../../../store/rootReducer";
 import {IMakeExtended, IModel} from "../../../../api/types";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";

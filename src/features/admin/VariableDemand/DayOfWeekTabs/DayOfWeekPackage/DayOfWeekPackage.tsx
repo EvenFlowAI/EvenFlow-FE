@@ -8,7 +8,7 @@ import {
     loadMPPricingSettings, loadPackageOptionsList
 } from "../../../../../store/reducers/pricingSettings/actions";
 import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {Loading} from "../../../../../components/UI/Loading";
+import {Loading} from "../../../../../components/Loading/Loading";
 import EditDayOFWeekPackage from "../../EditDayOFWeekPackageModal/EditDayOFWeekPackageModal";
 import {TMPackage, SliderObject, SliderRange} from "../../types";
 import {useStyles} from "./styles";

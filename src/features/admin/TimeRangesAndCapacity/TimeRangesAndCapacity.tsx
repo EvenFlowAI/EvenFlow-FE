@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {TableRowDataType} from "../../../components/UI/types";
 import {ITimeRangeAndCapacity} from "../../../store/reducers/capacityServiceValet/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
-import {Loading} from "../../../components/UI/Loading";
+import {Loading} from "../../../components/Loading/Loading";
 import {Table} from "../../../components/Table/Table";
 import {Button} from "@material-ui/core";
 import {useModal, useSCs} from "../../../utils/hooks";
 import EditTimeRangeAndCapacityModal from "./EditTimeRangeAndCapacityModal/EditTimeRangeAndCapacityModal";
 import {loadTimeRangesAndCapacity} from "../../../store/reducers/capacityServiceValet/actions";
 import {timeFormat, timeWithSecond} from "./constants";
+import {TableRowDataType} from "../../../types/types";
 
 const TimeRangesAndCapacity = () => {
     const {timeRangesAndCapacity, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);

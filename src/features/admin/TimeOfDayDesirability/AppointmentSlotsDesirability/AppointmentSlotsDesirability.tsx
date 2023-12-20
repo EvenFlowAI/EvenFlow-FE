@@ -24,7 +24,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {CheckBoxOutlined} from "@material-ui/icons";
 import {Caption} from "../../../../components/Caption/Caption";
 import moment from "moment";
-import {Loading} from "../../../../components/UI/Loading";
+import {Loading} from "../../../../components/Loading/Loading";
 import {useStyles} from "./styles";
 import {TForm} from "./types";
 import {gaps} from "./constants";

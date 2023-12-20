@@ -3,7 +3,7 @@ import {Autocomplete} from "@material-ui/lab";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {Divider, Grid} from "@material-ui/core";
 import {checkEmail, noop} from "../../../../utils/utils";
-import {autocompleteRender} from "../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {TSelectChange} from "../../../../types/types";
 import {TFormItem, TInputChange} from "../types";
 

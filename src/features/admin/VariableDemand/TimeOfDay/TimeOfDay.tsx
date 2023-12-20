@@ -2,7 +2,7 @@ import React from 'react';
 import {PaperTitle, TableContainer} from "../../../../pages/admin/PricingSettings/UI";
 import {Box, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {Caption} from "../../../../components/Caption/Caption";
-import {TextLink} from "../../../../components/UI/TextLink";
+import {TextLink} from "../../../../components/TextLink/TextLink";
 import {Routes} from "../../../../config/routes";
 import {SquarePaper} from "../../../../components/styled/Paper";
 import {useStyles} from "./styles";

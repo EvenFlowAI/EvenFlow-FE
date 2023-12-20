@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, styled} from "@material-ui/core";
 import { TActionProps } from './types';
-import {Loading} from "../../UI/Loading";
+import {Loading} from "../../Loading/Loading";
 import {useTranslation} from "react-i18next";
 
 

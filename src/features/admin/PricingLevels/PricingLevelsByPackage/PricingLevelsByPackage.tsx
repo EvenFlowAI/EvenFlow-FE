@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Button} from "@material-ui/core";
-import {TableRowDataType} from "../../../../components/UI/types";
 import {Table} from "../../../../components/Table/Table";
 import {useModal, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,6 +9,7 @@ import {EDemandCategory} from "../../../../store/reducers/pricingSettings/types"
 import EditPackagePricingLevelModal from "../EditPackagePricingLevelModal/EditPackagePricingLevelModal";
 import {TPackagePricingLevel} from "../types";
 import {useStyles} from "./styles";
+import {TableRowDataType} from "../../../../types/types";
 
 const RowData: TableRowDataType<TPackagePricingLevel>[] = [
     {val: (el: TPackagePricingLevel, index: number) => `${index + 1}`, header: "#"},

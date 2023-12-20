@@ -6,12 +6,12 @@ import {useException, useMessage} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
 import {loadPredictionParams, updatePredictionParams} from "../../../store/reducers/serviceCenters/actions";
 import {IPredictionParams} from "../../../store/reducers/serviceCenters/types";
-import {Loading} from "../../../components/UI/Loading";
+import {Loading} from "../../../components/Loading/Loading";
 import {useStyles} from "./styles";
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
 import {TableCell} from "../../../components/styled/TableCell";
-import {SaveEditBlock} from "../../../components/UI/SaveEditBlock";
+import {SaveEditBlock} from "../../../components/SaveEditBlock/SaveEditBlock";
 
 const fixedToTwo = /(^-?\d*\.?\d{1,2}?)$/;
 

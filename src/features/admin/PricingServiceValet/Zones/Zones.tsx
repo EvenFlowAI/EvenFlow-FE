@@ -2,7 +2,7 @@ import React, {Dispatch, SetStateAction} from 'react';
 import {TZipCode, TZone} from "../../../../store/reducers/mobileService/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../../components/UI/Loading";
+import {Loading} from "../../../../components/Loading/Loading";
 import GeographicZone from "../../../../components/GeographicZone/GeographicZone";
 import {useStyles} from "./styles";
 

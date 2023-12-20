@@ -10,7 +10,7 @@ import {TextField} from "../../../../components/FormControls/TextFieldStyled/Tex
 import {IAdvisorShort} from "../../../../store/reducers/users/types";
 import {IBayShort} from "../../../../store/reducers/bays/types";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
-import {autocompleteOptionsRender, autocompleteRender} from "../../../../components/UI/AutocompleteRender";
+import {autocompleteOptionsRender, autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {RootState} from "../../../../store/rootReducer";
 import {

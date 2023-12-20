@@ -11,11 +11,11 @@ import {
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
-import {ITableProps} from "../UI/types";
 import {defaultRowsPerPage, defaultRowsPerPageOptions} from "../../config/config";
-import {NoData} from "../UI/NoData";
-import {Loading} from "../UI/Loading";
+import {NoData} from "../NoData/NoData";
+import {Loading} from "../Loading/Loading";
 import {useStyles} from "./styles";
+import {ITableProps} from "../../types/types";
 
 export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITableProps<U>): JSX.Element {
     const classes = useStyles({

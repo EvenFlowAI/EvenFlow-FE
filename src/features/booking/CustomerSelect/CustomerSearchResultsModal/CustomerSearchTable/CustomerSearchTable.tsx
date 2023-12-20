@@ -36,7 +36,7 @@ import {CustomerInputField} from "../InputFields/CustomerInputField";
 import {AddressInputField} from "../InputFields/AddressInputField";
 import {changePageData, updateCustomer} from "../../../../../store/reducers/enhancedCustomerSearch/actions";
 import {useException, useModal, usePagination} from "../../../../../utils/hooks";
-import {Loading} from "../../../../../components/UI/Loading";
+import {Loading} from "../../../../../components/Loading/Loading";
 import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../../../utils/utils";
 import {EServiceType, EUserType} from "../../../../../store/reducers/appointmentFrameReducer/types";

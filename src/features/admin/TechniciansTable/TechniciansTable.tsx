@@ -9,7 +9,8 @@ import {RootState} from "../../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
 import {TableAvatar} from "../../../components/TableAvatar/TableAvatar";
 import {CreateEmployee} from "../../../components/Modals/admin/CreateEmployee/CreateEmployee";
-import {TableRowDataTypeResp} from "../../../components/UI/types";
+
+import {TableRowDataTypeResp} from "../../../types/types";
 
 const rowData: TableRowDataTypeResp<IEmployee>[] = [
     {header: "Technician Name", val: v => v.fullName},

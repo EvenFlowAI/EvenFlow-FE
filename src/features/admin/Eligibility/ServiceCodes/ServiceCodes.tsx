@@ -7,7 +7,7 @@ import {
     changeSRPrisingDisplayType,
     loadSrList,
 } from "../../../../store/reducers/pricingSettings/actions";
-import {NoItemsLoading} from "../../../../components/UI/NoItemsLoading";
+import {NoItemsLoading} from "../../../../components/NoItemsLoading/NoItemsLoading";
 import {TableBody, TableHead, Radio, RadioGroup, FormControlLabel} from "@material-ui/core";
 import {EPricingDisplayType} from "../../../../store/reducers/pricingSettings/types";
 import {headCellStyles, leftAlign, TableWrapper} from "../styles";

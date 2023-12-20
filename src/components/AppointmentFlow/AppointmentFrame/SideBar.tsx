@@ -10,7 +10,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {getCurrentMenu, getStepsMap, getStepsScreen} from "./utils";
-import {Loading} from "../../UI/Loading";
+import {Loading} from "../../Loading/Loading";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const Wrapper = styled('ul')(({theme}) => ({

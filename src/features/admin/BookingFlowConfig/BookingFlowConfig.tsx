@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import {RootState} from "../../../store/rootReducer";
 import {loadBookingFlowConfig, updateBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
-import {Loading} from "../../../components/UI/Loading";
+import {Loading} from "../../../components/Loading/Loading";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {useStyles} from "./styles";
 import {DenseTable} from "../../../components/styled/DemandTable";

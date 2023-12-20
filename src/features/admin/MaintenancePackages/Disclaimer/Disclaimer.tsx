@@ -4,7 +4,7 @@ import {Button} from "@material-ui/core";
 import {updatePackageDisclaimer} from "../../../../store/reducers/serviceCenters/actions";
 import {useDispatch} from "react-redux";
 import {useException, useMessage, useSCs} from "../../../../utils/hooks";
-import {Loading} from "../../../../components/UI/Loading";
+import {Loading} from "../../../../components/Loading/Loading";
 
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 

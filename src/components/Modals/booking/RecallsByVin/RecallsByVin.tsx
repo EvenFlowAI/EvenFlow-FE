@@ -7,7 +7,7 @@ import {useTranslation} from "react-i18next";
 import {loadRecallsByVin} from "../../../../store/reducers/recall/actions";
 import {decodeSCID} from "../../../../utils/utils";
 import {DialogProps} from "../../../BaseModal/types";
-import {Loading} from "../../../UI/Loading";
+import {Loading} from "../../../Loading/Loading";
 import {Button, Divider} from "@material-ui/core";
 import {IRecallByVin} from "../../../AppointmentFlow/AppointmentFrame/types";
 import moment from "moment";

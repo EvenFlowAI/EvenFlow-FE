@@ -9,7 +9,7 @@ import {
 } from "../../../../store/reducers/categories/types";
 import {Button, Divider, FormControlLabel, Radio, RadioGroup, Switch} from "@material-ui/core";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
-import {autocompleteRender} from "../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {SearchInput} from "../../../../components/FormControls/SearchInput/SearchInput";
 import {useDispatch, useSelector} from "react-redux";

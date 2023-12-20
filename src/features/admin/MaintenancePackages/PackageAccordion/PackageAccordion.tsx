@@ -8,7 +8,7 @@ import {
     Typography
 } from "@material-ui/core";
 import {ExpandMore, MoreHoriz}from '@material-ui/icons';
-import {Loading} from "../../../../components/UI/Loading";
+import {Loading} from "../../../../components/Loading/Loading";
 import {IPackageById, IPackageOptionDetailed, TSegmentTitle} from "../../../../api/types";
 import SummaryRow from "./SummaryRow/SummaryRow";
 import {useConfirm, useException, useModal, useSCs} from "../../../../utils/hooks";

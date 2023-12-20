@@ -10,7 +10,7 @@ import {ISetDemandSegmentForm} from "../../../store/reducers/demandSegments/type
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
 import {TableCell} from "../../../components/styled/TableCell";
-import {SaveEditBlock} from "../../../components/UI/SaveEditBlock";
+import {SaveEditBlock} from "../../../components/SaveEditBlock/SaveEditBlock";
 
 type TForm = number[][];
 export const DemandSegments = () => {

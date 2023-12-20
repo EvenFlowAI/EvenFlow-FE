@@ -9,10 +9,10 @@ import {useException, useMessage, useSCs, useSelectedPod} from "../../../../util
 import {useDispatch, useSelector} from "react-redux";
 import {changeUnplannedSlots, loadUnplannedSlots} from "../../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../../components/UI/Loading";
+import {Loading} from "../../../../components/Loading/Loading";
 import {Divider} from "@material-ui/core";
 import {useStyles} from "./styles";
-import {SaveEditBlock} from "../../../../components/UI/SaveEditBlock";
+import {SaveEditBlock} from "../../../../components/SaveEditBlock/SaveEditBlock";
 
 type TUnplannedDemandEditingProps = {
     isEdit: boolean;

@@ -8,7 +8,7 @@ import {Divider, IconButton} from "@material-ui/core";
 import {useException, useModal} from "../../../../utils/hooks";
 import HtmlEditor from "../../../../components/Modals/admin/HTMLEditor/HTMLEditor";
 import {TExtendedComplimentary, TExtendedService} from "../../../../api/types";
-import {Loading} from "../../../../components/UI/Loading";
+import {Loading} from "../../../../components/Loading/Loading";
 import {
     updatePackageComplimentaryDescription,
     updatePackageSRDescription

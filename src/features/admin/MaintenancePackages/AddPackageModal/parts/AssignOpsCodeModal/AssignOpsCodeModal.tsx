@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, SetStateAction, Dispatch, useState} from 
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Radio} from "@material-ui/core";
 import {DialogProps} from "../../../../../../components/BaseModal/types";
-import {TableRowDataType} from "../../../../../../components/UI/types";
 import {IServiceRequest} from "../../../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../../../store/rootReducer";
 import {Table} from "../../../../../../components/Table/Table";
@@ -16,13 +15,14 @@ import {
 } from "../../../../../../store/reducers/serviceRequests/actions";
 
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../../../utils/AutocompleteRender";
 import {MaintenanceOptions} from "../../../constants";
 import {TAssignedRequest} from "../../../../../../store/reducers/packages/types";
 import {IPackageById} from "../../../../../../api/types";
 import {useInputStyles, useStyles} from "./styles";
 import {TSelectOption} from "./types";
 import {TSelectedOption} from "../../../types";
+import {TableRowDataType} from "../../../../../../types/types";
 
 type TAssignOpsCodeModalProps = DialogProps & {
     selectedCodes: TAssignedRequest[];

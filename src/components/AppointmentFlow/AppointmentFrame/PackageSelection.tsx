@@ -15,7 +15,7 @@ import {
 import {useParams} from "react-router-dom";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
-import {NoItemsLoading} from "../../UI/NoItemsLoading";
+import {NoItemsLoading} from "../../NoItemsLoading/NoItemsLoading";
 import {
     EServiceCenterName,
     IPackage,

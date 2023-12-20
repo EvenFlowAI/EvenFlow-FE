@@ -1,5 +1,4 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {TableRowDataType} from "../../../../components/UI/types";
 import {IRecall} from "../../../../store/reducers/recall/types";
 import {Table} from "../../../../components/Table/Table";
 import {useDispatch, useSelector} from "react-redux";
@@ -9,6 +8,7 @@ import {MoreHoriz} from "@material-ui/icons";
 import {useConfirm, useException, useModal, usePagination, useSCs} from "../../../../utils/hooks";
 import {deleteRecall, loadRecalls, setRecallPageData} from "../../../../store/reducers/recall/actions";
 import {RecallSummary} from "../RecallSummary/RecallSummary";
+import {TableRowDataType} from "../../../../types/types";
 
 type TRecallTableProps = {
     onOpenModal: () => void;

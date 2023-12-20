@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {autocompleteRender} from "../../UI/AutocompleteRender";
+import {autocompleteRender} from "../../../utils/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {StepWrapper} from "./StepWrapper";
@@ -28,7 +28,7 @@ import {TArgCallback} from "../../../types/types";
 import {TScreen} from "../types";
 import RecallsByVin from "../../Modals/booking/RecallsByVin/RecallsByVin";
 import {Api} from "../../../config/requests";
-import {Loading} from "../../UI/Loading";
+import {Loading} from "../../Loading/Loading";
 import {makeStyles} from "@material-ui/core/styles";
 import NoRecalls from "../../Modals/booking/RecallsByVin/NoRecalls/NoRecalls";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";

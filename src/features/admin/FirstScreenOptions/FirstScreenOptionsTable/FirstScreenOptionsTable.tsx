@@ -7,8 +7,7 @@ import {deleteFirstScreenOptionById, loadFirstScreenOptionsList} from "../../../
 import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {TableRowDataType} from "../../../../components/UI/types";
-import {TCallback} from "../../../../types/types";
+import {TableRowDataType, TCallback} from "../../../../types/types";
 import {serviceTypeNames} from "../constants";
 
 const RowData: TableRowDataType<IFirstScreenOption>[] = [

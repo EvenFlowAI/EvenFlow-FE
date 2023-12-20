@@ -1,13 +1,13 @@
 import React, {Dispatch, SetStateAction, useCallback} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/BaseModal/BaseModal";
 import {DialogProps} from "../../../../../../components/BaseModal/types";
-import {TableRowDataType} from "../../../../../../components/UI/types";
 import {IPackageByQuery} from "../../../../../../api/types";
 import {Table} from "../../../../../../components/Table/Table";
-import Checkbox from "../../../../../../components/UI/Checkbox";
+import Checkbox from "../../../../../../components/Checkbox/Checkbox";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import {Button} from "@material-ui/core";
+import {TableRowDataType} from "../../../../../../types/types";
 
 type TAssignOpsCodeModalProps = DialogProps & {
     selectedPackages: number[];

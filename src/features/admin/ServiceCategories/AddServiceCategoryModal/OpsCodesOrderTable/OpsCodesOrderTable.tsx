@@ -1,13 +1,13 @@
 import React, {Dispatch, SetStateAction, useCallback} from 'react';
-import {TableRowDataType} from "../../../../../components/UI/types";
 import {IAssignedServiceRequest, TOPsCodeWithIndex} from "../../../../../store/reducers/serviceRequests/types";
 import {TextField} from "../../../../../components/FormControls/TextFieldStyled/TextField";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
-import Checkbox from "../../../../../components/UI/Checkbox";
+import Checkbox from "../../../../../components/Checkbox/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {Table} from "../../../../../components/Table/Table";
 import {useStyles} from "./styles";
+import {TableRowDataType} from "../../../../../types/types";
 
 type TOpsCodesTableProps = {
     selectedCodes: TOPsCodeWithIndex[];

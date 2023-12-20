@@ -1,6 +1,6 @@
 import React from "react";
 import {AutocompleteRenderInputParams} from "@material-ui/lab";
-import {TextField} from "../FormControls/TextFieldStyled/TextField";
+import {TextField} from "../components/FormControls/TextFieldStyled/TextField";
 import {Checkbox} from "@material-ui/core";
 import {AutocompleteRenderOptionState} from "@material-ui/lab/Autocomplete/Autocomplete";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";

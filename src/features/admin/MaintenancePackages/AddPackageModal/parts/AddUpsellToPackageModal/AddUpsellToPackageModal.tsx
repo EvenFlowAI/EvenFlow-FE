@@ -2,7 +2,6 @@ import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Button} from "@material-ui/core";
 import {DialogProps} from "../../../../../../components/BaseModal/types";
-import {TableRowDataType} from "../../../../../../components/UI/types";
 import {IUpsellServiceRequest} from "../../../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../../../store/rootReducer";
 import {Table} from "../../../../../../components/Table/Table";
@@ -12,8 +11,9 @@ import {usePagination, useSCs} from "../../../../../../utils/hooks";
 import {
     loadUpsellServiceRequests, setUpsellFilter, setUpsellPageData,
 } from "../../../../../../store/reducers/serviceRequests/actions";
-import Checkbox from "../../../../../../components/UI/Checkbox";
+import Checkbox from "../../../../../../components/Checkbox/Checkbox";
 import {useStyles} from "./styles";
+import {TableRowDataType} from "../../../../../../types/types";
 
 type TAddUpsellProps = DialogProps & {
     selectedCodes: IUpsellServiceRequest[];

@@ -3,7 +3,6 @@ import {DialogProps, TViewMode} from "../../../BaseModal/types";
 import {BaseModal, DialogActions, DialogTitle} from "../../../BaseModal/BaseModal";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {Table} from "../../../Table/Table";
-import {TableRowDataType} from "../../../UI/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {AddHolidayModal} from "./AddHolidayModal/AddHolidayModal";
 import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../../utils/hooks";
@@ -16,6 +15,7 @@ import {setHolidayPageData} from "../../../../store/reducers/holidays/actions";
 import {Api} from "../../../../config/requests";
 import {Roles} from "../../../../config/constants";
 import {useStyles} from "./styles";
+import {TableRowDataType} from "../../../../types/types";
 
 const rowData: TableRowDataType<IHoliday>[] = [
     {header: "Description Title", val: v => v.description.length > 40 ? v.description.slice(0, 39).concat('...') : v.description},

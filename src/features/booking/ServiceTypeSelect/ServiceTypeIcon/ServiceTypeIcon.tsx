@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import axios from "axios";
 import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
-import {Loading} from "../../../../components/UI/Loading";
+import {Loading} from "../../../../components/Loading/Loading";
 import {useTranslation} from "react-i18next";
 import {useStyles} from "./styles";
 

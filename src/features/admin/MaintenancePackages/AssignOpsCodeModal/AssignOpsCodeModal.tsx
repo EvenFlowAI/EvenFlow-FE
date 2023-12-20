@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/BaseModal/types";
-import {TableRowDataType} from "../../../../components/UI/types";
 import {IServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Button, Radio} from "@material-ui/core";
 import {Table} from "../../../../components/Table/Table";
@@ -16,12 +15,13 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {SearchInput} from "../../../../components/FormControls/SearchInput/SearchInput";
 import {updatePackageOptions} from "../../../../store/reducers/packages/actions";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {IPackageById} from "../../../../api/types";
 import {MaintenanceOptions} from "../constants";
 import {useInputStyles, useStyles} from "./styles";
 import {TSelectedOption} from "../types";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {TableRowDataType} from "../../../../types/types";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "OPS CODE", val: el => el.code},

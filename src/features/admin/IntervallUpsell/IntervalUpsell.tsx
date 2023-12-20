@@ -10,16 +10,15 @@ import {
     loadUpsellServiceRequests,
     setUpsellFilter, setUpsellOrdering, setUpsellPageData
 } from "../../../store/reducers/serviceRequests/actions";
-import {TableRowDataType} from "../../../components/UI/types";
 import {IUpsellServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../../components/Table/Table";
 import {MoreHoriz} from "@material-ui/icons";
 import {Api} from "../../../config/requests";
 import {optimizerRoot, SC_UNDEFINED} from "../../../config/constants";
 import {SearchInput} from "../../../components/FormControls/SearchInput/SearchInput";
-import {IOrder} from "../../../types/types";
+import {IOrder, TableRowDataType} from "../../../types/types";
 import IntervalUpsellModal from "./IntervalUpsellModal/IntervalUpsellModal";
-import {ServiceRequestCellData} from "../../../components/UI/ServiceRequestCellData";
+import {ServiceRequestCellData} from "../../../components/ServiceRequestCellData/ServiceRequestCellData";
 
 const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {

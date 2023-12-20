@@ -1,11 +1,11 @@
 import React from "react";
 import {Table} from "../../../../components/Table/Table";
-import {TableRowDataType} from "../../../../components/UI/types";
 import {IServiceCenterExtended} from "../../../../store/reducers/serviceCenters/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {concatAddress} from "../../../../utils/utils";
 import {TDetailComponentProps} from "../../../../pages/admin/DealerShipGroupDetails/types";
+import {TableRowDataType} from "../../../../types/types";
 
 const rowData: TableRowDataType<IServiceCenterExtended>[] = [
     {header: "Name", val: v => v.name},

@@ -21,7 +21,7 @@ import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
 import {EServiceCategoryPage, IServiceCategory} from "../../../api/types";
-import {Loading} from '../../UI/Loading';
+import {Loading} from '../../Loading/Loading';
 import ReactGA from "react-ga4";
 //import ReactGA from "react-ga";
 import CartTable from "./CartTable";

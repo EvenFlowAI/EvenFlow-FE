@@ -17,7 +17,7 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {Loading} from "../../UI/Loading";
+import {Loading} from "../../Loading/Loading";
 import {
     selectAppointment,
     selectServiceValetAppointment,

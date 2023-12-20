@@ -5,7 +5,7 @@ import {
     ETransportColumn,
     ITransportationOptionFull
 } from "../../../../store/reducers/transportationNeeds/types";
-import {autocompleteRender} from "../../../../components/UI/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {Button} from "@material-ui/core";

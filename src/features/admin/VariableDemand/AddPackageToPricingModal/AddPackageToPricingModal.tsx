@@ -9,8 +9,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useException, useSCs} from "../../../../utils/hooks";
 import {DialogProps} from "../../../../components/BaseModal/types";
-import {TableRowDataType} from "../../../../components/UI/types";
-import Checkbox from "../../../../components/UI/Checkbox";
+import Checkbox from "../../../../components/Checkbox/Checkbox";
+import {TableRowDataType} from "../../../../types/types";
 
 const tableData: TableRowDataType<IPackageOptionShort>[] = [
     {header: "PACKAGE LEVEL", val: el => el.maintenancePackageOptionName.toString(), align: "left"},
