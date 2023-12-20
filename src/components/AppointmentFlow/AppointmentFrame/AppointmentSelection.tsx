@@ -26,7 +26,7 @@ import ReactGA from "react-ga4";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TArgCallback} from "../../../types/types";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector";
 import {

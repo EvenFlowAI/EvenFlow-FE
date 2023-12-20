@@ -25,7 +25,7 @@ import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
 import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
 import {TArgCallback} from "../../../types/types";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import RecallsByVin from "../../Modals/booking/RecallsByVin/RecallsByVin";
 import {Api} from "../../../config/requests";
 import {Loading} from "../../UI/Loading";

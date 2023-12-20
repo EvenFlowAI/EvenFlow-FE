@@ -9,7 +9,7 @@ import {
 import {TComplimentary, TPackage, TService, TUpsell} from "./PackageSelection";
 import {EOfferType} from "../../../store/reducers/offers/types";
 import {EServiceType, IValueService} from "../../../store/reducers/appointmentFrameReducer/types";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import {IRecallByVin, TParsedAddress} from "./types";
 import {TRecallForRequest} from "../../../store/reducers/appointment/types";
 import {EServiceCategoryType, ICategory} from "../../../store/reducers/categories/types";

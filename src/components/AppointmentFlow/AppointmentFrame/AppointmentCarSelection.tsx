@@ -22,7 +22,7 @@ import {
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {getBlankVehicle, selectSR, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {useException} from "../../../utils/hooks";

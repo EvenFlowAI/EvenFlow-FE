@@ -9,7 +9,7 @@ import {Checkbox, FormControlLabel, IconButton, styled} from "@material-ui/core"
 import {TextField} from "../../FormControls/TextField/TextField";
 import {InfoOutlined, Search} from "@material-ui/icons";
 import {TArgCallback} from "../../../types/types";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import ReactGA from "react-ga4";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";

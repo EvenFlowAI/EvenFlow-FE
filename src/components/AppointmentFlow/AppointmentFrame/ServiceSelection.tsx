@@ -2,7 +2,7 @@ import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {TArgCallback, TCallback} from "../../../types/types";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {

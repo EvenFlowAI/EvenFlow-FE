@@ -12,7 +12,7 @@ import {
     setFrameDescription
 } from '../../../store/reducers/appointmentFrameReducer/actions';
 import {TArgCallback} from "../../../types/types";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import {useException, useModal} from "../../../utils/hooks";
 import {
     selectAppointment,

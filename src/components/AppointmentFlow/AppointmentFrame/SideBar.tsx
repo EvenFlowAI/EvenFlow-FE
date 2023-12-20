@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import {ProgressStepper} from "../ProgressStepper";
 import {
     setAdditionalServicesChosen, setSideBarActualSteps, setSideBarMenu,

@@ -30,10 +30,10 @@ import {
     TMaintenanceDetails,
     TYear
 } from "./types";
-import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, PaginatedAPIResponse, TView} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
-import {TScreen} from "../../../components/Layout/types";
+import {TScreen} from "../../../components/AppointmentFlow/types";
 import {
     getSlotsConsultantId,
     saveCustomerCache,
@@ -44,7 +44,6 @@ import {
     setCustomerLoadedData,
     setWaitListSettings
 } from "../appointment/actions";
-import {TView} from "../../../components/Welcome/types";
 import {IMaintenanceItem, IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";

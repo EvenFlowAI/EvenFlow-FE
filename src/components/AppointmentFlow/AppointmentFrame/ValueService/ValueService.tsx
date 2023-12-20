@@ -11,7 +11,7 @@ import {useHistory, useParams} from "react-router-dom";
 import ServiceSelection from "./ServiceSelection";
 import ServiceDetails from "./ServiceDetails";
 import {RootState} from "../../../../store/rootReducer";
-import {TScreen} from "../../../Layout/types";
+import {TScreen} from "../../types";
 import {loadSCProfile} from "../../../../store/reducers/appointment/actions";
 import {decodeSCID} from "../../../../utils/utils";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";

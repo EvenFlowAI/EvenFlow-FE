@@ -3,19 +3,19 @@ import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {Login} from "./components/Login/Login";
 import {Route, Switch, useHistory} from 'react-router-dom';
-import {Layout} from "./components/Layout/Layout";
+import {AdminPanel} from "./pages/admin/AdminPanel/AdminPanel";
 import {Routes} from "./config/routes";
 import {PrivateRoute} from "./utils/Routes";
 import {ConfirmDialog} from './components/UI/ConfirmDialog';
 import {ProviderContext, SnackbarProvider} from "notistack";
 import {Close} from "@material-ui/icons";
-import {EndUserLayout} from "./components/Layout/EndUserLayout";
-import {AppointmentFrameLayout} from "./components/Layout/AppointmentFrameLayout";
+import {BookingFlowPage} from "./pages/booking/BookingFlow/BookingFlowPage";
+import {AppointmentFrameLayout} from "./components/AppointmentFlow/AppointmentFrameLayout";
 import ValueService from "./components/AppointmentFlow/AppointmentFrame/ValueService/ValueService";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/rootReducer";
 import {setCurrentFrameScreen, setValueService} from "./store/reducers/appointmentFrameReducer/actions";
-import {TScreen} from "./components/Layout/types";
+import {TScreen} from "./components/AppointmentFlow/types";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
 import {loadBookingFlowConfig, setConfiguration} from "./store/reducers/bookingFlowConfig/actions";
 import PaymentBill from "./components/AppointmentFlow/PaymentBill/PaymentBill";
@@ -110,9 +110,9 @@ const App = () => {
                 <ConfirmDialog/>
                 <Switch>
                     <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentFrameLayout} />
-                    <Route path={Routes.EndUser.CancelAppointment} exact component={EndUserLayout} />
-                    <Route path={Routes.EndUser.EditAppointment} exact component={EndUserLayout} />
-                    <Route path={Routes.EndUser.Base} exact component={EndUserLayout} />
+                    <Route path={Routes.EndUser.CancelAppointment} exact component={BookingFlowPage} />
+                    <Route path={Routes.EndUser.EditAppointment} exact component={BookingFlowPage} />
+                    <Route path={Routes.EndUser.Base} exact component={BookingFlowPage} />
                     <Route path={Routes.EndUser.PaymentBill} exact component={PaymentBill} />
                     <Route path={Routes.Login.Base} component={Login} />
                     <Route path={Routes.Account.Base} component={Login} />
@@ -120,7 +120,7 @@ const App = () => {
                         path={Routes.EndUser.ValueService}
                         exact
                         render={() => <ValueService onBack={onValueServiceBack} nextScreen={valueServiceNextScreen}/>}/>
-                    <PrivateRoute path="/" component={Layout}/>
+                    <PrivateRoute path="/" component={AdminPanel}/>
                 </Switch>
             </Container>
         </SnackbarProvider>

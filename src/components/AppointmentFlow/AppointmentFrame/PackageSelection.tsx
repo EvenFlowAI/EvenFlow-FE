@@ -38,7 +38,7 @@ import Complimentary from "./PackageSelectionParts/Complimentary";
 import TotalComplimentary from "./PackageSelectionParts/TotalComplimentary";
 import {useTranslation} from "react-i18next";
 import {TArgCallback} from "../../../types/types";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
 import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
 import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";

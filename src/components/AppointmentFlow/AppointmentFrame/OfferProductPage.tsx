@@ -7,7 +7,7 @@ import {IServiceCategory} from "../../../api/types";
 import {useTranslation} from "react-i18next";
 import {styled} from "@material-ui/core";
 import moment from "moment";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
 import {
     selectCategoriesIds,

@@ -29,7 +29,7 @@ import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/type
 import AppointmentTimingCard from "./AppointmentTimingCard";
 import {useTranslation} from "react-i18next";
 import {TArgCallback} from "../../../types/types";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import {useHistory, useParams} from "react-router-dom";
 import {Routes} from "../../../config/routes";
 

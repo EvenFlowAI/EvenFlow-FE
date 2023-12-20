@@ -14,7 +14,7 @@ import {
     setShowServiceCentersList,
     setUserType
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import {CardsWrapper} from "./styled";
 import {ServiceCard} from "./ServiceCard";
 import {Api} from "../../../config/requests";

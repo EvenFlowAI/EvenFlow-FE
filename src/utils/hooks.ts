@@ -12,7 +12,7 @@ import {IDealershipProfile} from "../store/reducers/dealershipGroups/types";
 import {IServiceCenter} from "../store/reducers/serviceCenters/types";
 import {selectSC as selectSCAction} from "../store/reducers/serviceCenters/actions";
 import {useLocation} from "react-router-dom";
-import {options} from "../components/Layout/EndUserLayout";
+import {options} from "../pages/booking/BookingFlow/BookingFlowPage";
 import ReactGA from "react-ga4";
 import TagManager from "react-gtm-module";
 import {v4 as uuidv4} from "uuid";

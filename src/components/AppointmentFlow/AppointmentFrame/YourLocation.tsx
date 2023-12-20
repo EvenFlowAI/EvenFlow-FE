@@ -35,8 +35,7 @@ import DisplayAncillaryPrice from "../../Modals/booking/DisplayAncillaryPrice/Di
 import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import UnavailableService from "../../Modals/booking/UnavailableService/UnavailableService";
 import {KeyboardArrowDown} from "@material-ui/icons";
-import {TArgCallback} from "../../../types/types";
-import {TView} from "../../Welcome/types";
+import {TArgCallback, TView} from "../../../types/types";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../store/reducers/modals/actions";

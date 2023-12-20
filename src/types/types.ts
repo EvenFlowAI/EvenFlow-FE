@@ -102,3 +102,5 @@ export type TSelectChange = (
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<string> | undefined
 ) => void;
+
+export type TView = "select" | "search" | "confirm" | "serviceSelect" | "serviceCenterSelect";

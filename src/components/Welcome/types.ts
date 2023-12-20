@@ -1,1 +1,0 @@
-export type TView = "select" | "search" | "confirm" | "serviceSelect" | "serviceCenterSelect";

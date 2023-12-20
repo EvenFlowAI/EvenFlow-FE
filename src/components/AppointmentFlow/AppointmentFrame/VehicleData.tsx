@@ -3,7 +3,7 @@ import {StepWrapper} from "./StepWrapper";
 import {Actions} from "./Actions";
 import {useTranslation} from "react-i18next";
 import {TArgCallback, TCallback} from "../../../types/types";
-import {TScreen} from "../../Layout/types";
+import {TScreen} from "../types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 
