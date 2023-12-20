@@ -13,7 +13,7 @@ import {
     IRequestPricingSettings,
     TNewRequestsToPricing
 } from "../../../../store/reducers/pricingSettings/types";
-import AddOpsCodeModal from "../../../../components/Modals/AddOpsCode/AddOpsCode";
+import AddOpsCodeModal from "../../../../components/Modals/admin/AddOpsCode/AddOpsCode";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Loading} from "../../../../components/UI/Loading";
 import {loadAssignedServiceRequests, setAssignedPageData} from "../../../../store/reducers/serviceRequests/actions";

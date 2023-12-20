@@ -2,7 +2,7 @@ import React, {ChangeEvent, useEffect, useState} from 'react';
 import {useException, useModal, useSCs} from "../../utils/hooks";
 import RecallTable from "./RecallTable/RecallTable";
 import {Button} from "@material-ui/core";
-import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../components/UI/TitleContainer";
 import AddRecallModal from "./AddRecallModal/AddRecallModal";
 import {IRecall} from "../../store/reducers/recall/types";
 import {makeStyles} from "@material-ui/core/styles";

@@ -31,7 +31,7 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {styled, Theme} from "@material-ui/core";
-import DisplayAncillaryPrice from "../../Modals/DisplayAncillaryPrice/DisplayAncillaryPrice";
+import DisplayAncillaryPrice from "../../Modals/booking/DisplayAncillaryPrice/DisplayAncillaryPrice";
 import {useCurrentUser, useException, useModal} from "../../../utils/hooks";
 import UnavailableService from "../../Modals/InavailableService/UnavailableService";
 import {KeyboardArrowDown} from "@material-ui/icons";

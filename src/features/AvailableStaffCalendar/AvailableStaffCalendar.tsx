@@ -6,7 +6,7 @@ import moment, {Moment} from "moment";
 import clsx from "clsx";
 import {Star, SupervisorAccount} from "@material-ui/icons";
 import {TDay} from "./types";
-import {useCalendarStyles} from "../../sharedStyles/calendarStyles";
+import {useCalendarStyles} from "../../sharedStyles/useCalendarStyles";
 
 export const AvailableStaffCalendar = () => {
     const [date, setDate] = useState<Moment>(moment());

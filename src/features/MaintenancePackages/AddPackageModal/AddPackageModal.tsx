@@ -11,7 +11,7 @@ import {autocompleteRender} from "../../../components/UI/AutocompleteRender";
 import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
 import {useException, useModal, useSCs} from "../../../utils/hooks";
 import AssignOpsCode from "./parts/AssignOpsCodeModal/AssignOpsCodeModal";
-import AddOpsCode from "../../../components/Modals/AddOpsCode/AddOpsCode";
+import AddOpsCode from "../../../components/Modals/admin/AddOpsCode/AddOpsCode";
 import {
     IAssignedServiceRequest,
     IServiceRequest,

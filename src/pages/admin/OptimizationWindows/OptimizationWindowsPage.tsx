@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/UI/TitleContainer";
 import {OptimizationWindowCard} from "../../../components/OptimizationWindowCard/OptimizationWindowCard";
 import {Grid} from "@material-ui/core";
-import {DemandSegments} from "../../../components/Modals/DemandSegments/DemandSegments";
+import {DemandSegments} from "../../../components/Modals/admin/DemandSegments/DemandSegments";
 import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";

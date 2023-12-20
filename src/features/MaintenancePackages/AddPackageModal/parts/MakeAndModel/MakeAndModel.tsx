@@ -7,7 +7,7 @@ import Checkbox from "../../../../../components/UI/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {IMake} from "../../../../../api/types";
 import {upperCase} from "./utils";
-import {useAutocompleteStyles} from "../../../../../sharedStyles/autocompleteStyles";
+import {useAutocompleteStyles} from "../../../../../sharedStyles/useAutocompleteStyles";
 
 type MakeAndModelProps = {
     setSelectedMakes: Dispatch<SetStateAction<string[]>>;

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Titles} from "../../../config/constants";
-import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/UI/TitleContainer";
 import {IEndUserConfig} from "../../../features/Reporting/types";
 import {Api} from "../../../config/requests";
 import {useCurrentUser, useSCs} from "../../../utils/hooks";

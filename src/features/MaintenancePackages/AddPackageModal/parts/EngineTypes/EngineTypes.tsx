@@ -6,7 +6,7 @@ import {RootState} from "../../../../../store/rootReducer";
 import Checkbox from "../../../../../components/UI/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {IEngineType} from "../../../../../store/reducers/vehicleDetails/types";
-import {useAutocompleteStyles} from "../../../../../sharedStyles/autocompleteStyles";
+import {useAutocompleteStyles} from "../../../../../sharedStyles/useAutocompleteStyles";
 
 type TEngineTypesProps = {
     setSelectedEngineTypes: Dispatch<SetStateAction<IEngineType[]>>;

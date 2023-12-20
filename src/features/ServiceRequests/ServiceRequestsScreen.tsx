@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../components/UI/TitleContainer";
 import {Button} from "@material-ui/core";
 import {OPsCodesListDialog} from "../../components/Modals/OPsCodesListDialog/OPsCodesListDialog";
 import {useException, useMessage, useModal, usePagination, useSCs} from "../../utils/hooks";

@@ -5,7 +5,7 @@ import Checkbox from "../../../../../components/UI/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
-import {useAutocompleteStyles} from "../../../../../sharedStyles/autocompleteStyles";
+import {useAutocompleteStyles} from "../../../../../sharedStyles/useAutocompleteStyles";
 
 type TMileageProps = {
     disabled: boolean;

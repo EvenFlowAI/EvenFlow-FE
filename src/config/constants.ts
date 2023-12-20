@@ -1,5 +1,5 @@
 import {TRole} from "../store/reducers/users/types";
-import {TTitle} from "../components/Content/ContentTitle/ContentTitle";
+import {TTitle} from "../components/UI/ContentTitle";
 import {Routes} from "./routes";
 
 export enum States {

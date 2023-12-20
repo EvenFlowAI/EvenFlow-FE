@@ -61,7 +61,7 @@ export const ServiceCenterActions = () => {
                 className={classes.autocomplete}
             />
         </div>
-        : <>
+        : <div className={classes.buttonsWrapper}>
             <SearchDB onSearch={handleSearch} search={search} />
             <Button
                 color="primary"
@@ -70,5 +70,5 @@ export const ServiceCenterActions = () => {
                 Add Service Center
             </Button>
             <CreateServiceCenterModal open={isOpen} onClose={onClose} />
-        </>;
+        </div>;
 }

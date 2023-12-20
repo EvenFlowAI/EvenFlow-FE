@@ -23,7 +23,7 @@ import {
 } from "../../../store/reducers/appointment/actions";
 import Vehicle from "./confirmationSections/Vehicle";
 import ServiceRequests from "./confirmationSections/ServiceRequests";
-import DetailedFees from "../../Modals/DetailedFees/DetailedFees";
+import DetailedFees from "../../Modals/booking/DetailedFees/DetailedFees";
 import Address from "./confirmationSections/Address";
 import PaymentType from "../../Modals/PaymentType/PaymentType";
 import ServiceType from "./confirmationSections/ServiceType";

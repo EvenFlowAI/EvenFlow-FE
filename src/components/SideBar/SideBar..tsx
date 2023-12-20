@@ -8,7 +8,7 @@ import {Routes} from "../../config/routes";
 import {useCurrentUser, useModal, useSCs} from "../../utils/hooks";
 import {useLocation, useHistory, matchPath} from "react-router-dom";
 import {ArrowForwardIos, Close} from "@material-ui/icons";
-import {BookingModal} from "../Modals/BookingModal/BookingModal";
+import {BookingModal} from "../Modals/admin/BookingModal/BookingModal";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {Loading} from "../UI/Loading";

@@ -8,7 +8,7 @@ import {loadTechnicians, removeEmployee} from "../../store/reducers/employees/ac
 import {RootState} from "../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
 import {TableAvatar} from "../../components/UI/TableAvatar";
-import {CreateEmployee} from "../../components/Modals/CreateEmployee/CreateEmployee";
+import {CreateEmployee} from "../../components/Modals/admin/CreateEmployee/CreateEmployee";
 import {TableRowDataTypeResp} from "../../components/UI/types";
 
 const rowData: TableRowDataTypeResp<IEmployee>[] = [

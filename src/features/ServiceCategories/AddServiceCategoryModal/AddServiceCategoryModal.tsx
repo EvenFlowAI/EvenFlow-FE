@@ -19,7 +19,7 @@ import {RootState} from "../../../store/rootReducer";
 import {IAssignedServiceRequest, TOPsCodeWithIndex} from "../../../store/reducers/serviceRequests/types";
 import {createCategory, updateCategory, updateCategoryIcon} from "../../../store/reducers/categories/actions";
 import {OpsCodesTable} from "./OpsCodesTable/OpsCodesTable";
-import {FileInput} from "../../../components/FormControls/FileInput";
+import {FileInput} from "../../../components/FormControls/FileInput/FileInput";
 import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {OpsCodesOrderTable} from "./OpsCodesOrderTable/OpsCodesOrderTable";

@@ -6,9 +6,9 @@ import {
     useModal,
     useSCs
 } from "../../utils/hooks";
-import {CreateEmployee} from "../../components/Modals/CreateEmployee/CreateEmployee";
+import {CreateEmployee} from "../../components/Modals/admin/CreateEmployee/CreateEmployee";
 import {Titles} from "../../config/constants";
-import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../components/UI/TitleContainer";
 import {EmployeesActions} from "./EmployeesActions/EmployeesActions";
 import EmployeesFilters from "./EmployeesFilters/EmployeesFilters";
 import EmployeesTable from "./EmployeesTable/EmployeesTable";

@@ -7,5 +7,14 @@ export const useStyles = makeStyles(() => ({
     },
     autocomplete: {
         marginLeft: 20,
+    },
+    buttonsWrapper: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        '& > button': {
+            marginLeft: 8
+        }
     }
+
 }))

@@ -18,9 +18,9 @@ import {
     selectAppointment,
     selectServiceValetAppointment,
 } from "../../../store/reducers/appointment/actions";
-import AskAddService from "../../Modals/AskAddService/AskAddService";
+import AskAddService from "../../Modals/booking/AskAddService/AskAddService";
 import {useTranslation} from "react-i18next";
-import AddCommentPrompt from "../../Modals/AddCommentPrompt/AddCommentPrompt";
+import AddCommentPrompt from "../../Modals/booking/AddCommentPrompt/AddCommentPrompt";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 
 type TProps = {

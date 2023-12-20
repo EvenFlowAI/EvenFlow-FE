@@ -17,7 +17,7 @@ import {
     setAdditionalServicesChosen,
     setSelectedRecalls
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import AskAddService from "../AskAddService/AskAddService";
+import AskAddService from "../booking/AskAddService/AskAddService";
 import {useException, useModal} from "../../../utils/hooks";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 

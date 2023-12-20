@@ -4,7 +4,7 @@ import {Button, Divider, IconButton} from "@material-ui/core";
 import {DialogProps} from "../../../components/Modals/types";
 import {AddCircleOutline} from "@material-ui/icons";
 import {TextField} from "../../../components/UI/TextField";
-import {Chip} from "../../../components/Chip";
+import {Chip} from "../../../components/Chip/Chip";
 import {useException} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";

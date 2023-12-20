@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../utils/hooks";
 import {Table} from "../../components/UI/Table";
@@ -9,17 +8,9 @@ import {CheckCircle, MoreHoriz} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {loadBays, removeBay, setPageData} from "../../store/reducers/bays/actions";
-import {CreateBay} from "../../components/Modals/Bays/CreateBay";
+import {CreateBayModal} from "./CreateBayModal/CreateBayModal";
 import {TViewMode} from "../../components/Modals/types";
-
-const useStyles = makeStyles({
-    wrapper: {
-
-    },
-    actionRow: {
-        textAlign: "right"
-    }
-});
+import {useStyles} from "./styles";
 
 const rowData: TableRowDataType<IBay>[] = [
     {header: "", val: v => v.name},
@@ -35,6 +26,7 @@ export const RequiredEquipment: React.FC<TViewMode> = ({viewMode}) => {
     const {askConfirm, closeConfirm} = useConfirm();
     const showMessage = useMessage();
     const showError = useException();
+    const classes = useStyles();
 
     const [
         loading,
@@ -103,8 +95,7 @@ export const RequiredEquipment: React.FC<TViewMode> = ({viewMode}) => {
         </IconButton>
     }, []);
 
-    const classes = useStyles();
-    return <div className={classes.wrapper}>
+    return <div>
         {!viewMode ? <div className={classes.actionRow}>
             <Button
                 color="primary"
@@ -128,7 +119,7 @@ export const RequiredEquipment: React.FC<TViewMode> = ({viewMode}) => {
             actions={endActions}
             rowData={rowData}
         />
-        <CreateBay open={isOpen} payload={editedItem} onClose={onClose} />
+        <CreateBayModal open={isOpen} payload={editedItem} onClose={onClose} />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={closeMenu}>
             <MenuItem onClick={openEdit}>Edit</MenuItem>
             <MenuItem onClick={askRemove}>Remove</MenuItem>

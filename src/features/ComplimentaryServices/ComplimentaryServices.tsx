@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../components/UI/TitleContainer";
 import {SearchInput} from "../../components/UI/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {

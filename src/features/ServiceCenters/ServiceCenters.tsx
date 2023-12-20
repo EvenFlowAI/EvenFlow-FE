@@ -2,9 +2,10 @@ import React, {useState} from "react";
 import {IServiceCenterForm} from "../../store/reducers/serviceCenters/types";
 import {useCurrentUser, useModal} from "../../utils/hooks";
 import {CreateServiceCenterModal} from "./CreateServiceCenterModal/CreateServiceCenterModal";
-import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../components/UI/TitleContainer";
 import {Titles} from "../../config/constants";
 import ServiceCentersTable from "./ServiceCentersTable/ServiceCentersTable";
+import {ServiceCenterActions} from "./ServiceCenterActions/ServiceCenterActions";
 
 export const ServiceCenters = () => {
     const [editedItem, setEditedItem] = useState<IServiceCenterForm|undefined>();
@@ -12,7 +13,7 @@ export const ServiceCenters = () => {
     const {onOpen, onClose, isOpen} = useModal();
 
     return <>
-        <TitleContainer title={Titles.ServiceCenters} actions pad />
+        <TitleContainer title={Titles.ServiceCenters} actions={<ServiceCenterActions/>} pad />
         <ServiceCentersTable editedItem={editedItem} setEditedItem={setEditedItem} onOpen={onOpen}/>
         <CreateServiceCenterModal
             readOnly={currentUser?.isSuperUser}

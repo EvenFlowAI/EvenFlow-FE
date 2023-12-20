@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {useModal} from "../../../utils/hooks";
 import {Tab} from "@material-ui/core";
-import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/UI/TitleContainer";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TabList} from "../../../components/styled/Tabs";
 import GeographicZones from "../../../features/PricingServiceValet/GeographicZones/GeographicZones";
 import GeographicZonesMap from "../../../features/PricingServiceValet/GeographicZonesMap/GeographicZonesMap";
-import AddEditGeographicZone from "../../../components/Modals/EditGeographicZone/AddEditGeographicZone";
+import AddEditGeographicZone from "../../../components/Modals/admin/EditGeographicZone/AddEditGeographicZone";
 import AncillaryPrice from "../../../features/PricingServiceValet/AncillaryPrice/AncillaryPrice";
 import {pricingRoot} from "../../../config/constants";
 

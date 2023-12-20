@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Switch} from "@material-ui/core";
-import {ContentTitle} from "../../components/Content/ContentTitle/ContentTitle";
+import {ContentTitle} from "../../components/UI/ContentTitle";
 import {RootState} from "../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
 import {IPackageByQuery} from "../../api/types";
@@ -17,7 +17,7 @@ import {Autocomplete} from "@material-ui/lab";
 import {useMaintenancePackagesStyles} from "./styles";
 import {MaintenanceOptionTypes} from "./constants";
 import {TExpandedState, TOption} from "./types";
-import {useAutocompleteStyles} from "../../sharedStyles/autocompleteStyles";
+import {useAutocompleteStyles} from "../../sharedStyles/useAutocompleteStyles";
 
 export const MaintenancePackages = () => {
     const {packages: allPackages} = useSelector((state: RootState) => state.packages);

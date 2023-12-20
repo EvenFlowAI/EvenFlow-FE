@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Loading} from "../../../components/UI/Loading";
-import {TableCell} from "../../../components/Modals/AdvisorAssignment/AdvisorAssignment";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/Modals/BaseModal";
 import {Button, TableBody, TableHead} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -13,6 +12,7 @@ import {updateEmailRequirement} from "../../../store/reducers/screenSettings/act
 import {useStyles} from "./styles";
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
+import {TableCellWithPadding} from "../../../components/styled/TableCellWithPadding";
 
 export const EditEmailRequirementModal: React.FC<DialogProps> = ({onClose, ...props}) => {
     const {emailRequirement, isEmailRequirementLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
@@ -65,15 +65,15 @@ export const EditEmailRequirementModal: React.FC<DialogProps> = ({onClose, ...pr
                     : <DemandTable>
                         <TableHead>
                             <TableRow>
-                                <TableCell style={{color: "#9FA2B4", fontSize: 12}} align="left">Booking Flow</TableCell>
-                                <TableCell style={{color: "#9FA2B4", fontSize: 12}} align="center">Off</TableCell>
-                                <TableCell style={{color: "#9FA2B4", fontSize: 12}} align="center">On</TableCell>
+                                <TableCellWithPadding style={{color: "#9FA2B4", fontSize: 12}} align="left">Booking Flow</TableCellWithPadding>
+                                <TableCellWithPadding style={{color: "#9FA2B4", fontSize: 12}} align="center">Off</TableCellWithPadding>
+                                <TableCellWithPadding style={{color: "#9FA2B4", fontSize: 12}} align="center">On</TableCellWithPadding>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             <TableRow>
-                                <TableCell>Call Center & Service Advisor</TableCell>
-                                <TableCell align="center">
+                                <TableCellWithPadding>Call Center & Service Advisor</TableCellWithPadding>
+                                <TableCellWithPadding align="center">
                                     {!data?.adminAndEmployeesEnabled
                                         ? <RadioButtonChecked
                                             htmlColor="#3855F3"
@@ -82,8 +82,8 @@ export const EditEmailRequirementModal: React.FC<DialogProps> = ({onClose, ...pr
                                             htmlColor="#DADADA"
                                             cursor="pointer"
                                             onClick={() => onChange("adminAndEmployeesEnabled", false)}/>}
-                                </TableCell>
-                                <TableCell align="center">
+                                </TableCellWithPadding>
+                                <TableCellWithPadding align="center">
                                     {data?.adminAndEmployeesEnabled
                                         ? <RadioButtonChecked
                                             htmlColor="#3855F3"
@@ -92,11 +92,11 @@ export const EditEmailRequirementModal: React.FC<DialogProps> = ({onClose, ...pr
                                             htmlColor="#DADADA"
                                             cursor="pointer"
                                             onClick={() => onChange("adminAndEmployeesEnabled", true)}/>}
-                                </TableCell>
+                                </TableCellWithPadding>
                             </TableRow>
                             <TableRow>
-                                <TableCell>Customer Self Service</TableCell>
-                                <TableCell align="center">
+                                <TableCellWithPadding>Customer Self Service</TableCellWithPadding>
+                                <TableCellWithPadding align="center">
                                     {!data?.customerSelfServiceEnabled
                                         ? <RadioButtonChecked
                                             htmlColor="#3855F3"
@@ -105,8 +105,8 @@ export const EditEmailRequirementModal: React.FC<DialogProps> = ({onClose, ...pr
                                             htmlColor="#DADADA"
                                             cursor="pointer"
                                             onClick={() => onChange("customerSelfServiceEnabled", false)}/>}
-                                </TableCell>
-                                <TableCell align="center">
+                                </TableCellWithPadding>
+                                <TableCellWithPadding align="center">
                                     {data?.customerSelfServiceEnabled
                                         ? <RadioButtonChecked
                                             htmlColor="#3855F3"
@@ -115,7 +115,7 @@ export const EditEmailRequirementModal: React.FC<DialogProps> = ({onClose, ...pr
                                             htmlColor="#DADADA"
                                             cursor="pointer"
                                             onClick={() => onChange("customerSelfServiceEnabled", true)}/>}
-                                </TableCell>
+                                </TableCellWithPadding>
                             </TableRow>
                         </TableBody>
                     </DemandTable>}

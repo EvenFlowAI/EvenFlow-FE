@@ -1,5 +1,5 @@
 import React from "react";
-import {ContentContainer} from "../../../components/Content/ContentContainer/ContentContainer";
+import {ContentContainer} from "../../../components/UI/ContentContainer";
 import {Redirect, Switch} from "react-router-dom";
 import {PrivateRoute} from "../../../utils/Routes";
 import {Routes} from "../../../config/routes";

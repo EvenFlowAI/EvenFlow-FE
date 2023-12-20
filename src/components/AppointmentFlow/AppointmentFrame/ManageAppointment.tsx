@@ -30,7 +30,7 @@ import ServiceRequestsManage from "./manageSections/ServiceRequestsManage";
 import {SelectedPriceManage} from "./manageSections/SelectedPriceManage";
 import ServiceTypeManage from "./manageSections/ServiceTypeManage";
 import {ReviewManage} from "./manageSections/ReviewManage";
-import ConfirmCancelUpdate from "../../Modals/ConfirmCancelUpdate/ConfirmCancelUpdate";
+import ConfirmCancelUpdate from "../../Modals/booking/ConfirmCancelUpdate/ConfirmCancelUpdate";
 import {ILoadedVehicle} from "../../../api/types";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {Loading} from "../../UI/Loading";
@@ -40,7 +40,7 @@ import {API} from "../../../api/api";
 import {Routes} from "../../../config/routes";
 import {isMobile} from 'react-device-detect';
 import moment from "moment/moment";
-import DetailedFeesManage from "../../Modals/DetailedFees/DetailedFeesManage";
+import DetailedFeesManage from "../../Modals/booking/DetailedFees/DetailedFeesManage";
 import {loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 

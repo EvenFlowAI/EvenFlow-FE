@@ -7,7 +7,7 @@ import {LoginSideBar} from "./LoginSideBar";
 import {ResetPassword} from "./ResetPassword";
 import {loginTheme} from "../../theme/theme";
 import {Routes} from "../../config/routes";
-import {EmailVerification} from "../Verification/EmailVerification";
+import {EmailVerification} from "../../features/EmailVerification/EmailVerification";
 
 export const Login = () => {
     return <ThemeProvider theme={loginTheme}>

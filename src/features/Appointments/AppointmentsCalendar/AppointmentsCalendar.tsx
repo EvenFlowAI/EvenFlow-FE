@@ -14,7 +14,7 @@ import {ReactComponent as Active} from "../../../assets/img/date_1.svg";
 import {ReactComponent as FreeSlots} from "../../../assets/img/date_2.svg";
 import {Loading} from "../../../components/UI/Loading";
 import {useStyles} from "./styles";
-import {useCalendarStyles} from "../../../sharedStyles/calendarStyles";
+import {useCalendarStyles} from "../../../sharedStyles/useCalendarStyles";
 
 type TCalendarProps = {
     selectedView: TView;

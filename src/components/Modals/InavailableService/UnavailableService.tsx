@@ -3,7 +3,7 @@ import {DialogContent, DialogTitle} from "../BaseModal";
 import {Button, Dialog} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useDialogStyles} from "../DetailedFees/DetailedFees";
+import {useDialogStyles} from "../../../sharedStyles/useDialogStyles";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {makeStyles} from "@material-ui/core/styles";

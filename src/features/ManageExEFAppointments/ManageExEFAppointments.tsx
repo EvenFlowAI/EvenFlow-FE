@@ -4,7 +4,7 @@ import {useException, useMessage, useSCs} from "../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {updateAdvisor} from "../../store/reducers/serviceCenters/actions";
-import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../components/UI/TitleContainer";
 import {SquarePaper} from "../../components/styled/Paper";
 import {useStyles} from "./styles";
 import {optimizerRoot} from "../../config/constants";

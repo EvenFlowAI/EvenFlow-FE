@@ -34,7 +34,7 @@ import {useAnalyticsBySCId, useCurrentUser, useException} from "../../utils/hook
 import {Routes} from "../../config/routes";
 import {decodeSCID, encodeSCID} from "../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
-import AskChangesCompleted from "../Modals/AskChangesCompleted/AskChangesCompleted";
+import AskChangesCompleted from "../Modals/booking/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../Modals/SlotImpactedWarning/SlotImpactedWarning";
 import {setServiceWarningOpen, setSlotsWarningOpen} from "../../store/reducers/modals/actions";
 import ServiceImpactedWarning from "../Modals/ServiceImpactedWarning/ServiceImpactedWarning";

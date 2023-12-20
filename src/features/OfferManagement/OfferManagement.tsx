@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {TitleContainer} from "../../components/Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../components/UI/TitleContainer";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {TabList} from "../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";

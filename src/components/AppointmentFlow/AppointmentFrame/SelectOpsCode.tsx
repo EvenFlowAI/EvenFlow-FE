@@ -13,7 +13,7 @@ import {TScreen} from "../../Layout/types";
 import ReactGA from "react-ga4";
 import {IServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType} from "../../../store/reducers/categories/types";
-import AskAddService from "../../Modals/AskAddService/AskAddService";
+import AskAddService from "../../Modals/booking/AskAddService/AskAddService";
 import {
     checkCarIsValid,
     selectCategoriesIds,

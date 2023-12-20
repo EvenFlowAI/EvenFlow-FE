@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {TitleContainer} from "../../../components/Content/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/UI/TitleContainer";
 import {Api} from "../../../config/requests";
 import {IDealershipGroupExtended} from "../../../store/reducers/dealershipGroups/types";
 import {concatAddress} from "../../../utils/utils";

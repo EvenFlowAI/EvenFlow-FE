@@ -4,7 +4,7 @@ import {Button} from "@material-ui/core";
 import {TextField} from "../../../components/UI/TextField";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../components/UI/AutocompleteRender";
-import {FileInput} from "../../../components/FormControls/FileInput";
+import {FileInput} from "../../../components/FormControls/FileInput/FileInput";
 import {setAssignedFilter} from "../../../store/reducers/serviceRequests/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useException, useSCs} from "../../../utils/hooks";
