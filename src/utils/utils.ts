@@ -1,6 +1,5 @@
 import {IAddress} from "../store/reducers/dealershipGroups/types";
-import {ChangeEvent, ChangeEventHandler, Dispatch, SetStateAction} from "react";
-import {TCalendarProps, TGroupedAppointments, TGroupedAppointmentsList, TOption} from "./types";
+import {TCalendarProps, TGroupedAppointments, TOption} from "./types";
 import * as queryString from "querystring";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {PERMISSIONS} from "../permissions";
@@ -31,13 +30,6 @@ import {IMaintenanceItem, IRecallByVin} from "../types/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
 import i18n from "../i18n";
 
-export function PromiseTimeout<T> (val: T, timeout=2000): Promise<T> {
-    return new Promise(resolve => {
-            setTimeout(() => resolve(val), timeout);
-        }
-    );
-}
-
 export const getInitials = (name?: string) => {
     if (!name) {
         return "-";
@@ -62,16 +54,6 @@ export const pathReplace = (path: string, data?: Record<string, any>): string =>
     return path.replace(re, matched => data[matched.slice(1, -1)] as string)
 }
 export const noop = () => {};
-
-export const baseChangeHandler = <State>(setForm: Dispatch<SetStateAction<State>>): ChangeEventHandler<HTMLInputElement> => e => {
-    setForm(form => ({...form, [e.target.name]: e.target.value}));
-}
-export const baseCheckHandler = <State>(setForm: Dispatch<SetStateAction<State>>) => (e: ChangeEvent<HTMLInputElement>): void => {
-    setForm(form => ({...form, [e.target.name]: e.target.checked}));
-}
-export const baseSwitchHandler = <State>(setForm: Dispatch<SetStateAction<State>>) => (e: ChangeEvent<HTMLInputElement>, checked: boolean): void => {
-    setForm(form => ({...form, [e.target.name]: checked}));
-}
 
 export const getCalendarUrl = (params: TCalendarProps): string => {
     const data: {[k: string]: string|undefined} = {...params, dates: params.dates.join("/")};
@@ -115,9 +97,6 @@ export const validatePhoneNumber = (value: string): string => {
 export const getAppointmentDate = (appointment: IAppointment) => {
     return moment.utc(appointment.dateTime);
 }
-export const getAppointmentVehicle = ({vehicle}: IAppointment) => {
-    return `${vehicle?.make ?? ''} ${vehicle?.model ?? ''} ${vehicle?.year ?? ''}`;
-}
 
 export const encodeSCID = (id: number): string => {
     return encode(btoa(String(id)));
@@ -159,24 +138,6 @@ export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAp
         }
     }
     return appointments;
-}
-
-export const getGroupedAppointmentList = (slots: TGroupedAppointments): TGroupedAppointmentsList[] => {
-    const arr: TGroupedAppointmentsList[] = [];
-    for (let k in slots) {
-        if (slots.hasOwnProperty(k)) {
-            arr.push([k, slots[k]]);
-        }
-    }
-    arr.sort((a, b) => {
-        if (a > b) {
-            return 1;
-        } else if (a < b) {
-            return -1;
-        }
-        return 0;
-    });
-    return arr;
 }
 
 export const fallbackCopyTextToClipboard = (text: string) => {
@@ -227,46 +188,6 @@ export const parentOrigins = {
     performancetoyotastore: "performancetoyotastore",
 }
 
-export const getTracker = (origin: string): string => {
-    if (process.env.REACT_APP_ENV === "uat") return "G-ZW2CJN5R98";
-    // if (process.env.REACT_APP_ENV === "stage") return "UA-210743216-4";
-    if (process.env.REACT_APP_ENV === "production") {
-        if (origin.includes(parentOrigins.bmwofschererville)) return "UA-210743216-6";
-        //if (origin.includes(parentOrigins.riverviewford)) return "UA-210743216-3";
-        if (origin.includes(parentOrigins.riverviewford)) return "G-NBXVY09B7S";
-        if (origin.includes(parentOrigins.scherervilleEvenflow)) return "UA-210743216-8";
-        if (origin.includes(parentOrigins.fremontchryslerdodgejeepcasper)) return "G-FBF51NY0TY";
-        //if (origin.includes(parentOrigins.fremontchryslerdodgejeepcasper)) return "UA-210743216-9";
-        if (origin.includes(parentOrigins.fremontchryslerdodgejeeprocksprings)) return "G-9DVYXDJ45M";
-        //if (origin.includes(parentOrigins.fremontchryslerdodgejeeprocksprings)) return "UA-210743216-10";
-        if (origin.includes(parentOrigins.janssenchryslerjeepdodge)) return "G-7177QY7LH2";
-        //if (origin.includes(parentOrigins.janssenchryslerjeepdodge)) return "UA-210743216-11";
-        if (origin.includes(parentOrigins.janssenfordholdrege)) return "G-YXMH70Q2JX";
-        //if (origin.includes(parentOrigins.janssenfordholdrege)) return "UA-210743216-12";
-        if (origin.includes(parentOrigins.lakepowellford)) return "G-HS4HDY3376";
-        //if (origin.includes(parentOrigins.lakepowellford)) return "UA-210743216-13";
-        if (origin.includes(parentOrigins.larnedford)) return "G-4BFDSPFKH6";
-        //if (origin.includes(parentOrigins.larnedford)) return "UA-210743216-14";
-        if (origin.includes(parentOrigins.performancekingshonda)) return "G-P3DH15MW8P";
-        //if (origin.includes(parentOrigins.performancekingshonda)) return "UA-210743216-15";
-        if (origin.includes(parentOrigins.performancehondastore)) return "G-JFFE7XLTF5";
-        //if (origin.includes(parentOrigins.performancehondastore)) return "UA-210743216-16";
-        if (origin.includes(parentOrigins.performancelexusrivercenter)) return "G-3074D59PM3";
-        //if (origin.includes(parentOrigins.performancelexusrivercenter)) return "UA-210743216-18";
-        if (origin.includes(parentOrigins.performancelexus)) return "G-5XJ8256YEZ";
-        //if (origin.includes(parentOrigins.performancelexus)) return "UA-210743216-17";
-        if (origin.includes(parentOrigins.performancechryslerjeepcenterville)) return "G-EEJPTXTVF2";
-        //if (origin.includes(parentOrigins.performancechryslerjeepcenterville)) return "UA-210743216-19";
-        if (origin.includes(parentOrigins.performancetoyotastore)) return "G-HXLXXZQ4YB";
-        //if (origin.includes(parentOrigins.performancetoyotastore)) return "UA-210743216-20";
-        return "G-DWX0X9CBTT";
-        //return "UA-210743216-5";
-    } else {
-        return "G-LS5EEY1SRM";
-        //return "UA-210743216-5";
-    }
-}
-
 const ServiceCenters = {
     HennessysRiverViewFordQuickLane: 2,
     HennessysRiverViewFordMainServiceDrive: 6,
@@ -295,10 +216,8 @@ const ServiceCenters = {
 export const getTrackerById = (id: string): string => {
     const decodedId = decodeSCID(id);
     if (process.env.REACT_APP_ENV === "uat") return "G-ZW2CJN5R98";
-    // if (process.env.REACT_APP_ENV === "stage") return "UA-210743216-4";
     if (process.env.REACT_APP_ENV === "production") {
         if (decodedId === ServiceCenters.TestBmwOfSchererville) return "UA-210743216-6";
-        //if (origin.includes(parentOrigins.riverviewford)) return "UA-210743216-3";
         if (decodedId === ServiceCenters.HennessysRiverViewFordQuickLane) return "G-NBXVY09B7S";
         // todo its own property in GA
         if (decodedId === ServiceCenters.HennessysRiverViewFordMainServiceDrive) return "G-NBXVY09B7S";
@@ -474,6 +393,7 @@ export const getVehicleData = (selectedVehicle: ILoadedVehicle | null, valueServ
             : null;
     return [make, model, year];
 }
+
 export const getMaintenanceDescription = (
     srList: ISR[],
     selectedRecalls: IRecallByVin[],
@@ -523,6 +443,7 @@ export const getMaintenanceDescription = (
     selectedRecalls.forEach(el => services.push(el.shortDescription))
     return services;
 }
+
 export const getMaintenanceList = (
     srList: ISR[],
     selectedRecalls: IRecallByVin[],
