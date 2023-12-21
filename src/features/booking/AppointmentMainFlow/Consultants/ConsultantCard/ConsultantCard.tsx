@@ -3,6 +3,8 @@ import {TCallback} from "../../../../../types/types";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {Avatar, ConsultantWrapper} from "./styles";
+import {ReactComponent as AnyConsultantIcon} from '../../../assets/img/advisor_black.svg';
+import {ReactComponent as ConsultantIcon} from '../../../assets/img/advisor_grey.svg';
 
 type TCardProps = {
     advisor?: IServiceConsultant;
