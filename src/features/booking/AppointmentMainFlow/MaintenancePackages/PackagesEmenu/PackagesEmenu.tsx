@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../../components/Loading/Loading";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
+import {RootState} from "../../../../../store/rootReducer";
 import axios from "axios";
-import {useException} from "../../../../utils/hooks";
-import PackageEMenuActions from "./PackageEmenuActions";
+import {useException} from "../../../../../utils/hooks";
+import PackageEMenuActions from "../PakcagesEmenuActions/PackageEmenuActions";
 
 type TProps = {
     onBack: () => void,

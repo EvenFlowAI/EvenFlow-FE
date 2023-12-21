@@ -1,9 +1,9 @@
 import React from 'react';
-import {TPackage} from "../PackageSelection";
 import {IPackageOptions} from "../../../../../api/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
+import {TPackage} from "../types";
 
 type TTotalProps = {
     packages: TPackage[];
@@ -13,7 +13,7 @@ type TTotalProps = {
     setClasses: (id: number, cls: string) => string;
 }
 
-const Total: React.FC<TTotalProps> = ({ isBmWService, packages, handleClick, isSanfordInfinity, setClasses }) => {
+const PackagesTotalPrices: React.FC<TTotalProps> = ({ isBmWService, packages, handleClick, isSanfordInfinity, setClasses }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
 
@@ -42,4 +42,4 @@ const Total: React.FC<TTotalProps> = ({ isBmWService, packages, handleClick, isS
     </React.Fragment>;
 };
 
-export default Total;
+export default PackagesTotalPrices;

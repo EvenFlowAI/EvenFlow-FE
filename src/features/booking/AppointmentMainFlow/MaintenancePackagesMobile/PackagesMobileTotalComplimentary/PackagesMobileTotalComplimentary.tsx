@@ -1,11 +1,12 @@
 import React from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
-import {usePackageMobileStyles} from "../PackageSelectionMobile";
 import {useTranslation} from "react-i18next";
-import {TPackage} from "../PackageSelection";
 
-const TotalComplimentaryMobile: React.FC<{item: TPackage}> = ({item}) => {
+import {TPackage} from "../../MaintenancePackages/types";
+import {usePackageMobileStyles} from "../../../../../commonStyles/usePackageMobileStyles";
+
+const PackagesMobileTotalComplimentary: React.FC<{item: TPackage}> = ({item}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const classes = usePackageMobileStyles();
     const {t} = useTranslation();
@@ -25,4 +26,4 @@ const TotalComplimentaryMobile: React.FC<{item: TPackage}> = ({item}) => {
         : null
 };
 
-export default TotalComplimentaryMobile;
+export default PackagesMobileTotalComplimentary;

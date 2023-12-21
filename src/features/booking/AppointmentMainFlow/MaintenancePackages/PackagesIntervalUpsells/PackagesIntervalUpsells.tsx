@@ -1,11 +1,11 @@
 import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../../assets/img/done_icon_black.svg";
 import {InfoOutlined} from "@material-ui/icons";
-import {TPackage, TService, TUpsell} from "../PackageSelection";
 import {ESegmentTitle, IPackage, IPackageOptions} from "../../../../../api/types";
 import {useTranslation} from "react-i18next";
 import {HtmlTooltip} from "../../AppointmentFrame/ServiceCard";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
+import {TPackage, TService, TUpsell} from "../types";
 
 type TComplimentaryProps = {
     packages: TPackage[];
@@ -17,7 +17,7 @@ type TComplimentaryProps = {
     loadedPackages: IPackage[];
 }
 
-const IntervalUpsells: React.FC<TComplimentaryProps> =
+const PackagesIntervalUpsells: React.FC<TComplimentaryProps> =
     ({upsell, packages, setClasses, isBmWService, handleClick, loadedPackages}) => {
         const {t} = useTranslation();
         const title = loadedPackages[0]?.segmentTitles?.find(el => el.type === ESegmentTitle.IntervalUpsell)?.title
@@ -61,4 +61,4 @@ const IntervalUpsells: React.FC<TComplimentaryProps> =
             : null;
     };
 
-export default IntervalUpsells;
+export default PackagesIntervalUpsells;

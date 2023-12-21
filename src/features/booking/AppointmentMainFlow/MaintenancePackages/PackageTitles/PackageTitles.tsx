@@ -1,7 +1,7 @@
 import React from 'react';
 import {IPackageOptions} from "../../../../../api/types";
-import {TPackage} from "../PackageSelection";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
+import {TPackage} from "../types";
 
 type TPackageTitlesProps = {
     setClasses: (id: number, cls: string) => string;

@@ -1,36 +1,17 @@
 import React from 'react';
-import {Button, styled} from "@material-ui/core";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Button} from "@material-ui/core";
+import {Loading} from "../../../../../components/Loading/Loading";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
-import {setPackageEMenuType} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {RootState} from "../../../../store/rootReducer";
+import {setPackageEMenuType} from "../../../../../store/reducers/appointmentFrameReducer/actions";
+import {RootState} from "../../../../../store/rootReducer";
+import {ButtonsRow} from "./styles";
 
 type TProps = {
     isLoading: boolean,
     onBack: () => void,
     onNext: () => void,
 }
-
-const ButtonsRow = styled('div')(({theme}) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "flex-start",
-    gap: "22px",
-    marginTop: 20,
-    "& button": {
-        minWidth: 144
-    },
-    [`${theme.breakpoints.down('sm')} and (orientation: portrait)`]: {
-        flexDirection: "column",
-        width: "100%",
-        gap: "12px",
-        "& button": {
-            width: "100%"
-        }
-    }
-}));
 
 const PackageEMenuActions: React.FC<TProps> = ({isLoading, onBack, onNext}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);

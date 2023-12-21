@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {PackagesStepWrapper} from "../AppointmentFrame/StepWrapper";
 import {Actions} from "../../Actions/Actions";
-import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
@@ -16,257 +16,28 @@ import {useParams} from "react-router-dom";
 import {Api} from "../../../../config/requests";
 import {decodeSCID} from "../../../../utils/utils";
 import {NoItemsLoading} from "../../../../components/NoItemsLoading/NoItemsLoading";
-import {
-    EServiceCenterName,
-    IPackage,
-    IPackageOptions,
-    TExtendedComplimentary,
-    TExtendedService,
-    TUpsellOfOption
-} from "../../../../api/types";
-import PackageSelectionMobile from "./PackageSelectionMobile";
-//import ReactGA from "react-ga";
+import {EServiceCenterName, IPackage, IPackageOptions} from "../../../../api/types";
+import MaintenancePackagesMobile from "../MaintenancePackagesMobile/MaintenancePackagesMobile";
 import ReactGA from "react-ga4";
 import {useException, useModal} from "../../../../utils/hooks";
 import ConfirmChangeOption from "../../../../components/modals/booking/ConfirmChangeOption/ConfirmChangeOption";
 import AskAddService from "../../../../components/modals/booking/AskAddService/AskAddService";
-import {getPackagesData} from "../AppointmentFrame/utils";
-import PackageTitles from "./PackageSelectionParts/PackageTitles";
-import IncludedInPackage from "./PackageSelectionParts/IncludedInPackage";
-import TotalMaintenance from "./PackageSelectionParts/TotalMaintenance";
-import Complimentary from "./PackageSelectionParts/Complimentary";
-import TotalComplimentary from "./PackageSelectionParts/TotalComplimentary";
+import PackageTitles from "./PackageTitles/PackageTitles";
+import PackagesServiceRequests from "./PackagesServiceRequests/PackagesServiceRequests";
+import PackagesTotalMaintenance from "./PackagesTotalMaintenance/PackagesTotalMaintenance";
+import PackagesComplimentary from "./PackagesComplimentary/PackagesComplimentary";
+import PackagesTotalComplimentary from "./PackagesTotalComplimentary/PackagesTotalComplimentary";
 import {useTranslation} from "react-i18next";
 import {TArgCallback, TScreen} from "../../../../types/types";
-import IntervalUpsells from "./PackageSelectionParts/IntervalUpsells";
-import TotalPriceRow from "./PackageSelectionParts/TotalPriceRow";
-import TotalPriceWithFeeRow from "./PackageSelectionParts/TotalPriceWithFeeRow";
+import PackagesIntervalUpsells from "./PackagesIntervalUpsells/PackagesIntervalUpsells";
+import PackagesTotalPriceRow from "./PackagesTotalPriceRow/PackagesTotalPriceRow";
+import PackagesTotalPriceWithFee from "./PackagesTotalPriceWithFee/PackagesTotalPriceWithFee";
 import {EPackagePricingType} from "../../../../store/reducers/appointmentFrameReducer/types";
-import PackagesEmenu from "./PackagesEmenu";
+import PackagesEmenu from "./PackagesEmenu/PackagesEmenu";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
-
-const border = '1px solid #DADADA';
-
-type TWithPackages = {
-    packages: number[];
-}
-
-export type TService = TWithPackages & TExtendedService;
-export type TComplimentary = TWithPackages & TExtendedComplimentary;
-export type TUpsell = TWithPackages & TUpsellOfOption;
-export type TPackage = {
-    lastIdx?: number;
-    moreIdx?: number[];
-} & IPackageOptions;
-
-const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
-    display: "grid",
-    marginTop: 12,
-    gap: "0 16px",
-    gridTemplateColumns: count === 3
-        ? `2fr repeat(${count}, 1fr)`
-        : count === 2
-            ? '1fr 1fr 1fr'
-            : '1fr 1fr',
-    width: "100%",
-    alignItems: "stretch",
-    [theme.breakpoints.down('sm')]: {
-        overflowX: "auto"
-    },
-
-    "& .currentWrp": {
-        flexBasis: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "stretch"
-    },
-    "& > div": {
-        textAlign: "center",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        borderBottom: border,
-        padding: '2px 8px',
-        fontWeight: "bold",
-        borderLeft: border,
-        borderRight: border,
-        cursor: "pointer",
-        transition: "all .2s",
-        [theme.breakpoints.down("xs")]: {
-            minWidth: "180px"
-        },
-        "&.selected": {
-            borderLeftColor: "#000000",
-            borderRightColor: "#000000",
-            "&.top": {
-                borderTopColor: "#000000"
-            },
-            "&.end": {
-                borderBottomColor: "#000000"
-            },
-            "&.title": {
-                background: "#000000",
-                color: "#FFFFFF"
-            },
-            "& .triangle": {
-                width: 0,
-                height: 0,
-                borderTop: "14px solid transparent",
-                borderBottom: "14px solid transparent",
-            },
-            "& .current": {
-                background: "#D32F2F",
-                color: "#FFFFFF",
-            }
-        },
-        '&.top': {
-            borderTop: border,
-        },
-        '&:nth-child(4n+1)': {
-            justifyContent: "center",
-            cursor: "default",
-        },
-        "&.gray": {
-            background: "#DADADA",
-        },
-        "&.title": {
-            padding: 20,
-            fontSize: 20,
-            textTransform: "uppercase"
-        },
-        "&.subtitle": {
-            textTransform: "uppercase",
-            justifyContent: "flex-end",
-        },
-        "&.service": {
-            justifyContent: "center",
-            padding: "6px 8px",
-        },
-        "&.serviceWithInfo": {
-            display: 'flex',
-            justifyContent: "flex-end",
-            alignItems: 'center',
-            padding: "6px 8px",
-            textAlign: 'right',
-        },
-        "&.green": {
-            background: "#E5F5FF"
-        },
-        "&.yellow": {
-            background: "#FFF2CC"
-        },
-        "&.lgray": {
-            background: "#EFEFEF",
-        },
-        "&.green.subtitle": {
-            background: "#91CFF7"
-        },
-        "&.yellow.subtitle": {
-            background: "#FFD966"
-        },
-        "&.totalMaintenance": {
-            justifyContent: "flex-end",
-            fontWeight: 'bold',
-            borderTop: border,
-            paddingBottom: 10,
-            fontSize: 14,
-        },
-        "&.last": {
-            borderBottomColor: "#000000",
-        },
-        "&.totalComplimentary": {
-            justifyContent: "center",
-            padding: "16px 8px",
-            color: "#202021",
-        },
-        "&.complimentaryTitle": {
-            justifyContent: "flex-end",
-            borderBottomColor: "#000000",
-        },
-        "&.total": {
-            justifyContent: "flex-end",
-            padding: 8,
-            "&>.info": {
-                display: "inline-block",
-                marginLeft: 4,
-                textTransform: "none",
-                fontWeight: "normal",
-            }
-        },
-        "&.price": {
-            display: "grid",
-            gridTemplateColumns: "repeat(1, 1fr)",
-            alignItems: "center",
-            justifyContent: "center",
-            "& .current": {
-                flexGrow: 1,
-                fontSize: 20,
-                color: '#000000'
-            },
-            "&.selected": {
-                "& .current": {
-                    background: "#000000",
-                    color: "#FFFFFF",
-                },
-                "& .triangle": {
-                    borderRight: "14px solid #000000",
-                },
-            }
-        },
-        '&.priceWithBefore': {
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            alignItems: "center",
-            justifyContent: "center",
-            "&>.before": {
-                textDecoration: "line-through",
-                fontWeight: "bold",
-                color: "#000000",
-                fontSize: 20,
-            },
-            "& .current": {
-                flexGrow: 1,
-                fontSize: 20,
-                color: '#D32F2F'
-            },
-            "&.selected": {
-                "& .current": {
-                    background: "#D32F2F",
-                    color: "#FFFFFF",
-                },
-                "& .triangle": {
-                    borderRight: "14px solid #D32F2F",
-                },
-            }
-        },
-    }
-}));
-
-export const Info = styled("div")({
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    fontSize: 14,
-    color: "#808080",
-})
-
-export const FeesText = styled('div')<Theme, { count: number }>(({theme, count}) => ({
-    width: "100%",
-    display: "grid",
-    gap: "0 16px",
-    gridTemplateColumns: count === 3
-        ? `2fr repeat(${count}, 1fr)`
-        : count === 2
-            ? '1fr 1fr 1fr'
-            : '1fr 1fr',
-    alignItems: "stretch",
-    justifyItems: 'flex-end',
-    fontSize: 16,
-    fontWeight: 'bold',
-    [theme.breakpoints.down('sm')]: {
-        overflowX: "auto"
-    },
-}))
+import {TComplimentary, TPackage, TService, TUpsell} from "./types";
+import {FeesText, Info, Wrapper} from "./styles";
+import {getPackagesData} from "./utils";
 
 type TPackageSelectionProps = {
     onNext: TArgCallback<TScreen>;
@@ -274,7 +45,7 @@ type TPackageSelectionProps = {
     onAddServices: () => void;
 }
 
-export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices}) => {
+export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices}) => {
     const {scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {
@@ -466,7 +237,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                 </React.Fragment>
                 : packages.length ? <React.Fragment>
                 {isXs
-                    ? <PackageSelectionMobile
+                    ? <MaintenancePackagesMobile
                         loadedPackages={loadedPackages}
                         getTitle={getTitle}
                         withUpsells={!!upsells.length}
@@ -484,7 +255,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 handleClick={handleClick}
                                 setClasses={setClasses}/>
 
-                            <IncludedInPackage
+                            <PackagesServiceRequests
                                 packages={packages}
                                 services={services}
                                 handleClick={handleClick}
@@ -493,13 +264,13 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                             />
 
                             {scProfile?.isShowPriceDetails
-                                && <TotalMaintenance
+                                && <PackagesTotalMaintenance
                                     isBmWService={isBmWService}
                                     setClasses={setClasses}
                                     packages={packages}/>
                             }
 
-                            <IntervalUpsells
+                            <PackagesIntervalUpsells
                                 packages={packages}
                                 services={services}
                                 upsell={upsells}
@@ -508,7 +279,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 loadedPackages={loadedPackages}
                                 isBmWService={isBmWService}/>
 
-                            <Complimentary
+                            <PackagesComplimentary
                                 loadedPackages={loadedPackages}
                                 packages={packages}
                                 services={services}
@@ -517,7 +288,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 setClasses={setClasses}
                                 isBmWService={isBmWService}/>
 
-                            {scProfile?.isShowPriceDetails ? <TotalComplimentary
+                            {scProfile?.isShowPriceDetails ? <PackagesTotalComplimentary
                                 packages={packages}
                                 handleClick={handleClick}
                                 setClasses={setClasses}
@@ -530,7 +301,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                                 <div>{t("Total")}<span className="info"> ({t("Excluding taxes & fees")}):</span></div>
                             </FeesText>
                             : null}
-                        <TotalPriceRow
+                        <PackagesTotalPriceRow
                             packages={packages}
                             title={getTitle(EPackagePricingType.BasePrice)}
                             isUpsells={Boolean(upsells.length)}
@@ -539,7 +310,7 @@ export const PackageSelection: React.FC<TPackageSelectionProps> = ({onBack, onNe
                             packagePricingType={localSelectedPricingType}
                         />
                         {upsells.length > 0
-                            ? <TotalPriceWithFeeRow
+                            ? <PackagesTotalPriceWithFee
                                 packages={packages}
                                 selectedPackage={localSelectedPackage}
                                 packagePricingType={localSelectedPricingType}

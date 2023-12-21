@@ -1,8 +1,8 @@
 import React from 'react';
-import {TPackage} from "../PackageSelection";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
+import {TPackage} from "../types";
 
 type TTotalMaintenanceProps = {
     isBmWService: boolean;
@@ -10,7 +10,7 @@ type TTotalMaintenanceProps = {
     packages: TPackage[];
 }
 
-const TotalMaintenance: React.FC<TTotalMaintenanceProps> = ({ packages, isBmWService, setClasses }) => {
+const PackagesTotalMaintenance: React.FC<TTotalMaintenanceProps> = ({ packages, isBmWService, setClasses }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
 
@@ -29,4 +29,4 @@ const TotalMaintenance: React.FC<TTotalMaintenanceProps> = ({ packages, isBmWSer
     );
 };
 
-export default TotalMaintenance;
+export default PackagesTotalMaintenance;

@@ -1,8 +1,8 @@
 import React from 'react';
 import {HtmlTooltip} from "../../AppointmentFrame/ServiceCard";
-import {usePackageMobileStyles} from "../PackageSelectionMobile";
 import {useTranslation} from "react-i18next";
 import {ESegmentTitle, IPackage, TUpsellOfOption} from "../../../../../api/types";
+import {usePackageMobileStyles} from "../../../../../commonStyles/usePackageMobileStyles";
 
 type TProps = {
     intervalUpsells: TUpsellOfOption[];
@@ -10,7 +10,7 @@ type TProps = {
     loadedPackages: IPackage[];
 }
 
-const IntervalUpsellsMobile: React.FC<TProps> = ({intervalUpsells, isBmWService, loadedPackages}) => {
+const PackagesMobileIntervalUpsells: React.FC<TProps> = ({intervalUpsells, isBmWService, loadedPackages}) => {
     const classes = usePackageMobileStyles();
     const {t} = useTranslation();
     const title = loadedPackages[0]?.segmentTitles?.find(el => el.type === ESegmentTitle.IntervalUpsell)?.title
@@ -49,4 +49,4 @@ const IntervalUpsellsMobile: React.FC<TProps> = ({intervalUpsells, isBmWService,
             : null
 };
 
-export default IntervalUpsellsMobile;
+export default PackagesMobileIntervalUpsells;

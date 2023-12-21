@@ -2,10 +2,10 @@ import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../../assets/img/done_icon_black.svg";
 import {InfoOutlined} from "@material-ui/icons";
 import {IPackageOptions} from "../../../../../api/types";
-import {TPackage, TService} from "../PackageSelection";
 import {useTranslation} from "react-i18next";
 import {HtmlTooltip} from "../../AppointmentFrame/ServiceCard";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
+import {TPackage, TService} from "../types";
 
 type TIncludedInPackageProps = {
     packages: TPackage[];
@@ -15,7 +15,7 @@ type TIncludedInPackageProps = {
     isBmWService: boolean;
 }
 
-const IncludedInPackage: React.FC<TIncludedInPackageProps> =
+const PackagesServiceRequests: React.FC<TIncludedInPackageProps> =
     ({packages, services, setClasses, isBmWService, handleClick}) => {
     const {t} = useTranslation();
     return <React.Fragment>
@@ -52,4 +52,4 @@ const IncludedInPackage: React.FC<TIncludedInPackageProps> =
     </React.Fragment>;
 };
 
-export default IncludedInPackage;
+export default PackagesServiceRequests;

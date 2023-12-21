@@ -1,65 +1,11 @@
 import React, {useMemo} from 'react';
-import {styled, Theme} from "@material-ui/core";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {EMaintenanceOptionType, IPackageOptions} from "../../../../../api/types";
 import {useTranslation} from "react-i18next";
-
-const PriceWrapper = styled(({isUpsellPrice, isShowPriceDetails, isSelected, ...props}) =>
-    (<div {...props}/>))<Theme, {isShowPriceDetails: boolean, isUpsellPrice?: boolean, isSelected: boolean}>(
-    ({theme, isShowPriceDetails, isUpsellPrice, isSelected}) => ({
-        width: '100%',
-        display: 'grid',
-        gridTemplateColumns: '10% 50% 40%',
-        border: `1px solid ${isSelected ? '#202021' : '#BDBDBD'}`,
-        marginBottom: isUpsellPrice ? 0 : 10,
-        marginTop: isUpsellPrice ? 0 : 10,
-        "& .radio": {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            background: isUpsellPrice ?'#FFD966' : '#3E3E40',
-            color: isUpsellPrice ? '#202021' : '#FFFFFF',
-            padding: '10px 0 10px 0',
-        },
-        '& .text': {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'right',
-            fontSize: 16,
-            fontWeight: 'bold',
-            color: isUpsellPrice ? '#202021' : '#FFFFFF',
-            background: isUpsellPrice ?'#FFD966' : '#3E3E40',
-            padding: '10px 16px'
-        },
-        '& .price': {
-            display: 'flex',
-            justifyContent: "center",
-            alignItems: 'center',
-            flexDirection: isShowPriceDetails ? "column" : 'row',
-            background: isUpsellPrice ? 'FFF2CC' : isSelected ? '#DADADA' : '#EFEFEF',
-            padding: '10px 25px',
-            "& .prevPrice": {
-                color: '#202021',
-                textDecoration: "line-through",
-                fontWeight: 'bold',
-                fontSize: 20,
-            },
-            "& .currentPrice": {
-                color: "#D32F2F",
-                fontSize: 20,
-                fontWeight: 'bold',
-            },
-            "& .uniquePrice": {
-                color: '#202021',
-                fontWeight: 'bold',
-                fontSize: 20,
-            }
-        },
-    }))
+import {PriceWrapper} from "./styles";
 
 type TProps = {
     isUpsellPrice: boolean,
@@ -75,7 +21,7 @@ type TProps = {
     selectedPackage: IPackageOptions|null;
 }
 
-const TotalPriceMobile: React.FC<TProps> = ({
+const PackagesMobileTotalPrice: React.FC<TProps> = ({
                                                 handleClick,
                                                 type,
                                                 isUpsellPrice,
@@ -140,4 +86,4 @@ const TotalPriceMobile: React.FC<TProps> = ({
     );
 };
 
-export default TotalPriceMobile;
+export default PackagesMobileTotalPrice;

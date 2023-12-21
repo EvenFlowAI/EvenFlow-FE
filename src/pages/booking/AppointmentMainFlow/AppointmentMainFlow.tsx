@@ -13,7 +13,7 @@ import {TransportationNeeds} from '../../../features/booking/AppointmentMainFlow
 import {AppointmentConfirmation} from '../../../features/booking/AppointmentMainFlow/AppointmentConfirmation/AppointmentConfirmation';
 import {AppointmentComment} from "../../../features/booking/AppointmentMainFlow/AppointmentComment/AppointmentComment";
 import {ServiceSelection} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/ServiceSelection";
-import {PackageSelection} from "../../../features/booking/AppointmentMainFlow/MaintenancePackages/PackageSelection";
+import {MaintenancePackages} from "../../../features/booking/AppointmentMainFlow/MaintenancePackages/MaintenancePackages";
 import {SelectOpsCode} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/SelectOpsCode";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
@@ -350,7 +350,7 @@ export const AppointmentMainFlow = () => {
                 onBack={handleSetScreen}
                 onNext={handleSetScreen}
             />,
-            packageSelection: <PackageSelection
+            packageSelection: <MaintenancePackages
                 onBack={handleChangeScreen('maintenanceDetails')}
                 onNext={handleSetScreen}
                 onAddServices={handleChangeScreen('serviceNeeds')}

@@ -1,8 +1,8 @@
 import React from 'react';
 import {HtmlTooltip} from "../../AppointmentFrame/ServiceCard";
-import {usePackageMobileStyles} from "../PackageSelectionMobile";
 import {useTranslation} from "react-i18next";
 import {ESegmentTitle, IPackage, TExtendedComplimentary} from "../../../../../api/types";
+import {usePackageMobileStyles} from "../../../../../commonStyles/usePackageMobileStyles";
 
 type TProps = {
     isBmWService: boolean;
@@ -10,7 +10,7 @@ type TProps = {
     loadedPackages: IPackage[];
 }
 
-const ComplimentaryMobile: React.FC<TProps> = ({isBmWService, complimentaryServices, loadedPackages}) => {
+const PackagesMobileComplimentary: React.FC<TProps> = ({isBmWService, complimentaryServices, loadedPackages}) => {
     const classes = usePackageMobileStyles();
     const {t} = useTranslation();
     const title = loadedPackages[0]?.segmentTitles?.find(el => el.type === ESegmentTitle.Complimentary)?.title
@@ -45,4 +45,4 @@ const ComplimentaryMobile: React.FC<TProps> = ({isBmWService, complimentaryServi
     );
 };
 
-export default ComplimentaryMobile;
+export default PackagesMobileComplimentary;

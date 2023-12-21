@@ -1,13 +1,13 @@
 import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../../assets/img/done_icon_black.svg";
 import {InfoOutlined} from "@material-ui/icons";
-import {TComplimentary, TPackage, TService} from "../PackageSelection";
 import {ESegmentTitle, IPackage, IPackageOptions} from "../../../../../api/types";
 import {useTranslation} from "react-i18next";
 import {HtmlTooltip} from "../../AppointmentFrame/ServiceCard";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
+import {TComplimentary, TPackage, TService} from "../types";
 
 type TComplimentaryProps = {
     packages: TPackage[];
@@ -19,7 +19,7 @@ type TComplimentaryProps = {
     loadedPackages: IPackage[];
 }
 
-const Complimentary: React.FC<TComplimentaryProps> =
+const PackagesComplimentary: React.FC<TComplimentaryProps> =
     ({complimentary, packages, setClasses, isBmWService, handleClick, loadedPackages}) => {
         const {scProfile} = useSelector((state: RootState) => state.appointment);
         const {t} = useTranslation();
@@ -66,4 +66,4 @@ const Complimentary: React.FC<TComplimentaryProps> =
         </React.Fragment>;
 };
 
-export default Complimentary;
+export default PackagesComplimentary;

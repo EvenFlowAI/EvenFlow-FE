@@ -1,10 +1,10 @@
 import React from 'react';
-import {TPackage} from "../PackageSelection";
 import {IPackageOptions} from "../../../../../api/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
+import {TPackage} from "../types";
 
 type TTotalComplimentaryProps = {
     packages: TPackage[];
@@ -13,7 +13,7 @@ type TTotalComplimentaryProps = {
     isBmWService: boolean;
 }
 
-const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, packages, setClasses, handleClick}) => {
+const PackagesTotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, packages, setClasses, handleClick}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
 
@@ -36,4 +36,4 @@ const TotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, p
         </React.Fragment>;
 };
 
-export default TotalComplimentary;
+export default PackagesTotalComplimentary;

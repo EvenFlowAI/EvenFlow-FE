@@ -1,14 +1,14 @@
 import React from 'react';
 import {HtmlTooltip} from "../../AppointmentFrame/ServiceCard";
-import {usePackageMobileStyles} from "../PackageSelectionMobile";
 import {TExtendedService} from "../../../../../api/types";
+import {usePackageMobileStyles} from "../../../../../commonStyles/usePackageMobileStyles";
 
 type TProps = {
     serviceRequests: TExtendedService[];
     isBmWService: boolean
 }
 
-const ServiceRequestsMobile: React.FC<TProps> = ({isBmWService, serviceRequests}) => {
+const PackagesMobileServiceRequests: React.FC<TProps> = ({isBmWService, serviceRequests}) => {
     const classes = usePackageMobileStyles();
     return (
         <div className={classes.serviceRequests} style={{paddingBottom: 36}}>
@@ -39,4 +39,4 @@ const ServiceRequestsMobile: React.FC<TProps> = ({isBmWService, serviceRequests}
     );
 };
 
-export default ServiceRequestsMobile;
+export default PackagesMobileServiceRequests;
