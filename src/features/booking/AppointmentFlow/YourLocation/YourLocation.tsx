@@ -31,7 +31,6 @@ import {
 import {useTranslation} from "react-i18next";
 import {styled, Theme} from "@material-ui/core";
 import DisplayAncillaryPrice from "../../../../components/modals/booking/DisplayAncillaryPrice/DisplayAncillaryPrice";
-import {useCurrentUser, useException, useModal} from "../../../../utils/hooks";
 import UnavailableService from "../../../../components/modals/booking/UnavailableService/UnavailableService";
 import {KeyboardArrowDown} from "@material-ui/icons";
 import {TActionProps, TArgCallback, TView} from "../../../../types/types";
@@ -43,6 +42,9 @@ import {ILoadedVehicle} from "../../../../api/types";
 import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
 
 import {parseGeoCode} from "./utils";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useException} from "../../../../hooks/useException/useException";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",

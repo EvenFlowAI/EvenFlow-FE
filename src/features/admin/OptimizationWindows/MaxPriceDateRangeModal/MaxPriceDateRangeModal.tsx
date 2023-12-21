@@ -3,12 +3,15 @@ import {DialogProps} from "../../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import {SC_UNDEFINED} from "../../../../config/constants";
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {updateMaxPriceDateRange} from "../../../../store/reducers/optimizationWindows/actions";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 export const MaxPriceDateRangeModal: React.FC<DialogProps> = ({payload, onAction, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);

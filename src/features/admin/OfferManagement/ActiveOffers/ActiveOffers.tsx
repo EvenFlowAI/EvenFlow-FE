@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Button, CircularProgress, Grid, TablePagination} from "@material-ui/core";
-import {useModal, usePagination, useSCs} from "../../../../utils/hooks";
 import {OfferModal} from "../OfferModal/OfferModal";
 import {useDispatch, useSelector} from "react-redux";
 import {loadOffers, setOffersPageData} from "../../../../store/reducers/offers/actions";
@@ -10,6 +9,9 @@ import {EOfferStatus, IOffer} from "../../../../store/reducers/offers/types";
 import {NoItemsLoading} from "../../../../components/NoItemsLoading/NoItemsLoading";
 import {SendOfferModal} from "../SendOfferModal/SendOfferModal";
 import {defaultRowsPerPageOptions} from "../../../../config/config";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 export const ActiveOffers = () => {
     const {onOpen, onClose, isOpen} = useModal();

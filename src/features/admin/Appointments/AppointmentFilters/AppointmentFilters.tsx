@@ -6,7 +6,6 @@ import {EAppointmentStatus} from "../../../../api/types";
 import {DatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import moment from "moment";
-import {useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadSchedulerList, loadServiceBookList} from "../../../../store/reducers/appointments/actions";
 import {RootState} from "../../../../store/rootReducer";
@@ -15,6 +14,7 @@ import {ReactComponent as CalendarIcon} from '../../../../assets/img/calendar_bl
 import {TFilters} from "../types";
 import {initialPaging} from "../Appointments";
 import {useStyles, EmptyMenuItem} from "./styles";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TAppointmentFilterProps = {
     status: EAppointmentStatus | '' | unknown;

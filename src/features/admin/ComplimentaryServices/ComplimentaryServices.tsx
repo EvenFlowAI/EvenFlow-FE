@@ -9,7 +9,6 @@ import {
     setComplimentarySort
 } from "../../../store/reducers/packages/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {IComplimentaryServiceByQuery} from "../../../store/reducers/packages/types";
 import {Table} from "../../../components/Table/Table";
 import {RootState} from "../../../store/rootReducer";
@@ -20,6 +19,13 @@ import AddServiceManually from "./AddServiceManually/AddServiceManually";
 import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
 import {addOpsCodeFromList, loadAllComplimentary} from "../../../store/reducers/complimentary/actions";
 import {IOrder, TableRowDataType} from "../../../types/types";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
+import {usePagination} from "../../../hooks/usePaginations/usePaginations";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const ComplimentaryServices = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);

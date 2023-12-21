@@ -8,7 +8,6 @@ import {IPackageByQuery} from "../../../api/types";
 import {loadPackages} from "../../../store/reducers/packages/actions";
 import {updateAvailablePackageOptions, updatePackagePriceDetails} from "../../../store/reducers/serviceCenters/actions";
 import AddPackageModal from "./AddPackageModal/AddPackageModal";
-import {useConfirm, useException, useModal, useSCs} from "../../../utils/hooks";
 import LaborRate from "./LaborRate/LaborRate";
 import Disclaimer from "./Disclaimer/Disclaimer";
 import {Loading} from "../../../components/Loading/Loading";
@@ -18,6 +17,10 @@ import {useMaintenancePackagesStyles} from "./styles";
 import {MaintenanceOptionTypes} from "./constants";
 import {TExpandedState, TOption} from "./types";
 import {useAutocompleteStyles} from "../../../commonStyles/useAutocompleteStyles";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const MaintenancePackages = () => {
     const {packages: allPackages} = useSelector((state: RootState) => state.packages);

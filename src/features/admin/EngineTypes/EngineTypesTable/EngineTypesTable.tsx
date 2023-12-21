@@ -7,7 +7,11 @@ import {removeEngineType} from "../../../../store/reducers/vehicleDetails/action
 import {IOrder} from "../../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const RowData = [
     {val: (el: IEngineType) => `${el.name}`, header: "Estimated Mileage", orderId: "name"},

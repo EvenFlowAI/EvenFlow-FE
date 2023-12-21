@@ -2,8 +2,8 @@ import React from "react";
 import {Route, RouteProps, Redirect} from "react-router-dom";
 import {Routes} from "../config/routes";
 import {authService} from "../config/requests";
-import {useCurrentUser} from "./hooks";
 import {hasPermission} from "./utils";
+import {useCurrentUser} from "../hooks/useCurrentUser/useCurrentUser";
 
 export const PrivateRoute: React.FC<RouteProps> = (
     {component: Component, ...rest}) => {

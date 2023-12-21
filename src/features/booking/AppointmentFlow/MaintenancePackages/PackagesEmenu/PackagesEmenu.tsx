@@ -3,8 +3,8 @@ import {Loading} from "../../../../../components/Loading/Loading";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import axios from "axios";
-import {useException} from "../../../../../utils/hooks";
 import PackageEMenuActions from "../PakcagesEmenuActions/PackageEmenuActions";
+import {useException} from "../../../../../hooks/useException/useException";
 
 type TProps = {
     onBack: () => void,

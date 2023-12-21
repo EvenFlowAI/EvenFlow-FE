@@ -26,10 +26,10 @@ import {
 import moment from "moment";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {useTranslation} from "react-i18next";
-import {useStorage} from "../../../utils/hooks";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {dateTimeFormat} from "../../../features/admin/Appointments/ViewAppointmentsModal/AppointmentDetails/AppointmentDetails";
+import {useStorage} from "../../../hooks/useStorage/useStorage";
 
 const ContentContainer = styled("div")({
     fontSize: 22,

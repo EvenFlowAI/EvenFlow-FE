@@ -13,13 +13,17 @@ import {EditButton} from "../../../../components/EditButton/EditButton";
 import {TableContainer} from "../../../../pages/admin/PricingSettings/UI";
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {setPricingDemand} from "../../../../store/reducers/pricingSettings/actions";
-import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {TMappedDemands} from "../../../../store/reducers/pricingSettings/selectors";
 import {InvertedSlider, Slider} from "./styles";
 import {initialForm, sliderMarks, sliderRange} from "./constants";
 import {TForm} from "./types";
 import {DenseTable} from "../../../../components/styled/DemandTable";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TProps = {
     demand: TMappedDemands,

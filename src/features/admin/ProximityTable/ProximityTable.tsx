@@ -11,7 +11,6 @@ import {
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {createProximity, loadProximity} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -20,6 +19,11 @@ import {SOMETHING_WRONG} from "../../../config/constants";
 import {StyledTable} from "../../../components/styled/StyledTable";
 import {SliderRange, TForm} from "./types";
 import {blankSlider, initialForm, rows} from "./constants";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 export const ProximityTable = () => {
     const {selectedSC} = useSCs();

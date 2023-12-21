@@ -9,7 +9,6 @@ import {
     TableRow,
 } from "@material-ui/core";
 import {StyledTable} from '../../../../components/styled/StyledTable'
-import {useException, useMessage, useModal, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {EditDemandSegmentsModal} from '../EditDemandSegmentsModal/EditDemandSegmentsModal';
 import {useDispatch, useSelector} from "react-redux";
 import {loadOptimizationSettings, setSettingValues} from "../../../../store/reducers/slotScoring/actions";
@@ -23,6 +22,12 @@ import {SC_UNDEFINED} from "../../../../config/constants";
 import {Slider, useStyles} from "./styles";
 import {SliderRange, TForm} from "./types";
 import {initialForm} from "./constants";
+import {useModal} from "../../../../hooks/useModal/useModal";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
 export const DemandSegmentsDesirability = () => {
     const {onOpen, onClose, isOpen} = useModal();

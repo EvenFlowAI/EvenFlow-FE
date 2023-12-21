@@ -1,12 +1,14 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {NewLostCustomerModal} from "./NewLostCustomerModal/NewLostCustomerModal";
-import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadNewLostCustomers} from "../../../store/reducers/valueSettings/actions";
 import {RootState} from "../../../store/rootReducer";
 import {NewLostEnum} from "../../../store/reducers/valueSettings/types";
 import {StyledTable} from "../../../components/styled/StyledTable";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 export const NewLostCustomer = () => {
     const {

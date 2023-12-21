@@ -5,10 +5,11 @@ import {TextField} from "../../../../components/FormControls/TextFieldStyled/Tex
 import {Box, Button, Divider} from "@material-ui/core";
 import {EDemandCategory, IPackagePricingSettings} from "../../../../store/reducers/pricingSettings/types";
 import {updatePackagePricingSettings} from "../../../../store/reducers/pricingSettings/actions";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {TMPackage, SliderRange} from "../types";
 import {useStyles} from "./styles";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TEditDayOfWeekOpsCodeProps = DialogProps & {
     editingItem: TMPackage | null;

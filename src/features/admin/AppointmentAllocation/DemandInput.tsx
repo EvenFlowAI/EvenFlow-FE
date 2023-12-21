@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {TextField} from "../../../components/FormControls/TextFieldStyled/TextField";
 import {IUnplannedDemandBySlot} from "../../../store/reducers/demandSegments/types";
 import {makeStyles} from "@material-ui/core/styles";
-import {useException} from "../../../utils/hooks";
+
+import {useException} from "../../../hooks/useException/useException";
 
 const useStyles = makeStyles({
     inputWrapper: {

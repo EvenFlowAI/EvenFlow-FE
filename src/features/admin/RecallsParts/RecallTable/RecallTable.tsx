@@ -5,10 +5,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
-import {useConfirm, useException, useModal, usePagination, useSCs} from "../../../../utils/hooks";
 import {deleteRecall, loadRecalls, setRecallPageData} from "../../../../store/reducers/recall/actions";
 import {RecallSummary} from "../RecallSummary/RecallSummary";
 import {TableRowDataType} from "../../../../types/types";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TRecallTableProps = {
     onOpenModal: () => void;

@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
-import {useModal} from "../../../utils/hooks";
 import {Button} from "@material-ui/core";
 import {bookingFlowRoot} from "../../../config/constants";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {AddFirstScreenOptionModal} from "../../../features/admin/FirstScreenOptions/AddFirstScreenOptionModal/AddFirstScreenOptionModal";
 import {FirstScreenOptionsTable} from "../../../features/admin/FirstScreenOptions/FirstScreenOptionsTable/FirstScreenOptionsTable";
+import {useModal} from "../../../hooks/useModal/useModal";
 
 export const FirstScreenOptionsPage = () => {
     const [currentItem, setCurrentItem] = useState<IFirstScreenOption | null>(null);

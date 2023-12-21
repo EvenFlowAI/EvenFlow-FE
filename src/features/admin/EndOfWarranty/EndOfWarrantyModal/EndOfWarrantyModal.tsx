@@ -2,13 +2,17 @@ import React, {useEffect, useState} from "react";
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {setEndOfWarranty} from "../../../../store/reducers/valueSettings/actions";
 import {IEndOfWarranty} from "../../../../store/reducers/valueSettings/types";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
 export const EndOfWarrantyModal: React.FC<DialogProps<IEndOfWarranty>> = ({payload, onAction, ...props}) => {
     const [saving, setSaving] = useState<boolean>();

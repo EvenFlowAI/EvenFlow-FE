@@ -3,10 +3,13 @@ import {TextField} from "../../../../components/FormControls/TextFieldStyled/Tex
 import {Button} from "@material-ui/core";
 import {updatePackageDisclaimer} from "../../../../store/reducers/serviceCenters/actions";
 import {useDispatch} from "react-redux";
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {Loading} from "../../../../components/Loading/Loading";
 
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TDisclaimerProps = {
     setDisclaimerOpen: Dispatch<React.SetStateAction<boolean>>;

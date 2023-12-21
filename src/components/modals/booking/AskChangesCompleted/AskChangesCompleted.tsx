@@ -11,11 +11,12 @@ import {
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {decodeSCID} from "../../../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
-import {useCurrentUser, useException} from "../../../../utils/hooks";
 import {isMobile} from 'react-device-detect';
 import {setAppointmentWasChanged} from "../../../../store/reducers/appointment/actions";
 import {useStyles} from "./styles";
 import {LoadingButton} from "../../../LoadingButton/LoadingButton";
+import {useException} from "../../../../hooks/useException/useException";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 const AskChangesCompleted = () => {
     const {

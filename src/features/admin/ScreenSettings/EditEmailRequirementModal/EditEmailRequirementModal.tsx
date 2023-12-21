@@ -4,7 +4,6 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {Button, TableBody, TableHead} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {TEmailRequirement} from "../../../../store/reducers/screenSettings/types";
@@ -13,6 +12,10 @@ import {useStyles} from "./styles";
 import {DemandTable} from "../../../../components/styled/DemandTable";
 import {TableRow} from "../../../../components/styled/TableRow";
 import {TableCellWithPadding} from "../../../../components/styled/TableCellWithPadding";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 export const EditEmailRequirementModal: React.FC<DialogProps> = ({onClose, ...props}) => {
     const {emailRequirement, isEmailRequirementLoading} = useSelector((state: RootState) => state.screenSettingsBooking);

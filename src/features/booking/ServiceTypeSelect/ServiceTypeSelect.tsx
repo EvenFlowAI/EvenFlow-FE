@@ -30,7 +30,6 @@ import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {InfoOutlined} from "@material-ui/icons";
 import ServiceTypeIcon from "./ServiceTypeIcon/ServiceTypeIcon";
 import {Actions} from "../Actions/Actions";
-import {useAnalyticsBySCId, useCurrentUser, useException} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
 import {decodeSCID, encodeSCID} from "../../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
@@ -41,6 +40,9 @@ import ServiceImpactedWarning from "../../../components/modals/booking/ServiceIm
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 import {ServiceTypeButton, ServiceTypeCardsWrapper, Tagline, useServiceTypeStyles} from "./styles";
 import {HtmlTooltip} from "../../../components/styled/HtmlTooltip";
+import {useAnalyticsBySCId} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
+import {useException} from "../../../hooks/useException/useException";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 type TProps = {
     handleValueServiceConfig: (serviceType: EServiceType) => void;

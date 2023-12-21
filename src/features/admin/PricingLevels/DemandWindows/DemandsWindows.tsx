@@ -2,7 +2,6 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
 import {EditButton} from "../../../../components/EditButton/EditButton";
 import {PriceLevelsModal} from "../PriceLevelsModal/PriceLevelsModal";
-import {useModal, useSCs} from "../../../../utils/hooks";
 import {EDemandCategory, IPricingLevel, TPricingLevels} from "../../../../store/reducers/pricingSettings/types";
 import {useDispatch, useSelector} from "react-redux";
 import {loadPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
@@ -11,6 +10,8 @@ import {PaperTitle, TableContainer} from "../../../../pages/admin/PricingSetting
 import {SquarePaper} from "../../../../components/styled/Paper";
 import {useStyles} from "./styles";
 import {DenseTable} from "../../../../components/styled/DemandTable";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 export const DemandWindows = () => {
     const {pricingLevels} = useSelector((state: RootState) => state.pricingSettings)

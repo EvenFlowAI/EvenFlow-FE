@@ -3,7 +3,6 @@ import {Actions} from "../../Actions/Actions";
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {useDebounce, useException, useModal} from "../../../../utils/hooks";
 import {handleSearch, selectSRMultiple} from "../../../../store/reducers/appointment/actions";
 import {Checkbox, IconButton} from "@material-ui/core";
 import {InfoOutlined, Search} from "@material-ui/icons";
@@ -23,6 +22,9 @@ import {EServiceCategoryPage} from "../../../../api/types";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 import {getSortedRequests} from "./utils";
 import {Code, CodesWrapper, CodeWrapper, Price, PricesWrapper, SearchInput, Wrapper} from "./styles";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useDebounce} from "../../../../hooks/useDebounce/useDebounce";
+import {useException} from "../../../../hooks/useException/useException";
 
 type TProps = {
     handleSetScreen: TArgCallback<TScreen>;

@@ -9,11 +9,14 @@ import {ReactComponent as PlusIcon} from "../../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../../assets/img/close.svg";
 import {ENotificationType, TSCNotifications} from "../../../../store/reducers/notifications/types";
 import {updateNotificationsByType} from "../../../../store/reducers/notifications/actions";
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {IAdvisorShort} from "../../../../store/reducers/users/types";
 import {useNotificationStyles} from "../../../../commonStyles/useNotificationStyles";
 import {TNotificatonsProps} from "../types";
 import {initialSCNotifications} from "../constants";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);

@@ -4,13 +4,16 @@ import {DialogProps} from "../../../../components/BaseModal/types";
 import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {IBay, IBayForm} from "../../../../store/reducers/bays/types";
 import {createBay, updateBay} from "../../../../store/reducers/bays/actions";
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {TBayForm} from "../types";
 import {CreateBayForm} from "../CreateBayForm/CreateBayForm";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const initialForm: TBayForm = {
     onlyQuickService: false,

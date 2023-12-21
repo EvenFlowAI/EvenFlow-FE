@@ -11,7 +11,6 @@ import {LocalTokens, TCallback} from "../../../types/types";
 import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../../store/rootReducer";
-import {useAnalyticsBySCId, useCurrentUser} from "../../../utils/hooks";
 import {Actions} from "../Actions/Actions";
 import ReturningSelfCustomer from "./ReturningSelfCustomer/ReturningSelfCustomer";
 import NewSelfCustomer from "./NewSelfCustomer/NewSelfCustomer";
@@ -20,6 +19,8 @@ import NewCustomerForAdmin from "./NewCustomerForAdmin/NewCustomerForAdmin";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {useParams} from "react-router-dom";
 import {useStyles} from "./styles";
+import {useAnalyticsBySCId} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;

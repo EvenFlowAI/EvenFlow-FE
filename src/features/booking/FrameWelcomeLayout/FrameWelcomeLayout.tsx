@@ -7,8 +7,8 @@ import {EServiceCenterName} from "../../../api/types";
 import {
     ServiceCenterSwitcher
 } from "../ServiceCenterSwitcher/ServiceCenterSwitcher";
-import {useLayout} from "../../../utils/hooks";
 import {frameSmStyles, frameStyles, MainWrapper, nonFrameStyles, Title, Wrapper} from "./styles";
+import {useLayout} from "../../../hooks/useLayout/useLayout";
 
 export const FrameWelcomeLayout: React.FC<{}> = ({children }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);

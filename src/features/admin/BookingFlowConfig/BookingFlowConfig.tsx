@@ -2,7 +2,6 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {SquarePaper} from "../../../components/styled/Paper";
 import {TableContainer} from "../../../pages/admin/PricingSettings/UI";
 import {Box, Button, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import {RootState} from "../../../store/rootReducer";
@@ -12,6 +11,10 @@ import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/type
 import {useStyles} from "./styles";
 import {DenseTable} from "../../../components/styled/DemandTable";
 import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const BookingFlowConfig = () => {
     const [configuration, setConfiguration] = useState<TServiceTypeSettings[]>([]);

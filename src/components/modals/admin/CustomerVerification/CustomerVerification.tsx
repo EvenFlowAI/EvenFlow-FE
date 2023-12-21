@@ -2,11 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {Button, Divider, Switch} from "@material-ui/core";
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {updateAuth} from "../../../../store/reducers/serviceCenters/actions";
 import {useStyles} from "./styles";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const CustomerVerification: React.FC<DialogProps> = (props) => {
     const [isVerificationOn, setVerificationOn] = useState<boolean>(false);

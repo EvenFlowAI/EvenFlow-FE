@@ -1,14 +1,5 @@
 import React, {useEffect} from "react";
 import {Button, IconButton} from "@material-ui/core";
-import {
-    useConfirm,
-    useException,
-    useMessage,
-    useModal,
-    usePagination,
-    useSCs,
-    useSelectedPod
-} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
@@ -26,6 +17,14 @@ import {Api} from "../../../config/requests";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {DeleteOutline} from "@material-ui/icons";
 import {TableRowDataType} from "../../../types/types";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
+import {usePagination} from "../../../hooks/usePaginations/usePaginations";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
     {header: "Service Ops Code", val: el => el.code},

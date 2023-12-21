@@ -5,7 +5,6 @@ import {
     ECustomerSegment, ETransportationDays,
     ITransportationOptionFull, ITransportationOptionRules,
 } from "../../../../store/reducers/transportationNeeds/types";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {
     loadAllAssignedServiceRequests,
@@ -26,6 +25,8 @@ import {useAutocompleteStyles, useMultipleACStyles, useStyles} from "./styles";
 import {TOption, TTimeObject} from "../types";
 import {DatePicker} from "../../../../components/DatePicker/DatePicker";
 import {TimePicker} from "../../../../components/TimePicker/TimePicker";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;

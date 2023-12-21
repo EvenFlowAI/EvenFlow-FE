@@ -7,7 +7,6 @@ import {RootState} from "../../../../store/rootReducer";
 import {Table} from "../../../Table/Table";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {SearchInput} from "../../../FormControls/SearchInput/SearchInput";
-import {usePagination, useSCs} from "../../../../utils/hooks";
 import {
     loadAssignedServiceRequests,
     setAssignedFilter, setAssignedPageData,
@@ -16,6 +15,8 @@ import {
 import Checkbox from "../../../Checkbox/Checkbox";
 import {useStyles} from "./styles";
 import {TableRowDataType} from "../../../../types/types";
+import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TAssignOpsCodeModalProps = DialogProps & {
     selectedCodes: IAssignedServiceRequest[];

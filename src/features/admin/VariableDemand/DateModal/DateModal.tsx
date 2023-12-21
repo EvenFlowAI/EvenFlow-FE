@@ -5,12 +5,15 @@ import {Box, Button, FormControlLabel, Radio, RadioGroup} from "@material-ui/cor
 import moment from "moment";
 import {demandCategories, EDemandCategory, ITimeOfYearSetting} from "../../../../store/reducers/pricingSettings/types";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {setTimeOfYearPricing} from "../../../../store/reducers/pricingSettings/actions";
 import {Date, useStyles} from "./styles";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TProps = DialogProps<moment.Moment> & {data?: ITimeOfYearSetting};
 

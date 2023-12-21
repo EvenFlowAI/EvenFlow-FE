@@ -9,8 +9,9 @@ import {
     setEmployeeFilters,
     changePageData
 } from "../../../../store/reducers/employees/actions";
-import {useCurrentUser, usePagination} from "../../../../utils/hooks";
 import {ButtonsWrapper, FiltersWrapper} from "./styles";
+import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 const roles = ['Advisor', 'Technician', 'Call Center Rep', 'Manager', 'Owner'];
 const widerRoles = ['Advisor', 'Owner'];

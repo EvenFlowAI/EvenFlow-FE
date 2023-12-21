@@ -10,10 +10,10 @@ import {
     updateSROrderIndex,
     updateUpsellOrderIndex
 } from "../../../../../store/reducers/packages/actions";
-import {useException} from "../../../../../utils/hooks";
 import {TextField} from "../../../../../components/FormControls/TextFieldStyled/TextField";
 import {useStyles} from "./styles";
 import {LoadingButton} from "../../../../../components/LoadingButton/LoadingButton";
+import {useException} from "../../../../../hooks/useException/useException";
 
 type TOrderIndexProps = {
     onClose: () => void;

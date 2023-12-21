@@ -6,9 +6,10 @@ import {TextField} from "../../../../components/FormControls/TextFieldStyled/Tex
 import {Button, Divider} from "@material-ui/core";
 import {EDemandCategory, IRequestPricingSettings} from "../../../../store/reducers/pricingSettings/types";
 import {updateSRPricingSettings} from "../../../../store/reducers/pricingSettings/actions";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {useStyles} from "./styles";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TEditDayOfWeekOpsCodeProps = DialogProps & {
     editingItem: TOpsCode | null;

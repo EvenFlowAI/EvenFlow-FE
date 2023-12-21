@@ -3,7 +3,6 @@ import {TitleContainer} from "../../../components/TitleContainer/TitleContainer"
 import {OptimizationWindowCard} from "../../../components/OptimizationWindowCard/OptimizationWindowCard";
 import {Grid} from "@material-ui/core";
 import {DemandSegmentsModal} from "../../../features/admin/DemandSegmentsModal/DemandSegmentsModal";
-import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadDemandSegments} from "../../../store/reducers/demandSegments/actions";
@@ -20,6 +19,9 @@ import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {MaxPriceDateRangeModal} from "../../../features/admin/OptimizationWindows/MaxPriceDateRangeModal/MaxPriceDateRangeModal";
 import {TOptParam} from "./types";
 import {blankWindowParam, optContent} from "./constants";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 export const OptimizationWindowsPage = () => {
     const [selectedOpt, setSelectedOpt] = useState<EOptimizationWindowType>(EOptimizationWindowType.DemandSegments);

@@ -3,7 +3,6 @@ import {Button, Drawer, IconButton, List, useMediaQuery, useTheme} from "@materi
 import logo from '../../assets/img/logoSidebar.svg';
 import {LinkTypeWithSub} from "../../types/types";
 import {Routes} from "../../config/routes";
-import {useCurrentUser, useModal, useSCs} from "../../utils/hooks";
 import {matchPath, useHistory, useLocation} from "react-router-dom";
 import {ArrowForwardIos, Close} from "@material-ui/icons";
 import {useSelector} from "react-redux";
@@ -14,6 +13,9 @@ import {reportingAllowedRoles} from "../../pages/admin/Reporting/constants";
 import {useStyles} from "./styles";
 import {MainLinksWithSub, SULinks} from "./constants";
 import {BookingModal} from "./BookingModal/BookingModal";
+import {useModal} from "../../hooks/useModal/useModal";
+import {useSCs} from "../../hooks/useSCs/useSCs";
+import {useCurrentUser} from "../../hooks/useCurrentUser/useCurrentUser";
 
 type TProps = {
     isOpened: boolean;

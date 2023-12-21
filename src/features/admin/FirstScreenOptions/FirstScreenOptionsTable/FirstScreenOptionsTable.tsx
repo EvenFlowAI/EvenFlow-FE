@@ -4,11 +4,15 @@ import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {deleteFirstScreenOptionById, loadFirstScreenOptionsList} from "../../../../store/reducers/serviceTypes/actions";
-import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {TableRowDataType, TCallback} from "../../../../types/types";
 import {serviceTypeNames} from "../constants";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const RowData: TableRowDataType<IFirstScreenOption>[] = [
     {val: (el: IFirstScreenOption) => el.name, header: "First Screen Option",  width: 300},

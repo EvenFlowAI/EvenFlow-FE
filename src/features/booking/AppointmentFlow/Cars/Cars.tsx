@@ -23,12 +23,12 @@ import {
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {getBlankVehicle, selectSR, setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
-import {useException} from "../../../../utils/hooks";
 import {Routes} from "../../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {Arrow, CarsWrapper, Info} from "./styles";
 import {AppointmentScreenTitle} from "../../../../components/AppointmentScreenTitle/AppointmentScreenTitle";
 import {checkSelectedCar} from "./utils";
+import {useException} from "../../../../hooks/useException/useException";
 
 type TProps = {
     onBack: TCallback;

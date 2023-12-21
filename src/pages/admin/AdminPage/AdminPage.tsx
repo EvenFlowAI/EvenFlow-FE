@@ -5,7 +5,6 @@ import {Employees} from "../Employees/Employees";
 import {ContentContainer} from "../../../components/ContentContainer/ContentContainer";
 import {Routes} from "../../../config/routes";
 import {PrivateRoute} from "../../../utils/Routes";
-import {useCurrentUser} from "../../../utils/hooks";
 import {AdminDashboard} from "../Dashboard/Dashboard";
 import {DealershipGroupDetails} from "../DealerShipGroupDetails/DealershipGroupDetails";
 import {Profile} from "../Profile/Profile";
@@ -15,6 +14,7 @@ import ReportingPage from "../Reporting/ReportingPage";
 import {CapacityManagement} from "../CapacityManagement/CapacityManagement";
 import {BookingFlowPage} from "../BookingFlow/BookingFlowPage";
 import DealershipGroups from "../DealershipGroups/DealershipGroups";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 export const AdminPage = () => {
     const currentUser = useCurrentUser();

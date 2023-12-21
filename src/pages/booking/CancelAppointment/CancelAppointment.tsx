@@ -3,7 +3,6 @@ import {WelcomeLayout} from "../../../features/booking/WelcomeLayout/WelcomeLayo
 import {useHistory, useParams} from "react-router-dom";
 import {API} from "../../../api/api";
 import {AppointmentStatus, IAppointmentByQuery} from "../../../api/types";
-import {useException, useStorage} from "../../../utils/hooks";
 import {Loading} from "../../../components/Loading/Loading";
 import {useDispatch} from "react-redux";
 import {clearStorage, loadSCProfile} from "../../../store/reducers/appointment/actions";
@@ -15,6 +14,8 @@ import {NotFoundError} from "../../../components/NotFoundError/NotFoundError";
 import {encodeSCID} from "../../../utils/utils";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
+import {useStorage} from "../../../hooks/useStorage/useStorage";
+import {useException} from "../../../hooks/useException/useException";
 
 type TState = "loading" | "new" | "canceled" | "already_canceled" | "error";
 

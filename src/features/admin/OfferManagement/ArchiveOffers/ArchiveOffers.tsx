@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {useModal, usePagination, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {loadArchivedOffers, setArchivedOffersPageData} from "../../../../store/reducers/offers/actions";
@@ -9,6 +8,9 @@ import {OfferPlate} from "../OfferPlate/OfferPlate";
 import {EOfferStatus, IOffer} from "../../../../store/reducers/offers/types";
 import {OfferModal} from "../OfferModal/OfferModal";
 import {defaultRowsPerPageOptions} from "../../../../config/config";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 export const ArchiveOffers = () => {
     const {onOpen, onClose, isOpen} = useModal();

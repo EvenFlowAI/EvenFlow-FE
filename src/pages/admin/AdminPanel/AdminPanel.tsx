@@ -10,10 +10,11 @@ import {useDispatch} from "react-redux";
 import {getCurrentUser} from "../../../store/reducers/users/actions";
 import {loadDealershipProfile} from "../../../store/reducers/dealershipGroups/actions";
 import {loadAllSCs, loadSCAnalytics} from "../../../store/reducers/serviceCenters/actions";
-import {useSCs, useSideBar} from "../../../utils/hooks";
 import {getPodsShort, loadPodsShort} from "../../../store/reducers/pods/actions";
 import clsx from "clsx";
 import {useStyles} from "./styles";
+import {useSideBar} from "../../../hooks/useSideBar/useSideBar";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const AdminPanel = () => {
     const [navBarHeight, setNavBarHeight] = useState<number>(0);

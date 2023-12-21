@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {useModal, useSCs} from "../../../utils/hooks";
 import {loadMakes} from "../../../store/reducers/vehicleDetails/actions";
 import {RootState} from "../../../store/rootReducer";
 import {Button} from "@material-ui/core";
@@ -8,6 +7,8 @@ import {AddMakeModelModal} from "./AddMakeModelModal/AddMakeModelModal";
 import {useStyles} from "./styles";
 import {DefaultMake} from "./DefaultMake/DefaultMake";
 import {MakesModelsTable} from "./MakesModelsTable/MakesModelsTable";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const MakesModels = () => {
     const {currentMake} = useSelector((state: RootState) => state.vehicleDetails);

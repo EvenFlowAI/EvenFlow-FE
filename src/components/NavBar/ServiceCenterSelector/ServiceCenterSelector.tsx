@@ -1,11 +1,12 @@
 import React, {useState} from "react";
 import {Button, Menu, MenuItem} from "@material-ui/core";
-import {useCurrentUser, useSCs} from "../../../utils/hooks";
 import {ArrowDropDown} from "@material-ui/icons";
 import {IServiceCenter} from "../../../store/reducers/serviceCenters/types";
 import {TRole} from "../../../store/reducers/users/types";
 import {useHistory} from "react-router-dom";
 import {useStyles} from "./styles";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 const restrictedRoles: TRole[] = ["Advisor", "Super Admin", "Manager"];
 

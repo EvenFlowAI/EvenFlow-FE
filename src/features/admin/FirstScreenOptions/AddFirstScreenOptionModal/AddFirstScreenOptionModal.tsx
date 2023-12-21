@@ -7,7 +7,6 @@ import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {FileInput} from "../../../../components/FormControls/FileInput/FileInput";
 import {setAssignedFilter} from "../../../../store/reducers/serviceRequests/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {IIconState} from "../../ServiceCategories/AddServiceCategoryModal/types";
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {IFirstScreenOption, TNewFirstScreenOption, TUpdateFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
@@ -24,6 +23,8 @@ import {loadTransportationOptions} from "../../../../store/reducers/transportati
 import {useStyles} from "./styles";
 import {getTransportationOptionString} from "../../../../utils/utils";
 import {serviceTypeNames} from "../constants";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const initialFileState = {file: null, dataUrl: undefined};
 

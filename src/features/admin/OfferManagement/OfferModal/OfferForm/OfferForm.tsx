@@ -22,11 +22,11 @@ import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {TEnumMap} from "../../../../../store/reducers/utils";
 import {IAssignedServiceRequestShort} from "../../../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType, ICategory} from "../../../../../store/reducers/categories/types";
-import {useModal} from "../../../../../utils/hooks";
 import HtmlEditor from "../../../../../components/modals/admin/HTMLEditor/HTMLEditor";
 import {useStyles} from "./styles";
 import {DatePicker} from "../../../../../components/DatePicker/DatePicker";
 import {TimePicker} from "../../../../../components/TimePicker/TimePicker";
+import {useModal} from "../../../../../hooks/useModal/useModal";
 
 type TProps = {
     form: TOfferForm;

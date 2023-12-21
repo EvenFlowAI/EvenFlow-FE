@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Button} from "@material-ui/core";
 import {Table} from "../../../../components/Table/Table";
 import EditPricingLevelModal from "../EditPricingLevelModal/EditPricingLevelModal";
-import {useModal, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadAssignedServiceRequests, setAssignedPageData} from "../../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../../store/rootReducer";
@@ -11,6 +10,8 @@ import {EDemandCategory} from "../../../../store/reducers/pricingSettings/types"
 import {useStyles} from "./styles";
 import {TPricingLevel} from "../types";
 import {TableRowDataType} from "../../../../types/types";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const RowData: TableRowDataType<TPricingLevel>[] = [
     {val: (el: TPricingLevel, index: number) => `${index + 1}`, header: "#"},

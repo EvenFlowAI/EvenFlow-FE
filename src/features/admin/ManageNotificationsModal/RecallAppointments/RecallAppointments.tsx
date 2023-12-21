@@ -10,10 +10,13 @@ import {DialogActions} from "../../../../components/BaseModal/BaseModal";
 import {ENotificationType, TSCNotifications} from "../../../../store/reducers/notifications/types";
 import {TNotificatonsProps} from "../types";
 import {initialSCNotifications} from "../constants";
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {updateNotificationsByType} from "../../../../store/reducers/notifications/actions";
 import {IAdvisorShort} from "../../../../store/reducers/users/types";
 import {useNotificationStyles} from "../../../../commonStyles/useNotificationStyles";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);

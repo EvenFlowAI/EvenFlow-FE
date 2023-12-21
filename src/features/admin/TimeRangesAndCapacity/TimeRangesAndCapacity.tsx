@@ -6,11 +6,12 @@ import moment from "moment";
 import {Loading} from "../../../components/Loading/Loading";
 import {Table} from "../../../components/Table/Table";
 import {Button} from "@material-ui/core";
-import {useModal, useSCs} from "../../../utils/hooks";
 import EditTimeRangeAndCapacityModal from "./EditTimeRangeAndCapacityModal/EditTimeRangeAndCapacityModal";
 import {loadTimeRangesAndCapacity} from "../../../store/reducers/capacityServiceValet/actions";
 import {timeFormat, timeWithSecond} from "./constants";
 import {TableRowDataType} from "../../../types/types";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const TimeRangesAndCapacity = () => {
     const {timeRangesAndCapacity, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);

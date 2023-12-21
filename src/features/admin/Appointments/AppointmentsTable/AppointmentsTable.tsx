@@ -11,10 +11,14 @@ import {getAppointmentDate} from "../../../../utils/utils";
 import {API} from "../../../../api/api";
 import {MoreHoriz} from "@material-ui/icons";
 import {IOrder, IPageRequest, TableRowDataType} from "../../../../types/types";
-import {useConfirm, useException, useMessage, useModal} from "../../../../utils/hooks";
 import {timeString} from "../../../../config/constants";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
 
 const cols: TableRowDataType<IAppointment>[] = [
     {header: "Date", val: el => el.dateTime ? moment.utc(el.dateTime).format("MMMM D, YYYY") : "", orderId: "date", width: 150},

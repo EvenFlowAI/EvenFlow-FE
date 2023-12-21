@@ -5,9 +5,11 @@ import {LoginContainer} from "../../../components/styled/LoginContainer";
 import {LoginButton} from "../../../components/styled/LoginButton";
 import {Routes} from "../../../config/routes";
 import {Api} from "../../../config/requests";
-import {useException, useMessage} from "../../../utils/hooks";
 import {InvalidLinkMessage} from "./InvalidLinkMessage/InvalidLinkMessage";
 import {PasswordForm} from "./PasswordForm/PasswordForm";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
 
 export const EmailVerification: React.FC = () => {
     const [{password, password2}, setPassword] = useState({password: '', password2: ''});

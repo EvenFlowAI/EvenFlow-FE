@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Done, Edit} from "@material-ui/icons";
 import {IconButton, Input} from "@material-ui/core";
-import {useException} from "../../../../../../utils/hooks";
 import {useStyles} from "./styles";
+import {useException} from "../../../../../../hooks/useException/useException";
 
 type TTitleEditableProps = {
     text?: string;

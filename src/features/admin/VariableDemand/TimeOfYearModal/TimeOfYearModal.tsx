@@ -4,12 +4,13 @@ import {DialogProps} from "../../../../components/BaseModal/types";
 import {Button, Grid} from "@material-ui/core";
 import moment from "moment";
 import {Month} from "../Month/Month";
-import {useModal, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {ITimeOfYearSetting} from "../../../../store/reducers/pricingSettings/types";
 import {DateModal} from "../DateModal/DateModal";
 import {loadTimeOfYearPricing} from "../../../../store/reducers/pricingSettings/actions";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 export const TimeOfYearModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
     const [editedDate, setEditedDate] = useState<moment.Moment|undefined>(undefined);

@@ -3,9 +3,9 @@ import {IPackageById, IPackageOptionDetailed} from "../../../../../api/types";
 import {IconButton, TableBody, TableCell, TableContainer, TableHead, TableRow, Table, Input} from "@material-ui/core";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {useTableStyles} from "../../SaveRequestToDMSModal/styles";
-import {useException} from "../../../../../utils/hooks";
 import {TRequestRow, TCellData} from "../../types";
 import {useOptionsTableStyles} from "./styles";
+import {useException} from "../../../../../hooks/useException/useException";
 
 type TServiceRequestsProps = {
     packageData: IPackageById | null;

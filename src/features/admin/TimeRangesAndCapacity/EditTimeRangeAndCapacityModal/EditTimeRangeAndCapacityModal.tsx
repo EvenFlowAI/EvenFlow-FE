@@ -6,13 +6,14 @@ import moment from "moment";
 import {Button, Divider, Grid} from "@material-ui/core";
 import {AccessTime} from "@material-ui/icons";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
 import {useDispatch} from "react-redux";
 import {createTimeRange, updateTimeRange} from "../../../../store/reducers/capacityServiceValet/actions";
 import {timeFormat, timeWithSecond} from "../constants";
 import {TimePicker} from "../../../../components/TimePicker/TimePicker";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TProps = DialogProps & {
     editingElement: ITimeRangeAndCapacity;

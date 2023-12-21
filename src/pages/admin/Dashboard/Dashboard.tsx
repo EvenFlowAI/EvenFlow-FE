@@ -5,7 +5,6 @@ import {EditAddressModal} from "../../../features/admin/EditAddressModal/EditAdd
 import {HourOfOperationsModal} from "../../../features/admin/HourOfOperationsModal/HourOfOperationsModal";
 import {HolidaysModal} from "../../../features/admin/HolidaysModal/HolidaysModal";
 import {BreaksModal} from "../../../features/admin/BreaksModal/BreaksModal";
-import {useCurrentUser, useModal, useSCs} from "../../../utils/hooks";
 import {Technicians} from "../../../components/modals/admin/Technicians/Technicians";
 import {Bays} from "../../../components/modals/admin/Bays/Bays";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
@@ -29,6 +28,9 @@ import AdvisorAssignmentModal from "../../../features/admin/AdvisorAssignmentMod
 import ManageNotificationsModal from "../../../features/admin/ManageNotificationsModal/ManageNotificationsModal";
 import {useStyles} from "./styles";
 import {TCountData, TDataMap, TItem} from "./types";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 const overallData: TDataMap[] = [
     {label: "Technicians", value: "technicians"},

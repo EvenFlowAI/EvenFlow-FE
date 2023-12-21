@@ -3,7 +3,6 @@ import {DialogProps, TViewMode} from "../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import moment from "moment";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {Api} from "../../../config/requests";
 import {IHOODataForm} from "../../../store/reducers/serviceCenters/types";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
@@ -12,6 +11,10 @@ import {THOOForm} from "./types";
 import {initialForm} from "./constants";
 import {HourOfOperationForm} from "./HourOfOperationForm/HourOfOperationForm";
 import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const HourOfOperationsModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
     const {selectedSC} = useSCs();

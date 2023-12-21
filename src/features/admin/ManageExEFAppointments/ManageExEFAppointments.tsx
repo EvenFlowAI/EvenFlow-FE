@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Divider, Switch} from "@material-ui/core";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {updateAdvisor} from "../../../store/reducers/serviceCenters/actions";
@@ -8,6 +7,10 @@ import {TitleContainer} from "../../../components/TitleContainer/TitleContainer"
 import {SquarePaper} from "../../../components/styled/Paper";
 import {useStyles} from "./styles";
 import {optimizerRoot} from "../../../config/constants";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const ManageExEFAppointments = () => {
     const [isManageOn, setManageOn] = useState<boolean>(false);

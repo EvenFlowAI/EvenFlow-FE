@@ -4,7 +4,6 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {useException, useMessage, usePagination, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {
     loadNonUrgentServiceRequests,
     pageDataNonUrgentServiceRequests,
@@ -15,6 +14,12 @@ import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRe
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 import {TableRowDataType} from "../../../../types/types";
+import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
 const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
     {header: "Service Ops Code", val: el => el.code},

@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Button} from "@material-ui/core";
-import {useCurrentUser, useModal} from "../../../../utils/hooks";
 import {CreateServiceCenterModal} from "../CreateServiceCenterModal/CreateServiceCenterModal";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -12,6 +11,8 @@ import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {useStyles} from "./styles";
 import {TSelectedGroup} from "../types";
 import {SearchDB} from "../../../../components/FormControls/SearchDebounced/SearchDB";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 export const ServiceCenterActions = () => {
     const search = useSelector((state: RootState) => state.serviceCenters.searchTerm);

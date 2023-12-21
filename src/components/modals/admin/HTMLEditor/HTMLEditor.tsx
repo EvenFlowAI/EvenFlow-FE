@@ -8,8 +8,8 @@ import {Button} from "@material-ui/core";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {makeStyles} from "@material-ui/core/styles";
 import classnames from 'classnames';
-import {useException} from "../../../../utils/hooks";
 import {LoadingButton} from "../../../LoadingButton/LoadingButton";
+import {useException} from "../../../../hooks/useException/useException";
 
 type THTMLEditor = DialogProps & {
     onSave: (value: string) => void;

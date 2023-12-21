@@ -3,10 +3,10 @@ import {Box} from "@material-ui/core";
 import {TimeOfDay} from "./TimeOfDay/TimeOfDay";
 import {DayOfWeek} from "./DayOfWeek/DayOfWeek";
 import {useDispatch} from "react-redux";
-import {useSCs} from "../../../utils/hooks";
 import {loadPricingDemand} from "../../../store/reducers/pricingSettings/actions";
 import {TimeOfYear} from "./TimeOfYear/TimeOfYear";
 import DayOfWeekTabs from "./DayOfWeekTabs/DayOFWeekTabs";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const VariableDemand = () => {
     const dispatch = useDispatch();

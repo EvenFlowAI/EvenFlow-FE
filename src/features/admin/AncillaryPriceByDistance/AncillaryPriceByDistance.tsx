@@ -8,7 +8,6 @@ import {
     Button
 } from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
-import {useException, useModal} from "../../../utils/hooks";
 import AddDistanceRangeModal from "./AddDistanceRangeModal/AddDistanceRangeModal";
 import {IDistancePriceSettings, TDistanceRange} from "../../../store/reducers/serviceValet/types";
 import {Loading} from "../../../components/Loading/Loading";
@@ -18,6 +17,8 @@ import {FirstCell, HeaderTableCell, TableCell} from "../../../components/styled/
 import {ButtonWrapper, STextField, WideButton} from "./styles";
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useException} from "../../../hooks/useException/useException";
 
 type TByDistanceProps = {
     data: IDistancePriceSettings[];

@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import {NoItemsLoading} from "../../../../components/NoItemsLoading/NoItemsLoading";
 import {Box, FormControlLabel, Radio, RadioGroup, TableBody, TableHead} from "@material-ui/core";
 import {TableContainer} from "../../../../pages/admin/PricingSettings/UI";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {
     changeMPPrisingDisplayType,
@@ -16,6 +15,8 @@ import {TableWrapper} from "./styles";
 import {DemandTable} from "../../../../components/styled/DemandTable";
 import {TableRow} from "../../../../components/styled/TableRow";
 import {TableCell} from "../../../../components/styled/TableCell";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const MaintenancePackages = () => {
     const {isLoading, mpList} = useSelector((state: RootState) => state.pricingSettings);

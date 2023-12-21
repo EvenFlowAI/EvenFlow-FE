@@ -12,11 +12,11 @@ import {HeaderTableCell, FirstCell, TableCell} from "../../../components/styled/
 import {IZonePriceSettings} from "../../../store/reducers/serviceValet/types";
 import {NoData} from "../../../components/NoData/NoData";
 import {Loading} from "../../../components/Loading/Loading";
-import {useException} from "../../../utils/hooks";
 import {STextField} from "../AncillaryPriceByDistance/styles";
 import {AncillaryPriceSlider} from "../../../components/styled/AncillaryPriceSlider";
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
+import {useException} from "../../../hooks/useException/useException";
 
 type TByZoneProps = {
     data: IZonePriceSettings[];

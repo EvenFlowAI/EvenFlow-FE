@@ -7,7 +7,8 @@ import {mappedPricingDemandsSelectorDWeek} from "../../../../store/reducers/pric
 import {SliderTable} from "../SliderTable/SliderTable";
 import {EDemandType} from "../../../../store/reducers/pricingSettings/types";
 import {WorkWeekModal} from "../WorkWeekModal/WorkWeekModal";
-import {useModal} from "../../../../utils/hooks";
+
+import {useModal} from "../../../../hooks/useModal/useModal";
 
 export const DayOfWeek = () => {
     const {onOpen, onClose, isOpen} = useModal();

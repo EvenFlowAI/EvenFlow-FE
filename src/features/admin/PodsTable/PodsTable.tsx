@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {PODModal} from "./PODModal/PODModal";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {EAppointmentType, EJobType, IPod} from "../../../store/reducers/pods/types";
@@ -12,6 +11,13 @@ import {TViewMode} from "../../../components/BaseModal/types";
 import {getTransportationOptionString} from "../../../utils/utils";
 import {getNameFromEnum} from "./utils";
 import {TableRowDataTypeResp} from "../../../types/types";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
+import {usePagination} from "../../../hooks/usePaginations/usePaginations";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const rowData: TableRowDataTypeResp<IPod>[] = [
     {

@@ -8,13 +8,15 @@ import {
     loadNonSelectedServiceRequests, setNonSelectedFilter, setNonSelectedOrder,
     setNonSelectedPageData
 } from "../../../../store/reducers/serviceRequests/actions";
-import {useException, usePagination, useSCs} from "../../../../utils/hooks";
 import {IServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Table} from "../../../Table/Table";
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {SearchInput} from "../../../FormControls/SearchInput/SearchInput";
 import {IOrder, TableRowDataType} from "../../../../types/types";
 import {LoadingButton} from "../../../LoadingButton/LoadingButton";
+import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "Ops Code", val: el => el.code, orderId: "code"},

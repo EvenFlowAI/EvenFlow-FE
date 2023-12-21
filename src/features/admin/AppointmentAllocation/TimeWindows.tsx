@@ -8,7 +8,6 @@ import {
     useMediaQuery, useTheme,
     withStyles
 } from "@material-ui/core";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {loadTimeWindow, setTimeWindow} from "../../../store/reducers/demandSegments/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -16,6 +15,11 @@ import {ITimeWindow} from "../../../store/reducers/demandSegments/types";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {TextField} from "../../../components/FormControls/TextFieldStyled/TextField";
 import {StyledTable} from "../../../components/styled/StyledTable";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 const TableCell = withStyles({
     root: {

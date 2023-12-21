@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from "react-redux";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {EDemandCategory} from "../../../../store/reducers/pricingSettings/types";
 import {updateMPPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
@@ -9,6 +8,8 @@ import {Box, Button, Divider} from "@material-ui/core";
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {TPackagePricingLevel, TUpdatedSettings} from "../types";
 import {useEditPricingLevelStyles} from "../styles";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TEditPricingLevelsProps = DialogProps & {
     prisingLevel: TPackagePricingLevel | null;

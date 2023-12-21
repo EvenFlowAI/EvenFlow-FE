@@ -4,11 +4,14 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../com
 import {Button} from "@material-ui/core";
 import {IAddress} from "../../../store/reducers/dealershipGroups/types";
 import {TSelectChange} from "../../../types/types";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {Api} from "../../../config/requests";
 import {IServiceCenterExtended} from "../../../store/reducers/serviceCenters/types";
 import {EditForm} from "./EditForm/EditForm";
 import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const initialAddress: IAddress = {
     street: "",

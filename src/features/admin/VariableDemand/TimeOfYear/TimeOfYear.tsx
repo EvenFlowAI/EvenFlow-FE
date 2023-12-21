@@ -9,7 +9,8 @@ import {SliderTable} from "../SliderTable/SliderTable";
 import {EDemandType} from "../../../../store/reducers/pricingSettings/types";
 import React from "react";
 import {TimeOfYearModal} from "../TimeOfYearModal/TimeOfYearModal";
-import {useModal} from "../../../../utils/hooks";
+
+import {useModal} from "../../../../hooks/useModal/useModal";
 
 export const TimeOfYear = () => {
     const {onOpen, isOpen, onClose} = useModal();

@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 import moment, {Moment} from "moment";
 import {WeekControls} from "./WeekControls/WeekControls";
-import {useModal, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEmployeesSchedule} from "../../../store/reducers/schedules/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -28,6 +27,8 @@ import {loadWeeklyHolidaysList} from "../../../store/reducers/holidays/actions";
 import { TIds } from './types';
 import {ControlWrapper, HeadCell, Holiday, nonWorkingStyle, ScheduleTable} from "./styles";
 import {calendarDateFormat} from "../../../config/constants";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const EmployeeScheduleCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());

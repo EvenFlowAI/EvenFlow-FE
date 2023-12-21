@@ -13,7 +13,6 @@ import {
     setPageData,
     setPaging
 } from "../../../../store/reducers/enhancedCustomerSearch/actions";
-import {useException, useModal} from "../../../../utils/hooks";
 import CustomerSearchResults from "../CustomerSearchResultsModal/CustomerSearchResultsModal";
 import CustomerNotFound from "../../../../components/modals/booking/CustomerNotFound/CustomerNotFound";
 import {TCallback} from "../../../../types/types";
@@ -25,6 +24,8 @@ import {useCustomerSelectStyles} from "../../../../commonStyles/useCustomerSelec
 import {TError} from "./types";
 import {InputLabel} from "../InputLabel/InputLabel";
 import {LoadingProcess} from "../LoadingProcess/LoadingProcess";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useException} from "../../../../hooks/useException/useException";
 
 type TProps = {
     handleNew: () => void;

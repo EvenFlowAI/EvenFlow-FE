@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from "react";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
-import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
@@ -19,6 +18,13 @@ import {SearchInput} from "../../../components/FormControls/SearchInput/SearchIn
 import {IOrder, TableRowDataType} from "../../../types/types";
 import IntervalUpsellModal from "./IntervalUpsellModal/IntervalUpsellModal";
 import {ServiceRequestCellData} from "../../../components/ServiceRequestCellData/ServiceRequestCellData";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
+import {usePagination} from "../../../hooks/usePaginations/usePaginations";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {

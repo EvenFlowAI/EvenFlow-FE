@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {TableContainer} from "../../../../pages/admin/PricingSettings/UI";
 import {useDispatch, useSelector} from "react-redux";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
 import {
     changeSRPrisingDisplayType,
@@ -14,6 +13,8 @@ import {headCellStyles, leftAlign, TableWrapper} from "../styles";
 import {DemandTable} from "../../../../components/styled/DemandTable";
 import {TableRow} from "../../../../components/styled/TableRow";
 import {TableCell} from "../../../../components/styled/TableCell";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 export const ServiceCodes = () => {
     const [loading, setLoading] = useState<boolean>(false);

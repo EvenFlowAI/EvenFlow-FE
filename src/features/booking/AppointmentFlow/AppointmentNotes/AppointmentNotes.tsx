@@ -5,8 +5,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {setAppointmentNotes} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import ClickAwayListener from 'react-click-away-listener';
-import {useException} from "../../../../utils/hooks";
 import {Textarea, useStyles} from "./styles";
+import {useException} from "../../../../hooks/useException/useException";
 
 const maxNoteLength = 250;
 

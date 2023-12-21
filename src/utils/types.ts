@@ -14,7 +14,6 @@ export type TRouteRoleMap = {
     roles: TRole[] | boolean;
 }
 
-
 export type TGroupedAppointment = {
     date: moment.Moment;
     lowestPrice: number;
@@ -32,5 +31,3 @@ export type TOption = {
     value: number;
     name: string;
 }
-
-export type TGroupedAppointmentsList = [keyof TGroupedAppointments, TGroupedAppointment];

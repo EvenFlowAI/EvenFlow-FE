@@ -7,7 +7,6 @@ import {Button, Divider, IconButton, Switch} from "@material-ui/core";
 import {DialogActions} from "../../../../components/BaseModal/BaseModal";
 import {ReactComponent as PlusIcon} from "../../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../../assets/img/close.svg";
-import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {TTransportationNotifications} from "../../../../store/reducers/notifications/types";
 import {
     setLoading,
@@ -21,6 +20,11 @@ import {loadTransportationOptions} from "../../../../store/reducers/transportati
 import {ITransportationOptionFull} from "../../../../store/reducers/transportationNeeds/types";
 import {getTransportationOptionString} from "../../../../utils/utils";
 import {useNotificationStyles} from "../../../../commonStyles/useNotificationStyles";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const initialTransportationNotifications: TTransportationNotifications = {
     isActive: false,

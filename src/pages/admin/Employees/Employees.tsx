@@ -2,16 +2,14 @@ import React, {useEffect, useState} from "react";
 import {IEmployee} from "../../../store/reducers/employees/types";
 import {useDispatch} from "react-redux";
 import {setEmployeeFilters} from "../../../store/reducers/employees/actions";
-import {
-    useModal,
-    useSCs
-} from "../../../utils/hooks";
 import {CreateEmployee} from "../../../components/modals/admin/CreateEmployee/CreateEmployee";
 import {Titles} from "../../../config/constants";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {EmployeesActions} from "../../../features/admin/Employees/EmployeesActions/EmployeesActions";
 import EmployeesFilters from "../../../features/admin/Employees/EmployeesFilters/EmployeesFilters";
 import EmployeesTable from "../../../features/admin/Employees/EmployeesTable/EmployeesTable";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const Employees = () => {
     const [editedItem, setEditedItem] = useState<IEmployee|undefined>();

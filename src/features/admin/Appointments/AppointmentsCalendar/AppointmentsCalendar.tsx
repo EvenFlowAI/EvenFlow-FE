@@ -2,7 +2,6 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {IAppointmentsRequest} from "../../../../store/reducers/appointments/types";
 import {loadAppointments} from "../../../../store/reducers/appointments/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {useSCs} from "../../../../utils/hooks";
 import moment, {Moment} from "moment";
 import {TAppointmentsByDate, TDay, TView} from "../types";
 import {RootState} from "../../../../store/rootReducer";
@@ -15,6 +14,7 @@ import {ReactComponent as FreeSlots} from "../../../../assets/img/date_2.svg";
 import {Loading} from "../../../../components/Loading/Loading";
 import {useStyles} from "./styles";
 import {useCalendarStyles} from "../../../../commonStyles/useCalendarStyles";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TCalendarProps = {
     selectedView: TView;

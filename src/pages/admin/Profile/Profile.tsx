@@ -5,9 +5,9 @@ import {TabList} from "../../../components/styled/Tabs";
 import {DealershipGroupProfile} from "../../../features/admin/Profiles/DealershipGroupProfile/DealershipGroupProfile";
 import {UserProfile} from "../../../features/admin/Profiles/UserProfile/UserProfile";
 import {PodsTable} from "../../../features/admin/PodsTable/PodsTable";
-import {useCurrentUser} from "../../../utils/hooks";
 import {useStyles} from "./styles";
 import {TTab} from "./types";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 const tabs: TTab[] = [
     {label: "Dealership Group Profile", id: "1", component: DealershipGroupProfile},

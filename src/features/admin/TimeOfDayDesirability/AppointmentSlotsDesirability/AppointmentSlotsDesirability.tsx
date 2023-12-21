@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {
     Box,
     Button,
@@ -30,6 +29,11 @@ import {TForm} from "./types";
 import {gaps} from "./constants";
 import {ButtonRow} from "./ButtonRow/ButtonRow";
 import {TitleRow} from "./TitleRow/TitileRow";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
 const initialForm = {
     timeSlotType: ETimeSlotType.ThirtyMinutes,

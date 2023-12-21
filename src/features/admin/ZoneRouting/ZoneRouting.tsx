@@ -5,10 +5,10 @@ import Checkbox from "../../../components/Checkbox/Checkbox";
 import {EDaysFromMonday, IZonesRoutingByDay} from "../../../store/reducers/capacityServiceValet/types";
 import {Table} from "../../../components/Table/Table";
 import {Loading} from "../../../components/Loading/Loading";
-import {useSCs} from "../../../utils/hooks";
 import {loadZonesRouting, updateZonesRouting} from "../../../store/reducers/capacityServiceValet/actions";
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {TableRowDataType} from "../../../types/types";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const dayNames = Object.keys(EDay).filter(key => Number.isNaN(+key));
 

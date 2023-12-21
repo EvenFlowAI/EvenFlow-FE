@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {Button, FormControlLabel, Grid, Radio, RadioGroup} from "@material-ui/core";
-import {useException, useMessage} from "../../../../utils/hooks";
 import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
 import {useSelector} from "react-redux";
@@ -12,6 +11,9 @@ import {TEnumKeyLabel} from "../../../../store/reducers/utils";
 import {EAudience, EChannel, TForm} from "../types";
 import {Label} from "./styles";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
 
 const audienceLabels: TEnumKeyLabel<EAudience> = {
     [EAudience.All]: "All",

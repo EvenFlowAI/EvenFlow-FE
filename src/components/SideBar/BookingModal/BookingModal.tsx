@@ -5,8 +5,11 @@ import {Box, Button, ButtonGroup} from "@material-ui/core";
 import {TextField} from "../../FormControls/TextFieldStyled/TextField";
 import {copyTextToClipboard, encodeSCID} from "../../../utils/utils";
 import {Routes} from "../../../config/routes";
-import {useCurrentUser, useMessage, useSCs} from "../../../utils/hooks";
 import {TRole} from "../../../store/reducers/users/types";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 const restrictedRoles: TRole[] = ["Call Center Rep", "Advisor", "Manager"]
 

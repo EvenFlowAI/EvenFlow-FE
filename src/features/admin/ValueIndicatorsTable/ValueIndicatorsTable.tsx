@@ -7,7 +7,6 @@ import {
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {loadValueSettings, setValueSettings} from "../../../store/reducers/valueSettings/actions";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {Indicators, IValueSettings} from "../../../store/reducers/valueSettings/types";
 import {SC_UNDEFINED} from "../../../config/constants";
 import {RootState} from "../../../store/rootReducer";
@@ -15,6 +14,11 @@ import {StyledTable} from "../../../components/styled/StyledTable";
 import {ValueIndicatorsRow} from "./ValueIndicatorsRow/ValueIndicatorsRow";
 import {TData} from "./types";
 import {blankRow, columns, initialData, rows} from "./constants";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 type TProps = {onTabChange?: (e: any, idx: string) => void}
 

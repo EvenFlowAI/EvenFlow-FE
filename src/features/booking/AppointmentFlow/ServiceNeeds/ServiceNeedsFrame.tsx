@@ -31,8 +31,9 @@ import {
     selectAppointment,
     selectServiceValetAppointment,
 } from "../../../../store/reducers/appointment/actions";
-import {useCurrentUser, useException} from "../../../../utils/hooks";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
+import {useException} from "../../../../hooks/useException/useException";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;

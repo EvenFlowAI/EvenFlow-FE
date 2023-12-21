@@ -4,9 +4,9 @@ import {DialogProps} from "../../../BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {useException} from "../../../../utils/hooks";
 import {Textarea} from "./styles";
 import {LoadingButton} from "../../../LoadingButton/LoadingButton";
+import {useException} from "../../../../hooks/useException/useException";
 
 type TMapIframeLinkProps = DialogProps & {
     onSave: (link: string) => void;

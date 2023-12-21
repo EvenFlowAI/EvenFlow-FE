@@ -3,7 +3,6 @@ import {Titles} from "../../../config/constants";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {IEndUserConfig} from "../../../features/admin/Reporting/types";
 import {Api} from "../../../config/requests";
-import {useCurrentUser, useSCs} from "../../../utils/hooks";
 import {Routes} from "../../../config/routes";
 import {Redirect, Route, Switch} from "react-router-dom";
 import {ShopLoading} from "../../../features/admin/Reporting/ShopLoading/ShopLoading";
@@ -14,6 +13,8 @@ import {CustomerBehavior} from "../../../features/admin/Reporting/CustomerBehavi
 import {RepairOrderPerformance} from "../../../features/admin/Reporting/RepairOrderPerformance/RepairOrderPerformance";
 import {CapacityManagementPerformance} from "../../../features/admin/Reporting/CapacityManagementPerfomance/CapacityManagementPerfomance";
 import {reportingAllowedRoles} from "./constants";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 const ReportingPage: React.FC<{}> = ({}) => {
     const [config, setConfig] = useState<IEndUserConfig>({

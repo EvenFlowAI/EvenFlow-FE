@@ -11,9 +11,9 @@ import {DetailsServiceCenters} from "../../../features/admin/DealershipGroupDeta
 import {DetailsEmployees} from "../../../features/admin/DealershipGroupDetails/DetailsEmployees/DetailsEmployees";
 import {useDispatch} from "react-redux";
 import {loadDealershipEmployees} from "../../../store/reducers/employees/actions";
-import {useStatePagination} from "../../../utils/hooks";
 import {loadDealershipSCs} from "../../../store/reducers/serviceCenters/actions";
 import {TTab} from "./types";
+import {useStatePagination} from "../../../hooks/usePaginations/usePaginations";
 
 const tabs: TTab[] = [
     {id: "1", label: "Service centers", component: DetailsServiceCenters},

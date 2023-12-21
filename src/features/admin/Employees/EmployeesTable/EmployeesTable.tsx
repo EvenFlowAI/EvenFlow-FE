@@ -7,10 +7,16 @@ import {Roles} from "../../../../config/constants";
 import {TableAvatar} from "../../../../components/TableAvatar/TableAvatar";
 import {IOrder, TableRowDataType, TCallback} from "../../../../types/types";
 import {changePageData, loadByFilters, removeEmployee, setEmplOrder} from "../../../../store/reducers/employees/actions";
-import {useConfirm, useCurrentUser, useException, useMessage, usePagination, useSCs} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {concatAddress} from "../../../../utils/utils";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 const SURowData: TableRowDataType<IEmployee>[] = [
     {val: (el: IEmployee) => el.fullName, header: "Name"},

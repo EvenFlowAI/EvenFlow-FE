@@ -18,7 +18,6 @@ import {NoItemsLoading} from "../../../../components/NoItemsLoading/NoItemsLoadi
 import {EServiceCenterName, IPackage, IPackageOptions} from "../../../../api/types";
 import MaintenancePackagesMobile from "../MaintenancePackagesMobile/MaintenancePackagesMobile";
 import ReactGA from "react-ga4";
-import {useException, useModal} from "../../../../utils/hooks";
 import ConfirmChangeOption from "../../../../components/modals/booking/ConfirmChangeOption/ConfirmChangeOption";
 import AskAddService from "../../../../components/modals/booking/AskAddService/AskAddService";
 import PackageTitles from "./PackageTitles/PackageTitles";
@@ -37,6 +36,8 @@ import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 import {TComplimentary, TPackage, TService, TUpsell} from "./types";
 import {FeesText, Info, PackagesStepWrapper, Wrapper} from "./styles";
 import {getPackagesData} from "./utils";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useException} from "../../../../hooks/useException/useException";
 
 type TPackageSelectionProps = {
     onNext: TArgCallback<TScreen>;

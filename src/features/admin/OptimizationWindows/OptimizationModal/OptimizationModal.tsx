@@ -5,10 +5,14 @@ import {Button} from "@material-ui/core";
 import {IOptimizationWindow, TOptContentData} from "../../../../store/reducers/optimizationWindows/types";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {useDispatch} from "react-redux";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {setOptimizationWindow} from "../../../../store/reducers/optimizationWindows/actions";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
 type TProps = DialogProps<IOptimizationWindow> & {
     content: TOptContentData

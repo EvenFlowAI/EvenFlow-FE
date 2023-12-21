@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {TableBody, TableHead} from "@material-ui/core";
 import {SC_UNDEFINED} from "../../../config/constants";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
 import {
@@ -20,6 +19,11 @@ import {SaveEditBlock} from "../../../components/SaveEditBlock/SaveEditBlock";
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
 import {TableCell} from "../../../components/styled/TableCell";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 export const OverbookingFactor = () => {
     const [saving, setSaving] = useState<boolean>(false);

@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import {useException} from "../../../utils/hooks";
 import {API} from "../../../api/api";
 import {ForgotPasswordForm} from "./ForgotPasswordForm/ForgotPassworfForm";
 import {Message} from "./ForgotPasswordMessage/ForgotPasswordMessage";
+import {useException} from "../../../hooks/useException/useException";
 
 export const ForgotPassword = () => {
     const [showMessage, changeShow] = useState(false);

@@ -1,5 +1,4 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
-import {useException, useModal, useSCs} from "../../../utils/hooks";
 import RecallTable from "./RecallTable/RecallTable";
 import {Button} from "@material-ui/core";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
@@ -14,6 +13,9 @@ import {loadAllAssignedServiceRequests} from "../../../store/reducers/serviceReq
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {updateDefaultRecallOpsCode} from "../../../store/reducers/serviceCenters/actions";
 import {optimizerRoot} from "../../../config/constants";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const useStyles = makeStyles(() => ({
     wrapper: {

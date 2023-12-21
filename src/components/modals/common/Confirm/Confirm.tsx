@@ -3,9 +3,9 @@ import {Button, Divider, Grid} from "@material-ui/core";
 import {BaseModal, DialogContent, DialogTitle, DialogActions} from '../../../BaseModal/BaseModal';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {useConfirm} from "../../../../utils/hooks";
 import {ReportProblemOutlined} from "@material-ui/icons";
 import {LoadingButton} from "../../../LoadingButton/LoadingButton";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 
 export const Confirm: React.FC = () => {
     const {open, payload} = useSelector((state: RootState) => state.modals.confirm);

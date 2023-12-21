@@ -5,7 +5,6 @@ import {
 } from "../../../../store/reducers/demandSegments/types";
 import moment from "moment";
 import UnplannedDemandSlots from "../UnplannedDemandSlots/UnplannedDemandSlots";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {changeUnplannedSlots, loadUnplannedSlots} from "../../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../../store/rootReducer";
@@ -13,6 +12,11 @@ import {Loading} from "../../../../components/Loading/Loading";
 import {Divider} from "@material-ui/core";
 import {useStyles} from "./styles";
 import {SaveEditBlock} from "../../../../components/SaveEditBlock/SaveEditBlock";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
 type TUnplannedDemandEditingProps = {
     isEdit: boolean;

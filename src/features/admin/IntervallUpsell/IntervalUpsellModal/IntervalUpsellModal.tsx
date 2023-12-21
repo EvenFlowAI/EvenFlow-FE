@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {IUpsellServiceRequest, IUpsellServiceRequestUpdate} from "../../../../store/reducers/serviceRequests/types";
@@ -8,6 +7,10 @@ import {Button, Grid} from "@material-ui/core";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {updateUpsellServiceRequest} from "../../../../store/reducers/serviceRequests/actions";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TForm = {
     description: string;

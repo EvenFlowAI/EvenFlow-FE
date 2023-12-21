@@ -5,11 +5,14 @@ import {Caption} from "../../../components/Caption/Caption";
 import {Routes} from "../../../config/routes";
 import {TextLink} from "../../../components/TextLink/TextLink";
 import {useDispatch, useSelector} from "react-redux";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {recalculateCapacity} from "../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../store/rootReducer";
 import {ButtonContainer, TableContainer} from "./styles";
 import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const ScheduledAppointments = () => {
     const {isRecalculationLoading} = useSelector((state: RootState) => state.demandSegments);

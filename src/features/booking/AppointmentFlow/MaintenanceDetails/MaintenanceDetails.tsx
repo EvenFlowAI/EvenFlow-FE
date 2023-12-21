@@ -18,7 +18,6 @@ import {RootState} from "../../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryPage, EServiceCenterName, ILoadedVehicle} from "../../../../api/types";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
-import {useException, useModal} from "../../../../utils/hooks";
 import {decodeSCID, getYearOptions} from "../../../../utils/utils";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
@@ -31,6 +30,8 @@ import NoRecallsModal from "../NoRecallsModal/NoRecallsModal";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 import {SelectWrapper, useStyles} from "./styles";
 import {TKey, TOptionsState} from "./types";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useException} from "../../../../hooks/useException/useException";
 
 type TMaintenanceDetailsProps = {
     onBack: TArgCallback<TScreen>;

@@ -12,13 +12,15 @@ import {
 } from "../../../store/reducers/transportationNeeds/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useException, useModal, useSCs} from "../../../utils/hooks";
 import {headCellStyles, TableWrapper} from "./styles";
 import {EditTransportationModal} from "./EditTransportationModal/EditTransportationModal";
 import {EditTransportationDescriptionModal} from "./EditTransportationDescriptionModal/EditTransportationDescriptionModal";
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
 import {TableCell} from "../../../components/styled/TableCell";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const leftAlign = {
     textAlign: "left" as const

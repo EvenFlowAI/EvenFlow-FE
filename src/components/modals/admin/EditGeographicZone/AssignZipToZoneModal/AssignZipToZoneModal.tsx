@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {useException, useMessage, useSCs} from "../../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {DialogProps} from "../../../../BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../BaseModal/BaseModal";
@@ -12,6 +11,10 @@ import {
 } from "../../../../../store/reducers/serviceValet/actions";
 import {RootState} from "../../../../../store/rootReducer";
 import {useStyles} from "./styles";
+
+import {useMessage} from "../../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../../hooks/useException/useException";
+import {useSCs} from "../../../../../hooks/useSCs/useSCs";
 
 type TAssignZipToZoneProps = DialogProps & {
     serviceType: TZonesServiceType;

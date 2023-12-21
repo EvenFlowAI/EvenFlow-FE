@@ -7,7 +7,8 @@ import {PricingSettingsPage} from "../PricingSettings/PricingSettingsPage";
 import PricingMobileService from "../PricingMobileService/PricingMobileService";
 import PricingServiceValet from "../PricingServiceValet/PricingServiceValet";
 import {OfferManagementPage} from "../OfferManagement/OfferManagementPage";
-import {useCurrentUser} from "../../../utils/hooks";
+
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 const PricingPage = () => {
     const currentUser = useCurrentUser();

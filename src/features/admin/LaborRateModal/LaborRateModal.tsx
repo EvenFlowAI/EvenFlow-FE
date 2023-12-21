@@ -5,7 +5,6 @@ import {TextField} from "../../../components/FormControls/TextFieldStyled/TextFi
 import {DialogProps} from "../../../components/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useException, useMessage} from "../../../utils/hooks";
 import {loadLaborRate, updateLaborRate} from "../../../store/reducers/serviceCenters/actions";
 import {ILaborRate} from "../../../store/reducers/serviceCenters/types";
 import {Loading} from "../../../components/Loading/Loading";
@@ -13,6 +12,9 @@ import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
 import {TableCell} from "../../../components/styled/TableCell";
 import {useStyles} from "./styles";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
 
 const fixedToTwo = /(^-?\d*\.?\d{1,2}?)$/;
 

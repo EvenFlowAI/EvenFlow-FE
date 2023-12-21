@@ -16,10 +16,11 @@ import {
     setSelectedRecalls
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import AskAddService from "../../../../components/modals/booking/AskAddService/AskAddService";
-import {useException, useModal} from "../../../../utils/hooks";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 import {CustomSwitch, Label, useStyles} from "./styles";
 import {IRecallByVin} from "../../../../types/types";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useException} from "../../../../hooks/useException/useException";
 
 type TRecallsByVinProps = DialogProps & {
     handleNext : () => void,

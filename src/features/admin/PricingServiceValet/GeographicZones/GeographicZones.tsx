@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import EligibleCustomerSegment from "../EligibleCustomerSegment/EligibleCustomerSegment";
 import Zones from "../Zones/Zones";
-import {useConfirm, useException, useMessage, useModal, useSCs} from "../../../../utils/hooks";
 import {TZipCode, TZone} from "../../../../store/reducers/mobileService/types";
 import AddEditGeographicZone from "../../../../components/modals/admin/EditGeographicZone/AddEditGeographicZone";
 import RemoveZipCode from "../../../../components/modals/admin/RemoveZipCode/RemoveZipCode";
@@ -14,6 +13,12 @@ import {
 import GeographicZonesButtons from "../../../../components/GeographicZonesButtons/GeographicZonesButtons";
 import {EligibleTitle} from "../../../../components/styled/EligibleTitle";
 import {GeographicZonesWrapper, TabHeaderWrapper} from "../../../../components/styled/GeographicZonesWrappers";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TGeographicZonesProps = {
     onAddZoneOpen: () => void;

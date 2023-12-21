@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import {useDispatch} from "react-redux";
-import {useModal, useSCs} from "../../../utils/hooks";
 import {loadEngineType} from "../../../store/reducers/vehicleDetails/actions";
 import {Button} from "@material-ui/core";
 import {AddEngineTypeModal} from "./AddEngineTypeModal/AddEngineTypeModal";
 import {EditFieldNameModal} from "./EditFieldNameModal/EditFieldNameModal";
 import {Wrapper} from "./styles";
 import {EngineTypesTable} from "./EngineTypesTable/EngineTypesTable";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const EngineTypes = () => {
     const { selectedSC } = useSCs();

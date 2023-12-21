@@ -4,9 +4,9 @@ import {TView} from "../types";
 import {Routes} from "../../../../config/routes";
 import {NavLink} from "react-router-dom";
 import {encodeSCID} from "../../../../utils/utils";
-import {useSCs} from "../../../../utils/hooks";
 import {useStyles} from "./styles";
 import {SearchDebounced} from "../../../../components/FormControls/SearchDebounced/SearchDebounced";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TProps = {
     searchTerm: string;

@@ -1,12 +1,13 @@
 import React, {Dispatch, SetStateAction, useCallback} from "react";
 import {Button} from "@material-ui/core";
-import {useCurrentUser, useModal} from "../../../../utils/hooks";
 import {CreateEmployee} from "../../../../components/modals/admin/CreateEmployee/CreateEmployee";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {setEmplSearch} from "../../../../store/reducers/employees/actions";
 import {ActionsWrapper} from "./styles";
 import {SearchDB} from "../../../../components/FormControls/SearchDebounced/SearchDB";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 type TActionsProps = {
     setFiltersOpen: Dispatch<SetStateAction<boolean>>

@@ -2,11 +2,11 @@ import React, {Dispatch, SetStateAction} from 'react';
 import {Input} from "@material-ui/core";
 import {IntervalUpsellAndOptions} from "../IntervalUpsellAndOptions/IntervalUpsellAndOptions";
 import {ESegmentTitle, IPackageById} from "../../../../../api/types";
-import {useException} from "../../../../../utils/hooks";
 import {Edit} from "@material-ui/icons";
 import {TRequestRow, TCellData} from "../../types";
 import {usePackageAccordionStyles} from "../../styles";
 import {defaultUpsellTitle} from "../../constants";
+import {useException} from "../../../../../hooks/useException/useException";
 
 type TUpsellTitleProps = {
     isUpsellNameEdit: boolean;

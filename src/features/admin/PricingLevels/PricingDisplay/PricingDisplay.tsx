@@ -6,9 +6,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Loading} from "../../../../components/Loading/Loading";
 import {changeRoundPriceSetting, loadRoundPriceSetting} from "../../../../store/reducers/pricingSettings/actions";
-import {useConfirm, useException, useSCs} from "../../../../utils/hooks";
 import {useStyles} from "./styles";
 import {Label} from "./Label/Label";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const PricingDisplay: React.FC = () => {
     const { isRoundPriceLoading, roundPrice } = useSelector((state: RootState) => state.pricingSettings);

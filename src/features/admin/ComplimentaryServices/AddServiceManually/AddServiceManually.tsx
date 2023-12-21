@@ -5,10 +5,13 @@ import {TextField} from "../../../../components/FormControls/TextFieldStyled/Tex
 import {Button, InputAdornment} from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import {TComplimentary} from "../../../../store/reducers/complimentary/types";
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {addComplimentaryManually, editComplimentary} from "../../../../store/reducers/complimentary/actions";
 import {IComplimentaryServiceByQuery} from "../../../../store/reducers/packages/types";
 import {useStyles} from "./styles";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TAddServiceProps = DialogProps & {
   title: string;

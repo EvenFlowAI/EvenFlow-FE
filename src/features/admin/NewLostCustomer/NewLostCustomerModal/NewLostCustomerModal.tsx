@@ -3,12 +3,16 @@ import {DialogProps} from "../../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import {useDispatch} from "react-redux";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {setNewLostCustomers} from "../../../../store/reducers/valueSettings/actions";
 import {INewLostCustomer, NewLostEnum} from "../../../../store/reducers/valueSettings/types";
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
 export const NewLostCustomerModal: React.FC<DialogProps<INewLostCustomer> & {isNew: boolean}> = ({onAction, isNew=false, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);

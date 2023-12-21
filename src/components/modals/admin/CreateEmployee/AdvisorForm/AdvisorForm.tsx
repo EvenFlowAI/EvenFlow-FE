@@ -1,5 +1,4 @@
 import React from "react";
-import {useCurrentUser} from "../../../../../utils/hooks";
 import {Divider, FormControlLabel, Grid, Switch} from "@material-ui/core";
 import {TextField} from "../../../../FormControls/TextFieldStyled/TextField";
 import {checkEmail} from "../../../../../utils/utils";
@@ -10,6 +9,7 @@ import {userRoles, widerUserRoles} from "../../../../../config/constants";
 import {TRole} from "../../../../../store/reducers/users/types";
 import {TAdvisorForm, TConsultantOption, TDMSConsultantChange, TSelectChange} from "../types";
 import {IServiceCenter} from "../../../../../store/reducers/serviceCenters/types";
+import {useCurrentUser} from "../../../../../hooks/useCurrentUser/useCurrentUser";
 
 type TAFormProps = {
     onChange: React.ChangeEventHandler<HTMLInputElement>,

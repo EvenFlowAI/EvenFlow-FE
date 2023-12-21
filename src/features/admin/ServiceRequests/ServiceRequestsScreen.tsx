@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from "react";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {Button} from "@material-ui/core";
 import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
-import {useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
@@ -16,6 +15,12 @@ import {OverrideOPsCodeModal} from "./OverrideOpsCodeModal/OverrideOPsCodeModal"
 import {SearchInput} from "../../../components/FormControls/SearchInput/SearchInput";
 import {ServiceRequestsTable} from "./ServiceRequestsTable/ServiceRequestsTable";
 import {optimizerRoot} from "../../../config/constants";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {usePagination} from "../../../hooks/usePaginations/usePaginations";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const ServiceRequestsScreen = () => {
     const [

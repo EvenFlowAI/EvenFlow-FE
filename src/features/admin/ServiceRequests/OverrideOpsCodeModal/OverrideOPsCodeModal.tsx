@@ -7,12 +7,14 @@ import {
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button, Grid} from "@material-ui/core";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
-import {useException, useMessage} from "../../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {updateAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/actions";
 import {ToggleButtons} from "../../../../components/ToggleButtons/ToggleButtons";
 import {TForm} from "./types";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
 
 const initialForm: TForm = {
     description: "",

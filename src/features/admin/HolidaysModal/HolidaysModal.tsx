@@ -5,7 +5,6 @@ import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {Table} from "../../../components/Table/Table";
 import {MoreHoriz} from "@material-ui/icons";
 import {AddHolidayModal} from "./AddHolidayModal/AddHolidayModal";
-import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {IHoliday} from "../../../store/reducers/holidays/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -16,6 +15,13 @@ import {Api} from "../../../config/requests";
 import {Roles} from "../../../config/constants";
 import {useStyles} from "./styles";
 import {TableRowDataType} from "../../../types/types";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
+import {usePagination} from "../../../hooks/usePaginations/usePaginations";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const rowData: TableRowDataType<IHoliday>[] = [
     {header: "Description Title", val: v => v.description.length > 40 ? v.description.slice(0, 39).concat('...') : v.description},

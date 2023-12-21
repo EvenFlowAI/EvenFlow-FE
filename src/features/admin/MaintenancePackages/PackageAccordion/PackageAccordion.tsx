@@ -11,7 +11,6 @@ import {ExpandMore, MoreHoriz}from '@material-ui/icons';
 import {Loading} from "../../../../components/Loading/Loading";
 import {IPackageById, IPackageOptionDetailed, TSegmentTitle} from "../../../../api/types";
 import SummaryRow from "./SummaryRow/SummaryRow";
-import {useConfirm, useException, useModal, useSCs} from "../../../../utils/hooks";
 import AccordionActions from "./AccordionActions/AccordionActions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -35,6 +34,10 @@ import {IDetailsData} from "./types";
 import {getOptionsTableData, checkIsValid} from "./utils";
 import {usePackageAccordionStyles} from "../styles";
 import {useAccordionStyles, useIconStyles} from "./styles";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TAccordionProps = {
     defaultExpanded?: boolean | undefined;

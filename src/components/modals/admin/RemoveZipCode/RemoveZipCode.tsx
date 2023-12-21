@@ -4,10 +4,10 @@ import {Button, Divider} from "@material-ui/core";
 import {DialogProps} from "../../../BaseModal/types";
 import {useDispatch} from "react-redux";
 import {removeZipFromMobServiceZone} from "../../../../store/reducers/mobileService/actions";
-import {useSCs} from "../../../../utils/hooks";
 import {TZipCode, TZone, TZonesServiceType} from "../../../../store/reducers/mobileService/types";
 import {removeZipFromServiceValetZone} from "../../../../store/reducers/serviceValet/actions";
 import {useStyles} from "./styles";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TRemoveGeographicZoneProps = DialogProps & {
     zone: TZone|null;

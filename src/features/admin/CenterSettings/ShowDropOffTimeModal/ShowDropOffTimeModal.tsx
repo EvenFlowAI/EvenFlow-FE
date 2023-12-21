@@ -5,11 +5,12 @@ import {Button, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {updateShowDropOffTime} from "../../../../store/reducers/capacityServiceValet/actions";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {IShowDropOffTime} from "../../../../store/reducers/capacityServiceValet/types";
 import {useTranslation} from "react-i18next";
 import {ButtonsWrapper, TopWrapper} from "../styles";
 import {Textarea, Warning} from "./styles";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const ShowDropOffTimeModal: React.FC<DialogProps> = ({onClose, open}) => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);

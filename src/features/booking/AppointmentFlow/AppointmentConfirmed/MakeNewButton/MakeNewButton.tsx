@@ -9,8 +9,8 @@ import {
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {Routes} from "../../../../../config/routes";
 import {useTranslation} from "react-i18next";
-import {useCurrentUser} from "../../../../../utils/hooks";
 import {useHistory, useParams} from "react-router-dom";
+import {useCurrentUser} from "../../../../../hooks/useCurrentUser/useCurrentUser";
 
 const MakeNewButton = () => {
     const {isAppointmentSaving,} = useSelector((state: RootState) => state.appointmentFrame)

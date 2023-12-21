@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useConfirm, useException, useModal, useSCs} from "../../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EDemandCategory, IPackagePricingSettings} from "../../../../../store/reducers/pricingSettings/types";
@@ -15,6 +14,10 @@ import {useStyles} from "./styles";
 import {Slider} from "../../../../../components/styled/Slider";
 import AddPackageToPricingModal from "../../AddPackageToPricingModal/AddPackageToPricingModal";
 import {DenseTable} from "../../../../../components/styled/DemandTable";
+import {useModal} from "../../../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../../../hooks/useConfirm/useConfirm";
+import {useException} from "../../../../../hooks/useException/useException";
+import {useSCs} from "../../../../../hooks/useSCs/useSCs";
 
 const DayOfWeekPackage = () => {
     const { mpPricingSettings, isLoading } = useSelector((state: RootState) => state.pricingSettings);

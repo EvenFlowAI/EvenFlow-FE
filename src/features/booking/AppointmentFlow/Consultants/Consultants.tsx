@@ -25,12 +25,12 @@ import {
 } from "../utils";
 import {useParams} from "react-router-dom";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {useException} from "../../../../utils/hooks";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 import {collectServiceRequestIds, decodeSCID, mapRecallsForRequest} from "../../../../utils/utils";
 import {ConsultantsWrapper} from "./styles";
 import {ConsultantCard} from "./ConsultantCard/ConsultantCard";
 import {TActionProps} from "../../../../types/types";
+import {useException} from "../../../../hooks/useException/useException";
 
 export const Consultants: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {

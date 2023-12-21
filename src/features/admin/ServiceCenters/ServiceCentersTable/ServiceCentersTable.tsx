@@ -2,7 +2,6 @@ import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'rea
 import {Table} from "../../../../components/Table/Table";
 import {IServiceCenterExtended, IServiceCenterForm} from "../../../../store/reducers/serviceCenters/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
-import {useConfirm, useCurrentUser, useException, useMessage, usePagination} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
 import {changePageData, loadAll, removeSC, setSCOrder} from "../../../../store/reducers/serviceCenters/actions";
 import {MoreHoriz, Visibility} from "@material-ui/icons";
@@ -10,6 +9,12 @@ import {TableAvatar} from "../../../../components/TableAvatar/TableAvatar";
 import {IOrder, TableRowDataType, TCallback} from "../../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {concatAddress} from "../../../../utils/utils";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 const rowDataSU: TableRowDataType<IServiceCenterExtended>[] = [
     {val: (el: IServiceCenterExtended) => el.dealership.name, header: "Dealership group"},

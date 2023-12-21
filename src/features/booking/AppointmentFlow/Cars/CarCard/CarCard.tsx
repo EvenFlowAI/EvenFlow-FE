@@ -6,10 +6,11 @@ import {setVehicle} from "../../../../../store/reducers/appointmentFrameReducer/
 import {TArgCallback, TCallback} from "../../../../../types/types";
 import {useTranslation} from "react-i18next";
 import CarCardAction from "../CarCardAction/CarCardAction";
-import {useCurrentUser, useModal} from "../../../../../utils/hooks";
 import VehicleRepairHistory from "../../../../../components/modals/common/VehicleRepairHistory/VehicleRepairHistory";
 import {RootState} from "../../../../../store/rootReducer";
 import {CarDataWithBtn, CarInfo, RepairBtn, Wrapper} from "./styles";
+import {useModal} from "../../../../../hooks/useModal/useModal";
+import {useCurrentUser} from "../../../../../hooks/useCurrentUser/useCurrentUser";
 
 type TProps = {
     car: ILoadedVehicle;

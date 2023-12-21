@@ -6,9 +6,10 @@ import {RootState} from "../../../../../store/rootReducer";
 import {EMaintenanceOptionType, IPackageById} from "../../../../../api/types";
 import {updatePriceTitles} from "../../../../../store/reducers/packages/actions";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import {useMessage} from "../../../../../utils/hooks";
 import {TSummaryCell} from "../../types";
 import {useStyles} from "./styles";
+
+import {useMessage} from "../../../../../hooks/useMessage/useMessage";
 
 type TProps = {
     packageData: IPackageById|null;

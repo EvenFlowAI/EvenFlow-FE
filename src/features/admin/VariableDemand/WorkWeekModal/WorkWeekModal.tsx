@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Box, Button} from "@material-ui/core";
-import {useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
 import {EDay, EDemandCategory, IDayOfWeekSetting} from "../../../../store/reducers/pricingSettings/types";
@@ -13,6 +12,10 @@ import {TForm} from "./types";
 import {buttons, initialForm} from "./constants";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 import {SwitchButtons} from "../../../../components/SwitchButtons/SwitchButtons";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 export const WorkWeekModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);

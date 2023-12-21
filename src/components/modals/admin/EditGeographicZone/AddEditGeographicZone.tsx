@@ -11,7 +11,6 @@ import {
     getServiceValetZoneById,
     updateServiceValetZone
 } from "../../../../store/reducers/serviceValet/actions";
-import {useException, useMessage, useModal, useSCs} from "../../../../utils/hooks";
 import {ReactComponent as ChangeZone} from "../../../../assets/img/changeZipZone.svg";
 import AssignZipToZoneModal from "./AssignZipToZoneModal/AssignZipToZoneModal";
 import {
@@ -27,6 +26,11 @@ import {Autocomplete} from "@material-ui/lab";
 import {loadFilteredZip, setFilteredZipCodes} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useStyles} from "./styles";
 import {useAutocompleteStyles} from "../../../../commonStyles/useAutocompleteStyles";
+import {useModal} from "../../../../hooks/useModal/useModal";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TEditZoneProps = DialogProps & {
     isEdit: boolean;

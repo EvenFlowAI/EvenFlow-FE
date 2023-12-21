@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {Grid} from "@material-ui/core";
-import {useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEmailRequirement} from "../../../store/reducers/screenSettings/actions";
 import {screenSettingsList, TOptContent} from "../../../store/reducers/screenSettings/types";
@@ -8,6 +7,7 @@ import {RootState} from "../../../store/rootReducer";
 import {EScreenSettingsType} from "../../../store/reducers/screenSettings/types";
 import {CenterSettingsPlate} from "../CenterSettings/CenterSettingsPlate/CenterSettingsPlate";
 import {TCallback} from "../../../types/types";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 type TProps = {
     onEmailEditOpen: TCallback;

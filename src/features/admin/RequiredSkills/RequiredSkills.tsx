@@ -4,7 +4,6 @@ import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/t
 import {MoreHoriz} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {
     loadAssignedServiceRequests,
     setAssignedFilter,
@@ -14,6 +13,9 @@ import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {RequiredSkillsModal} from "./RequiredSkillsModal/RequiredSkillsModal";
 import {CheckmarkCircle} from "../../../components/ChekmarkCircle/ChekmarkCircle";
 import {TableRowDataType} from "../../../types/types";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {usePagination} from "../../../hooks/usePaginations/usePaginations";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const rowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {

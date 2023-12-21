@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {TableHead, TableBody, CircularProgress} from "@material-ui/core";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {loadDemandSegments, setDemandSegments} from "../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -11,6 +10,11 @@ import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
 import {TableCell} from "../../../components/styled/TableCell";
 import {SaveEditBlock} from "../../../components/SaveEditBlock/SaveEditBlock";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 type TForm = number[][];
 export const DemandSegments = () => {

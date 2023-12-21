@@ -8,11 +8,12 @@ import {RootState} from "../../../../store/rootReducer";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../../utils/AutocompleteRender";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {updateServiceValetServiceRequest} from "../../../../store/reducers/capacityServiceValet/actions";
 import {TServiceValetRequestId} from "../../../../store/reducers/capacityServiceValet/types";
 import {loadAllAssignedServiceRequests} from "../../../../store/reducers/serviceRequests/actions";
 import {InputWrapper, OpsCode} from "./styles";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const ServiceValetOpsCodeModal: React.FC<DialogProps> = ({onClose, open}) => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);

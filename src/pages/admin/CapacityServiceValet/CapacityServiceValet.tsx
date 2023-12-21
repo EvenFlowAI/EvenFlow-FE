@@ -5,12 +5,12 @@ import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import ZoneRouting from "../../../features/admin/ZoneRouting/ZoneRouting";
 import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
-import {useSCs} from "../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {loadHoursOfOperations} from "../../../store/reducers/slotScoring/actions";
 import TimeRangesAndCapacity from "../../../features/admin/TimeRangesAndCapacity/TimeRangesAndCapacity";
 import CenterSettings from "../../../features/admin/CenterSettings/CenterSettings";
 import {optimizerRoot} from "../../../config/constants";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const CapacityServiceValet = () => {
     const [selectedTab, setTab] = useState<string>("0");

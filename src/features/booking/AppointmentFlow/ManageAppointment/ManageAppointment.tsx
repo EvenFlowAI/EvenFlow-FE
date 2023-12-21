@@ -22,7 +22,6 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useHistory, useParams} from "react-router-dom";
-import {useConfirm, useCurrentUser, useException, useMessage, useModal} from "../../../../utils/hooks";
 import {
     loadAllServiceCategories,
     loadSRs,
@@ -49,6 +48,12 @@ import {loadFirstScreenOptionsByQuery} from "../../../../store/reducers/serviceT
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import AddressManaging from "./AddressManaging/AddressManaging";
 import {ButtonWrapper, Info, ManageTitle, Wrapper} from "./styles";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 type TProps = {
     onChangeSlot: TCallback;

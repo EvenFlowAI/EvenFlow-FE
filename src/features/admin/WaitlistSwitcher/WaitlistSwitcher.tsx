@@ -5,9 +5,11 @@ import {
 } from "../../../store/reducers/optimizationWindows/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
 import WaitListSlotSettingsModal from "./WaitListSlotSettingsModal/WaitListSlotSettingsModal";
 import {SwitcherLabel, Wrapper} from "./styles";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 const WaitlistSwitcher = () => {
     const {waitListSettings} = useSelector((state: RootState) => state.optimizationWindows);

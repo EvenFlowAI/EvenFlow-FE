@@ -8,7 +8,6 @@ import {IconButton, Button, Divider} from "@material-ui/core";
 import OpsCode from "./parts/OpsCodeLabel/OpsCodeLabel";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../../utils/AutocompleteRender";
-import {useException, useModal, useSCs} from "../../../../utils/hooks";
 import AssignOpsCode from "./parts/AssignOpsCodeModal/AssignOpsCodeModal";
 import AddOpsCode from "../../../../components/modals/admin/AddOpsCode/AddOpsCode";
 import {
@@ -36,6 +35,9 @@ import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
 import EngineTypes from "./parts/EngineTypes/EngineTypes";
 import AddUpsellToPackageModal from "./parts/AddUpsellToPackageModal/AddUpsellToPackageModal";
 import {getYearOptions} from "../../../../utils/utils";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 
 type TModalProps = DialogProps & {

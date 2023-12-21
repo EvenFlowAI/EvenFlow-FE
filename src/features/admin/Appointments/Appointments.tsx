@@ -3,7 +3,6 @@ import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {Titles} from "../../../config/constants";
-import {useModal, useSCs} from "../../../utils/hooks";
 import {loadAppointments} from "../../../store/reducers/appointments/actions";
 import {AppointmentActions} from "./AppointmentActions/AppointmentActions";
 import {AppointmentFilters} from "./AppointmentFilters/AppointmentFilters";
@@ -15,6 +14,8 @@ import {IAppointmentsRequest} from "../../../store/reducers/appointments/types";
 import {EAppointmentStatus, IAppointment} from "../../../api/types";
 import {IOrder} from "../../../types/types";
 import {TFilters, TView} from "./types";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const initialOrder = {
     orderBy: "date",

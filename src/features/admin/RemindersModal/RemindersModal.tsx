@@ -2,11 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
 import {Button, Divider, Switch} from "@material-ui/core";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadReminders, updateReminders} from "../../../store/reducers/serviceCenters/actions";
 import {useStyles} from "./styles";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const RemindersModal: React.FC<DialogProps> = (props) => {
     const [isRemindersOn, setRemindersOn] = useState<boolean>(false);

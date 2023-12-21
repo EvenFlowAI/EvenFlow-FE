@@ -16,7 +16,6 @@ import {
     setSessionId
 } from "../../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../../utils/utils";
-import {useException, useLayout, useModal, useStorage} from "../../../utils/hooks";
 import {FrameWelcomeLayout} from "../../../features/booking/FrameWelcomeLayout/FrameWelcomeLayout";
 import {MuiThemeProvider} from "@material-ui/core";
 import {frameTheme} from "../../../theme/theme";
@@ -42,6 +41,10 @@ import {
 import ServiceCenterSelect from "../../../features/booking/ServiceCenterSelect/ServiceCenterSelect";
 import {initialCustomerSearch} from "../../../store/reducers/enhancedCustomerSearch/reducer";
 import {TView} from "../../../types/types";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useStorage} from "../../../hooks/useStorage/useStorage";
+import {useLayout} from "../../../hooks/useLayout/useLayout";
+import {useException} from "../../../hooks/useException/useException";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);

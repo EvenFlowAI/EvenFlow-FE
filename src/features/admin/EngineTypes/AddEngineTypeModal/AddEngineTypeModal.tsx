@@ -9,8 +9,9 @@ import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {createEngineType} from "../../../../store/reducers/vehicleDetails/actions";
 import {TCreateEngineType} from "../../../../store/reducers/vehicleDetails/types";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 export const AddEngineTypeModal: React.FC<DialogProps> = (props) => {
     const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);

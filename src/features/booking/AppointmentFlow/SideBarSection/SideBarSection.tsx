@@ -1,5 +1,4 @@
 import React, {useMemo} from 'react';
-import {useCurrentUser, useModal} from "../../../../utils/hooks";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {SideBar} from "../SideBar/SideBar";
@@ -9,6 +8,8 @@ import {useTranslation} from "react-i18next";
 import CustomerInfo from "../CustomerInfo/CustomerInfo";
 import {TScreen} from "../../../../types/types";
 import {RoHistoryLink, SectionWrapper} from "./styles";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 type TProps = {
     screen: TScreen;

@@ -2,7 +2,6 @@ import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "rea
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {EAppointmentType, EJobType, IPod, IPodForm} from "../../../../store/reducers/pods/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
-import {useException, useMessage, useModal, useSCs} from "../../../../utils/hooks";
 import {Button, Grid, Switch} from "@material-ui/core";
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {useDispatch, useSelector} from "react-redux";
@@ -33,6 +32,11 @@ import {loadTransportationOptions} from "../../../../store/reducers/transportati
 import {Label} from "./styles";
 import {TForm, TOption} from "./types";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {useModal} from "../../../../hooks/useModal/useModal";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const initialForm: TForm = {
     name: "",

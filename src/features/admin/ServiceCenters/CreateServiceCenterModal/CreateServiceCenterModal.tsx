@@ -6,7 +6,6 @@ import {Button} from "@material-ui/core";
 import {CreateServiceCenterForm} from "../CreateServiceCenterForm/CreateServiceCenterForm";
 import {useDispatch, useSelector} from "react-redux";
 import {IServiceCenterForm} from "../../../../store/reducers/serviceCenters/types";
-import {useException, useMessage} from "../../../../utils/hooks";
 import {createSC, updateSC} from "../../../../store/reducers/serviceCenters/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {API} from "../../../../api/api";
@@ -15,6 +14,9 @@ import {AvatarWrapper} from "../../../../components/AvatarWrapper/AvatarWrapper"
 import {TSelectChange} from "../../../../types/types";
 import {TFormItem} from "../types";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
 
 type TSCFormState = {
     scName: string;

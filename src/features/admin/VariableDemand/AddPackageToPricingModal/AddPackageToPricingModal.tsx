@@ -7,10 +7,11 @@ import {addPackageToPricing} from "../../../../store/reducers/pricingSettings/ac
 import {IPackageOptionShort} from "../../../../store/reducers/packages/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {DialogProps} from "../../../../components/BaseModal/types";
 import Checkbox from "../../../../components/Checkbox/Checkbox";
 import {TableRowDataType} from "../../../../types/types";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const tableData: TableRowDataType<IPackageOptionShort>[] = [
     {header: "PACKAGE LEVEL", val: el => el.maintenancePackageOptionName.toString(), align: "left"},

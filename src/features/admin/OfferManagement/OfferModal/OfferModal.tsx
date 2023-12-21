@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
-import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {
     customerSegments,
     dayOfWeek,
@@ -28,6 +27,11 @@ import {EPricingDisplayType} from "../../../../store/reducers/pricingSettings/ty
 import {ICategory} from "../../../../store/reducers/categories/types";
 import {loadCategoriesByQuery} from "../../../../store/reducers/categories/actions";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const initialForm: TOfferForm = {
     offerValue: undefined,

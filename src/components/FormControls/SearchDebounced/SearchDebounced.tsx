@@ -1,8 +1,8 @@
 import React, {useEffect, useRef} from "react";
-import {useDebounce} from "../../../utils/hooks";
 import {TextField} from "../TextFieldStyled/TextField";
 import {Search} from "@material-ui/icons";
 import {TSearchInputProps} from "../../../types/types";
+import {useDebounce} from "../../../hooks/useDebounce/useDebounce";
 
 export const SearchDebounced: React.FC<TSearchInputProps> = ({
                                                                  placeholder,

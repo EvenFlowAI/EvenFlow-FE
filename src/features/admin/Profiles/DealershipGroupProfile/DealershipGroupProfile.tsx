@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {AvatarUpload} from "../../../../components/AvatarUpload/AvatarUpload";
-import {useDealershipProfile, useException, useMessage} from "../../../../utils/hooks";
 import {updateDealership, updateDealershipAvatar} from "../../../../store/reducers/dealershipGroups/actions";
 import {useDispatch} from "react-redux";
 import {states} from "../../../../config/constants";
@@ -12,6 +11,10 @@ import {validatePhoneNumber} from "../../../../utils/utils";
 import {useStyles} from "./styles";
 import {TForm} from "./types";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useDealershipProfile} from "../../../../hooks/useDealershipProfile/useDealershipProfile";
 
 const blankAddress = {street: "", city: "", zipCode: "", state: ""}
 

@@ -12,7 +12,6 @@ import {createOrUpdateAppointment, setReminders} from "../../../../store/reducer
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useParams} from "react-router-dom";
-import {useCurrentUser, useException, useModal} from "../../../../utils/hooks";
 import {loadAllServiceCategories,} from "../../../../store/reducers/appointment/actions";
 import AppointmentVehicleInfo from "../../../../components/AppointmentVehicleInfo/AppointmentVehicleInfo";
 import ServiceRequests from "./ServiceRequests/ServiceRequests";
@@ -24,6 +23,9 @@ import {useTranslation} from "react-i18next";
 import {isMobile} from 'react-device-detect';
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {Info, Wrapper} from "./styles";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useException} from "../../../../hooks/useException/useException";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 type TProps = {
     onChangeSlot: TCallback;

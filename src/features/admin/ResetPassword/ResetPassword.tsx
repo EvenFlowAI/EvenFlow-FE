@@ -8,8 +8,10 @@ import {useSnackbar} from "notistack";
 import {useHistory, useLocation} from "react-router-dom";
 import queryString from "query-string";
 import {Routes} from "../../../config/routes";
-import {useException, useMessage} from "../../../utils/hooks";
 import {API} from "../../../api/api";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
 
 export const ResetPassword = () => {
     const [{newPassword, confirmPassword}, setPassword] = useState({newPassword: '', confirmPassword: ''});

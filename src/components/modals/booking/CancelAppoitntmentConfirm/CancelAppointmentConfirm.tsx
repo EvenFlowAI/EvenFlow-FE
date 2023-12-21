@@ -5,7 +5,6 @@ import {Actions} from "../../../../features/booking/Actions/Actions";
 import {IAppointmentByQuery} from "../../../../api/types";
 import {API} from "../../../../api/api";
 import moment from "moment";
-import {useException} from "../../../../utils/hooks";
 import {Loading} from "../../../Loading/Loading";
 import {NoData} from "../../../NoData/NoData";
 import {useDialogStyles} from "../../../../commonStyles/useDialogStyles";
@@ -13,6 +12,7 @@ import {TArgCallback} from "../../../../types/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useStyles} from "./styles";
+import {useException} from "../../../../hooks/useException/useException";
 
 const CancelAppointmentConfirm: React.FC<DialogProps&{hashKey: string, loadData: TArgCallback<boolean>}> = ({open, onClose, hashKey, loadData}) => {
     const {customerSearchData} = useSelector((state: RootState) => state.customers);

@@ -8,7 +8,6 @@ import {DialogActions} from "../../../../components/BaseModal/BaseModal";
 import {IPodShort} from "../../../../store/reducers/pods/types";
 import {ReactComponent as PlusIcon} from "../../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../../assets/img/close.svg";
-import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {loadPodsShort} from "../../../../store/reducers/pods/actions";
 import {TNotifications} from "../../../../store/reducers/notifications/types";
 import {setLoading, updatePodNotifications} from "../../../../store/reducers/notifications/actions";
@@ -17,6 +16,11 @@ import {Loading} from "../../../../components/Loading/Loading";
 import {checkPodsAreTheSame} from "../utils";
 import {IAdvisorShort} from "../../../../store/reducers/users/types";
 import {useNotificationStyles} from "../../../../commonStyles/useNotificationStyles";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changesState}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);

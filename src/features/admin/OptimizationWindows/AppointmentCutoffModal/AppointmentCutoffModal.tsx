@@ -3,7 +3,6 @@ import {DialogProps} from "../../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import {SC_UNDEFINED, timeSpanString} from "../../../../config/constants";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {EDay} from "../../../../store/reducers/demandSegments/types";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
@@ -14,6 +13,11 @@ import {IAppointmentCutoff} from "../../../../store/reducers/optimizationWindows
 import {AccessTime} from "@material-ui/icons";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 import {TimePicker} from "../../../../components/TimePicker/TimePicker";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
 type TForm = {
     [k in EDay]: ParsableDate;

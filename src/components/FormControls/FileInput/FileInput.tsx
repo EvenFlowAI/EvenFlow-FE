@@ -1,7 +1,9 @@
 import React, {ChangeEventHandler, createRef, Dispatch, SetStateAction, useCallback} from 'react';
-import {useException, useMessage} from "../../../utils/hooks";
 import {useStyles} from "./styles";
 import {IIconState} from "../types";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
 
 const allowedFileTypes = ['image/svg+xml', 'image/svg', 'image/png', 'image/jpeg', 'image/jpg'];
 

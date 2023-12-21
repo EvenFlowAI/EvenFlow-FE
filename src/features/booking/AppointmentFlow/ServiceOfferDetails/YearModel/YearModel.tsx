@@ -7,13 +7,13 @@ import {Actions} from "../../../Actions/Actions";
 import {loadSeriesModels, setValueServicePartial} from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../../../store/rootReducer";
 import {TModel, TSeries} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import {useException} from "../../../../../utils/hooks";
 import {Loading} from "../../../../../components/Loading/Loading";
 import {useOfferInputStyles} from "../../../../../commonStyles/useOfferInputStyles";
 import {ScreenWrapper} from "../../../../../components/styled/ScreenWrapper";
 import {SelectsTitle} from "../../../../../components/styled/SelectsTitle";
 import {SelectWrapper} from "../../../../../components/styled/SelectWrapper";
 import {TActionProps} from "../../../../../types/types";
+import {useException} from "../../../../../hooks/useException/useException";
 
 export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {valueService, selectedVehicle, seriesModels}= useSelector((state: RootState) => state.appointmentFrame);

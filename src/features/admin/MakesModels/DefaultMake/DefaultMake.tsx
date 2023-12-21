@@ -3,10 +3,11 @@ import {Autocomplete} from "@material-ui/lab";
 import {useStyles} from "./styles";
 import {useDispatch, useSelector} from "react-redux";
 import {IMake} from "../../../../api/types";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
 import {updateDefaultMake} from "../../../../store/reducers/serviceCenters/actions";
 import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 export const DefaultMake = () => {
     const { makes, isLoading } = useSelector((state: RootState) => state.vehicleDetails);

@@ -5,13 +5,13 @@ import {DialogProps} from "../../../../components/BaseModal/types";
 import {AddCircleOutline} from "@material-ui/icons";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {Chip} from "../../../../components/Chip/Chip";
-import {useException} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {createMake, setCurrentMake, updateMake} from "../../../../store/reducers/vehicleDetails/actions";
 import {ICreateMake} from "../../../../store/reducers/vehicleDetails/types";
 import {IMake} from "../../../../api/types";
 import {useStyles} from "./styles";
+import {useException} from "../../../../hooks/useException/useException";
 
 type TAddMakeModalProps = DialogProps & {
     isEditing?: boolean;

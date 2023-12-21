@@ -4,7 +4,6 @@ import {Button, TableBody, TableHead} from "@material-ui/core";
 import {DialogProps} from "../../../components/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {useException, useMessage} from "../../../utils/hooks";
 import {EAdvisorAssignMethod, IAdvisorAssignment} from "../../../store/reducers/serviceCenters/types";
 import {Loading} from "../../../components/Loading/Loading";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
@@ -13,6 +12,9 @@ import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
 import {useStyles} from "./styles";
 import {TableCellWithPadding} from "../../../components/styled/TableCellWithPadding";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
 
 type TMethod = "primary"|"secondary"
 

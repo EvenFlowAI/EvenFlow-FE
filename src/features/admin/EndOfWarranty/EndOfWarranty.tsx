@@ -1,11 +1,13 @@
 import React, {useEffect} from "react";
 import {Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
-import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadEndOfWarranty} from "../../../store/reducers/valueSettings/actions";
 import {EndOfWarrantyModal} from "./EndOfWarrantyModal/EndOfWarrantyModal";
 import {StyledTable} from "../../../components/styled/StyledTable";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 export const EndOfWarranty = () => {
     const {onOpen, onClose, isOpen} = useModal();

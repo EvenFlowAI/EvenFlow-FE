@@ -9,7 +9,6 @@ import {
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
-import {useException, useMessage, useModal, useSCs} from "../../../../utils/hooks";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import moment from "moment";
 import {IEmployee} from "../../../../store/reducers/employees/types";
@@ -31,6 +30,11 @@ import {getStartEndDates} from "../../../../utils/utils";
 import {TForm} from "./types";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 import {TimePicker} from "../../../../components/TimePicker/TimePicker";
+import {useModal} from "../../../../hooks/useModal/useModal";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TProps = DialogProps<ISchedule> & {
     selectedDate: moment.Moment;

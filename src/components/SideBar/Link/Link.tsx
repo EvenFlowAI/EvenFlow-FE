@@ -3,9 +3,9 @@ import {List, ListItem, ListItemSecondaryAction} from "@material-ui/core";
 import clsx from "clsx";
 import {NavLink, useHistory} from "react-router-dom";
 import {LinkTypeWithSub} from "../../../types/types";
-import {useCurrentUser} from "../../../utils/hooks";
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
 import {useStyles} from "./styles";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 type TLinkProps = {
     link: LinkTypeWithSub;

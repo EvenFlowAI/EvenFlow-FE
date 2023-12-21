@@ -2,7 +2,6 @@ import {DialogProps} from "../../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import React, {useEffect, useState} from "react";
 import {Button, FormGroup, InputLabel} from "@material-ui/core";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {ICustomerLifetime, ICustomerLifetimeForm} from "../../../../store/reducers/valueSettings/types";
 import {setCustomerLifetimes} from "../../../../store/reducers/valueSettings/actions";
@@ -11,6 +10,11 @@ import {SC_UNDEFINED} from "../../../../config/constants";
 import {useStyles} from "./styles";
 import {TForm} from "./types";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
 const initialForm: TForm = {
     from: "", to: ""

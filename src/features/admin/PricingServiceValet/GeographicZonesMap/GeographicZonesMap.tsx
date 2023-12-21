@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button} from "@material-ui/core";
 import EligibleCustomerSegment from "../EligibleCustomerSegment/EligibleCustomerSegment";
-import {useException, useMessage, useModal, useSCs} from "../../../../utils/hooks";
 import MapIframeLink from "../../../../components/modals/admin/MapIframeLink/MapIframeLink";
 import {useDispatch} from "react-redux";
 import {saveLinkToServiceValetMap} from "../../../../store/reducers/serviceValet/actions";
@@ -9,6 +8,11 @@ import {useStyles} from "./styles";
 import {ButtonsWrapper} from "../../../../components/GeographicZonesButtons/styles";
 import {EligibleTitle} from "../../../../components/styled/EligibleTitle";
 import {GeographicZonesWrapper, TabHeaderWrapper} from "../../../../components/styled/GeographicZonesWrappers";
+import {useModal} from "../../../../hooks/useModal/useModal";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const mockSRC = 'https://app.mapline.com/map/map_36c1b7f/Pz8UPz4ZIEJDfz8UPxAUP1kAMD8vJT8UPz8UPz8GQkxGCD8tPz'
 

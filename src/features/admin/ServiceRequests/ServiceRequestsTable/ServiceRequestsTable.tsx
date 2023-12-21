@@ -10,15 +10,14 @@ import {
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {IOrder, TableRowDataType, TCallback} from "../../../../types/types";
 import {MoreHoriz} from "@material-ui/icons";
-import {
-    useConfirm,
-    useException,
-    useMessage,
-    useSCs
-} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {ServiceRequestCellData} from "../../../../components/ServiceRequestCellData/ServiceRequestCellData";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {header: "Service Ops Code", val: el => el.serviceRequest.code, orderId: "code"},

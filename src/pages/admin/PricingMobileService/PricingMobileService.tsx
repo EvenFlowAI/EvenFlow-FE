@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {useModal} from "../../../utils/hooks";
 import {Tab} from "@material-ui/core";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {TabContext, TabPanel} from "@material-ui/lab";
@@ -9,6 +8,7 @@ import GeographicZonesMap from "../../../features/admin/PricingMobileService/Geo
 import AddEditGeographicZone from "../../../components/modals/admin/EditGeographicZone/AddEditGeographicZone";
 import AncillaryPrice from "../../../features/admin/PricingMobileService/AncillaryPrice/AncillaryPrice";
 import {pricingRoot} from "../../../config/constants";
+import {useModal} from "../../../hooks/useModal/useModal";
 
 type TTab = {
     id: string;

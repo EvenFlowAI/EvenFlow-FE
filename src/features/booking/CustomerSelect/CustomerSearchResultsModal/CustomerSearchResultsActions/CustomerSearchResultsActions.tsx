@@ -3,11 +3,11 @@ import {Button} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 import {TCallback} from "../../../../../types/types";
 import {ReactComponent as SelectColumns} from "../../../../../assets/img/select_columns.svg";
-import {useModal} from "../../../../../utils/hooks";
 import {TSearchColumnName} from "../types";
 import ColumnsSelectionModal from "../ColumnsSelectionModal/ColumnsSelectionModal";
 import {InfoOutlined} from "@material-ui/icons";
 import {useStyles} from "./styles";
+import {useModal} from "../../../../../hooks/useModal/useModal";
 
 type TCustomerSearchResultsActionsProps = {
     onBack: TCallback;

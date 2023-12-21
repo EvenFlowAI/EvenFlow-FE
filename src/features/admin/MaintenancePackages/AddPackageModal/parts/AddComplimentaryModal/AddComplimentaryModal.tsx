@@ -5,7 +5,6 @@ import {DialogProps} from "../../../../../../components/BaseModal/types";
 import {RootState} from "../../../../../../store/rootReducer";
 import {Table} from "../../../../../../components/Table/Table";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/BaseModal/BaseModal";
-import {usePagination, useSCs} from "../../../../../../utils/hooks";
 import Checkbox from "../../../../../../components/Checkbox/Checkbox";
 import {
     changeComplimentaryPageData,
@@ -13,6 +12,8 @@ import {
 } from "../../../../../../store/reducers/packages/actions";
 import {IComplimentaryServiceByQuery} from "../../../../../../store/reducers/packages/types";
 import {TableRowDataType} from "../../../../../../types/types";
+import {usePagination} from "../../../../../../hooks/usePaginations/usePaginations";
+import {useSCs} from "../../../../../../hooks/useSCs/useSCs";
 
 type TAssignOpsCodeModalProps = DialogProps & {
     selectedCodes: number[];

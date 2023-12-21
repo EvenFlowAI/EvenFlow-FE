@@ -8,7 +8,6 @@ import {TGroupedAppointments} from "../../../../../utils/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EAppointmentTimingType} from "../../../../../store/reducers/appointment/types";
-import {useModal} from "../../../../../utils/hooks";
 import PromptNewSearchModal from "../PromptNewSearchModal/PromptNewSearchModal";
 import {setCurrentFrameScreen} from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {selectAppointment, selectServiceValetAppointment,} from "../../../../../store/reducers/appointment/actions";
@@ -16,6 +15,7 @@ import {WHILE_LIMIT} from "../constants";
 import {DaySelectorWrapper} from "../../../../../components/styled/DaySelectorWrapper";
 import {DateSelectArrow} from "../../../../../components/styled/DateSelectArrow";
 import {getAppointmentDate} from "../utils";
+import {useModal} from "../../../../../hooks/useModal/useModal";
 
 type TProps = {
     date: moment.Moment,

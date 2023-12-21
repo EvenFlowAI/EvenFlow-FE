@@ -35,7 +35,6 @@ import {ICustomerWithPhones} from "../../../../../store/reducers/enhancedCustome
 import {CustomerInputField} from "../InputFields/CustomerInputField";
 import {AddressInputField} from "../InputFields/AddressInputField";
 import {changePageData, updateCustomer} from "../../../../../store/reducers/enhancedCustomerSearch/actions";
-import {useException, useModal, usePagination} from "../../../../../utils/hooks";
 import {Loading} from "../../../../../components/Loading/Loading";
 import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../../../utils/utils";
@@ -45,6 +44,9 @@ import CancelAppointmentConfirm from "../../../../../components/modals/booking/C
 import {TColumn, TOffset, TSortColumn, TSortOrder} from "../types";
 import {initialColumnOffset} from "../constants";
 import {HtmlTooltip, IconsBlock, useStyles} from "./styles";
+import {useModal} from "../../../../../hooks/useModal/useModal";
+import {usePagination} from "../../../../../hooks/usePaginations/usePaginations";
+import {useException} from "../../../../../hooks/useException/useException";
 
 type TCustomerSearchTableProps = {
     onClose: TCallback;

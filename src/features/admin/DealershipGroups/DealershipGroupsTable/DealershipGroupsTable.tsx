@@ -7,12 +7,16 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import * as dealershipActions from "../../../../store/reducers/dealershipGroups/actions";
 import {changePageData, remove as removeDealership} from "../../../../store/reducers/dealershipGroups/actions";
-import {useConfirm, useException, useMessage, usePagination} from "../../../../utils/hooks";
 import {useHistory} from "react-router-dom";
 import {Routes} from "../../../../config/routes";
 import {concatAddress} from "../../../../utils/utils";
 import {authService} from "../../../../config/requests";
 import {TableRowDataType} from "../../../../types/types";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
 
 const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
     {val: el => el.name, header: "Dealership name"},

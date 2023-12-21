@@ -6,10 +6,11 @@ import {TPricingLevel} from "../types";
 import {Box, Button, Divider} from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import {updateSRPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {EDemandCategory} from "../../../../store/reducers/pricingSettings/types";
 import {TUpdatedSettings} from "../types";
 import {useEditPricingLevelStyles} from "../styles";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TEditPricingLevelsProps = DialogProps & {
   prisingLevel: TPricingLevel | null;

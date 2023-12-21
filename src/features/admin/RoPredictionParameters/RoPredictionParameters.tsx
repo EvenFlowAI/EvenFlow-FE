@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {TableBody, TableHead} from "@material-ui/core";
 import {TextField} from "../../../components/FormControls/TextFieldStyled/TextField";
 import {useDispatch, useSelector} from "react-redux";
-import {useException, useMessage} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
 import {loadPredictionParams, updatePredictionParams} from "../../../store/reducers/serviceCenters/actions";
 import {IPredictionParams} from "../../../store/reducers/serviceCenters/types";
@@ -12,6 +11,9 @@ import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
 import {TableCell} from "../../../components/styled/TableCell";
 import {SaveEditBlock} from "../../../components/SaveEditBlock/SaveEditBlock";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
 
 const fixedToTwo = /(^-?\d*\.?\d{1,2}?)$/;
 

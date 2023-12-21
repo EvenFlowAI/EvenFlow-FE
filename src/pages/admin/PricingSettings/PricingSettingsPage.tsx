@@ -7,7 +7,6 @@ import { PricingLevels } from '../../../features/admin/PricingLevels/PricingLeve
 import {Eligibility} from "../../../features/admin/Eligibility/Eligibility";
 import {PricingOptimization} from "../../../features/admin/PricingOptimization/PricingOptimization";
 import {VariableDemand} from "../../../features/admin/VariableDemand/VariableDemand";
-import {useException, useMessage, useSCs} from "../../../utils/hooks";
 import { changePricingOpt } from '../../../store/reducers/serviceCenters/actions';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -15,6 +14,10 @@ import {updateMaxPrice} from "../../../store/reducers/pricingSettings/actions";
 import {ButtonsWrapper, ControlLabel} from "./styles";
 import {pricingRoot} from "../../../config/constants";
 import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 type Tab = {
     id: string;

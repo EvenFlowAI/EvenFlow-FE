@@ -4,7 +4,6 @@ import {TabList} from "../../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import AncillaryPriceByZone from "../../AncillaryPriceByZone/AncillaryPriceByZone";
 import AncillaryPriceByDistance from "../../AncillaryPriceByDistance/AncillaryPriceByDistance";
-import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addServiceValetDistanceRange,
@@ -23,6 +22,11 @@ import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/t
 import {EAncillaryPriceType} from "../../../../store/reducers/mobileService/types";
 import {TablesWrapper} from "../../../../components/styled/TablesWrapper";
 import {useStyles} from "./styles";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TTab = {
     id: string;

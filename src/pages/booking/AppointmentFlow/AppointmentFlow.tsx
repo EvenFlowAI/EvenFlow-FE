@@ -38,7 +38,6 @@ import {
     AppointmentConfirmed
 } from "../../../features/booking/AppointmentFlow/AppointmentConfirmed/AppointmentConfirmed";
 import {API} from "../../../api/api";
-import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../../utils/hooks";
 import {
     checkCarIsValid,
     handleSideBarAppointmentUpdate,
@@ -83,6 +82,10 @@ import {Container, SidebarWrapper} from "./styles";
 import {AppointmentScreenTitle} from "../../../components/AppointmentScreenTitle/AppointmentScreenTitle";
 import {Subtitle} from "../../../components/AppointmentScreenSubtitle/AppointmentScreenSubtitle";
 import {SCREENS} from "../../../config/constants";
+import {useAnalyticsBySCId} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
+import {useStorage} from "../../../hooks/useStorage/useStorage";
+import {useException} from "../../../hooks/useException/useException";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 export const AppointmentFlow = () => {
     const {

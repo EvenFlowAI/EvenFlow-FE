@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
-import {useException, useMessage, useSCs, useSelectedPod} from "../../../../utils/hooks";
 import {SC_UNDEFINED} from "../../../../config/constants";
 import {useDispatch} from "react-redux";
 import {
@@ -14,6 +13,11 @@ import {TextField} from "../../../../components/FormControls/TextFieldStyled/Tex
 import {setOptimizationSettings} from "../../../../store/reducers/slotScoring/actions";
 import {useStyles} from "./styles";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
 type TForm = IOptimizationSettingsItem[];
 

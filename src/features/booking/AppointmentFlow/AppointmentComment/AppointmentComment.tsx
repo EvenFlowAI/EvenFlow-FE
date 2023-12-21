@@ -12,7 +12,6 @@ import {
     setFrameDescription
 } from '../../../../store/reducers/appointmentFrameReducer/actions';
 import {TArgCallback, TScreen} from "../../../../types/types";
-import {useException, useModal} from "../../../../utils/hooks";
 import {
     selectAppointment,
     selectServiceValetAppointment,
@@ -21,6 +20,8 @@ import AskAddService from "../../../../components/modals/booking/AskAddService/A
 import {useTranslation} from "react-i18next";
 import AddCommentPrompt from "../../../../components/modals/booking/AddCommentPrompt/AddCommentPrompt";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useException} from "../../../../hooks/useException/useException";
 
 type TProps = {
     handleSetScreen:TArgCallback<TScreen>;

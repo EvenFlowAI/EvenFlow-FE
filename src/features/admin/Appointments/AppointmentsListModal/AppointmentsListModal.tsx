@@ -2,13 +2,14 @@ import React, {Dispatch, SetStateAction, useEffect} from 'react';
 import {DialogTitle, BaseModal, DialogContent} from "../../../../components/BaseModal/BaseModal";
 import moment from "moment";
 import {DialogProps} from "../../../../components/BaseModal/types";
-import {useSCs, useStatePagination} from "../../../../utils/hooks";
 import {IAppointmentsRequest} from "../../../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";
 import {IAppointment} from "../../../../api/types";
 import {AppointmentsTable} from "../AppointmentsTable/AppointmentsTable";
 import {IOrder} from "../../../../types/types";
 import {RootState} from "../../../../store/rootReducer";
+import {useStatePagination} from "../../../../hooks/usePaginations/usePaginations";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TDialogProps = DialogProps & {
     date: moment.Moment | null;

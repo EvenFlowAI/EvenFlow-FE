@@ -14,7 +14,6 @@ import {Autocomplete} from "@material-ui/lab";
 import {SearchInput} from "../../../../components/FormControls/SearchInput/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
 import {loadAllAssignedServiceRequests, setAssignedFilter,} from "../../../../store/reducers/serviceRequests/actions";
-import {useException, useSCs} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
 import {IAssignedServiceRequest, TOPsCodeWithIndex} from "../../../../store/reducers/serviceRequests/types";
 import {createCategory, updateCategory, updateCategoryIcon} from "../../../../store/reducers/categories/actions";
@@ -27,6 +26,8 @@ import {IIconState, TOption} from "./types";
 import {Label, useStyles} from "./styles";
 import {categoryOptions, findMissingNumbers, getOptionLabel, getPageOptions} from "./utils";
 import {visitCenterTabs} from "../constants";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TAddServiceCategoryProps = DialogProps & {
     editingItem: ICategory | null;

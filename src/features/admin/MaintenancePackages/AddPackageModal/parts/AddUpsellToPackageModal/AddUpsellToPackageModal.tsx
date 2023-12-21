@@ -7,13 +7,14 @@ import {RootState} from "../../../../../../store/rootReducer";
 import {Table} from "../../../../../../components/Table/Table";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/BaseModal/BaseModal";
 import {SearchInput} from "../../../../../../components/FormControls/SearchInput/SearchInput";
-import {usePagination, useSCs} from "../../../../../../utils/hooks";
 import {
     loadUpsellServiceRequests, setUpsellFilter, setUpsellPageData,
 } from "../../../../../../store/reducers/serviceRequests/actions";
 import Checkbox from "../../../../../../components/Checkbox/Checkbox";
 import {useStyles} from "./styles";
 import {TableRowDataType} from "../../../../../../types/types";
+import {usePagination} from "../../../../../../hooks/usePaginations/usePaginations";
+import {useSCs} from "../../../../../../hooks/useSCs/useSCs";
 
 type TAddUpsellProps = DialogProps & {
     selectedCodes: IUpsellServiceRequest[];

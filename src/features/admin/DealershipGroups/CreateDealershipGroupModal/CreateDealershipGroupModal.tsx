@@ -16,7 +16,6 @@ import {
 } from "../../../../store/reducers/dealershipGroups/types";
 import {create} from "../../../../store/reducers/dealershipGroups/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {useException, useMessage, useValidation} from "../../../../utils/hooks";
 import {RootState} from "../../../../store/rootReducer";
 import {validatePhoneNumber} from "../../../../utils/utils";
 import {FormElements} from "./FormElements/FormElements";
@@ -24,6 +23,10 @@ import {initialCPState, initialStateDealershipState, requiredFields, elementsGro
 import {DialogContentTitle} from "../DialogContentTitle/DialogContentTitle";
 import {AvatarWrapper} from "../../../../components/AvatarWrapper/AvatarWrapper";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useValidation} from "../../../../hooks/useValidation/useValidation";
+import {useException} from "../../../../hooks/useException/useException";
 
 export const CreateDealershipGroupModal: React.FC<DialogProps> = props => {
     const [dealership, setDealership] = useState<IDealershipForm>({...initialStateDealershipState});

@@ -12,7 +12,6 @@ import {
     updateMobileServicePrisingByDistance,
     updateMobileServicePrisingByZones
 } from "../../../../store/reducers/mobileService/actions";
-import {useConfirm, useException, useMessage, useSCs} from "../../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {IZonePriceSettings, TDistanceRange, TDistanceRangeUpdate} from "../../../../store/reducers/serviceValet/types";
 import {RootState} from "../../../../store/rootReducer";
@@ -23,6 +22,11 @@ import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/t
 import {EAncillaryPriceType} from "../../../../store/reducers/mobileService/types";
 import {TablesWrapper} from "../../../../components/styled/TablesWrapper";
 import {useStyles} from "./styles";
+import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TTab = {
     id: string;

@@ -11,9 +11,9 @@ import {TextField} from "../../../../components/FormControls/TextFieldStyled/Tex
 import {Button} from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import {updateTransportationDescription} from "../../../../store/reducers/transportationNeeds/actions";
-import {useException} from "../../../../utils/hooks";
 import {useStyles} from "./styles";
 import {TOption} from "../types";
+import {useException} from "../../../../hooks/useException/useException";
 
 const initialColumn = {name: "Yes", value: ETransportColumn.Yes}
 

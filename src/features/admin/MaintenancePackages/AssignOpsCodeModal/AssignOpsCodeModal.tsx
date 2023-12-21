@@ -5,7 +5,6 @@ import {Button, Radio} from "@material-ui/core";
 import {Table} from "../../../../components/Table/Table";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {useException, usePagination, useSCs} from "../../../../utils/hooks";
 import {
     loadNonSelectedServiceRequests,
     setNonSelectedFilter,
@@ -22,6 +21,9 @@ import {useInputStyles, useStyles} from "./styles";
 import {TSelectedOption} from "../types";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 import {TableRowDataType} from "../../../../types/types";
+import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "OPS CODE", val: el => el.code},

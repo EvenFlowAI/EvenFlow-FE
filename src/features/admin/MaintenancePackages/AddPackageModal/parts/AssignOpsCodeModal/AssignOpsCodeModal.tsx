@@ -7,7 +7,6 @@ import {RootState} from "../../../../../../store/rootReducer";
 import {Table} from "../../../../../../components/Table/Table";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/BaseModal/BaseModal";
 import {SearchInput} from "../../../../../../components/FormControls/SearchInput/SearchInput";
-import {useException, usePagination, useSCs} from "../../../../../../utils/hooks";
 import {
     loadNonSelectedServiceRequests,
     setNonSelectedFilter,
@@ -23,6 +22,9 @@ import {useInputStyles, useStyles} from "./styles";
 import {TSelectOption} from "./types";
 import {TSelectedOption} from "../../../types";
 import {TableRowDataType} from "../../../../../../types/types";
+import {usePagination} from "../../../../../../hooks/usePaginations/usePaginations";
+import {useException} from "../../../../../../hooks/useException/useException";
+import {useSCs} from "../../../../../../hooks/useSCs/useSCs";
 
 type TAssignOpsCodeModalProps = DialogProps & {
     selectedCodes: TAssignedRequest[];

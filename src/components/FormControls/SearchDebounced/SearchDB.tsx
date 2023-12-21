@@ -1,8 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
-import {useDebounce} from "../../../utils/hooks";
 import {TextField} from "../TextFieldStyled/TextField";
 import {Search} from "@material-ui/icons";
 import {TextInputProps} from "../types";
+import {useDebounce} from "../../../hooks/useDebounce/useDebounce";
 
 type TProps = TextInputProps & {
     onSearch: (s: string) => void;

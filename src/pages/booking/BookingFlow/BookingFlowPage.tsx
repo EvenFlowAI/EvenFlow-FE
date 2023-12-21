@@ -10,11 +10,11 @@ import {loadSCProfile} from "../../../store/reducers/appointment/actions";
 import {CancelAppointment} from "../CancelAppointment/CancelAppointment";
 import {EditAppointment} from "../EditAppointment/EditAppointment";
 import {decodeSCID} from "../../../utils/utils";
-import { useLayout} from "../../../utils/hooks";
 import {RootState} from "../../../store/rootReducer";
 import {setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {loadShortSC} from "../../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../../store/reducers/users/actions";
+import {useLayout} from "../../../hooks/useLayout/useLayout";
 
 type TGAOptions = {
     siteSpeedSampleRate: number;

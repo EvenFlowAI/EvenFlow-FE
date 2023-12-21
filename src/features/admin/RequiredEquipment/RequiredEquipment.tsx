@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {useConfirm, useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {Table} from "../../../components/Table/Table";
 import {IBay} from "../../../store/reducers/bays/types";
 import {CheckCircle, MoreHoriz} from "@material-ui/icons";
@@ -11,6 +10,13 @@ import {CreateBayModal} from "./CreateBayModal/CreateBayModal";
 import {TViewMode} from "../../../components/BaseModal/types";
 import {useStyles} from "./styles";
 import {TableRowDataType} from "../../../types/types";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
+import {usePagination} from "../../../hooks/usePaginations/usePaginations";
+
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const rowData: TableRowDataType<IBay>[] = [
     {header: "", val: v => v.name},

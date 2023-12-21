@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {AvatarUpload} from "../../../../components/AvatarUpload/AvatarUpload";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
-import {useCurrentUser, useException, useMessage} from "../../../../utils/hooks";
 import {useDispatch} from "react-redux";
 import {saveEmployeeAvatar, updateUser} from "../../../../store/reducers/users/actions";
 import {Api} from "../../../../config/requests";
@@ -10,6 +9,10 @@ import {validatePhoneNumber} from "../../../../utils/utils";
 import {useStyles} from "./styles";
 import {TForm, TPasswordForm} from "./types";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 const blankProfile: TForm = {
     firstName: "",

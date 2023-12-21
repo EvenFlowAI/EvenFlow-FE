@@ -5,10 +5,12 @@ import {Button, Checkbox, FormControlLabel, FormGroup} from "@material-ui/core";
 import {IAssignedServiceRequest, IRequiredSkill} from "../../../../store/reducers/serviceRequests/types";
 import {useDispatch} from "react-redux";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
-import {useException, useMessage} from "../../../../utils/hooks";
 import {setRequiredSkills} from "../../../../store/reducers/serviceRequests/actions";
 import {useStyles} from "./styles";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
 
 type TForm = IRequiredSkill;
 

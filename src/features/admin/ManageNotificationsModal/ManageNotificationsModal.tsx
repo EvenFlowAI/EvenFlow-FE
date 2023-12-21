@@ -8,11 +8,12 @@ import {useDispatch} from "react-redux";
 import ServiceCenterAppointments from "./ServiceCenterAppointments/ServiceCenterAppointments";
 import PodAppointments from "./PodAppointments/PodAppointments";
 import RecallAppointments from "./RecallAppointments/RecallAppointments";
-import {useException, useSCs} from "../../../utils/hooks";
 import {loadUsersShort} from "../../../store/reducers/employees/actions";
 import {loadNotifications} from "../../../store/reducers/notifications/actions";
 import TransportationNotifications from "./TransportationNotifications/TransportationNotifications";
 import {TChangesState} from "./types";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const ManageNotificationsModal:React.FC<DialogProps> = (props) => {
     const [currentTab, setCurrentTab] = useState<string>("0");
