@@ -6,9 +6,9 @@ import {ServiceNeedsFrame} from "../../../features/booking/AppointmentMainFlow/A
 import {SideBar} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/SideBar";
 import {Subtitle, Title} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/Title";
 import {MaintenanceDetails} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/MaintenanceDetails";
-import {ConsultantSelection} from '../../../features/booking/AppointmentMainFlow/AppointmentFrame/ConsultantSelection';
-import {AppointmentTiming} from '../../../features/booking/AppointmentMainFlow/AppointmentFrame/AppointmentTiming';
-import {AppointmentSelection} from '../../../features/booking/AppointmentMainFlow/AppointmentFrame/AppointmentSelection';
+import {Consultants} from '../../../features/booking/AppointmentMainFlow/Consultants/Consultants';
+import {AppointmentTiming} from '../../../features/booking/AppointmentMainFlow/AppointmentTiming/AppointmentTiming';
+import {AppointmentSlots} from '../../../features/booking/AppointmentMainFlow/AppointmentSlots/AppointmentSlots';
 import {TransportationNeeds} from '../../../features/booking/AppointmentMainFlow/AppointmentFrame/TransportationNeeds';
 import {AppointmentConfirmation} from '../../../features/booking/AppointmentMainFlow/AppointmentConfirmation/AppointmentConfirmation';
 import {AppointmentComment} from "../../../features/booking/AppointmentMainFlow/AppointmentComment/AppointmentComment";
@@ -27,7 +27,7 @@ import {
     setCustomerLoadedData, setWaitListSettings
 } from "../../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../../utils/utils";
-import {AppointmentConfirmed} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/AppointmentConfirmed";
+import {AppointmentConfirmed} from "../../../features/booking/AppointmentMainFlow/AppointmentConfirmed/AppointmentConfirmed";
 import {VehicleData} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/VehicleData";
 import {API} from "../../../api/api";
 import {useAnalyticsBySCId, useCurrentUser, useException, useStorage} from "../../../utils/hooks";
@@ -59,8 +59,8 @@ import YourLocation from "../../../features/booking/AppointmentMainFlow/Appointm
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import PaymentScreen from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/PaymentScreen";
 import {useTranslation} from "react-i18next";
-import OfferProductPage from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/OfferProductPage";
-import {ServiceCenterSwitcher} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
+import OfferProductPage from "../../../features/booking/AppointmentMainFlow/OfferProductPage/OfferProductPage";
+import {ServiceCenterSwitcher} from "../../../features/booking/ServiceCenterSwitcher/ServiceCenterSwitcher";
 import {SCREENS} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/utils";
 import {IServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 import {setTransportationAvailable} from "../../../store/reducers/bookingFlowConfig/actions";
@@ -368,12 +368,12 @@ export const AppointmentMainFlow = () => {
                 onBack={handleChangeScreen('describeMore')}
                 onNext={handleSetScreen}
             />,
-            consultantSelection: <ConsultantSelection
+            consultantSelection: <Consultants
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
             />,
             appointmentTiming: <AppointmentTiming handleSetScreen={handleSetScreen}/>,
-            appointmentSelection: <AppointmentSelection handleSetScreen={handleSetScreen}/>,
+            appointmentSelection: <AppointmentSlots handleSetScreen={handleSetScreen}/>,
             transportationNeeds: <TransportationNeeds
                 onBack={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmation')}

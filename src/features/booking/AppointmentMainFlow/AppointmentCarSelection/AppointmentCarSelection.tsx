@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {Title} from "../AppointmentFrame/Title";
-import {CarCard} from "../AppointmentFrame/CarCard";
+import {CarCard} from "./CarCard/CarCard";
 import {useMediaQuery, useTheme} from "@material-ui/core";
 import {Actions} from "../../Actions/Actions";
 import {TArgCallback, TCallback, TScreen} from "../../../../types/types";

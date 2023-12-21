@@ -4,7 +4,7 @@ import {useCurrentUser, useModal} from "../../../../utils/hooks";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {SideBar} from "./SideBar";
-import AppointmentNotes from "./AppointmentNotes";
+import AppointmentNotes from "../AppointmentNotes/AppointmentNotes";
 import VehicleRepairHistory from "../../../../components/modals/common/VehicleRepairHistory/VehicleRepairHistory";
 import {useTranslation} from "react-i18next";
 import CustomerInfo from "./CustomerInfo";

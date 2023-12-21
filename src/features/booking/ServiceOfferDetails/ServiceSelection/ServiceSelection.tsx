@@ -4,15 +4,14 @@ import {RootState} from "../../../../store/rootReducer";
 import {IServiceOffer} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {loadServiceOffers, setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {Loading} from "../../../../components/Loading/Loading";
-import {useTranslation} from "react-i18next";
-import {CarName} from "../../../../components/styled/CarName";
 import {OffersContainer} from "../../../../components/styled/OffersContainer";
 import {OfferCardWrapper} from "../../../../components/styled/OfferCardWrapper";
 import {ServiceTitle} from "../../../../components/styled/ServiceTitle";
-import {Price, SelectButton} from "./styles";
 import {ChangeButton} from "../../../../components/styled/ChangeButton";
 import {OfferPageWrapper} from "../../../../components/styled/OfferPageWrapper";
 import {SubTitle} from "../../../../components/styled/SubTitle";
+import {CarName} from "../../../../components/styled/CarName";
+import {Price, SelectButton} from "./styles";
 
 type TServiceSelectionProps = {
     onNext: () => void;
@@ -23,7 +22,6 @@ const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) =>
     const {valueService, serviceOffers, offersLoading} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
-    const {t} = useTranslation();
 
     useEffect(() => {
         const year = valueService?.year?.year;
@@ -40,8 +38,8 @@ const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) =>
     return (
         <OfferPageWrapper>
             <CarName>{valueService?.year?.year} {valueService?.series?.name} {valueService?.model?.name}</CarName>
-            <ChangeButton onClick={onBack} variant="text">{t("Change Vehicle")}</ChangeButton>
-            <SubTitle>{t("Select Service")}</SubTitle>
+            <ChangeButton onClick={onBack} variant="text">Change Vehicle</ChangeButton>
+            <SubTitle>Select Service</SubTitle>
             <OffersContainer>
                 {offersLoading
                     ? <Loading/>
@@ -50,7 +48,7 @@ const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) =>
                         <ServiceTitle>{service.name}</ServiceTitle>
                         <div  className="image" style={{backgroundImage: `url(${service.imagePath})`}}/>
                         <div className="buttonsWrapper">
-                            <SelectButton onClick={onSelectClick(service)}>{t("Select")}</SelectButton>
+                            <SelectButton onClick={onSelectClick(service)}>Select</SelectButton>
                             <Price>$ {service.price}</Price>
                         </div>
                     </OfferCardWrapper>

@@ -6,7 +6,10 @@ import {Loading} from "../../../../components/Loading/Loading";
 import {Actions} from "../../Actions/Actions";
 import {useTranslation} from "react-i18next";
 import {Description, Price} from "./styles";
-import {CarName, ChangeButton, PageWrapper, SubTitle} from "../styles";
+import {CarName} from "../../../../components/styled/CarName";
+import {ChangeButton} from "../../../../components/styled/ChangeButton";
+import {OfferPageWrapper} from "../../../../components/styled/OfferPageWrapper";
+import {SubTitle} from "../../../../components/styled/SubTitle";
 
 type TServiceDetails = {
     onChangeVehicle: () => void;
@@ -21,7 +24,7 @@ const ServiceDetails: React.FC<TServiceDetails> = ({onChangeVehicle, onBack, onN
     const {t} = useTranslation();
 
     return valueService?.selectedService ? (
-        <PageWrapper>
+        <OfferPageWrapper>
             <CarName>{valueService.year?.year} {valueService.series?.name} {valueService.model?.name}</CarName>
             <ChangeButton onClick={onChangeVehicle} variant="text">{t("Change Vehicle")}</ChangeButton>
             <SubTitle>{valueService.selectedService?.name}</SubTitle>
@@ -32,7 +35,7 @@ const ServiceDetails: React.FC<TServiceDetails> = ({onChangeVehicle, onBack, onN
                 onNext={onNext}
                 nextLabel={isSM ? t("Schedule") : t("Schedule Service")}
             />
-        </PageWrapper>
+        </OfferPageWrapper>
     )
         : <Loading/>;
 };

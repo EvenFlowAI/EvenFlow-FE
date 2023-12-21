@@ -23,7 +23,7 @@ import {EServiceCategoryPage, IServiceCategory} from "../../../../api/types";
 import {Loading} from '../../../../components/Loading/Loading';
 import ReactGA from "react-ga4";
 //import ReactGA from "react-ga";
-import CartTable from "./CartTable";
+import ShoppingCart from "../ShoppingCart/ShoppingCart";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {Routes} from "../../../../config/routes";
 import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
@@ -263,7 +263,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
                         key={card.id}/>
                 })}
             </CardsWrapper> : <Loading />}
-            <CartTable/>
+            <ShoppingCart/>
             <Actions
                 prevDisabled={history?.location?.search?.includes('view=unique')}
                 hideNext={!selectedServices?.length}

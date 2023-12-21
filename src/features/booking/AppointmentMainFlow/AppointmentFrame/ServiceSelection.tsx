@@ -19,7 +19,7 @@ import {useHistory, useParams} from "react-router-dom";
 import {Loading} from "../../../../components/Loading/Loading";
 import ReactGA from "react-ga4";
 //import ReactGA from "react-ga";
-import CartTable from "./CartTable";
+import ShoppingCart from "../ShoppingCart/ShoppingCart";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {Routes} from "../../../../config/routes";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
@@ -151,7 +151,7 @@ export const ServiceSelection: React.FC<TProps> = ({onNext, onBack, setLastSelec
                         key={card.name}/>
                 })}
             </CardsWrapper> : <Loading />}
-            <CartTable/>
+            <ShoppingCart/>
             <Actions
                 nextDisabled={!subService}
                 nextLabel={t("Next")}
