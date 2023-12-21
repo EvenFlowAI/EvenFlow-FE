@@ -1,4 +1,4 @@
-import React from 'rect';
+import React from 'react';
 import {styled, Theme} from "@material-ui/core";
 
 export const ConsultantWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, { active?: boolean }>(({theme, active}) => ({
