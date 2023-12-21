@@ -1,6 +1,5 @@
 import React, {useMemo} from 'react';
-import {styled} from "@material-ui/core";
-import {ConfirmationTitle} from "../Title";
+import {ConfirmationTitle} from "../../AppointmentFrame/Title";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
@@ -8,21 +7,16 @@ import {useTranslation} from "react-i18next";
 import {IFirstScreenOption} from "../../../../../store/reducers/serviceTypes/types";
 import {Edit} from "@material-ui/icons";
 import {
-    setEditingPosition, setServiceOptionChanged,
+    setEditingPosition,
+    setServiceOptionChanged,
     setShowServiceCentersList,
     setWelcomeScreenView
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {Routes} from "../../../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
+import {TitleWrapper} from "./styles";
 
-const TitleWrapper = styled('div')({
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    margin: '8px 0',
-});
-
-const ServiceTypeManage = () => {
+const ServiceTypeManaging = () => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {t} = useTranslation();
@@ -64,4 +58,4 @@ const ServiceTypeManage = () => {
     </div>
 };
 
-export default ServiceTypeManage;
+export default ServiceTypeManaging;

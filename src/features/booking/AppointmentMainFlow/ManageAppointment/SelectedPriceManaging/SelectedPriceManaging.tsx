@@ -1,31 +1,11 @@
 import React from 'react';
-import {ConfirmationTitle} from "../Title";
-import {styled} from "@material-ui/core";
+import {ConfirmationTitle} from "../../AppointmentFrame/Title";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
+import {Price} from "./styles";
 
-const Price = styled('div')({
-    marginTop: 8,
-    display: "flex",
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    fontWeight: "bold",
-})
-
-export const SpecialLabel = styled('div')({
-    display: "flex",
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    color: "#142EA1",
-    fontWeight: 'bold',
-    fontSize: 16,
-    "& .icon": {
-        marginRight: 10,
-    }
-})
-
-export const SelectedPriceManage = () => {
+export const SelectedPriceManaging = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {appointmentRequestsPrices} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();

@@ -1,6 +1,5 @@
 import React, {useMemo} from 'react';
-import {styled} from "@material-ui/core";
-import {ConfirmationTitle} from "../Title";
+import {ConfirmationTitle} from "../../AppointmentFrame/Title";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
@@ -11,29 +10,9 @@ import {
     setEditingPosition,
     setServiceOptionChanged
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
+import {List, TitleWrapper} from "./styles";
 
-const TitleWrapper = styled('div')({
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    margin: '8px 0',
-})
-
-const List = styled('ul')({
-    display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    flexDirection: "column",
-    gap: "12px",
-    margin: "12px 0 0",
-    padding: 0,
-    listStyle: "none",
-    "& .service-item": {
-        textTransform: "capitalize"
-    }
-});
-
-const Address = () => {
+const AddressManaging = () => {
     const {address, zipCode, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -63,4 +42,4 @@ const Address = () => {
         : null;
 };
 
-export default Address;
+export default AddressManaging;

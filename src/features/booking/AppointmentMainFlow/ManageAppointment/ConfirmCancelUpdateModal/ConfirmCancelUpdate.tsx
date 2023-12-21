@@ -1,10 +1,10 @@
 import React from 'react';
 import {useTranslation} from "react-i18next";
-import {DialogProps} from "../../../BaseModal/types";
-import {BaseModal, DialogTitle} from "../../../BaseModal/BaseModal";
-import {TCallback} from "../../../../types/types";
+import {DialogProps} from "../../../../../components/BaseModal/types";
+import {BaseModal, DialogTitle} from "../../../../../components/BaseModal/BaseModal";
+import {TCallback} from "../../../../../types/types";
 import {useStyles} from "./styles";
-import {LoadingButton} from "../../../LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../../components/LoadingButton/LoadingButton";
 
 type TConfirmCancelUpdateProps = DialogProps &  {
     onCancelChanges: TCallback;

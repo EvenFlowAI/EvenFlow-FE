@@ -1,6 +1,5 @@
 import React, {useMemo} from 'react';
-import {styled} from "@material-ui/core";
-import {ConfirmationTitle} from "../Title";
+import {ConfirmationTitle} from "../../AppointmentFrame/Title";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
@@ -10,30 +9,10 @@ import {
     setServiceOptionChanged
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {Edit} from "@material-ui/icons";
-import {getMaintenanceDescription} from "../uiUtils";
+import {getMaintenanceDescription} from "../../AppointmentFrame/uiUtils";
+import {List, TitleWrapper} from "./styles";
 
-const TitleWrapper = styled('div')({
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    margin: '8px 0',
-})
-
-const List = styled('ul')({
-    display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    flexDirection: "column",
-    gap: "12px",
-    margin: "12px 0 0",
-    padding: 0,
-    listStyle: "none",
-    "& .service-item": {
-        textTransform: "capitalize"
-    }
-});
-
-const ServiceRequestsManage = () => {
+const ServiceRequestsManaging = () => {
     const {
         selectedRecalls,
         packagePriceTitles,
@@ -87,4 +66,4 @@ const ServiceRequestsManage = () => {
         : null;
 };
 
-export default ServiceRequestsManage;
+export default ServiceRequestsManaging;

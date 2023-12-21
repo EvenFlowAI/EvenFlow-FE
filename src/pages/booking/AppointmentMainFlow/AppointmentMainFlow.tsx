@@ -67,7 +67,7 @@ import {setTransportationAvailable} from "../../../store/reducers/bookingFlowCon
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {getCurrentUser} from "../../../store/reducers/users/actions";
 import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetails/actions";
-import {ManageAppointment} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/ManageAppointment";
+import {ManageAppointment} from "../../../features/booking/AppointmentMainFlow/ManageAppointment/ManageAppointment";
 import AskChangesCompleted from "../../../components/modals/booking/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../../components/modals/booking/SlotImpactedWarning/SlotImpactedWarning";
 import ServiceImpactedWarning from "../../../components/modals/booking/ServiceImpactedWarning/ServiceImpactedWarning";

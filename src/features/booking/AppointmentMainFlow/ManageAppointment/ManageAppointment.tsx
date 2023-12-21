@@ -1,11 +1,11 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {StepWrapper} from "./StepWrapper";
+import {StepWrapper} from "../AppointmentFrame/StepWrapper";
 import {Actions} from "../../Actions/Actions";
 import {AppointmentUserData} from "../../../../components/AppointmentUserData/AppointmentUserData";
-import {Button, styled} from "@material-ui/core";
+import {Button} from "@material-ui/core";
 import {AppointmentSelectedDate} from "../../../../components/AppointmentSelectedDate/AppointmentSelectedDate";
 import {AppointmentReminders} from "../../../../components/AppointmentReminders/AppointmentReminders";
-import {TArgCallback, TCallback} from "../../../../types/types";
+import {TArgCallback, TCallback, TError} from "../../../../types/types";
 import {decodeSCID} from "../../../../utils/utils";
 import {
     clearAppointmentData,
@@ -13,7 +13,10 @@ import {
     loadAppointmentRequestsPrices,
     setAppointmentSaving,
     setCurrentFrameScreen,
-    setReminders, setServiceOptionChanged, setSideBarSteps, setVehicle,
+    setReminders,
+    setServiceOptionChanged,
+    setSideBarSteps,
+    setVehicle,
     setWelcomeScreenView
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -21,21 +24,22 @@ import {RootState} from "../../../../store/rootReducer";
 import {useHistory, useParams} from "react-router-dom";
 import {useConfirm, useCurrentUser, useException, useMessage, useModal} from "../../../../utils/hooks";
 import {
-    loadAllServiceCategories, loadSRs, setCustomerLoadedData,
+    loadAllServiceCategories,
+    loadSRs,
+    setCustomerLoadedData,
 } from "../../../../store/reducers/appointment/actions";
 import AppointmentVehicleInfo from "../../../../components/AppointmentVehicleInfo/AppointmentVehicleInfo";
 import PaymentType from "../../../../components/modals/booking/PaymentType/PaymentType";
 import {useTranslation} from "react-i18next";
-import ServiceRequestsManage from "./manageSections/ServiceRequestsManage";
-import {SelectedPriceManage} from "./manageSections/SelectedPriceManage";
-import ServiceTypeManage from "./manageSections/ServiceTypeManage";
-import {ReviewManage} from "./manageSections/ReviewManage";
-import ConfirmCancelUpdate from "../../../../components/modals/booking/ConfirmCancelUpdate/ConfirmCancelUpdate";
+import ServiceRequestsManaging from "./ServiceRequestsManaging/ServiceRequestsManaging";
+import {SelectedPriceManaging} from "./SelectedPriceManaging/SelectedPriceManaging";
+import ServiceTypeManaging from "./ServiceTypeManaging/ServiceTypeManaging";
+import {ReviewManaging} from "./ReviewManaging/ReviewManaging";
+import ConfirmCancelUpdate from "./ConfirmCancelUpdateModal/ConfirmCancelUpdate";
 import {ILoadedVehicle} from "../../../../api/types";
 import {loadCategoriesByQuery} from "../../../../store/reducers/categories/actions";
 import {Loading} from "../../../../components/Loading/Loading";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";
-import AddressManage from "./manageSections/AddressManage";
 import {API} from "../../../../api/api";
 import {Routes} from "../../../../config/routes";
 import {isMobile} from 'react-device-detect';
@@ -43,50 +47,8 @@ import moment from "moment/moment";
 import DetailedFeesManage from "../../../../components/modals/booking/DetailedFees/DetailedFeesManage";
 import {loadFirstScreenOptionsByQuery} from "../../../../store/reducers/serviceTypes/actions";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
-
-const Wrapper = styled('div')(({theme}) => ({
-    display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
-    gap: "80px",
-    "&>div": {
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
-        justifyContent: "flex-start",
-        alignItems: "stretch"
-    },
-    "& > .itemizedLink": {
-        textDecoration: 'underline',
-        textTransform: 'none',
-    },
-    [theme.breakpoints.down("sm")]: {
-        gridTemplateColumns: "1fr"
-    },
-}));
-
-const ButtonWrapper = styled('div')(({theme}) => ({
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    "& > button": {
-        color: "#142EA1"
-    }
-}));
-
-const ManageTitle = styled('div')({
-    fontSize: 20,
-    fontWeight: 700,
-    textTransform: 'uppercase'
-})
-
-const Info = styled('div')({
-    fontSize: 12
-});
-
-interface TError {
-    field: string,
-    message: string
-}
+import AddressManaging from "./AddressManaging/AddressManaging";
+import {ButtonWrapper, Info, ManageTitle, Wrapper} from "./styles";
 
 type TProps = {
     onChangeSlot: TCallback;
@@ -274,18 +236,18 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
                     <div>
                         <AppointmentSelectedDate onChangeSlot={onChangeSlot} />
                         <AppointmentVehicleInfo/>
-                        <ServiceRequestsManage/>
-                        <AddressManage/>
-                        <SelectedPriceManage/>
+                        <ServiceRequestsManaging/>
+                        <AddressManaging/>
+                        <SelectedPriceManaging/>
                         <div
                             role="presentation"
                             style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
                             onClick={onFeesOpen}>
                             {t("View itemized fees of services")}
                         </div>
-                        <ServiceTypeManage/>
+                        <ServiceTypeManaging/>
                         {appointmentFrame.transportation || appointmentFrame.serviceTypeOption?.transportationOption || isAdvisorAvailable
-                            ? <ReviewManage/>
+                            ? <ReviewManaging/>
                             : null}
                     </div>
                     <div>

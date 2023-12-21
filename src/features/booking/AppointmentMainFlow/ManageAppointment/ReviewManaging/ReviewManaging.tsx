@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
-import {ConfirmationTitle} from "../Title";
-import {styled} from "@material-ui/core";
+import {ConfirmationTitle} from "../../AppointmentFrame/Title";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
@@ -8,24 +7,12 @@ import {Edit} from "@material-ui/icons";
 import {
     setAdvisor,
     setCurrentFrameScreen,
-    setEditingPosition, setServiceOptionChanged
+    setEditingPosition,
+    setServiceOptionChanged
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
+import {Wrapper} from "./styles";
 
-const Wrapper = styled('ul')({
-    display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    flexDirection: "column",
-    gap: "12px",
-    margin: "12px 0 0",
-    padding: 0,
-    listStyle: "none",
-    "& .service-item": {
-        textTransform: "capitalize"
-    }
-});
-
-export const ReviewManage = () => {
+export const ReviewManaging = () => {
     const [
         advisor,
         isAnyAdvisorSelected,
