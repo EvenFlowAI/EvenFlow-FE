@@ -1,9 +1,9 @@
 import React from 'react';
 import {Button} from "@material-ui/core";
-import {TActionProps} from '../AppointmentMainFlow/AppointmentFrame/types';
 import {Loading} from "../../../components/Loading/Loading";
 import {useTranslation} from "react-i18next";
 import {ButtonsRow} from "./styles";
+import {TActionProps} from "../../../types/types";
 
 export const Actions: React.FC<TActionProps> = (
     {

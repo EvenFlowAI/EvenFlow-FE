@@ -114,3 +114,25 @@ export const pricingRoot: TTitle = {
     to: Routes.Pricing.Base,
     title: "Pricing"
 }
+
+export const SCREENS = {
+    carSelection: 'Car Selection',
+    serviceNeeds: 'Service Needs',
+    packageSelection: 'Package Selection',
+    maintenanceDetails: 'Car Details',
+    carDetails: 'Car Details',
+    consultantSelection: 'Consultant Selection',
+    serviceSelection: 'Service Selection',
+    describeMore: 'Describe More',
+    appointmentConfirmation: 'Appointment Confirmation',
+    appointmentSelection: 'Appointment Selection',
+    appointmentConfirmed: 'Appointment Confirmed',
+    appointmentTiming: 'Appointment Timing',
+    transportationNeeds: 'Transportation Needs',
+    opsCode: "opsCode",
+    vehicleData: "vehicleData",
+    location: "Your Location",
+    payment: "payment",
+    serviceOfferProductPage: "Service Offer Produce Page",
+    manageAppointment: "Manage Appointment",
+}

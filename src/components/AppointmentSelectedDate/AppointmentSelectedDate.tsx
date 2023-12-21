@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ConfirmationTitle} from "../../features/booking/AppointmentMainFlow/AppointmentFrame/Title";
+import {AppointmentConfirmationTitle} from "../AppointmentConfirmationTitle/AppointmentConfirmationTitle";
 import moment from "moment";
 import {Edit} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
@@ -77,9 +77,9 @@ export const AppointmentSelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     }
     return <div>
         <TitleWrapper>
-            <ConfirmationTitle>
+            <AppointmentConfirmationTitle>
                 {t("Selected Date & Time")}
-            </ConfirmationTitle>
+            </AppointmentConfirmationTitle>
             <Edit htmlColor="#142EA1" fontSize="small" onClick={handleChangeSlot} style={{cursor: "pointer"}}/>
         </TitleWrapper>
         {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment

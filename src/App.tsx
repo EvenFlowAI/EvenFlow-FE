@@ -10,7 +10,7 @@ import {Confirm} from './components/modals/common/Confirm/Confirm';
 import {ProviderContext, SnackbarProvider} from "notistack";
 import {Close} from "@material-ui/icons";
 import {BookingFlowPage} from "./pages/booking/BookingFlow/BookingFlowPage";
-import {AppointmentMainFlow} from "./pages/booking/AppointmentMainFlow/AppointmentMainFlow";
+import {AppointmentFlow} from "./pages/booking/AppointmentFlow/AppointmentFlow";
 import ValueService from "./pages/booking/ValueService/ValueService";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/rootReducer";
@@ -109,7 +109,7 @@ const App = () => {
                     maxHeight: "-webkit-fill-available"}}>
                 <Confirm/>
                 <Switch>
-                    <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentMainFlow} />
+                    <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentFlow} />
                     <Route path={Routes.EndUser.CancelAppointment} exact component={BookingFlowPage} />
                     <Route path={Routes.EndUser.EditAppointment} exact component={BookingFlowPage} />
                     <Route path={Routes.EndUser.Base} exact component={BookingFlowPage} />

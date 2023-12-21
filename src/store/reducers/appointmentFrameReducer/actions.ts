@@ -30,9 +30,15 @@ import {
     TMaintenanceDetails,
     TYear
 } from "./types";
-import {AppThunk, PaginatedAPIResponse, TScreen, TView} from "../../../types/types";
+import {AppThunk, IMaintenanceItem, IRecallByVin, PaginatedAPIResponse, TScreen, TView} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {decodeSCID, getYearOptions} from "../../../utils/utils";
+import {
+    collectServiceRequestIds,
+    decodeSCID,
+    getCategories, getVehicleData,
+    getYearOptions,
+    mapRecallsForRequest
+} from "../../../utils/utils";
 import {
     getSlotsConsultantId,
     saveCustomerCache,
@@ -43,18 +49,11 @@ import {
     setCustomerLoadedData,
     setWaitListSettings
 } from "../appointment/actions";
-import {IMaintenanceItem, IRecallByVin} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
 import {TPackagePrice} from "../packages/types";
 import {updateSelectedRecalls} from "../recall/actions";
 import {EServiceCategoryType} from "../categories/types";
-import {
-    collectServiceRequestIds,
-    getCategories,
-    getVehicleData,
-    mapRecallsForRequest
-} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/utils";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
 import {EScheduler} from "../appointments/types";
 import {setAppointmentsLoading} from "../appointments/actions";

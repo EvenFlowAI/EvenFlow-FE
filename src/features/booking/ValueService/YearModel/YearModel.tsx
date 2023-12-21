@@ -2,9 +2,8 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {Autocomplete} from "@material-ui/lab";
 import {useDispatch, useSelector} from "react-redux";
 import {autocompleteRender} from "../../../../utils/AutocompleteRender";
-import {StepWrapper} from "../../AppointmentMainFlow/AppointmentFrame/StepWrapper";
+import {StepWrapper} from "../../../../components/styled/StepWrapper";
 import {Actions} from "../../Actions/Actions";
-import {TActionProps} from "../../AppointmentMainFlow/AppointmentFrame/types";
 import {loadSeriesModels, setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {TModel, TSeries} from "../../../../store/reducers/appointmentFrameReducer/types";
@@ -15,6 +14,7 @@ import {useOfferInputStyles} from "../../../../commonStyles/useOfferInputStyles"
 import {SelectWrapper} from "../../../../components/styled/SelectWrapper";
 import {ScreenWrapper} from "../../../../components/styled/ScreenWrapper";
 import {SelectsTitle} from "../../../../components/styled/SelectsTitle";
+import {TActionProps} from "../../../../types/types";
 
 export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {valueService, selectedVehicle, seriesModels}= useSelector((state: RootState) => state.appointmentFrame);

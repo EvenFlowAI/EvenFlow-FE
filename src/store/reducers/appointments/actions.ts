@@ -4,15 +4,11 @@ import {IAppointmentsRequest, ICheckPodRequest, IPackageRequestData, TScheduler,
 import {AppThunk, IPageRequest, TArgCallback} from "../../../types/types";
 import {API} from "../../../api/api";
 import {Api} from "../../../config/requests";
-import {
-    collectServiceRequestIds,
-    getCategories,
-    getVehicleData, mapRecallsForRequest
-} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/utils";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType} from "../appointment/types";
 import {setAppointmentSaving} from "../appointmentFrameReducer/actions";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../modals/actions";
+import {collectServiceRequestIds, getCategories, getVehicleData, mapRecallsForRequest} from "../../../utils/utils";
 
 export const getAppointments = createAction<IAppointment[]>("Appointments/GetAppointments");
 export const getAllAppointments = createAction<IAppointment[]>("Appointments/GetAllAppointments");

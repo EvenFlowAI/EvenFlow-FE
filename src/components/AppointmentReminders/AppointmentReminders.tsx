@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo} from 'react';
-import {ConfirmationTitle} from '../../features/booking/AppointmentMainFlow/AppointmentFrame/Title';
+import {AppointmentConfirmationTitle} from '../AppointmentConfirmationTitle/AppointmentConfirmationTitle';
 import {Checkbox, FormControlLabel} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
@@ -42,7 +42,7 @@ export const AppointmentReminders: React.FC<TRemindersProps> = ({isEmailRequired
 
     return (
         <div>
-            <ConfirmationTitle>{t("Reminders")}</ConfirmationTitle>
+            <AppointmentConfirmationTitle>{t("Reminders")}</AppointmentConfirmationTitle>
             <FlexGroup>
                 <FormControlLabel
                     label={t("Text")}

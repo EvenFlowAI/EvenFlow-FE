@@ -173,7 +173,6 @@ export type TScreen =
     | "packageSelection"
     | "describeMore"
     | "opsCode"
-    | "vehicleData"
     | "consultantSelection"
     | "appointmentTiming"
     | "appointmentSelection"
@@ -191,7 +190,6 @@ export type TMobileScreen =
     | "packageSelection"
     | "describeMore"
     | "opsCode"
-    | "vehicleData"
     | "appointmentTiming"
     | "appointmentSelection"
     | "appointmentConfirmation"
@@ -204,3 +202,36 @@ export interface TError {
     field: string,
     message: string
 }
+
+export type EMaintenanceItemType = 'category' | 'package' | 'service' | 'valueService' | 'recall'
+export type IMaintenanceItem = {
+    id?: number;
+    name: string;
+    type: EMaintenanceItemType;
+    nhtsaRecallNumber?: string;
+}
+
+export interface IRecallByVin {
+    shortDescription: string;
+    recallOpenDate: string;
+    recallComponent: string;
+    nhtsaRecallNumber: string;
+    recallStatus: string;
+    summary: string;
+    safetyRisk: string;
+    serviceRequestId: number;
+    id: number | null;
+}
+
+export type TActionProps = {
+    onBack: () => void;
+    onNext: () => void;
+    nextDisabled?: boolean;
+    nextLabel?: string;
+    loading?: boolean;
+    onAddServices?: () => void;
+    prevDisabled?: boolean;
+    prevLabel?: string;
+    hideNext?: boolean;
+    hidePrev?: boolean;
+};

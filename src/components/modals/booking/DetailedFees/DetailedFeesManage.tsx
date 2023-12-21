@@ -7,9 +7,9 @@ import {Dialog} from "@material-ui/core";
 import {ErrorOutline} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";
 import {EOfferType} from "../../../../store/reducers/offers/types";
-import {getOfferString} from "../../../../features/booking/AppointmentMainFlow/AppointmentFrame/utils";
 import {DetailedFeesInfo, DetailedFeesList, useStyles} from "./styles";
 import {useDialogStyles} from "../../../../commonStyles/useDialogStyles";
+import {getOfferString} from "../../../../utils/utils";
 
 const DetailedFeesManage: React.FC<DialogProps> = ({ open, onClose, }) => {
     const { scProfile} = useSelector((state: RootState) => state.appointment);

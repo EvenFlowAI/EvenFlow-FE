@@ -1,8 +1,7 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {IRecall} from "./types";
 import {getRecalls, getRecallsByVin, setLoading, setRecallPageData, setRecallsCount} from "./actions";
-import {IPageRequest} from "../../../types/types";
-import {IRecallByVin} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/types";
+import {IPageRequest, IRecallByVin} from "../../../types/types";
 
 type TState = {
     recalls: IRecall[];

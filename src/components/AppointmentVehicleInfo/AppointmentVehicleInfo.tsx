@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {ConfirmationTitle} from "../../features/booking/AppointmentMainFlow/AppointmentFrame/Title";
+import {AppointmentConfirmationTitle} from "../AppointmentConfirmationTitle/AppointmentConfirmationTitle";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {useTranslation} from "react-i18next";
@@ -14,7 +14,7 @@ const AppointmentVehicleInfo = () => {
     return (
         <div>
             <TitleWrapper>
-                <ConfirmationTitle>{t("Vehicle")}</ConfirmationTitle>
+                <AppointmentConfirmationTitle>{t("Vehicle")}</AppointmentConfirmationTitle>
             </TitleWrapper>
             {valueService?.selectedService ? <>
                 {valueService?.year?.year} <span style={{textTransform: 'uppercase'}}>{valueService?.series?.name}</span> {valueService?.model?.name}

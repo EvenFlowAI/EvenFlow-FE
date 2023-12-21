@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect} from 'react';
-import {ConfirmationTitle} from "../../features/booking/AppointmentMainFlow/AppointmentFrame/Title";
+import {AppointmentConfirmationTitle} from "../AppointmentConfirmationTitle/AppointmentConfirmationTitle";
 import {TextField} from "../FormControls/TextFieldStyled/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
@@ -38,7 +38,7 @@ export const AppointmentUserData: React.FC<TUserDataProps> = ({ errors, setError
     }
     return (
         <Wrapper>
-            <ConfirmationTitle>{t("Customer Information")}</ConfirmationTitle>
+            <AppointmentConfirmationTitle>{t("Customer Information")}</AppointmentConfirmationTitle>
             <TextField
                 onChange={handleChange}
                 value={customer?.fullName}
