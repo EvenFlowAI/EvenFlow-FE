@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {PackagesStepWrapper} from "./StepWrapper";
+import {PackagesStepWrapper} from "../AppointmentFrame/StepWrapper";
 import {Actions} from "../../Actions/Actions";
 import {styled, Theme, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -30,7 +30,7 @@ import ReactGA from "react-ga4";
 import {useException, useModal} from "../../../../utils/hooks";
 import ConfirmChangeOption from "../../../../components/modals/booking/ConfirmChangeOption/ConfirmChangeOption";
 import AskAddService from "../../../../components/modals/booking/AskAddService/AskAddService";
-import {getPackagesData} from "./utils";
+import {getPackagesData} from "../AppointmentFrame/utils";
 import PackageTitles from "./PackageSelectionParts/PackageTitles";
 import IncludedInPackage from "./PackageSelectionParts/IncludedInPackage";
 import TotalMaintenance from "./PackageSelectionParts/TotalMaintenance";

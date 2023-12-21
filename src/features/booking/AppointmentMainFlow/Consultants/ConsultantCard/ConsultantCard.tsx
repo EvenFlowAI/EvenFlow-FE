@@ -12,6 +12,7 @@ type TCardProps = {
     active?: boolean;
     onClick: TCallback;
 }
+
 export const ConsultantCard: React.FC<TCardProps> = ({advisor, blank, active, onClick}) => {
     const {t} = useTranslation();
     return <ConsultantWrapper onClick={onClick} active={active}>

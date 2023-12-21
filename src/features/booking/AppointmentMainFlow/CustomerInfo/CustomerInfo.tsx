@@ -1,21 +1,9 @@
 import React from 'react';
 import {useTranslation} from "react-i18next";
-import {makeStyles} from "@material-ui/core/styles";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
-
-const useStyles = makeStyles({
-    wrapper: {
-        fontSize: 16,
-        color: "#202021",
-        fontWeight: 600,
-    },
-    title: {
-        textTransform: "uppercase",
-        marginBottom: 8
-    }
-})
+import {useStyles} from "./styles";
 
 const CustomerInfo = () => {
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);

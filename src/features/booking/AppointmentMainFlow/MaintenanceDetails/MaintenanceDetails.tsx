@@ -1,11 +1,11 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {autocompleteRender} from "../../../../utils/AutocompleteRender";
 import {Autocomplete} from "@material-ui/lab";
-import {styled, useMediaQuery, useTheme} from "@material-ui/core";
-import {StepWrapper} from "./StepWrapper";
+import {useMediaQuery, useTheme} from "@material-ui/core";
+import {StepWrapper} from "../AppointmentFrame/StepWrapper";
 import {Actions} from "../../Actions/Actions";
 import {useDispatch, useSelector} from "react-redux";
-import {EServiceType, EUserType, TMaintenanceDetails} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {
     clearAppointmentSteps,
     setRecallsAreShown,
@@ -17,56 +17,27 @@ import {
 import {RootState} from "../../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryPage, EServiceCenterName, ILoadedVehicle} from "../../../../api/types";
-import moment from "moment";
 import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
 import {useException, useModal} from "../../../../utils/hooks";
-import {decodeSCID} from "../../../../utils/utils";
+import {decodeSCID, getYearOptions} from "../../../../utils/utils";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
 import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
 import {TArgCallback, TScreen} from "../../../../types/types";
-import RecallsByVin from "../../../../components/modals/booking/RecallsByVin/RecallsByVin";
+import RecallsByVinModal from "../RecallsByVinModal/RecallsByVinModal";
 import {Api} from "../../../../config/requests";
 import {Loading} from "../../../../components/Loading/Loading";
-import {makeStyles} from "@material-ui/core/styles";
-import NoRecalls from "../../../../components/modals/booking/RecallsByVin/NoRecalls/NoRecalls";
+import NoRecallsModal from "../NoRecallsModal/NoRecallsModal";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
-
-const SelectWrapper = styled('div')(({theme}) => ({
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "20px",
-    width: "100%",
-    [theme.breakpoints.down("sm")]: {
-        gridTemplateColumns: "1fr"
-    }
-}));
-
-const useStyles = makeStyles(() => ({
-    vinWrapper: {
-        '& > label': {
-            textTransform: 'none',
-            fontSize: 14,
-            color: "#142EA1",
-            fontWeight: "normal",
-        }
-    }
-}))
-
-let year = moment.utc().year()
-if (moment().month() > 6) year = moment.utc().add(1, 'year').year();
-const YEARS = year - 1982;
-export const yearOptions: string[] = Array(YEARS).fill(0).map((_, idx) => String(year - idx));
-
-type TOptionsState = {[s: string]: string[]};
-const blankOptions: TOptionsState = {};
-
-type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
+import {SelectWrapper, useStyles} from "./styles";
+import {TKey, TOptionsState} from "./types";
 
 type TMaintenanceDetailsProps = {
     onBack: TArgCallback<TScreen>;
     onNext: TArgCallback<TScreen>;
 }
+
+const blankOptions: TOptionsState = {};
 
 export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack}) => {
     const {
@@ -390,7 +361,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                 <Autocomplete
                     key="year"
                     style={orderMapStyles.year}
-                    options={yearOptions}
+                    options={getYearOptions()}
                     onChange={handleChange('year', false)}
                     fullWidth
                     disableClearable
@@ -490,7 +461,6 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                             required={requiredFields.includes("vin") || isRecallsCategorySelected}
                             fullWidth
                             disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length && isExistingVin)}
-                            //disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length) || (recallsAreShown && !isRecallsCategorySelected)}
                             value={selectedVehicle ? selectedVehicle.vin : ""}
                             placeholder={errors.includes("vin")
                                 ? `${t("VIN")} ${t("required")}`
@@ -506,13 +476,13 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
             nextDisabled={isNextDisabled || isLoading}
             nextLabel={isRecallsCategorySelected ? t("Check for Recalls") : t("Next")}
         />
-        <RecallsByVin
+        <RecallsByVinModal
             open={isOpen}
             onClose={onClose}
             handleNext={handleNext}
             handleAddServices={handleAddServices}
             onDeclineRecalls={handleDeclineRecalls}
         />
-        <NoRecalls open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleDeclineRecalls}/>
+        <NoRecallsModal open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleDeclineRecalls}/>
     </StepWrapper>);
 };

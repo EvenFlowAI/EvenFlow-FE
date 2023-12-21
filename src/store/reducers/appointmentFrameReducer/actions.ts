@@ -32,7 +32,7 @@ import {
 } from "./types";
 import {AppThunk, PaginatedAPIResponse, TScreen, TView} from "../../../types/types";
 import {Api} from "../../../config/requests";
-import {decodeSCID} from "../../../utils/utils";
+import {decodeSCID, getYearOptions} from "../../../utils/utils";
 import {
     getSlotsConsultantId,
     saveCustomerCache,
@@ -56,7 +56,6 @@ import {
     mapRecallsForRequest
 } from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/utils";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
-import {yearOptions} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/MaintenanceDetails";
 import {EScheduler} from "../appointments/types";
 import {setAppointmentsLoading} from "../appointments/actions";
 
@@ -514,6 +513,7 @@ export const setVehicleDataFromValueService = (): AppThunk => (dispatch, getStat
         const bmwMake = makes.find(item => item.name === "BMW");
         if (bmwMake) {
             vehicle.make = bmwMake.name;
+            const yearOptions = getYearOptions();
             if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
                 vehicle.year = Number(valueService.year.year)
             }

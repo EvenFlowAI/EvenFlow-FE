@@ -1,22 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {loadRecallsByVin} from "../../../../store/reducers/recall/actions";
 import {decodeSCID} from "../../../../utils/utils";
-import {DialogProps} from "../../../BaseModal/types";
-import {Loading} from "../../../Loading/Loading";
+import {DialogProps} from "../../../../components/BaseModal/types";
+import {Loading} from "../../../../components/Loading/Loading";
 import {Button, Divider} from "@material-ui/core";
-import {IRecallByVin} from "../../../../features/booking/AppointmentMainFlow/AppointmentFrame/types";
+import {IRecallByVin} from "../AppointmentFrame/types";
 import moment from "moment";
 import {
     checkCarIsValid,
     setAdditionalServicesChosen,
     setSelectedRecalls
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
-import AskAddService from "../AskAddService/AskAddService";
+import AskAddService from "../../../../components/modals/booking/AskAddService/AskAddService";
 import {useException, useModal} from "../../../../utils/hooks";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 import {CustomSwitch, Label, useStyles} from "./styles";
@@ -27,7 +27,7 @@ type TRecallsByVinProps = DialogProps & {
     handleAddServices: () => void,
 }
 
-const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
+const RecallsByVinModal: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
     const {selectedVehicle, makes, isUsualFlowNeeded} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
@@ -171,4 +171,4 @@ const RecallsByVin: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, 
     );
 };
 
-export default RecallsByVin;
+export default RecallsByVinModal;

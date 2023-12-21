@@ -4,7 +4,7 @@ import {InfoOutlined} from "@material-ui/icons";
 import {IPackageOptions} from "../../../../../api/types";
 import {TPackage, TService} from "../PackageSelection";
 import {useTranslation} from "react-i18next";
-import {HtmlTooltip} from "../ServiceCard";
+import {HtmlTooltip} from "../../AppointmentFrame/ServiceCard";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 
 type TIncludedInPackageProps = {

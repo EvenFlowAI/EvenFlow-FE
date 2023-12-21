@@ -6,7 +6,7 @@ import {
     IPackageOptions,
     IServiceCategory,
 } from "../../../../api/types";
-import {TComplimentary, TPackage, TService, TUpsell} from "./PackageSelection";
+import {TComplimentary, TPackage, TService, TUpsell} from "../MaintenancePackages/PackageSelection";
 import {EOfferType} from "../../../../store/reducers/offers/types";
 import {EServiceType, IValueService} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {IRecallByVin, TParsedAddress} from "./types";

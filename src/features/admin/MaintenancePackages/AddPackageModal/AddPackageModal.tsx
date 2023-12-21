@@ -8,7 +8,6 @@ import {IconButton, Button, Divider} from "@material-ui/core";
 import OpsCode from "./parts/OpsCodeLabel/OpsCodeLabel";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../../utils/AutocompleteRender";
-import {yearOptions} from "../../../booking/AppointmentMainFlow/AppointmentFrame/MaintenanceDetails";
 import {useException, useModal, useSCs} from "../../../../utils/hooks";
 import AssignOpsCode from "./parts/AssignOpsCodeModal/AssignOpsCodeModal";
 import AddOpsCode from "../../../../components/modals/admin/AddOpsCode/AddOpsCode";
@@ -36,6 +35,7 @@ import AssignedOpsCodes from "./parts/AssignedOpsCodes/AssignedOpsCodes";
 import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
 import EngineTypes from "./parts/EngineTypes/EngineTypes";
 import AddUpsellToPackageModal from "./parts/AddUpsellToPackageModal/AddUpsellToPackageModal";
+import {getYearOptions} from "../../../../utils/utils";
 
 
 type TModalProps = DialogProps & {
@@ -203,6 +203,7 @@ const useAutocompleteStyles = makeStyles(() => ({
 }))
 
 const criteriaOptions = Object.keys(ECustomerCriteria).filter(key => Number.isNaN(+key));
+const yearOptions = getYearOptions();
 
 const initialValues = {
     mileageFrom: '',

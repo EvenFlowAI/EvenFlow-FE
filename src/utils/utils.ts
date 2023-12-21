@@ -376,3 +376,10 @@ export const getStartEndDates = (date: moment.Moment, isXS: boolean): [string, s
         moment(correctedDate).endOf("week").add(1, 'days').add(utcOffset, 'minutes').toISOString(),
     ]
 }
+
+export const getYearOptions = () => {
+    let year = moment.utc().year()
+    if (moment().month() > 6) year = moment.utc().add(1, 'year').year();
+    const YEARS = year - 1982;
+    return Array(YEARS).fill(0).map((_, idx) => String(year - idx));
+}

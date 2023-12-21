@@ -1,11 +1,11 @@
 import React from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../BaseModal/BaseModal";
-import {DialogProps} from "../../../../BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/BaseModal/types";
 import {Button} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 import {useStyles} from "./styles";
 
-const NoRecalls: React.FC<DialogProps & {handleNext : () => void}> = ({ open, onClose, handleNext }) => {
+const NoRecallsModal: React.FC<DialogProps & {handleNext : () => void}> = ({ open, onClose, handleNext }) => {
     const classes = useStyles();
     const {t} = useTranslation();
 
@@ -28,4 +28,4 @@ const NoRecalls: React.FC<DialogProps & {handleNext : () => void}> = ({ open, on
     );
 };
 
-export default NoRecalls;
+export default NoRecallsModal;

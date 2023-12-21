@@ -1,5 +1,5 @@
 import React from 'react';
-import {IServiceCategory} from "../../../../api/types";
+import {IServiceCategory} from "../../../../../api/types";
 import {getOfferView} from "./utils";
 import {PriceValue, Wrapper} from "./styles";
 

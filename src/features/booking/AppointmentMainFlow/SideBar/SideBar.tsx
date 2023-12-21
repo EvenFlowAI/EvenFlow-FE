@@ -1,66 +1,21 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
-import {Button, styled, useMediaQuery, useTheme} from "@material-ui/core";
-import {ProgressStepper} from "../../ProgressStepper/ProgressStepper";
+import {Button, useMediaQuery, useTheme} from "@material-ui/core";
 import {
-    setAdditionalServicesChosen, setSideBarActualSteps, setSideBarMenu,
-    setSideBarSteps, setSideBarStepsList
+    setAdditionalServicesChosen,
+    setSideBarActualSteps,
+    setSideBarMenu,
+    setSideBarSteps,
+    setSideBarStepsList
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
-import {getCurrentMenu, getStepsMap, getStepsScreen} from "./utils";
+import {getCurrentMenu, getStepsMap, getStepsScreen} from "../AppointmentFrame/utils";
 import {Loading} from "../../../../components/Loading/Loading";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {TScreen} from "../../../../types/types";
-
-const Wrapper = styled('ul')(({theme}) => ({
-    listStyle: "none",
-    margin: 0,
-    padding: 0,
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-    alignItems: "stretch",
-    justifyContent: "center",
-    "& button": {
-        justifyContent: "flex-start",
-        textAlign: "left",
-        fontSize: 18,
-        textTransform: "none"
-    },
-    [theme.breakpoints.down("sm")]: {
-        marginBottom: "auto"
-    }
-}));
-
-const Index = styled('span')({
-    fontSize: 32,
-    display: "inline-block",
-    paddingRight: 8,
-    minWidth: 28
-});
-
-const MobileWrapper = styled('div')({
-
-});
-
-type TStepProps = {
-    active: number;
-    steps: number;
-    currentLabel: string;
-    nextLabel?: string;
-}
-
-const MobileSteps: React.FC<TStepProps> = ({active, steps, currentLabel, nextLabel}) => {
-    return <MobileWrapper>
-        <ProgressStepper
-            steps={steps}
-            activeStep={active}
-            label={currentLabel}
-            nextLabel={nextLabel}
-        />
-    </MobileWrapper>;
-}
+import {MobileSteps} from "./MobileSteps/MobileSteps";
+import {Index, Wrapper} from "./styles";
 
 type TProps = {
     screen: TScreen;

@@ -1,27 +1,14 @@
 import React, {useMemo} from 'react';
-import {styled} from "@material-ui/core";
 import {useCurrentUser, useModal} from "../../../../utils/hooks";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {SideBar} from "./SideBar";
+import {SideBar} from "../SideBar/SideBar";
 import AppointmentNotes from "../AppointmentNotes/AppointmentNotes";
 import VehicleRepairHistory from "../../../../components/modals/common/VehicleRepairHistory/VehicleRepairHistory";
 import {useTranslation} from "react-i18next";
-import CustomerInfo from "./CustomerInfo";
+import CustomerInfo from "../CustomerInfo/CustomerInfo";
 import {TScreen} from "../../../../types/types";
-
-const SectionWrapper = styled('div')(() => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '30px',
-    alignItems: "stretch",
-    justifyContent: "center",
-}))
-
-const RoHistoryLink = styled('div')(() => ({
-    fontSize: 16,
-    fontWeight: 600,
-}))
+import {RoHistoryLink, SectionWrapper} from "./styles";
 
 type TProps = {
     screen: TScreen;

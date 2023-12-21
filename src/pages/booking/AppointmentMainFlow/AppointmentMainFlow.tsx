@@ -3,9 +3,9 @@ import {MuiThemeProvider, styled, useMediaQuery, useTheme} from "@material-ui/co
 import {AppointmentCarSelection} from "../../../features/booking/AppointmentMainFlow/AppointmentCarSelection/AppointmentCarSelection";
 import {frameTheme} from "../../../theme/theme";
 import {ServiceNeedsFrame} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/ServiceNeedsFrame";
-import {SideBar} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/SideBar";
+import {SideBar} from "../../../features/booking/AppointmentMainFlow/SideBar/SideBar";
 import {Subtitle, Title} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/Title";
-import {MaintenanceDetails} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/MaintenanceDetails";
+import {MaintenanceDetails} from "../../../features/booking/AppointmentMainFlow/MaintenanceDetails/MaintenanceDetails";
 import {Consultants} from '../../../features/booking/AppointmentMainFlow/Consultants/Consultants';
 import {AppointmentTiming} from '../../../features/booking/AppointmentMainFlow/AppointmentTiming/AppointmentTiming';
 import {AppointmentSlots} from '../../../features/booking/AppointmentMainFlow/AppointmentSlots/AppointmentSlots';
@@ -13,7 +13,7 @@ import {TransportationNeeds} from '../../../features/booking/AppointmentMainFlow
 import {AppointmentConfirmation} from '../../../features/booking/AppointmentMainFlow/AppointmentConfirmation/AppointmentConfirmation';
 import {AppointmentComment} from "../../../features/booking/AppointmentMainFlow/AppointmentComment/AppointmentComment";
 import {ServiceSelection} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/ServiceSelection";
-import {PackageSelection} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/PackageSelection";
+import {PackageSelection} from "../../../features/booking/AppointmentMainFlow/MaintenancePackages/PackageSelection";
 import {SelectOpsCode} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/SelectOpsCode";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
@@ -71,7 +71,7 @@ import {ManageAppointment} from "../../../features/booking/AppointmentMainFlow/A
 import AskChangesCompleted from "../../../components/modals/booking/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../../components/modals/booking/SlotImpactedWarning/SlotImpactedWarning";
 import ServiceImpactedWarning from "../../../components/modals/booking/ServiceImpactedWarning/ServiceImpactedWarning";
-import SideBarSection from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/SideBarSection";
+import SideBarSection from "../../../features/booking/AppointmentMainFlow/SideBarSection/SideBarSection";
 import {TMobileScreen, TScreen, TView} from "../../../types/types";
 
 const Container = styled('div')({

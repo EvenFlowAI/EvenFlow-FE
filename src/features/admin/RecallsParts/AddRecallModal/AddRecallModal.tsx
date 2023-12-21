@@ -13,9 +13,9 @@ import {IMakeExtended, IModel} from "../../../../api/types";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {loadMakesForPods} from "../../../../store/reducers/vehicleDetails/actions";
 import {createRecall, updateRecall} from "../../../../store/reducers/recall/actions";
-import {yearOptions} from "../../../booking/AppointmentMainFlow/AppointmentFrame/MaintenanceDetails";
 import {Textarea, useStyles} from "./styles";
 import {TForm} from "./types";
+import {getYearOptions} from "../../../../utils/utils";
 
 type TAddRecallProps = DialogProps & {
     editingItem: IRecall|null;
@@ -34,6 +34,8 @@ const initialForm: TForm = {
     dailyPartsCount: '',
     serviceRequest: null,
 }
+
+const yearOptions = getYearOptions()
 
 const AddRecallModal: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEditingItem}) => {
     const {makesModels} = useSelector((state: RootState) => state.vehicleDetails);

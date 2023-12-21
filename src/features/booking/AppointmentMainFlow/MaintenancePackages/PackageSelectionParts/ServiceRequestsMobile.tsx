@@ -1,5 +1,5 @@
 import React from 'react';
-import {HtmlTooltip} from "../ServiceCard";
+import {HtmlTooltip} from "../../AppointmentFrame/ServiceCard";
 import {usePackageMobileStyles} from "../PackageSelectionMobile";
 import {TExtendedService} from "../../../../../api/types";
 

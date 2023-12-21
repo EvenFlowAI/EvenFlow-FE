@@ -1,16 +1,16 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
-import {IServiceOffer} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {loadServiceOffers, setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {Loading} from "../../../../components/Loading/Loading";
-import {OffersContainer} from "../../../../components/styled/OffersContainer";
-import {OfferCardWrapper} from "../../../../components/styled/OfferCardWrapper";
-import {ServiceTitle} from "../../../../components/styled/ServiceTitle";
-import {ChangeButton} from "../../../../components/styled/ChangeButton";
-import {OfferPageWrapper} from "../../../../components/styled/OfferPageWrapper";
-import {SubTitle} from "../../../../components/styled/SubTitle";
-import {CarName} from "../../../../components/styled/CarName";
+import {RootState} from "../../../../../store/rootReducer";
+import {IServiceOffer} from "../../../../../store/reducers/appointmentFrameReducer/types";
+import {loadServiceOffers, setValueServicePartial} from "../../../../../store/reducers/appointmentFrameReducer/actions";
+import {Loading} from "../../../../../components/Loading/Loading";
+import {OffersContainer} from "../../../../../components/styled/OffersContainer";
+import {OfferCardWrapper} from "../../../../../components/styled/OfferCardWrapper";
+import {ServiceTitle} from "../../../../../components/styled/ServiceTitle";
+import {ChangeButton} from "../../../../../components/styled/ChangeButton";
+import {OfferPageWrapper} from "../../../../../components/styled/OfferPageWrapper";
+import {SubTitle} from "../../../../../components/styled/SubTitle";
+import {CarName} from "../../../../../components/styled/CarName";
 import {Price, SelectButton} from "./styles";
 
 type TServiceSelectionProps = {
