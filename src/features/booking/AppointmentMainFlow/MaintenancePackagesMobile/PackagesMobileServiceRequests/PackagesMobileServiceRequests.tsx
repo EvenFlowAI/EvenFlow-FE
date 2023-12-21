@@ -1,7 +1,7 @@
 import React from 'react';
-import {HtmlTooltip} from "../../AppointmentFrame/ServiceCard";
 import {TExtendedService} from "../../../../../api/types";
 import {usePackageMobileStyles} from "../../../../../commonStyles/usePackageMobileStyles";
+import {HtmlTooltip} from "../../../../../components/styled/HtmlTooltip";
 
 type TProps = {
     serviceRequests: TExtendedService[];

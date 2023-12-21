@@ -75,17 +75,14 @@ const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeV
             case 1:
                 return handleSetScreen('maintenanceDetails');
             case 3:
-                return handleSetScreen('serviceSelection');
+                return handleSetScreen('serviceNeeds');
             default:
                 return handleSetScreen('describeMore');
         }
     }
 
     const handleBack = () => {
-        handleSetScreen(service?.type === EServiceCategoryType.Diagnose
-        || service?.type === EServiceCategoryType.IndividualServices
-            ? 'serviceNeeds'
-            : 'serviceSelection')
+        handleSetScreen('serviceNeeds')
     }
 
     return (

@@ -1,132 +1,24 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {TActionProps, TTransportationData} from "./types";
-import {StepWrapper} from "./StepWrapper";
+import {TActionProps, TTransportationData} from "../AppointmentFrame/types";
+import {StepWrapper} from "../AppointmentFrame/StepWrapper";
 import {Actions} from '../../Actions/Actions';
-import {styled, Theme} from "@material-ui/core";
 import {Api} from "../../../../config/requests";
 import {decodeSCID} from "../../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {collectServiceRequestIds, mapRecallsForRequest} from "./utils";
+import {collectServiceRequestIds, mapRecallsForRequest} from "../AppointmentFrame/utils";
 import {ITransportation} from '../../../../api/types';
-import {TArgCallback} from "../../../../types/types";
-import {
-    setCurrentFrameScreen,
-    setTransportation
-} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
-import theme from "../../../../theme/theme";
+import {setCurrentFrameScreen, setTransportation} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {Loading} from "../../../../components/Loading/Loading";
 import ReactGA from "react-ga4";
-//import ReactGA from "react-ga";
 import {useTranslation} from "react-i18next";
 import {ETransportColumn} from "../../../../store/reducers/transportationNeeds/types";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import moment from "moment";
 import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions";
-
-const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, {active?: boolean}>(({theme, active}) => ({
-    width: 287,
-    minHeight: 264,
-    fontSize: 22,
-    cursor: "pointer",
-    fontWeight: 700,
-    textAlign: "center",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 12,
-    background: active ? "#000000" : "transparent",
-    color: active ? "#FFFFFF" : theme.palette.text.primary,
-    border: `1px solid ${active ? "#000000" : "#DADADA"}`,
-    transition: "all .2s",
-    [theme.breakpoints.down("sm")]: {
-        minHeight: 100
-    }
-}));
-
-const CardOptions = styled('ul')({
-    listStyle: "none",
-    margin: 0,
-    padding: 0,
-    fontSize: 14,
-    display: "flex",
-    alignItems: "stretch",
-    flexDirection: "column",
-    gap: "8px",
-    fontWeight: "normal",
-    width: "100%",
-    "&>li": {
-        border: '1px solid #DADADA',
-        cursor: "pointer",
-        textAlign: "left",
-        padding: 8,
-        display: "flex",
-        alignItems: "center",
-        gap: "6px",
-        transition: "all .2s",
-        color: theme.palette.text.primary,
-        background: "#FFFFFF",
-        "&.active": {
-            border: "1px solid #FFFFFF",
-            color: "#FFFFFF",
-            background: "#000000"
-        }
-    }
-})
-
-const TransportationWrapper = styled('div')(({theme}) => ({
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    gap: "20px",
-    [theme.breakpoints.down("sm")]: {
-        gridTemplateColumns: "1fr"
-    }
-}));
-
-const TextWrapper = styled('div')(() => ({
-    display: "flex",
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: 20,
-    fontWeight: 'bold',
-    padding: '20px 40px'
-}))
-
-type TTransportationProps = {
-    transportation: string;
-    selectedTransportation: ITransportation|null;
-    active?: boolean;
-    options: ITransportation[]|null;
-    onSelectOption: TArgCallback<ITransportation>;
-}
-const TransportationCard: React.FC<TTransportationProps> = ({selectedTransportation, transportation, active, options, onSelectOption}) => {
-    const {t} = useTranslation();
-
-    const handleClick = (t: ITransportation) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-        e.stopPropagation();
-        onSelectOption(t);
-    }
-
-    return <CardWrapper active={active}>
-        {transportation}
-        {(active && options)
-            ? <CardOptions>{options.map(option => {
-                const isActive = option.type === selectedTransportation?.type
-                    return <li
-                        onClick={handleClick(option)}
-                        className={isActive ? "active" : undefined}
-                        key={option.type}>
-                        {isActive ? <RadioButtonChecked fontSize={'small'} /> : <RadioButtonUnchecked fontSize={'small'} />}
-                        {t(option.description)}
-                    </li>;
-                }
-            )}</CardOptions>
-            : null}
-    </CardWrapper>
-}
+import {TextWrapper, TransportationsWrapper} from "./styles";
+import {TransportationCard} from "./TransportationCard/TransportationCard";
 
 export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {id} = useParams();
@@ -253,13 +145,6 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         handleNext(o);
     }
 
-    // const handleSelectGeneric = (column: ETransportColumn) => {
-    //     const options = transportations.filter(item => item.column === column);
-    //     if (options.length) {
-    //         dispatch(setTransportation(options[0]));
-    //     }
-    // }
-
     const handleBack = () => {
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
             dispatch(setCurrentFrameScreen("manageAppointment"))
@@ -271,7 +156,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     return <StepWrapper>
         {loading ? <Loading/>
-            : transportations.length ? <TransportationWrapper>
+            : transportations.length ? <TransportationsWrapper>
                     {transportationNo.length ? <TransportationCard
                         active
                         selectedTransportation={transportation}
@@ -286,7 +171,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                         transportation={`${t("Yes, I would like")}:`}
                         onSelectOption={handleSelectOption}
                     /> : null}
-            </TransportationWrapper>
+            </TransportationsWrapper>
                 : <TextWrapper>
                     {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
                 </TextWrapper>

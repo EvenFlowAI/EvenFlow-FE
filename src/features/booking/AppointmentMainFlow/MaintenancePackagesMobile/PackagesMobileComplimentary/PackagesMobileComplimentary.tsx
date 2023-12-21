@@ -1,8 +1,8 @@
 import React from 'react';
-import {HtmlTooltip} from "../../AppointmentFrame/ServiceCard";
 import {useTranslation} from "react-i18next";
 import {ESegmentTitle, IPackage, TExtendedComplimentary} from "../../../../../api/types";
 import {usePackageMobileStyles} from "../../../../../commonStyles/usePackageMobileStyles";
+import {HtmlTooltip} from "../../../../../components/styled/HtmlTooltip";
 
 type TProps = {
     isBmWService: boolean;

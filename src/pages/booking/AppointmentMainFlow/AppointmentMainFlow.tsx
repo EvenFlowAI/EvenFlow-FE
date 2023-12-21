@@ -2,19 +2,18 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {MuiThemeProvider, styled, useMediaQuery, useTheme} from "@material-ui/core";
 import {AppointmentCarSelection} from "../../../features/booking/AppointmentMainFlow/AppointmentCarSelection/AppointmentCarSelection";
 import {frameTheme} from "../../../theme/theme";
-import {ServiceNeedsFrame} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/ServiceNeedsFrame";
+import {ServiceNeedsFrame} from "../../../features/booking/AppointmentMainFlow/ServiceNeeds/ServiceNeedsFrame";
 import {SideBar} from "../../../features/booking/AppointmentMainFlow/SideBar/SideBar";
 import {Subtitle, Title} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/Title";
 import {MaintenanceDetails} from "../../../features/booking/AppointmentMainFlow/MaintenanceDetails/MaintenanceDetails";
 import {Consultants} from '../../../features/booking/AppointmentMainFlow/Consultants/Consultants';
 import {AppointmentTiming} from '../../../features/booking/AppointmentMainFlow/AppointmentTiming/AppointmentTiming';
 import {AppointmentSlots} from '../../../features/booking/AppointmentMainFlow/AppointmentSlots/AppointmentSlots';
-import {TransportationNeeds} from '../../../features/booking/AppointmentMainFlow/AppointmentFrame/TransportationNeeds';
+import {TransportationNeeds} from '../../../features/booking/AppointmentMainFlow/TransportationNeeds/TransportationNeeds';
 import {AppointmentConfirmation} from '../../../features/booking/AppointmentMainFlow/AppointmentConfirmation/AppointmentConfirmation';
 import {AppointmentComment} from "../../../features/booking/AppointmentMainFlow/AppointmentComment/AppointmentComment";
-import {ServiceSelection} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/ServiceSelection";
 import {MaintenancePackages} from "../../../features/booking/AppointmentMainFlow/MaintenancePackages/MaintenancePackages";
-import {SelectOpsCode} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/SelectOpsCode";
+import {SelectOpsCode} from "../../../features/booking/AppointmentMainFlow/ServiceOpsCodes/SelectOpsCode";
 import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -57,7 +56,7 @@ import ReactGA from "react-ga4";
 // import ReactGA from "react-ga";
 import YourLocation from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/YourLocation";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import PaymentScreen from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/PaymentScreen";
+import PaymentScreen from "../../../features/booking/AppointmentMainFlow/PaymentScreen/PaymentScreen";
 import {useTranslation} from "react-i18next";
 import OfferProductPage from "../../../features/booking/AppointmentMainFlow/OfferProductPage/OfferProductPage";
 import {ServiceCenterSwitcher} from "../../../features/booking/ServiceCenterSwitcher/ServiceCenterSwitcher";
@@ -341,11 +340,6 @@ export const AppointmentMainFlow = () => {
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
                 onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
-            serviceSelection: <ServiceSelection
-                setLastSelectedCategory={setLastSelectedCategory}
-                onBack={handleChangeScreen('serviceNeeds')}
-                onNext={handleSetScreen}
-            />,
             maintenanceDetails: <MaintenanceDetails
                 onBack={handleSetScreen}
                 onNext={handleSetScreen}
@@ -416,7 +410,6 @@ export const AppointmentMainFlow = () => {
                 return null;
             case "maintenanceDetails":
             case "serviceNeeds":
-            case "serviceSelection":
                 return t("How can we help you?");
             case "describeMore":
                 return t("Please describe what’s going on");

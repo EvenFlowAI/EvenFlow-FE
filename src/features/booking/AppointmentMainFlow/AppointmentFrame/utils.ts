@@ -110,7 +110,6 @@ export const getStepsMap = (serviceType: EServiceType, isAdvisorAvailable: boole
         carSelection: 0,
         serviceNeeds: serviceType === EServiceType.VisitCenter ? 1 : 2,
         maintenanceDetails: serviceType === EServiceType.VisitCenter ? 1 : 2,
-        serviceSelection: serviceType === EServiceType.VisitCenter ? 1 : 2,
         packageSelection: serviceType === EServiceType.VisitCenter ? 1 : 2,
         describeMore: serviceType === EServiceType.VisitCenter ? 1 : 2,
         opsCode: serviceType === EServiceType.VisitCenter ? 1 : 2,

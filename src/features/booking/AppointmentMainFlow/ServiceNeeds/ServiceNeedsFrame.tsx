@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {Actions} from "../../Actions/Actions";
-import {StepWrapper} from './StepWrapper';
+import {StepWrapper} from '../AppointmentFrame/StepWrapper';
 import {TArgCallback, TScreen} from "../../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -14,15 +14,14 @@ import {
     setShowServiceCentersList,
     setUserType
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {CardsWrapper} from "./styled";
-import {ServiceCard} from "./ServiceCard";
+import {CardsWrapper} from "../AppointmentFrame/styled";
+import {ServiceCard} from "./ServiceCard/ServiceCard";
 import {Api} from "../../../../config/requests";
 import {decodeSCID} from "../../../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
 import {EServiceCategoryPage, IServiceCategory} from "../../../../api/types";
 import {Loading} from '../../../../components/Loading/Loading';
 import ReactGA from "react-ga4";
-//import ReactGA from "react-ga";
 import ShoppingCart from "../ShoppingCart/ShoppingCart";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {Routes} from "../../../../config/routes";
@@ -33,7 +32,7 @@ import {
     selectServiceValetAppointment,
 } from "../../../../store/reducers/appointment/actions";
 import {useCurrentUser, useException} from "../../../../utils/hooks";
-import {getMaintenanceList} from "./uiUtils";
+import {getMaintenanceList} from "../AppointmentFrame/uiUtils";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 
 type TProps = {
@@ -165,7 +164,6 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
     const clearData = () => {
         dispatch(setAdditionalServicesChosen(false));
         dispatch(selectAppointment(null));
-       // dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
         dispatch(clearAppointmentSteps("appointmentSelection"));
     }
@@ -210,21 +208,17 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
         if (card.type === EServiceCategoryType.MaintenancePackage) return Boolean(selectedPackage || (packageEMenuType !== null));
         if (card.type === EServiceCategoryType.ValueService) return Boolean(valueService?.selectedService);
         if (card.type === EServiceCategoryType.OpenRecalls) {
-            return Boolean(selectedRecalls.length
-                // && categoriesIds?.includes(card.id)
-            );
+            return Boolean(selectedRecalls.length);
         }
         if (card.type === EServiceCategoryType.IndividualServices) {
             return Boolean(serviceCategories
                 .find(cat => cat.type === EServiceCategoryType.IndividualServices
-                    // && categoriesIds.includes(card.id)
                     && card.id === cat.id
                     && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
         }
         if (card.type === EServiceCategoryType.Diagnose) {
             return Boolean(serviceCategories
                 .find(cat => cat.type === EServiceCategoryType.Diagnose
-                    // && categoriesIds.includes(card.id)
                     && card.id === cat.id
                     && cat.serviceRequests.find(req => selectedSR.includes(req.id))))
         }

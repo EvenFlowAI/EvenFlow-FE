@@ -3,9 +3,9 @@ import {ReactComponent as CheckboxCircle} from "../../../../../assets/img/done_i
 import {InfoOutlined} from "@material-ui/icons";
 import {IPackageOptions} from "../../../../../api/types";
 import {useTranslation} from "react-i18next";
-import {HtmlTooltip} from "../../AppointmentFrame/ServiceCard";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {TPackage, TService} from "../types";
+import {HtmlTooltip} from "../../../../../components/styled/HtmlTooltip";
 
 type TIncludedInPackageProps = {
     packages: TPackage[];

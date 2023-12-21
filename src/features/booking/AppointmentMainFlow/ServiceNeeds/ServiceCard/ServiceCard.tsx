@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import {TCallback} from "../../../../types/types";
-import {IServiceCategory} from "../../../../api/types";
-import {ReactComponent as Icon} from "../../../../assets/img/oil-icon.svg";
+import {TCallback} from "../../../../../types/types";
+import {IServiceCategory} from "../../../../../api/types";
+import {ReactComponent as Icon} from "../../../../../assets/img/oil-icon.svg";
 import axios from "axios";
-import {Loading} from "../../../../components/Loading/Loading";
-import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
+import {Loading} from "../../../../../components/Loading/Loading";
+import {EServiceCategoryType} from "../../../../../store/reducers/categories/types";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
-import {styled, Theme, Tooltip, useMediaQuery, useTheme, withStyles} from "@material-ui/core";
+import {RootState} from "../../../../../store/rootReducer";
+import {useMediaQuery, useTheme} from "@material-ui/core";
 import {InfoOutlined} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";
-import {EOfferType} from "../../../../store/reducers/offers/types";
-import moment from "moment";
-import {getOfferString} from "./utils";
+import {EOfferType} from "../../../../../store/reducers/offers/types";
+import {HtmlTooltip} from "../../../../../components/styled/HtmlTooltip";
+import {CardWrapper} from "./styles";
 
 type TSCProps = {
     card: IServiceCategory;
@@ -20,96 +20,6 @@ type TSCProps = {
     active: boolean;
     selected: boolean;
 }
-
-const CardWrapper = styled(({active, selected, ...props}) => <div {...props}/>)<Theme, {active?: boolean, selected?: boolean}>(({theme, active, selected}) => {
-    return {
-        display: "grid",
-        gridTemplateColumns: "1fr",
-        gridTemplateRows: "1fr 4fr 3fr 2fr",
-        width: "100%",
-        maxWidth: 250,
-        transition: "all .2s",
-        fontSize: 24,
-        textAlign: "center",
-        alignItems: "center",
-        padding: 10,
-        background: active ? '#000000' : selected ? "#DEFFDF" : "transparent",
-        border: `1px solid ${active ? '#000000' : selected ? '#89E5AB' : '#DADADA'}`,
-        cursor: "pointer",
-        [theme.breakpoints.down('sm')]: {
-            position: 'relative',
-            maxWidth: 300,
-            gridTemplateColumns: "1fr 3fr",
-            gridTemplateRows: "1fr",
-            fontSize: 18,
-            ".cardIcon": {
-                width: 65,
-                height: 65
-            }
-        },
-        "& .priceWrapper": {
-            height: 30,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            padding: "0 12px",
-            [theme.breakpoints.down('sm')]: {
-                gridColumn: "1/3",
-            }
-        },
-        "& .price": {
-            color: active ? "#FFFFFF" : "#202021",
-            fontSize: 20,
-            fontWeight: "bold",
-        },
-        "& .bluePrice": {
-            color: "#142EA1",
-            fontSize: 20,
-            fontWeight: "bold",
-        },
-        "& .blueStrikePrice": {
-            color: "#142EA1",
-            fontSize: 20,
-            fontWeight: "bold",
-            textDecoration: 'line-through',
-        },
-        "& .expiringDate": {
-            display: 'flex',
-            justifyContent: 'flex-end',
-            color: "#202021",
-            fontWeight: 'bold',
-            fontSize: 9,
-        },
-        "& .text": {
-            color: active ? "#DADADA" : "#828282",
-            fontSize: 11,
-            fontWeight: "bold",
-            fontFamily: "Proxima Nova",
-            textTransform: "uppercase",
-        },
-        "& .infoIcon": {
-            display: 'flex',
-            justifyContent: 'flex-end',
-            [theme.breakpoints.down("sm")]: {
-                position: 'absolute',
-                top: 5,
-                right: 5,
-            }
-        },
-    }
-});
-
-export const HtmlTooltip = withStyles({
-    tooltip: {
-        fontSize: 13,
-        color: '#202021',
-        background: '#D1D1D1',
-    },
-    popper: {
-        borderRadius: 2,
-    }
-})(Tooltip);
 
 export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selected}) => {
     const [icon, setIcon] = useState<string>('');

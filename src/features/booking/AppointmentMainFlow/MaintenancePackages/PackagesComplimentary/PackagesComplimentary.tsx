@@ -3,11 +3,11 @@ import {ReactComponent as CheckboxCircle} from "../../../../../assets/img/done_i
 import {InfoOutlined} from "@material-ui/icons";
 import {ESegmentTitle, IPackage, IPackageOptions} from "../../../../../api/types";
 import {useTranslation} from "react-i18next";
-import {HtmlTooltip} from "../../AppointmentFrame/ServiceCard";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {TComplimentary, TPackage, TService} from "../types";
+import {HtmlTooltip} from "../../../../../components/styled/HtmlTooltip";
 
 type TComplimentaryProps = {
     packages: TPackage[];

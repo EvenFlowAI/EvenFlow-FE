@@ -28,7 +28,6 @@ import ReactGA from "react-ga4";
 import {Loading} from "../../../components/Loading/Loading";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {InfoOutlined} from "@material-ui/icons";
-import {HtmlTooltip} from "../AppointmentMainFlow/AppointmentFrame/ServiceCard";
 import ServiceTypeIcon from "./ServiceTypeIcon/ServiceTypeIcon";
 import {Actions} from "../Actions/Actions";
 import {useAnalyticsBySCId, useCurrentUser, useException} from "../../../utils/hooks";
@@ -41,6 +40,7 @@ import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../store/reducer
 import ServiceImpactedWarning from "../../../components/modals/booking/ServiceImpactedWarning/ServiceImpactedWarning";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 import {ServiceTypeButton, ServiceTypeCardsWrapper, Tagline, useServiceTypeStyles} from "./styles";
+import {HtmlTooltip} from "../../../components/styled/HtmlTooltip";
 
 type TProps = {
     handleValueServiceConfig: (serviceType: EServiceType) => void;
