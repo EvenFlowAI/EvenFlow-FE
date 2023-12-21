@@ -6,7 +6,7 @@ import {TabContext, TabPanel} from "@material-ui/lab";
 import {TabList} from "../../../components/styled/Tabs";
 import GeographicZones from "../../../features/admin/PricingServiceValet/GeographicZones/GeographicZones";
 import GeographicZonesMap from "../../../features/admin/PricingServiceValet/GeographicZonesMap/GeographicZonesMap";
-import AddEditGeographicZone from "../../../components/Modals/admin/EditGeographicZone/AddEditGeographicZone";
+import AddEditGeographicZone from "../../../components/modals/admin/EditGeographicZone/AddEditGeographicZone";
 import AncillaryPrice from "../../../features/admin/PricingServiceValet/AncillaryPrice/AncillaryPrice";
 import {pricingRoot} from "../../../config/constants";
 

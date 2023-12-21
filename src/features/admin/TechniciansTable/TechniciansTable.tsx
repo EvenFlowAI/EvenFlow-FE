@@ -8,7 +8,7 @@ import {loadTechnicians, removeEmployee} from "../../../store/reducers/employees
 import {RootState} from "../../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
 import {TableAvatar} from "../../../components/TableAvatar/TableAvatar";
-import {CreateEmployee} from "../../../components/Modals/admin/CreateEmployee/CreateEmployee";
+import {CreateEmployee} from "../../../components/modals/admin/CreateEmployee/CreateEmployee";
 
 import {TableRowDataTypeResp} from "../../../types/types";
 

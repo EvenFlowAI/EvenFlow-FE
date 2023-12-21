@@ -6,7 +6,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {Delete, EditOutlined} from "@material-ui/icons";
 import {Divider, IconButton} from "@material-ui/core";
 import {useException, useModal} from "../../../../utils/hooks";
-import HtmlEditor from "../../../../components/Modals/admin/HTMLEditor/HTMLEditor";
+import HtmlEditor from "../../../../components/modals/admin/HTMLEditor/HTMLEditor";
 import {TExtendedComplimentary, TExtendedService} from "../../../../api/types";
 import {Loading} from "../../../../components/Loading/Loading";
 import {

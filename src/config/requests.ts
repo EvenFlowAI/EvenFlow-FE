@@ -94,9 +94,6 @@ export const request = axios.create({
     baseURL: APIUrl,
     headers: {Authorization: `Bearer ${authService.getLocalToken()}`}
 });
-export const endUserRequest = axios.create({
-    baseURL: APIUrl
-});
 
 request.interceptors.request.use(request => {
     const sessionId = sessionStorage.getItem(LocalTokens.sessionId);

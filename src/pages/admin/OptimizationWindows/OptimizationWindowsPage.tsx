@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {OptimizationWindowCard} from "../../../components/OptimizationWindowCard/OptimizationWindowCard";
 import {Grid} from "@material-ui/core";
-import {DemandSegments} from "../../../components/Modals/admin/DemandSegments/DemandSegments";
+import {DemandSegmentsModal} from "../../../features/admin/DemandSegmentsModal/DemandSegmentsModal";
 import {useModal, useSCs, useSelectedPod} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -109,7 +109,7 @@ export const OptimizationWindowsPage = () => {
                 payload={optMapped[selectedOpt]}
                 onClose={onOptClose}
             />
-            <DemandSegments open={isDemandOpen} onClose={onDemandClose} />
+            <DemandSegmentsModal open={isDemandOpen} onClose={onDemandClose} />
             <AppointmentCutoffModal open={isCutoffOpen} onClose={onCutoffClose} />
             <MaxPriceDateRangeModal open={isMaxPriceOpen} onClose={onMaxPriceClose}/>
         </Grid>

@@ -6,7 +6,7 @@ import {
     useModal,
     useSCs
 } from "../../../utils/hooks";
-import {CreateEmployee} from "../../../components/Modals/admin/CreateEmployee/CreateEmployee";
+import {CreateEmployee} from "../../../components/modals/admin/CreateEmployee/CreateEmployee";
 import {Titles} from "../../../config/constants";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {EmployeesActions} from "../../../features/admin/Employees/EmployeesActions/EmployeesActions";

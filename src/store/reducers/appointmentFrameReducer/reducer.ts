@@ -97,13 +97,12 @@ import {
     TMaintenanceDetails,
     TYear
 } from "./types";
-import {TScreen} from "../../../components/AppointmentFlow/types";
-import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
+import {IRecallByVin} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
 import {TPackagePrice} from "../packages/types";
 import {getSlotsConsultantId} from "../appointment/actions";
-import {TView} from "../../../types/types";
+import {TScreen, TView} from "../../../types/types";
 
 type TState = {
     service: IServiceCategory|null;

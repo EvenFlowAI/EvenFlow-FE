@@ -165,3 +165,44 @@ export interface ITableProps<Data> {
     hideHeader?: boolean;
     borderHeader?: boolean;
 }
+
+export type TScreen =
+    | "carSelection"
+    | "serviceNeeds"
+    | "maintenanceDetails"
+    | "serviceSelection"
+    | "packageSelection"
+    | "describeMore"
+    | "opsCode"
+    | "vehicleData"
+    | "consultantSelection"
+    | "appointmentTiming"
+    | "appointmentSelection"
+    | "transportationNeeds"
+    | "appointmentConfirmation"
+    | "appointmentConfirmed"
+    | "location"
+    | "payment"
+    | "serviceOfferProductPage"
+    | "manageAppointment"
+export type TMobileScreen =
+    | "carSelection"
+    | "serviceNeeds"
+    | "maintenanceDetails"
+    | "serviceSelection"
+    | "packageSelection"
+    | "describeMore"
+    | "opsCode"
+    | "vehicleData"
+    | "appointmentTiming"
+    | "appointmentSelection"
+    | "appointmentConfirmation"
+    | "appointmentConfirmed"
+    | "location"
+    | "payment"
+    | "serviceOfferProductPage"
+
+export interface TError {
+    field: string,
+    message: string
+}

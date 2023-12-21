@@ -6,7 +6,7 @@ import {RootState} from "../../../store/rootReducer";
 import {EServiceCenterName} from "../../../api/types";
 import {
     ServiceCenterSwitcher
-} from "../../../components/AppointmentFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
+} from "../AppointmentMainFlow/AppointmentFrame/ServiceCenterSwitcher/ServiceCenterSwitcher";
 import {useLayout} from "../../../utils/hooks";
 import {frameSmStyles, frameStyles, MainWrapper, nonFrameStyles, Title, Wrapper} from "./styles";
 

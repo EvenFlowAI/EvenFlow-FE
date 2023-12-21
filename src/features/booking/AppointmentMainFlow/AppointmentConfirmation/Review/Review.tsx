@@ -1,0 +1,37 @@
+import React from 'react';
+import {ConfirmationTitle} from "../../AppointmentFrame/Title";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../../../store/rootReducer";
+import {useTranslation} from "react-i18next";
+import {Wrapper} from "./styles";
+
+export const Review = () => {
+    const [
+        consultant,
+        transportation,
+        serviceTypeOption,
+        currentConfig,
+    ] = useSelector((state: RootState) => [
+        state.appointmentFrame.advisor,
+        state.appointmentFrame.transportation,
+        state.appointmentFrame.serviceTypeOption,
+        state.bookingFlowConfig.currentConfig,
+    ]);
+    const {t} = useTranslation();
+    const transportationSelected = serviceTypeOption?.transportationOption || transportation;
+
+    return (
+        <div>
+            <ConfirmationTitle>{t("Appointment Details")}</ConfirmationTitle>
+            <Wrapper>
+                {transportationSelected
+                    ? <li>Transportation needs: {transportationSelected?.description}</li>
+                    : null}
+                {currentConfig?.advisorSelection
+                    ? <li>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}</li>
+                    : null
+                }
+            </Wrapper>
+        </div>
+    );
+};

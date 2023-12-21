@@ -1,13 +1,13 @@
 import React, {useMemo} from "react";
 import {Box, Grid, Paper} from "@material-ui/core";
 import {useSelector} from "react-redux";
-import {EditAddress} from "../../../components/Modals/admin/EditAddress/EditAddress";
-import {HourOfOperations} from "../../../components/Modals/admin/HourOfOperations/HourOfOperations";
-import {Holidays} from "../../../components/Modals/admin/Holidays/Holidays";
-import {Break} from "../../../components/Modals/admin/Breaks/Break";
+import {EditAddressModal} from "../../../features/admin/EditAddressModal/EditAddressModal";
+import {HourOfOperationsModal} from "../../../features/admin/HourOfOperationsModal/HourOfOperationsModal";
+import {HolidaysModal} from "../../../features/admin/HolidaysModal/HolidaysModal";
+import {BreaksModal} from "../../../features/admin/BreaksModal/BreaksModal";
 import {useCurrentUser, useModal, useSCs} from "../../../utils/hooks";
-import {Technicians} from "../../../components/Modals/admin/Technicians/Technicians";
-import {Bays} from "../../../components/Modals/admin/Bays/Bays";
+import {Technicians} from "../../../components/modals/admin/Technicians/Technicians";
+import {Bays} from "../../../components/modals/admin/Bays/Bays";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {concatAddress} from "../../../utils/utils";
 import {SquarePaper} from "../../../components/styled/Paper";
@@ -22,11 +22,11 @@ import {ReactComponent as BreaksIcon} from "../../../assets/img/Icon 4 Breaks.sv
 import {ReactComponent as LockOutlined} from "../../../assets/img/Icon 5 Holidays.svg";
 import {ReactComponent as AdvisorIcon} from "../../../assets/img/advisor_assignment.svg";
 import {ReactComponent as NotificationsIcon} from "../../../assets/img/notifications.svg";
-import Reminders from "../../../components/Modals/admin/Reminders/Reminders";
-import LaborRate from "../../../components/Modals/admin/LaborRate/LaborRate";
-import {EmployeeSchedule} from "../../../components/Modals/admin/EmployeeSchedule/EmployeeSchedule";
-import AdvisorAssignment from "../../../components/Modals/admin/AdvisorAssignment/AdvisorAssignment";
-import ManageNotifications from "../../../components/Modals/admin/ManageNotifications/ManageNotifications";
+import RemindersModal from "../../../features/admin/RemindersModal/RemindersModal";
+import LaborRateModal from "../../../features/admin/LaborRateModal/LaborRateModal";
+import {EmployeeSchedule} from "../../../components/modals/admin/EmployeeSchedule/EmployeeSchedule";
+import AdvisorAssignmentModal from "../../../features/admin/AdvisorAssignmentModal/AdvisorAssignmentModal";
+import ManageNotificationsModal from "../../../features/admin/ManageNotificationsModal/ManageNotificationsModal";
 import {useStyles} from "./styles";
 import {TCountData, TDataMap, TItem} from "./types";
 
@@ -152,15 +152,15 @@ export const AdminDashboard: React.FC = () => {
                 </Grid>
             )}
         </Grid>
-        <EditAddress open={isAddressOpen} viewMode={isCCRView} onClose={onCloseAddress} />
-        <HourOfOperations viewMode={isCCRView} open={isHOOOpen} onClose={onCloseHOO} />
+        <EditAddressModal open={isAddressOpen} viewMode={isCCRView} onClose={onCloseAddress} />
+        <HourOfOperationsModal viewMode={isCCRView} open={isHOOOpen} onClose={onCloseHOO} />
         <EmployeeSchedule open={isOpenEmployeeSchedule} onClose={onCloseEmployeeSchedule}/>
-        <Holidays viewMode={isCCRView} open={isHOpen} onClose={onCloseH} />
-        <Break viewMode={isCCRView} open={isBOpen} onClose={onCloseB} />
+        <HolidaysModal viewMode={isCCRView} open={isHOpen} onClose={onCloseH} />
+        <BreaksModal viewMode={isCCRView} open={isBOpen} onClose={onCloseB} />
         <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
-        <Reminders open={isOpenReminders} onClose={onCloseReminders}/>
-        <LaborRate open={isOpenLaborRate} onClose={onCloseLaborRate}/>
-        <AdvisorAssignment open={isOpenAdvisorAssignment} onClose={onCloseAdvisorAssignment}/>
-        <ManageNotifications open={isOpenManageNotifications} onClose={onCloseManageNotifications}/>
+        <RemindersModal open={isOpenReminders} onClose={onCloseReminders}/>
+        <LaborRateModal open={isOpenLaborRate} onClose={onCloseLaborRate}/>
+        <AdvisorAssignmentModal open={isOpenAdvisorAssignment} onClose={onCloseAdvisorAssignment}/>
+        <ManageNotificationsModal open={isOpenManageNotifications} onClose={onCloseManageNotifications}/>
     </div>
 }

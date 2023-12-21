@@ -22,7 +22,7 @@ import {createPod, updatePod} from "../../../../store/reducers/pods/actions";
 import {loadBaysShort} from "../../../../store/reducers/bays/actions";
 import {IMakeExtended, IModel} from "../../../../api/types";
 import {getOptions, getTransportationOptionString} from "../../../../utils/utils";
-import {EmployeeSchedule} from "../../../../components/Modals/admin/EmployeeSchedule/EmployeeSchedule";
+import {EmployeeSchedule} from "../../../../components/modals/admin/EmployeeSchedule/EmployeeSchedule";
 import {loadEngineType, loadMakesForPods} from "../../../../store/reducers/vehicleDetails/actions";
 import {TZone} from "../../../../store/reducers/mobileService/types";
 import {loadMobServiceZones} from "../../../../store/reducers/mobileService/actions";

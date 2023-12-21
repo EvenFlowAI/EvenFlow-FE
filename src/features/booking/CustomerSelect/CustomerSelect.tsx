@@ -12,7 +12,7 @@ import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../../store/rootReducer";
 import {useAnalyticsBySCId, useCurrentUser} from "../../../utils/hooks";
-import {Actions} from "../../../components/AppointmentFlow/AppointmentFrame/Actions";
+import {Actions} from "../Actions/Actions";
 import ReturningSelfCustomer from "./ReturningSelfCustomer/ReturningSelfCustomer";
 import NewSelfCustomer from "./NewSelfCustomer/NewSelfCustomer";
 import ReturningCustomerForAdmin from "./ReturningCustomerForAdmin/ReturningCustomerForAdmin";

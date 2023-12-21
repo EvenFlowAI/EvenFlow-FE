@@ -8,7 +8,7 @@ import {
     collectServiceRequestIds,
     getCategories,
     getVehicleData, mapRecallsForRequest
-} from "../../../components/AppointmentFlow/AppointmentFrame/utils";
+} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/utils";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType} from "../appointment/types";
 import {setAppointmentSaving} from "../appointmentFrameReducer/actions";

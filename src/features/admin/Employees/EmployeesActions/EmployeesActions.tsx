@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useCallback} from "react";
 import {Button} from "@material-ui/core";
 import {useCurrentUser, useModal} from "../../../../utils/hooks";
-import {CreateEmployee} from "../../../../components/Modals/admin/CreateEmployee/CreateEmployee";
+import {CreateEmployee} from "../../../../components/modals/admin/CreateEmployee/CreateEmployee";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {setEmplSearch} from "../../../../store/reducers/employees/actions";

@@ -6,16 +6,9 @@ enum AdminRoutes {
     Profile = "/admin/profile",
     ServiceCenters = "/admin/service-centers",
     ServiceRequests = "/admin/service-requests",
-    BookingFlowConfig = "/admin/booking-flow-config",
-    BookingFlowConfigDetails = "/admin/booking-flow-config/details",
-    TransportationOptions = "/admin/booking-flow-config/transportation-options",
-    ServiceOpsCodesMapping = "/admin/booking-flow-config/service-codes-mapping",
-    VehicleDetails = "/admin/booking-flow-config/vehicle-details",
     CapacityOptimization = "/admin/capacity-optimization",
     Pricing = "/admin/pricing",
-    ServicePriceSettings = "/admin/pricing/service-price-settings",
     MobileService = "/admin/pricing/mobile-service",
-    ServiceValet = "/admin/pricing/service-valet",
     Reporting = "/admin/reporting",
 }
 
@@ -88,9 +81,6 @@ enum EndUser {
     Appointment = "/appointment/:id",
     AppointmentFrame = "/f/appointment/:id",
     AppointmentFrameBase = "/f/appointment",
-    AppointmentBase = "/appointment",
-    Confirmation = "/confirmation/:id",
-    ConfirmationBase = "/confirmation",
     ValueService = "/f/appointment/:id/valueService",
     PaymentBill = "/f/appointment/:id/payment-bill",
 }

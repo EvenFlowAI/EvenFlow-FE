@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {Button} from "@material-ui/core";
-import {OPsCodesListDialog} from "../../../components/Modals/admin/OPsCodesListDialog/OPsCodesListDialog";
+import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
 import {useException, useMessage, useModal, usePagination, useSCs} from "../../../utils/hooks";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";

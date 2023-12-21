@@ -6,21 +6,21 @@ import {Route, Switch, useHistory} from 'react-router-dom';
 import {AdminPanel} from "./pages/admin/AdminPanel/AdminPanel";
 import {Routes} from "./config/routes";
 import {PrivateRoute} from "./utils/Routes";
-import {Confirm} from './components/Modals/common/Confirm/Confirm';
+import {Confirm} from './components/modals/common/Confirm/Confirm';
 import {ProviderContext, SnackbarProvider} from "notistack";
 import {Close} from "@material-ui/icons";
 import {BookingFlowPage} from "./pages/booking/BookingFlow/BookingFlowPage";
-import {AppointmentFrameLayout} from "./components/AppointmentFlow/AppointmentFrameLayout";
-import ValueService from "./components/AppointmentFlow/AppointmentFrame/ValueService/ValueService";
+import {AppointmentMainFlow} from "./pages/booking/AppointmentMainFlow/AppointmentMainFlow";
+import ValueService from "./pages/booking/ValueService/ValueService";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/rootReducer";
 import {setCurrentFrameScreen, setValueService} from "./store/reducers/appointmentFrameReducer/actions";
-import {TScreen} from "./components/AppointmentFlow/types";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
 import {loadBookingFlowConfig, setConfiguration} from "./store/reducers/bookingFlowConfig/actions";
-import PaymentBill from "./components/AppointmentFlow/PaymentBill/PaymentBill";
+import PaymentBill from "./features/booking/PaymentBill/PaymentBill";
 import {EServiceCenterName} from "./api/types";
 import moment from "moment";
+import {TScreen} from "./types/types";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -109,7 +109,7 @@ const App = () => {
                     maxHeight: "-webkit-fill-available"}}>
                 <Confirm/>
                 <Switch>
-                    <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentFrameLayout} />
+                    <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentMainFlow} />
                     <Route path={Routes.EndUser.CancelAppointment} exact component={BookingFlowPage} />
                     <Route path={Routes.EndUser.EditAppointment} exact component={BookingFlowPage} />
                     <Route path={Routes.EndUser.Base} exact component={BookingFlowPage} />

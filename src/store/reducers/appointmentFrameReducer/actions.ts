@@ -30,10 +30,9 @@ import {
     TMaintenanceDetails,
     TYear
 } from "./types";
-import {AppThunk, PaginatedAPIResponse, TView} from "../../../types/types";
+import {AppThunk, PaginatedAPIResponse, TScreen, TView} from "../../../types/types";
 import {Api} from "../../../config/requests";
 import {decodeSCID} from "../../../utils/utils";
-import {TScreen} from "../../../components/AppointmentFlow/types";
 import {
     getSlotsConsultantId,
     saveCustomerCache,
@@ -44,7 +43,7 @@ import {
     setCustomerLoadedData,
     setWaitListSettings
 } from "../appointment/actions";
-import {IMaintenanceItem, IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
+import {IMaintenanceItem, IRecallByVin} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
 import {TPackagePrice} from "../packages/types";
@@ -55,9 +54,9 @@ import {
     getCategories,
     getVehicleData,
     mapRecallsForRequest
-} from "../../../components/AppointmentFlow/AppointmentFrame/utils";
+} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/utils";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
-import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import {yearOptions} from "../../../features/booking/AppointmentMainFlow/AppointmentFrame/MaintenanceDetails";
 import {EScheduler} from "../appointments/types";
 import {setAppointmentsLoading} from "../appointments/actions";
 

@@ -19,7 +19,7 @@ import {timeSpanString} from "../../../../config/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEmployeesSchedule, setEmployeesSchedule} from "../../../../store/reducers/schedules/actions";
 import {RootState} from "../../../../store/rootReducer";
-import {CreateEmployee} from "../../../../components/Modals/admin/CreateEmployee/CreateEmployee";
+import {CreateEmployee} from "../../../../components/modals/admin/CreateEmployee/CreateEmployee";
 import {Close} from "@material-ui/icons";
 import {API} from "../../../../api/api";
 import {TIds} from "../types";

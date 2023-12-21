@@ -15,7 +15,7 @@ import {
 } from "../../../../store/reducers/enhancedCustomerSearch/actions";
 import {useException, useModal} from "../../../../utils/hooks";
 import CustomerSearchResults from "../CustomerSearchResultsModal/CustomerSearchResultsModal";
-import CustomerNotFound from "../../../../components/Modals/booking/CustomerNotFound/CustomerNotFound";
+import CustomerNotFound from "../../../../components/modals/booking/CustomerNotFound/CustomerNotFound";
 import {TCallback} from "../../../../types/types";
 import {defaultPageData} from "../../../../store/reducers/defaultInitials";
 import {TCustomerSearchData} from "../../../../store/reducers/enhancedCustomerSearch/types";

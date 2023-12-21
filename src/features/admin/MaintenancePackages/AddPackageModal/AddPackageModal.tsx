@@ -8,10 +8,10 @@ import {IconButton, Button, Divider} from "@material-ui/core";
 import OpsCode from "./parts/OpsCodeLabel/OpsCodeLabel";
 import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../../utils/AutocompleteRender";
-import {yearOptions} from "../../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
+import {yearOptions} from "../../../booking/AppointmentMainFlow/AppointmentFrame/MaintenanceDetails";
 import {useException, useModal, useSCs} from "../../../../utils/hooks";
 import AssignOpsCode from "./parts/AssignOpsCodeModal/AssignOpsCodeModal";
-import AddOpsCode from "../../../../components/Modals/admin/AddOpsCode/AddOpsCode";
+import AddOpsCode from "../../../../components/modals/admin/AddOpsCode/AddOpsCode";
 import {
     IAssignedServiceRequest,
     IServiceRequest,
