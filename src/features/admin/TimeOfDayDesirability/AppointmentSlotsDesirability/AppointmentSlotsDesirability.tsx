@@ -10,12 +10,6 @@ import {
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
-import {EDesirabilityState, ETimeSlotType} from "../../../store/reducers/slotScoring/types";
-import {generateSlots, TSlot} from "./utils";
-import {DesirabilityButton} from "../../UI/DesirabilityButton";
-import {EDesirabilityState, ETimeSlotType} from "../../../../store/reducers/slotScoring/types";
-import {generateSlots, TSlot} from "../utils";
 import {useDispatch, useSelector} from "react-redux";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {
@@ -38,6 +32,8 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
+import {EDesirabilityState, ETimeSlotType} from "../../../../store/reducers/slotScoring/types";
+import {generateSlots, TSlot} from "../utils";
 
 const initialForm = {
     timeSlotType: ETimeSlotType.ThirtyMinutes,

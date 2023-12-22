@@ -1,7 +1,6 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Grid, MenuItem, Paper, Select, IconButton} from "@material-ui/core";
 import {Clear} from '@material-ui/icons';
-import {EReportingStatus, reportingStatuses} from "../../api/types";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {DatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
@@ -15,6 +14,7 @@ import {TFilters} from "../types";
 import {initialPaging} from "../Appointments";
 import {useStyles, EmptyMenuItem} from "./styles";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {EReportingStatus, reportingStatuses} from "../../../../api/types";
 
 type TAppointmentFilterProps = {
     status: EReportingStatus | '' | unknown;

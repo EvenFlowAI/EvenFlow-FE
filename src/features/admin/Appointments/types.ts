@@ -1,5 +1,5 @@
 import {TScheduler, TServiceBook} from "../../../store/reducers/appointments/types";
-import {EAppointmentStatus, IAppointment} from "../../../api/types";
+import {EReportingStatus, IAppointment} from "../../../api/types";
 import moment, {Moment} from "moment/moment";
 import {IPageRequest} from "../../../types/types";
 
@@ -9,7 +9,7 @@ export type TFilters = {
     searchTerm: string;
     serviceBook: TServiceBook|null;
     scheduler: TScheduler|null;
-    status: EAppointmentStatus | '' | unknown;
+    reportingStatus: EReportingStatus | '' | unknown;
     date: moment.Moment | null;
     scId: number|null;
     pageData: IPageRequest;
