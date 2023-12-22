@@ -7,7 +7,10 @@ import moment from "moment";
 import {TitleWrapper} from "../styles";
 
 export const OperationalDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
-    const createdText = [moment(payload.createdDateTime).utc().format(dateTimeFormat), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
+    const date = payload.createdDateTime
+        ? payload.createdDateTime.toString().split('.')[0]
+        : payload.createdDateTime
+    const createdText = [moment(date).format(dateTimeFormat), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
 
     return (
         <div>
