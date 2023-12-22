@@ -10,7 +10,7 @@ import {setAdvisor, setAnyAdvisorSelected} from "../../../../../../store/reducer
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import {EServiceCenterName} from "../../../../../../api/types";
-import {useSelectedAppointmentStyles} from "../../../../../../commonStyles/useSelectedAppointmentStyles";
+import {useSelectedAppointmentStyles} from "../../../../../../hooks/styling/useSelectedAppointmentStyles";
 
 const SelectedConsultant = () => {
     const { advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);

@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Button, Divider, IconButton} from "@material-ui/core";
@@ -15,7 +15,7 @@ import {TNotificatonsProps} from "../types";
 import {Loading} from "../../../../components/Loading/Loading";
 import {checkPodsAreTheSame} from "../utils";
 import {IAdvisorShort} from "../../../../store/reducers/users/types";
-import {useNotificationStyles} from "../../../../commonStyles/useNotificationStyles";
+import {useNotificationStyles} from "../../../../hooks/styling/useNotificationStyles";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";

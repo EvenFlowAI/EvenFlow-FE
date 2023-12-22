@@ -1,7 +1,7 @@
 import React from "react";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {Transportations} from "../../../features/admin/Transportations/Transportations";
-import {bookingFlowRoot} from "../../../config/constants";
+import {bookingFlowRoot} from "../../../utils/constants";
 
 export const TransportationOptions = () => {
     return <div style={{width: '100%'}}>

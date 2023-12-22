@@ -1,6 +1,6 @@
 import {EDay, IUnplannedDemand, IUnplannedDemandBySlot} from "../../../store/reducers/demandSegments/types";
 import moment from "moment/moment";
-import {timeSpanString} from "../../../config/constants";
+import {timeSpanString} from "../../../utils/constants";
 
 export const remapSegments = (sl: IUnplannedDemand[]): IUnplannedDemand[] => {
     const blankDemand: IUnplannedDemand = {

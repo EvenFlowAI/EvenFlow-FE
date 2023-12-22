@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {setEmplSearch} from "../../../../store/reducers/employees/actions";
 import {ActionsWrapper} from "./styles";
-import {SearchDB} from "../../../../components/FormControls/SearchDebounced/SearchDB";
+import {SearchDB} from "../../../../components/formControls/SearchDebounced/SearchDB";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 

@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IBay, IBayForm} from "../../../../store/reducers/bays/types";
 import {createBay, updateBay} from "../../../../store/reducers/bays/actions";
-import {SC_UNDEFINED} from "../../../../config/constants";
+import {SC_UNDEFINED} from "../../../../utils/constants";
 import {TBayForm} from "../types";
 import {CreateBayForm} from "../CreateBayForm/CreateBayForm";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";

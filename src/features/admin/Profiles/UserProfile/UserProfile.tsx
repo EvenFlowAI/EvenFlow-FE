@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {AvatarUpload} from "../../../../components/AvatarUpload/AvatarUpload";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch} from "react-redux";
 import {saveEmployeeAvatar, updateUser} from "../../../../store/reducers/users/actions";
 import {Api} from "../../../../config/requests";

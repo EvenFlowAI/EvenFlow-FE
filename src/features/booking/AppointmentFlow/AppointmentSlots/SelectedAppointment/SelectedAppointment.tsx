@@ -11,7 +11,7 @@ import Prices from "./Prices/Prices";
 import ServiceOption from "./ServiceOption/ServiceOption";
 import Address from "./Address/Address";
 import Info from "./Info/Info";
-import {useSelectedAppointmentStyles} from "../../../../../commonStyles/useSelectedAppointmentStyles";
+import {useSelectedAppointmentStyles} from "../../../../../hooks/styling/useSelectedAppointmentStyles";
 import {DateWrapper} from "../../../../../components/styled/DateWrapper";
 import {List, PriceWrapper, Wrapper} from "./styles";
 import {WaitListLabel} from "../WaitListLabel/WaitListLabel";

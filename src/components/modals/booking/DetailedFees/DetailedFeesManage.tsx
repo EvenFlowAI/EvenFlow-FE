@@ -8,7 +8,7 @@ import {ErrorOutline} from "@material-ui/icons";
 import {useTranslation} from "react-i18next";
 import {EOfferType} from "../../../../store/reducers/offers/types";
 import {DetailedFeesInfo, DetailedFeesList, useStyles} from "./styles";
-import {useDialogStyles} from "../../../../commonStyles/useDialogStyles";
+import {useDialogStyles} from "../../../../hooks/styling/useDialogStyles";
 import {getOfferString} from "../../../../utils/utils";
 
 const DetailedFeesManage: React.FC<DialogProps> = ({ open, onClose, }) => {

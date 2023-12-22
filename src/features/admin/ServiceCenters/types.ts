@@ -1,6 +1,6 @@
 import {GridSize} from "@material-ui/core";
 import React from "react";
-import {TextInputProps} from "../../../components/FormControls/types";
+import {TextInputProps} from "../../../components/formControls/types";
 
 export type TSelectedGroup = {
     name: string;

@@ -4,7 +4,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {Button, Checkbox, FormControlLabel, FormGroup} from "@material-ui/core";
 import {IAssignedServiceRequest, IRequiredSkill} from "../../../../store/reducers/serviceRequests/types";
 import {useDispatch} from "react-redux";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {setRequiredSkills} from "../../../../store/reducers/serviceRequests/actions";
 import {useStyles} from "./styles";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";

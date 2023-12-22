@@ -1,5 +1,5 @@
 import React from "react";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 
 type TPasswordProps = {
     password: string,

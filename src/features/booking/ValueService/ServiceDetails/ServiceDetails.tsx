@@ -3,7 +3,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useMediaQuery, useTheme} from "@material-ui/core";
 import {Loading} from "../../../../components/Loading/Loading";
-import {Actions} from "../../Actions/Actions";
+import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {useTranslation} from "react-i18next";
 import {Description, Price} from "./styles";
 import {CarName} from "../../../../components/styled/CarName";
@@ -30,7 +30,7 @@ const ServiceDetails: React.FC<TServiceDetails> = ({onChangeVehicle, onBack, onN
             <SubTitle>{valueService.selectedService?.name}</SubTitle>
             <Price>${valueService.selectedService?.price}</Price>
             <Description dangerouslySetInnerHTML={{ __html: valueService.selectedService?.description}}/>
-            <Actions
+            <ActionButtons
                 onBack={onBack}
                 onNext={onNext}
                 nextLabel={isSM ? t("Schedule") : t("Schedule Service")}

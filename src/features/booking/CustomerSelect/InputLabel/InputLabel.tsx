@@ -1,5 +1,5 @@
 import React from "react";
-import {useCustomerSelectStyles} from "../../../../commonStyles/useCustomerSelectStyles";
+import {useCustomerSelectStyles} from "../../../../hooks/styling/useCustomerSelectStyles";
 
 export const InputLabel: React.FC<{ label: string }> = ({label}) => {
     const returningClasses = useCustomerSelectStyles();

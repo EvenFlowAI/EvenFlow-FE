@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
-import {Actions} from '../../Actions/Actions';
+import {ActionButtons} from '../../ActionButtons/ActionButtons';
 import {IServiceConsultant} from '../../../../api/types';
 import {
     loadConsultants,
@@ -130,6 +130,6 @@ export const Consultants: React.FC<TActionProps> = ({onNext, onBack}) => {
                 )}
             </ConsultantsWrapper>
         }
-        <Actions onNext={handleNext} onBack={handleBack} nextLabel={t("Next")}/>
+        <ActionButtons onNext={handleNext} onBack={handleBack} nextLabel={t("Next")}/>
     </StepWrapper>);
 };

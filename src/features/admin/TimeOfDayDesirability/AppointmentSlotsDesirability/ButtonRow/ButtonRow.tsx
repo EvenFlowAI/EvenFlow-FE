@@ -1,6 +1,6 @@
 import React from "react";
 import {Grid} from "@material-ui/core";
-import {timeString} from "../../../../../config/constants";
+import {timeString} from "../../../../../utils/constants";
 import {useStylesBR} from "./styles";
 import {TSlot} from "../../utils";
 import {EDesirabilityState} from "../../../../../store/reducers/slotScoring/types";

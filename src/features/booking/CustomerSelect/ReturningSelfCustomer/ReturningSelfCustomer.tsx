@@ -7,7 +7,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {setCustomerEnteredEmail} from "../../../../store/reducers/appointment/actions";
 import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {setUserType} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {useLoadingStyles} from "../../../../commonStyles/useLoadingStyles";
+import {useLoadingStyles} from "../../../../hooks/styling/useLoadingStyles";
 import {useStyles} from "../styles";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 

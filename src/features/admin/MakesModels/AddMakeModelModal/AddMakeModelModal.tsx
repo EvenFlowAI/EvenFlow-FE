@@ -3,7 +3,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {Button, Divider, IconButton} from "@material-ui/core";
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {AddCircleOutline} from "@material-ui/icons";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Chip} from "../../../../components/Chip/Chip";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";

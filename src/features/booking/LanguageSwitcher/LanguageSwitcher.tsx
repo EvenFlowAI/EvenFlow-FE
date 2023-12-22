@@ -4,7 +4,7 @@ import {RootState} from "../../../store/rootReducer";
 import {MenuItem, Select} from "@material-ui/core";
 import {switchLanguage} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {changeLanguage} from "i18next";
-import {TextField} from "../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {useStyles, Wrapper} from "./styles";
 
 const LanguageSwitcher = () => {

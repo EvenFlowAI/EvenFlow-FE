@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {TPricingLevel} from "../types";
 import {Box, Button, Divider} from "@material-ui/core";

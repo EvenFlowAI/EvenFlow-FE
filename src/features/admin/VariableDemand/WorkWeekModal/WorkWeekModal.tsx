@@ -5,7 +5,7 @@ import {Box, Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
 import {EDay, EDemandCategory, IDayOfWeekSetting} from "../../../../store/reducers/pricingSettings/types";
-import {SC_UNDEFINED} from "../../../../config/constants";
+import {SC_UNDEFINED} from "../../../../utils/constants";
 import {loadDayOfWeekPricing, setWorkWeekPricing} from "../../../../store/reducers/pricingSettings/actions";
 import {mappedDWeekPricingSelector} from "../../../../store/reducers/pricingSettings/selectors";
 import {TForm} from "./types";

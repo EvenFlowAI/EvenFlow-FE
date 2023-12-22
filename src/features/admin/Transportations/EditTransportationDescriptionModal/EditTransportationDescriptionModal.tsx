@@ -5,9 +5,9 @@ import {
     ETransportColumn,
     ITransportationOptionFull
 } from "../../../../store/reducers/transportationNeeds/types";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Button} from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import {updateTransportationDescription} from "../../../../store/reducers/transportationNeeds/actions";

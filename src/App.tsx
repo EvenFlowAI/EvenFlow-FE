@@ -5,7 +5,7 @@ import {Login} from "./pages/admin/Login/Login";
 import {Route, Switch, useHistory} from 'react-router-dom';
 import {AdminPanel} from "./pages/admin/AdminPanel/AdminPanel";
 import {Routes} from "./config/routes";
-import {PrivateRoute} from "./utils/Routes";
+import {PrivateRoute} from "./components/PrivateRoute/PrivateRoute";
 import {Confirm} from './components/modals/common/Confirm/Confirm';
 import {ProviderContext, SnackbarProvider} from "notistack";
 import {Close} from "@material-ui/icons";

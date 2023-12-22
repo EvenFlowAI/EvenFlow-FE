@@ -12,8 +12,8 @@ import {loadTimeWindow, setTimeWindow} from "../../../store/reducers/demandSegme
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {ITimeWindow} from "../../../store/reducers/demandSegments/types";
-import {SC_UNDEFINED} from "../../../config/constants";
-import {TextField} from "../../../components/FormControls/TextFieldStyled/TextField";
+import {SC_UNDEFINED} from "../../../utils/constants";
+import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {StyledTable} from "../../../components/styled/StyledTable";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";

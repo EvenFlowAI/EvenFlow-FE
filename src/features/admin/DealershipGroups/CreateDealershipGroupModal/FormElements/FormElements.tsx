@@ -1,6 +1,6 @@
 import React from "react";
 import {Grid} from "@material-ui/core";
-import {TextField} from "../../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../../components/formControls/TextFieldStyled/TextField";
 import {KeyPair} from "../types";
 
 type FormElementProps<U> = {

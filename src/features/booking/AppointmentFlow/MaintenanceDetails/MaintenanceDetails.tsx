@@ -1,9 +1,9 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
 import {useMediaQuery, useTheme} from "@material-ui/core";
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
-import {Actions} from "../../Actions/Actions";
+import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {useDispatch, useSelector} from "react-redux";
 import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {
@@ -17,16 +17,16 @@ import {
 import {RootState} from "../../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {EServiceCategoryPage, EServiceCenterName, ILoadedVehicle} from "../../../../api/types";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {decodeSCID, getYearOptions} from "../../../../utils/utils";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";
 import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
 import {TArgCallback, TScreen} from "../../../../types/types";
-import RecallsByVinModal from "../RecallsByVinModal/RecallsByVinModal";
+import RecallsByVinModal from "../../RecallsByVinModal/RecallsByVinModal";
 import {Api} from "../../../../config/requests";
 import {Loading} from "../../../../components/Loading/Loading";
-import NoRecallsModal from "../NoRecallsModal/NoRecallsModal";
+import NoRecallsModal from "../../NoRecallsModal/NoRecallsModal";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 import {SelectWrapper, useStyles} from "./styles";
 import {TKey, TOptionsState} from "./types";
@@ -470,7 +470,7 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
                     </div> : null}
             </SelectWrapper>
         }
-        <Actions
+        <ActionButtons
             onBack={handleBack}
             onNext={handleSubmit}
             prevDisabled={isLoading}

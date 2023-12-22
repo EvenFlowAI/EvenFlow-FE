@@ -18,7 +18,7 @@ import {
     IOptimizationSettingValue,
     IOptimizationSettingValueForm
 } from "../../../../store/reducers/slotScoring/types";
-import {SC_UNDEFINED} from "../../../../config/constants";
+import {SC_UNDEFINED} from "../../../../utils/constants";
 import {Slider, useStyles} from "./styles";
 import {SliderRange, TForm} from "./types";
 import {initialForm} from "./constants";

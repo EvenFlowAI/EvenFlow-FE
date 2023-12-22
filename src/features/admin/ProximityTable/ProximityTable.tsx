@@ -15,7 +15,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {createProximity, loadProximity} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
 import {EProximityType, IProximity} from "../../../store/reducers/slotScoring/types";
-import {SOMETHING_WRONG} from "../../../config/constants";
+import {SOMETHING_WRONG} from "../../../utils/constants";
 import {StyledTable} from "../../../components/styled/StyledTable";
 import {SliderRange, TForm} from "./types";
 import {blankSlider, initialForm, rows} from "./constants";

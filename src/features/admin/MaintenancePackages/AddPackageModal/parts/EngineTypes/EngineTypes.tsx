@@ -1,12 +1,12 @@
 import React, {ChangeEvent, useCallback, Dispatch, SetStateAction} from 'react';
-import {autocompleteRender} from "../../../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import Checkbox from "../../../../../../components/Checkbox/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {IEngineType} from "../../../../../../store/reducers/vehicleDetails/types";
-import {useAutocompleteStyles} from "../../../../../../commonStyles/useAutocompleteStyles";
+import {useAutocompleteStyles} from "../../../../../../hooks/styling/useAutocompleteStyles";
 
 type TEngineTypesProps = {
     setSelectedEngineTypes: Dispatch<SetStateAction<IEngineType[]>>;

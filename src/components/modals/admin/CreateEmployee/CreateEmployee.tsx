@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {DialogProps} from "../../../BaseModal/types";
 import {Button, Divider, Grid} from "@material-ui/core";
-import {TTechnicianLevel} from "../../../../types/types";
+import {Roles, TTechnicianLevel} from "../../../../types/types";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -16,7 +16,6 @@ import {
 } from "../../../../store/reducers/employees/actions";
 import {IUserForm, TRole} from "../../../../store/reducers/users/types";
 import {createUser, updateUser} from "../../../../store/reducers/users/actions";
-import {Roles} from "../../../../config/constants";
 import {checkEmail, validatePhoneNumber} from "../../../../utils/utils";
 import {AdvisorForm} from "./AdvisorForm/AdvisorForm";
 import {TechnicianForm} from "./TechnicianForm/TechnicianForm";

@@ -13,7 +13,7 @@ import {
 import {EDesirabilityState, ETimeSlotType} from "../../../../store/reducers/slotScoring/types";
 import {generateSlots, TSlot} from "../utils";
 import {useDispatch, useSelector} from "react-redux";
-import {SC_UNDEFINED} from "../../../../config/constants";
+import {SC_UNDEFINED} from "../../../../utils/constants";
 import {
     loadDesirability,
     loadRange,

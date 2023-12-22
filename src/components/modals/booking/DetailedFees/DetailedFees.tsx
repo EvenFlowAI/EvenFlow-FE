@@ -9,7 +9,7 @@ import {useTranslation} from "react-i18next";
 import {EOfferType} from "../../../../store/reducers/offers/types";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {DetailedFeesInfo, DetailedFeesList, useStyles} from "./styles";
-import {useDialogStyles} from "../../../../commonStyles/useDialogStyles";
+import {useDialogStyles} from "../../../../hooks/styling/useDialogStyles";
 import {getOfferString} from "../../../../utils/utils";
 
 const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {

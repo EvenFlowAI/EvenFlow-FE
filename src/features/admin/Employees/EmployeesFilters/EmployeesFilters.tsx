@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, MenuItem, Select} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {
     loadByFilters,
     loadAll,

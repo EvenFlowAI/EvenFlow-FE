@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, Paper} from "@material-ui/core";
 import {customerSegmentsMap, dayOfWeekMap, EOfferType, IOffer} from "../../../../store/reducers/offers/types";
 import moment from "moment";
-import {calendarDateFormat, timeSpanString, timeString} from "../../../../config/constants";
+import {calendarDateFormat, timeSpanString, timeString} from "../../../../utils/constants";
 import {useStyles} from "./styles";
 
 type TProps = {

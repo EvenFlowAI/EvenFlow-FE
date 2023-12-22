@@ -6,7 +6,7 @@ import moment from "moment";
 import {Api} from "../../../config/requests";
 import {IHOODataForm} from "../../../store/reducers/serviceCenters/types";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import {timeSpanString} from "../../../config/constants";
+import {timeSpanString} from "../../../utils/constants";
 import {THOOForm} from "./types";
 import {initialForm} from "./constants";
 import {HourOfOperationForm} from "./HourOfOperationForm/HourOfOperationForm";

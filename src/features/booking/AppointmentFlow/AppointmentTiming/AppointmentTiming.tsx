@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
-import {Actions} from '../../Actions/Actions';
+import {ActionButtons} from '../../ActionButtons/ActionButtons';
 import {ReactComponent as SelectDateIcon} from "../../../../assets/img/selectDateIcon.svg";
 import {ReactComponent as FirstAvailableIcon} from "../../../../assets/img/firstAvailableIcon.svg";
 import {ReactComponent as OffersIcon} from "../../../../assets/img/offersIcon.svg";
@@ -166,7 +166,7 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
                         key={card.name}/>
                 })}
             </TimingWrapper>
-            <Actions onBack={onBack} onNext={onSubmit} nextDisabled={!isTimingValid} nextLabel={t("Next")}/>
+            <ActionButtons onBack={onBack} onNext={onSubmit} nextDisabled={!isTimingValid} nextLabel={t("Next")}/>
         </StepWrapper>
     );
 };

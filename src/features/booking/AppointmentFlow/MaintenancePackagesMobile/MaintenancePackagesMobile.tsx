@@ -14,7 +14,7 @@ import PackagesMobileComplimentary from "./PackagesMobileComplimentary/PackagesM
 import PackagesMobileTotalComplimentary from "./PackagesMobileTotalComplimentary/PackagesMobileTotalComplimentary";
 import {TPackage} from "../MaintenancePackages/types";
 import {Info} from "../MaintenancePackages/styles";
-import {usePackageMobileStyles} from "../../../../commonStyles/usePackageMobileStyles";
+import {usePackageMobileStyles} from "../../../../hooks/styling/usePackageMobileStyles";
 import {TabLabel} from "./TabLabel/TabLabel";
 import {getTitleStyle} from "./utils";
 import {TabPanel, Tabs} from "./styles";

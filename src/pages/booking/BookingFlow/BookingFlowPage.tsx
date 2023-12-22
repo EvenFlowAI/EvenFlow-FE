@@ -4,7 +4,7 @@ import {endUserTheme} from "../../../theme/theme";
 import {ThemeProvider} from "@material-ui/core";
 import {Routes} from "../../../config/routes";
 import {Welcome} from "../Welcome/Welcome";
-import {EndUserBar} from "../../../components/EndUserBar/EndUserBar";
+import {EndUserBar} from "../../../features/booking/EndUserBar/EndUserBar";
 import {useDispatch, useSelector} from "react-redux";
 import {loadSCProfile} from "../../../store/reducers/appointment/actions";
 import {CancelAppointment} from "../CancelAppointment/CancelAppointment";

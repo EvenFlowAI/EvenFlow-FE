@@ -29,7 +29,7 @@ import {Loading} from "../../../components/Loading/Loading";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {InfoOutlined} from "@material-ui/icons";
 import ServiceTypeIcon from "./ServiceTypeIcon/ServiceTypeIcon";
-import {Actions} from "../Actions/Actions";
+import {ActionButtons} from "../ActionButtons/ActionButtons";
 import {Routes} from "../../../config/routes";
 import {decodeSCID, encodeSCID} from "../../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
@@ -209,7 +209,7 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
                         }
                     })}
             </ServiceTypeCardsWrapper>
-            <Actions onBack={handleBack} onNext={() => {}} hideNext/>
+            <ActionButtons onBack={handleBack} onNext={() => {}} hideNext/>
             <AskChangesCompleted />
             <SlotImpactedWarning />
             <ServiceImpactedWarning />

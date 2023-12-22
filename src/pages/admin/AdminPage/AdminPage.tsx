@@ -4,7 +4,7 @@ import {ServiceCenters} from "../ServiceCenters/ServiceCenters";
 import {Employees} from "../Employees/Employees";
 import {ContentContainer} from "../../../components/ContentContainer/ContentContainer";
 import {Routes} from "../../../config/routes";
-import {PrivateRoute} from "../../../utils/Routes";
+import {PrivateRoute} from "../../../components/PrivateRoute/PrivateRoute";
 import {AdminDashboard} from "../Dashboard/Dashboard";
 import {DealershipGroupDetails} from "../DealerShipGroupDetails/DealershipGroupDetails";
 import {Profile} from "../Profile/Profile";

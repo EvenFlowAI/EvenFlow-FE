@@ -1,8 +1,8 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
-import {Actions} from "../../Actions/Actions";
+import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import GooglePlacesAutocomplete, {geocodeByPlaceId} from 'react-google-places-autocomplete';
@@ -455,7 +455,7 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
                 />
 
             </SelectWrapper>
-            <Actions onBack={handleBack} onNext={handleNext} nextLabel={t("Next")} loading={ancillaryPriceLoading}/>
+            <ActionButtons onBack={handleBack} onNext={handleNext} nextLabel={t("Next")} loading={ancillaryPriceLoading}/>
             <DisplayAncillaryPrice
                 onNext={onNextStep}
                 open={isOpen}

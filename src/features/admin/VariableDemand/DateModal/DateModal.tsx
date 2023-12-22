@@ -4,9 +4,9 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {Box, Button, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 import moment from "moment";
 import {demandCategories, EDemandCategory, ITimeOfYearSetting} from "../../../../store/reducers/pricingSettings/types";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch} from "react-redux";
-import {SC_UNDEFINED} from "../../../../config/constants";
+import {SC_UNDEFINED} from "../../../../utils/constants";
 import {setTimeOfYearPricing} from "../../../../store/reducers/pricingSettings/actions";
 import {Date, useStyles} from "./styles";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";

@@ -3,7 +3,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../Bas
 import {Button, Divider, IconButton} from "@material-ui/core";
 import {DialogProps} from "../../../BaseModal/types";
 import {TZipCode, TZone, TZoneNew, TZonesServiceType, TZoneUpdate} from "../../../../store/reducers/mobileService/types";
-import {TextField} from "../../../FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../formControls/TextFieldStyled/TextField";
 import {Close} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -21,11 +21,11 @@ import {
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../../../store/rootReducer";
 import {Loading} from "../../../Loading/Loading";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
 import {loadFilteredZip, setFilteredZipCodes} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useStyles} from "./styles";
-import {useAutocompleteStyles} from "../../../../commonStyles/useAutocompleteStyles";
+import {useAutocompleteStyles} from "../../../../hooks/styling/useAutocompleteStyles";
 import {useModal} from "../../../../hooks/useModal/useModal";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";

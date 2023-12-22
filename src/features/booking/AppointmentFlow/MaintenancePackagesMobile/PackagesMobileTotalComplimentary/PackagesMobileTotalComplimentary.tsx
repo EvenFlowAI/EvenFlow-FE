@@ -4,7 +4,7 @@ import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 
 import {TPackage} from "../../MaintenancePackages/types";
-import {usePackageMobileStyles} from "../../../../../commonStyles/usePackageMobileStyles";
+import {usePackageMobileStyles} from "../../../../../hooks/styling/usePackageMobileStyles";
 
 const PackagesMobileTotalComplimentary: React.FC<{item: TPackage}> = ({item}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);

@@ -1,11 +1,11 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
-import {Actions} from "../../Actions/Actions";
-import {AppointmentUserData} from "../../../../components/AppointmentUserData/AppointmentUserData";
-import {AppointmentSelectedDate} from "../../../../components/AppointmentSelectedDate/AppointmentSelectedDate";
+import {ActionButtons} from "../../ActionButtons/ActionButtons";
+import {AppointmentUserData} from "../../AppointmentUserData/AppointmentUserData";
+import {AppointmentSelectedDate} from "../../AppointmentSelectedDate/AppointmentSelectedDate";
 import {Review} from "./Review/Review";
 import {SelectedPrice} from "./SelectedPrice/SelectedPrice";
-import {AppointmentReminders} from "../../../../components/AppointmentReminders/AppointmentReminders";
+import {AppointmentReminders} from "../../AppointmentReminders/AppointmentReminders";
 import {TActionProps, TCallback, TError} from "../../../../types/types";
 import {decodeSCID} from "../../../../utils/utils";
 import {createOrUpdateAppointment, setReminders} from "../../../../store/reducers/appointmentFrameReducer/actions";
@@ -13,7 +13,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {loadAllServiceCategories,} from "../../../../store/reducers/appointment/actions";
-import AppointmentVehicleInfo from "../../../../components/AppointmentVehicleInfo/AppointmentVehicleInfo";
+import AppointmentVehicleInfo from "../../AppointmentVehicleInfo/AppointmentVehicleInfo";
 import ServiceRequests from "./ServiceRequests/ServiceRequests";
 import DetailedFees from "../../../../components/modals/booking/DetailedFees/DetailedFees";
 import Address from "./Address/Address";
@@ -134,7 +134,7 @@ export const AppointmentConfirmation: React.FC<TProps> = ({onBack, onChangeSlot,
 
         </Wrapper>
         {/*todo change to open payment window on next*/}
-        <Actions loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
+        <ActionButtons loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
         <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
     </StepWrapper>

@@ -1,13 +1,14 @@
 import React, {useCallback, useMemo} from 'react';
 import {Button} from "@material-ui/core";
-import {concatAddress, getCalendarUrl} from "../../../../../utils/utils";
-import {G_CALENDAR_FORMAT} from "../../../../../config/constants";
+import {concatAddress} from "../../../../../utils/utils";
+import {G_CALENDAR_FORMAT} from "../../../../../utils/constants";
 import moment from "moment";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {TItem} from "../types";
+import {getCalendarUrl} from "./utils";
 
 type TProps = {
     date: moment.Moment,

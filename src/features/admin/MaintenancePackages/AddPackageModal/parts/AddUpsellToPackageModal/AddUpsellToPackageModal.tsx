@@ -6,7 +6,7 @@ import {IUpsellServiceRequest} from "../../../../../../store/reducers/serviceReq
 import {RootState} from "../../../../../../store/rootReducer";
 import {Table} from "../../../../../../components/Table/Table";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/BaseModal/BaseModal";
-import {SearchInput} from "../../../../../../components/FormControls/SearchInput/SearchInput";
+import {SearchInput} from "../../../../../../components/formControls/SearchInput/SearchInput";
 import {
     loadUpsellServiceRequests, setUpsellFilter, setUpsellPageData,
 } from "../../../../../../store/reducers/serviceRequests/actions";

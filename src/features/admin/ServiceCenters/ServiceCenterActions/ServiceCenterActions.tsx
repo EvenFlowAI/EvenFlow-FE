@@ -3,14 +3,14 @@ import {Button} from "@material-ui/core";
 import {CreateServiceCenterModal} from "../CreateServiceCenterModal/CreateServiceCenterModal";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {SearchInput} from "../../../../components/FormControls/SearchInput/SearchInput";
+import {SearchInput} from "../../../../components/formControls/SearchInput/SearchInput";
 import {loadAll, setSCSearch, setSelectedDealershipGroupId} from "../../../../store/reducers/serviceCenters/actions";
 import {changePageData} from "../../../../store/reducers/dealershipGroups/actions";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useStyles} from "./styles";
 import {TSelectedGroup} from "../types";
-import {SearchDB} from "../../../../components/FormControls/SearchDebounced/SearchDB";
+import {SearchDB} from "../../../../components/formControls/SearchDebounced/SearchDB";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 

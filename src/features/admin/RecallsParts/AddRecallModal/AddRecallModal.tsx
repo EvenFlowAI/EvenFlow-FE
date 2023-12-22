@@ -4,9 +4,9 @@ import {ICreateUpdateRecall, IRecall} from "../../../../store/reducers/recall/ty
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {RootState} from "../../../../store/rootReducer";
 import {IMakeExtended, IModel} from "../../../../api/types";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";

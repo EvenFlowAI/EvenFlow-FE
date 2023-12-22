@@ -11,10 +11,10 @@ import {
     setNonSelectedPageData
 } from "../../../../store/reducers/serviceRequests/actions";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
-import {SearchInput} from "../../../../components/FormControls/SearchInput/SearchInput";
+import {SearchInput} from "../../../../components/formControls/SearchInput/SearchInput";
 import {updatePackageOptions} from "../../../../store/reducers/packages/actions";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {IPackageById} from "../../../../api/types";
 import {MaintenanceOptions} from "../constants";
 import {useInputStyles, useStyles} from "./styles";

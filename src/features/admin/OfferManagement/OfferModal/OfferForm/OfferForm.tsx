@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {TextField} from "../../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../../components/formControls/TextFieldStyled/TextField";
 import {Button, FormControlLabel, MenuItem, Radio, RadioGroup, Select, Switch} from "@material-ui/core";
 import {
     customerPresence,
@@ -11,7 +11,7 @@ import {
     offerTypes
 } from "../../../../../store/reducers/offers/types";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteOptionsRender, autocompleteRender} from "../../../../../utils/AutocompleteRender";
+import {autocompleteOptionsRender, autocompleteRender} from "../../../../../utils/autocompleteRenders";
 import clsx from "clsx";
 import {DateRange, QueryBuilder} from "@material-ui/icons";
 import {DialogContent} from "../../../../../components/BaseModal/BaseModal";

@@ -1,9 +1,9 @@
 import React, {useMemo} from 'react';
-import {useDialogStyles} from "../../../../commonStyles/useDialogStyles";
+import {useDialogStyles} from "../../../../hooks/styling/useDialogStyles";
 import {BaseModal, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
 import {DialogProps} from "../../../BaseModal/types";
 import {useTranslation} from "react-i18next";
-import {Actions} from "../../../../features/booking/Actions/Actions";
+import {ActionButtons} from "../../../../features/booking/ActionButtons/ActionButtons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EAncillaryType, EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
@@ -84,7 +84,7 @@ const DisplayAncillaryPrice: React.FC<TDisplayAncillaryPriceProps> = ({
                 </div>
             </DialogContent>
             <div className={classes.actionsWrapper}>
-                <Actions
+                <ActionButtons
                     onBack={onBack}
                     onNext={onSubmit}
                     nextLabel={`${t("Continue with")} ${serviceString}`}

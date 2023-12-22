@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {Titles} from "../../../config/constants";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {IEndUserConfig} from "../../../features/admin/Reporting/types";
 import {Api} from "../../../config/requests";
@@ -15,6 +14,7 @@ import {CapacityManagementPerformance} from "../../../features/admin/Reporting/C
 import {reportingAllowedRoles} from "./constants";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
+import {Titles} from "../../../types/types";
 
 const ReportingPage: React.FC<{}> = ({}) => {
     const [config, setConfig] = useState<IEndUserConfig>({

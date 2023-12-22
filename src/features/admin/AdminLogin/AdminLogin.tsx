@@ -1,5 +1,5 @@
 import {Checkbox, FormControlLabel, Grid, Link} from "@material-ui/core";
-import {TextField} from "../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {Link as RLink, useHistory, useLocation} from "react-router-dom";
 import {LockOpen} from "@material-ui/icons";
 import React, {useState} from "react";

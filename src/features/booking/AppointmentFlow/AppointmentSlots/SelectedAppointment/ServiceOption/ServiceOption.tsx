@@ -22,7 +22,7 @@ import {useParams} from "react-router-dom";
 import {IFirstScreenOption} from "../../../../../../store/reducers/serviceTypes/types";
 import {setAdvisorAvailable} from "../../../../../../store/reducers/bookingFlowConfig/actions";
 import {IServiceConsultant} from "../../../../../../api/types";
-import {useSelectedAppointmentStyles} from "../../../../../../commonStyles/useSelectedAppointmentStyles";
+import {useSelectedAppointmentStyles} from "../../../../../../hooks/styling/useSelectedAppointmentStyles";
 
 const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const {

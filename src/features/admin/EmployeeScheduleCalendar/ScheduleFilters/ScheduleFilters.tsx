@@ -1,6 +1,6 @@
 import React from 'react';
 import {Grid, MenuItem, Select} from "@material-ui/core";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IScheduleFilters} from "../../../../store/reducers/schedules/types";

@@ -7,7 +7,7 @@ import {ScheduledAppointments} from "../../../features/admin/ScheduledAppointmen
 import RoPredictionParameters from "../../../features/admin/RoPredictionParameters/RoPredictionParameters";
 import {OverbookingFactor} from "../../../features/admin/OverbookingFactor/OverbookingFactor";
 import {UnplannedDemand} from "../../../features/admin/UnplannedDemand/UnplannedDemand";
-import {optimizerRoot} from "../../../config/constants";
+import {optimizerRoot} from "../../../utils/constants";
 
 export const AppointmentAllocation = () => {
     const [selectedTab, setTab] = useState<string>("0");

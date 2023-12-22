@@ -5,7 +5,7 @@ import {Button} from "@material-ui/core";
 import moment from "moment";
 import {Api} from "../../../config/requests";
 import {IBreak, IBreakFrom} from "../../../store/reducers/serviceCenters/types";
-import {timeSpanString} from "../../../config/constants";
+import {timeSpanString} from "../../../utils/constants";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {TBreak} from "./types";
 import {initialBreaks} from "./constants";

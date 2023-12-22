@@ -1,5 +1,5 @@
 import React, {Dispatch, useCallback, useEffect, useState} from 'react';
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Button} from "@material-ui/core";
 import {updatePackageDisclaimer} from "../../../../store/reducers/serviceCenters/actions";
 import {useDispatch} from "react-redux";

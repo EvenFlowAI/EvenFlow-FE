@@ -7,11 +7,10 @@ import {
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {ViewAppointmentsModal} from "../ViewAppointmentsModal/ViewAppointmentsModal";
 import moment from "moment";
-import {getAppointmentDate} from "../../../../utils/utils";
 import {API} from "../../../../api/api";
 import {MoreHoriz} from "@material-ui/icons";
 import {IOrder, IPageRequest, TableRowDataType} from "../../../../types/types";
-import {timeString} from "../../../../config/constants";
+import {timeString} from "../../../../utils/constants";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useModal} from "../../../../hooks/useModal/useModal";
@@ -19,6 +18,7 @@ import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
+import {getAppointmentDate} from "./utils";
 
 const cols: TableRowDataType<IAppointment>[] = [
     {header: "Date", val: el => el.dateTime ? moment.utc(el.dateTime).format("MMMM D, YYYY") : "", orderId: "date", width: 150},

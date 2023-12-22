@@ -1,6 +1,6 @@
 import React from 'react';
 import {ICustomerWithPhones} from "../../../../../store/reducers/enhancedCustomerSearch/types";
-import {CustomerInput} from "../../../../../components/FormControls/CustomerInput/CustomerInput";
+import {CustomerInput} from "../../../../../components/formControls/CustomerInput/CustomerInput";
 
 type TCustomerInputFieldProps = {
     editingElement: ICustomerWithPhones|null;

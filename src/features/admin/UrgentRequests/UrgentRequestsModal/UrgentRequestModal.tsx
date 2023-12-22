@@ -11,7 +11,7 @@ import {
 } from "../../../../store/reducers/serviceRequests/actions";
 import {Table} from "../../../../components/Table/Table";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
-import {SC_UNDEFINED} from "../../../../config/constants";
+import {SC_UNDEFINED} from "../../../../utils/constants";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 import {TableRowDataType} from "../../../../types/types";
 import {usePagination} from "../../../../hooks/usePaginations/usePaginations";

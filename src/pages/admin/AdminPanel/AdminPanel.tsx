@@ -1,11 +1,11 @@
 import React, {useEffect, useRef, useState} from "react";
-import {SideBar} from "../../../components/SideBar/SideBar";
+import {SideBar} from "../../../features/admin/SideBar/SideBar";
 import {Redirect, Switch} from "react-router-dom";
 import {AdminPage} from "../AdminPage/AdminPage";
-import {NavBar} from "../../../components/NavBar/NavBar";
+import {NavBar} from "../../../features/admin/NavBar/NavBar";
 import {Toolbar} from "@material-ui/core";
 import {Routes} from "../../../config/routes";
-import {PrivateRoute} from "../../../utils/Routes";
+import {PrivateRoute} from "../../../components/PrivateRoute/PrivateRoute";
 import {useDispatch} from "react-redux";
 import {getCurrentUser} from "../../../store/reducers/users/actions";
 import {loadDealershipProfile} from "../../../store/reducers/dealershipGroups/actions";

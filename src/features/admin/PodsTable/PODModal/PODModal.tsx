@@ -3,13 +3,13 @@ import {DialogProps} from "../../../../components/BaseModal/types";
 import {EAppointmentType, EJobType, IPod, IPodForm} from "../../../../store/reducers/pods/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button, Grid, Switch} from "@material-ui/core";
-import {SC_UNDEFINED} from "../../../../config/constants";
+import {SC_UNDEFINED} from "../../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {IAdvisorShort} from "../../../../store/reducers/users/types";
 import {IBayShort} from "../../../../store/reducers/bays/types";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
-import {autocompleteOptionsRender, autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteOptionsRender, autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
 import {RootState} from "../../../../store/rootReducer";
 import {

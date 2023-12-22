@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {StepWrapper} from '../../../../components/styled/StepWrapper';
-import {Actions} from '../../Actions/Actions';
+import {ActionButtons} from '../../ActionButtons/ActionButtons';
 import {SelectedAppointment} from "./SelectedAppointment/SelectedAppointment";
 import {AppointmentDateSelector} from "./AppointmentDateSelector/AppointmentDateSelector";
 import {AppointmentTimeSelector} from "./AppointmentTimeSelector/AppointmentTimeSelector";
 import moment from "moment";
 import {useHistory, useParams} from "react-router-dom";
-import {collectServiceRequestIds, decodeSCID, groupAppointments, mapRecallsForRequest} from "../../../../utils/utils";
+import {collectServiceRequestIds, decodeSCID, mapRecallsForRequest} from "../../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
@@ -37,6 +37,7 @@ import {useTranslation} from "react-i18next";
 import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions";
 import {Routes} from "../../../../config/routes";
 import {Wrapper} from "./styles";
+import {groupAppointments} from "./utils";
 
 type TAppointmentSelectionProps = {
     handleSetScreen: TArgCallback<TScreen>;
@@ -357,7 +358,7 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
         <StepWrapper>
             <Wrapper>
                 <SelectedAppointment />
-                <Actions onBack={handleBack} onNext={handleNext} nextDisabled={nextDisabled} nextLabel={t("Next")} loading={isConsultantsLoading}/>
+                <ActionButtons onBack={handleBack} onNext={handleNext} nextDisabled={nextDisabled} nextLabel={t("Next")} loading={isConsultantsLoading}/>
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}

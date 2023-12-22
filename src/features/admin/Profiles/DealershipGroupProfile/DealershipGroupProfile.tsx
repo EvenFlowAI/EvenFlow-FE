@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {AvatarUpload} from "../../../../components/AvatarUpload/AvatarUpload";
 import {updateDealership, updateDealershipAvatar} from "../../../../store/reducers/dealershipGroups/actions";
 import {useDispatch} from "react-redux";
-import {states} from "../../../../config/constants";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {states} from "../../../../utils/constants";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
 import {validatePhoneNumber} from "../../../../utils/utils";
 import {useStyles} from "./styles";

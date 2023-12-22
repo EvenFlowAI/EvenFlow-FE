@@ -11,7 +11,7 @@ import {
 import {dayDemands, EDayDemand, EDemandCategory, EDemandType} from "../../../../store/reducers/pricingSettings/types";
 import {EditButton} from "../../../../components/EditButton/EditButton";
 import {TableContainer} from "../../../../pages/admin/PricingSettings/UI";
-import {SC_UNDEFINED} from "../../../../config/constants";
+import {SC_UNDEFINED} from "../../../../utils/constants";
 import {setPricingDemand} from "../../../../store/reducers/pricingSettings/actions";
 import {useDispatch} from "react-redux";
 import {TMappedDemands} from "../../../../store/reducers/pricingSettings/selectors";

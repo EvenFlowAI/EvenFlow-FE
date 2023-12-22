@@ -3,10 +3,10 @@ import {DialogProps} from "../../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import {useDispatch} from "react-redux";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {setNewLostCustomers} from "../../../../store/reducers/valueSettings/actions";
 import {INewLostCustomer, NewLostEnum} from "../../../../store/reducers/valueSettings/types";
-import {SC_UNDEFINED} from "../../../../config/constants";
+import {SC_UNDEFINED} from "../../../../utils/constants";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";

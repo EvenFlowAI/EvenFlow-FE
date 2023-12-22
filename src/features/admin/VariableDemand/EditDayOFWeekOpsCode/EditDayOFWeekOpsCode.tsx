@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../../../../components/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {SliderRange, TOpsCode} from "../types";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Button, Divider} from "@material-ui/core";
 import {EDemandCategory, IRequestPricingSettings} from "../../../../store/reducers/pricingSettings/types";
 import {updateSRPricingSettings} from "../../../../store/reducers/pricingSettings/actions";

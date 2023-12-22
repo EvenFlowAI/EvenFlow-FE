@@ -1,12 +1,12 @@
 import React, {useMemo, useState} from "react";
 import {Paper} from "@material-ui/core";
 import {CalendarControls} from "./CalendarControls/CalendarControls";
-import {WeekDayNames} from "../../../config/constants";
+import {WeekDayNames} from "../../../utils/constants";
 import moment, {Moment} from "moment";
 import clsx from "clsx";
 import {Star, SupervisorAccount} from "@material-ui/icons";
 import {TDay} from "./types";
-import {useCalendarStyles} from "../../../commonStyles/useCalendarStyles";
+import {useCalendarStyles} from "../../../hooks/styling/useCalendarStyles";
 
 export const AvailableStaffCalendar = () => {
     const [date, setDate] = useState<Moment>(moment());

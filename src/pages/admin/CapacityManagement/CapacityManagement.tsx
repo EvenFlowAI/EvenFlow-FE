@@ -1,7 +1,7 @@
 import React from "react";
 import {ContentContainer} from "../../../components/ContentContainer/ContentContainer";
 import {Switch, Redirect} from "react-router-dom";
-import {PrivateRoute} from "../../../utils/Routes";
+import {PrivateRoute} from "../../../components/PrivateRoute/PrivateRoute";
 import {Routes} from "../../../config/routes";
 import {CapacitySettings} from "../CapacitySettings/CapacitySettings";
 import {AppointmentValueSettings} from "../AppointmentValueSettings/AppointmentValueSettings";

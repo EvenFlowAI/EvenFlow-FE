@@ -1,6 +1,7 @@
 import {ICurrentUser, TUserActions} from "./types";
 import {superUser} from "../../../config/config";
-import {Roles} from "../../../config/constants";
+
+import {Roles} from "../../../types/types";
 
 
 type IUsersState = {

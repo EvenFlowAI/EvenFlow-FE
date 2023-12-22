@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/BaseModal/types";
-import {states} from "../../../../config/constants";
+import {states} from "../../../../utils/constants";
 import {Button} from "@material-ui/core";
 import {CreateServiceCenterForm} from "../CreateServiceCenterForm/CreateServiceCenterForm";
 import {useDispatch, useSelector} from "react-redux";

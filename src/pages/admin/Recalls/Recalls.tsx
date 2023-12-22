@@ -5,7 +5,7 @@ import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import RecallParts from "../../../features/admin/RecallsParts/RecallParts";
 import RecallsAllOtherParts from "../../../features/admin/RecallsAllOtherParts/RecallsAllOtherParts";
-import {optimizerRoot} from "../../../config/constants";
+import {optimizerRoot} from "../../../utils/constants";
 
 const Recalls = () => {
     const [selectedTab, setTab] = useState<string>("0");

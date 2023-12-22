@@ -6,7 +6,7 @@ import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequest
 import {RootState} from "../../../../store/rootReducer";
 import {Table} from "../../../Table/Table";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
-import {SearchInput} from "../../../FormControls/SearchInput/SearchInput";
+import {SearchInput} from "../../../formControls/SearchInput/SearchInput";
 import {
     loadAssignedServiceRequests,
     setAssignedFilter, setAssignedPageData,

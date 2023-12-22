@@ -26,7 +26,7 @@ import {getStartEndDates, noop} from "../../../utils/utils";
 import {loadWeeklyHolidaysList} from "../../../store/reducers/holidays/actions";
 import { TIds } from './types';
 import {ControlWrapper, HeadCell, Holiday, nonWorkingStyle, ScheduleTable} from "./styles";
-import {calendarDateFormat} from "../../../config/constants";
+import {calendarDateFormat} from "../../../utils/constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 

@@ -4,7 +4,7 @@ import {DialogProps} from "../../../../components/BaseModal/types";
 import {IUpsellServiceRequest, IUpsellServiceRequestUpdate} from "../../../../store/reducers/serviceRequests/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button, Grid} from "@material-ui/core";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {updateUpsellServiceRequest} from "../../../../store/reducers/serviceRequests/actions";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 

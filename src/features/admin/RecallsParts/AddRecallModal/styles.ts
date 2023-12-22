@@ -1,6 +1,6 @@
 import {makeStyles} from "@material-ui/core/styles";
 import {styled} from "@material-ui/core";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 
 export const useStyles = makeStyles(() => ({
     actionsWrapper: {

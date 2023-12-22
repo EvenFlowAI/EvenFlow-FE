@@ -1,5 +1,5 @@
 import {FormControlLabel, styled} from "@material-ui/core";
-import {TextField} from "../../../../components/FormControls/TextField/TextField";
+import {TextField} from "../../../../components/formControls/TextField/TextField";
 
 export const Wrapper = styled('div')({
     width: "100%"

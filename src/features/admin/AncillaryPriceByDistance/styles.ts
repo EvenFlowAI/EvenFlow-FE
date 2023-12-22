@@ -1,5 +1,5 @@
 import {Button, styled, withStyles} from "@material-ui/core";
-import {TextField} from "../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 
 export const ButtonWrapper = styled('div')(() => ({
     display: 'flex',

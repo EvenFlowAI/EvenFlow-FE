@@ -12,7 +12,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {updateMaxPrice} from "../../../store/reducers/pricingSettings/actions";
 import {ButtonsWrapper, ControlLabel} from "./styles";
-import {pricingRoot} from "../../../config/constants";
+import {pricingRoot} from "../../../utils/constants";
 import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";

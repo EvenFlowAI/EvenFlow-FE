@@ -14,7 +14,7 @@ import {
 } from "../../../../store/reducers/offers/types";
 import {useDispatch} from "react-redux";
 import {createOffer, removeOffer, setArchiveOffer, updateOffer} from "../../../../store/reducers/offers/actions";
-import {SC_UNDEFINED, SOMETHING_WRONG, timeSpanString} from "../../../../config/constants";
+import {SC_UNDEFINED, SOMETHING_WRONG, timeSpanString} from "../../../../utils/constants";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
 import {loadSCRequestsShort} from "../../../../store/reducers/serviceRequests/actions";
 import {TEnumMap} from "../../../../store/reducers/utils";

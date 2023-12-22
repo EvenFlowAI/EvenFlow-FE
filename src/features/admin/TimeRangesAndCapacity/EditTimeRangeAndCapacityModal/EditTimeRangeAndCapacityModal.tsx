@@ -6,7 +6,7 @@ import moment from "moment";
 import {Button, Divider, Grid} from "@material-ui/core";
 import {AccessTime} from "@material-ui/icons";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
 import {useDispatch} from "react-redux";
 import {createTimeRange, updateTimeRange} from "../../../../store/reducers/capacityServiceValet/actions";

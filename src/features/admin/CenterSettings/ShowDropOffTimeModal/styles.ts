@@ -1,5 +1,5 @@
 import {styled} from "@material-ui/core";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 
 export const Textarea = styled(TextField)({
     "& textarea": {

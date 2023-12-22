@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../BaseModal/types";
 import {BaseModal, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
-import {Actions} from "../../../../features/booking/Actions/Actions";
+import {ActionButtons} from "../../../../features/booking/ActionButtons/ActionButtons";
 import {IAppointmentByQuery} from "../../../../api/types";
 import {API} from "../../../../api/api";
 import moment from "moment";
 import {Loading} from "../../../Loading/Loading";
 import {NoData} from "../../../NoData/NoData";
-import {useDialogStyles} from "../../../../commonStyles/useDialogStyles";
+import {useDialogStyles} from "../../../../hooks/styling/useDialogStyles";
 import {TArgCallback} from "../../../../types/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -67,7 +67,7 @@ const CancelAppointmentConfirm: React.FC<DialogProps&{hashKey: string, loadData:
             </DialogContent>
                     : <NoData/>}
             <div className={classes.actionsWrapper}>
-                <Actions
+                <ActionButtons
                     nextDisabled={loading}
                     prevDisabled={loading}
                     onBack={onClose}

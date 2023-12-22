@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
-import {Actions} from "../../Actions/Actions";
+import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {StepWrapper} from '../../../../components/styled/StepWrapper';
 import {TArgCallback, TScreen} from "../../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -22,7 +22,7 @@ import {useHistory, useParams} from "react-router-dom";
 import {EServiceCategoryPage, IServiceCategory} from "../../../../api/types";
 import {Loading} from '../../../../components/Loading/Loading';
 import ReactGA from "react-ga4";
-import ShoppingCart from "../ShoppingCart/ShoppingCart";
+import ShoppingCart from "./ShoppingCart/ShoppingCart";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {Routes} from "../../../../config/routes";
 import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
@@ -258,7 +258,7 @@ export const ServiceNeedsFrame: React.FC<TProps> = ({
                 })}
             </CardsWrapper> : <Loading />}
             <ShoppingCart/>
-            <Actions
+            <ActionButtons
                 prevDisabled={history?.location?.search?.includes('view=unique')}
                 hideNext={!selectedServices?.length}
                 hidePrev={!selectedServices.length && isManagingAppointment}

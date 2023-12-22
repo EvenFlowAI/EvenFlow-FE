@@ -1,7 +1,7 @@
 import React from 'react';
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {BookingFlowConfig} from "../../../features/admin/BookingFlowConfig/BookingFlowConfig";
-import {bookingFlowRoot} from "../../../config/constants";
+import {bookingFlowRoot} from "../../../utils/constants";
 
 export const BookingFlowConfigPage = () => {
     return (

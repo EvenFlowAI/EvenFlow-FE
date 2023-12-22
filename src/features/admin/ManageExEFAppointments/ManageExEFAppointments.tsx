@@ -6,7 +6,7 @@ import {updateAdvisor} from "../../../store/reducers/serviceCenters/actions";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {SquarePaper} from "../../../components/styled/Paper";
 import {useStyles} from "./styles";
-import {optimizerRoot} from "../../../config/constants";
+import {optimizerRoot} from "../../../utils/constants";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";

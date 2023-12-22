@@ -1,11 +1,11 @@
 import React from "react";
 import {Divider, FormControlLabel, Grid, Switch} from "@material-ui/core";
-import {TextField} from "../../../../FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../formControls/TextFieldStyled/TextField";
 import {checkEmail} from "../../../../../utils/utils";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../../utils/autocompleteRenders";
 import {superRoles} from "../constants";
-import {userRoles, widerUserRoles} from "../../../../../config/constants";
+import {userRoles, widerUserRoles} from "../../../../../utils/constants";
 import {TRole} from "../../../../../store/reducers/users/types";
 import {TAdvisorForm, TConsultantOption, TDMSConsultantChange, TSelectChange} from "../types";
 import {IServiceCenter} from "../../../../../store/reducers/serviceCenters/types";

@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useCallback} from 'react';
 import {IAssignedServiceRequest, TOPsCodeWithIndex} from "../../../../../store/reducers/serviceRequests/types";
-import {TextField} from "../../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../../components/formControls/TextFieldStyled/TextField";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import Checkbox from "../../../../../components/Checkbox/Checkbox";

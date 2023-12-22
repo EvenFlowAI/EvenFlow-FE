@@ -7,7 +7,7 @@ import {
     loadAssignedServiceRequests,
     setAssignedOrdering,
 } from "../../../../store/reducers/serviceRequests/actions";
-import {SC_UNDEFINED} from "../../../../config/constants";
+import {SC_UNDEFINED} from "../../../../utils/constants";
 import {IOrder, TableRowDataType, TCallback} from "../../../../types/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {RootState} from "../../../../store/rootReducer";

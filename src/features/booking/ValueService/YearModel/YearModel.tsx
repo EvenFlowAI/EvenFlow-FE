@@ -1,15 +1,15 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Autocomplete} from "@material-ui/lab";
 import {useDispatch, useSelector} from "react-redux";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
-import {Actions} from "../../Actions/Actions";
+import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {loadSeriesModels, setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {TModel, TSeries} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {Loading} from "../../../../components/Loading/Loading";
 import {useTranslation} from "react-i18next";
-import {useOfferInputStyles} from "../../../../commonStyles/useOfferInputStyles";
+import {useOfferInputStyles} from "../../../../hooks/styling/useOfferInputStyles";
 import {SelectWrapper} from "../../../../components/styled/SelectWrapper";
 import {ScreenWrapper} from "../../../../components/styled/ScreenWrapper";
 import {SelectsTitle} from "../../../../components/styled/SelectsTitle";
@@ -159,7 +159,7 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
                     />
                     : null}
             </SelectWrapper>
-            <Actions
+            <ActionButtons
                 onBack={handleBack}
                 onNext={handleNext}
                 nextLabel={t("View Price")}

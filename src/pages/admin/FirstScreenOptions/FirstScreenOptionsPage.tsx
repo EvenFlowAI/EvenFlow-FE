@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {Button} from "@material-ui/core";
-import {bookingFlowRoot} from "../../../config/constants";
+import {bookingFlowRoot} from "../../../utils/constants";
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {AddFirstScreenOptionModal} from "../../../features/admin/FirstScreenOptions/AddFirstScreenOptionModal/AddFirstScreenOptionModal";
 import {FirstScreenOptionsTable} from "../../../features/admin/FirstScreenOptions/FirstScreenOptionsTable/FirstScreenOptionsTable";

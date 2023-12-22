@@ -10,8 +10,8 @@ import {
 } from "../../../../store/reducers/serviceRequests/actions";
 import {IServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Table} from "../../../Table/Table";
-import {SC_UNDEFINED} from "../../../../config/constants";
-import {SearchInput} from "../../../FormControls/SearchInput/SearchInput";
+import {SC_UNDEFINED} from "../../../../utils/constants";
+import {SearchInput} from "../../../formControls/SearchInput/SearchInput";
 import {IOrder, TableRowDataType} from "../../../../types/types";
 import {LoadingButton} from "../../../LoadingButton/LoadingButton";
 import {usePagination} from "../../../../hooks/usePaginations/usePaginations";

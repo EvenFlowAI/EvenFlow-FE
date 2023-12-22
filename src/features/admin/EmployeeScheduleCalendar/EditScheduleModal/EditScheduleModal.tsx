@@ -9,12 +9,12 @@ import {
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import moment from "moment";
 import {IEmployee} from "../../../../store/reducers/employees/types";
 import {ISchedule, IScheduleForm, IScheduleForWeek} from "../../../../store/reducers/schedules/types";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import {timeSpanString} from "../../../../config/constants";
+import {timeSpanString} from "../../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEmployeesSchedule, setEmployeesSchedule} from "../../../../store/reducers/schedules/actions";
 import {RootState} from "../../../../store/rootReducer";

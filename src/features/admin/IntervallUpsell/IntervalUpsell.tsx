@@ -13,8 +13,8 @@ import {IUpsellServiceRequest} from "../../../store/reducers/serviceRequests/typ
 import {Table} from "../../../components/Table/Table";
 import {MoreHoriz} from "@material-ui/icons";
 import {Api} from "../../../config/requests";
-import {optimizerRoot, SC_UNDEFINED} from "../../../config/constants";
-import {SearchInput} from "../../../components/FormControls/SearchInput/SearchInput";
+import {optimizerRoot, SC_UNDEFINED} from "../../../utils/constants";
+import {SearchInput} from "../../../components/formControls/SearchInput/SearchInput";
 import {IOrder, TableRowDataType} from "../../../types/types";
 import IntervalUpsellModal from "./IntervalUpsellModal/IntervalUpsellModal";
 import {ServiceRequestCellData} from "../../../components/ServiceRequestCellData/ServiceRequestCellData";

@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
-import {FileInput} from "../../../../components/FormControls/FileInput/FileInput";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
+import {FileInput} from "../../../../components/formControls/FileInput/FileInput";
 import {setAssignedFilter} from "../../../../store/reducers/serviceRequests/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {IIconState} from "../../ServiceCategories/AddServiceCategoryModal/types";

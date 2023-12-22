@@ -14,7 +14,7 @@ import {
 import {OptimizationModal} from "../../../features/admin/OptimizationWindows/OptimizationModal/OptimizationModal";
 import {AppointmentCutoffModal} from "../../../features/admin/OptimizationWindows/AppointmentCutoffModal/AppointmentCutoffModal";
 import moment from "moment";
-import {optimizerRoot, timeSpanString} from "../../../config/constants";
+import {optimizerRoot, timeSpanString} from "../../../utils/constants";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {MaxPriceDateRangeModal} from "../../../features/admin/OptimizationWindows/MaxPriceDateRangeModal/MaxPriceDateRangeModal";
 import {TOptParam} from "./types";

@@ -11,7 +11,7 @@ import {LocalTokens, TCallback} from "../../../types/types";
 import {v4 as uuidv4} from 'uuid';
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../../store/rootReducer";
-import {Actions} from "../Actions/Actions";
+import {ActionButtons} from "../ActionButtons/ActionButtons";
 import ReturningSelfCustomer from "./ReturningSelfCustomer/ReturningSelfCustomer";
 import NewSelfCustomer from "./NewSelfCustomer/NewSelfCustomer";
 import ReturningCustomerForAdmin from "./ReturningCustomerForAdmin/ReturningCustomerForAdmin";
@@ -79,6 +79,6 @@ export const CustomerSelect: React.FC<TProps> = ({
                 ? <NewCustomerForAdmin handleNew={handleNew}/>
                 : <NewSelfCustomer handleNew={handleNew}/>}
         </Grid>
-        {isAuthorized && !!shortSC?.length && <Actions onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service Center"/>}
+        {isAuthorized && !!shortSC?.length && <ActionButtons onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service Center"/>}
     </div>
 };

@@ -10,7 +10,7 @@ import {ValueIndicatorsTable} from "../../../features/admin/ValueIndicatorsTable
 import {UrgentRequests} from "../../../features/admin/UrgentRequests/UrgentRequests";
 import {TTab} from "./types";
 import {useStyles} from "./styles";
-import {optimizerRoot} from "../../../config/constants";
+import {optimizerRoot} from "../../../utils/constants";
 
 const tabs: TTab[] = [
     {label: "Value Indicators", id: "0", component: ValueIndicatorsTable},

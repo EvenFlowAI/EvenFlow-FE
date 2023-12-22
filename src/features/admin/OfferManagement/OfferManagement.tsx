@@ -5,7 +5,7 @@ import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import {ActiveOffers} from "./ActiveOffers/ActiveOffers";
 import {ArchiveOffers} from "./ArchiveOffers/ArchiveOffers";
-import {pricingRoot} from "../../../config/constants";
+import {pricingRoot} from "../../../utils/constants";
 
 export const OfferManagement = () => {
     const [selectedTab, setTab] = useState<string>("0");

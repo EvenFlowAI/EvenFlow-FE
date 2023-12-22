@@ -9,7 +9,7 @@ import {useDispatch} from "react-redux";
 import {loadHoursOfOperations} from "../../../store/reducers/slotScoring/actions";
 import TimeRangesAndCapacity from "../../../features/admin/TimeRangesAndCapacity/TimeRangesAndCapacity";
 import CenterSettings from "../../../features/admin/CenterSettings/CenterSettings";
-import {optimizerRoot} from "../../../config/constants";
+import {optimizerRoot} from "../../../utils/constants";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const CapacityServiceValet = () => {

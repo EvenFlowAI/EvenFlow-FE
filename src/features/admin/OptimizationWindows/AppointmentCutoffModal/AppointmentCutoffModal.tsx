@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
-import {SC_UNDEFINED, timeSpanString} from "../../../../config/constants";
+import {SC_UNDEFINED, timeSpanString} from "../../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {EDay} from "../../../../store/reducers/demandSegments/types";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";

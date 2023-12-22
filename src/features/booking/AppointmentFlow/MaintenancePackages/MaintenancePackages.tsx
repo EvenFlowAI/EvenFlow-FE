@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Actions} from "../../Actions/Actions";
+import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -330,7 +330,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({onBack, o
             </React.Fragment> : null}
             {scProfile?.eMenuEnabled
                 ? null
-                : <Actions
+                : <ActionButtons
                 onBack={handleBack}
                 nextLabel={t("Next")}
                 nextDisabled={!localSelectedPackage || localSelectedPricingType === null}

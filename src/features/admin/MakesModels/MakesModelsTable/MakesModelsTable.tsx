@@ -6,13 +6,13 @@ import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {IMake} from "../../../../api/types";
 import {Table} from "../../../../components/Table/Table";
 import {MoreHoriz} from "@material-ui/icons";
-import {truncateMakes} from "../../../../utils/utils";
 import {TableRowDataType, TCallback} from "../../../../types/types";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {truncateMakes} from "./utils";
 
 const RowData: TableRowDataType<IMake>[] = [
     {val: (el: IMake) => <span style={{fontWeight: 'bold'}}>{el.name}</span>, header: "Make"},

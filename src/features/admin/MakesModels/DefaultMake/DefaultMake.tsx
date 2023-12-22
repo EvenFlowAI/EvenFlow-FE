@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {IMake} from "../../../../api/types";
 import {RootState} from "../../../../store/rootReducer";
 import {updateDefaultMake} from "../../../../store/reducers/serviceCenters/actions";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 

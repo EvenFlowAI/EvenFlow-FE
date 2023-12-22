@@ -1,5 +1,5 @@
 import {DatePicker as DP, DatePickerProps} from "@material-ui/pickers";
-import {useDatePickerStyles} from "../../commonStyles/useDatePickerStyles";
+import {useDatePickerStyles} from "../../hooks/styling/useDatePickerStyles";
 import {InputLabel} from "@material-ui/core";
 import React from "react";
 

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
 import {Button, TableBody, TableHead} from "@material-ui/core";
-import {TextField} from "../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {DialogProps} from "../../../components/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";

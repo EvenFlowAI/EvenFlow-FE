@@ -4,7 +4,7 @@ import {DialogProps} from "../../../../BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../BaseModal/BaseModal";
 import {Button, Divider, MenuItem, Select} from "@material-ui/core";
 import {TReassignZip, TZipCode, TZone, TZonesServiceType} from "../../../../../store/reducers/mobileService/types";
-import {TextField} from "../../../../FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../formControls/TextFieldStyled/TextField";
 import {assignZipToMobServiceZone} from "../../../../../store/reducers/mobileService/actions";
 import {
     reassignZipToServiceValetZone,

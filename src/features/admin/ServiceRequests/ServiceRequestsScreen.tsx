@@ -12,9 +12,9 @@ import {
 } from "../../../store/reducers/serviceRequests/actions";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {OverrideOPsCodeModal} from "./OverrideOpsCodeModal/OverrideOPsCodeModal";
-import {SearchInput} from "../../../components/FormControls/SearchInput/SearchInput";
+import {SearchInput} from "../../../components/formControls/SearchInput/SearchInput";
 import {ServiceRequestsTable} from "./ServiceRequestsTable/ServiceRequestsTable";
-import {optimizerRoot} from "../../../config/constants";
+import {optimizerRoot} from "../../../utils/constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {usePagination} from "../../../hooks/usePaginations/usePaginations";
 

@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Grid, MenuItem, Paper, Select, IconButton} from "@material-ui/core";
 import {Clear} from '@material-ui/icons';
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {EAppointmentStatus} from "../../../../api/types";
 import {DatePicker} from "@material-ui/pickers";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";

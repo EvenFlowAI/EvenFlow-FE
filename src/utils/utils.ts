@@ -1,21 +1,12 @@
 import {IAddress} from "../store/reducers/dealershipGroups/types";
-import {TCalendarProps, TGroupedAppointments, TOption} from "./types";
-import * as queryString from "querystring";
+import {TOption} from "./types";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {PERMISSIONS} from "../permissions";
 import {matchPath} from "react-router-dom";
-import {
-    EAppointmentTimingType,
-    IRemappedAppointmentSlot,
-    ISR,
-    TRecallForRequest
-} from "../store/reducers/appointment/types";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {ISR, TRecallForRequest} from "../store/reducers/appointment/types";
 import {
     EMaintenanceOptionType,
-    IAppointment,
     ILoadedVehicle,
-    IMake,
     IOfferForCategory,
     IPackageOptions,
     IServiceCategory
@@ -55,11 +46,6 @@ export const pathReplace = (path: string, data?: Record<string, any>): string =>
 }
 export const noop = () => {};
 
-export const getCalendarUrl = (params: TCalendarProps): string => {
-    const data: {[k: string]: string|undefined} = {...params, dates: params.dates.join("/")};
-    data.action = "TEMPLATE";
-    return `https://calendar.google.com/calendar/event?${queryString.stringify(data)}`;
-}
 export const hasPermission = (user: ICurrentUser|undefined, route: string): boolean => {
     if (!user) {
         return true;
@@ -75,18 +61,6 @@ export const hasPermission = (user: ICurrentUser|undefined, route: string): bool
     return true;
 }
 
-export const preCenterNeeded = (
-    isSet: boolean, appointmentType: EAppointmentTimingType,
-    sliceIdx: number, groupedAppointments: TGroupedAppointments, displayItems: number,
-    appointmentDate: ParsableDate|undefined
-): boolean => {
-    return !isSet
-        && appointmentType === EAppointmentTimingType.PreferredDate
-        && !sliceIdx
-        && Object.keys(groupedAppointments).length > displayItems
-        && Boolean(appointmentDate)
-}
-
 export const validatePhoneNumber = (value: string): string => {
     if (value) {
         value = `+${value.replace(/[^0-9.]/g, '')}`;
@@ -94,80 +68,16 @@ export const validatePhoneNumber = (value: string): string => {
     return value;
 }
 
-export const getAppointmentDate = (appointment: IAppointment) => {
-    return moment.utc(appointment.dateTime);
-}
-
 export const encodeSCID = (id: number): string => {
     return encode(btoa(String(id)));
 }
+
 export const decodeSCID = (id: string): number => {
     try {
         return Number(atob(decode(id)));
     } catch {
         return 0;
     }
-}
-
-export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAppointments => {
-    const appointments: TGroupedAppointments = {};
-    for (let slot of slots) {
-        const date = moment(slot.date);
-        const idx = slot.id.split("|")[0];
-        if (appointments[idx]) {
-            appointments[idx].appointments.push(slot);
-            if (slot.offer) {
-                appointments[idx].offers = appointments[idx].offers || Boolean(slot.offer);
-            }
-            if ((slot.priceWithOffer?.value || slot.price.value) < appointments[idx].lowestPrice) {
-                appointments[idx].lowestPrice = slot.priceWithOffer?.value || slot.price.value;
-                appointments[idx].ancillaryPrice = slot.price.ancillaryPrice;
-            }
-        } else {
-            const lowestPrice = slot.priceWithOffer?.value ?? slot.price.value;
-            const amountOfSavingMoney = slot?.price?.amountOfSavingMoney;
-            appointments[idx] = {
-                date,
-                idx,
-                lowestPrice,
-                appointments: [slot],
-                offers: Boolean(slot.offer),
-                amountOfSavingMoney: amountOfSavingMoney,
-                ancillaryPrice: slot.price.ancillaryPrice,
-            };
-        }
-    }
-    return appointments;
-}
-
-export const fallbackCopyTextToClipboard = (text: string) => {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-
-    // Avoid scrolling to bottom
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.position = "fixed";
-
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-
-    try {
-        document.execCommand('copy');
-    } catch (err) {
-        console.error('Fallback: Unable to copy', err);
-    }
-    document.body.removeChild(textArea);
-}
-export const copyTextToClipboard = (text: string) => {
-    if (!navigator.clipboard) {
-        fallbackCopyTextToClipboard(text);
-        return;
-    }
-    navigator.clipboard.writeText(text).then(() => {}, (err) => {
-        console.error('Async: Could not copy text: ', err);
-    });
 }
 
 export const parentOrigins = {
@@ -265,23 +175,6 @@ export const checkEmail = (email: string|undefined): boolean => {
     if (!email) return false;
     const matches = String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
     return Boolean(matches);
-}
-
-export const truncateMakes = (makes: IMake[]): IMake[] => {
-    const formattedData: IMake[] = [];
-    makes.forEach(make => {
-        const formattedMake = {...make};
-
-        if (formattedMake.name.length > 30) {
-            formattedMake.name = formattedMake.name.slice(0, 26).concat('...');
-        }
-        formattedMake.models = formattedMake.models
-            .map(model => model.length > 30
-                ? model.slice(0, 26).concat('...')
-                : model)
-        formattedData.push(formattedMake);
-    })
-    return formattedData;
 }
 
 export const getTransportationOptionString = (option: string) => {

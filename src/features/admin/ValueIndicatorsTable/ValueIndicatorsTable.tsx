@@ -8,7 +8,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {loadValueSettings, setValueSettings} from "../../../store/reducers/valueSettings/actions";
 import {Indicators, IValueSettings} from "../../../store/reducers/valueSettings/types";
-import {SC_UNDEFINED} from "../../../config/constants";
+import {SC_UNDEFINED} from "../../../utils/constants";
 import {RootState} from "../../../store/rootReducer";
 import {StyledTable} from "../../../components/styled/StyledTable";
 import {ValueIndicatorsRow} from "./ValueIndicatorsRow/ValueIndicatorsRow";

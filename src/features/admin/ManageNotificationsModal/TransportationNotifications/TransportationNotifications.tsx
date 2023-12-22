@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Button, Divider, IconButton, Switch} from "@material-ui/core";
@@ -19,7 +19,7 @@ import {IAdvisorShort} from "../../../../store/reducers/users/types";
 import {loadTransportationOptions} from "../../../../store/reducers/transportationNeeds/actions";
 import {ITransportationOptionFull} from "../../../../store/reducers/transportationNeeds/types";
 import {getTransportationOptionString} from "../../../../utils/utils";
-import {useNotificationStyles} from "../../../../commonStyles/useNotificationStyles";
+import {useNotificationStyles} from "../../../../hooks/styling/useNotificationStyles";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";

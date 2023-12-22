@@ -3,9 +3,9 @@ import {DialogProps} from "../../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import {IOptimizationWindow, TOptContentData} from "../../../../store/reducers/optimizationWindows/types";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch} from "react-redux";
-import {SC_UNDEFINED} from "../../../../config/constants";
+import {SC_UNDEFINED} from "../../../../utils/constants";
 import {setOptimizationWindow} from "../../../../store/reducers/optimizationWindows/actions";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 

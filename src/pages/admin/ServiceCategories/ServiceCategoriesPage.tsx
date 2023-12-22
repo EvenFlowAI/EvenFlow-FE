@@ -12,7 +12,7 @@ import {
 import {ServiceCategoriesTable} from "../../../features/admin/ServiceCategories/ServiceCategoriesTable/ServiceCategoriesTable";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {visitCenterTabs} from "../../../features/admin/ServiceCategories/constants";
-import {bookingFlowRoot} from "../../../config/constants";
+import {bookingFlowRoot} from "../../../utils/constants";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const tabNames = [

@@ -8,17 +8,17 @@ import {
     TUpdateCategoryData
 } from "../../../../store/reducers/categories/types";
 import {Button, Divider, FormControlLabel, Radio, RadioGroup, Switch} from "@material-ui/core";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
-import {SearchInput} from "../../../../components/FormControls/SearchInput/SearchInput";
+import {SearchInput} from "../../../../components/formControls/SearchInput/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
 import {loadAllAssignedServiceRequests, setAssignedFilter,} from "../../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {IAssignedServiceRequest, TOPsCodeWithIndex} from "../../../../store/reducers/serviceRequests/types";
 import {createCategory, updateCategory, updateCategoryIcon} from "../../../../store/reducers/categories/actions";
 import {OpsCodesTable} from "./OpsCodesTable/OpsCodesTable";
-import {FileInput} from "../../../../components/FormControls/FileInput/FileInput";
+import {FileInput} from "../../../../components/formControls/FileInput/FileInput";
 import {loadBookingFlowConfig} from "../../../../store/reducers/bookingFlowConfig/actions";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {OpsCodesOrderTable} from "./OpsCodesOrderTable/OpsCodesOrderTable";

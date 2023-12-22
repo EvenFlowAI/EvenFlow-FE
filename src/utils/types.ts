@@ -31,3 +31,13 @@ export type TOption = {
     value: number;
     name: string;
 }
+
+export type TTextParams = {
+    label: string;
+    fullWidth?: boolean;
+    disabled?: boolean;
+    placeholder?: string;
+    error?: boolean;
+    required?: boolean;
+    key?: string;
+};

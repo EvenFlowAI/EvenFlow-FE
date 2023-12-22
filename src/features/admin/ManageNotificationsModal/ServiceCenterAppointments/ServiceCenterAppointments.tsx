@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Button, Divider, IconButton, Switch} from "@material-ui/core";
@@ -10,7 +10,7 @@ import {ReactComponent as DeleteIcon} from "../../../../assets/img/close.svg";
 import {ENotificationType, TSCNotifications} from "../../../../store/reducers/notifications/types";
 import {updateNotificationsByType} from "../../../../store/reducers/notifications/actions";
 import {IAdvisorShort} from "../../../../store/reducers/users/types";
-import {useNotificationStyles} from "../../../../commonStyles/useNotificationStyles";
+import {useNotificationStyles} from "../../../../hooks/styling/useNotificationStyles";
 import {TNotificatonsProps} from "../types";
 import {initialSCNotifications} from "../constants";
 

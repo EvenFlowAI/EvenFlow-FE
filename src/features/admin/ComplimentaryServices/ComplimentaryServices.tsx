@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
-import {SearchInput} from "../../../components/FormControls/SearchInput/SearchInput";
+import {SearchInput} from "../../../components/formControls/SearchInput/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {
     changeComplimentaryPageData,
@@ -14,7 +14,7 @@ import {Table} from "../../../components/Table/Table";
 import {RootState} from "../../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
 import {Api} from "../../../config/requests";
-import {optimizerRoot, SC_UNDEFINED} from "../../../config/constants";
+import {optimizerRoot, SC_UNDEFINED} from "../../../utils/constants";
 import AddServiceManually from "./AddServiceManually/AddServiceManually";
 import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
 import {addOpsCodeFromList, loadAllComplimentary} from "../../../store/reducers/complimentary/actions";

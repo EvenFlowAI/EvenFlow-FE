@@ -3,7 +3,7 @@ import {IWaitListSettings} from "../../../../store/reducers/optimizationWindows/
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {updateWaitListSettings} from "../../../../store/reducers/optimizationWindows/actions";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Button, Switch} from "@material-ui/core";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/BaseModal/types";

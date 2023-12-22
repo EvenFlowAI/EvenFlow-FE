@@ -5,7 +5,7 @@ import {
 } from "../../../features/booking/AppointmentFlow/Cars/Cars";
 import {frameTheme} from "../../../theme/theme";
 import {ServiceNeedsFrame} from "../../../features/booking/AppointmentFlow/ServiceNeeds/ServiceNeedsFrame";
-import {SideBar} from "../../../features/booking/AppointmentFlow/SideBar/SideBar";
+import {SideBar} from "../../../features/booking/SideBar/SideBar";
 import {MaintenanceDetails} from "../../../features/booking/AppointmentFlow/MaintenanceDetails/MaintenanceDetails";
 import {Consultants} from '../../../features/booking/AppointmentFlow/Consultants/Consultants';
 import {AppointmentTiming} from '../../../features/booking/AppointmentFlow/AppointmentTiming/AppointmentTiming';
@@ -76,12 +76,12 @@ import {ManageAppointment} from "../../../features/booking/AppointmentFlow/Manag
 import AskChangesCompleted from "../../../components/modals/booking/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../../components/modals/booking/SlotImpactedWarning/SlotImpactedWarning";
 import ServiceImpactedWarning from "../../../components/modals/booking/ServiceImpactedWarning/ServiceImpactedWarning";
-import SideBarSection from "../../../features/booking/AppointmentFlow/SideBarSection/SideBarSection";
+import SideBarSection from "../../../features/booking/SideBarSection/SideBarSection";
 import {TMobileScreen, TScreen, TView} from "../../../types/types";
 import {Container, SidebarWrapper} from "./styles";
 import {AppointmentScreenTitle} from "../../../components/AppointmentScreenTitle/AppointmentScreenTitle";
 import {Subtitle} from "../../../components/AppointmentScreenSubtitle/AppointmentScreenSubtitle";
-import {SCREENS} from "../../../config/constants";
+import {SCREENS} from "../../../utils/constants";
 import {useAnalyticsBySCId} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {useException} from "../../../hooks/useException/useException";

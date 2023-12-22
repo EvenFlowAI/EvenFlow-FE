@@ -2,7 +2,7 @@ import React from "react";
 import {LoginContainer} from "../../../../components/styled/LoginContainer";
 import {LoginHeader} from "../../../../components/LoginHeader/LoginHeader";
 import {LoginTextContent} from "../../../../components/LoginTextContent/LoginTextContent";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {LoginButton} from "../../../../components/styled/LoginButton";
 import {Typography} from "@material-ui/core";
 import {BackLink} from "../../../../components/BackLink/BackLink";

@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 import {ISchedule} from "../../../store/reducers/schedules/types";
-import {timeSpanString, timeString} from "../../../config/constants";
+import {timeSpanString, timeString} from "../../../utils/constants";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 
 export const getDaysOfWeek = (date: moment.Moment, isXS: boolean): moment.Moment[] => {

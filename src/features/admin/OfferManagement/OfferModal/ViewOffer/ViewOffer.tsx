@@ -8,9 +8,9 @@ import {
     IOffer
 } from "../../../../../store/reducers/offers/types";
 import {Grid, Switch} from "@material-ui/core";
-import {TextField} from "../../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../../components/formControls/TextFieldStyled/TextField";
 import moment from "moment";
-import {calendarDateFormat, timeSpanString, timeString} from "../../../../../config/constants";
+import {calendarDateFormat, timeSpanString, timeString} from "../../../../../utils/constants";
 import {Label} from "./styles";
 
 export const ViewOffer: React.FC<{

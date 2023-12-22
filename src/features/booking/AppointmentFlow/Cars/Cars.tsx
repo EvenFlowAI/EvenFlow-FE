@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {CarCard} from "./CarCard/CarCard";
 import {useMediaQuery, useTheme} from "@material-ui/core";
-import {Actions} from "../../Actions/Actions";
+import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {TArgCallback, TCallback, TScreen} from "../../../../types/types";
 import {StepWrapper} from '../../../../components/styled/StepWrapper';
 import {useDispatch, useSelector} from "react-redux";
@@ -227,7 +227,7 @@ export const Cars: React.FC<TProps> = ({
             <Info>
                 {t("Click here to")} <span onClick={handleAddNewVehicle}>{t("add new vehicle")}</span>
             </Info>
-            <Actions
+            <ActionButtons
                 hideNext
                 onBack={onBack}
                 nextLabel={t("Next")}

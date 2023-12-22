@@ -4,7 +4,7 @@ import {TitleContainer} from "../../../components/TitleContainer/TitleContainer"
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import {Mileage} from "../../../features/admin/Mileage/Mileage";
-import {bookingFlowRoot} from "../../../config/constants";
+import {bookingFlowRoot} from "../../../utils/constants";
 import {EngineTypes} from "../../../features/admin/EngineTypes/EngineTypes";
 import {MakesModels} from "../../../features/admin/MakesModels/MakesModels";
 

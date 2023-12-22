@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
-import {Actions} from "../../Actions/Actions";
+import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
-import {TextField} from "../../../../components/FormControls/TextField/TextField";
+import {TextField} from "../../../../components/formControls/TextField/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
@@ -119,7 +119,7 @@ export const AppointmentComment: React.FC<TProps> = ({handleSetScreen, onAddServ
                 required={scProfile?.isCommentRequired}
                 placeholder={t("Describe what`s going on")}
             />
-            <Actions onBack={handleBack} onNext={onSubmit} nextLabel={t("Next")}/>
+            <ActionButtons onBack={handleBack} onNext={onSubmit} nextLabel={t("Next")}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isOpen}/>
             <AddCommentPrompt open={isErrorOpen} onClose={onErrorClose}/>
         </StepWrapper>

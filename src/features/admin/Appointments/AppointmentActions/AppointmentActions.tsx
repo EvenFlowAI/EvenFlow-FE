@@ -5,7 +5,7 @@ import {Routes} from "../../../../config/routes";
 import {NavLink} from "react-router-dom";
 import {encodeSCID} from "../../../../utils/utils";
 import {useStyles} from "./styles";
-import {SearchDebounced} from "../../../../components/FormControls/SearchDebounced/SearchDebounced";
+import {SearchDebounced} from "../../../../components/formControls/SearchDebounced/SearchDebounced";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TProps = {

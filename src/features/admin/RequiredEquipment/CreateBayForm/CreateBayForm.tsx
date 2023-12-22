@@ -1,6 +1,6 @@
 import React from "react";
 import {TBayForm} from "../types";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Checkbox, FormControlLabel, FormGroup} from "@material-ui/core";
 
 type TProps = {

@@ -3,9 +3,9 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {Button} from "@material-ui/core";
 import {useDispatch} from "react-redux";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {EDemandCategory, IPricingLevel} from "../../../../store/reducers/pricingSettings/types";
-import {SC_UNDEFINED} from "../../../../config/constants";
+import {SC_UNDEFINED} from "../../../../utils/constants";
 import {setPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
 import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
 

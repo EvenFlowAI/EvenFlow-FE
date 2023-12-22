@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {TextField} from "../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {IUnplannedDemandBySlot} from "../../../store/reducers/demandSegments/types";
 import {makeStyles} from "@material-ui/core/styles";
 

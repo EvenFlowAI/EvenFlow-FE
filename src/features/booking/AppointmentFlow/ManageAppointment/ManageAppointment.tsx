@@ -1,10 +1,10 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
-import {Actions} from "../../Actions/Actions";
-import {AppointmentUserData} from "../../../../components/AppointmentUserData/AppointmentUserData";
+import {ActionButtons} from "../../ActionButtons/ActionButtons";
+import {AppointmentUserData} from "../../AppointmentUserData/AppointmentUserData";
 import {Button} from "@material-ui/core";
-import {AppointmentSelectedDate} from "../../../../components/AppointmentSelectedDate/AppointmentSelectedDate";
-import {AppointmentReminders} from "../../../../components/AppointmentReminders/AppointmentReminders";
+import {AppointmentSelectedDate} from "../../AppointmentSelectedDate/AppointmentSelectedDate";
+import {AppointmentReminders} from "../../AppointmentReminders/AppointmentReminders";
 import {TArgCallback, TCallback, TError} from "../../../../types/types";
 import {decodeSCID} from "../../../../utils/utils";
 import {
@@ -27,7 +27,7 @@ import {
     loadSRs,
     setCustomerLoadedData,
 } from "../../../../store/reducers/appointment/actions";
-import AppointmentVehicleInfo from "../../../../components/AppointmentVehicleInfo/AppointmentVehicleInfo";
+import AppointmentVehicleInfo from "../../AppointmentVehicleInfo/AppointmentVehicleInfo";
 import PaymentType from "../../../../components/modals/booking/PaymentType/PaymentType";
 import {useTranslation} from "react-i18next";
 import ServiceRequestsManaging from "./ServiceRequestsManaging/ServiceRequestsManaging";
@@ -267,7 +267,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
         {/*todo change to open payment window on next*/}
         {saving
             ? null
-            :  <Actions
+            :  <ActionButtons
                 loading={saving}
                 onBack={onCancelConfirmOpen}
                 onNext={handleCreateAppointment}

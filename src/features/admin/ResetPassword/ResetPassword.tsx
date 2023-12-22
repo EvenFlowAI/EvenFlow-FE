@@ -2,7 +2,7 @@ import React, {useState} from "react";
 
 import {LoginContainer} from "../../../components/styled/LoginContainer";
 import {LoginHeader} from "../../../components/LoginHeader/LoginHeader";
-import { TextField } from "../../../components/FormControls/TextFieldStyled/TextField";
+import { TextField } from "../../../components/formControls/TextFieldStyled/TextField";
 import {LoginButton} from "../../../components/styled/LoginButton";
 import {useSnackbar} from "notistack";
 import {useHistory, useLocation} from "react-router-dom";

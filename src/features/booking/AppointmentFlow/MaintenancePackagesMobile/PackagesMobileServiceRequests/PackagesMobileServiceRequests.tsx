@@ -1,6 +1,6 @@
 import React from 'react';
 import {TExtendedService} from "../../../../../api/types";
-import {usePackageMobileStyles} from "../../../../../commonStyles/usePackageMobileStyles";
+import {usePackageMobileStyles} from "../../../../../hooks/styling/usePackageMobileStyles";
 import {HtmlTooltip} from "../../../../../components/styled/HtmlTooltip";
 
 type TProps = {

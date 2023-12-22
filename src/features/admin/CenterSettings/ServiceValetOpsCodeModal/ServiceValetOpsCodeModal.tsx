@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {updateServiceValetServiceRequest} from "../../../../store/reducers/capacityServiceValet/actions";
 import {TServiceValetRequestId} from "../../../../store/reducers/capacityServiceValet/types";
 import {loadAllAssignedServiceRequests} from "../../../../store/reducers/serviceRequests/actions";

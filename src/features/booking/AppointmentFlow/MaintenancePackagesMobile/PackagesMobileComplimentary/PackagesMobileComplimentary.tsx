@@ -1,7 +1,7 @@
 import React from 'react';
 import {useTranslation} from "react-i18next";
 import {ESegmentTitle, IPackage, TExtendedComplimentary} from "../../../../../api/types";
-import {usePackageMobileStyles} from "../../../../../commonStyles/usePackageMobileStyles";
+import {usePackageMobileStyles} from "../../../../../hooks/styling/usePackageMobileStyles";
 import {HtmlTooltip} from "../../../../../components/styled/HtmlTooltip";
 
 type TProps = {

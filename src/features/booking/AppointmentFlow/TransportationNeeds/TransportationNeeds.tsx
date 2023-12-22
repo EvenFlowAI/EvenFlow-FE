@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
-import {Actions} from '../../Actions/Actions';
+import {ActionButtons} from '../../ActionButtons/ActionButtons';
 import {Api} from "../../../../config/requests";
 import {collectServiceRequestIds, decodeSCID, mapRecallsForRequest} from "../../../../utils/utils";
 import {useParams} from "react-router-dom";
@@ -176,7 +176,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                     {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
                 </TextWrapper>
         }
-        <Actions
+        <ActionButtons
             onBack={handleBack}
             nextLabel={t("Next")}
             hideNext={!!transportations.length}

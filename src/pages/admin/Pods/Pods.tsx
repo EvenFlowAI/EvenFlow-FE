@@ -2,7 +2,7 @@ import React from 'react';
 import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
 import {SquarePaper} from "../../../components/styled/Paper";
 import {PodsTable} from "../../../features/admin/PodsTable/PodsTable";
-import {optimizerRoot} from "../../../config/constants";
+import {optimizerRoot} from "../../../utils/constants";
 
 const Pods = () => {
     return (

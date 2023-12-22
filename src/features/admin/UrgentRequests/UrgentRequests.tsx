@@ -14,7 +14,7 @@ import {
 } from "../../../store/reducers/serviceRequests/types";
 import {UrgentRequestModal} from "./UrgentRequestsModal/UrgentRequestModal";
 import {Api} from "../../../config/requests";
-import {SC_UNDEFINED} from "../../../config/constants";
+import {SC_UNDEFINED} from "../../../utils/constants";
 import {DeleteOutline} from "@material-ui/icons";
 import {TableRowDataType} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";

@@ -10,7 +10,7 @@ import {setServiceRequestsPageActiveTab} from "../../../store/reducers/serviceRe
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IntervalUpsell} from "../../../features/admin/IntervallUpsell/IntervalUpsell";
-import {optimizerRoot} from "../../../config/constants";
+import {optimizerRoot} from "../../../utils/constants";
 
 export const ServiceRequests = () => {
     const {srPageActiveTab} = useSelector((state: RootState) => state.serviceRequests);

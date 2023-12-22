@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {TableBody, TableHead} from "@material-ui/core";
-import {TextField} from "../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadPredictionParams, updatePredictionParams} from "../../../store/reducers/serviceCenters/actions";

@@ -2,7 +2,7 @@ import React from "react";
 import {THolidayForm} from "../types";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {FormControlLabel, Grid, Switch} from "@material-ui/core";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useStyles} from "./styles";
 import {DatePicker} from "../../../../components/DatePicker/DatePicker";
 

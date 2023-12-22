@@ -6,7 +6,7 @@ import {IServiceRequest} from "../../../../../../store/reducers/serviceRequests/
 import {RootState} from "../../../../../../store/rootReducer";
 import {Table} from "../../../../../../components/Table/Table";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/BaseModal/BaseModal";
-import {SearchInput} from "../../../../../../components/FormControls/SearchInput/SearchInput";
+import {SearchInput} from "../../../../../../components/formControls/SearchInput/SearchInput";
 import {
     loadNonSelectedServiceRequests,
     setNonSelectedFilter,
@@ -14,7 +14,7 @@ import {
 } from "../../../../../../store/reducers/serviceRequests/actions";
 
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
 import {MaintenanceOptions} from "../../../constants";
 import {TAssignedRequest} from "../../../../../../store/reducers/packages/types";
 import {IPackageById} from "../../../../../../api/types";

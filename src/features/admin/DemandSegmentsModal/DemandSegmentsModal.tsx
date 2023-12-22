@@ -5,7 +5,7 @@ import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {createDemandSegment, loadDemandSegments} from "../../../store/reducers/demandSegments/actions";
 import {defaultDemandSegment} from "../../../store/reducers/demandSegments/reducer";
-import {SC_UNDEFINED} from "../../../config/constants";
+import {SC_UNDEFINED} from "../../../utils/constants";
 import {RootState} from "../../../store/rootReducer";
 import {Table} from "../../../components/Table/Table";
 import {IDemandSegment} from "../../../store/reducers/demandSegments/types";

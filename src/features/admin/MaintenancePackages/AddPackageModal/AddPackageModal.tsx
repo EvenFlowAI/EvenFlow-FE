@@ -2,12 +2,12 @@ import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
 import {makeStyles} from "@material-ui/core/styles";
-import {TextField} from "../../../../components/FormControls/TextFieldStyled/TextField";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {AddCircleOutline} from "@material-ui/icons";
 import {IconButton, Button, Divider} from "@material-ui/core";
 import OpsCode from "./parts/OpsCodeLabel/OpsCodeLabel";
 import {Autocomplete} from "@material-ui/lab";
-import {autocompleteRender} from "../../../../utils/AutocompleteRender";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import AssignOpsCode from "./parts/AssignOpsCodeModal/AssignOpsCodeModal";
 import AddOpsCode from "../../../../components/modals/admin/AddOpsCode/AddOpsCode";
 import {

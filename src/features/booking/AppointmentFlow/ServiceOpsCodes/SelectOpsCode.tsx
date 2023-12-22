@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Actions} from "../../Actions/Actions";
+import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -235,7 +235,7 @@ export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices,
                 {allRequestsHavePrice ? null : <Caption title={t("The price for the service will be quoted at the dealership")}/>}
             </Wrapper>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
-            <Actions onBack={handleBack} nextDisabled={!selectedOpsCodes.length} onNext={handleNext} nextLabel={t("Next")}/>
+            <ActionButtons onBack={handleBack} nextDisabled={!selectedOpsCodes.length} onNext={handleNext} nextLabel={t("Next")}/>
         </StepWrapper>
     );
 };
