@@ -1,13 +1,13 @@
 import React from "react";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import {TViewMode} from "../../../../components/BaseModal/types";
+import {TViewMode} from "../../../../components/modals/BaseModal/types";
 import {Button, Grid, IconButton, useMediaQuery, useTheme} from "@material-ui/core";
 import moment from "moment/moment";
 import {DeleteOutline} from "@material-ui/icons";
 import {TBreak} from "../types";
 import {useStyles} from "./styles";
 import {blankRow} from "../constants";
-import {TimePicker} from "../../../../components/TimePicker/TimePicker";
+import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 
 type TProps = {
     form: TBreak[],

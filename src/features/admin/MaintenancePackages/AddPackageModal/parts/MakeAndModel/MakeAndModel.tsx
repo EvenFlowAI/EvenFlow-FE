@@ -3,7 +3,7 @@ import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
-import Checkbox from "../../../../../../components/Checkbox/Checkbox";
+import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {IMake} from "../../../../../../api/types";
 import {upperCase} from "./utils";

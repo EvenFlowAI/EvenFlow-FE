@@ -1,12 +1,12 @@
 import React, {useState} from "react";
-import {Table} from "../../../components/Table/Table";
+import {Table} from "../../../components/tables/Table/Table";
 import {IEmployee} from "../../../store/reducers/employees/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {loadTechnicians, removeEmployee} from "../../../store/reducers/employees/actions";
 import {RootState} from "../../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
-import {TableAvatar} from "../../../components/TableAvatar/TableAvatar";
+import {TableAvatar} from "../../../components/wrappers/TableAvatar/TableAvatar";
 import {CreateEmployee} from "../../../components/modals/admin/CreateEmployee/CreateEmployee";
 
 import {TableRowDataTypeResp} from "../../../types/types";

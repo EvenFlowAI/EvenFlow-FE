@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {loadMileage, removeMileage} from "../../../../store/reducers/vehicleDetails/actions";
 import {IMileage} from "../../../../store/reducers/vehicleDetails/types";

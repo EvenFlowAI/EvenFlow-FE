@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {DialogTitle, DialogContent, BaseModal, DialogActions} from "../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {DialogTitle, DialogContent, BaseModal, DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {ITimeRangeAndCapacity} from "../../../../store/reducers/capacityServiceValet/types";
 import moment from "moment";
 import {Button, Divider, Grid} from "@material-ui/core";
@@ -11,7 +11,7 @@ import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
 import {useDispatch} from "react-redux";
 import {createTimeRange, updateTimeRange} from "../../../../store/reducers/capacityServiceValet/actions";
 import {timeFormat, timeWithSecond} from "../constants";
-import {TimePicker} from "../../../../components/TimePicker/TimePicker";
+import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 

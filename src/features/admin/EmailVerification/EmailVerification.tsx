@@ -1,15 +1,15 @@
 import React, {useState} from "react";
 import {useLocation, useHistory} from "react-router-dom";
-import {LoginHeader} from "../../../components/LoginHeader/LoginHeader";
+import {LoginTitle} from "../../../components/wrappers/LoginTitle/LoginTitle";
 import {LoginContainer} from "../../../components/styled/LoginContainer";
 import {LoginButton} from "../../../components/styled/LoginButton";
-import {Routes} from "../../../config/routes";
-import {Api} from "../../../config/requests";
 import {InvalidLinkMessage} from "./InvalidLinkMessage/InvalidLinkMessage";
 import {PasswordForm} from "./PasswordForm/PasswordForm";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
+import {Routes} from "../../../routes/constants";
+import {Api} from "../../../api/ApiEndpoints";
 
 export const EmailVerification: React.FC = () => {
     const [{password, password2}, setPassword] = useState({password: '', password2: ''});
@@ -42,7 +42,7 @@ export const EmailVerification: React.FC = () => {
     const userId = params.get('userId');
 
     return <LoginContainer>
-        <LoginHeader title="Set your password" />
+        <LoginTitle title="Set your password" />
         {token && userId
             ? <>
                 <PasswordForm password={password} password2={password2} onChange={handleChangePassword}/>

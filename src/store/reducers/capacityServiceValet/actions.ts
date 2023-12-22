@@ -7,7 +7,8 @@ import {
     IZoneTimeSlot, TDmsAppointmentTime, TServiceValetRequestId
 } from "./types";
 import {AppThunk} from "../../../types/types";
-import {Api} from "../../../config/requests";
+
+import {Api} from "../../../api/ApiEndpoints";
 
 export const getZonesRouting = createAction<IZonesRoutingByDay[]>('ServiceValetCapacity/GetZonesRouting');
 export const setZoneTimeWindows = createAction<IZoneTimeSlot[]>('ServiceValetCapacity/SetZoneTimeWindows');

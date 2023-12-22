@@ -1,6 +1,7 @@
 import {TRole} from "../store/reducers/users/types";
-import {Routes} from "../config/routes";
 import {EStates, TTitle} from "../types/types";
+import {TGAOptions} from "./types";
+import {Routes} from "../routes/constants";
 
 export const states = Object.values(EStates);
 
@@ -59,4 +60,10 @@ export const SCREENS = {
     payment: "payment",
     serviceOfferProductPage: "Service Offer Produce Page",
     manageAppointment: "Manage Appointment",
+}
+export const options: TGAOptions = {
+    siteSpeedSampleRate: 100,
+    cookieDomain: 'auto',
+    allowLinker: true,
+    storage: 'none',
 }

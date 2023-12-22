@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useEffect} from 'react';
-import {DialogTitle, BaseModal, DialogContent} from "../../../../components/BaseModal/BaseModal";
+import {DialogTitle, BaseModal, DialogContent} from "../../../../components/modals/BaseModal/BaseModal";
 import moment from "moment";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {IAppointmentsRequest} from "../../../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";
 import {IAppointment} from "../../../../api/types";

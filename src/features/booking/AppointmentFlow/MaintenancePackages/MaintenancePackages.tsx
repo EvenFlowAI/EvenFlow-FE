@@ -12,13 +12,12 @@ import {
     setSelectedPackagePriceTitles
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
-import {Api} from "../../../../config/requests";
 import {decodeSCID} from "../../../../utils/utils";
-import {NoItemsLoading} from "../../../../components/NoItemsLoading/NoItemsLoading";
+import {NoItemsLoading} from "../../../../components/wrappers/NoItemsLoading/NoItemsLoading";
 import {EServiceCenterName, IPackage, IPackageOptions} from "../../../../api/types";
 import MaintenancePackagesMobile from "../MaintenancePackagesMobile/MaintenancePackagesMobile";
 import ReactGA from "react-ga4";
-import ConfirmChangeOption from "../../../../components/modals/booking/ConfirmChangeOption/ConfirmChangeOption";
+import ConfirmChangeOption from "./ConfirmChangeOption/ConfirmChangeOption";
 import AskAddService from "../../../../components/modals/booking/AskAddService/AskAddService";
 import PackageTitles from "./PackageTitles/PackageTitles";
 import PackagesServiceRequests from "./PackagesServiceRequests/PackagesServiceRequests";
@@ -38,6 +37,7 @@ import {FeesText, Info, PackagesStepWrapper, Wrapper} from "./styles";
 import {getPackagesData} from "./utils";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";
+import {Api} from "../../../../api/ApiEndpoints";
 
 type TPackageSelectionProps = {
     onNext: TArgCallback<TScreen>;

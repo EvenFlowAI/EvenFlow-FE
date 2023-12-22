@@ -41,3 +41,11 @@ export type TTextParams = {
     required?: boolean;
     key?: string;
 };
+
+export type TGAOptions = {
+    siteSpeedSampleRate: number;
+    cookieDomain: string;
+    allowLinker: boolean;
+    storage: string;
+    clientId?: string;
+}

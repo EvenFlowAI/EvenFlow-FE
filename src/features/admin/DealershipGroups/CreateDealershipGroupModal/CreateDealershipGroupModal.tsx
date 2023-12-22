@@ -4,8 +4,8 @@ import {
     DialogContent,
     DialogTitle,
     DialogActions
-} from "../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/BaseModal/types";
+} from "../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {
     Divider, Button
 } from "@material-ui/core";
@@ -21,8 +21,8 @@ import {validatePhoneNumber} from "../../../../utils/utils";
 import {FormElements} from "./FormElements/FormElements";
 import {initialCPState, initialStateDealershipState, requiredFields, elementsGroup1, elementsGroup2} from "./constants";
 import {DialogContentTitle} from "../DialogContentTitle/DialogContentTitle";
-import {AvatarWrapper} from "../../../../components/AvatarWrapper/AvatarWrapper";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {AvatarWrapper} from "../../../../components/wrappers/AvatarWrapper/AvatarWrapper";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useValidation} from "../../../../hooks/useValidation/useValidation";

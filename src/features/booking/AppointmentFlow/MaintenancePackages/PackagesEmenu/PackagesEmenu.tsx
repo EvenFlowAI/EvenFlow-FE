@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Loading} from "../../../../../components/Loading/Loading";
+import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import axios from "axios";

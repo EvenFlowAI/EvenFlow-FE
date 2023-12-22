@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Box, Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
@@ -10,8 +10,8 @@ import {loadDayOfWeekPricing, setWorkWeekPricing} from "../../../../store/reduce
 import {mappedDWeekPricingSelector} from "../../../../store/reducers/pricingSettings/selectors";
 import {TForm} from "./types";
 import {buttons, initialForm} from "./constants";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
-import {SwitchButtons} from "../../../../components/SwitchButtons/SwitchButtons";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
+import {SwitchButtons} from "../../../../components/buttons/SwitchButtons/SwitchButtons";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

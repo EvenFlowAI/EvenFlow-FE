@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../components/BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../components/modals/BaseModal/BaseModal";
 import {TableBody, TableCell, TableContainer, TableHead, TableRow, Table, Button} from "@material-ui/core";
-import {Loading} from "../../../../../components/Loading/Loading";
+import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {TExtendedComplimentary, TExtendedService, TIntervalUpsellForPackage} from "../../../../../api/types";
@@ -12,7 +12,7 @@ import {
 } from "../../../../../store/reducers/packages/actions";
 import {TextField} from "../../../../../components/formControls/TextFieldStyled/TextField";
 import {useStyles} from "./styles";
-import {LoadingButton} from "../../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../../components/buttons/LoadingButton/LoadingButton";
 import {useException} from "../../../../../hooks/useException/useException";
 
 type TOrderIndexProps = {

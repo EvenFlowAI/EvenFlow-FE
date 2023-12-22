@@ -1,0 +1,87 @@
+export enum AdminRoutes {
+    Base = "/admin",
+    DealershipGroups = "/admin/dealership-groups",
+    Appointments = "/admin/appointments",
+    Employees = "/admin/employees",
+    Profile = "/admin/profile",
+    ServiceCenters = "/admin/service-centers",
+    ServiceRequests = "/admin/service-requests",
+    CapacityOptimization = "/admin/capacity-optimization",
+    Pricing = "/admin/pricing",
+    MobileService = "/admin/pricing/mobile-service",
+    Reporting = "/admin/reporting",
+}
+
+export enum AdminLogin {
+    Base = "/admin-login",
+    ForgotPassword = "/admin-login/forgot-password",
+}
+
+export enum AccountRoutes {
+    Base = "/account",
+    Verification = "/account/email-verification",
+    ResetPassword = "/account/reset-password"
+}
+
+export enum OfferManagementRoutes {
+    Base = "/offer-management"
+}
+
+export enum OptimizerRoutes {
+    Base = "/optimizer",
+
+    ServiceRequests = "/optimizer/service-requests",
+    AppointmentValue = "/optimizer/appointment-value",
+    CapacitySettings = "/optimizer/capacity-settings",
+    EmployeeSchedule = "/optimizer/employee-schedule",
+    AppointmentSlotScoring = "/optimizer/appointment-slot-scoring",
+    AppointmentAllocation = "/optimizer/appointment-allocation",
+    OptimizationWindows = "/optimizer/optimization-windows",
+    PricingSettings = "/optimizer/pricing-settings",
+    MobileService = "/optimizer/mobile-service",
+    Pods = "/optimizer/pods",
+    ManageEXEvenFlowAppointments = "/optimizer/manage-ex-evenflow-appointments",
+    PartsAvailability = "/optimizer/parts-availability",
+    ServiceValet = "/optimizer/service-valet",
+}
+
+export enum BookingFlowConfigRoutes {
+    Base = "/admin/booking-flow-config",
+    BookingFlowConfigDetails = "/admin/booking-flow-config/details",
+    TransportationOptions = "/admin/booking-flow-config/transportation-options",
+    ServiceOpsCodesMapping = "/admin/booking-flow-config/service-codes-mapping",
+    VehicleDetails = "/admin/booking-flow-config/vehicle-details",
+    FirstScreen = "/admin/booking-flow-config/first-screen",
+    ScreenSettings = "/admin/booking-flow-config/screen-settings",
+}
+
+export enum ReportingRoutes {
+    Base = "/admin/reporting",
+    AppointmentsSummary = "/admin/reporting/summary",
+    ShopLoading = "/admin/reporting/shop-loading",
+    ValetAppointments = "/admin/reporting/valet-appointments",
+    MobileServiceAppointments = "/admin/reporting/mobile-service-appointments",
+    CustomerBehavior = "/admin/reporting/customer-behavior",
+    RepairOrderPerformance = "/admin/reporting/repair-order-performance",
+    CapacityManagementPerformance = "/admin/reporting/capacity-management-performance",
+}
+
+export enum PricingRoutes {
+    Base = "/admin/pricing",
+    ServicePricingSettings = "/admin/pricing/service-pricing-settings",
+    MobileService = "/admin/pricing/mobile-service",
+    ServiceValet = "/admin/pricing/service-valet",
+    OfferManagement = "/admin/pricing/offer-management",
+}
+
+export enum EndUser {
+    Base = "/welcome/:id",
+    Welcome = "/welcome",
+    CancelAppointment = "/appointment-cancel/:id",
+    EditAppointment = "/appointment-update/:id",
+    Appointment = "/appointment/:id",
+    AppointmentFrame = "/f/appointment/:id",
+    AppointmentFrameBase = "/f/appointment",
+    ValueService = "/f/appointment/:id/valueService",
+    PaymentBill = "/f/appointment/:id/payment-bill",
+}

@@ -30,11 +30,10 @@ import {
 } from "../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {styled, Theme} from "@material-ui/core";
-import DisplayAncillaryPrice from "../../../../components/modals/booking/DisplayAncillaryPrice/DisplayAncillaryPrice";
-import UnavailableService from "../../../../components/modals/booking/UnavailableService/UnavailableService";
+import AncillaryPriceModal from "./AncillaryPriceModal/AncillaryPriceModal";
+import UnavailableServiceModal from "./UnavailableServiceModal/UnavailableServiceModal";
 import {KeyboardArrowDown} from "@material-ui/icons";
 import {TActionProps, TArgCallback, TView} from "../../../../types/types";
-import {Routes} from "../../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
@@ -45,6 +44,7 @@ import {parseGeoCode} from "./utils";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
+import {Routes} from "../../../../routes/constants";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -456,13 +456,13 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
             </SelectWrapper>
             <ActionButtons onBack={handleBack} onNext={handleNext} nextLabel={t("Next")} loading={ancillaryPriceLoading}/>
-            <DisplayAncillaryPrice
+            <AncillaryPriceModal
                 onNext={onNextStep}
                 open={isOpen}
                 onClose={onClose}
                 onBackToSelectSlotsForVisitCenter={onGoToSlotsForVisitCenter}
                 onVisitCenter={setDefaultVisitCenter}/>
-            <UnavailableService
+            <UnavailableServiceModal
                 open={isUnavailableOpen}
                 onClose={onUnavailableClose}
                 setFormChecked={setFormChecked}

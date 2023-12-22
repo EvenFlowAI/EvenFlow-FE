@@ -1,8 +1,8 @@
 import {getTrackerById} from "../../utils/utils";
-import {options} from "../../pages/booking/BookingFlow/BookingFlowPage";
 import ReactGA from "react-ga4";
 import TagManager from "react-gtm-module";
 import {useEffect} from "react";
+import {options} from "../../utils/constants";
 
 export const useAnalyticsBySCId = (id: string, trackerCreated: boolean, setTrackerCreated: () => void) => {
     function createTracker(opt_clientId = '', trackerCreated: boolean) {

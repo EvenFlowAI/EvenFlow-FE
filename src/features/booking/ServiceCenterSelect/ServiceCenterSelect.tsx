@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {Loading} from "../../../components/Loading/Loading";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IServiceCenter} from "../../../store/reducers/serviceCenters/types";
 import {TRole} from "../../../store/reducers/users/types";
 import {setTrackerCreated, setWelcomeScreenView} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {Routes} from "../../../config/routes";
 import {NavLink} from "react-router-dom";
 import {useStyles} from "./styles";
 import {ServiceCenterCard} from "./ServiceCenterCard/ServiceCenterCard";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
+import {Routes} from "../../../routes/constants";
 
 const restrictedRoles: TRole[] = ["Manager", "Advisor"];
 

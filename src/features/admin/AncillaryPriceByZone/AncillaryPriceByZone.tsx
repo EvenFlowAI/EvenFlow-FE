@@ -10,8 +10,8 @@ import {
 import {MoreHoriz} from "@material-ui/icons";
 import {HeaderTableCell, FirstCell, TableCell} from "../../../components/styled/AncillaryPriceComponents";
 import {IZonePriceSettings} from "../../../store/reducers/serviceValet/types";
-import {NoData} from "../../../components/NoData/NoData";
-import {Loading} from "../../../components/Loading/Loading";
+import {NoData} from "../../../components/wrappers/NoData/NoData";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {STextField} from "../AncillaryPriceByDistance/styles";
 import {AncillaryPriceSlider} from "../../../components/styled/AncillaryPriceSlider";
 import {DemandTable} from "../../../components/styled/DemandTable";

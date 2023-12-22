@@ -7,7 +7,7 @@ import {HolidaysModal} from "../../../features/admin/HolidaysModal/HolidaysModal
 import {BreaksModal} from "../../../features/admin/BreaksModal/BreaksModal";
 import {Technicians} from "../../../components/modals/admin/Technicians/Technicians";
 import {Bays} from "../../../components/modals/admin/Bays/Bays";
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {concatAddress} from "../../../utils/utils";
 import {SquarePaper} from "../../../components/styled/Paper";
 import {RootState} from "../../../store/rootReducer";

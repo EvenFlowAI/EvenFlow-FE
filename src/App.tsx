@@ -1,26 +1,18 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import './App.css';
 import {Container, IconButton} from '@material-ui/core';
-import {Login} from "./pages/admin/Login/Login";
-import {Route, Switch, useHistory} from 'react-router-dom';
-import {AdminPanel} from "./pages/admin/AdminPanel/AdminPanel";
-import {Routes} from "./config/routes";
-import {PrivateRoute} from "./components/PrivateRoute/PrivateRoute";
-import {Confirm} from './components/modals/common/Confirm/Confirm';
+import {useHistory} from 'react-router-dom';
+import {ConfirmModal} from './components/modals/common/ConfirmModal/ConfirmModal';
 import {ProviderContext, SnackbarProvider} from "notistack";
 import {Close} from "@material-ui/icons";
-import {BookingFlowPage} from "./pages/booking/BookingFlow/BookingFlowPage";
-import {AppointmentFlow} from "./pages/booking/AppointmentFlow/AppointmentFlow";
-import ValueService from "./pages/booking/ValueService/ValueService";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/rootReducer";
-import {setCurrentFrameScreen, setValueService} from "./store/reducers/appointmentFrameReducer/actions";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
 import {loadBookingFlowConfig, setConfiguration} from "./store/reducers/bookingFlowConfig/actions";
-import PaymentBill from "./features/booking/PaymentBill/PaymentBill";
 import {EServiceCenterName} from "./api/types";
 import moment from "moment";
 import {TScreen} from "./types/types";
+import AppRoutes from "./routes/AppRoutes/AppRoutes";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -87,11 +79,6 @@ const App = () => {
     }
     const isWin = window.navigator.appVersion.indexOf('Win') !== -1;
 
-    const onValueServiceBack = async () => {
-        await dispatch(setValueService(null));
-        await dispatch(setCurrentFrameScreen(valueServicePreviousScreen));
-    }
-
     return (
         <SnackbarProvider
             maxSnack={3}
@@ -107,21 +94,10 @@ const App = () => {
                 style={{
                     height: isTopAligning ? "auto" : "100vh",
                     maxHeight: "-webkit-fill-available"}}>
-                <Confirm/>
-                <Switch>
-                    <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentFlow} />
-                    <Route path={Routes.EndUser.CancelAppointment} exact component={BookingFlowPage} />
-                    <Route path={Routes.EndUser.EditAppointment} exact component={BookingFlowPage} />
-                    <Route path={Routes.EndUser.Base} exact component={BookingFlowPage} />
-                    <Route path={Routes.EndUser.PaymentBill} exact component={PaymentBill} />
-                    <Route path={Routes.Login.Base} component={Login} />
-                    <Route path={Routes.Account.Base} component={Login} />
-                    <Route
-                        path={Routes.EndUser.ValueService}
-                        exact
-                        render={() => <ValueService onBack={onValueServiceBack} nextScreen={valueServiceNextScreen}/>}/>
-                    <PrivateRoute path="/" component={AdminPanel}/>
-                </Switch>
+                <ConfirmModal/>
+                <AppRoutes
+                    valueServicePreviousScreen={valueServicePreviousScreen}
+                    valueServiceNextScreen={valueServiceNextScreen}/>
             </Container>
         </SnackbarProvider>
     );

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/styled/Tabs";
 import {Switch, Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";
@@ -13,7 +13,7 @@ import {RootState} from "../../../store/rootReducer";
 import {updateMaxPrice} from "../../../store/reducers/pricingSettings/actions";
 import {ButtonsWrapper, ControlLabel} from "./styles";
 import {pricingRoot} from "../../../utils/constants";
-import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";

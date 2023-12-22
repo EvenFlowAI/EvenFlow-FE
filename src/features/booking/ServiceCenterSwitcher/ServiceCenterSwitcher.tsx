@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {Loading} from "../../../components/Loading/Loading";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useHistory} from "react-router-dom";
 import {setCustomerEnteredEmail, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {
@@ -14,12 +14,12 @@ import {
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {encodeSCID} from "../../../utils/utils";
-import {Routes} from "../../../config/routes";
 import {setCustomerSearchData} from "../../../store/reducers/enhancedCustomerSearch/actions";
 import {initialCustomerSearch} from "../../../store/reducers/enhancedCustomerSearch/reducer";
 import {useStyles} from "./styles";
 import {useException} from "../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
+import {Routes} from "../../../routes/constants";
 
 export const ServiceCenterSwitcher = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);

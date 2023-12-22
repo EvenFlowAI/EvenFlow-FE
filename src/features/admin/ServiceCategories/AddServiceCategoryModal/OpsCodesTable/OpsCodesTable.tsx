@@ -1,9 +1,9 @@
 import React, {useCallback, Dispatch, SetStateAction} from 'react';
-import {Table} from "../../../../../components/Table/Table";
+import {Table} from "../../../../../components/tables/Table/Table";
 import {IAssignedServiceRequest} from "../../../../../store/reducers/serviceRequests/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
-import Checkbox from "../../../../../components/Checkbox/Checkbox";
+import Checkbox from "../../../../../components/formControls/Checkbox/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {useStyles} from "./styles";
 import {TableRowDataType} from "../../../../../types/types";

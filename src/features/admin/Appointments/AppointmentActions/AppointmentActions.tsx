@@ -1,12 +1,12 @@
 import React from 'react';
 import {Button, Box} from "@material-ui/core";
 import {TView} from "../types";
-import {Routes} from "../../../../config/routes";
 import {NavLink} from "react-router-dom";
 import {encodeSCID} from "../../../../utils/utils";
 import {useStyles} from "./styles";
 import {SearchDebounced} from "../../../../components/formControls/SearchDebounced/SearchDebounced";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {Routes} from "../../../../routes/constants";
 
 type TProps = {
     searchTerm: string;

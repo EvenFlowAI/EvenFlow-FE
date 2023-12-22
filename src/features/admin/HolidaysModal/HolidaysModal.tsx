@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps, TViewMode} from "../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {Table} from "../../../components/Table/Table";
+import {Table} from "../../../components/tables/Table/Table";
 import {MoreHoriz} from "@material-ui/icons";
 import {AddHolidayModal} from "./AddHolidayModal/AddHolidayModal";
 import {IHoliday} from "../../../store/reducers/holidays/types";
@@ -11,7 +11,6 @@ import {RootState} from "../../../store/rootReducer";
 import {loadAllHolidays} from "../../../store/reducers/holidays/actions";
 import moment from "moment";
 import {setHolidayPageData} from "../../../store/reducers/holidays/actions";
-import {Api} from "../../../config/requests";
 import {useStyles} from "./styles";
 import {Roles, TableRowDataType} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";
@@ -21,6 +20,7 @@ import {usePagination} from "../../../hooks/usePaginations/usePaginations";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {Api} from "../../../api/ApiEndpoints";
 
 const rowData: TableRowDataType<IHoliday>[] = [
     {header: "Description Title", val: v => v.description.length > 40 ? v.description.slice(0, 39).concat('...') : v.description},

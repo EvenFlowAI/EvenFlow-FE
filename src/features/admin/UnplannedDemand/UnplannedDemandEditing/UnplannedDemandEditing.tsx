@@ -8,10 +8,10 @@ import UnplannedDemandSlots from "../UnplannedDemandSlots/UnplannedDemandSlots";
 import {useDispatch, useSelector} from "react-redux";
 import {changeUnplannedSlots, loadUnplannedSlots} from "../../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {Divider} from "@material-ui/core";
 import {useStyles} from "./styles";
-import {SaveEditBlock} from "../../../../components/SaveEditBlock/SaveEditBlock";
+import {SaveEditBlock} from "../../../../components/buttons/SaveEditBlock/SaveEditBlock";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

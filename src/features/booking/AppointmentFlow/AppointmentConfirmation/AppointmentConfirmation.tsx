@@ -15,9 +15,9 @@ import {useParams} from "react-router-dom";
 import {loadAllServiceCategories,} from "../../../../store/reducers/appointment/actions";
 import AppointmentVehicleInfo from "../../AppointmentVehicleInfo/AppointmentVehicleInfo";
 import ServiceRequests from "./ServiceRequests/ServiceRequests";
-import DetailedFees from "../../../../components/modals/booking/DetailedFees/DetailedFees";
+import DetailedFees from "./DetailedFees/DetailedFees";
 import Address from "./Address/Address";
-import PaymentType from "../../../../components/modals/booking/PaymentType/PaymentType";
+import PaymentTypeModal from "../../PaymentTypeModal/PaymentTypeModal";
 import ServiceType from "./ServiceType/ServiceType";
 import {useTranslation} from "react-i18next";
 import {isMobile} from 'react-device-detect';
@@ -136,6 +136,6 @@ export const AppointmentConfirmation: React.FC<TProps> = ({onBack, onChangeSlot,
         {/*todo change to open payment window on next*/}
         <ActionButtons loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
-        <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
+        <PaymentTypeModal open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
     </StepWrapper>
 };

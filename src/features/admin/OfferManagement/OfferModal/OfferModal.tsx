@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import {
     customerSegments,
@@ -26,7 +26,7 @@ import {selectAllSR, TOfferForm} from "../types";
 import {EPricingDisplayType} from "../../../../store/reducers/pricingSettings/types";
 import {ICategory} from "../../../../store/reducers/categories/types";
 import {loadCategoriesByQuery} from "../../../../store/reducers/categories/actions";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";

@@ -1,8 +1,8 @@
 import React from 'react';
-import {BaseModal, DialogActions, DialogTitle} from "../../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../../components/BaseModal/types";
+import {BaseModal, DialogActions, DialogTitle} from "../../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../../components/modals/BaseModal/types";
 import {useTranslation} from "react-i18next";
-import {LoadingButton} from "../../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../../components/buttons/LoadingButton/LoadingButton";
 
 type TPromptNewSearchRangeProps = DialogProps & {
     onSave: () => void

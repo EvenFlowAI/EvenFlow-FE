@@ -1,17 +1,17 @@
 import React, {useState} from "react";
 
 import {LoginContainer} from "../../../components/styled/LoginContainer";
-import {LoginHeader} from "../../../components/LoginHeader/LoginHeader";
+import {LoginTitle} from "../../../components/wrappers/LoginTitle/LoginTitle";
 import { TextField } from "../../../components/formControls/TextFieldStyled/TextField";
 import {LoginButton} from "../../../components/styled/LoginButton";
 import {useSnackbar} from "notistack";
 import {useHistory, useLocation} from "react-router-dom";
 import queryString from "query-string";
-import {Routes} from "../../../config/routes";
 import {API} from "../../../api/api";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
+import {Routes} from "../../../routes/constants";
 
 export const ResetPassword = () => {
     const [{newPassword, confirmPassword}, setPassword] = useState({newPassword: '', confirmPassword: ''});
@@ -50,7 +50,7 @@ export const ResetPassword = () => {
     }
 
     return <LoginContainer>
-        <LoginHeader title="Reset your password" />
+        <LoginTitle title="Reset your password" />
         <TextField
             label="New password"
             value={newPassword}

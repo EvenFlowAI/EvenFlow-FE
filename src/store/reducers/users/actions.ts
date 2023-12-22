@@ -1,9 +1,9 @@
 import {ICurrentUser, IUserForm, TUserActions} from "./types";
-import {Api} from "../../../config/requests";
 import {AppThunk} from "../../../types/types";
 import {IEmployee} from "../employees/types";
 import {loadByFilters} from "../employees/actions";
 import {setShowServiceCentersList, setWelcomeScreenView} from "../appointmentFrameReducer/actions";
+import {Api} from "../../../api/ApiEndpoints";
 
 const _getCurrentUser = (payload: ICurrentUser): TUserActions => ({
     type: "User/GetCurrentUser", payload

@@ -2,7 +2,7 @@ import React from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useMediaQuery, useTheme} from "@material-ui/core";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {useTranslation} from "react-i18next";
 import {Description, Price} from "./styles";

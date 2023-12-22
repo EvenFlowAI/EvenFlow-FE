@@ -4,10 +4,10 @@ import {RootState} from "../../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {setSelectedPod} from "../../../../store/reducers/pods/actions";
-import {Routes} from "../../../../config/routes";
 import {matchPath, useLocation} from "react-router-dom";
 import {useStyles} from "./styles";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
+import {Routes} from "../../../../routes/constants";
 
 const selectedRoutes: string[] = [
     Routes.Optimizer.AppointmentValue,

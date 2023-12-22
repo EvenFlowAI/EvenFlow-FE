@@ -4,7 +4,7 @@ import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {RequiredEquipment} from "../../../features/admin/RequiredEquipment/RequiredEquipment";
 import {RequiredSkills} from "../../../features/admin/RequiredSkills/RequiredSkills";
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {makeStyles} from "@material-ui/core/styles";
 import {AvailableStaffCalendar} from "../../../features/admin/AvailableStaffCalendar/AvailableStaffCalendar";
 import {optimizerRoot} from "../../../utils/constants";

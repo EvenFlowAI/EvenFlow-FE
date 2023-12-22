@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {states} from "../../../../utils/constants";
 import {Button} from "@material-ui/core";
 import {CreateServiceCenterForm} from "../CreateServiceCenterForm/CreateServiceCenterForm";
@@ -10,10 +10,10 @@ import {createSC, updateSC} from "../../../../store/reducers/serviceCenters/acti
 import {RootState} from "../../../../store/rootReducer";
 import {API} from "../../../../api/api";
 import {checkEmail, validatePhoneNumber} from "../../../../utils/utils";
-import {AvatarWrapper} from "../../../../components/AvatarWrapper/AvatarWrapper";
+import {AvatarWrapper} from "../../../../components/wrappers/AvatarWrapper/AvatarWrapper";
 import {TSelectChange} from "../../../../types/types";
 import {TFormItem} from "../types";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

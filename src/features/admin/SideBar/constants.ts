@@ -1,5 +1,6 @@
 import {LinkType, LinkTypeWithSub} from "../../../types/types";
-import {Routes} from "../../../config/routes";
+
+import {Routes} from "../../../routes/constants";
 
 export const SULinks: LinkType[] = [
     {to: Routes.Admin.DealershipGroups, name: "Dealership Groups", roles: ["Super Admin"]},

@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, SetStateAction, Dispatch, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Radio} from "@material-ui/core";
-import {DialogProps} from "../../../../../../components/BaseModal/types";
+import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {IServiceRequest} from "../../../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../../../store/rootReducer";
-import {Table} from "../../../../../../components/Table/Table";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/BaseModal/BaseModal";
+import {Table} from "../../../../../../components/tables/Table/Table";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
 import {SearchInput} from "../../../../../../components/formControls/SearchInput/SearchInput";
 import {
     loadNonSelectedServiceRequests,

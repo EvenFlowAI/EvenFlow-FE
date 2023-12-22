@@ -16,15 +16,13 @@ import {
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {CardsWrapper} from "./styles";
 import {ServiceCard} from "./ServiceCard/ServiceCard";
-import {Api} from "../../../../config/requests";
 import {decodeSCID, getMaintenanceList} from "../../../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
 import {EServiceCategoryPage, IServiceCategory} from "../../../../api/types";
-import {Loading} from '../../../../components/Loading/Loading';
+import {Loading} from '../../../../components/wrappers/Loading/Loading';
 import ReactGA from "react-ga4";
 import ShoppingCart from "./ShoppingCart/ShoppingCart";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
-import {Routes} from "../../../../config/routes";
 import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {
@@ -34,6 +32,8 @@ import {
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
+import {Routes} from "../../../../routes/constants";
+import {Api} from "../../../../api/ApiEndpoints";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;

@@ -2,7 +2,6 @@ import React, {useEffect, useMemo, useState} from 'react';
 
 import {CustomerSelect} from "../../../features/booking/CustomerSelect/CustomerSelect";
 import {useHistory, useParams} from 'react-router-dom';
-import {Routes} from "../../../config/routes";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {WelcomeLayout} from "../../../features/booking/WelcomeLayout/WelcomeLayout";
@@ -33,7 +32,7 @@ import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameR
 import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import ExistingCustomerError from "../../../components/modals/booking/ExistingCustomerError/ExistingCustomerError";
-import {Loading} from "../../../components/Loading/Loading";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
 import {
     loadCustomersByPhoneOrEmail, setCustomerSearchData,
@@ -45,6 +44,7 @@ import {useModal} from "../../../hooks/useModal/useModal";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {useLayout} from "../../../hooks/useLayout/useLayout";
 import {useException} from "../../../hooks/useException/useException";
+import {Routes} from "../../../routes/constants";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);

@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {Button} from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {EDemandCategory, IPricingLevel} from "../../../../store/reducers/pricingSettings/types";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {setPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

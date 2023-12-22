@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {AppointmentConfirmationTitle} from "../../../components/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
+import {AppointmentConfirmationTitle} from "../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
 import moment from "moment";
 import {Edit} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";

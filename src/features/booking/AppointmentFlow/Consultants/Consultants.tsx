@@ -14,7 +14,7 @@ import {
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {selectAppointment, selectServiceValetAppointment,} from "../../../../store/reducers/appointment/actions";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {useTranslation} from "react-i18next";

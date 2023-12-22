@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {IServiceCenterForm} from "../../../store/reducers/serviceCenters/types";
 import {CreateServiceCenterModal} from "../../../features/admin/ServiceCenters";
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import ServiceCentersTable from "../../../features/admin/ServiceCenters/ServiceCentersTable/ServiceCentersTable";
 import {ServiceCenterActions} from "../../../features/admin/ServiceCenters";
 import {useModal} from "../../../hooks/useModal/useModal";

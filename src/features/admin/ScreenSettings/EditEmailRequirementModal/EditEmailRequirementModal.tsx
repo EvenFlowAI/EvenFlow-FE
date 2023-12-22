@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Loading} from "../../../../components/Loading/Loading";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Button, TableBody, TableHead} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {TEmailRequirement} from "../../../../store/reducers/screenSettings/types";
 import {updateEmailRequirement} from "../../../../store/reducers/screenSettings/actions";

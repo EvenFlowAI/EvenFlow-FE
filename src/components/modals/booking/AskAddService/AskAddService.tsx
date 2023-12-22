@@ -1,8 +1,8 @@
 import React from 'react';
-import {BaseModal, DialogActions, DialogTitle} from "../../../BaseModal/BaseModal";
-import {DialogProps} from "../../../BaseModal/types";
+import {BaseModal, DialogActions, DialogTitle} from "../../BaseModal/BaseModal";
+import {DialogProps} from "../../BaseModal/types";
 import {useTranslation} from "react-i18next";
-import {LoadingButton} from "../../../LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 
 type TAskAddServiceProps = DialogProps & {
     onSave: () => void;

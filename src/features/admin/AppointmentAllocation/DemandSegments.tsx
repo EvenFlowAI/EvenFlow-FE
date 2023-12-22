@@ -9,7 +9,7 @@ import {ISetDemandSegmentForm} from "../../../store/reducers/demandSegments/type
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
 import {TableCell} from "../../../components/styled/TableCell";
-import {SaveEditBlock} from "../../../components/SaveEditBlock/SaveEditBlock";
+import {SaveEditBlock} from "../../../components/buttons/SaveEditBlock/SaveEditBlock";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";

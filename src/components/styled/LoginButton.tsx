@@ -1,6 +1,6 @@
 import {withStyles} from "@material-ui/core";
 
-import {LoadingButton} from "../LoadingButton/LoadingButton";
+import {LoadingButton} from "../buttons/LoadingButton/LoadingButton";
 
 export const LoginButton = withStyles(theme => ({
     wrapper: {marginTop: 40},

@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect} from 'react';
-import {AppointmentConfirmationTitle} from "../../../components/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
+import {AppointmentConfirmationTitle} from "../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";

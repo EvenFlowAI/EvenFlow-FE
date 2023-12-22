@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Box, Button, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 import moment from "moment";
 import {demandCategories, EDemandCategory, ITimeOfYearSetting} from "../../../../store/reducers/pricingSettings/types";
@@ -9,7 +9,7 @@ import {useDispatch} from "react-redux";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {setTimeOfYearPricing} from "../../../../store/reducers/pricingSettings/actions";
 import {Date, useStyles} from "./styles";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

@@ -7,7 +7,6 @@ import {
     TSearchCustomerParams
 } from "./types";
 import {AppThunk, IAPIResponse, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import {ActionCreator} from "redux";
 import {ICustomerLoadedData, ILoadedVehicle} from "../../../api/types";
 import {saveAppointmentReducer, setCustomerLoadedData} from "../appointment/actions";
@@ -18,6 +17,7 @@ import {
     setPoliticalState,
     setZipCode
 } from "../appointmentFrameReducer/actions";
+import {Api} from "../../../api/ApiEndpoints";
 
 export const getCustomers = createAction<ICustomerWithPhones[]>("CustomerSearch/GetCustomers");
 export const setCurrentCustomer = createAction<ICustomerWithPhones|null>("CustomerSearch/SetCurrentCustomer");

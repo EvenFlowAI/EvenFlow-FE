@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {loadAppointments} from "../../../store/reducers/appointments/actions";
 import {AppointmentActions} from "./AppointmentActions/AppointmentActions";
 import {AppointmentFilters} from "./AppointmentFilters/AppointmentFilters";

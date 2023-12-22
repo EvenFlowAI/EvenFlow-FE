@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {Button, FormControlLabel, Grid, Radio, RadioGroup} from "@material-ui/core";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
@@ -10,7 +10,7 @@ import {IOffer} from "../../../../store/reducers/offers/types";
 import {TEnumKeyLabel} from "../../../../store/reducers/utils";
 import {EAudience, EChannel, TForm} from "../types";
 import {Label} from "./styles";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

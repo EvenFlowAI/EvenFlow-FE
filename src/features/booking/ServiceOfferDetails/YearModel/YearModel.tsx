@@ -7,7 +7,7 @@ import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {loadSeriesModels, setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {TModel, TSeries} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {useOfferInputStyles} from "../../../../hooks/styling/useOfferInputStyles";
 import {ScreenWrapper} from "../../../../components/styled/ScreenWrapper";
 import {SelectsTitle} from "../../../../components/styled/SelectsTitle";

@@ -19,7 +19,6 @@ import {IEmployee} from "../../../store/reducers/employees/types";
 import {ISchedule} from "../../../store/reducers/schedules/types";
 import {EditScheduleModal} from "./EditScheduleModal/EditScheduleModal";
 import {ScheduleFilters} from "./ScheduleFilters/ScheduleFilters";
-import {Api} from "../../../config/requests";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {getStartEndDates, noop} from "../../../utils/utils";
@@ -29,6 +28,7 @@ import {ControlWrapper, HeadCell, Holiday, nonWorkingStyle, ScheduleTable} from 
 import {calendarDateFormat} from "../../../utils/constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {Api} from "../../../api/ApiEndpoints";
 
 export const EmployeeScheduleCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());

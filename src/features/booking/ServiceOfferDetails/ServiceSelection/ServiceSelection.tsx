@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IServiceOffer} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {loadServiceOffers, setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {OffersContainer} from "../../../../components/styled/OffersContainer";
 import {OfferCardWrapper} from "../../../../components/styled/OfferCardWrapper";
 import {ServiceTitle} from "../../../../components/styled/ServiceTitle";

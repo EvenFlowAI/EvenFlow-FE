@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import moment from "moment";
 import {IRemappedAppointmentSlot} from "../../../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "../TimeSlotCard/TimeSlotCard";
-import {Loading} from "../../../../../components/Loading/Loading";
+import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import {TGroupedAppointment} from "../../../../../utils/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";

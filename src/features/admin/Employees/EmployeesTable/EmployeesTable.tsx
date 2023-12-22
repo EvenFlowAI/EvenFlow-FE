@@ -1,9 +1,9 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {IEmployee} from "../../../../store/reducers/employees/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz, Visibility} from "@material-ui/icons";
-import {TableAvatar} from "../../../../components/TableAvatar/TableAvatar";
+import {TableAvatar} from "../../../../components/wrappers/TableAvatar/TableAvatar";
 import {IOrder, Roles, TableRowDataType, TCallback} from "../../../../types/types";
 import {changePageData, loadByFilters, removeEmployee, setEmplOrder} from "../../../../store/reducers/employees/actions";
 import {RootState} from "../../../../store/rootReducer";

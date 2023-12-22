@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {loadArchivedOffers, setArchivedOffersPageData} from "../../../../store/reducers/offers/actions";
 import {Grid, TablePagination} from "@material-ui/core";
-import {NoItemsLoading} from "../../../../components/NoItemsLoading/NoItemsLoading";
+import {NoItemsLoading} from "../../../../components/wrappers/NoItemsLoading/NoItemsLoading";
 import {OfferPlate} from "../OfferPlate/OfferPlate";
 import {EOfferStatus, IOffer} from "../../../../store/reducers/offers/types";
 import {OfferModal} from "../OfferModal/OfferModal";

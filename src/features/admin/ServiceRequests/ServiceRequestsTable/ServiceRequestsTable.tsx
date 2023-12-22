@@ -1,8 +1,7 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
-import {Api} from "../../../../config/requests";
 import {
     loadAssignedServiceRequests,
     setAssignedOrdering,
@@ -12,12 +11,13 @@ import {IOrder, TableRowDataType, TCallback} from "../../../../types/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {RootState} from "../../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {ServiceRequestCellData} from "../../../../components/ServiceRequestCellData/ServiceRequestCellData";
+import {ServiceRequestCellData} from "../../../../components/wrappers/ServiceRequestCellData/ServiceRequestCellData";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {Api} from "../../../../api/ApiEndpoints";
 
 const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {header: "Service Ops Code", val: el => el.serviceRequest.code, orderId: "code"},

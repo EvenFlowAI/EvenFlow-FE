@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {
     ECustomerSegment, ETransportationDays,
     ITransportationOptionFull, ITransportationOptionRules,
@@ -15,7 +15,7 @@ import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
 import { ReactComponent as Calendar } from "../../../../assets/img/date_range.svg";
 import { ReactComponent as Watch } from "../../../../assets/img/watch_round.svg";
-import Checkbox from "../../../../components/Checkbox/Checkbox";
+import Checkbox from "../../../../components/formControls/Checkbox/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {Button, Divider} from "@material-ui/core";
 import {editTransportationOptionRules} from "../../../../store/reducers/transportationNeeds/actions";
@@ -23,8 +23,8 @@ import {TextField} from "../../../../components/formControls/TextFieldStyled/Tex
 import {getOptions} from "../../../../utils/utils";
 import {useAutocompleteStyles, useMultipleACStyles, useStyles} from "./styles";
 import {TOption, TTimeObject} from "../types";
-import {DatePicker} from "../../../../components/DatePicker/DatePicker";
-import {TimePicker} from "../../../../components/TimePicker/TimePicker";
+import {DatePicker} from "../../../../components/pickers/DatePicker/DatePicker";
+import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 

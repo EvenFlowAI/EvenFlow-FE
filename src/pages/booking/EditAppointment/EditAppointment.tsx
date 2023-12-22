@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {WelcomeLayout} from "../../../features/booking/WelcomeLayout/WelcomeLayout";
-import {Loading} from "../../../components/Loading/Loading";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import {API} from "../../../api/api";
 import {Button, styled} from "@material-ui/core";
@@ -11,11 +11,10 @@ import {
     saveCustomerCache,
     setCustomerLoadedData
 } from "../../../store/reducers/appointment/actions";
-import {Routes} from "../../../config/routes";
 import {AppointmentStatus, ICustomerLoadedData, ILoadedVehicle} from "../../../api/types";
 import {Edit} from "@material-ui/icons";
 import {RootState} from "../../../store/rootReducer";
-import {NotFoundError} from "../../../components/NotFoundError/NotFoundError";
+import {NotFoundError} from "../../../components/wrappers/NotFoundError/NotFoundError";
 import {encodeSCID} from "../../../utils/utils";
 import {
     setCurrentFrameScreen,
@@ -30,6 +29,7 @@ import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {dateTimeFormat} from "../../../features/admin/Appointments/ViewAppointmentsModal/AppointmentDetails/AppointmentDetails";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
+import {Routes} from "../../../routes/constants";
 
 const ContentContainer = styled("div")({
     fontSize: 22,

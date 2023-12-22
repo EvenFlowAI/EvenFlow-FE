@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {Button, TableBody, TableHead} from "@material-ui/core";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
-import {DialogProps} from "../../../components/BaseModal/types";
+import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadLaborRate, updateLaborRate} from "../../../store/reducers/serviceCenters/actions";
 import {ILaborRate} from "../../../store/reducers/serviceCenters/types";
-import {Loading} from "../../../components/Loading/Loading";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
 import {TableCell} from "../../../components/styled/TableCell";

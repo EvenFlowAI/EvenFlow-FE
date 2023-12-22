@@ -10,19 +10,19 @@ import {
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
-import {authService} from "../../../config/requests";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {getInitials} from "../../../utils/utils";
 import {ServiceCenterSelector} from "./ServiceCenterSelector/ServiceCenterSelector";
-import {Routes} from "../../../config/routes";
 import {PodSelector} from "./PodSelector/PodSelector";
 import {Menu as MenuIcon, SupervisorAccount} from "@material-ui/icons";
 import clsx from "clsx";
 import {clearSC} from "../../../store/reducers/serviceCenters/actions";
 import {useStyles} from "./styles";
 import {Roles} from "../../../types/types";
+import {Routes} from "../../../routes/constants";
+import {authService} from "../../../api/AuthService";
 
 type TProps = {
     sideBarOpened?: boolean;

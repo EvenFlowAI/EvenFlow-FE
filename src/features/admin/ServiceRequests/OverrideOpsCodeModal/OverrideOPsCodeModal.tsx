@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {
     IAssignedServiceRequest, IServiceRequestOverride,
     IServiceRequestOverrideEditRequest
 } from "../../../../store/reducers/serviceRequests/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Button, Grid} from "@material-ui/core";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch} from "react-redux";
 import {updateAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/actions";
-import {ToggleButtons} from "../../../../components/ToggleButtons/ToggleButtons";
+import {ToggleButtons} from "../../../../components/buttons/ToggleButtons/ToggleButtons";
 import {TForm} from "./types";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

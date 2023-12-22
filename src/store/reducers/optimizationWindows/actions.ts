@@ -7,8 +7,8 @@ import {
     IWaitListSettings
 } from "./types";
 import {AppThunk} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import moment from "moment";
+import {Api} from "../../../api/ApiEndpoints";
 
 export const getOptimizationWindows = createAction<IOptimizationWindow[]>("OptimizationWindows/GetParams");
 export const loadOptimizationWindows = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {

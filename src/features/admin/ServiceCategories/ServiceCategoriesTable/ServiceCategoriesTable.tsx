@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {TabPanel} from "@material-ui/lab";
 import {ICategory} from "../../../../store/reducers/categories/types";
 import {useDispatch, useSelector} from "react-redux";

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {SearchInput} from "../../../components/formControls/SearchInput/SearchInput";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {
@@ -10,10 +10,9 @@ import {
 } from "../../../store/reducers/packages/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {IComplimentaryServiceByQuery} from "../../../store/reducers/packages/types";
-import {Table} from "../../../components/Table/Table";
+import {Table} from "../../../components/tables/Table/Table";
 import {RootState} from "../../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
-import {Api} from "../../../config/requests";
 import {optimizerRoot, SC_UNDEFINED} from "../../../utils/constants";
 import AddServiceManually from "./AddServiceManually/AddServiceManually";
 import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
@@ -26,6 +25,7 @@ import {usePagination} from "../../../hooks/usePaginations/usePaginations";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {Api} from "../../../api/ApiEndpoints";
 
 export const ComplimentaryServices = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);

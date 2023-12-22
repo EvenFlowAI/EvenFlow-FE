@@ -21,7 +21,6 @@ import {
     MaintenancePackages
 } from "../../../features/booking/AppointmentFlow/MaintenancePackages/MaintenancePackages";
 import {SelectOpsCode} from "../../../features/booking/AppointmentFlow/ServiceOpsCodes/SelectOpsCode";
-import {Routes} from "../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -79,13 +78,14 @@ import ServiceImpactedWarning from "../../../components/modals/booking/ServiceIm
 import SideBarSection from "../../../features/booking/SideBarSection/SideBarSection";
 import {TMobileScreen, TScreen, TView} from "../../../types/types";
 import {Container, SidebarWrapper} from "./styles";
-import {AppointmentScreenTitle} from "../../../components/AppointmentScreenTitle/AppointmentScreenTitle";
-import {Subtitle} from "../../../components/AppointmentScreenSubtitle/AppointmentScreenSubtitle";
+import {AppointmentScreenTitle} from "../../../components/wrappers/AppointmentScreenTitle/AppointmentScreenTitle";
+import {Subtitle} from "../../../components/wrappers/AppointmentScreenSubtitle/AppointmentScreenSubtitle";
 import {SCREENS} from "../../../utils/constants";
 import {useAnalyticsBySCId} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {useException} from "../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
+import {Routes} from "../../../routes/constants";
 
 export const AppointmentFlow = () => {
     const {

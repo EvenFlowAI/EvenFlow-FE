@@ -6,14 +6,13 @@ import {
     loadUrgentServiceRequests,
     pageDataUrgentServiceRequests
 } from "../../../store/reducers/serviceRequests/actions";
-import {Table} from "../../../components/Table/Table";
+import {Table} from "../../../components/tables/Table/Table";
 import {
     IAssignedServiceRequestShort,
     IPrioritizeRequest,
     IServiceRequestPriority
 } from "../../../store/reducers/serviceRequests/types";
 import {UrgentRequestModal} from "./UrgentRequestsModal/UrgentRequestModal";
-import {Api} from "../../../config/requests";
 import {SC_UNDEFINED} from "../../../utils/constants";
 import {DeleteOutline} from "@material-ui/icons";
 import {TableRowDataType} from "../../../types/types";
@@ -25,6 +24,7 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
+import {Api} from "../../../api/ApiEndpoints";
 
 const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
     {header: "Service Ops Code", val: el => el.code},

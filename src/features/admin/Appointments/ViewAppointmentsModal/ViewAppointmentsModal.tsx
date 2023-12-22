@@ -1,10 +1,10 @@
 import React from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {
     Button,
     CircularProgress,
 } from "@material-ui/core";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {AppointmentStatus, IAppointment} from "../../../../api/types";
 import {AppointmentDetails} from "./AppointmentDetails/AppointmentDetails";
 import {VehicleDetails} from "./VehicleDetails/VehicleDetails";

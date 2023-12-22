@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
-import {Api} from "../../../config/requests";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {IDealershipGroupExtended} from "../../../store/reducers/dealershipGroups/types";
 import {concatAddress} from "../../../utils/utils";
 import {Tab} from "@material-ui/core";
@@ -14,6 +13,7 @@ import {loadDealershipEmployees} from "../../../store/reducers/employees/actions
 import {loadDealershipSCs} from "../../../store/reducers/serviceCenters/actions";
 import {TTab} from "./types";
 import {useStatePagination} from "../../../hooks/usePaginations/usePaginations";
+import {Api} from "../../../api/ApiEndpoints";
 
 const tabs: TTab[] = [
     {id: "1", label: "Service centers", component: DetailsServiceCenters},

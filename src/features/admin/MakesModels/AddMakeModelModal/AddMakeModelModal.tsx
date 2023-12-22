@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Button, Divider, IconButton} from "@material-ui/core";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {AddCircleOutline} from "@material-ui/icons";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Chip} from "../../../../components/Chip/Chip";
+import {Chip} from "../../../../components/wrappers/Chip/Chip";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {createMake, setCurrentMake, updateMake} from "../../../../store/reducers/vehicleDetails/actions";

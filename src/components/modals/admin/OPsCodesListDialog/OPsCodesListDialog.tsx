@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {DialogProps} from "../../../BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
+import {DialogProps} from "../../BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {Button, Checkbox, useMediaQuery, useTheme} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -9,11 +9,11 @@ import {
     setNonSelectedPageData
 } from "../../../../store/reducers/serviceRequests/actions";
 import {IServiceRequest} from "../../../../store/reducers/serviceRequests/types";
-import {Table} from "../../../Table/Table";
+import {Table} from "../../../tables/Table/Table";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {SearchInput} from "../../../formControls/SearchInput/SearchInput";
 import {IOrder, TableRowDataType} from "../../../../types/types";
-import {LoadingButton} from "../../../LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
-import {DialogProps} from "../../../BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
+import {DialogProps} from "../../BaseModal/types";
 import {Editor} from "react-draft-wysiwyg";
 import {convertToRaw, EditorState} from "draft-js";
 import {convertToHTML, convertFromHTML} from "draft-convert";
@@ -8,7 +8,7 @@ import {Button} from "@material-ui/core";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {makeStyles} from "@material-ui/core/styles";
 import classnames from 'classnames';
-import {LoadingButton} from "../../../LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {useException} from "../../../../hooks/useException/useException";
 
 type THTMLEditor = DialogProps & {

@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {IServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {Button, Radio} from "@material-ui/core";
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
@@ -10,7 +10,7 @@ import {
     setNonSelectedFilter,
     setNonSelectedPageData
 } from "../../../../store/reducers/serviceRequests/actions";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {SearchInput} from "../../../../components/formControls/SearchInput/SearchInput";
 import {updatePackageOptions} from "../../../../store/reducers/packages/actions";
 import {Autocomplete} from "@material-ui/lab";
@@ -19,7 +19,7 @@ import {IPackageById} from "../../../../api/types";
 import {MaintenanceOptions} from "../constants";
 import {useInputStyles, useStyles} from "./styles";
 import {TSelectedOption} from "../types";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 import {TableRowDataType} from "../../../../types/types";
 import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
 import {useException} from "../../../../hooks/useException/useException";

@@ -35,12 +35,12 @@ import {ICustomerWithPhones} from "../../../../../store/reducers/enhancedCustome
 import {CustomerInputField} from "../InputFields/CustomerInputField";
 import {AddressInputField} from "../InputFields/AddressInputField";
 import {changePageData, updateCustomer} from "../../../../../store/reducers/enhancedCustomerSearch/actions";
-import {Loading} from "../../../../../components/Loading/Loading";
+import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import {useHistory} from "react-router-dom";
 import {encodeSCID} from "../../../../../utils/utils";
 import {EServiceType, EUserType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import VehicleRepairHistory from "../../../../../components/modals/common/VehicleRepairHistory/VehicleRepairHistory";
-import CancelAppointmentConfirm from "../../../../../components/modals/booking/CancelAppoitntmentConfirm/CancelAppointmentConfirm";
+import CancelAppointmentModal from "../../CancelAppoitntmentModal/CancelAppointmentModal";
 import {TColumn, TOffset, TSortColumn, TSortOrder} from "../types";
 import {initialColumnOffset} from "../constants";
 import {HtmlTooltip, IconsBlock, useStyles} from "./styles";
@@ -540,7 +540,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
 
                 {editingElement ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={editingElement.vehicleDmsId}/> : null}
                 {editingElement?.appointmentHashKey
-                    ? <CancelAppointmentConfirm
+                    ? <CancelAppointmentModal
                         open={isOpenConfirm}
                         onClose={onCloseConfirm}
                         loadData={loadData}

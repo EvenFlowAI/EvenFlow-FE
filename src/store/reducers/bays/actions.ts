@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import {IBay, IBayForm, IBayShort} from "./types";
+import {Api} from "../../../api/ApiEndpoints";
 
 export const getAllBays = createAction<IBay[]>("Bays/GetAllBays");
 export const getFilteredBays = createAction<IBay[]>("Bays/GetFiltered");

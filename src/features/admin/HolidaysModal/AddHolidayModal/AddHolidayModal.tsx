@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps} from "../../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import {Api} from "../../../../config/requests";
 import {IHoliday} from "../../../../store/reducers/holidays/types";
 import {THolidayForm} from "../types";
 import {HolidayForm} from "../AddHolidayForm/AddHolidayForm";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {Api} from "../../../../api/ApiEndpoints";
 
 const initialForm: THolidayForm = {
     date: null,

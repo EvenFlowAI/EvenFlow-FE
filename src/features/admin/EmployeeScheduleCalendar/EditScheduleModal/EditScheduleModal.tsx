@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {
     Button,
     Grid,
@@ -22,19 +22,19 @@ import {CreateEmployee} from "../../../../components/modals/admin/CreateEmployee
 import {Close} from "@material-ui/icons";
 import {API} from "../../../../api/api";
 import {TIds} from "../types";
-import {Api} from "../../../../config/requests";
 import {getRequestDate} from "../utils";
 import {loadWorkingDays} from "../../../../store/reducers/serviceCenters/actions";
 import {loadWeeklyHolidaysList} from "../../../../store/reducers/holidays/actions";
 import {getStartEndDates} from "../../../../utils/utils";
 import {TForm} from "./types";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
-import {TimePicker} from "../../../../components/TimePicker/TimePicker";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
+import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 import {useModal} from "../../../../hooks/useModal/useModal";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {Api} from "../../../../api/ApiEndpoints";
 
 type TProps = DialogProps<ISchedule> & {
     selectedDate: moment.Moment;

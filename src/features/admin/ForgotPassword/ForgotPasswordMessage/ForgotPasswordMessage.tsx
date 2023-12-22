@@ -1,8 +1,8 @@
 import React from "react";
 import {useHistory} from "react-router-dom";
 import {LoginContainer} from "../../../../components/styled/LoginContainer";
-import {LoginHeader} from "../../../../components/LoginHeader/LoginHeader";
-import {LoginTextContent} from "../../../../components/LoginTextContent/LoginTextContent";
+import {LoginTitle} from "../../../../components/wrappers/LoginTitle/LoginTitle";
+import {LoginTextContent} from "../../../../components/wrappers/LoginTextContent/LoginTextContent";
 import {LoginButton} from "../../../../components/styled/LoginButton";
 
 const messageContent = (
@@ -16,7 +16,7 @@ export const Message = () => {
     }
 
     return <LoginContainer>
-        <LoginHeader title="Check your email"/>
+        <LoginTitle title="Check your email"/>
         <LoginTextContent content={messageContent}/>
         <LoginButton fullWidth onClick={handleBack}>Close</LoginButton>
     </LoginContainer>;

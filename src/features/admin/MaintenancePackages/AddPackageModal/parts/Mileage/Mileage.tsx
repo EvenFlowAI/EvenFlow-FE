@@ -1,7 +1,7 @@
 import React, {ChangeEvent, Dispatch, SetStateAction, useCallback} from 'react';
 import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
-import Checkbox from "../../../../../../components/Checkbox/Checkbox";
+import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";

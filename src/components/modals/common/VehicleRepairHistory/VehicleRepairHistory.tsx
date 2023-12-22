@@ -2,13 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {loadRepairHistory} from "../../../../store/reducers/enhancedCustomerSearch/actions";
-import {BaseModal, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
-import {DialogProps} from "../../../BaseModal/types";
+import {BaseModal, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
+import {DialogProps} from "../../BaseModal/types";
 import {Button, Divider, Table, TableBody, TableHead, TableRow} from "@material-ui/core";
 import moment from "moment";
-import {Loading} from "../../../Loading/Loading";
+import {Loading} from "../../../wrappers/Loading/Loading";
 import classnames from 'classnames';
-import {NoData} from "../../../NoData/NoData";
+import {NoData} from "../../../wrappers/NoData/NoData";
 import {HCell, TCell, useStyles} from "./styles";
 
 const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({vehicleDmsId, open, onClose}) => {

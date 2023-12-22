@@ -1,4 +1,4 @@
-import {TViewMode} from "../../../../components/BaseModal/types";
+import {TViewMode} from "../../../../components/modals/BaseModal/types";
 import {THOOForm} from "../types";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import React from "react";
@@ -6,7 +6,7 @@ import {Button, Grid, Switch, useMediaQuery, useTheme} from "@material-ui/core";
 import moment from "moment/moment";
 import {blankRow} from "../constants";
 import {useStyles} from "./styles";
-import {TimePicker} from "../../../../components/TimePicker/TimePicker";
+import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 
 type THOOFormProps = TViewMode & {
     form: THOOForm[];

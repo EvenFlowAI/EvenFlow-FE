@@ -2,8 +2,8 @@ import React, {Dispatch, SetStateAction} from 'react';
 import {TZipCode, TZone} from "../../../../store/reducers/mobileService/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../../components/Loading/Loading";
-import GeographicZone from "../../../../components/GeographicZone/GeographicZone";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
+import GeographicZone from "../../../../components/wrappers/GeographicZone/GeographicZone";
 import {useStyles} from "./styles";
 
 type TZonesProps = {

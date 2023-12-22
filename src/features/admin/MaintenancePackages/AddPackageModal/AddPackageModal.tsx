@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
-import {DialogProps} from "../../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {makeStyles} from "@material-ui/core/styles";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {AddCircleOutline} from "@material-ui/icons";
@@ -21,7 +21,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import PackageLabel from "./parts/PackageLabel/PackageLabel";
 import {createPackage, loadMakes, updatePackage} from "../../../../store/reducers/packages/actions";
-import Checkbox from "../../../../components/Checkbox/Checkbox";
+import Checkbox from "../../../../components/formControls/Checkbox/Checkbox";
 import {INewPackage, IUpdatedPackage, TAssignedRequest} from "../../../../store/reducers/packages/types";
 import AddComplimentary from "./parts/AddComplimentaryModal/AddComplimentaryModal";
 import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";

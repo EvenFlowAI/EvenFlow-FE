@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {useDispatch} from "react-redux";
 import {updateEngineTypeFieldName} from "../../../../store/reducers/vehicleDetails/actions";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Button, Divider} from "@material-ui/core";
 import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";

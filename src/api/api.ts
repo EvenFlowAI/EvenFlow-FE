@@ -7,7 +7,7 @@ import {
     IListAppointmentRequest,
     IAppointment, IAppointmentByKey
 } from "./types";
-import {request} from "../config/requests";
+import {request} from "./request";
 import {ITokens, PaginatedAPIResponse} from "../types/types";
 
 const accounts = {

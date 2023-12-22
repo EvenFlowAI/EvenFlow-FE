@@ -1,12 +1,13 @@
 import React from "react";
 import {LoginContainer} from "../../../../components/styled/LoginContainer";
-import {LoginHeader} from "../../../../components/LoginHeader/LoginHeader";
-import {LoginTextContent} from "../../../../components/LoginTextContent/LoginTextContent";
+import {LoginTitle} from "../../../../components/wrappers/LoginTitle/LoginTitle";
+import {LoginTextContent} from "../../../../components/wrappers/LoginTextContent/LoginTextContent";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {LoginButton} from "../../../../components/styled/LoginButton";
 import {Typography} from "@material-ui/core";
-import {BackLink} from "../../../../components/BackLink/BackLink";
-import {Routes} from "../../../../config/routes";
+import {BackLink} from "../../../../components/wrappers/BackLink/BackLink";
+
+import {Routes} from "../../../../routes/constants";
 
 type FormProps = {
     onChange: React.ChangeEventHandler;
@@ -19,7 +20,7 @@ export const ForgotPasswordForm = (props: FormProps) => {
     const content = "Enter the email you registered with and we will send you a link to reset your password";
 
     return <LoginContainer>
-        <LoginHeader title="Forgot password?"/>
+        <LoginTitle title="Forgot password?"/>
         <LoginTextContent content={content}/>
         <TextField
             value={props.email}

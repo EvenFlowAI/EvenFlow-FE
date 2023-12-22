@@ -1,8 +1,8 @@
 import {createAction} from "@reduxjs/toolkit";
 import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import {ICategory, TNewCategory, TSuccessCallback, TUpdateCategoryData} from "./types";
 import {EServiceType} from "../appointmentFrameReducer/types";
+import {Api} from "../../../api/ApiEndpoints";
 
 export const setCategoriesPage = createAction<number>("Categories/SetPage");
 export const setCategoriesFilter = createAction<EServiceType>("Categories/SetFilter");

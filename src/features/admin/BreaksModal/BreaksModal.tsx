@@ -1,20 +1,20 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps, TViewMode} from "../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import moment from "moment";
-import {Api} from "../../../config/requests";
 import {IBreak, IBreakFrom} from "../../../store/reducers/serviceCenters/types";
 import {timeSpanString} from "../../../utils/constants";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {TBreak} from "./types";
 import {initialBreaks} from "./constants";
 import {BreakForm} from "./BreakForm/BreakForm";
-import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {Api} from "../../../api/ApiEndpoints";
 
 export const BreaksModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);

@@ -7,7 +7,7 @@ import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {loadSeriesModels, setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {TModel, TSeries} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {useTranslation} from "react-i18next";
 import {useOfferInputStyles} from "../../../../hooks/styling/useOfferInputStyles";
 import {SelectWrapper} from "../../../../components/styled/SelectWrapper";

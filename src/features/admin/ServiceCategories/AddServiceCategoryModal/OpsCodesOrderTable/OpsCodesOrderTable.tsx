@@ -3,9 +3,9 @@ import {IAssignedServiceRequest, TOPsCodeWithIndex} from "../../../../../store/r
 import {TextField} from "../../../../../components/formControls/TextFieldStyled/TextField";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
-import Checkbox from "../../../../../components/Checkbox/Checkbox";
+import Checkbox from "../../../../../components/formControls/Checkbox/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
-import {Table} from "../../../../../components/Table/Table";
+import {Table} from "../../../../../components/tables/Table/Table";
 import {useStyles} from "./styles";
 import {TableRowDataType} from "../../../../../types/types";
 

@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import Checkbox from "../../../components/Checkbox/Checkbox";
+import Checkbox from "../../../components/formControls/Checkbox/Checkbox";
 import {EDaysFromMonday, IZonesRoutingByDay} from "../../../store/reducers/capacityServiceValet/types";
-import {Table} from "../../../components/Table/Table";
-import {Loading} from "../../../components/Loading/Loading";
+import {Table} from "../../../components/tables/Table/Table";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {loadZonesRouting, updateZonesRouting} from "../../../store/reducers/capacityServiceValet/actions";
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {TableRowDataType} from "../../../types/types";

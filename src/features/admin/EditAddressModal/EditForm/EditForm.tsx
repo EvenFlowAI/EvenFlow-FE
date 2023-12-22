@@ -1,4 +1,4 @@
-import {TViewMode} from "../../../../components/BaseModal/types";
+import {TViewMode} from "../../../../components/modals/BaseModal/types";
 import React from "react";
 import {TSelectChange} from "../../../../types/types";
 import {IAddress} from "../../../../store/reducers/dealershipGroups/types";

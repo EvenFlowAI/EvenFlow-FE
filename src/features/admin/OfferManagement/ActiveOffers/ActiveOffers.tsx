@@ -6,7 +6,7 @@ import {loadOffers, setOffersPageData} from "../../../../store/reducers/offers/a
 import {RootState} from "../../../../store/rootReducer";
 import {OfferPlate} from "../OfferPlate/OfferPlate";
 import {EOfferStatus, IOffer} from "../../../../store/reducers/offers/types";
-import {NoItemsLoading} from "../../../../components/NoItemsLoading/NoItemsLoading";
+import {NoItemsLoading} from "../../../../components/wrappers/NoItemsLoading/NoItemsLoading";
 import {SendOfferModal} from "../SendOfferModal/SendOfferModal";
 import {defaultRowsPerPageOptions} from "../../../../config/config";
 import {useModal} from "../../../../hooks/useModal/useModal";

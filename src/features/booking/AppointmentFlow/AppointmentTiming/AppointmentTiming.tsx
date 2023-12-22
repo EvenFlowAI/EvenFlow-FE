@@ -22,9 +22,9 @@ import AppointmentTimingCard from "./AppointmentTimingCard/AppointmentTimingCard
 import {useTranslation} from "react-i18next";
 import {TArgCallback, TScreen} from "../../../../types/types";
 import {useHistory, useParams} from "react-router-dom";
-import {Routes} from "../../../../config/routes";
 import {TimingWrapper} from "./styles";
 import {TCard} from "./types";
+import {Routes} from "../../../../routes/constants";
 
 const cards: TCard[] = [
     {

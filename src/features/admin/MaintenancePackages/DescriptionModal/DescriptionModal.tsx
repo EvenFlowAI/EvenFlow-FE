@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import {BaseModal, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {BaseModal, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Delete, EditOutlined} from "@material-ui/icons";
 import {Divider, IconButton} from "@material-ui/core";
 import HtmlEditor from "../../../../components/modals/admin/HTMLEditor/HTMLEditor";
 import {TExtendedComplimentary, TExtendedService} from "../../../../api/types";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {
     updatePackageComplimentaryDescription,
     updatePackageSRDescription

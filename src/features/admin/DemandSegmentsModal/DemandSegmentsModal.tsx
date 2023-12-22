@@ -1,16 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps} from "../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {createDemandSegment, loadDemandSegments} from "../../../store/reducers/demandSegments/actions";
 import {defaultDemandSegment} from "../../../store/reducers/demandSegments/reducer";
 import {SC_UNDEFINED} from "../../../utils/constants";
 import {RootState} from "../../../store/rootReducer";
-import {Table} from "../../../components/Table/Table";
+import {Table} from "../../../components/tables/Table/Table";
 import {IDemandSegment} from "../../../store/reducers/demandSegments/types";
-import {Api} from "../../../config/requests";
-import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 import {TableRowDataType} from "../../../types/types";
 import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
 
@@ -18,6 +17,7 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
+import {Api} from "../../../api/ApiEndpoints";
 
 const rowData: TableRowDataType<IDemandSegment>[] = [
     {header: "Demand Segments",

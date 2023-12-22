@@ -3,19 +3,19 @@ import {WelcomeLayout} from "../../../features/booking/WelcomeLayout/WelcomeLayo
 import {useHistory, useParams} from "react-router-dom";
 import {API} from "../../../api/api";
 import {AppointmentStatus, IAppointmentByQuery} from "../../../api/types";
-import {Loading} from "../../../components/Loading/Loading";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useDispatch} from "react-redux";
 import {clearStorage, loadSCProfile} from "../../../store/reducers/appointment/actions";
 import {Button, styled} from "@material-ui/core";
 import moment from "moment";
 import {Edit} from "@material-ui/icons";
-import {Routes} from "../../../config/routes";
-import {NotFoundError} from "../../../components/NotFoundError/NotFoundError";
+import {NotFoundError} from "../../../components/wrappers/NotFoundError/NotFoundError";
 import {encodeSCID} from "../../../utils/utils";
 import {useTranslation} from "react-i18next";
-import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {useException} from "../../../hooks/useException/useException";
+import {Routes} from "../../../routes/constants";
 
 type TState = "loading" | "new" | "canceled" | "already_canceled" | "error";
 

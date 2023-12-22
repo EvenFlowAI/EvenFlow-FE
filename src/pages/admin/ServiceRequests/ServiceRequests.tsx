@@ -2,7 +2,7 @@ import React from "react";
 import {Tab} from "@material-ui/core";
 import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@material-ui/lab";
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {ServiceRequestsScreen} from "../../../features/admin/ServiceRequests/ServiceRequestsScreen";
 import {MaintenancePackages} from "../../../features/admin/MaintenancePackages/MaintenancePackages";
 import {ComplimentaryServices} from "../../../features/admin/ComplimentaryServices/ComplimentaryServices";

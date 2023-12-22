@@ -4,7 +4,7 @@ import {Divider, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 import {SquarePaper} from "../../../../components/styled/Paper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {changeRoundPriceSetting, loadRoundPriceSetting} from "../../../../store/reducers/pricingSettings/actions";
 import {useStyles} from "./styles";
 import {Label} from "./Label/Label";

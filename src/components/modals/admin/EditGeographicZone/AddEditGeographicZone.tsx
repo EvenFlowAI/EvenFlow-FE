@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {Button, Divider, IconButton} from "@material-ui/core";
-import {DialogProps} from "../../../BaseModal/types";
+import {DialogProps} from "../../BaseModal/types";
 import {TZipCode, TZone, TZoneNew, TZonesServiceType, TZoneUpdate} from "../../../../store/reducers/mobileService/types";
 import {TextField} from "../../../formControls/TextFieldStyled/TextField";
 import {Close} from "@material-ui/icons";
@@ -20,7 +20,7 @@ import {
 } from "../../../../store/reducers/mobileService/actions";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../Loading/Loading";
+import {Loading} from "../../../wrappers/Loading/Loading";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
 import {loadFilteredZip, setFilteredZipCodes} from "../../../../store/reducers/appointmentFrameReducer/actions";

@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {loadRecallsByVin} from "../../../store/reducers/recall/actions";
 import {decodeSCID} from "../../../utils/utils";
-import {DialogProps} from "../../../components/BaseModal/types";
-import {Loading} from "../../../components/Loading/Loading";
+import {DialogProps} from "../../../components/modals/BaseModal/types";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {Button, Divider} from "@material-ui/core";
 import moment from "moment";
 import {

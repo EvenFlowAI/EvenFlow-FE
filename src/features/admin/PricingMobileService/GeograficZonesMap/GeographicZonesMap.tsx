@@ -5,7 +5,7 @@ import MapIframeLink from "../../../../components/modals/admin/MapIframeLink/Map
 import {useDispatch} from "react-redux";
 import {saveLinkToMobServiceMap} from "../../../../store/reducers/mobileService/actions";
 import {useStyles} from "./styles";
-import {ButtonsWrapper} from "../../../../components/GeographicZonesButtons/styles";
+import {ButtonsWrapper} from "../../../../components/buttons/GeographicZonesButtons/styles";
 import {EligibleTitle} from "../../../../components/styled/EligibleTitle";
 import {GeographicZonesWrapper, TabHeaderWrapper} from "../../../../components/styled/GeographicZonesWrappers";
 import {useModal} from "../../../../hooks/useModal/useModal";

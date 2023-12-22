@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from "react";
 import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
-import {AvatarUpload} from "../../../../components/AvatarUpload/AvatarUpload";
+import {AvatarUpload} from "../../../../components/formControls/AvatarUpload/AvatarUpload";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch} from "react-redux";
 import {saveEmployeeAvatar, updateUser} from "../../../../store/reducers/users/actions";
-import {Api} from "../../../../config/requests";
 import {validatePhoneNumber} from "../../../../utils/utils";
 import {useStyles} from "./styles";
 import {TForm, TPasswordForm} from "./types";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
+import {Api} from "../../../../api/ApiEndpoints";
 
 const blankProfile: TForm = {
     firstName: "",

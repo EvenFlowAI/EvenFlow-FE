@@ -3,8 +3,8 @@ import {ITimeRangeAndCapacity} from "../../../store/reducers/capacityServiceVale
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
-import {Loading} from "../../../components/Loading/Loading";
-import {Table} from "../../../components/Table/Table";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
+import {Table} from "../../../components/tables/Table/Table";
 import {Button} from "@material-ui/core";
 import EditTimeRangeAndCapacityModal from "./EditTimeRangeAndCapacityModal/EditTimeRangeAndCapacityModal";
 import {loadTimeRangesAndCapacity} from "../../../store/reducers/capacityServiceValet/actions";

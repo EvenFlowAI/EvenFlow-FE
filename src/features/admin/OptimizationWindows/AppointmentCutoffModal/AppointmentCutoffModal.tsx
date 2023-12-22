@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import {SC_UNDEFINED, timeSpanString} from "../../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,8 +11,8 @@ import {loadAppointmentCutoff, setAppointmentCutoff} from "../../../../store/red
 import {RootState} from "../../../../store/rootReducer";
 import {IAppointmentCutoff} from "../../../../store/reducers/optimizationWindows/types";
 import {AccessTime} from "@material-ui/icons";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
-import {TimePicker} from "../../../../components/TimePicker/TimePicker";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
+import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

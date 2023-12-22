@@ -3,7 +3,7 @@ import {IEmployee} from "../../../../store/reducers/employees/types";
 import {IPagingResponse, TableRowDataType} from "../../../../types/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {concatAddress} from "../../../../utils/utils";
 import {TDetailComponentProps} from "../../../../pages/admin/DealerShipGroupDetails/types";
 

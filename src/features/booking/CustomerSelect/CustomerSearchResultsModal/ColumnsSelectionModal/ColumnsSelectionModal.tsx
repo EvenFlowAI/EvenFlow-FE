@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../../components/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../../components/modals/BaseModal/types";
 import {ReactComponent as CheckboxChecked} from "../../../../../assets/img/checkbox_checcked.svg";
 import {ReactComponent as CheckboxUnchecked} from "../../../../../assets/img/checkbox_empty.svg";
 import {ReactComponent as CheckboxDisabled} from "../../../../../assets/img/checkbox_checked_disabled.svg";

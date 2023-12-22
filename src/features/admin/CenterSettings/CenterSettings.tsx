@@ -11,7 +11,7 @@ import {RootState} from "../../../store/rootReducer";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {TDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/types";
 import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
-import {TimePicker} from "../../../components/TimePicker/TimePicker";
+import {TimePicker} from "../../../components/pickers/TimePicker/TimePicker";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";

@@ -10,7 +10,7 @@ import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/t
 import {useTranslation} from "react-i18next";
 import {setWelcomeScreenView} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {ILoadedVehicle} from "../../../../api/types";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import AddToCalendarButton from "./AddToCalendarButton/AddToCalendarButton";
 import ModifyButton from "./ModifyButton/ModifyButton";
 import MakeNewButton from "./MakeNewButton/MakeNewButton";

@@ -3,9 +3,9 @@ import {TextField} from "../../../../components/formControls/TextFieldStyled/Tex
 import {Button} from "@material-ui/core";
 import {updatePackageDisclaimer} from "../../../../store/reducers/serviceCenters/actions";
 import {useDispatch} from "react-redux";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

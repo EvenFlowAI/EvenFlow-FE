@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
 import {MoreHoriz} from "@material-ui/icons";

@@ -25,12 +25,11 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga4";
 //import ReactGA from "react-ga";
-import {Loading} from "../../../components/Loading/Loading";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {InfoOutlined} from "@material-ui/icons";
 import ServiceTypeIcon from "./ServiceTypeIcon/ServiceTypeIcon";
 import {ActionButtons} from "../ActionButtons/ActionButtons";
-import {Routes} from "../../../config/routes";
 import {decodeSCID, encodeSCID} from "../../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
 import AskChangesCompleted from "../../../components/modals/booking/AskChangesCompleted/AskChangesCompleted";
@@ -43,6 +42,7 @@ import {HtmlTooltip} from "../../../components/styled/HtmlTooltip";
 import {useAnalyticsBySCId} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {useException} from "../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
+import {Routes} from "../../../routes/constants";
 
 type TProps = {
     handleValueServiceConfig: (serviceType: EServiceType) => void;

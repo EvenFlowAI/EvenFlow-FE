@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useCallback, useState} from 'react';
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {
     AppointmentStatus,
     appointmentStatuses, IAppointment,

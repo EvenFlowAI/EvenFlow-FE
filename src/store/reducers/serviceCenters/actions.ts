@@ -11,7 +11,6 @@ import {
 import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
-import {Api, TOptions} from "../../../config/requests";
 import {AppThunk, IOrder, IPageRequest, LocalItems, PaginatedAPIResponse} from "../../../types/types";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {setSelectedPod} from "../pods/actions";
@@ -19,6 +18,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {EDay} from "../demandSegments/types";
 import {EMaintenanceOptionType} from "../../../api/types";
 import {setWelcomeScreenView} from "../appointmentFrameReducer/actions";
+import {Api, TOptions} from "../../../api/ApiEndpoints";
 
 const getAll = (payload: IServiceCenterExtended[]): TServiceCenterActions => ({
     type: "ServiceCenters/GetAll", payload

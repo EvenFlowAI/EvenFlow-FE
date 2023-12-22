@@ -1,16 +1,16 @@
 import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Button} from "@material-ui/core";
-import {DialogProps} from "../../../../../../components/BaseModal/types";
+import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {IUpsellServiceRequest} from "../../../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../../../store/rootReducer";
-import {Table} from "../../../../../../components/Table/Table";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/BaseModal/BaseModal";
+import {Table} from "../../../../../../components/tables/Table/Table";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
 import {SearchInput} from "../../../../../../components/formControls/SearchInput/SearchInput";
 import {
     loadUpsellServiceRequests, setUpsellFilter, setUpsellPageData,
 } from "../../../../../../store/reducers/serviceRequests/actions";
-import Checkbox from "../../../../../../components/Checkbox/Checkbox";
+import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
 import {useStyles} from "./styles";
 import {TableRowDataType} from "../../../../../../types/types";
 import {usePagination} from "../../../../../../hooks/usePaginations/usePaginations";

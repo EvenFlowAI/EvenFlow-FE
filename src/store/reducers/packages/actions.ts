@@ -1,12 +1,12 @@
 import {createAction} from "@reduxjs/toolkit";
 import {IPackageById, IPackageByQuery, IMake, IPackageOptionDetailed, TSegmentTitle} from "../../../api/types";
 import {AppThunk, IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import {
     IComplimentaryServiceByQuery,
     INewPackage,
     IUpdatedPackage, TOrderIndex, TPackagePrice
 } from "./types";
+import {Api} from "../../../api/ApiEndpoints";
 
 export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoading');
 export const getPackageById = createAction<IPackageById | null>('Optimizer/GetPackageById');

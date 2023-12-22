@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
-import {DialogProps} from "../../../BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
+import {DialogProps} from "../../BaseModal/types";
 import {Button, Divider, Grid} from "@material-ui/core";
 import {Roles, TTechnicianLevel} from "../../../../types/types";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
@@ -20,8 +20,8 @@ import {checkEmail, validatePhoneNumber} from "../../../../utils/utils";
 import {AdvisorForm} from "./AdvisorForm/AdvisorForm";
 import {TechnicianForm} from "./TechnicianForm/TechnicianForm";
 import {initialAdvisorForm, initialTechnicianForm} from "./constants";
-import {AvatarWrapper} from "../../../AvatarWrapper/AvatarWrapper";
-import {LoadingButton} from "../../../LoadingButton/LoadingButton";
+import {AvatarWrapper} from "../../../wrappers/AvatarWrapper/AvatarWrapper";
+import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

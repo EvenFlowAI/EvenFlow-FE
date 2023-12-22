@@ -21,9 +21,9 @@ import {
 } from "../../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {CheckBoxOutlined} from "@material-ui/icons";
-import {Caption} from "../../../../components/Caption/Caption";
+import {Caption} from "../../../../components/wrappers/Caption/Caption";
 import moment from "moment";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {useStyles} from "./styles";
 import {TForm} from "./types";
 import {gaps} from "./constants";

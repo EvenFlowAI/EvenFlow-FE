@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button} from "@material-ui/core";
-import {Loading} from "../../../../../components/Loading/Loading";
+import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {setPackageEMenuType} from "../../../../../store/reducers/appointmentFrameReducer/actions";

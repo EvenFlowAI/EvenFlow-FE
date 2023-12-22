@@ -18,7 +18,6 @@ import {
     TS3Form
 } from "./types";
 import {AppThunk, PaginatedAPIResponse, TCallback} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import moment from "moment";
 import {
     IAppointmentByQuery,
@@ -29,6 +28,7 @@ import {
 } from "../../../api/types";
 import {EDemandCategory} from "../pricingSettings/types";
 import {getSlotsGap} from "../appointmentFrameReducer/actions";
+import {Api} from "../../../api/ApiEndpoints";
 
 export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLoading');
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>("Appointment/GetSCProfile");

@@ -1,5 +1,5 @@
-import {DialogProps} from "../../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import React, {useEffect, useState} from "react";
 import {Button, FormGroup, InputLabel} from "@material-ui/core";
 import {useDispatch} from "react-redux";
@@ -9,7 +9,7 @@ import {TextField} from "../../../../components/formControls/TextFieldStyled/Tex
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {useStyles} from "./styles";
 import {TForm} from "./types";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

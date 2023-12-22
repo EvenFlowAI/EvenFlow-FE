@@ -3,7 +3,7 @@ import {IEmployee} from "../../../store/reducers/employees/types";
 import {useDispatch} from "react-redux";
 import {setEmployeeFilters} from "../../../store/reducers/employees/actions";
 import {CreateEmployee} from "../../../components/modals/admin/CreateEmployee/CreateEmployee";
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {EmployeesActions} from "../../../features/admin/Employees/EmployeesActions/EmployeesActions";
 import EmployeesFilters from "../../../features/admin/Employees/EmployeesFilters/EmployeesFilters";
 import EmployeesTable from "../../../features/admin/Employees/EmployeesTable/EmployeesTable";

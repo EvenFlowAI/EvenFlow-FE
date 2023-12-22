@@ -3,7 +3,7 @@ import {Button, Divider, Switch} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {updateAdvisor} from "../../../store/reducers/serviceCenters/actions";
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {SquarePaper} from "../../../components/styled/Paper";
 import {useStyles} from "./styles";
 import {optimizerRoot} from "../../../utils/constants";

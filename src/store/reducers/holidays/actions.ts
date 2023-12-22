@@ -1,8 +1,8 @@
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {IHoliday, THolidayActions} from "./types";
-import {Api} from "../../../config/requests";
 import {createAction} from "@reduxjs/toolkit";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {Api} from "../../../api/ApiEndpoints";
 
 
 const loading = (payload: boolean): THolidayActions => ({type: "Holidays/Loading", payload});

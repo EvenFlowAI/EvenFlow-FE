@@ -1,7 +1,7 @@
 import React from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {Button, Divider} from "@material-ui/core";
-import {DialogProps} from "../../../BaseModal/types";
+import {DialogProps} from "../../BaseModal/types";
 import {useDispatch} from "react-redux";
 import {removeZipFromMobServiceZone} from "../../../../store/reducers/mobileService/actions";
 import {TZipCode, TZone, TZonesServiceType} from "../../../../store/reducers/mobileService/types";

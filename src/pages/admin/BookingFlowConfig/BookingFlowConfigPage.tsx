@@ -1,5 +1,5 @@
 import React from 'react';
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {BookingFlowConfig} from "../../../features/admin/BookingFlowConfig/BookingFlowConfig";
 import {bookingFlowRoot} from "../../../utils/constants";
 

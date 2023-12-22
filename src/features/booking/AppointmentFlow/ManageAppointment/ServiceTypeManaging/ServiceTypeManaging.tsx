@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {AppointmentConfirmationTitle} from "../../../../../components/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
+import {AppointmentConfirmationTitle} from "../../../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
@@ -12,9 +12,9 @@ import {
     setShowServiceCentersList,
     setWelcomeScreenView
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import {Routes} from "../../../../../config/routes";
 import {useHistory, useParams} from "react-router-dom";
 import {TitleWrapper} from "./styles";
+import {Routes} from "../../../../../routes/constants";
 
 const ServiceTypeManaging = () => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);

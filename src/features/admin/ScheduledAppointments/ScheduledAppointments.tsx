@@ -1,18 +1,18 @@
 import React from "react";
 import {TimeWindows} from "../AppointmentAllocation/TimeWindows";
 import {DemandSegments} from "../AppointmentAllocation/DemandSegments";
-import {Caption} from "../../../components/Caption/Caption";
-import {Routes} from "../../../config/routes";
-import {TextLink} from "../../../components/TextLink/TextLink";
+import {Caption} from "../../../components/wrappers/Caption/Caption";
+import {TextLink} from "../../../components/wrappers/TextLink/TextLink";
 import {useDispatch, useSelector} from "react-redux";
 import {recalculateCapacity} from "../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../store/rootReducer";
 import {ButtonContainer, TableContainer} from "./styles";
-import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {Routes} from "../../../routes/constants";
 
 export const ScheduledAppointments = () => {
     const {isRecalculationLoading} = useSelector((state: RootState) => state.demandSegments);

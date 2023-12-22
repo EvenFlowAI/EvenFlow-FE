@@ -14,7 +14,7 @@ import {
     setPaging
 } from "../../../../store/reducers/enhancedCustomerSearch/actions";
 import CustomerSearchResults from "../CustomerSearchResultsModal/CustomerSearchResultsModal";
-import CustomerNotFound from "../../../../components/modals/booking/CustomerNotFound/CustomerNotFound";
+import CustomerNotFoundModal from "../CustomerNotFoundModal/CustomerNotFoundModal";
 import {TCallback} from "../../../../types/types";
 import {defaultPageData} from "../../../../store/reducers/defaultInitials";
 import {TCustomerSearchData} from "../../../../store/reducers/enhancedCustomerSearch/types";
@@ -246,7 +246,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                 open={isOpenSearchResults}
                 onClearSearchForm={clearForm}
             />
-            <CustomerNotFound open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onCloseNotFound}/>
+            <CustomerNotFoundModal open={isOpenNotFound} onClose={onCloseNotFound} handleNew={handleNew} onTryAnotherName={onCloseNotFound}/>
         </div>
     </Grid>
 };

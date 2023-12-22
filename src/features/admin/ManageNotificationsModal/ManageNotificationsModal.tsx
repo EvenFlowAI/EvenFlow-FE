@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../../../components/BaseModal/types";
-import {BaseModal, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../components/modals/BaseModal/types";
+import {BaseModal, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";

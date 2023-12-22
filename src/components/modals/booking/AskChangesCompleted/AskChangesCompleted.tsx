@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {BaseModal, DialogTitle} from "../../../BaseModal/BaseModal";
+import {BaseModal, DialogTitle} from "../../BaseModal/BaseModal";
 import {useTranslation} from "react-i18next";
 import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
@@ -14,7 +14,7 @@ import {useHistory, useParams} from "react-router-dom";
 import {isMobile} from 'react-device-detect';
 import {setAppointmentWasChanged} from "../../../../store/reducers/appointment/actions";
 import {useStyles} from "./styles";
-import {LoadingButton} from "../../../LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 

@@ -1,16 +1,16 @@
 import React, {useMemo} from 'react';
-import {DialogProps} from "../../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Box, Button, ButtonGroup} from "@material-ui/core";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {encodeSCID} from "../../../../utils/utils";
-import {Routes} from "../../../../config/routes";
 import {TRole} from "../../../../store/reducers/users/types";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {copyTextToClipboard} from "./utils";
+import {Routes} from "../../../../routes/constants";
 
 const restrictedRoles: TRole[] = ["Call Center Rep", "Advisor", "Manager"]
 

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {BaseModal, DialogContent, DialogTitle, DialogActions} from "../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {BaseModal, DialogContent, DialogTitle, DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -9,7 +9,7 @@ import {createBay, updateBay} from "../../../../store/reducers/bays/actions";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {TBayForm} from "../types";
 import {CreateBayForm} from "../CreateBayForm/CreateBayForm";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

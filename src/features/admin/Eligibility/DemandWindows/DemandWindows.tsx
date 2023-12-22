@@ -6,13 +6,13 @@ import {loadTimeWindows, setTimeWindows} from "../../../../store/reducers/pricin
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {EWindowType, TTimeWindow} from "../../../../store/reducers/pricingSettings/types";
-import {Caption} from "../../../../components/Caption/Caption";
-import {TextLink} from "../../../../components/TextLink/TextLink";
-import {Routes} from "../../../../config/routes";
+import {Caption} from "../../../../components/wrappers/Caption/Caption";
+import {TextLink} from "../../../../components/wrappers/TextLink/TextLink";
 import {useStyles} from "./styles";
 import {DenseTable} from "../../../../components/styled/DemandTable";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {Routes} from "../../../../routes/constants";
 
 export const DemandWindows = () => {
     const {timeWindows} = useSelector((state: RootState) => state.pricingSettings);

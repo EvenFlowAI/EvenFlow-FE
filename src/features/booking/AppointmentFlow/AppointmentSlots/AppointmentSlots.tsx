@@ -35,9 +35,9 @@ import {
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions";
-import {Routes} from "../../../../config/routes";
 import {Wrapper} from "./styles";
 import {groupAppointments} from "./utils";
+import {Routes} from "../../../../routes/constants";
 
 type TAppointmentSelectionProps = {
     handleSetScreen: TArgCallback<TScreen>;

@@ -2,12 +2,11 @@ import React, {useEffect, useMemo} from "react";
 import {Button, Drawer, IconButton, List, useMediaQuery, useTheme} from "@material-ui/core";
 import logo from '../../../assets/img/logoSidebar.svg';
 import {LinkTypeWithSub} from "../../../types/types";
-import {Routes} from "../../../config/routes";
 import {matchPath, useHistory, useLocation} from "react-router-dom";
 import {ArrowForwardIos, Close} from "@material-ui/icons";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {Loading} from "../../../components/Loading/Loading";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import Link from "./Link/Link";
 import {reportingAllowedRoles} from "../../../pages/admin/Reporting/constants";
 import {useStyles} from "./styles";
@@ -16,6 +15,7 @@ import {BookingModal} from "./BookingModal/BookingModal";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
+import {Routes} from "../../../routes/constants";
 
 type TProps = {
     isOpened: boolean;

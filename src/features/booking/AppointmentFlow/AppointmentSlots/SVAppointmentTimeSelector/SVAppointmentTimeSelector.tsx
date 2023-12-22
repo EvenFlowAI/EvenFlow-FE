@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import moment from "moment";
 import {IServiceValetAppointment,} from "../../../../../store/reducers/appointment/types";
-import {Loading} from "../../../../../components/Loading/Loading";
+import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {selectServiceValetAppointment} from "../../../../../store/reducers/appointment/actions";

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
 import {MoreHoriz} from "@material-ui/icons";

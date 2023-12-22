@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, SetStateAction, Dispatch} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Button} from "@material-ui/core";
-import {DialogProps} from "../../../../../../components/BaseModal/types";
+import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {RootState} from "../../../../../../store/rootReducer";
-import {Table} from "../../../../../../components/Table/Table";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/BaseModal/BaseModal";
-import Checkbox from "../../../../../../components/Checkbox/Checkbox";
+import {Table} from "../../../../../../components/tables/Table/Table";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
+import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
 import {
     changeComplimentaryPageData,
     loadComplimentary,

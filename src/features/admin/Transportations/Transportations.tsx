@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {SquarePaper} from "../../../components/styled/Paper";
 import {TableContainer} from "../../../pages/admin/PricingSettings/UI";
-import {NoItemsLoading} from "../../../components/NoItemsLoading/NoItemsLoading";
+import {NoItemsLoading} from "../../../components/wrappers/NoItemsLoading/NoItemsLoading";
 import {IconButton, Menu, MenuItem, Switch, TableBody, TableHead} from "@material-ui/core";
 import {getTransportationOptionString} from "../../../utils/utils";
 import {ETransportColumn, ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";

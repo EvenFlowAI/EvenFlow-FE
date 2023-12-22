@@ -1,5 +1,5 @@
 import React from "react";
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {IServiceCenterExtended} from "../../../../store/reducers/serviceCenters/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";

@@ -15,7 +15,7 @@ import WaitlistSwitcher from "../WaitlistSwitcher/WaitlistSwitcher";
 import {STextField} from "../AncillaryPriceByDistance/styles";
 import {initialState, tableHead} from "./constants";
 import {TForm} from "./types";
-import {SaveEditBlock} from "../../../components/SaveEditBlock/SaveEditBlock";
+import {SaveEditBlock} from "../../../components/buttons/SaveEditBlock/SaveEditBlock";
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
 import {TableCell} from "../../../components/styled/TableCell";

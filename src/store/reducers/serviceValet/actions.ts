@@ -17,7 +17,8 @@ import {
     TDistanceRangeUpdate
 } from "./types";
 import {EServiceType} from "../appointmentFrameReducer/types";
-import {Api} from "../../../config/requests";
+
+import {Api} from "../../../api/ApiEndpoints";
 
 export const setCurrentZone = createAction<TZone|null>('ServiceValet/SetCurrentZone');
 export const setLoading = createAction<boolean>('ServiceValet/SetLoading');

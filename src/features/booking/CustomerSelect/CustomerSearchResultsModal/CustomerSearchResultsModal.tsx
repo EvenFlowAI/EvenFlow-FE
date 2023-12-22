@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {BaseModal, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import CustomerSearchResultsActions from "./CustomerSearchResultsActions/CustomerSearchResultsActions";
 import {TArgCallback, TCallback} from "../../../../types/types";
 import CustomerSearchTable from "./CustomerSearchTable/CustomerSearchTable";

@@ -4,7 +4,7 @@ import {deleteMake, setCurrentMake} from "../../../../store/reducers/vehicleDeta
 import {RootState} from "../../../../store/rootReducer";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {IMake} from "../../../../api/types";
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {MoreHoriz} from "@material-ui/icons";
 import {TableRowDataType, TCallback} from "../../../../types/types";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";

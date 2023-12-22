@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button} from "@material-ui/core";
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {loadPackageOptionsList, loadPackagePricingLevels,} from "../../../../store/reducers/pricingSettings/actions";

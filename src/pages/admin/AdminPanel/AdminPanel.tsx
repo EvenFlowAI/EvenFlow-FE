@@ -1,11 +1,10 @@
 import React, {useEffect, useRef, useState} from "react";
 import {SideBar} from "../../../features/admin/SideBar/SideBar";
 import {Redirect, Switch} from "react-router-dom";
-import {AdminPage} from "../AdminPage/AdminPage";
+import {AdminRoutes} from "../../../routes/AdminRoutes/AdminRoutes";
 import {NavBar} from "../../../features/admin/NavBar/NavBar";
 import {Toolbar} from "@material-ui/core";
-import {Routes} from "../../../config/routes";
-import {PrivateRoute} from "../../../components/PrivateRoute/PrivateRoute";
+import {PrivateRoute} from "../../../routes/PrivateRoute/PrivateRoute";
 import {useDispatch} from "react-redux";
 import {getCurrentUser} from "../../../store/reducers/users/actions";
 import {loadDealershipProfile} from "../../../store/reducers/dealershipGroups/actions";
@@ -15,6 +14,7 @@ import clsx from "clsx";
 import {useStyles} from "./styles";
 import {useSideBar} from "../../../hooks/useSideBar/useSideBar";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {Routes} from "../../../routes/constants";
 
 export const AdminPanel = () => {
     const [navBarHeight, setNavBarHeight] = useState<number>(0);
@@ -58,7 +58,7 @@ export const AdminPanel = () => {
         )}>
             <Toolbar id="backToTopAnchor" style={{height: navBarHeight || undefined}} />
             <Switch>
-                <PrivateRoute path={Routes.Admin.Base} component={AdminPage} />
+                <PrivateRoute path={Routes.Admin.Base} component={AdminRoutes} />
                 <Redirect to={Routes.Admin.Base} />
             </Switch>
         </div>

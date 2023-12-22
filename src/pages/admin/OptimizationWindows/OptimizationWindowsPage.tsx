@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
-import {OptimizationWindowCard} from "../../../components/OptimizationWindowCard/OptimizationWindowCard";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
+import {OptimizationWindowCard} from "./OptimizationWindowCard/OptimizationWindowCard";
 import {Grid} from "@material-ui/core";
 import {DemandSegmentsModal} from "../../../features/admin/DemandSegmentsModal/DemandSegmentsModal";
 import {useDispatch, useSelector} from "react-redux";

@@ -3,14 +3,15 @@ import {TextField} from "../../../components/formControls/TextFieldStyled/TextFi
 import {Link as RLink, useHistory, useLocation} from "react-router-dom";
 import {LockOpen} from "@material-ui/icons";
 import React, {useState} from "react";
-import {LoginHeader} from "../../../components/LoginHeader/LoginHeader";
+import {LoginTitle} from "../../../components/wrappers/LoginTitle/LoginTitle";
 import {LoginContainer} from "../../../components/styled/LoginContainer";
 import {LoginButton} from "../../../components/styled/LoginButton";
 import {ICredentials} from "../../../types/types";
 import {useSnackbar} from "notistack";
-import {authService} from "../../../config/requests";
 import {getAPIException} from "../../../utils/utils";
-import {Routes} from "../../../config/routes";
+
+import {Routes} from "../../../routes/constants";
+import {authService} from "../../../api/AuthService";
 
 export const AdminLogin = () => {
     const [loading, setLoading] = useState(false);
@@ -42,7 +43,7 @@ export const AdminLogin = () => {
 
 
     return <LoginContainer>
-        <LoginHeader title="Welcome to EvenFlow" />
+        <LoginTitle title="Welcome to EvenFlow" />
         <TextField
             label="Email Address"
             spacing="normal"

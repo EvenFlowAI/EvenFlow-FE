@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {Button, Divider} from "@material-ui/core";
 import {TDistanceRange} from "../../../../store/reducers/serviceValet/types";
 import {useStyles} from "./styles";

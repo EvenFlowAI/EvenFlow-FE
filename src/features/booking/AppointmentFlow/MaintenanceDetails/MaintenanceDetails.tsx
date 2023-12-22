@@ -24,14 +24,14 @@ import {useTranslation} from "react-i18next";
 import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
 import {TArgCallback, TScreen} from "../../../../types/types";
 import RecallsByVinModal from "../../RecallsByVinModal/RecallsByVinModal";
-import {Api} from "../../../../config/requests";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import NoRecallsModal from "../../NoRecallsModal/NoRecallsModal";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 import {SelectWrapper, useStyles} from "./styles";
 import {TKey, TOptionsState} from "./types";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";
+import {Api} from "../../../../api/ApiEndpoints";
 
 type TMaintenanceDetailsProps = {
     onBack: TArgCallback<TScreen>;

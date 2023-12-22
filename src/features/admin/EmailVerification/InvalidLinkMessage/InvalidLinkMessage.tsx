@@ -1,8 +1,9 @@
 import React from "react";
-import {LoginTextContent} from "../../../../components/LoginTextContent/LoginTextContent";
+import {LoginTextContent} from "../../../../components/wrappers/LoginTextContent/LoginTextContent";
 import {Typography} from "@material-ui/core";
-import {BackLink} from "../../../../components/BackLink/BackLink";
-import {Routes} from "../../../../config/routes";
+import {BackLink} from "../../../../components/wrappers/BackLink/BackLink";
+
+import {Routes} from "../../../../routes/constants";
 
 export const InvalidLinkMessage: React.FC = () => {
     return <>

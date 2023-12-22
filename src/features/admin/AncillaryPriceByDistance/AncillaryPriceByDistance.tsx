@@ -10,8 +10,8 @@ import {
 import {MoreHoriz} from "@material-ui/icons";
 import AddDistanceRangeModal from "./AddDistanceRangeModal/AddDistanceRangeModal";
 import {IDistancePriceSettings, TDistanceRange} from "../../../store/reducers/serviceValet/types";
-import {Loading} from "../../../components/Loading/Loading";
-import {NoData} from "../../../components/NoData/NoData";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
+import {NoData} from "../../../components/wrappers/NoData/NoData";
 import {AncillaryPriceSlider} from "../../../components/styled/AncillaryPriceSlider";
 import {FirstCell, HeaderTableCell, TableCell} from "../../../components/styled/AncillaryPriceComponents";
 import {ButtonWrapper, STextField, WideButton} from "./styles";

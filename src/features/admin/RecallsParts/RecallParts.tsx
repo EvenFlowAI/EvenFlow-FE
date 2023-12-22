@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import RecallTable from "./RecallTable/RecallTable";
 import {Button} from "@material-ui/core";
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import AddRecallModal from "./AddRecallModal/AddRecallModal";
 import {IRecall} from "../../../store/reducers/recall/types";
 import {makeStyles} from "@material-ui/core/styles";

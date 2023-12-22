@@ -4,7 +4,7 @@ import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Button, Divider, IconButton, Switch} from "@material-ui/core";
-import {DialogActions} from "../../../../components/BaseModal/BaseModal";
+import {DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
 import {ReactComponent as PlusIcon} from "../../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../../assets/img/close.svg";
 import {ENotificationType, TSCNotifications} from "../../../../store/reducers/notifications/types";

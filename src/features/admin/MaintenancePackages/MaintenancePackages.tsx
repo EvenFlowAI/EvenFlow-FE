@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Switch} from "@material-ui/core";
-import {ContentTitle} from "../../../components/ContentTitle/ContentTitle";
+import {ContentTitle} from "../../../components/wrappers/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
 import {IPackageByQuery} from "../../../api/types";
@@ -10,7 +10,7 @@ import {updateAvailablePackageOptions, updatePackagePriceDetails} from "../../..
 import AddPackageModal from "./AddPackageModal/AddPackageModal";
 import LaborRate from "./LaborRate/LaborRate";
 import Disclaimer from "./Disclaimer/Disclaimer";
-import {Loading} from "../../../components/Loading/Loading";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {autocompleteRender} from "../../../utils/autocompleteRenders";
 import {Autocomplete} from "@material-ui/lab";
 import {useMaintenancePackagesStyles} from "./styles";

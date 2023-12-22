@@ -4,7 +4,7 @@ import {IServiceCenter} from "../../../../../store/reducers/serviceCenters/types
 import {Grid} from "@material-ui/core";
 import {TextField} from "../../../../formControls/TextFieldStyled/TextField";
 import {TConsultantOption, TDMSConsultantChange, TSelectChange, TTechnicianForm} from "../types";
-import {ToggleButtons} from "../../../../ToggleButtons/ToggleButtons";
+import {ToggleButtons} from "../../../../buttons/ToggleButtons/ToggleButtons";
 import {autocompleteRender} from "../../../../../utils/autocompleteRenders";
 import {checkEmail} from "../../../../../utils/utils";
 import 'react-phone-number-input/style.css'

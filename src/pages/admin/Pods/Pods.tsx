@@ -1,5 +1,5 @@
 import React from 'react';
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {SquarePaper} from "../../../components/styled/Paper";
 import {PodsTable} from "../../../features/admin/PodsTable/PodsTable";
 import {optimizerRoot} from "../../../utils/constants";

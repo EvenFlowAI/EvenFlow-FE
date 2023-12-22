@@ -7,7 +7,7 @@ import RemoveZipCode from "../../../../components/modals/admin/RemoveZipCode/Rem
 import {useDispatch} from "react-redux";
 import {loadMobServiceZones, removeMobServiceZone} from "../../../../store/reducers/mobileService/actions";
 import {setCurrentZone} from "../../../../store/reducers/serviceValet/actions";
-import GeographicZonesButtons from "../../../../components/GeographicZonesButtons/GeographicZonesButtons";
+import GeographicZonesButtons from "../../../../components/buttons/GeographicZonesButtons/GeographicZonesButtons";
 import {EligibleTitle} from "../../../../components/styled/EligibleTitle";
 import {GeographicZonesWrapper, TabHeaderWrapper} from "../../../../components/styled/GeographicZonesWrappers";
 import {useModal} from "../../../../hooks/useModal/useModal";

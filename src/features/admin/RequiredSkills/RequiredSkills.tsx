@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Table} from "../../../components/Table/Table";
+import {Table} from "../../../components/tables/Table/Table";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {MoreHoriz} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,7 +11,7 @@ import {
 } from "../../../store/reducers/serviceRequests/actions";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {RequiredSkillsModal} from "./RequiredSkillsModal/RequiredSkillsModal";
-import {CheckmarkCircle} from "../../../components/ChekmarkCircle/ChekmarkCircle";
+import {CheckmarkCircle} from "../../../components/wrappers/ChekmarkCircle/ChekmarkCircle";
 import {TableRowDataType} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {usePagination} from "../../../hooks/usePaginations/usePaginations";

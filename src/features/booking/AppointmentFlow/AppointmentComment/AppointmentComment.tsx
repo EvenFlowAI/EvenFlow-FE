@@ -18,7 +18,7 @@ import {
 } from "../../../../store/reducers/appointment/actions";
 import AskAddService from "../../../../components/modals/booking/AskAddService/AskAddService";
 import {useTranslation} from "react-i18next";
-import AddCommentPrompt from "../../../../components/modals/booking/AddCommentPrompt/AddCommentPrompt";
+import AddCommentPrompt from "./AddCommentPrompt/AddCommentPrompt";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";

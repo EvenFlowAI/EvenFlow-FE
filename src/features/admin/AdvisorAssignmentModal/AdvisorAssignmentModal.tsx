@@ -1,11 +1,11 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {Button, TableBody, TableHead} from "@material-ui/core";
-import {DialogProps} from "../../../components/BaseModal/types";
+import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAdvisorAssignMethod, IAdvisorAssignment} from "../../../store/reducers/serviceCenters/types";
-import {Loading} from "../../../components/Loading/Loading";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
 import {loadAdvisorAssignment, updateAdvisorAssignment} from "../../../store/reducers/serviceCenters/actions";
 import {DemandTable} from "../../../components/styled/DemandTable";

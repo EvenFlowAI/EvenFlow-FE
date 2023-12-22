@@ -9,7 +9,7 @@ import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFra
 import {setUserType} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useLoadingStyles} from "../../../../hooks/styling/useLoadingStyles";
 import {useStyles} from "../styles";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;

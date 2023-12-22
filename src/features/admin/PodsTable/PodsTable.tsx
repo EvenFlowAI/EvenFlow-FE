@@ -5,9 +5,9 @@ import {EAppointmentType, EJobType, IPod} from "../../../store/reducers/pods/typ
 import {useDispatch, useSelector} from "react-redux";
 import {loadPods, removePod, setPodsPageData} from "../../../store/reducers/pods/actions";
 import {RootState} from "../../../store/rootReducer";
-import {Table} from "../../../components/Table/Table";
+import {Table} from "../../../components/tables/Table/Table";
 import {MoreHoriz} from "@material-ui/icons";
-import {TViewMode} from "../../../components/BaseModal/types";
+import {TViewMode} from "../../../components/modals/BaseModal/types";
 import {getTransportationOptionString} from "../../../utils/utils";
 import {getNameFromEnum} from "./utils";
 import {TableRowDataTypeResp} from "../../../types/types";

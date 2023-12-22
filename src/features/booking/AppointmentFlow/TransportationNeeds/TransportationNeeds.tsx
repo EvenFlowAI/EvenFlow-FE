@@ -1,14 +1,13 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
 import {ActionButtons} from '../../ActionButtons/ActionButtons';
-import {Api} from "../../../../config/requests";
 import {collectServiceRequestIds, decodeSCID, mapRecallsForRequest} from "../../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {ITransportation} from '../../../../api/types';
 import {setCurrentFrameScreen, setTransportation} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import {ETransportColumn} from "../../../../store/reducers/transportationNeeds/types";
@@ -19,6 +18,7 @@ import {TextWrapper, TransportationsWrapper} from "./styles";
 import {TransportationCard} from "./TransportationCard/TransportationCard";
 import {TTransportationData} from "./types";
 import {TActionProps} from "../../../../types/types";
+import {Api} from "../../../../api/ApiEndpoints";
 
 export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {id} = useParams();

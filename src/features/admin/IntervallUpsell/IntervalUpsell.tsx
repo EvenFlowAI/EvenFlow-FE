@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {TitleContainer} from "../../../components/TitleContainer/TitleContainer";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
 import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,14 +10,13 @@ import {
     setUpsellFilter, setUpsellOrdering, setUpsellPageData
 } from "../../../store/reducers/serviceRequests/actions";
 import {IUpsellServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import {Table} from "../../../components/Table/Table";
+import {Table} from "../../../components/tables/Table/Table";
 import {MoreHoriz} from "@material-ui/icons";
-import {Api} from "../../../config/requests";
 import {optimizerRoot, SC_UNDEFINED} from "../../../utils/constants";
 import {SearchInput} from "../../../components/formControls/SearchInput/SearchInput";
 import {IOrder, TableRowDataType} from "../../../types/types";
 import IntervalUpsellModal from "./IntervalUpsellModal/IntervalUpsellModal";
-import {ServiceRequestCellData} from "../../../components/ServiceRequestCellData/ServiceRequestCellData";
+import {ServiceRequestCellData} from "../../../components/wrappers/ServiceRequestCellData/ServiceRequestCellData";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
 import {usePagination} from "../../../hooks/usePaginations/usePaginations";
@@ -25,6 +24,7 @@ import {usePagination} from "../../../hooks/usePaginations/usePaginations";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {Api} from "../../../api/ApiEndpoints";
 
 const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {

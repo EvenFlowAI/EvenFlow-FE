@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDialogStyles} from "../../../../hooks/styling/useDialogStyles";
-import {BaseModal, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
-import {DialogProps} from "../../../BaseModal/types";
+import {BaseModal, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
+import {DialogProps} from "../../BaseModal/types";
 import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
 import {setCurrentFrameScreen,} from "../../../../store/reducers/appointmentFrameReducer/actions";

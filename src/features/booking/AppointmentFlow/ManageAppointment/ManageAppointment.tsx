@@ -28,7 +28,7 @@ import {
     setCustomerLoadedData,
 } from "../../../../store/reducers/appointment/actions";
 import AppointmentVehicleInfo from "../../AppointmentVehicleInfo/AppointmentVehicleInfo";
-import PaymentType from "../../../../components/modals/booking/PaymentType/PaymentType";
+import PaymentTypeModal from "../../PaymentTypeModal/PaymentTypeModal";
 import {useTranslation} from "react-i18next";
 import ServiceRequestsManaging from "./ServiceRequestsManaging/ServiceRequestsManaging";
 import {SelectedPriceManaging} from "./SelectedPriceManaging/SelectedPriceManaging";
@@ -37,13 +37,12 @@ import {ReviewManaging} from "./ReviewManaging/ReviewManaging";
 import ConfirmCancelUpdate from "./ConfirmCancelUpdateModal/ConfirmCancelUpdate";
 import {ILoadedVehicle} from "../../../../api/types";
 import {loadCategoriesByQuery} from "../../../../store/reducers/categories/actions";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";
 import {API} from "../../../../api/api";
-import {Routes} from "../../../../config/routes";
 import {isMobile} from 'react-device-detect';
 import moment from "moment/moment";
-import DetailedFeesManage from "../../../../components/modals/booking/DetailedFees/DetailedFeesManage";
+import DetailedFeesManage from "../AppointmentConfirmation/DetailedFees/DetailedFeesManage";
 import {loadFirstScreenOptionsByQuery} from "../../../../store/reducers/serviceTypes/actions";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import AddressManaging from "./AddressManaging/AddressManaging";
@@ -54,6 +53,7 @@ import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
+import {Routes} from "../../../../routes/constants";
 
 type TProps = {
     onChangeSlot: TCallback;
@@ -287,7 +287,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
             </ButtonWrapper>}
 
         <DetailedFeesManage open={isFeesOpen} onClose={onFeesClose}/>
-        <PaymentType open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
+        <PaymentTypeModal open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
         <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
     </StepWrapper>
 };

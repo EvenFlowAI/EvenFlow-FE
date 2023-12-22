@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps, TViewMode} from "../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/BaseModal/BaseModal";
+import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import {IAddress} from "../../../store/reducers/dealershipGroups/types";
 import {TSelectChange} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import {IServiceCenterExtended} from "../../../store/reducers/serviceCenters/types";
 import {EditForm} from "./EditForm/EditForm";
-import {LoadingButton} from "../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {Api} from "../../../api/ApiEndpoints";
 
 const initialAddress: IAddress = {
     street: "",

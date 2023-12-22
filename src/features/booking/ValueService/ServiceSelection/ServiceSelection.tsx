@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IServiceOffer} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {loadServiceOffers, setValueServicePartial} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {Loading} from "../../../../components/Loading/Loading";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {useTranslation} from "react-i18next";
 import {CarName} from "../../../../components/styled/CarName";
 import {OffersContainer} from "../../../../components/styled/OffersContainer";

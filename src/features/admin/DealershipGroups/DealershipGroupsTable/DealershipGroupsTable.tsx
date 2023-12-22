@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {IconButton, Menu, MenuItem, Typography} from "@material-ui/core";
 import {MoreHoriz} from "@material-ui/icons";
 import {IDealershipGroupExtended} from "../../../../store/reducers/dealershipGroups/types";
@@ -8,15 +8,15 @@ import {RootState} from "../../../../store/rootReducer";
 import * as dealershipActions from "../../../../store/reducers/dealershipGroups/actions";
 import {changePageData, remove as removeDealership} from "../../../../store/reducers/dealershipGroups/actions";
 import {useHistory} from "react-router-dom";
-import {Routes} from "../../../../config/routes";
 import {concatAddress} from "../../../../utils/utils";
-import {authService} from "../../../../config/requests";
 import {TableRowDataType} from "../../../../types/types";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
+import {Routes} from "../../../../routes/constants";
+import {authService} from "../../../../api/AuthService";
 
 const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
     {val: el => el.name, header: "Dealership name"},

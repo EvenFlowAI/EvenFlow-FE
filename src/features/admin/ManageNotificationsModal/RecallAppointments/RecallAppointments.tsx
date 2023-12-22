@@ -6,7 +6,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {Button, Divider, IconButton, Switch} from "@material-ui/core";
 import {ReactComponent as PlusIcon} from "../../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../../assets/img/close.svg";
-import {DialogActions} from "../../../../components/BaseModal/BaseModal";
+import {DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
 import {ENotificationType, TSCNotifications} from "../../../../store/reducers/notifications/types";
 import {TNotificatonsProps} from "../types";
 import {initialSCNotifications} from "../constants";

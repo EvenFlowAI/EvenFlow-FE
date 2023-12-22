@@ -1,13 +1,13 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {Table} from "../../../components/Table/Table";
+import {Table} from "../../../components/tables/Table/Table";
 import {IBay} from "../../../store/reducers/bays/types";
 import {CheckCircle, MoreHoriz} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadBays, removeBay, setPageData} from "../../../store/reducers/bays/actions";
 import {CreateBayModal} from "./CreateBayModal/CreateBayModal";
-import {TViewMode} from "../../../components/BaseModal/types";
+import {TViewMode} from "../../../components/modals/BaseModal/types";
 import {useStyles} from "./styles";
 import {TableRowDataType} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";

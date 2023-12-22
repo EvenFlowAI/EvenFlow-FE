@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
-import {DialogProps} from "../../../../components/BaseModal/types";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {EAppointmentType, EJobType, IPod, IPodForm} from "../../../../store/reducers/pods/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Button, Grid, Switch} from "@material-ui/core";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
@@ -31,7 +31,7 @@ import {ITransportationOptionFull} from "../../../../store/reducers/transportati
 import {loadTransportationOptions} from "../../../../store/reducers/transportationNeeds/actions";
 import {Label} from "./styles";
 import {TForm, TOption} from "./types";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 import {useModal} from "../../../../hooks/useModal/useModal";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";

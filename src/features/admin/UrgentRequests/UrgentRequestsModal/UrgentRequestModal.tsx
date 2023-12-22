@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {DialogProps} from "../../../../components/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/BaseModal/BaseModal";
+import {DialogProps} from "../../../../components/modals/BaseModal/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Button} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -9,10 +9,10 @@ import {
     pageDataNonUrgentServiceRequests,
     setUrgentRequests
 } from "../../../../store/reducers/serviceRequests/actions";
-import {Table} from "../../../../components/Table/Table";
+import {Table} from "../../../../components/tables/Table/Table";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
 import {SC_UNDEFINED} from "../../../../utils/constants";
-import {LoadingButton} from "../../../../components/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 import {TableRowDataType} from "../../../../types/types";
 import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
 

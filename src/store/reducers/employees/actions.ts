@@ -1,11 +1,11 @@
 import {ActionCreator} from "redux";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
-import {Api} from "../../../config/requests";
 import {AppThunk, IOrder, IPageRequest, PaginatedAPIResponse, Roles} from "../../../types/types";
 import {IEmployee, IEmployeeFilters, IEmployeeForm, TDmsAdvisor, TEmployeeActions} from "./types";
 import {saveEmployeeAvatar} from "../users/actions";
 import {createAction} from "@reduxjs/toolkit";
 import {IAdvisorShort} from "../users/types";
+import {Api} from "../../../api/ApiEndpoints";
 
 export const getAll = (payload: IEmployee[]): TEmployeeActions => ({
    type: "Employees/GetAll", payload

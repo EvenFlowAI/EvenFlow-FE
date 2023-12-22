@@ -15,8 +15,8 @@ import {
     ISRAdminForm, IUpsellServiceRequest, IUpsellServiceRequestUpdate
 } from "./types";
 import {AppThunk, IOrder, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import {EPricingDisplayType} from "../pricingSettings/types";
+import {Api} from "../../../api/ApiEndpoints";
 
 export const getNonSelectedServiceRequests = createAction<IServiceRequest[]>("ServiceRequestsScreen/getNonSelected");
 export const setLoadingNonSelected = createAction<boolean>("ServiceRequestsScreen/loadingNonSelected");

@@ -1,5 +1,6 @@
 import {TRouteRoleMap} from "./utils/types";
-import {Routes} from "./config/routes";
+
+import {Routes} from "./routes/constants";
 
 export const PERMISSIONS: TRouteRoleMap[] = [
     {route: Routes.Login.Base, roles: true},

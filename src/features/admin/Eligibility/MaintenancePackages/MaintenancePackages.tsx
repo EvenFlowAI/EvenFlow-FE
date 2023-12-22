@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {NoItemsLoading} from "../../../../components/NoItemsLoading/NoItemsLoading";
+import {NoItemsLoading} from "../../../../components/wrappers/NoItemsLoading/NoItemsLoading";
 import {Box, FormControlLabel, Radio, RadioGroup, TableBody, TableHead} from "@material-ui/core";
 import {TableContainer} from "../../../../pages/admin/PricingSettings/UI";
 import {useDispatch, useSelector} from "react-redux";
@@ -8,7 +8,7 @@ import {
     loadMPList,
 } from "../../../../store/reducers/pricingSettings/actions";
 import {RootState} from "../../../../store/rootReducer";
-import {Caption} from "../../../../components/Caption/Caption";
+import {Caption} from "../../../../components/wrappers/Caption/Caption";
 import {EPricingDisplayType} from "../../../../store/reducers/pricingSettings/types";
 import {headCellStyles, leftAlign} from "../styles";
 import {TableWrapper} from "./styles";

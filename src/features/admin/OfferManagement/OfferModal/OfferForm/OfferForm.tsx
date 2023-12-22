@@ -14,7 +14,7 @@ import {Autocomplete} from "@material-ui/lab";
 import {autocompleteOptionsRender, autocompleteRender} from "../../../../../utils/autocompleteRenders";
 import clsx from "clsx";
 import {DateRange, QueryBuilder} from "@material-ui/icons";
-import {DialogContent} from "../../../../../components/BaseModal/BaseModal";
+import {DialogContent} from "../../../../../components/modals/BaseModal/BaseModal";
 import {selectAllSR, TAutoChangeEvent, TOfferForm} from "../../types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
@@ -24,8 +24,8 @@ import {IAssignedServiceRequestShort} from "../../../../../store/reducers/servic
 import {EServiceCategoryType, ICategory} from "../../../../../store/reducers/categories/types";
 import HtmlEditor from "../../../../../components/modals/admin/HTMLEditor/HTMLEditor";
 import {useStyles} from "./styles";
-import {DatePicker} from "../../../../../components/DatePicker/DatePicker";
-import {TimePicker} from "../../../../../components/TimePicker/TimePicker";
+import {DatePicker} from "../../../../../components/pickers/DatePicker/DatePicker";
+import {TimePicker} from "../../../../../components/pickers/TimePicker/TimePicker";
 import {useModal} from "../../../../../hooks/useModal/useModal";
 
 type TProps = {
