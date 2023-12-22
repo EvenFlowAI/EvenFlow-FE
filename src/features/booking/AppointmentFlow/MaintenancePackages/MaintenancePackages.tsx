@@ -37,7 +37,7 @@ import {FeesText, Info, PackagesStepWrapper, Wrapper} from "./styles";
 import {getPackagesData} from "./utils";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";
-import {Api} from "../../../../api/ApiEndpoints";
+import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 
 type TPackageSelectionProps = {
     onNext: TArgCallback<TScreen>;

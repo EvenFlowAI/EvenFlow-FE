@@ -3,7 +3,7 @@ import {Route, RouteProps, Redirect} from "react-router-dom";
 import {hasPermission} from "../../utils/utils";
 import {useCurrentUser} from "../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../constants";
-import {authService} from "../../api/AuthService";
+import {authService} from "../../api/AuthService/AuthService";
 
 export const PrivateRoute: React.FC<RouteProps> = (
     {component: Component, ...rest}) => {

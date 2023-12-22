@@ -5,7 +5,7 @@ import CustomerSearchResultsActions from "./CustomerSearchResultsActions/Custome
 import {TArgCallback, TCallback} from "../../../../types/types";
 import CustomerSearchTable from "./CustomerSearchTable/CustomerSearchTable";
 import {setPageData, setPaging} from "../../../../store/reducers/enhancedCustomerSearch/actions";
-import {defaultPageData} from "../../../../store/reducers/defaultInitials";
+import {defaultPageData} from "../../../../store/reducers/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {TSearchColumnName} from "./types";
 import {RootState} from "../../../../store/rootReducer";

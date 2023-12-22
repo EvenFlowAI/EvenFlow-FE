@@ -17,7 +17,7 @@ import {
     setPoliticalState,
     setZipCode
 } from "../appointmentFrameReducer/actions";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getCustomers = createAction<ICustomerWithPhones[]>("CustomerSearch/GetCustomers");
 export const setCurrentCustomer = createAction<ICustomerWithPhones|null>("CustomerSearch/SetCurrentCustomer");

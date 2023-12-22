@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {AppThunk} from "../../../types/types";
 import {TEmailRequirement} from "./types";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getEmailRequirement = createAction<TEmailRequirement>("ServiceCenters/getEmailRequirement");
 export const setEmailRequirementLoading = createAction<boolean>("ServiceCenters/SetEmailRequirementLoading");

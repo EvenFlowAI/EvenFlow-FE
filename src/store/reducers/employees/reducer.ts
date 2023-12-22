@@ -1,6 +1,6 @@
 import {IEmployee, IEmployeeFilters, TDmsAdvisor, TEmployeeActions} from "./types";
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
-import {defaultPageData, defaultPaging} from "../defaultInitials";
+import {defaultPageData, defaultPaging} from "../constants";
 import {createReducer} from "@reduxjs/toolkit";
 import {IAdvisorShort} from "../users/types";
 import {

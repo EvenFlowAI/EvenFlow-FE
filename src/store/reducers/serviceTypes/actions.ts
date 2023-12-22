@@ -2,7 +2,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {IFirstScreenOption, TNewFirstScreenOption, TUpdateFirstScreenOption} from "./types";
 import {EServiceType} from "../appointmentFrameReducer/types";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setFirstScreenOptionsLoading = createAction<boolean>("ServiceTypes/SetLoading");
 export const getFirstScreenOptionsByQuery = createAction<IFirstScreenOption[]>("ServiceTypes/GetServiceTypesByQuery");

@@ -10,7 +10,7 @@ import {
 import {AppThunk} from "../../../types/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import moment from "moment";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setLoading = createAction<boolean>("SlotScoring/SetLoading");
 

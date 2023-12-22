@@ -33,7 +33,7 @@ import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../../routes/constants";
-import {Api} from "../../../../api/ApiEndpoints";
+import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;

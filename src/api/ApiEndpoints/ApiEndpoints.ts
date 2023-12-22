@@ -1,7 +1,7 @@
-import {IApiEndpoints, TApiEndpoint} from "./IApiEndpoints";
-import {pathReplace} from "../utils/utils";
+import {IApiEndpoints, TApiEndpoint} from "./types";
+import {pathReplace} from "../../utils/utils";
 import {AxiosResponse} from "axios";
-import {request} from "./request";
+import {request} from "../request";
 
 export type TOptions = {
     data?: any,

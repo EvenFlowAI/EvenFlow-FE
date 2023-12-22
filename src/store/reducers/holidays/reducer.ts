@@ -1,6 +1,6 @@
 import {IHoliday, THolidayActions} from "./types";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
-import {defaultPageData, defaultPaging} from "../defaultInitials";
+import {defaultPageData, defaultPaging} from "../constants";
 import {getWeeklyHolidaysList} from "./actions";
 
 type TState = {

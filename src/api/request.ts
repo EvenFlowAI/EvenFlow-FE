@@ -1,7 +1,7 @@
 import axios from "axios";
 import {APIUrl} from "../config/config";
 import {LocalTokens} from "../types/types";
-import {authService} from "./AuthService";
+import {authService} from "./AuthService/AuthService";
 
 export const request = axios.create({
     baseURL: APIUrl,

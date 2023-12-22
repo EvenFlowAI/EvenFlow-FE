@@ -17,7 +17,7 @@ import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {Api} from "../../../../api/ApiEndpoints";
+import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 
 const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {header: "Service Ops Code", val: el => el.serviceRequest.code, orderId: "code"},

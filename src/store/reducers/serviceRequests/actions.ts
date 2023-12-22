@@ -16,7 +16,7 @@ import {
 } from "./types";
 import {AppThunk, IOrder, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {EPricingDisplayType} from "../pricingSettings/types";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getNonSelectedServiceRequests = createAction<IServiceRequest[]>("ServiceRequestsScreen/getNonSelected");
 export const setLoadingNonSelected = createAction<boolean>("ServiceRequestsScreen/loadingNonSelected");

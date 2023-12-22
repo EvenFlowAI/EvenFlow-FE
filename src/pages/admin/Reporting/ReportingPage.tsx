@@ -4,7 +4,7 @@ import {IEndUserConfig} from "../../../features/admin/Reporting/types";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Titles} from "../../../types/types";
 import {ReportingRoutes} from "../../../routes/ReportingRoutes/ReportingRoutes";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 const ReportingPage: React.FC<{}> = ({}) => {
     const [config, setConfig] = useState<IEndUserConfig>({

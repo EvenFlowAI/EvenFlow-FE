@@ -3,7 +3,7 @@ import {AppThunk} from "../../../types/types";
 import {IMake, IMakeExtended} from "../../../api/types";
 import {ICreateMake, IEngineType, IMileage, TCreateEngineType, TCreateMileage} from "./types";
 import {loadAllSCs} from "../serviceCenters/actions";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getMakes = createAction<IMake[]>('VehicleDetails/GetMakes');
 export const setCurrentMake = createAction<IMake | null>('VehicleDetails/SetCurrentMake');

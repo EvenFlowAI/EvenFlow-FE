@@ -3,7 +3,7 @@ import {IEmployeeSchedule, IScheduleFilters, IScheduleForm} from "./types";
 import {AppThunk} from "../../../types/types";
 import moment from "moment";
 import {getStartEndDates} from "../../../utils/utils";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const switchScheduleFilters = createAction<boolean>("Schedules/SwitchFilters");
 export const setScheduleFilters = createAction<Partial<IScheduleFilters>>("Schedules/SetFilters");

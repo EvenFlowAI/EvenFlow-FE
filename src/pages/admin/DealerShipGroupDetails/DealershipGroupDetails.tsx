@@ -13,7 +13,7 @@ import {loadDealershipEmployees} from "../../../store/reducers/employees/actions
 import {loadDealershipSCs} from "../../../store/reducers/serviceCenters/actions";
 import {TTab} from "./types";
 import {useStatePagination} from "../../../hooks/usePaginations/usePaginations";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 const tabs: TTab[] = [
     {id: "1", label: "Service centers", component: DetailsServiceCenters},

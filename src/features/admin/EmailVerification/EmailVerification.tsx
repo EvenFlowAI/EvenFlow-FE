@@ -9,7 +9,7 @@ import {PasswordForm} from "./PasswordForm/PasswordForm";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {Routes} from "../../../routes/constants";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const EmailVerification: React.FC = () => {
     const [{password, password2}, setPassword] = useState({password: '', password2: ''});

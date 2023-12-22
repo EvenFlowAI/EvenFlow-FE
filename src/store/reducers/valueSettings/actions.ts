@@ -9,7 +9,7 @@ import {
 } from "./types";
 import {AppThunk} from "../../../types/types";
 
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getCustomerLifetimes = createAction<ICustomerLifetime|undefined>("Value/SetLifetime");
 export const getNewLostCustomers = createAction<INewLostCustomer[]>("Value/NewLostCustomer");

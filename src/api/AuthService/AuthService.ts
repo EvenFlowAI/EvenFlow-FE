@@ -1,7 +1,7 @@
-import {ICredentials, IRefreshTokenData, ITokens, LocalTokens} from "../types/types";
-import {API} from "./api";
-import {request} from "./request";
-import {Api} from "./ApiEndpoints";
+import {ICredentials, IRefreshTokenData, ITokens, LocalTokens} from "../../types/types";
+import {API} from "../api";
+import {request} from "../request";
+import {Api} from "../ApiEndpoints/ApiEndpoints";
 
 class AuthService {
     getLocalToken(): string {

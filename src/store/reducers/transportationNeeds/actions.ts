@@ -2,7 +2,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {ITransportationOptionFull, ITransportationOptionRules} from "./types";
 import {AppThunk} from "../../../types/types";
 
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setTransportationLoading = createAction<boolean>("TransportationNeeds/SetLoading");
 export const getTransportationOptions = createAction<ITransportationOptionFull[]>("TransportationNeeds/GetOptions");

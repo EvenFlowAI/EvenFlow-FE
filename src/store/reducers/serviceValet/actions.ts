@@ -18,7 +18,7 @@ import {
 } from "./types";
 import {EServiceType} from "../appointmentFrameReducer/types";
 
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setCurrentZone = createAction<TZone|null>('ServiceValet/SetCurrentZone');
 export const setLoading = createAction<boolean>('ServiceValet/SetLoading');

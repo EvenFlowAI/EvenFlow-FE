@@ -14,7 +14,7 @@ import {
 import {IComplimentaryServiceByQuery} from "./types";
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultOrder} from "../../../config/config";
-import {defaultPageData} from "../defaultInitials";
+import {defaultPageData} from "../constants";
 
 type TState = {
     currentPackage: IPackageById | null;

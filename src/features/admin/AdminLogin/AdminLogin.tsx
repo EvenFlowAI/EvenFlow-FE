@@ -11,7 +11,7 @@ import {useSnackbar} from "notistack";
 import {getAPIException} from "../../../utils/utils";
 
 import {Routes} from "../../../routes/constants";
-import {authService} from "../../../api/AuthService";
+import {authService} from "../../../api/AuthService/AuthService";
 
 export const AdminLogin = () => {
     const [loading, setLoading] = useState(false);

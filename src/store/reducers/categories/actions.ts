@@ -2,7 +2,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
 import {ICategory, TNewCategory, TSuccessCallback, TUpdateCategoryData} from "./types";
 import {EServiceType} from "../appointmentFrameReducer/types";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setCategoriesPage = createAction<number>("Categories/SetPage");
 export const setCategoriesFilter = createAction<EServiceType>("Categories/SetFilter");
@@ -12,10 +12,8 @@ export const getCategoriesByQuery = createAction<ICategory[]>("Categories/GetCat
 
 export const loadCategoriesByPage = (serviceType: EServiceType): AppThunk => (dispatch, getState) => {
     dispatch(setCategoriesLoading(true));
-    const { page, filter } = getState().categories;
+    const { page } = getState().categories;
     const { selectedSC } = getState().serviceCenters;
-
-    // todo add filter to the request
 
     if (selectedSC) {
         Api.call(Api.endpoints.ServiceCategories.GetByPage, {data: {serviceCenterId:  selectedSC.id, page, serviceType}})

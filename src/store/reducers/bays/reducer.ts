@@ -12,7 +12,7 @@ import {
 } from "./actions";
 import {IBay, IBayShort} from "./types";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
-import {defaultPageData, defaultPaging} from "../defaultInitials";
+import {defaultPageData, defaultPaging} from "../constants";
 
 type TState = {
     allBays: IBay[],

@@ -6,7 +6,7 @@ import {
     INewPackage,
     IUpdatedPackage, TOrderIndex, TPackagePrice
 } from "./types";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoading');
 export const getPackageById = createAction<IPackageById | null>('Optimizer/GetPackageById');

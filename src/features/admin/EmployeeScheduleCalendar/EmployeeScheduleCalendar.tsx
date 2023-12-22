@@ -28,7 +28,7 @@ import {ControlWrapper, HeadCell, Holiday, nonWorkingStyle, ScheduleTable} from 
 import {calendarDateFormat} from "../../../utils/constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const EmployeeScheduleCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());

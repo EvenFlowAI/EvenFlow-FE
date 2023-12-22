@@ -7,7 +7,7 @@ import {
     setPodsFilters, getPodsShort, setSelectedPod
 } from "./actions";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
-import {defaultPageData, defaultPaging} from "../defaultInitials";
+import {defaultPageData, defaultPaging} from "../constants";
 import {createReducer} from "@reduxjs/toolkit";
 
 type TState = {

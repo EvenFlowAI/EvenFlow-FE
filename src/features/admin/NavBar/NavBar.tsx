@@ -22,7 +22,7 @@ import {clearSC} from "../../../store/reducers/serviceCenters/actions";
 import {useStyles} from "./styles";
 import {Roles} from "../../../types/types";
 import {Routes} from "../../../routes/constants";
-import {authService} from "../../../api/AuthService";
+import {authService} from "../../../api/AuthService/AuthService";
 
 type TProps = {
     sideBarOpened?: boolean;

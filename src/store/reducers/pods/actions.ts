@@ -2,7 +2,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {IPod, IPodFilters, IPodForm, IPodShort} from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getPods = createAction<IPod[]>("Pods/GetPods");
 export const setPodsLoading = createAction<boolean>("Pods/Loading");

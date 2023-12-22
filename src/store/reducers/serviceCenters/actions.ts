@@ -18,7 +18,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {EDay} from "../demandSegments/types";
 import {EMaintenanceOptionType} from "../../../api/types";
 import {setWelcomeScreenView} from "../appointmentFrameReducer/actions";
-import {Api, TOptions} from "../../../api/ApiEndpoints";
+import {Api, TOptions} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 const getAll = (payload: IServiceCenterExtended[]): TServiceCenterActions => ({
     type: "ServiceCenters/GetAll", payload

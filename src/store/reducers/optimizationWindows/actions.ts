@@ -8,7 +8,7 @@ import {
 } from "./types";
 import {AppThunk} from "../../../types/types";
 import moment from "moment";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getOptimizationWindows = createAction<IOptimizationWindow[]>("OptimizationWindows/GetParams");
 export const loadOptimizationWindows = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {

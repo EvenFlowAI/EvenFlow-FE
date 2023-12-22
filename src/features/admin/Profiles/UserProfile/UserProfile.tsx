@@ -12,7 +12,7 @@ import {LoadingButton} from "../../../../components/buttons/LoadingButton/Loadin
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
-import {Api} from "../../../../api/ApiEndpoints";
+import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 
 const blankProfile: TForm = {
     firstName: "",

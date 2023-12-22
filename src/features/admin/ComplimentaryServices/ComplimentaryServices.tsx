@@ -25,7 +25,7 @@ import {usePagination} from "../../../hooks/usePaginations/usePaginations";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const ComplimentaryServices = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);

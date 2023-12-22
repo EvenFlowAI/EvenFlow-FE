@@ -34,7 +34,7 @@ import {useModal} from "../../../../hooks/useModal/useModal";
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {Api} from "../../../../api/ApiEndpoints";
+import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 
 type TProps = DialogProps<ISchedule> & {
     selectedDate: moment.Moment;

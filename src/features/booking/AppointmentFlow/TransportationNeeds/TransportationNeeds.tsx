@@ -18,7 +18,7 @@ import {TextWrapper, TransportationsWrapper} from "./styles";
 import {TransportationCard} from "./TransportationCard/TransportationCard";
 import {TTransportationData} from "./types";
 import {TActionProps} from "../../../../types/types";
-import {Api} from "../../../../api/ApiEndpoints";
+import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 
 export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {id} = useParams();

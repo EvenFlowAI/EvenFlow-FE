@@ -31,7 +31,7 @@ import {SelectWrapper, useStyles} from "./styles";
 import {TKey, TOptionsState} from "./types";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";
-import {Api} from "../../../../api/ApiEndpoints";
+import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 
 type TMaintenanceDetailsProps = {
     onBack: TArgCallback<TScreen>;

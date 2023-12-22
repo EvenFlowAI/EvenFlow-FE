@@ -8,7 +8,7 @@ import {
     TServiceCenterActions
 } from "./types";
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
-import {defaultPageData, defaultPaging} from "../defaultInitials";
+import {defaultPageData, defaultPaging} from "../constants";
 import {EDay} from "../demandSegments/types";
 import {getSCAnalytics, getWorkingDays, setPricingOpt, setSCOrder, setSCSearch} from "./actions";
 import {defaultOrder} from "../../../config/config";

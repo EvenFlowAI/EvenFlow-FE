@@ -28,7 +28,7 @@ import {
 } from "../../../api/types";
 import {EDemandCategory} from "../pricingSettings/types";
 import {getSlotsGap} from "../appointmentFrameReducer/actions";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLoading');
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>("Appointment/GetSCProfile");

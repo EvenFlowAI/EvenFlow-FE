@@ -16,7 +16,7 @@ import {
 import CustomerSearchResults from "../CustomerSearchResultsModal/CustomerSearchResultsModal";
 import CustomerNotFoundModal from "../CustomerNotFoundModal/CustomerNotFoundModal";
 import {TCallback} from "../../../../types/types";
-import {defaultPageData} from "../../../../store/reducers/defaultInitials";
+import {defaultPageData} from "../../../../store/reducers/constants";
 import {TCustomerSearchData} from "../../../../store/reducers/enhancedCustomerSearch/types";
 import {KeyboardArrowDown, KeyboardArrowUp} from "@material-ui/icons";
 import {useStyles} from "../styles";

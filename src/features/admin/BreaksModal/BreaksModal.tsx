@@ -14,7 +14,7 @@ import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingBu
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const BreaksModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);

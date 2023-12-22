@@ -1,6 +1,6 @@
 import {IOffer} from "./types";
 import {IPageRequest, IPagingResponse} from "../../../types/types";
-import {defaultPageData, defaultPaging} from "../defaultInitials";
+import {defaultPageData, defaultPaging} from "../constants";
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getArchivedOffers,

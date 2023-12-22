@@ -5,7 +5,7 @@ import {IEmployee, IEmployeeFilters, IEmployeeForm, TDmsAdvisor, TEmployeeAction
 import {saveEmployeeAvatar} from "../users/actions";
 import {createAction} from "@reduxjs/toolkit";
 import {IAdvisorShort} from "../users/types";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getAll = (payload: IEmployee[]): TEmployeeActions => ({
    type: "Employees/GetAll", payload

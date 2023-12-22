@@ -8,7 +8,7 @@ import {EAppointmentTimingType} from "../appointment/types";
 import {setAppointmentSaving} from "../appointmentFrameReducer/actions";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../modals/actions";
 import {collectServiceRequestIds, getCategories, getVehicleData, mapRecallsForRequest} from "../../../utils/utils";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getAppointments = createAction<IAppointment[]>("Appointments/GetAppointments");
 export const getAllAppointments = createAction<IAppointment[]>("Appointments/GetAllAppointments");

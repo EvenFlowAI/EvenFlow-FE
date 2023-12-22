@@ -1,9 +1,7 @@
 import {AxiosResponse} from "axios";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {
-    EAppointmentTimingType,
-    EReminderType, ETransportation,
-    IPersonalInformation, IServiceRequestPrice,
+    EReminderType, IServiceRequestPrice,
     IVehicleData, IVehicleForSlots, IWaitListData, MPOptionShort, TRecallForRequest
 } from "../store/reducers/appointment/types";
 import {EOfferType, IOffer} from "../store/reducers/offers/types";
@@ -51,41 +49,6 @@ export enum ECustomerCriteria {
 
 export enum EMaintenanceOptionType {
     Base, Value, Preferred
-}
-
-export interface ICreateAppointment {
-    id?: number;
-    serviceCategoryId?: number | null;
-    serviceCategoryIds?: number[];
-    maintenancePackageOptionId: number | null;
-    date: ParsableDate;
-    slot: string;
-    customerId?: string;
-    reminderTypes: EReminderType[];
-    gmt: number;
-    appointmentTimingType: EAppointmentTimingType;
-    driver: IPersonalInformation;
-    serviceCenterId: number;
-    offerId: number | null;
-    consultantId?: string;
-    transportationType?: ETransportation
-    vehicle: {
-        dmsId: string | null;
-        vin: string;
-        make: string;
-        year: string | null;
-        model: string,
-        mileage: string | null;
-        engineTypeId?: number|null;
-    },
-    isNeedCall: boolean;
-    comment: string;
-    serviceRequestIds: number[];
-    searchTerm?: string;
-    jobType?: EJobType;
-    serviceTypeOptionId: number|null;
-    address?: string;
-    zipCode?: string;
 }
 
 export interface ICreateAppointmentResp extends IAppointmentByQuery {

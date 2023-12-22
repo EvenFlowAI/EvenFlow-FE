@@ -16,7 +16,7 @@ import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {Routes} from "../../../../routes/constants";
-import {authService} from "../../../../api/AuthService";
+import {authService} from "../../../../api/AuthService/AuthService";
 
 const rowData: TableRowDataType<IDealershipGroupExtended>[] = [
     {val: el => el.name, header: "Dealership name"},

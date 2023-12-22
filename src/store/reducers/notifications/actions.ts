@@ -2,7 +2,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {TSCNotifications, TNotifications, TTransportationNotifications} from "./types";
 import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
 
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setLoading = createAction<boolean>('Notifications/SetLoading');
 export const setSCNotifications = createAction<TSCNotifications>('Notifications/SetSCNotifications');

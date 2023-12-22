@@ -56,7 +56,7 @@ import {EServiceCategoryType} from "../categories/types";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
 import {EScheduler} from "../appointments/types";
 import {setAppointmentsLoading} from "../appointments/actions";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");

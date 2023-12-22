@@ -15,7 +15,7 @@ import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
 import moment from "moment";
 import {IPackageOptionShort, IPackageShort} from "../packages/types";
-import {Api} from "../../../api/ApiEndpoints";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setLoading = createAction<boolean>("PricingSettings/SetLoading");
 
