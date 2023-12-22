@@ -10,7 +10,7 @@ import {AppointmentsListModal} from "./AppointmentsListModal/AppointmentsListMod
 import {AppointmentsTable} from "./AppointmentsTable/AppointmentsTable";
 import {RootState} from "../../../store/rootReducer";
 import {IAppointmentsRequest} from "../../../store/reducers/appointments/types";
-import {EAppointmentStatus, IAppointment} from "../../../api/types";
+import {EReportingStatus, IAppointment} from "../../../api/types";
 import {IOrder, Titles} from "../../../types/types";
 import {TFilters, TView} from "./types";
 import {useModal} from "../../../hooks/useModal/useModal";
@@ -27,7 +27,7 @@ const initialFilters = {
     searchTerm: '',
     serviceBook: null,
     scheduler: null,
-    status: '',
+    reportingStatus: '',
     date: null,
     scId: null,
     pageData: initialPaging,
@@ -57,7 +57,7 @@ export const Appointments = () => {
                 isAscending: order.isAscending,
                 date: moment(filters.date).add(moment(filters.date).utcOffset(), 'minute'),
                 // @ts-ignore
-                status: filters.status ? EAppointmentStatus[filters.status] : undefined,
+                reportingStatus: filters.reportingStatus ? +filters.reportingStatus : undefined,
                 scheduler: filters.scheduler ? {id: filters.scheduler.id, type: filters.scheduler.type} : null,
                 serviceBookId,
                 searchTerm: filters.searchTerm,
@@ -84,6 +84,30 @@ export const Appointments = () => {
 
     const onFilterOpen = () => {
         setFiltersOpen(prev => !prev);
+    }
+
+    const handleSelectStatus = (e: React.ChangeEvent<{value: unknown}>) => {
+        setFilters(prev => ({...prev, reportingStatus: e.target.value, pageData: initialPaging}))
+    }
+
+    const handleSelectServiceBook = (e: React.ChangeEvent<{value: unknown}>) => {
+        if (e.target.value) {
+            const selected = serviceBookList.find(item => item.id === e.target.value || item.name === e.target.value)
+            setFilters(prev => ({...prev, serviceBook: selected ?? null, pageData: initialPaging}))
+        } else {
+            setFilters(prev => ({...prev, serviceBook: null, pageData: initialPaging}))
+        }
+    }
+
+    const handleSelectScheduler = (e: React.ChangeEvent<{value: unknown}>) => {
+        if (e.target.value) {
+            const selected = schedulerList.find(item => item.id
+                ? item.id.toString() === e.target.value
+            : item.fullName === e.target.value)
+            setFilters(prev => ({...prev, scheduler: selected ?? null, pageData: initialPaging}))
+        } else {
+            setFilters(prev => ({...prev, scheduler: null, pageData: initialPaging}))
+        }
     }
 
     const onChangePage = useCallback((e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number): void => {
@@ -129,7 +153,7 @@ export const Appointments = () => {
         />
         {isFiltersOpen ?
             <AppointmentFilters
-                status={filters.status}
+                status={filters.reportingStatus}
                 setFilters={setFilters}
                 scheduler={filters.scheduler}
                 serviceBook={filters.serviceBook}

@@ -64,8 +64,6 @@ export const RequiredSkills = () => {
 
     useEffect(() => {
         if (initial.current) {
-            // Clear search input
-            // TODO: Possibly go through other list
             dispatch(setAssignedFilter({searchTerm: ""}));
         }
     }, [dispatch]);

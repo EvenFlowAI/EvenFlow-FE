@@ -10,6 +10,10 @@ import {
     useMediaQuery,
     useTheme
 } from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+import {EDesirabilityState, ETimeSlotType} from "../../../store/reducers/slotScoring/types";
+import {generateSlots, TSlot} from "./utils";
+import {DesirabilityButton} from "../../UI/DesirabilityButton";
 import {EDesirabilityState, ETimeSlotType} from "../../../../store/reducers/slotScoring/types";
 import {generateSlots, TSlot} from "../utils";
 import {useDispatch, useSelector} from "react-redux";
