@@ -1,8 +1,4 @@
 import {IAddress} from "../store/reducers/dealershipGroups/types";
-import {TOption} from "./types";
-import {ChangeEvent, ChangeEventHandler, Dispatch, SetStateAction} from "react";
-import {TCalendarProps, TGroupedAppointments, TOption} from "./types";
-import * as queryString from "querystring";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {PERMISSIONS} from "../permissions";
 import {matchPath} from "react-router-dom";
@@ -14,8 +10,6 @@ import {
     IPackageOptions,
     IServiceCategory
 } from "../api/types";
-import {IRemappedAppointmentSlot} from "../store/reducers/appointment/types";
-import {IAppointment, IMake} from "../api/types";
 import moment from "moment";
 import {decode, encode} from 'url-safe-base64';
 import {ETransportationType} from "../store/reducers/transportationNeeds/types";
@@ -25,6 +19,7 @@ import {EPackagePricingType, IValueService} from "../store/reducers/appointmentF
 import {IMaintenanceItem, IRecallByVin} from "../types/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
 import i18n from "../i18n";
+import {TOption} from "./types";
 
 export const getInitials = (name?: string) => {
     if (!name) {

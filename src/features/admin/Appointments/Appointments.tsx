@@ -10,7 +10,7 @@ import {AppointmentsListModal} from "./AppointmentsListModal/AppointmentsListMod
 import {AppointmentsTable} from "./AppointmentsTable/AppointmentsTable";
 import {RootState} from "../../../store/rootReducer";
 import {IAppointmentsRequest} from "../../../store/reducers/appointments/types";
-import {EAppointmentStatus, IAppointment} from "../../../api/types";
+import {IAppointment} from "../../../api/types";
 import {IOrder, Titles} from "../../../types/types";
 import {TFilters, TView} from "./types";
 import {useModal} from "../../../hooks/useModal/useModal";
