@@ -27,7 +27,7 @@ const initialFilters = {
     searchTerm: '',
     serviceBook: null,
     scheduler: null,
-    status: '',
+    reportingStatus: '',
     date: null,
     scId: null,
     pageData: initialPaging,
@@ -57,7 +57,7 @@ export const Appointments = () => {
                 isAscending: order.isAscending,
                 date: moment(filters.date).add(moment(filters.date).utcOffset(), 'minute'),
                 // @ts-ignore
-                status: filters.status ? EAppointmentStatus[filters.status] : undefined,
+                reportingStatus: filters.reportingStatus ? +filters.reportingStatus : undefined,
                 scheduler: filters.scheduler ? {id: filters.scheduler.id, type: filters.scheduler.type} : null,
                 serviceBookId,
                 searchTerm: filters.searchTerm,
@@ -129,7 +129,7 @@ export const Appointments = () => {
         />
         {isFiltersOpen ?
             <AppointmentFilters
-                status={filters.status}
+                status={filters.reportingStatus}
                 setFilters={setFilters}
                 scheduler={filters.scheduler}
                 serviceBook={filters.serviceBook}

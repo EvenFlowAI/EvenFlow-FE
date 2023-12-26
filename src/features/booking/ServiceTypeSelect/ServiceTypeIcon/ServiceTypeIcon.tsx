@@ -38,7 +38,6 @@ const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card}) => {
             ? iconType.toLowerCase() === 'svg'
                 ? <div className={classes.icon} dangerouslySetInnerHTML={{__html: icon}} />
                 : <div className={classes.icon}
-                    //style={{backgroundImage: `url(${card.iconPath})`}}
                 >
                     <img className={classes.image} src={card.iconPath} alt="logo"/>
                 </div>

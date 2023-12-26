@@ -707,8 +707,8 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
     const settingsEnabled = Boolean(appointment.waitListSettings?.isEnabled)
     const isWaitListSlotSelected = appointment.appointment?.isOverbookingApplied && settingsEnabled;
     const isWaitListManaging = !appointment.appointment
-        && Boolean(appointmentFrame.appointmentByKey?.isWaitlist && appointmentFrame.hashKey)
-        && settingsEnabled
+        && Boolean(appointmentFrame.appointmentByKey?.isWaitlist)
+        && appointmentFrame.appointmentByKey?.waitlistTextSettings?.isEnabled;
     const isVisitCenterAppointment = appointmentFrame?.serviceTypeOption?.type === EServiceType.VisitCenter;
 
     const isWaitlist = isVisitCenterAppointment && (isWaitListSlotSelected || isWaitListManaging);
