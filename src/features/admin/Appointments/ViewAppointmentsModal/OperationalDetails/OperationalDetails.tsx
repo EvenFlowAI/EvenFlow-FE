@@ -10,7 +10,7 @@ export const OperationalDetails: React.FC<{payload: IAppointment}> = ({payload})
     const date = payload.createdDateTime
         ? payload.createdDateTime.toString().split('.')[0]
         : payload.createdDateTime
-    const createdText = [moment(date).utc().format(dateTimeFormat), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
+    const createdText = [moment(date).format(dateTimeFormat), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
 
     return (
         <div>
