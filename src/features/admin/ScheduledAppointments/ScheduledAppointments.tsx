@@ -46,7 +46,7 @@ export const ScheduledAppointments = () => {
         <Caption title={<>
             <span>You can change the number of Demand Segments on </span>
             <TextLink
-                to={Routes.Optimizer.OptimizationWindows}>
+                to={Routes.CapacityManagement.OptimizationWindows}>
                 Optimization Windows
             </TextLink>
             <span> page</span>

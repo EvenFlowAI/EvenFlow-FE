@@ -14,7 +14,7 @@ import {
 import {OptimizationModal} from "../../../features/admin/OptimizationWindows/OptimizationModal/OptimizationModal";
 import {AppointmentCutoffModal} from "../../../features/admin/OptimizationWindows/AppointmentCutoffModal/AppointmentCutoffModal";
 import moment from "moment";
-import {optimizerRoot, timeSpanString} from "../../../utils/constants";
+import {capacityManagementRoot, timeSpanString} from "../../../utils/constants";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {MaxPriceDateRangeModal} from "../../../features/admin/OptimizationWindows/MaxPriceDateRangeModal/MaxPriceDateRangeModal";
 import {TOptParam} from "./types";
@@ -74,7 +74,7 @@ export const OptimizationWindowsPage = () => {
     }, [dispatch, selectedSC, selectedPod, isDemandOpen]);
 
     return <>
-        <TitleContainer title="Optimization Windows" pad parent={optimizerRoot} />
+        <TitleContainer title="Optimization Windows" pad parent={capacityManagementRoot} />
         <Grid container spacing={3}>
             {optimizationWindowsList.map(k => {
                 const plate = optContent[k];

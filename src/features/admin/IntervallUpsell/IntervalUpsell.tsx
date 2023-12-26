@@ -12,7 +12,7 @@ import {
 import {IUpsellServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../../components/tables/Table/Table";
 import {MoreHoriz} from "@material-ui/icons";
-import {optimizerRoot, SC_UNDEFINED} from "../../../utils/constants";
+import {capacityManagementRoot, SC_UNDEFINED} from "../../../utils/constants";
 import {SearchInput} from "../../../components/formControls/SearchInput/SearchInput";
 import {IOrder, TableRowDataType} from "../../../types/types";
 import IntervalUpsellModal from "./IntervalUpsellModal/IntervalUpsellModal";
@@ -181,7 +181,7 @@ export const IntervalUpsell = () => {
     return <>
         <TitleContainer
             pad
-            parent={optimizerRoot}
+            parent={capacityManagementRoot}
             actions={<div style={{display: "flex", alignItems: "center"}}>
                 <SearchInput
                     onChange={handleSearchChange}

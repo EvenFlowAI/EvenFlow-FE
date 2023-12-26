@@ -49,7 +49,7 @@ export const TimeOfDay = () => {
                     title={<>
                         <span>You can change the desirability of appointment slots on </span>
                         <TextLink
-                            to={Routes.Optimizer.AppointmentSlotScoring}>
+                            to={Routes.CapacityManagement.AppointmentSlotScoring}>
                             Time of Day Desirability</TextLink>
                         <span> page</span>
                     </>}

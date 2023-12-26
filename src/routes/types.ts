@@ -27,22 +27,22 @@ export enum OfferManagementRoutes {
     Base = "/offer-management"
 }
 
-export enum OptimizerRoutes {
-    Base = "/optimizer",
+export enum CapacityManagementRoutes {
+    Base = "/admin/capacity-management",
 
-    ServiceRequests = "/optimizer/service-requests",
-    AppointmentValue = "/optimizer/appointment-value",
-    CapacitySettings = "/optimizer/capacity-settings",
-    EmployeeSchedule = "/optimizer/employee-schedule",
-    AppointmentSlotScoring = "/optimizer/appointment-slot-scoring",
-    AppointmentAllocation = "/optimizer/appointment-allocation",
-    OptimizationWindows = "/optimizer/optimization-windows",
-    PricingSettings = "/optimizer/pricing-settings",
-    MobileService = "/optimizer/mobile-service",
-    Pods = "/optimizer/pods",
-    ManageEXEvenFlowAppointments = "/optimizer/manage-ex-evenflow-appointments",
-    PartsAvailability = "/optimizer/parts-availability",
-    ServiceValet = "/optimizer/service-valet",
+    ServiceRequests = "/admin/capacity-management/service-requests",
+    AppointmentValue = "/admin/capacity-management/appointment-value",
+    CapacitySettings = "/admin/capacity-management/capacity-settings",
+    EmployeeSchedule = "/admin/capacity-management/employee-schedule",
+    AppointmentSlotScoring = "/admin/capacity-management/appointment-slot-scoring",
+    AppointmentAllocation = "/admin/capacity-management/appointment-allocation",
+    OptimizationWindows = "/admin/capacity-management/optimization-windows",
+    PricingSettings = "/admin/capacity-management/pricing-settings",
+    MobileService = "/admin/capacity-management/mobile-service",
+    Pods = "/admin/capacity-management/pods",
+    ManageEXEvenFlowAppointments = "/admin/capacity-management/manage-ex-evenflow-appointments",
+    PartsAvailability = "/admin/capacity-management/parts-availability",
+    ServiceValet = "/admin/capacity-management/service-valet",
 }
 
 export enum BookingFlowConfigRoutes {
@@ -82,7 +82,6 @@ export enum EndUser {
     Appointment = "/appointment/:id",
     AppointmentFrame = "/f/appointment/:id",
     AppointmentFrameBase = "/f/appointment",
-    AppointmentBase = "/appointment",
     ValueService = "/f/appointment/:id/valueService",
     PaymentBill = "/f/appointment/:id/payment-bill",
 }

@@ -126,7 +126,7 @@ export const DemandWindows = () => {
             <Box mt={2}>
                 <Caption
                     title={<span>
-                        You can edit the Demand Segment values on <TextLink to={Routes.Optimizer.AppointmentAllocation}>
+                        You can edit the Demand Segment values on <TextLink to={Routes.CapacityManagement.AppointmentAllocation}>
                             Appointment Allocation
                         </TextLink> page
                     </span>}

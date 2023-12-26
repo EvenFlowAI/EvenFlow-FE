@@ -5,7 +5,7 @@ import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@material-ui/core";
 import RecallParts from "../../../features/admin/RecallsParts/RecallParts";
 import RecallsAllOtherParts from "../../../features/admin/RecallsAllOtherParts/RecallsAllOtherParts";
-import {optimizerRoot} from "../../../utils/constants";
+import {capacityManagementRoot} from "../../../utils/constants";
 
 const Recalls = () => {
     const [selectedTab, setTab] = useState<string>("0");
@@ -15,7 +15,7 @@ const Recalls = () => {
     }
 
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Parts Availability" pad parent={optimizerRoot} />
+        <TitleContainer title="Parts Availability" pad parent={capacityManagementRoot} />
         <TabList
             onChange={handleTabChange}
             variant="scrollable"

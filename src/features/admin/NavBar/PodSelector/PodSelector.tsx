@@ -10,10 +10,10 @@ import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 import {Routes} from "../../../../routes/constants";
 
 const selectedRoutes: string[] = [
-    Routes.Optimizer.AppointmentValue,
-    Routes.Optimizer.AppointmentSlotScoring,
-    Routes.Optimizer.AppointmentAllocation,
-    Routes.Optimizer.OptimizationWindows
+    Routes.CapacityManagement.AppointmentValue,
+    Routes.CapacityManagement.AppointmentSlotScoring,
+    Routes.CapacityManagement.AppointmentAllocation,
+    Routes.CapacityManagement.OptimizationWindows
 ];
 
 export const PodSelector = () => {

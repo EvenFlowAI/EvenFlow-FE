@@ -10,7 +10,7 @@ import {setServiceRequestsPageActiveTab} from "../../../store/reducers/serviceRe
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IntervalUpsell} from "../../../features/admin/IntervallUpsell/IntervalUpsell";
-import {optimizerRoot} from "../../../utils/constants";
+import {capacityManagementRoot} from "../../../utils/constants";
 
 export const ServiceRequests = () => {
     const {srPageActiveTab} = useSelector((state: RootState) => state.serviceRequests);
@@ -21,7 +21,7 @@ export const ServiceRequests = () => {
     }
 
     return <TabContext value={srPageActiveTab}>
-        <TitleContainer title="Service Requests" pad parent={optimizerRoot}/>
+        <TitleContainer title="Service Requests" pad parent={capacityManagementRoot}/>
         <TabList
             onChange={handleTabChange}
             variant="scrollable"

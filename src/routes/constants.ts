@@ -5,7 +5,7 @@ import {
     BookingFlowConfigRoutes,
     EndUser,
     OfferManagementRoutes,
-    OptimizerRoutes,
+    CapacityManagementRoutes,
     PricingRoutes,
     ReportingRoutes
 } from "./types";
@@ -16,7 +16,7 @@ export const Routes = {
     Login: AdminLogin,
     EndUser: EndUser,
     Account: AccountRoutes,
-    Optimizer: OptimizerRoutes,
+    CapacityManagement: CapacityManagementRoutes,
     OfferManagement: OfferManagementRoutes,
     BookingFlow: BookingFlowConfigRoutes,
     Pricing: PricingRoutes,

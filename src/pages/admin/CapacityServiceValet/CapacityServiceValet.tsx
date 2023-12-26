@@ -9,7 +9,7 @@ import {useDispatch} from "react-redux";
 import {loadHoursOfOperations} from "../../../store/reducers/slotScoring/actions";
 import TimeRangesAndCapacity from "../../../features/admin/TimeRangesAndCapacity/TimeRangesAndCapacity";
 import CenterSettings from "../../../features/admin/CenterSettings/CenterSettings";
-import {optimizerRoot} from "../../../utils/constants";
+import {capacityManagementRoot} from "../../../utils/constants";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const CapacityServiceValet = () => {
@@ -29,7 +29,7 @@ const CapacityServiceValet = () => {
     }
 
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Service Valet" pad parent={optimizerRoot} />
+        <TitleContainer title="Service Valet" pad parent={capacityManagementRoot} />
         <TabList
             onChange={handleTabChange}
             variant="scrollable"

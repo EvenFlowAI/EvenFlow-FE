@@ -12,61 +12,61 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
     {to: Routes.Admin.Employees, name: "Employees", roles: ["Owner", "Manager", "Service Director"]},
     {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager", "Service Director"]},
     {
-        to: Routes.Optimizer.Base,
+        to: Routes.CapacityManagement.Base,
         name: "Capacity Optimization",
         roles: ["Owner", "Manager", "Service Director"],
         subLinks: [
             {
-                to: Routes.Optimizer.ServiceRequests,
+                to: Routes.CapacityManagement.ServiceRequests,
                 name: "Service Requests",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.Optimizer.AppointmentValue,
+                to: Routes.CapacityManagement.AppointmentValue,
                 name: "Appointment Value Settings",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.Optimizer.AppointmentSlotScoring,
+                to: Routes.CapacityManagement.AppointmentSlotScoring,
                 name: "Appointment Slot Scoring",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.Optimizer.AppointmentAllocation,
+                to: Routes.CapacityManagement.AppointmentAllocation,
                 name: "Appointment Allocation",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.Optimizer.OptimizationWindows,
+                to: Routes.CapacityManagement.OptimizationWindows,
                 name: "Optimization Windows",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
-            {to: Routes.Optimizer.Pods, name: "Pods", sub: true, roles: ["Owner", "Manager", "Service Director"]},
+            {to: Routes.CapacityManagement.Pods, name: "Pods", sub: true, roles: ["Owner", "Manager", "Service Director"]},
             {
-                to: Routes.Optimizer.ManageEXEvenFlowAppointments,
+                to: Routes.CapacityManagement.ManageEXEvenFlowAppointments,
                 name: "Manage Ex EvenFlow Appointments",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.Optimizer.CapacitySettings,
+                to: Routes.CapacityManagement.CapacitySettings,
                 name: "Capacity Settings",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.Optimizer.PartsAvailability,
+                to: Routes.CapacityManagement.PartsAvailability,
                 name: "Parts Availability",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.Optimizer.ServiceValet,
+                to: Routes.CapacityManagement.ServiceValet,
                 name: "Service Valet",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]

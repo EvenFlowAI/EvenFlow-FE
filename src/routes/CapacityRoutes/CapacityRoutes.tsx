@@ -17,17 +17,17 @@ import {Routes} from "../constants";
 export const CapacityRoutes = () => {
     return <ContentContainer>
         <Switch>
-            <PrivateRoute path={Routes.Optimizer.ServiceRequests} component={ServiceRequests} />
-            <PrivateRoute path={Routes.Optimizer.AppointmentValue} component={AppointmentValueSettings} />
-            <PrivateRoute path={Routes.Optimizer.CapacitySettings} component={CapacitySettings} />
-            <PrivateRoute path={Routes.Optimizer.AppointmentSlotScoring} component={AppointmentSlotScoring} />
-            <PrivateRoute path={Routes.Optimizer.AppointmentAllocation} component={AppointmentAllocation} />
-            <PrivateRoute path={Routes.Optimizer.OptimizationWindows} component={OptimizationWindowsPage} />
-            <PrivateRoute path={Routes.Optimizer.Pods} component={Pods} />
-            <PrivateRoute path={Routes.Optimizer.ManageEXEvenFlowAppointments} component={ManageExEFAppointments} />
-            <PrivateRoute path={Routes.Optimizer.PartsAvailability} component={Recalls} />
-            <PrivateRoute path={Routes.Optimizer.ServiceValet} component={CapacityServiceValet} />
-            <Redirect to={Routes.Optimizer.ServiceRequests} />
+            <PrivateRoute path={Routes.CapacityManagement.ServiceRequests} component={ServiceRequests} />
+            <PrivateRoute path={Routes.CapacityManagement.AppointmentValue} component={AppointmentValueSettings} />
+            <PrivateRoute path={Routes.CapacityManagement.CapacitySettings} component={CapacitySettings} />
+            <PrivateRoute path={Routes.CapacityManagement.AppointmentSlotScoring} component={AppointmentSlotScoring} />
+            <PrivateRoute path={Routes.CapacityManagement.AppointmentAllocation} component={AppointmentAllocation} />
+            <PrivateRoute path={Routes.CapacityManagement.OptimizationWindows} component={OptimizationWindowsPage} />
+            <PrivateRoute path={Routes.CapacityManagement.Pods} component={Pods} />
+            <PrivateRoute path={Routes.CapacityManagement.ManageEXEvenFlowAppointments} component={ManageExEFAppointments} />
+            <PrivateRoute path={Routes.CapacityManagement.PartsAvailability} component={Recalls} />
+            <PrivateRoute path={Routes.CapacityManagement.ServiceValet} component={CapacityServiceValet} />
+            <Redirect to={Routes.CapacityManagement.ServiceRequests} />
         </Switch>
     </ContentContainer>
 }

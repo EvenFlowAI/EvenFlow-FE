@@ -2,12 +2,12 @@ import React from 'react';
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {SquarePaper} from "../../../components/styled/Paper";
 import {PodsTable} from "../../../features/admin/PodsTable/PodsTable";
-import {optimizerRoot} from "../../../utils/constants";
+import {capacityManagementRoot} from "../../../utils/constants";
 
 const Pods = () => {
     return (
         <div style={{width: '100%'}}>
-            <TitleContainer title="Pods" pad parent={optimizerRoot}/>
+            <TitleContainer title="Pods" pad parent={capacityManagementRoot}/>
             <SquarePaper variant="outlined" style={{padding: 20}}>
                 <PodsTable />
             </SquarePaper>

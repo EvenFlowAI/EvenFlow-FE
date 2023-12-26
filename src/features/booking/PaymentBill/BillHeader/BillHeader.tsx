@@ -1,4 +1,4 @@
-import {ReactComponent as DealershipLogo} from "../../../assets/img/logo_dealership_example.svg";
+import {ReactComponent as DealershipLogo} from "../../../../assets/img/logo_dealership_example.svg";
 import {useStyles} from "../styles";
 import {useTranslation} from "react-i18next";
 import {Grid} from "@material-ui/core";

@@ -7,7 +7,7 @@ import {RequiredSkills} from "../../../features/admin/RequiredSkills/RequiredSki
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {makeStyles} from "@material-ui/core/styles";
 import {AvailableStaffCalendar} from "../../../features/admin/AvailableStaffCalendar/AvailableStaffCalendar";
-import {optimizerRoot} from "../../../utils/constants";
+import {capacityManagementRoot} from "../../../utils/constants";
 
 const useStyles = makeStyles(theme => ({
     panel: {
@@ -25,7 +25,7 @@ export const CapacitySettings = () => {
     }
     const classes = useStyles();
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Capacity Settings" pad parent={optimizerRoot} />
+        <TitleContainer title="Capacity Settings" pad parent={capacityManagementRoot} />
         <TabList
             onChange={handleTabChange}
             variant="scrollable"

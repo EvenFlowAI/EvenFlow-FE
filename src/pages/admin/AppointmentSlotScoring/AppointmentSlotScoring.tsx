@@ -5,7 +5,7 @@ import {Tab} from "@material-ui/core";
 import {TabContext, TabPanel} from "@material-ui/lab";
 import {ProximityTable} from "../../../features/admin/ProximityTable/ProximityTable";
 import {TimeOfDayDesirability} from "../../../features/admin/TimeOfDayDesirability/TimeOfDayDesirability";
-import {optimizerRoot} from "../../../utils/constants";
+import {capacityManagementRoot} from "../../../utils/constants";
 
 export const AppointmentSlotScoring = () => {
     const [selectedTab, setTab] = useState<string>("0");
@@ -15,7 +15,7 @@ export const AppointmentSlotScoring = () => {
     }
 
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Appointment Slot Scoring" pad parent={optimizerRoot} />
+        <TitleContainer title="Appointment Slot Scoring" pad parent={capacityManagementRoot} />
         <TabList
             onChange={handleTabChange}
             variant="scrollable"

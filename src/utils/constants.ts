@@ -25,8 +25,8 @@ export const SOMETHING_WRONG = "Something wrong";
 export const G_CALENDAR_FORMAT = "YYYYMMDDT";
 export const calendarDateFormat = "ddd, MMM D";
 
-export const optimizerRoot: TTitle = {
-    to: Routes.Optimizer.Base,
+export const capacityManagementRoot: TTitle = {
+    to: Routes.CapacityManagement.Base,
     title: "Capacity Optimization"
 }
 

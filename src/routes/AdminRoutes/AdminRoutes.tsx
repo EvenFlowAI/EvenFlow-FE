@@ -38,9 +38,6 @@ export const AdminRoutes = () => {
                 ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
                 : null}
             {!currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.CapacityOptimization} component={CapacityRoutes}/>
-                : null}
-            {!currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.Pricing.Base} component={PricingRoutes}/>
                 : null}
             {!currentUser.isSuperUser
@@ -50,7 +47,7 @@ export const AdminRoutes = () => {
                 ? <PrivateRoute path={Routes.Admin.Reporting} component={ReportingPage}/>
                 : null}
             {!currentUser.isSuperUser && !currentRoleIsRestricted
-                ? <PrivateRoute path={Routes.Optimizer.Base} component={CapacityRoutes} />
+                ? <PrivateRoute path={Routes.CapacityManagement.Base} component={CapacityRoutes} />
                 : null}
             <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>

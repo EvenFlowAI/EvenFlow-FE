@@ -14,7 +14,7 @@ import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/t
 import {OverrideOPsCodeModal} from "./OverrideOpsCodeModal/OverrideOPsCodeModal";
 import {SearchInput} from "../../../components/formControls/SearchInput/SearchInput";
 import {ServiceRequestsTable} from "./ServiceRequestsTable/ServiceRequestsTable";
-import {optimizerRoot} from "../../../utils/constants";
+import {capacityManagementRoot} from "../../../utils/constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {usePagination} from "../../../hooks/usePaginations/usePaginations";
 
@@ -79,7 +79,7 @@ export const ServiceRequestsScreen = () => {
     return <>
         <TitleContainer
             pad
-            parent={optimizerRoot}
+            parent={capacityManagementRoot}
             actions={<div style={{display: "flex", alignItems: "center"}}>
                 <SearchInput
                     onChange={handleSearchChange}

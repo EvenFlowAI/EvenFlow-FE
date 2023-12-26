@@ -6,7 +6,7 @@ import {updateAdvisor} from "../../../store/reducers/serviceCenters/actions";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {SquarePaper} from "../../../components/styled/Paper";
 import {useStyles} from "./styles";
-import {optimizerRoot} from "../../../utils/constants";
+import {capacityManagementRoot} from "../../../utils/constants";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
@@ -51,7 +51,7 @@ const ManageExEFAppointments = () => {
 
     return (
         <div style={{width: '100%'}}>
-            <TitleContainer title="Manage Ex EvenFlow Appointments" pad parent={optimizerRoot}/>
+            <TitleContainer title="Manage Ex EvenFlow Appointments" pad parent={capacityManagementRoot}/>
             <SquarePaper variant="outlined" style={{padding: 20}}>
                 <p className={classes.text}>
                     By switching off, the EvenFlow app will no longer flag appointments as "Main Drive" or "Express Service".

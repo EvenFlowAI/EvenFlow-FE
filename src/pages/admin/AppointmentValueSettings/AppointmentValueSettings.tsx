@@ -10,7 +10,7 @@ import {ValueIndicatorsTable} from "../../../features/admin/ValueIndicatorsTable
 import {UrgentRequests} from "../../../features/admin/UrgentRequests/UrgentRequests";
 import {TTab} from "./types";
 import {useStyles} from "./styles";
-import {optimizerRoot} from "../../../utils/constants";
+import {capacityManagementRoot} from "../../../utils/constants";
 
 const tabs: TTab[] = [
     {label: "Value Indicators", id: "0", component: ValueIndicatorsTable},
@@ -27,7 +27,7 @@ export const AppointmentValueSettings = () => {
     }
     const classes = useStyles();
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Appointment Value Settings" pad parent={optimizerRoot} />
+        <TitleContainer title="Appointment Value Settings" pad parent={capacityManagementRoot} />
         <TabList
             onChange={handleTabChange}
             indicatorColor="primary"

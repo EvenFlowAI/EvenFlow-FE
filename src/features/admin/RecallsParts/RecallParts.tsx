@@ -12,7 +12,7 @@ import {RootState} from "../../../store/rootReducer";
 import {loadAllAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {updateDefaultRecallOpsCode} from "../../../store/reducers/serviceCenters/actions";
-import {optimizerRoot} from "../../../utils/constants";
+import {capacityManagementRoot} from "../../../utils/constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
@@ -79,7 +79,7 @@ const RecallParts = () => {
         <>
             <TitleContainer
                 pad
-                parent={optimizerRoot}
+                parent={capacityManagementRoot}
                 actions={<div className={classes.wrapper}>
                     <div className={classes.title}>
                         default recall ops code:

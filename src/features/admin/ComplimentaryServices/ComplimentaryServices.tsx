@@ -13,7 +13,7 @@ import {IComplimentaryServiceByQuery} from "../../../store/reducers/packages/typ
 import {Table} from "../../../components/tables/Table/Table";
 import {RootState} from "../../../store/rootReducer";
 import {MoreHoriz} from "@material-ui/icons";
-import {optimizerRoot, SC_UNDEFINED} from "../../../utils/constants";
+import {capacityManagementRoot, SC_UNDEFINED} from "../../../utils/constants";
 import AddServiceManually from "./AddServiceManually/AddServiceManually";
 import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
 import {addOpsCodeFromList, loadAllComplimentary} from "../../../store/reducers/complimentary/actions";
@@ -173,7 +173,7 @@ export const ComplimentaryServices = () => {
         <div>
             <TitleContainer
                 pad
-                parent={optimizerRoot}
+                parent={capacityManagementRoot}
                 actions={<div style={{display: "flex", alignItems: "center"}}>
                     <SearchInput
                         onChange={handleSearchChange}
