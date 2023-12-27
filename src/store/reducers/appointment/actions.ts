@@ -125,7 +125,6 @@ export const setOldAppointmentId = createAction<ICreateAppointmentResp&{updated:
 export const setAppointmentFilters = createAction<Partial<IAppointmentFilters>>("Appointment/SetFilters");
 export const setCustomerEnteredEmail = createAction<string>("Appointment/SetCustomerEnteredEmail");
 export const setCustomerLoadedData = createAction<ICustomerLoadedData|null>("Appointment/SetCustomerLoadedData");
-export const setCustomerVehicle = createAction<ILoadedVehicle|null>("Appointment/SetCustomerVehicle");
 
 export const setSessionId = createAction<string>("Appointment/SetSessionId");
 export const setEditAppointment = createAction<TAppointmentState>("Appointment/SetEditAppointment");

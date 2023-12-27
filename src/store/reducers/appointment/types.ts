@@ -7,7 +7,7 @@ import {
     EMaintenanceOptionType,
     ICreateAppointmentResp,
     ICustomerLoadedData,
-    ILoadedVehicle, IOfferForCategory,
+    IOfferForCategory,
     IServiceCategory, IServiceCategoryShort,
 } from "../../../api/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
@@ -190,7 +190,6 @@ export type TAppointmentState = {
     sessionId: string;
     updated: boolean;
     customerEnteredEmail: string;
-    customerSelectedVehicle: ILoadedVehicle|null;
     scProfile?: IServiceCenterProfile;
     serviceRequests: ISR[];
     customerLoadedData: ICustomerLoadedData|null;

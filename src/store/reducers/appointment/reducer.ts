@@ -20,7 +20,6 @@ import {
     setAppointmentWasChanged,
     setCustomerEnteredEmail,
     setCustomerLoadedData,
-    setCustomerVehicle,
     setEditAppointment,
     setLoadedDateRange,
     setLoadedReducer,
@@ -53,7 +52,6 @@ const initialState: TAppointmentState = {
     searchedDateRange: null,
     serviceRequests: [],
     customerLoadedData: null,
-    customerSelectedVehicle: null,
     customerEnteredEmail: "",
     appointmentId: null,
     selectedSR: [],
@@ -150,18 +148,6 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {
             ...state,
             customerLoadedData: payload
-        };
-    })
-    .addCase(setCustomerVehicle, (state, {payload}) => {
-        if (payload) {
-            return {
-                ...state,
-                customerSelectedVehicle: payload,
-            }
-        }
-        return {
-            ...state,
-            customerSelectedVehicle: payload,
         };
     })
     .addCase(setEditAppointment, (state, {payload}) => {

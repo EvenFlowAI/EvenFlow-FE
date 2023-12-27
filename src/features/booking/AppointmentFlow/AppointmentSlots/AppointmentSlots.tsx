@@ -63,7 +63,6 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
         valueService,
         customerEnteredEmail,
         userType,
-        vehicle,
         hashKey,
         zipCode,
         address,
@@ -86,7 +85,7 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
         state.appointmentFrame.selectedTiming,
         state.appointmentFrame.selectedTime,
         state.appointment.customerLoadedData,
-        state.appointment.customerSelectedVehicle,
+        state.appointmentFrame.selectedVehicle,
         state.appointmentFrame.service,
         state.appointmentFrame.subService,
         state.appointmentFrame.selectedPackage,
@@ -99,7 +98,6 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
         state.appointmentFrame.valueService,
         state.appointment.customerEnteredEmail,
         state.appointmentFrame.userType,
-        state.appointmentFrame.selectedVehicle,
         state.appointmentFrame.hashKey,
         state.appointmentFrame.zipCode,
         state.appointmentFrame.address,
@@ -259,14 +257,14 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
                             data.address = address;
                         }
                     }
-                    if (vehicle) {
+                    if (selectedVehicle) {
                         data.vehicle = {
-                            vin: vehicle.vin,
-                            year: vehicle.year,
-                            make: vehicle.make,
-                            model: vehicle.model,
-                            mileage: vehicle.mileage,
-                            engineTypeId: vehicle.engineTypeId,
+                            vin: selectedVehicle.vin,
+                            year: selectedVehicle.year,
+                            make: selectedVehicle.make,
+                            model: selectedVehicle.model,
+                            mileage: selectedVehicle.mileage,
+                            engineTypeId: selectedVehicle.engineTypeId,
                         }
                     }
                     if (hashKey) data.appointmentHashKey = hashKey;
@@ -288,7 +286,7 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
         loadData().finally();
     }, [
         dispatch, id, selectedTimingType,
-        selectedVehicle, customerData, service, vehicle, packagePricingType, packageEMenuType, serviceTypeOption,
+        selectedVehicle, customerData, service, packagePricingType, packageEMenuType, serviceTypeOption,
         subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode, address,
     ]);
 
