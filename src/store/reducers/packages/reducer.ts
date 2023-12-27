@@ -1,4 +1,3 @@
-import {IMake, IPackageById, IPackageByQuery} from "../../../api/types";
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getAllComplimentary,
@@ -8,27 +7,14 @@ import {
     getPackagesByQuery,
     setComplimentaryLoading,
     setComplimentaryPageData,
-    setComplimentaryPagingResponse, setComplimentarySearchTerm, setComplimentarySort,
+    setComplimentaryPagingResponse,
+    setComplimentarySearchTerm,
+    setComplimentarySort,
     setPackageLoading
 } from "./actions";
-import {IComplimentaryServiceByQuery} from "./types";
-import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
+import {TState} from "./types";
 import {defaultOrder} from "../../../config/config";
 import {defaultPageData} from "../constants";
-
-type TState = {
-    currentPackage: IPackageById | null;
-    isPackageLoading: boolean;
-    packages: IPackageByQuery[];
-    makes: IMake[];
-    complimentary: IComplimentaryServiceByQuery[];
-    isComplimentaryLoading: boolean;
-    complimentaryPaging: IPagingResponse;
-    complimentaryPageData: IPageRequest;
-    complimentarySortOrder: IOrder<IComplimentaryServiceByQuery>;
-    complimentarySearchTerm: string;
-    allComplimentary: IComplimentaryServiceByQuery[];
-}
 
 const initialState: TState = {
     currentPackage: null,

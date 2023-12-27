@@ -1,11 +1,6 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {TEmailRequirement} from "./types";
+import {TState} from "./types";
 import {getEmailRequirement, setEmailRequirementLoading} from "./actions";
-
-type TState = {
-    emailRequirement: TEmailRequirement|null;
-    isEmailRequirementLoading: boolean;
-}
 
 const initialState: TState = {
     emailRequirement: null,

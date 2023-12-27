@@ -49,7 +49,6 @@ export const removePod = (id: number, serviceCenterId?: number): AppThunk => asy
     }
 }
 
-
 export const loadPodsShort = (serviceCenterId: number): AppThunk => async dispatch => {
     const {data: {result}} = await Api.call<PaginatedAPIResponse<IPodShort>>(
         Api.endpoints.Pods.GetShort,

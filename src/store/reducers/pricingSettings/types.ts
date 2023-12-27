@@ -1,5 +1,8 @@
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {TEnumMap} from "../types";
+import {IAssignedServiceRequest} from "../serviceRequests/types";
+import {IPackageOptionShort, IPackageShort} from "../packages/types";
+
 export type TValuePricingLevel = {
     demandCategory: EDemandCategory;
     value: number;
@@ -126,4 +129,23 @@ export type TTimeWindow = {
 
 export type TPricingLevels = {
     [k in EDemandCategory]: IPricingLevel;
+}
+
+export type TState = {
+    pricingLevels: IPricingLevel[];
+    timeWindows: ITimeWindowEl[];
+    srList: IAssignedServiceRequest[];
+    calculations: IPricingSetting[];
+    pricingDemands: IPricingDemand[];
+    dWeekPricing: IDayOfWeekSetting[];
+    tYearPricing: ITimeOfYearSetting[];
+    srPricingLevels: IRequestPricingSettings[];
+    srPricingSettings: IRequestPricingSettings[];
+    mpList: IPackageShort[];
+    mpPricingSettings: IPackagePricingSettings[];
+    mpOptionsList: IPackageOptionShort[];
+    isLoading: boolean;
+    isRoundPriceLoading: boolean;
+    roundPrice: boolean;
+    mpPricingLevels: IPackagePricingLevels[];
 }

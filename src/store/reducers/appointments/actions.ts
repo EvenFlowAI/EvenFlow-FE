@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {IAppointment, ILoadedVehicle, IPackageAppointments} from "../../../api/types";
-import {IAppointmentsRequest, ICheckPodRequest, IPackageRequestData, TScheduler, TServiceBook} from "./types";
+import {IAppointmentsRequest, ICheckPodRequest, TScheduler, TServiceBook} from "./types";
 import {AppThunk, IPageRequest, TArgCallback} from "../../../types/types";
 import {API} from "../../../api/api";
 import {EServiceType} from "../appointmentFrameReducer/types";
@@ -37,41 +37,6 @@ export const loadAppointments = (data: IAppointmentsRequest): AppThunk => dispat
             console.log('load appointments for calendar', err)
         })
         .finally(() => dispatch(setAppointmentsLoading(false)))
-}
-
-export const loadAppointmentsForModal = (data: IAppointmentsRequest): AppThunk => dispatch => {
-    dispatch(setAppointmentsModalLoading(true));
-    API.appointment.list(data)
-        .then(({data: {paging, result}}) => {
-            if (data.pageIndex === 0 && data.pageSize === 0 && !data.date) {
-                dispatch(getAllAppointments(result));
-                dispatch(setAllAppointmentsCount(paging.numberOfRecords));
-            } else {
-                dispatch(getAppointments(result));
-                dispatch(setAppointmentsCount(paging.numberOfRecords));
-            }
-        })
-        .catch(err => {
-            console.log('load appointments for calendar', err)
-        })
-        .finally(() => dispatch(setAppointmentsModalLoading(false)))
-}
-
-export const loadPackageByVehicle = (data: IPackageRequestData): AppThunk => dispatch => {
-    dispatch(setAppointmentsModalLoading(true));
-    Api.call<IPackageAppointments[]>(Api.endpoints.MaintenancePackages.ByVehicle, {data})
-        .then(({data}) => {
-            if (data && data[0]) {
-                dispatch(getPackageByVehicle([data[0]]))
-            } else {
-               dispatch(getPackageByVehicle([]));
-            }
-        })
-        .catch(err => {
-            dispatch(getPackageByVehicle([]));
-            console.log('load package by vehicle', err)
-        })
-        .finally(() => dispatch(setAppointmentsModalLoading(false)))
 }
 
 export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<any>, onPodKept?: () => void): AppThunk => (dispatch, getState) => {

@@ -42,3 +42,11 @@ export enum Indicators {
     CustomerLifetimeLow,
     CustomerLifetimeHigh
 }
+
+export type TState = {
+    customerLifetimes?: ICustomerLifetime,
+    newLostCustomer: INewLostCustomer[],
+    endOfWarranty?: IEndOfWarranty,
+    valueSettings: IValueSettings[],
+    configuredValues: number[],
+}

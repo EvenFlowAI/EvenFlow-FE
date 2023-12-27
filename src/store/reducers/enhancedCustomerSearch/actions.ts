@@ -175,20 +175,3 @@ export const loadRepairHistory = (serviceCenterId: number, vehicleDmsId: string,
         })
         .finally(() => dispatch(setRepairHistoryLoading(false)))
 }
-
-export const loadMoreRepairHistory = (serviceCenterId: number, vehicleDmsId: string, pageIndex: number, pageSize: number): AppThunk => (dispatch, getState) => {
-    dispatch(setRepairHistoryLoading(true));
-    const {repairHistory} = getState().customers;
-    Api.call(Api.endpoints.Customers.GetRepairHistory, {params: {serviceCenterId, vehicleDmsId, pageIndex, pageSize}})
-        .then(result => {
-            if (result?.data?.result?.repairOrders && repairHistory) {
-                const data = {...repairHistory, repairOrders: [...repairHistory?.repairOrders, ...result.data.result.repairOrders]}
-                dispatch(getRepairHistory(data))
-                dispatch(setRepairHistoryPaging(result.data.paging))
-            }
-        })
-        .catch(err => {
-            console.log('get repair history error', err)
-        })
-        .finally(() => dispatch(setRepairHistoryLoading(false)))
-}

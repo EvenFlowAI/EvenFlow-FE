@@ -1,35 +1,18 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {ICustomerWithPhones, IRepairHistory, TCustomerSearchData} from "./types";
+import {TCustomerSearchState} from "./types";
 import {
     getCustomers,
     getRepairHistory,
-    setCurrentCustomer, setCustomerSearchData,
+    setCurrentCustomer,
+    setCustomerSearchData,
     setLoading,
     setPageData,
     setPaging,
-    setRepairHistoryLoading, setRepairHistoryPaging
+    setRepairHistoryLoading,
+    setRepairHistoryPaging
 } from "./actions";
-import {IPageRequest, IPagingResponse} from "../../../types/types";
+import {initialCustomerSearch} from "../constants";
 
-export const initialCustomerSearch: TCustomerSearchData = {
-    firstName: '',
-    lastName: '',
-    companyName: '',
-    address: '',
-    lastVINCharacters: ''
-}
-
-type TCustomerSearchState = {
-    isLoading: boolean;
-    customers: ICustomerWithPhones[];
-    currentCustomer: ICustomerWithPhones|null;
-    paging: IPagingResponse;
-    pageData: IPageRequest;
-    repairHistory: IRepairHistory|null;
-    repairHistoryPaging: IPagingResponse;
-    repairHistoryLoading: boolean;
-    customerSearchData: TCustomerSearchData;
-}
 const initialState: TCustomerSearchState = {
     isLoading: false,
     customers: [],

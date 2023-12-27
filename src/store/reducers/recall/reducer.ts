@@ -1,15 +1,7 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IRecall} from "./types";
+import {TState} from "./types";
 import {getRecalls, getRecallsByVin, setLoading, setRecallPageData, setRecallsCount} from "./actions";
-import {IPageRequest, IRecallByVin} from "../../../types/types";
 
-type TState = {
-    recalls: IRecall[];
-    isLoading: boolean;
-    recallPageData: IPageRequest;
-    recallsCount: number,
-    recallsByVin: IRecallByVin[];
-}
 const initialState: TState = {
     recalls: [],
     isLoading: false,

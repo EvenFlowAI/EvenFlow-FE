@@ -1,15 +1,7 @@
-import {ICurrentUser, TUserActions} from "./types";
+import {ICurrentUser, IUsersState, TUserActions} from "./types";
 import {superUser} from "../../../config/config";
-
 import {Roles} from "../../../types/types";
 
-
-type IUsersState = {
-    currentUser?: ICurrentUser,
-    saving: boolean,
-    loading: boolean;
-    isSuperAdmin: boolean;
-}
 const initialState: IUsersState = {
     saving: false,
     loading: false,

@@ -38,13 +38,13 @@ import {
     loadCustomersByPhoneOrEmail, setCustomerSearchData,
 } from "../../../store/reducers/enhancedCustomerSearch/actions";
 import ServiceCenterSelect from "../../../features/booking/ServiceCenterSelect/ServiceCenterSelect";
-import {initialCustomerSearch} from "../../../store/reducers/enhancedCustomerSearch/reducer";
 import {TView} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {useLayout} from "../../../hooks/useLayout/useLayout";
 import {useException} from "../../../hooks/useException/useException";
 import {Routes} from "../../../routes/constants";
+import {initialCustomerSearch} from "../../../store/reducers/constants";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);

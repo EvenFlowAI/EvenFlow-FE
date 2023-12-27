@@ -1,50 +1,7 @@
-import {
-    IAdvisorAssignment,
-    ILaborRate,
-    IPredictionParams,
-    ISCAnalytics,
-    IServiceCenter,
-    IServiceCenterExtended,
-    TServiceCenterActions
-} from "./types";
-import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
-import {defaultPageData, defaultPaging} from "../constants";
-import {EDay} from "../demandSegments/types";
+import {TServiceCenterActions, TServiceCenterState} from "./types";
+import {blankAnalytics, defaultPageData, defaultPaging} from "../constants";
 import {getSCAnalytics, getWorkingDays, setPricingOpt, setSCOrder, setSCSearch} from "./actions";
 import {defaultOrder} from "../../../config/config";
-
-
-const blankAnalytics: ISCAnalytics = {
-    countOfAppointmentsToday: 0, countOfBays: 0,
-    countOfPods: 0, countOfTechnicians: 0
-}
-type TServiceCenterState = {
-    serviceCenters: IServiceCenterExtended[],
-    dealershipSCs: IServiceCenterExtended[],
-    fullSCList: IServiceCenter[],
-    selectedSC?: IServiceCenter,
-    shortSC: IServiceCenter[],
-    loading: boolean,
-    packagesOptionsLoading: boolean;
-    dealershipLoading: boolean,
-    shortLoading: boolean,
-    saving: boolean,
-    paging: IPagingResponse,
-    dealershipPaging: IPagingResponse,
-    pageData: IPageRequest,
-    order: IOrder<IServiceCenterExtended>,
-    searchTerm: string,
-    workingDays: EDay[],
-    analytics: ISCAnalytics,
-    dealershipId: number | undefined,
-    reminders: boolean,
-    remindersLoading: boolean,
-    predictionParams: IPredictionParams,
-    laborRate: ILaborRate,
-    predictionParamsLoading: boolean,
-    advisorAssignment: IAdvisorAssignment;
-    advisorAssignmentLoading: boolean;
-};
 
 const initialState: TServiceCenterState = {
     serviceCenters: [],

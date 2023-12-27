@@ -19,10 +19,10 @@ import {
     setZipCode
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {setCustomerSearchData} from "../../../../store/reducers/enhancedCustomerSearch/actions";
-import {initialCustomerSearch} from "../../../../store/reducers/enhancedCustomerSearch/reducer";
 import {encodeSCID} from "../../../../utils/utils";
 import {Button} from "@material-ui/core";
 import {Routes} from "../../../../routes/constants";
+import {initialCustomerSearch} from "../../../../store/reducers/constants";
 
 export const ServiceCenterCard: React.FC<{ sc: IServiceCenter }> = ({sc}) => {
     const classes = useStyles();

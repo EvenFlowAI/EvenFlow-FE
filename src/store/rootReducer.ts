@@ -1,5 +1,5 @@
 import {combineReducers} from "@reduxjs/toolkit";
-import {usersReducer} from "./reducers/users/user";
+import {usersReducer} from "./reducers/users/reducer";
 import {dealershipGroupsReducer} from "./reducers/dealershipGroups/reducer";
 import {employeesReducer, scEmployees} from "./reducers/employees/reducer";
 import {serviceCenterReducer} from "./reducers/serviceCenters/reducer";
@@ -31,7 +31,6 @@ import {capacityServiceValetReducer} from "./reducers/capacityServiceValet/reduc
 import {customerReducer} from "./reducers/enhancedCustomerSearch/reducer";
 import {screenSettingsReducer} from "./reducers/screenSettings/reducer";
 import {notificationsReducer} from "./reducers/notifications/reducer";
-import {reportingReducer} from "./reducers/reporting/reducer";
 
 export const rootReducer = combineReducers({
     appointment: appointmentReducer,
@@ -67,6 +66,5 @@ export const rootReducer = combineReducers({
     customers: customerReducer,
     screenSettingsBooking: screenSettingsReducer,
     notifications: notificationsReducer,
-    reporting: reportingReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;

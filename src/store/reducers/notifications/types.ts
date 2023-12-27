@@ -18,3 +18,11 @@ export type TTransportationNotifications = {
     isActive?: boolean;
     transportationOptions: TNotifications[];
 }
+
+export type TState = {
+    isLoading: boolean;
+    scNotifications: TSCNotifications | null;
+    podNotifications: TNotifications[];
+    transportationNotifications: TTransportationNotifications | null;
+    recallNotifications: TSCNotifications | null;
+}

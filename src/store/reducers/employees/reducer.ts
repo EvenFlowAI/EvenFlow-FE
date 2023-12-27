@@ -1,34 +1,8 @@
-import {IEmployee, IEmployeeFilters, TDmsAdvisor, TEmployeeActions} from "./types";
-import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
+import {TEmployeeActions, TEmployeesState, TSCState} from "./types";
 import {defaultPageData, defaultPaging} from "../constants";
 import {createReducer} from "@reduxjs/toolkit";
-import {IAdvisorShort} from "../users/types";
-import {
-    getDMSAdvisors,
-    getSCAdvisors,
-    getSCEmployees,
-    setEmplOrder,
-    setEmplSearch
-} from "./actions";
+import {getDMSAdvisors, getSCAdvisors, getSCEmployees, setEmplOrder, setEmplSearch} from "./actions";
 import {defaultOrder} from "../../../config/config";
-
-export type TEmployeesState = {
-    employeesList: IEmployee[];
-    dealershipEmployeesList: IEmployee[];
-    techniciansList: IEmployee[];
-    searchTerm: string;
-    order: IOrder<IEmployee>;
-    loadingTechnicians: boolean;
-    loadingDealership: boolean;
-    loading: boolean;
-    loadingDMSAdvisors: boolean;
-    saving: boolean;
-    dealershipPaging: IPagingResponse;
-    paging: IPagingResponse;
-    pageData: IPageRequest;
-    filters: IEmployeeFilters;
-    usersShort: IAdvisorShort[];
-}
 
 const initialState: TEmployeesState = {
     employeesList: [],
@@ -91,11 +65,6 @@ export const employeesReducer = (state=initialState, action: TEmployeeActions): 
     }
 }
 
-type TSCState = {
-    advisorsList: IAdvisorShort[];
-    techniciansList: IAdvisorShort[];
-    DmsAdvisors: TDmsAdvisor[];
-}
 const scInitialState: TSCState = {
     advisorsList: [],
     techniciansList: [],

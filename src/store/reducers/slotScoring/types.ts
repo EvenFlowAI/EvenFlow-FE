@@ -1,5 +1,3 @@
-import {EDayOfWeek} from "../offers/types";
-
 export enum EProximityType {
     Closest,
     Earliest,
@@ -10,11 +8,6 @@ export interface IProximity {
     point: number;
     serviceCenterId?: number;
     podId?: number;
-}
-
-export type TRange = {
-    start: string;
-    end: string;
 }
 
 export interface ISlotRange {
@@ -83,4 +76,12 @@ export interface IOptimizationSetting {
     values: IOptimizationSettingValue[];
     serviceCenterId: number;
     podId?: number;
+}
+
+export type TState = {
+    isLoading: boolean;
+    proximity: IProximity[];
+    desirability: IDesirability[];
+    optimizationSettings: IOptimizationSetting[];
+    slotRange: ISlotRange | null;
 }

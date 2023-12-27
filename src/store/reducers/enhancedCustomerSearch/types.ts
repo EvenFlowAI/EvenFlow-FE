@@ -1,5 +1,6 @@
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {IAddressData} from "../../../api/types";
+import {IPageRequest, IPagingResponse} from "../../../types/types";
 
 export interface ICustomerByName {
     customerId: number;
@@ -140,4 +141,16 @@ export type TCustomerSearchData = {
     companyName: string;
     address: string;
     lastVINCharacters: string;
+}
+
+export type TCustomerSearchState = {
+    isLoading: boolean;
+    customers: ICustomerWithPhones[];
+    currentCustomer: ICustomerWithPhones | null;
+    paging: IPagingResponse;
+    pageData: IPageRequest;
+    repairHistory: IRepairHistory | null;
+    repairHistoryPaging: IPagingResponse;
+    repairHistoryLoading: boolean;
+    customerSearchData: TCustomerSearchData;
 }

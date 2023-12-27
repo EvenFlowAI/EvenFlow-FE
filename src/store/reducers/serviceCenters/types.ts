@@ -1,8 +1,9 @@
 import {IAddress, IDealershipGroupShort} from "../dealershipGroups/types";
-import {ITimeSpan} from "../../../types/types";
+import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {EMaintenanceOptionType} from "../../../api/types";
 import {TEmailRequirement} from "../screenSettings/types";
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
+import {EDay} from "../demandSegments/types";
 
 export interface IServiceCenter {
     id: number;
@@ -46,11 +47,7 @@ export interface IServiceCenterForm {
     address: IAddress;
     timeZoneId: string;
 }
-export interface IHOOData {
-    dayOfWeek: number;
-    from: ITimeSpan;
-    to: ITimeSpan;
-}
+
 export interface IHOODataForm {
     dayOfWeek: number;
     from: string;
@@ -68,14 +65,6 @@ export interface IBreakFrom {
     breaks: IBreak[];
 }
 
-export interface IWeeklySchedule {
-    dayOfWeek: number;
-    averageTechnicians: number;
-    averageLevelThreeTechnicians: number;
-}
-export interface IWeeklyScheduleForm {
-    weeklySchedules: IWeeklySchedule[]
-}
 export interface ISCAnalytics {
     countOfTechnicians: number;
     countOfBays: number;
@@ -154,3 +143,31 @@ export interface IAdvisorAssignment {
     primaryMethod?: EAdvisorAssignMethod|null;
     secondaryMethod?: EAdvisorAssignMethod|null;
 }
+
+export type TServiceCenterState = {
+    serviceCenters: IServiceCenterExtended[],
+    dealershipSCs: IServiceCenterExtended[],
+    fullSCList: IServiceCenter[],
+    selectedSC?: IServiceCenter,
+    shortSC: IServiceCenter[],
+    loading: boolean,
+    packagesOptionsLoading: boolean;
+    dealershipLoading: boolean,
+    shortLoading: boolean,
+    saving: boolean,
+    paging: IPagingResponse,
+    dealershipPaging: IPagingResponse,
+    pageData: IPageRequest,
+    order: IOrder<IServiceCenterExtended>,
+    searchTerm: string,
+    workingDays: EDay[],
+    analytics: ISCAnalytics,
+    dealershipId: number | undefined,
+    reminders: boolean,
+    remindersLoading: boolean,
+    predictionParams: IPredictionParams,
+    laborRate: ILaborRate,
+    predictionParamsLoading: boolean,
+    advisorAssignment: IAdvisorAssignment;
+    advisorAssignmentLoading: boolean;
+};

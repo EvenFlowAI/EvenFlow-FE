@@ -72,10 +72,7 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
 }
 export const setSCOrder = createAction<IOrder<IServiceCenterExtended>>("ServiceCenters/ChangeOrder");
 export const setSCSearch = createAction<string>("ServiceCenters/SetSearch");
-//
-// const _create = (payload: IServiceCenterExtended): TServiceCenterActions => ({
-//     type: "ServiceCenters/Create", payload
-// });
+
 export const saveAvatar = (avatar: File, id: number): AppThunk => async () => {
     const data = new FormData();
     data.append("file", avatar, avatar?.name || "");

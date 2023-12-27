@@ -2,6 +2,7 @@ import {IAdvisorShort} from "../users/types";
 import {IBayShort} from "../bays/types";
 import {IAssignedServiceRequestShort} from "../serviceRequests/types";
 import {IEngineType} from "../vehicleDetails/types";
+import {IPageRequest, IPagingResponse} from "../../../types/types";
 
 export interface IPodVehicleMake {
     id: number;
@@ -78,4 +79,14 @@ export enum EJobType {
 
 export enum EAppointmentType {
     MaintenanceOnly, RepairOnly, Mixed
+}
+
+export type TState = {
+    podsList: IPod[],
+    podsLoading: boolean;
+    podsPaging: IPagingResponse;
+    podsPageData: IPageRequest;
+    podsFilters: IPodFilters;
+    shortPodsList: IPodShort[];
+    selectedPod: IPodShort | null;
 }

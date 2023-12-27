@@ -1,24 +1,16 @@
-import {IPod, IPodFilters, IPodShort} from "./types";
+import {TState} from "./types";
 import {
     getPods,
+    getPodsShort,
+    setPodsFilters,
     setPodsLoading,
     setPodsPageData,
     setPodsPaging,
-    setPodsFilters, getPodsShort, setSelectedPod
+    setSelectedPod
 } from "./actions";
-import {IPageRequest, IPagingResponse} from "../../../types/types";
 import {defaultPageData, defaultPaging} from "../constants";
 import {createReducer} from "@reduxjs/toolkit";
 
-type TState = {
-    podsList: IPod[],
-    podsLoading: boolean;
-    podsPaging: IPagingResponse;
-    podsPageData: IPageRequest;
-    podsFilters: IPodFilters;
-    shortPodsList: IPodShort[];
-    selectedPod: IPodShort|null;
-}
 const initialState: TState = {
     podsList: [],
     podsLoading: false,

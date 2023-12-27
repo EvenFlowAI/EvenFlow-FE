@@ -15,11 +15,11 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {encodeSCID} from "../../../utils/utils";
 import {setCustomerSearchData} from "../../../store/reducers/enhancedCustomerSearch/actions";
-import {initialCustomerSearch} from "../../../store/reducers/enhancedCustomerSearch/reducer";
 import {useStyles} from "./styles";
 import {useException} from "../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../routes/constants";
+import {initialCustomerSearch} from "../../../store/reducers/constants";
 
 export const ServiceCenterSwitcher = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
