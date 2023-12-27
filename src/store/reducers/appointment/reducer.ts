@@ -1,32 +1,33 @@
 import {createReducer} from "@reduxjs/toolkit";
+import {IPersonalInformation, IPrivacy, IReminders, TAppointmentState} from "./types";
 import {
-    EAppointmentTimingType,
-    IPersonalInformation,
-    IPrivacy,
-    IReminders,
-    TAppointmentState,
-    TS1Form,
-    TS3Form
-} from "./types";
-import {
-    changeComment,
     changePersonalInformation,
     changePrivacy,
     changeReminders,
-    changeS1Form,
-    changeS3Form,
-    changeTransportation, getAllServiceCategories,
-    getAppointmentSlots, getDropOffSettings, getServiceCategories,
-    getServiceCenterProfile, getServiceValetSlots,
+    getAllServiceCategories,
+    getAppointmentSlots,
+    getDropOffSettings,
+    getServiceCategories,
+    getServiceCenterProfile,
+    getServiceValetSlots,
     getSRs,
     handleSearch,
-    selectAppointment, selectServiceValetAppointment,
-    selectSR, selectSRMultiple,
-    setAppointmentFilters, setAppointmentWasChanged,
+    selectAppointment,
+    selectServiceValetAppointment,
+    selectSR,
+    selectSRMultiple,
+    setAppointmentFilters,
+    setAppointmentWasChanged,
     setCustomerEnteredEmail,
     setCustomerLoadedData,
-    setCustomerVehicle, setEditAppointment, setLoadedDateRange,
-    setLoadedReducer, setOldAppointmentId, setProfileLoading, setSessionId, setWaitListSettings
+    setCustomerVehicle,
+    setEditAppointment,
+    setLoadedDateRange,
+    setLoadedReducer,
+    setOldAppointmentId,
+    setProfileLoading,
+    setSessionId,
+    setWaitListSettings
 } from "./actions";
 import moment from "moment";
 import {setPackage} from "../appointmentFrameReducer/actions";
@@ -46,18 +47,6 @@ const blankPrivacy: IPrivacy = {
     callback: false
 }
 
-const initialS1Form: TS1Form = {
-    year: null,
-    vin: "",
-    mileage: null,
-    driveType: "",
-    make: "",
-    model: "",
-    transmission: ""
-}
-const initialS3Form: TS3Form = {
-    appointmentType: EAppointmentTimingType.SpecialOffers
-}
 const initialState: TAppointmentState = {
     sessionId: "",
     updated: false,
@@ -68,14 +57,10 @@ const initialState: TAppointmentState = {
     customerEnteredEmail: "",
     appointmentId: null,
     selectedSR: [],
-    s1Data: initialS1Form,
     search: "",
-    s3Data: initialS3Form,
-    transportation: null,
     personalInformation: blankPersonalInfo,
     reminders: blankReminders,
     privacy: blankPrivacy,
-    comment: "",
     appointment: null,
     serviceValetAppointment: null,
     appointmentSlots: [],
@@ -91,6 +76,7 @@ const initialState: TAppointmentState = {
     appointmentWasChanged: false,
     waitListSettings: null,
 }
+
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {
         return {...state, scProfile: payload};
@@ -110,17 +96,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         }
         return {...state, selectedSR: selected};
     })
-    .addCase(changeS1Form, (state, {payload}) => {
-        return {...state, s1Data: {...state.s1Data, ...payload}};
-    })
     .addCase(handleSearch, (state, {payload}) => {
         return {...state, search: payload};
-    })
-    .addCase(changeS3Form, (state, {payload}) => {
-        return {...state, s3Data: {...state.s3Data, ...payload, date: payload.date || undefined}};
-    })
-    .addCase(changeTransportation, (state, {payload}) => {
-        return {...state, transportation: payload};
     })
     .addCase(changeReminders, (state, {payload}) => {
         return {...state, reminders: {...state.reminders, ...payload}};
@@ -131,9 +108,6 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(changePersonalInformation, (state, {payload}) => {
         return {...state, personalInformation: {...state.personalInformation, ...payload}};
     })
-    .addCase(changeComment, (state, {payload}) => {
-        return {...state, comment: payload};
-    })
     .addCase(selectAppointment, (state, {payload}) => {
         return {...state, appointment: payload};
     })
@@ -141,14 +115,6 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {...state, searchedDateRange: payload};
     })
     .addCase(getAppointmentSlots, (state, {payload}) => {
-        // if (payload.length && state.appointment) {
-        //     const {appointment} = state;
-        //     if (!Boolean(payload.find(sl =>
-        //         sl.time === appointment.time && sl.date === appointment.id.split("|")[0]
-        //     ))) {
-        //         payload = [{...appointment, date: appointment.id.split("|")[0]}, ...payload];
-        //     }
-        // }
         let appointmentSlots = payload.map(sl => {
             const date = `${String(sl.date).split("T")[0]}T${sl.time}Z`;
             return {...sl, id: `${sl.date}|${sl.time}`, date: moment.utc(date)}
@@ -170,25 +136,16 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(setCustomerLoadedData, (state, {payload}) => {
         if (payload) {
-            const nState = {
+            return {
                 ...state,
                 customerLoadedData: payload,
                 personalInformation: {
                     ...state.personalInformation,
                     fullName: `${payload.firstName} ${payload.lastName}`,
                     email: payload.emails?.length ? payload.emails[0] : state.customerEnteredEmail,
-                    phoneNumber: payload.phoneNumbers?.length ?  payload.phoneNumbers[0] : ""
+                    phoneNumber: payload.phoneNumbers?.length ? payload.phoneNumbers[0] : ""
                 }
             };
-            if (payload.vehicles.length === 1) {
-                nState.s1Data = {
-                    ...nState.s1Data,
-                    ...payload.vehicles[0],
-                    year: String(payload.vehicles[0].year),
-                    mileage: String(payload.vehicles[0].mileage)
-                }
-            }
-            return nState;
         }
         return {
             ...state,
@@ -200,18 +157,11 @@ export const appointmentReducer = createReducer(initialState, builder => builder
             return {
                 ...state,
                 customerSelectedVehicle: payload,
-                s1Data: {
-                    ...state.s1Data,
-                    ...payload,
-                    mileage: String(payload.mileage),
-                    year: String(payload.year)
-                }
             }
         }
         return {
             ...state,
             customerSelectedVehicle: payload,
-            s1Data: {...initialS1Form}
         };
     })
     .addCase(setEditAppointment, (state, {payload}) => {
@@ -227,12 +177,6 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         }
         return {...state, sessionId: payload};
     })
-    // .addCase(selectService, (state) => {
-    //     return {...state, appointment: null}
-    // })
-    // .addCase(selectSubService, (state) => {
-    //     return {...state, appointment: null}
-    // })
     .addCase(setPackage, (state) => {
         return {...state, appointment: null}
     })

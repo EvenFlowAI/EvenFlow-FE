@@ -5,10 +5,10 @@ import {
     EOfferType, IOffer,
 } from "../../../store/reducers/offers/types";
 import {IAssignedServiceRequestShort, IServiceRequestPriority} from "../../../store/reducers/serviceRequests/types";
-import {TEnumMap} from "../../../store/reducers/utils";
 import moment from "moment";
 import {ICategory} from "../../../store/reducers/categories/types";
 import React from "react";
+import {TEnumMap} from "../../../store/reducers/types";
 
 export type TOfferForm = {
     offerValue?: string;

@@ -2,7 +2,7 @@ import {createAction} from "@reduxjs/toolkit";
 import {
     APPOINTMENT_STATE_KEY,
     APPOINTMENT_STATE_SAVED_KEY,
-    EAppointmentTimingType, EReminderType,
+    EAppointmentTimingType,
     IAppointmentFilters,
     IAppointmentResponse,
     IAppointmentSlot,
@@ -14,19 +14,14 @@ import {
     IServiceCenterProfile, IServiceValetAppointment,
     ISR, ISVAppointmentResponse, IWaitListData,
     TAppointmentState,
-    TS1Form,
-    TS3Form
 } from "./types";
 import {AppThunk, PaginatedAPIResponse, TCallback} from "../../../types/types";
 import moment from "moment";
 import {
-    IAppointmentByQuery,
     ICreateAppointmentResp,
     ICustomerLoadedData,
     ILoadedVehicle, IServiceCategory, IServiceCategoryShort,
-    ITransportation
 } from "../../../api/types";
-import {EDemandCategory} from "../pricingSettings/types";
 import {getSlotsGap} from "../appointmentFrameReducer/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
@@ -57,14 +52,10 @@ export const loadSRs = (serviceCenterId: number): AppThunk => async (dispatch, g
 }
 export const selectSR = createAction<number|null>("Appointment/SelectSR");
 export const selectSRMultiple = createAction<number[]>("Appointment/SelectSRMultiple")
-export const changeS1Form = createAction<Partial<TS1Form>>("Appointment/ChangeS1Form");
 export const handleSearch = createAction<string>("Appointment/Search");
-export const changeS3Form = createAction<Partial<TS3Form>>("Appointment/ChangeS3Form");
-export const changeTransportation = createAction<ITransportation|null>("Appointment/Transportation");
 export const changeReminders = createAction<Partial<IReminders>>("Appointment/ChangeReminders");
 export const changePrivacy = createAction<Partial<IPrivacy>>("Appointment/ChangePrivacy");
 export const changePersonalInformation = createAction<Partial<IPersonalInformation>>("Appointment/ChangePersonalInformation");
-export const changeComment = createAction<string>("Appointment/ChangeComment");
 export const selectAppointment = createAction<IRemappedAppointmentSlot|null>("Appointment/SelectAppointment");
 export const selectServiceValetAppointment = createAction<IServiceValetAppointment|null>("Appointment/SelectServiceValetAppointment");
 export const getServiceCategories = createAction<IServiceCategory[]>("Appointment/GetServiceCategories");
@@ -136,78 +127,8 @@ export const setCustomerEnteredEmail = createAction<string>("Appointment/SetCust
 export const setCustomerLoadedData = createAction<ICustomerLoadedData|null>("Appointment/SetCustomerLoadedData");
 export const setCustomerVehicle = createAction<ILoadedVehicle|null>("Appointment/SetCustomerVehicle");
 
-
 export const setSessionId = createAction<string>("Appointment/SetSessionId");
 export const setEditAppointment = createAction<TAppointmentState>("Appointment/SetEditAppointment");
-export const loadEditAppointment = (appointment: IAppointmentByQuery): AppThunk => (dispatch, getState) => {
-    const state = {...getState().appointment};
-
-    state.selectedSR = appointment.serviceRequests.map(sr => sr.id);
-    state.appointmentId = {
-        ...appointment
-    };
-    state.s1Data = {
-        ...state.s1Data,
-        ...appointment.vehicle,
-        year: String(appointment.vehicle.year || ""),
-        mileage: String(appointment.vehicle.mileage || "")
-    }
-    state.s3Data = {
-        ...state.s3Data,
-        appointmentType: EAppointmentTimingType.FirstAvailable,
-    }
-    state.transportation = appointment.transportationOption
-
-    const date = `${
-        String(appointment.dateInUtc).split("T")[0]
-    }T${
-        appointment.timeSlot
-    }Z`;
-    state.appointment = {
-        id: `${appointment.dateInUtc}|${appointment.timeSlot}`,
-        date: moment.utc(date),
-        offer: appointment.offer,
-        time: appointment.timeSlot,
-        price: {
-            value: appointment.transactionValue,
-            category: EDemandCategory.Average,
-            ancillaryPrice: appointment.ancillaryPrice,
-        },
-        priceWithOffer: {
-            value: appointment.transactionValue,
-            category: EDemandCategory.Average,
-            ancillaryPrice: appointment.ancillaryPrice,
-        },
-        isShorterWaitTime: false,
-    };
-    const reminders: IReminders = {
-        email: false,
-        sms: false,
-        phone: false
-    }
-    for (let r of appointment.reminderTypes) {
-        switch (r) {
-            case EReminderType.Email:
-                reminders.email = true;
-                break;
-            case EReminderType.Phone:
-                reminders.phone = true;
-                break;
-            case EReminderType.Sms:
-                reminders.sms = true;
-                break;
-        }
-    }
-    state.reminders = reminders;
-    state.comment = appointment.comment;
-    state.personalInformation = {
-        ...appointment.driver
-    }
-    state.privacy = {privacy: true, callback: appointment.isNeedCall};
-
-    dispatch(setEditAppointment(state));
-    dispatch(saveAppointmentReducer());
-}
 
 const CUSTOMER_CACHE = 'fCC';
 export const saveCustomerCache = (data: ICustomerLoadedData): void => {

@@ -1,5 +1,5 @@
-import {TEnumMap} from "../utils";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {TEnumMap} from "../types";
 export type TValuePricingLevel = {
     demandCategory: EDemandCategory;
     value: number;

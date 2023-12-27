@@ -1,7 +1,7 @@
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {TEnumKeyLabel, TEnumMap} from "../utils";
 import {IAssignedServiceRequestShort} from "../serviceRequests/types";
 import {ICategory} from "../categories/types";
+import {TEnumKeyLabel, TEnumMap} from "../types";
 
 export enum EOfferType {
     AmountOff, PercentOff, FreeService

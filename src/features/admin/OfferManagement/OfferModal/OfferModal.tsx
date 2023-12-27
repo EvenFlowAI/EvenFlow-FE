@@ -17,7 +17,6 @@ import {createOffer, removeOffer, setArchiveOffer, updateOffer} from "../../../.
 import {SC_UNDEFINED, SOMETHING_WRONG, timeSpanString} from "../../../../utils/constants";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
 import {loadSCRequestsShort} from "../../../../store/reducers/serviceRequests/actions";
-import {TEnumMap} from "../../../../store/reducers/utils";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import moment from "moment";
 import {ViewOffer} from "./ViewOffer/ViewOffer";
@@ -32,6 +31,7 @@ import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {TEnumMap} from "../../../../store/reducers/types";
 
 const initialForm: TOfferForm = {
     offerValue: undefined,

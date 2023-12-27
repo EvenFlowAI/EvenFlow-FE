@@ -7,13 +7,13 @@ import {Autocomplete} from "@material-ui/lab";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IOffer} from "../../../../store/reducers/offers/types";
-import {TEnumKeyLabel} from "../../../../store/reducers/utils";
 import {EAudience, EChannel, TForm} from "../types";
 import {Label} from "./styles";
 import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
+import {TEnumKeyLabel} from "../../../../store/reducers/types";
 
 const audienceLabels: TEnumKeyLabel<EAudience> = {
     [EAudience.All]: "All",

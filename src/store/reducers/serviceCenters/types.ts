@@ -1,8 +1,8 @@
 import {IAddress, IDealershipGroupShort} from "../dealershipGroups/types";
-import {TChangePageDataGeneric, TChangePagingGeneric} from "../utils";
 import {ITimeSpan} from "../../../types/types";
 import {EMaintenanceOptionType} from "../../../api/types";
 import {TEmailRequirement} from "../screenSettings/types";
+import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
 
 export interface IServiceCenter {
     id: number;

@@ -1,6 +1,5 @@
 import {IAddress} from "../dealershipGroups/types";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {TEnumMap} from "../utils";
 import {EDemandCategory, EPricingDisplayType} from "../pricingSettings/types";
 import {EOfferType, IOffer} from "../offers/types";
 import moment from "moment";
@@ -10,7 +9,6 @@ import {
     ICustomerLoadedData,
     ILoadedVehicle, IOfferForCategory,
     IServiceCategory, IServiceCategoryShort,
-    ITransportation
 } from "../../../api/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
 import {TEmailRequirement} from "../screenSettings/types";
@@ -39,6 +37,7 @@ export interface IServiceCenterProfile {
     eMenuEnabled?: boolean;
     emailRequirement?: TEmailRequirement;
 }
+
 export interface ISR {
     id: number;
     code: string;
@@ -46,15 +45,6 @@ export interface ISR {
     price?: number;
 }
 
-export type TS1Form = {
-    year: string|null;
-    mileage: string|null;
-    vin: string;
-    model: string;
-    make: string;
-    transmission: string;
-    driveType: string;
-}
 export interface IVehicleData {
     vin: string;
     make: string;
@@ -77,37 +67,8 @@ export interface IVehicle extends IVehicleShort {
     transmission: string;
     driveType: string;
     engineTypeId: number|null;
-    // serviceInterval: string;
 }
 
-export type TS3Form = {
-    date?: ParsableDate,
-    appointmentType: EAppointmentTimingType;
-}
-
-export enum ETransportation {
-    HaveARide,
-    WaitWithAVehicle,
-    PickUpVehicle,
-    Rental,
-    Shuttle,
-    LoanerCar,
-}
-export const transportations: TEnumMap<ETransportation>[][] = [
-    [
-        {id: ETransportation.HaveARide, label: "I have a ride"},
-        {id: ETransportation.WaitWithAVehicle, label: "I will wait with my vehicle"},
-        {id: ETransportation.PickUpVehicle, label: "I would like for you to pick up my vehicle"}
-    ],
-    [
-        {id: ETransportation.Rental, label: "I would like a rental"},
-        {id: ETransportation.Shuttle, label: "I will take the shuttle"},
-        {id: ETransportation.LoanerCar, label: "I would take a loaner car"},
-    ]
-];
-export const flatTransportations: TEnumMap<ETransportation>[] = transportations.reduce((acc, ta) => [
-    ...acc, ...ta
-], [] as TEnumMap<ETransportation>[]);
 export interface IPersonalInformation {
     fullName: string;
     phoneNumber: string;
@@ -147,10 +108,12 @@ export interface IAppointmentSlot {
     isShorterWaitTime: boolean;
     isOverbookingApplied?: boolean;
 }
+
 export interface ISearchedDateRange {
     from: ParsableDate;
     to: ParsableDate;
 }
+
 export interface IAppointmentResponse {
     items: IAppointmentSlot[];
     searchedDateRange: ISearchedDateRange;
@@ -158,6 +121,7 @@ export interface IAppointmentResponse {
     consultantId?: string;
     waitlistSettings?: IWaitListData;
 }
+
 export enum EAppointmentTimingType {
     SpecialOffers, PreferredDate, FirstAvailable
 }
@@ -208,6 +172,7 @@ export interface IAppointmentSlotsRequest {
     address?: string;
     recalls: TRecallForRequest[];
 }
+
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
     date: moment.Moment;
@@ -231,14 +196,10 @@ export type TAppointmentState = {
     customerLoadedData: ICustomerLoadedData|null;
     appointmentId: ICreateAppointmentResp|null;
     selectedSR: number[],
-    s1Data: TS1Form;
     search: string;
-    s3Data: TS3Form;
-    transportation: ITransportation|null;
     personalInformation: IPersonalInformation;
     reminders: IReminders;
     privacy: IPrivacy;
-    comment: string;
     appointment: IRemappedAppointmentSlot|null;
     serviceValetAppointment: IServiceValetAppointment|null;
     searchedDateRange: ISearchedDateRange|null;
@@ -252,6 +213,7 @@ export type TAppointmentState = {
     appointmentWasChanged: boolean;
     waitListSettings: IWaitListData|null;
 };
+
 export enum EReminderType {
     Email, Phone, Sms
 }

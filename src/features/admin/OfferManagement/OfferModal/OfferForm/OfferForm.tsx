@@ -19,7 +19,6 @@ import {selectAllSR, TAutoChangeEvent, TOfferForm} from "../../types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import {TEnumMap} from "../../../../../store/reducers/utils";
 import {IAssignedServiceRequestShort} from "../../../../../store/reducers/serviceRequests/types";
 import {EServiceCategoryType, ICategory} from "../../../../../store/reducers/categories/types";
 import HtmlEditor from "../../../../../components/modals/admin/HTMLEditor/HTMLEditor";
@@ -27,6 +26,7 @@ import {useStyles} from "./styles";
 import {DatePicker} from "../../../../../components/pickers/DatePicker/DatePicker";
 import {TimePicker} from "../../../../../components/pickers/TimePicker/TimePicker";
 import {useModal} from "../../../../../hooks/useModal/useModal";
+import {TEnumMap} from "../../../../../store/reducers/types";
 
 type TProps = {
     form: TOfferForm;

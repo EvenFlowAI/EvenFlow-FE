@@ -1,5 +1,6 @@
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {TChangePageDataGeneric, TChangePagingGeneric} from "../utils";
+
+import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
 
 export interface IHoliday {
     id?: number;
