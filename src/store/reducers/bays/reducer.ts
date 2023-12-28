@@ -1,30 +1,18 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getAllBays,
+    getBaysShort,
     getFilteredBays,
-    setAllPaging,
-    setPaging,
-    setAllLoading,
     loading,
     saving,
+    setAllLoading,
+    setAllPaging,
     setPageData,
-    getBaysShort
+    setPaging
 } from "./actions";
-import {IBay, IBayShort} from "./types";
-import {IPageRequest, IPagingResponse} from "../../../types/types";
-import {defaultPageData, defaultPaging} from "../defaultInitials";
+import {TState} from "./types";
+import {defaultPageData, defaultPaging} from "../constants";
 
-type TState = {
-    allBays: IBay[],
-    allLoading: boolean;
-    allPaging: IPagingResponse;
-    saving: boolean;
-    loading: boolean;
-    paging: IPagingResponse;
-    pageData: IPageRequest;
-    bays: IBay[];
-    baysShort: IBayShort[]
-}
 const initialState: TState = {
     allBays: [],
     bays: [],

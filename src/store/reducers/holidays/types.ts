@@ -1,5 +1,7 @@
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
-import {TChangePageDataGeneric, TChangePagingGeneric} from "../utils";
+
+import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
+import {IPageRequest, IPagingResponse} from "../../../types/types";
 
 export interface IHoliday {
     id?: number;
@@ -20,3 +22,11 @@ export type THolidayActions =
     | TLoadAll
     | TPaging
     | TPageData;
+export type TState = {
+    holidaysList: IHoliday[],
+    paging: IPagingResponse,
+    pageData: IPageRequest,
+    loading: boolean,
+    saving: boolean,
+    weeklyHolidaysList: IHoliday[],
+}

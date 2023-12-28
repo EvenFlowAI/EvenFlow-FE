@@ -7,9 +7,9 @@ import {
 } from "./types";
 import {ThunkAction} from "redux-thunk";
 import {ActionCreator} from "redux";
-import {Api} from "../../../config/requests";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
 import {RootState} from "../../rootReducer";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const loading = (payload: boolean): DealershipActions => ({
     type: "Dealership/Loading", payload

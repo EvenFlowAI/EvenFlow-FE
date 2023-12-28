@@ -1,5 +1,5 @@
 import {DealershipActions, DealershipState} from "./types";
-import {defaultPageData, defaultPaging} from "../defaultInitials";
+import {defaultPageData, defaultPaging} from "../constants";
 
 const initialState: DealershipState = {
     dealershipList: [],

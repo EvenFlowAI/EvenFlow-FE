@@ -1,5 +1,6 @@
 import {TRouteRoleMap} from "./utils/types";
-import {Routes} from "./config/routes";
+
+import {Routes} from "./routes/constants";
 
 export const PERMISSIONS: TRouteRoleMap[] = [
     {route: Routes.Login.Base, roles: true},
@@ -15,19 +16,18 @@ export const PERMISSIONS: TRouteRoleMap[] = [
     {route: Routes.Account.ResetPassword, roles: true},
     {route: Routes.Account.Verification, roles: true},
 
-    {route: Routes.Optimizer.AppointmentAllocation, roles: ["Owner", "Manager", "Service Director"]},
-    {route: Routes.Optimizer.AppointmentSlotScoring, roles: ["Owner", "Manager", "Service Director"]},
-    {route: Routes.Optimizer.AppointmentValue, roles: ["Owner", "Manager", "Service Director"]},
-    {route: Routes.Optimizer.CapacitySettings, roles: ["Owner", "Manager", "Service Director"]},
-    {route: Routes.Optimizer.EmployeeSchedule, roles: ["Owner", "Manager", "Service Director"]},
-    {route: Routes.Optimizer.OptimizationWindows, roles: ["Owner", "Manager", "Service Director"]},
-    {route: Routes.Optimizer.PricingSettings, roles: ["Owner", "Manager", "Service Director"]},
-    {route: Routes.Optimizer.ServiceRequests, roles: ["Owner", "Manager", "Service Director"]},
-    // {route: Routes.Optimizer.ServiceRequests, roles: ["Owner", "Manager", "Advisor"]},
+    {route: Routes.CapacityManagement.AppointmentAllocation, roles: ["Owner", "Manager", "Service Director"]},
+    {route: Routes.CapacityManagement.AppointmentSlotScoring, roles: ["Owner", "Manager", "Service Director"]},
+    {route: Routes.CapacityManagement.AppointmentValue, roles: ["Owner", "Manager", "Service Director"]},
+    {route: Routes.CapacityManagement.CapacitySettings, roles: ["Owner", "Manager", "Service Director"]},
+    {route: Routes.CapacityManagement.EmployeeSchedule, roles: ["Owner", "Manager", "Service Director"]},
+    {route: Routes.CapacityManagement.OptimizationWindows, roles: ["Owner", "Manager", "Service Director"]},
+    {route: Routes.CapacityManagement.PricingSettings, roles: ["Owner", "Manager", "Service Director"]},
+    {route: Routes.CapacityManagement.ServiceRequests, roles: ["Owner", "Manager", "Service Director"]},
 
     {route: Routes.OfferManagement.Base, roles: ["Owner", "Manager", "Service Director"]},
 
     {route: Routes.Admin.Base, roles: true},
     {route: Routes.Account.Base, roles: true},
-    {route: Routes.Optimizer.Base, roles: ["Owner", "Manager", "Advisor", "Service Director"]},
+    {route: Routes.CapacityManagement.Base, roles: ["Owner", "Manager", "Advisor", "Service Director"]},
 ];

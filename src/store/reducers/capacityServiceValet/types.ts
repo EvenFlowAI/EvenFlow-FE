@@ -110,3 +110,10 @@ export type TDmsAppointmentTime = {
 export type TServiceValetRequestId = {
     serviceRequestId: number;
 }
+
+export interface InitialState {
+    zonesRouting: IZonesRoutingByDay[];
+    timeRangesAndCapacity: ITimeRangeAndCapacity[];
+    isLoading: boolean;
+    centerSettings: ICenterSettings | null;
+}

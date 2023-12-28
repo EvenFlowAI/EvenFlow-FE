@@ -48,3 +48,10 @@ export type TRole =
     | "Technician"
     | "Call Center Rep"
     | "Service Director"
+
+export type IUsersState = {
+    currentUser?: ICurrentUser,
+    saving: boolean,
+    loading: boolean;
+    isSuperAdmin: boolean;
+}

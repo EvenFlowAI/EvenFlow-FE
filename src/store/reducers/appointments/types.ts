@@ -1,11 +1,16 @@
 import moment from "moment";
 import {
-    EMaintenanceOptionType, EReportingStatus,
+    EMaintenanceOptionType,
+    EReportingStatus,
+    IAppointment,
     IListAppointment,
-    IVehicle, TAppointmentAdvisor
+    IPackageAppointments,
+    IVehicle,
+    TAppointmentAdvisor
 } from "../../../api/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType, TRecallForRequest} from "../appointment/types";
+import {IPageRequest} from "../../../types/types";
 
 export interface IAppointmentsRequest {
     pageIndex: number;
@@ -19,19 +24,6 @@ export interface IAppointmentsRequest {
     serviceBookId?: number|unknown;
     scheduler?: string|unknown;
     isServiceBookServiceCenter?: boolean,
-}
-
-export interface IVehicleDetails {
-    vehicleVin?: string;
-    vehicleMake?: string;
-    vehicleModel?: string;
-    vehicleYear?: string;
-    vehicleMileage?: string;
-}
-
-export interface IPackageRequestData {
-    serviceCenterId: number;
-    vehicle: IVehicle;
 }
 
 type TPackageOptionRequest = {
@@ -68,4 +60,17 @@ export type TScheduler = {
     id?: string;
     type?: EScheduler;
     fullName: string;
+}
+
+export type TState = {
+    appointments: IAppointment[];
+    count: number;
+    allCount: number;
+    isLoading: boolean;
+    isModalLoading: boolean;
+    allAppointments: IAppointment[];
+    packages: IPackageAppointments[];
+    serviceBookList: TServiceBook[];
+    schedulerList: TScheduler[];
+    pageData: IPageRequest,
 }

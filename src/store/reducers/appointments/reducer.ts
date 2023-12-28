@@ -1,27 +1,17 @@
-import {IAppointment, IPackageAppointments} from "../../../api/types";
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getAllAppointments,
-    getAppointments, getPackageByVehicle, getAppointmentsPageData, getScheduler, getServiceBookList,
+    getAppointments,
+    getAppointmentsPageData,
+    getPackageByVehicle,
+    getScheduler,
+    getServiceBookList,
     setAllAppointmentsCount,
     setAppointmentsCount,
-    setAppointmentsLoading, setAppointmentsModalLoading
+    setAppointmentsLoading,
+    setAppointmentsModalLoading
 } from "./actions";
-import {TScheduler, TServiceBook} from "./types";
-import {IPageRequest} from "../../../types/types";
-
-type TState = {
-    appointments: IAppointment[];
-    count: number;
-    allCount: number;
-    isLoading: boolean;
-    isModalLoading: boolean;
-    allAppointments: IAppointment[];
-    packages: IPackageAppointments[];
-    serviceBookList: TServiceBook[];
-    schedulerList: TScheduler[];
-    pageData: IPageRequest,
-}
+import {TState} from "./types";
 
 const initialState: TState = {
     appointments: [],

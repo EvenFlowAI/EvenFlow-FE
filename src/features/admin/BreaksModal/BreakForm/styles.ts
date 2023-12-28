@@ -1,0 +1,17 @@
+import {makeStyles} from "@material-ui/core/styles";
+
+export const useStyles = makeStyles({
+    button: {
+        marginBottom: 3
+    },
+    text: {
+        textAlign: "center",
+        marginBottom: 10
+    },
+    container: {
+        marginBottom: 12,
+        "&:last-child": {
+            marginBottom: 0
+        }
+    }
+});

@@ -1,7 +1,8 @@
 import {createAction} from "@reduxjs/toolkit";
 import {EOfferStatus, IOffer, IOfferForm} from "./types";
 import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
-import {Api} from "../../../config/requests";
+
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getOffers = createAction<IOffer[]>("Offers/GetOffers");
 export const setOffersPageData = createAction<Partial<IPageRequest>>("Offers/PageData");

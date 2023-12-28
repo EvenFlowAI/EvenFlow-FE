@@ -1,20 +1,13 @@
-import {TServiceTypeSettings} from "./types";
+import {InitialState} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
 import {
-    setAdvisorAvailable, setAppointmentTimingAvailable,
+    setAdvisorAvailable,
+    setAppointmentTimingAvailable,
     setBookingFlowConfig,
-    setBookingFlowConfigLoading, setCurrentConfig,
+    setBookingFlowConfigLoading,
+    setCurrentConfig,
     setTransportationAvailable
 } from "./actions";
-
-interface InitialState {
-    config: TServiceTypeSettings[],
-    isLoading: boolean;
-    currentConfig: TServiceTypeSettings|null;
-    isAdvisorAvailable: boolean;
-    isTransportationAvailable: boolean;
-    isAppointmentTimingAvailable: boolean;
-}
 
 const initialState: InitialState = {
     config: [],

@@ -1,4 +1,4 @@
-import {IMake} from "../../../api/types";
+import {IMake, IMakeExtended} from "../../../api/types";
 
 export interface ICreateMake extends IMake {
    serviceCenterId: number;
@@ -25,4 +25,13 @@ export type TCreateEngineType = {
    names: string[];
    serviceCenterId: number;
    podId?: number;
+}
+
+export type TState = {
+    makes: IMake[];
+    currentMake: IMake | null;
+    isLoading: boolean;
+    mileage: IMileage[];
+    makesModels: IMakeExtended[];
+    engineTypes: IEngineType[];
 }

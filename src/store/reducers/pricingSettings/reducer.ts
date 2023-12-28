@@ -1,46 +1,24 @@
 import {createReducer} from "@reduxjs/toolkit";
+import {TState} from "./types";
 import {
-    IDayOfWeekSetting,
-    IPackagePricingLevels,
-    IPackagePricingSettings,
-    IPricingDemand,
-    IPricingLevel,
-    IPricingSetting, IRequestPricingSettings,
-    ITimeOfYearSetting,
-    ITimeWindowEl
-} from "./types";
-import {
-    getMPPricingSettings,
     getDayOfWeekPricing,
     getMPList,
+    getMPPricingSettings,
+    getPackageOptionsList,
     getPackagePricingLevels,
     getPricingCalculations,
     getPricingDemand,
-    getPricingLevels, getRequestsPricingLevels, getRoundPriceSetting,
-    getSrList, getSRPricingSettings, getTimeOfYearPricing,
-    getTimeWindows, setLoading, setRoundPriceLoading, getPackageOptionsList
+    getPricingLevels,
+    getRequestsPricingLevels,
+    getRoundPriceSetting,
+    getSrList,
+    getSRPricingSettings,
+    getTimeOfYearPricing,
+    getTimeWindows,
+    setLoading,
+    setRoundPriceLoading
 } from "./actions";
-import {IAssignedServiceRequest} from "../serviceRequests/types";
-import {IPackageOptionShort, IPackageShort} from "../packages/types";
 
-type TState = {
-    pricingLevels: IPricingLevel[];
-    timeWindows: ITimeWindowEl[];
-    srList: IAssignedServiceRequest[];
-    calculations: IPricingSetting[];
-    pricingDemands: IPricingDemand[];
-    dWeekPricing: IDayOfWeekSetting[];
-    tYearPricing: ITimeOfYearSetting[];
-    srPricingLevels: IRequestPricingSettings[];
-    srPricingSettings: IRequestPricingSettings[];
-    mpList: IPackageShort[];
-    mpPricingSettings: IPackagePricingSettings[];
-    mpOptionsList: IPackageOptionShort[];
-    isLoading: boolean;
-    isRoundPriceLoading: boolean;
-    roundPrice: boolean;
-    mpPricingLevels: IPackagePricingLevels[];
-}
 const initialState: TState = {
     pricingLevels: [],
     timeWindows: [],

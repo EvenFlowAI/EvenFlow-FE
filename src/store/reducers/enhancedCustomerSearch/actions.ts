@@ -7,7 +7,6 @@ import {
     TSearchCustomerParams
 } from "./types";
 import {AppThunk, IAPIResponse, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import {ActionCreator} from "redux";
 import {ICustomerLoadedData, ILoadedVehicle} from "../../../api/types";
 import {saveAppointmentReducer, setCustomerLoadedData} from "../appointment/actions";
@@ -18,6 +17,7 @@ import {
     setPoliticalState,
     setZipCode
 } from "../appointmentFrameReducer/actions";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getCustomers = createAction<ICustomerWithPhones[]>("CustomerSearch/GetCustomers");
 export const setCurrentCustomer = createAction<ICustomerWithPhones|null>("CustomerSearch/SetCurrentCustomer");
@@ -167,23 +167,6 @@ export const loadRepairHistory = (serviceCenterId: number, vehicleDmsId: string,
         .then(result => {
             if (result?.data?.result) {
                 dispatch(getRepairHistory(result.data.result))
-                dispatch(setRepairHistoryPaging(result.data.paging))
-            }
-        })
-        .catch(err => {
-            console.log('get repair history error', err)
-        })
-        .finally(() => dispatch(setRepairHistoryLoading(false)))
-}
-
-export const loadMoreRepairHistory = (serviceCenterId: number, vehicleDmsId: string, pageIndex: number, pageSize: number): AppThunk => (dispatch, getState) => {
-    dispatch(setRepairHistoryLoading(true));
-    const {repairHistory} = getState().customers;
-    Api.call(Api.endpoints.Customers.GetRepairHistory, {params: {serviceCenterId, vehicleDmsId, pageIndex, pageSize}})
-        .then(result => {
-            if (result?.data?.result?.repairOrders && repairHistory) {
-                const data = {...repairHistory, repairOrders: [...repairHistory?.repairOrders, ...result.data.result.repairOrders]}
-                dispatch(getRepairHistory(data))
                 dispatch(setRepairHistoryPaging(result.data.paging))
             }
         })

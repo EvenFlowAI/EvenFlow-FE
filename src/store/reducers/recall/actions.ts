@@ -1,9 +1,8 @@
 import {createAction} from "@reduxjs/toolkit";
 import {ICreateUpdateRecall, IRecall, IRecallResponse} from "./types";
-import {AppThunk, IPageRequest} from "../../../types/types";
-import {Api} from "../../../config/requests";
-import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
+import {AppThunk, IPageRequest, IRecallByVin} from "../../../types/types";
 import {setSelectedRecalls} from "../appointmentFrameReducer/actions";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getRecalls  = createAction<IRecall[]>('Recall/GetRecalls');
 export const setLoading  = createAction<boolean>('Recall/SetLoading');

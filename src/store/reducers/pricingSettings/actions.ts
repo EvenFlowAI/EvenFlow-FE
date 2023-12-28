@@ -11,11 +11,11 @@ import {
     ITimeOfYearSetting,
     ITimeWindowEl, TNewRequestsToPricing, TNewPackagesToPricing, EPricingDisplayType
 } from "./types";
-import {Api} from "../../../config/requests";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
 import moment from "moment";
 import {IPackageOptionShort, IPackageShort} from "../packages/types";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setLoading = createAction<boolean>("PricingSettings/SetLoading");
 
@@ -224,19 +224,6 @@ export const loadMPList = (data: IGetMPListData): AppThunk => dispatch => {
         .finally(() => dispatch(setLoading(false)));
 }
 
-export const setPricingOptimization = (id: number, isApplyPricingOptimization: boolean, data: IGetMPListData): AppThunk => dispatch => {
-    dispatch(setLoading(true));
-    Api.call(Api.endpoints.MaintenancePackages.SetPricingOptimization, {urlParams: {id}, data: {isApplyPricingOptimization}})
-        .then(result => {
-            if (result) {
-                dispatch(loadMPList(data));
-            }
-        })
-        .catch(err => {
-            console.log('set pricing optimization for package error', err)
-        })
-        .finally(() => dispatch(setLoading(false)));
-}
 export const getRoundPriceSetting = createAction<boolean>('PricingSettings/GetRoundPriceSetting');
 export const setRoundPriceLoading = createAction<boolean>('PricingSettings/SetRoundPriceLoading');
 

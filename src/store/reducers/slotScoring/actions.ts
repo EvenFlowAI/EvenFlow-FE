@@ -8,9 +8,9 @@ import {
     IProximity, ISlotRange
 } from "./types";
 import {AppThunk} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import {IHOODataForm} from "../serviceCenters/types";
 import moment from "moment";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setLoading = createAction<boolean>("SlotScoring/SetLoading");
 
