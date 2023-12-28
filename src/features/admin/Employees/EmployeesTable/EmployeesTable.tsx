@@ -32,10 +32,10 @@ const SURowData: TableRowDataType<IEmployee>[] = [
 
 const AdminRowData: TableRowDataType<IEmployee>[] = [
     {val: el => el.fullName, header: "Name", orderId: "name"},
-    {val: el => el.serviceCenter?.name || '-', header: "Service Center", orderId: "serviceCenterName"},
-    {val: el => el.serviceCenter?.address ? concatAddress(el.serviceCenter.address) : '-', header: "Service Center Address"},
+    {val: el => el.serviceCenter?.name || '-', header: "Service Center", width: 170},
     {val: el => el.role === Roles.Technician ? `${el.role} (${el.employeeInfo?.skillLevel || 1})` : el.role, header: "Role", orderId: "role"},
-    {val: el => el.phoneNumber, header: "Phone Number", orderId: "phoneNumber", width: 170}
+    {val: el => el.email, header: "Email Address", width: 170},
+    {val: el => el.dmsId ? el.dmsId.toString() : '-' , header: "DMS Employee ID"}
 ];
 
 type TProps = {

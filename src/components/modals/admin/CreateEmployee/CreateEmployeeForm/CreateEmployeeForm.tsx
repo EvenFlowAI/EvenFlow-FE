@@ -10,7 +10,7 @@ import 'react-phone-number-input/style.css'
 import {superRoles} from "../constants";
 import {userRoles, widerUserRoles} from "../../../../../utils/constants";
 import {useCurrentUser} from "../../../../../hooks/useCurrentUser/useCurrentUser";
-import {TTechnicianLevel} from "../../../../../types/types";
+import {Roles, TTechnicianLevel} from "../../../../../types/types";
 import {loadDMSAdvisors} from "../../../../../store/reducers/employees/actions";
 import {TRole} from "../../../../../store/reducers/users/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -179,7 +179,7 @@ export const CreateEmployeeForm: React.FC<TTFormProps> = ({
                 fullWidth
             />
         </Grid>
-        {form.role === 'Technician'
+        {form.role === Roles.Technician
             ? <>
                 <Grid item xs={12} sm={12} md={6}>
                     <Grid container spacing={3}>
@@ -225,21 +225,20 @@ export const CreateEmployeeForm: React.FC<TTFormProps> = ({
                     />
                 </Grid>
             </>
-            : null
+            : <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                    style={{width: '100%', display: 'flex', justifyContent: 'space-between', marginLeft: 2}}
+                    labelPlacement="start"
+                    control={
+                        <Switch
+                            disabled={!form.dmsId}
+                            name="showInBooking"
+                            onChange={handleShowOnBookingChange}
+                            checked={form.showOnBooking || false}
+                            color="primary"/>
+                    }
+                    label={<span style={{fontWeight: 'bold', textTransform: 'uppercase', fontSize: 13}}>Display On Booking Flow</span>}/>
+            </Grid>
         }
-        <Grid item xs={12} sm={6}>
-            <FormControlLabel
-                style={{width : '100%', display: 'flex', justifyContent: 'space-between', marginLeft: 2}}
-                labelPlacement="start"
-                control={
-                    <Switch
-                        disabled={!form.dmsId || form.role === 'Technician'}
-                        name="showInBooking"
-                        onChange={handleShowOnBookingChange}
-                        checked={form.showOnBooking || false}
-                        color="primary" />
-                }
-                label={<span style={{ fontWeight: 'bold', textTransform: 'uppercase', fontSize: 13 }}>Display On Booking Flow</span>} />
-        </Grid>
     </Grid>
 }
