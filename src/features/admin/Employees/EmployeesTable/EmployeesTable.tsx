@@ -5,7 +5,13 @@ import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {MoreHoriz, Visibility} from "@material-ui/icons";
 import {TableAvatar} from "../../../../components/wrappers/TableAvatar/TableAvatar";
 import {IOrder, Roles, TableRowDataType, TCallback} from "../../../../types/types";
-import {changePageData, loadByFilters, removeEmployee, setEmplOrder} from "../../../../store/reducers/employees/actions";
+import {
+    changePageData,
+    loadByFilters,
+    removeEmployee,
+    setEmplOrder,
+    setEmployeeFilters
+} from "../../../../store/reducers/employees/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {concatAddress} from "../../../../utils/utils";
@@ -62,6 +68,12 @@ const EmployeesTable:React.FC<TProps> = ({editedItem, setEditedItem, onOpen}) =>
     const rowData = useMemo<TableRowDataType<IEmployee>[]>(() => {
         return currentUser?.isSuperUser ? SURowData : AdminRowData;
     }, [currentUser]);
+
+    useEffect(() => {
+        if (selectedSC) {
+            dispatch(setEmployeeFilters({serviceCenterId: selectedSC.id}))
+        }
+    }, [selectedSC])
 
     useEffect(() => {
         selectedSC && dispatch(loadByFilters())
