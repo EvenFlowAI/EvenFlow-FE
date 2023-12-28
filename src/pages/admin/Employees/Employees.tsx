@@ -5,14 +5,10 @@ import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleC
 import EmployeesFilters from "../../../features/admin/Employees/EmployeesFilters/EmployeesFilters";
 import EmployeesTable from "../../../features/admin/Employees/EmployeesTable/EmployeesTable";
 import {useModal} from "../../../hooks/useModal/useModal";
-import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Titles} from "../../../types/types";
 
 export const Employees = () => {
     const [editedItem, setEditedItem] = useState<IEmployee|undefined>();
-    const [isFiltersOpen, setFiltersOpen] = useState<boolean>(true);
-    const {selectedSC} = useSCs();
-    const dispatch = useDispatch();
     const {onOpen, isOpen, onClose} = useModal();
 
     return <>
