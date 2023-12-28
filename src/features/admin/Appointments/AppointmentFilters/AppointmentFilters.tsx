@@ -62,7 +62,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     }
 
     const handleSelectStatus = (e: React.ChangeEvent<{value: unknown}>) => {
-        setFilters(prev => ({...prev, status: e.target.value, pageData: initialPaging}))
+        setFilters(prev => ({...prev, reportingStatus: e.target.value, pageData: initialPaging}))
     }
 
     const handleSelectServiceBook = (e: React.ChangeEvent<{value: unknown}>) => {

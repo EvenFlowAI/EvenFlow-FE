@@ -10,7 +10,6 @@ import {BrowserRouter} from "react-router-dom";
 import theme from "./theme/theme";
 import MomentUtils from "@date-io/moment";
 import {MuiPickersUtilsProvider} from "@material-ui/pickers";
-import i18n from './i18n';
 
 ReactDOM.render(
     <React.StrictMode>
