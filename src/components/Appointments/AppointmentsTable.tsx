@@ -1,8 +1,7 @@
 import React, {Dispatch, SetStateAction, useCallback, useState} from 'react';
 import {Table} from "../UI/Table";
 import {
-    AppointmentStatus,
-    appointmentStatuses, IAppointment,
+    EReportingStatus, IAppointment, reportingStatuses,
 } from "../../api/types";
 import {IconButton, Menu, MenuItem} from "@material-ui/core";
 import {ViewAppointmentDialog} from "./ViewAppointmentDialog";
@@ -25,7 +24,7 @@ const cols: TableRowDataType<IAppointment>[] = [
     {header: "Vehicle", val: el => `${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${el.vehicle?.year ?? ''}`},
     {header: "Service Book", val: el => el.serviceBook?.name ?? ''},
     {header: "Scheduler", val: el => `${el.scheduler?.fullName ?? ''}`},
-    {header: "Status", val: el => typeof el.appointmentStatus !== 'undefined' && Number.isInteger(el.appointmentStatus) ? appointmentStatuses[el.appointmentStatus] : "", orderId: "appointmentStatus"},
+    {header: "Status", val: el => typeof el.reportingStatus !== 'undefined' && Number.isInteger(el.reportingStatus) ? reportingStatuses[el.reportingStatus] : "", orderId: "reportingStatus"},
 ]
 
 type TAppointmentsTable = {
@@ -73,7 +72,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
 
     const handleCancel = useCallback(() => {
         setAnchorEl(null);
-        if (viewItem?.appointmentStatus === AppointmentStatus.Cancelled) {
+        if (viewItem?.reportingStatus === EReportingStatus.Cancelled) {
             showError("Appointment is already canceled");
         } else {
             if (viewItem) {
@@ -147,13 +146,13 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
             <MenuItem onClick={handleView}>View</MenuItem>
             <MenuItem
                 disabled={
-                    viewItem?.appointmentStatus === AppointmentStatus.Cancelled
+                    viewItem?.reportingStatus === EReportingStatus.Cancelled
                     || !viewItem?.isEditable
                 }
                 onClick={handleEdit}>Edit</MenuItem>
             <MenuItem
                 disabled={
-                    viewItem?.appointmentStatus === AppointmentStatus.Cancelled
+                    viewItem?.reportingStatus === EReportingStatus.Cancelled
                     || !viewItem?.isEditable
                 }
                 onClick={handleCancel}>Cancel</MenuItem>

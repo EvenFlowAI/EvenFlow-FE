@@ -1,17 +1,14 @@
 import React, {forwardRef, useLayoutEffect, useRef} from "react";
 import {
-    Box, Button,
+    Box,
     CircularProgress,
-    createStyles,
-    FormLabel, Grid,
-    InputBase,
+    FormLabel,
     styled,
-    TextFieldProps, useMediaQuery, useTheme,
+    TextFieldProps,
     withStyles
 } from "@material-ui/core";
 import {TextField as TF} from "../UI/EndUserInputs";
 import {InputProps as StandardInputProps} from "@material-ui/core/Input/Input";
-import {LoadingButton} from "../UI/Button";
 
 export const TextField: React.FC<TextFieldProps> = forwardRef((props, ref) => {
     return <TF ref={ref} fullWidth {...props} InputProps={{disableUnderline: true, ...props.InputProps} as Partial<StandardInputProps>} />;
@@ -38,27 +35,6 @@ export const InputLoading = () => {
     </span>;
 }
 
-export const SelectInput = withStyles(createStyles({
-    root: {
-        borderRadius: 2,
-    },
-    input: {
-        padding: "6px 16px"
-    }
-}))(InputBase);
-
-export const StepContainer: React.FC = ({children}) => {
-    return <div style={{
-        display: "flex",
-        flexFlow: "column nowrap",
-        justifyContent: "space-around",
-        alignItems: "center",
-        width: "100%",
-        height: "100%",
-    }}>
-        {children}
-    </div>;
-}
 const SCContainer = styled("div")({
     height: "100%",
     overflowX: "hidden",
@@ -123,45 +99,5 @@ export const ScrollableContainer: React.FC = ({children}) => {
             {children}
             <Shadow ref={shadowRef} />
         </SCContainer>
-    </Box>
-}
-
-export const StepContentContainer = styled("div")(({theme}) => ({
-    width: "90%",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "nowrap",
-    minWidth: 0,
-    [theme.breakpoints.down("xs")]: {
-        width: "100%"
-    }
-}));
-type TNextProps = {
-    isLoading?: boolean;
-    nextDisabled?: boolean;
-    nextLabel?: string;
-    prevLabel?: string;
-    prevDisabled?: boolean;
-};
-export const NextPrevBlock: React.FC<TStepProps&TNextProps> = ({next, prev, isLoading, nextDisabled, prevDisabled, nextLabel, prevLabel, isCompleted}) => {
-    const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
-    return <Box mt={2} textAlign="center">
-        <Grid container spacing={2}>
-            {!prevDisabled ? <Grid item xs={12} sm={6} style={{order: isXS ? 1 : undefined}}>
-                <Button fullWidth variant="outlined" color="primary" onClick={prev}>
-                    {prevLabel ?? "Previous Step"}
-                </Button>
-            </Grid> : null}
-            <Grid item xs={12} sm={prevDisabled ? 12 : 6}>
-                <LoadingButton loading={isLoading}
-                               fullWidth
-                               disabled={nextDisabled || !isCompleted}
-                               variant="contained" onClick={next} color="primary">
-                    {nextLabel ?? "Continue"}
-                </LoadingButton>
-            </Grid>
-        </Grid>
     </Box>
 }

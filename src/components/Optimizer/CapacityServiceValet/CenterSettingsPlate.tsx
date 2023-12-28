@@ -53,6 +53,7 @@ export type TCenterSettingsPlateProps = {
     helperText: string;
     isLoading: boolean;
 }
+
 export const CenterSettingsPlate: React.FC<TCenterSettingsPlateProps> = ({
                                                                              onEdit,
                                                                              title,

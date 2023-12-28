@@ -119,17 +119,20 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
 
     useEffect(() => {
         if (timeSlot?.date) {
-            const [h, m, s] = timeSlot?.pickUpMin.split(":");
-            const timeSlotTime = moment(timeSlot.date).set('hour', +h).set('minute', +m).set('second', +s);
-            if (moment(timeSlot?.date).isSame(moment(), 'day') && moment(date).isSame(moment(), 'day')) {
-                const differenceInMSeconds = moment(moment(timeSlotTime).format('YYYY-MM-DDTHH:mm:ss')).diff(moment());
-                if (differenceInMSeconds > 0) {
-                    setTimeout(() => setTimePassed(true), differenceInMSeconds);
+            if (timeSlot?.date) {
+                const timeSlotDate = timeSlot.date.toString().split('T')[0]
+                const [h, m, s] = timeSlot?.pickUpMin.split(":");
+                const timeSlotTime = moment(timeSlotDate).set('hour', +h).set('minute', +m).set('second', +s);
+                if (moment(timeSlotDate).isSame(moment(), 'day') && moment(date).isSame(moment(), 'day')) {
+                    const differenceInMSeconds = moment(moment(timeSlotTime).format('YYYY-MM-DDTHH:mm:ss')).diff(moment());
+                    if (differenceInMSeconds > 0) {
+                        setTimeout(() => setTimePassed(true), differenceInMSeconds);
+                    } else {
+                        setTimePassed(true);
+                    }
                 } else {
-                    setTimePassed(true);
+                    setTimePassed(false);
                 }
-            } else {
-                setTimePassed(false);
             }
         }
     }, [timeSlot, date])

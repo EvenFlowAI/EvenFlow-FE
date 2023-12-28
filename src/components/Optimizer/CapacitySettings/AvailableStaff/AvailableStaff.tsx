@@ -11,7 +11,6 @@ const useStyles = makeStyles({
 export const AvailableStaff = () => {
     const classes = useStyles();
     return <div className={classes.wrapper}>
-        {/*<Cards />*/}
         <Calendar />
     </div>
 }
