@@ -10,11 +10,11 @@ export const WeekDayNames = [
 ]
 
 export const userRoles: TRole[] = [
-    "Manager", "Advisor", "Call Center Rep"
+    "Advisor",  "Technician", "Call Center Rep", "Manager",
 ];
 
 export const widerUserRoles: TRole[] = [
-    "Manager", "Advisor", "Call Center Rep", "Service Director"
+    "Advisor",  "Technician", "Call Center Rep", "Manager", "Service Director",
 ];
 
 export const timeSpanString = "HH:mm:ss";

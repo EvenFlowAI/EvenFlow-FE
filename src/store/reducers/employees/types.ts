@@ -46,7 +46,7 @@ export interface IEmployeeForm {
     firstName: string;
     lastName: string;
     serviceCenterId: number | null;
-    email?: number;
+    email?: string;
     phoneNumber?: string;
     employeeInfo?: IEmployeeInfo,
     dmsId: string | null;

@@ -9,6 +9,20 @@ export type TConsultantOption = {
     name: string;
 }
 
+export type TEmployeeForm = {
+    firstName: string;
+    email: string;
+    role: TRole|null;
+    lastName: string;
+    serviceCenter?: IServiceCenter | null;
+    dmsId?: string | null;
+    position: string;
+    showOnBooking?: boolean;
+    hourlyRate?: number | '';
+    overtimeRate?: number | '';
+    technicianLevel?: TTechnicianLevel;
+}
+
 export type TAdvisorForm = {
     firstName: string;
     email: string;
