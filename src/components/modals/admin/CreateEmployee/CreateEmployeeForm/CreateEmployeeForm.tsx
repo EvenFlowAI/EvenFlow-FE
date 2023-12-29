@@ -1,10 +1,13 @@
-import React, {Dispatch, SetStateAction} from "react";
+import React, {Dispatch, SetStateAction, useState} from "react";
 import {Autocomplete} from "@material-ui/lab";
 import {Divider, FormControlLabel, Grid, Switch} from "@material-ui/core";
 import {TextField} from "../../../../formControls/TextFieldStyled/TextField";
 import {TDMSConsultantChange, TEmployeeForm, TSelectChange} from "../types";
 import {ToggleButtons} from "../../../../buttons/ToggleButtons/ToggleButtons";
-import {autocompleteRender} from "../../../../../utils/autocompleteRenders";
+import {
+    autocompleteOptionsCheckboxRender,
+    autocompleteRender
+} from "../../../../../utils/autocompleteRenders";
 import {checkEmail, validatePhoneNumber} from "../../../../../utils/utils";
 import 'react-phone-number-input/style.css'
 import {superRoles} from "../constants";
@@ -15,6 +18,8 @@ import {loadDMSAdvisors} from "../../../../../store/reducers/employees/actions";
 import {TRole} from "../../../../../store/reducers/users/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
+import {IServiceCenter} from "../../../../../store/reducers/serviceCenters/types";
+import {useMultipleAutocompleteStyles} from "./styles";
 
 type TTFormProps = {
     isEdit: boolean;
@@ -31,15 +36,16 @@ export const CreateEmployeeForm: React.FC<TTFormProps> = ({
                                                               formIsChecked,
                                                               form,
                                                               isEdit}) => {
-    const currentUser = useCurrentUser();
-    const dispatch = useDispatch();
-
     const [shortSC, shortLoading, dmsAdvisors, loadingDMSAdvisors] = useSelector((state: RootState) => [
         state.serviceCenters.shortSC,
         state.serviceCenters.shortLoading,
         state.scEmployees.DmsAdvisors,
         state.employees.loadingDMSAdvisors,
     ]);
+    const [serviceCenters, setServiceCenters] = useState<IServiceCenter[]>([])
+    const currentUser = useCurrentUser();
+    const dispatch = useDispatch();
+    const autocompleteClasses = useMultipleAutocompleteStyles();
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}})  => {
         setFormIsChecked(false);
@@ -48,12 +54,17 @@ export const CreateEmployeeForm: React.FC<TTFormProps> = ({
         }
         setEmployeeForm(prev => ({...prev, [name]: value}));
     }
+
     const handleSelectChange: TSelectChange = (e, value) => {
         setFormIsChecked(false);
         if (typeof value !== 'string' && value?.id) {
             dispatch(loadDMSAdvisors(value.id))
         }
         setEmployeeForm(prev => ({...prev, serviceCenter: typeof value !== 'string' ? value : null}));
+    }
+
+    const handleServiceCentersChange = (e: React.ChangeEvent<{}>, options: IServiceCenter[]) => {
+        setServiceCenters(options)
     }
 
     const handleShowOnBookingChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -121,6 +132,26 @@ export const CreateEmployeeForm: React.FC<TTFormProps> = ({
                 })}
             />
         </Grid>
+        {/*<Grid item xs={12}>*/}
+        {/*    <Autocomplete*/}
+        {/*        multiple*/}
+        {/*        classes={autocompleteClasses}*/}
+        {/*        disabled={isEdit}*/}
+        {/*        options={shortSC}*/}
+        {/*        onChange={handleServiceCentersChange}*/}
+        {/*        getOptionLabel={i => i.name}*/}
+        {/*        renderOption={autocompleteOptionsCheckboxRender((e) => e.name)}*/}
+        {/*        getOptionSelected={(o, s) => o.id === s.id}*/}
+        {/*        loading={shortLoading}*/}
+        {/*        value={serviceCenters}*/}
+        {/*        renderInput={autocompleteRender({*/}
+        {/*            label: "Service centers",*/}
+        {/*            fullWidth: true,*/}
+        {/*            placeholder: "Select Service Centers",*/}
+        {/*            error: !serviceCenters.length && formIsChecked*/}
+        {/*        })}*/}
+        {/*    />*/}
+        {/*</Grid>*/}
         <Grid item xs={12} sm={6}>
             <TextField
                 id="email"
