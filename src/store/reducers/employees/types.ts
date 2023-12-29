@@ -14,6 +14,7 @@ export interface IEmployeeInfo {
 export interface IEmployee {
     dealership?: IDealershipGroupExtended;
     serviceCenter?: IServiceCenter;
+    serviceCenters?: IServiceCenter[];
     employeeInfo?: IEmployeeInfo;
     id: string;
     fullName: string;
