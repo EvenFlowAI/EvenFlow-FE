@@ -19,7 +19,7 @@ export const useStyles = makeStyles((theme) => ({
     },
     subMenu: {
         color: "#929292",
-        padding: "10px 0 10px 15px",
+        padding: "10px 0",
         textTransform: "none"
     },
     expandIcon: {
@@ -35,5 +35,10 @@ export const useStyles = makeStyles((theme) => ({
         "&:hover": {
             color: lighten("#7898FF", .5)
         }
+    },
+    mainListItem: {
+        "&.active": {
+            color: "#FFFFFF"
+        },
     }
 }))
