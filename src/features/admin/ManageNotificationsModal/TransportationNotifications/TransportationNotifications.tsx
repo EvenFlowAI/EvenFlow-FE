@@ -23,7 +23,7 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {initialTransportationNotifications} from "../constants";
 import EmployeeChip from "../EmployeeChip/EmployeeChip";
 
-const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesState, changesState}) => {
+const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesState, changesState, onClose}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);
     const {options, isLoading} = useSelector((state: RootState) => state.transportation);
     const {transportationNotifications, isLoading: isSaving} = useSelector((state: RootState) => state.notifications);
@@ -129,6 +129,7 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
         setFormChecked(false)
         setCurrentEmployee(null);
         if (changesState?.transportationNotificationsSaved) {
+            onClose()
             setInitialData()
         } else {
             askConfirm({
