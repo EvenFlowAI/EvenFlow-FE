@@ -86,16 +86,16 @@ const ManageNotificationsModal:React.FC<DialogProps> = (props) => {
                         <Tab label="Transportation Requests" value="3"/>
                     </TabList>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="0">
-                        <ServiceCenterAppointments setChangesState={setChangesState}/>
+                        <ServiceCenterAppointments setChangesState={setChangesState} onClose={props.onClose}/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="1">
-                       <PodAppointments setChangesState={setChangesState} changesState={changesState}/>
+                       <PodAppointments setChangesState={setChangesState} changesState={changesState} onClose={props.onClose}/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="2">
-                        <RecallAppointments setChangesState={setChangesState}/>
+                        <RecallAppointments setChangesState={setChangesState} onClose={props.onClose}/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="3">
-                        <TransportationNotifications setChangesState={setChangesState} changesState={changesState}/>
+                        <TransportationNotifications setChangesState={setChangesState} changesState={changesState} onClose={props.onClose}/>
                     </TabPanel>
                 </TabContext>
             </DialogContent>
