@@ -12,7 +12,8 @@ export const useStyles = makeStyles({
     zoneWrapper: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        marginBottom: 25,
     },
     zone: {
         marginRight: 35,
