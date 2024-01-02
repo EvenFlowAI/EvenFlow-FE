@@ -371,6 +371,7 @@ export class Api {
             ChangeServiceRequest: {route: "service-valet/{id}/service-request", method: "put"},
             ChangeDmsTimeStamp: {route: "service-valet/{id}/dms-time", method: "put"},
             GetServiceValetSettings: {route: "service-valet/{id}/settings", method: "get"},
+            UpdateZonesServiceRequests: {route: "service-valet/{id}/zone-service-requests", method: "put"},
         },
         TransportationOptions: {
             Edit: {route: "/transportation-options", method: "put"},

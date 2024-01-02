@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {centerSettingsList, ECenterSettingType, TOptContent} from "./types";
 import {Grid} from "@material-ui/core";
 import {CenterSettingsPlate} from "./CenterSettingsPlate/CenterSettingsPlate";
@@ -6,7 +6,6 @@ import moment from "moment";
 import ShowDropOffTimeModal from "./ShowDropOffTimeModal/ShowDropOffTimeModal";
 import {useDispatch, useSelector} from "react-redux";
 import {loadCenterSettings, updateDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/actions";
-import ServiceValetOpsCodeModal from "./ServiceValetOpsCodeModal/ServiceValetOpsCodeModal";
 import {RootState} from "../../../store/rootReducer";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {TDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/types";
@@ -15,10 +14,11 @@ import {TimePicker} from "../../../components/pickers/TimePicker/TimePicker";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {ZonesOpsCodesPlate} from "./ZonesOpsCodesPlate/ZonesOpsCodesPlate";
+import ZonesOpsCodeModal from "./ZonesOpsCodesModal/ZonesOpsCodeModal";
 
 const CenterSettings = () => {
     const {centerSettings, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
-    const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
     const [calendarValue, setCalendarValue] = useState<moment.Moment>(moment())
     const [isOpen, setOpen] = useState<boolean>(false);
     const {onOpen: onShowTimeOpen, isOpen: isShowTimeOpen, onClose: isShowTimeClose} = useModal();
@@ -26,8 +26,6 @@ const CenterSettings = () => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const showError = useException();
-    const selectedOpsCode = useMemo(() => allAssignedList.find(item => item.id === centerSettings?.serviceRequest?.id),
-        [allAssignedList, centerSettings])
 
     useEffect(() => {
         if (centerSettings?.dmsAppointmentTime) {
@@ -54,23 +52,16 @@ const CenterSettings = () => {
             label: "",
             title: "Dms Appointment Time",
         },
-        [ECenterSettingType.ServiceValetOpsCode]: {
-            helperText: "",
-            label: "",
-            title: "Service Valet Ops Code",
-        },
     }
 
     const getCount = (k: ECenterSettingType): string|number => {
         switch (k) {
-            case ECenterSettingType.ShowDropOffTime:
-                return centerSettings?.showDropOffTime ? "Yes" : "No";
             case ECenterSettingType.DmsAppointmentTime:
                 return centerSettings?.dmsAppointmentTime
                     ? moment(centerSettings?.dmsAppointmentTime, "HH:mm:ss").format('HH:mm a')
                     : 'Not Selected';
             default:
-                return selectedOpsCode?.serviceRequest?.code ?? 'Not Selected';
+                return centerSettings?.showDropOffTime ? "Yes" : "No";
         }
     }
 
@@ -79,11 +70,8 @@ const CenterSettings = () => {
             case ECenterSettingType.ShowDropOffTime:
                 onShowTimeOpen();
                 break;
-            case ECenterSettingType.DmsAppointmentTime:
-                setOpen(true);
-                break;
             default:
-                onServiceValetOpsCodeOpen();
+                setOpen(true);
         }
     }
     const onClose = () => setOpen(false)
@@ -97,30 +85,33 @@ const CenterSettings = () => {
 
     return (
         <Grid container spacing={3}>
-            {centerSettingsList.map(k => {
-                const plate = optContent[k];
-                return <CenterSettingsPlate
-                    key={k}
-                    onEdit={() => getPlateEdit(k)}
-                    title={plate.title}
-                    count={getCount(k)}
-                    label={plate.label}
-                    prefix={plate.prefix}
-                    suffix={plate.suffix}
-                    helperText={plate.helperText}
-                    isLoading={isLoading}
-                />
-            })}
-            <ShowDropOffTimeModal open={isShowTimeOpen} onClose={isShowTimeClose}/>
-            <ServiceValetOpsCodeModal open={isServiceValetOpsCodeOpen} onClose={onServiceValetOpsCodeClose}/>
+            <>
+                {centerSettingsList.map(k => {
+                    const plate = optContent[k];
+                    return <CenterSettingsPlate
+                        key={k}
+                        onEdit={() => getPlateEdit(k)}
+                        title={plate.title}
+                        count={getCount(k)}
+                        label={plate.label}
+                        prefix={plate.prefix}
+                        suffix={plate.suffix}
+                        helperText={plate.helperText}
+                        isLoading={isLoading}
+                    />
+                })}
+                <ZonesOpsCodesPlate onEdit={onServiceValetOpsCodeOpen} isLoading={isLoading}/>
+            </>
             <div style={{visibility: 'hidden'}}>
                 <TimePicker
                 open={isOpen}
                 value={calendarValue}
                 onChange={onChange}
-                onClose={onClose}
-            />
+                onClose={onClose}/>
             </div>
+            <ShowDropOffTimeModal open={isShowTimeOpen} onClose={isShowTimeClose}/>
+            {/*<ServiceValetOpsCodeModal open={isServiceValetOpsCodeOpen} onClose={onServiceValetOpsCodeClose}/>*/}
+            <ZonesOpsCodeModal open={isServiceValetOpsCodeOpen} onClose={onServiceValetOpsCodeClose}/>
         </Grid>
     )
 };
