@@ -1,4 +1,5 @@
 import {Dispatch, SetStateAction} from "react";
+import {TCallback} from "../../../types/types";
 
 export type TChangesState = {
     scNotificationsSaved: boolean;
@@ -7,4 +8,4 @@ export type TChangesState = {
     transportationNotificationsSaved: boolean;
 }
 
-export type TNotificatonsProps = {setChangesState: Dispatch<SetStateAction<TChangesState>>, changesState?: TChangesState}
+export type TNotificatonsProps = {setChangesState: Dispatch<SetStateAction<TChangesState>>, changesState?: TChangesState, onClose: TCallback}
