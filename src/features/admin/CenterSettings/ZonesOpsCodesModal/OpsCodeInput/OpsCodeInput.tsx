@@ -21,7 +21,7 @@ const OpsCodeInput: React.FC<TProps> = ({zone, zonesOpsCodes, setZonesOpsCodes})
         return zonesOpsCodes.find(item => item.zone.id === zone.id)?.serviceRequest
     }, [zonesOpsCodes, zone]);
     const selectedCode = useMemo(() => {
-       return allAssignedList.find(el => el.serviceRequestId === zoneOpsCode?.id)
+       return allAssignedList.find(el => el.id === zoneOpsCode?.id)
     }, [allAssignedList, zoneOpsCode])
 
     const onOpsCodeChange = (e: React.ChangeEvent<{}>, option: IAssignedServiceRequest)  => {
@@ -42,7 +42,7 @@ const OpsCodeInput: React.FC<TProps> = ({zone, zonesOpsCodes, setZonesOpsCodes})
     }
 
     return <InputWrapper>
-        <div>{zone.name}</div>
+        <div>{zone.name.toUpperCase()}</div>
         <Autocomplete
             style={{width: '50%'}}
             disableClearable

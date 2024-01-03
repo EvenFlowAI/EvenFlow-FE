@@ -68,6 +68,7 @@ const ZonesOpsCodeModal: React.FC<DialogProps> = ({onClose, open}) => {
                     .sort((a, b) => a.name.localeCompare(b.name))
                     .map(zone => (
                         <OpsCodeInput
+                            key={zone.id}
                             zone={zone}
                             zonesOpsCodes={zonesOpsCodes}
                             setZonesOpsCodes={setZonesOpsCodes}/>

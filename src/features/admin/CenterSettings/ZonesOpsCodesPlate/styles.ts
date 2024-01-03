@@ -12,9 +12,6 @@ export const useStyles = makeStyles({
         backgroundColor: "#F7F8FB",
     },
     elementWrapper: {
-        // display: 'flex',
-        // alignItems: 'center',
-        // justifyContent: 'flex-start',
         marginBottom: 25,
     },
     zone: {
