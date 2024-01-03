@@ -16,7 +16,6 @@ import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {ZonesOpsCodesPlate} from "./ZonesOpsCodesPlate/ZonesOpsCodesPlate";
 import ZonesOpsCodeModal from "./ZonesOpsCodesModal/ZonesOpsCodeModal";
-import ServiceValetOpsCodeModal from "./ServiceValetOpsCodeModal/ServiceValetOpsCodeModal";
 
 const CenterSettings = () => {
     const {centerSettings, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
@@ -111,8 +110,7 @@ const CenterSettings = () => {
                 onClose={onClose}/>
             </div>
             <ShowDropOffTimeModal open={isShowTimeOpen} onClose={isShowTimeClose}/>
-            <ServiceValetOpsCodeModal open={isServiceValetOpsCodeOpen} onClose={onServiceValetOpsCodeClose}/>
-            {/*<ZonesOpsCodeModal open={isServiceValetOpsCodeOpen} onClose={onServiceValetOpsCodeClose}/>*/}
+            <ZonesOpsCodeModal open={isServiceValetOpsCodeOpen} onClose={onServiceValetOpsCodeClose}/>
         </Grid>
     )
 };
