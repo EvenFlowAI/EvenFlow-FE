@@ -34,7 +34,7 @@ const ManageNotificationsModal:React.FC<DialogProps> = (props) => {
         }
     }, [selectedSC])
 
-    const onCancel = () => {
+    const onClose = () => {
         if (Object.values(changesState).some(value => !value)) {
             showError("Please save your entries before closing the service center notifications window.")
         } else {
@@ -66,9 +66,9 @@ const ManageNotificationsModal:React.FC<DialogProps> = (props) => {
     }
 
     return (
-        <BaseModal {...props} width={1150} onClose={onCancel}>
+        <BaseModal {...props} width={1150} onClose={onClose}>
             <DialogTitle
-                onClose={onCancel}
+                onClose={onClose}
                 style={{textTransform: 'uppercase', color: "#252525", padding: '24px 0'}}>
                 Manage service center notifications
             </DialogTitle>
@@ -86,16 +86,16 @@ const ManageNotificationsModal:React.FC<DialogProps> = (props) => {
                         <Tab label="Transportation Requests" value="3"/>
                     </TabList>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="0">
-                        <ServiceCenterAppointments setChangesState={setChangesState} onClose={props.onClose}/>
+                        <ServiceCenterAppointments setChangesState={setChangesState} onClose={onClose}/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="1">
-                       <PodAppointments setChangesState={setChangesState} changesState={changesState} onClose={props.onClose}/>
+                       <PodAppointments setChangesState={setChangesState} changesState={changesState} onClose={onClose}/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="2">
-                        <RecallAppointments setChangesState={setChangesState} onClose={props.onClose}/>
+                        <RecallAppointments setChangesState={setChangesState} onClose={onClose}/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="3">
-                        <TransportationNotifications setChangesState={setChangesState} changesState={changesState} onClose={props.onClose}/>
+                        <TransportationNotifications setChangesState={setChangesState} changesState={changesState} onClose={onClose}/>
                     </TabPanel>
                 </TabContext>
             </DialogContent>
