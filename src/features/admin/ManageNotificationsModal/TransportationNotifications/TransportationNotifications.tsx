@@ -129,7 +129,6 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
         setFormChecked(false)
         setCurrentEmployee(null);
         if (changesState?.transportationNotificationsSaved) {
-            onClose()
             setInitialData()
         } else {
             askConfirm({
@@ -218,6 +217,11 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
         }
     }
 
+    const handleClose = () => {
+        onCancel();
+        onClose();
+    }
+
     return (
         <div>
             <div className={classes.tabWrapper}>
@@ -282,8 +286,11 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
             </div>
             <Divider style={{margin: '24px 0'}}/>
             <DialogActions style={{padding: '0 24px 0 0'}}>
+                <Button onClick={handleClose} variant="outlined" color="primary" disabled={loading || isSaving || isLoading}>
+                    Close
+                </Button>
                 <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || isSaving || isLoading}>
-                    Cancel
+                    Cancel Changes
                 </Button>
                 <Button onClick={onSave} variant="contained" color="primary" disabled={loading || isSaving || isLoading}>
                     Save

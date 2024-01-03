@@ -69,7 +69,6 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState, onCl
         setRecallData(recallNotifications)
         setCurrentEmployee(null);
         setFormChecked(false)
-        onClose()
     }
 
     const onSuccess = () => {
@@ -124,6 +123,11 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState, onCl
         })
     }
 
+    const handleClose = () => {
+        onCancel();
+        onClose();
+    }
+
     return (
         <div>
             <div className={classes.tabWrapper}>
@@ -172,8 +176,11 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState, onCl
             </div>
             <Divider style={{margin: '24px 0'}}/>
             <DialogActions style={{padding: '0 24px 0 0'}}>
+                <Button onClick={handleClose} variant="outlined" color="primary" disabled={loading || isLoading}>
+                    Close
+                </Button>
                 <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || isLoading}>
-                    Cancel
+                    Cancel Changes
                 </Button>
                 <Button onClick={onSave} variant="contained" color="primary" disabled={loading || isLoading}>
                     Save
