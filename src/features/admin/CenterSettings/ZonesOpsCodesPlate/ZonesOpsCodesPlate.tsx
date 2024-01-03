@@ -35,24 +35,14 @@ export const ZonesOpsCodesPlate: React.FC<TProps> = ({onEdit, isLoading}) => {
             {isLoading
                 ? <Loading/>
                 : <div className={classes.wrapper}>
-                    <div>
-                        {[...zonesData]
-                            .sort((a, b) => a.name.localeCompare(b.name))
-                            .map(item => {
-                                return <div className={classes.elementWrapper} key={item.name}>
-                                    <div className={classes.zone}>{item.name.toUpperCase()}</div>
-                                </div>
-                            })}
-                    </div>
-                    <div>
-                        {[...zonesData]
-                            .sort((a, b) => a.name.localeCompare(b.name))
-                            .map(item => {
-                                return <div className={classes.elementWrapper} key={item.name}>
-                                    <div>{item.opsCode}</div>
-                                </div>
-                            })}
-                    </div>
+                    {[...zonesData]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map(item => {
+                            return <div className={classes.elementWrapper} key={item.name}>
+                                <div className={classes.zone}>{item.name.toUpperCase()}</div>
+                                <div>{item.opsCode}</div>
+                            </div>
+                        })}
                 </div>
             }
         </Paper>

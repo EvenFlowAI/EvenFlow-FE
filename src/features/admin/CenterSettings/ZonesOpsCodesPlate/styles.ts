@@ -3,7 +3,6 @@ import {makeStyles} from "@material-ui/core/styles";
 export const useStyles = makeStyles({
     wrapper: {
         maxHeight: 180,
-        display: 'flex',
         overflowY: 'auto',
         border: "1px solid #DADADA",
         borderRadius: 2,
@@ -12,10 +11,13 @@ export const useStyles = makeStyles({
         backgroundColor: "#F7F8FB",
     },
     elementWrapper: {
+        display: 'flex',
+        alignItems: 'center',
         marginBottom: 25,
     },
     zone: {
-        marginRight: 35,
+        width: '30%',
+        marginRight: 12,
         fontWeight: 'bold'
     }
 })
