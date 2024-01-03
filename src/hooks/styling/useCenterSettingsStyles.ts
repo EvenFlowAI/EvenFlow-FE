@@ -1,6 +1,6 @@
 import {makeStyles} from "@material-ui/core/styles";
 
-export const useStyles = makeStyles({
+export const useCenterSettingsStyles = makeStyles({
     paper: {
         height: "100%",
         borderRadius: 0,

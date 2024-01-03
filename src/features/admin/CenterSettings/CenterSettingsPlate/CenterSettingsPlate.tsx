@@ -1,7 +1,8 @@
 import React from "react";
 import {Button, Grid, Paper} from "@material-ui/core";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
-import {useStyles} from "./styles";
+
+import {useCenterSettingsStyles} from "../../../../hooks/styling/useCenterSettingsStyles";
 
 type TCenterSettingsPlateProps = {
     onEdit: () => void;
@@ -24,7 +25,7 @@ export const CenterSettingsPlate: React.FC<TCenterSettingsPlateProps> = ({
                                                                              helperText,
                                                                              isLoading
                                                                          }) => {
-    const classes = useStyles();
+    const classes = useCenterSettingsStyles();
 
     return <Grid item xs={6} md={4}>
         <Paper className={classes.paper} variant={"outlined"} >
