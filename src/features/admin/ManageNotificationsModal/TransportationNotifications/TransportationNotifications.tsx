@@ -217,11 +217,6 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
         }
     }
 
-    const handleClose = () => {
-        onCancel();
-        onClose();
-    }
-
     return (
         <div>
             <div className={classes.tabWrapper}>
@@ -286,7 +281,7 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
             </div>
             <Divider style={{margin: '24px 0'}}/>
             <DialogActions style={{padding: '0 24px 0 0'}}>
-                <Button onClick={handleClose} variant="outlined" color="primary" disabled={loading || isSaving || isLoading}>
+                <Button onClick={onClose} variant="outlined" color="primary" disabled={loading || isSaving || isLoading}>
                     Close
                 </Button>
                 <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || isSaving || isLoading}>
