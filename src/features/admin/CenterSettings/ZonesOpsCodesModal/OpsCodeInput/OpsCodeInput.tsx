@@ -42,7 +42,7 @@ const OpsCodeInput: React.FC<TProps> = ({zone, zonesOpsCodes, setZonesOpsCodes})
     }
 
     return <InputWrapper>
-        <div>{zone.name.toUpperCase()}</div>
+        <div style={{maxWidth: '50%'}}>{zone.name.toUpperCase()}</div>
         <Autocomplete
             style={{width: '50%'}}
             disableClearable

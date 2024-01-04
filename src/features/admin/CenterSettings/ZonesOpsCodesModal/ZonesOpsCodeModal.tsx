@@ -43,10 +43,14 @@ const ZonesOpsCodeModal: React.FC<DialogProps> = ({onClose, open}) => {
     }
 
     const onSave = () => {
-        if (selectedSC && zonesOpsCodes.length) {
-            const data: TZonesOpsCodesRequest[] = zonesOpsCodes
-                .map(el => ({zoneId: el.zone.id, serviceRequestId: el.serviceRequest.id}))
-            dispatch(updateServiceValetZonesOpsCodes(selectedSC.id, data, onCancel, showError))
+        if (selectedSC) {
+            if (zonesOpsCodes.length) {
+                const data: TZonesOpsCodesRequest[] = zonesOpsCodes
+                    .map(el => ({zoneId: el.zone.id, serviceRequestId: el.serviceRequest.id}))
+                dispatch(updateServiceValetZonesOpsCodes(selectedSC.id, data, onCancel, showError))
+            } else {
+                showError("All Service Valet Zones should have assigned Ops Code")
+            }
         }
     }
 
