@@ -39,8 +39,14 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
     const showMessage = useMessage();
     const classes = useNotificationStyles();
 
-    const currentTransportationData = useMemo(() => allTransportationData?.transportationOptions?.find(el => el.id === selectedTransportation?.id), [allTransportationData, selectedTransportation])
-    const inactiveOptionsIds = useMemo(() => options.filter(op => op.state === 0).map(el => el.id), [options])
+    const currentTransportationData = useMemo(() => {
+        return allTransportationData?.transportationOptions?.find(el => el.id === selectedTransportation?.id)
+    }, [allTransportationData, selectedTransportation])
+
+    const inactiveOptionsIds = useMemo(() => options
+        .filter(op => op.state === 0)
+        .map(el => el.id), [options])
+
     const activeOptionsNotifications = useMemo(() => {
         if (transportationNotifications?.transportationOptions) {
             return transportationNotifications?.transportationOptions.filter(el => !inactiveOptionsIds.includes(el.id))
@@ -93,7 +99,7 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
         } else {
             setAllTransportationData(transportationNotifications)
         }
-    }, [transportationNotifications, activeOptionsNotifications])
+    }, [transportationNotifications, activeOptionsNotifications, options])
 
     useEffect(() => {
         setInitialData()
@@ -125,11 +131,17 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
         setSelectedTransportation(value)
     }
 
+    const clearData = () => {
+        setInitialData();
+        setSelectedEmployees([])
+        setSelectedTransportation(null);
+    }
+
     const onCancel = () => {
         setFormChecked(false)
         setCurrentEmployee(null);
         if (changesState?.transportationNotificationsSaved) {
-            setInitialData()
+            clearData()
         } else {
             askConfirm({
                 isRemove: true,
@@ -140,7 +152,7 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
                        By clicking Cancel, your entries across all Transportations will not be saved.<br />
                      Click Save Changes to store your inputs.
                     </span>,
-                onConfirm: () => setInitialData(),
+                onConfirm: clearData,
                 onCancel: onSave
             });
         }
@@ -274,7 +286,12 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
                         <div>
                             {selectedEmployees
                                 .sort((a, b) => a.fullName.localeCompare(b.fullName))
-                                .map(item => <EmployeeChip item={item} deleteEmployee={deleteEmployee} isSaving={isSaving}/>
+                                .map(item => (
+                                    <EmployeeChip
+                                        item={item}
+                                        deleteEmployee={deleteEmployee}
+                                        isSaving={isSaving}
+                                        key={item.id}/>)
                                 )}
                         </div>
                     </React.Fragment>}
