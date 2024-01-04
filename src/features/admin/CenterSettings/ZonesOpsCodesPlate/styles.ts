@@ -16,5 +16,8 @@ export const useStyles = makeStyles({
     },
     zone: {
         fontWeight: 'bold'
+    },
+    emptyWrapper: {
+        height: '100%',
     }
 })
