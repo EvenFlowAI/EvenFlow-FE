@@ -35,19 +35,21 @@ export const ZonesOpsCodesPlate: React.FC<TProps> = ({onEdit, isLoading}) => {
     return <Grid item xs={6} md={4}>
         <Paper className={centerSettingsClasses.paper} variant={"outlined"} >
             <h3 className={centerSettingsClasses.title}>Service Valet Ops Code</h3>
-            <Button className={centerSettingsClasses.edit} color="primary" onClick={() => onEdit()}>Edit</Button>
+            <Button className={centerSettingsClasses.edit} color="primary" onClick={() => onEdit()} disabled={!zonesData.length}>Edit</Button>
             {isLoading
                 ? <Loading/>
-                : <div className={classes.wrapper}>
-                    {[...zonesData]
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map(item => {
-                            return <>
-                                <div className={classes.zone} key={item.name}>{item.name.toUpperCase()}</div>
-                                <div key={item.opsCode + item.name}>{item.opsCode}</div>
-                            </>
-                        })}
-                </div>
+                : zonesData.length
+                    ? <div className={classes.wrapper}>
+                        {[...zonesData]
+                            .sort((a, b) => a.name.localeCompare(b.name))
+                            .map(item => {
+                                return <>
+                                    <div className={classes.zone} key={item.name}>{item.name.toUpperCase()}</div>
+                                    <div key={item.opsCode + item.name}>{item.opsCode}</div>
+                                </>
+                            })}
+                    </div>
+                    : <div className={centerSettingsClasses.value}>No zones</div>
             }
         </Paper>
     </Grid>
