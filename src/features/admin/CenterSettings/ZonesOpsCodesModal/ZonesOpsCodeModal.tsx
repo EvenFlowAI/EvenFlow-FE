@@ -19,6 +19,7 @@ const ZonesOpsCodeModal: React.FC<DialogProps> = ({onClose, open}) => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
     const {zones, isLoading} = useSelector((state: RootState) => state.serviceValet);
     const [zonesOpsCodes, setZonesOpsCodes] = useState<ISVZoneDefaultOpsCode[]>([])
+    const [formChecked, setFormChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
@@ -38,11 +39,13 @@ const ZonesOpsCodeModal: React.FC<DialogProps> = ({onClose, open}) => {
 
 
     const onCancel = () => {
+        setFormChecked(false)
         setZonesOpsCodes(centerSettings?.zoneServiceRequests ?? [])
         onClose();
     }
 
     const onSave = () => {
+        setFormChecked(true)
         if (selectedSC) {
             if (zonesOpsCodes.length) {
                 const data: TZonesOpsCodesRequest[] = zonesOpsCodes
@@ -72,6 +75,8 @@ const ZonesOpsCodeModal: React.FC<DialogProps> = ({onClose, open}) => {
                     .sort((a, b) => a.name.localeCompare(b.name))
                     .map(zone => (
                         <OpsCodeInput
+                            formChecked={formChecked}
+                            setFormChecked={setFormChecked}
                             key={zone.id}
                             zone={zone}
                             zonesOpsCodes={zonesOpsCodes}
