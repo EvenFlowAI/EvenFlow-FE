@@ -3,6 +3,10 @@ import {makeStyles} from "@material-ui/core/styles";
 export const useStyles = makeStyles({
     wrapper: {
         maxHeight: 180,
+        display: 'grid',
+        gridTemplateColumns: '1fr 3fr',
+        gridGap: 25,
+        gap: 25,
         overflowY: 'auto',
         border: "1px solid #DADADA",
         borderRadius: 2,
@@ -10,14 +14,7 @@ export const useStyles = makeStyles({
         marginTop: 32,
         backgroundColor: "#F7F8FB",
     },
-    elementWrapper: {
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: 25,
-    },
     zone: {
-        width: '30%',
-        marginRight: 12,
         fontWeight: 'bold'
     }
 })

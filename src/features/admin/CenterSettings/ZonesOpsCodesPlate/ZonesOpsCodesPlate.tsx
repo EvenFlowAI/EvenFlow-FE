@@ -18,14 +18,18 @@ export const ZonesOpsCodesPlate: React.FC<TProps> = ({onEdit, isLoading}) => {
     const classes = useStyles();
 
     const zonesData = useMemo(() => {
-        return zones.map(el => {
-            const opsCode = centerSettings?.zoneServiceRequests
-                .find(item => item.zone.id === el.id)?.serviceRequest?.code;
-            return {
-                name: el.name,
-                opsCode: opsCode ?? 'Unassigned'
-            }
-        })
+        if (centerSettings?.zoneServiceRequests) {
+            return zones.map(el => {
+                const opsCode = centerSettings?.zoneServiceRequests
+                    .find(item => item.zone.id === el.id)?.serviceRequest?.code;
+                return {
+                    name: el.name,
+                    opsCode: opsCode ?? 'Unassigned'
+                }
+            })
+        } else {
+            return [];
+        }
     }, [centerSettings, zones])
 
     return <Grid item xs={6} md={4}>
@@ -38,10 +42,10 @@ export const ZonesOpsCodesPlate: React.FC<TProps> = ({onEdit, isLoading}) => {
                     {[...zonesData]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map(item => {
-                            return <div className={classes.elementWrapper} key={item.name}>
-                                <div className={classes.zone}>{item.name.toUpperCase()}</div>
-                                <div>{item.opsCode}</div>
-                            </div>
+                            return <>
+                                <div className={classes.zone} key={item.name}>{item.name.toUpperCase()}</div>
+                                <div key={item.opsCode + item.name}>{item.opsCode}</div>
+                            </>
                         })}
                 </div>
             }
