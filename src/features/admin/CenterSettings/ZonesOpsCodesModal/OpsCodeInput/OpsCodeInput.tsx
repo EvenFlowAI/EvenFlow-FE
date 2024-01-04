@@ -12,9 +12,11 @@ type TProps = {
     zone: TZone;
     zonesOpsCodes: ISVZoneDefaultOpsCode[];
     setZonesOpsCodes: Dispatch<SetStateAction<ISVZoneDefaultOpsCode[]>>;
+    setFormChecked: Dispatch<SetStateAction<boolean>>;
+    formChecked: boolean;
 }
 
-const OpsCodeInput: React.FC<TProps> = ({zone, zonesOpsCodes, setZonesOpsCodes}) => {
+const OpsCodeInput: React.FC<TProps> = ({zone, zonesOpsCodes, setZonesOpsCodes, formChecked, setFormChecked}) => {
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
 
     const zoneOpsCode = useMemo(() => {
@@ -25,6 +27,7 @@ const OpsCodeInput: React.FC<TProps> = ({zone, zonesOpsCodes, setZonesOpsCodes})
     }, [allAssignedList, zoneOpsCode])
 
     const onOpsCodeChange = (e: React.ChangeEvent<{}>, option: IAssignedServiceRequest)  => {
+        setFormChecked(false);
         const serviceRequest: TDefaultOpsCode = {
             id: option.id,
             code: option.serviceRequest.code,
@@ -52,6 +55,7 @@ const OpsCodeInput: React.FC<TProps> = ({zone, zonesOpsCodes, setZonesOpsCodes})
             renderInput={autocompleteRender({
                 label: '',
                 placeholder: 'Unassigned',
+                error: formChecked && !selectedCode
             })}
             options={allAssignedList}
         />
