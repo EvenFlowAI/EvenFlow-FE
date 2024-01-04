@@ -1,6 +1,5 @@
-import React, {ReactElement} from 'react';
-import {Box, CircularProgress} from "@material-ui/core";
-import {Loading} from "./Loading";
+import React from 'react';
+import {CircularProgress} from "@material-ui/core";
 import {useTranslation} from "react-i18next";
 
 type TProps = {
@@ -10,6 +9,7 @@ type TProps = {
     wrapperStyles?: React.CSSProperties;
 }
 const divStyles = {textAlign: "center" as const, width: "100%"};
+
 export const NoItemsLoading: React.FC<TProps> = ({loading, items, label, wrapperStyles}) => {
     const {t} = useTranslation();
     if (loading) {
@@ -24,20 +24,3 @@ export const NoItemsLoading: React.FC<TProps> = ({loading, items, label, wrapper
         return null;
     }
 };
-
-type TWrapperProps = {
-    isLoading: boolean;
-    itemsExist: boolean;
-    noItemsLabel?: string;
-    children: ReactElement;
-}
-
-export const LoadingWrapper: React.FC<TWrapperProps> = ({
-    isLoading, itemsExist, noItemsLabel, children}) => {
-    const {t} = useTranslation();
-    return isLoading
-        ? <Loading />
-        : itemsExist
-            ? children
-            : <Box p={2} textAlign="center">{noItemsLabel ?? `${t("No items")}...`}</Box>;
-}

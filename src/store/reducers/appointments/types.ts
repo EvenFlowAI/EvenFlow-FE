@@ -1,7 +1,6 @@
 import moment from "moment";
 import {
-    EAppointmentStatus,
-    EMaintenanceOptionType,
+    EMaintenanceOptionType, EReportingStatus,
     IListAppointment,
     IVehicle, TAppointmentAdvisor
 } from "../../../api/types";
@@ -15,7 +14,7 @@ export interface IAppointmentsRequest {
     orderBy?: keyof IListAppointment | string | undefined;
     isAscending?: boolean;
     date?: moment.Moment | null;
-    status?: EAppointmentStatus | null | unknown;
+    reportingStatus? :EReportingStatus | null | unknown;
     searchTerm?: string;
     serviceBookId?: number|unknown;
     scheduler?: string|unknown;

@@ -21,6 +21,7 @@ const useStyles = makeStyles(theme => ({
         padding: "5px 20px !important"
     }
 }))
+
 type TProps = {
     date: Moment,
     onChange: (date: Moment) => void
@@ -29,6 +30,7 @@ type TProps = {
 enum Directions {
     Next, Prev
 }
+
 export const CalendarControls = (props: TProps) => {
     const classes = useStyles();
     const switchDate = (direction: Directions) => () => {

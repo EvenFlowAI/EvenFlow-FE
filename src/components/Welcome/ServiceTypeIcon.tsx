@@ -10,14 +10,10 @@ type TServiceTypeIconProps = {card: IFirstScreenOption}
 const useStyles = makeStyles((theme) => ({
     icon: {
         width: '100%',
-        // width: 224,
         maxHeight: 160,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        // backgroundSize: 'contain',
-        // backgroundPosition: 'center',
-        // backgroundRepeat: 'no-repeat',
         [`${theme.breakpoints.down("sm")} and (orientation: portrait)`]: {
             maxWidth: 224,
             height: 112,
@@ -48,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     image: {
-        // width: 'fit-content',
         maxWidth: '100%',
         maxHeight: 112,
         [theme.breakpoints.down("sm")]: {
@@ -88,7 +83,6 @@ const ServiceTypeIcon: React.FC<TServiceTypeIconProps> = ({card}) => {
             ? iconType.toLowerCase() === 'svg'
                 ? <div className={classes.icon} dangerouslySetInnerHTML={{__html: icon}} />
                 : <div className={classes.icon}
-                    //style={{backgroundImage: `url(${card.iconPath})`}}
                 >
                     <img className={classes.image} src={card.iconPath} alt="logo"/>
                 </div>

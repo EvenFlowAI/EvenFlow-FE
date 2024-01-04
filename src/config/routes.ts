@@ -89,8 +89,6 @@ enum EndUser {
     AppointmentFrame = "/f/appointment/:id",
     AppointmentFrameBase = "/f/appointment",
     AppointmentBase = "/appointment",
-    Confirmation = "/confirmation/:id",
-    ConfirmationBase = "/confirmation",
     ValueService = "/f/appointment/:id/valueService",
     PaymentBill = "/f/appointment/:id/payment-bill",
 }
