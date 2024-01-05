@@ -122,9 +122,10 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
                     ? {...prev, transportationOptions: [...prev.transportationOptions, {id: value?.id, usersList: []}]}
                     : prev)
             } else {
-                setAllTransportationData(prev => prev
-                    ? {...prev, transportationOptions: prev.transportationOptions.filter(item => item.id !== selectedTransportation?.id)}
-                    : prev)
+                setSelectedTransportation(null)
+                // setAllTransportationData(prev => prev
+                //     ? {...prev, transportationOptions: prev.transportationOptions.filter(item => item.id !== selectedTransportation?.id)}
+                //     : prev)
             }
             setSelectedEmployees([])
         }
