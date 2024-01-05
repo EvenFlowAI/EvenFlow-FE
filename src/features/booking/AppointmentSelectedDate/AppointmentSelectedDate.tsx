@@ -25,9 +25,9 @@ export const AppointmentSelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     const [serviceValetTime, setServiceValetTime] = useState<TServiceValetSlot|null>(null);
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const isWaitList = waitListSettings?.isEnabled && appointment
-        ? appointment?.isOverbookingApplied
-        : appointmentByKey?.isWaitlist
+    const isWaitList = appointment
+        ? appointment?.isOverbookingApplied && waitListSettings?.isEnabled
+        : appointmentByKey?.isWaitlist && waitListSettings?.isEnabled;
 
     useEffect(() => {
         if (serviceValetAppointment) {
