@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 
 import {useTranslation} from "react-i18next";
-import {ReactComponent as UserIcon} from "../../../../assets/img/user_big.svg";
+import {ReactComponent as UserIcon} from "../../../../assets/img/user.svg";
 import {useCustomerSelectStyles} from "../../../../hooks/styling/useCustomerSelectStyles";
 import {useStyles} from "./styles";
 
