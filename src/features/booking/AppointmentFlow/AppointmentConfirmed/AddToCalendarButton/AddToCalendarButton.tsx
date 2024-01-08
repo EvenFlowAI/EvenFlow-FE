@@ -92,7 +92,7 @@ const AddToCalendarButton: React.FC<TProps> = ({ serviceName, servicesList}) => 
             : moment.utc(appointment?.date)
 
     const getDateForCalendar = useCallback(() => {
-        let dateString: string = '';
+        let dateString: string;
         if (isServiceValetApp) {
             dateString = moment(date).format('ddd, MMM D');
             const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('hh:mm A')} ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
