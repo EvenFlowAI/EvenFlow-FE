@@ -17,6 +17,7 @@ import MakeNewButton from "./MakeNewButton/MakeNewButton";
 import {ButtonsWrapper, Divider, Paper, Wrapper} from "./styles";
 import {TItem} from "./types";
 import {getAddressLabel, getServiceName} from "./utils";
+import {calendarDateFormat, dateTimeString, time24HourFormat, timeSpanString} from "../../../../utils/constants";
 
 type TProps = {
     onUpdateAppointment: TArgCallback<ILoadedVehicle>;
@@ -154,17 +155,17 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     }
 
     const getDate = () => {
-        let date = moment.utc().format('ddd, MMM D, h:mm A');
+        let date = moment.utc().format(dateTimeString);
         if (isServiceValetApp) {
-            date =  moment.utc(serviceValetAppointment?.date).format('ddd, MMM D')
+            date =  moment.utc(serviceValetAppointment?.date).format(calendarDateFormat)
         } else if (appointment) {
-            date = appointment?.date.format('ddd, MMM D, h:mm A')
+            date = appointment?.date.format(dateTimeString)
         } else if (appointmentByKey?.dateInUtc) {
             if (appointmentByKey.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                date = moment(appointmentByKey.dateInUtc).utc().format('ddd, MMM D')
+                date = moment(appointmentByKey.dateInUtc).utc().format(calendarDateFormat)
             } else {
                 const [hh, mm] = appointmentByKey.timeSlot.split(":")
-                date = moment(appointmentByKey.dateInUtc).utc().set('hour', +hh).set('minute', +mm).format('ddd, MMM D, h:mm A')
+                date = moment(appointmentByKey.dateInUtc).utc().set('hour', +hh).set('minute', +mm).format(dateTimeString)
             }
         }
         return date;
@@ -177,15 +178,15 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 0,
                 {
                     label: t("Pick Up Time"),
-                    content: `${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('hh:mm A')}
-            ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
+                    content: `${moment.utc(serviceValetAppointment?.pickUpMin, timeSpanString).format(time24HourFormat)}
+            ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, timeSpanString).format(time24HourFormat)}`
                 }
             )
             if (dropOffSettings?.showDropOffTime && serviceValetAppointment?.dropOffMin && serviceValetAppointment?.dropOffMax) {
                 list.splice(2, 0, {
                     label: t("Drop Off Time"),
-                    content: `${moment.utc(serviceValetAppointment?.dropOffMin, "HH:mm:ss").format('hh:mm A')}
-            ${t("to")} ${moment.utc(serviceValetAppointment?.dropOffMax, "HH:mm:ss").format('hh:mm A')}`
+                    content: `${moment.utc(serviceValetAppointment?.dropOffMin, timeSpanString).format(time24HourFormat)}
+            ${t("to")} ${moment.utc(serviceValetAppointment?.dropOffMax, timeSpanString).format(time24HourFormat)}`
                 })
             }
         } else if (isServiceValetManage) {
@@ -194,15 +195,15 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 0,
                 {
                     label: t("Pick Up Time"),
-                    content: `${moment.utc(appointmentByKey?.serviceValetTime?.pickUpMin, "HH:mm:ss").format('hh:mm A')}
-            ${t("to")} ${moment.utc(appointmentByKey?.serviceValetTime?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
+                    content: `${moment.utc(appointmentByKey?.serviceValetTime?.pickUpMin, timeSpanString).format(time24HourFormat)}
+            ${t("to")} ${moment.utc(appointmentByKey?.serviceValetTime?.pickUpMax, timeSpanString).format(time24HourFormat)}`
                 }
             )
             if (dropOffSettings?.showDropOffTime && appointmentByKey?.serviceValetTime?.dropOffMin && appointmentByKey?.serviceValetTime?.dropOffMax) {
                 list.splice(2, 0, {
                     label: t("Drop Off Time"),
-                    content: `${moment.utc(appointmentByKey?.serviceValetTime?.dropOffMin, "HH:mm:ss").format('hh:mm A')}
-            ${t("to")} ${moment.utc(appointmentByKey?.serviceValetTime?.dropOffMax, "HH:mm:ss").format('hh:mm A')}`
+                    content: `${moment.utc(appointmentByKey?.serviceValetTime?.dropOffMin, timeSpanString).format(time24HourFormat)}
+            ${t("to")} ${moment.utc(appointmentByKey?.serviceValetTime?.dropOffMax, timeSpanString).format(time24HourFormat)}`
                 })
             }
         }

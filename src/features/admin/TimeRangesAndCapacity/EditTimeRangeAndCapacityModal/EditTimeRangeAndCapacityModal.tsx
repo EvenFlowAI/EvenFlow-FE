@@ -10,10 +10,11 @@ import {TextField} from "../../../../components/formControls/TextFieldStyled/Tex
 import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
 import {useDispatch} from "react-redux";
 import {createTimeRange, updateTimeRange} from "../../../../store/reducers/capacityServiceValet/actions";
-import {timeFormat, timeWithSecond} from "../constants";
+import {timeWithSecond} from "../constants";
 import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {time24HourFormat} from "../../../../utils/constants";
 
 type TProps = DialogProps & {
     editingElement: ITimeRangeAndCapacity;
@@ -33,10 +34,10 @@ const EditTimeRangeAndCapacityModal: React.FC<TProps> = ({onClose, open, editing
 
     useEffect(() => {
         if (open && editingElement) {
-            if (editingElement.pickUpMin !== '-') setPickUpMin(moment(editingElement.pickUpMin, timeFormat))
-            if (editingElement.pickUpMax !== '-') setPickUpMax(moment(editingElement.pickUpMax, timeFormat))
-            if (editingElement.dropOffMin !== '-') setDropOffMin(moment(editingElement.dropOffMin, timeFormat))
-            if (editingElement.dropOffMax !== '-') setDropOffMax(moment(editingElement.dropOffMax, timeFormat))
+            if (editingElement.pickUpMin !== '-') setPickUpMin(moment(editingElement.pickUpMin, time24HourFormat))
+            if (editingElement.pickUpMax !== '-') setPickUpMax(moment(editingElement.pickUpMax, time24HourFormat))
+            if (editingElement.dropOffMin !== '-') setDropOffMin(moment(editingElement.dropOffMin, time24HourFormat))
+            if (editingElement.dropOffMax !== '-') setDropOffMax(moment(editingElement.dropOffMax, time24HourFormat))
             if (editingElement.capacity) setDailyCapacity(editingElement.capacity)
         }
     }, [editingElement, open])

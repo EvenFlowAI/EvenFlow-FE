@@ -8,10 +8,11 @@ import {Table} from "../../../components/tables/Table/Table";
 import {Button} from "@material-ui/core";
 import EditTimeRangeAndCapacityModal from "./EditTimeRangeAndCapacityModal/EditTimeRangeAndCapacityModal";
 import {loadTimeRangesAndCapacity} from "../../../store/reducers/capacityServiceValet/actions";
-import {timeFormat, timeWithSecond} from "./constants";
+import {timeWithSecond} from "./constants";
 import {TableRowDataType} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {time24HourFormat} from "../../../utils/constants";
 
 const TimeRangesAndCapacity = () => {
     const {timeRangesAndCapacity, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
@@ -33,10 +34,10 @@ const TimeRangesAndCapacity = () => {
                     return {
                         serviceCenterId: selectedSC.id,
                         dayOfWeek: day,
-                        pickUpMin: timeRange?.pickUpMin ? moment(timeRange?.pickUpMin, timeWithSecond).format(timeFormat) : '-',
-                        pickUpMax: timeRange?.pickUpMax ? moment(timeRange?.pickUpMax, timeWithSecond).format(timeFormat) : '-',
-                        dropOffMin: timeRange?.dropOffMin ? moment(timeRange?.dropOffMin, timeWithSecond).format(timeFormat) : '-',
-                        dropOffMax: timeRange?.dropOffMax ? moment(timeRange?.dropOffMax, timeWithSecond).format(timeFormat) : '-',
+                        pickUpMin: timeRange?.pickUpMin ? moment(timeRange?.pickUpMin, timeWithSecond).format(time24HourFormat) : '-',
+                        pickUpMax: timeRange?.pickUpMax ? moment(timeRange?.pickUpMax, timeWithSecond).format(time24HourFormat) : '-',
+                        dropOffMin: timeRange?.dropOffMin ? moment(timeRange?.dropOffMin, timeWithSecond).format(time24HourFormat) : '-',
+                        dropOffMax: timeRange?.dropOffMax ? moment(timeRange?.dropOffMax, timeWithSecond).format(time24HourFormat) : '-',
                         capacity: timeRange?.capacity ?? 0,
                         id: timeRange?.id ?? 0,
                     }

@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, Paper} from "@material-ui/core";
 import {customerSegmentsMap, dayOfWeekMap, EOfferType, IOffer} from "../../../../store/reducers/offers/types";
 import moment from "moment";
-import {calendarDateFormat, timeSpanString, timeString} from "../../../../utils/constants";
+import {calendarDateFormat, timeSpanString, time12HourFormat} from "../../../../utils/constants";
 import {useStyles} from "./styles";
 
 type TProps = {
@@ -29,9 +29,9 @@ export const OfferPlate: React.FC<TProps> = ({offer, onClick}) => {
             <div className={classes.data}>
                 <span>{offer.dayOfWeeks.map(s => dayOfWeekMap[s]).join(", ")}</span>
                 <span>
-                    <span className="nowrap">{moment(offer.timeOfDay.start, timeSpanString).format(timeString)}</span>
+                    <span className="nowrap">{moment(offer.timeOfDay.start, timeSpanString).format(time12HourFormat)}</span>
                     <span> - </span>
-                    <span className="nowrap">{moment(offer.timeOfDay.end, timeSpanString).format(timeString)}</span>
+                    <span className="nowrap">{moment(offer.timeOfDay.end, timeSpanString).format(time12HourFormat)}</span>
                 </span>
                 <span>
                     <span className="nowrap">
