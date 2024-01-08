@@ -81,7 +81,7 @@ const AddToCalendarButton: React.FC<TProps> = ({ serviceName, servicesList}) => 
         return moment()
     }
 
-    const date = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
+    const date = isServiceValetApp
         ? moment.utc(serviceValetAppointment?.date)
         : customerLoadedData?.isUpdating && appointmentByKey
             ? appointment?.date
@@ -162,8 +162,6 @@ const AddToCalendarButton: React.FC<TProps> = ({ serviceName, servicesList}) => 
             location: scProfile?.address ? concatAddress(scProfile?.address) : "",
             details: calendarData.map(r => `${r.label}:\n${r.content}`).join("\n \n"),
         });
-        console.log(dateFrom, dateTo)
-        console.log(serviceValetTime)
         window.open(url);
     }
 
