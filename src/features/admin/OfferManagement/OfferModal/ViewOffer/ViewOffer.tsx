@@ -10,7 +10,7 @@ import {
 import {Grid, Switch} from "@material-ui/core";
 import {TextField} from "../../../../../components/formControls/TextFieldStyled/TextField";
 import moment from "moment";
-import {calendarDateFormat, timeSpanString, timeString} from "../../../../../utils/constants";
+import {calendarDateFormat, timeSpanString, time12HourFormat} from "../../../../../utils/constants";
 import {Label} from "./styles";
 
 export const ViewOffer: React.FC<{
@@ -55,9 +55,9 @@ export const ViewOffer: React.FC<{
                         value={
                             `${moment(
                                 offer.timeOfDay.start, timeSpanString
-                            ).format(timeString)} - ${moment(
-                                offer.timeOfDay.end, timeString
-                            ).format(timeString)}`
+                            ).format(time12HourFormat)} - ${moment(
+                                offer.timeOfDay.end, time12HourFormat
+                            ).format(time12HourFormat)}`
                         }
                     />
                 </Grid>

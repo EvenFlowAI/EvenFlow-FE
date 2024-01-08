@@ -10,7 +10,7 @@ import moment from "moment";
 import {API} from "../../../../api/api";
 import {MoreHoriz} from "@material-ui/icons";
 import {IOrder, IPageRequest, TableRowDataType} from "../../../../types/types";
-import {timeString} from "../../../../utils/constants";
+import {time12HourFormat} from "../../../../utils/constants";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useModal} from "../../../../hooks/useModal/useModal";
@@ -23,7 +23,7 @@ import {getAppointmentDate} from "./utils";
 const cols: TableRowDataType<IAppointment>[] = [
     {header: "Date", val: el => el.dateTime ? moment.utc(el.dateTime).format("MMMM D, YYYY") : "", orderId: "date", width: 150},
     {header: "Day", val: el => el.dateTime ? moment.utc(el.dateTime).format("ddd") : ""},
-    {header: "Time", val: el => el.dateTime ? moment.utc(el.dateTime).format(timeString) : "", width: 100},
+    {header: "Time", val: el => el.dateTime ? moment.utc(el.dateTime).format(time12HourFormat) : "", width: 100},
     {header: "Customer Name", val: el => el.customerInformation?.fullName ?? "", orderId: "fullName"},
     {header: "Vehicle", val: el => `${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${el.vehicle?.year ?? ''}`},
     {header: "Service Book", val: el => el.serviceBook?.name ?? ''},

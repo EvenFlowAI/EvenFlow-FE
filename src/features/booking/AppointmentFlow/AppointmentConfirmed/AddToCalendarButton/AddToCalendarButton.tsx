@@ -1,7 +1,13 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Button} from "@material-ui/core";
 import {concatAddress} from "../../../../../utils/utils";
-import {G_CALENDAR_FORMAT} from "../../../../../utils/constants";
+import {
+    calendarDateFormat,
+    dateTimeString,
+    G_CALENDAR_FORMAT,
+    time24HourFormat,
+    timeSpanString
+} from "../../../../../utils/constants";
 import moment from "moment";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
@@ -44,11 +50,13 @@ const AddToCalendarButton: React.FC<TProps> = ({ serviceName, servicesList}) => 
     const isWaitList = useMemo(() => waitListSettings?.isEnabled && (appointment?.isOverbookingApplied || appointmentByKey?.isWaitlist),
         [waitListSettings, appointment, appointmentByKey])
 
-    const vehicleData = selectedVehicle?.year
-        ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} ${engine?.name ?? ""}`
-        : valueService?.year
-            ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
-            : ''
+    const vehicleData = useMemo(() => {
+        return selectedVehicle?.year
+            ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} ${engine?.name ?? ""}`
+            : valueService?.year
+                ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
+                : ''
+    }, [selectedVehicle, engine, valueService])
 
     useEffect(() => {
         if (serviceValetAppointment) {
@@ -90,24 +98,26 @@ const AddToCalendarButton: React.FC<TProps> = ({ serviceName, servicesList}) => 
             : moment.utc(appointment?.date)
 
     const getDateForCalendar = useCallback(() => {
-        let dateString: string = '';
+        let dateString: string;
         if (isServiceValetApp) {
-            dateString = moment(date).format('ddd, MMM D');
-            const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('hh:mm A')} ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
+            dateString = moment(date).format(calendarDateFormat);
+            const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(serviceValetAppointment?.pickUpMin, timeSpanString)
+                .format(time24HourFormat)} ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, timeSpanString).format(time24HourFormat)}`
             dateString = dateString.concat('\n')
             dateString = dateString.concat(pickUpTime)
         } else {
             if (serviceTypeOption?.type === EServiceType.PickUpDropOff && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                dateString = moment(date).format('ddd, MMM D');
+                dateString = moment(date).format(calendarDateFormat);
                 const pickUpMin = appointmentByKey?.serviceValetTime?.pickUpMin;
                 const pickUpMax = appointmentByKey?.serviceValetTime?.pickUpMax;
                 if (pickUpMin && pickUpMax) {
-                    const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(pickUpMin, "HH:mm:ss").format('hh:mm A')} ${t("to")} ${moment.utc(pickUpMax, "HH:mm:ss").format('hh:mm A')}`
+                    const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(pickUpMin, timeSpanString)
+                        .format(time24HourFormat)} ${t("to")} ${moment.utc(pickUpMax, timeSpanString).format(time24HourFormat)}`
                     dateString = dateString.concat('\n')
                     dateString = dateString.concat(pickUpTime)
                 }
             } else {
-                dateString = date.format('ddd, MMM D, h:mm A') ?? moment.utc().format('ddd, MMM D, h:mm A');
+                dateString = date.format(dateTimeString) ?? moment.utc().format(dateTimeString);
             }
         }
         return dateString;
