@@ -44,11 +44,13 @@ const AddToCalendarButton: React.FC<TProps> = ({ serviceName, servicesList}) => 
     const isWaitList = useMemo(() => waitListSettings?.isEnabled && (appointment?.isOverbookingApplied || appointmentByKey?.isWaitlist),
         [waitListSettings, appointment, appointmentByKey])
 
-    const vehicleData = selectedVehicle?.year
-        ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} ${engine?.name ?? ""}`
-        : valueService?.year
-            ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
-            : ''
+    const vehicleData = useMemo(() => {
+        return selectedVehicle?.year
+            ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} ${engine?.name ?? ""}`
+            : valueService?.year
+                ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
+                : ''
+    }, [selectedVehicle, engine, valueService])
 
     useEffect(() => {
         if (serviceValetAppointment) {
