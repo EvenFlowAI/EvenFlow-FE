@@ -46,7 +46,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         selectedRecalls,
         packagePriceTitles,
         dropOffSettings,
-        customerLoadedData,
         isAppointmentSaving,
         appointmentByKey,
         transactionValue,
@@ -74,7 +73,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         state.appointmentFrame.selectedRecalls,
         state.appointmentFrame.packagePriceTitles,
         state.appointment.dropOffSettings,
-        state.appointment.customerLoadedData,
         state.appointmentFrame.isAppointmentSaving,
         state.appointmentFrame.appointmentByKey,
         state.appointmentFrame.transactionValue,
@@ -275,26 +273,6 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR,
         isServiceValetApp, isServiceValetManage, insertPickUpTime, serviceName, serviceType, waitListSettings, appointmentByKey]);
 
-    const getDateForUpdate = (): moment.Moment => {
-        if (customerLoadedData?.isUpdating && appointmentByKey) {
-            if (appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                return moment.utc(appointmentByKey.dateInUtc)
-            } else {
-                const [hh, mm] = appointmentByKey.timeSlot.split(':')
-                return moment.utc(appointmentByKey.dateInUtc).set('hour', +hh).set('minute', +mm)
-            }
-        }
-        return moment()
-    }
-
-    const date = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
-        ? moment.utc(serviceValetAppointment?.date)
-        : customerLoadedData?.isUpdating && appointmentByKey
-            ? appointment?.date
-                ? moment.utc(appointment?.date)
-                : getDateForUpdate()
-            : moment.utc(appointment?.date)
-
     return <StepWrapper>
         <Paper>
             <Wrapper>
@@ -311,7 +289,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
             </Wrapper>
             <ButtonsWrapper>
                 <ModifyButton onUpdateAppointment={onUpdateAppointment}/>
-                <AddToCalendarButton date={date} servicesList={servicesList} serviceName={serviceName}/>
+                <AddToCalendarButton servicesList={servicesList} serviceName={serviceName}/>
                 <Divider />
             </ButtonsWrapper>
            <MakeNewButton/>
