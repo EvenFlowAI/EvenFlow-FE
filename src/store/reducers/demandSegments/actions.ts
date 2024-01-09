@@ -8,7 +8,8 @@ import {
     IUnplannedDemandRequest, IUnplannedDemandSlotsRequest, IUnplannedSlotUpdateData
 } from "./types";
 import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
-import {Api} from "../../../config/requests";
+
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const loadingDemandSegments = createAction<boolean>("DemandSegments/Loading");
 export const getDemandSegments = createAction<IDemandSegment[]>("DemandSegments/GetDemandSegments");

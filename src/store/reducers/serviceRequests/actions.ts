@@ -10,21 +10,26 @@ import {
     IServiceRequestNonAddedFilter,
     IServiceRequestOverrideEditRequest,
     IServiceRequestPriority,
-    ISRAdmin,
-    ISRAdminFilters,
-    ISRAdminForm, IUpsellServiceRequest, IUpsellServiceRequestUpdate
+    IUpsellServiceRequest, IUpsellServiceRequestUpdate
 } from "./types";
-import {AppThunk, IOrder, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
-import {Api} from "../../../config/requests";
+import {
+    AppThunk,
+    IOrder,
+    IPageRequest,
+    IPagingResponse,
+    PaginatedAPIResponse,
+    TArgCallback
+} from "../../../types/types";
 import {EPricingDisplayType} from "../pricingSettings/types";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
-export const getNonSelectedServiceRequests = createAction<IServiceRequest[]>("ServiceRequests/getNonSelected");
-export const setLoadingNonSelected = createAction<boolean>("ServiceRequests/loadingNonSelected");
-export const setNonSelectedPaging = createAction<IPagingResponse>("ServiceRequests/NonSelectedPaging");
-export const setNonSelectedOrder = createAction<IOrder<IServiceRequest>>("ServiceRequests/NonSelectedOrder");
-export const setNonSelectedPageData = createAction<Partial<IPageRequest>>("ServiceRequests/NonSelectedPageData");
-export const setNonSelectedFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/NonSelectedFilter");
-export const setServiceRequestsPageActiveTab = createAction<string>("ServiceRequests/SetServiceRequestsPageActiveTab");
+export const getNonSelectedServiceRequests = createAction<IServiceRequest[]>("ServiceRequestsScreen/getNonSelected");
+export const setLoadingNonSelected = createAction<boolean>("ServiceRequestsScreen/loadingNonSelected");
+export const setNonSelectedPaging = createAction<IPagingResponse>("ServiceRequestsScreen/NonSelectedPaging");
+export const setNonSelectedOrder = createAction<IOrder<IServiceRequest>>("ServiceRequestsScreen/NonSelectedOrder");
+export const setNonSelectedPageData = createAction<Partial<IPageRequest>>("ServiceRequestsScreen/NonSelectedPageData");
+export const setNonSelectedFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequestsScreen/NonSelectedFilter");
+export const setServiceRequestsPageActiveTab = createAction<string>("ServiceRequestsScreen/SetServiceRequestsPageActiveTab");
 
 export const loadNonSelectedServiceRequests = (serviceCenterId: number, isAssigned?: boolean): AppThunk =>
     async (dispatch, getState) => {
@@ -54,8 +59,8 @@ export const loadNonSelectedServiceRequests = (serviceCenterId: number, isAssign
 export const assignServiceRequests = (
     serviceRequestIds: number[],
     serviceCenterId: number,
-    onError = (err: string) => {},
-    onSuccess = (codes: number[]) => {},
+    onError: TArgCallback<string>,
+    onSuccess: TArgCallback<number[]>,
 ): AppThunk => dispatch => {
     Api.call(
         Api.endpoints.ServiceRequests.AssignMultiple, {data: {serviceRequestIds, serviceCenterId}}
@@ -73,13 +78,14 @@ export const assignServiceRequests = (
 }
 
 // Assigned Service Requests
-export const getAssignedServiceRequests = createAction<IAssignedServiceRequest[]>("ServiceRequests/GetAssigned");
-export const getAllAssignedServiceRequests = createAction<IAssignedServiceRequest[]>("ServiceRequests/GetAllAssigned");
-export const setAssignedLoading = createAction<boolean>("ServiceRequests/SetAssignedLoading");
-export const setAssignedPaging = createAction<IPagingResponse>("ServiceRequests/SetAssignedPaging");
-export const setAssignedPageData = createAction<Partial<IPageRequest>>("ServiceRequests/SetAssignedPageData");
-export const setAssignedFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/SetAssignedFilter");
-export const setAssignedOrdering = createAction<IOrder<IAssignedServiceRequest>>("ServiceRequests/SetAssignedOrder");
+export const getAssignedServiceRequests = createAction<IAssignedServiceRequest[]>("ServiceRequestsScreen/GetAssigned");
+export const getAllAssignedServiceRequests = createAction<IAssignedServiceRequest[]>("ServiceRequestsScreen/GetAllAssigned");
+export const setAssignedLoading = createAction<boolean>("ServiceRequestsScreen/SetAssignedLoading");
+export const setAssignedPaging = createAction<IPagingResponse>("ServiceRequestsScreen/SetAssignedPaging");
+export const setAssignedPageData = createAction<Partial<IPageRequest>>("ServiceRequestsScreen/SetAssignedPageData");
+export const setAssignedFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequestsScreen/SetAssignedFilter");
+export const setAssignedOrdering = createAction<IOrder<IAssignedServiceRequest>>("ServiceRequestsScreen/SetAssignedOrder");
+
 export const loadAssignedServiceRequests = (serviceCenterId: number, isEligible?: boolean): AppThunk =>
     async (dispatch, getState) => {
     const {assignedPageData, assignedFilter, assignedOrdering} = getState().serviceRequests;
@@ -144,10 +150,11 @@ export const setRequiredSkills = (
     }
 }
 
-export const getUrgentServiceRequests = createAction<IAssignedServiceRequestShort[]>("ServiceRequests/getUrgent");
-export const loadingUrgentServiceRequests = createAction<boolean>("ServiceRequests/loadingUrgent");
-export const pagingUrgentServiceRequests = createAction<IPagingResponse>("ServiceRequests/pagingUrgent");
-export const pageDataUrgentServiceRequests = createAction<Partial<IPageRequest>>("ServiceRequests/pageDataUrgent");
+export const getUrgentServiceRequests = createAction<IAssignedServiceRequestShort[]>("ServiceRequestsScreen/getUrgent");
+export const loadingUrgentServiceRequests = createAction<boolean>("ServiceRequestsScreen/loadingUrgent");
+export const pagingUrgentServiceRequests = createAction<IPagingResponse>("ServiceRequestsScreen/pagingUrgent");
+export const pageDataUrgentServiceRequests = createAction<Partial<IPageRequest>>("ServiceRequestsScreen/pageDataUrgent");
+
 export const loadUrgentServiceRequests = (serviceCenterId: number, podId?: number): AppThunk =>
 async (dispatch, getState) => {
     const pageData = getState().serviceRequests.urgentPageData;
@@ -180,10 +187,11 @@ export const setUrgentRequests = (ids: number[], serviceCenterId?: number, podId
     }
 }
 
-export const getNonUrgentServiceRequests = createAction<IAssignedServiceRequestShort[]>("ServiceRequests/getNonUrgent");
-export const loadingNonUrgentServiceRequests = createAction<boolean>("ServiceRequests/loadingNonUrgent");
-export const pagingNonUrgentServiceRequests = createAction<IPagingResponse>("ServiceRequests/pagingNonUrgent");
-export const pageDataNonUrgentServiceRequests = createAction<Partial<IPageRequest>>("ServiceRequests/pageDataNonUrgent");
+export const getNonUrgentServiceRequests = createAction<IAssignedServiceRequestShort[]>("ServiceRequestsScreen/getNonUrgent");
+export const loadingNonUrgentServiceRequests = createAction<boolean>("ServiceRequestsScreen/loadingNonUrgent");
+export const pagingNonUrgentServiceRequests = createAction<IPagingResponse>("ServiceRequestsScreen/pagingNonUrgent");
+export const pageDataNonUrgentServiceRequests = createAction<Partial<IPageRequest>>("ServiceRequestsScreen/pageDataNonUrgent");
+
 export const loadNonUrgentServiceRequests = (serviceCenterId: number, podId?: number): AppThunk =>
 async (dispatch, getState) => {
     const pageData = getState().serviceRequests.urgentPageData;
@@ -203,7 +211,7 @@ async (dispatch, getState) => {
     }
 }
 
-export const getSCRequestsShort = createAction<IAssignedServiceRequestShort[]>("ServiceRequests/GetSCShort");
+export const getSCRequestsShort = createAction<IAssignedServiceRequestShort[]>("ServiceRequestsScreen/GetSCShort");
 export const loadSCRequestsShort = (serviceCenterId: number, pricingDisplayType?: EPricingDisplayType): AppThunk => async dispatch => {
     const {data: {result}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequestShort>>(
         Api.endpoints.ServiceRequests.GetShort,
@@ -212,62 +220,13 @@ export const loadSCRequestsShort = (serviceCenterId: number, pricingDisplayType?
     dispatch(getSCRequestsShort(result));
 }
 
-export const getAdminServiceRequests = createAction<ISRAdmin[]>("ServiceRequests/getAdmin");
-export const setLoadingAdmin = createAction<boolean>("ServiceRequests/loadingAdmin");
-export const setAdminPaging = createAction<IPagingResponse>("ServiceRequests/AdminPaging");
-export const setAdminPageData = createAction<Partial<IPageRequest>>("ServiceRequests/AdminPageData");
-export const setAdminFilter = createAction<Partial<ISRAdminFilters>>("ServiceRequests/AdminFilter");
-export const loadAdminServiceRequests = (): AppThunk =>
-async (dispatch, getState) => {
-    const {adminPageData, adminFilters} = getState().serviceRequests;
-    dispatch(setLoadingAdmin(true));
-    try {
-        const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<ISRAdmin>>(
-            Api.endpoints.ServiceRequests.GetFiltered,
-            {data: {...adminPageData, ...adminFilters}}
-        );
-        dispatch(setLoadingAdmin(false));
-        dispatch(getAdminServiceRequests(result));
-        dispatch(setAdminPaging(paging));
-    } catch (e) {
-        dispatch(setLoadingAdmin(false));
-        throw e;
-    }
-}
-export const removeAdminServiceRequest = (el: ISRAdmin): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.ServiceRequests.Remove, {urlParams: {id: el.id}});
-    dispatch(loadAdminServiceRequests());
-}
-export const archiveAdminServiceRequest = (el: ISRAdmin): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.ServiceRequests.UpdateStatus, {
-        urlParams: {id: el.id},
-        data: {status: el.status === EServiceStatus.Archived
-                ? EServiceStatus.None : EServiceStatus.Archived}
-    });
-    dispatch(loadAdminServiceRequests());
-}
-export const createAdminServiceRequest = (data: ISRAdminForm): AppThunk => async dispatch => {
-    await Api.call(
-        Api.endpoints.ServiceRequests.Create,
-        {data}
-    );
-    dispatch(loadAdminServiceRequests());
-}
-export const updateAdminServiceRequest = (data: ISRAdminForm, id: number): AppThunk => async dispatch => {
-    await Api.call(
-        Api.endpoints.ServiceRequests.Update,
-        {data, urlParams: {id}}
-    );
-    dispatch(loadAdminServiceRequests());
-}
+export const getUpsellServiceRequests = createAction<IUpsellServiceRequest[]>("ServiceRequestsScreen/GetIntervalUpsell");
+export const setUpsellLoading = createAction<boolean>("ServiceRequestsScreen/SetUpsellLoading");
+export const setUpsellPaging = createAction<IPagingResponse>("ServiceRequestsScreen/SetUpsellPaging");
+export const setUpsellPageData = createAction<Partial<IPageRequest>>("ServiceRequestsScreen/SetUpsellPageData");
+export const setUpsellFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequestsScreen/SetUpsellFilter");
+export const setUpsellOrdering = createAction<IOrder<IUpsellServiceRequest>>("ServiceRequestsScreen/SetUpsellOrder");
 
-export const getUpsellServiceRequests = createAction<IUpsellServiceRequest[]>("ServiceRequests/GetIntervalUpsell");
-export const getCurrentUpsell = createAction<IUpsellServiceRequest|null>("ServiceRequests/GetIntervalUpsell");
-export const setUpsellLoading = createAction<boolean>("ServiceRequests/SetUpsellLoading");
-export const setUpsellPaging = createAction<IPagingResponse>("ServiceRequests/SetUpsellPaging");
-export const setUpsellPageData = createAction<Partial<IPageRequest>>("ServiceRequests/SetUpsellPageData");
-export const setUpsellFilter = createAction<Partial<IServiceRequestNonAddedFilter>>("ServiceRequests/SetUpsellFilter");
-export const setUpsellOrdering = createAction<IOrder<IUpsellServiceRequest>>("ServiceRequests/SetUpsellOrder");
 export const loadUpsellServiceRequests = (serviceCenterId: number): AppThunk =>
     async (dispatch, getState) => {
         const {upsellPageData, upsellFilter, upsellOrdering} = getState().serviceRequests;
@@ -302,8 +261,8 @@ export const updateUpsellServiceRequest = (
 export const addUpsellServiceRequests = (
     serviceRequestIds: number[],
     serviceCenterId: number,
-    onError = (err: string) => {},
-    onSuccess = (codes: number[]) => {},
+    onError: TArgCallback<string>,
+    onSuccess: TArgCallback<number[]>,
 ): AppThunk => dispatch => {
     Api.call(
         Api.endpoints.IntervalUpsell.AddUpsell, {data: {serviceRequestIds, serviceCenterId}}
@@ -317,16 +276,4 @@ export const addUpsellServiceRequests = (
         .catch(err => {
             onError(err)
         })
-}
-
-export const loadUpsellById = (id: number): AppThunk => dispatch => {
-    dispatch(setUpsellLoading(true));
-    Api.call<IUpsellServiceRequest>(Api.endpoints.IntervalUpsell.GetUpsellById, {urlParams: {id}})
-        .then(result => {
-            if (result) dispatch(getCurrentUpsell(result.data))
-        })
-        .catch(err => {
-            console.log('get upsell service request by id error', err)
-        })
-        .finally(() => dispatch(setUpsellLoading(false)));
 }

@@ -3,15 +3,13 @@ import {
     ICenterSettings, IShowDropOffTime,
     ITimeRangeAndCapacity,
     IZonesRoutingByDay,
-    IZoneTimeReservation,
-    IZoneTimeSlot, TDmsAppointmentTime, TServiceValetRequestId
+    TDmsAppointmentTime, TServiceValetRequestId, TZonesOpsCodesRequest
 } from "./types";
-import {AppThunk} from "../../../types/types";
-import {Api} from "../../../config/requests";
+import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
+
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const getZonesRouting = createAction<IZonesRoutingByDay[]>('ServiceValetCapacity/GetZonesRouting');
-export const setZoneTimeWindows = createAction<IZoneTimeSlot[]>('ServiceValetCapacity/SetZoneTimeWindows');
-export const setZoneCapacity = createAction<IZoneTimeReservation[]>('ServiceValetCapacity/SetZoneCapacity');
 export const getTimeRangesAndCapacity = createAction<ITimeRangeAndCapacity[]>('ServiceValetCapacity/SetTimeRangesAndCapacity');
 export const setLoading = createAction<boolean>('ServiceValetCapacity/SetLoading');
 export const getCenterSettings = createAction<ICenterSettings|null>('ServiceValetCapacity/GetCenterSettings');
@@ -139,6 +137,20 @@ export const updateServiceValetServiceRequest = (id: number, data: TServiceValet
         .catch(err => {
             onError(err)
             console.log('update service valet service request error', err)
+        })
+        .finally(() => dispatch(setLoading(false)))
+}
+
+export const updateServiceValetZonesOpsCodes = (id: number, zoneServiceRequests: TZonesOpsCodesRequest[], onSuccess: TCallback, onError: TArgCallback<string>): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.ServiceValet.UpdateZonesServiceRequests, {urlParams: {id}, data: {zoneServiceRequests}})
+        .then(result => {
+            if (result) dispatch(loadCenterSettings(id))
+            onSuccess()
+        })
+        .catch(err => {
+            onError(err)
+            console.log('update service valet zones service requests error', err)
         })
         .finally(() => dispatch(setLoading(false)))
 }

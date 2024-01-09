@@ -1,4 +1,4 @@
-import {IPagingResponse} from "../../../types/types";
+import {IPageRequest, IPagingResponse, IRecallByVin} from "../../../types/types";
 
 export type TIdName = {
     id: number;
@@ -40,4 +40,12 @@ export interface ICreateUpdateRecall {
 export interface IRecallResponse {
     result: IRecall[],
     paging: IPagingResponse,
+}
+
+export type TState = {
+    recalls: IRecall[];
+    isLoading: boolean;
+    recallPageData: IPageRequest;
+    recallsCount: number,
+    recallsByVin: IRecallByVin[];
 }

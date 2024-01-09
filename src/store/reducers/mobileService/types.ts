@@ -1,4 +1,5 @@
 import {EServiceType} from "../appointmentFrameReducer/types";
+import {IDistancePriceSettings, IZonePriceSettings} from "../serviceValet/types";
 
 export type TZipCode = {
     code: string;
@@ -45,5 +46,15 @@ export type TAncillaryPriceTypeData = {
 
 export type TChangeAncillaryPriceType = {
     serviceType: EServiceType;
+    ancillaryPriceType: EAncillaryPriceType;
+}
+
+export type TState = {
+    isLoading: boolean;
+    currentZone: TZone | null;
+    zones: TZone[];
+    pricingByZones: IZonePriceSettings[];
+    pricingByDistance: IDistancePriceSettings[];
+    isPricingByZoneLoading: boolean;
     ancillaryPriceType: EAncillaryPriceType;
 }

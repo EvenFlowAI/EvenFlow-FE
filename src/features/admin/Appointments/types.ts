@@ -1,0 +1,33 @@
+import {TScheduler, TServiceBook} from "../../../store/reducers/appointments/types";
+import {EReportingStatus, IAppointment} from "../../../api/types";
+import moment, {Moment} from "moment/moment";
+import {IPageRequest} from "../../../types/types";
+
+export type TView = "calendar" | "list";
+
+export type TFilters = {
+    searchTerm: string;
+    serviceBook: TServiceBook|null;
+    scheduler: TScheduler|null;
+    reportingStatus: EReportingStatus | '' | unknown;
+    date: moment.Moment | null;
+    scId: number|null;
+    pageData: IPageRequest;
+}
+
+export type TViewButton = { label: string, type: TView };
+
+export const views: TViewButton[] = [
+    {type: "calendar", label: "Calendar View"},
+    {type: "list", label: "List View"}
+];
+
+export type TDayType = "prev" | "cur" | "next"
+
+export type TDay = {
+    date: Moment,
+    day: number,
+    type: TDayType
+}
+
+export type TAppointmentsByDate = {[key: string]: IAppointment[]}

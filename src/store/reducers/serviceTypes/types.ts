@@ -38,3 +38,8 @@ export type TUpdateFirstScreenOption = {
 export type TNewFirstScreenOption = TUpdateFirstScreenOption & {
     serviceCenterId: number;
 }
+
+export type TState = {
+    firstScreenOptions: IFirstScreenOption[];
+    isLoading: boolean;
+}

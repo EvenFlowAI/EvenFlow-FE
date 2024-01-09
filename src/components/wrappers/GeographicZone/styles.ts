@@ -1,0 +1,57 @@
+import {makeStyles} from "@material-ui/core/styles";
+import {styled} from "@material-ui/core";
+import {TStyleProps} from "./types";
+
+export const useStyles = makeStyles(() => ({
+    zoneContainer: ({isSelected}: TStyleProps) => ({
+        display: 'grid',
+        gridTemplateColumns: '2fr 3fr',
+        alignItems: "flex-start",
+        padding: 12,
+        borderRadius: 1,
+        border: isSelected ? '1px solid #2F80ED' : '1px solid #DADADA',
+        backgroundColor: "#FFFFFF",
+    }),
+    zoneBox: {
+        display: "flex",
+        alignItems: 'center',
+        gap: 10,
+        backgroundColor: "#F2F3F7",
+        border: '1px solid #DADADA',
+        borderRadius: 2,
+        paddingRight: 11,
+        marginRight: 10,
+        textTransform: 'uppercase',
+        fontWeight: 'bold',
+        color: "#252733",
+
+    },
+    codesContainer: {
+        minHeight: 45,
+        display: "grid",
+        gridTemplateColumns: '1fr 1fr',
+        gridGap: 8,
+        padding: 8,
+        border: "2px solid #DADADA",
+        borderRadius: 2,
+        backgroundColor: "#F2F3F7",
+    },
+    icon: {
+        width: 16,
+        height: 16,
+        borderRadius: '50%',
+        color: "grey",
+        backgroundColor: 'white',
+        cursor: 'pointer',
+    }
+}))
+
+export const ZipCode = styled('div')({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: "center",
+    backgroundColor: "#7898FF",
+    borderRadius: 4,
+    padding: '2px 6px',
+    color: '#FFFFFF',
+})

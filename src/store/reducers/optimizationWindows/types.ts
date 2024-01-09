@@ -55,3 +55,12 @@ export interface IWaitListSettings {
     appointmentSlotBoxHex?: string;
     rolloverDescriptionText?: string;
 }
+
+export type TState = {
+    dataList: IOptimizationWindow[],
+    overbookingFactor: IOverbookingFactor[],
+    appointmentCutoff: IAppointmentCutoff[],
+    maxPriceDateRange: number | undefined,
+    waitListSettings: IWaitListSettings | null;
+    isWaitListLoading: boolean;
+}

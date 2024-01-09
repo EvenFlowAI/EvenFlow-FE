@@ -1,11 +1,7 @@
-import {ITransportationOptionFull} from "./types";
+import {TState} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
 import {getTransportationOptions, setTransportationLoading} from "./actions";
 
-type TState = {
-    options: ITransportationOptionFull[];
-    isLoading: boolean;
-}
 const initialState: TState = {
     options: [],
     isLoading: false,

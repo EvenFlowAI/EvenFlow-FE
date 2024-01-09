@@ -1,10 +1,10 @@
 import {createAction} from "@reduxjs/toolkit";
 import {TServiceTypeSettings} from "./types";
 import {AppThunk} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import {setMobileServiceAvailability, setPickUpDropOffAvailability} from "../appointmentFrameReducer/actions";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setBookingFlowConfig = createAction<TServiceTypeSettings[]>("BookingFlowConfig/SetConfig");
 export const setBookingFlowConfigLoading = createAction<boolean>("BookingFlowConfig/SetLoading");

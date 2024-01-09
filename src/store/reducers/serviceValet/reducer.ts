@@ -8,18 +8,8 @@ import {
     setServiceValetPrisingOption,
     setZones
 } from "./actions";
-import {EAncillaryPriceType, TZone} from "../mobileService/types";
-import {IDistancePriceSettings, IZonePriceSettings} from "./types";
-
-type TState = {
-    isLoading: boolean;
-    currentZone: TZone|null;
-    zones: TZone[];
-    pricingByZones: IZonePriceSettings[];
-    pricingByDistance: IDistancePriceSettings[];
-    isPricingByZoneLoading: boolean;
-    ancillaryPriceType: EAncillaryPriceType;
-}
+import {EAncillaryPriceType} from "../mobileService/types";
+import {TState} from "./types";
 
 const initialState: TState = {
     isLoading: false,

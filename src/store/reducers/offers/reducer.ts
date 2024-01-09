@@ -1,27 +1,17 @@
-import {IOffer} from "./types";
-import {IPageRequest, IPagingResponse} from "../../../types/types";
-import {defaultPageData, defaultPaging} from "../defaultInitials";
+import {TState} from "./types";
+import {defaultPageData, defaultPaging} from "../constants";
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getArchivedOffers,
     getOffers,
     setArchivedOffersLoading,
-    setArchivedOffersPageData, setArchivedOffersPaging,
+    setArchivedOffersPageData,
+    setArchivedOffersPaging,
     setOffersLoading,
     setOffersPageData,
     setOffersPaging
 } from "./actions";
 
-type TState = {
-    offersLoading: boolean;
-    offersList: IOffer[],
-    offersPaging: IPagingResponse;
-    offersPageData: IPageRequest;
-    archivedOffersLoading: boolean;
-    archivedOffersList: IOffer[],
-    archivedOffersPaging: IPagingResponse;
-    archivedOffersPageData: IPageRequest;
-}
 const initialState: TState = {
     offersList: [],
     offersLoading: false,

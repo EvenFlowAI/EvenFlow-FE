@@ -1,16 +1,4 @@
-import {TConfirmModalPayload, TModalActions} from "./types";
-
-export type TConfirmState = {
-    open: boolean;
-    payload?: TConfirmModalPayload;
-};
-
-export type TModalState = {
-    confirm: TConfirmState,
-    isChangesCompletedOpen: boolean;
-    isSlotsWarningOpen: boolean;
-    isServiceWarningOpen: boolean;
-};
+import {TModalActions, TModalState} from "./types";
 
 const initialState: TModalState = {
     confirm: {open: false},

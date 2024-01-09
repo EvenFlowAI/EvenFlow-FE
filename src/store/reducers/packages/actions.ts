@@ -1,12 +1,12 @@
 import {createAction} from "@reduxjs/toolkit";
 import {IPackageById, IPackageByQuery, IMake, IPackageOptionDetailed, TSegmentTitle} from "../../../api/types";
 import {AppThunk, IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import {
     IComplimentaryServiceByQuery,
     INewPackage,
     IUpdatedPackage, TOrderIndex, TPackagePrice
 } from "./types";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoading');
 export const getPackageById = createAction<IPackageById | null>('Optimizer/GetPackageById');
@@ -117,21 +117,6 @@ export const createPackage = (id: number, data: INewPackage, callback: () => voi
             errCallback && errCallback(err)
     })
         .finally(() => dispatch(setPackageLoading(false)))
-}
-
-export const loadAllComplimentary = (serviceCenterId: number): AppThunk => dispatch => {
-    const data = {
-        serviceCenterId,
-        pageIndex: 0,
-        pageSize: 0,
-    }
-    Api.call(Api.endpoints.ComplimentaryServices.GetByQuery, {data})
-        .then(result => {
-            dispatch(getAllComplimentary(result.data.result))
-        })
-        .catch(err => {
-            console.log(err)
-        })
 }
 
 export const loadComplimentary = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {

@@ -1,19 +1,7 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IEmployeeSchedule, IScheduleFilters} from "./types";
+import {TState} from "./types";
 import {getEmployeesSchedule, loadingEmployeesSchedule, setScheduleFilters, switchScheduleFilters} from "./actions";
 
-type TState = {
-    employeesList: IEmployeeSchedule[];
-    employeesLoading: boolean;
-    filters: IScheduleFilters;
-    filtersOpened: boolean;
-}
-export const blankScheduleFilters: IScheduleFilters = {
-    podId: undefined,
-    role: undefined,
-    searchTerm: undefined,
-    skillLevel: undefined
-}
 const initialState: TState = {
     employeesList: [],
     employeesLoading: false,
