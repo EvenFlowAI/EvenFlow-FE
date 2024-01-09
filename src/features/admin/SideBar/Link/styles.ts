@@ -19,7 +19,7 @@ export const useStyles = makeStyles((theme) => ({
     },
     subMenu: {
         color: "#929292",
-        padding: "10px 0",
+        padding: "10px 0 10px 15px",
         textTransform: "none"
     },
     expandIcon: {
