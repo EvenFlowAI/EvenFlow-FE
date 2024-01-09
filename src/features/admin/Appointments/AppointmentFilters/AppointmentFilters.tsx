@@ -12,9 +12,10 @@ import {TScheduler, TServiceBook} from "../../../../store/reducers/appointments/
 import {ReactComponent as CalendarIcon} from '../../../../assets/img/calendar_blue.svg';
 import {TFilters} from "../types";
 import {initialPaging} from "../Appointments";
-import {useStyles, EmptyMenuItem} from "./styles";
+import {EmptyMenuItem} from "./styles";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {EReportingStatus, reportingStatuses} from "../../../../api/types";
+import {useLabelStyles} from "../../../../hooks/styling/useLabelStyles";
 
 type TAppointmentFilterProps = {
     status: EReportingStatus | '' | unknown;
@@ -33,7 +34,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                }) => {
     const {schedulerList, serviceBookList, isLoading} = useSelector((state: RootState) => state.appointments)
     const [isOpen, setOpen] = useState<boolean>(false);
-    const classes = useStyles()
+    const classes = useLabelStyles()
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 

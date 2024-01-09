@@ -8,7 +8,8 @@ export const PERMISSIONS: TRouteRoleMap[] = [
 
     {route: Routes.Admin.Appointments, roles: true},
     {route: Routes.Admin.DealershipGroups, roles: ["Super Admin"]},
-    {route: Routes.Admin.Employees, roles: ["Manager", "Owner", "Service Director"]},
+    {route: Routes.Employees.Base, roles: ["Manager", "Owner", "Service Director"]},
+    {route: Routes.Employees.AddDelete, roles: ["Manager", "Owner", "Service Director"]},
     {route: Routes.Admin.Profile, roles: true},
     {route: Routes.Admin.ServiceCenters, roles: ["Super Admin", "Owner", "Manager",  "Service Director"]},
     {route: Routes.Admin.ServiceRequests, roles: ["Owner", "Manager", "Service Director"]},

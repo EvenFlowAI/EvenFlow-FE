@@ -1,11 +1,7 @@
-import {TAdvisorForm, TTechnicianForm} from "./types";
+import {TEmployeeForm} from "./types";
 
-export const initialAdvisorForm: TAdvisorForm = {
-    firstName: '', lastName: '', email: '', phoneNumber: '', serviceCenter: null, role: "Manager", position: '',
-    showOnBooking: false, dmsId: ''
-}
-export const initialTechnicianForm: TTechnicianForm = {
-    firstName: '', lastName: '', serviceCenter: null, phoneNumber: "",
+export const initialEmployeeForm: TEmployeeForm = {
+    firstName: '', lastName: '', serviceCenter: null, role: null, position: '',
     hourlyRate: '', overtimeRate: '', email: "", technicianLevel: 1, dmsId: '',
 }
 

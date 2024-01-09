@@ -2,7 +2,6 @@ export enum AdminRoutes {
     Base = "/admin",
     DealershipGroups = "/admin/dealership-groups",
     Appointments = "/admin/appointments",
-    Employees = "/admin/employees",
     Profile = "/admin/profile",
     ServiceCenters = "/admin/service-centers",
     ServiceRequests = "/admin/service-requests",
@@ -72,6 +71,11 @@ export enum PricingRoutes {
     MobileService = "/admin/pricing/mobile-service",
     ServiceValet = "/admin/pricing/service-valet",
     OfferManagement = "/admin/pricing/offer-management",
+}
+
+export enum EmployeeRoutes {
+    Base = "/admin/employees",
+    AddDelete = "/admin/employees/add-delete"
 }
 
 export enum EndUser {

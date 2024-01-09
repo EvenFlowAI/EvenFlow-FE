@@ -3,20 +3,17 @@ import {styled} from "@material-ui/core";
 export const FiltersWrapper = styled('div')({
     width: '100%',
     display: "flex",
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
     marginBottom: 20,
-    '& > div:first-child': {
+    '& > div': {
+        width: '100%',
+    },
+    '& > div:not(last-child)': {
         marginRight: 20
+    },
+    '& > button': {
+        flexShrink: 0,
+        padding: '9px 16px'
     }
 });
-
-export const ButtonsWrapper = styled('div')({
-    width: '100%',
-    display: "flex",
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    '& > button:first-child': {
-        marginRight: 20
-    }
-})
