@@ -16,7 +16,7 @@ import {useModal} from "../../../../hooks/useModal/useModal";
 import {useLabelStyles} from "../../../../hooks/styling/useLabelStyles";
 import {EmptyMenuItem} from "../../Appointments/AppointmentFilters/styles";
 
-const roles = ['Advisor', 'Technician', 'Call Center Rep', 'Manager', 'Owner'];
+const roles = ['Advisor', 'Technician', 'Call Center Rep', 'Manager', 'Owner', 'Service Director'];
 const widerRoles = ['Advisor', 'Owner'];
 
 const EmployeesFilters = () => {
