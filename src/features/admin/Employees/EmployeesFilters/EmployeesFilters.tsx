@@ -14,6 +14,7 @@ import {SearchDB} from "../../../../components/formControls/SearchDebounced/Sear
 import {CreateEmployee} from "../../../../components/modals/admin/CreateEmployee/CreateEmployee";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useLabelStyles} from "../../../../hooks/styling/useLabelStyles";
+import {EmptyMenuItem} from "../../Appointments/AppointmentFilters/styles";
 
 const roles = ['Advisor', 'Technician', 'Call Center Rep', 'Manager', 'Owner'];
 const widerRoles = ['Advisor', 'Owner'];
@@ -22,7 +23,7 @@ const EmployeesFilters = () => {
     const {fullSCList} = useSelector((state: RootState) => state.serviceCenters);
     const {filters, searchTerm} = useSelector((state: RootState) => state.employees);
 
-    const [selectedRole, setSelectedRole] = useState<string|unknown>('');
+    const [selectedRole, setSelectedRole] = useState<string>('');
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();
     const classes = useLabelStyles();
@@ -33,7 +34,7 @@ const EmployeesFilters = () => {
     );
 
     useEffect(() => {
-        setSelectedRole(filters.role ?? null)
+        setSelectedRole(filters.role ?? '')
     }, [filters])
 
     const handleSelectRole = (e: React.ChangeEvent<{value: unknown}>) => {
@@ -65,12 +66,13 @@ const EmployeesFilters = () => {
                         <div className={classes.label}>Service Center</div>
                         <Select
                             fullWidth
-                            placeholder='Service Center'
+                            displayEmpty
+                            style={{color: filters.serviceCenterId ? "inherit" : '#858585'}}
                             onChange={handleSelectCenter}
                             value={filters.serviceCenterId ?? ""}
-                            input={<TextField />}
+                            input={<TextField/>}
                         >
-                            <MenuItem value=''>-</MenuItem>
+                            <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
                             {fullSCList.map(serviceCenter => {
                                 return <MenuItem key={serviceCenter.name}
                                                  value={serviceCenter.id}>{serviceCenter.name}</MenuItem>
@@ -83,12 +85,13 @@ const EmployeesFilters = () => {
                     <div className={classes.label}>Role</div>
                     <Select
                         fullWidth
-                        placeholder='Role'
+                        displayEmpty
                         onChange={handleSelectRole}
+                        style={{color: selectedRole ? "inherit" : '#858585'}}
                         value={selectedRole}
-                        input={<TextField/>}
+                        input={<TextField placeholder={"Not selected"}/>}
                     >
-                        <MenuItem value=''>-</MenuItem>
+                        <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
                         {roles.map(role => {
                             return <MenuItem key={role} value={role}>{role}</MenuItem>
                         })}
