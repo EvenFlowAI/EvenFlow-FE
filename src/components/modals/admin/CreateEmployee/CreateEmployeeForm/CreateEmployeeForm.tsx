@@ -45,6 +45,7 @@ export const CreateEmployeeForm: React.FC<TTFormProps> = ({
     const [serviceCenters, setServiceCenters] = useState<IServiceCenter[]>([])
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();
+    // todo multiple service centers
     const autocompleteClasses = useMultipleAutocompleteStyles();
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}})  => {
@@ -191,7 +192,7 @@ export const CreateEmployeeForm: React.FC<TTFormProps> = ({
             <Autocomplete
                 options={dmsAdvisors}
                 onChange={handleDMSConsultantChange}
-                getOptionLabel={i => i.name}
+                getOptionLabel={i => `${i.name} - ${i.id}`}
                 getOptionSelected={(o, s) => o.id === s.id}
                 disabled={shortLoading || loadingDMSAdvisors}
                 loading={shortLoading || loadingDMSAdvisors}
