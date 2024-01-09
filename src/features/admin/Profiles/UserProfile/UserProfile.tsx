@@ -8,23 +8,11 @@ import {validatePhoneNumber} from "../../../../utils/utils";
 import {useStyles} from "./styles";
 import {TForm, TPasswordForm} from "./types";
 import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
-
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
-
-const blankProfile: TForm = {
-    firstName: "",
-    lastName: "",
-    phoneNumber: ""
-}
-
-const initialPasswordForm: TPasswordForm = {
-    oldPassword: "",
-    newPassword: "",
-    repeatPassword: ""
-}
+import {blankProfile, initialPasswordForm} from "./constants";
 
 export const UserProfile = () => {
     const [saving, setSaving] = useState<boolean>(false);

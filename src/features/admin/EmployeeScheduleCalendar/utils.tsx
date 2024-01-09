@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 import {ISchedule} from "../../../store/reducers/schedules/types";
-import {timeSpanString, timeString} from "../../../utils/constants";
+import {timeSpanString, time12HourFormat} from "../../../utils/constants";
 import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 
 export const getDaysOfWeek = (date: moment.Moment, isXS: boolean): moment.Moment[] => {
@@ -35,9 +35,9 @@ export const findScheduleDates = (date: moment.Moment, schedules: ISchedule[], i
     const schedule = getSchedule(date, schedules);
     if (schedule && isWorkingDay) {
         return <>
-            <span className="nowrap">{moment(schedule.startAt, timeSpanString).format(timeString)}</span>
+            <span className="nowrap">{moment(schedule.startAt, timeSpanString).format(time12HourFormat)}</span>
             <span> - </span>
-            <span className="nowrap">{moment(schedule.finishAt, timeSpanString).format(timeString)}</span>
+            <span className="nowrap">{moment(schedule.finishAt, timeSpanString).format(time12HourFormat)}</span>
         </>
     }
     return "-"

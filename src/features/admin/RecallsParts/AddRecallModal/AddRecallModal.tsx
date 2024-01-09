@@ -17,23 +17,12 @@ import {TForm} from "./types";
 import {getYearOptions} from "../../../../utils/utils";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {checkIsValid} from "./utils";
+import {initialForm} from "./constants";
 
 type TAddRecallProps = DialogProps & {
     editingItem: IRecall|null;
     setEditingItem: Dispatch<SetStateAction<IRecall|null>>;
-}
-
-const initialForm: TForm = {
-    recallCampaignNumber: '',
-    make: null,
-    model: null,
-    yearTo: '',
-    yearFrom: '',
-    recallComponent: '',
-    recallSummary: '',
-    partLeadDaysCount: '',
-    dailyPartsCount: '',
-    serviceRequest: null,
 }
 
 const yearOptions = getYearOptions()
@@ -82,37 +71,10 @@ const AddRecallModal: React.FC<TAddRecallProps> = ({editingItem, open, onClose, 
         onClose();
     }
 
-    const isValid = () => {
-        if (!form.recallCampaignNumber.length) showError('"Recall Campaign Number" must not be empty')
-        if (!form.make) showError('"Make" must not be empty')
-        if (!form.model) showError('"Chip" must not be empty')
-        if (!form.yearTo?.length) showError('"Year To" must not be empty')
-        if (!form.yearFrom?.length) showError('"Year From" must not be empty')
-        if (!form.recallComponent.length) showError('"Recall Component" must not be empty')
-        if (!form.recallSummary) showError('"Recall Summary" must not be empty')
-        if (!form.partLeadDaysCount.length) showError('"Part Lead Dais Count" must not be empty')
-        if (+form.partLeadDaysCount < 0) showError('"Part Lead Dais Count" must be equal to or more than "0"')
-        if (!form.dailyPartsCount.length) showError('"Daily Parts" must not be empty')
-        if (+form.dailyPartsCount < 0) showError('"Daily Parts" must be equal to or more than "0"')
-        if (!form.serviceRequest) showError('"Ops Code Assignment" must not be empty')
-
-        return form.recallCampaignNumber.length
-            && form.make
-            && form.model
-            && form.recallComponent.length
-            && form.recallSummary.length
-            && form.partLeadDaysCount.length
-            && Number.isInteger(+form.partLeadDaysCount)
-            && +form.partLeadDaysCount >= 0
-            && form.dailyPartsCount.length
-            && Number.isInteger(+form.dailyPartsCount)
-            && +form.dailyPartsCount >= 0
-            && form.serviceRequest;
-    }
-
     const onSave = () => {
         setFormIsChecked(true);
-        if (isValid() && selectedSC) {
+        const isValid = checkIsValid(form, showError)
+        if (isValid && selectedSC) {
             const data: ICreateUpdateRecall = {
                 recallCampaignNumber: form.recallCampaignNumber,
                 makeId: form.make?.id ?? null,
@@ -237,7 +199,6 @@ const AddRecallModal: React.FC<TAddRecallProps> = ({editingItem, open, onClose, 
                         || formIsChecked && !form.yearTo
                     })}
                 />
-
                 <TextField
                     fullWidth
                     style={{ marginBottom: 10 }}

@@ -18,7 +18,9 @@ export const widerUserRoles: TRole[] = [
 ];
 
 export const timeSpanString = "HH:mm:ss";
-export const timeString = "h:mm a";
+export const time12HourFormat = "h:mm a";
+export const dateTimeString = "ddd, MMM D, h:mm A";
+export const time24HourFormat = "hh:mm A";
 
 export const SC_UNDEFINED = "Service center is not loaded";
 export const SOMETHING_WRONG = "Something wrong";

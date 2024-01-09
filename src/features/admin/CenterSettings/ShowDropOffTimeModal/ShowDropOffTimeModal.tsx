@@ -6,7 +6,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {updateShowDropOffTime} from "../../../../store/reducers/capacityServiceValet/actions";
 import {IShowDropOffTime} from "../../../../store/reducers/capacityServiceValet/types";
-import {useTranslation} from "react-i18next";
 import {ButtonsWrapper, TopWrapper} from "../styles";
 import {Textarea, Warning} from "./styles";
 import {useException} from "../../../../hooks/useException/useException";
@@ -18,7 +17,6 @@ const ShowDropOffTimeModal: React.FC<DialogProps> = ({onClose, open}) => {
     const [text, setText] = useState<string>('');
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
-    const {t} = useTranslation();
     const showError = useException();
 
     useEffect(() => {
@@ -44,7 +42,7 @@ const ShowDropOffTimeModal: React.FC<DialogProps> = ({onClose, open}) => {
                 if (text.trim().length) {
                     dispatch(updateShowDropOffTime(selectedSC.id, data, onCancel, showError))
                 } else {
-                    showError(t('"Text" must not be empty'))
+                    showError('"Text" must not be empty')
                 }
             } else {
                 dispatch(updateShowDropOffTime(selectedSC.id, data, onCancel, showError))

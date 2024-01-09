@@ -1,7 +1,13 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Button} from "@material-ui/core";
 import {concatAddress} from "../../../../../utils/utils";
-import {G_CALENDAR_FORMAT} from "../../../../../utils/constants";
+import {
+    calendarDateFormat,
+    dateTimeString,
+    G_CALENDAR_FORMAT,
+    time24HourFormat,
+    timeSpanString
+} from "../../../../../utils/constants";
 import moment from "moment";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
@@ -9,14 +15,14 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {TItem} from "../types";
 import {getCalendarUrl} from "./utils";
+import {TServiceValetSlot} from "../../../../../api/types";
 
 type TProps = {
-    date: moment.Moment,
     serviceName: string,
     servicesList: string[],
 }
 
-const AddToCalendarButton: React.FC<TProps> = ({date, serviceName, servicesList}) => {
+const AddToCalendarButton: React.FC<TProps> = ({ serviceName, servicesList}) => {
     const {
         advisor,
         isAppointmentSaving,
@@ -25,9 +31,17 @@ const AddToCalendarButton: React.FC<TProps> = ({date, serviceName, servicesList}
         serviceTypeOption,
         appointmentByKey
     } = useSelector((state: RootState) => state.appointmentFrame)
-    const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails)
-    const { serviceValetAppointment, appointment, scProfile, waitListSettings } = useSelector((state: RootState) => state.appointment)
+    const {
+        serviceValetAppointment,
+        appointment,
+        scProfile,
+        waitListSettings,
+        customerLoadedData
+    } = useSelector((state: RootState) => state.appointment)
     const {t} = useTranslation();
+    const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails)
+    const [serviceValetTime, setServiceValetTime] = useState<TServiceValetSlot|null>(null);
+
     const engine = useMemo(() => engineTypes.find(item => item.id === Number(selectedVehicle?.engineTypeId)), [engineTypes, selectedVehicle])
 
     const isServiceValetApp = useMemo(() => Boolean(serviceValetAppointment) && serviceTypeOption?.type === EServiceType.PickUpDropOff,
@@ -36,31 +50,74 @@ const AddToCalendarButton: React.FC<TProps> = ({date, serviceName, servicesList}
     const isWaitList = useMemo(() => waitListSettings?.isEnabled && (appointment?.isOverbookingApplied || appointmentByKey?.isWaitlist),
         [waitListSettings, appointment, appointmentByKey])
 
-    const vehicleData = selectedVehicle?.year
-        ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} ${engine?.name ?? ""}`
-        : valueService?.year
-            ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
-            : ''
+    const vehicleData = useMemo(() => {
+        return selectedVehicle?.year
+            ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} ${engine?.name ?? ""}`
+            : valueService?.year
+                ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
+                : ''
+    }, [selectedVehicle, engine, valueService])
+
+    useEffect(() => {
+        if (serviceValetAppointment) {
+            setServiceValetTime({
+                pickUpMin: serviceValetAppointment.pickUpMin,
+                pickUpMax: serviceValetAppointment.pickUpMax,
+                dropOffMin: serviceValetAppointment.dropOffMin,
+                dropOffMax: serviceValetAppointment.dropOffMax,
+            })
+        } else if (appointmentByKey?.serviceValetTime) {
+            const {serviceValetTime} = appointmentByKey;
+            setServiceValetTime({
+                pickUpMin: serviceValetTime.pickUpMin,
+                pickUpMax: serviceValetTime.pickUpMax,
+                dropOffMin: serviceValetTime.dropOffMin,
+                dropOffMax: serviceValetTime.dropOffMax,
+            })
+        }
+    }, [serviceValetAppointment, appointmentByKey])
+
+    const getDateForUpdate = (): moment.Moment => {
+        if (customerLoadedData?.isUpdating && appointmentByKey) {
+            if (appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+                return moment.utc(appointmentByKey.dateInUtc)
+            } else {
+                const [hh, mm] = appointmentByKey.timeSlot.split(':')
+                return moment.utc(appointmentByKey.dateInUtc).set('hour', +hh).set('minute', +mm)
+            }
+        }
+        return moment()
+    }
+
+    const date = isServiceValetApp
+        ? moment.utc(serviceValetAppointment?.date)
+        : customerLoadedData?.isUpdating && appointmentByKey
+            ? appointment?.date
+                ? moment.utc(appointment?.date)
+                : getDateForUpdate()
+            : moment.utc(appointment?.date)
 
     const getDateForCalendar = useCallback(() => {
-        let dateString: string = '';
+        let dateString: string;
         if (isServiceValetApp) {
-            dateString = moment(date).format('ddd, MMM D');
-            const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(serviceValetAppointment?.pickUpMin, "HH:mm:ss").format('hh:mm A')} ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, "HH:mm:ss").format('hh:mm A')}`
+            dateString = moment(date).format(calendarDateFormat);
+            const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(serviceValetAppointment?.pickUpMin, timeSpanString)
+                .format(time24HourFormat)} ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, timeSpanString).format(time24HourFormat)}`
             dateString = dateString.concat('\n')
             dateString = dateString.concat(pickUpTime)
         } else {
             if (serviceTypeOption?.type === EServiceType.PickUpDropOff && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                dateString = moment(date).format('ddd, MMM D');
+                dateString = moment(date).format(calendarDateFormat);
                 const pickUpMin = appointmentByKey?.serviceValetTime?.pickUpMin;
                 const pickUpMax = appointmentByKey?.serviceValetTime?.pickUpMax;
                 if (pickUpMin && pickUpMax) {
-                    const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(pickUpMin, "HH:mm:ss").format('hh:mm A')} ${t("to")} ${moment.utc(pickUpMax, "HH:mm:ss").format('hh:mm A')}`
+                    const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(pickUpMin, timeSpanString)
+                        .format(time24HourFormat)} ${t("to")} ${moment.utc(pickUpMax, timeSpanString).format(time24HourFormat)}`
                     dateString = dateString.concat('\n')
                     dateString = dateString.concat(pickUpTime)
                 }
             } else {
-                dateString = date.format('ddd, MMM D, h:mm A') ?? moment.utc().format('ddd, MMM D, h:mm A');
+                dateString = date.format(dateTimeString) ?? moment.utc().format(dateTimeString);
             }
         }
         return dateString;
@@ -103,10 +160,14 @@ const AddToCalendarButton: React.FC<TProps> = ({date, serviceName, servicesList}
     }, [vehicleData, serviceName, getDateForCalendar, isServiceValetApp, servicesList, advisor, scProfile, serviceTypeOption, getDateForCalendar])
 
     const handleAddToCalendar = () => {
+        const dateFrom = date.format(G_CALENDAR_FORMAT) + `${isServiceValetApp 
+            ? serviceValetTime?.pickUpMin.split(":").join('') ?? "000000" 
+            : appointment?.time.split(":").join("")}`;
+        const dateTo = date.add(1, "hour").format(G_CALENDAR_FORMAT) + `${isServiceValetApp 
+            ? serviceValetTime?.pickUpMax?.split(":").join('') ?? "000000" 
+            : appointment?.time.split(":").join("")}`;
         const url = getCalendarUrl({
-            dates: [
-                date.format(G_CALENDAR_FORMAT) + `${isServiceValetApp ? "000000" : appointment?.time.split(":").join("")}`,
-                date.add(1, "hour").format(G_CALENDAR_FORMAT) + `${isServiceValetApp ? "000000" : appointment?.time.split(":").join("")}`],
+            dates: [dateFrom, dateTo],
             text: `${scProfile?.name} ${t("Service Appointment")}`,
             location: scProfile?.address ? concatAddress(scProfile?.address) : "",
             details: calendarData.map(r => `${r.label}:\n${r.content}`).join("\n \n"),

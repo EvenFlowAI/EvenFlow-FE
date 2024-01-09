@@ -100,7 +100,6 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
         setCurrentEmployee(null);
         if (changesState?.podNotificationsSaved) {
             setAllPodData(podNotifications)
-            onClose()
         } else {
             askConfirm({
                 isRemove: true,
@@ -214,8 +213,11 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
             </div>
             <Divider style={{margin: '24px 0'}}/>
             <DialogActions style={{padding: '0 24px 0 0'}}>
+                <Button onClick={onClose} variant="outlined" color="primary" disabled={loading || podsLoading || isLoading}>
+                    Close
+                </Button>
                 <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || podsLoading || isLoading}>
-                    Cancel
+                    Cancel Changes
                 </Button>
                 <Button onClick={onSave} variant="contained" color="primary" disabled={loading || podsLoading || isLoading}>
                     Save

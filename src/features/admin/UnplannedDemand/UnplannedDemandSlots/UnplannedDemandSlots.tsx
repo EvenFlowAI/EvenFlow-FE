@@ -2,7 +2,7 @@ import React, {Dispatch, SetStateAction} from "react";
 import {IUnplannedDemandBySlot} from "../../../../store/reducers/demandSegments/types";
 import {Table, TableBody, TableHead} from "@material-ui/core";
 import moment from "moment";
-import {timeSpanString, timeString} from "../../../../utils/constants";
+import {timeSpanString, time12HourFormat} from "../../../../utils/constants";
 import {sortSlots} from "../utils";
 import DemandInput from "../../AppointmentAllocation/DemandInput";
 import {useStyles} from "./styles";
@@ -40,8 +40,8 @@ const UnplannedDemandSlots: React.FC<TTableProps> = ({ slots, setDemandSlots }) 
         <TableBody>
             {slots.map(item => {
                 return <TableRow key={moment().toISOString() + item.start} className={classes.row}>
-                    <TableCell key={item.start} align="center" className={classes.cell}>{moment(item.start, timeSpanString).format(timeString)}</TableCell>
-                    <TableCell key={item.end} align="center" className={classes.cell}>{moment(item.end, timeSpanString).format(timeString)}</TableCell>
+                    <TableCell key={item.start} align="center" className={classes.cell}>{moment(item.start, timeSpanString).format(time12HourFormat)}</TableCell>
+                    <TableCell key={item.end} align="center" className={classes.cell}>{moment(item.end, timeSpanString).format(time12HourFormat)}</TableCell>
                     <TableCell className={classes.cell} align="center">
                         <DemandInput item={item} onBlur={onChange}/>
                     </TableCell>

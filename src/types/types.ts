@@ -311,3 +311,8 @@ export enum EStates {
     WI = "Wisconsin",
     WY = "Wyoming",
 }
+
+export type TIdAndName = {
+    id: number;
+    name: string;
+}
