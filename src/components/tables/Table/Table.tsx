@@ -128,8 +128,8 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
             component="div"
             count={count}
             page={nPage}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
             rowsPerPage={nRowsPerPage}
             rowsPerPageOptions={defaultRowsPerPageOptions}
         /> : null}

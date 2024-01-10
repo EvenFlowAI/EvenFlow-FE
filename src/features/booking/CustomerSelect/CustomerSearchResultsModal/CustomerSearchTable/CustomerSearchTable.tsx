@@ -571,8 +571,8 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                     component="div"
                     count={paging.numberOfRecords}
                     page={pageData.pageIndex}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRows}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRows}
                     rowsPerPage={pageData.pageSize}/>
                 : null }
         </div>

@@ -8,7 +8,7 @@ export const useStyles = makeStyles(theme => ({
     label: {
         textTransform: "uppercase",
         marginBottom: theme.spacing(.5),
-        fontWeight: theme.typography.fontWeightBold,
+        fontWeight: 'bold',
         color: theme.palette.text.primary,
     },
     button: {

@@ -64,8 +64,8 @@ export const ArchiveOffers = () => {
                 component="div"
                 count={count}
                 page={pageData.pageIndex}
-                onChangePage={changePage}
-                onChangeRowsPerPage={changeRowsPerPage}
+                onPageChange={changePage}
+                onRowsPerPageChange={changeRowsPerPage}
                 rowsPerPage={pageData.pageSize}
                 rowsPerPageOptions={defaultRowsPerPageOptions}
             />
