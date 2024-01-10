@@ -3,7 +3,7 @@ import './App.css';
 import {Container, IconButton} from '@material-ui/core';
 import {useHistory} from 'react-router-dom';
 import {ConfirmModal} from './components/modals/common/ConfirmModal/ConfirmModal';
-import {ProviderContext, SnackbarProvider} from "notistack";
+import {SnackbarProvider} from "notistack";
 import {Close} from "@material-ui/icons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/rootReducer";
@@ -20,7 +20,7 @@ const App = () => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
-    const notificationsRef = useRef<ProviderContext>();
+    const notificationsRef = useRef<SnackbarProvider|null>(null);
     const dispatch = useDispatch();
     const history = useHistory();
     const lastLoadingTime = useMemo(() => moment().utc().toISOString(), []);
