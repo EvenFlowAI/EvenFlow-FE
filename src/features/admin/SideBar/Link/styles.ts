@@ -35,5 +35,10 @@ export const useStyles = makeStyles((theme) => ({
         "&:hover": {
             color: lighten("#7898FF", .5)
         }
+    },
+    mainListItem: {
+        "&.active": {
+            color: "#FFFFFF"
+        },
     }
 }))

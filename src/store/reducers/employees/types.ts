@@ -14,6 +14,7 @@ export interface IEmployeeInfo {
 export interface IEmployee {
     dealership?: IDealershipGroupExtended;
     serviceCenter?: IServiceCenter;
+    serviceCenters?: IServiceCenter[];
     employeeInfo?: IEmployeeInfo;
     id: string;
     fullName: string;
@@ -46,7 +47,7 @@ export interface IEmployeeForm {
     firstName: string;
     lastName: string;
     serviceCenterId: number | null;
-    email?: number;
+    email?: string;
     phoneNumber?: string;
     employeeInfo?: IEmployeeInfo,
     dmsId: string | null;

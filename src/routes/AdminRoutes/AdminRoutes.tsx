@@ -1,7 +1,6 @@
 import React from "react";
 import {Switch, Redirect} from "react-router-dom";
 import {ServiceCenters} from "../../pages/admin/ServiceCenters/ServiceCenters";
-import {Employees} from "../../pages/admin/Employees/Employees";
 import {ContentContainer} from "../../components/wrappers/ContentContainer/ContentContainer";
 import {PrivateRoute} from "../PrivateRoute/PrivateRoute";
 import {AdminDashboard} from "../../pages/admin/Dashboard/Dashboard";
@@ -15,6 +14,7 @@ import {BookingFlowSettingsRoutes} from "../BookingFlowSettingsRoutes/BookingFlo
 import DealershipGroups from "../../pages/admin/DealershipGroups/DealershipGroups";
 import {useCurrentUser} from "../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../constants";
+import EmployeesRoutes from "../EmployeesRoutes/EmployeesRoutes";
 
 export const AdminRoutes = () => {
     const currentUser = useCurrentUser();
@@ -30,7 +30,7 @@ export const AdminRoutes = () => {
             {currentUser.isSuperUser
                 ? <PrivateRoute path={`${Routes.Admin.DealershipGroups}/:id`} component={DealershipGroupDetails} />
                 : null}
-            {!currentRoleIsRestricted && <PrivateRoute path={Routes.Admin.Employees} component={Employees}/>}
+            {!currentRoleIsRestricted && <PrivateRoute path={Routes.Employees.Base} component={EmployeesRoutes}/>}
             {!currentUser.isSuperUser ?
                 <PrivateRoute path={Routes.Admin.Appointments} component={AppointmentsPage} />
                 : null}

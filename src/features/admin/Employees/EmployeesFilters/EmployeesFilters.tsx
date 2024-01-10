@@ -1,38 +1,40 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Button, MenuItem, Select} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {
-    loadByFilters,
-    loadAll,
     setEmployeeFilters,
-    changePageData
+    changePageData, setEmplSearch
 } from "../../../../store/reducers/employees/actions";
-import {ButtonsWrapper, FiltersWrapper} from "./styles";
+import {FiltersWrapper} from "./styles";
 import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
+import {SearchDB} from "../../../../components/formControls/SearchDebounced/SearchDB";
+import {CreateEmployee} from "../../../../components/modals/admin/CreateEmployee/CreateEmployee";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useLabelStyles} from "../../../../hooks/styling/useLabelStyles";
+import {EmptyMenuItem} from "../../Appointments/AppointmentFilters/styles";
 
-const roles = ['Advisor', 'Technician', 'Call Center Rep', 'Manager', 'Owner'];
+const roles = ['Advisor', 'Technician', 'Call Center Rep', 'Manager', 'Owner', 'Service Director'];
 const widerRoles = ['Advisor', 'Owner'];
 
 const EmployeesFilters = () => {
     const {fullSCList} = useSelector((state: RootState) => state.serviceCenters);
-    const {filters} = useSelector((state: RootState) => state.employees);
-    const [selectedRole, setSelectedRole] = useState<string|unknown>('');
+    const {filters, searchTerm} = useSelector((state: RootState) => state.employees);
+
+    const [selectedRole, setSelectedRole] = useState<string>('');
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();
+    const classes = useLabelStyles();
+    const {isOpen, onClose, onOpen} = useModal();
     const {changePage} = usePagination(
         (s: RootState) => s.employees.pageData,
         changePageData
     );
 
-    const applyFilters = () => {
-        dispatch(loadByFilters())
-    }
-
     useEffect(() => {
-        setSelectedRole(filters.role ?? null)
+        setSelectedRole(filters.role ?? '')
     }, [filters])
 
     const handleSelectRole = (e: React.ChangeEvent<{value: unknown}>) => {
@@ -52,65 +54,63 @@ const EmployeesFilters = () => {
         changePage(null, 0)
     }
 
-    const clearFilters = () => {
-        dispatch(setEmployeeFilters({serviceCenterId: null}))
-        dispatch(setEmployeeFilters({role: ''}))
-        setSelectedRole(null);
-        changePage(null, 0)
-        dispatch(loadAll());
-    }
+    const handleSearch = useCallback((s: string) => {
+        dispatch(setEmplSearch(s));
+    }, [dispatch]);
 
 
     return (
-        <>
             <FiltersWrapper>
-                <Select
-                    fullWidth
-                    style={{ marginRight: 20, width: currentUser && !widerRoles.includes(currentUser?.role) ? "45%" : "100%"}}
-                    placeholder='Role'
-                    onChange={handleSelectRole}
-                    value={selectedRole}
-                    input={
-                        <TextField label='Role'/>
-                    }
-                >
-                    <MenuItem value=''>-</MenuItem>
-                    {roles.map(role => {
-                        return <MenuItem key={role} value={role}>{role}</MenuItem>
-                    })}
-                </Select>
                 {currentUser && widerRoles.includes(currentUser.role)
-                    ? <Select
-                    fullWidth
-                    placeholder='Service Center'
-                    onChange={handleSelectCenter}
-                    value={filters.serviceCenterId ?? ""}
-                    input={
-                        <TextField label='Service Center'/>
-                    }
-                >
-                    <MenuItem value=''>-</MenuItem>
-                    {fullSCList.map(serviceCenter => {
-                        return <MenuItem key={serviceCenter.name}
-                                         value={serviceCenter.id}>{serviceCenter.name}</MenuItem>
-                    })}
-                </Select> : <div/>}
+                    ? <div>
+                        <div className={classes.label}>Service Center</div>
+                        <Select
+                            fullWidth
+                            displayEmpty
+                            style={{color: filters.serviceCenterId ? "inherit" : '#858585'}}
+                            onChange={handleSelectCenter}
+                            value={filters.serviceCenterId ?? ""}
+                            input={<TextField/>}
+                        >
+                            <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
+                            {fullSCList.map(serviceCenter => {
+                                return <MenuItem key={serviceCenter.name}
+                                                 value={serviceCenter.id}>{serviceCenter.name}</MenuItem>
+                            })}
+                        </Select>
+                    </div>
+                    : <div/>}
+
+                <div style={currentUser && !widerRoles.includes(currentUser?.role) ? {width: "45%"} : {}}>
+                    <div className={classes.label}>Role</div>
+                    <Select
+                        fullWidth
+                        displayEmpty
+                        onChange={handleSelectRole}
+                        style={{color: selectedRole ? "inherit" : '#858585'}}
+                        value={selectedRole}
+                        input={<TextField placeholder={"Not selected"}/>}
+                    >
+                        <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
+                        {roles.map(role => {
+                            return <MenuItem key={role} value={role}>{role}</MenuItem>
+                        })}
+                    </Select>
+                </div>
+
+                {currentUser && !currentUser.isSuperUser
+                    ? <>
+                        <SearchDB onSearch={handleSearch} search={searchTerm} style={{marginRight: 20}}/>
+                        <Button
+                            onClick={onOpen}
+                            variant="contained"
+                            color="primary">
+                            Add Employee
+                        </Button>
+                    </>
+                    : null}
+                <CreateEmployee open={isOpen} onClose={onClose} />
             </FiltersWrapper>
-            <ButtonsWrapper>
-                <Button
-                    onClick={clearFilters}
-                    variant="outlined"
-                    color="primary">
-                    Clear
-                </Button>
-                <Button
-                    onClick={applyFilters}
-                    variant="contained"
-                    color="primary">
-                    Apply
-                </Button>
-            </ButtonsWrapper>
-        </>
     );
 };
 

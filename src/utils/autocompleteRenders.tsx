@@ -30,3 +30,18 @@ export const autocompleteOptionsRender = (label: (el: any) => string) => (option
         {label(option)}
     </>;
 }
+
+export const autocompleteOptionsCheckboxRender = (label: (el: any) => string) => (option: any, params: AutocompleteRenderOptionState) => {
+    return <>
+        <Checkbox
+            color="primary"
+            size="small"
+            icon={params.selected
+                ? <CheckBoxOutlined fontSize="small" htmlColor="#3855FE"/>
+                : <CheckBoxOutlineBlank fontSize="small" htmlColor="#DADADA"/>}
+            style={{marginRight: 8, padding: 0}}
+            checked={params.selected}
+        />
+        {label(option)}
+    </>;
+}

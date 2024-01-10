@@ -47,7 +47,7 @@ const Link: React.FC<TLinkProps> = ({link, closeSidebar}) => {
         ? <List disablePadding className={classes.listWithSubs}>
             <ListItem
                 disableGutters
-                className={classes.listItem}
+                className={clsx(classes.listItem)}
                 component={NavLink}
                 to={link.to}
                 onClick={onOpenSubList}
