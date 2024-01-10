@@ -262,7 +262,7 @@ export const mapRecallsForRequest = (selectedRecalls: IRecallByVin[]): TRecallFo
 export const getCategories = (allCategories: ICategory[], categoriesIds: number[]): number[] => {
     return allCategories
         .filter(category => {
-            return category.type === EServiceCategoryType.GeneralCategory
+            return (category.type === EServiceCategoryType.GeneralCategory || category.type === EServiceCategoryType.OpenRecalls)
                 && categoriesIds.includes(category.id)
         })
         .map(item => item.id)
