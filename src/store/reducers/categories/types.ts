@@ -49,3 +49,11 @@ export enum EServiceCategoryType {
 }
 
 export type TSuccessCallback = (id: number) => void;
+
+export type TState = {
+    categories: ICategory[];
+    allCategories: ICategory[];
+    isLoading: boolean;
+    page: number;
+    filter: EServiceType;
+}

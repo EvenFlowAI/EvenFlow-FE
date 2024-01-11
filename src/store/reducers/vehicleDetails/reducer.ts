@@ -1,16 +1,6 @@
-import {IMake, IMakeExtended} from "../../../api/types";
 import {createReducer} from "@reduxjs/toolkit";
 import {getEngineType, getMakes, getMileage, setCurrentMake, setLoading, setPodsMakes} from "./actions";
-import {IEngineType, IMileage} from "./types";
-
-type TState = {
-    makes: IMake[];
-    currentMake: IMake | null;
-    isLoading: boolean;
-    mileage: IMileage[];
-    makesModels: IMakeExtended[];
-    engineTypes: IEngineType[];
-}
+import {TState} from "./types";
 
 const initialState: TState = {
     makes: [],

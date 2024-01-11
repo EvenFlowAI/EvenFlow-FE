@@ -1,16 +1,7 @@
-import {IHoliday, THolidayActions} from "./types";
-import {IPageRequest, IPagingResponse} from "../../../types/types";
-import {defaultPageData, defaultPaging} from "../defaultInitials";
+import {THolidayActions, TState} from "./types";
+import {defaultPageData, defaultPaging} from "../constants";
 import {getWeeklyHolidaysList} from "./actions";
 
-type TState = {
-    holidaysList: IHoliday[],
-    paging: IPagingResponse,
-    pageData: IPageRequest,
-    loading: boolean,
-    saving: boolean,
-    weeklyHolidaysList: IHoliday[],
-}
 const initialState: TState = {
     holidaysList: [],
     loading: false,

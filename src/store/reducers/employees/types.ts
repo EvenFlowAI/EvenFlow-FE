@@ -1,7 +1,8 @@
 import {IDealershipGroupExtended} from "../dealershipGroups/types";
 import {IServiceCenter} from "../serviceCenters/types";
-import {TChangePageDataGeneric, TChangePagingGeneric} from "../utils";
 import {IAdvisorShort} from "../users/types";
+import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
+import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 
 export interface IEmployeeInfo {
     hourlyRate: number;
@@ -13,6 +14,7 @@ export interface IEmployeeInfo {
 export interface IEmployee {
     dealership?: IDealershipGroupExtended;
     serviceCenter?: IServiceCenter;
+    serviceCenters?: IServiceCenter[];
     employeeInfo?: IEmployeeInfo;
     id: string;
     fullName: string;
@@ -45,7 +47,7 @@ export interface IEmployeeForm {
     firstName: string;
     lastName: string;
     serviceCenterId: number | null;
-    email?: number;
+    email?: string;
     phoneNumber?: string;
     employeeInfo?: IEmployeeInfo,
     dmsId: string | null;
@@ -85,4 +87,26 @@ export type TEmployeeActions =
 export type TDmsAdvisor = {
     id: string;
     name: string;
+}
+export type TEmployeesState = {
+    employeesList: IEmployee[];
+    dealershipEmployeesList: IEmployee[];
+    techniciansList: IEmployee[];
+    searchTerm: string;
+    order: IOrder<IEmployee>;
+    loadingTechnicians: boolean;
+    loadingDealership: boolean;
+    loading: boolean;
+    loadingDMSAdvisors: boolean;
+    saving: boolean;
+    dealershipPaging: IPagingResponse;
+    paging: IPagingResponse;
+    pageData: IPageRequest;
+    filters: IEmployeeFilters;
+    usersShort: IAdvisorShort[];
+}
+export type TSCState = {
+    advisorsList: IAdvisorShort[];
+    techniciansList: IAdvisorShort[];
+    DmsAdvisors: TDmsAdvisor[];
 }

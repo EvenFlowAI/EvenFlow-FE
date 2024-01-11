@@ -1,11 +1,6 @@
-import {IFirstScreenOption} from "./types";
+import {TState} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
 import {getFirstScreenOptionsByQuery, setFirstScreenOptionsLoading} from "./actions";
-
-type TState = {
-    firstScreenOptions: IFirstScreenOption[];
-    isLoading: boolean;
-}
 
 const initialState: TState = {
     firstScreenOptions: [],

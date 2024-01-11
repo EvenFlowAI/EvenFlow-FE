@@ -1,9 +1,9 @@
 import {createAction} from "@reduxjs/toolkit";
 import {IEmployeeSchedule, IScheduleFilters, IScheduleForm} from "./types";
 import {AppThunk} from "../../../types/types";
-import {Api} from "../../../config/requests";
-import {getStartEndDates} from "../../../components/Optimizer/EmployeeSchedule/utils";
 import moment from "moment";
+import {getStartEndDates} from "../../../utils/utils";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const switchScheduleFilters = createAction<boolean>("Schedules/SwitchFilters");
 export const setScheduleFilters = createAction<Partial<IScheduleFilters>>("Schedules/SetFilters");

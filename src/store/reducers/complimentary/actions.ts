@@ -1,10 +1,10 @@
 import {TComplimentary} from "./types";
 import {AppThunk} from "../../../types/types";
-import {Api} from "../../../config/requests";
 import {
     loadComplimentary,
     getAllComplimentary,
 } from "../packages/actions";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const addComplimentaryManually = (data: TComplimentary, callback: () => void, errCallback = (err: string) => {}): AppThunk => dispatch => {
     Api.call(Api.endpoints.ComplimentaryServices.Create, {data})

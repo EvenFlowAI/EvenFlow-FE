@@ -1,0 +1,18 @@
+import {makeStyles} from "@material-ui/core/styles";
+
+export const useStyles = makeStyles({
+    wrapper: {
+        height: 300,
+        display: 'flex',
+        flexDirection: 'column',
+        flexWrap: 'wrap',
+        padding: '0px 8px',
+    },
+    label: {
+        maxWidth: '50%',
+        marginBottom: 12
+    },
+    checkbox: {
+        marginRight: 12
+    },
+})

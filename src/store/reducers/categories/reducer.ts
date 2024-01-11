@@ -1,4 +1,4 @@
-import {ICategory} from "./types";
+import {TState} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
 import {
     getCategoriesByPage,
@@ -8,14 +8,6 @@ import {
     setCategoriesPage
 } from "./actions";
 import {EServiceType} from "../appointmentFrameReducer/types";
-
-type TState = {
-    categories: ICategory[];
-    allCategories: ICategory[];
-    isLoading: boolean;
-    page: number;
-    filter: EServiceType;
-}
 
 const initialState: TState = {
     categories: [],

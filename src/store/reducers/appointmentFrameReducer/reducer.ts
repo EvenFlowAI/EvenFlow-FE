@@ -1,9 +1,12 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
+    deleteLastScreen,
+    getAppointmentRequestsPrices,
     getMakes,
     getModels,
     getSeriesModels,
     getSlotsGap,
+    getTransactionValue,
     getValueServiceOffers,
     selectCategoriesIds,
     selectService,
@@ -13,13 +16,18 @@ import {
     setAdvisor,
     setAncillaryPriceByZip,
     setAncillaryPriceLoading,
+    setAnyAdvisorSelected,
     setAppointmentByKey,
     setAppointmentId,
+    setAppointmentNotes,
     setAppointmentSaving,
     setCarIsValidForUpdate,
+    setCity,
     setConsultants,
+    setConsultantsLoading,
     setCurrentFrameScreen,
     setCustomer,
+    setEditingPosition,
     setFilteredZipCodes,
     setFrameDescription,
     setHashKey,
@@ -27,31 +35,36 @@ import {
     setLoadingPackages,
     setMaintenanceDetails,
     setMobileServiceAvailability,
-    setUsualFlowNeeded,
     setOffersLoading,
     setPackage,
     setPackageEMenuType,
     setPackageIsSelected,
     setPackagePricingType,
     setPackages,
+    setPassedScreens,
     setPickUpDropOffAvailability,
+    setPoliticalState,
     setRecallsAreShown,
     setReminders,
     setSelectedPackageOptionType,
     setSelectedPackagePriceTitles,
     setSelectedRecalls,
+    setSelectedServiceTypeOptions,
+    setServiceOptionChanged,
     setServiceTypeOption,
     setShowServiceCentersList,
     setSideBarActualSteps,
     setSideBarMenu,
     setSideBarSteps,
     setSideBarStepsList,
+    setStreetName,
     setTime,
     setTiming,
     setTrackerCreated,
     setTransportation,
     setUpdateAppointment,
     setUserType,
+    setUsualFlowNeeded,
     setValueService,
     setValueServiceAvailability,
     setVehicle,
@@ -59,127 +72,11 @@ import {
     setZipCode,
     switchLanguage,
     updateVehicle,
-    setEditingPosition,
-    getAppointmentRequestsPrices,
-    setAppointmentNotes,
-    setServiceOptionChanged,
-    setConsultantsLoading,
-    setPoliticalState,
-    setCity,
-    setStreetName,
-    setAnyAdvisorSelected,
-    getTransactionValue,
-    setSelectedServiceTypeOptions,
-    setPassedScreens,
-    deleteLastScreen,
 } from "./actions";
-import {
-    EMaintenanceOptionType, IAppointmentByKey,
-    ICustomer,
-    ILoadedVehicle,
-    IMake,
-    IPackage,
-    IPackageOptions,
-    IServiceCategory,
-    IServiceConsultant,
-    ITransportation
-} from "../../../api/types";
-import moment from "moment";
-import {EAppointmentTimingType, EReminderType, IServiceRequestPrice} from "../appointment/types";
-import {
-    EPackagePricingType,
-    EServiceType,
-    EUserType,
-    IServiceOffer,
-    IValueService,
-    TAncillaryPriceByZip, TEditingPosition,
-    TLanguage,
-    TMaintenanceDetails,
-    TYear
-} from "./types";
-import {TScreen} from "../../../components/Layout/types";
-import {TView} from "../../../components/Welcome/types";
-import {IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
-import {IHOODataForm} from "../serviceCenters/types";
-import {IFirstScreenOption} from "../serviceTypes/types";
-import {TPackagePrice} from "../packages/types";
+import {EAppointmentTimingType} from "../appointment/types";
+import {EServiceType, TState} from "./types";
 import {getSlotsConsultantId} from "../appointment/actions";
 
-type TState = {
-    service: IServiceCategory|null;
-    subService: IServiceCategory|null;
-    description: string;
-    selectedPackage: IPackageOptions|null;
-    advisor: IServiceConsultant|null;
-    isAnyAdvisorSelected: boolean;
-    selectedTiming: EAppointmentTimingType|null;
-    selectedTime: moment.Moment|null;
-    selectedVehicle: ILoadedVehicle|null;
-    customer: ICustomer;
-    reminders: EReminderType[];
-    transportation: ITransportation|null;
-    maintenanceDetails: TMaintenanceDetails;
-    packages: IPackage[];
-    isPackagesLoading: boolean;
-    consultants: IServiceConsultant[];
-    isConsultantsLoading: boolean;
-    currentScreen: TScreen | '';
-    prevScreen: TScreen | '';
-    makes: IMake[];
-    models: string[];
-    trackerCreated: boolean;
-    isAdditionalServices: boolean;
-    packageIsSelected: boolean;
-    packageOptionType: number | null;
-    categoriesIds: number[];
-    id?: number;
-    hashKey?: string;
-    gap: number | undefined;
-    userType: EUserType | undefined;
-    address: any;
-    politicalState: string;
-    city: string;
-    zipCode: string;
-    streetName: string;
-    valueService: IValueService | null;
-    seriesModels: TYear[];
-    offersLoading: boolean;
-    serviceOffers: IServiceOffer[];
-    isMobileServiceOn: boolean;
-    isPickUpDropOffServiceOn: boolean;
-    isValueServiceOn: boolean;
-    sideBarSteps: TScreen[];
-    sideBarMenu: string[];
-    sideBarActualSteps: {[K in TScreen]: number}|null;
-    sideBarStepsList: TScreen[];
-    welcomeScreenView: TView;
-    language: TLanguage;
-    ancillaryPriceLoading: boolean;
-    ancillaryPrice: TAncillaryPriceByZip|null;
-    filteredZipCodes: string[];
-    selectedRecalls: IRecallByVin[];
-    recallsAreShown: boolean;
-    hoursOfOperations: IHOODataForm[];
-    serviceTypeOption: IFirstScreenOption|null;
-    selectedOptionTypes: EServiceType[];
-    selectedServiceOptions: IFirstScreenOption[];
-    prevSelectedOption:  IFirstScreenOption|null;
-    packagePricingType: EPackagePricingType | null;
-    packagePriceTitles: TPackagePrice[];
-    packageEMenuType: EMaintenanceOptionType|null;
-    slotsConsultantId: string|null;
-    shouldShowServiceCentersList: boolean;
-    isAppointmentSaving: boolean;
-    appointmentByKey: IAppointmentByKey|null;
-    carIsValidForUpdate: boolean;
-    isUsualFlowNeeded: boolean;
-    editingPosition: TEditingPosition|null;
-    appointmentRequestsPrices: IServiceRequestPrice[];
-    appointmentNotes: string;
-    serviceOptionChangedFromSlotPage: boolean;
-    transactionValue: number;
-    passedScreens: TScreen[];
-}
 const initialState: TState = {
     service: null,
     subService: null,

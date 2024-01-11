@@ -21,7 +21,7 @@ export interface IUserForm {
     phoneNumber: string;
     role: TRole;
     serviceCenterId: number;
-    dmsId?: string;
+    dmsId?: string|null;
     showOnBookingFlow?: boolean;
     position?: string;
 }
@@ -48,3 +48,10 @@ export type TRole =
     | "Technician"
     | "Call Center Rep"
     | "Service Director"
+
+export type IUsersState = {
+    currentUser?: ICurrentUser,
+    saving: boolean,
+    loading: boolean;
+    isSuperAdmin: boolean;
+}

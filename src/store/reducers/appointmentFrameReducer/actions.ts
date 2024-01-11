@@ -30,10 +30,14 @@ import {
     TMaintenanceDetails,
     TYear
 } from "./types";
-import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
-import {Api} from "../../../config/requests";
-import {decodeSCID} from "../../../utils/utils";
-import {TScreen} from "../../../components/Layout/types";
+import {AppThunk, IMaintenanceItem, IRecallByVin, PaginatedAPIResponse, TScreen, TView} from "../../../types/types";
+import {
+    collectServiceRequestIds,
+    decodeSCID,
+    getCategories, getVehicleData,
+    getYearOptions,
+    mapRecallsForRequest
+} from "../../../utils/utils";
 import {
     getSlotsConsultantId,
     saveCustomerCache,
@@ -44,23 +48,15 @@ import {
     setCustomerLoadedData,
     setWaitListSettings
 } from "../appointment/actions";
-import {TView} from "../../../components/Welcome/types";
-import {IMaintenanceItem, IRecallByVin} from "../../../components/AppointmentFlow/AppointmentFrame/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
 import {TPackagePrice} from "../packages/types";
 import {updateSelectedRecalls} from "../recall/actions";
 import {EServiceCategoryType} from "../categories/types";
-import {
-    collectServiceRequestIds,
-    getCategories,
-    getVehicleData,
-    mapRecallsForRequest
-} from "../../../components/AppointmentFlow/AppointmentFrame/utils";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
-import {yearOptions} from "../../../components/AppointmentFlow/AppointmentFrame/MaintenanceDetails";
 import {EScheduler} from "../appointments/types";
 import {setAppointmentsLoading} from "../appointments/actions";
+import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -516,6 +512,7 @@ export const setVehicleDataFromValueService = (): AppThunk => (dispatch, getStat
         const bmwMake = makes.find(item => item.name === "BMW");
         if (bmwMake) {
             vehicle.make = bmwMake.name;
+            const yearOptions = getYearOptions();
             if (valueService?.year?.year && yearOptions.find(option => Number(option) === valueService?.year?.year)) {
                 vehicle.year = Number(valueService.year.year)
             }

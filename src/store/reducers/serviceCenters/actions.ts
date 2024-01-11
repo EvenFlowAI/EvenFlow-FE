@@ -11,15 +11,14 @@ import {
 import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
-import {Api, TOptions} from "../../../config/requests";
-import {AppThunk, IOrder, IPageRequest, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, IOrder, IPageRequest, LocalItems, PaginatedAPIResponse} from "../../../types/types";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
-import {LocalItems} from "../../../config/constants";
 import {setSelectedPod} from "../pods/actions";
 import {createAction} from "@reduxjs/toolkit";
 import {EDay} from "../demandSegments/types";
 import {EMaintenanceOptionType} from "../../../api/types";
 import {setWelcomeScreenView} from "../appointmentFrameReducer/actions";
+import {Api, TOptions} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 const getAll = (payload: IServiceCenterExtended[]): TServiceCenterActions => ({
     type: "ServiceCenters/GetAll", payload
@@ -73,10 +72,7 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
 }
 export const setSCOrder = createAction<IOrder<IServiceCenterExtended>>("ServiceCenters/ChangeOrder");
 export const setSCSearch = createAction<string>("ServiceCenters/SetSearch");
-//
-// const _create = (payload: IServiceCenterExtended): TServiceCenterActions => ({
-//     type: "ServiceCenters/Create", payload
-// });
+
 export const saveAvatar = (avatar: File, id: number): AppThunk => async () => {
     const data = new FormData();
     data.append("file", avatar, avatar?.name || "");

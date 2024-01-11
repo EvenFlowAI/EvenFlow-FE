@@ -20,3 +20,15 @@ export type TModalActions =
     | TSetChangesModal
     | TSetSlotsWarningModal
     | TSetServiceWarningModal;
+
+export type TConfirmState = {
+    open: boolean;
+    payload?: TConfirmModalPayload;
+};
+
+export type TModalState = {
+    confirm: TConfirmState,
+    isChangesCompletedOpen: boolean;
+    isSlotsWarningOpen: boolean;
+    isServiceWarningOpen: boolean;
+};

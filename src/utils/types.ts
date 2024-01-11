@@ -14,7 +14,6 @@ export type TRouteRoleMap = {
     roles: TRole[] | boolean;
 }
 
-
 export type TGroupedAppointment = {
     date: moment.Moment;
     lowestPrice: number;
@@ -31,4 +30,22 @@ export type TGroupedAppointments = {
 export type TOption = {
     value: number;
     name: string;
+}
+
+export type TTextParams = {
+    label: string;
+    fullWidth?: boolean;
+    disabled?: boolean;
+    placeholder?: string;
+    error?: boolean;
+    required?: boolean;
+    key?: string;
+};
+
+export type TGAOptions = {
+    siteSpeedSampleRate: number;
+    cookieDomain: string;
+    allowLinker: boolean;
+    storage: string;
+    clientId?: string;
 }

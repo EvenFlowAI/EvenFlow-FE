@@ -1,0 +1,489 @@
+import React, {useEffect, useMemo, useState} from 'react';
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
+import {Autocomplete} from "@material-ui/lab";
+import {useMediaQuery, useTheme} from "@material-ui/core";
+import {StepWrapper} from "../../../../components/styled/StepWrapper";
+import {ActionButtons} from "../../ActionButtons/ActionButtons";
+import {useDispatch, useSelector} from "react-redux";
+import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {
+    clearAppointmentSteps,
+    setRecallsAreShown,
+    setSelectedRecalls,
+    setVehicle,
+    setVehicleDataFromValueService,
+    updateVehicle
+} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {RootState} from "../../../../store/rootReducer";
+import {useParams} from "react-router-dom";
+import {EServiceCategoryPage, EServiceCenterName, ILoadedVehicle} from "../../../../api/types";
+import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
+import {decodeSCID, getYearOptions} from "../../../../utils/utils";
+import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
+import {useTranslation} from "react-i18next";
+import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
+import {TArgCallback, TScreen} from "../../../../types/types";
+import RecallsByVinModal from "../../RecallsByVinModal/RecallsByVinModal";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
+import NoRecallsModal from "../../NoRecallsModal/NoRecallsModal";
+import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
+import {SelectWrapper, useStyles} from "./styles";
+import {TKey, TOptionsState} from "./types";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import {useException} from "../../../../hooks/useException/useException";
+import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
+
+type TMaintenanceDetailsProps = {
+    onBack: TArgCallback<TScreen>;
+    onNext: TArgCallback<TScreen>;
+}
+
+const blankOptions: TOptionsState = {};
+
+export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack}) => {
+    const {
+        selectedVehicle,
+        makes,
+        service,
+        valueService,
+        subService,
+        userType,
+        recallsAreShown,
+        categoriesIds,
+        selectedPackage,
+        serviceTypeOption,
+        appointmentByKey,
+        advisor
+    }= useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
+    const {currentConfig, isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const [errors, setErrors] = useState<TKey[]>([]);
+    const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
+    const [currentModels, setCurrentModels] = useState<string[] | []>([]);
+    const [selectedEngine, setSelectedEngine] = useState<IEngineType|null>(null);
+    const [isLoading, setLoading] = useState<boolean>(false);
+
+    const dispatch = useDispatch();
+    const showError = useException();
+    const theme = useTheme();
+    const {id} = useParams();
+    const {t} = useTranslation();
+    const {isOpen, onOpen, onClose} = useModal();
+    const {isOpen: isNoRecallsOpen, onOpen: onNoRecallsOpen, onClose: onNoRecallsClose} = useModal();
+    const classes = useStyles();
+
+    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+    const requiredFields: TKey[] = ["model", "year", "make", "mileage"];
+    const nextLogicalScreen = useMemo(() => {
+         return isAdvisorAvailable
+            ? 'consultantSelection'
+            : isAppointmentTimingAvailable
+                ? 'appointmentTiming'
+                : "appointmentSelection"
+    }, [isAdvisorAvailable, isAppointmentTimingAvailable])
+
+    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
+        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
+
+    const isExistingVin = useMemo(() => {
+        return Boolean(customerLoadedData?.vehicles.find(v => {
+            return (v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin)}));
+    }, [selectedVehicle, customerLoadedData])
+
+    const isExistingVehicle = useMemo(() => {
+        return Boolean(customerLoadedData?.vehicles.find(v => {
+            return (v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin)
+                || (v.make === selectedVehicle?.make
+                    && v.model === selectedVehicle?.model
+                    && v.year
+                    && v.year?.toString() === selectedVehicle?.year?.toString())
+        }));
+    }, [selectedVehicle, customerLoadedData])
+
+    const recallsToggledOn = useMemo(() => (currentConfig?.checkRecallsNew && userType === EUserType.New)
+        || (currentConfig?.checkRecallsExisting && userType === EUserType.Existing), [currentConfig, userType])
+
+    const isRecallsCategorySelected = useMemo(() => {
+        const isServiceRecall = service?.type == EServiceCategoryType.OpenRecalls && service.page === EServiceCategoryPage.Page1;
+        const isSubServiceRecall = subService?.type == EServiceCategoryType.OpenRecalls && subService.page === EServiceCategoryPage.Page2;
+        return isServiceRecall || isSubServiceRecall;
+    }, [service, subService])
+
+    const onlyRecallsSelected = useMemo(() => {
+        const uniqueCategories = Array.from(new Set(categoriesIds));
+        return !selectedSR.length && !selectedPackage && isRecallsCategorySelected && uniqueCategories.length === 1
+    }, [selectedSR, selectedPackage, isRecallsCategorySelected, categoriesIds])
+
+    const isNextDisabled = useMemo(() => {
+        return !Boolean(selectedVehicle?.make
+            && selectedVehicle?.model
+            && selectedVehicle?.year
+            && selectedVehicle?.mileage
+            && (currentConfig?.engineType ? selectedVehicle?.engineTypeId : true)
+            && (isRecallsCategorySelected ? selectedVehicle?.vin : true))
+    }, [selectedVehicle, currentConfig, isRecallsCategorySelected])
+
+    useEffect(() => {
+        const selectedMileage = mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
+        const mileageIsValid = selectedMileage && selectedMileage?.value.toString() === selectedVehicle?.mileage?.toString();
+        if (selectedVehicle) {
+            if (selectedMileage?.value && mileageIsValid && selectedVehicle.mileage !== selectedMileage?.value) {
+                dispatch(updateVehicle({mileage: selectedMileage.value}))
+            }
+        }
+    }, [dispatch, mileage, selectedVehicle]);
+
+    useEffect(() => {
+        if (isRecallsCategorySelected) requiredFields.push('vin')
+    }, [isRecallsCategorySelected])
+
+    useEffect(() => {
+        if (selectedVehicle?.engineTypeId && engineTypes.length) {
+            const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineTypeId))
+            option && setSelectedEngine(option);
+        }
+    }, [selectedVehicle, engineTypes])
+
+    useEffect(() => {
+        dispatch(setVehicleDataFromValueService())
+    }, [valueService, makes, isBmWService])
+
+    useEffect(() => {
+        if (currentModels.length) {
+            setLoadedOptions(prevOptions => ({...prevOptions, model: currentModels}));
+        }
+    }, [currentModels])
+
+    useEffect(() => {
+        if (makes.length) {
+            setLoadedOptions(prevOptions => ({...prevOptions, make: makes.map(item => item.name)}));
+        } else {
+            setLoadedOptions(prevOptions => ({...prevOptions, make: [t('Other')]}));
+        }
+        if (selectedVehicle?.make) {
+            const currentMake = makes.find(item => item.name === selectedVehicle.make);
+            if (currentMake) setLoadedOptions(prevOptions => ({...prevOptions, model: currentMake.models }));
+        } else {
+            setCurrentModels(() => makes.map(item => item.models).flat());
+        }
+    }, [makes, selectedVehicle])
+
+    useEffect(() => {
+        if (!selectedVehicle?.make) {
+            const defaultMake = makes.find(item => item.id === scProfile?.defaultVehicleMakeId)
+            if (defaultMake) {
+                selectedVehicle && dispatch(setVehicle({...selectedVehicle, make: defaultMake.name}))
+                setCurrentModels(defaultMake.models);
+            }
+        }
+    }, [makes, selectedVehicle])
+
+    const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
+        if (isXS) e.preventDefault();
+        if (option && !skip) {
+            if (["year", "model", "make", "mileage"].includes(name)) {
+                dispatch(updateVehicle({[name]: option}))
+            }
+            setErrors(e => e.filter(err => err !== name));
+            if (name === 'make') {
+                if (option === t('Other')) {
+                    setLoadedOptions(prevOptions => ({...prevOptions, model: [t('Other')]}));
+                    if (selectedVehicle?.model) dispatch(updateVehicle({model: ''}));
+                } else {
+                    const currentMake = makes.find(item => item.name === option);
+                    if (currentMake) setLoadedOptions(prevOptions => ({...prevOptions, model: currentMake.models }));
+                    if (option !== selectedVehicle?.make) dispatch(updateVehicle({model: ''}));
+                }
+            }
+        }
+    }
+
+    const handleEngineTypeChange =  (e: React.ChangeEvent<{}>, option: IEngineType|null) => {
+        setSelectedEngine(option)
+        dispatch(updateVehicle({engineTypeId: option?.id ?? null}));
+        setErrors(e => e.filter(err => err !== "engineTypeId"))
+    }
+
+    const handleTextChange = (name: TKey) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setRecallsAreShown(false));
+        dispatch(updateVehicle({[name]: value.trim()}));
+        setErrors(e => e.filter(err => err !== name));
+    }
+
+    const isValid = () => {
+        const errorsArray: string [] = [];
+        for (let f of requiredFields) {
+            if (!selectedVehicle || (!selectedVehicle[f as keyof ILoadedVehicle])) {
+                setErrors(e => [...e, f]);
+                if (f === "mileage" && !selectedVehicle?.mileage) {
+                    errorsArray.push(t("Estimated Mileage"));
+                } else {
+                    errorsArray.push(f);
+                }
+            }
+        }
+        if (currentConfig?.engineType && !selectedEngine) {
+            errorsArray.push(scProfile?.engineTypeFieldName ?? "Engine Type");
+            setErrors(e => [...e, "engineTypeId"]);
+        }
+
+        if (errorsArray.length) {
+            const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
+            const message = fields.join(', ').concat(fields.length < 2 ? ` ${t("is")}` : ` ${t("are")}`).concat(` ${t("required")}`);
+            showError(message);
+        }
+        return !errorsArray.length;
+    }
+
+    const goToNextScreen = () => {
+        onNext(service?.type === EServiceCategoryType.MaintenancePackage
+            ? 'packageSelection'
+            : nextLogicalScreen);
+    }
+
+    const handleUpdating = () => {
+        if (service?.type === EServiceCategoryType.MaintenancePackage) {
+            goToNextScreen()
+        } else {
+            const advisorNotSelected = !advisor && isAdvisorAvailable;
+            const pickUpSelected = serviceTypeOption?.type === EServiceType.PickUpDropOff
+                && appointmentByKey?.serviceTypeOption
+                && appointmentByKey?.serviceTypeOption?.type !== EServiceType.PickUpDropOff;
+            const pickUpChanged = serviceTypeOption?.type !== EServiceType.PickUpDropOff
+                && appointmentByKey?.serviceTypeOption
+                && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff;
+            if (pickUpSelected || pickUpChanged) {
+                onNext(advisorNotSelected
+                    ? "consultantSelection"
+                    : isAppointmentTimingAvailable
+                        ? "appointmentTiming"
+                        : "appointmentSelection")
+            } else {
+                if (advisorNotSelected) {
+                    onNext("consultantSelection");
+                } else {
+                    scProfile && dispatch(checkPodChanged(scProfile.id, showError))
+                }
+            }
+        }
+    }
+
+    const handleNext = () => {
+        if (isValid()) {
+            customerLoadedData?.isUpdating
+                ? handleUpdating()
+                : goToNextScreen()
+        }
+    }
+
+    const handleBack = () => {
+        onBack(service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
+            ? 'opsCode' : 'serviceNeeds');
+    }
+
+    const handleDeclineRecalls = () => {
+        dispatch(setSelectedRecalls([]));
+        if (isRecallsCategorySelected) {
+            if (onlyRecallsSelected) dispatch(clearAppointmentSteps("serviceNeeds"))
+            onBack('serviceNeeds');
+        } else {
+            handleNext()
+        }
+    }
+
+    const handleAddServices = () => {
+        onBack('serviceNeeds');
+    }
+
+    const onEmptyRecalls = () => {
+        if (userType === EUserType.New || isRecallsCategorySelected) {
+            onNoRecallsOpen()
+        } else {
+            handleNext();
+        }
+    }
+
+    const checkVINforRecallCategory = () => {
+        if (selectedVehicle?.vin?.length !== 17) {
+            errors.push('vin')
+            showError("VIN must include 17 characters")
+        } else {
+            onNoRecallsOpen()
+        }
+    }
+
+    const handleNoRecalls = () => {
+        if (categoriesIds.length < 2 && isRecallsCategorySelected) {
+            checkVINforRecallCategory()
+        } else {
+            handleNext()
+        }
+    }
+
+    const handleSubmit = async () => {
+        const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn;
+        const makeInTheList = makes.find(item => item.name.toLowerCase() === selectedVehicle?.make.toLowerCase());
+        if (selectedVehicle && makeInTheList && (!customerLoadedData?.isUpdating || isRecallsCategorySelected)) {
+            const {vin, make} = selectedVehicle;
+            if (vin?.length === 17 && make && (recallsFromTheAdmin || isRecallsCategorySelected)) {
+                setLoading(true);
+                const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
+                    {data: {serviceCenterId: decodeSCID(id), vin: vin, vehicleMakeId: makeInTheList?.id}})
+                dispatch(setRecallsAreShown(true));
+                if (data.length) {
+                    await onOpen()
+                } else {
+                    onEmptyRecalls()
+                }
+            } else {
+                handleNoRecalls()
+            }
+        } else {
+            handleNoRecalls()
+        }
+        setLoading(false);
+    }
+
+    const orderMapStyles = {
+        year: {order: isSM ? 2 : !currentConfig?.engineType && !recallsToggledOn ? 1 : 4},
+        mileage: {order: (currentConfig?.engineType || recallsToggledOn) && !isSM ? 1 : 3},
+        make: {order: 0},
+        model: {order: isSM ? 1 : 2},
+        vin: {order: isSM ? 5 : currentConfig?.engineType ? 5 : 3},
+        engineType: {order: isSM ? 4 : 3}
+    }
+
+    return (<StepWrapper>
+        {isLoading
+            ? <Loading/>
+            : <SelectWrapper>
+                <Autocomplete
+                    key="year"
+                    style={orderMapStyles.year}
+                    options={getYearOptions()}
+                    onChange={handleChange('year', false)}
+                    fullWidth
+                    disableClearable
+                    autoComplete={true}
+                    disabled={isExistingVehicle}
+                    renderInput={autocompleteRender({
+                        label: t("Year"),
+                        placeholder: errors.includes("year") ? `${t("Year")} ${t("required")}` : `${t("Select")} ${t("Year")}`,
+                        error: errors.includes("year"),
+                        required: requiredFields.includes('year')
+                    })}
+                    value={selectedVehicle?.year ? selectedVehicle.year.toString() : ''}
+                />
+                <Autocomplete
+                    key="mileage"
+                    style={orderMapStyles.mileage}
+                    options={mileage.map(item => item.value.toString())}
+                    onChange={handleChange('mileage', false)}
+                    fullWidth
+                    disableClearable
+                    autoComplete={true}
+                    renderInput={autocompleteRender({
+                        label: t("Estimated mileage"),
+                        placeholder: errors.includes("mileage") ? `${t("Estimated mileage")} ${t("required")}` : `${t("Select")} ${t("Estimated mileage")}`,
+                        error: errors.includes("mileage"),
+                        required: requiredFields.includes('mileage')
+                    })}
+                    value={selectedVehicle?.mileage ? selectedVehicle.mileage.toString() : ''}
+                />
+                <Autocomplete
+                    key="make"
+                    style={orderMapStyles.make}
+                    options={loadedOptions.make ?? []}
+                    onChange={handleChange('make', false)}
+                    fullWidth
+                    disableClearable
+                    autoComplete={true}
+                    disabled={isExistingVehicle}
+                    renderInput={autocompleteRender({
+                        label: t("Make"),
+                        placeholder: errors.includes("make") ? `${t("Make")} ${t("required")}` : `${t("Select")} ${t("Make")}`,
+                        error: errors.includes("make"),
+                        required: requiredFields.includes('make')
+                    })}
+                    value={selectedVehicle?.make ? selectedVehicle.make?.toString() : ''}
+                />
+                {currentConfig?.engineType
+                    ? <Autocomplete
+                        key="Engine Type"
+                        style={orderMapStyles.engineType}
+                        options={engineTypes}
+                        onChange={handleEngineTypeChange}
+                        fullWidth
+                        getOptionLabel={o => o.name}
+                        getOptionSelected={o => o.id === selectedEngine?.id}
+                        disabled={Boolean(selectedEngine) && Boolean(appointmentByKey?.vehicle?.engineTypeId)}
+                        renderInput={autocompleteRender({
+                            label: scProfile?.engineTypeFieldName ?? t("Engine Type"),
+                            placeholder: errors.includes("engineTypeId")
+                                ? `${scProfile?.engineTypeFieldName ?? t("Engine Type")} ${t("required")}`
+                                : `${t("Select")} ${scProfile?.engineTypeFieldName ?? t("Engine Type")}`,
+                            error: errors.includes("engineTypeId"),
+                            required: true,
+                        })}
+                        value={selectedEngine}
+                    />
+                    : null}
+                <Autocomplete
+                    key="model"
+                    options={loadedOptions.model ?? []}
+                    onChange={handleChange('model', false)}
+                    style={orderMapStyles.model}
+                    fullWidth
+                    disableClearable
+                    autoComplete={true}
+                    disabled={isExistingVehicle}
+                    renderInput={autocompleteRender({
+                        label: t("Model"),
+                        placeholder: errors.includes("model") ? `${t("Model")} ${t("required")}` : `${t("Select")} ${t("Model")}`,
+                        error: errors.includes("model"),
+                        required: requiredFields.includes('model')
+                    })}
+                    value={selectedVehicle?.model ? selectedVehicle.model.toString() : ''}
+                />
+                {recallsToggledOn || isRecallsCategorySelected
+                    ? <div key="vin"
+                           className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}
+                           style={orderMapStyles.vin}>
+                        <TextField
+                            onChange={handleTextChange("vin")}
+                            label={recallsToggledOn && !isRecallsCategorySelected
+                                ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
+                                : `${t("VIN")}${isRecallsCategorySelected ? "" : `(${ t("Optional")})`}`
+                            }
+                            name={"vin"}
+                            error={errors.includes("vin")}
+                            required={requiredFields.includes("vin") || isRecallsCategorySelected}
+                            fullWidth
+                            disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length && isExistingVin)}
+                            value={selectedVehicle ? selectedVehicle.vin : ""}
+                            placeholder={errors.includes("vin")
+                                ? `${t("VIN")} ${t("required")}`
+                                : `${t("Type")} ${t("VIN")} ${isRecallsCategorySelected ? "" : `(${t("Optional")})`}`}
+                        />
+                    </div> : null}
+            </SelectWrapper>
+        }
+        <ActionButtons
+            onBack={handleBack}
+            onNext={handleSubmit}
+            prevDisabled={isLoading}
+            nextDisabled={isNextDisabled || isLoading}
+            nextLabel={isRecallsCategorySelected ? t("Check for Recalls") : t("Next")}
+        />
+        <RecallsByVinModal
+            open={isOpen}
+            onClose={onClose}
+            handleNext={handleNext}
+            handleAddServices={handleAddServices}
+            onDeclineRecalls={handleDeclineRecalls}
+        />
+        <NoRecallsModal open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleDeclineRecalls}/>
+    </StepWrapper>);
+};

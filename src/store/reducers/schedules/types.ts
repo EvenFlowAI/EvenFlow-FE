@@ -48,12 +48,10 @@ export interface IScheduleFilters {
     skillLevel?: number;
     podId?: number;
 }
-type TFilterLabels = {
-    [K in keyof IScheduleFilters]: string;
-}
-export const filterLabels: TFilterLabels = {
-    searchTerm: "Search",
-    role: "Employee",
-    skillLevel: "Employee position",
-    podId: "Pod"
+
+export type TState = {
+    employeesList: IEmployeeSchedule[];
+    employeesLoading: boolean;
+    filters: IScheduleFilters;
+    filtersOpened: boolean;
 }

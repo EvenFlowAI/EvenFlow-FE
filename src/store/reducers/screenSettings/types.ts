@@ -6,12 +6,6 @@ export type TEmailRequirement = {
 export enum EScreenSettingsType {
     EmailRequirement
 }
-export interface IScreenSetting {
-    type: EScreenSettingsType;
-    value: number;
-    serviceCenterId: number;
-    podId?: number;
-}
 
 export const screenSettingsList: EScreenSettingsType[] = [
     EScreenSettingsType.EmailRequirement,
@@ -26,4 +20,8 @@ export type TOptContentData = {
 }
 export type TOptContent = {
     [k in EScreenSettingsType]: TOptContentData;
+}
+export type TState = {
+    emailRequirement: TEmailRequirement | null;
+    isEmailRequirementLoading: boolean;
 }

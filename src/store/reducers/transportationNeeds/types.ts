@@ -1,9 +1,3 @@
-export interface IEditedTransportationOption {
-    type: number;
-    state: number;
-    serviceCenterId: number;
-}
-
 export interface ITransportationOptionRules {
     isAllServiceRequestsIncluded?: boolean;
     duration?: {
@@ -94,4 +88,9 @@ export enum ETransportationDays {
 
 export enum ETransportColumn {
     Yes, No
+}
+
+export type TState = {
+    options: ITransportationOptionFull[];
+    isLoading: boolean;
 }

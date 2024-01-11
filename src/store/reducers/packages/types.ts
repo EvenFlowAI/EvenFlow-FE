@@ -1,6 +1,7 @@
-import {EMaintenanceOptionType, IBusinessRule} from "../../../api/types";
+import {EMaintenanceOptionType, IBusinessRule, IMake, IPackageById, IPackageByQuery} from "../../../api/types";
 import {EPricingDisplayType} from "../pricingSettings/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
+import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 
 export type TAssignedRequest = {
     type: string | number;
@@ -70,7 +71,16 @@ export type TPackagePrice = {
     type: EPackagePricingType;
 }
 
-export type TPriceTitles = {
-    priceTitle?: string;
-    priceWithFeeTitle?: string;
+export type TState = {
+    currentPackage: IPackageById | null;
+    isPackageLoading: boolean;
+    packages: IPackageByQuery[];
+    makes: IMake[];
+    complimentary: IComplimentaryServiceByQuery[];
+    isComplimentaryLoading: boolean;
+    complimentaryPaging: IPagingResponse;
+    complimentaryPageData: IPageRequest;
+    complimentarySortOrder: IOrder<IComplimentaryServiceByQuery>;
+    complimentarySearchTerm: string;
+    allComplimentary: IComplimentaryServiceByQuery[];
 }

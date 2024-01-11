@@ -1,14 +1,7 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {IDesirability, IOptimizationSetting, IProximity, ISlotRange} from "./types";
+import {TState} from "./types";
 import {getDesirability, getOptimizationSettings, getProximity, getRange, setLoading} from "./actions";
 
-type TState = {
-    isLoading: boolean;
-    proximity: IProximity[];
-    desirability: IDesirability[];
-    optimizationSettings: IOptimizationSetting[];
-    slotRange: ISlotRange | null;
-}
 const initialState: TState = {
     isLoading: false,
     proximity: [],
