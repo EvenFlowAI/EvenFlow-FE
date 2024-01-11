@@ -1,7 +1,7 @@
 import {IServiceCenter} from "../../../../store/reducers/serviceCenters/types";
 import {TTechnicianLevel} from "../../../../types/types";
 import React from "react";
-import {Value} from "@material-ui/lab";
+import { Value } from '@mui/material/useAutocomplete';
 import {TRole} from "../../../../store/reducers/users/types";
 
 export type TConsultantOption = {

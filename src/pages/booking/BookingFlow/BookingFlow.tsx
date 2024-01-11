@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useParams} from "react-router-dom";
 import {endUserTheme} from "../../../theme/theme";
-import {ThemeProvider} from "@material-ui/core";
+import { ThemeProvider, Theme, StyledEngineProvider } from "@mui/material";
 import {EndUserBar} from "../../../features/booking/EndUserBar/EndUserBar";
 import {useDispatch, useSelector} from "react-redux";
 import {loadSCProfile} from "../../../store/reducers/appointment/actions";
@@ -12,6 +12,13 @@ import {loadShortSC} from "../../../store/reducers/serviceCenters/actions";
 import {getCurrentUser} from "../../../store/reducers/users/actions";
 import {useLayout} from "../../../hooks/useLayout/useLayout";
 import BookingFlowRoutes from "../../../routes/BookingFlowRoutes/BookingFlowRoutes";
+
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 export const BookingFlow = () => {
     const { scProfile } = useSelector((state: RootState) => state.appointment);
@@ -40,10 +47,14 @@ export const BookingFlow = () => {
         }
     }, [scProfile])
 
-    return <ThemeProvider theme={endUserTheme}>
-        <div>
-            {!isFrame ? <EndUserBar/> : null}
-            <BookingFlowRoutes/>
-        </div>
-    </ThemeProvider>
+    return (
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={endUserTheme}>
+                <div>
+                    {!isFrame ? <EndUserBar/> : null}
+                    <BookingFlowRoutes/>
+                </div>
+            </ThemeProvider>
+        </StyledEngineProvider>
+    );
 };

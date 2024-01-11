@@ -20,7 +20,7 @@ import {
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {setCustomerSearchData} from "../../../../store/reducers/enhancedCustomerSearch/actions";
 import {encodeSCID} from "../../../../utils/utils";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {Routes} from "../../../../routes/constants";
 import {initialCustomerSearch} from "../../../../store/reducers/constants";
 

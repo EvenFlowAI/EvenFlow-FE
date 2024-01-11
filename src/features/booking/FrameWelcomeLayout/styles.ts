@@ -1,6 +1,6 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
-export const Wrapper = styled('div')(({theme}) => ({
+export const Wrapper = styled('div')(() => ({
     width: '80%',
     maxWidth: 1000,
 }));
@@ -11,10 +11,10 @@ export const Title = styled('h1')(({theme}) => ({
     textAlign: 'center',
     fontSize: 32,
     margin: 0,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
         fontSize: 24
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
         fontSize: 18
     }
 }));

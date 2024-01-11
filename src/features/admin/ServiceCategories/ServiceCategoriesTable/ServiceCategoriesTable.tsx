@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@mui/material";
 import {Table} from "../../../../components/tables/Table/Table";
-import {TabPanel} from "@material-ui/lab";
+import {TabPanel} from "@mui/lab";
 import {ICategory} from "../../../../store/reducers/categories/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {deleteCategoryById} from "../../../../store/reducers/categories/actions";
 import {AddServiceCategoryModal} from "../AddServiceCategoryModal/AddServiceCategoryModal";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
@@ -44,9 +44,11 @@ export const ServiceCategoriesTable: React.FC<{tabValue: string}> = ({tabValue})
     }
 
     const tableActions = (el: ICategory) => {
-        return <IconButton onClick={openMenu(el)}>
-            <MoreHoriz />
-        </IconButton>;
+        return (
+            <IconButton onClick={openMenu(el)} size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }
 
     const handleRemove = async () => {

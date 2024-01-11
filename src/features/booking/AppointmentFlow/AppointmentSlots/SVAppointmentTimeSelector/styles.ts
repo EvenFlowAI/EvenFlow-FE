@@ -1,5 +1,5 @@
-import {styled} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import {styled} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const PickUpSlotsWrapper = styled('div')(() => ({
     display: "grid",
@@ -13,7 +13,7 @@ export const useStyles = makeStyles(theme => ({
     wrapper: {
         maxHeight: '40vh',
         overflowY: "auto",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             maxHeight: '30vh',
         }
     }

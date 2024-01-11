@@ -4,7 +4,7 @@ import {IAssignedServiceRequest} from "../../../../../store/reducers/serviceRequ
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import Checkbox from "../../../../../components/formControls/Checkbox/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {useStyles} from "./styles";
 import {TableRowDataType} from "../../../../../types/types";
 

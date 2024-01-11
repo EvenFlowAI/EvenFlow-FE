@@ -79,7 +79,7 @@ export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: mo
         if (loadCB) {
             loadCB();
         }
-        searchedDateRange && await dispatch(setLoadedDateRange(searchedDateRange))
+        searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)))
         if (cb && data.appointmentTimingType === EAppointmentTimingType.FirstAvailable && searchedDateRange) {
             return cb(moment.utc(searchedDateRange.from));
         }

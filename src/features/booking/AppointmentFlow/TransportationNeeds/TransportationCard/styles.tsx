@@ -1,4 +1,4 @@
-import {styled, Theme} from "@material-ui/core";
+import {styled, Theme} from "@mui/material";
 import React from "react";
 import theme from "../../../../../theme/theme";
 
@@ -21,7 +21,7 @@ export const CardWrapper = styled(({active, ...props}) => (<div {...props}/>))<T
     color: active ? "#FFFFFF" : theme.palette.text.primary,
     border: `1px solid ${active ? "#000000" : "#DADADA"}`,
     transition: "all .2s",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         minHeight: 100
     }
 }));

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Box} from "@material-ui/core";
+import {Button, Box} from "@mui/material";
 import {TView} from "../types";
 import {NavLink} from "react-router-dom";
 import {encodeSCID} from "../../../../utils/utils";

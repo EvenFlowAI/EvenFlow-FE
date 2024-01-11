@@ -1,8 +1,8 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useStyles = makeStyles(theme => ({
     controls: {
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             textAlign: "center"
         }
     },

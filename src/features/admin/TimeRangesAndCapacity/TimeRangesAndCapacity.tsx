@@ -5,7 +5,7 @@ import {RootState} from "../../../store/rootReducer";
 import moment from "moment";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {Table} from "../../../components/tables/Table/Table";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import EditTimeRangeAndCapacityModal from "./EditTimeRangeAndCapacityModal/EditTimeRangeAndCapacityModal";
 import {loadTimeRangesAndCapacity} from "../../../store/reducers/capacityServiceValet/actions";
 import {timeWithSecond} from "./constants";

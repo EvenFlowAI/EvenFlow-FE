@@ -1,5 +1,5 @@
 import {IEmployee} from "../employees/types";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {ParsableDate} from "../../../types/types";
 
 enum EWorkingStatus {
     Working, NonWorking, NonActive

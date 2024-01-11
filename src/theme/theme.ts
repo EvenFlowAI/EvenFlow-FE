@@ -1,8 +1,12 @@
-import {unstable_createMuiStrictModeTheme as createMuiTheme, ThemeOptions} from "@material-ui/core";
+import {
+    unstable_createMuiStrictModeTheme as createMuiTheme,
+    DeprecatedThemeOptions,
+    adaptV4Theme,
+} from "@mui/material";
 import {fonts} from "./fonts";
 import {colors} from "./colors";
 
-declare module "@material-ui/core/styles/createBreakpoints" {
+declare module "@mui/material/styles/createBreakpoints" {
     interface BreakpointOverrides {
         xs: true;
         sm: true;
@@ -16,7 +20,7 @@ declare module "@material-ui/core/styles/createBreakpoints" {
 export const sideBarWidth = 255;
 
 
-const themeOptions: ThemeOptions = {
+const themeOptions: DeprecatedThemeOptions = {
     breakpoints: {
         values: {
             xs: 0,
@@ -60,7 +64,7 @@ const input = {
     background: "transparent",
     // fontWeight: "bold" as const,
 }
-const theme = createMuiTheme(themeOptions);
+const theme = createMuiTheme(adaptV4Theme(themeOptions));
 theme.overrides = {
     ...theme.overrides,
     MuiInputBase: {
@@ -105,7 +109,7 @@ theme.overrides = {
     }
 }
 
-export const loginTheme = createMuiTheme({
+export const loginTheme = createMuiTheme(adaptV4Theme({
     ...theme,
     palette: {
         ...theme.palette,
@@ -125,8 +129,8 @@ export const loginTheme = createMuiTheme({
             }
         }
     }
-});
-export const endUserTheme = createMuiTheme({
+}));
+export const endUserTheme = createMuiTheme(adaptV4Theme({
     ...theme,
     palette: {
         ...theme.palette,
@@ -134,8 +138,8 @@ export const endUserTheme = createMuiTheme({
             main: "#3855F3",
         },
     },
-});
-export const frameTheme = createMuiTheme({
+}));
+export const frameTheme = createMuiTheme(adaptV4Theme({
     ...theme,
     palette: {
         ...theme.palette,
@@ -143,7 +147,7 @@ export const frameTheme = createMuiTheme({
             main: "#000000"
         }
     },
-});
+}));
 frameTheme.overrides = {
     ...frameTheme.overrides,
     MuiButton: {

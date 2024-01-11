@@ -5,7 +5,7 @@ import {RootState} from "../../../../../store/rootReducer";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {IFirstScreenOption} from "../../../../../store/reducers/serviceTypes/types";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {
     setEditingPosition,
     setServiceOptionChanged,

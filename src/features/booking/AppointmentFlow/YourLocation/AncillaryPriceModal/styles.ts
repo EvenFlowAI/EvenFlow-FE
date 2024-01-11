@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useStyles = makeStyles(theme => ({
     info: {
@@ -19,7 +19,7 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
         marginBottom: 30,
-        [`${theme.breakpoints.down("sm")} and (orientation: portrait)`]: {
+        [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
             '& > div': {
                 flexDirection: 'column',
                 padding: '0 16px',

@@ -1,9 +1,10 @@
-import {withStyles, Tab as T} from "@material-ui/core";
-import {TabList as TL} from "@material-ui/lab";
+import { Tab as T } from "@mui/material";
+import withStyles from '@mui/styles/withStyles';
+import {TabList as TL} from "@mui/lab";
 
 const style = withStyles(theme => ({
     root: {
-        width: `calc(100% + ${theme.spacing(4) * 2}px)`,
+        width: `calc(100% + calc(${theme.spacing(4)} * 2))`,
         marginLeft: -theme.spacing(4),
         marginRight: -theme.spacing(4),
         paddingLeft: theme.spacing(4),

@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import {sideBarWidth} from "../../../theme/theme";
 
 export const useStyles = makeStyles(theme => ({
@@ -8,7 +8,7 @@ export const useStyles = makeStyles(theme => ({
         display: "flex",
         flexFlow: "column",
         position: "relative",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             width: "100%",
         }
     },
@@ -37,7 +37,7 @@ export const useStyles = makeStyles(theme => ({
         flexFlow: "column",
         padding: "60px 30px",
         alignItems: "center",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             width: "100%"
         }
     },

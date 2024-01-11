@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {PODModal} from "./PODModal/PODModal";
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@mui/material";
 import {EAppointmentType, EJobType, IPod} from "../../../store/reducers/pods/types";
 import {useDispatch, useSelector} from "react-redux";
 import {loadPods, removePod, setPodsPageData} from "../../../store/reducers/pods/actions";
 import {RootState} from "../../../store/rootReducer";
 import {Table} from "../../../components/tables/Table/Table";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {TViewMode} from "../../../components/modals/BaseModal/types";
 import {getTransportationOptionString} from "../../../utils/utils";
 import {getNameFromEnum} from "./utils";
@@ -167,9 +167,11 @@ export const PodsTable:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode
     }
 
     const actions = (el: IPod) => {
-        return <IconButton onClick={handleOpenMenu(el)}>
-            <MoreHoriz />
-        </IconButton>
+        return (
+            <IconButton onClick={handleOpenMenu(el)} size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }
 
     return <div>

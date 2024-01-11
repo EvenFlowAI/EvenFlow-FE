@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, SetStateAction, Dispatch} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {DialogProps} from "../../BaseModal/types";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../store/rootReducer";

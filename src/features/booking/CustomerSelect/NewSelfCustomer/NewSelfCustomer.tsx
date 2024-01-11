@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Grid} from "@material-ui/core";
+import {Button, Grid} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useStyles} from "../styles";
 

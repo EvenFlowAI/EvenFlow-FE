@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {Box, CircularProgress, Typography} from "@material-ui/core";
+import {Box, CircularProgress, Typography} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {Label, Wrapper} from "./styles";
 

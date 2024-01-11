@@ -1,10 +1,10 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import './App.css';
-import {Container, IconButton} from '@material-ui/core';
+import {Container, IconButton} from '@mui/material';
 import {useHistory} from 'react-router-dom';
 import {ConfirmModal} from './components/modals/common/ConfirmModal/ConfirmModal';
 import {SnackbarProvider} from "notistack";
-import {Close} from "@material-ui/icons";
+import {Close} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/rootReducer";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";

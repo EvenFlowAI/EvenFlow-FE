@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const ButtonsRow = styled('div')(({theme}) => ({
     display: "flex",
@@ -10,7 +10,7 @@ export const ButtonsRow = styled('div')(({theme}) => ({
     "& button": {
         minWidth: 144
     },
-    [`${theme.breakpoints.down('sm')} and (orientation: portrait)`]: {
+    [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
         flexDirection: "column",
         width: "100%",
         gap: "12px",

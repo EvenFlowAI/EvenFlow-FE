@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";

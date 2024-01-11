@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, MenuItem, Select} from "@material-ui/core";
+import {Grid, MenuItem, Select} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -23,7 +23,7 @@ export const ScheduleFilters = () => {
         }
     }
     return (
-        <Grid container spacing={2} justify="flex-end" style={{marginRight: 20}}>
+        <Grid container spacing={2} justifyContent="flex-end" style={{marginRight: 20}}>
             <Grid item>
                 <Select
                     fullWidth

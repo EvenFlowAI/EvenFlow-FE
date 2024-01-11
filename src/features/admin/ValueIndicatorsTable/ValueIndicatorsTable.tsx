@@ -4,7 +4,7 @@ import {
     TableCell,
     TableHead,
     TableRow, useMediaQuery, useTheme
-} from "@material-ui/core";
+} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {loadValueSettings, setValueSettings} from "../../../store/reducers/valueSettings/actions";
 import {Indicators, IValueSettings} from "../../../store/reducers/valueSettings/types";
@@ -36,7 +36,7 @@ export const ValueIndicatorsTable = ({onTabChange}: TProps) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [editItem, setEditItem] = useState<IValueSettings|null>(null);
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
     const data: TData = useMemo(() => {
         if (!valuesData.length) {

@@ -1,9 +1,9 @@
 import React, {useCallback, useState} from "react";
-import {Button, Divider, Grid} from "@material-ui/core";
+import {Button, Divider, Grid} from "@mui/material";
 import {BaseModal, DialogContent, DialogTitle, DialogActions} from '../../BaseModal/BaseModal';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {ReportProblemOutlined} from "@material-ui/icons";
+import {ReportProblemOutlined} from "@mui/icons-material";
 import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 

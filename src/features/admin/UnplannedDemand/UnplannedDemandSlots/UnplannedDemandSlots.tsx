@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction} from "react";
 import {IUnplannedDemandBySlot} from "../../../../store/reducers/demandSegments/types";
-import {Table, TableBody, TableHead} from "@material-ui/core";
+import {Table, TableBody, TableHead} from "@mui/material";
 import moment from "moment";
 import {timeSpanString, time12HourFormat} from "../../../../utils/constants";
 import {sortSlots} from "../utils";

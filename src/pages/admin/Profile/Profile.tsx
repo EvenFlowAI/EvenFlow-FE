@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {TabContext, TabPanel} from "@material-ui/lab";
-import {Tab} from "@material-ui/core";
+import {TabContext, TabPanel} from "@mui/lab";
+import {Tab} from "@mui/material";
 import {TabList} from "../../../components/styled/Tabs";
 import {DealershipGroupProfile} from "../../../features/admin/Profiles/DealershipGroupProfile/DealershipGroupProfile";
 import {UserProfile} from "../../../features/admin/Profiles/UserProfile/UserProfile";

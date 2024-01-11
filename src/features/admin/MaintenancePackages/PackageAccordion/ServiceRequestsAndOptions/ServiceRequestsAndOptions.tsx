@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {IPackageById, IPackageOptionDetailed} from "../../../../../api/types";
-import {IconButton, TableBody, TableCell, TableContainer, TableHead, TableRow, Table, Input} from "@material-ui/core";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {IconButton, TableBody, TableCell, TableContainer, TableHead, TableRow, Table, Input} from "@mui/material";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {useTableStyles} from "../../SaveRequestToDMSModal/styles";
 import {TRequestRow, TCellData} from "../../types";
 import {useOptionsTableStyles} from "./styles";
@@ -71,74 +71,80 @@ export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (prop
         }
     }
 
-    return <TableContainer style={{ overflowX: 'unset' }}>
-        <Table>
-            <TableHead>
-                <TableRow>
-                    <TableCell className={classes.headerCell} key="1">
-                        Included in Package
-                    </TableCell>
-                    <TableCell className={classes.headerCell} align="center" width={110} key="2">
-                        Labor Hours
-                    </TableCell>
-                    <TableCell className={classes.headerCell} align="center" width={110} key="3">
-                        Labor Amount
-                    </TableCell>
-                    <TableCell className={classes.headerCell} align="center" width={110} key="4">
-                        Parts Amount
-                    </TableCell>
-                    <TableCell className={classes.headerCell} align="center" width={110} key="5">
-                        Total
-                    </TableCell>
-                    <TableCell className={classes.emptyCell} width={16} key="6"/>
-
-                    {props.packageData?.options ? [...props.packageData?.options]
-                        .sort((a, b) => a.type - b.type)
-                        .map((option: IPackageOptionDetailed) => (
-                        <TableCell align='center' className={optionsClasses.headerCell} key={option.type}>
-                            {props.editingOption && props.editingOption.type === option.type ?
-                                <Input
-                                    value={option.name}
-                                    onChange={onNameChange}
-                                    className={optionsClasses.optionName}/>
-                                : <div className={optionsClasses.optionName}
-                                       onClick={() => onOptionNameClick(option)}>
-                                    {option.name}
-                                </div>
-                            }
+    return (
+        <TableContainer style={{ overflowX: 'unset' }}>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell className={classes.headerCell} key="1">
+                            Included in Package
                         </TableCell>
-                    )) : null}
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                <TableRow className={classes.emptyRow} key="empty"/>
-                {props.packageData?.serviceRequests
-                    .slice()
-                    .sort((a, b) => a.orderIndex - b.orderIndex)
-                    .map((request, rowIndex) => {
-                    return <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={`${request.code}+${rowIndex}`}>
-                        <TableCell className={classes.requestCell} key="1">{request.description}</TableCell>
-                        <TableCell className={classes.requestCell} key="2" align="center" width={100}>{request.durationInHours}</TableCell>
-                        <TableCell className={classes.requestCell} key="3" align="center" width={100}>${request.laborAmount}</TableCell>
-                        <TableCell className={classes.requestCell} key="4" align="center" width={100}>${request.partsAmount}</TableCell>
-                        <TableCell className={classes.requestCell} key="5" align="center" width={100}>${request.price}</TableCell>
+                        <TableCell className={classes.headerCell} align="center" width={110} key="2">
+                            Labor Hours
+                        </TableCell>
+                        <TableCell className={classes.headerCell} align="center" width={110} key="3">
+                            Labor Amount
+                        </TableCell>
+                        <TableCell className={classes.headerCell} align="center" width={110} key="4">
+                            Parts Amount
+                        </TableCell>
+                        <TableCell className={classes.headerCell} align="center" width={110} key="5">
+                            Total
+                        </TableCell>
                         <TableCell className={classes.emptyCell} width={16} key="6"/>
 
-                        {props.data.find(item => item.requestId === request.id)?.cellData
-                            .sort((a, b) => a.optionType - b.optionType)
-                            .map((item: TCellData, cellIndex) => {
-                                return <TableCell className={getCellClass(cellIndex, rowIndex)} align='center' key={item.optionType}>
-                                    <IconButton onClick={() => props.onCheckboxClick(item, request.id)}>
-                                        {item.isSelected
-                                            ? <CheckBoxOutlined htmlColor="#3855FE"/>
-                                            : <CheckBoxOutlineBlank htmlColor="#DADADA"/>
-                                        }
-                                    </IconButton>
-                                </TableCell>
-                            })}
+                        {props.packageData?.options ? [...props.packageData?.options]
+                            .sort((a, b) => a.type - b.type)
+                            .map((option: IPackageOptionDetailed) => (
+                            <TableCell align='center' className={optionsClasses.headerCell} key={option.type}>
+                                {props.editingOption && props.editingOption.type === option.type ?
+                                    <Input
+                                        value={option.name}
+                                        onChange={onNameChange}
+                                        className={optionsClasses.optionName}/>
+                                    : <div className={optionsClasses.optionName}
+                                           onClick={() => onOptionNameClick(option)}>
+                                        {option.name}
+                                    </div>
+                                }
+                            </TableCell>
+                        )) : null}
                     </TableRow>
-                })}
-            </TableBody>
-        </Table>
-    </TableContainer>
+                </TableHead>
+                <TableBody>
+                    <TableRow className={classes.emptyRow} key="empty"/>
+                    {props.packageData?.serviceRequests
+                        .slice()
+                        .sort((a, b) => a.orderIndex - b.orderIndex)
+                        .map((request, rowIndex) => {
+                        return (
+                            <TableRow className={rowIndex % 2 === 0 ?  classes.row : classes.rowGrey} key={`${request.code}+${rowIndex}`}>
+                                <TableCell className={classes.requestCell} key="1">{request.description}</TableCell>
+                                <TableCell className={classes.requestCell} key="2" align="center" width={100}>{request.durationInHours}</TableCell>
+                                <TableCell className={classes.requestCell} key="3" align="center" width={100}>${request.laborAmount}</TableCell>
+                                <TableCell className={classes.requestCell} key="4" align="center" width={100}>${request.partsAmount}</TableCell>
+                                <TableCell className={classes.requestCell} key="5" align="center" width={100}>${request.price}</TableCell>
+                                <TableCell className={classes.emptyCell} width={16} key="6"/>
+
+                                {props.data.find(item => item.requestId === request.id)?.cellData
+                                    .sort((a, b) => a.optionType - b.optionType)
+                                    .map((item: TCellData, cellIndex) => {
+                                        return (
+                                            <TableCell className={getCellClass(cellIndex, rowIndex)} align='center' key={item.optionType}>
+                                                <IconButton onClick={() => props.onCheckboxClick(item, request.id)} size="large">
+                                                    {item.isSelected
+                                                        ? <CheckBoxOutlined htmlColor="#3855FE"/>
+                                                        : <CheckBoxOutlineBlank htmlColor="#DADADA"/>
+                                                    }
+                                                </IconButton>
+                                            </TableCell>
+                                        );
+                                    })}
+                            </TableRow>
+                        );
+                    })}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
 }

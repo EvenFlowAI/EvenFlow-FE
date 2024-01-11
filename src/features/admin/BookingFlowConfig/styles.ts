@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useStyles = makeStyles(theme => ({
     switchCell: {
@@ -8,13 +8,13 @@ export const useStyles = makeStyles(theme => ({
     tableWrapper: {
         width: "100%",
         "& .MuiTableCell-root": {
-            [theme.breakpoints.down("xs")]: {
+            [theme.breakpoints.down('sm')]: {
                 fontSize: "12px !important"
             }
         }
     },
     headerCell: {
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: "12px !important"
         }
     },

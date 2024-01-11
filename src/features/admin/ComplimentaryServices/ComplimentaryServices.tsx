@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {SearchInput} from "../../../components/formControls/SearchInput/SearchInput";
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@mui/material";
 import {
     changeComplimentaryPageData,
     loadComplimentary, setComplimentaryPageData,
@@ -12,7 +12,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {IComplimentaryServiceByQuery} from "../../../store/reducers/packages/types";
 import {Table} from "../../../components/tables/Table/Table";
 import {RootState} from "../../../store/rootReducer";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {capacityManagementRoot, SC_UNDEFINED} from "../../../utils/constants";
 import AddServiceManually from "./AddServiceManually/AddServiceManually";
 import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
@@ -140,7 +140,7 @@ export const ComplimentaryServices = () => {
     }
 
     const actions = (el:IComplimentaryServiceByQuery) => {
-        return <IconButton onClick={handleOpenMenu(el)}><MoreHoriz /></IconButton>
+        return <IconButton onClick={handleOpenMenu(el)} size="large"><MoreHoriz /></IconButton>;
     }
 
     const onAddOpsCode = async (selectedCodes: number[], serviceCenterId: number) => {

@@ -8,8 +8,8 @@ import {
     DialogTitle as DT,
     DialogTitleProps,
     IconButton
-} from "@material-ui/core";
-import {Close} from "@material-ui/icons";
+} from "@mui/material";
+import {Close} from "@mui/icons-material";
 import {DialogProps} from "./types";
 import {useStyles} from "./styles";
 
@@ -32,10 +32,12 @@ export const DialogTitle: React.FC<
     DialogTitleProps & {onClose?: () => void}
 > = ({children, onClose, ...props}) => {
     const classes = useStyles({maxWidth: 0});
-    return <DT {...props} className={classes.dialogTitle}>
-        {children}
-        {onClose ? <IconButton className={classes.closeButton} onClick={onClose}>
-            <Close />
-        </IconButton> : null}
-    </DT>;
+    return (
+        <DT {...props} className={classes.dialogTitle}>
+            {children}
+            {onClose ? <IconButton className={classes.closeButton} onClick={onClose} size="large">
+                <Close />
+            </IconButton> : null}
+        </DT>
+    );
 }

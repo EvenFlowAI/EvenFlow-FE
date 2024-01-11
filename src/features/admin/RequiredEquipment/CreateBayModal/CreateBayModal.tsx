@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {BaseModal, DialogContent, DialogTitle, DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IBay, IBayForm} from "../../../../store/reducers/bays/types";

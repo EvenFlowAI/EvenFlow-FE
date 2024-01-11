@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useStyles = makeStyles(theme => ({
     grow: {
@@ -7,7 +7,7 @@ export const useStyles = makeStyles(theme => ({
     contacts: {
         fontSize: 19,
         fontWeight: "bold",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             display: "none"
         }
     },

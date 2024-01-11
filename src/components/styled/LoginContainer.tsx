@@ -1,5 +1,7 @@
 import React from "react";
-import {Paper, withStyles} from "@material-ui/core";
+import { Paper } from "@mui/material";
+
+import withStyles from '@mui/styles/withStyles';
 
 const BaseLoginContainer: React.FC = props => {
     return <Paper elevation={0}>

@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@mui/material";
 import {Table} from "../../../components/tables/Table/Table";
 import {IBay} from "../../../store/reducers/bays/types";
-import {CheckCircle, MoreHoriz} from "@material-ui/icons";
+import {CheckCircle, MoreHoriz} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadBays, removeBay, setPageData} from "../../../store/reducers/bays/actions";
@@ -96,9 +96,11 @@ export const RequiredEquipment: React.FC<TViewMode> = ({viewMode}) => {
     }
 
     const endActions = useCallback((el: IBay) => {
-        return <IconButton onClick={openMenu(el)}>
-            <MoreHoriz />
-        </IconButton>
+        return (
+            <IconButton onClick={openMenu(el)} size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }, []);
 
     return <div>

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, CircularProgress, Grid, TablePagination} from "@material-ui/core";
+import {Button, CircularProgress, Grid, TablePagination} from "@mui/material";
 import {OfferModal} from "../OfferModal/OfferModal";
 import {useDispatch, useSelector} from "react-redux";
 import {loadOffers, setOffersPageData} from "../../../../store/reducers/offers/actions";

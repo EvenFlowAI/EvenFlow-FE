@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {IServiceRequest} from "../../../../store/reducers/serviceRequests/types";
-import {Button, Radio} from "@material-ui/core";
+import {Button, Radio} from "@mui/material";
 import {Table} from "../../../../components/tables/Table/Table";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -13,7 +13,7 @@ import {
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {SearchInput} from "../../../../components/formControls/SearchInput/SearchInput";
 import {updatePackageOptions} from "../../../../store/reducers/packages/actions";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {IPackageById} from "../../../../api/types";
 import {MaintenanceOptions} from "../constants";
@@ -158,7 +158,7 @@ const AssignOpsCodeModal: React.FC<TModalProps> = ({ packageName, ...props}) => 
                     {currentPackage && <Autocomplete
                       classes={inputClasses}
                       options={getOptions(currentPackage)}
-                      getOptionSelected={(option, value) => option.type === value.type}
+                      isOptionEqualToValue={(option, value) => option.type === value.type}
                       getOptionLabel={option => option.name}
                       onChange={onSelectOption}
                       renderInput={autocompleteRender({

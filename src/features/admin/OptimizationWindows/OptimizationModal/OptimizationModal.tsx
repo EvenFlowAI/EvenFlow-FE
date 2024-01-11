@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {IOptimizationWindow, TOptContentData} from "../../../../store/reducers/optimizationWindows/types";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch} from "react-redux";

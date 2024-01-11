@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {useStyles} from "./styles";
 import {useDispatch, useSelector} from "react-redux";
 import {IMake} from "../../../../api/types";
@@ -28,23 +28,21 @@ export const DefaultMake = () => {
         if (selectedSC) dispatch(updateDefaultMake(selectedSC.id, value?.id ?? null, showError))
     }
 
-    return (
-        <>
-            <div className={classes.title}>Default Make:</div>
-            <Autocomplete
-                style={{marginRight: 20, width: 300}}
-                loading={isLoading}
-                value={selectedMake}
-                options={makes}
-                closeIcon={null}
-                getOptionSelected={(o, v) => o.id === v.id}
-                getOptionLabel={o => o.name}
-                onChange={onMakeChange}
-                renderInput={autocompleteRender({
-                    label: "",
-                    placeholder: 'Select make'
-                })}
-            />
-        </>
-    );
+    return <>
+        <div className={classes.title}>Default Make:</div>
+        <Autocomplete
+            style={{marginRight: 20, width: 300}}
+            loading={isLoading}
+            value={selectedMake}
+            options={makes}
+            clearIcon={null}
+            isOptionEqualToValue={(o, v) => o.id === v.id}
+            getOptionLabel={o => o.name}
+            onChange={onMakeChange}
+            renderInput={autocompleteRender({
+                label: "",
+                placeholder: 'Select make'
+            })}
+        />
+    </>;
 };

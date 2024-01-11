@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {MuiThemeProvider, useMediaQuery, useTheme} from "@material-ui/core";
+import { ThemeProvider, Theme, StyledEngineProvider, useMediaQuery, useTheme } from "@mui/material";
 import {
     Cars
 } from "../../../features/booking/AppointmentFlow/Cars/Cars";
@@ -87,6 +87,13 @@ import {useException} from "../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../routes/constants";
 
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
+
 export const AppointmentFlow = () => {
     const {
         selectedVehicle,
@@ -121,8 +128,8 @@ export const AppointmentFlow = () => {
     const {t} = useTranslation();
 
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-    const isXs = useMediaQuery(theme.breakpoints.down('xs'));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
@@ -204,7 +211,7 @@ export const AppointmentFlow = () => {
                 await updateServiceRequests(data.serviceRequests);
                 handleServiceTypeOption(data)
                 await dispatch(handleSideBarAppointmentUpdate());
-                option && await dispatch(loadConsultantsForUpdating(id, option.id, data))
+                option && (await dispatch(loadConsultantsForUpdating(id, option.id, data)))
                 await dispatch(updateConsultant(data.advisor))
                 await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
                 await dispatch(checkCarIsValid());
@@ -425,31 +432,33 @@ export const AppointmentFlow = () => {
         }
     }
     return (
-        <MuiThemeProvider theme={frameTheme}>
-            <Container>
-                <ServiceCenterSwitcher/>
-                {isSm && !['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
-                    ? <SideBar screen={currentScreen} handleSetScreen={handleSetScreen}/> : null}
-                {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)
-                    ? <AppointmentScreenTitle>{getTitle()}</AppointmentScreenTitle> : null}
-                {isXs && currentScreen === 'packageSelection'
-                    ? <p style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 0}}>
-                        {t("Please click on the maintenance package for your vehicle")}
-                    </p>
-                    : null}
-                {currentScreen === 'maintenanceDetails'
-                    ? <Subtitle>{t("Please provide the maintenance details for your vehicle")}</Subtitle> : null}
-                {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)
-                    ? component
-                    : !isSm ? <SidebarWrapper>
-                        <SideBarSection screen={currentScreen} handleSetScreen={handleSetScreen}/>
-                        {component}
-                    </SidebarWrapper> : component
-                }
-            </Container>
-            <AskChangesCompleted />
-            <SlotImpactedWarning />
-            <ServiceImpactedWarning/>
-        </MuiThemeProvider>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={frameTheme}>
+                <Container>
+                    <ServiceCenterSwitcher/>
+                    {isSm && !['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
+                        ? <SideBar screen={currentScreen} handleSetScreen={handleSetScreen}/> : null}
+                    {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)
+                        ? <AppointmentScreenTitle>{getTitle()}</AppointmentScreenTitle> : null}
+                    {isXs && currentScreen === 'packageSelection'
+                        ? <p style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 0}}>
+                            {t("Please click on the maintenance package for your vehicle")}
+                        </p>
+                        : null}
+                    {currentScreen === 'maintenanceDetails'
+                        ? <Subtitle>{t("Please provide the maintenance details for your vehicle")}</Subtitle> : null}
+                    {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)
+                        ? component
+                        : !isSm ? <SidebarWrapper>
+                            <SideBarSection screen={currentScreen} handleSetScreen={handleSetScreen}/>
+                            {component}
+                        </SidebarWrapper> : component
+                    }
+                </Container>
+                <AskChangesCompleted />
+                <SlotImpactedWarning />
+                <ServiceImpactedWarning/>
+            </ThemeProvider>
+        </StyledEngineProvider>
     );
 };

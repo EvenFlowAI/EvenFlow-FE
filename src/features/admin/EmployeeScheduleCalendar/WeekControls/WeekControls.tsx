@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
-import {Button} from "@material-ui/core";
-import {ChevronLeft, ChevronRight} from "@material-ui/icons";
+import {Button} from "@mui/material";
+import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import moment from "moment";
 import {getFirstLastDaysOfWeek} from "../utils";
-import {DatePicker} from "@material-ui/pickers";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
+import {DatePicker} from "@mui/x-date-pickers";
 import {useStyles} from "./styles";
 
 type TProps = {
@@ -29,7 +28,7 @@ export const WeekControls: React.FC<TProps> = ({selectedDate, isXS, onChange}) =
         setIsOpen(s);
     }
 
-    const handleDateChange = (date: MaterialUiPickersDate) => {
+    const handleDateChange = (date: moment.Moment) => {
         onChange(moment(date));
     }
 

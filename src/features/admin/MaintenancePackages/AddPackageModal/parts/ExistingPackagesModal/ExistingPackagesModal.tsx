@@ -6,7 +6,7 @@ import {Table} from "../../../../../../components/tables/Table/Table";
 import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {TableRowDataType} from "../../../../../../types/types";
 
 type TAssignOpsCodeModalProps = DialogProps & {

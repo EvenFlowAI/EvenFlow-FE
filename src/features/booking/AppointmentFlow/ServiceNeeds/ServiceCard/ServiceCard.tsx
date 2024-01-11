@@ -7,8 +7,8 @@ import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import {EServiceCategoryType} from "../../../../../store/reducers/categories/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
-import {useMediaQuery, useTheme} from "@material-ui/core";
-import {InfoOutlined} from "@material-ui/icons";
+import {useMediaQuery, useTheme} from "@mui/material";
+import {InfoOutlined} from "@mui/icons-material";
 import {useTranslation} from "react-i18next";
 import {EOfferType} from "../../../../../store/reducers/offers/types";
 import {HtmlTooltip} from "../../../../../components/styled/HtmlTooltip";
@@ -26,7 +26,7 @@ export const ServiceCard: React.FC<TSCProps> = ({card, onSelect, active, selecte
     const [isLoading, setLoading] = useState<boolean>(false);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const theme = useTheme();
-    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+    const isSM = useMediaQuery(theme.breakpoints.down('md'));
     const {t} = useTranslation();
 
     const price = card.type === EServiceCategoryType.GeneralCategory ? card.price : undefined;

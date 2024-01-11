@@ -1,4 +1,6 @@
-import {FormControlLabel, styled, withStyles} from "@material-ui/core";
+import { FormControlLabel, styled } from "@mui/material";
+
+import withStyles from '@mui/styles/withStyles';
 
 export const SwitcherLabel = withStyles({
     root: {

@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core";
+import makeStyles from '@mui/styles/makeStyles';
 
 const borderRule = '1px solid #E0E2E8';
 

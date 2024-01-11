@@ -3,8 +3,8 @@ import {DialogContent, DialogTitle} from "../../../../../components/modals/BaseM
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {DialogProps} from "../../../../../components/modals/BaseModal/types";
-import {Dialog} from "@material-ui/core";
-import {ErrorOutline} from "@material-ui/icons";
+import {Dialog} from "@mui/material";
+import {ErrorOutline} from "@mui/icons-material";
 import {useTranslation} from "react-i18next";
 import {EOfferType} from "../../../../../store/reducers/offers/types";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";

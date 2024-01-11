@@ -1,14 +1,14 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import {Table} from "../../../../components/tables/Table/Table";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {
     loadAssignedServiceRequests,
     setAssignedOrdering,
 } from "../../../../store/reducers/serviceRequests/actions";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {IOrder, TableRowDataType, TCallback} from "../../../../types/types";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {RootState} from "../../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {ServiceRequestCellData} from "../../../../components/wrappers/ServiceRequestCellData/ServiceRequestCellData";
@@ -134,7 +134,7 @@ export const ServiceRequestsTable: React.FC<TProps> = ({setEditedItem, onOOpen, 
     }
 
     const actions = (el: IAssignedServiceRequest) => {
-        return <IconButton onClick={handleOpenMenu(el)}><MoreHoriz /></IconButton>
+        return <IconButton onClick={handleOpenMenu(el)} size="large"><MoreHoriz /></IconButton>;
     }
 
     const handleCloseMenu = () => {

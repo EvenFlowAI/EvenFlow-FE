@@ -6,8 +6,8 @@ import {
     MenuItem,
     IconButton,
     Button
-} from "@material-ui/core";
-import {MoreHoriz} from "@material-ui/icons";
+} from "@mui/material";
+import {MoreHoriz} from "@mui/icons-material";
 import {HeaderTableCell, FirstCell, TableCell} from "../../../components/styled/AncillaryPriceComponents";
 import {IZonePriceSettings} from "../../../store/reducers/serviceValet/types";
 import {NoData} from "../../../components/wrappers/NoData/NoData";

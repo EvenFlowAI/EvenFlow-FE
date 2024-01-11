@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
+import {Button, Divider, Grid, useMediaQuery, useTheme} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {AvatarUpload} from "../../../../components/formControls/AvatarUpload/AvatarUpload";
 import {updateDealership, updateDealershipAvatar} from "../../../../store/reducers/dealershipGroups/actions";
 import {useDispatch} from "react-redux";
 import {states} from "../../../../utils/constants";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {validatePhoneNumber} from "../../../../utils/utils";
 import {useStyles} from "./styles";
 import {TForm} from "./types";
@@ -30,7 +30,7 @@ export const DealershipGroupProfile = () => {
     const showMessage = useMessage();
 
     const theme = useTheme();
-    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+    const isSM = useMediaQuery(theme.breakpoints.down('md'));
     const classes = useStyles();
 
     useEffect(() => {

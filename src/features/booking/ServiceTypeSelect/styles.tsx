@@ -1,11 +1,11 @@
-import {styled, Theme} from "@material-ui/core";
+import {styled, Theme} from "@mui/material";
 import React from "react";
 import {mh400, mh600} from "../CustomerSelect/constants";
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
-export const ServiceTypeCardsWrapper = styled(({cardsAmount, ...props}) => (<div {...props}/>))<Theme, {
-    cardsAmount: number
-}>(({theme, cardsAmount}) => ({
+export const ServiceTypeCardsWrapper = styled((props) => (<div {...props}/>))
+    <{ cardsAmount: number}>
+    (({theme, cardsAmount}) => ({
     display: 'grid',
     gridTemplateColumns: `repeat(${cardsAmount}, 1fr)`,
     gap: "18px",
@@ -18,15 +18,15 @@ export const ServiceTypeCardsWrapper = styled(({cardsAmount, ...props}) => (<div
     [mh600]: {
         marginTop: "2%"
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         gridTemplateRows: `repeat(${cardsAmount}, 1fr)`,
         gridTemplateColumns: '1fr',
         marginTop: theme.spacing(5)
     }
 }));
-export const Tagline = styled(({taglineColor, ...props}) => (<div {...props}/>))<Theme, {
+export const Tagline = styled((props) => (<div {...props}/>))<{
     taglineColor?: string
-}>(({theme, taglineColor}) => ({
+}>(({taglineColor}) => ({
     minHeight: 40,
     width: '100%',
     display: 'flex',
@@ -36,7 +36,8 @@ export const Tagline = styled(({taglineColor, ...props}) => (<div {...props}/>))
     paddingBottom: 16,
     color: taglineColor ? `#${taglineColor}` : 'inherit',
 }))
-export const ServiceTypeButton = styled(({isTaglinePresent, ...props}) => (<div {...props}/>))<Theme, {
+
+export const ServiceTypeButton = styled((props) => (<div {...props}/>))<{
     isTaglinePresent: boolean
 }>(({theme, isTaglinePresent}) => ({
     position: 'relative',
@@ -64,10 +65,10 @@ export const ServiceTypeButton = styled(({isTaglinePresent, ...props}) => (<div 
         fontSize: 18,
         padding: "2%"
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         justifyItems: 'center',
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
         fontSize: 18,
         padding: "5% 10%"
     },
@@ -79,7 +80,7 @@ export const ServiceTypeButton = styled(({isTaglinePresent, ...props}) => (<div 
         justifyContent: 'flex-end',
     },
 }));
-export const useServiceTypeStyles = makeStyles((theme) => ({
+export const useServiceTypeStyles = makeStyles(() => ({
     name: {
         width: "100%",
         fontSize: 28,

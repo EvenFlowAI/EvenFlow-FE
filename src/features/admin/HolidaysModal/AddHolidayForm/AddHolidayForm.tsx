@@ -1,14 +1,14 @@
 import React from "react";
 import {THolidayForm} from "../types";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import {FormControlLabel, Grid, Switch} from "@material-ui/core";
+import {FormControlLabel, Grid, Switch} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useStyles} from "./styles";
 import {DatePicker} from "../../../../components/pickers/DatePicker/DatePicker";
+import moment from "moment";
 
 type TProps = {
     form: THolidayForm
-    onDateChange: (date: MaterialUiPickersDate) => void;
+    onDateChange: (date: moment.Moment) => void;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onCheck: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 }

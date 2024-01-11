@@ -1,8 +1,8 @@
 import React, {Dispatch, SetStateAction} from 'react';
-import {Input} from "@material-ui/core";
+import {Input} from "@mui/material";
 import {IntervalUpsellAndOptions} from "../IntervalUpsellAndOptions/IntervalUpsellAndOptions";
 import {ESegmentTitle, IPackageById} from "../../../../../api/types";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {TRequestRow, TCellData} from "../../types";
 import {usePackageAccordionStyles} from "../../styles";
 import {defaultUpsellTitle} from "../../constants";

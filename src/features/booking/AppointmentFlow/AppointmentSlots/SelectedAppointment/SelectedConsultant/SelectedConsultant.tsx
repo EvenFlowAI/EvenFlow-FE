@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {MenuItem, Select, useMediaQuery, useTheme} from "@material-ui/core";
+import {MenuItem, Select, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {
     getSlotsConsultantId,
@@ -20,7 +20,7 @@ const SelectedConsultant = () => {
     const dispatch = useDispatch();
     const classes = useSelectedAppointmentStyles();
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 

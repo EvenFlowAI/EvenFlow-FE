@@ -1,4 +1,5 @@
-import {Button, styled, Theme, withStyles} from "@material-ui/core";
+import { Button, styled, Theme } from "@mui/material";
+import withStyles from '@mui/styles/withStyles';
 import React from "react";
 
 export const Wrapper = styled((({active, ...props}) => (<div {...props}/>)))<Theme, {

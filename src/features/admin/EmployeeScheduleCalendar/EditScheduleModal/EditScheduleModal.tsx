@@ -5,21 +5,20 @@ import {
     Button,
     Grid,
     MenuItem,
-    Select,
+    Select, SelectChangeEvent,
     useMediaQuery,
     useTheme
-} from "@material-ui/core";
+} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import moment from "moment";
 import {IEmployee} from "../../../../store/reducers/employees/types";
 import {ISchedule, IScheduleForm, IScheduleForWeek} from "../../../../store/reducers/schedules/types";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {timeSpanString} from "../../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEmployeesSchedule, setEmployeesSchedule} from "../../../../store/reducers/schedules/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {CreateEmployee} from "../../../../components/modals/admin/CreateEmployee/CreateEmployee";
-import {Close} from "@material-ui/icons";
+import {Close} from "@mui/icons-material";
 import {API} from "../../../../api/api";
 import {TIds} from "../types";
 import {getRequestDate} from "../utils";
@@ -60,7 +59,7 @@ export const EditScheduleModal: React.FC<TProps> = ({selectedDate, date, onClear
 
     const theme = useTheme();
     const {selectedSC} = useSCs();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         selectedSC && dispatch(loadWorkingDays(selectedSC.id))
@@ -87,11 +86,11 @@ export const EditScheduleModal: React.FC<TProps> = ({selectedDate, date, onClear
         props.onClose();
     }
 
-    const handleUpdate = (name: keyof TForm) => (date: MaterialUiPickersDate) => {
+    const handleUpdate = (name: keyof TForm) => (date: moment.Moment) => {
         setFormIsChecked(false);
         setForm({...form, [name]: moment(date)});
     }
-    const handleSelectPod = (e: React.ChangeEvent<{value: unknown, name?: string}>) => {
+    const handleSelectPod = (e: SelectChangeEvent<number>) => {
         setFormIsChecked(false);
         setForm({...form, podId: e.target.value ? Number(e.target.value) : undefined});
     }

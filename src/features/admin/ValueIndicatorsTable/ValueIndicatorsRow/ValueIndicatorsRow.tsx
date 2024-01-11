@@ -5,7 +5,7 @@ import {
     Switch,
     TableCell,
     TableRow,
-} from "@material-ui/core";
+} from "@mui/material";
 import {ValueSlider} from "../../../../components/styled/ValueSlider";
 import {IValueSettings} from "../../../../store/reducers/valueSettings/types";
 import {SliderRange, TRow} from "../types";

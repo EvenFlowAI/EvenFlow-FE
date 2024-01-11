@@ -1,9 +1,9 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Button, Divider, Switch} from "@material-ui/core";
+import {Button, Divider, Switch} from "@mui/material";
 import {DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
 import {ReactComponent as PlusIcon} from "../../../../assets/img/plus.svg";
 import {TTransportationNotifications} from "../../../../store/reducers/notifications/types";

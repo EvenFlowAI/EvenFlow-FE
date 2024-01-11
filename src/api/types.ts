@@ -1,5 +1,4 @@
 import {AxiosResponse} from "axios";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {
     EReminderType, IServiceRequestPrice,
     IVehicleData, IVehicleForSlots, IWaitListData, MPOptionShort, TRecallForRequest
@@ -15,6 +14,7 @@ import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
 import {TScheduler, TServiceBook} from "../store/reducers/appointments/types";
 import {TEnumKeyLabel} from "../store/reducers/types";
+import {ParsableDate} from "../types/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 

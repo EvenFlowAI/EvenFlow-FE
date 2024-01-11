@@ -3,9 +3,8 @@ import {DialogTitle, DialogContent, BaseModal, DialogActions} from "../../../../
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {ITimeRangeAndCapacity} from "../../../../store/reducers/capacityServiceValet/types";
 import moment from "moment";
-import {Button, Divider, Grid} from "@material-ui/core";
-import {AccessTime} from "@material-ui/icons";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {Button, Divider, Grid} from "@mui/material";
+import {AccessTime} from "@mui/icons-material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
 import {useDispatch} from "react-redux";
@@ -15,6 +14,7 @@ import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {time24HourFormat} from "../../../../utils/constants";
+import {ParsableDate} from "../../../../types/types";
 
 type TProps = DialogProps & {
     editingElement: ITimeRangeAndCapacity;

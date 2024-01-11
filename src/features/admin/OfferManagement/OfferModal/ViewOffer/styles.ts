@@ -1,4 +1,6 @@
-import {FormControlLabel, withStyles} from "@material-ui/core";
+import { FormControlLabel } from "@mui/material";
+
+import withStyles from '@mui/styles/withStyles';
 
 export const Label = withStyles({
     root: {

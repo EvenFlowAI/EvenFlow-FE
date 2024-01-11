@@ -1,9 +1,8 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {Grid, MenuItem, Paper, Select, IconButton} from "@material-ui/core";
-import {Clear} from '@material-ui/icons';
+import {Grid, MenuItem, Paper, Select, IconButton, SelectChangeEvent} from "@mui/material";
+import {Clear} from '@mui/icons-material';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {DatePicker} from "@material-ui/pickers";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
+import {DatePicker} from "../../../../components/pickers/DatePicker/DatePicker";
 import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
 import {loadSchedulerList, loadServiceBookList} from "../../../../store/reducers/appointments/actions";
@@ -53,7 +52,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         setFilters(prev => ({...prev, date, pageData: initialPaging}))
     }
 
-    const handleDateChange = (date: MaterialUiPickersDate) => {
+    const handleDateChange = (date: moment.Moment) => {
         onChange(moment(date));
     }
 
@@ -62,11 +61,11 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         onChange(null);
     }
 
-    const handleSelectStatus = (e: React.ChangeEvent<{value: unknown}>) => {
+    const handleSelectStatus = (e: SelectChangeEvent<string | number | unknown>) => {
         setFilters(prev => ({...prev, reportingStatus: e.target.value, pageData: initialPaging}))
     }
 
-    const handleSelectServiceBook = (e: React.ChangeEvent<{value: unknown}>) => {
+    const handleSelectServiceBook = (e: SelectChangeEvent<string | number>) => {
         if (e.target.value) {
             const selected = serviceBookList.find(item => item.id === e.target.value || item.name === e.target.value)
             setFilters(prev => ({...prev, serviceBook: selected ?? null, pageData: initialPaging}))
@@ -75,7 +74,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         }
     }
 
-    const handleSelectScheduler = (e: React.ChangeEvent<{value: unknown}>) => {
+    const handleSelectScheduler = (e: SelectChangeEvent<string | number>) => {
         if (e.target.value) {
             const selected = schedulerList.find(item => item.id
                 ? item.id.toString() === e.target.value
@@ -90,7 +89,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         <Paper variant="outlined" style={{
             borderRadius: 0, marginBottom: 18, padding: 18, width: '100%'
         }}>
-            <Grid container spacing={2} justify="space-between" alignItems='flex-end'>
+            <Grid container spacing={2} justifyContent="space-between" alignItems='flex-end'>
                 <Grid item xs={3}>
                     <div className={classes.label}>Date</div>
                     <DatePicker
@@ -104,7 +103,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                             placeholder: "Select date",
                             endAdornment:
                                 selectedDate
-                                    ? (<IconButton onClick={(e) => handleClear(e)}>
+                                    ? (<IconButton onClick={(e) => handleClear(e)} size="large">
                                     <Clear />
                                 </IconButton>)
                                     : <CalendarIcon/> }}

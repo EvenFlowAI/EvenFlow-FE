@@ -1,5 +1,5 @@
 import React from "react";
-import {Avatar} from "@material-ui/core";
+import {Avatar} from "@mui/material";
 import {getInitials} from "../../../utils/utils";
 import {useStyles} from "./styles";
 

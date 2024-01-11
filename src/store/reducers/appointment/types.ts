@@ -1,5 +1,4 @@
 import {IAddress} from "../dealershipGroups/types";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {EDemandCategory, EPricingDisplayType} from "../pricingSettings/types";
 import {EOfferType, IOffer} from "../offers/types";
 import moment from "moment";
@@ -12,6 +11,7 @@ import {
 } from "../../../api/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
 import {TEmailRequirement} from "../screenSettings/types";
+import {ParsableDate} from "../../../types/types";
 
 export interface IServiceCenterProfile {
     id: number;

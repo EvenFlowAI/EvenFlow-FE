@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -15,12 +15,12 @@ export const Wrapper = styled('div')(({theme}) => ({
         textDecoration: 'underline',
         textTransform: 'none',
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         gridTemplateColumns: "1fr"
     },
 }));
 
-export const ButtonWrapper = styled('div')(({theme}) => ({
+export const ButtonWrapper = styled('div')(() => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

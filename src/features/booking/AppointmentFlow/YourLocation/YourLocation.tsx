@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -21,7 +21,7 @@ import {
     setWelcomeScreenView,
     setZipCode, setDefaultVisitCenterOption,
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import {
     EAncillaryType,
     EServiceType,
@@ -29,10 +29,10 @@ import {
     TAncillaryPriceByZip
 } from "../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
-import {styled, Theme} from "@material-ui/core";
+import {styled, Theme} from "@mui/material";
 import AncillaryPriceModal from "./AncillaryPriceModal/AncillaryPriceModal";
 import UnavailableServiceModal from "./UnavailableServiceModal/UnavailableServiceModal";
-import {KeyboardArrowDown} from "@material-ui/icons";
+import {KeyboardArrowDown} from "@mui/icons-material";
 import {TActionProps, TArgCallback, TView} from "../../../../types/types";
 import {useHistory, useParams} from "react-router-dom";
 import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";
@@ -57,7 +57,7 @@ export const SelectWrapper = styled('div')(({theme}) => ({
         textTransform: 'uppercase',
         fontSize: 12,
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         gridTemplateColumns: "100%",
         gap: "20px",
     }

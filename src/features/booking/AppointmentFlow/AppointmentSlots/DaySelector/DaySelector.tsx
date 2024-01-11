@@ -1,9 +1,9 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import moment from "moment";
-import {ChevronLeft, ChevronRight} from "@material-ui/icons";
+import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import {DaySelectCard} from "../DaySelectCard/DaySelectCard";
 import {TArgCallback} from "../../../../../types/types";
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {TGroupedAppointments} from "../../../../../utils/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
@@ -32,8 +32,8 @@ export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appo
     const theme = useTheme();
     const dispatch = useDispatch();
     const {onOpen, isOpen, onClose} = useModal();
-    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
-    const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const isMds = useMediaQuery(theme.breakpoints.down("mds"));
     const daysPerScreen: number = useMemo(() => {
         return isSm ? 4 : isMds ? 5 : 6;

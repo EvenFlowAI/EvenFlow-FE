@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {
     setCurrentFrameScreen,
     setEditingPosition,

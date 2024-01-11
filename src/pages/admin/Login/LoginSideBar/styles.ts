@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import bgImage from "../../../../assets/img/image_login.jpg";
 
 export const useStyles = makeStyles({

@@ -1,4 +1,4 @@
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {ParsableDate} from "../../../types/types";
 
 export type TBreak = {
     id?: number;

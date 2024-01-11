@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import {cellPadding, compactPadding, superCompactPadding} from "./constants";
 
 type TStyleProps = {
@@ -17,7 +17,7 @@ export const useStyles = makeStyles(theme => ({
         border: "none",
         // borderBottomColor: "#000000",
         padding: compact ? compactPadding : superCompact ? superCompactPadding : cellPadding,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: 12,
             padding: theme.spacing(1)
         }
@@ -29,7 +29,7 @@ export const useStyles = makeStyles(theme => ({
         padding: compact ? compactPadding : superCompact ? superCompactPadding : cellPadding,
         fontWeight: "bold",
         color: "#9DA8B5",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: 12,
             padding: theme.spacing(1)
         }

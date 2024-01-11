@@ -3,7 +3,7 @@ import {WelcomeLayout} from "../../../features/booking/WelcomeLayout/WelcomeLayo
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import {API} from "../../../api/api";
-import {Button, styled} from "@material-ui/core";
+import {Button, styled} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {
     clearStorage,
@@ -12,7 +12,7 @@ import {
     setCustomerLoadedData
 } from "../../../store/reducers/appointment/actions";
 import {AppointmentStatus, ICustomerLoadedData, ILoadedVehicle} from "../../../api/types";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {RootState} from "../../../store/rootReducer";
 import {NotFoundError} from "../../../components/wrappers/NotFoundError/NotFoundError";
 import {encodeSCID} from "../../../utils/utils";

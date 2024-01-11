@@ -1,6 +1,6 @@
-import {ToggleButton, ToggleButtonGroup} from "@material-ui/lab";
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import React from "react";
-import {InputLabel} from "@material-ui/core";
+import {InputLabel} from "@mui/material";
 import {useStyles} from "./styles";
 
 export type TButtonElement = {

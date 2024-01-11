@@ -4,7 +4,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {loadRepairHistory} from "../../../../store/reducers/enhancedCustomerSearch/actions";
 import {BaseModal, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {DialogProps} from "../../BaseModal/types";
-import {Button, Divider, Table, TableBody, TableHead, TableRow} from "@material-ui/core";
+import {Button, Divider, Table, TableBody, TableHead, TableRow} from "@mui/material";
 import moment from "moment";
 import {Loading} from "../../../wrappers/Loading/Loading";
 import classnames from 'classnames';

@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useSelectedAppointmentStyles = makeStyles(theme => ({
     selectWrapper: {
@@ -7,7 +7,7 @@ export const useSelectedAppointmentStyles = makeStyles(theme => ({
         '& > span': {
             marginLeft: 5,
         },
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             '& > div > div': {
                 padding: 5
             }

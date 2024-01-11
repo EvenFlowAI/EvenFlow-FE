@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Button, IconButton} from "@material-ui/core";
+import {Button, IconButton} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
@@ -14,7 +14,7 @@ import {
 } from "../../../store/reducers/serviceRequests/types";
 import {UrgentRequestModal} from "./UrgentRequestsModal/UrgentRequestModal";
 import {SC_UNDEFINED} from "../../../utils/constants";
-import {DeleteOutline} from "@material-ui/icons";
+import {DeleteOutline} from "@mui/icons-material";
 import {TableRowDataType} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
@@ -84,9 +84,11 @@ export const UrgentRequests = () => {
         }
     }
     const actions = (el: IAssignedServiceRequestShort) => {
-        return <IconButton onClick={askRemove(el)}>
-            <DeleteOutline />
-        </IconButton>
+        return (
+            <IconButton onClick={askRemove(el)} size="large">
+                <DeleteOutline />
+            </IconButton>
+        );
     }
 
     return <div>

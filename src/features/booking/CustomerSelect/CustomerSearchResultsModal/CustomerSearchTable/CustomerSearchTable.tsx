@@ -16,7 +16,7 @@ import {
     TableHead,
     TablePagination,
     TableRow, TableSortLabel,
-} from "@material-ui/core";
+} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {IAddressData, ICustomerLoadedData} from "../../../../../api/types";
 import {
@@ -397,7 +397,8 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                                 <HtmlTooltip title="Create Appointment">
                                                     <IconButton
                                                         style={{padding: 4}}
-                                                        onClick={() => onCreateNewForCar(customer)}>
+                                                        onClick={() => onCreateNewForCar(customer)}
+                                                        size="large">
                                                         <Create/>
                                                     </IconButton>
                                                 </HtmlTooltip>
@@ -405,39 +406,38 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                                     ? <HtmlTooltip title="Edit Appointment">
                                                         <IconButton
                                                             style={{padding: 4}}
-                                                            onClick={() => onUpdateAppForCar(customer)}>
+                                                            onClick={() => onUpdateAppForCar(customer)}
+                                                            size="large">
                                                             <Update/>
                                                         </IconButton>
                                                     </HtmlTooltip>
-                                                    : <IconButton style={{padding: 4}} disabled><EditDisabled/></IconButton>
+                                                    : <IconButton style={{padding: 4}} disabled size="large"><EditDisabled/></IconButton>
                                                 }
                                                 {customer.appointmentHashKey?.length
                                                     ? <HtmlTooltip title="Cancel Appointment">
                                                         <IconButton
                                                             style={{padding: 4}}
-                                                            onClick={() => onCancelAppointment(customer)}>
+                                                            onClick={() => onCancelAppointment(customer)}
+                                                            size="large">
                                                             <CancelApp/>
                                                         </IconButton>
                                                     </HtmlTooltip>
-                                                    : <IconButton style={{padding: 4}} disabled><CancelAppDisabled/></IconButton>
+                                                    : <IconButton style={{padding: 4}} disabled size="large"><CancelAppDisabled/></IconButton>
                                                 }
                                                 {customer.hasOrders
                                                     ? <HtmlTooltip title="View Repair History">
                                                         <IconButton
                                                             style={{padding: 4}}
-                                                            onClick={() => onViewRepairHistory(customer)}>
+                                                            onClick={() => onViewRepairHistory(customer)}
+                                                            size="large">
                                                             <Search/>
                                                         </IconButton>
                                                     </HtmlTooltip>
-                                                    : <IconButton
-                                                        style={{padding: 4}}
-                                                        disabled>
+                                                    : <IconButton style={{padding: 4}} disabled size="large">
                                                         <SearchDisabled/>
                                                     </IconButton>}
                                                 <HtmlTooltip title="Edit Customer Information">
-                                                    <IconButton
-                                                        style={{padding: 4}}
-                                                        onClick={() => onEditData(customer)}>
+                                                    <IconButton style={{padding: 4}} onClick={() => onEditData(customer)} size="large">
                                                         <Edit/>
                                                     </IconButton>
                                                 </HtmlTooltip>
@@ -575,7 +575,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                     onRowsPerPageChange={handleChangeRows}
                     rowsPerPage={pageData.pageSize}/>
                 : null }
-        </div>
+        </div>;
 };
 
 export default CustomerSearchTable;

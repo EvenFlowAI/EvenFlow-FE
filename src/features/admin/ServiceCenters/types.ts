@@ -1,4 +1,4 @@
-import {GridSize} from "@material-ui/core";
+import {GridSize} from "@mui/material";
 import React from "react";
 import {TextInputProps} from "../../../components/formControls/types";
 

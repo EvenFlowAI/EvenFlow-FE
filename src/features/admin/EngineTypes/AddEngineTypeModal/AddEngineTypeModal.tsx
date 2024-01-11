@@ -3,8 +3,8 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Chip} from "../../../../components/wrappers/Chip/Chip";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button, Divider, IconButton} from "@material-ui/core";
-import {AddCircleOutline} from "@material-ui/icons";
+import {Button, Divider, IconButton} from "@mui/material";
+import {AddCircleOutline} from "@mui/icons-material";
 import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {createEngineType} from "../../../../store/reducers/vehicleDetails/actions";
@@ -90,7 +90,7 @@ export const AddEngineTypeModal: React.FC<DialogProps> = (props) => {
                             onChange={onEngineTypeChange}
                             value={newEngineType}/>
                     </div>
-                    <IconButton onClick={addEngineType} className={classes.iconPlus}>
+                    <IconButton onClick={addEngineType} className={classes.iconPlus} size="large">
                         <AddCircleOutline/>
                     </IconButton>
                 </div>

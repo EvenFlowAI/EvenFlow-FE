@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button, TableBody, TableHead} from "@material-ui/core";
+import {Button, TableBody, TableHead} from "@mui/material";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";

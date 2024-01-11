@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {TableBody, TableHead, Button} from "@material-ui/core";
+import {TableBody, TableHead, Button} from "@mui/material";
 import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
 import {loadUnplannedDemand} from "../../../store/reducers/demandSegments/actions";

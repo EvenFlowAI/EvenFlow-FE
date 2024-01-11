@@ -7,10 +7,10 @@ import {
     TNewCategory,
     TUpdateCategoryData
 } from "../../../../store/reducers/categories/types";
-import {Button, Divider, FormControlLabel, Radio, RadioGroup, Switch} from "@material-ui/core";
+import {Button, Divider, FormControlLabel, Radio, RadioGroup, Switch} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {SearchInput} from "../../../../components/formControls/SearchInput/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
 import {loadAllAssignedServiceRequests, setAssignedFilter,} from "../../../../store/reducers/serviceRequests/actions";
@@ -285,7 +285,7 @@ export const AddServiceCategoryModal: React.FC<TAddServiceCategoryProps> = ({edi
                     </div>
                     <Autocomplete
                         options={getPageOptions(selectedServiceType)}
-                        getOptionSelected={(option) => option.value === definedPage?.value}
+                        isOptionEqualToValue={(option) => option.value === definedPage?.value}
                         getOptionLabel={option => option.name}
                         value={definedPage}
                         onChange={onDefinedPageChange}
@@ -301,7 +301,7 @@ export const AddServiceCategoryModal: React.FC<TAddServiceCategoryProps> = ({edi
                     </div>
                     <Autocomplete
                         options={getCategoryOptions()}
-                        getOptionSelected={(option) => option.value === categoryType?.value}
+                        isOptionEqualToValue={(option) => option.value === categoryType?.value}
                         getOptionLabel={getOptionLabel}
                         value={categoryType}
                         onChange={onCategoryTypeChange}

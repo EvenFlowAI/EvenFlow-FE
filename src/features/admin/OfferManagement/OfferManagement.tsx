@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {TabContext, TabPanel} from "@mui/lab";
 import {TabList} from "../../../components/styled/Tabs";
-import {Tab} from "@material-ui/core";
+import {Tab} from "@mui/material";
 import {ActiveOffers} from "./ActiveOffers/ActiveOffers";
 import {ArchiveOffers} from "./ArchiveOffers/ArchiveOffers";
 import {pricingRoot} from "../../../utils/constants";

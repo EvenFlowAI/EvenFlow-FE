@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {CreateServiceCenterModal} from "../CreateServiceCenterModal/CreateServiceCenterModal";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {SearchInput} from "../../../../components/formControls/SearchInput/SearchInput";
 import {loadAll, setSCSearch, setSelectedDealershipGroupId} from "../../../../store/reducers/serviceCenters/actions";
 import {changePageData} from "../../../../store/reducers/dealershipGroups/actions";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useStyles} from "./styles";
 import {TSelectedGroup} from "../types";

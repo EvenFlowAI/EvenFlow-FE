@@ -9,7 +9,7 @@ import {
     Paper,
     useMediaQuery,
     useTheme
-} from "@material-ui/core";
+} from "@mui/material";
 import {EDesirabilityState, ETimeSlotType} from "../../../../store/reducers/slotScoring/types";
 import {generateSlots, TSlot} from "../utils";
 import {useDispatch, useSelector} from "react-redux";
@@ -20,7 +20,7 @@ import {
     saveDesirability
 } from "../../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../../store/rootReducer";
-import {CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlined} from "@mui/icons-material";
 import {Caption} from "../../../../components/wrappers/Caption/Caption";
 import moment from "moment";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
@@ -52,7 +52,7 @@ export const AppointmentSlotsDesirability = () => {
     const showError = useException();
 
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [desirabilityItems] = useSelector((state: RootState) => [
         state.slotScoring.desirability

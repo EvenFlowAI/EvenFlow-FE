@@ -1,15 +1,15 @@
 import React, {useEffect, useRef} from 'react';
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import moment from "moment";
 import {EAppointmentTimingType} from "../../../../../store/reducers/appointment/types";
-import {DateRangeIcon} from "@material-ui/pickers/_shared/icons/DateRangeIcon";
-import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import {RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {TArgCallback, TCallback} from "../../../../../types/types";
 import {CardWrapper, MobileWrapper, StyledDate} from "./styles";
 import {TCard} from "../types";
+import {DateRangeIcon} from "@mui/x-date-pickers";
 
 type TCardProps = {
     card: TCard;
@@ -23,7 +23,7 @@ type TCardProps = {
 const AppointmentTimingCard: React.FC<TCardProps> = ({card, active, onClick,
                                               onChangeTime, selectedTime, isLoading}) => {
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const {t} = useTranslation();
     const {appointmentSlots} = useSelector((state: RootState) => state.appointment)
     const cardRef = useRef<HTMLDivElement|null>(null);

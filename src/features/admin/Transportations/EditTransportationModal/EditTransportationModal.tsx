@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {ChangeEvent, HTMLAttributes, useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {
@@ -12,12 +12,12 @@ import {
 import {RootState} from "../../../../store/rootReducer";
 import moment from "moment";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import { ReactComponent as Calendar } from "../../../../assets/img/date_range.svg";
 import { ReactComponent as Watch } from "../../../../assets/img/watch_round.svg";
 import Checkbox from "../../../../components/formControls/Checkbox/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
-import {Button, Divider} from "@material-ui/core";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
+import {Button, Divider} from "@mui/material";
 import {editTransportationOptionRules} from "../../../../store/reducers/transportationNeeds/actions";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {getOptions} from "../../../../utils/utils";
@@ -203,7 +203,7 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
         }
     }, [daysOfWeek])
 
-    const renderDayOfWeekOption = useCallback((option: TOption) => {
+    const renderDayOfWeekOption = useCallback((props: HTMLAttributes<HTMLLIElement>, option: TOption) => {
         const allOptionsSelected = Boolean(daysOfWeek.length && daysOfWeek.length === dayOFWeekOptions.length - 1);
         const checked = Boolean(daysOfWeek.find(item => item.value === option.value)) || allOptionsSelected;
         return <React.Fragment>
@@ -219,7 +219,7 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
         </React.Fragment>
     }, [daysOfWeek, dayOFWeekOptions])
 
-    const renderRequestOption = useCallback((option: TOption) => {
+    const renderRequestOption = useCallback((props: HTMLAttributes<HTMLLIElement>, option: TOption) => {
         const checked = !!serviceRequests.find(item => item.value === option.value) || allRequestsSelected;
         return <React.Fragment>
             <Checkbox
@@ -294,149 +294,151 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
         if (Number.isInteger(+e.target.value) && +e.target.value >= 0) setSlotsCount(e.target.value);
     }
 
-    return <BaseModal {...props} width={500} onClose={onCancel}>
-        <DialogTitle onClose={onCancel}>Manage Rules</DialogTitle>
-        <DialogContent>
-            <div className={classes.wrapper}>
-                <Autocomplete
-                    fullWidth
-                    classes={autoCompleteStyles}
-                    style={{ marginBottom: 20 }}
-                    getOptionLabel={option => option.name}
-                    options={segmentOptions}
-                    getOptionSelected={(option, value) => option.name === ECustomerSegment[+value]}
-                    value={customerSegment}
-                    onChange={onCustomerSegmentChange}
-                    renderInput={autocompleteRender({
-                        label: 'Applicable Customer Segment',
-                        placeholder: 'Select Customer Segment',
-                        error: !customerSegment && formIsChecked,
-                    })}
-                />
-                <Autocomplete
-                    multiple
-                    style={{ marginBottom: 20 }}
-                    classes={multipleACSClasses}
-                    options={requestsOptions}
-                    disableCloseOnSelect
-                    disableClearable
-                    getOptionLabel={option => option.name}
-                    getOptionSelected={(o, v) => o.value === v.value}
-                    renderOption={renderRequestOption}
-                    value={serviceRequests}
-                    onChange={onRequestChange}
-                    renderInput={autocompleteRender({
-                        label: "Service Requests",
-                        error: !serviceRequests.length && formIsChecked,
-                        placeholder: 'Select Service Requests'
-                    })}
-                />
+    return (
+        <BaseModal {...props} width={500} onClose={onCancel}>
+            <DialogTitle onClose={onCancel}>Manage Rules</DialogTitle>
+            <DialogContent>
+                <div className={classes.wrapper}>
                     <Autocomplete
-                        multiple
                         fullWidth
-                        classes={multipleACSClasses}
-                        options={dayOFWeekOptions}
+                        classes={autoCompleteStyles}
                         style={{ marginBottom: 20 }}
                         getOptionLabel={option => option.name}
-                        getOptionSelected={(o, v) => o.value === v.value}
-                        disableClearable
-                        disableCloseOnSelect
-                        renderOption={renderDayOfWeekOption}
-                        value={daysOfWeek}
-                        onChange={onDayOfWeekChange}
+                        options={segmentOptions}
+                        isOptionEqualToValue={(option, value) => option.name === ECustomerSegment[+value]}
+                        value={customerSegment}
+                        onChange={onCustomerSegmentChange}
                         renderInput={autocompleteRender({
-                            label: 'Day Of Week',
-                            placeholder: 'Select Day Of Week',
-                            error: !daysOfWeek.length && formIsChecked,
+                            label: 'Applicable Customer Segment',
+                            placeholder: 'Select Customer Segment',
+                            error: !customerSegment && formIsChecked,
                         })}
                     />
-                <div className={classes.label}>Time Of Day</div>
-                <div className={classes.smallWrapper}>
-                    <TimePicker
-                        placeholder={"Start Time"}
-                        value={timeOfDay?.start ?? null}
-                        style={{ marginBottom: 20, width: '47%' }}
-                        onChange={handleTime('start')}
-                        id={"Time Of Day From"}
-                        InputProps={{
-                            endAdornment: <Watch />,
-                            error: !timeOfDay?.start && formIsChecked,
-                        }}
+                    <Autocomplete
+                        multiple
+                        style={{ marginBottom: 20 }}
+                        classes={multipleACSClasses}
+                        options={requestsOptions}
+                        disableCloseOnSelect
+                        disableClearable
+                        getOptionLabel={option => option.name}
+                        isOptionEqualToValue={(o, v) => o.value === v.value}
+                        renderOption={renderRequestOption}
+                        value={serviceRequests}
+                        onChange={onRequestChange}
+                        renderInput={autocompleteRender({
+                            label: "Service Requests",
+                            error: !serviceRequests.length && formIsChecked,
+                            placeholder: 'Select Service Requests'
+                        })}
                     />
-                    <TimePicker
-                        placeholder={"End Time"}
-                        value={timeOfDay?.end ?? null}
-                        onChange={handleTime('end')}
-                        style={{ marginBottom: 20, width: '47%' }}
-                        id={"Time Of Day To"}
-                        InputProps={{
-                            endAdornment: <Watch />,
-                            error: !timeOfDay?.end && formIsChecked,
-                        }}
-                    />
+                        <Autocomplete
+                            multiple
+                            fullWidth
+                            classes={multipleACSClasses}
+                            options={dayOFWeekOptions}
+                            style={{ marginBottom: 20 }}
+                            getOptionLabel={option => option.name}
+                            isOptionEqualToValue={(o, v) => o.value === v.value}
+                            disableClearable
+                            disableCloseOnSelect
+                            renderOption={renderDayOfWeekOption}
+                            value={daysOfWeek}
+                            onChange={onDayOfWeekChange}
+                            renderInput={autocompleteRender({
+                                label: 'Day Of Week',
+                                placeholder: 'Select Day Of Week',
+                                error: !daysOfWeek.length && formIsChecked,
+                            })}
+                        />
+                    <div className={classes.label}>Time Of Day</div>
+                    <div className={classes.smallWrapper}>
+                        <TimePicker
+                            placeholder={"Start Time"}
+                            value={timeOfDay?.start ?? null}
+                            style={{ marginBottom: 20, width: '47%' }}
+                            onChange={handleTime('start')}
+                            id={"Time Of Day From"}
+                            InputProps={{
+                                endAdornment: <Watch />,
+                                error: !timeOfDay?.start && formIsChecked,
+                            }}
+                        />
+                        <TimePicker
+                            placeholder={"End Time"}
+                            value={timeOfDay?.end ?? null}
+                            onChange={handleTime('end')}
+                            style={{ marginBottom: 20, width: '47%' }}
+                            id={"Time Of Day To"}
+                            InputProps={{
+                                endAdornment: <Watch />,
+                                error: !timeOfDay?.end && formIsChecked,
+                            }}
+                        />
+                    </div>
+                    <div className={classes.label}>Duration</div>
+                    <div className={classes.smallWrapper}>
+                        <DatePicker
+                            value={duration?.start ?? null}
+                            format="MMM D, YYYY"
+                            style={{ marginBottom: 20, width: '47%' }}
+                            onChange={handleDateChange('start')}
+                            InputProps={{
+                                endAdornment: <Calendar />,
+                                error: !duration?.start && formIsChecked,
+                            }}
+                        />
+                        <DatePicker
+                            value={duration?.end ?? null}
+                            format="MMM D, YYYY"
+                            style={{ marginBottom: 20, width: '47%' }}
+                            onChange={handleDateChange('end')}
+                            InputProps={{
+                                endAdornment: <Calendar />,
+                                error: !duration?.end && formIsChecked,
+                            }}
+                        />
+                    </div>
+                    <div className={classes.bigLabel}>CONSTRAINTS</div>
+                    <Divider style={{ margin: '0 0 10px 0' }}/>
+                    <TextField
+                        fullWidth
+                        type="number"
+                        inputProps={{min: 1, step: 1}}
+                        label='Capacity'
+                        style={{ marginBottom: 20}}
+                        placeholder='Type Number'
+                        error={Boolean(capacity) && !Number.isInteger(+capacity)}
+                        onChange={onCapacityChange}
+                        value={capacity ?? ''}/>
+                    <TextField
+                        fullWidth
+                        type="number"
+                        inputProps={{min: 1, step: 1}}
+                        label='Per appointment slots'
+                        placeholder='Type Number'
+                        error={Boolean(slotsCount) && !Number.isInteger(+slotsCount)}
+                        onChange={onSlotsCountChange}
+                        value={slotsCount ?? ''}/>
                 </div>
-                <div className={classes.label}>Duration</div>
-                <div className={classes.smallWrapper}>
-                    <DatePicker
-                        value={duration?.start ?? null}
-                        format="MMM D, YYYY"
-                        style={{ marginBottom: 20, width: '47%' }}
-                        onChange={handleDateChange('start')}
-                        InputProps={{
-                            endAdornment: <Calendar />,
-                            error: !duration?.start && formIsChecked,
-                        }}
-                    />
-                    <DatePicker
-                        value={duration?.end ?? null}
-                        format="MMM D, YYYY"
-                        style={{ marginBottom: 20, width: '47%' }}
-                        onChange={handleDateChange('end')}
-                        InputProps={{
-                            endAdornment: <Calendar />,
-                            error: !duration?.end && formIsChecked,
-                        }}
-                    />
+            </DialogContent>
+            <Divider style={{ margin: 0 }}/>
+            <DialogActions>
+                <div className={classes.actionsWrapper}>
+                    <div className={classes.buttonsWrapper}>
+                        <Button
+                            onClick={onCancel}
+                            className={classes.cancelButton}>
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={onSave}
+                            className={classes.saveButton}>
+                            Save
+                        </Button>
+                    </div>
                 </div>
-                <div className={classes.bigLabel}>CONSTRAINTS</div>
-                <Divider style={{ margin: '0 0 10px 0' }}/>
-                <TextField
-                    fullWidth
-                    type="number"
-                    inputProps={{min: 1, step: 1}}
-                    label='Capacity'
-                    style={{ marginBottom: 20}}
-                    placeholder='Type Number'
-                    error={Boolean(capacity) && !Number.isInteger(+capacity)}
-                    onChange={onCapacityChange}
-                    value={capacity ?? ''}/>
-                <TextField
-                    fullWidth
-                    type="number"
-                    inputProps={{min: 1, step: 1}}
-                    label='Per appointment slots'
-                    placeholder='Type Number'
-                    error={Boolean(slotsCount) && !Number.isInteger(+slotsCount)}
-                    onChange={onSlotsCountChange}
-                    value={slotsCount ?? ''}/>
-            </div>
-        </DialogContent>
-        <Divider style={{ margin: 0 }}/>
-        <DialogActions>
-            <div className={classes.actionsWrapper}>
-                <div className={classes.buttonsWrapper}>
-                    <Button
-                        onClick={onCancel}
-                        className={classes.cancelButton}>
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={onSave}
-                        className={classes.saveButton}>
-                        Save
-                    </Button>
-                </div>
-            </div>
-        </DialogActions>
-    </BaseModal>;
+            </DialogActions>
+        </BaseModal>
+    );
 };

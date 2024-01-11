@@ -1,9 +1,9 @@
-import {styled, Theme} from "@material-ui/core";
+import {styled} from "@mui/material";
 import React from "react";
 
-export const PriceWrapper = styled(({isUpsellPrice, isShowPriceDetails, isSelected, ...props}) =>
-    (<div {...props}/>))<Theme, { isShowPriceDetails: boolean, isUpsellPrice?: boolean, isSelected: boolean }>(
-    ({theme, isShowPriceDetails, isUpsellPrice, isSelected}) => ({
+export const PriceWrapper = styled((props) =>
+    (<div {...props}/>))<{ isShowPriceDetails: boolean, isUpsellPrice?: boolean, isSelected: boolean }>(
+    ({isShowPriceDetails, isUpsellPrice, isSelected}) => ({
         width: '100%',
         display: 'grid',
         gridTemplateColumns: '10% 50% 40%',

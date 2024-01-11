@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import {mh400, mh600} from "../CustomerSelect/constants";
 
 export const useStyles = makeStyles((theme) => ({
@@ -13,7 +13,7 @@ export const useStyles = makeStyles((theme) => ({
         [mh600]: {
             padding: "2% 0"
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             padding: 0
         }
     },
@@ -29,7 +29,7 @@ export const useStyles = makeStyles((theme) => ({
         [mh400]: {
             fontSize: 18
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: 18,
         }
     },
@@ -44,7 +44,7 @@ export const useStyles = makeStyles((theme) => ({
         [mh600]: {
             padding: "2%"
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             width: "100%",
             height: "100%",
             paddingTop: theme.spacing(6)

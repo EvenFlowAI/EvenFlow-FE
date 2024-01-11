@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, SetStateAction, Dispatch, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {Button, Radio} from "@material-ui/core";
+import {Button, Radio} from "@mui/material";
 import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {IServiceRequest} from "../../../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../../../store/rootReducer";
@@ -13,7 +13,7 @@ import {
     setNonSelectedPageData
 } from "../../../../../../store/reducers/serviceRequests/actions";
 
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
 import {MaintenanceOptions} from "../../../constants";
 import {TAssignedRequest} from "../../../../../../store/reducers/packages/types";
@@ -169,7 +169,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
                    <Autocomplete
                         classes={inputClasses}
                         options={getOptions(currentPackage)}
-                        getOptionSelected={(option, value) => option.type === value.type}
+                        isOptionEqualToValue={(option, value) => option.type === value.type}
                         getOptionLabel={option => option.name}
                         onChange={onSelectOption}
                         renderInput={autocompleteRender({

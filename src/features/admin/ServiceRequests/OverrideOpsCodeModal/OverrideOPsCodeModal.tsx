@@ -5,7 +5,7 @@ import {
     IServiceRequestOverrideEditRequest
 } from "../../../../store/reducers/serviceRequests/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button, Grid} from "@material-ui/core";
+import {Button, Grid} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch} from "react-redux";
 import {updateAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/actions";

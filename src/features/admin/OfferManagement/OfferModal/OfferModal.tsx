@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button, SelectChangeEvent} from "@mui/material";
 import {
     customerSegments,
     dayOfWeek,
@@ -17,7 +17,6 @@ import {createOffer, removeOffer, setArchiveOffer, updateOffer} from "../../../.
 import {SC_UNDEFINED, SOMETHING_WRONG, timeSpanString} from "../../../../utils/constants";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
 import {loadSCRequestsShort} from "../../../../store/reducers/serviceRequests/actions";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import moment from "moment";
 import {ViewOffer} from "./ViewOffer/ViewOffer";
 import {OfferForm} from "./OfferForm/OfferForm";
@@ -32,6 +31,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {TEnumMap} from "../../../../store/reducers/types";
+import {ParsableDate} from "../../../../types/types";
 
 const initialForm: TOfferForm = {
     offerValue: undefined,
@@ -157,7 +157,7 @@ export const OfferModal:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({on
             setForm({...form, dayOfWeek: value});
         }
     }
-    const handleChangeDateTime = (name: keyof TOfferForm) => (date: MaterialUiPickersDate) => {
+    const handleChangeDateTime = (name: keyof TOfferForm) => (date: ParsableDate) => {
         setFormIsChecked(false);
         setForm({...form, [name]: date});
     }
@@ -202,7 +202,8 @@ export const OfferModal:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({on
         setForm(prev => ({...prev, serviceCategories: value}))
     }
 
-    const handleSelect = ({target: {name, value}}: React.ChangeEvent<{name?: string, value: unknown}>) => {
+    const handleSelect = (e: SelectChangeEvent<ECustomerPresence>) => {
+        const {name, value} = e.target;
         setFormIsChecked(false);
         if (name) {
             setForm({...form, [name]: value});

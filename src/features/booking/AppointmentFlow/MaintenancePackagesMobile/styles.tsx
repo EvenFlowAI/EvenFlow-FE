@@ -1,5 +1,6 @@
-import {Tabs as Ts, withStyles} from "@material-ui/core";
-import {TabPanel as Tp} from "@material-ui/lab";
+import { Tabs as Ts } from "@mui/material";
+import withStyles from '@mui/styles/withStyles';
+import {TabPanel as Tp} from "@mui/lab";
 
 const style = withStyles(() => ({
     root: {

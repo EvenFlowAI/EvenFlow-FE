@@ -1,6 +1,6 @@
 import React from "react";
-import {Button} from "@material-ui/core";
-import {ChevronLeft, ChevronRight} from "@material-ui/icons";
+import {Button} from "@mui/material";
+import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import clsx from "clsx";
 import moment, {Moment} from "moment";
 import {useStyles} from "./styles";

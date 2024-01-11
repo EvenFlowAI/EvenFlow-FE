@@ -1,5 +1,5 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {lighten} from "@material-ui/core";
+import makeStyles from '@mui/styles/makeStyles';
+import {lighten} from "@mui/material";
 
 export const useCalendarStyles = makeStyles(theme => ({
     title: {
@@ -10,7 +10,7 @@ export const useCalendarStyles = makeStyles(theme => ({
         right: 0,
         margin: 0,
         fontSize: 16,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             position: "static",
             marginBottom: theme.spacing(1)
         }

@@ -1,5 +1,5 @@
-import {AutocompleteRenderInputParams} from "@material-ui/lab";
-import {InputBaseProps} from "@material-ui/core/InputBase/InputBase";
+import {AutocompleteRenderInputParams} from "@mui/lab";
+import {InputBaseProps} from "@mui/material/InputBase/InputBase";
 
 export interface IIconState {
     file: File | null;

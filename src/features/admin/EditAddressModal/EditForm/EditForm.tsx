@@ -2,9 +2,9 @@ import {TViewMode} from "../../../../components/modals/BaseModal/types";
 import React from "react";
 import {TSelectChange} from "../../../../types/types";
 import {IAddress} from "../../../../store/reducers/dealershipGroups/types";
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {states} from "../../../../utils/constants";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 

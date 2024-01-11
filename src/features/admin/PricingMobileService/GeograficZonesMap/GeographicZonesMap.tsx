@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import EligibleCustomerSegment from "../EligibleCustomerSegment/EligibleCustomerSegment";
 import MapIframeLink from "../../../../components/modals/admin/MapIframeLink/MapIframeLink";
 import {useDispatch} from "react-redux";

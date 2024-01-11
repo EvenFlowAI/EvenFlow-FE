@@ -5,9 +5,10 @@ import {
     TableBody,
     TableCell as TC,
     TableRow,
-    useMediaQuery, useTheme,
-    withStyles
-} from "@material-ui/core";
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
+import withStyles from '@mui/styles/withStyles';
 import {loadTimeWindow, setTimeWindow} from "../../../store/reducers/demandSegments/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -63,7 +64,7 @@ const InputOrValue: React.FC<{
     isEdit: boolean;
 }> = ({name, value, isEdit, onChange}) => {
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     if (!isEdit) return <span>{value ? String(value) : "0"}</span>;
     return <TextField
         name={name}

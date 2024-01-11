@@ -3,7 +3,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {IPackageOptions} from "../../../../../api/types";
-import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import {RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {TPackage} from "../types";
 import {PriceValue, useStyles, Wrapper} from "./styles";
@@ -35,7 +35,6 @@ const PackagesTotalPriceRow: React.FC<TTotalPriceRowProps> = ({packages, handleC
 
             return <PriceValue
                 selected={selected}
-                count={packages.length}
                 roundPrice={scProfile?.isRoundPrice}
                 onClick={handleClick(p, EPackagePricingType.BasePrice)}
                 showDetails={showDetails}

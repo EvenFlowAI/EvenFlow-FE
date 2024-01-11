@@ -1,6 +1,6 @@
 import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {Tab} from "@material-ui/core";
-import {TabContext} from "@material-ui/lab";
+import {Tab} from "@mui/material";
+import {TabContext} from "@mui/lab";
 import {useSelector} from "react-redux";
 import {EMaintenanceOptionType, IPackage, IPackageOptions} from "../../../../api/types";
 import {RootState} from "../../../../store/rootReducer";

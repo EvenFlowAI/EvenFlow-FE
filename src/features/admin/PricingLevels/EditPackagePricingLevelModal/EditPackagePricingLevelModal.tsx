@@ -4,7 +4,7 @@ import {EDemandCategory} from "../../../../store/reducers/pricingSettings/types"
 import {updateMPPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Box, Button, Divider} from "@material-ui/core";
+import {Box, Button, Divider} from "@mui/material";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {TPackagePricingLevel, TUpdatedSettings} from "../types";
 import {useEditPricingLevelStyles} from "../styles";

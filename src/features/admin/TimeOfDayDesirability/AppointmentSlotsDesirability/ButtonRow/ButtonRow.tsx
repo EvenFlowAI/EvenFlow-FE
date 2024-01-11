@@ -1,5 +1,5 @@
 import React from "react";
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import {time12HourFormat} from "../../../../../utils/constants";
 import {useStylesBR} from "./styles";
 import {TSlot} from "../../utils";

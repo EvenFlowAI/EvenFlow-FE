@@ -1,6 +1,5 @@
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {IAddressData} from "../../../api/types";
-import {IPageRequest, IPagingResponse} from "../../../types/types";
+import {IPageRequest, IPagingResponse, ParsableDate} from "../../../types/types";
 
 export interface ICustomerByName {
     customerId: number;

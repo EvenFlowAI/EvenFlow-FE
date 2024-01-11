@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {Button, Menu, MenuItem} from "@material-ui/core";
-import {ArrowDropDown} from "@material-ui/icons";
+import {Button, Menu, MenuItem} from "@mui/material";
+import {ArrowDropDown} from "@mui/icons-material";
 import {IServiceCenter} from "../../../../store/reducers/serviceCenters/types";
 import {TRole} from "../../../../store/reducers/users/types";
 import {useHistory} from "react-router-dom";

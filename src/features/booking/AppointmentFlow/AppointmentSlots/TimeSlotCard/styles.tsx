@@ -1,4 +1,5 @@
-import {darken, lighten, styled, Theme, Tooltip, withStyles} from "@material-ui/core";
+import { darken, lighten, styled, Theme, Tooltip } from "@mui/material";
+import withStyles from '@mui/styles/withStyles';
 import React from "react";
 
 export const HtmlTooltip = withStyles({

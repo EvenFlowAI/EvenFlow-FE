@@ -4,7 +4,7 @@ import {loadPricingCalculations} from "../../../store/reducers/pricingSettings/a
 import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 import {useDispatch, useSelector} from "react-redux";
 import {PaperTitle, TableContainer} from "../../../pages/admin/PricingSettings/UI";
-import {Box, Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Box, Divider, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import moment from "moment";
 import {mappedCalculationsSelector} from "../../../store/reducers/pricingSettings/selectors";
 import {
@@ -13,9 +13,9 @@ import {
     EDemandCategory,
     EPricingDisplayType
 } from "../../../store/reducers/pricingSettings/types";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {TextField} from "../../../components/styled/EndUserInputs";
-import {KeyboardArrowDown} from "@material-ui/icons";
+import {KeyboardArrowDown} from "@mui/icons-material";
 import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../store/rootReducer";
 import {TableWrapper, Label} from "./styles";
@@ -56,92 +56,94 @@ export const PricingOptimization = () => {
         setDemand(value);
     }
 
-    return <SquarePaper variant="outlined">
-        <PaperTitle>Check Pricing</PaperTitle>
-        <Divider />
-        <Box display="flex" flexWrap={"wrap"}>
-            <Box p={2} mt={1.5} width={300}>
-                <Label style={{color: "#252733"}} htmlFor="serviceRequest">
-                    Select Service Request
-                </Label>
-                <Autocomplete
-                    id="serviceRequest"
-                    placeholder="Select here"
-                    popupIcon={<KeyboardArrowDown/>}
-                    onChange={handleChange}
-                    options={srList}
-                    value={sr}
-                    getOptionLabel={option => option.code}
-                    renderInput={params => <TextField {...{
-                        ...params, InputProps: {
-                            ...params.InputProps,
-                            disableUnderline: true,
-                            style: {padding: "4px 10px"}
-                        }
-                    }} placeholder="Select here"/>}
-                />
+    return (
+        <SquarePaper variant="outlined">
+            <PaperTitle>Check Pricing</PaperTitle>
+            <Divider />
+            <Box display="flex" flexWrap={"wrap"}>
+                <Box p={2} mt={1.5} width={300}>
+                    <Label style={{color: "#252733"}} htmlFor="serviceRequest">
+                        Select Service Request
+                    </Label>
+                    <Autocomplete
+                        id="serviceRequest"
+                        placeholder="Select here"
+                        popupIcon={<KeyboardArrowDown/>}
+                        onChange={handleChange}
+                        options={srList}
+                        value={sr}
+                        getOptionLabel={option => option.code}
+                        renderInput={params => <TextField {...{
+                            ...params, InputProps: {
+                                ...params.InputProps,
+                                disableUnderline: true,
+                                style: {padding: "4px 10px"}
+                            }
+                        }} placeholder="Select here"/>}
+                    />
+                </Box>
+                <Box p={2} mt={1.5} width={300}>
+                    <Label style={{color: "#252733"}} htmlFor="timeOfYear">
+                        Select time of year
+                    </Label>
+                    <Autocomplete
+                        id="timeOfYear"
+                        placeholder="Select here"
+                        popupIcon={<KeyboardArrowDown/>}
+                        value={demand}
+                        onChange={handleDemandChange}
+                        options={demandCategories}
+                        getOptionLabel={option => option.label}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        renderInput={params => <TextField {...{
+                            ...params, InputProps: {
+                                ...params.InputProps,
+                                disableUnderline: true,
+                                style: {padding: "4px 10px"}
+                            }
+                        }} placeholder="Select here"/>}
+                    />
+                </Box>
             </Box>
-            <Box p={2} mt={1.5} width={300}>
-                <Label style={{color: "#252733"}} htmlFor="timeOfYear">
-                    Select time of year
-                </Label>
-                <Autocomplete
-                    id="timeOfYear"
-                    placeholder="Select here"
-                    popupIcon={<KeyboardArrowDown/>}
-                    value={demand}
-                    onChange={handleDemandChange}
-                    options={demandCategories}
-                    getOptionLabel={option => option.label}
-                    getOptionSelected={(option, value) => option.id === value.id}
-                    renderInput={params => <TextField {...{
-                        ...params, InputProps: {
-                            ...params.InputProps,
-                            disableUnderline: true,
-                            style: {padding: "4px 10px"}
-                        }
-                    }} placeholder="Select here"/>}
-                />
+            <Box mt={2} ml={2}>
+                <PaperTitle noPadding>time of day</PaperTitle>
             </Box>
-        </Box>
-        <Box mt={2} ml={2}>
-            <PaperTitle noPadding>time of day</PaperTitle>
-        </Box>
-        <TableContainer>
-            <TableWrapper>
-                <DenseTable>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Day</TableCell>
-                            <TableCell width={"20%"} align="center">Low</TableCell>
-                            <TableCell width={"20%"} align="center">Average</TableCell>
-                            <TableCell width={"20%"} align="center">High</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {moment.weekdays().map((wd, idx) => {
-                            return <TableRow key={wd}>
-                                <TableCell>{wd}</TableCell>
-                                <TableCell align="center">
-                                    {data[idx as EDay]?.lowPrice
-                                        ? Math.round(data[idx as EDay].lowPrice) + "$"
-                                        : "-"}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {data[idx as EDay]?.averagePrice
-                                        ? Math.round(data[idx as EDay].averagePrice) + "$"
-                                        : "-"}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {data[idx as EDay]?.highPrice
-                                        ? Math.round(data[idx as EDay].highPrice) + "$"
-                                        : "-"}
-                                </TableCell>
+            <TableContainer>
+                <TableWrapper>
+                    <DenseTable>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Day</TableCell>
+                                <TableCell width={"20%"} align="center">Low</TableCell>
+                                <TableCell width={"20%"} align="center">Average</TableCell>
+                                <TableCell width={"20%"} align="center">High</TableCell>
                             </TableRow>
-                        })}
-                    </TableBody>
-                </DenseTable>
-            </TableWrapper>
-        </TableContainer>
-    </SquarePaper>
+                        </TableHead>
+                        <TableBody>
+                            {moment.weekdays().map((wd, idx) => {
+                                return <TableRow key={wd}>
+                                    <TableCell>{wd}</TableCell>
+                                    <TableCell align="center">
+                                        {data[idx as EDay]?.lowPrice
+                                            ? Math.round(data[idx as EDay].lowPrice) + "$"
+                                            : "-"}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {data[idx as EDay]?.averagePrice
+                                            ? Math.round(data[idx as EDay].averagePrice) + "$"
+                                            : "-"}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {data[idx as EDay]?.highPrice
+                                            ? Math.round(data[idx as EDay].highPrice) + "$"
+                                            : "-"}
+                                    </TableCell>
+                                </TableRow>
+                            })}
+                        </TableBody>
+                    </DenseTable>
+                </TableWrapper>
+            </TableContainer>
+        </SquarePaper>
+    );
 };

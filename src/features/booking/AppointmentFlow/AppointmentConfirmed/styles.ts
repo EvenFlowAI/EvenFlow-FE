@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -25,7 +25,7 @@ export const ButtonsWrapper = styled('div')({
     marginBottom: 20,
 })
 
-export const Wrapper = styled('div')(({theme}) => ({
+export const Wrapper = styled('div')(() => ({
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
     gap: "15px",

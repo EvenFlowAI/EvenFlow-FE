@@ -1,4 +1,6 @@
-import {TableRow as TR, withStyles} from "@material-ui/core";
+import { TableRow as TR } from "@mui/material";
+
+import withStyles from '@mui/styles/withStyles';
 
 export const TableRow = withStyles(theme => ({
     root: {

@@ -8,7 +8,7 @@ import {loadRecallsByVin} from "../../../store/reducers/recall/actions";
 import {decodeSCID} from "../../../utils/utils";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {Button, Divider} from "@material-ui/core";
+import {Button, Divider} from "@mui/material";
 import moment from "moment";
 import {
     checkCarIsValid,

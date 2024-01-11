@@ -1,4 +1,6 @@
-import {Slider, withStyles} from "@material-ui/core";
+import { Slider } from "@mui/material";
+
+import withStyles from '@mui/styles/withStyles';
 
 export const ValueSlider = withStyles(theme => ({
     track: {

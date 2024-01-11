@@ -1,9 +1,9 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Button, Divider, IconButton, Switch} from "@material-ui/core";
+import {Button, Divider, IconButton, Switch} from "@mui/material";
 import {ReactComponent as PlusIcon} from "../../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../../assets/img/close.svg";
 import {DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
@@ -164,7 +164,10 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState, onCl
                         <div className={classes.employeeWrapper} key={item.id}>
                             <div>{item.fullName}</div>
                             <div>{item.email}</div>
-                            <IconButton onClick={() => deleteEmployee(item.id)} disabled={loading || isLoading}><DeleteIcon/></IconButton>
+                            <IconButton
+                                onClick={() => deleteEmployee(item.id)}
+                                disabled={loading || isLoading}
+                                size="large"><DeleteIcon/></IconButton>
                         </div>
                     ))}
                 </div>

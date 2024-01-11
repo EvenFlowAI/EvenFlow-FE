@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Button, InputAdornment} from "@material-ui/core";
+import {Button, InputAdornment} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {TComplimentary} from "../../../../store/reducers/complimentary/types";
 import {addComplimentaryManually, editComplimentary} from "../../../../store/reducers/complimentary/actions";

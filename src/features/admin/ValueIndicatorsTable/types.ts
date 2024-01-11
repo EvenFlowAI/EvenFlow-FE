@@ -1,5 +1,5 @@
 import {Indicators, IValueSettings} from "../../../store/reducers/valueSettings/types";
-import {TableCellProps} from "@material-ui/core";
+import {TableCellProps} from "@mui/material";
 
 export type TRow = {
     id: Indicators;

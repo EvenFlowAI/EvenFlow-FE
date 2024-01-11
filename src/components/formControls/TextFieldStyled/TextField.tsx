@@ -1,5 +1,5 @@
 import React, {forwardRef} from 'react';
-import {InputBase as DefaultTextField, InputLabel} from "@material-ui/core";
+import {InputBase as DefaultTextField, InputLabel} from "@mui/material";
 import theme from "../../../theme/theme";
 import {TextInputProps} from "../types";
 import {useStyles} from "./styles";

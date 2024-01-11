@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {BaseModal, DialogTitle} from "../../BaseModal/BaseModal";
 import {useTranslation} from "react-i18next";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";

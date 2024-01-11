@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Table} from "../../../../components/tables/Table/Table";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {loadMileage, removeMileage} from "../../../../store/reducers/vehicleDetails/actions";
 import {IMileage} from "../../../../store/reducers/vehicleDetails/types";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {IOrder} from "../../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -45,9 +45,11 @@ export const MileageTable = () => {
     }
 
     const tableActions = (el: IMileage) => {
-        return <IconButton onClick={openMenu(el)}>
-            <MoreHoriz />
-        </IconButton>;
+        return (
+            <IconButton onClick={openMenu(el)} size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }
 
     const onRemoveSuccess = () => {

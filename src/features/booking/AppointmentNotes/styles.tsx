@@ -1,6 +1,6 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useStyles = makeStyles({
     title: {

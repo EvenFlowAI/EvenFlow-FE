@@ -10,7 +10,7 @@ import {
     TableRow,
     useMediaQuery,
     useTheme
-} from "@material-ui/core";
+} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {createProximity, loadProximity} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -35,7 +35,7 @@ export const ProximityTable = () => {
     const showMessage = useMessage();
     const showError = useException();
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [proximity] = useSelector((state: RootState) => [
         state.slotScoring.proximity

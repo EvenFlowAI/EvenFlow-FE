@@ -1,4 +1,5 @@
-import {Button, styled, withStyles} from "@material-ui/core";
+import { Button, styled } from "@mui/material";
+import withStyles from '@mui/styles/withStyles';
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 
 export const ButtonWrapper = styled('div')(() => ({

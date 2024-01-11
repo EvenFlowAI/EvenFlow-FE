@@ -1,5 +1,5 @@
 import {EOfferType, IOffer} from "../../../../store/reducers/offers/types";
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export type TStyleProps = {
     t: IOffer['type']

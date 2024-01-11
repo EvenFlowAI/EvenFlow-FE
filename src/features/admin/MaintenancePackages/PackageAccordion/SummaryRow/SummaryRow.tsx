@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import SummaryInput from "./SummaryInput/SummaryInput";
-import {Switch} from "@material-ui/core";
+import {Switch} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {updateManualOverride, updateShowSuggestedPrice} from "../../../../../store/reducers/packages/actions";
 import {RootState} from "../../../../../store/rootReducer";

@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import {sideBarWidth} from "../../../theme/theme";
 
 export const useStyles = makeStyles(theme => ({
@@ -20,7 +20,7 @@ export const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up("lg")]: {
             marginLeft: 0
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             marginLeft: "-100%"
         }
     },

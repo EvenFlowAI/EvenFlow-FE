@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
@@ -65,7 +65,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({onBack, o
     const theme = useTheme();
     const { isOpen, onOpen, onClose } = useModal();
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
-    const isXs = useMediaQuery(theme.breakpoints.down('xs'));
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const {t} = useTranslation();
     const showError = useException();
 

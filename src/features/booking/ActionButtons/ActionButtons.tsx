@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useTranslation} from "react-i18next";
 import {ButtonsRow} from "./styles";

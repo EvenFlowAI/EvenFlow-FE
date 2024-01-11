@@ -1,4 +1,6 @@
-import {withStyles, TextField as TF} from "@material-ui/core";
+import { TextField as TF } from "@mui/material";
+
+import withStyles from '@mui/styles/withStyles';
 
 export const TextField = withStyles({
     root: {

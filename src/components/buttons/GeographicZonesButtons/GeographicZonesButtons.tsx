@@ -1,6 +1,6 @@
 import React from 'react';
 import {ButtonsWrapper, TextButton} from "./styles";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {TCallback} from "../../../types/types";
 import {TZone} from "../../../store/reducers/mobileService/types";
 

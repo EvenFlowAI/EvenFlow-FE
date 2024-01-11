@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
+import {Button} from "@mui/material";
 import {IHoliday} from "../../../../store/reducers/holidays/types";
 import {THolidayForm} from "../types";
 import {HolidayForm} from "../AddHolidayForm/AddHolidayForm";
@@ -12,6 +11,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
+import moment from "moment";
 
 const initialForm: THolidayForm = {
     date: null,
@@ -43,7 +43,7 @@ export const AddHolidayModal: React.FC<DialogProps<IHoliday>> = ({onAction, payl
             setForm({...form, [e.target.name]: e.target.value});
         }
     }
-    const handleDateChange = (date: MaterialUiPickersDate) => {
+    const handleDateChange = (date: moment.Moment) => {
         setForm({...form, date});
     }
     const handleCheck = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {

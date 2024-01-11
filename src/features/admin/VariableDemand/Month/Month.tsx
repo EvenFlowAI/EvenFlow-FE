@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {Box} from "@material-ui/core";
+import {Box} from "@mui/material";
 import moment from "moment";
 import {EDemandCategory, ITimeOfYearSetting} from "../../../../store/reducers/pricingSettings/types";
 import {noop} from "../../../../utils/utils";
@@ -28,21 +28,23 @@ export const Month: React.FC<TProps> = ({month, data, onClick}) => {
         onClick(mDate, data);
     }
 
-    return <Box display="grid" gridGap={3} gridTemplateColumns="repeat(7, 1fr)">
-        <MonthName>{d.format("MMMM")}</MonthName>
-        {moment.weekdays().map(wd => <DayName key={wd}>{wd[0]}</DayName>)}
-        {monthDatesData.map((mdd, idx) => {
-            const dayNumber = mdd.date.format("D");
-            return <Day
-                key={idx}
-                onClick={mdd.date.isSame(d, "month") ? handleClick(Number(dayNumber), mdd.data) : noop}
-                className={[
-                    !mdd.date.isSame(d, "month") ? "nonCurrent" : "current",
-                    !mdd.data ? "" : mdd.data.demandCategory === EDemandCategory.Low ? "low"
-                        : mdd.data.demandCategory === EDemandCategory.Average ? "average" : "high"
-                ].join(" ")}>
-                <span>{dayNumber}</span>
-            </Day>
-        })}
-    </Box>
+    return (
+        <Box display="grid" gap={3} gridTemplateColumns="repeat(7, 1fr)">
+            <MonthName>{d.format("MMMM")}</MonthName>
+            {moment.weekdays().map(wd => <DayName key={wd}>{wd[0]}</DayName>)}
+            {monthDatesData.map((mdd, idx) => {
+                const dayNumber = mdd.date.format("D");
+                return <Day
+                    key={idx}
+                    onClick={mdd.date.isSame(d, "month") ? handleClick(Number(dayNumber), mdd.data) : noop}
+                    className={[
+                        !mdd.date.isSame(d, "month") ? "nonCurrent" : "current",
+                        !mdd.data ? "" : mdd.data.demandCategory === EDemandCategory.Low ? "low"
+                            : mdd.data.demandCategory === EDemandCategory.Average ? "average" : "high"
+                    ].join(" ")}>
+                    <span>{dayNumber}</span>
+                </Day>
+            })}
+        </Box>
+    );
 };

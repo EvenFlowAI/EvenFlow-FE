@@ -1,5 +1,5 @@
 import React from "react";
-import {CloseOutlined} from "@material-ui/icons";
+import {CloseOutlined} from "@mui/icons-material";
 import {IPackageByQuery} from "../../../../../../api/types";
 import {useStyles} from "./styles";
 

@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useDialogStyles = makeStyles(theme => ({
     root: {
@@ -29,7 +29,7 @@ export const useDialogStyles = makeStyles(theme => ({
         backgroundColor: '#E5E5E5',
         maxWidth: 525,
         paddingBottom: 24,
-        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+        [`${theme.breakpoints.down('md')} and (orientation: landscape)`]: {
             paddingBottom: 12,
         }
     }

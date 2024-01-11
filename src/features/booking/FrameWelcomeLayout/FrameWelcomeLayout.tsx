@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -16,7 +16,7 @@ export const FrameWelcomeLayout: React.FC<{}> = ({children }) => {
     const {t} = useTranslation();
     const isFrame = useLayout();
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt

@@ -1,6 +1,6 @@
 import React from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
-import {Button, Divider} from "@material-ui/core";
+import {Button, Divider} from "@mui/material";
 import {DialogProps} from "../../BaseModal/types";
 import {useDispatch} from "react-redux";
 import {removeZipFromMobServiceZone} from "../../../../store/reducers/mobileService/actions";

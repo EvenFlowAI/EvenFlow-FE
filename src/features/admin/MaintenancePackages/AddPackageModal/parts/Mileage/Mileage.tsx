@@ -1,8 +1,8 @@
 import React, {ChangeEvent, Dispatch, SetStateAction, useCallback} from 'react';
 import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import {useAutocompleteStyles} from "../../../../../../hooks/styling/useAutocompleteStyles";
@@ -74,7 +74,7 @@ const Mileage: React.FC<TMileageProps> = ({
             disabled={disabled}
             options={getOptions()}
             disableCloseOnSelect
-            getOptionSelected={(o, v) => o.toLowerCase() === v.toLowerCase()}
+            isOptionEqualToValue={(o, v) => o.toLowerCase() === v.toLowerCase()}
             renderOption={renderOption}
             value={selectedMileages}
             onChange={onMileageChange}

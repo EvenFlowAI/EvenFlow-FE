@@ -5,7 +5,7 @@ import {DialogProps} from "../../BaseModal/types";
 import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
 import {setCurrentFrameScreen,} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {ButtonsRow, useStyles} from "./styles";
 
 type TExistingCustomerErrorProps = DialogProps & {

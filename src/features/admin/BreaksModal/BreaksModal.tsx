@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import moment from "moment";
 import {IBreak, IBreakFrom} from "../../../store/reducers/serviceCenters/types";
 import {timeSpanString} from "../../../utils/constants";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {TBreak} from "./types";
 import {initialBreaks} from "./constants";
 import {BreakForm} from "./BreakForm/BreakForm";
@@ -59,7 +58,7 @@ export const BreaksModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props
         form[idx] = {...form[idx], checked};
         setForm([...form]);
     }
-    const handleChange = (dayOfWeek: number, v: "from" | "to") => (date: MaterialUiPickersDate) => {
+    const handleChange = (dayOfWeek: number, v: "from" | "to") => (date: moment.Moment) => {
         setFormIsChecked(false);
         const idx = form.findIndex(d => d.dayOfWeek === dayOfWeek);
         form[idx] = {...form[idx], [v]: date};

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Box, Button, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
+import {Box, Button, FormControlLabel, Radio, RadioGroup} from "@mui/material";
 import moment from "moment";
 import {demandCategories, EDemandCategory, ITimeOfYearSetting} from "../../../../store/reducers/pricingSettings/types";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";

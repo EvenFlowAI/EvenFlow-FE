@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {TableBody, TableHead} from "@material-ui/core";
+import {TableBody, TableHead} from "@mui/material";
 import {SC_UNDEFINED} from "../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";

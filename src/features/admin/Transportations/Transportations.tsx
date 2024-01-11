@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {SquarePaper} from "../../../components/styled/Paper";
 import {TableContainer} from "../../../pages/admin/PricingSettings/UI";
 import {NoItemsLoading} from "../../../components/wrappers/NoItemsLoading/NoItemsLoading";
-import {IconButton, Menu, MenuItem, Switch, TableBody, TableHead} from "@material-ui/core";
+import {IconButton, Menu, MenuItem, Switch, TableBody, TableHead} from "@mui/material";
 import {getTransportationOptionString} from "../../../utils/utils";
 import {ETransportColumn, ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {
     loadTransportationOptions,
     updateTransportationOption

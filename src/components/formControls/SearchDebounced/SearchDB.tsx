@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {TextField} from "../TextFieldStyled/TextField";
-import {Search} from "@material-ui/icons";
+import {Search} from "@mui/icons-material";
 import {TextInputProps} from "../types";
 import {useDebounce} from "../../../hooks/useDebounce/useDebounce";
 

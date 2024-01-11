@@ -1,10 +1,12 @@
-import {FormLabel, styled, withStyles} from "@material-ui/core";
+import { FormLabel, styled } from "@mui/material";
+
+import withStyles from '@mui/styles/withStyles';
 
 export const TableWrapper = styled("div")(({theme}) => ({
     width: "100%",
     overflowX: "auto",
     "& .MuiTableCell-root": {
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: "10px !important"
         }
     }

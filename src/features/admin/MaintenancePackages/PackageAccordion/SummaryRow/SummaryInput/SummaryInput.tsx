@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {TSummaryCell} from "../../../types";
 import {useStyles} from "./styles";
 

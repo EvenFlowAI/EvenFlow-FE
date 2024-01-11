@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {Button, Grid, Paper} from "@material-ui/core";
+import {Button, Grid, Paper} from "@mui/material";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {useCenterSettingsStyles} from "../../../../hooks/styling/useCenterSettingsStyles";
 import {useStyles} from "./styles";

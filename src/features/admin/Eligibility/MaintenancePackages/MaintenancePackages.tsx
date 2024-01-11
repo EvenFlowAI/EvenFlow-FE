@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {NoItemsLoading} from "../../../../components/wrappers/NoItemsLoading/NoItemsLoading";
-import {Box, FormControlLabel, Radio, RadioGroup, TableBody, TableHead} from "@material-ui/core";
+import {Box, FormControlLabel, Radio, RadioGroup, TableBody, TableHead} from "@mui/material";
 import {TableContainer} from "../../../../pages/admin/PricingSettings/UI";
 import {useDispatch, useSelector} from "react-redux";
 import {

@@ -3,7 +3,7 @@ import {AppointmentConfirmationTitle} from "../../../../../components/wrappers/A
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {
     setAdvisor,
     setCurrentFrameScreen,

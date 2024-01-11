@@ -3,8 +3,8 @@ import {BaseModal, DialogContent, DialogTitle} from "../../../../components/moda
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Delete, EditOutlined} from "@material-ui/icons";
-import {Divider, IconButton} from "@material-ui/core";
+import {Delete, EditOutlined} from "@mui/icons-material";
+import {Divider, IconButton} from "@mui/material";
 import HtmlEditor from "../../../../components/modals/admin/HTMLEditor/HTMLEditor";
 import {TExtendedComplimentary, TExtendedService} from "../../../../api/types";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";

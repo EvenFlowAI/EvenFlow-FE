@@ -1,9 +1,9 @@
 import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Button, Divider, IconButton} from "@material-ui/core";
+import {Button, Divider, IconButton} from "@mui/material";
 import {DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
 import {IPodShort} from "../../../../store/reducers/pods/types";
 import {ReactComponent as PlusIcon} from "../../../../assets/img/plus.svg";
@@ -203,7 +203,8 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
                                     <div>{item.email}</div>
                                     <IconButton
                                         onClick={() => deleteEmployee(item.id)}
-                                        disabled={loading || podsLoading || isLoading}>
+                                        disabled={loading || podsLoading || isLoading}
+                                        size="large">
                                         <DeleteIcon/>
                                     </IconButton>
                                 </div>

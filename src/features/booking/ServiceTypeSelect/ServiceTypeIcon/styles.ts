@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useStyles = makeStyles((theme) => ({
     icon: {
@@ -7,12 +7,12 @@ export const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        [`${theme.breakpoints.down("sm")} and (orientation: portrait)`]: {
+        [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
             maxWidth: 224,
             height: 112,
             width: '90%',
         },
-        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+        [`${theme.breakpoints.down('md')} and (orientation: landscape)`]: {
             padding: '7%'
         },
     },
@@ -27,19 +27,19 @@ export const useStyles = makeStyles((theme) => ({
         fontSize: 32,
         padding: '10%',
         backgroundColor: "#F4F4F4",
-        [`${theme.breakpoints.down("sm")} and (orientation: portrait)`]: {
+        [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
             width: 224,
             height: 112,
             maxWidth: '90%'
         },
-        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+        [`${theme.breakpoints.down('md')} and (orientation: landscape)`]: {
             padding: '7%'
         },
     },
     image: {
         maxWidth: '100%',
         maxHeight: 112,
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             maxWidth: 224,
         }
     }

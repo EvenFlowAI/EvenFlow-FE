@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {EServiceType} from "../../../../../../store/reducers/appointmentFrameReducer/types";
-import {MenuItem, Select} from "@material-ui/core";
+import {MenuItem, Select} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";

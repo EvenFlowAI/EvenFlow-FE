@@ -9,14 +9,14 @@ import {
     Typography,
     useMediaQuery,
     useTheme
-} from "@material-ui/core";
+} from "@mui/material";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {getInitials} from "../../../utils/utils";
 import {ServiceCenterSelector} from "./ServiceCenterSelector/ServiceCenterSelector";
 import {PodSelector} from "./PodSelector/PodSelector";
-import {Menu as MenuIcon, SupervisorAccount} from "@material-ui/icons";
+import {Menu as MenuIcon, SupervisorAccount} from "@mui/icons-material";
 import clsx from "clsx";
 import {clearSC} from "../../../store/reducers/serviceCenters/actions";
 import {useStyles} from "./styles";
@@ -37,7 +37,7 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({sideBarOpened, onOpen
     const classes = useStyles();
     const history = useHistory();
     const theme = useTheme();
-    const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+    const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
     const isAdminDealership = currentUser?.adminDealership ?? false;
 
     const handleClick: React.MouseEventHandler<HTMLElement> = e => {
@@ -65,7 +65,7 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({sideBarOpened, onOpen
             classes.root,
             {[classes.openedRoot]: sideBarOpened}
         )}>
-            {(isTablet && !sideBarOpened) ? <IconButton onClick={onOpen}><MenuIcon /></IconButton> : null}
+            {(isTablet && !sideBarOpened) ? <IconButton onClick={onOpen} size="large"><MenuIcon /></IconButton> : null}
             <Toolbar>
                 <PodSelector />
             </Toolbar>
@@ -96,5 +96,5 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({sideBarOpened, onOpen
                 </Menu>
             </Toolbar>
         </AppBar>
-    </>
+    </>;
 });

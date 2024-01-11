@@ -1,6 +1,6 @@
 import React from "react";
 import {usePackageMobileStyles} from "../../../../../hooks/styling/usePackageMobileStyles";
-import {Done} from "@material-ui/icons";
+import {Done} from "@mui/icons-material";
 
 type TTabLabelProps = {
     text: string;

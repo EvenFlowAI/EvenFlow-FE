@@ -10,7 +10,7 @@ import {
     TableSortLabel,
     useMediaQuery,
     useTheme
-} from "@material-ui/core";
+} from "@mui/material";
 import {defaultRowsPerPage, defaultRowsPerPageOptions} from "../../../config/config";
 import {NoData} from "../../wrappers/NoData/NoData";
 import {Loading} from "../../wrappers/Loading/Loading";
@@ -26,7 +26,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
     });
 
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(defaultRowsPerPage);

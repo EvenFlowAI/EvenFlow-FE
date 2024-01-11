@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Done, Edit} from "@material-ui/icons";
-import {IconButton, Input} from "@material-ui/core";
+import {Done, Edit} from "@mui/icons-material";
+import {IconButton, Input} from "@mui/material";
 import {useStyles} from "./styles";
 import {useException} from "../../../../../../hooks/useException/useException";
 
@@ -39,10 +39,10 @@ const PriceTitleEditable: React.FC<TTitleEditableProps> = ({text, onSave}) => {
                 ? <Input onChange={onChange} className={classes.textInput} value={newName} placeholder="Enter Price Text"/>
                 : <div className={classes.text}>{newName?.length ? newName : "Enter Price Text"}</div>}
             {isEdit
-                ? <IconButton onClick={onSaveClick} className={classes.editIcon}>
+                ? <IconButton onClick={onSaveClick} className={classes.editIcon} size="large">
                     <Done htmlColor="#FFFFFF"/>
                 </IconButton>
-                : <IconButton onClick={() => setEdit(true)} className={classes.editIcon}>
+                : <IconButton onClick={() => setEdit(true)} className={classes.editIcon} size="large">
                     <Edit htmlColor="#FFFFFF"/>
                 </IconButton>}
         </div>

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useDispatch} from "react-redux";
 import {loadEngineType} from "../../../store/reducers/vehicleDetails/actions";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {AddEngineTypeModal} from "./AddEngineTypeModal/AddEngineTypeModal";
 import {EditFieldNameModal} from "./EditFieldNameModal/EditFieldNameModal";
 import {Wrapper} from "./styles";

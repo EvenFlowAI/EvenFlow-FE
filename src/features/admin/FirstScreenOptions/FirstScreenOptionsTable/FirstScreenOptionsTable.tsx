@@ -1,8 +1,8 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Table} from "../../../../components/tables/Table/Table";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {deleteFirstScreenOptionById, loadFirstScreenOptionsList} from "../../../../store/reducers/serviceTypes/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -46,9 +46,11 @@ export const FirstScreenOptionsTable: React.FC<TProps> = ({setCurrentItem, curre
     }
 
     const tableActions = (el: IFirstScreenOption) => {
-        return <IconButton onClick={openMenu(el)}>
-            <MoreHoriz />
-        </IconButton>;
+        return (
+            <IconButton onClick={openMenu(el)} size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }
 
     const handleRemove = async () => {

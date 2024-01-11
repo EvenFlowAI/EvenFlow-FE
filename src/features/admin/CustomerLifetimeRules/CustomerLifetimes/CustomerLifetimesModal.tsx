@@ -1,7 +1,7 @@
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import React, {useEffect, useState} from "react";
-import {Button, FormGroup, InputLabel} from "@material-ui/core";
+import {Button, FormGroup, InputLabel} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {ICustomerLifetime, ICustomerLifetimeForm} from "../../../../store/reducers/valueSettings/types";
 import {setCustomerLifetimes} from "../../../../store/reducers/valueSettings/actions";

@@ -3,7 +3,7 @@ import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../../../../
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {SliderRange, TOpsCode} from "../types";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Button, Divider} from "@material-ui/core";
+import {Button, Divider} from "@mui/material";
 import {EDemandCategory, IRequestPricingSettings} from "../../../../store/reducers/pricingSettings/types";
 import {updateSRPricingSettings} from "../../../../store/reducers/pricingSettings/actions";
 import {useDispatch} from "react-redux";

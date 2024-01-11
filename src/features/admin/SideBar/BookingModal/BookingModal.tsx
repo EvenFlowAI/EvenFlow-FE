@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Box, Button, ButtonGroup} from "@material-ui/core";
+import {Box, Button, ButtonGroup} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {encodeSCID} from "../../../../utils/utils";
 import {TRole} from "../../../../store/reducers/users/types";

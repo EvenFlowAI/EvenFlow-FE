@@ -1,7 +1,7 @@
-import {styled, Theme} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 const border = '1px solid #DADADA';
-export const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
+export const Wrapper = styled('div')<{ count: number }>(({theme, count}) => ({
     display: "grid",
     marginTop: 12,
     gap: "0 16px",
@@ -12,7 +12,7 @@ export const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) 
             : '1fr 1fr',
     width: "100%",
     alignItems: "stretch",
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
         overflowX: "auto"
     },
 
@@ -34,7 +34,7 @@ export const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) 
         borderRight: border,
         cursor: "pointer",
         transition: "all .2s",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             minWidth: "180px"
         },
         "&.selected": {
@@ -192,7 +192,7 @@ export const Info = styled("div")({
     color: "#808080",
 })
 
-export const FeesText = styled('div')<Theme, { count: number }>(({theme, count}) => ({
+export const FeesText = styled('div')<{ count: number }>(({theme, count}) => ({
     width: "100%",
     display: "grid",
     gap: "0 16px",
@@ -205,7 +205,7 @@ export const FeesText = styled('div')<Theme, { count: number }>(({theme, count})
     justifyItems: 'flex-end',
     fontSize: 16,
     fontWeight: 'bold',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
         overflowX: "auto"
     },
 }))
@@ -217,7 +217,7 @@ export const PackagesStepWrapper = styled('div')(({theme}) => ({
     gap: "16px",
     flexDirection: "column",
     width: "100%",
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
         marginBottom: "auto",
     }
 }))

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {DialogTitle, BaseModal, DialogContent} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {ButtonsWrapper, TopWrapper} from "../styles";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";

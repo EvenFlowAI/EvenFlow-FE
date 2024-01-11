@@ -1,4 +1,4 @@
-import {FormControlLabel, styled} from "@material-ui/core";
+import {FormControlLabel, styled} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextField/TextField";
 
 export const Wrapper = styled('div')({

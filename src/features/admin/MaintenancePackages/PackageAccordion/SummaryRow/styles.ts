@@ -1,5 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {FormControlLabel, styled, Theme, withStyles} from "@material-ui/core";
+import makeStyles from '@mui/styles/makeStyles';
+import { FormControlLabel, styled } from "@mui/material";
+
+import withStyles from '@mui/styles/withStyles';
 
 export const useStyles = makeStyles({
     summaryText: {
@@ -15,7 +17,7 @@ export const useStyles = makeStyles({
     },
 })
 
-export const RowWrapper = styled('div')<Theme, {toggle: number}>(({theme, toggle}) => ({
+export const RowWrapper = styled('div')<{toggle: number}>(({toggle}) => ({
     width: '100%',
     display: 'grid',
     gridTemplateColumns: toggle ? '3fr 2fr 2fr' : '5fr 2fr',

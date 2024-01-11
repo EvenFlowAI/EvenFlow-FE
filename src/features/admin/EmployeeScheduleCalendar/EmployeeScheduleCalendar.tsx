@@ -8,7 +8,7 @@ import {
     TableRow,
     Tooltip,
     useMediaQuery, useTheme
-} from "@material-ui/core";
+} from "@mui/material";
 import moment, {Moment} from "moment";
 import {WeekControls} from "./WeekControls/WeekControls";
 import {useDispatch, useSelector} from "react-redux";
@@ -53,7 +53,7 @@ export const EmployeeScheduleCalendar = () => {
     ]);
     const {isOpen, onOpen, onClose} = useModal();
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     const [start, end] = useMemo(() => getStartEndDates(selectedDate, isXS), [selectedDate, isXS, selectedSC])
     const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate, isXS), [selectedDate, isXS, selectedSC]);
 

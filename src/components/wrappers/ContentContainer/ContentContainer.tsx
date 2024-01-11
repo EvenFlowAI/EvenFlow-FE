@@ -1,5 +1,5 @@
 import React from "react";
-import {Container, ContainerProps} from "@material-ui/core";
+import {Container, ContainerProps} from "@mui/material";
 import {useStyles} from "./styles";
 
 export const ContentContainer: React.FC<ContainerProps> = props => {

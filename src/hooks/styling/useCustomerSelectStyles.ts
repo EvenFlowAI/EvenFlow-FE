@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useCustomerSelectStyles = makeStyles((theme) => ({
     greyText: {
@@ -16,7 +16,7 @@ export const useCustomerSelectStyles = makeStyles((theme) => ({
         fontSize: 20,
         color: "#202021",
         textAlign: "left",
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             fontSize: 18,
         },
     },
@@ -24,18 +24,18 @@ export const useCustomerSelectStyles = makeStyles((theme) => ({
         display: 'flex',
         justifyContent: "space-between",
         alignItems: "center",
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
         },
         "& > div": {
             marginBottom: 28,
-            [theme.breakpoints.down("sm")]: {
+            [theme.breakpoints.down('md')]: {
                 marginBottom: 16,
             }
         },
         '& > div:first-child': {
             marginRight: 12,
-            [theme.breakpoints.down("sm")]: {
+            [theme.breakpoints.down('md')]: {
                 marginRight: 0,
                 marginBottom: 8,
             },

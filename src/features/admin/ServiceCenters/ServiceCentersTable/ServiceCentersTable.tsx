@@ -1,10 +1,10 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {Table} from "../../../../components/tables/Table/Table";
 import {IServiceCenterExtended, IServiceCenterForm} from "../../../../store/reducers/serviceCenters/types";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {RootState} from "../../../../store/rootReducer";
 import {changePageData, loadAll, removeSC, setSCOrder} from "../../../../store/reducers/serviceCenters/actions";
-import {MoreHoriz, Visibility} from "@material-ui/icons";
+import {MoreHoriz, Visibility} from "@mui/icons-material";
 import {TableAvatar} from "../../../../components/wrappers/TableAvatar/TableAvatar";
 import {IOrder, TableRowDataType, TCallback} from "../../../../types/types";
 import {useDispatch, useSelector} from "react-redux";

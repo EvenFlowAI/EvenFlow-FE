@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Paper} from "@material-ui/core";
+import {Button, Paper} from "@mui/material";
 import {useStyles} from "./styles";
 
 export type TOptimizationPlateProps = {

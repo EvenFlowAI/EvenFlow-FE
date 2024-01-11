@@ -1,9 +1,11 @@
-import {TimePicker as TP, TimePickerProps} from "@material-ui/pickers";
-import {useDatePickerStyles} from "../../../hooks/styling/useDatePickerStyles";
-import {InputLabel} from "@material-ui/core";
 import React from "react";
+import {useDatePickerStyles} from "../../../hooks/styling/useDatePickerStyles";
+import {InputLabel} from "@mui/material";
+import {TimePicker as TP} from "@mui/x-date-pickers";
+import {TimePickerProps} from '@mui/lab';
+import {ParsableDate} from "../../../types/types";
 
-export const TimePicker = ({label, ...props}: TimePickerProps) => {
+export const TimePicker = ({label, ...props}: TimePickerProps<ParsableDate>) => {
     const classes = useDatePickerStyles();
     if (!label) return <TP {...props} />;
     return <>

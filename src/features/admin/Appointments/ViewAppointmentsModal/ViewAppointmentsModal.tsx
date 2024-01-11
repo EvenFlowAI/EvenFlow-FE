@@ -3,7 +3,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {
     Button,
     CircularProgress,
-} from "@material-ui/core";
+} from "@mui/material";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {AppointmentStatus, IAppointment} from "../../../../api/types";
 import {AppointmentDetails} from "./AppointmentDetails/AppointmentDetails";

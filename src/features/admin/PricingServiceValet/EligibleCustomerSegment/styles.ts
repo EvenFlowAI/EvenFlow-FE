@@ -1,4 +1,5 @@
-import {TableCell as TC, withStyles} from "@material-ui/core";
+import { TableCell as TC } from "@mui/material";
+import withStyles from '@mui/styles/withStyles';
 import {DemandTable} from "../../../../components/styled/DemandTable";
 
 export const TableCell = withStyles({

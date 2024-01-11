@@ -1,7 +1,7 @@
 import React from "react";
 import {TBayForm} from "../types";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Checkbox, FormControlLabel, FormGroup} from "@material-ui/core";
+import {Checkbox, FormControlLabel, FormGroup} from "@mui/material";
 
 type TProps = {
     onChange: React.ChangeEventHandler<HTMLInputElement>,

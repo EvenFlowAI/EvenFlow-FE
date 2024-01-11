@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNotificationStyles} from "../../../../hooks/styling/useNotificationStyles";
-import {IconButton} from "@material-ui/core";
+import {IconButton} from "@mui/material";
 import {IAdvisorShort} from "../../../../store/reducers/users/types";
 import {ReactComponent as DeleteIcon} from "../../../../assets/img/close.svg";
 import {useSelector} from "react-redux";
@@ -22,7 +22,8 @@ const EmployeeChip: React.FC<TProps> = ({item, deleteEmployee, isSaving}) => {
             <div>{item.email}</div>
             <IconButton
                 onClick={() => deleteEmployee(item.id)}
-                disabled={loading || isSaving || isLoading}>
+                disabled={loading || isSaving || isLoading}
+                size="large">
                 <DeleteIcon/>
             </IconButton>
         </div>

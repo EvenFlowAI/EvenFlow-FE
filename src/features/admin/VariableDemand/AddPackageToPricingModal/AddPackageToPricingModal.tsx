@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Table} from "../../../../components/tables/Table/Table";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {TNewPackagesToPricing} from "../../../../store/reducers/pricingSettings/types";
 import {addPackageToPricing} from "../../../../store/reducers/pricingSettings/actions";
 import {IPackageOptionShort} from "../../../../store/reducers/packages/types";

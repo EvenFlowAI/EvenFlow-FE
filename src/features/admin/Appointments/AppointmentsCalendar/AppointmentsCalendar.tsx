@@ -8,7 +8,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {CalendarControls} from "../../AvailableStaffCalendar/CalendarControls/CalendarControls";
 import {WeekDayNames} from "../../../../utils/constants";
 import clsx from "clsx";
-import {Paper} from '@material-ui/core';
+import {Paper} from '@mui/material';
 import {ReactComponent as Active} from "../../../../assets/img/date_1.svg";
 import {ReactComponent as FreeSlots} from "../../../../assets/img/date_2.svg";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";

@@ -1,11 +1,13 @@
-import {styled, Table, TableCell, withStyles} from "@material-ui/core";
+import { styled, Table, TableCell } from "@mui/material";
+
+import withStyles from '@mui/styles/withStyles';
 
 export const ControlWrapper = styled("div")(({theme}) => ({
     display: "flex",
     flexFlow: "row nowrap",
     justifyContent: "flex-end",
     marginBottom: 10,
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
         justifyContent: "center"
     }
 }));
@@ -45,7 +47,7 @@ export const HeadCell = styled(TableCell)(({theme}) => ({
         alignItems: "center",
         maxWidth: "100%"
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
         width: "35%"
     }
 }));

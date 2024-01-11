@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {Box, Grid, Paper} from "@material-ui/core";
+import {Box, Grid, Paper} from "@mui/material";
 import {useSelector} from "react-redux";
 import {EditAddressModal} from "../../../features/admin/EditAddressModal/EditAddressModal";
 import {HourOfOperationsModal} from "../../../features/admin/HourOfOperationsModal/HourOfOperationsModal";

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {IAddress} from "../../../store/reducers/dealershipGroups/types";
 import {TSelectChange} from "../../../types/types";
 import {IServiceCenterExtended} from "../../../store/reducers/serviceCenters/types";

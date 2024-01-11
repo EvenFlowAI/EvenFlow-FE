@@ -1,10 +1,10 @@
 import React, {useMemo, useState} from "react";
-import {Paper} from "@material-ui/core";
+import {Paper} from "@mui/material";
 import {CalendarControls} from "./CalendarControls/CalendarControls";
 import {WeekDayNames} from "../../../utils/constants";
 import moment, {Moment} from "moment";
 import clsx from "clsx";
-import {Star, SupervisorAccount} from "@material-ui/icons";
+import {Star, SupervisorAccount} from "@mui/icons-material";
 import {TDay} from "./types";
 import {useCalendarStyles} from "../../../hooks/styling/useCalendarStyles";
 

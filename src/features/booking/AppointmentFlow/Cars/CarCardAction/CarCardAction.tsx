@@ -4,9 +4,11 @@ import React, {useCallback, useMemo, useRef, useState} from "react";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {setVehicle} from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import {Button, ButtonGroup, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper,} from "@material-ui/core";
-import {MoreVert} from "@material-ui/icons";
+import {Button, ButtonGroup, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper} from "@mui/material";
+import {MoreVert} from "@mui/icons-material";
 import {useStyles} from "./styles";
+import {TransitionProps} from "@mui/material/transitions";
+import {PopperPlacementType} from "@mui/base/Popper/Popper.types";
 
 type TCarActionProps = {
     car: ILoadedVehicle;
@@ -35,7 +37,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
         onAddNewAppointment(car);
     }, [car]);
 
-    const handleClose = useCallback((event: React.MouseEvent<Document, MouseEvent>) => {
+    const handleClose = useCallback((event: MouseEvent | TouchEvent) => {
         if (anchorRef.current && anchorRef.current?.contains(event?.target as Node)) {
             return;
         }
@@ -82,9 +84,9 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
             placement={"bottom-end"}
             role="presentation"
             transition disablePortal>
-            {({ TransitionProps, placement }) => (
+            {({ props, placement }: {props: TransitionProps, placement: PopperPlacementType}) => (
                 <Grow
-                    {...TransitionProps}
+                    {...props}
                     style={{
                         transformOrigin: placement === 'bottom' ? 'right top' : 'right bottom',
                     }}

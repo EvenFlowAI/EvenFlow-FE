@@ -1,7 +1,9 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {styled, Tooltip, withStyles} from "@material-ui/core";
+import makeStyles from '@mui/styles/makeStyles';
+import { styled, Tooltip } from "@mui/material";
 
-export const useStyles = makeStyles(theme => ({
+import withStyles from '@mui/styles/withStyles';
+
+export const useStyles = makeStyles(() => ({
     tableWrapper: {
     },
     wrapper: ({columnsCount}: {columnsCount: number}) => ({

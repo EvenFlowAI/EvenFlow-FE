@@ -1,4 +1,4 @@
-import {FormGroup, styled} from "@material-ui/core";
+import {FormGroup, styled} from "@mui/material";
 
 export const FlexGroup = styled(FormGroup)({
     display: "flex",

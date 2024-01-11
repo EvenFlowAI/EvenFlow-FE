@@ -1,5 +1,5 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {styled, Theme} from "@material-ui/core";
+import makeStyles from '@mui/styles/makeStyles';
+import {styled} from "@mui/material";
 import React from "react";
 
 export const useStyles = makeStyles(theme => ({
@@ -19,7 +19,7 @@ export const useStyles = makeStyles(theme => ({
     rightPart: {
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             gap: 8,
         },
     },
@@ -61,8 +61,8 @@ export type TPickUpSlotsWrapperProps = {
     selected?: boolean,
 }
 
-export const PickUpWrapper = styled(({available, selected, ...props}) =>
-    <div {...props}/>)<Theme, TPickUpSlotsWrapperProps>(({theme, available, selected}) => ({
+export const PickUpWrapper = styled(({available, selected, ...props}: TPickUpSlotsWrapperProps) =>
+    <div {...props}/>)<TPickUpSlotsWrapperProps>(({theme, available, selected}) => ({
     maxHeight: 315,
     display: "grid",
     gridTemplateColumns: '4fr 6fr',
@@ -73,7 +73,7 @@ export const PickUpWrapper = styled(({available, selected, ...props}) =>
     cursor: "pointer",
     border: '1px solid #000000',
     borderRadius: 2,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
         gridTemplateColumns: '1fr',
         gridTemplateRows: '1fr 1fr',
     },

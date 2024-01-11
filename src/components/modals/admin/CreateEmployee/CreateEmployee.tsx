@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {DialogProps} from "../../BaseModal/types";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {Roles, TTechnicianLevel} from "../../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";

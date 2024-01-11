@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -6,7 +6,7 @@ export const Wrapper = styled('div')(({theme}) => ({
     gridGap: 10,
     alignItems: "stretch",
     justifyContent: "space-between",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
         flexDirection: "column"
     }
 }))
@@ -20,14 +20,14 @@ export const List = styled('ul')(({theme}) => ({
     gap: "18px",
     fontSize: 16,
     fontWeight: "bold",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         alignSelf: "flex-start",
         gap: "10px",
         width: "100%",
     },
     "& .service-item": {
         textTransform: "capitalize",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             width: "100%",
             display: 'flex',
             justifyContent: 'space-between',
@@ -66,7 +66,7 @@ export const PriceWrapper = styled('div')(({theme}) => ({
     alignItems: "flex-end",
     justifyContent: "space-between",
     textAlign: "right",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         alignItems: "flex-start",
     },
     "& .price": {
@@ -85,7 +85,7 @@ export const PriceWrapper = styled('div')(({theme}) => ({
         fontSize: 14,
         fontWeight: "bold",
         textTransform: 'uppercase',
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             marginTop: 5
         }
     },

@@ -6,8 +6,8 @@ import {
     MenuItem,
     IconButton,
     Button
-} from "@material-ui/core";
-import {MoreHoriz} from "@material-ui/icons";
+} from "@mui/material";
+import {MoreHoriz} from "@mui/icons-material";
 import AddDistanceRangeModal from "./AddDistanceRangeModal/AddDistanceRangeModal";
 import {IDistancePriceSettings, TDistanceRange} from "../../../store/reducers/serviceValet/types";
 import {Loading} from "../../../components/wrappers/Loading/Loading";

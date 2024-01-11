@@ -6,7 +6,7 @@ import {
     deletePackagePricingSettings,
     loadMPPricingSettings, loadPackageOptionsList
 } from "../../../../../store/reducers/pricingSettings/actions";
-import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import EditDayOFWeekPackage from "../../EditDayOFWeekPackageModal/EditDayOFWeekPackageModal";
 import {TMPackage, SliderObject, SliderRange} from "../../types";

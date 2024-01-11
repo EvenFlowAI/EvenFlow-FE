@@ -1,9 +1,10 @@
 import React from "react";
-import {DateTimePicker as DTP, DateTimePickerProps} from "@material-ui/pickers";
-import {InputLabel} from "@material-ui/core";
+import {DateTimePicker as DTP} from "@mui/x-date-pickers";
+import {InputLabel} from "@mui/material";
 import {useDatePickerStyles} from "../../../hooks/styling/useDatePickerStyles";
+import {DateTimePickerProps} from "@mui/lab";
 
-export const DateTimePicker = ({label, ...props}: DateTimePickerProps) => {
+export const CustomDateTimePicker = ({label, ...props}: DateTimePickerProps<Date> & React.RefAttributes<HTMLDivElement>) => {
     const classes = useDatePickerStyles();
     if (!label) return <DTP {...props} />;
     return <>

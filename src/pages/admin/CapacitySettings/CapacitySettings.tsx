@@ -1,19 +1,19 @@
 import React, {useState} from "react";
-import {Tab} from "@material-ui/core";
+import {Tab} from "@mui/material";
 import {TabList} from "../../../components/styled/Tabs";
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {TabContext, TabPanel} from "@mui/lab";
 import {RequiredEquipment} from "../../../features/admin/RequiredEquipment/RequiredEquipment";
 import {RequiredSkills} from "../../../features/admin/RequiredSkills/RequiredSkills";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import {AvailableStaffCalendar} from "../../../features/admin/AvailableStaffCalendar/AvailableStaffCalendar";
 import {capacityManagementRoot} from "../../../utils/constants";
 
 const useStyles = makeStyles(theme => ({
     panel: {
         width: "100%",
-        [theme.breakpoints.down("xs")]: {
-            padding: `${theme.spacing(3)}px 0`
+        [theme.breakpoints.down('sm')]: {
+            padding: `${theme.spacing(3)} 0`
         }
     }
 }))

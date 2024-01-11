@@ -1,4 +1,4 @@
-import {styled, Theme} from "@material-ui/core";
+import {styled} from "@mui/material";
 import React from "react";
 
 type TDayCardProps = {
@@ -7,8 +7,8 @@ type TDayCardProps = {
     isOffPeak?: boolean;
 }
 
-export const DayCard = styled(({available, isCurrent, isOffPeak, ...props}) => (
-    <div {...props}/>))<Theme, TDayCardProps>(({theme, available, isCurrent, isOffPeak}) => ({
+export const DayCard = styled((props) => (
+    <div {...props}/>))<TDayCardProps>(({theme, available, isCurrent, isOffPeak}) => ({
     flex: "1 0 0px",
     opacity: (!available && !isCurrent) ? .3 : 1,
     display: "flex",
@@ -37,7 +37,7 @@ export const DayCard = styled(({available, isCurrent, isOffPeak, ...props}) => (
         '& > svg': {
             marginBottom: 4
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             width: 50,
             height: 50,
             minHeight: "auto",

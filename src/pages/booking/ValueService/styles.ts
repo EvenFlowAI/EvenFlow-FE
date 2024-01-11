@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const Container = styled('div')(({theme}) => ({
     display: "flex",
@@ -9,7 +9,7 @@ export const Container = styled('div')(({theme}) => ({
     padding: 20,
     maxWidth: 1280,
     margin: "auto",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         padding: 0,
     },
 }));

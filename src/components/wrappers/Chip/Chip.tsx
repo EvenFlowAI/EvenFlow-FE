@@ -1,5 +1,5 @@
 import React from 'react';
-import {CloseOutlined} from "@material-ui/icons";
+import {CloseOutlined} from "@mui/icons-material";
 import {useStyles} from "./styles";
 
 type TModelProps = {

@@ -3,7 +3,7 @@ import {IServiceValetAppointment} from "../../../../../store/reducers/appointmen
 import {TArgCallback} from "../../../../../types/types";
 import moment from "moment";
 import {useTranslation} from "react-i18next";
-import {CheckCircleOutlined, HighlightOff, RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import {CheckCircleOutlined, HighlightOff, RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {mockSlotTime} from "../constants";

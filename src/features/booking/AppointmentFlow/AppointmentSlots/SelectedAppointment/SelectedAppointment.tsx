@@ -1,5 +1,5 @@
 import React from 'react';
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
@@ -22,7 +22,7 @@ export const SelectedAppointment = () => {
     const classes = useSelectedAppointmentStyles();
     const theme = useTheme();
     const {t} = useTranslation();
-    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
 
     const price = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
         ? serviceValetAppointment?.price.value ?? 0

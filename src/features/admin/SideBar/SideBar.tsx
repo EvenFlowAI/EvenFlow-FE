@@ -1,9 +1,9 @@
 import React, {useEffect, useMemo} from "react";
-import {Button, Drawer, IconButton, List, useMediaQuery, useTheme} from "@material-ui/core";
+import {Button, Drawer, IconButton, List, useMediaQuery, useTheme} from "@mui/material";
 import logo from '../../../assets/img/logoSidebar.svg';
 import {LinkTypeWithSub} from "../../../types/types";
 import {matchPath, useHistory, useLocation} from "react-router-dom";
-import {ArrowForwardIos, Close} from "@material-ui/icons";
+import {ArrowForwardIos, Close} from "@mui/icons-material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
@@ -25,8 +25,8 @@ type TProps = {
 export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
     const classes = useStyles();
     const theme = useTheme();
-    const isTablet = useMediaQuery(theme.breakpoints.down("md"));
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     const {onClose: onModalClose, isOpen, onOpen} = useModal();
 
     const currentUser = useCurrentUser();
@@ -69,36 +69,36 @@ export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
         }
     }
 
-    return <Drawer
-        className={classes.drawer}
-        classes={{paper: classes.drawerPaper}}
-        variant={!isTablet ? "permanent" : "persistent"}
-        open={isOpened}
-        anchor="left"
-    >
-        {isTablet
-            ? <IconButton
-                className={classes.closeButton}
-                onClick={onClose}>
-                <Close style={{color: "#fff"}} />
-            </IconButton>
-            : null}
-        <img onClick={handleLogoClick} className={classes.logo} src={logo} alt="EvenFlow AI"/>
-        <List disablePadding>
-            {loading
-                ? <Loading/>
-                : links.map(link =>  <Link link={link} closeSidebar={closeSidebar} key={link.name}/>)
-            }
-        </List>
-        <div style={{flex: 1}} />
-        {selectedSC
-            ? <Button
-                endIcon={<ArrowForwardIos/>}
-                className={classes.link}
-                onClick={onOpen}>
-                Booking UI
-            </Button>
-            : null}
-        <BookingModal open={isOpen} onClose={onModalClose} />
-    </Drawer>
+    return (
+        <Drawer
+            className={classes.drawer}
+            classes={{paper: classes.drawerPaper}}
+            variant={!isTablet ? "permanent" : "persistent"}
+            open={isOpened}
+            anchor="left"
+        >
+            {isTablet
+                ? <IconButton className={classes.closeButton} onClick={onClose} size="large">
+                    <Close style={{color: "#fff"}} />
+                </IconButton>
+                : null}
+            <img onClick={handleLogoClick} className={classes.logo} src={logo} alt="EvenFlow AI"/>
+            <List disablePadding>
+                {loading
+                    ? <Loading/>
+                    : links.map(link =>  <Link link={link} closeSidebar={closeSidebar} key={link.name}/>)
+                }
+            </List>
+            <div style={{flex: 1}} />
+            {selectedSC
+                ? <Button
+                    endIcon={<ArrowForwardIos/>}
+                    className={classes.link}
+                    onClick={onOpen}>
+                    Booking UI
+                </Button>
+                : null}
+            <BookingModal open={isOpen} onClose={onModalClose} />
+        </Drawer>
+    );
 };

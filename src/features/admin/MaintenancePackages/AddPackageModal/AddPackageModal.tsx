@@ -1,12 +1,12 @@
 import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {AddCircleOutline} from "@material-ui/icons";
-import {IconButton, Button, Divider} from "@material-ui/core";
+import {AddCircleOutline} from "@mui/icons-material";
+import {IconButton, Button, Divider} from "@mui/material";
 import OpsCode from "./parts/OpsCodeLabel/OpsCodeLabel";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import AssignOpsCode from "./parts/AssignOpsCodeModal/AssignOpsCodeModal";
 import AddOpsCode from "../../../../components/modals/admin/AddOpsCode/AddOpsCode";
@@ -443,7 +443,7 @@ const AddPackageModal: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     })}
 
                     <div className={classes.addExisting}>
-                        <IconButton onClick={onExistingOpen} className={classes.iconPlus}>
+                        <IconButton onClick={onExistingOpen} className={classes.iconPlus} size="large">
                             <AddCircleOutline/>
                         </IconButton>
                         <span> Add Existing Maintenance Package</span>
@@ -540,7 +540,7 @@ const AddPackageModal: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                                 disableClearable
                                 options={yearOptions}
                                 disableCloseOnSelect
-                                getOptionSelected={(option, value) => option.toLowerCase() === value.toLowerCase()}
+                                isOptionEqualToValue={(option, value) => option.toLowerCase() === value.toLowerCase()}
                                 value={vehiclesData?.yearFrom}
                                 onChange={onFormFieldChange('yearFrom')}
                                 renderInput={autocompleteRender({
@@ -554,7 +554,7 @@ const AddPackageModal: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                                 options={yearOptions}
                                 disableClearable
                                 disableCloseOnSelect
-                                getOptionSelected={(option, value) => option.toLowerCase() === value.toLowerCase()}
+                                isOptionEqualToValue={(option, value) => option.toLowerCase() === value.toLowerCase()}
                                 value={vehiclesData?.yearTo}
                                 onChange={onFormFieldChange('yearTo')}
                                 renderInput={autocompleteRender({
@@ -569,7 +569,7 @@ const AddPackageModal: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                             classes={autoCompleteStyles}
                             disableClearable
                             options={criteriaOptions}
-                            getOptionSelected={(option, value) => option === value}
+                            isOptionEqualToValue={(option, value) => option === value}
                             disabled={!isApplyBusinessRules}
                             value={vehiclesData?.customerCriteria ? ECustomerCriteria[vehiclesData.customerCriteria].toString() : ECustomerCriteria[ECustomerCriteria.Any]}
                             onChange={onFormFieldChange('customerCriteria')}

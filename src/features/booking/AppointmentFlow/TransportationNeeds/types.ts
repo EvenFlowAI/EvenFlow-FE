@@ -1,5 +1,5 @@
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {IVehicleForSlots, MPOptionShort, TRecallForRequest} from "../../../../store/reducers/appointment/types";
+import {ParsableDate} from "../../../../types/types";
 
 export type TTransportationData = {
     serviceCenterId: number;

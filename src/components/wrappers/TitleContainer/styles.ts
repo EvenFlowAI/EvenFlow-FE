@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 type TStyleProps = {
     pad: boolean;
@@ -10,7 +10,7 @@ export const useStyles = makeStyles(theme => ({
         flexFlow: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        width: `calc(100% + ${theme.spacing(4) * 2}px)`,
+        width: `calc(100% + calc(${theme.spacing(4)} * 2))`,
         maxWidth: theme.breakpoints.values.lg,
         marginLeft: -theme.spacing(4),
         marginRight: -theme.spacing(4),
@@ -18,7 +18,7 @@ export const useStyles = makeStyles(theme => ({
         paddingLeft: theme.spacing(4),
         paddingRight: theme.spacing(4),
         paddingBottom: pad ? theme.spacing(3) : 0,
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             flexFlow: "column",
             "&>*:not(:first-child)": {
                 marginTop: theme.spacing(1)

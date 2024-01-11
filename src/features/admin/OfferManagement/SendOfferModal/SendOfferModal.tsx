@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button, FormControlLabel, Grid, Radio, RadioGroup} from "@material-ui/core";
+import {Button, FormControlLabel, Grid, Radio, RadioGroup} from "@mui/material";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IOffer} from "../../../../store/reducers/offers/types";

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Box, Button} from "@material-ui/core";
+import {Box, Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
 import {EDay, EDemandCategory, IDayOfWeekSetting} from "../../../../store/reducers/pricingSettings/types";
@@ -89,24 +89,26 @@ export const WorkWeekModal: React.FC<DialogProps> = ({onAction, payload, ...prop
         days.push(sunday)
         return days;
     }
-    return <BaseModal {...props} width={400}>
-        <DialogTitle onClose={props.onClose}>Work Week Settings</DialogTitle>
-        <DialogContent>
-            <Box display="grid" gridGap={10} gridTemplateColumns="1fr 220px">
-                <Box component="span" fontWeight="bold" color={"text.disabled"}>Day</Box>
-                <Box component="span" fontWeight="bold" color={"text.disabled"}>Demand Category</Box>
-                {getContent()}
-            </Box>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={props.onClose}>Close</Button>
-            <LoadingButton
-                loading={saving}
-                onClick={handleSave}
-                color="primary"
-                variant="contained">
-                Save
-            </LoadingButton>
-        </DialogActions>
-    </BaseModal>
+    return (
+        <BaseModal {...props} width={400}>
+            <DialogTitle onClose={props.onClose}>Work Week Settings</DialogTitle>
+            <DialogContent>
+                <Box display="grid" gap={10} gridTemplateColumns="1fr 220px">
+                    <Box component="span" fontWeight="bold" color={"text.disabled"}>Day</Box>
+                    <Box component="span" fontWeight="bold" color={"text.disabled"}>Demand Category</Box>
+                    {getContent()}
+                </Box>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={props.onClose}>Close</Button>
+                <LoadingButton
+                    loading={saving}
+                    onClick={handleSave}
+                    color="primary"
+                    variant="contained">
+                    Save
+                </LoadingButton>
+            </DialogActions>
+        </BaseModal>
+    );
 };

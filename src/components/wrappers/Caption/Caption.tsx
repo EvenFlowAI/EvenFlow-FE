@@ -1,5 +1,5 @@
 import React from "react";
-import {InfoOutlined} from "@material-ui/icons";
+import {InfoOutlined} from "@mui/icons-material";
 import {useStyles} from "./styles";
 
 export const Caption: React.FC<{title: string|JSX.Element, icon?: JSX.Element}> = ({title, icon}) => {

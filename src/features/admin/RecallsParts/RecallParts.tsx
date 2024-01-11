@@ -1,11 +1,11 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import RecallTable from "./RecallTable/RecallTable";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import AddRecallModal from "./AddRecallModal/AddRecallModal";
 import {IRecall} from "../../../store/reducers/recall/types";
-import {makeStyles} from "@material-ui/core/styles";
-import {Autocomplete} from "@material-ui/lab";
+import makeStyles from '@mui/styles/makeStyles';
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -75,42 +75,40 @@ const RecallParts = () => {
         }
     }
 
-    return (
-        <>
-            <TitleContainer
-                pad
-                parent={capacityManagementRoot}
-                actions={<div className={classes.wrapper}>
-                    <div className={classes.title}>
-                        default recall ops code:
-                    </div>
-                    <Autocomplete
-                        style={{width: 200}}
-                        loading={loading}
-                        value={selectedOpsCode}
-                        options={allAssignedList}
-                        getOptionSelected={(o, v) => o.id === v.id}
-                        getOptionLabel={o => o.serviceRequest.code}
-                        onChange={onSRChange}
-                        renderInput={autocompleteRender({
-                            label: "",
-                            placeholder: 'Select Ops Code'
-                        })}
-                    />
-                    <Button
-                        className={classes.button}
-                        color="primary"
-                        variant="contained"
-                        onClick={handleAddRecall}
-                    >
-                        Add Recall
-                    </Button>
-                </div>}
-            />
-            <RecallTable onOpenModal={handleAddRecall} currentItem={currentItem} setCurrentItem={setCurrentItem}/>
-            <AddRecallModal open={isOpen} editingItem={currentItem} onClose={onClose} setEditingItem={setCurrentItem}/>
-        </>
-    );
+    return <>
+        <TitleContainer
+            pad
+            parent={capacityManagementRoot}
+            actions={<div className={classes.wrapper}>
+                <div className={classes.title}>
+                    default recall ops code:
+                </div>
+                <Autocomplete
+                    style={{width: 200}}
+                    loading={loading}
+                    value={selectedOpsCode}
+                    options={allAssignedList}
+                    isOptionEqualToValue={(o, v) => o.id === v.id}
+                    getOptionLabel={o => o.serviceRequest.code}
+                    onChange={onSRChange}
+                    renderInput={autocompleteRender({
+                        label: "",
+                        placeholder: 'Select Ops Code'
+                    })}
+                />
+                <Button
+                    className={classes.button}
+                    color="primary"
+                    variant="contained"
+                    onClick={handleAddRecall}
+                >
+                    Add Recall
+                </Button>
+            </div>}
+        />
+        <RecallTable onOpenModal={handleAddRecall} currentItem={currentItem} setCurrentItem={setCurrentItem}/>
+        <AddRecallModal open={isOpen} editingItem={currentItem} onClose={onClose} setEditingItem={setCurrentItem}/>
+    </>;
 };
 
 export default RecallParts;

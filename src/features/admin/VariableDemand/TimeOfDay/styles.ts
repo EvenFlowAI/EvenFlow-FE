@@ -1,14 +1,14 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useStyles = makeStyles(theme =>({
     message: {
         fontSize: 14,
-        [theme.breakpoints.down("lg")]: {
+        [theme.breakpoints.down('xl')]: {
             fontSize: 11
         }
     },
     rowWrapper: {
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             marginBottom: theme.spacing(2)
         }
     }

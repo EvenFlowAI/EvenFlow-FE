@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@mui/material";
 import {Table} from "../../../components/tables/Table/Table";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {AddHolidayModal} from "./AddHolidayModal/AddHolidayModal";
 import {IHoliday} from "../../../store/reducers/holidays/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -107,9 +107,14 @@ export const HolidaysModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...pro
     }
 
     const actions = (el: IHoliday) => {
-        return <IconButton onClick={openMenu(el)} disabled={currentUser?.role === Roles.Manager}>
-            <MoreHoriz />
-        </IconButton>
+        return (
+            <IconButton
+                onClick={openMenu(el)}
+                disabled={currentUser?.role === Roles.Manager}
+                size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }
 
     const handleOpenCreate = () => {

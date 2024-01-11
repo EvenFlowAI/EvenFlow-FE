@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment/moment";
-import {ChevronLeft, ChevronRight} from "@material-ui/icons";
+import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import {MonthSelectorWrapper} from "./styles";
 import {TMonthProps} from "../types";
 

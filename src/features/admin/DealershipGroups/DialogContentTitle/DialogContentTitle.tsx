@@ -1,5 +1,5 @@
 import React from "react";
-import {Typography} from "@material-ui/core";
+import {Typography} from "@mui/material";
 import {useStyles} from "./styles";
 
 export const DialogContentTitle: React.FC<{title: string}> = props => {

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {loadMakes} from "../../../store/reducers/vehicleDetails/actions";
 import {RootState} from "../../../store/rootReducer";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {AddMakeModelModal} from "./AddMakeModelModal/AddMakeModelModal";
 import {useStyles} from "./styles";
 import {DefaultMake} from "./DefaultMake/DefaultMake";

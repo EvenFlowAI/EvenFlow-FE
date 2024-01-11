@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {CssBaseline, ThemeProvider} from "@material-ui/core";
+import { CssBaseline, ThemeProvider, Theme, StyledEngineProvider } from "@mui/material";
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -8,20 +8,29 @@ import { Provider } from "react-redux";
 import {store} from "./store/store";
 import {BrowserRouter} from "react-router-dom";
 import theme from "./theme/theme";
-import MomentUtils from "@date-io/moment";
-import {MuiPickersUtilsProvider} from "@material-ui/pickers";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
-                <ThemeProvider theme={theme}>
-                    <MuiPickersUtilsProvider utils={MomentUtils}>
-                        <CssBaseline />
-                        <BrowserRouter>
-                            <App />
-                        </BrowserRouter>
-                    </MuiPickersUtilsProvider>
-                </ThemeProvider>
+                <StyledEngineProvider injectFirst>
+                    <ThemeProvider theme={theme}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <CssBaseline />
+                            <BrowserRouter>
+                                <App />
+                            </BrowserRouter>
+                        </LocalizationProvider>
+                    </ThemeProvider>
+                </StyledEngineProvider>
         </Provider>
     </React.StrictMode>,
     document.getElementById('root')

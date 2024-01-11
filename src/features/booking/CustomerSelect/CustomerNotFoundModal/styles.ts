@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useStyles = makeStyles((theme) => ({
     buttonsWrapper: {
@@ -8,7 +8,7 @@ export const useStyles = makeStyles((theme) => ({
         "& > div:first-child": {
             marginRight: 20,
         },
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             flexDirection: "column",
             "& > div:first-child": {
                 marginRight: 0,
@@ -23,7 +23,7 @@ export const useStyles = makeStyles((theme) => ({
     },
     modalWrapper: {
         padding: "60px 88px 36px 88px",
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             padding: "16px",
         },
     },
@@ -33,7 +33,7 @@ export const useStyles = makeStyles((theme) => ({
         color: "#202021",
         marginBottom: 24,
         textAlign: "center",
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             fontSize: 22,
             marginBottom: 16,
         },

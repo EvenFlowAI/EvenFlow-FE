@@ -1,16 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {SC_UNDEFINED, timeSpanString} from "../../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {EDay} from "../../../../store/reducers/demandSegments/types";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import moment from "moment";
 import {loadAppointmentCutoff, setAppointmentCutoff} from "../../../../store/reducers/optimizationWindows/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {IAppointmentCutoff} from "../../../../store/reducers/optimizationWindows/types";
-import {AccessTime} from "@material-ui/icons";
+import {AccessTime} from "@mui/icons-material";
 import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 
@@ -18,6 +17,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
+import {ParsableDate} from "../../../../types/types";
 
 type TForm = {
     [k in EDay]: ParsableDate;

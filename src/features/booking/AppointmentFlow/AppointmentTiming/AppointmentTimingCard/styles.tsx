@@ -1,5 +1,5 @@
-import {styled, Theme} from "@material-ui/core";
-import {DatePicker} from "@material-ui/pickers";
+import {styled, Theme} from "@mui/material";
+import {DatePicker} from "@mui/x-date-pickers";
 import React from "react";
 
 export const StyledDate = styled(DatePicker)(({theme}) => ({
@@ -17,7 +17,7 @@ export const StyledDate = styled(DatePicker)(({theme}) => ({
         paddingRight: 4,
         backgroundColor: "#fff"
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
         marginTop: 0
     }
 }))
@@ -46,14 +46,14 @@ export const CardWrapper = styled(({active, ...props}) => <div {...props}/>)<The
         alignItems: "center",
         justifyContent: "center",
         background: active ? "#FFFFFF" : "#E7E7E7",
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             display: "none"
         }
     },
     "&>div:last-child": {
         marginTop: "auto",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         flexDirection: "row",
     }
 }));

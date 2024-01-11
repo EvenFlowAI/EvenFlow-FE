@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../components/modals/BaseModal/BaseModal";
-import {TableBody, TableCell, TableContainer, TableHead, TableRow, Table, Button} from "@material-ui/core";
+import {TableBody, TableCell, TableContainer, TableHead, TableRow, Table, Button} from "@mui/material";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";

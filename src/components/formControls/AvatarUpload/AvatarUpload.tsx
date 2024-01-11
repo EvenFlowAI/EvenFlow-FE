@@ -1,5 +1,5 @@
 import React, {ChangeEventHandler, createRef, useState} from "react";
-import {Avatar} from "@material-ui/core";
+import {Avatar} from "@mui/material";
 import {useStyles} from "./styles";
 import {IAvatarState} from "./types";
 

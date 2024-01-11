@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useStyles = makeStyles(theme => ({
     mainWrapper: {
@@ -13,11 +13,11 @@ export const useStyles = makeStyles(theme => ({
         display: 'grid',
         gridTemplateColumns: "1fr 1fr 1fr",
         gridGap: 20,
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             gridTemplateColumns: "1fr 1fr",
             marginBottom: 20,
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             gridTemplateColumns: "1fr",
         }
     },

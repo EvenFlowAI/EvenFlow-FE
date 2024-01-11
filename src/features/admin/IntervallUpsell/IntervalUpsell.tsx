@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@mui/material";
 import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -11,7 +11,7 @@ import {
 } from "../../../store/reducers/serviceRequests/actions";
 import {IUpsellServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {Table} from "../../../components/tables/Table/Table";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {capacityManagementRoot, SC_UNDEFINED} from "../../../utils/constants";
 import {SearchInput} from "../../../components/formControls/SearchInput/SearchInput";
 import {IOrder, TableRowDataType} from "../../../types/types";
@@ -111,7 +111,7 @@ export const IntervalUpsell = () => {
     }, [selectedSC, dispatch, pageData, order]);
 
     const actions = (el: IUpsellServiceRequest) => {
-        return <IconButton onClick={handleOpenMenu(el)}><MoreHoriz /></IconButton>
+        return <IconButton onClick={handleOpenMenu(el)} size="large"><MoreHoriz /></IconButton>;
     }
 
     const handleAddOpsCode = () => {

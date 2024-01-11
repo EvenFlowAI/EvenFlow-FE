@@ -3,7 +3,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {IPackageOptions} from "../../../../../api/types";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import {RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {TPackage} from "../types";
 import {PriceValue, useStyles, Wrapper} from "./styles";
 
@@ -39,7 +39,6 @@ const PackagesTotalPriceWithFee: React.FC<TTotalPriceRowProps> = ({packages, han
                 showDetails={showDetails}
                 roundPrice={scProfile?.isRoundPrice}
                 selected={selected}
-                count={packages.length}
                 onClick={handleClick(p, EPackagePricingType.PriceWithFee)}
                 key={p.id}>
                 <div className={showDetails ? "" : "positionedBtn"}>{selected ? <RadioButtonChecked/> : <RadioButtonUnchecked/>}</div>

@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const TablesWrapper = styled('div')({
     display: 'flex',

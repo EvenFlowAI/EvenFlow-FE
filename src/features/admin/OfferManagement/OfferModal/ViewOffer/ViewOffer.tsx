@@ -7,7 +7,7 @@ import {
     EOfferType,
     IOffer
 } from "../../../../../store/reducers/offers/types";
-import {Grid, Switch} from "@material-ui/core";
+import {Grid, Switch} from "@mui/material";
 import {TextField} from "../../../../../components/formControls/TextFieldStyled/TextField";
 import moment from "moment";
 import {calendarDateFormat, timeSpanString, time12HourFormat} from "../../../../../utils/constants";

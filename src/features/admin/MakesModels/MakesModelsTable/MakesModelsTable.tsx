@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {deleteMake, setCurrentMake} from "../../../../store/reducers/vehicleDetails/actions";
 import {RootState} from "../../../../store/rootReducer";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {IMake} from "../../../../api/types";
 import {Table} from "../../../../components/tables/Table/Table";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {TableRowDataType, TCallback} from "../../../../types/types";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 
@@ -40,9 +40,11 @@ export const MakesModelsTable: React.FC<{onOpen: TCallback}> = ({onOpen}) => {
     }
 
     const tableActions = (el: IMake) => {
-        return <IconButton onClick={openMenu(el)}>
-            <MoreHoriz />
-        </IconButton>;
+        return (
+            <IconButton onClick={openMenu(el)} size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }
 
     const handleRemove = async () => {

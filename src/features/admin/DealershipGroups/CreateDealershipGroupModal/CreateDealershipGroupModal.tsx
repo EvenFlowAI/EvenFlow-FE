@@ -8,7 +8,7 @@ import {
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {
     Divider, Button
-} from "@material-ui/core";
+} from "@mui/material";
 import {
     IContactPersonForm,
     IDealershipForm,

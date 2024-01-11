@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button, Divider, IconButton} from "@material-ui/core";
+import {Button, Divider, IconButton} from "@mui/material";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {AddCircleOutline} from "@material-ui/icons";
+import {AddCircleOutline} from "@mui/icons-material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Chip} from "../../../../components/wrappers/Chip/Chip";
 import {useDispatch, useSelector} from "react-redux";
@@ -125,7 +125,7 @@ export const AddMakeModelModal:React.FC<TAddMakeModalProps> = ({ isEditing, onCl
                         onChange={onModelChange}
                         value={newModel}/>
                     </div>
-                    <IconButton onClick={addModel} className={classes.iconPlus}>
+                    <IconButton onClick={addModel} className={classes.iconPlus} size="large">
                         <AddCircleOutline/>
                     </IconButton>
                 </div>

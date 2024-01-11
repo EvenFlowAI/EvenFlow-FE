@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import moment from "moment";
 import {IHOODataForm} from "../../../store/reducers/serviceCenters/types";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {timeSpanString} from "../../../utils/constants";
 import {THOOForm} from "./types";
 import {initialForm} from "./constants";
@@ -42,7 +41,7 @@ export const HourOfOperationsModal: React.FC<DialogProps&TViewMode> = ({viewMode
         }
     }, [selectedSC, setForm, props.open]);
 
-    const handleChange = (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => {
+    const handleChange = (day: number, t: "from" | "to") => (date: moment.Moment) => {
         setFormIsChecked(false);
         const idx = form.findIndex(v => v.dayOfWeek === day);
         form[idx] = {...form[idx], [t]: date};

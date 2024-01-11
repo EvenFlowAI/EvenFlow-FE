@@ -1,6 +1,6 @@
 import React from "react";
 import {LoginTextContent} from "../../../../components/wrappers/LoginTextContent/LoginTextContent";
-import {Typography} from "@material-ui/core";
+import {Typography} from "@mui/material";
 import {BackLink} from "../../../../components/wrappers/BackLink/BackLink";
 
 import {Routes} from "../../../../routes/constants";

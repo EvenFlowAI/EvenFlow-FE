@@ -4,11 +4,11 @@ import {
     EReportingStatus,
     reportingStatuses, IAppointment,
 } from "../../../../api/types";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {ViewAppointmentsModal} from "../ViewAppointmentsModal/ViewAppointmentsModal";
 import moment from "moment";
 import {API} from "../../../../api/api";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {IOrder, IPageRequest, TableRowDataType} from "../../../../types/types";
 import {time12HourFormat} from "../../../../utils/constants";
 import {useSelector} from "react-redux";

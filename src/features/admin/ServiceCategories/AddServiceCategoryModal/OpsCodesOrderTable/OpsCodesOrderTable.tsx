@@ -4,7 +4,7 @@ import {TextField} from "../../../../../components/formControls/TextFieldStyled/
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import Checkbox from "../../../../../components/formControls/Checkbox/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {Table} from "../../../../../components/tables/Table/Table";
 import {useStyles} from "./styles";
 import {TableRowDataType} from "../../../../../types/types";

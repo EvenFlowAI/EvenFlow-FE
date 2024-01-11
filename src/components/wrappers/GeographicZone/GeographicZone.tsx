@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import {TZipCode, TZone} from "../../../store/reducers/mobileService/types";
 import Checkbox from "../../formControls/Checkbox/Checkbox";
-import {CloseOutlined} from "@material-ui/icons";
+import {CloseOutlined} from "@mui/icons-material";
 import {useStyles, ZipCode} from "./styles";
 
 type TZoneProps = {

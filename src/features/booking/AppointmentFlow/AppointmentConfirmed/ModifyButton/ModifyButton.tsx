@@ -5,7 +5,7 @@ import {
     setServiceOptionChanged, setUserType
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {EUserType} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {TArgCallback} from "../../../../../types/types";

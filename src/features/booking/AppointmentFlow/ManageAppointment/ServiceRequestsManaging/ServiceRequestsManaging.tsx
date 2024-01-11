@@ -8,7 +8,7 @@ import {
     setEditingPosition,
     setServiceOptionChanged
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {List, TitleWrapper} from "./styles";
 import {getMaintenanceDescription} from "../../../../../utils/utils";
 

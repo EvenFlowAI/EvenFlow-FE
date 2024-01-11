@@ -16,7 +16,7 @@ import {
 } from "../../../store/reducers/appointment/actions";
 import {decodeSCID, encodeSCID} from "../../../utils/utils";
 import {FrameWelcomeLayout} from "../../../features/booking/FrameWelcomeLayout/FrameWelcomeLayout";
-import {MuiThemeProvider} from "@material-ui/core";
+import { ThemeProvider, Theme, StyledEngineProvider } from "@mui/material";
 import {frameTheme} from "../../../theme/theme";
 import {
     setAddress,
@@ -45,6 +45,13 @@ import {useLayout} from "../../../hooks/useLayout/useLayout";
 import {useException} from "../../../hooks/useException/useException";
 import {Routes} from "../../../routes/constants";
 import {initialCustomerSearch} from "../../../store/reducers/constants";
+
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
@@ -231,18 +238,20 @@ export const Welcome = () => {
     return !scProfile || isProfileLoading || shortLoading
         ? <Loading/>
         : isFrame
-            ? <MuiThemeProvider theme={frameTheme}>
-                <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
-                <FrameWelcomeLayout>
-                    {/*<LanguageSwitcher/>*/}
-                    {getComponent()}
-                </FrameWelcomeLayout>
-            </MuiThemeProvider>
+            ? <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={frameTheme}>
+                    <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
+                    <FrameWelcomeLayout>
+                        {/*<LanguageSwitcher/>*/}
+                        {getComponent()}
+                    </FrameWelcomeLayout>
+                </ThemeProvider>
+    </StyledEngineProvider>
             : <React.Fragment>
                 <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
                     {/*<LanguageSwitcher/>*/}
                     {getComponent()}
                     <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew}/>
                 </WelcomeLayout>
-            </React.Fragment>
+            </React.Fragment>;
 };

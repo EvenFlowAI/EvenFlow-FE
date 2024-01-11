@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addServiceRequestsToPricing,

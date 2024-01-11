@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useMemo} from 'react';
 import {InputWrapper} from "../styles";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../../utils/autocompleteRenders";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";

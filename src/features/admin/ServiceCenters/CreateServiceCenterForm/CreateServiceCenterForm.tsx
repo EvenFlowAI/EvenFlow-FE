@@ -1,7 +1,7 @@
 import React from "react";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Divider, Grid} from "@material-ui/core";
+import {Divider, Grid} from "@mui/material";
 import {checkEmail, noop} from "../../../../utils/utils";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {TSelectChange} from "../../../../types/types";

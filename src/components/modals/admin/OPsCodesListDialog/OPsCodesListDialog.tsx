@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {DialogProps} from "../../BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
-import {Button, Checkbox, useMediaQuery, useTheme} from "@material-ui/core";
+import {Button, Checkbox, useMediaQuery, useTheme} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
@@ -57,7 +57,7 @@ export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction
     const [selectedCodes, setSelectedCodes] = useState<number[]>([]);
 
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         if (props.open && !selectedPreviously) {

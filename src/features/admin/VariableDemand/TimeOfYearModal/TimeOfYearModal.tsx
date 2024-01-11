@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button, Grid} from "@material-ui/core";
+import {Button, Grid} from "@mui/material";
 import moment from "moment";
 import {Month} from "../Month/Month";
 import {useDispatch, useSelector} from "react-redux";

@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {AppointmentUserData} from "../../AppointmentUserData/AppointmentUserData";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {AppointmentSelectedDate} from "../../AppointmentSelectedDate/AppointmentSelectedDate";
 import {AppointmentReminders} from "../../AppointmentReminders/AppointmentReminders";
 import {TArgCallback, TCallback, TError} from "../../../../types/types";

@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo} from 'react';
 import {AppointmentConfirmationTitle} from '../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle';
-import {Checkbox, FormControlLabel} from "@material-ui/core";
+import {Checkbox, FormControlLabel} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setReminders} from "../../../store/reducers/appointmentFrameReducer/actions";

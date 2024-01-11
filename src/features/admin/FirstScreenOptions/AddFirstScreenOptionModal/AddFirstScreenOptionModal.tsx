@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {FileInput} from "../../../../components/formControls/FileInput/FileInput";
 import {setAssignedFilter} from "../../../../store/reducers/serviceRequests/actions";
@@ -220,7 +220,7 @@ export const AddFirstScreenOptionModal: React.FC<TAddFirstScreenOptionProps> = (
                     </div>
                     <Autocomplete
                         options={getServiceTypeOptions()}
-                        getOptionSelected={(option) => option.value === selectedServiceType?.value}
+                        isOptionEqualToValue={(option) => option.value === selectedServiceType?.value}
                         getOptionLabel={o => o.name}
                         value={selectedServiceType}
                         onChange={onServiceTypeChange}
@@ -243,7 +243,7 @@ export const AddFirstScreenOptionModal: React.FC<TAddFirstScreenOptionProps> = (
                     />
                     <Autocomplete
                         options={enabledTransportationOptions}
-                        getOptionSelected={(option) => option.id === defaultTransportation?.id}
+                        isOptionEqualToValue={(option) => option.id === defaultTransportation?.id}
                         getOptionLabel={o => getTransportationOptionString(o.type)}
                         value={defaultTransportation}
                         onChange={onTransportationChange}

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {AppointmentConfirmationTitle} from "../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
 import moment from "moment";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {TCallback} from "../../../types/types";

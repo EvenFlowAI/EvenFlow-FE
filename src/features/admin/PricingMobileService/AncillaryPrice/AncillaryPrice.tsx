@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {FormControlLabel, Radio, RadioGroup, Tab} from "@material-ui/core";
+import {FormControlLabel, Radio, RadioGroup, Tab} from "@mui/material";
 import {TabList} from "../../../../components/styled/Tabs";
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {TabContext, TabPanel} from "@mui/lab";
 import {
     addMobileServiceDistanceRange,
     changeMobileServicePriceSettings,

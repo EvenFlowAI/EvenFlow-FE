@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {MenuItem, Select} from "@material-ui/core";
+import {MenuItem, Select} from "@mui/material";
 import {RootState} from "../../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";

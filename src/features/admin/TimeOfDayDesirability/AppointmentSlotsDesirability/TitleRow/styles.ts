@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
 export const useStyles = makeStyles((theme) => ({
     titleRow: {
@@ -6,7 +6,7 @@ export const useStyles = makeStyles((theme) => ({
         fontWeight: "bold",
         fontSize: 12,
         color: theme.palette.text.disabled,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: 11
         }
     },

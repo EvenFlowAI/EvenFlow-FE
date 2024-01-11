@@ -1,10 +1,10 @@
 import React, {ChangeEvent, useCallback, Dispatch, SetStateAction} from 'react';
 import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {IEngineType} from "../../../../../../store/reducers/vehicleDetails/types";
 import {useAutocompleteStyles} from "../../../../../../hooks/styling/useAutocompleteStyles";
 
@@ -78,7 +78,7 @@ const EngineTypes: React.FC<TEngineTypesProps> = ({
             disableCloseOnSelect
             multiple
             renderOption={renderEngineTypeOption}
-            getOptionSelected={(option, value) => option.id === value.id}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={(option) => option.name}
             disabled={!isApplyBusinessRules}
             value={selectedEngineTypes}

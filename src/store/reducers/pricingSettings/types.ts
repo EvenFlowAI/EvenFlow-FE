@@ -1,7 +1,7 @@
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {TEnumMap} from "../types";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
 import {IPackageOptionShort, IPackageShort} from "../packages/types";
+import {ParsableDate} from "../../../types/types";
 
 export type TValuePricingLevel = {
     demandCategory: EDemandCategory;

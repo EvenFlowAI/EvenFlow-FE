@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {TextField} from "../../../../components/styled/EndUserInputs";
-import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
+import {Button, Divider, Grid, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -18,7 +18,7 @@ import CustomerNotFoundModal from "../CustomerNotFoundModal/CustomerNotFoundModa
 import {TCallback} from "../../../../types/types";
 import {defaultPageData} from "../../../../store/reducers/constants";
 import {TCustomerSearchData} from "../../../../store/reducers/enhancedCustomerSearch/types";
-import {KeyboardArrowDown, KeyboardArrowUp} from "@material-ui/icons";
+import {KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
 import {useStyles} from "../styles";
 import {useCustomerSelectStyles} from "../../../../hooks/styling/useCustomerSelectStyles";
 import {TError} from "./types";
@@ -46,7 +46,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
     const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
     const { t } = useTranslation();
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const dispatch = useDispatch();
     const showError = useException();
 

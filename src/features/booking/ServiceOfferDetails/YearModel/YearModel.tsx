@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {useDispatch, useSelector} from "react-redux";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
@@ -95,74 +95,76 @@ export const YearModel: React.FC<TActionProps> = ({onNext, onBack}) => {
         dispatch(setValueServicePartial({model: option, selectedService: null}))
     }
 
-    return (<StepWrapper>
-        <ScreenWrapper>
-        <SelectsTitle>SELECT YOUR VEHICLE</SelectsTitle>
-        <SelectWrapper>
-            {seriesModels?.length > 0
-                ? <Autocomplete
-                key={valueService?.year?.year || seriesModels[0].year}
-                options={yearOptions}
-                onChange={onYearChange}
-                fullWidth
-                disabled={isError}
-                className={classes.input}
-                disableClearable
-                renderInput={autocompleteRender({
-                    label: "Year",
-                    placeholder: "Select Year",
-                    required: true
-                })}
-                value={valueService?.year?.year.toString() ?? ""}
+    return (
+        <StepWrapper>
+            <ScreenWrapper>
+            <SelectsTitle>SELECT YOUR VEHICLE</SelectsTitle>
+            <SelectWrapper>
+                {seriesModels?.length > 0
+                    ? <Autocomplete
+                    key={valueService?.year?.year || seriesModels[0].year}
+                    options={yearOptions}
+                    onChange={onYearChange}
+                    fullWidth
+                    disabled={isError}
+                    className={classes.input}
+                    disableClearable
+                    renderInput={autocompleteRender({
+                        label: "Year",
+                        placeholder: "Select Year",
+                        required: true
+                    })}
+                    value={valueService?.year?.year.toString() ?? ""}
+                />
+                    : <Loading/>}
+                {valueService?.year && currentSeries?.length
+                    ? <Autocomplete
+                    key={valueService?.series?.name || 'series'}
+                    options={currentSeries}
+                    onChange={onSeriesChange}
+                    disabled={isError}
+                    fullWidth
+                    getOptionLabel={option => option.name}
+                    isOptionEqualToValue={option => option.id === valueService?.series?.id}
+                    disableClearable
+                    autoComplete={true}
+                    className={classes.input}
+                    renderInput={autocompleteRender({
+                        label: "Series",
+                        placeholder: "Select Series",
+                        required: true
+                    })}
+                    value={valueService.series}
+                />
+                    : null}
+                {valueService?.year && valueService?.series
+                    ? <Autocomplete
+                    key={valueService?.model?.name || "model"}
+                    options={currentModels}
+                    onChange={onModelChange}
+                    disabled={isError}
+                    fullWidth
+                    disableClearable
+                    getOptionLabel={option => option.name}
+                    isOptionEqualToValue={option => option.name === valueService?.model?.name}
+                    autoComplete={true}
+                    className={classes.input}
+                    renderInput={autocompleteRender({
+                        label: "Model",
+                        placeholder: "Select Chip",
+                        required: true
+                    })}
+                    value={valueService.model || undefined}
+                />
+                    : null}
+            </SelectWrapper>
+            <ActionButtons
+                onBack={handleBack}
+                onNext={handleNext}
+                nextLabel="View Price"
+                nextDisabled={!valueService?.year || !valueService?.series || !valueService?.model || isError}
             />
-                : <Loading/>}
-            {valueService?.year && currentSeries?.length
-                ? <Autocomplete
-                key={valueService?.series?.name || 'series'}
-                options={currentSeries}
-                onChange={onSeriesChange}
-                disabled={isError}
-                fullWidth
-                getOptionLabel={option => option.name}
-                getOptionSelected={option => option.id === valueService?.series?.id}
-                disableClearable
-                autoComplete={true}
-                className={classes.input}
-                renderInput={autocompleteRender({
-                    label: "Series",
-                    placeholder: "Select Series",
-                    required: true
-                })}
-                value={valueService.series}
-            />
-                : null}
-            {valueService?.year && valueService?.series
-                ? <Autocomplete
-                key={valueService?.model?.name || "model"}
-                options={currentModels}
-                onChange={onModelChange}
-                disabled={isError}
-                fullWidth
-                disableClearable
-                getOptionLabel={option => option.name}
-                getOptionSelected={option => option.name === valueService?.model?.name}
-                autoComplete={true}
-                className={classes.input}
-                renderInput={autocompleteRender({
-                    label: "Model",
-                    placeholder: "Select Chip",
-                    required: true
-                })}
-                value={valueService.model || undefined}
-            />
-                : null}
-        </SelectWrapper>
-        <ActionButtons
-            onBack={handleBack}
-            onNext={handleNext}
-            nextLabel="View Price"
-            nextDisabled={!valueService?.year || !valueService?.series || !valueService?.model || isError}
-        />
-        </ScreenWrapper>
-    </StepWrapper>);
+            </ScreenWrapper>
+        </StepWrapper>
+    );
 };

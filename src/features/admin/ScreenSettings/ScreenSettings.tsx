@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEmailRequirement} from "../../../store/reducers/screenSettings/actions";
 import {screenSettingsList, TOptContent} from "../../../store/reducers/screenSettings/types";

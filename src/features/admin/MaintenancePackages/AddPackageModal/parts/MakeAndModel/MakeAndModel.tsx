@@ -1,10 +1,10 @@
 import React, {ChangeEvent, useCallback, Dispatch, SetStateAction, useState, useEffect} from 'react';
 import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {IMake} from "../../../../../../api/types";
 import {upperCase} from "./utils";
 import {useAutocompleteStyles} from "../../../../../../hooks/styling/useAutocompleteStyles";
@@ -154,40 +154,40 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
     }, [makesFromDB, selectedModels, selectedMakes, onModelCheckboxChange]);
 
     return (
-            <div>
-                <Autocomplete
-                    multiple
-                    style={{ marginBottom: 10 }}
-                    classes={classes}
-                    disabled={disabled}
-                    options={getSortedMakes(makesFromDB)}
-                    disableCloseOnSelect
-                    getOptionSelected={(o, v) => o.toLowerCase() === v.toLowerCase()}
-                    renderOption={renderMakeOption}
-                    value={selectedMakes}
-                    onChange={onMakeChange}
-                    renderInput={autocompleteRender({
-                        label: "Make",
-                        placeholder: 'Select Make'
-                    })}
-                />
-                <Autocomplete
-                    multiple
-                    style={{ marginBottom: 10 }}
-                    classes={classes}
-                    disabled={disabled}
-                    options={models}
-                    disableCloseOnSelect
-                    renderOption={renderModelOption}
-                    getOptionSelected={(o, v) => o.toLowerCase() === v.toLowerCase()}
-                    value={selectedModels}
-                    onChange={onModelChange}
-                    renderInput={autocompleteRender({
-                        label: "Model",
-                        placeholder: 'Select Chip'
-                    })}
-                />
-            </div>
+        <div>
+            <Autocomplete
+                multiple
+                style={{ marginBottom: 10 }}
+                classes={classes}
+                disabled={disabled}
+                options={getSortedMakes(makesFromDB)}
+                disableCloseOnSelect
+                isOptionEqualToValue={(o, v) => o.toLowerCase() === v.toLowerCase()}
+                renderOption={renderMakeOption}
+                value={selectedMakes}
+                onChange={onMakeChange}
+                renderInput={autocompleteRender({
+                    label: "Make",
+                    placeholder: 'Select Make'
+                })}
+            />
+            <Autocomplete
+                multiple
+                style={{ marginBottom: 10 }}
+                classes={classes}
+                disabled={disabled}
+                options={models}
+                disableCloseOnSelect
+                renderOption={renderModelOption}
+                isOptionEqualToValue={(o, v) => o.toLowerCase() === v.toLowerCase()}
+                value={selectedModels}
+                onChange={onModelChange}
+                renderInput={autocompleteRender({
+                    label: "Model",
+                    placeholder: 'Select Chip'
+                })}
+            />
+        </div>
     );
 };
 

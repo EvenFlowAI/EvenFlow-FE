@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {centerSettingsList, ECenterSettingType, TOptContent} from "./types";
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import {CenterSettingsPlate} from "./CenterSettingsPlate/CenterSettingsPlate";
 import moment from "moment";
 import ShowDropOffTimeModal from "./ShowDropOffTimeModal/ShowDropOffTimeModal";
 import {useDispatch, useSelector} from "react-redux";
 import {loadCenterSettings, updateDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/actions";
 import {RootState} from "../../../store/rootReducer";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {TDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/types";
 import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
 import {TimePicker} from "../../../components/pickers/TimePicker/TimePicker";
@@ -16,6 +15,7 @@ import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {ZonesOpsCodesPlate} from "./ZonesOpsCodesPlate/ZonesOpsCodesPlate";
 import ZonesOpsCodeModal from "./ZonesOpsCodesModal/ZonesOpsCodeModal";
+import {ParsableDate} from "../../../types/types";
 
 const CenterSettings = () => {
     const {centerSettings, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);

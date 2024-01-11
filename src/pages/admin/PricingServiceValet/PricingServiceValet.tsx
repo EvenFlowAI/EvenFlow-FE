@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {Tab} from "@material-ui/core";
+import {Tab} from "@mui/material";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {TabContext, TabPanel} from "@mui/lab";
 import {TabList} from "../../../components/styled/Tabs";
 import GeographicZones from "../../../features/admin/PricingServiceValet/GeographicZones/GeographicZones";
 import GeographicZonesMap from "../../../features/admin/PricingServiceValet/GeographicZonesMap/GeographicZonesMap";

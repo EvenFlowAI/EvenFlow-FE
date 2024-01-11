@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 import React from "react";
 
 const SubtitleWrapper = styled('h3')(({theme}) => ({
@@ -7,7 +7,7 @@ const SubtitleWrapper = styled('h3')(({theme}) => ({
     margin: "10px 0 0",
     alignSelf: "flex-start",
     color: "#828282",
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
         alignSelf: "center",
         textAlign: "center",
         fontSize: 14,

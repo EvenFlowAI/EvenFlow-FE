@@ -6,9 +6,9 @@ import {
     ITransportationOptionFull
 } from "../../../../store/reducers/transportationNeeds/types";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {updateTransportationDescription} from "../../../../store/reducers/transportationNeeds/actions";
 import {useStyles} from "./styles";
@@ -76,7 +76,7 @@ export const EditTransportationDescriptionModal: React.FC<DialogProps & {editing
                     getOptionLabel={option => option.name}
                     options={columnOptions}
                     disableClearable
-                    getOptionSelected={(option, value) => option.name === ETransportColumn[+value]}
+                    isOptionEqualToValue={(option, value) => option.name === ETransportColumn[+value]}
                     value={column}
                     onChange={onColumnChange}
                     renderInput={autocompleteRender({

@@ -1,4 +1,4 @@
-import {withStyles} from "@material-ui/core";
+import withStyles from '@mui/styles/withStyles';
 import {StyledTable} from "./StyledTable";
 
 export const DemandTable = withStyles(theme => ({

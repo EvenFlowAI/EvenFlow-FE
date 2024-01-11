@@ -1,4 +1,4 @@
-import {Button, ButtonClassKey, ButtonProps, CircularProgress} from "@material-ui/core";
+import {Button, ButtonClassKey, ButtonProps, CircularProgress} from "@mui/material";
 import React from "react";
 import clsx from "clsx";
 import {useStyles} from "./styles";

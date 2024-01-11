@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {DialogProps} from "../../BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {useSelector} from "react-redux";

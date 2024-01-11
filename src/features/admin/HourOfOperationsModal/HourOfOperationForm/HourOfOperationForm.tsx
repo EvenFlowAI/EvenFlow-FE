@@ -1,8 +1,7 @@
 import {TViewMode} from "../../../../components/modals/BaseModal/types";
 import {THOOForm} from "../types";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import React from "react";
-import {Button, Grid, Switch, useMediaQuery, useTheme} from "@material-ui/core";
+import {Button, Grid, Switch, useMediaQuery, useTheme} from "@mui/material";
 import moment from "moment/moment";
 import {blankRow} from "../constants";
 import {useStyles} from "./styles";
@@ -11,14 +10,14 @@ import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 type THOOFormProps = TViewMode & {
     form: THOOForm[];
     onApply: () => void;
-    onChange: (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => void;
+    onChange: (day: number, t: "from" | "to") => (date: moment.Moment) => void;
     onCheck: (day: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
     formIsChecked: boolean;
 }
 
 export const HourOfOperationForm: React.FC<THOOFormProps> = ({form, onApply, onChange, onCheck, viewMode, formIsChecked}) => {
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     const classes = useStyles();
 
     return <>
