@@ -1,11 +1,7 @@
-import ProximaNovaRegular from '../assets/fonts/ProximaNova-Regular.otf';
-import ProximaNovaThin from '../assets/fonts/Proxima Nova Thin.otf';
-import ProximaNovaExtraBold from '../assets/fonts/Proxima Nova Extrabold.otf';
-import ProximaNovaBold from '../assets/fonts/Proxima Nova Bold.otf';
-// import ProximaNovaBlack from './fonts/Proxima Nova Black.otf';
-// import ProximaNovaAltThin from './fonts/Proxima Nova Alt Thin.otf';
-// import ProximaNovaAltLight from './fonts/Proxima Nova Alt Light.otf';
-// import ProximaNovaAltBold from './fonts/Proxima Nova Alt Bold.otf';
+import ProximaNovaRegular from '../assets/fonts/ProximaNova-Regular.woff';
+import ProximaNovaThin from '../assets/fonts/ProximaNovaT-Thin.woff';
+import ProximaNovaExtraBold from '../assets/fonts/ProximaNova-Extrabld.woff';
+import ProximaNovaBold from '../assets/fonts/ProximaNova-Bold.woff';
 
 const proximaNovaRegular = {
     fontFamily: 'Proxima Nova',
@@ -14,9 +10,10 @@ const proximaNovaRegular = {
     src: `
         local('Proxima Nova'),
         local('ProximaNova-Regular'),
-        url('${ProximaNovaRegular}') format('opentype')
+        url('${ProximaNovaRegular}') format('woff')
     `
 };
+
 const proximaNovaBold = {
     fontFamily: 'Proxima Nova',
     fontStyle: 'normal',
@@ -24,7 +21,7 @@ const proximaNovaBold = {
     src: `
         local('Proxima Nova'),
         local('ProximaNova-Bold'),
-        url('${ProximaNovaBold}') format('opentype')
+        url('${ProximaNovaBold}') format('woff')
     `
 };
 
@@ -35,7 +32,7 @@ const proximaNovaThin = {
     src: `
         local('Proxima Nova'),
         local('ProximaNova-Thin'),
-        url('${ProximaNovaThin}') format('opentype')
+        url('${ProximaNovaThin}') format('woff')
     `
 };
 const proximaNovaExtraBold = {
@@ -45,9 +42,10 @@ const proximaNovaExtraBold = {
     src: `
         local('Proxima Nova'),
         local('ProximaNova-ExtraBold'),
-        url('${ProximaNovaExtraBold}') format('opentype')
+        url('${ProximaNovaExtraBold}') format('woff')
     `
 };
+
 export const fonts = [
     proximaNovaRegular,
     proximaNovaBold,

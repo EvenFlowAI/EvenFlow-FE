@@ -1,12 +1,11 @@
 import {
-    unstable_createMuiStrictModeTheme as createMuiTheme,
-    DeprecatedThemeOptions,
-    adaptV4Theme,
+    createTheme, Theme,
+    ThemeOptions,
 } from "@mui/material";
 import {fonts} from "./fonts";
 import {colors} from "./colors";
 
-declare module "@mui/material/styles/createBreakpoints" {
+declare module "@mui/material/styles" {
     interface BreakpointOverrides {
         xs: true;
         sm: true;
@@ -19,8 +18,7 @@ declare module "@mui/material/styles/createBreakpoints" {
 
 export const sideBarWidth = 255;
 
-
-const themeOptions: DeprecatedThemeOptions = {
+const themeOptions: ThemeOptions = {
     breakpoints: {
         values: {
             xs: 0,
@@ -33,8 +31,6 @@ const themeOptions: DeprecatedThemeOptions = {
     },
     typography: {
         fontFamily: [
-            // '-apple-system',
-            // 'BlinkMacSystemFont',
             '"Proxima Nova"',
             'Roboto',
             'sans-serif',
@@ -43,73 +39,81 @@ const themeOptions: DeprecatedThemeOptions = {
             '"Segoe UI Symbol"'
         ].join(','),
     },
-    overrides: {
+    components: {
         MuiCssBaseline: {
-            '@global': {
+            styleOverrides: {
                 '@font-face': fonts
             }
         },
         MuiIconButton: {
-            root: {
-                padding: 9
+            styleOverrides: {
+                root: {
+                    padding: 9
+                }
             }
         }
     },
     palette: colors,
 };
+
 const input = {
     border: "none",
     padding: 11,
     fontSize: 16,
     background: "transparent",
-    // fontWeight: "bold" as const,
 }
-const theme = createMuiTheme(adaptV4Theme(themeOptions));
-theme.overrides = {
-    ...theme.overrides,
+
+const theme = createTheme(themeOptions);
+theme.components = {
+    ...theme.components,
     MuiInputBase: {
-        root: {
-            backgroundColor: "#F7F8FB",
-            border: '1px solid #DADADA',
-            "&.MuiInputBase-adornedStart": {
-                paddingLeft: 8
-            },
-            "&.MuiInputBase-adornedEnd": {
-                paddingRight: 8
-            },
-            "&.Mui-disabled": {
-                background: "#F7F8FB"
-            },
-            transition: theme.transitions.create(['border-color']),
-            '&.Mui-focused': {
-            //     boxShadow: `${fade(theme.palette.grey.A400, 0.25)} 0 0 0 0.2rem`,
-                borderColor: theme.palette.grey.A200
-            },
-        },
-        inputMultiline: {
-            padding: theme.spacing(2)
-        },
-        input: {
-            ...input,
-        }
+       styleOverrides: {
+           root: {
+               backgroundColor: "#F7F8FB",
+               border: '1px solid #DADADA',
+               "&.MuiInputBase-adornedStart": {
+                   paddingLeft: 8
+               },
+               "&.MuiInputBase-adornedEnd": {
+                   paddingRight: 8
+               },
+               "&.Mui-disabled": {
+                   background: "#F7F8FB"
+               },
+               transition: theme.transitions.create(['border-color']),
+               '&.Mui-focused': {
+                   borderColor: theme.palette.grey.A200
+               },
+           },
+           inputMultiline: {
+               padding: theme.spacing(2)
+           },
+           input: {
+               ...input,
+           }
+       }
     },
     MuiButton: {
-        contained: {
-            boxShadow: "none"
-        },
-        root: {
-            borderRadius: 4,
-            fontWeight: "bold",
+        styleOverrides: {
+            contained: {
+                boxShadow: "none"
+            },
+            root: {
+                borderRadius: 4,
+                fontWeight: "bold",
+            }
         }
     },
     MuiCheckbox: {
-        root: {
-            color: "#DADADA"
+        styleOverrides: {
+            root: {
+                color: "#DADADA"
+            }
         }
     }
 }
 
-export const loginTheme = createMuiTheme(adaptV4Theme({
+export const loginTheme = createTheme({
     ...theme,
     palette: {
         ...theme.palette,
@@ -117,20 +121,23 @@ export const loginTheme = createMuiTheme(adaptV4Theme({
             main: "#3855F3",
         },
     },
-    overrides: {
-        ...theme.overrides,
+    components: {
         MuiInputBase: {
-            input: {
-                ...input,
-                padding: theme.spacing(2),
-                border: '1px solid #DADADA',
-                backgroundColor: "#F7F8FB",
-                fontWeight: "bold"
+            styleOverrides: {
+                input: {
+                    ...input,
+                    padding: theme.spacing(2),
+                    border: '1px solid #DADADA',
+                    backgroundColor: "#F7F8FB",
+                    fontWeight: "bold"
+                }
             }
         }
     }
-}));
-export const endUserTheme = createMuiTheme(adaptV4Theme({
+});
+
+// @ts-ignore
+export const endUserTheme = createTheme({
     ...theme,
     palette: {
         ...theme.palette,
@@ -138,8 +145,10 @@ export const endUserTheme = createMuiTheme(adaptV4Theme({
             main: "#3855F3",
         },
     },
-}));
-export const frameTheme = createMuiTheme(adaptV4Theme({
+});
+
+// @ts-ignore
+export const frameTheme: Theme = (theme: Theme) => createTheme({
     ...theme,
     palette: {
         ...theme.palette,
@@ -147,22 +156,24 @@ export const frameTheme = createMuiTheme(adaptV4Theme({
             main: "#000000"
         }
     },
-}));
-frameTheme.overrides = {
-    ...frameTheme.overrides,
+});
+
+frameTheme.components = {
+    ...frameTheme.components,
     MuiButton: {
-        ...frameTheme.overrides?.MuiButton,
-        root: {
-            ...frameTheme.overrides?.MuiButton?.root,
-            borderRadius: 0
-        }
+       styleOverrides: {
+           root: {
+               borderRadius: 0
+           }
+       }
     },
     MuiInput: {
-        ...frameTheme.overrides?.MuiInput,
-        error: {
-            borderColor: "#FF0000",
-            color: "#FF0000"
-        }
+      styleOverrides: {
+          error: {
+              borderColor: "#FF0000",
+              color: "#FF0000"
+          }
+      }
     }
 }
 export default theme;
