@@ -15,10 +15,11 @@ export const useStyles = makeStyles({
     },
     dialogTitle: {
         textAlign: "center",
+        fontSize: 19,
+        fontWeight: "bold",
+        marginTop: 10,
         "&> h2": {
-            fontSize: 19,
-            fontWeight: "bold",
-            marginTop: 10,
+
         }
     },
     dialogContent: {

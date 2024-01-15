@@ -3,6 +3,7 @@ import {
     ThemeOptions,
 } from "@mui/material";
 import {colors} from "./colors";
+import {fonts, proximaNovaBold, proximaNovaExtraBold, proximaNovaRegular, proximaNovaThin} from "./fonts";
 
 declare module "@mui/material/styles" {
     interface BreakpointOverrides {
@@ -39,11 +40,6 @@ const themeOptions: ThemeOptions = {
         ].join(','),
     },
     components: {
-        // MuiCssBaseline: {
-        //     styleOverrides: {
-        //         '@font-face': fonts
-        //     }
-        // },
         MuiIconButton: {
             styleOverrides: {
                 root: {
