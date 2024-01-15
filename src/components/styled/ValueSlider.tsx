@@ -4,7 +4,7 @@ import withStyles from '@mui/styles/withStyles';
 
 export const ValueSlider = withStyles(theme => ({
     track: {
-        height: 4,
+        height: 2,
     },
     root: {
         height: 4,
@@ -24,18 +24,23 @@ export const ValueSlider = withStyles(theme => ({
         top: -17,
     },
     thumb: {
+        width: 0,
+        height: 0,
         '&:focus, &:hover, &:active': {
+            width: 0,
+            height: 0,
             boxShadow: "none",
         },
     },
     valueLabel: {
-        top: 5,
+        top: 15,
         left: -8,
+        backgroundColor: 'transparent',
         transition: theme.transitions.create(["box-shadow"]),
         '&:focus, &:hover, &:active': {
-            boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.2),0 0 0 1px rgba(0,0,0,0.02)',
+            boxShadow: '1 2px 4px rgba(0,0,0,0.1),0 2px 4px rgba(0,0,0,0.2),0 0 0 1px rgba(0,0,0,0.02)',
             '@media (hover: none)': {
-                boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)',
+                boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 2px 4px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)',
             },
         },
         "&>span": {
@@ -45,6 +50,9 @@ export const ValueSlider = withStyles(theme => ({
             width: 27,
             height: 22,
             transform: "none",
+            textAlign: 'center',
+            lineHeight: '20px',
+            fontSize: 12,
             "&>span": {
                 transform: "none",
                 color: theme.palette.text.primary,

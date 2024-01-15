@@ -175,6 +175,7 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
                         />
                         <div className={classes.selectWrapper}>
                             <Autocomplete
+                                className={classes.autocomplete}
                                 options={usersShort}
                                 disabled={loading || podsLoading || isLoading}
                                 fullWidth

@@ -261,6 +261,7 @@ const TransportationNotifications: React.FC<TNotificatonsProps> = ({setChangesSt
                         />
                         <div className={classes.selectWrapper}>
                             <Autocomplete
+                                className={classes.autocomplete}
                                 options={usersShort}
                                 disabled={loading || isSaving || isLoading}
                                 fullWidth

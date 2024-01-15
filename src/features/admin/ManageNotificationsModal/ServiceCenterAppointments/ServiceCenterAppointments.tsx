@@ -143,6 +143,7 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
                 </div>
                 <div className={classes.selectWrapper}>
                     <Autocomplete
+                        className={classes.autocomplete}
                         options={usersShort}
                         style={{width: 290}}
                         disabled={loading || isLoading}

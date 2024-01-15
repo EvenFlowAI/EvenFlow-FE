@@ -5,6 +5,10 @@ export const colors: PaletteOptions = {
         main: '#7898FF',
         contrastText: "#FFFFFF"
     },
+    secondary: {
+        main: "#f50057",
+        contrastText: "#FFFFFF"
+    },
     background: {
         default: "#F7F8FB",
         paper: "#FFFFFF"
@@ -12,6 +16,6 @@ export const colors: PaletteOptions = {
     success: {
         main: '#89E5AB',
         contrastText: "#202021"
-    }
+    },
 };
 

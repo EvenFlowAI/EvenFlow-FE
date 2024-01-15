@@ -11,7 +11,7 @@ export const useStyles = makeStyles({
         "& input": {
             padding: 11,
             fontSize: 14
-        }
+        },
     },
     dialogTitle: {
         textAlign: "center",
@@ -34,6 +34,6 @@ export const useStyles = makeStyles({
     closeButton: {
         position: "absolute",
         top: 0,
-        right: 0
+        right: 0,
     },
 });

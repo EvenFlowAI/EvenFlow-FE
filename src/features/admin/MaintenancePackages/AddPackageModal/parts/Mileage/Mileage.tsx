@@ -28,32 +28,32 @@ const Mileage: React.FC<TMileageProps> = ({
         return options;
     }, [mileage])
 
-    const onMileageChange = useCallback((e: ChangeEvent<{}>, value: string[]) => {
-        if (value.includes('Apply To All')) {
-            setSelectedMileages(() => mileage.map(item => item.value.toString()));
-        } else {
-            setSelectedMileages(value);
-        }
-    }, [mileage])
+    const sortMileage = (a: string, b: string) => {
+        return selectedMileages.includes(a) ? selectedMileages.includes(b) ? 0 : -1 : 1
+    }
 
     const onMileageCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: string) => {
         setFormIsChecked(false);
-        if (!e.target.checked) {
-            setSelectedMileages(prev => {
-                let data = option === 'Apply To All' ? [] : prev;
-                return data
-                    .filter(item => item !== option)
-                    .sort((a, b) => selectedMileages.includes(a) ? selectedMileages.includes(b) ? 0 : -1 : 1)
-            })
-        }
+        setSelectedMileages(prev => {
+            let data = option === 'Apply To All'
+                ? !e.target.checked
+                    ? []
+                    : getOptions()
+                : prev;
+            return !e.target.checked
+                ? data.filter(item => item !== option).sort(sortMileage)
+                : option === 'Apply To All'
+                    ? data.sort(sortMileage)
+                    : data.concat(option).sort(sortMileage)
+        })
     }, [selectedMileages])
 
-    const renderOption = useCallback((option: string) => {
+    const renderOption = useCallback((props, option: string) => {
         const allMileagesSelected = mileage.length
             ? mileage.every(item => selectedMileages.includes(item.value.toString()))
             : false;
         const checked = selectedMileages.includes(option) || allMileagesSelected;
-        return <React.Fragment>
+        return <div style={{display: 'flex', alignItems: 'center'}} key={option}>
             <Checkbox
                 color="primary"
                 icon={checked
@@ -63,8 +63,12 @@ const Mileage: React.FC<TMileageProps> = ({
                 onChange={e => onMileageCheckboxChange(e, option)}
             />
             {option}
-        </React.Fragment>
+        </div>
     }, [mileage, selectedMileages]);
+
+    const onChange = (e: React.SyntheticEvent, value: string[]) => {
+        setSelectedMileages(value)
+    }
 
     return (
         <Autocomplete
@@ -74,10 +78,11 @@ const Mileage: React.FC<TMileageProps> = ({
             disabled={disabled}
             options={getOptions()}
             disableCloseOnSelect
+            getOptionLabel={o => o ?? null}
             isOptionEqualToValue={(o, v) => o.toLowerCase() === v.toLowerCase()}
             renderOption={renderOption}
             value={selectedMileages}
-            onChange={onMileageChange}
+            onChange={onChange}
             renderInput={autocompleteRender({
                 label: "Mileage",
                 placeholder: 'Select Mileage'

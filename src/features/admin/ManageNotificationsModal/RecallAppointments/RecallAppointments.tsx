@@ -138,6 +138,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState, onCl
                 </div>
                 <div className={classes.selectWrapper}>
                 <Autocomplete
+                    className={classes.autocomplete}
                     options={usersShort}
                     fullWidth
                     disabled={loading || isLoading}

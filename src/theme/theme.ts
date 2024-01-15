@@ -43,7 +43,7 @@ const themeOptions: ThemeOptions = {
         MuiIconButton: {
             styleOverrides: {
                 root: {
-                    padding: 9
+                    padding: 9,
                 }
             }
         }
@@ -53,7 +53,7 @@ const themeOptions: ThemeOptions = {
 
 const input = {
     border: "none",
-    padding: 11,
+    padding: 9,
     fontSize: 16,
     background: "transparent",
 }
@@ -85,7 +85,7 @@ theme.components = {
            },
            input: {
                ...input,
-           }
+           },
        }
     },
     MuiButton: {
@@ -96,13 +96,29 @@ theme.components = {
             root: {
                 borderRadius: 4,
                 fontWeight: "bold",
-            }
+            },
         }
     },
     MuiCheckbox: {
         styleOverrides: {
             root: {
                 color: "#DADADA"
+            }
+        }
+    },
+    MuiTab: {
+        styleOverrides: {
+            root: {
+                '&.Mui-selected': {
+                    color: '#000000'
+                }
+            }
+        }
+    },
+    MuiChip: {
+        styleOverrides: {
+            deleteIcon: {
+                color: "#FFFFFF"
             }
         }
     }

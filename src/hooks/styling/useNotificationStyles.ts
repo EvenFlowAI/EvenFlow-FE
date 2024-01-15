@@ -43,5 +43,10 @@ export const useNotificationStyles = makeStyles({
         alignItems: "center",
         gap: '8px',
         marginTop: 9,
+    },
+    autocomplete: {
+        '& > label': {
+            transformOrigin: "bottom left"
+        }
     }
 })

@@ -24,41 +24,30 @@ const EngineTypes: React.FC<TEngineTypesProps> = ({
     const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
     const classes = useAutocompleteStyles();
 
-    const onEngineTypeChange = (e: React.ChangeEvent<{}>, value: IEngineType[]) => {
-        setFormIsChecked(false);
-        setSelectedEngineTypes(value);
+    const sortEngineTypes = (a: IEngineType, b: IEngineType) => {
+        return selectedEngineTypes.find(el => a.id === el.id)
+            ? selectedEngineTypes.find(el => b.id === el.id)
+                ? 0
+                : -1
+            : 1
     }
 
     const getSortedOptions = () => {
-        return engineTypes.slice().sort((a, b) => {
-            return selectedEngineTypes.find(el => a.id === el.id)
-                ? selectedEngineTypes.find(el => b.id === el.id)
-                    ? 0
-                    : -1
-                : 1
-        })
+        return engineTypes.slice().sort(sortEngineTypes)
     }
 
     const onCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: IEngineType) => {
         setFormIsChecked(false);
-        if (!e.target.checked) {
-            setSelectedEngineTypes(prev => {
-                return prev
-                    .filter(item => item.id !== option.id)
-                    .sort((a, b) => {
-                        return selectedEngineTypes.find(el => a.id === el.id)
-                            ? selectedEngineTypes.find(el => b.id === el.id)
-                                ? 0
-                                : -1
-                            : 1
-                    })
-            })
-        }
+        setSelectedEngineTypes(prev => {
+            return !e.target.checked
+                ? prev.filter(item => item.id !== option.id).sort(sortEngineTypes)
+                : prev.concat(option).sort(sortEngineTypes)
+        })
     }, [selectedEngineTypes])
 
-    const renderEngineTypeOption = useCallback((option: IEngineType) => {
+    const renderEngineTypeOption = useCallback((props, option: IEngineType) => {
         const checked = !!selectedEngineTypes.find(el => el.id === option.id);
-        return <React.Fragment>
+        return <div style={{display: 'flex', alignItems: 'center'}} key={option.id}>
             <Checkbox
                 color="primary"
                 icon={checked
@@ -68,8 +57,12 @@ const EngineTypes: React.FC<TEngineTypesProps> = ({
                 onChange={e => onCheckboxChange(e, option)}
             />
             {option.name}
-        </React.Fragment>
+        </div>
     }, [selectedEngineTypes, onCheckboxChange]);
+
+    const onChange = (e: React.SyntheticEvent, value: IEngineType[]) => {
+        setSelectedEngineTypes(value)
+    }
 
     return (
         <Autocomplete
@@ -77,12 +70,12 @@ const EngineTypes: React.FC<TEngineTypesProps> = ({
             options={getSortedOptions()}
             disableCloseOnSelect
             multiple
+            onChange={onChange}
             renderOption={renderEngineTypeOption}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => option.name ?? null}
             disabled={!isApplyBusinessRules}
             value={selectedEngineTypes}
-            onChange={onEngineTypeChange}
             renderInput={autocompleteRender({label: 'Engine Types', placeholder: 'Select Engine Types'})}
         />
     );
