@@ -2,7 +2,6 @@ import {
     createTheme, Theme,
     ThemeOptions,
 } from "@mui/material";
-import {fonts} from "./fonts";
 import {colors} from "./colors";
 
 declare module "@mui/material/styles" {
