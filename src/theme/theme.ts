@@ -40,11 +40,11 @@ const themeOptions: ThemeOptions = {
         ].join(','),
     },
     components: {
-        MuiCssBaseline: {
-            styleOverrides: {
-                '@font-face': fonts
-            }
-        },
+        // MuiCssBaseline: {
+        //     styleOverrides: {
+        //         '@font-face': fonts
+        //     }
+        // },
         MuiIconButton: {
             styleOverrides: {
                 root: {

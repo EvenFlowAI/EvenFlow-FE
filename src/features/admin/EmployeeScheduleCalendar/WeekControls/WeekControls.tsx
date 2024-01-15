@@ -3,8 +3,8 @@ import {Button} from "@mui/material";
 import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import moment from "moment";
 import {getFirstLastDaysOfWeek} from "../utils";
-import {DatePicker} from "@mui/x-date-pickers";
 import {useStyles} from "./styles";
+import {DatePicker} from "../../../../components/pickers/DatePicker/DatePicker";
 
 type TProps = {
     isXS: boolean;
