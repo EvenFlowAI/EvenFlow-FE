@@ -83,6 +83,7 @@ export interface IVehicle {
 }
 
 export interface ILoadedVehicle  extends IVehicle {
+    id?: number|string;
     dmsId?: string;
     warrantyExpiration?: ParsableDate;
     appointmentHashKeys: string[];
