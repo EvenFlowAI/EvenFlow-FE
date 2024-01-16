@@ -88,6 +88,7 @@ export interface ILoadedVehicle  extends IVehicle {
     warrantyExpiration?: ParsableDate;
     appointmentHashKeys: string[];
     hasRepairOrders?: boolean;
+    hasOrders?: boolean;
 }
 
 export interface IPasswordRecoveryData {
