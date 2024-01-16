@@ -32,6 +32,7 @@ export const CarCard: React.FC<TProps> = ({
     hasOrders,
 }) => {
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
@@ -64,7 +65,13 @@ export const CarCard: React.FC<TProps> = ({
                 clearData={clearData}
                 onNext={onNext}
             />
-            {car.dmsId ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={car.dmsId}/> : null}
+            {car.id && customerLoadedData?.id
+                ? <VehicleRepairHistory
+                    customerId={customerLoadedData.id}
+                    open={isOpenHistory}
+                    onClose={onCloseHistory}
+                    vehicleId={car.id}/>
+                : null}
         </Wrapper>
     );
 };

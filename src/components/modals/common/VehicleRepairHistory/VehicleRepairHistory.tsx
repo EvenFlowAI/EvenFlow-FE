@@ -11,7 +11,7 @@ import classnames from 'classnames';
 import {NoData} from "../../../wrappers/NoData/NoData";
 import {HCell, TCell, useStyles} from "./styles";
 
-const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({vehicleDmsId, open, onClose}) => {
+const VehicleRepairHistory: React.FC<DialogProps & {vehicleId: string|number, customerId: number|string}> = ({vehicleId, open, onClose}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {repairHistoryLoading, repairHistory} = useSelector((state: RootState) => state.customers);
     const [pageIndex, setPageIndex] = useState<number>(0);
@@ -19,10 +19,10 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleDmsId: string}> = ({v
     const classes = useStyles();
 
     useEffect(() => {
-        if (scProfile && vehicleDmsId && open) {
-            dispatch(loadRepairHistory(scProfile.id, vehicleDmsId, 0, 0));
+        if (scProfile && vehicleId && open) {
+            dispatch(loadRepairHistory(scProfile.id, vehicleId, 0, 0));
         }
-    }, [scProfile, vehicleDmsId, open])
+    }, [scProfile, vehicleId, open])
 
     const onCancel = () => {
         onClose();

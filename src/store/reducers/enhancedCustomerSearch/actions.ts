@@ -92,6 +92,7 @@ export const loadCustomersByPhoneOrEmail = (
                         mileage: item.mileage,
                         engineTypeId: item.engineTypeId ? +item.engineTypeId : null,
                         appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
+                        id: item.vehicleId,
                     }
                     if (item.hasOrders) vehicle.hasRepairOrders = true;
                     return vehicle;
@@ -161,9 +162,9 @@ export const updateCustomer = (data: ICustomerWithPhones, onSuccess: () => void,
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const loadRepairHistory = (serviceCenterId: number, vehicleDmsId: string, pageIndex: number, pageSize: number): AppThunk => dispatch => {
+export const loadRepairHistory = (customerId: number|string, vehicleId: string|number, pageIndex: number, pageSize: number): AppThunk => dispatch => {
     dispatch(setRepairHistoryLoading(true));
-    Api.call(Api.endpoints.Customers.GetRepairHistory, {params: {serviceCenterId, vehicleDmsId, pageIndex, pageSize}})
+    Api.call(Api.endpoints.Customers.GetRepairHistory, {params: {customerId, vehicleId, pageIndex, pageSize}})
         .then(result => {
             if (result?.data?.result) {
                 dispatch(getRepairHistory(result.data.result))
