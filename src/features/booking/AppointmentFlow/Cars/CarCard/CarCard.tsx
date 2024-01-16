@@ -43,6 +43,11 @@ export const CarCard: React.FC<TProps> = ({
         dispatch(setVehicle({...car, mileage: selectedMileage?.value ?? null}));
     }, [car])
 
+    const onOpen = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        onOpenHistory();
+    }
+
     return (
         <Wrapper
             active={selected}
@@ -55,7 +60,7 @@ export const CarCard: React.FC<TProps> = ({
                     <li>{car.year} {car.make} {car.model} {car?.modelDetails ?? ''}</li>
                     <li>{t("VIN")}: <span>{car.vin}</span></li>
                 </CarInfo>
-                {currentUser && hasOrders ? <RepairBtn variant="text" onClick={onOpenHistory}>Repair Order History</RepairBtn> : null}
+                {currentUser && hasOrders ? <RepairBtn variant="text" onClick={onOpen}>Repair Order History</RepairBtn> : null}
             </CarDataWithBtn>
             <CarCardAction
                 onSelectCar={onSelectCar}
