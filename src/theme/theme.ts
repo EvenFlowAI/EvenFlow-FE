@@ -3,7 +3,6 @@ import {
     ThemeOptions,
 } from "@mui/material";
 import {colors} from "./colors";
-import {fonts, proximaNovaBold, proximaNovaExtraBold, proximaNovaRegular, proximaNovaThin} from "./fonts";
 
 declare module "@mui/material/styles" {
     interface BreakpointOverrides {
@@ -121,7 +120,7 @@ theme.components = {
                 color: "#FFFFFF"
             }
         }
-    }
+    },
 }
 
 export const loginTheme = createTheme({

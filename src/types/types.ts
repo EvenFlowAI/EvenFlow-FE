@@ -319,3 +319,5 @@ export type TIdAndName = {
 }
 
 export type ParsableDate = object | string | number | Date | null | undefined;
+
+export type TAutocompleteChangeReason = "createOption" | "selectOption" | "removeOption" | "blur" | "clear"

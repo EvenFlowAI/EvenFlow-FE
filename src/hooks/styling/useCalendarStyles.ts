@@ -29,7 +29,7 @@ export const useCalendarStyles = makeStyles(theme => ({
         top: 4, left: 4
     },
     prevMonth: {
-        color: theme.palette.text.hint
+        color: theme.palette.text.secondary
     },
     dayCell: {
         background: theme.palette.common.white,

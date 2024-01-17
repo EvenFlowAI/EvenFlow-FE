@@ -37,6 +37,7 @@ import {useModal} from "../../../../hooks/useModal/useModal";
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useAutocompleteStyles} from "../../../../hooks/styling/useAutocompleteStyles";
 
 const initialForm: TForm = {
     name: "",
@@ -65,6 +66,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
+    const classes = useAutocompleteStyles();
     const [
         advisorsList,
         techniciansList,
@@ -346,7 +348,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                             onChange={handleSCChange}
                             getOptionLabel={i => i.code}
                             isOptionEqualToValue={(o, v) => o.id === v.id}
-                            //renderOption={autocompleteOptionsRender((e) => e.code)}
+                            renderOption={autocompleteOptionsRender((e) => e.code)}
                             loading={false}
                             value={form.serviceRequests}
                             renderInput={autocompleteRender({label: "Service Requests", fullWidth: true, placeholder: "Select Service Requests"})}

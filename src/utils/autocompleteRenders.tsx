@@ -18,7 +18,7 @@ export const autocompleteRender = (props: TTextParams) => (params: AutocompleteR
 }
 
 export const autocompleteOptionsRender = (label: (el: any) => string) => (props: React.HTMLAttributes<HTMLLIElement>, option: any, state: AutocompleteRenderOptionState) => {
-    return <div style={{display: 'flex', alignItems: 'center'}}>
+    return <li style={{display: 'flex', alignItems: 'center'}} key={option + new Date()} {...props}>
         <Checkbox
             size="small"
             icon={<CheckBoxOutlineBlank fontSize="small" />}
@@ -27,5 +27,5 @@ export const autocompleteOptionsRender = (label: (el: any) => string) => (props:
             checked={state.selected}
         />
         {label(option)}
-    </div>;
+    </li>;
 }
