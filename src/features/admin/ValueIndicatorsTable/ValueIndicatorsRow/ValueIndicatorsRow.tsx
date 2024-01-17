@@ -20,7 +20,7 @@ type TRowProps = {
     disabled: boolean;
     editing: boolean;
     onSwitch: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
-    onSlide: (e: React.ChangeEvent<{}>, val: number | number[]) => void;
+    onSlide: (e: Event, val: number | number[]) => void;
     onEdit: () => void;
     onTabChange: () => void
     onCancel: () => void;

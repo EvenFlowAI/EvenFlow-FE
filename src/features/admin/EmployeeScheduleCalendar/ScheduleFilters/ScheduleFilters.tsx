@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, MenuItem, Select} from "@mui/material";
+import {Grid, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -10,10 +10,10 @@ export const ScheduleFilters = () => {
     const filters = useSelector((state: RootState) => state.employeesSchedule.filters);
     const podList = useSelector((state: RootState) => state.pods.shortPodsList);
     const dispatch = useDispatch();
-    const handleSelect = (v: keyof IScheduleFilters) => (e: React.ChangeEvent<{value: unknown}>) => {
+    const handleSelect = (v: keyof IScheduleFilters) => (e: SelectChangeEvent<number>) => {
         dispatch(setScheduleFilters({[v]: e.target.value}));
     }
-    const handleEmployeeFilter = ({target: {value}}: React.ChangeEvent<{value: unknown}>) => {
+    const handleEmployeeFilter = ({target: {value}}: SelectChangeEvent<unknown>) => {
         if (value === 0) {
             dispatch(setScheduleFilters({role: "Advisor", skillLevel: undefined}));
         } else if (Boolean(value)) {

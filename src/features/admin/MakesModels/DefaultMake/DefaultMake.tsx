@@ -22,7 +22,7 @@ export const DefaultMake = () => {
             const make = makes.find(item => item.id === selectedSC.defaultVehicleMakeId)
             make && setSelectedMake(make)
         }
-    }, [])
+    }, [selectedSC, makes])
 
     const onMakeChange = (e: ChangeEvent<{}>, value: IMake|null) => {
         if (selectedSC) dispatch(updateDefaultMake(selectedSC.id, value?.id ?? null, showError))
