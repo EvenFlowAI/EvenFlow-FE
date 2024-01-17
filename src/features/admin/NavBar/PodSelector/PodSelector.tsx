@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {MenuItem, Select} from "@mui/material";
+import {MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {RootState} from "../../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
@@ -32,7 +32,7 @@ export const PodSelector = () => {
         return false;
     }, [pathname]);
 
-    const handleSelectPod = (e: React.ChangeEvent<{value: unknown}>) => {
+    const handleSelectPod = (e: SelectChangeEvent<unknown>) => {
         const val = e.target.value as number;
         const selectedPod = pods.find(p => p.id === val);
         dispatch(setSelectedPod(selectedPod || null));

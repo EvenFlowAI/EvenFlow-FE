@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {EServiceType} from "../../../../../../store/reducers/appointmentFrameReducer/types";
-import {MenuItem, Select} from "@mui/material";
+import {MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
@@ -146,7 +146,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         dispatch(checkCarIsValid(() => onCarIsValid(option, shouldLoadAdvisors, isAdvisorSelectionOn), undefined, true))
     }
 
-    const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    const handleServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
         clearTransportation()
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {

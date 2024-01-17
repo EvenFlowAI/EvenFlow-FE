@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {MenuItem, Select, useMediaQuery, useTheme} from "@mui/material";
+import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {
     getSlotsConsultantId,
@@ -24,11 +24,10 @@ const SelectedConsultant = () => {
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
-    const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    const handleConsultantChange = (e: SelectChangeEvent<unknown>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
         if (isBmWService && e.target.value !== advisor?.id) {
             dispatch(selectAppointment(null));
-            //dispatch(setWaitListSettings(null));
             dispatch(selectServiceValetAppointment(null));
         }
         dispatch(setAdvisor(consultant ? consultant : null))
