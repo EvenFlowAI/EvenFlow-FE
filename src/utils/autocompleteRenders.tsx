@@ -3,10 +3,9 @@ import {TextField} from "../components/formControls/TextFieldStyled/TextField";
 import {Checkbox} from "@mui/material";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {TTextParams} from "./types";
+import {AutocompleteRenderInputParams, AutocompleteRenderOptionState} from "@mui/material/Autocomplete/Autocomplete";
 
-// todo to find correct mui types for AutocompleteRenderOptionState and AutocompleteRenderInputParams
-
-export const autocompleteRender = (props: TTextParams) => (params: any) => {
+export const autocompleteRender = (props: TTextParams) => (params: AutocompleteRenderInputParams) => {
     return <TextField
         label={props.label}
         name={"undefined-name"}
@@ -18,15 +17,15 @@ export const autocompleteRender = (props: TTextParams) => (params: any) => {
     />;
 }
 
-export const autocompleteOptionsRender = (label: (el: any) => string) => (option: any, params: any) => {
-    return <>
+export const autocompleteOptionsRender = (label: (el: any) => string) => (props: React.HTMLAttributes<HTMLLIElement>, option: any, state: AutocompleteRenderOptionState) => {
+    return <div style={{display: 'flex', alignItems: 'center'}}>
         <Checkbox
             size="small"
             icon={<CheckBoxOutlineBlank fontSize="small" />}
             checkedIcon={<CheckBoxOutlined fontSize="small" color="primary" />}
             style={{marginRight: 8, padding: 0}}
-            checked={params.selected}
+            checked={state.selected}
         />
         {label(option)}
-    </>;
+    </div>;
 }

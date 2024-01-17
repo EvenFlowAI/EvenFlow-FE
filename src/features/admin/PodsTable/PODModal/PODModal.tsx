@@ -346,7 +346,7 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
                             onChange={handleSCChange}
                             getOptionLabel={i => i.code}
                             isOptionEqualToValue={(o, v) => o.id === v.id}
-                            renderOption={autocompleteOptionsRender((e) => e.code)}
+                            //renderOption={autocompleteOptionsRender((e) => e.code)}
                             loading={false}
                             value={form.serviceRequests}
                             renderInput={autocompleteRender({label: "Service Requests", fullWidth: true, placeholder: "Select Service Requests"})}
