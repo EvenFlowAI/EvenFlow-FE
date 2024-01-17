@@ -32,6 +32,7 @@ export const CarCard: React.FC<TProps> = ({
     hasOrders,
 }) => {
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
@@ -41,6 +42,11 @@ export const CarCard: React.FC<TProps> = ({
         const selectedMileage = mileage.find(el => el.value.toString() === car?.mileage?.toString());
         dispatch(setVehicle({...car, mileage: selectedMileage?.value ?? null}));
     }, [car])
+
+    const onOpen = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        onOpenHistory();
+    }
 
     return (
         <Wrapper
@@ -54,7 +60,7 @@ export const CarCard: React.FC<TProps> = ({
                     <li>{car.year} {car.make} {car.model} {car?.modelDetails ?? ''}</li>
                     <li>{t("VIN")}: <span>{car.vin}</span></li>
                 </CarInfo>
-                {currentUser && hasOrders ? <RepairBtn variant="text" onClick={onOpenHistory}>Repair Order History</RepairBtn> : null}
+                {currentUser && hasOrders ? <RepairBtn variant="text" onClick={onOpen}>Repair Order History</RepairBtn> : null}
             </CarDataWithBtn>
             <CarCardAction
                 onSelectCar={onSelectCar}
@@ -64,7 +70,13 @@ export const CarCard: React.FC<TProps> = ({
                 clearData={clearData}
                 onNext={onNext}
             />
-            {car.dmsId ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={car.dmsId}/> : null}
+            {car.id && customerLoadedData?.id
+                ? <VehicleRepairHistory
+                    customerId={customerLoadedData.id}
+                    open={isOpenHistory}
+                    onClose={onCloseHistory}
+                    vehicleId={car.id}/>
+                : null}
         </Wrapper>
     );
 };

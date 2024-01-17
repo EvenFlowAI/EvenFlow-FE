@@ -119,6 +119,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
             dmsId: item.vehicleDmsId,
             hasRepairOrders: Boolean(item.hasOrders),
             engineTypeId: item.engineTypeId ?? null,
+            id: item.vehicleId,
         }
         const data: ICustomerLoadedData = {
             emails: item?.email ? [item.email] : [],
@@ -557,7 +558,13 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                     </TableBody>
                 </Table>
 
-                {editingElement ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={editingElement.vehicleDmsId}/> : null}
+                {editingElement
+                    ? <VehicleRepairHistory
+                        customerId={editingElement.customerId}
+                        open={isOpenHistory}
+                        onClose={onCloseHistory}
+                        vehicleId={editingElement.vehicleId}/>
+                    : null}
                 {editingElement?.appointmentHashKey
                     ? <CancelAppointmentModal
                         open={isOpenConfirm}
