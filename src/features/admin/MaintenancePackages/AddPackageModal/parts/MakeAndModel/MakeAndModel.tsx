@@ -1,4 +1,4 @@
-import React, {useCallback, Dispatch, SetStateAction, useState, useEffect} from 'react';
+import React, {useCallback, Dispatch, SetStateAction, useState, useEffect, useMemo} from 'react';
 import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
 import { Autocomplete } from '@mui/material';
 import {useSelector} from "react-redux";
@@ -6,7 +6,7 @@ import {RootState} from "../../../../../../store/rootReducer";
 import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
 import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {IMake} from "../../../../../../api/types";
-import {upperCase} from "./utils";
+import {removeDuplicates, upperCase} from "./utils";
 import {useAutocompleteStyles} from "../../../../../../hooks/styling/useAutocompleteStyles";
 
 type MakeAndModelProps = {
@@ -32,10 +32,13 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
     const [models, setModels] = useState<string[]>([]);
     const classes = useAutocompleteStyles();
 
+    const filteredMakes = useMemo(() => makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase())),
+        [makesFromDB, selectedMakes])
+
     useEffect(() => {
-        const filteredMakes = makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase()));
-        setModels(getSortedModelsOptions(filteredMakes))
-    }, [makesFromDB])
+        const sorted = getSortedModelsOptions(filteredMakes)
+        setModels(removeDuplicates(sorted))
+    }, [filteredMakes])
 
     const sortMakes = (a: string, b: string) => {
         return upperCase(selectedMakes).includes(a.toUpperCase())
@@ -59,7 +62,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
             .sort(sortMakes);
         if (data.length) data.unshift(ApplyToAll);
         return data
-    }, [makesFromDB, selectedMakes])
+    }, [selectedMakes])
 
     const getSortedModelsOptions = useCallback((makesFromDB: IMake[]): string[] => {
         const data: string[] = makesFromDB
@@ -67,12 +70,13 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
             .flat(1)
             .sort(sortModels);
         if (data.length) data.unshift(ApplyToAll);
-        return Array.from(new Set(data));
-    }, [makesFromDB, selectedModels])
+        return removeDuplicates(data);
+    }, [selectedModels])
 
     const renderMakeOption = useCallback((props, option) => {
-        const checked = upperCase(selectedMakes).includes(option.toUpperCase())
-            || Boolean(!makesFromDB.find(make => !upperCase(selectedMakes).includes(make.name.toUpperCase())));
+        const currentOptionSelected = upperCase(selectedMakes).includes(option.toUpperCase())
+        const allSelected = Boolean(!makesFromDB.find(make => !upperCase(selectedMakes).includes(make.name.toUpperCase())))
+        const checked = currentOptionSelected || allSelected;
         return <li style={{display: 'flex', alignItems: 'center'}} {...props} key={option}>
             <Checkbox
                 color="primary"
@@ -92,9 +96,13 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
         return data
     }
 
-    const renderModelOption = useCallback((props, option) => {
-        const filteredMakes = makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase()));
+    const setInitialModels = () => {
+        const sorted = getSortedModelsOptions(makesFromDB)
+        setModels(removeDuplicates(sorted));
+    }
 
+    const renderModelOption = useCallback((props, option) => {
+        const filteredMakes = makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase()))
         const allModelsSelected = filteredMakes.length
             ? Boolean(!filteredMakes
             .map(item => item.models)
@@ -113,13 +121,18 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
             />
             {option}
         </li>
-    }, [makesFromDB, selectedModels, selectedMakes]);
+    }, [selectedModels, selectedMakes]);
 
     const onMakeChange = (e: React.SyntheticEvent, value: string[]) => {
         setFormIsChecked(false)
         if (value.includes(ApplyToAll)) {
-            setSelectedMakes(() => makesFromDB.map(item => item.name));
-            setModels(getSortedModelsOptions(makesFromDB));
+            if (makesFromDB.length && value.length === makesFromDB.length + 1) {
+                setSelectedModels([])
+                setSelectedMakes([])
+            } else {
+                setSelectedMakes(() => makesFromDB.map(item => item.name));
+                setInitialModels()
+            }
         } else {
             setSelectedMakes(value);
         }
@@ -127,10 +140,14 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
 
     const onModelChange = (e: React.SyntheticEvent, value: string[]) => {
         setFormIsChecked(false)
+        const filteredModels = filteredMakes.map(item => item.models).flat(1);
+        const modelsSet = removeDuplicates(filteredModels);
         if (value.includes(ApplyToAll)) {
-            const filteredMakes = makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase()));
-            const data = Array.from(new Set(filteredMakes.map(item => item.models).flat(1)))
-            setSelectedModels(data);
+            if (modelsSet.length && value.length === modelsSet.length + 1) {
+                setSelectedModels([])
+            } else {
+                setSelectedModels(modelsSet);
+            }
         } else {
             setSelectedModels(value);
         }
