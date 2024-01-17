@@ -24,11 +24,14 @@ export const AncillaryPriceSlider = withStyles((theme) => ({
         height: 18,
         background: "#3261FB",
         border: '2px solid #FFFFFF',
-        marginTop: -7,
+        '&.Mui-disabled': {
+            width: 10,
+            height: 10,
+        }
     },
     valueLabel: {
-        top: -20,
-        left: -8,
+        top: -2,
+        left: -22,
         transition: theme.transitions.create(["box-shadow"]),
         '&:focus, &:hover, &:active': {
             boxShadow: '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.2),0 0 0 1px rgba(0,0,0,0.02)',
@@ -37,11 +40,12 @@ export const AncillaryPriceSlider = withStyles((theme) => ({
             },
         },
         "&>span": {
-            boxShadow: "1px 4px 10px rgba(0, 44, 131, 0.3)",
             width: 'fit-content',
             height: 22,
-            transform: "none",
+            boxShadow: "1px 4px 10px rgba(0, 44, 131, 0.3)",
             padding: 6,
+            transform: "none",
+            lineHeight: '12px',
             "&>span": {
                 transform: "none",
                 color: theme.palette.text.primary,
