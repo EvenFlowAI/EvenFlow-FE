@@ -93,7 +93,7 @@ export const WorkWeekModal: React.FC<DialogProps> = ({onAction, payload, ...prop
         <BaseModal {...props} width={400}>
             <DialogTitle onClose={props.onClose}>Work Week Settings</DialogTitle>
             <DialogContent>
-                <Box display="grid" gap={10} gridTemplateColumns="1fr 220px">
+                <Box display="grid" gap={'10px'} gridTemplateColumns="1fr 220px">
                     <Box component="span" fontWeight="bold" color={"text.disabled"}>Day</Box>
                     <Box component="span" fontWeight="bold" color={"text.disabled"}>Demand Category</Box>
                     {getContent()}

@@ -29,7 +29,7 @@ export const Month: React.FC<TProps> = ({month, data, onClick}) => {
     }
 
     return (
-        <Box display="grid" gap={3} gridTemplateColumns="repeat(7, 1fr)">
+        <Box display="grid" gap={'3px'} gridTemplateColumns="repeat(7, 1fr)">
             <MonthName>{d.format("MMMM")}</MonthName>
             {moment.weekdays().map(wd => <DayName key={wd}>{wd[0]}</DayName>)}
             {monthDatesData.map((mdd, idx) => {

@@ -77,7 +77,7 @@ export const PricingOptimization = () => {
                             ...params, InputProps: {
                                 ...params.InputProps,
                                 disableUnderline: true,
-                                style: {padding: "4px 10px"}
+                                style: {padding: "4px 10px", border: 0 }
                             }
                         }} placeholder="Select here"/>}
                     />
@@ -99,7 +99,7 @@ export const PricingOptimization = () => {
                             ...params, InputProps: {
                                 ...params.InputProps,
                                 disableUnderline: true,
-                                style: {padding: "4px 10px"}
+                                style: {padding: "4px 10px", border: 0}
                             }
                         }} placeholder="Select here"/>}
                     />

@@ -15,7 +15,6 @@ export const useStyles = makeStyles(() => ({
     zoneBox: {
         display: "flex",
         alignItems: 'center',
-        gap: 10,
         backgroundColor: "#F2F3F7",
         border: '1px solid #DADADA',
         borderRadius: 2,
