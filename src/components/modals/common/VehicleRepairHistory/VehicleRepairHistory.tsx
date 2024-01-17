@@ -28,8 +28,7 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleId: string|number, cu
     }
 
     const onLoadMore = () => {
-        const index = pageIndex + 1;
-        setPageIndex(index);
+        setPageIndex(pageIndex + 1);
     }
 
     return (
