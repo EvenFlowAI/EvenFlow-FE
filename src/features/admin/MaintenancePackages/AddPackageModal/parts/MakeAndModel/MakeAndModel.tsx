@@ -1,6 +1,6 @@
-import React, {useCallback, Dispatch, SetStateAction, useState, useEffect, useMemo} from 'react';
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
-import { Autocomplete } from '@mui/material';
+import {Autocomplete} from '@mui/material';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
@@ -8,6 +8,7 @@ import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {IMake} from "../../../../../../api/types";
 import {removeDuplicates, upperCase} from "./utils";
 import {useAutocompleteStyles} from "../../../../../../hooks/styling/useAutocompleteStyles";
+import {ApplyToAll} from "../constants";
 
 type MakeAndModelProps = {
     setSelectedMakes: Dispatch<SetStateAction<string[]>>;
@@ -17,8 +18,6 @@ type MakeAndModelProps = {
     setFormIsChecked: Dispatch<SetStateAction<boolean>>;
     disabled: boolean;
 }
-
-const ApplyToAll = "Apply to All"
 
 const MakeAndModel: React.FC<MakeAndModelProps> = ({
                                                        disabled,

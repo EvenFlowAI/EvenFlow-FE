@@ -1,4 +1,4 @@
-import React, {ChangeEvent, Dispatch, SetStateAction, useCallback} from 'react';
+import React, {Dispatch, SetStateAction, useCallback} from 'react';
 import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
 import { Autocomplete } from '@mui/material';
 import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
@@ -6,6 +6,7 @@ import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import {useAutocompleteStyles} from "../../../../../../hooks/styling/useAutocompleteStyles";
+import {ApplyToAll} from "../constants";
 
 type TMileageProps = {
     disabled: boolean;
@@ -22,52 +23,45 @@ const Mileage: React.FC<TMileageProps> = ({
     const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
     const classes = useAutocompleteStyles();
 
-    const getOptions = useCallback(() => {
-        const options = mileage.map(item => item.value.toString());
-        if (options.length) options.unshift('Apply To All')
-        return options;
-    }, [mileage])
-
     const sortMileage = (a: string, b: string) => {
         return selectedMileages.includes(a) ? selectedMileages.includes(b) ? 0 : -1 : 1
     }
 
-    const onMileageCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: string) => {
-        setFormIsChecked(false);
-        setSelectedMileages(prev => {
-            let data = option === 'Apply To All'
-                ? !e.target.checked
-                    ? []
-                    : getOptions()
-                : prev;
-            return !e.target.checked
-                ? data.filter(item => item !== option).sort(sortMileage)
-                : option === 'Apply To All'
-                    ? data.sort(sortMileage)
-                    : data.concat(option).sort(sortMileage)
-        })
-    }, [selectedMileages])
+    const getOptions = useCallback(() => {
+        let options = mileage.map(item => item.value.toString());
+        options = options.sort(sortMileage);
+        if (options.length) options.unshift(ApplyToAll)
+        return options;
+    }, [mileage])
 
     const renderOption = useCallback((props, option: string) => {
         const allMileagesSelected = mileage.length
             ? mileage.every(item => selectedMileages.includes(item.value.toString()))
             : false;
         const checked = selectedMileages.includes(option) || allMileagesSelected;
-        return <div style={{display: 'flex', alignItems: 'center'}} key={option}>
+        return <li style={{display: 'flex', alignItems: 'center'}} key={option} {...props}>
             <Checkbox
                 color="primary"
                 icon={checked
                     ? <CheckBoxOutlined htmlColor="#3855FE"/>
                     : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
                 checked={checked}
-                onChange={e => onMileageCheckboxChange(e, option)}
             />
             {option}
-        </div>
+        </li>
     }, [mileage, selectedMileages]);
 
     const onChange = (e: React.SyntheticEvent, value: string[]) => {
-        setSelectedMileages(value)
+        setFormIsChecked(false);
+        if (value.includes(ApplyToAll)) {
+            if (mileage.length && value.length === mileage.length + 1) {
+                setSelectedMileages([])
+            } else {
+                setSelectedMileages(mileage.map(item => item.value.toString()));
+            }
+        } else {
+            setSelectedMileages(value);
+        }
     }
 
     return (

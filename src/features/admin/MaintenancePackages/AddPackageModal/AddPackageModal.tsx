@@ -314,7 +314,6 @@ const AddPackageModal: React.FC<TModalProps> = ({ isEditing, ...props}) => {
         setPackageName(e.target.value);
     }, [])
 
-
     const onFormFieldChange = useCallback(
         (fieldName: keyof IVehiclesData) =>
         (e: React.ChangeEvent<{}>, value: string[] | string | null): void => {

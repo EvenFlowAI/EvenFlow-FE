@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, Dispatch, SetStateAction} from 'react';
+import React, {useCallback, Dispatch, SetStateAction} from 'react';
 import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
 import { Autocomplete } from '@mui/material';
 import {useSelector} from "react-redux";
@@ -36,31 +36,22 @@ const EngineTypes: React.FC<TEngineTypesProps> = ({
         return engineTypes.slice().sort(sortEngineTypes)
     }
 
-    const onCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: IEngineType) => {
-        setFormIsChecked(false);
-        setSelectedEngineTypes(prev => {
-            return !e.target.checked
-                ? prev.filter(item => item.id !== option.id).sort(sortEngineTypes)
-                : prev.concat(option).sort(sortEngineTypes)
-        })
-    }, [selectedEngineTypes])
-
     const renderEngineTypeOption = useCallback((props, option: IEngineType) => {
         const checked = !!selectedEngineTypes.find(el => el.id === option.id);
-        return <div style={{display: 'flex', alignItems: 'center'}} key={option.id}>
+        return <li style={{display: 'flex', alignItems: 'center'}} {...props} key={option.id}>
             <Checkbox
                 color="primary"
                 icon={checked
                     ? <CheckBoxOutlined htmlColor="#3855FE"/>
                     : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
                 checked={checked}
-                onChange={e => onCheckboxChange(e, option)}
             />
             {option.name}
-        </div>
-    }, [selectedEngineTypes, onCheckboxChange]);
+        </li>
+    }, [selectedEngineTypes]);
 
     const onChange = (e: React.SyntheticEvent, value: IEngineType[]) => {
+        setFormIsChecked(false)
         setSelectedEngineTypes(value)
     }
 
