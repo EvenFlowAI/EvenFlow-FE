@@ -17,7 +17,7 @@ type TProps = {
 }
 
 const SideBarSection: React.FC<TProps> = ({screen, handleSetScreen}) => {
-    const {scProfile} = useSelector((state: RootState) => state.appointment)
+    const {scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment)
     const {selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame)
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
     const currentUser = useCurrentUser()
@@ -36,8 +36,13 @@ const SideBarSection: React.FC<TProps> = ({screen, handleSetScreen}) => {
                 {t("See RO History")}
             </RoHistoryLink>
             <AppointmentNotes/>
-            {hasHistory && selectedVehicle?.dmsId
-                ? <VehicleRepairHistory open={isOpenHistory} onClose={onCloseHistory} vehicleDmsId={selectedVehicle.dmsId}/>
+
+            {hasHistory && selectedVehicle?.id && customerLoadedData?.id
+                ? <VehicleRepairHistory
+                    customerId={customerLoadedData.id}
+                    open={isOpenHistory}
+                    onClose={onCloseHistory}
+                    vehicleId={selectedVehicle.id}/>
                 : null}
         </SectionWrapper>
         : <SideBar screen={screen} handleSetScreen={handleSetScreen}/>
