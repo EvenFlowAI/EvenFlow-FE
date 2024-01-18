@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {AppointmentConfirmationTitle} from "../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
 import moment from "moment";
 import {Edit} from "@material-ui/icons";
@@ -25,9 +25,14 @@ export const AppointmentSelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     const [serviceValetTime, setServiceValetTime] = useState<TServiceValetSlot|null>(null);
     const {t} = useTranslation();
     const dispatch = useDispatch();
+
+    const serviceType = useMemo(() => serviceTypeOption
+        ? serviceTypeOption.type
+        : EServiceType.VisitCenter, [serviceTypeOption]);
+
     const isWaitList = appointment
-        ? appointment?.isOverbookingApplied && waitListSettings?.isEnabled
-        : appointmentByKey?.isWaitlist && waitListSettings?.isEnabled;
+        ? appointment?.isOverbookingApplied && waitListSettings?.isEnabled && serviceType === EServiceType.VisitCenter
+        : appointmentByKey?.isWaitlist && appointmentByKey?.waitlistTextSettings?.isEnabled && serviceType === EServiceType.VisitCenter;
 
     useEffect(() => {
         if (serviceValetAppointment) {

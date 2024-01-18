@@ -211,12 +211,13 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     }, [isServiceValetApp, serviceValetAppointment, dropOffSettings, isServiceValetManage, appointmentByKey])
 
     const data: TItem[] = useMemo(() => {
-        let isWaitList: boolean|undefined = false;
-        if (waitListSettings?.isEnabled) {
-            isWaitList = appointment
-                ? appointment?.isOverbookingApplied
-                : appointmentByKey?.isWaitlist && serviceType === EServiceType.VisitCenter
-        }
+        const isWaitListCreated = appointment?.isOverbookingApplied
+            && waitListSettings?.isEnabled
+            && serviceType === EServiceType.VisitCenter
+        const isWaitListManaged = appointmentByKey?.isWaitlist
+            && appointmentByKey?.waitlistTextSettings?.isEnabled
+            && serviceType === EServiceType.VisitCenter
+        const isWaitList =  appointment ? isWaitListCreated : isWaitListManaged;
         const list: TItem[] = [
             {
                 label: isServiceValetApp || isServiceValetManage
