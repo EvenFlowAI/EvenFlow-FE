@@ -711,7 +711,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
     const isWaitListManaging = !appointment.appointment
         && Boolean(appointmentFrame.appointmentByKey?.isWaitlist)
         && appointmentFrame.appointmentByKey?.waitlistTextSettings?.isEnabled;
-    const isVisitCenterAppointment = appointmentFrame?.serviceTypeOption?.type === EServiceType.VisitCenter;
+    const isVisitCenterAppointment = appointmentFrame?.serviceTypeOption?.type === EServiceType.VisitCenter || !appointmentFrame.serviceTypeOption;
 
     const isWaitlist = isVisitCenterAppointment && (isWaitListSlotSelected || isWaitListManaging);
 
