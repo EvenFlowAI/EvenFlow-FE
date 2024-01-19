@@ -49,6 +49,7 @@ export const CarCard: React.FC<TProps> = ({
     }
 
     return (
+        <>
         <Wrapper
             active={selected}
             role="presentation"
@@ -70,6 +71,7 @@ export const CarCard: React.FC<TProps> = ({
                 clearData={clearData}
                 onNext={onNext}
             />
+        </Wrapper>
             {car.id && customerLoadedData?.id
                 ? <VehicleRepairHistory
                     customerId={customerLoadedData.id}
@@ -77,6 +79,6 @@ export const CarCard: React.FC<TProps> = ({
                     onClose={onCloseHistory}
                     vehicleId={car.id}/>
                 : null}
-        </Wrapper>
+        </>
     );
 };
