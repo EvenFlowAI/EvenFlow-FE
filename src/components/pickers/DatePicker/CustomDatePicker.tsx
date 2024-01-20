@@ -7,7 +7,7 @@ import {ParsableDate} from "../../../types/types";
 
 // todo find correct props types
 
-export const DatePicker = ({label, ...props}: DatePickerProps<ParsableDate>) => {
+export const CustomDatePicker = ({label, ...props}: DatePickerProps<ParsableDate>) => {
     const classes = useDatePickerStyles();
     if (!label) return <DP {...props} />;
     return <>

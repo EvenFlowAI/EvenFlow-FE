@@ -160,7 +160,7 @@ export const OfferModal:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({on
     const handleChangeDateTime = (name: keyof TOfferForm) => (date: ParsableDate) => {
         setFormIsChecked(false);
         setForm({...form, [name]: date});
-    }
+    };
 
     const setEditMode = () => {
         setViewMode(false);

@@ -4,7 +4,7 @@ import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import moment from "moment";
 import {getFirstLastDaysOfWeek} from "../utils";
 import {useStyles} from "./styles";
-import {DatePicker} from "../../../../components/pickers/DatePicker/DatePicker";
+import {CustomDatePicker} from "../../../../components/pickers/DatePicker/CustomDatePicker";
 
 type TProps = {
     isXS: boolean;
@@ -43,7 +43,7 @@ export const WeekControls: React.FC<TProps> = ({selectedDate, isXS, onChange}) =
             <Button onClick={handleRight} variant="outlined" className={classes.arrowButton}>
                 <ChevronRight />
             </Button>
-            <DatePicker
+            <CustomDatePicker
                 style={{display: "none"}}
                 onOpen={handleOpen(true)}
                 onClose={handleOpen(false)}

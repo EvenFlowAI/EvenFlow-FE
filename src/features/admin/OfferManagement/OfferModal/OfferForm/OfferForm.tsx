@@ -22,11 +22,13 @@ import {IAssignedServiceRequestShort} from "../../../../../store/reducers/servic
 import {EServiceCategoryType, ICategory} from "../../../../../store/reducers/categories/types";
 import HtmlEditor from "../../../../../components/modals/admin/HTMLEditor/HTMLEditor";
 import {useStyles} from "./styles";
-import {DatePicker} from "../../../../../components/pickers/DatePicker/DatePicker";
+import {CustomDatePicker} from "../../../../../components/pickers/DatePicker/CustomDatePicker";
 import {TimePicker} from "../../../../../components/pickers/TimePicker/TimePicker";
 import {useModal} from "../../../../../hooks/useModal/useModal";
 import {TEnumMap} from "../../../../../store/reducers/types";
 import moment from "moment";
+import MuiXDatePicker from "../../../../../components/pickers/MuiXDatePicker/MuiXDatePicker";
+import dayjs from "dayjs";
 
 type TProps = {
     form: TOfferForm;
@@ -80,6 +82,7 @@ export const OfferForm: React.FC<TProps> = ({
                     value={form.offerTitle||""}
                 />
             </div>
+            <MuiXDatePicker/>
             <div className={classes.inputContainer}>
                 <RadioGroup
                     row
@@ -264,7 +267,7 @@ export const OfferForm: React.FC<TProps> = ({
             </div>
             <div className={clsx(classes.inputContainer, classes.rowContainer)}>
                 <div className={classes.innerContainer}>
-                    <DatePicker
+                    <CustomDatePicker
                         fullWidth
                         label={"Start Date"}
                         disablePast
@@ -278,7 +281,7 @@ export const OfferForm: React.FC<TProps> = ({
                 </div>
                 <div className={classes.divider}>-</div>
                 <div className={classes.innerContainer}>
-                    <DatePicker
+                    <CustomDatePicker
                         fullWidth
                         disablePast
                         label={"End Date"}

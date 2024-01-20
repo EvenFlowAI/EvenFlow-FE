@@ -23,7 +23,7 @@ import {TextField} from "../../../../components/formControls/TextFieldStyled/Tex
 import {getOptions} from "../../../../utils/utils";
 import {useAutocompleteStyles, useMultipleACStyles, useStyles} from "./styles";
 import {TOption, TTimeObject} from "../types";
-import {DatePicker} from "../../../../components/pickers/DatePicker/DatePicker";
+import {CustomDatePicker} from "../../../../components/pickers/DatePicker/CustomDatePicker";
 import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
@@ -378,7 +378,7 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
                     </div>
                     <div className={classes.label}>Duration</div>
                     <div className={classes.smallWrapper}>
-                        <DatePicker
+                        <CustomDatePicker
                             value={duration?.start ?? null}
                             format="MMM D, YYYY"
                             style={{ marginBottom: 20, width: '47%' }}
@@ -388,7 +388,7 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
                                 error: !duration?.start && formIsChecked,
                             }}
                         />
-                        <DatePicker
+                        <CustomDatePicker
                             value={duration?.end ?? null}
                             format="MMM D, YYYY"
                             style={{ marginBottom: 20, width: '47%' }}

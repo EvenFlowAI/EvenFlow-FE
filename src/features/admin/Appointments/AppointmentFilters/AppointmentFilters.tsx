@@ -2,7 +2,7 @@ import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Grid, MenuItem, Paper, Select, IconButton, SelectChangeEvent} from "@mui/material";
 import {Clear} from '@mui/icons-material';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {DatePicker} from "../../../../components/pickers/DatePicker/DatePicker";
+import {CustomDatePicker} from "../../../../components/pickers/DatePicker/CustomDatePicker";
 import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
 import {loadSchedulerList, loadServiceBookList} from "../../../../store/reducers/appointments/actions";
@@ -92,7 +92,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
             <Grid container spacing={2} justifyContent="space-between" alignItems='flex-end'>
                 <Grid item xs={3}>
                     <div className={classes.label}>Date</div>
-                    <DatePicker
+                    <CustomDatePicker
                         style={{width: "100%"}}
                         onOpen={handleOpen(true)}
                         onClose={handleOpen(false)}

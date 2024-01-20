@@ -3,7 +3,7 @@ import {THolidayForm} from "../types";
 import {FormControlLabel, Grid, Switch} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useStyles} from "./styles";
-import {DatePicker} from "../../../../components/pickers/DatePicker/DatePicker";
+import {CustomDatePicker} from "../../../../components/pickers/DatePicker/CustomDatePicker";
 import moment from "moment";
 
 type TProps = {
@@ -18,7 +18,7 @@ export const HolidayForm: React.FC<TProps> = props => {
     return <div>
         <Grid container spacing={2}>
             <Grid item xs={12}>
-                <DatePicker
+                <CustomDatePicker
                     value={props.form.date}
                     onChange={props.onDateChange}
                     label="Date"
