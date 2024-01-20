@@ -15,7 +15,7 @@ type TIncludedInPackageProps = {
     isBmWService: boolean;
 }
 
-const PackagesServiceRequests: React.FC<TIncludedInPackageProps> =
+const PackagesServiceRequests: React.FC<React.PropsWithChildren<TIncludedInPackageProps>> =
     ({packages, services, setClasses, isBmWService, handleClick}) => {
     const {t} = useTranslation();
     return <React.Fragment>

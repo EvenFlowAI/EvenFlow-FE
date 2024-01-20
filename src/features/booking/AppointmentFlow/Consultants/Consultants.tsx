@@ -32,7 +32,7 @@ import {ConsultantCard} from "./ConsultantCard/ConsultantCard";
 import {TActionProps} from "../../../../types/types";
 import {useException} from "../../../../hooks/useException/useException";
 
-export const Consultants: React.FC<TActionProps> = ({onNext, onBack}) => {
+export const Consultants: React.FC<React.PropsWithChildren<TActionProps>> = ({onNext, onBack}) => {
     const {
         advisor: selectedConsultant,
         consultants,

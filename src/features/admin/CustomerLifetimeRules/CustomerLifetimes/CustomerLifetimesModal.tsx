@@ -20,7 +20,7 @@ const initialForm: TForm = {
     from: "", to: ""
 }
 
-export const CustomerLifetimesModal: React.FC<DialogProps<ICustomerLifetime>> = ({payload, onAction, ...props}) => {
+export const CustomerLifetimesModal: React.FC<React.PropsWithChildren<DialogProps<ICustomerLifetime>>> = ({payload, onAction, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>(initialForm);
     const {selectedSC} = useSCs();

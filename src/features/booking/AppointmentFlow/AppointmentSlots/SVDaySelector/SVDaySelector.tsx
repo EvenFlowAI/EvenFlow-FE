@@ -26,7 +26,7 @@ type TProps = {
     appointments: IServiceValetAppointment[];
 }
 
-export const SVDaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments, dateRangeUpdated, onDateRangeSet}) => {
+export const SVDaySelector: React.FC<React.PropsWithChildren<TProps>> = ({date, onDateChange, loading, appointments, dateRangeUpdated, onDateRangeSet}) => {
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {selectedTiming, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {searchedDateRange, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);

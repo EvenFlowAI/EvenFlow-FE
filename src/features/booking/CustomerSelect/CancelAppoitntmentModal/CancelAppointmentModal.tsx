@@ -14,7 +14,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {useStyles} from "./styles";
 import {useException} from "../../../../hooks/useException/useException";
 
-const CancelAppointmentModal: React.FC<DialogProps&{hashKey: string, loadData: TArgCallback<boolean>}> = ({open, onClose, hashKey, loadData}) => {
+const CancelAppointmentModal: React.FC<React.PropsWithChildren<DialogProps&{hashKey: string, loadData: TArgCallback<boolean>}>> = ({open, onClose, hashKey, loadData}) => {
     const {customerSearchData} = useSelector((state: RootState) => state.customers);
     const [data, setData] = useState<IAppointmentByQuery|null>(null);
     const [loading, setLoading] = useState<boolean>(false);

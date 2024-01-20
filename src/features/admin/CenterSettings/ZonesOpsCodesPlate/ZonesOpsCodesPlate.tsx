@@ -11,7 +11,7 @@ type TProps = {
     isLoading: boolean;
 }
 
-export const ZonesOpsCodesPlate: React.FC<TProps> = ({onEdit, isLoading}) => {
+export const ZonesOpsCodesPlate: React.FC<React.PropsWithChildren<TProps>> = ({onEdit, isLoading}) => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
     const {zones} = useSelector((state: RootState) => state.serviceValet);
     const centerSettingsClasses = useCenterSettingsStyles();

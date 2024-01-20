@@ -17,7 +17,7 @@ type TProps = {
     handleChangeView: (type: TView) => () => void;
 }
 
-export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selectedView, searchTerm, handleSearchChange, onSearch, onFilterOpen}) => {
+export const AppointmentActions: React.FC<React.PropsWithChildren<TProps>> = ({handleChangeView, selectedView, searchTerm, handleSearchChange, onSearch, onFilterOpen}) => {
     const classes = useStyles();
     const {selectedSC} = useSCs();
     const encoded = encodeSCID(selectedSC?.id??0);

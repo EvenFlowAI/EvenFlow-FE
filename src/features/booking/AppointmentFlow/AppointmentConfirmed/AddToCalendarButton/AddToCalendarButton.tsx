@@ -22,7 +22,7 @@ type TProps = {
     servicesList: string[],
 }
 
-const AddToCalendarButton: React.FC<TProps> = ({ serviceName, servicesList}) => {
+const AddToCalendarButton: React.FC<React.PropsWithChildren<TProps>> = ({ serviceName, servicesList}) => {
     const {
         advisor,
         isAppointmentSaving,

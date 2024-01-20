@@ -16,7 +16,7 @@ type TServiceRequestsProps = {
     data: TRequestRow[];
 }
 
-export const ServiceRequestsWithOptions: React.FC<TServiceRequestsProps> = (props) => {
+export const ServiceRequestsWithOptions: React.FC<React.PropsWithChildren<TServiceRequestsProps>> = (props) => {
     const classes = useTableStyles();
     const optionsClasses = useOptionsTableStyles();
     const showError = useException();

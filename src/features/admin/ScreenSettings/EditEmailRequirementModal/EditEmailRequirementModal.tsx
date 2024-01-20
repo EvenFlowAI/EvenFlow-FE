@@ -17,7 +17,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const EditEmailRequirementModal: React.FC<DialogProps> = ({onClose, ...props}) => {
+export const EditEmailRequirementModal: React.FC<React.PropsWithChildren<DialogProps>> = ({onClose, ...props}) => {
     const {emailRequirement, isEmailRequirementLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
     const [data, setData] = useState<TEmailRequirement|null>(null);
     const {selectedSC} = useSCs();

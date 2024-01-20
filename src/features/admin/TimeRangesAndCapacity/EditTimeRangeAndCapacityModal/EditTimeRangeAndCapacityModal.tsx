@@ -20,7 +20,7 @@ type TProps = DialogProps & {
     editingElement: ITimeRangeAndCapacity;
 }
 
-const EditTimeRangeAndCapacityModal: React.FC<TProps> = ({onClose, open, editingElement}) => {
+const EditTimeRangeAndCapacityModal: React.FC<React.PropsWithChildren<TProps>> = ({onClose, open, editingElement}) => {
     const [pickUpMin, setPickUpMin] = useState<moment.Moment|null>(null)
     const [pickUpMax, setPickUpMax] = useState<moment.Moment|null>(null)
     const [dropOffMin, setDropOffMin] = useState<moment.Moment|null>(null)

@@ -10,5 +10,5 @@ export type TDetailComponentProps = {
 export type TTab = {
     id: string;
     label: string;
-    component: React.FC<TDetailComponentProps>;
+    component: React.FC<React.PropsWithChildren<TDetailComponentProps>>;
 }

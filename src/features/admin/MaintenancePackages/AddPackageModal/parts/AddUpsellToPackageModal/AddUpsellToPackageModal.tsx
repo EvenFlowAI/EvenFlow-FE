@@ -28,7 +28,7 @@ const tableData: TableRowDataType<IUpsellServiceRequest>[] = [
     {header: "INVOICE AMOUNT", val: el => `$${el.invoiceAmount ?? el.serviceRequest?.invoiceAmount}`, align: "left"},
 ]
 
-const AddUpsellToPackageModal: React.FC<TAddUpsellProps> =
+const AddUpsellToPackageModal: React.FC<React.PropsWithChildren<TAddUpsellProps>> =
     ({ handleSelect,
          disabledIds,
          selectedCodes,

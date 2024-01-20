@@ -32,7 +32,7 @@ type TProps = {
     redirect: TCallback;
 };
 
-const ReturningCustomerForAdmin: React.FC<TProps> = ({
+const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<TProps>> = ({
                                                          handleNew,
                                                          redirect
 }) => {

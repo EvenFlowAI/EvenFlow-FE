@@ -31,7 +31,7 @@ type TProps = {
     onChangeSlot: TCallback;
 } & TActionProps;
 
-export const AppointmentConfirmation: React.FC<TProps> = ({onBack, onChangeSlot, onNext}) => {
+export const AppointmentConfirmation: React.FC<React.PropsWithChildren<TProps>> = ({onBack, onChangeSlot, onNext}) => {
     const [errors, setErrors] = useState<string[]>([]);
     const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const currentUser = useCurrentUser();

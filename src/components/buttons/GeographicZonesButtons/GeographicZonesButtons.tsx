@@ -11,7 +11,7 @@ type TProps = {
     askRemove: TCallback;
 }
 
-const GeographicZonesButtons: React.FC<TProps> = ({onEditZoneOpen, selectedZone, askRemove, onAddZoneOpen}) => {
+const GeographicZonesButtons: React.FC<React.PropsWithChildren<TProps>> = ({onEditZoneOpen, selectedZone, askRemove, onAddZoneOpen}) => {
     return (
         <ButtonsWrapper>
             <TextButton variant="text" onClick={onEditZoneOpen} disabled={!selectedZone}>Edit</TextButton>

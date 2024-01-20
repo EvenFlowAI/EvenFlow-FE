@@ -47,7 +47,7 @@ const initialForm: TOfferForm = {
     isProductPageOn: false,
 }
 
-export const OfferModal:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAction, archive, payload, ...props}) => {
+export const OfferModal:React.FC<React.PropsWithChildren<DialogProps<IOffer>&{archive?: boolean}>> = ({onAction, archive, payload, ...props}) => {
     const [form, setForm] = useState<TOfferForm>(initialForm);
     const [archiving, setArchiving] = useState<boolean>(false);
     const [viewMode, setViewMode] = useState<boolean>(false);

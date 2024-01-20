@@ -39,7 +39,7 @@ const overallData: TDataMap[] = [
     {label: "Appointments Today", value: "appointments"},
 ];
 
-export const AdminDashboard: React.FC = () => {
+export const AdminDashboard: React.FC<React.PropsWithChildren<unknown>> = () => {
     const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
         technicians: analytics.countOfTechnicians,
         bays: analytics.countOfBays,

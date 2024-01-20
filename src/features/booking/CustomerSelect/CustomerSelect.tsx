@@ -29,7 +29,7 @@ type TProps = {
     redirect: TCallback;
 };
 
-export const CustomerSelect: React.FC<TProps> = ({
+export const CustomerSelect: React.FC<React.PropsWithChildren<TProps>> = ({
                                                      onComplete,
                                                      loading,
                                                      handleNew,

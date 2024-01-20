@@ -13,7 +13,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const AddMileageModal: React.FC<DialogProps> = (props) => {
+export const AddMileageModal: React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [newMileage, setNewMileage] = useState<string>('');
     const [mileages, setMileages] = useState<string[]>([]);

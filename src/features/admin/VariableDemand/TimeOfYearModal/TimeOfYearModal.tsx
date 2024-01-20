@@ -12,7 +12,7 @@ import {loadTimeOfYearPricing} from "../../../../store/reducers/pricingSettings/
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const TimeOfYearModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export const TimeOfYearModal: React.FC<React.PropsWithChildren<DialogProps>> = ({onAction, payload, ...props}) => {
     const [editedDate, setEditedDate] = useState<moment.Moment|undefined>(undefined);
     const [toy, setToy] = useState<ITimeOfYearSetting|undefined>(undefined);
     const {selectedSC} = useSCs();

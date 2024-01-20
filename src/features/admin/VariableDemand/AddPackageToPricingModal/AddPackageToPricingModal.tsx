@@ -19,7 +19,7 @@ const tableData: TableRowDataType<IPackageOptionShort>[] = [
     {header: "PACKAGE NAME", val: el => el.maintenancePackageName, align: "left"},
 ]
 
-const AddPackageToPricingModal: React.FC<DialogProps> = (props) => {
+const AddPackageToPricingModal: React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
     const {mpOptionsList, mpPricingSettings} = useSelector((state: RootState) => state.pricingSettings);
     const [selectedPackages, setSelectedPackages] = useState<IPackageOptionShort[]>([]);
     const [filteredPackages, setFilteredPackages] = useState<IPackageOptionShort[]>([]);

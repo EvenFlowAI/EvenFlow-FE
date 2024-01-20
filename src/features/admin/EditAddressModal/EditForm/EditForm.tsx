@@ -14,7 +14,7 @@ type TEditFormProps = TViewMode & {
     form: IAddress;
 }
 
-export const EditForm: React.FC<TEditFormProps> = ({viewMode, ...props}) => {
+export const EditForm: React.FC<React.PropsWithChildren<TEditFormProps>> = ({viewMode, ...props}) => {
     return <Grid container spacing={3}>
         <Grid item xs={12}>
             <TextField

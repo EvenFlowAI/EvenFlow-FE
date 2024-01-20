@@ -18,7 +18,7 @@ export const existingPackagesTableData: TableRowDataType<IPackageByQuery>[] = [
     {header: "Package Name", val: el => el.name, width: '90%'}
 ]
 
-const ExistingPackagesModal: React.FC<TAssignOpsCodeModalProps> = ({selectedPackages, setSelectedPackages, ...props}) => {
+const ExistingPackagesModal: React.FC<React.PropsWithChildren<TAssignOpsCodeModalProps>> = ({selectedPackages, setSelectedPackages, ...props}) => {
     const { packages } = useSelector((state: RootState) => state.packages);
 
     const handleSelect = useCallback((el: IPackageByQuery) => {

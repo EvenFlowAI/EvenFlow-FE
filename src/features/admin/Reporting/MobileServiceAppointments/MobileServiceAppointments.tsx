@@ -3,6 +3,6 @@ import {IEndUserConfig} from "../types";
 import {QrveyEndUser} from "../QrvayEndUser/QrvayEndUser";
 import {DashboardsIds} from "../../../../pages/admin/Reporting/constants";
 
-export const MobileServiceAppointments: React.FC<{ settings: IEndUserConfig }> = ({settings}) => {
+export const MobileServiceAppointments: React.FC<React.PropsWithChildren<{ settings: IEndUserConfig }>> = ({settings}) => {
     return <QrveyEndUser settings={{...settings, dashboard_id: DashboardsIds.MobileServiceAppointments}}/>
 };

@@ -43,7 +43,7 @@ type TAppointmentSelectionProps = {
     handleSetScreen: TArgCallback<TScreen>;
 }
 
-export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSetScreen}) => {
+export const AppointmentSlots: React.FC<React.PropsWithChildren<TAppointmentSelectionProps>> = ({handleSetScreen}) => {
     const [
         slots,
         serviceValetSlots,

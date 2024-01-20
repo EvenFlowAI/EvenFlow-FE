@@ -19,7 +19,7 @@ type MakeAndModelProps = {
     disabled: boolean;
 }
 
-const MakeAndModel: React.FC<MakeAndModelProps> = ({
+const MakeAndModel: React.FC<React.PropsWithChildren<MakeAndModelProps>> = ({
                                                        disabled,
                                                        setSelectedMakes,
                                                        selectedModels,
@@ -72,7 +72,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
         return removeDuplicates(data);
     }, [selectedModels])
 
-    const renderMakeOption = useCallback((props, option) => {
+    const renderMakeOption = useCallback((props: any, option: any) => {
         const currentOptionSelected = upperCase(selectedMakes).includes(option.toUpperCase())
         const allSelected = Boolean(!makesFromDB.find(make => !upperCase(selectedMakes).includes(make.name.toUpperCase())))
         const checked = currentOptionSelected || allSelected;
@@ -100,7 +100,7 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
         setModels(removeDuplicates(sorted));
     }
 
-    const renderModelOption = useCallback((props, option) => {
+    const renderModelOption = useCallback((props: any, option: any) => {
         const filteredMakes = makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase()))
         const allModelsSelected = filteredMakes.length
             ? Boolean(!filteredMakes

@@ -9,7 +9,7 @@ type TProps = {
     onCheck: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export const CreateBayForm: React.FC<TProps> = props => {
+export const CreateBayForm: React.FC<React.PropsWithChildren<TProps>> = props => {
     return <div>
         <TextField
             label="Name"

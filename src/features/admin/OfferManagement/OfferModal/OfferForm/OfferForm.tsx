@@ -44,7 +44,7 @@ type TProps = {
     formIsChecked: boolean;
 }
 
-export const OfferForm: React.FC<TProps> = ({
+export const OfferForm: React.FC<React.PropsWithChildren<TProps>> = ({
     form,
     onSelect,
     onChange,

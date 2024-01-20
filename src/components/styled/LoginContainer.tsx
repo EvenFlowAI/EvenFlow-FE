@@ -3,7 +3,7 @@ import { Paper } from "@mui/material";
 
 import withStyles from '@mui/styles/withStyles';
 
-const BaseLoginContainer: React.FC = props => {
+const BaseLoginContainer: React.FC<React.PropsWithChildren<unknown>> = props => {
     return <Paper elevation={0}>
         {props.children}
     </Paper>

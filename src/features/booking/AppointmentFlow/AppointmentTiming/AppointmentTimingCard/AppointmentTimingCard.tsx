@@ -20,7 +20,7 @@ type TCardProps = {
     isLoading: boolean;
 }
 
-const AppointmentTimingCard: React.FC<TCardProps> = ({card, active, onClick,
+const AppointmentTimingCard: React.FC<React.PropsWithChildren<TCardProps>> = ({card, active, onClick,
                                               onChangeTime, selectedTime, isLoading}) => {
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('md'));

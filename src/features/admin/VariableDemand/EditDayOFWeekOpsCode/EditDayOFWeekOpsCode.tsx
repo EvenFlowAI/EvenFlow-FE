@@ -25,7 +25,7 @@ const initialValues: TState = {
     high: undefined
 }
 
-const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem, ...props}) => {
+const EditDayOfWeekOpsCode: React.FC<React.PropsWithChildren<TEditDayOfWeekOpsCodeProps>> = ({editingItem, ...props}) => {
     const [values, setValues] = useState<TState>(initialValues);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();

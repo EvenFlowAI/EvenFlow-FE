@@ -26,7 +26,7 @@ const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
     {header: "Description", val: el => el.description}
 ];
 
-export const UrgentRequestModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export const UrgentRequestModal: React.FC<React.PropsWithChildren<DialogProps>> = ({onAction, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [selected, setSelected] = useState<number[]>([]);
     const dispatch = useDispatch();

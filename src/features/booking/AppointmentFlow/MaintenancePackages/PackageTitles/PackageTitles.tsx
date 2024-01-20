@@ -9,7 +9,7 @@ type TPackageTitlesProps = {
     packages: TPackage[];
 }
 
-const PackageTitles: React.FC<TPackageTitlesProps> = ({ packages, setClasses, handleClick }) => {
+const PackageTitles: React.FC<React.PropsWithChildren<TPackageTitlesProps>> = ({ packages, setClasses, handleClick }) => {
     return (
         <React.Fragment>
             <div className='top'/>

@@ -6,7 +6,7 @@ import {Button, Divider} from "@mui/material";
 import {TDistanceRange} from "../../../../store/reducers/serviceValet/types";
 import {useStyles} from "./styles";
 
-const AddDistanceRangeModal: React.FC<DialogProps & {onAddRange: (data: TDistanceRange) => void}> = (props) => {
+const AddDistanceRangeModal: React.FC<React.PropsWithChildren<DialogProps & {onAddRange: (data: TDistanceRange) => void}>> = (props) => {
     const [rangeMin, setRangeMin] = useState<number|''>('');
     const [rangeMax, setRangeMax] = useState<number|''>('');
     const [costPerMile, setCostPerMile] = useState<number|''>('');

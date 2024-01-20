@@ -45,7 +45,7 @@ type TProps = DialogProps<ISchedule> & {
     onClear: (t: keyof TIds) => void;
 }
 
-export const EditScheduleModal: React.FC<TProps> = ({selectedDate, date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
+export const EditScheduleModal: React.FC<React.PropsWithChildren<TProps>> = ({selectedDate, date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
     const [isCleared, setCleared] = useState<boolean>(false);

@@ -18,7 +18,7 @@ type TProps = DialogProps<IOptimizationWindow> & {
     content: TOptContentData
 }
 
-export const OptimizationModal: React.FC<TProps> = ({
+export const OptimizationModal: React.FC<React.PropsWithChildren<TProps>> = ({
     onAction,
     content,
     payload,

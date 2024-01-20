@@ -21,7 +21,7 @@ type TCalendarProps = {
     openDetails: (date: moment.Moment | null) => void;
 }
 
-export const AppointmentsCalendar: React.FC<TCalendarProps> = ({ openDetails, selectedView }) => {
+export const AppointmentsCalendar: React.FC<React.PropsWithChildren<TCalendarProps>> = ({ openDetails, selectedView }) => {
     const { allAppointments, isLoading } = useSelector((state: RootState) => state.appointments);
     const [startDate, setStartDate] = useState<Moment>(moment());
     const [appointmentsByDate, setAppointmentsByDate] = useState<TAppointmentsByDate>({})

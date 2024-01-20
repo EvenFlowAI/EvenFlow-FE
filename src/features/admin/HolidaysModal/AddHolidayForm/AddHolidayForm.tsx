@@ -13,7 +13,7 @@ type TProps = {
     onCheck: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 }
 
-export const HolidayForm: React.FC<TProps> = props => {
+export const HolidayForm: React.FC<React.PropsWithChildren<TProps>> = props => {
     const classes = useStyles();
     return <div>
         <Grid container spacing={2}>

@@ -15,7 +15,7 @@ type TMileageProps = {
     setSelectedMileages: Dispatch<SetStateAction<string[]>>;
 }
 
-const Mileage: React.FC<TMileageProps> = ({
+const Mileage: React.FC<React.PropsWithChildren<TMileageProps>> = ({
                                               disabled,
                                               selectedMileages,
                                               setSelectedMileages,
@@ -34,7 +34,7 @@ const Mileage: React.FC<TMileageProps> = ({
         return options;
     }, [mileage])
 
-    const renderOption = useCallback((props, option: string) => {
+    const renderOption = useCallback((props: any, option: string) => {
         const allMileagesSelected = mileage.length
             ? mileage.every(item => selectedMileages.includes(item.value.toString()))
             : false;

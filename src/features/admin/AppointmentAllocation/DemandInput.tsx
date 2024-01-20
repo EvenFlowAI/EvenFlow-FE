@@ -19,7 +19,7 @@ type TDemandInputProps = {
     onBlur: (item: IUnplannedDemandBySlot, value: number|string) => void;
 }
 
-const DemandInput: React.FC<TDemandInputProps> = ({item,onBlur}) => {
+const DemandInput: React.FC<React.PropsWithChildren<TDemandInputProps>> = ({item,onBlur}) => {
     const [value, setValue] = useState<number|string>(0);
     const showError = useException();
     const classes = useStyles();

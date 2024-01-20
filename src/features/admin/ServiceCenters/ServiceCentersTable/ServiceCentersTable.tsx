@@ -36,7 +36,7 @@ type TProps = {
     onOpen: TCallback;
 }
 
-const ServiceCentersTable: React.FC<TProps> = ({setEditedItem, editedItem, onOpen}) => {
+const ServiceCentersTable: React.FC<React.PropsWithChildren<TProps>> = ({setEditedItem, editedItem, onOpen}) => {
     const [data, loading, count, order, search] = useSelector((state: RootState) => [
         state.serviceCenters.serviceCenters,
         state.serviceCenters.loading,

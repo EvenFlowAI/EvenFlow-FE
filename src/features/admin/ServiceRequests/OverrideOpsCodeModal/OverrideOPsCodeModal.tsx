@@ -27,7 +27,7 @@ const initialForm: TForm = {
     numberOfParts: "",
 };
 
-export const OverrideOPsCodeModal: React.FC<DialogProps<IAssignedServiceRequest>> = ({onAction, payload, ...props}) => {
+export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<DialogProps<IAssignedServiceRequest>>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [isLoading, setLoading] = useState<boolean>(false);
     const showMessage = useMessage();

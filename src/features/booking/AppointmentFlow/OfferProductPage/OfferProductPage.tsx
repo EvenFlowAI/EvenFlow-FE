@@ -26,7 +26,7 @@ type TOfferProductPageProps = {
     lastCategory: IServiceCategory|null;
 }
 
-const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeVehicle, handleSetScreen, lastCategory}) => {
+const OfferProductPage: React.FC<React.PropsWithChildren<TOfferProductPageProps>> = ({category, onChangeVehicle, handleSetScreen, lastCategory}) => {
     const {selectedVehicle, categoriesIds, subService, service} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();

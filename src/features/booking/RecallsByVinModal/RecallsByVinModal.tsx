@@ -28,7 +28,7 @@ type TRecallsByVinProps = DialogProps & {
     handleAddServices: () => void,
 }
 
-const RecallsByVinModal: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
+const RecallsByVinModal: React.FC<React.PropsWithChildren<TRecallsByVinProps>> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
     const {selectedVehicle, makes, isUsualFlowNeeded} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);

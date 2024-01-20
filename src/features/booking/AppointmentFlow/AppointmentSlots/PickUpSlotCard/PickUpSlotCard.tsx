@@ -16,7 +16,7 @@ type TProps = {
     date: moment.Moment|null;
 }
 
-export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, date}) => {
+export const PickUpSlotCard: React.FC<React.PropsWithChildren<TProps>> =({timeSlot, onSelect, selected, date}) => {
     const [timePassed, setTimePassed] = useState<boolean>(false);
     const {dropOffSettings} = useSelector((state: RootState) => state.appointment);
     const classes = useStyles();

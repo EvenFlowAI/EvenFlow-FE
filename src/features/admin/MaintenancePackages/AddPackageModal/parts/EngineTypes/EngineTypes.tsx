@@ -15,7 +15,7 @@ type TEngineTypesProps = {
     isApplyBusinessRules: boolean;
 }
 
-const EngineTypes: React.FC<TEngineTypesProps> = ({
+const EngineTypes: React.FC<React.PropsWithChildren<TEngineTypesProps>> = ({
                                                        setSelectedEngineTypes,
                                                        selectedEngineTypes,
                                                        setFormIsChecked,
@@ -36,7 +36,7 @@ const EngineTypes: React.FC<TEngineTypesProps> = ({
         return engineTypes.slice().sort(sortEngineTypes)
     }
 
-    const renderEngineTypeOption = useCallback((props, option: IEngineType) => {
+    const renderEngineTypeOption = useCallback((props: any, option: IEngineType) => {
         const checked = !!selectedEngineTypes.find(el => el.id === option.id);
         return <li style={{display: 'flex', alignItems: 'center'}} {...props} key={option.id}>
             <Checkbox

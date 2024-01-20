@@ -25,7 +25,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {CreateEmployeeForm} from "./CreateEmployeeForm/CreateEmployeeForm";
 
-export const CreateEmployee: React.FC<DialogProps<IEmployee>> = ({payload, onAction, ...props}) => {
+export const CreateEmployee: React.FC<React.PropsWithChildren<DialogProps<IEmployee>>> = ({payload, onAction, ...props}) => {
     const [shortSC,savingE, savingU] = useSelector((state: RootState) => [
         state.serviceCenters.shortSC,
         state.employees.saving,

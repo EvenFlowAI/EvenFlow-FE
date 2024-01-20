@@ -29,7 +29,7 @@ const tableData: TableRowDataType<IComplimentaryServiceByQuery>[] = [
     {header: "REGULAR INVOICE", val: el => el.price.toFixed(2), align: 'center'},
 ]
 
-const AddComplimentaryModal: React.FC<TAssignOpsCodeModalProps> =
+const AddComplimentaryModal: React.FC<React.PropsWithChildren<TAssignOpsCodeModalProps>> =
     ({selectedCodes, setSelectedCodes, isComplimentary, title, ...props}) => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();

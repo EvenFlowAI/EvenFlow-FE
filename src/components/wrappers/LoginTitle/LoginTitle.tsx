@@ -3,7 +3,7 @@ import {Typography} from "@mui/material";
 
 type Props = {title: string};
 
-export const LoginTitle: React.FC<Props> = ({title}) => {
+export const LoginTitle: React.FC<React.PropsWithChildren<Props>> = ({title}) => {
     return <Typography variant="h1" style={{
         textTransform: "uppercase", textAlign: "center",
         fontSize: 36,

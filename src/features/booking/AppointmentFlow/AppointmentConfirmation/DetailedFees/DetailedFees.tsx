@@ -12,7 +12,7 @@ import {DetailedFeesInfo, DetailedFeesList, useStyles} from "./styles";
 import {useDialogStyles} from "../../../../../hooks/styling/useDialogStyles";
 import {getOfferString} from "../../../../../utils/utils";
 
-const DetailedFees: React.FC<DialogProps> = ({ open, onClose, }) => {
+const DetailedFees: React.FC<React.PropsWithChildren<DialogProps>> = ({ open, onClose, }) => {
     const {appointment, scProfile, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const { serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const dialogClasses = useDialogStyles();

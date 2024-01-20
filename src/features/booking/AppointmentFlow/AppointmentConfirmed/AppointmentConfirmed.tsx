@@ -23,7 +23,7 @@ type TProps = {
     onUpdateAppointment: TArgCallback<ILoadedVehicle>;
 }
 
-export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) => {
+export const AppointmentConfirmed: React.FC<React.PropsWithChildren<TProps>> = ({onUpdateAppointment}) => {
     const [
         appointment,
         serviceValetAppointment,

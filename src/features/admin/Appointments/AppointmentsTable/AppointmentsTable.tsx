@@ -43,7 +43,7 @@ type TAppointmentsTable = {
     setViewItem?: Dispatch<SetStateAction<IAppointment|undefined>>
 }
 
-export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setViewItem, isLoading, refresh, setOrder, order, pageData, onChangeRowsPerPage, onChangePage }) => {
+export const AppointmentsTable: React.FC<React.PropsWithChildren<TAppointmentsTable>> = ({ viewItem, setViewItem, isLoading, refresh, setOrder, order, pageData, onChangeRowsPerPage, onChangePage }) => {
     const { appointments, count } = useSelector((state: RootState) => state.appointments);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 

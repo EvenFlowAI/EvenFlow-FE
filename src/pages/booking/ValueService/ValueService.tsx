@@ -30,7 +30,7 @@ type TValueServiceProps = {
     nextScreen: TScreen;
 }
 
-const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
+const ValueService: React.FC<React.PropsWithChildren<TValueServiceProps>> = ({onBack, nextScreen}) => {
     const [screen, setScreen] = useState<TValueServiceScreen>("vehicleDetails");
     const { serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);

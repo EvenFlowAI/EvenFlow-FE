@@ -10,7 +10,7 @@ type TTitleProps = {
     subtitle?: string;
 }
 
-export const ContentTitle: React.FC<TTitleProps> = (props) => {
+export const ContentTitle: React.FC<React.PropsWithChildren<TTitleProps>> = (props) => {
     const classes = useStyles();
     return <div className={classes.titleContainer}>
         <Typography className={classes.title} variant="h1">

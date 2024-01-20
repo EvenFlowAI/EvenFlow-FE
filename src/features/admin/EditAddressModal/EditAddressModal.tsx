@@ -20,7 +20,7 @@ const initialAddress: IAddress = {
     zipCode: ""
 }
 
-export const EditAddressModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
+export const EditAddressModal: React.FC<React.PropsWithChildren<DialogProps&TViewMode>> = ({viewMode, ...props}) => {
     const [form, setForm] = useState<IAddress>(initialAddress);
     const [saving, setSave] = useState<boolean>(false);
     const showError = useException();

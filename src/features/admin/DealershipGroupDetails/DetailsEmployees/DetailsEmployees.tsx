@@ -14,7 +14,7 @@ const rowData: TableRowDataType<IEmployee>[] = [
     {header: "Service center address", val: v => concatAddress(v.serviceCenter?.address)}
 ];
 
-export const DetailsEmployees: React.FC<TDetailComponentProps> = (props) => {
+export const DetailsEmployees: React.FC<React.PropsWithChildren<TDetailComponentProps>> = (props) => {
     const [employees, employeesLoading, employeesPaging]: [IEmployee[], boolean, IPagingResponse] = useSelector((state: RootState) => [
         state.employees.dealershipEmployeesList,
         state.employees.loadingDealership,

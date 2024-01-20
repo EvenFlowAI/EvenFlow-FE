@@ -25,7 +25,7 @@ const rowData: TableRowDataType<IBay>[] = [
     {header: "Only Quick Service", val: v => v.onlyQuickService ? <CheckCircle color="primary" /> : "-", align: "center"},
 ];
 
-export const RequiredEquipment: React.FC<TViewMode> = ({viewMode}) => {
+export const RequiredEquipment: React.FC<React.PropsWithChildren<TViewMode>> = ({viewMode}) => {
     const {onOpen, onClose, isOpen} = useModal();
     const [editedItem, setEditedItem] = useState<IBay|undefined>();
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);

@@ -27,7 +27,7 @@ type TRowProps = {
     onSave: () => void;
 }
 
-export const ValueIndicatorsRow: React.FC<TRowProps> = props => {
+export const ValueIndicatorsRow: React.FC<React.PropsWithChildren<TRowProps>> = props => {
     return <TableRow>
         {!props.isXS ? <TableCell>{props.rowData.title}</TableCell> : null}
         <SliderCell>

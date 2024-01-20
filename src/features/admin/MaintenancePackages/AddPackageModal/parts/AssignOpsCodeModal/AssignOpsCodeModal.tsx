@@ -40,7 +40,7 @@ const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "DESCRIPTION", val: el => el.description, width: '80%'},
 ]
 
-const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
+const AssignOpsCodeModal: React.FC<React.PropsWithChildren<TAssignOpsCodeModalProps>> =
     ({
          selectedCodes,
          setSelectedCodes,

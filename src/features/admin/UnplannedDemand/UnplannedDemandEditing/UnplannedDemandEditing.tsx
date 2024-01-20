@@ -24,7 +24,7 @@ type TUnplannedDemandEditingProps = {
     editingElement: IUnplannedDemand|null;
 }
 
-const UnplannedDemandEditing: React.FC<TUnplannedDemandEditingProps> = ({ setEdit, isEdit, editingElement }) => {
+const UnplannedDemandEditing: React.FC<React.PropsWithChildren<TUnplannedDemandEditingProps>> = ({ setEdit, isEdit, editingElement }) => {
     const {unplannedSlots, isSlotsLoading} = useSelector((state: RootState) => state.demandSegments);
     const [slots1, setSlots1] = useState<IUnplannedDemandBySlot[]>([]);
     const [slots2, setSlots2] = useState<IUnplannedDemandBySlot[]>([]);

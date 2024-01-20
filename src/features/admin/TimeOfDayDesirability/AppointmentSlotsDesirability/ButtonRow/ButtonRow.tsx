@@ -11,7 +11,7 @@ type TRowProps = {
     onClick: (t: EDesirabilityState) => () => void;
 }
 
-export const ButtonRow:React.FC<TRowProps> = ({slot, onClick}) => {
+export const ButtonRow:React.FC<React.PropsWithChildren<TRowProps>> = ({slot, onClick}) => {
     const classes = useStylesBR();
     return <Grid className={classes.dataRow} container spacing={1}>
         <Grid item xs={6} sm={2} md={3} className={classes.time}>

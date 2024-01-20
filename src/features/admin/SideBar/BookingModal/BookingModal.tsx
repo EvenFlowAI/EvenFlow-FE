@@ -14,7 +14,7 @@ import {Routes} from "../../../../routes/constants";
 
 const restrictedRoles: TRole[] = ["Call Center Rep", "Advisor", "Manager"]
 
-export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export const BookingModal: React.FC<React.PropsWithChildren<DialogProps>> = ({onAction, payload, ...props}) => {
     const {selectedSC} = useSCs();
     const showMessage = useMessage();
     const currentUser = useCurrentUser();

@@ -39,7 +39,7 @@ type TProps = {
     onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
 }
 
-export const Cars: React.FC<TProps> = ({
+export const Cars: React.FC<React.PropsWithChildren<TProps>> = ({
                                                               onUpdateAppointment, onBack, loading, handleSetScreen,
                                                               needToShowServiceSelection, setNeedToShowServiceSelection
                                                           }) => {

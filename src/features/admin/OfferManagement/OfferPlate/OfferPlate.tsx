@@ -10,7 +10,7 @@ type TProps = {
     onClick: (offer: IOffer) => () => void;
 }
 
-export const OfferPlate: React.FC<TProps> = ({offer, onClick}) => {
+export const OfferPlate: React.FC<React.PropsWithChildren<TProps>> = ({offer, onClick}) => {
     const classes = useStyles({t: offer.type});
     return (
         <Paper variant="outlined" className={classes.wrapper}>

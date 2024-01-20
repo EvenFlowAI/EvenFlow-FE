@@ -16,7 +16,7 @@ type TServiceDetails = {
     selectedService: IServiceCategory;
 }
 
-const ServiceDetails: React.FC<TServiceDetails> = ({onChangeVehicle, onBack, onNext, selectedService}) => {
+const ServiceDetails: React.FC<React.PropsWithChildren<TServiceDetails>> = ({onChangeVehicle, onBack, onNext, selectedService}) => {
     const {selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
 
     return <OfferPageWrapper>

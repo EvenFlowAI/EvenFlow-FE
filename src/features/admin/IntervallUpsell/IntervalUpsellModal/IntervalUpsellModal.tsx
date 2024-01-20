@@ -28,7 +28,7 @@ const initialForm: TForm = {
     numberOfParts: "",
 };
 
-const IntervalUpsellModal: React.FC<DialogProps<IUpsellServiceRequest>> = ({payload, ...props}) => {
+const IntervalUpsellModal: React.FC<React.PropsWithChildren<DialogProps<IUpsellServiceRequest>>> = ({payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [isLoading, setLoading] = useState<boolean>(false);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);

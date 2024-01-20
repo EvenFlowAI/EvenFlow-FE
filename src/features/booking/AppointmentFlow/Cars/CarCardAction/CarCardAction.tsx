@@ -23,7 +23,7 @@ const options: string[] = [
     "Schedule New Appointment"
 ];
 
-const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, clearData, onNext, onSelectCar}) => {
+const CarCardAction: React.FC<React.PropsWithChildren<TCarActionProps>> = ({car, onAddNewAppointment, clearData, onNext, onSelectCar}) => {
     const [open, setOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState<number>(1);
     const anchorRef = useRef<HTMLDivElement|null>(null);

@@ -13,7 +13,7 @@ export type TTransportationProps = {
     onSelectOption: TArgCallback<ITransportation>;
 }
 
-export const TransportationCard: React.FC<TTransportationProps> = ({
+export const TransportationCard: React.FC<React.PropsWithChildren<TTransportationProps>> = ({
                                                                        selectedTransportation,
                                                                        transportation,
                                                                        active,

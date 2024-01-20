@@ -16,7 +16,7 @@ import {
 import {useCurrentUser} from "../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../constants";
 
-export const ReportingRoutes: React.FC<{ config: IEndUserConfig }> = ({config}) => {
+export const ReportingRoutes: React.FC<React.PropsWithChildren<{ config: IEndUserConfig }>> = ({config}) => {
     const currentUser = useCurrentUser();
 
     return config.qv_token && (!window.origin.includes("apps.evenflow.ai") || (currentUser && reportingAllowedRoles.includes(currentUser?.role)))

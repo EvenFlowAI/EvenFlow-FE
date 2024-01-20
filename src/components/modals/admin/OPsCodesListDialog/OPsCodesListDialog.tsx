@@ -30,7 +30,7 @@ type TOPsCodesListDialogProps = {
     selectedPreviously?: number[];
 } & DialogProps;
 
-export const OPsCodesListDialog: React.FC<TOPsCodesListDialogProps> = ({onAction, onSave, selectedPreviously, payload, ...props}) => {
+export const OPsCodesListDialog: React.FC<React.PropsWithChildren<TOPsCodesListDialogProps>> = ({onAction, onSave, selectedPreviously, payload, ...props}) => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const showError = useException();

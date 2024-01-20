@@ -31,7 +31,7 @@ type TProps = {
     onAddServices: () => void;
 };
 
-export const AppointmentComment: React.FC<TProps> = ({handleSetScreen, onAddServices}) => {
+export const AppointmentComment: React.FC<React.PropsWithChildren<TProps>> = ({handleSetScreen, onAddServices}) => {
     const [
         subService,
         scProfile,

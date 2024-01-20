@@ -17,7 +17,7 @@ type TComplimentaryProps = {
     onComplimentaryClick: (item: TCellData, requestId: number) => void;
 }
 
-const Complimentary: React.FC<TComplimentaryProps> = ({
+const Complimentary: React.FC<React.PropsWithChildren<TComplimentaryProps>> = ({
                                                           isComplimentaryNameEdit,
                                                           packageData,
                                                           setComplimentaryNameEdit,

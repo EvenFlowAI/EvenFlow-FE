@@ -9,7 +9,7 @@ type TAssignedOpsCodesProps = {
     codes: TAssignedRequest[];
 }
 
-const AssignedOpsCodes:React.FC<TAssignedOpsCodesProps> = ({codes}) => {
+const AssignedOpsCodes:React.FC<React.PropsWithChildren<TAssignedOpsCodesProps>> = ({codes}) => {
     const {currentPackage} = useSelector((state: RootState) => state.packages);
     const classes = useStyles();
 

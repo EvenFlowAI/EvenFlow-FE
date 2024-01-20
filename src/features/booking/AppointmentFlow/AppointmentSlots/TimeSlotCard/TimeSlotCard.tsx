@@ -18,7 +18,7 @@ type TProps = {
     date: moment.Moment|null;
 }
 
-export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selected, date}) => {
+export const TimeSlotCard: React.FC<React.PropsWithChildren<TProps>> =({timeSlot, slot, onSelect, selected, date}) => {
     const {waitListSettings} = useSelector((state: RootState) => state.appointment);
     const [timePassed, setTimePassed] = useState<boolean>(false);
     const {t} = useTranslation();

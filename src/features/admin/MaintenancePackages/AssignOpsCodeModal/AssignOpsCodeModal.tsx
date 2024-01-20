@@ -34,7 +34,7 @@ type TModalProps = DialogProps & {
     packageName: string;
 }
 
-const AssignOpsCodeModal: React.FC<TModalProps> = ({ packageName, ...props}) => {
+const AssignOpsCodeModal: React.FC<React.PropsWithChildren<TModalProps>> = ({ packageName, ...props}) => {
     const [selectedCode, setSelectedCode] = useState<number | null>(null);
     const [saving, setSaving] = useState<boolean>(false);
     const [selectedOption, setSelectedOption] = useState<TSelectedOption | null>(null);

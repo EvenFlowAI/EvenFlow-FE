@@ -107,7 +107,7 @@ type TProps = {
     changeRowsPerPage: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const ServiceRequestsTable: React.FC<TProps> = ({setEditedItem, onOOpen, editedItem, pageSize, pageIndex, changePage, changeRowsPerPage}) => {
+export const ServiceRequestsTable: React.FC<React.PropsWithChildren<TProps>> = ({setEditedItem, onOOpen, editedItem, pageSize, pageIndex, changePage, changeRowsPerPage}) => {
     const [
         serviceRequestsList,
         isLoading,

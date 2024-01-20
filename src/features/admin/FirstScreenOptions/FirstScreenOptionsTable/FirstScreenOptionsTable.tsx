@@ -27,7 +27,7 @@ type TProps = {
     onOpen: TCallback;
 }
 
-export const FirstScreenOptionsTable: React.FC<TProps> = ({setCurrentItem, currentItem, onOpen}) => {
+export const FirstScreenOptionsTable: React.FC<React.PropsWithChildren<TProps>> = ({setCurrentItem, currentItem, onOpen}) => {
     const { firstScreenOptions, isLoading } = useSelector((state: RootState) => state.serviceTypes);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const {selectedSC} = useSCs();

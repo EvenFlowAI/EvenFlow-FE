@@ -45,7 +45,7 @@ type TPackageSelectionProps = {
     onAddServices: () => void;
 }
 
-export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices}) => {
+export const MaintenancePackages: React.FC<React.PropsWithChildren<TPackageSelectionProps>> = ({onBack, onNext, onAddServices}) => {
     const {scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {

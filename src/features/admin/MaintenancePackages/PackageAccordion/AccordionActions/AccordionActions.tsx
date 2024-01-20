@@ -8,7 +8,7 @@ type TAccordionProps = {
     onAddOpsCode: () => void;
 }
 
-const AccordionActions: React.FC<TAccordionProps> = ({ onAddOpsCode, onCancel, onSave }) => {
+const AccordionActions: React.FC<React.PropsWithChildren<TAccordionProps>> = ({ onAddOpsCode, onCancel, onSave }) => {
     const classes = useStyles();
     return (
         <>

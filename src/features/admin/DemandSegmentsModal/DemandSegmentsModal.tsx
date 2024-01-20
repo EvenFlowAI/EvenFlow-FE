@@ -27,7 +27,7 @@ const rowData: TableRowDataType<IDemandSegment>[] = [
     {header: "Window 3", val: el => `${el.window3Point} %`, align: "center"},
 ];
 
-export const DemandSegmentsModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export const DemandSegmentsModal: React.FC<React.PropsWithChildren<DialogProps>> = ({onAction, payload, ...props}) => {
     const [isSaving, setSaving] = useState<boolean>(false);
 
     const showMessage = useMessage();

@@ -4,7 +4,7 @@ import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import {MonthSelectorWrapper} from "./styles";
 import {TMonthProps} from "../types";
 
-export const MonthSelector: React.FC<TMonthProps> = ({date, onDateChange, loading}) => {
+export const MonthSelector: React.FC<React.PropsWithChildren<TMonthProps>> = ({date, onDateChange, loading}) => {
     const handleNext = () => {
         onDateChange(moment.utc(date).startOf('month').add(1, 'month'));
     }

@@ -28,7 +28,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useValidation} from "../../../../hooks/useValidation/useValidation";
 import {useException} from "../../../../hooks/useException/useException";
 
-export const CreateDealershipGroupModal: React.FC<DialogProps> = props => {
+export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<DialogProps>> = props => {
     const [dealership, setDealership] = useState<IDealershipForm>({...initialStateDealershipState});
     const [contactPerson, setCP] = useState<IContactPersonForm>({...initialCPState});
     const dispatch = useDispatch();

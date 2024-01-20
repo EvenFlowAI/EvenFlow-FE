@@ -10,7 +10,7 @@ export type TAvatarProps = {
     disabled?: boolean;
 }
 
-export const AvatarUpload: React.FC<TAvatarProps> = (props) => {
+export const AvatarUpload: React.FC<React.PropsWithChildren<TAvatarProps>> = (props) => {
     const [state, setState] = useState<IAvatarState>({file: null, dataUrl: props.dataUrl || undefined});
     const classes = useStyles({size: props.size || 74, disabled: props.disabled});
 

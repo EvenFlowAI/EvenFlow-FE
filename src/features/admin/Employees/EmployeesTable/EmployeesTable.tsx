@@ -51,7 +51,7 @@ type TProps = {
     onOpen: TCallback;
 }
 
-const EmployeesTable:React.FC<TProps> = ({editedItem, setEditedItem, onOpen}) => {
+const EmployeesTable:React.FC<React.PropsWithChildren<TProps>> = ({editedItem, setEditedItem, onOpen}) => {
     const [data, isLoading, count,  order, searchTerm] = useSelector((state: RootState) => [
         state.employees.employeesList,
         state.employees.loading,

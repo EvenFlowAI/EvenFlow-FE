@@ -23,7 +23,7 @@ type TProps = {
     appointments?: TGroupedAppointment;
 }
 
-export const AppointmentTimeSelector: React.FC<TProps> =
+export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<TProps>> =
     ({date, loading, appointments}) => {
         const {
             appointment: selectedAppointment,

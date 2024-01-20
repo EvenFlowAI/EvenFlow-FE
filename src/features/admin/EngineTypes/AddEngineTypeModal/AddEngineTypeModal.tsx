@@ -13,7 +13,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const AddEngineTypeModal: React.FC<DialogProps> = (props) => {
+export const AddEngineTypeModal: React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
     const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [newEngineType, setNewEngineType] = useState<string>('');
     const [types, setTypes] = useState<string[]>([]);

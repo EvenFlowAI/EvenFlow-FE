@@ -13,7 +13,7 @@ type TProps = {
     onEmailEditOpen: TCallback;
 }
 
-export const ScreenSettings: React.FC<TProps> = ({onEmailEditOpen}) => {
+export const ScreenSettings: React.FC<React.PropsWithChildren<TProps>> = ({onEmailEditOpen}) => {
     const {emailRequirement, isEmailRequirementLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();

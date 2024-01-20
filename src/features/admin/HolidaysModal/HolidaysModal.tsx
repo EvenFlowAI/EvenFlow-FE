@@ -28,7 +28,7 @@ const rowData: TableRowDataType<IHoliday>[] = [
     {header: "Recurring", val: v => v.isRecurring ? "Repeat" : "No Repeat"}
 ]
 
-export const HolidaysModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
+export const HolidaysModal: React.FC<React.PropsWithChildren<DialogProps&TViewMode>> = ({viewMode, ...props}) => {
     const [
         holidays,
         isLoading,

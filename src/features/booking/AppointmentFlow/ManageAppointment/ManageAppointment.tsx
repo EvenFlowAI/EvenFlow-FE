@@ -60,7 +60,7 @@ type TProps = {
     onUpdateAppointment: TArgCallback<ILoadedVehicle>;
 };
 
-export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppointment}) => {
+export const ManageAppointment: React.FC<React.PropsWithChildren<TProps>> = ({onChangeSlot, onUpdateAppointment}) => {
     const [appointment, appointmentFrame, saving] = useSelector((state: RootState) => [
         state.appointment,
         state.appointmentFrame,

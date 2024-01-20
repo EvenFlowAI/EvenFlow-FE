@@ -19,7 +19,7 @@ const RowData: TableRowDataType<IMake>[] = [
     {val: (el: IMake) => el.models.join(', '), header: "Model"},
 ];
 
-export const MakesModelsTable: React.FC<{onOpen: TCallback}> = ({onOpen}) => {
+export const MakesModelsTable: React.FC<React.PropsWithChildren<{onOpen: TCallback}>> = ({onOpen}) => {
     const {makes, currentMake, isLoading} = useSelector((state: RootState) => state.vehicleDetails);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [tableData, setTableData] = useState<IMake[]>([]);

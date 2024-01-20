@@ -51,7 +51,7 @@ type TAccordionProps = {
     onOpenEdit: () => void;
 };
 
-export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
+export const PackageAccordion: React.FC<React.PropsWithChildren<TAccordionProps>> = (props) => {
     const {
         id,
         title,

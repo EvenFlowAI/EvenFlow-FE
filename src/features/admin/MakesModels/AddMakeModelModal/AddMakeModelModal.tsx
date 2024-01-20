@@ -17,7 +17,7 @@ type TAddMakeModalProps = DialogProps & {
     isEditing?: boolean;
 };
 
-export const AddMakeModelModal:React.FC<TAddMakeModalProps> = ({ isEditing, onClose, ...props}) => {
+export const AddMakeModelModal:React.FC<React.PropsWithChildren<TAddMakeModalProps>> = ({ isEditing, onClose, ...props}) => {
     const { currentMake, makes } = useSelector((state: RootState) => state.vehicleDetails);
     const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);

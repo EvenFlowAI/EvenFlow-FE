@@ -124,7 +124,7 @@ const useAutocompleteStyles = makeStyles<Theme, TStyleProps>(() => ({
     },
 }))
 
-const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToShowServiceSelection, onGoToFirstScreen, onUpdateAppointment}) => {
+const YourLocation: React.FC<React.PropsWithChildren<TYourLocationProps>> = ({onBack, onNext, setNeedToShowServiceSelection, onGoToFirstScreen, onUpdateAppointment}) => {
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);

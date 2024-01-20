@@ -24,7 +24,7 @@ type TAppointmentFilterProps = {
     setFilters: Dispatch<SetStateAction<TFilters>>;
 }
 
-export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
+export const AppointmentFilters: React.FC<React.PropsWithChildren<TAppointmentFilterProps>> = ({
                                                                           status,
                                                                           selectedDate,
                                                                           setFilters,

@@ -56,7 +56,7 @@ type TCustomerSearchTableProps = {
     selectedColumns: TColumn[];
 }
 
-const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColumns, onClose, loadData, isNewVehicleMode, redirect}) => {
+const CustomerSearchTable: React.FC<React.PropsWithChildren<TCustomerSearchTableProps>> = ({selectedColumns, onClose, loadData, isNewVehicleMode, redirect}) => {
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);

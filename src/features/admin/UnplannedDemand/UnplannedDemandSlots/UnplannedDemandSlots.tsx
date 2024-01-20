@@ -14,7 +14,7 @@ type TTableProps = {
     slots: IUnplannedDemandBySlot[];
 }
 
-const UnplannedDemandSlots: React.FC<TTableProps> = ({ slots, setDemandSlots }) => {
+const UnplannedDemandSlots: React.FC<React.PropsWithChildren<TTableProps>> = ({ slots, setDemandSlots }) => {
     const classes = useStyles();
 
     const onChange = (item: IUnplannedDemandBySlot, value: number|string) => {

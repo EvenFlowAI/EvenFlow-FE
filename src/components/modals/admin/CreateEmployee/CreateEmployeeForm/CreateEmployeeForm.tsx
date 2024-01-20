@@ -29,7 +29,7 @@ type TTFormProps = {
 };
 
 
-export const CreateEmployeeForm: React.FC<TTFormProps> = ({
+export const CreateEmployeeForm: React.FC<React.PropsWithChildren<TTFormProps>> = ({
                                                               setEmployeeForm,
                                                               setFormIsChecked,
                                                               formIsChecked,

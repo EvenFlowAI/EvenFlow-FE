@@ -19,7 +19,7 @@ type TCustomerSearchResultsActionsProps = {
     setSelectedColumns: Dispatch<SetStateAction<TSearchColumnName[]>>;
 }
 
-const CustomerSearchResultsActions: React.FC<TCustomerSearchResultsActionsProps> = ({
+const CustomerSearchResultsActions: React.FC<React.PropsWithChildren<TCustomerSearchResultsActionsProps>> = ({
                                                                                         onBack,
                                                                                         onNewSearch,
                                                                                         isNewVehicleMode,

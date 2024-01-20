@@ -11,7 +11,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-const CustomerVerification: React.FC<DialogProps> = (props) => {
+const CustomerVerification: React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
     const [isVerificationOn, setVerificationOn] = useState<boolean>(false);
     const { remindersLoading } = useSelector((state: RootState) => state.serviceCenters);
     const {selectedSC} = useSCs();

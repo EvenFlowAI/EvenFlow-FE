@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import {ButtonsRow} from "./styles";
 import {TActionProps} from "../../../types/types";
 
-export const ActionButtons: React.FC<TActionProps> = (
+export const ActionButtons: React.FC<React.PropsWithChildren<TActionProps>> = (
     {
         onBack,
         onNext,

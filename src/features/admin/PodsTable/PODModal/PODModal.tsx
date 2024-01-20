@@ -49,7 +49,7 @@ const initialForm: TForm = {
     isVisitCenter: true,
 }
 
-export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...props}) => {
+export const PODModal: React.FC<React.PropsWithChildren<DialogProps<IPod>>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const {selectedSC} = useSCs();
     const [loading, setLoading] = useState<boolean>();

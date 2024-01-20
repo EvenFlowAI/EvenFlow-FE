@@ -26,7 +26,7 @@ type TProps = {
     appointments: TGroupedAppointments;
 }
 
-export const DaySelector: React.FC<TProps> = ({date, onDateChange, loading, appointments, dateRangeUpdated, onDateRangeSet}) => {
+export const DaySelector: React.FC<React.PropsWithChildren<TProps>> = ({date, onDateChange, loading, appointments, dateRangeUpdated, onDateRangeSet}) => {
     const {isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const [sliceIdx, setSliceIdx] = useState<number>(0);
     const theme = useTheme();

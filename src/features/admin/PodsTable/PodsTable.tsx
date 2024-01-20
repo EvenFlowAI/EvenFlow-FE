@@ -106,7 +106,7 @@ const rowData: TableRowDataTypeResp<IPod>[] = [
     },
 ]
 
-export const PodsTable:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode}) => {
+export const PodsTable:React.FC<React.PropsWithChildren<{dense?: boolean}&TViewMode>> = ({dense, viewMode}) => {
     const [pods, podsCount, isLoading] = useSelector((state: RootState) => [
         state.pods.podsList,
         state.pods.podsPaging.numberOfRecords,

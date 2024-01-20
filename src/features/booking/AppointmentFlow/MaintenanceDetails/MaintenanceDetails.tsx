@@ -40,7 +40,7 @@ type TMaintenanceDetailsProps = {
 
 const blankOptions: TOptionsState = {};
 
-export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack}) => {
+export const MaintenanceDetails: React.FC<React.PropsWithChildren<TMaintenanceDetailsProps>> = ({onNext, onBack}) => {
     const {
         selectedVehicle,
         makes,

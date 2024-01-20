@@ -15,7 +15,7 @@ import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
-export const BreaksModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
+export const BreaksModal: React.FC<React.PropsWithChildren<DialogProps&TViewMode>> = ({viewMode, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [form, setForm] = useState<TBreak[]>(initialBreaks);

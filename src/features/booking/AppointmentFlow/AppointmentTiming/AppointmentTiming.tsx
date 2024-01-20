@@ -46,7 +46,7 @@ const cards: TCard[] = [
 
 const timingTypes = ['Special Offers', 'Preferred Date', 'First Available Date'];
 
-export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>}> = ({handleSetScreen}) => {
+export const AppointmentTiming: React.FC<React.PropsWithChildren<{handleSetScreen: TArgCallback<TScreen>}>> = ({handleSetScreen}) => {
     const [isLoading, setLoading] = useState<boolean>(false);
     const [
         selectedType,

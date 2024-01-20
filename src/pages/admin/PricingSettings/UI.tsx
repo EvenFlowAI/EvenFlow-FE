@@ -16,11 +16,11 @@ const useStyles = makeStyles({
 type TProps = {
     noPadding?: boolean;
 }
-export const PaperTitle: React.FC<TProps> = ({children, noPadding}) => {
+export const PaperTitle: React.FC<React.PropsWithChildren<TProps>> = ({children, noPadding}) => {
     const classes = useStyles({nPd: Boolean(noPadding)});
     return <h4 className={classes.title}>{children}</h4>;
 };
 
-export const TableContainer: React.FC = ({children}) => {
+export const TableContainer: React.FC<React.PropsWithChildren<unknown>> = ({children}) => {
     return <div style={{padding: 16}}>{children}</div>;
 }

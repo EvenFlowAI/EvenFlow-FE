@@ -24,7 +24,7 @@ import {setAdvisorAvailable} from "../../../../../../store/reducers/bookingFlowC
 import {IServiceConsultant} from "../../../../../../api/types";
 import {useSelectedAppointmentStyles} from "../../../../../../hooks/styling/useSelectedAppointmentStyles";
 
-const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
+const ServiceOption: React.FC<React.PropsWithChildren<{isSm: boolean}>> = ({isSm}) => {
     const {
         serviceTypeOption,
         sideBarSteps,

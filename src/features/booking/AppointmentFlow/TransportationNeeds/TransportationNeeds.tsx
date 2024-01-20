@@ -20,7 +20,7 @@ import {TTransportationData} from "./types";
 import {TActionProps} from "../../../../types/types";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 
-export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) => {
+export const TransportationNeeds: React.FC<React.PropsWithChildren<TActionProps>> = ({onNext, onBack}) => {
     const {id} = useParams();
     const {t} = useTranslation();
     const [transportations, setTransportations] = useState<ITransportation[]>([]);

@@ -12,7 +12,7 @@ type TProps = {
     onClick: (date: moment.Moment, data?: ITimeOfYearSetting) => void;
 }
 
-export const Month: React.FC<TProps> = ({month, data, onClick}) => {
+export const Month: React.FC<React.PropsWithChildren<TProps>> = ({month, data, onClick}) => {
     const [d, start, end] = useMemo(() => {
         const dt = moment.utc().month(month);
         return [

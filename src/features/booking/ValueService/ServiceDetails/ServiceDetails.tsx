@@ -17,7 +17,7 @@ type TServiceDetails = {
     onNext: () => void;
 }
 
-const ServiceDetails: React.FC<TServiceDetails> = ({onChangeVehicle, onBack, onNext}) => {
+const ServiceDetails: React.FC<React.PropsWithChildren<TServiceDetails>> = ({onChangeVehicle, onBack, onNext}) => {
     const {valueService} = useSelector((state: RootState) => state.appointmentFrame);
     const theme = useTheme();
     const isSM = useMediaQuery(theme.breakpoints.down('md'));

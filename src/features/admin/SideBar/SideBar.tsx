@@ -22,7 +22,7 @@ type TProps = {
     onClose: () => void;
 };
 
-export const SideBar: React.FC<TProps> = ({isOpened, onClose}) => {
+export const SideBar: React.FC<React.PropsWithChildren<TProps>> = ({isOpened, onClose}) => {
     const classes = useStyles();
     const theme = useTheme();
     const isTablet = useMediaQuery(theme.breakpoints.down('lg'));

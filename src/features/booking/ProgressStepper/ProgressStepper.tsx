@@ -10,7 +10,7 @@ type TProps = {
     nextLabel?: string;
 }
 
-export const ProgressStepper: React.FC<TProps> = ({activeStep, steps, label, nextLabel}) => {
+export const ProgressStepper: React.FC<React.PropsWithChildren<TProps>> = ({activeStep, steps, label, nextLabel}) => {
     const {t} = useTranslation();
     const stepWeight = useMemo(() => {
         return 100 / (steps || 1);

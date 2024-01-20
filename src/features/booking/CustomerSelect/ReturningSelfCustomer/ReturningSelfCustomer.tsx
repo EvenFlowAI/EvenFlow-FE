@@ -16,7 +16,7 @@ type TProps = {
     loading: boolean;
 }
 
-const ReturningSelfCustomer: React.FC<TProps> = ({loading, onComplete}) => {
+const ReturningSelfCustomer: React.FC<React.PropsWithChildren<TProps>> = ({loading, onComplete}) => {
     const {customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
 

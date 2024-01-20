@@ -15,7 +15,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
-const WaitListSlotSettingsModal: React.FC<DialogProps> = (props) => {
+const WaitListSlotSettingsModal: React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
     const {waitListSettings, isWaitListLoading} = useSelector((state: RootState) => state.optimizationWindows);
     const [slotText, setSlotText] = useState<string>('');
     const [slotTextHex, setSlotTextHex] = useState<string>('');

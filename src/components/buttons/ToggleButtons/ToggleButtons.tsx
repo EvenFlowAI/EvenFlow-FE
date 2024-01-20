@@ -15,7 +15,7 @@ type TProps = {
     exclusive?: boolean,
 }
 
-export const ToggleButtons: React.FC<TProps> = props => {
+export const ToggleButtons: React.FC<React.PropsWithChildren<TProps>> = props => {
     const classes = useStyles();
 
     return <div>

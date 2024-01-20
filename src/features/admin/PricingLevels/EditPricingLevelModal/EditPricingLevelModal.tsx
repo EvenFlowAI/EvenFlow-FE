@@ -16,7 +16,7 @@ type TEditPricingLevelsProps = DialogProps & {
   prisingLevel: TPricingLevel | null;
 };
 
-const EditPricingLevelModal: React.FC<TEditPricingLevelsProps> = ({ prisingLevel, ...props}) => {
+const EditPricingLevelModal: React.FC<React.PropsWithChildren<TEditPricingLevelsProps>> = ({ prisingLevel, ...props}) => {
     const [service, setService] = useState<string>('');
     const [opsCode, setOpsCode] = useState<string>('');
     const [discount, setDiscount] = useState<string>('');

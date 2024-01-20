@@ -11,7 +11,7 @@ import {Textarea, Warning} from "./styles";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-const ShowDropOffTimeModal: React.FC<DialogProps> = ({onClose, open}) => {
+const ShowDropOffTimeModal: React.FC<React.PropsWithChildren<DialogProps>> = ({onClose, open}) => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
     const [isShowTime, setIsShowTime] = useState<boolean>(false);
     const [text, setText] = useState<string>('');

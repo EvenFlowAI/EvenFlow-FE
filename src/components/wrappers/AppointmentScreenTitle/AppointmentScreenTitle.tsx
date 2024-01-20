@@ -15,7 +15,7 @@ const Wrapper = styled('h1')(({theme}) => ({
     }
 }))
 
-export const AppointmentScreenTitle: React.FC = ({children}) => {
+export const AppointmentScreenTitle: React.FC<React.PropsWithChildren<unknown>> = ({children}) => {
     return (
         <Wrapper>
             {children}

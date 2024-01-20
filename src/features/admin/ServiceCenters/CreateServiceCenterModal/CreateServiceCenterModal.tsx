@@ -43,7 +43,7 @@ const initialFormState: TSCFormState = {
 }
 
 export const CreateServiceCenterModal:
-    React.FC<DialogProps<IServiceCenterForm>&{readOnly?: boolean}> =
+    React.FC<React.PropsWithChildren<DialogProps<IServiceCenterForm>&{readOnly?: boolean}>> =
     ({payload, readOnly, ...props}) => {
         const saving = useSelector((state: RootState) => state.serviceCenters.saving);
 

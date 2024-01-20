@@ -17,7 +17,7 @@ type TProps = {
     valueServiceNextScreen: TScreen;
 }
 
-const AppRoutes: React.FC<TProps> = ({valueServicePreviousScreen, valueServiceNextScreen}) => {
+const AppRoutes: React.FC<React.PropsWithChildren<TProps>> = ({valueServicePreviousScreen, valueServiceNextScreen}) => {
     const dispatch = useDispatch();
 
     const onValueServiceBack = async () => {

@@ -16,7 +16,7 @@ type TProps = {
     loading: boolean;
 }
 
-export const SVAppointmentTimeSelector: React.FC<TProps> =
+export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<TProps>> =
     ({date, loading}) => {
         const {serviceValetAppointment: selectedAppointment, serviceValetSlots} = useSelector((state: RootState) => state.appointment);
         const {selectedTiming, sideBarSteps} = useSelector((state : RootState) => state.appointmentFrame);

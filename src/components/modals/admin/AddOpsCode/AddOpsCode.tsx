@@ -36,7 +36,7 @@ const tableData: TableRowDataType<IAssignedServiceRequest>[] = [
     {header: "INVOICE AMOUNT", val: el => `$${el.serviceRequestOverride?.invoiceAmount || el.serviceRequest.invoiceAmount}`, align: "left"},
 ]
 
-const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
+const AddOpsCodeModal: React.FC<React.PropsWithChildren<TAssignOpsCodeModalProps>> =
     ({ handleSelect,
          isEligible,
          disabledIds,

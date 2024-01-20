@@ -13,7 +13,7 @@ type TZonesProps = {
     selectedZone: TZone|null;
 }
 
-const Zones: React.FC<TZonesProps> = ({setCurrentZip, onRemoveZip, setSelectedZone, selectedZone }) => {
+const Zones: React.FC<React.PropsWithChildren<TZonesProps>> = ({setCurrentZip, onRemoveZip, setSelectedZone, selectedZone }) => {
     const {zones, isLoading} = useSelector((state: RootState) => state.serviceValet);
     const classes = useStyles();
 

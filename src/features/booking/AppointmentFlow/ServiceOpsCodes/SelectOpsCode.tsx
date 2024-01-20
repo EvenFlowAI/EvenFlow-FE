@@ -32,7 +32,7 @@ type TProps = {
     page: EServiceCategoryPage;
 }
 
-export const SelectOpsCode: React.FC<TProps> = ({handleSetScreen, onAddServices, page}) => {
+export const SelectOpsCode: React.FC<React.PropsWithChildren<TProps>> = ({handleSetScreen, onAddServices, page}) => {
     const [
         selectedSR,
         srList,

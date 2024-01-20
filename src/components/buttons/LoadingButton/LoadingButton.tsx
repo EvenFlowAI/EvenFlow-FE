@@ -7,7 +7,7 @@ type Props =
     { loading?: boolean, classes?: Partial<Record<ButtonClassKey, string> & { wrapper?: string }> }
     & ButtonProps;
 
-export const LoadingButton: React.FC<Props> = ({loading, classes, ...props}) => {
+export const LoadingButton: React.FC<React.PropsWithChildren<Props>> = ({loading, classes, ...props}) => {
     const classes_ = useStyles({fw: props.fullWidth || false});
     const wrapperClassName = clsx(classes?.wrapper, classes_.wrapper);
     const buttonClasses = {...classes};

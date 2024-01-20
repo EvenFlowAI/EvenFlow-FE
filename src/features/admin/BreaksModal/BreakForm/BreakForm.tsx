@@ -16,7 +16,7 @@ type TProps = {
     formIsChecked: boolean;
 }
 
-export const BreakForm: React.FC<TProps&TViewMode> = props => {
+export const BreakForm: React.FC<React.PropsWithChildren<TProps&TViewMode>> = props => {
     const classes = useStyles();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));

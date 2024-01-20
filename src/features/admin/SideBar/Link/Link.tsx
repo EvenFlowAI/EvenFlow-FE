@@ -12,7 +12,7 @@ type TLinkProps = {
     closeSidebar: () => void;
 }
 
-const Link: React.FC<TLinkProps> = ({link, closeSidebar}) => {
+const Link: React.FC<React.PropsWithChildren<TLinkProps>> = ({link, closeSidebar}) => {
     const [isSubListOpen, setSubListOpen] = useState<boolean>(false);
     const currentUser = useCurrentUser();
     const classes = useStyles();

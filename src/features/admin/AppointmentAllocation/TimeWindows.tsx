@@ -57,12 +57,12 @@ const getData = (d: ITimeWindow): TForm => {
         duration2: d.durationInHours
     };
 }
-const InputOrValue: React.FC<{
+const InputOrValue: React.FC<React.PropsWithChildren<{
     name: string;
     value: number;
     onChange: React.ChangeEventHandler
     isEdit: boolean;
-}> = ({name, value, isEdit, onChange}) => {
+}>> = ({name, value, isEdit, onChange}) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     if (!isEdit) return <span>{value ? String(value) : "0"}</span>;

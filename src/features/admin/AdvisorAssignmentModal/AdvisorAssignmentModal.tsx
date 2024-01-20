@@ -18,7 +18,7 @@ import {useException} from "../../../hooks/useException/useException";
 
 type TMethod = "primary"|"secondary"
 
-const AdvisorAssignmentModal: React.FC<DialogProps> = (props) => {
+const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
     const {selectedSC, advisorAssignment, advisorAssignmentLoading} = useSelector((state: RootState) => state.serviceCenters);
     const [primaryMethod, setPrimaryMethod] = useState<EAdvisorAssignMethod|null>(null);
     const [secondaryMethod, setSecondaryMethod] = useState<EAdvisorAssignMethod|null>(null);

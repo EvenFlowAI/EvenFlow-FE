@@ -17,7 +17,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const WorkWeekModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export const WorkWeekModal: React.FC<React.PropsWithChildren<DialogProps>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);
     const showError = useException();

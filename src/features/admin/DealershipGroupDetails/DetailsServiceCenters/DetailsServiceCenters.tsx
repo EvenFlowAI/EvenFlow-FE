@@ -14,7 +14,7 @@ const rowData: TableRowDataType<IServiceCenterExtended>[] = [
     {header: "Bays", val: v => String(v.countOfBays) || '-', align: "center"}
 ];
 
-export const DetailsServiceCenters: React.FC<TDetailComponentProps> = (props) => {
+export const DetailsServiceCenters: React.FC<React.PropsWithChildren<TDetailComponentProps>> = (props) => {
     const [data, size, loading] = useSelector((state: RootState) => [
         state.serviceCenters.dealershipSCs,
         state.serviceCenters.dealershipPaging.numberOfRecords,

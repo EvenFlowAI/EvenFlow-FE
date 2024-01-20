@@ -11,7 +11,7 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 
-const RemindersModal: React.FC<DialogProps> = (props) => {
+const RemindersModal: React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
     const [isRemindersOn, setRemindersOn] = useState<boolean>(false);
     const { reminders, remindersLoading } = useSelector((state: RootState) => state.serviceCenters);
     const showError = useException();

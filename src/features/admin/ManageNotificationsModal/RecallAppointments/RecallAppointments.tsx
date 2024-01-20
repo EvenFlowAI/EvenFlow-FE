@@ -18,7 +18,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState, onClose}) => {
+const RecallAppointments: React.FC<React.PropsWithChildren<TNotificatonsProps>> = ({setChangesState, onClose}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);
     const {recallNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort|null>(null);

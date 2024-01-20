@@ -7,7 +7,7 @@ import {ReportProblemOutlined} from "@mui/icons-material";
 import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 
-export const ConfirmModal: React.FC = () => {
+export const ConfirmModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     const {open, payload} = useSelector((state: RootState) => state.modals.confirm);
     const {closeConfirm} = useConfirm();
     const [loading, setLoading] = useState<boolean>(false);

@@ -17,7 +17,7 @@ type TOpsCodesTableProps = {
     setWrongOrderIndexes: Dispatch<SetStateAction<number[]>>;
 }
 
-export const OpsCodesOrderTable:React.FC<TOpsCodesTableProps> = ({
+export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<TOpsCodesTableProps>> = ({
                                                              selectedCodes,
                                                              setSelectedCodes,
                                                              disabled,

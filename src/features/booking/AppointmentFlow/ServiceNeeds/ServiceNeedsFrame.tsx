@@ -43,7 +43,7 @@ type TProps = {
     page: EServiceCategoryPage;
     setPage: Dispatch<SetStateAction<EServiceCategoryPage>>;
 }
-export const ServiceNeedsFrame: React.FC<TProps> = ({
+export const ServiceNeedsFrame: React.FC<React.PropsWithChildren<TProps>> = ({
                                                         onSelect,
                                                         onBack,
                                                         setLastSelectedCategory,

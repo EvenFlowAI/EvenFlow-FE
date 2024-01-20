@@ -49,7 +49,7 @@ type TProps = {
     loading: boolean;
 };
 
-const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading }) => {
+const ServiceTypeSelect: React.FC<React.PropsWithChildren<TProps>> = ({handleValueServiceConfig, loading }) => {
     const {
         trackerCreated,
         userType,
