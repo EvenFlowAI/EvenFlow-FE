@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {AppointmentConfirmationTitle} from "../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
 import moment from "moment";
 import {Edit} from "@material-ui/icons";
@@ -25,9 +25,16 @@ export const AppointmentSelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     const [serviceValetTime, setServiceValetTime] = useState<TServiceValetSlot|null>(null);
     const {t} = useTranslation();
     const dispatch = useDispatch();
+
+    const serviceType = useMemo(() => serviceTypeOption
+        ? serviceTypeOption.type
+        : EServiceType.VisitCenter, [serviceTypeOption]);
+
     const isWaitList = appointment
-        ? appointment?.isOverbookingApplied && waitListSettings?.isEnabled
-        : appointmentByKey?.isWaitlist && waitListSettings?.isEnabled;
+        ? appointment?.isOverbookingApplied && waitListSettings?.isEnabled && serviceType === EServiceType.VisitCenter
+        : appointmentByKey?.isWaitlist && appointmentByKey?.waitlistTextSettings?.isEnabled && serviceType === EServiceType.VisitCenter;
+
+    const waitListData = appointment ? waitListSettings : appointmentByKey?.waitlistTextSettings;
 
     useEffect(() => {
         if (serviceValetAppointment) {
@@ -104,10 +111,10 @@ export const AppointmentSelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
             </div>
             : null}
         {isWaitList
-            ? <div style={{color: waitListSettings?.textHex
-                    ? `#${waitListSettings?.textHex}`
+            ? <div style={{color: waitListData?.textHex
+                    ? `#${waitListData?.textHex}`
                     : "#CE690B", marginTop: 8}}>
-                {waitListSettings?.text ?? t("Waitlist only")}
+                {waitListData?.text ?? t("Waitlist only")}
         </div>
             : null}
     </div>
