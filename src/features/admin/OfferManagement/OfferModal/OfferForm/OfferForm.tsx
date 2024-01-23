@@ -23,11 +23,10 @@ import {EServiceCategoryType, ICategory} from "../../../../../store/reducers/cat
 import HtmlEditor from "../../../../../components/modals/admin/HTMLEditor/HTMLEditor";
 import {useStyles} from "./styles";
 import {CustomDatePicker} from "../../../../../components/pickers/DatePicker/CustomDatePicker";
-import {TimePicker} from "../../../../../components/pickers/TimePicker/TimePicker";
 import {useModal} from "../../../../../hooks/useModal/useModal";
 import {TEnumMap} from "../../../../../store/reducers/types";
-import moment from "moment";
-import MuiXDatePicker from "../../../../../components/pickers/MuiXDatePicker/MuiXDatePicker";
+import CustomClockTimePicker from "../../../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
+import {Dayjs} from "dayjs";
 
 type TProps = {
     form: TOfferForm;
@@ -35,7 +34,7 @@ type TProps = {
     onValueChange: (name: keyof TOfferForm, value: unknown) => void;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onRadio: (e: React.ChangeEvent<HTMLInputElement>, value: string) => void;
-    onChangeDateTime: (name: keyof TOfferForm) => (date: moment.Moment) => void;
+    onChangeDateTime: (name: keyof TOfferForm) => (date: Dayjs|null) => void;
     onDOWSelect: (e: any, value: TEnumMap<EDayOfWeek>[]) => void;
     onSegmentSelect: (e: any, value: TEnumMap<ECustomerSegment>[]) => void;
     onSRChange: (e: any, value: IAssignedServiceRequestShort[]) => void;
@@ -70,6 +69,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
 
     return (
         <DialogContent>
+            {/*<MuiXDatePicker/>*/}
             <div className={classes.inputContainer}>
                 <TextField
                     fullWidth
@@ -81,7 +81,6 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                     value={form.offerTitle||""}
                 />
             </div>
-            <MuiXDatePicker/>
             <div className={classes.inputContainer}>
                 <RadioGroup
                     row
@@ -242,25 +241,25 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
             </div>
             <div className={clsx(classes.inputContainer, classes.rowContainer)}>
                 <div className={classes.innerContainer}>
-                    <TimePicker
+                    <CustomClockTimePicker
                         fullWidth
                         label={"Time of Day"}
                         InputProps={{
                             endAdornment: <QueryBuilder color={"disabled"} />,
                             error: formIsChecked && !form.timeOfDayFrom
                         }}
-                        value={form.timeOfDayFrom||null}
+                        value={form.timeOfDayFrom ?? null}
                         onChange={onChangeDateTime("timeOfDayFrom")} />
                 </div>
                 <div className={classes.divider}>-</div>
                 <div className={classes.innerContainer}>
-                    <TimePicker
+                    <CustomClockTimePicker
                         fullWidth
                         InputProps={{
                             endAdornment: <QueryBuilder color={"disabled"} />,
                             error: formIsChecked && !form.timeOfDayTo
                         }}
-                        value={form.timeOfDayTo||null}
+                        value={form.timeOfDayTo ?? null}
                         onChange={onChangeDateTime("timeOfDayTo")} />
                 </div>
             </div>

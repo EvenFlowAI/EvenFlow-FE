@@ -14,7 +14,7 @@ import {
 } from "../../../../store/reducers/offers/types";
 import {useDispatch} from "react-redux";
 import {createOffer, removeOffer, setArchiveOffer, updateOffer} from "../../../../store/reducers/offers/actions";
-import {SC_UNDEFINED, SOMETHING_WRONG, timeSpanString} from "../../../../utils/constants";
+import {SC_UNDEFINED, SOMETHING_WRONG, time12HourSeconds, timeSpanString} from "../../../../utils/constants";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
 import {loadSCRequestsShort} from "../../../../store/reducers/serviceRequests/actions";
 import moment from "moment";
@@ -32,6 +32,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {TEnumMap} from "../../../../store/reducers/types";
 import {ParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
 
 const initialForm: TOfferForm = {
     offerValue: undefined,
@@ -42,8 +43,8 @@ const initialForm: TOfferForm = {
     customerSegments: [customerSegments[0]],
     customerPresence: ECustomerPresence.Both,
     dayOfWeek: [dayOfWeek[0]],
-    timeOfDayFrom: moment("00:00:00", "hh:mm:ss"),
-    timeOfDayTo: moment("23:59:59", "hh:mm:ss"),
+    timeOfDayFrom: dayjs("00:00:00", time12HourSeconds),
+    timeOfDayTo: dayjs("23:59:59", time12HourSeconds),
     isProductPageOn: false,
 }
 
@@ -90,8 +91,8 @@ export const OfferModal:React.FC<React.PropsWithChildren<React.PropsWithChildren
                     }, [] as TEnumMap<EDayOfWeek>[]),
                     durationFrom: moment(payload.duration.start),
                     durationTo: moment(payload.duration.end),
-                    timeOfDayFrom: moment(payload.timeOfDay.start, timeSpanString),
-                    timeOfDayTo: moment(payload.timeOfDay.end, timeSpanString),
+                    timeOfDayFrom: dayjs(payload.timeOfDay.start, timeSpanString),
+                    timeOfDayTo: dayjs(payload.timeOfDay.end, timeSpanString),
                     serviceType: payload.serviceType?.name,
                     serviceCategories: payload.serviceCategories,
                 })
@@ -283,8 +284,8 @@ export const OfferModal:React.FC<React.PropsWithChildren<React.PropsWithChildren
                             end: form.durationTo?.toISOString()
                         },
                         timeOfDay: {
-                            start: form.timeOfDayFrom?.format(timeSpanString),
-                            end: form.timeOfDayTo?.format(timeSpanString),
+                            start: dayjs(form.timeOfDayFrom, time12HourSeconds).format(timeSpanString),
+                            end: dayjs(form.timeOfDayTo, time12HourSeconds).format(timeSpanString),
                         },
                         isAllServiceRequestsIncluded: Boolean(
                             form.serviceRequests.find(sr => sr.id === 0)

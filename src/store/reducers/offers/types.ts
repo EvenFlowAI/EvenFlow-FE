@@ -1,7 +1,7 @@
 import {IAssignedServiceRequestShort} from "../serviceRequests/types";
 import {ICategory} from "../categories/types";
 import {TEnumKeyLabel, TEnumMap} from "../types";
-import {IPageRequest, IPagingResponse, ParsableDate} from "../../../types/types";
+import {IPageRequest, IPagingResponse, ParsableDate, TParsableDate} from "../../../types/types";
 
 export enum EOfferType {
     AmountOff, PercentOff, FreeService
@@ -81,8 +81,8 @@ export interface IDuration {
     end: ParsableDate;
 }
 export interface ITimeOfDay {
-    start: ParsableDate;
-    end: ParsableDate;
+    start: TParsableDate;
+    end: TParsableDate;
 }
 export interface IServiceType {
     name: string;

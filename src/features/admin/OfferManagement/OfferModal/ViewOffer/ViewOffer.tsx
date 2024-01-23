@@ -12,6 +12,7 @@ import {TextField} from "../../../../../components/formControls/TextFieldStyled/
 import moment from "moment";
 import {calendarDateFormat, timeSpanString, time12HourFormat} from "../../../../../utils/constants";
 import {Label} from "./styles";
+import dayjs from "dayjs";
 
 export const ViewOffer: React.FC<React.PropsWithChildren<React.PropsWithChildren<{
     onArchive: () => void, archiving: boolean, offer: IOffer}>>> = ({offer, onArchive, archiving}) => {
@@ -53,9 +54,9 @@ export const ViewOffer: React.FC<React.PropsWithChildren<React.PropsWithChildren
                         label="Time of Day"
                         disabled
                         value={
-                            `${moment(
+                            `${dayjs(
                                 offer.timeOfDay.start, timeSpanString
-                            ).format(time12HourFormat)} - ${moment(
+                            ).format(time12HourFormat)} - ${dayjs(
                                 offer.timeOfDay.end, time12HourFormat
                             ).format(time12HourFormat)}`
                         }

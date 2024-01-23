@@ -7,6 +7,7 @@ import React from "react";
 import { AutocompleteChangeReason, AutocompleteChangeDetails } from '@mui/material/useAutocomplete';
 
 import {TextInputProps} from "../components/formControls/types";
+import {Dayjs} from "dayjs";
 
 export type LinkType = {
     to: string;
@@ -319,5 +320,6 @@ export type TIdAndName = {
 }
 
 export type ParsableDate = object | string | number | Date | null | undefined;
+export type TParsableDate = string | number | Date | Dayjs | null | undefined;
 
 export type TAutocompleteChangeReason = "createOption" | "selectOption" | "removeOption" | "blur" | "clear"

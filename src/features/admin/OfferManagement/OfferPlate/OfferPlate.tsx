@@ -4,6 +4,7 @@ import {customerSegmentsMap, dayOfWeekMap, EOfferType, IOffer} from "../../../..
 import moment from "moment";
 import {calendarDateFormat, timeSpanString, time12HourFormat} from "../../../../utils/constants";
 import {useStyles} from "./styles";
+import dayjs from "dayjs";
 
 type TProps = {
     offer: IOffer,
@@ -29,9 +30,9 @@ export const OfferPlate: React.FC<React.PropsWithChildren<React.PropsWithChildre
             <div className={classes.data}>
                 <span>{offer.dayOfWeeks.map(s => dayOfWeekMap[s]).join(", ")}</span>
                 <span>
-                    <span className="nowrap">{moment(offer.timeOfDay.start, timeSpanString).format(time12HourFormat)}</span>
+                    <span className="nowrap">{dayjs(offer.timeOfDay.start, timeSpanString).format(time12HourFormat)}</span>
                     <span> - </span>
-                    <span className="nowrap">{moment(offer.timeOfDay.end, timeSpanString).format(time12HourFormat)}</span>
+                    <span className="nowrap">{dayjs(offer.timeOfDay.end, timeSpanString).format(time12HourFormat)}</span>
                 </span>
                 <span>
                     <span className="nowrap">
