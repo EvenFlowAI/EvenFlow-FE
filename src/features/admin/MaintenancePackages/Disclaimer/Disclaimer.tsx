@@ -15,7 +15,7 @@ type TDisclaimerProps = {
     setDisclaimerOpen: Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Disclaimer: React.FC<React.PropsWithChildren<TDisclaimerProps>> = ({setDisclaimerOpen}) => {
+const Disclaimer: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDisclaimerProps>>> = ({setDisclaimerOpen}) => {
     const {selectedSC} = useSCs();
     const [disclaimer, setDisclaimer] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);

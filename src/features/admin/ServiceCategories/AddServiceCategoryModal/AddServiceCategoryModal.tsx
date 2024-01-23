@@ -36,7 +36,7 @@ type TAddServiceCategoryProps = DialogProps & {
 
 const initialFileState = {file: null, dataUrl: undefined};
 
-export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<TAddServiceCategoryProps>> = ({editingItem, tabValue, ...props}) => {
+export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddServiceCategoryProps>>> = ({editingItem, tabValue, ...props}) => {
     const {allAssignedList, assignedFilter} = useSelector((state: RootState) => state.serviceRequests);
     const {categories, page, filter} = useSelector((state: RootState) => state.categories);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);

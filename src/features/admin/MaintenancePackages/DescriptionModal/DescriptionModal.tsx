@@ -18,7 +18,7 @@ import {useException} from "../../../../hooks/useException/useException";
 
 type TDescriptionProps = DialogProps;
 
-const DescriptionModal: React.FC<React.PropsWithChildren<TDescriptionProps>>  = ({open, onClose}) => {
+const DescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDescriptionProps>>>  = ({open, onClose}) => {
     const { isPackageLoading, currentPackage } = useSelector((state: RootState) => state.packages);
     const [editingElement, setEditingElement] = useState<TExtendedService|TExtendedComplimentary|null>(null);
     const [editingElementType, setEditingElementType] = useState<"service"|"complimentary"|null>(null);

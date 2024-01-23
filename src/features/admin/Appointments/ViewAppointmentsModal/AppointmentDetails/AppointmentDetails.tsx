@@ -16,7 +16,7 @@ import {TitleWrapper} from "../styles";
 
 export const dateTimeFormat = "ddd, MMM DD, YYYY h:mm a"
 
-export const AppointmentDetails: React.FC<React.PropsWithChildren<{payload: IAppointment}>> = ({payload}) => {
+export const AppointmentDetails: React.FC<React.PropsWithChildren<React.PropsWithChildren<{payload: IAppointment}>>> = ({payload}) => {
     return (
         <div>
             <TitleWrapper>Appointment Details</TitleWrapper>

@@ -75,30 +75,24 @@ const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
 ]
 
 export const IntervalUpsell = () => {
-    const {isOpen, onOpen, onClose} = useModal();
-    const {isOpen: isOOpen, onOpen: onOOpen, onClose: onOClose} = useModal();
+    const {
+        intervalUpsellList,
+        upsellLoading,
+        upsellPaging: {numberOfRecords},
+        upsellPageData,
+        upsellFilter: {searchTerm},
+        upsellOrdering
+    } = useSelector(({serviceRequests}: RootState) => serviceRequests);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+    const [editedItem, setEditedItem] = useState<IUpsellServiceRequest|undefined>(undefined);
+
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
-    const [
-        serviceRequestsList,
-        isLoading,
-        requestsCount,
-        pageData,
-        search,
-        order
-    ] = useSelector((state: RootState) => [
-        state.serviceRequests.intervalUpsellList,
-        state.serviceRequests.upsellLoading,
-        state.serviceRequests.upsellPaging.numberOfRecords,
-        state.serviceRequests.upsellPageData,
-        state.serviceRequests.upsellFilter.searchTerm,
-        state.serviceRequests.upsellOrdering
-    ]);
-    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const [editedItem, setEditedItem] = useState<IUpsellServiceRequest|undefined>(undefined);
     const {askConfirm} = useConfirm();
+    const {isOpen, onOpen, onClose} = useModal();
+    const {isOpen: isOOpen, onOpen: onOOpen, onClose: onOClose} = useModal();
     const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.upsellPageData,
         setUpsellPageData
@@ -108,7 +102,7 @@ export const IntervalUpsell = () => {
         if (selectedSC) {
             dispatch(loadUpsellServiceRequests(selectedSC.id));
         }
-    }, [selectedSC, dispatch, pageData, order]);
+    }, [selectedSC, dispatch, upsellPageData, upsellOrdering]);
 
     const actions = (el: IUpsellServiceRequest) => {
         return <IconButton onClick={handleOpenMenu(el)} size="large"><MoreHoriz /></IconButton>;
@@ -185,7 +179,7 @@ export const IntervalUpsell = () => {
             actions={<div style={{display: "flex", alignItems: "center"}}>
                 <SearchInput
                     onChange={handleSearchChange}
-                    value={search}
+                    value={searchTerm}
                     onSearch={handleSearch}
                 />
                 <Button
@@ -199,9 +193,9 @@ export const IntervalUpsell = () => {
             </div>}
         />
         <Table<IUpsellServiceRequest>
-            data={serviceRequestsList}
-            order={order.orderBy}
-            isAscending={order.isAscending}
+            data={intervalUpsellList}
+            order={upsellOrdering.orderBy}
+            isAscending={upsellOrdering.isAscending}
             onSort={handleSort}
             index="id"
             rowData={tableRow}
@@ -209,10 +203,10 @@ export const IntervalUpsell = () => {
             page={pageIndex}
             onChangePage={changePage}
             onChangeRowsPerPage={changeRowsPerPage}
-            count={requestsCount}
-            hidePagination={requestsCount < 11}
+            count={numberOfRecords}
+            hidePagination={numberOfRecords < 11}
             actions={actions}
-            isLoading={isLoading}
+            isLoading={upsellLoading}
         />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleCloseMenu}>
             <MenuItem onClick={handleEdit}>Edit</MenuItem>

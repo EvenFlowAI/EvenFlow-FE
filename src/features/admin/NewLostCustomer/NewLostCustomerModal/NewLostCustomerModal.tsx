@@ -14,7 +14,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
-export const NewLostCustomerModal: React.FC<React.PropsWithChildren<DialogProps<INewLostCustomer> & {isNew: boolean}>> = ({onAction, isNew=false, payload, ...props}) => {
+export const NewLostCustomerModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<INewLostCustomer> & {isNew: boolean}>>> = ({onAction, isNew=false, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [months, setMonths] = useState<string>("");
 

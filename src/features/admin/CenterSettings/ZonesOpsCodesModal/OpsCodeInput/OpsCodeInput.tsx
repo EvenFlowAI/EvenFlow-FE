@@ -16,7 +16,7 @@ type TProps = {
     formChecked: boolean;
 }
 
-const OpsCodeInput: React.FC<React.PropsWithChildren<TProps>> = ({zone, zonesOpsCodes, setZonesOpsCodes, formChecked, setFormChecked}) => {
+const OpsCodeInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({zone, zonesOpsCodes, setZonesOpsCodes, formChecked, setFormChecked}) => {
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
 
     const zoneOpsCode = useMemo(() => {

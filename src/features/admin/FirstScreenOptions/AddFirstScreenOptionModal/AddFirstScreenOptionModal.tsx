@@ -32,7 +32,7 @@ type TAddFirstScreenOptionProps = DialogProps & {
     editingItem: IFirstScreenOption | null;
 }
 
-export const AddFirstScreenOptionModal: React.FC<React.PropsWithChildren<TAddFirstScreenOptionProps>> = ({editingItem, ...props}) => {
+export const AddFirstScreenOptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddFirstScreenOptionProps>>> = ({editingItem, ...props}) => {
     const {options} = useSelector((state: RootState) => state.transportation);
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
     const [firstScreenOptionName, setFirstScreenOptionName] = useState<string>('');

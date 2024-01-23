@@ -124,7 +124,7 @@ const useAutocompleteStyles = makeStyles<Theme, TStyleProps>(() => ({
     },
 }))
 
-const YourLocation: React.FC<React.PropsWithChildren<TYourLocationProps>> = ({onBack, onNext, setNeedToShowServiceSelection, onGoToFirstScreen, onUpdateAppointment}) => {
+const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYourLocationProps>>> = ({onBack, onNext, setNeedToShowServiceSelection, onGoToFirstScreen, onUpdateAppointment}) => {
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
@@ -153,7 +153,7 @@ const YourLocation: React.FC<React.PropsWithChildren<TYourLocationProps>> = ({on
     const autocompleteClasses = useAutocompleteStyles(styleProps);
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);

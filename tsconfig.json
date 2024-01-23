@@ -21,7 +21,6 @@
     "noFallthroughCasesInSwitch": true,
   },
   "include": [
-    "src",
-    "./node_modules/@mui/**/*"
+    "src"
   ]
 }

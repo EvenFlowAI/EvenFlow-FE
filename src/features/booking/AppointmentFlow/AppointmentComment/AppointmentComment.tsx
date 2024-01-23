@@ -31,23 +31,14 @@ type TProps = {
     onAddServices: () => void;
 };
 
-export const AppointmentComment: React.FC<React.PropsWithChildren<TProps>> = ({handleSetScreen, onAddServices}) => {
-    const [
+export const AppointmentComment: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({handleSetScreen, onAddServices}) => {
+    const {
         subService,
-        scProfile,
         service,
         categoriesIds,
-        customerLoadedData,
         isUsualFlowNeeded,
-    ] = useSelector(({appointmentFrame, appointment}: RootState) => [
-        appointmentFrame.subService,
-        appointment.scProfile,
-        appointmentFrame.service,
-        appointmentFrame.categoriesIds,
-        appointment.customerLoadedData,
-        appointmentFrame.isUsualFlowNeeded,
-    ]);
-    const {description} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
+        description} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isErrorOpen, onClose: onErrorClose, onOpen: onErrorOpen} = useModal();

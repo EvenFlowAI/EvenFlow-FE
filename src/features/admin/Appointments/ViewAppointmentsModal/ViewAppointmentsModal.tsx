@@ -17,7 +17,7 @@ type TCallbackProps = {
     onCancelAppointment: () => void;
 }
 
-export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<DialogProps<IAppointment>&TCallbackProps>> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
+export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAppointment>&TCallbackProps>>> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
     return <BaseModal {...props} width={940}>
         <DialogTitle onClose={props.onClose}>View Appointment</DialogTitle>
         <DialogContent>

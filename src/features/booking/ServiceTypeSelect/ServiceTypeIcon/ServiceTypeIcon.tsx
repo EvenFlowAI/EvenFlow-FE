@@ -7,7 +7,7 @@ import {useStyles} from "./styles";
 
 type TServiceTypeIconProps = {card: IFirstScreenOption}
 
-const ServiceTypeIcon: React.FC<React.PropsWithChildren<TServiceTypeIconProps>> = ({card}) => {
+const ServiceTypeIcon: React.FC<React.PropsWithChildren<React.PropsWithChildren<TServiceTypeIconProps>>> = ({card}) => {
     const [isIconLoading, setIsIconLoading] = useState<boolean>(false);
     const [icon, setIcon] = useState<string>('');
     const classes = useStyles();

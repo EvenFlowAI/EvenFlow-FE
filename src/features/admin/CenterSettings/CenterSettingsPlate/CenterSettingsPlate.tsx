@@ -15,7 +15,7 @@ type TCenterSettingsPlateProps = {
     isLoading: boolean;
 }
 
-export const CenterSettingsPlate: React.FC<React.PropsWithChildren<TCenterSettingsPlateProps>> = ({
+export const CenterSettingsPlate: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCenterSettingsPlateProps>>> = ({
                                                                              onEdit,
                                                                              title,
                                                                              count,

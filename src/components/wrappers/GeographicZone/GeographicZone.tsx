@@ -13,7 +13,7 @@ type TZoneProps = {
     setSelectedZone: Dispatch<SetStateAction<TZone|null>>;
 }
 
-const GeographicZone: React.FC<React.PropsWithChildren<TZoneProps>> = ({isSelected, zone, zipCodes, setCurrentZip, onRemoveZip, setSelectedZone}) => {
+const GeographicZone: React.FC<React.PropsWithChildren<React.PropsWithChildren<TZoneProps>>> = ({isSelected, zone, zipCodes, setCurrentZip, onRemoveZip, setSelectedZone}) => {
     const classes = useStyles({isSelected});
 
     const onClick = () => {

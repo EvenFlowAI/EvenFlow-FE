@@ -17,7 +17,7 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 type TProps = DialogProps<moment.Moment> & {data?: ITimeOfYearSetting};
 
-export const DateModal: React.FC<React.PropsWithChildren<TProps>> = ({payload, onAction, data, ...props}) => {
+export const DateModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({payload, onAction, data, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [demand, setDemand] = useState<EDemandCategory>(EDemandCategory.Average);
     const [comment, setComment] = useState<string>("");

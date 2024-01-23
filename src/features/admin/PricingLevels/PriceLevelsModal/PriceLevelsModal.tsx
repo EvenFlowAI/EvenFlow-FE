@@ -12,7 +12,7 @@ import {LoadingButton} from "../../../../components/buttons/LoadingButton/Loadin
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 
-export const PriceLevelsModal: React.FC<React.PropsWithChildren<DialogProps<IPricingLevel>>>
+export const PriceLevelsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IPricingLevel>>>>
     = ({onAction, payload, ...props}) => {
     const [priceSetting, setSetting] = useState<string>("100");
     const [saving, setSaving] = useState<boolean>(false);

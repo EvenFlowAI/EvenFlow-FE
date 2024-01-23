@@ -24,7 +24,7 @@ import {Button} from "@mui/material";
 import {Routes} from "../../../../routes/constants";
 import {initialCustomerSearch} from "../../../../store/reducers/constants";
 
-export const ServiceCenterCard: React.FC<React.PropsWithChildren<{ sc: IServiceCenter }>> = ({sc}) => {
+export const ServiceCenterCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<{ sc: IServiceCenter }>>> = ({sc}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();

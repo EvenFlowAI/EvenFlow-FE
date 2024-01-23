@@ -16,7 +16,7 @@ type TProps = {
     handleSetScreen: (screen: TScreen) => void;
 }
 
-const SideBarSection: React.FC<React.PropsWithChildren<TProps>> = ({screen, handleSetScreen}) => {
+const SideBarSection: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({screen, handleSetScreen}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment)
     const {selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame)
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();

@@ -22,7 +22,7 @@ type TProps = {
     handleSetScreen: (screen: TScreen) => void;
 }
 
-export const SideBar: React.FC<React.PropsWithChildren<TProps>> = ({screen, handleSetScreen}) => {
+export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({screen, handleSetScreen}) => {
     const {
         sideBarSteps,
         sideBarMenu,

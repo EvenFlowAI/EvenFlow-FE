@@ -1,4 +1,4 @@
-import {FormControlLabel, styled} from "@mui/material";
+import {FormControlLabel, styled, FormControlLabelProps} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextField/TextField";
 
 export const Wrapper = styled('div')({
@@ -50,7 +50,7 @@ const OfferPrice = styled('div')({
     color: '#008331',
 })
 
-export const Code = styled(FormControlLabel)({
+export const Code = styled(FormControlLabel)<FormControlLabelProps>({
     width: "80%",
     padding: 0,
     margin: 0,

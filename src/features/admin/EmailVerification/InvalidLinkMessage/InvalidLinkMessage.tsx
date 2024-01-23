@@ -5,7 +5,7 @@ import {BackLink} from "../../../../components/wrappers/BackLink/BackLink";
 
 import {Routes} from "../../../../routes/constants";
 
-export const InvalidLinkMessage: React.FC<React.PropsWithChildren<unknown>> = () => {
+export const InvalidLinkMessage: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = () => {
     return <>
         <LoginTextContent content="Invalid url" />
         <Typography variant="body1" style={{textAlign: "center", marginTop: 20}}>

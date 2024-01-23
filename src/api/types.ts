@@ -89,6 +89,13 @@ export interface ILoadedVehicle  extends IVehicle {
     hasRepairOrders?: boolean;
 }
 
+export interface IVehicleForRequest extends IVehicle {
+    dmsId?: string;
+    appointmentHashKeys?: string[];
+    hasRepairOrders?: boolean;
+    warrantyExpiration?: ParsableDate;
+}
+
 export interface IPasswordRecoveryData {
     email: string;
 }

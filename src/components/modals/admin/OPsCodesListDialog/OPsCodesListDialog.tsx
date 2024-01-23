@@ -30,25 +30,18 @@ type TOPsCodesListDialogProps = {
     selectedPreviously?: number[];
 } & DialogProps;
 
-export const OPsCodesListDialog: React.FC<React.PropsWithChildren<TOPsCodesListDialogProps>> = ({onAction, onSave, selectedPreviously, payload, ...props}) => {
+export const OPsCodesListDialog: React.FC<React.PropsWithChildren<React.PropsWithChildren<TOPsCodesListDialogProps>>> = ({onAction, onSave, selectedPreviously, payload, ...props}) => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const showError = useException();
-    const [
-        serviceList,
-        isLoading,
-        servicesCount,
-        search,
-        order,
+    const {
+        nonSelectedList,
+        nonSelectedLoading,
+        nonSelectedPaging: {numberOfRecords},
+        nonSelectedFilter: {searchTerm},
+        nonSelectedOrder,
         nonSelectedPageData
-    ] = useSelector((state: RootState) => [
-        state.serviceRequests.nonSelectedList,
-        state.serviceRequests.nonSelectedLoading,
-        state.serviceRequests.nonSelectedPaging.numberOfRecords,
-        state.serviceRequests.nonSelectedFilter.searchTerm,
-        state.serviceRequests.nonSelectedOrder,
-        state.serviceRequests.nonSelectedPageData,
-    ]);
+        } = useSelector(({serviceRequests}: RootState) => serviceRequests);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
         setNonSelectedPageData
@@ -69,7 +62,7 @@ export const OPsCodesListDialog: React.FC<React.PropsWithChildren<TOPsCodesListD
         if (props.open && selectedSC) {
             dispatch(loadNonSelectedServiceRequests(selectedSC.id, true));
         }
-    }, [props.open, dispatch, selectedSC, pageSize, pageIndex, order]);
+    }, [props.open, dispatch, selectedSC, pageSize, pageIndex, nonSelectedOrder]);
 
     const handleSearch = useCallback(async () => {
         if (selectedSC) {
@@ -124,24 +117,24 @@ export const OPsCodesListDialog: React.FC<React.PropsWithChildren<TOPsCodesListD
         <DialogTitle onClose={props.onClose}>Select Service Requests</DialogTitle>
         <DialogContent>
             <div style={{display: "flex", justifyContent: isXS ? "center" : "flex-end", marginBottom: 18}}>
-                <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
+                <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={searchTerm} />
             </div>
             <Table<IServiceRequest>
-                data={serviceList}
-                order={order.orderBy}
-                isAscending={order.isAscending}
+                data={nonSelectedList}
+                order={nonSelectedOrder.orderBy}
+                isAscending={nonSelectedOrder.isAscending}
                 onSort={handleOrder}
                 index="id"
                 startActions={preActions}
                 compact
-                hidePagination={servicesCount < nonSelectedPageData.pageSize}
+                hidePagination={numberOfRecords < nonSelectedPageData.pageSize}
                 rowData={tableData}
-                isLoading={isLoading}
+                isLoading={nonSelectedLoading}
                 page={pageIndex}
                 rowsPerPage={pageSize}
                 onChangePage={changePage}
                 onChangeRowsPerPage={changeRowsPerPage}
-                count={servicesCount}
+                count={numberOfRecords}
             />
         </DialogContent>
         <DialogActions>

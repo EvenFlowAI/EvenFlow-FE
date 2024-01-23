@@ -106,12 +106,12 @@ const rowData: TableRowDataTypeResp<IPod>[] = [
     },
 ]
 
-export const PodsTable:React.FC<React.PropsWithChildren<{dense?: boolean}&TViewMode>> = ({dense, viewMode}) => {
-    const [pods, podsCount, isLoading] = useSelector((state: RootState) => [
-        state.pods.podsList,
-        state.pods.podsPaging.numberOfRecords,
-        state.pods.podsLoading
-    ]);
+export const PodsTable:React.FC<React.PropsWithChildren<React.PropsWithChildren<{dense?: boolean}&TViewMode>>> = ({dense, viewMode}) => {
+    const {
+        podsList,
+        podsPaging: {numberOfRecords},
+        podsLoading
+    } = useSelector(({pods}: RootState) => pods);
     const [editedItem, setEditedItem] = useState<IPod|undefined>(undefined);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 
@@ -185,7 +185,7 @@ export const PodsTable:React.FC<React.PropsWithChildren<{dense?: boolean}&TViewM
             </Button>
         </div> : null}
         <Table<IPod>
-            data={pods}
+            data={podsList}
             viewMode={viewMode}
             index='id'
             rowData={rowData}
@@ -194,10 +194,10 @@ export const PodsTable:React.FC<React.PropsWithChildren<{dense?: boolean}&TViewM
             rowsPerPage={pageSize}
             onChangePage={changePage}
             onChangeRowsPerPage={changeRowsPerPage}
-            count={podsCount}
+            count={numberOfRecords}
             actions={actions}
             startActions={actions}
-            isLoading={isLoading}
+            isLoading={podsLoading}
         />
         <PODModal open={isOpen} onClose={onClose} payload={editedItem} />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>

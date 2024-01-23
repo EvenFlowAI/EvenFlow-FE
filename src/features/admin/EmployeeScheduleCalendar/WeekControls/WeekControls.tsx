@@ -12,7 +12,7 @@ type TProps = {
     onChange: (date: moment.Moment) => void;
 }
 
-export const WeekControls: React.FC<React.PropsWithChildren<TProps>> = ({selectedDate, isXS, onChange}) => {
+export const WeekControls: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({selectedDate, isXS, onChange}) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const classes = useStyles();
 

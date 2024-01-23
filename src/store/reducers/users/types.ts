@@ -20,7 +20,7 @@ export interface IUserForm {
     email: string;
     phoneNumber: string;
     role: TRole;
-    serviceCenterId: number;
+    serviceCenterId?: number;
     dmsId?: string|null;
     showOnBookingFlow?: boolean;
     position?: string;

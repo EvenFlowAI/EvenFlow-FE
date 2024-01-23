@@ -22,7 +22,7 @@ declare module '@mui/styles/defaultTheme' {
 
 export const BookingFlow = () => {
     const { scProfile } = useSelector((state: RootState) => state.appointment);
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
     const isFrame = useLayout();
 

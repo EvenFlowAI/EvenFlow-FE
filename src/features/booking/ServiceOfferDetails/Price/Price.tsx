@@ -7,7 +7,7 @@ type TPriceProps = {
     selectedService: IServiceCategory;
 }
 
-const Price: React.FC<React.PropsWithChildren<TPriceProps>> = ({selectedService}) => {
+const Price: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPriceProps>>> = ({selectedService}) => {
     return (
         <Wrapper>
             <PriceValue>

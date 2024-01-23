@@ -13,7 +13,7 @@ type TProps = {
     onNext: () => void,
 }
 
-const PackageEMenuActions: React.FC<React.PropsWithChildren<TProps>> = ({isLoading, onBack, onNext}) => {
+const PackageEMenuActions: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isLoading, onBack, onNext}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {t} = useTranslation();

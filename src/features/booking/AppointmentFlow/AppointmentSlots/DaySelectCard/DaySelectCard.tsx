@@ -19,7 +19,7 @@ type TProps = {
     appointments: TGroupedAppointments;
 };
 
-export const DaySelectCard: React.FC<React.PropsWithChildren<TProps>> = ({
+export const DaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
     day, onClick, appointment, isCurrent, isXs, appointments,
 }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);

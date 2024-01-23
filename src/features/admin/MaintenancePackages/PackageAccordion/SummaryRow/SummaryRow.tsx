@@ -20,7 +20,7 @@ type TSummaryProps = {
     checked?: boolean;
 }
 
-const SummaryRow: React.FC<React.PropsWithChildren<TSummaryProps>> = ({
+const SummaryRow: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSummaryProps>>> = ({
                                                  isComplimentary,
                                                  packageHasComplimentary,
                                                  summaryText,

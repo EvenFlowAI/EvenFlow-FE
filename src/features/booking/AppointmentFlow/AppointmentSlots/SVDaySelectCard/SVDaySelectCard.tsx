@@ -17,7 +17,7 @@ type TProps = {
     isXs: boolean;
 };
 
-export const SVDaySelectCard: React.FC<React.PropsWithChildren<TProps>> = ({
+export const SVDaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
                                                     day, onClick, appointment, isCurrent, isXs
                                                 }) => {
     const isCustomRange = useSelector((state: RootState) => {

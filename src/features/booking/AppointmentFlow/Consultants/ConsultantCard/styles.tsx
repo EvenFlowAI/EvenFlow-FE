@@ -1,7 +1,7 @@
 import React from 'react';
-import {styled, Theme} from "@mui/material";
+import {styled} from "@mui/material";
 
-export const ConsultantWrapper = styled((props) => (<div {...props}/>))<{ active?: boolean }>(({theme, active}) => ({
+export const ConsultantWrapper = styled("div")<{ active?: boolean }>(({theme, active}) => ({
     display: 'grid',
     gridGap: 16,
     gridTemplateColumns: '1fr 1fr',

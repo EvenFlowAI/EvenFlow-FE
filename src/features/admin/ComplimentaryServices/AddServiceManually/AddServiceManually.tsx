@@ -18,7 +18,7 @@ type TAddServiceProps = DialogProps & {
   editedItem: IComplimentaryServiceByQuery | undefined;
 };
 
-const AddServiceManually: React.FC<React.PropsWithChildren<TAddServiceProps>> = ({ title, onClose, editedItem, ...props}) => {
+const AddServiceManually: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddServiceProps>>> = ({ title, onClose, editedItem, ...props}) => {
     const [description, setDescription] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [duration, setDuration] = useState<number | string>('');

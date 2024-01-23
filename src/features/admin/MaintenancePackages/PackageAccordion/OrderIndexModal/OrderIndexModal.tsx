@@ -20,7 +20,7 @@ type TOrderIndexProps = {
     open: boolean;
 }
 
-const OrderIndexModal: React.FC<React.PropsWithChildren<TOrderIndexProps>> = ({onClose, open}) => {
+const OrderIndexModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TOrderIndexProps>>> = ({onClose, open}) => {
     const {isPackageLoading, currentPackage} = useSelector((state: RootState) => state.packages);
     const [serviceRequests, setServiceRequests] = useState<TExtendedService[]>([]);
     const [complimentary, setComplimentary] = useState<TExtendedComplimentary[]>([]);

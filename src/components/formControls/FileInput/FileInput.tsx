@@ -12,7 +12,7 @@ type TFileInputProps = {
     label: string;
 }
 
-export const FileInput: React.FC<React.PropsWithChildren<TFileInputProps>> = ({ setState, label }) => {
+export const FileInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TFileInputProps>>> = ({ setState, label }) => {
     const ref = createRef<HTMLInputElement>();
     const showError = useException();
     const showMessage = useMessage();

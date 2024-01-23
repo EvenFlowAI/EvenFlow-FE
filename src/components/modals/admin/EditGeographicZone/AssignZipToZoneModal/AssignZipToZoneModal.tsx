@@ -22,7 +22,7 @@ type TAssignZipToZoneProps = DialogProps & {
     zone?: TZone|null;
 }
 
-const AssignZipToZoneModal:React.FC<React.PropsWithChildren<TAssignZipToZoneProps>> = ({zip, zone, serviceType, ...props}) => {
+const AssignZipToZoneModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<TAssignZipToZoneProps>>> = ({zip, zone, serviceType, ...props}) => {
     const {zones: serviceValetZones, currentZone: currentValetZone, isLoading: isValetLoading} = useSelector((state: RootState) => state.serviceValet);
     const {zones: mobileServiceZones, currentZone: currentMobileZone, isLoading: isMobileLoading} = useSelector((state: RootState) => state.mobileService);
     const [selectedZone, setSelectedZone] = useState<TZone|null>(null);

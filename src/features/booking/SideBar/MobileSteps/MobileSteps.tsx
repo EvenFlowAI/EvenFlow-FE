@@ -7,7 +7,7 @@ type TStepProps = {
     currentLabel: string;
     nextLabel?: string;
 }
-export const MobileSteps: React.FC<React.PropsWithChildren<TStepProps>> = ({active, steps, currentLabel, nextLabel}) => {
+export const MobileSteps: React.FC<React.PropsWithChildren<React.PropsWithChildren<TStepProps>>> = ({active, steps, currentLabel, nextLabel}) => {
     return <div>
         <ProgressStepper
             steps={steps}

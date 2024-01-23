@@ -15,7 +15,7 @@ type TMileageProps = {
     setSelectedMileages: Dispatch<SetStateAction<string[]>>;
 }
 
-const Mileage: React.FC<React.PropsWithChildren<TMileageProps>> = ({
+const Mileage: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMileageProps>>> = ({
                                               disabled,
                                               selectedMileages,
                                               setSelectedMileages,

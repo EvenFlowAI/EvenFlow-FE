@@ -23,15 +23,11 @@ import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const ServiceRequestsScreen = () => {
-    const [
-        pageData,
-        search,
-        order
-    ] = useSelector((state: RootState) => [
-        state.serviceRequests.assignedPageData,
-        state.serviceRequests.assignedFilter.searchTerm,
-        state.serviceRequests.assignedOrdering
-    ]);
+    const {
+        assignedPageData,
+        assignedFilter: {searchTerm},
+        assignedOrdering
+        } = useSelector(({serviceRequests}: RootState) => serviceRequests);
 
     const [editedItem, setEditedItem] = useState<IAssignedServiceRequest|undefined>(undefined);
     const {selectedSC} = useSCs();
@@ -49,7 +45,7 @@ export const ServiceRequestsScreen = () => {
         if (selectedSC) {
             dispatch(loadAssignedServiceRequests(selectedSC.id));
         }
-    }, [selectedSC, dispatch, pageData, order]);
+    }, [selectedSC, dispatch, assignedPageData, assignedOrdering]);
 
     const handleAddOpsCode = () => {
         setEditedItem(undefined);
@@ -83,7 +79,7 @@ export const ServiceRequestsScreen = () => {
             actions={<div style={{display: "flex", alignItems: "center"}}>
                 <SearchInput
                     onChange={handleSearchChange}
-                    value={search}
+                    value={searchTerm}
                     onSearch={handleSearch}
                 />
                 <Button

@@ -12,7 +12,7 @@ import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-const PricingDisplay: React.FC<React.PropsWithChildren<unknown>> = () => {
+const PricingDisplay: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = () => {
     const { isRoundPriceLoading, roundPrice } = useSelector((state: RootState) => state.pricingSettings);
     const [value, setValue] = useState<string>('decimal');
     const {askConfirm} = useConfirm();

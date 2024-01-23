@@ -56,16 +56,18 @@ type TCustomerSearchTableProps = {
     selectedColumns: TColumn[];
 }
 
-const CustomerSearchTable: React.FC<React.PropsWithChildren<TCustomerSearchTableProps>> = ({selectedColumns, onClose, loadData, isNewVehicleMode, redirect}) => {
+const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCustomerSearchTableProps>>> = ({selectedColumns, onClose, loadData, isNewVehicleMode, redirect}) => {
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+
     const [data, setData] = useState<ICustomerWithPhones[]>([]);
     const [sorting, setSorting] = useState<TSortOrder>({isAscending: true, order: null});
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<ICustomerWithPhones|null>(null);
     const [offset, setOffset] = useState<TOffset>(initialColumnOffset);
+
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
     const {onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm} = useModal();

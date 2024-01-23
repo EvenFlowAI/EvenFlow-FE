@@ -4,7 +4,7 @@ import {TitleWrapper} from "../styles";
 import {DetailsItem} from "../DetailsItem/DetailsItem";
 import {Divider} from "@mui/material";
 
-export const CustomerInfo:React.FC<React.PropsWithChildren<{payload: IAppointment}>> = ({payload}) => {
+export const CustomerInfo:React.FC<React.PropsWithChildren<React.PropsWithChildren<{payload: IAppointment}>>> = ({payload}) => {
     return (
         <div>
             <TitleWrapper>Customer Information</TitleWrapper>

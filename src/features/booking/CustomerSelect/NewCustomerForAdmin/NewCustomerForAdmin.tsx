@@ -6,7 +6,7 @@ import {ReactComponent as UserIcon} from "../../../../assets/img/user.svg";
 import {useCustomerSelectStyles} from "../../../../hooks/styling/useCustomerSelectStyles";
 import {useStyles} from "./styles";
 
-const NewCustomerForAdmin: React.FC<React.PropsWithChildren<{ handleNew: () => void}>> = ({ handleNew }) => {
+const NewCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWithChildren<{ handleNew: () => void}>>> = ({ handleNew }) => {
     const classes = useStyles();
     const { t } = useTranslation();
     const theme = useTheme();

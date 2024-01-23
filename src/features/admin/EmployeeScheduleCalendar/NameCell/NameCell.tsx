@@ -8,7 +8,7 @@ type TProps = {
     employee: IEmployee;
 }
 
-export const NameCell: React.FC<React.PropsWithChildren<TProps>> = ({employee}) => {
+export const NameCell: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({employee}) => {
     const classes = useStyles();
     return (
         <div className={classes.wrapper}>

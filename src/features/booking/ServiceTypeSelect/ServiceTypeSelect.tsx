@@ -49,7 +49,7 @@ type TProps = {
     loading: boolean;
 };
 
-const ServiceTypeSelect: React.FC<React.PropsWithChildren<TProps>> = ({handleValueServiceConfig, loading }) => {
+const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({handleValueServiceConfig, loading }) => {
     const {
         trackerCreated,
         userType,
@@ -62,7 +62,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<TProps>> = ({handleVal
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const currentUser = useCurrentUser();
 
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const classes = useServiceTypeStyles();
     const dispatch = useDispatch();
     const history = useHistory();

@@ -40,7 +40,7 @@ type TMaintenanceDetailsProps = {
 
 const blankOptions: TOptionsState = {};
 
-export const MaintenanceDetails: React.FC<React.PropsWithChildren<TMaintenanceDetailsProps>> = ({onNext, onBack}) => {
+export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>> = ({onNext, onBack}) => {
     const {
         selectedVehicle,
         makes,
@@ -67,7 +67,7 @@ export const MaintenanceDetails: React.FC<React.PropsWithChildren<TMaintenanceDe
     const dispatch = useDispatch();
     const showError = useException();
     const theme = useTheme();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
     const {isOpen: isNoRecallsOpen, onOpen: onNoRecallsOpen, onClose: onNoRecallsClose} = useModal();

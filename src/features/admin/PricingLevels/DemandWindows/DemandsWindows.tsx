@@ -38,8 +38,9 @@ export const DemandWindows = () => {
         if (selectedSC) {
             const item = mappedPricingLevels[t];
             setEditedItem({
-                serviceCenterId: selectedSC.id, percentage: 100, demandCategory: t,
-                ...item
+                serviceCenterId: item?.serviceCenterId ?? selectedSC.id,
+                percentage: item?.percentage ?? 100,
+                demandCategory: item.demandCategory ?? t,
             });
             onOpen();
         }

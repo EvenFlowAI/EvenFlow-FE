@@ -20,7 +20,7 @@ type TRecallTableProps = {
     setCurrentItem: Dispatch<SetStateAction<IRecall|null>>;
 }
 
-const RecallTable: React.FC<React.PropsWithChildren<TRecallTableProps>> = ({onOpenModal, currentItem, setCurrentItem}) => {
+const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>> = ({onOpenModal, currentItem, setCurrentItem}) => {
     const {recalls, recallsCount} = useSelector((state: RootState) => state.recalls);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 

@@ -11,7 +11,7 @@ import classnames from 'classnames';
 import {NoData} from "../../../wrappers/NoData/NoData";
 import {HCell, TCell, useStyles} from "./styles";
 
-const VehicleRepairHistory: React.FC<React.PropsWithChildren<DialogProps & {vehicleDmsId: string}>> = ({vehicleDmsId, open, onClose}) => {
+const VehicleRepairHistory: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {vehicleDmsId: string}>>> = ({vehicleDmsId, open, onClose}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {repairHistoryLoading, repairHistory} = useSelector((state: RootState) => state.customers);
     const [pageIndex, setPageIndex] = useState<number>(0);

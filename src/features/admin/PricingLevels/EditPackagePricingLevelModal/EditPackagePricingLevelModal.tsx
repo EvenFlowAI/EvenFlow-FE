@@ -15,7 +15,7 @@ type TEditPricingLevelsProps = DialogProps & {
     prisingLevel: TPackagePricingLevel | null;
 };
 
-const EditPackagePricingLevelModal: React.FC<React.PropsWithChildren<TEditPricingLevelsProps>> = ({ prisingLevel, ...props}) => {
+const EditPackagePricingLevelModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TEditPricingLevelsProps>>> = ({ prisingLevel, ...props}) => {
     const [discount, setDiscount] = useState<string>('');
     const [premium, setPremium] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);

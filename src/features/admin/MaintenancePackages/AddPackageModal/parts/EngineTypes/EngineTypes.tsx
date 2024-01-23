@@ -15,7 +15,7 @@ type TEngineTypesProps = {
     isApplyBusinessRules: boolean;
 }
 
-const EngineTypes: React.FC<React.PropsWithChildren<TEngineTypesProps>> = ({
+const EngineTypes: React.FC<React.PropsWithChildren<React.PropsWithChildren<TEngineTypesProps>>> = ({
                                                        setSelectedEngineTypes,
                                                        selectedEngineTypes,
                                                        setFormIsChecked,

@@ -27,7 +27,8 @@ const rowData: TableRowDataType<IDemandSegment>[] = [
     {header: "Window 3", val: el => `${el.window3Point} %`, align: "center"},
 ];
 
-export const DemandSegmentsModal: React.FC<React.PropsWithChildren<DialogProps>> = ({onAction, payload, ...props}) => {
+export const DemandSegmentsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onAction, payload, ...props}) => {
+    const {demandSegmentList, listLoading} = useSelector((state: RootState) => state.demandSegments)
     const [isSaving, setSaving] = useState<boolean>(false);
 
     const showMessage = useMessage();
@@ -36,11 +37,6 @@ export const DemandSegmentsModal: React.FC<React.PropsWithChildren<DialogProps>>
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const {askConfirm} = useConfirm();
-
-    const [demandSegmentsList, isLoading] = useSelector((state: RootState) => [
-        state.demandSegments.demandSegmentList,
-        state.demandSegments.listLoading
-    ]);
 
     useEffect(() => {
         if (selectedSC) {
@@ -73,7 +69,7 @@ export const DemandSegmentsModal: React.FC<React.PropsWithChildren<DialogProps>>
         </Button>
     }
     const askRemove = (el: IDemandSegment) => () => {
-        const segmentIndex = demandSegmentsList.findIndex(item => item.id === el.id);
+        const segmentIndex = demandSegmentList.findIndex(item => item.id === el.id);
         askConfirm({
             onConfirm: handleRemoveSegment(el),
             isRemove: true,
@@ -107,9 +103,9 @@ export const DemandSegmentsModal: React.FC<React.PropsWithChildren<DialogProps>>
             </div>
             <Table<IDemandSegment>
                 hidePagination
-                data={demandSegmentsList}
+                data={demandSegmentList}
                 index="id"
-                isLoading={isLoading}
+                isLoading={listLoading}
                 compact
                 rowData={rowData}
                 actions={actions}

@@ -4,7 +4,7 @@ import {Search} from "@mui/icons-material";
 import {TSearchInputProps} from "../../../types/types";
 import {useDebounce} from "../../../hooks/useDebounce/useDebounce";
 
-export const SearchDebounced: React.FC<React.PropsWithChildren<TSearchInputProps>> = ({
+export const SearchDebounced: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSearchInputProps>>> = ({
                                                                  placeholder,
                                                                  onSearch,
                                                                  value,

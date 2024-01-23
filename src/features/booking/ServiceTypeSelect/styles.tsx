@@ -1,9 +1,9 @@
-import {styled, Theme} from "@mui/material";
+import {styled} from "@mui/material";
 import React from "react";
 import {mh400, mh600} from "../CustomerSelect/constants";
 import makeStyles from '@mui/styles/makeStyles';
 
-export const ServiceTypeCardsWrapper = styled((props) => (<div {...props}/>))
+export const ServiceTypeCardsWrapper = styled("div")
     <{ cardsAmount: number}>
     (({theme, cardsAmount}) => ({
     display: 'grid',
@@ -24,7 +24,7 @@ export const ServiceTypeCardsWrapper = styled((props) => (<div {...props}/>))
         marginTop: theme.spacing(5)
     }
 }));
-export const Tagline = styled((props) => (<div {...props}/>))<{
+export const Tagline = styled("div")<{
     taglineColor?: string
 }>(({taglineColor}) => ({
     minHeight: 40,
@@ -37,7 +37,7 @@ export const Tagline = styled((props) => (<div {...props}/>))<{
     color: taglineColor ? `#${taglineColor}` : 'inherit',
 }))
 
-export const ServiceTypeButton = styled((props) => (<div {...props}/>))<{
+export const ServiceTypeButton = styled("div")<{
     isTaglinePresent: boolean
 }>(({theme, isTaglinePresent}) => ({
     position: 'relative',

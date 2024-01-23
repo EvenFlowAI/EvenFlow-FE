@@ -25,12 +25,11 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {CreateEmployeeForm} from "./CreateEmployeeForm/CreateEmployeeForm";
 
-export const CreateEmployee: React.FC<React.PropsWithChildren<DialogProps<IEmployee>>> = ({payload, onAction, ...props}) => {
-    const [shortSC,savingE, savingU] = useSelector((state: RootState) => [
-        state.serviceCenters.shortSC,
-        state.employees.saving,
-        state.users.saving,
-    ]);
+export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IEmployee>>>> = ({payload, onAction, ...props}) => {
+    const {shortSC} = useSelector((state: RootState) => state.serviceCenters)
+    const {saving: savingE} = useSelector((state: RootState) => state.employees)
+    const {saving: savingU} = useSelector((state: RootState) => state.users)
+
     const [avatar, setAvatar] = useState<File | undefined>();
     const [employeeForm, setEmployeeForm] = useState<TEmployeeForm>(initialEmployeeForm);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);

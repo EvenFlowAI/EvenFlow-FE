@@ -17,7 +17,7 @@ import {useException} from "../../../../hooks/useException/useException";
 
 const initialColumn = {name: "Yes", value: ETransportColumn.Yes}
 
-export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildren<DialogProps & {editingElement: ITransportationOptionFull|null}>> = (props) => {
+export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {editingElement: ITransportationOptionFull|null}>>> = (props) => {
     const [description, setDescription] = useState<string>('')
     const [column, setColumn] = useState<TOption>(initialColumn);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);

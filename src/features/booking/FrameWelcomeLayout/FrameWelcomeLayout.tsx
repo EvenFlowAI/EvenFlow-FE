@@ -10,7 +10,7 @@ import {
 import {frameSmStyles, frameStyles, MainWrapper, nonFrameStyles, Title, Wrapper} from "./styles";
 import {useLayout} from "../../../hooks/useLayout/useLayout";
 
-export const FrameWelcomeLayout: React.FC<React.PropsWithChildren<{}>> = ({children }) => {
+export const FrameWelcomeLayout: React.FC<React.PropsWithChildren<React.PropsWithChildren<{}>>> = ({children }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {welcomeScreenView} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();

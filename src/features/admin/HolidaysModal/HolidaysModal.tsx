@@ -28,18 +28,12 @@ const rowData: TableRowDataType<IHoliday>[] = [
     {header: "Recurring", val: v => v.isRecurring ? "Repeat" : "No Repeat"}
 ]
 
-export const HolidaysModal: React.FC<React.PropsWithChildren<DialogProps&TViewMode>> = ({viewMode, ...props}) => {
-    const [
-        holidays,
-        isLoading,
-        currentUser,
-    ] = useSelector((state: RootState) => [
-        state.holidays.holidaysList,
-        state.holidays.loading,
-        state.users.currentUser,
-    ]);
+export const HolidaysModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TViewMode>>> = ({viewMode, ...props}) => {
+    const {holidaysList, loading} = useSelector(({holidays}: RootState) => holidays);
+    const {currentUser} = useSelector(({users}: RootState) => users);
     const [editedItem, setEditedItem] = useState<IHoliday|undefined>();
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+
     const {selectedSC} = useSCs();
     const {askConfirm, closeConfirm} = useConfirm();
     const {onOpen, onClose, isOpen} = useModal();
@@ -134,8 +128,8 @@ export const HolidaysModal: React.FC<React.PropsWithChildren<DialogProps&TViewMo
             rowsPerPage={pageSize}
             onChangeRowsPerPage={changeRowsPerPage}
             compact
-            isLoading={isLoading}
-            data={holidays}
+            isLoading={loading}
+            data={holidaysList}
             index={"id"}
             rowData={rowData}
             actions={actions}

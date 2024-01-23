@@ -20,18 +20,12 @@ import {TTransportationData} from "./types";
 import {TActionProps} from "../../../../types/types";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 
-export const TransportationNeeds: React.FC<React.PropsWithChildren<TActionProps>> = ({onNext, onBack}) => {
-    const {id} = useParams();
-    const {t} = useTranslation();
-    const [transportations, setTransportations] = useState<ITransportation[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [
-        s,
-        ss,
-        individualOps,
+export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWithChildren<TActionProps>>> = ({onNext, onBack}) => {
+    const {
+        subService,
+        service,
         categoriesIds,
-        packageOpt,
-        appointment,
+        isUsualFlowNeeded,
         hashKey,
         selectedRecalls,
         transportation,
@@ -39,36 +33,23 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<TActionProps>
         selectedPackage,
         selectedVehicle,
         packageEMenuType,
-        allCategories,
-        appointmentByKey,
-        isUsualFlowNeeded,
-        customerLoadedData,
-    ] = useSelector((state: RootState) => [
-        state.appointmentFrame.service,
-        state.appointmentFrame.subService,
-        state.appointment.selectedSR,
-        state.appointmentFrame.categoriesIds,
-        state.appointmentFrame.selectedPackage,
-        state.appointment.appointment,
-        state.appointmentFrame.hashKey,
-        state.appointmentFrame.selectedRecalls,
-        state.appointmentFrame.transportation,
-        state.appointmentFrame.packagePricingType,
-        state.appointmentFrame.selectedPackage,
-        state.appointmentFrame.selectedVehicle,
-        state.appointmentFrame.packageEMenuType,
-        state.categories.allCategories,
-        state.appointmentFrame.appointmentByKey,
-        state.appointmentFrame.isUsualFlowNeeded,
-        state.appointment.customerLoadedData,
-    ]);
+        appointmentByKey
+    } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
+    const {selectedSR, customerLoadedData, appointment} = useSelector(({appointment}: RootState) => appointment)
+    const {allCategories} = useSelector(({categories}: RootState) => categories)
+    const {id} = useParams<{id: string}>();
+    const {t} = useTranslation();
+    const [transportations, setTransportations] = useState<ITransportation[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+
     const dispatch = useDispatch();
 
     const serviceRequestIds = useMemo(() => {
-        return collectServiceRequestIds(s, ss, null, individualOps);
-    }, [s, ss, individualOps]);
+        return collectServiceRequestIds(service, subService, null, selectedSR);
+    }, [service, subService, selectedSR]);
     const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
     const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])
+
     const date = useMemo(() => {
         let fullDateString = ''
         if (appointmentByKey) {
@@ -125,7 +106,7 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<TActionProps>
                 })
         }
     }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls,
-        packagePricingType, packageEMenuType, packageOpt, categoriesIds, hashKey, date]);
+        packagePricingType, packageEMenuType, selectedPackage, categoriesIds, hashKey, date]);
 
     const handleNext = (transportation: ITransportation|null): void => {
         ReactGA.event({

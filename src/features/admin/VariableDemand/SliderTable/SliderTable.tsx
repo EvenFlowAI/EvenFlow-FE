@@ -30,7 +30,7 @@ type TProps = {
     type: EDemandType
 }
 
-export const SliderTable: React.FC<React.PropsWithChildren<TProps>> = ({demand, type}) => {
+export const SliderTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({demand, type}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [edit, setEdit] = useState<EDayDemand|null>(null);
 

@@ -1,6 +1,6 @@
-import {styled, Theme} from "@mui/material";
+import {styled} from "@mui/material";
 
-export const CardsWrapper = styled("div")<Theme>(({theme}) => ({
+export const CardsWrapper = styled("div")(({theme}) => ({
     width: '100%',
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr 1fr',

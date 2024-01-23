@@ -19,7 +19,7 @@ type TComplimentaryProps = {
     loadedPackages: IPackage[];
 }
 
-const PackagesComplimentary: React.FC<React.PropsWithChildren<TComplimentaryProps>> =
+const PackagesComplimentary: React.FC<React.PropsWithChildren<React.PropsWithChildren<TComplimentaryProps>>> =
     ({complimentary, packages, setClasses, isBmWService, handleClick, loadedPackages}) => {
         const {scProfile} = useSelector((state: RootState) => state.appointment);
         const {t} = useTranslation();

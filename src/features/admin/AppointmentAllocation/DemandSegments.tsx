@@ -27,10 +27,7 @@ export const DemandSegments = () => {
     const showError = useException();
     const showMessage = useMessage();
 
-    const [segments, loading] = useSelector((state: RootState) => [
-        state.demandSegments.demandSegmentList,
-        state.demandSegments.listLoading
-    ]);
+    const {demandSegmentList: segments, listLoading: loading} = useSelector((state: RootState) => state.demandSegments);
 
     useEffect(() => {
         if (selectedSC) {

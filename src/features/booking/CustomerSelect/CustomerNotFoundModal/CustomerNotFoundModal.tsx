@@ -10,7 +10,7 @@ type TCustomerNotFoundProps = DialogProps & {
     onTryAnotherName: () => void;
 }
 
-const CustomerNotFoundModal: React.FC<React.PropsWithChildren<TCustomerNotFoundProps>> = ({ open, onClose, onTryAnotherName, handleNew}) => {
+const CustomerNotFoundModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCustomerNotFoundProps>>> = ({ open, onClose, onTryAnotherName, handleNew}) => {
     const classes = useStyles();
     const {t} = useTranslation();
 

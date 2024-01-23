@@ -1,8 +1,7 @@
 import {styled} from "@mui/material";
 import React from "react";
 
-export const PriceWrapper = styled((props) =>
-    (<div {...props}/>))<{ isShowPriceDetails: boolean, isUpsellPrice?: boolean, isSelected: boolean }>(
+export const PriceWrapper = styled("div")<{ isShowPriceDetails: boolean, isUpsellPrice?: boolean, isSelected: boolean }>(
     ({isShowPriceDetails, isUpsellPrice, isSelected}) => ({
         width: '100%',
         display: 'grid',

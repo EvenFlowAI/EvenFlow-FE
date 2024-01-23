@@ -24,7 +24,7 @@ type TByZoneProps = {
     isLoading: boolean;
 }
 
-const AncillaryPriceByZone: React.FC<React.PropsWithChildren<TByZoneProps>> = ({ data, onUpdate, isLoading }) => {
+const AncillaryPriceByZone: React.FC<React.PropsWithChildren<React.PropsWithChildren<TByZoneProps>>> = ({ data, onUpdate, isLoading }) => {
     const [zonesData, setZonesData] = useState<IZonePriceSettings[]>([]);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<IZonePriceSettings|null>(null);

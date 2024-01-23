@@ -36,14 +36,14 @@ type TProps = {
     onOpen: TCallback;
 }
 
-const ServiceCentersTable: React.FC<React.PropsWithChildren<TProps>> = ({setEditedItem, editedItem, onOpen}) => {
-    const [data, loading, count, order, search] = useSelector((state: RootState) => [
-        state.serviceCenters.serviceCenters,
-        state.serviceCenters.loading,
-        state.serviceCenters.paging.numberOfRecords,
-        state.serviceCenters.order,
-        state.serviceCenters.searchTerm
-    ]);
+const ServiceCentersTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({setEditedItem, editedItem, onOpen}) => {
+    const {
+        serviceCenters,
+        loading,
+        paging: {numberOfRecords},
+        order,
+        searchTerm
+    } = useSelector(({serviceCenters}: RootState) => serviceCenters);
 
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement & EventTarget | null>(null);
     const currentUser = useCurrentUser();
@@ -61,7 +61,7 @@ const ServiceCentersTable: React.FC<React.PropsWithChildren<TProps>> = ({setEdit
 
     useEffect(() => {
         dispatch(loadAll())
-    }, [dispatch, order, search]);
+    }, [dispatch, order, searchTerm]);
 
     const handleView = (el: IServiceCenterExtended) => () => {
         setEditedItem(el);
@@ -114,7 +114,7 @@ const ServiceCentersTable: React.FC<React.PropsWithChildren<TProps>> = ({setEdit
     return (
         <>
             <Table<IServiceCenterExtended>
-                data={data}
+                data={serviceCenters}
                 order={order.orderBy}
                 onSort={handleSort}
                 isAscending={order.isAscending}
@@ -123,7 +123,7 @@ const ServiceCentersTable: React.FC<React.PropsWithChildren<TProps>> = ({setEdit
                 rowData={rowData}
                 onChangePage={changePage}
                 onChangeRowsPerPage={changeRowsPerPage}
-                count={count}
+                count={numberOfRecords}
                 page={pageIndex}
                 rowsPerPage={pageSize}
                 startActions={startActions}

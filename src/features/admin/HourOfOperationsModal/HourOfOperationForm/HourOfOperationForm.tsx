@@ -15,7 +15,7 @@ type THOOFormProps = TViewMode & {
     formIsChecked: boolean;
 }
 
-export const HourOfOperationForm: React.FC<React.PropsWithChildren<THOOFormProps>> = ({form, onApply, onChange, onCheck, viewMode, formIsChecked}) => {
+export const HourOfOperationForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<THOOFormProps>>> = ({form, onApply, onChange, onCheck, viewMode, formIsChecked}) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     const classes = useStyles();

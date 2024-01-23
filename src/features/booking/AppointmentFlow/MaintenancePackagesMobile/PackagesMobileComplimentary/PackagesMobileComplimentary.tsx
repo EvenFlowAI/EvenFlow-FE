@@ -10,7 +10,7 @@ type TProps = {
     loadedPackages: IPackage[];
 }
 
-const PackagesMobileComplimentary: React.FC<React.PropsWithChildren<TProps>> = ({isBmWService, complimentaryServices, loadedPackages}) => {
+const PackagesMobileComplimentary: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isBmWService, complimentaryServices, loadedPackages}) => {
     const classes = usePackageMobileStyles();
     const {t} = useTranslation();
     const title = loadedPackages[0]?.segmentTitles?.find(el => el.type === ESegmentTitle.Complimentary)?.title

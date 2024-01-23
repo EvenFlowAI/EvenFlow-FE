@@ -6,7 +6,7 @@ import {Titles} from "../../../types/types";
 import {ReportingRoutes} from "../../../routes/ReportingRoutes/ReportingRoutes";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
-const ReportingPage: React.FC<React.PropsWithChildren<{}>> = ({}) => {
+const ReportingPage: React.FC<React.PropsWithChildren<React.PropsWithChildren<{}>>> = ({}) => {
     const [config, setConfig] = useState<IEndUserConfig>({
         domain: 'https://pcuxl.qrveyapp.com',
     })

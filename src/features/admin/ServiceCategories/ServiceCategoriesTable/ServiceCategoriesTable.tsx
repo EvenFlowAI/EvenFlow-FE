@@ -22,7 +22,7 @@ const RowData: TableRowDataType<ICategory>[] = [
     {val: (el: ICategory) => el.orderIndex?.toString() ?? '', header: "Order Index", align: 'center', width: 150},
 ];
 
-export const ServiceCategoriesTable: React.FC<React.PropsWithChildren<{tabValue: string}>> = ({tabValue}) => {
+export const ServiceCategoriesTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<{tabValue: string}>>> = ({tabValue}) => {
     const { categories, isLoading } = useSelector((state: RootState) => state.categories);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [currentItem, setCurrentItem] = useState<ICategory | null>(null);

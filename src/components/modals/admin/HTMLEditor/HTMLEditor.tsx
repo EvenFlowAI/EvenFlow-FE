@@ -23,7 +23,7 @@ const useStyles = makeStyles(({
     }
 }))
 
-const HtmlEditor: React.FC<React.PropsWithChildren<THTMLEditor>> = ({open, onClose, title, onSave, isLoading, payload}) => {
+const HtmlEditor: React.FC<React.PropsWithChildren<React.PropsWithChildren<THTMLEditor>>> = ({open, onClose, title, onSave, isLoading, payload}) => {
     const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty())
     const showError = useException();
     const styles = useStyles();

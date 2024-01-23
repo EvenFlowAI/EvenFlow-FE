@@ -1,4 +1,4 @@
-import {styled, Theme} from "@mui/material";
+import {styled} from "@mui/material";
 import {DatePicker} from "@mui/x-date-pickers";
 import React from "react";
 
@@ -22,10 +22,7 @@ export const StyledDate = styled(DatePicker)(({theme}) => ({
     }
 }))
 
-export const CardWrapper = styled(({active, ...props}) => <div {...props}/>)<Theme, { active?: boolean }>(({
-                                                                                                               theme,
-                                                                                                               active
-                                                                                                           }) => ({
+export const CardWrapper = styled("div")<{ active?: boolean}>(({theme, active}) => ({
     border: "1px solid #DADADA",
     display: "flex",
     flexDirection: "column",

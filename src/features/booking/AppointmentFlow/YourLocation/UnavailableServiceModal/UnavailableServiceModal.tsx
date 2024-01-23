@@ -18,7 +18,7 @@ type TUnavailableServiceProps = DialogProps & {
     onBackToSelectSlotsForVisitCenter: TCallback;
 }
 
-const UnavailableServiceModal: React.FC<React.PropsWithChildren<TUnavailableServiceProps>> = ({
+const UnavailableServiceModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUnavailableServiceProps>>> = ({
                                                                     onClose,
                                                                     open,
                                                                     setFormChecked,

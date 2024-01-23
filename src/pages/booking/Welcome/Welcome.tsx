@@ -65,7 +65,7 @@ export const Welcome = () => {
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
 
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
     const showError = useException();
     const isFrame = useLayout();
@@ -130,7 +130,7 @@ export const Welcome = () => {
         try {
             setLoading(true);
             dispatch(loadCustomersByPhoneOrEmail(scProfile?.id ?? 0, showError, customerEnteredEmail, onSuccessForCustomer, onOpen))
-        } catch (err) {
+        } catch (err: any) {
             dispatch(setSessionId(""));
             if (err.response?.data?.errorCode === 6) {
                 onOpen()

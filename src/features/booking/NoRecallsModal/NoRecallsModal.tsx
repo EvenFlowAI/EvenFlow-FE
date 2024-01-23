@@ -5,7 +5,7 @@ import {Button} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useStyles} from "./styles";
 
-const NoRecallsModal: React.FC<React.PropsWithChildren<DialogProps & {handleNext : () => void}>> = ({ open, onClose, handleNext }) => {
+const NoRecallsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {handleNext : () => void}>>> = ({ open, onClose, handleNext }) => {
     const classes = useStyles();
     const {t} = useTranslation();
 

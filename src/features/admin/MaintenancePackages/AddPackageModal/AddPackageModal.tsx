@@ -216,7 +216,7 @@ const initialValues = {
     isApplyBusinessRules: false,
 }
 
-const AddPackageModal: React.FC<React.PropsWithChildren<TModalProps>> = ({ isEditing, ...props}) => {
+const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TModalProps>>> = ({ isEditing, ...props}) => {
     const { packages, currentPackage, isPackageLoading } = useSelector((state: RootState) => state.packages);
     const { allAssignedList, intervalUpsellList } = useSelector((state: RootState) => state.serviceRequests);
     const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);

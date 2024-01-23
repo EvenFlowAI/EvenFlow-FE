@@ -21,7 +21,7 @@ const tabs: TTab[] = [
 ];
 
 export const DealershipGroupDetails = () => {
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const [dealership, setDS] = useState<IDealershipGroupExtended | undefined>();
     const [selectedTab, setTab] = useState<string>("1");
     const dispatch = useDispatch();

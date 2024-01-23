@@ -16,7 +16,7 @@ const SubtitleWrapper = styled('h3')(({theme}) => ({
     }
 }))
 
-export const Subtitle: React.FC<React.PropsWithChildren<unknown>> = ({children}) => {
+export const Subtitle: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = ({children}) => {
     return <SubtitleWrapper>
         {children}
     </SubtitleWrapper>

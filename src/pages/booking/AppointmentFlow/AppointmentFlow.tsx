@@ -118,7 +118,7 @@ export const AppointmentFlow = () => {
     const [needToShowServiceTypes, setNeedToShowServiceTypes] = useState<boolean>(false)
     const [serviceCategoryPage, setServiceCategoryPage] = useState<EServiceCategoryPage>(EServiceCategoryPage.Page1);
 
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
     const dispatch = useDispatch();
     const showError = useException();

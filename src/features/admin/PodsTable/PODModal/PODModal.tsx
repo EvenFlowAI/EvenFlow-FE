@@ -49,9 +49,16 @@ const initialForm: TForm = {
     isVisitCenter: true,
 }
 
-export const PODModal: React.FC<React.PropsWithChildren<DialogProps<IPod>>> = ({onAction, payload, ...props}) => {
+export const PODModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IPod>>>> = ({onAction, payload, ...props}) => {
+    const {advisorsList, techniciansList} = useSelector(({scEmployees}: RootState) => scEmployees);
+    const {scRequestsShort: serviceRequests} = useSelector(({serviceRequests}: RootState) => serviceRequests);
+    const {baysShort: baysList} = useSelector(({bays}: RootState) => bays);
+    const {makesModels, engineTypes} = useSelector(({vehicleDetails}: RootState) => vehicleDetails);
+    const {options: transportations, isLoading: isTransportationLoading} = useSelector(({transportation}: RootState) => transportation);
+    const {zones: serviceValetZones} = useSelector(({serviceValet}: RootState) => serviceValet);
+    const {zones} = useSelector(({mobileService}: RootState) => mobileService);
+
     const [form, setForm] = useState<TForm>(initialForm);
-    const {selectedSC} = useSCs();
     const [loading, setLoading] = useState<boolean>();
     const [selectedMakes, setSelectedMakes] = useState<IMakeExtended[]>([]);
     const [modelsOptions, setModelsOptions] = useState<IModel[]>([]);
@@ -62,34 +69,12 @@ export const PODModal: React.FC<React.PropsWithChildren<DialogProps<IPod>>> = ({
     const [jobType, setJobType] = useState<TOption|null>(null);
     const [appointmentType, setAppointmentType] = useState<TOption|null>(null);
     const [transportationOptions, setTransportationOptions] = useState<ITransportationOptionFull[]>([]);
-    const {onOpen, isOpen, onClose} = useModal();
+    const {selectedSC} = useSCs();
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
+    const {onOpen, isOpen, onClose} = useModal();
     const classes = useAutocompleteStyles();
-    const [
-        advisorsList,
-        techniciansList,
-        serviceRequests,
-        baysList,
-        makesModels,
-        zones,
-        serviceValetZones,
-        engineTypes,
-        transportations,
-        isTransportationLoading,
-    ] = useSelector((state: RootState) => [
-        state.scEmployees.advisorsList,
-        state.scEmployees.techniciansList,
-        state.serviceRequests.scRequestsShort,
-        state.bays.baysShort,
-        state.vehicleDetails.makesModels,
-        state.mobileService.zones,
-        state.serviceValet.zones,
-        state.vehicleDetails.engineTypes,
-        state.transportation.options,
-        state.transportation.isLoading,
-    ]);
 
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
     const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);

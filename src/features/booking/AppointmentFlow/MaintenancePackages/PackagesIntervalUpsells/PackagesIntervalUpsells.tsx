@@ -17,7 +17,7 @@ type TComplimentaryProps = {
     loadedPackages: IPackage[];
 }
 
-const PackagesIntervalUpsells: React.FC<React.PropsWithChildren<TComplimentaryProps>> =
+const PackagesIntervalUpsells: React.FC<React.PropsWithChildren<React.PropsWithChildren<TComplimentaryProps>>> =
     ({upsell, packages, setClasses, isBmWService, handleClick, loadedPackages}) => {
         const {t} = useTranslation();
         const title = loadedPackages[0]?.segmentTitles?.find(el => el.type === ESegmentTitle.IntervalUpsell)?.title

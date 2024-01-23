@@ -13,7 +13,7 @@ type TTotalProps = {
     setClasses: (id: number, cls: string) => string;
 }
 
-const PackagesTotalPrices: React.FC<React.PropsWithChildren<TTotalProps>> = ({ isBmWService, packages, handleClick, isSanfordInfinity, setClasses }) => {
+const PackagesTotalPrices: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTotalProps>>> = ({ isBmWService, packages, handleClick, isSanfordInfinity, setClasses }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
 

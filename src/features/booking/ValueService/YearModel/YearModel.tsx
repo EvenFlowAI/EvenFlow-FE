@@ -16,7 +16,7 @@ import {SelectsTitle} from "../../../../components/styled/SelectsTitle";
 import {TActionProps} from "../../../../types/types";
 import {useException} from "../../../../hooks/useException/useException";
 
-export const YearModel: React.FC<React.PropsWithChildren<TActionProps>> = ({onNext, onBack}) => {
+export const YearModel: React.FC<React.PropsWithChildren<React.PropsWithChildren<TActionProps>>> = ({onNext, onBack}) => {
     const {valueService, selectedVehicle, seriesModels}= useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile}= useSelector((state: RootState) => state.appointment);
     const [currentModels, setCurrentModels] = useState<TModel[]>([]);

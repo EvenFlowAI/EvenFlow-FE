@@ -8,7 +8,7 @@ type TCartItemProps = {
     item: IMaintenanceItem;
     onClick: (item: IMaintenanceItem) => void;
 }
-export const CartItem: React.FC<React.PropsWithChildren<TCartItemProps>> = ({item, onClick}) => {
+export const CartItem: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCartItemProps>>> = ({item, onClick}) => {
     const classes = useStyles();
     return (
         <div className={classes.itemWrapper}>

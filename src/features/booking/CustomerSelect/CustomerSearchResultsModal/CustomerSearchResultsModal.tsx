@@ -18,7 +18,7 @@ type TCustomerSearchResultsProps = DialogProps & {
     loadData: TArgCallback<boolean>;
 };
 
-const CustomerSearchResultsModal: React.FC<React.PropsWithChildren<TCustomerSearchResultsProps>> = ({
+const CustomerSearchResultsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCustomerSearchResultsProps>>> = ({
                                                                           loadData,
                                                                           open,
                                                                           onClose,

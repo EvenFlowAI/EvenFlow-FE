@@ -32,7 +32,7 @@ type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;
 }
 
-export const EditTransportationModal:React.FC<React.PropsWithChildren<DialogProps&TEditTransportationOptionDialogProps>> = ({ editingElement, ...props}) => {
+export const EditTransportationModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TEditTransportationOptionDialogProps>>> = ({ editingElement, ...props}) => {
     const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
     const [customerSegment, setCustomerSegment] = useState<TOption | null>(null);
     const [daysOfWeek, setDaysOfWeek] = useState<TOption[]>([]);

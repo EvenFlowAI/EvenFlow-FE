@@ -12,7 +12,7 @@ type TSummaryProps = {
     setIsEdit?: Dispatch<SetStateAction<boolean>>;
 }
 
-const SummaryInput: React.FC<React.PropsWithChildren<TSummaryProps>> = ({ isComplimentary, packageHasComplimentary, item,isEdit, setIsEdit, onChange}) => {
+const SummaryInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSummaryProps>>> = ({ isComplimentary, packageHasComplimentary, item,isEdit, setIsEdit, onChange}) => {
     const classes = useStyles();
     const [value, setValue] = useState<string>('')
 

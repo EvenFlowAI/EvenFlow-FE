@@ -17,7 +17,7 @@ type TTotalPriceRowProps = {
     packagePricingType: EPackagePricingType|null;
 }
 
-const PackagesTotalPriceRow: React.FC<React.PropsWithChildren<TTotalPriceRowProps>> = ({packages, handleClick, isUpsells, title, selectedPackage, packagePricingType}) => {
+const PackagesTotalPriceRow: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTotalPriceRowProps>>> = ({packages, handleClick, isUpsells, title, selectedPackage, packagePricingType}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
     const classes = useStyles();

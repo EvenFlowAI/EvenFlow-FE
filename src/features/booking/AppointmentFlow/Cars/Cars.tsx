@@ -39,7 +39,7 @@ type TProps = {
     onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
 }
 
-export const Cars: React.FC<React.PropsWithChildren<TProps>> = ({
+export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
                                                               onUpdateAppointment, onBack, loading, handleSetScreen,
                                                               needToShowServiceSelection, setNeedToShowServiceSelection
                                                           }) => {
@@ -63,7 +63,7 @@ export const Cars: React.FC<React.PropsWithChildren<TProps>> = ({
     const dispatch = useDispatch();
     const showError = useException();
     const {t} = useTranslation();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
 
     const vehiclesPerScreen = useMemo(() => {

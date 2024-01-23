@@ -22,7 +22,7 @@ const ServiceTypeManaging = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const history = useHistory();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const onlyNotVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type !== EServiceType.VisitCenter;
 

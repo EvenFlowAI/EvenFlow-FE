@@ -8,7 +8,7 @@ type Props = {
     src?: string;
 }
 
-export const TableAvatar: React.FC<React.PropsWithChildren<Props>> = props => {
+export const TableAvatar: React.FC<React.PropsWithChildren<React.PropsWithChildren<Props>>> = props => {
     const classes = useStyles();
 
     return <Avatar src={props.src} className={classes.root}>

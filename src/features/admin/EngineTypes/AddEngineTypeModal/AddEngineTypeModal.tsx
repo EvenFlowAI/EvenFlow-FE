@@ -13,7 +13,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const AddEngineTypeModal: React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
+export const AddEngineTypeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [newEngineType, setNewEngineType] = useState<string>('');
     const [types, setTypes] = useState<string[]>([]);
@@ -53,7 +53,7 @@ export const AddEngineTypeModal: React.FC<React.PropsWithChildren<DialogProps>> 
         setNewEngineType('');
     }
 
-    const onKeyDown = (e: React.KeyboardEvent<{}>) => {
+    const onKeyUp = (e: React.KeyboardEvent<{}>) => {
         if (e.key === 'Enter') addEngineType();
     }
 
@@ -80,7 +80,7 @@ export const AddEngineTypeModal: React.FC<React.PropsWithChildren<DialogProps>> 
                 {Boolean(types.length) && <div className={classes.modelsWrapper}>
                     {types.map(type => <Chip key={type} name={type} onDelete={onEngineTypeDelete}/>)}
                 </div>}
-                <div className={classes.addModel} role="presentation" onKeyPress={onKeyDown}>
+                <div className={classes.addModel} role="presentation" onKeyUp={onKeyUp}>
                     <div style={{width: '90%'}}>
                         <TextField
                             fullWidth

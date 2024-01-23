@@ -16,7 +16,7 @@ type TProps = {
     onUpdateAppointment: TArgCallback<ILoadedVehicle>;
 }
 
-const ModifyButton: React.FC<React.PropsWithChildren<TProps>> = ({onUpdateAppointment}) => {
+const ModifyButton: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onUpdateAppointment}) => {
     const {isAppointmentSaving, selectedVehicle,} = useSelector((state: RootState) => state.appointmentFrame)
     const { customerLoadedData } = useSelector((state: RootState) => state.appointment)
     const dispatch = useDispatch();

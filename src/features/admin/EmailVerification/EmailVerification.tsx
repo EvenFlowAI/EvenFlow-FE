@@ -11,7 +11,7 @@ import {useException} from "../../../hooks/useException/useException";
 import {Routes} from "../../../routes/constants";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
-export const EmailVerification: React.FC<React.PropsWithChildren<unknown>> = () => {
+export const EmailVerification: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = () => {
     const [{password, password2}, setPassword] = useState({password: '', password2: ''});
     const {search} = useLocation();
     const showError = useException();

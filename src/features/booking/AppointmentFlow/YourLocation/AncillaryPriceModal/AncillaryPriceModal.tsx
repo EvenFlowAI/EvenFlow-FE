@@ -20,7 +20,7 @@ type TDisplayAncillaryPriceProps = DialogProps & {
     onBackToSelectSlotsForVisitCenter: TCallback;
 }
 
-const AncillaryPriceModal: React.FC<React.PropsWithChildren<TDisplayAncillaryPriceProps>> = ({
+const AncillaryPriceModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDisplayAncillaryPriceProps>>> = ({
                                                                           open,
                                                                           onClose,
                                                                           onNext,

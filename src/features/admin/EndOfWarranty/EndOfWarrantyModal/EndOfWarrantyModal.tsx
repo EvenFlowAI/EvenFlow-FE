@@ -14,7 +14,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
-export const EndOfWarrantyModal: React.FC<React.PropsWithChildren<DialogProps<IEndOfWarranty>>> = ({payload, onAction, ...props}) => {
+export const EndOfWarrantyModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IEndOfWarranty>>>> = ({payload, onAction, ...props}) => {
     const [saving, setSaving] = useState<boolean>();
     const [months, setMonths] = useState<string>("");
     const {selectedSC} = useSCs();

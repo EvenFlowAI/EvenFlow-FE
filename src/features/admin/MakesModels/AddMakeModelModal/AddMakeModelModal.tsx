@@ -17,7 +17,7 @@ type TAddMakeModalProps = DialogProps & {
     isEditing?: boolean;
 };
 
-export const AddMakeModelModal:React.FC<React.PropsWithChildren<TAddMakeModalProps>> = ({ isEditing, onClose, ...props}) => {
+export const AddMakeModelModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddMakeModalProps>>> = ({ isEditing, onClose, ...props}) => {
     const { currentMake, makes } = useSelector((state: RootState) => state.vehicleDetails);
     const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
@@ -97,7 +97,7 @@ export const AddMakeModelModal:React.FC<React.PropsWithChildren<TAddMakeModalPro
         setModels(prev => prev.filter(item => item !== model));
     }
 
-    const onKeyDown = (e: React.KeyboardEvent<{}>) => {
+    const onKeyUp = (e: React.KeyboardEvent<{}>) => {
         if (e.key === 'Enter') addModel();
     }
 
@@ -115,7 +115,7 @@ export const AddMakeModelModal:React.FC<React.PropsWithChildren<TAddMakeModalPro
                 {Boolean(models.length) && <div className={classes.modelsWrapper}>
                     {models.map(model => <Chip key={model} name={model} onDelete={onModelDelete}/>)}
                 </div>}
-                <div className={classes.addModel} role="presentation" onKeyPress={onKeyDown}>
+                <div className={classes.addModel} role="presentation" onKeyUp={onKeyUp}>
                     <div style={{width: '90%'}}>
                     <TextField
                         fullWidth

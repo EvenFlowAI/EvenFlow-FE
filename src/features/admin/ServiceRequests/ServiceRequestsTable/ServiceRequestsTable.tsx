@@ -107,18 +107,13 @@ type TProps = {
     changeRowsPerPage: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const ServiceRequestsTable: React.FC<React.PropsWithChildren<TProps>> = ({setEditedItem, onOOpen, editedItem, pageSize, pageIndex, changePage, changeRowsPerPage}) => {
-    const [
-        serviceRequestsList,
-        isLoading,
-        requestsCount,
-        order
-    ] = useSelector((state: RootState) => [
-        state.serviceRequests.assignedList,
-        state.serviceRequests.assignedLoading,
-        state.serviceRequests.assignedPaging.numberOfRecords,
-        state.serviceRequests.assignedOrdering
-    ]);
+export const ServiceRequestsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({setEditedItem, onOOpen, editedItem, pageSize, pageIndex, changePage, changeRowsPerPage}) => {
+    const {
+        assignedList,
+        assignedLoading,
+        assignedPaging: {numberOfRecords},
+        assignedOrdering
+    } = useSelector(({serviceRequests}: RootState) => serviceRequests);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const {selectedSC} = useSCs();
 
@@ -182,9 +177,9 @@ export const ServiceRequestsTable: React.FC<React.PropsWithChildren<TProps>> = (
     return (
         <>
             <Table<IAssignedServiceRequest>
-                data={serviceRequestsList}
-                order={order.orderBy}
-                isAscending={order.isAscending}
+                data={assignedList}
+                order={assignedOrdering.orderBy}
+                isAscending={assignedOrdering.isAscending}
                 onSort={handleSort}
                 index="id"
                 rowData={RowData}
@@ -192,10 +187,10 @@ export const ServiceRequestsTable: React.FC<React.PropsWithChildren<TProps>> = (
                 page={pageIndex}
                 onChangePage={changePage}
                 onChangeRowsPerPage={changeRowsPerPage}
-                count={requestsCount}
-                hidePagination={requestsCount < 11}
+                count={numberOfRecords}
+                hidePagination={numberOfRecords < 11}
                 actions={actions}
-                isLoading={isLoading}
+                isLoading={assignedLoading}
             />
             <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleCloseMenu}>
                 <MenuItem onClick={handleEdit}>Edit</MenuItem>

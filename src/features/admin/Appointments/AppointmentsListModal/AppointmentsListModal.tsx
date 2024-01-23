@@ -20,7 +20,7 @@ type TDialogProps = DialogProps & {
     setViewItem?: Dispatch<SetStateAction<IAppointment|undefined>>
 }
 
-export const AppointmentsListModal: React.FC<React.PropsWithChildren<TDialogProps>> = ({
+export const AppointmentsListModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDialogProps>>> = ({
                                                             date,
                                                             refresh,
                                                             order,

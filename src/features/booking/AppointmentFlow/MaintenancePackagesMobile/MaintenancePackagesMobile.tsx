@@ -31,7 +31,7 @@ type TPackageSelectionMobileProps = {
     loadedPackages: IPackage[];
 }
 
-const MaintenancePackagesMobile: React.FC<React.PropsWithChildren<TPackageSelectionMobileProps>> = ({
+const MaintenancePackagesMobile: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPackageSelectionMobileProps>>> = ({
                                                                            getTitle,
                                                                            data,
                                                                            isBmWService,

@@ -12,7 +12,7 @@ type TSaveRequestModalProps = DialogProps & {
     onSave: (packageData: IPackageById) => void;
 };
 
-const SaveRequestToDMSModal: React.FC<React.PropsWithChildren<TSaveRequestModalProps>> = ({ packageData, setPackageData, onSave, ...props}) => {
+const SaveRequestToDMSModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSaveRequestModalProps>>> = ({ packageData, setPackageData, onSave, ...props}) => {
     const [newRequests, setNewRequests] = useState<TExtendedService[]>([]);
     const [newUpsellRequests, setNewUpsellRequests] = useState<TIntervalUpsellForPackage[]>([]);
     const [temporaryData, setTemporaryData] = useState<IPackageById | null>(null);

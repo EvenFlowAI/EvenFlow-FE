@@ -8,7 +8,7 @@ type TPromptNewSearchRangeProps = DialogProps & {
     onSave: () => void
 }
 
-const PromptNewSearchModal: React.FC<React.PropsWithChildren<TPromptNewSearchRangeProps>> = (props) => {
+const PromptNewSearchModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPromptNewSearchRangeProps>>> = (props) => {
     const {t} = useTranslation();
     return (
         <BaseModal

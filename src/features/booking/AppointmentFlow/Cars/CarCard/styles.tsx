@@ -1,10 +1,8 @@
-import { Button, styled, Theme } from "@mui/material";
+import { Button, styled } from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
 import React from "react";
 
-export const Wrapper = styled((({active, ...props}) => (<div {...props}/>)))<Theme, {
-    active?: boolean
-}>(({theme}) => ({
+export const Wrapper = styled("div")<{ active?: boolean}>(({theme, active}) => ({
     display: "flex",
     flex: "1 1 0px",
     padding: 22,

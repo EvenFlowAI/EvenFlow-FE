@@ -9,7 +9,7 @@ type TTitleEditableProps = {
     onSave: (name: string) => void;
 }
 
-const PriceTitleEditable: React.FC<React.PropsWithChildren<TTitleEditableProps>> = ({text, onSave}) => {
+const PriceTitleEditable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTitleEditableProps>>> = ({text, onSave}) => {
     const [isEdit, setEdit] = useState<boolean>(false);
     const [newName, setNewName] = useState<string>('');
     const classes = useStyles();

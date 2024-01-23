@@ -1,4 +1,4 @@
-import {styled, Theme} from "@mui/material";
+import {styled} from "@mui/material";
 
 export const CarsWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -23,7 +23,7 @@ export const Info = styled('div')({
     }
 });
 
-export const Arrow = styled("span")<Theme, { disabled?: boolean }>(({theme, disabled}) => ({
+export const Arrow = styled("span")<{ disabled?: boolean }>(({theme, disabled}) => ({
     position: "relative",
     display: "flex",
     alignItems: "center",

@@ -34,7 +34,7 @@ const initialForm: TForm = {
     channel: EChannel.Text
 }
 
-export const SendOfferModal: React.FC<React.PropsWithChildren<DialogProps>> = ({onAction, payload, ...props}) => {
+export const SendOfferModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const offers = useSelector((state: RootState) => state.offers.offersList);

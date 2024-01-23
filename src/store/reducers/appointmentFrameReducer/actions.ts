@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EMaintenanceOptionType,
-    EServiceCenterName,
+    EServiceCenterName, IAddressData,
     IAppointmentByKey,
     IConsultantsRequestData,
     ICreateAppointmentResp,
@@ -15,22 +15,35 @@ import {
     TAppointmentAdvisor
 } from "../../../api/types";
 import moment from "moment";
-import {EAppointmentTimingType, EReminderType, IMake, IServiceRequestPrice, IVehicle} from "../appointment/types";
+import {
+    EAppointmentTimingType,
+    EReminderType,
+    IMake,
+    IServiceRequestPrice,
+    IVehicle,
+} from "../appointment/types";
 import {
     EPackagePricingType,
     EServiceType,
     EUserType,
     IAncillaryByZipRequest,
-    IAppointmentId,
+    IAppointmentId, ICreateAppointmentRequest,
     IServiceOffer,
     IValueService,
-    TAncillaryPriceByZip,
+    TAncillaryPriceByZip, TDriverForRequest,
     TEditingPosition,
     TLanguage,
-    TMaintenanceDetails,
+    TMaintenanceDetails, TMaintenanceOption, TVehicleForRequest,
     TYear
 } from "./types";
-import {AppThunk, IMaintenanceItem, IRecallByVin, PaginatedAPIResponse, TScreen, TView} from "../../../types/types";
+import {
+    AppThunk,
+    IMaintenanceItem,
+    IRecallByVin,
+    PaginatedAPIResponse,
+    TScreen,
+    TView
+} from "../../../types/types";
 import {
     collectServiceRequestIds,
     decodeSCID,
@@ -657,7 +670,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
     const categories = getState().categories;
     const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
 
-    const vehicle = {
+    const vehicle:TVehicleForRequest = {
         dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
         engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
         model,
@@ -667,7 +680,8 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
         modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
     }
-    const driver = {
+
+    const driver:TDriverForRequest = {
         ...appointmentFrame.customer,
         email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
     }
@@ -693,8 +707,8 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         appointment.selectedSR,
     )
 
-    const maintenancePackageOption = appointmentFrame.selectedPackage
-        ? {id: appointmentFrame.selectedPackage?.id, priceType: appointmentFrame.packagePricingType}
+    const maintenancePackageOption: TMaintenanceOption|null = appointmentFrame.selectedPackage
+        ? {id: appointmentFrame.selectedPackage.id, priceType: appointmentFrame.packagePricingType}
         : appointmentFrame.packageEMenuType !== null
             ? {optionType: appointmentFrame.packageEMenuType}
             : null;
@@ -713,7 +727,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
 
     const isWaitlist = isVisitCenterAppointment && (isWaitListSlotSelected || isWaitListManaging);
 
-    const addressData = {
+    const addressData: IAddressData = {
         address: appointmentFrame.streetName ?? '',
         city: appointmentFrame.city ?? '',
         state: appointmentFrame.politicalState ?? '',
@@ -721,7 +735,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         zipCode: appointmentFrame.zipCode ?? null,
     }
 
-    const data = {
+    const data: ICreateAppointmentRequest = {
         id: appointmentFrame.id,
         appointmentTimingType,
         customerId: appointment.customerLoadedData?.id ?? null,
@@ -754,7 +768,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             || appointmentFrame.serviceTypeOption?.type === EServiceType.MobileService
             ? addressData
             : null,
-        isWaitlist,
+        isWaitlist: Boolean(isWaitlist),
     };
 
     if (isAdmin) delete data.schedulerType;

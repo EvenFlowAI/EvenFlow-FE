@@ -18,13 +18,13 @@ type TProps = DialogProps<IOptimizationWindow> & {
     content: TOptContentData
 }
 
-export const OptimizationModal: React.FC<React.PropsWithChildren<TProps>> = ({
+export const OptimizationModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
     onAction,
     content,
     payload,
     ...props}) => {
     const [val, setVal] = useState<number>(0);
-    const [saving, setSaving] = useState();
+    const [saving, setSaving] = useState<boolean>(false);
     const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();

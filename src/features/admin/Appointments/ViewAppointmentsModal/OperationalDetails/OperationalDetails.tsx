@@ -6,7 +6,7 @@ import {ModifiedData} from "../ModifiedData/ModifiedData";
 import moment from "moment";
 import {TitleWrapper} from "../styles";
 
-export const OperationalDetails: React.FC<React.PropsWithChildren<{payload: IAppointment}>> = ({payload}) => {
+export const OperationalDetails: React.FC<React.PropsWithChildren<React.PropsWithChildren<{payload: IAppointment}>>> = ({payload}) => {
     const date = payload.createdDateTime
         ? payload.createdDateTime.toString().split('.')[0]
         : payload.createdDateTime

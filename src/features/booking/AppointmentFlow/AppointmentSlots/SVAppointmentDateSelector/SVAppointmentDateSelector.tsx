@@ -15,7 +15,7 @@ type TProps = {
     dateChangeDisabled: boolean;
 } & TMonthProps;
 
-export const SVAppointmentDateSelector: React.FC<React.PropsWithChildren<TProps>> = ({
+export const SVAppointmentDateSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
                                                                 date,
                                                                 loading,
                                                                 onDateChange,

@@ -13,27 +13,20 @@ import {
 import {Wrapper} from "./styles";
 
 export const ReviewManaging = () => {
-    const [
+    const {
         advisor,
         isAnyAdvisorSelected,
         transportation,
         serviceTypeOption,
+        consultants,
+        appointmentByKey
+    } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
+    const {
         currentConfig,
         isTransportationAvailable,
         isAdvisorAvailable,
-        consultants,
-        appointmentByKey
-    ] = useSelector((state: RootState) => [
-        state.appointmentFrame.advisor,
-        state.appointmentFrame.isAnyAdvisorSelected,
-        state.appointmentFrame.transportation,
-        state.appointmentFrame.serviceTypeOption,
-        state.bookingFlowConfig.currentConfig,
-        state.bookingFlowConfig.isTransportationAvailable,
-        state.bookingFlowConfig.isAdvisorAvailable,
-        state.appointmentFrame.consultants,
-        state.appointmentFrame.appointmentByKey,
-    ]);
+    } = useSelector(({bookingFlowConfig}: RootState) => bookingFlowConfig)
+
     const {t} = useTranslation();
     const transportationSelected = serviceTypeOption?.transportationOption || transportation;
     const dispatch = useDispatch();

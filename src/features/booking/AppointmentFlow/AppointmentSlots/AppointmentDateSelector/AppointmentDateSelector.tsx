@@ -14,7 +14,7 @@ type TProps = {
     dateChangeDisabled: boolean;
 } & TMonthProps;
 
-export const AppointmentDateSelector: React.FC<React.PropsWithChildren<TProps>> = ({date, loading, onDateChange,
+export const AppointmentDateSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({date, loading, onDateChange,
     appointments, dateChangeDisabled,
     dateRangeUpdated, onDateRangeSet}) => {
     const theme = useTheme();

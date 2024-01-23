@@ -21,7 +21,7 @@ type TProps = {
     selectedPackage: IPackageOptions|null;
 }
 
-const PackagesMobileTotalPrice: React.FC<React.PropsWithChildren<TProps>> = ({
+const PackagesMobileTotalPrice: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
                                                 handleClick,
                                                 type,
                                                 isUpsellPrice,

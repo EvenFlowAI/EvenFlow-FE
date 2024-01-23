@@ -28,25 +28,19 @@ import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const ComplimentaryServices = () => {
-    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const [editedItem, setEditedItem] = useState<IComplimentaryServiceByQuery|undefined>(undefined);
+    const {
+        complimentary,
+        isComplimentaryLoading,
+        complimentaryPaging: {numberOfRecords},
+        complimentarySortOrder,
+        complimentarySearchTerm,
+        allComplimentary,
+    } = useSelector((state: RootState) => state.packages);
+
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [editedItem, setEditedItem] = useState<IComplimentaryServiceByQuery | undefined>(undefined);
     const [selectedOpsCodes, setSelectedOpsCodes] = useState<number[]>([]);
 
-    const [
-        complimentary,
-        isLoading,
-        servicesCount,
-        sortOrder,
-        searchTerm,
-        allComplimentary,
-    ] = useSelector((state: RootState) => [
-        state.packages.complimentary,
-        state.packages.isComplimentaryLoading,
-        state.packages.complimentaryPaging.numberOfRecords,
-        state.packages.complimentarySortOrder,
-        state.packages.complimentarySearchTerm,
-        state.packages.allComplimentary,
-    ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
         changeComplimentaryPageData
@@ -177,7 +171,7 @@ export const ComplimentaryServices = () => {
                 actions={<div style={{display: "flex", alignItems: "center"}}>
                     <SearchInput
                         onChange={handleSearchChange}
-                        value={searchTerm}
+                        value={complimentarySearchTerm}
                         onSearch={handleSearch}
                     />
                     <Button
@@ -202,17 +196,17 @@ export const ComplimentaryServices = () => {
                 <Table<IComplimentaryServiceByQuery>
                     data={complimentary}
                     index="id"
-                    order={sortOrder?.orderBy}
-                    isAscending={sortOrder?.isAscending}
+                    order={complimentarySortOrder?.orderBy}
+                    isAscending={complimentarySortOrder?.isAscending}
                     rowData={tableData}
-                    isLoading={isLoading}
+                    isLoading={isComplimentaryLoading}
                     page={pageIndex}
                     onSort={handleSort}
-                    hidePagination={servicesCount < 11}
+                    hidePagination={numberOfRecords < 11}
                     rowsPerPage={pageSize}
                     onChangePage={changePage}
                     onChangeRowsPerPage={changeRowsPerPage}
-                    count={servicesCount}
+                    count={numberOfRecords}
                     actions={actions}
                 />
             </div>

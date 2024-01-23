@@ -22,7 +22,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-const PodAppointments: React.FC<React.PropsWithChildren<TNotificatonsProps>> = ({setChangesState, changesState, onClose}) => {
+const PodAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<TNotificatonsProps>>> = ({setChangesState, changesState, onClose}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);
     const {shortPodsList, podsLoading} = useSelector((state: RootState) => state.pods);
     const {podNotifications, isLoading} = useSelector((state: RootState) => state.notifications);

@@ -109,7 +109,7 @@ export const updateEmployee = (data: IEmployeeForm, id: string, avatar?: File): 
 const changeDPaging = changePagingGeneric("Employees/ChangeDPaging");
 const loadDealership = (payload: boolean): TEmployeeActions => ({type: "Employees/LoadingDealership", payload});
 const _loadDealership = (payload: IEmployee[]): TEmployeeActions => ({type: "Employees/GetDealershipEmployees", payload});
-export const loadDealershipEmployees = (dealershipId: number, pageData: IPageRequest): AppThunk => async (dispatch) => {
+export const loadDealershipEmployees = (dealershipId: string, pageData: IPageRequest): AppThunk => async (dispatch) => {
     dispatch(loadDealership(true));
     try {
         const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IEmployee>>(Api.endpoints.Users.GetAll, {data: {...pageData, dealershipId}});

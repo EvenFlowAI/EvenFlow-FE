@@ -12,7 +12,7 @@ type TRemindersProps = {
     isEmailRequired: boolean
 }
 
-export const AppointmentReminders: React.FC<React.PropsWithChildren<TRemindersProps>> = ({isEmailRequired}) => {
+export const AppointmentReminders: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRemindersProps>>> = ({isEmailRequired}) => {
     const {reminders, customer}= useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile}= useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();

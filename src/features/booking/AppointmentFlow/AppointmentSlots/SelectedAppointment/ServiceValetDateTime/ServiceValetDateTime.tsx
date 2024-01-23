@@ -12,7 +12,7 @@ type TDropOffTime = {
     minutesDMax: string;
 }
 
-const ServiceValetDateTime: React.FC<React.PropsWithChildren<{serviceValetAppointment: IServiceValetAppointment}>> = ({serviceValetAppointment}) => {
+const ServiceValetDateTime: React.FC<React.PropsWithChildren<React.PropsWithChildren<{serviceValetAppointment: IServiceValetAppointment}>>> = ({serviceValetAppointment}) => {
     const { dropOffSettings } = useSelector((state: RootState) => state.appointment);
     const [dropOffTime, setDropOffTime] = useState<TDropOffTime|null>(null);
     const [hoursPMin, minutesPMin] = serviceValetAppointment.pickUpMin.split(":");

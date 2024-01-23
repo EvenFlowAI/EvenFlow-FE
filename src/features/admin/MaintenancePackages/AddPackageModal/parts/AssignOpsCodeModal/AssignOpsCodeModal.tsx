@@ -40,7 +40,7 @@ const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "DESCRIPTION", val: el => el.description, width: '80%'},
 ]
 
-const AssignOpsCodeModal: React.FC<React.PropsWithChildren<TAssignOpsCodeModalProps>> =
+const AssignOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAssignOpsCodeModalProps>>> =
     ({
          selectedCodes,
          setSelectedCodes,
@@ -51,21 +51,14 @@ const AssignOpsCodeModal: React.FC<React.PropsWithChildren<TAssignOpsCodeModalPr
          ...props}) => {
     const {selectedSC} = useSCs();
     const [selectedOption, setSelectedOption] = useState<TSelectedOption | null>(null);
-    const [
-        serviceList,
-        isLoading,
-        servicesCount,
-        search,
-        currentPackage,
-        nonSelectedPageData,
-    ] = useSelector((state: RootState) => [
-        state.serviceRequests.nonSelectedList,
-        state.serviceRequests.nonSelectedLoading,
-        state.serviceRequests.nonSelectedPaging.numberOfRecords,
-        state.serviceRequests.nonSelectedFilter.searchTerm,
-        state.packages.currentPackage,
-        state.serviceRequests.nonSelectedPageData
-    ]);
+        const {currentPackage} = useSelector((state: RootState) => state.packages)
+        const {
+            nonSelectedList,
+            nonSelectedLoading,
+            nonSelectedPageData,
+            nonSelectedPaging: {numberOfRecords},
+            nonSelectedFilter: {searchTerm}
+        } = useSelector((state: RootState) => state.serviceRequests)
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
         setNonSelectedPageData
@@ -182,21 +175,21 @@ const AssignOpsCodeModal: React.FC<React.PropsWithChildren<TAssignOpsCodeModalPr
                     {currentPackage && selectedOption && isEditing && <div className={classes.selectedCode}>
                         Selected:  {getSelectedOpsCode(selectedOption)}
                     </div>}
-                    <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
+                    <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={searchTerm} />
                 </div>
                 <Table<IServiceRequest>
-                    data={serviceList}
+                    data={nonSelectedList}
                     index="id"
                     startActions={preActions}
                     compact
-                    hidePagination={servicesCount <= nonSelectedPageData.pageSize}
+                    hidePagination={numberOfRecords <= nonSelectedPageData.pageSize}
                     rowData={tableData}
-                    isLoading={isLoading}
+                    isLoading={nonSelectedLoading}
                     page={pageIndex}
                     rowsPerPage={pageSize}
                     onChangePage={changePage}
                     onChangeRowsPerPage={changeRowsPerPage}
-                    count={servicesCount}
+                    count={numberOfRecords}
                 />
             </DialogContent>
             <DialogActions>

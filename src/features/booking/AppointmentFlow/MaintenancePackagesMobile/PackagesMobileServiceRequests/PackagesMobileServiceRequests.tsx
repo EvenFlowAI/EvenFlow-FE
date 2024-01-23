@@ -8,7 +8,7 @@ type TProps = {
     isBmWService: boolean
 }
 
-const PackagesMobileServiceRequests: React.FC<React.PropsWithChildren<TProps>> = ({isBmWService, serviceRequests}) => {
+const PackagesMobileServiceRequests: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isBmWService, serviceRequests}) => {
     const classes = usePackageMobileStyles();
     return (
         <div className={classes.serviceRequests} style={{paddingBottom: 36}}>

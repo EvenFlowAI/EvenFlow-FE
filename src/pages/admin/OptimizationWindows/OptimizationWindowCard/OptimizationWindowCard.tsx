@@ -12,7 +12,7 @@ export type TOptimizationPlateProps = {
     helperText: string;
 }
 
-export const OptimizationWindowCard: React.FC<React.PropsWithChildren<TOptimizationPlateProps>> = ({
+export const OptimizationWindowCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TOptimizationPlateProps>>> = ({
     onEdit,
     title,
     count,

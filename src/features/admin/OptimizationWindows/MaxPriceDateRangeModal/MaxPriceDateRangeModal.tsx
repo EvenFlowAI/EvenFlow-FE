@@ -13,7 +13,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const MaxPriceDateRangeModal: React.FC<React.PropsWithChildren<DialogProps>> = ({payload, onAction, ...props}) => {
+export const MaxPriceDateRangeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({payload, onAction, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [val, setVal] = useState<number>(0);
 

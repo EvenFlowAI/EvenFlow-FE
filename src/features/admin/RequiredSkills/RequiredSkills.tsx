@@ -46,11 +46,11 @@ const rowData: TableRowDataType<IAssignedServiceRequest>[] = [
 ]
 
 export const RequiredSkills = () => {
-    const [data, loading, count] = useSelector((state: RootState) => [
-        state.serviceRequests.assignedList,
-        state.serviceRequests.assignedLoading,
-        state.serviceRequests.assignedPaging.numberOfRecords
-    ]);
+    const {
+        assignedList,
+        assignedLoading,
+        assignedPaging: {numberOfRecords}
+    } = useSelector(({serviceRequests}: RootState) => serviceRequests);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [editedItem, setEditedItem] = useState<IAssignedServiceRequest|undefined>();
     const {pageSize, pageIndex, changeRowsPerPage, changePage} = usePagination(
@@ -99,11 +99,11 @@ export const RequiredSkills = () => {
     return <div>
         <Table<IAssignedServiceRequest>
             rowData={rowData}
-            data={data}
-            isLoading={loading}
+            data={assignedList}
+            isLoading={assignedLoading}
             index="id"
             compact
-            count={count}
+            count={numberOfRecords}
             page={pageIndex}
             actions={actions}
             rowsPerPage={pageSize}

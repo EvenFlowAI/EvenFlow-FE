@@ -15,7 +15,7 @@ import {TChangesState} from "./types";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 
-const ManageNotificationsModal:React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
+const ManageNotificationsModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const [currentTab, setCurrentTab] = useState<string>("0");
     const [changesState, setChangesState] = useState<TChangesState>({
         scNotificationsSaved: true,

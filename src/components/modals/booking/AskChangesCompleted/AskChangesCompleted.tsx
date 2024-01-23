@@ -33,7 +33,7 @@ const AskChangesCompleted = () => {
     const classes = useStyles();
     const showError = useException();
     const {t} = useTranslation();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
     const isNewServiceOption = useMemo(() => {
         return editingPosition === 'serviceOption' && serviceTypeOption?.id !== appointmentByKey?.serviceTypeOption?.id

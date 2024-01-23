@@ -16,12 +16,12 @@ export const ArchiveOffers = () => {
     const {onOpen, onClose, isOpen} = useModal();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const [offers, offersLoading, pageData, count] = useSelector((state: RootState) => [
-        state.offers.archivedOffersList,
-        state.offers.archivedOffersLoading,
-        state.offers.archivedOffersPageData,
-        state.offers.archivedOffersPaging.numberOfRecords
-    ]);
+    const {
+        archivedOffersList: offers,
+        archivedOffersLoading: offersLoading,
+        archivedOffersPageData: pageData,
+        archivedOffersPaging: {numberOfRecords: count}
+    } = useSelector((state: RootState) => state.offers)
     const [editedItem, setEditedItem] = useState<IOffer|undefined>(undefined);
     const {changePage, changeRowsPerPage} = usePagination(
         s => s.offers.archivedOffersPageData,

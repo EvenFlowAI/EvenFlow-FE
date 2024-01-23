@@ -31,26 +31,22 @@ import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const EmployeeScheduleCalendar = () => {
+    const {
+        employeesList,
+        employeesLoading,
+        filters,
+    } = useSelector(({employeesSchedule}: RootState) => employeesSchedule)
+    const {workingDays} = useSelector(({serviceCenters}: RootState) => serviceCenters)
+    const {weeklyHolidaysList} = useSelector(({holidays}: RootState) => holidays)
+
     const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
     const [editedDate, setEditedDate] = useState<moment.Moment>(moment());
     const [editedEmployee, setEditedEmployee] = useState<IEmployee>({} as IEmployee);
     const [editedSchedule, setEditedSchedule] = useState<ISchedule|undefined>(undefined);
     const [ids, setIds] = useState<TIds>({});
+
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const [
-        employeesList,
-        employeesLoading,
-        filters,
-        workingDays,
-        holidaysList
-    ] = useSelector((state: RootState) => [
-        state.employeesSchedule.employeesList,
-        state.employeesSchedule.employeesLoading,
-        state.employeesSchedule.filters,
-        state.serviceCenters.workingDays,
-        state.holidays.weeklyHolidaysList,
-    ]);
     const {isOpen, onOpen, onClose} = useModal();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
@@ -113,7 +109,7 @@ export const EmployeeScheduleCalendar = () => {
     const getCellStyle = (nonWorking: boolean) => nonWorking ? nonWorkingStyle : {};
 
     const getHoliday = useCallback((date: moment.Moment) => {
-        const holiday = holidaysList.find(h => {
+        const holiday = weeklyHolidaysList.find(h => {
             const d = moment.utc(h.date).year(date.year()).startOf('day');
             return moment(moment(d).format("YYYY-MM-DD"), "YYYY-MM-DD")
                 .isSame(moment(moment.utc(date).format("YYYY-MM-DD"), "YYYY-MM-DD"), "date");
@@ -125,15 +121,15 @@ export const EmployeeScheduleCalendar = () => {
             return <Tooltip title={holiday.description}><Holiday>{description}</Holiday></Tooltip>;
         }
         return null;
-    }, [holidaysList])
+    }, [weeklyHolidaysList])
 
     const isWorkingDay = useCallback((date: Moment): boolean => {
-        const holiday = holidaysList.find(h => {
+        const holiday = weeklyHolidaysList.find(h => {
             const d = moment.utc(h.date).year(date.year()).startOf('day');
             return d.isSame(moment.utc(date), "date");
         });
         return workingDays.includes(moment.utc(date).day() as EDay) && !holiday;
-    }, [workingDays, holidaysList])
+    }, [workingDays, weeklyHolidaysList])
 
     return (
         <div>

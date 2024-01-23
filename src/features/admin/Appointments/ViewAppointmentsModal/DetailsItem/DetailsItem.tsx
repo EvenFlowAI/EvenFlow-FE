@@ -1,7 +1,7 @@
 import React, {ReactComponentElement} from "react";
 import {useDetailsItemStyles} from "./styles";
 
-export const DetailsItem: React.FC<React.PropsWithChildren<{title: string, text: string|string[], icon?: ReactComponentElement<any>}>> = ({title, text, icon}) => {
+export const DetailsItem: React.FC<React.PropsWithChildren<React.PropsWithChildren<{title: string, text: string|string[], icon?: ReactComponentElement<any>}>>> = ({title, text, icon}) => {
     const classes = useDetailsItemStyles();
     return text?.length
         ? <div className={classes.wrapper}>

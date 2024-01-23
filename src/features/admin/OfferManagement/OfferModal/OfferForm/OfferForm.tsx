@@ -28,7 +28,6 @@ import {useModal} from "../../../../../hooks/useModal/useModal";
 import {TEnumMap} from "../../../../../store/reducers/types";
 import moment from "moment";
 import MuiXDatePicker from "../../../../../components/pickers/MuiXDatePicker/MuiXDatePicker";
-import dayjs from "dayjs";
 
 type TProps = {
     form: TOfferForm;
@@ -44,7 +43,7 @@ type TProps = {
     formIsChecked: boolean;
 }
 
-export const OfferForm: React.FC<React.PropsWithChildren<TProps>> = ({
+export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
     form,
     onSelect,
     onChange,

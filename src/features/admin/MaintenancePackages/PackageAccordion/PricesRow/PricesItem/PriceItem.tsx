@@ -5,7 +5,7 @@ type TPriceItemProps = {
     value: number;
 }
 
-const PriceItem: React.FC<React.PropsWithChildren<TPriceItemProps>> = ({value}) => {
+const PriceItem: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPriceItemProps>>> = ({value}) => {
     const classes = useStyles();
     return (
         <div className={classes.wrapper}>

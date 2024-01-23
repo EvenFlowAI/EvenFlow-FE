@@ -25,24 +25,17 @@ const rowData: TableRowDataType<IBay>[] = [
     {header: "Only Quick Service", val: v => v.onlyQuickService ? <CheckCircle color="primary" /> : "-", align: "center"},
 ];
 
-export const RequiredEquipment: React.FC<React.PropsWithChildren<TViewMode>> = ({viewMode}) => {
-    const {onOpen, onClose, isOpen} = useModal();
+export const RequiredEquipment: React.FC<React.PropsWithChildren<React.PropsWithChildren<TViewMode>>> = ({viewMode}) => {
+    const {loading, bays, paging:{numberOfRecords}} = useSelector(({bays}: RootState) => bays);
     const [editedItem, setEditedItem] = useState<IBay|undefined>();
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+
+    const {onOpen, onClose, isOpen} = useModal();
     const {askConfirm, closeConfirm} = useConfirm();
     const showMessage = useMessage();
     const showError = useException();
     const classes = useStyles();
 
-    const [
-        loading,
-        bays,
-        size
-    ] = useSelector((state: RootState) => [
-        state.bays.loading,
-        state.bays.bays,
-        state.bays.paging.numberOfRecords
-    ]);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
@@ -123,7 +116,7 @@ export const RequiredEquipment: React.FC<React.PropsWithChildren<TViewMode>> = (
             onChangeRowsPerPage={changeRowsPerPage}
             rowsPerPage={pageSize}
             page={pageIndex}
-            count={size}
+            count={numberOfRecords}
             actions={endActions}
             rowData={rowData}
         />

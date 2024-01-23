@@ -4,7 +4,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseMo
 import {Button} from "@mui/material";
 import {RequiredEquipment} from "../../../../features/admin/RequiredEquipment/RequiredEquipment";
 
-export const Bays: React.FC<React.PropsWithChildren<DialogProps&TViewMode>> = ({viewMode, ...props}) => {
+export const Bays: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TViewMode>>> = ({viewMode, ...props}) => {
     return <BaseModal {...props} width={700}>
         <DialogTitle onClose={props.onClose}>Bays</DialogTitle>
         <DialogContent>

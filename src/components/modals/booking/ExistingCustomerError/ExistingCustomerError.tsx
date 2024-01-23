@@ -12,7 +12,7 @@ type TExistingCustomerErrorProps = DialogProps & {
     onNext: () => void;
 }
 
-const ExistingCustomerError: React.FC<React.PropsWithChildren<TExistingCustomerErrorProps>> = ({open, onClose, onNext}) => {
+const ExistingCustomerError: React.FC<React.PropsWithChildren<React.PropsWithChildren<TExistingCustomerErrorProps>>> = ({open, onClose, onNext}) => {
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const dialogClasses = useDialogStyles();

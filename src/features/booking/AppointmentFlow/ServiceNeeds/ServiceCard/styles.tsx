@@ -1,7 +1,7 @@
-import {styled, Theme} from "@mui/material";
+import {styled} from "@mui/material";
 import React from "react";
 
-export const CardWrapper = styled(({active, selected, ...props}) => <div {...props}/>)<Theme, {
+export const CardWrapper = styled("div")<{
     active?: boolean,
     selected?: boolean
 }>(({theme, active, selected}) => {

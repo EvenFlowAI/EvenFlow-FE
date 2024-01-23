@@ -29,18 +29,16 @@ type TTFormProps = {
 };
 
 
-export const CreateEmployeeForm: React.FC<React.PropsWithChildren<TTFormProps>> = ({
+export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTFormProps>>> = ({
                                                               setEmployeeForm,
                                                               setFormIsChecked,
                                                               formIsChecked,
                                                               form,
                                                               isEdit}) => {
-    const [shortSC, shortLoading, dmsAdvisors, loadingDMSAdvisors] = useSelector((state: RootState) => [
-        state.serviceCenters.shortSC,
-        state.serviceCenters.shortLoading,
-        state.scEmployees.DmsAdvisors,
-        state.employees.loadingDMSAdvisors,
-    ]);
+    const {shortSC, shortLoading} = useSelector((state: RootState) => state.serviceCenters);
+    const {DmsAdvisors: dmsAdvisors} = useSelector((state: RootState) => state.scEmployees);
+    const {loadingDMSAdvisors} = useSelector((state: RootState) => state.employees);
+
     const [serviceCenters, setServiceCenters] = useState<IServiceCenter[]>([])
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();

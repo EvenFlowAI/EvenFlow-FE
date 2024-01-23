@@ -13,7 +13,7 @@ type TProps = {
 
 const primaryString = 'https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&';
 
-const PackagesEmenu: React.FC<React.PropsWithChildren<TProps>> = ({onBack, onNext}) => {
+const PackagesEmenu: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onBack, onNext}) => {
     const {selectedVehicle, makes} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const [isLoading, setLoading] = useState<boolean>(false);

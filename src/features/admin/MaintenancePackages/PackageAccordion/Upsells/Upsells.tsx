@@ -17,7 +17,7 @@ type TUpsellTitleProps = {
     setPackageData: Dispatch<SetStateAction<IPackageById|null>>;
 }
 
-const Upsells: React.FC<React.PropsWithChildren<TUpsellTitleProps>> = ({
+const Upsells: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUpsellTitleProps>>> = ({
                                                   isUpsellNameEdit,
                                                   packageData,
                                                   setUpsellNameEdit,

@@ -13,7 +13,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const AddMileageModal: React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
+export const AddMileageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [newMileage, setNewMileage] = useState<string>('');
     const [mileages, setMileages] = useState<string[]>([]);
@@ -46,7 +46,7 @@ export const AddMileageModal: React.FC<React.PropsWithChildren<DialogProps>> = (
         setNewMileage('');
     }
 
-    const onKeyDown = (e: React.KeyboardEvent<{}>) => {
+    const onKeyUp = (e: React.KeyboardEvent<{}>) => {
         if (e.key === 'Enter') addMileage();
     }
 
@@ -73,7 +73,7 @@ export const AddMileageModal: React.FC<React.PropsWithChildren<DialogProps>> = (
                 {Boolean(mileages.length) && <div className={classes.modelsWrapper}>
                     {mileages.map(mileage => <Chip key={mileage} name={mileage} onDelete={onMileageDelete}/>)}
                 </div>}
-                <div className={classes.addModel} role="presentation" onKeyPress={onKeyDown}>
+                <div className={classes.addModel} role="presentation" onKeyUp={onKeyUp}>
                     <div style={{width: '90%'}}>
                         <TextField
                             fullWidth

@@ -9,7 +9,6 @@ import {LoginButton} from "../../../components/styled/LoginButton";
 import {ICredentials} from "../../../types/types";
 import {useSnackbar} from "notistack";
 import {getAPIException} from "../../../utils/utils";
-
 import {Routes} from "../../../routes/constants";
 import {authService} from "../../../api/AuthService/AuthService";
 
@@ -18,7 +17,7 @@ export const AdminLogin = () => {
     const [credentials, setCredentials] = useState<ICredentials>({email: '', password: ''});
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
-    const {state: locationState} = useLocation();
+    const {state: locationState} = useLocation<{from: string}>();
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         setCredentials({...credentials, [name]: value});

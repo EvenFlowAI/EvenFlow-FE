@@ -35,7 +35,7 @@ export const CancelAppointment = () => {
     const [tState, setTState] = useState<TState>("loading");
     const [loading, setLoading] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory();

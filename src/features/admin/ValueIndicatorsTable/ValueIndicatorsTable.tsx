@@ -26,10 +26,7 @@ export const ValueIndicatorsTable = ({onTabChange}: TProps) => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
-    const [valuesData, configuredValues] = useSelector((state: RootState) => [
-        state.valueSettings.valueSettings,
-        state.valueSettings.configuredValues
-    ]);
+    const {valueSettings: valuesData, configuredValues} = useSelector((state: RootState) => state.valueSettings);
 
     const showError = useException();
     const showMessage = useMessage();

@@ -23,62 +23,37 @@ type TProps = {
     onUpdateAppointment: TArgCallback<ILoadedVehicle>;
 }
 
-export const AppointmentConfirmed: React.FC<React.PropsWithChildren<TProps>> = ({onUpdateAppointment}) => {
-    const [
+export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onUpdateAppointment}) => {
+    const {
         appointment,
         serviceValetAppointment,
-        srList,
+        serviceRequests,
         selectedSR,
         scProfile,
-        s,
-        ss,
+        dropOffSettings,
+        waitListSettings,
+    } = useSelector((state: RootState) => state.appointment)
+    const {
+        service,
+        subService,
         selectedPackage,
         packagePricingType,
         packageEMenuType,
         customer,
-        vehicle,
-        allCategories,
+        selectedVehicle,
         categoriesIds,
         serviceTypeOption,
         address,
         zipCode,
         valueService,
-        engineTypes,
         selectedRecalls,
         packagePriceTitles,
-        dropOffSettings,
         isAppointmentSaving,
         appointmentByKey,
         transactionValue,
-        waitListSettings,
-    ] = useSelector((state: RootState) => [
-        state.appointment.appointment,
-        state.appointment.serviceValetAppointment,
-        state.appointment.serviceRequests,
-        state.appointment.selectedSR,
-        state.appointment.scProfile,
-        state.appointmentFrame.service,
-        state.appointmentFrame.subService,
-        state.appointmentFrame.selectedPackage,
-        state.appointmentFrame.packagePricingType,
-        state.appointmentFrame.packageEMenuType,
-        state.appointmentFrame.customer,
-        state.appointmentFrame.selectedVehicle,
-        state.categories.allCategories,
-        state.appointmentFrame.categoriesIds,
-        state.appointmentFrame.serviceTypeOption,
-        state.appointmentFrame.address,
-        state.appointmentFrame.zipCode,
-        state.appointmentFrame.valueService,
-        state.vehicleDetails.engineTypes,
-        state.appointmentFrame.selectedRecalls,
-        state.appointmentFrame.packagePriceTitles,
-        state.appointment.dropOffSettings,
-        state.appointmentFrame.isAppointmentSaving,
-        state.appointmentFrame.appointmentByKey,
-        state.appointmentFrame.transactionValue,
-        state.appointment.waitListSettings,
-    ]);
+    } = useSelector((state: RootState) => state.appointmentFrame)
+    const {allCategories} = useSelector((state: RootState) => state.categories)
+    const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails)
 
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -88,7 +63,7 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<TProps>> = (
         : EServiceType.VisitCenter, [serviceTypeOption]);
     const servicesList = useMemo(() => {
             return getMaintenanceDescription(
-                srList,
+                serviceRequests,
                 selectedRecalls,
                 packagePriceTitles,
                 selectedSR,
@@ -101,15 +76,15 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<TProps>> = (
                 scProfile?.maintenancePackageOptionTypes
             )
         },
-        [srList, selectedSR, selectedRecalls, selectedPackage, allCategories, packagePriceTitles, categoriesIds,
+        [serviceRequests, selectedSR, selectedRecalls, selectedPackage, allCategories, packagePriceTitles, categoriesIds,
             valueService, packagePricingType, packageEMenuType, scProfile])
 
-    const engine = useMemo(() => engineTypes.find(item => item.id === Number(vehicle?.engineTypeId)), [engineTypes, vehicle])
+    const engine = useMemo(() => engineTypes.find(item => item.id === Number(selectedVehicle?.engineTypeId)), [engineTypes, selectedVehicle])
 
     const serviceName = useMemo(() => getServiceName(serviceTypeOption, serviceType), [serviceTypeOption, serviceType])
 
-    const vehicleData = vehicle?.year
-        ? `${vehicle.year} ${vehicle.make} ${vehicle.model} ${engine?.name ?? ""}`
+    const vehicleData = selectedVehicle?.year
+        ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} ${engine?.name ?? ""}`
         : valueService?.year
             ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
             : ''
@@ -271,7 +246,7 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<TProps>> = (
         ]
 
         return insertPickUpTime(list);
-    }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR,
+    }, [ appointment, scProfile, service, subService, customer, selectedVehicle, serviceRequests, selectedPackage, selectedSR,
         isServiceValetApp, isServiceValetManage, insertPickUpTime, serviceName, serviceType, waitListSettings, appointmentByKey]);
 
     return <StepWrapper>

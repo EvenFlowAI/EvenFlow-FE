@@ -18,7 +18,7 @@ import {useException} from "../../../hooks/useException/useException";
 
 const fixedToTwo = /(^-?\d*\.?\d{1,2}?)$/;
 
-const LaborRateModal: React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
+const LaborRateModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {laborRate, selectedSC, predictionParamsLoading} = useSelector((state: RootState) => state.serviceCenters);
     const [customerPay, setCustomerPay] = useState<string>('0');
     const [warranty, setWarranty] = useState<string>('0');

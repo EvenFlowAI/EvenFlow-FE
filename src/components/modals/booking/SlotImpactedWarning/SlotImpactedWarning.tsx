@@ -15,7 +15,7 @@ const SlotImpactedWarning = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const {t} = useTranslation();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
 
     const onNext = () => {

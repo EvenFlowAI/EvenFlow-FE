@@ -5,12 +5,7 @@ import {IServiceCenter} from "../../store/reducers/serviceCenters/types";
 import {selectSC as selectSCAction} from "../../store/reducers/serviceCenters/actions";
 
 export const useSCs = () => {
-    const [
-        selectedSC, scList
-    ] = useSelector((state: RootState) => [
-        state.serviceCenters.selectedSC,
-        state.serviceCenters.fullSCList
-    ]);
+    const {selectedSC, fullSCList: scList} = useSelector((state: RootState) => state.serviceCenters)
     const dispatch = useDispatch();
     const selectSC = useCallback((sc: IServiceCenter) => {
         dispatch(selectSCAction(sc));

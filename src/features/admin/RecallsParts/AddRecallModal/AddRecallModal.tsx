@@ -27,7 +27,7 @@ type TAddRecallProps = DialogProps & {
 
 const yearOptions = getYearOptions()
 
-const AddRecallModal: React.FC<React.PropsWithChildren<TAddRecallProps>> = ({editingItem, open, onClose, setEditingItem}) => {
+const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddRecallProps>>> = ({editingItem, open, onClose, setEditingItem}) => {
     const {makesModels} = useSelector((state: RootState) => state.vehicleDetails);
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
     const [form, setForm] = useState<TForm>(initialForm);

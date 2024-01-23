@@ -15,7 +15,7 @@ import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
-export const HourOfOperationsModal: React.FC<React.PropsWithChildren<DialogProps&TViewMode>> = ({viewMode, ...props}) => {
+export const HourOfOperationsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TViewMode>>> = ({viewMode, ...props}) => {
     const {selectedSC} = useSCs();
     const [form, setForm] = useState<THOOForm[]>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);

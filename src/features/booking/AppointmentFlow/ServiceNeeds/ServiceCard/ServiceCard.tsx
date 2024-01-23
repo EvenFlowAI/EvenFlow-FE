@@ -21,7 +21,7 @@ type TSCProps = {
     selected: boolean;
 }
 
-export const ServiceCard: React.FC<React.PropsWithChildren<TSCProps>> = ({card, onSelect, active, selected}) => {
+export const ServiceCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSCProps>>> = ({card, onSelect, active, selected}) => {
     const [icon, setIcon] = useState<string>('');
     const [isLoading, setLoading] = useState<boolean>(false);
     const {scProfile} = useSelector((state: RootState) => state.appointment);

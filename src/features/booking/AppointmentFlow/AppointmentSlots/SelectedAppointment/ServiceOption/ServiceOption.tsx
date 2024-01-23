@@ -24,7 +24,7 @@ import {setAdvisorAvailable} from "../../../../../../store/reducers/bookingFlowC
 import {IServiceConsultant} from "../../../../../../api/types";
 import {useSelectedAppointmentStyles} from "../../../../../../hooks/styling/useSelectedAppointmentStyles";
 
-const ServiceOption: React.FC<React.PropsWithChildren<{isSm: boolean}>> = ({isSm}) => {
+const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{isSm: boolean}>>> = ({isSm}) => {
     const {
         serviceTypeOption,
         sideBarSteps,
@@ -40,7 +40,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<{isSm: boolean}>> = ({isSm
     const {t} = useTranslation();
     const classes = useSelectedAppointmentStyles();
     const dispatch = useDispatch();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceValetIsPossibleToUse = useMemo(() => {

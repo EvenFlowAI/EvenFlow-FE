@@ -19,7 +19,7 @@ type MakeAndModelProps = {
     disabled: boolean;
 }
 
-const MakeAndModel: React.FC<React.PropsWithChildren<MakeAndModelProps>> = ({
+const MakeAndModel: React.FC<React.PropsWithChildren<React.PropsWithChildren<MakeAndModelProps>>> = ({
                                                        disabled,
                                                        setSelectedMakes,
                                                        selectedModels,

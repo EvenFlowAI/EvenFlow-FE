@@ -19,7 +19,7 @@ const initialForm: THolidayForm = {
     description: ""
 }
 
-export const AddHolidayModal: React.FC<React.PropsWithChildren<DialogProps<IHoliday>>> = ({onAction, payload, ...props}) => {
+export const AddHolidayModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IHoliday>>>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<THolidayForm>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();

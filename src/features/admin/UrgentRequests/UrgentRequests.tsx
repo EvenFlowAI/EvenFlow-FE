@@ -32,24 +32,23 @@ const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
 ];
 
 export const UrgentRequests = () => {
-    const {onOpen, onClose, isOpen} = useModal();
+    const {
+        urgentList,
+        urgentLoading,
+        urgentPaging: {numberOfRecords}
+    } = useSelector(({serviceRequests}: RootState) => serviceRequests);
+
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const {askConfirm} = useConfirm();
     const showMessage = useMessage();
     const showError = useException();
+    const {onOpen, onClose, isOpen} = useModal();
     const {pageIndex, pageSize, changePage, changeRowsPerPage} = usePagination(
         state => state.serviceRequests.urgentPageData,
         pageDataUrgentServiceRequests
     )
     const dispatch = useDispatch();
-    const [
-        data, isLoading, count
-    ] = useSelector((state: RootState) => [
-        state.serviceRequests.urgentList,
-        state.serviceRequests.urgentLoading,
-        state.serviceRequests.urgentPaging.numberOfRecords
-    ]);
 
     useEffect(() => {
         if (selectedSC) {
@@ -102,11 +101,11 @@ export const UrgentRequests = () => {
             </Button>
         </div>
         <Table<IAssignedServiceRequestShort>
-            data={data}
+            data={urgentList}
             rowData={rowData}
             index="id"
-            count={count}
-            isLoading={isLoading}
+            count={numberOfRecords}
+            isLoading={urgentLoading}
             page={pageIndex}
             rowsPerPage={pageSize}
             onChangePage={changePage}

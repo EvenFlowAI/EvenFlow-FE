@@ -32,30 +32,21 @@ type TProps = {
     page: EServiceCategoryPage;
 }
 
-export const SelectOpsCode: React.FC<React.PropsWithChildren<TProps>> = ({handleSetScreen, onAddServices, page}) => {
-    const [
+export const SelectOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({handleSetScreen, onAddServices, page}) => {
+    const {
         selectedSR,
-        srList,
+        serviceRequests,
         search,
         scProfile,
+        customerLoadedData,
+    } = useSelector(({appointment}: RootState) => appointment)
+    const {
         subService,
         service,
-        allCategories,
         categoriesIds,
-        customerLoadedData,
         isUsualFlowNeeded
-    ] = useSelector((state: RootState) => [
-        state.appointment.selectedSR,
-        state.appointment.serviceRequests,
-        state.appointment.search,
-        state.appointment.scProfile,
-        state.appointmentFrame.subService,
-        state.appointmentFrame.service,
-        state.categories.allCategories,
-        state.appointmentFrame.categoriesIds,
-        state.appointment.customerLoadedData,
-        state.appointmentFrame.isUsualFlowNeeded,
-    ]);
+    } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
+    const {allCategories} = useSelector(({categories}: RootState) => categories)
 
     const [searchInput, setSearch] = useState<string>("");
     const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
@@ -157,7 +148,7 @@ export const SelectOpsCode: React.FC<React.PropsWithChildren<TProps>> = ({handle
         ReactGA.event({
             category: 'EvenFlow User',
             action: 'Selected Individual Service Requests',
-            label: `With Codes ${srList.filter(item => selectedOpsCodes.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
+            label: `With Codes ${serviceRequests.filter(item => selectedOpsCodes.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
         })
         dispatch(selectSRMultiple(selectedOpsCodes))
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
@@ -217,9 +208,7 @@ export const SelectOpsCode: React.FC<React.PropsWithChildren<TProps>> = ({handle
                                     checked={selectedOpsCodes.includes(s.id)}
                                     color="primary"
                                 />
-                            }
-                            >
-                            </Code>
+                            }/>
                             <PricesWrapper>
                                 {/*todo uncomment for offer new functionality*/}
                                 {/*{s.offer ? <OfferPrice style={{fontWeight: s.offer.type === EOfferType.FreeService ? 400 : 600}}>*/}

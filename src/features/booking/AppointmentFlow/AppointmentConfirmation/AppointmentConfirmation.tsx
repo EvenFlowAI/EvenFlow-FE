@@ -31,17 +31,23 @@ type TProps = {
     onChangeSlot: TCallback;
 } & TActionProps;
 
-export const AppointmentConfirmation: React.FC<React.PropsWithChildren<TProps>> = ({onBack, onChangeSlot, onNext}) => {
+export const AppointmentConfirmation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onBack, onChangeSlot, onNext}) => {
     const [errors, setErrors] = useState<string[]>([]);
     const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const currentUser = useCurrentUser();
-    const [appointment, appointmentFrame, saving] = useSelector((state: RootState) => [
-        state.appointment,
-        state.appointmentFrame,
-        state.appointmentFrame.isAppointmentSaving,
-    ]);
+    const {
+        scProfile,
+        serviceValetAppointment,
+        appointment,
+    } = useSelector((state: RootState) => state.appointment);
+    const {
+        customer,
+        serviceTypeOption,
+        transportation,
+        isAppointmentSaving: saving
+    } = useSelector((state: RootState) => state.appointmentFrame);
 
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
 
@@ -51,13 +57,13 @@ export const AppointmentConfirmation: React.FC<React.PropsWithChildren<TProps>> 
 
     const isEmailRequired = useMemo(() => {
         return currentUser
-            ? Boolean(appointment.scProfile?.emailRequirement?.adminAndEmployeesEnabled)
-            : Boolean(appointment.scProfile?.emailRequirement?.customerSelfServiceEnabled)
-    }, [currentUser, appointment.scProfile])
+            ? Boolean(scProfile?.emailRequirement?.adminAndEmployeesEnabled)
+            : Boolean(scProfile?.emailRequirement?.customerSelfServiceEnabled)
+    }, [currentUser, scProfile])
 
     useEffect(() => {
-        appointment?.scProfile && dispatch(loadAllServiceCategories(appointment.scProfile.id));
-    }, [appointment.scProfile])
+        scProfile && dispatch(loadAllServiceCategories(scProfile.id));
+    }, [scProfile])
 
     useEffect(() => {
         dispatch(setReminders([0, 2]));
@@ -66,23 +72,23 @@ export const AppointmentConfirmation: React.FC<React.PropsWithChildren<TProps>> 
     const checkIsValid = () => {
         let isValid = true;
         const localErrors: string[] = [];
-        if (!appointmentFrame.customer.email && isEmailRequired) {
+        if (!customer.email && isEmailRequired) {
             isValid = false;
             localErrors.push('email')
             showError('"Email" must not be empty')
         }
-        if (!appointmentFrame.customer?.fullName) {
+        if (!customer?.fullName) {
             isValid = false;
             localErrors.push('fullname')
             showError('"Full Name" must not be empty')
         }
-        if (!appointmentFrame.customer?.phoneNumber) {
+        if (!customer?.phoneNumber) {
             isValid = false;
             localErrors.push('phonenumber')
             showError('"Phone Number" must not be empty')
         }
-        const invalidServiceValetSlot = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && !appointment.serviceValetAppointment;
-        const invalidSlot = appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && !appointment.appointment;
+        const invalidServiceValetSlot = serviceTypeOption?.type === EServiceType.PickUpDropOff && !serviceValetAppointment;
+        const invalidSlot = serviceTypeOption?.type !== EServiceType.PickUpDropOff && !appointment;
         if (invalidServiceValetSlot || invalidSlot) {
             isValid = false;
             showError('Selected date and time are not correct. Please select correct date and time or cancel all changes')
@@ -122,7 +128,7 @@ export const AppointmentConfirmation: React.FC<React.PropsWithChildren<TProps>> 
                     {t("View itemized fees of services")}
                 </div>
                 <ServiceType/>
-                {appointmentFrame.transportation || appointmentFrame.serviceTypeOption?.transportationOption || isAdvisorAvailable
+                {transportation || serviceTypeOption?.transportationOption || isAdvisorAvailable
                     ? <Review/>
                     : null}
             </div>

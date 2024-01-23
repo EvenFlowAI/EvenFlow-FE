@@ -43,7 +43,7 @@ type TProps = {
     page: EServiceCategoryPage;
     setPage: Dispatch<SetStateAction<EServiceCategoryPage>>;
 }
-export const ServiceNeedsFrame: React.FC<React.PropsWithChildren<TProps>> = ({
+export const ServiceNeedsFrame: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
                                                         onSelect,
                                                         onBack,
                                                         setLastSelectedCategory,
@@ -68,7 +68,7 @@ export const ServiceNeedsFrame: React.FC<React.PropsWithChildren<TProps>> = ({
     const { allCategories } = useSelector((state: RootState) => state.categories);
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
     const history = useHistory();
     const {t} = useTranslation();

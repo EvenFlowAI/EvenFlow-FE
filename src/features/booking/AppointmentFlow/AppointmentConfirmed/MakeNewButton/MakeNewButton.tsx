@@ -18,7 +18,7 @@ const MakeNewButton = () => {
     const dispatch = useDispatch();
     const isFrame = window.top !== window.self;
     const {t} = useTranslation();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
 
     const clearAddress = async () => {

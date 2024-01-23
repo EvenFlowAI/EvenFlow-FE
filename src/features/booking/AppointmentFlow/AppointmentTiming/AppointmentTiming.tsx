@@ -46,35 +46,23 @@ const cards: TCard[] = [
 
 const timingTypes = ['Special Offers', 'Preferred Date', 'First Available Date'];
 
-export const AppointmentTiming: React.FC<React.PropsWithChildren<{handleSetScreen: TArgCallback<TScreen>}>> = ({handleSetScreen}) => {
-    const [isLoading, setLoading] = useState<boolean>(false);
-    const [
-        selectedType,
+export const AppointmentTiming: React.FC<React.PropsWithChildren<React.PropsWithChildren<{handleSetScreen: TArgCallback<TScreen>}>>> = ({handleSetScreen}) => {
+    const {appointment, customerLoadedData} = useSelector((state: RootState) => state.appointment)
+    const {
+        selectedTiming,
         selectedTime,
-        appointment,
         serviceTypeOption,
         sideBarSteps,
-        isAdvisorAvailable,
         consultants,
         appointmentByKey,
-        editingPosition,
-        customerLoadedData,
-    ] = useSelector(
-        (state: RootState) => [
-            state.appointmentFrame.selectedTiming,
-            state.appointmentFrame.selectedTime,
-            state.appointment.appointment,
-            state.appointmentFrame.serviceTypeOption,
-            state.appointmentFrame.sideBarSteps,
-            state.bookingFlowConfig.isAdvisorAvailable,
-            state.appointmentFrame.consultants,
-            state.appointmentFrame.appointmentByKey,
-            state.appointmentFrame.editingPosition,
-            state.appointment.customerLoadedData,
-        ]);
+        editingPosition
+    } = useSelector((state: RootState) => state.appointmentFrame)
+    const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
+
+    const [isLoading, setLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const {t} = useTranslation();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
 
     const fromServiceValetToVisitCenter = useMemo(() => {
@@ -120,8 +108,8 @@ export const AppointmentTiming: React.FC<React.PropsWithChildren<{handleSetScree
     }, [selectedTime])
 
     const isTimingValid = Boolean(
-        selectedType !== null
-        && (selectedType !== EAppointmentTimingType.PreferredDate || selectedTime)
+        selectedTiming !== null
+        && (selectedTiming !== EAppointmentTimingType.PreferredDate || selectedTime)
     );
 
     const handleSideBar = () => {
@@ -133,17 +121,17 @@ export const AppointmentTiming: React.FC<React.PropsWithChildren<{handleSetScree
     }
 
     const onSubmit = useCallback((): void => {
-        if (selectedType) {
+        if (selectedTiming) {
             ReactGA.event({
                 category: 'EvenFlow User',
                 action: 'Selected Timing Type',
-                label: `Selected ${timingTypes[selectedType]}`,
+                label: `Selected ${timingTypes[selectedTiming]}`,
             });
         }
-        if (appointment?.timingType !== selectedType) clearAppointmentSlots()
+        if (appointment?.timingType !== selectedTiming) clearAppointmentSlots()
         handleSideBar();
         onNext();
-    }, [appointment, dispatch, onNext, selectedType])
+    }, [appointment, dispatch, onNext, selectedTiming])
 
     return (
         <StepWrapper>
@@ -162,7 +150,7 @@ export const AppointmentTiming: React.FC<React.PropsWithChildren<{handleSetScree
                         isLoading={isLoading}
                         onChangeTime={handleChangeTime}
                         selectedTime={selectedTime}
-                        active={selectedType === card.name}
+                        active={selectedTiming === card.name}
                         key={card.name}/>
                 })}
             </TimingWrapper>

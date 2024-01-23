@@ -3,7 +3,7 @@ import {Button, Grid} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useStyles} from "../styles";
 
-const NewSelfCustomer: React.FC<React.PropsWithChildren<{ handleNew: () => void}>> = ({ handleNew }) => {
+const NewSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChildren<{ handleNew: () => void}>>> = ({ handleNew }) => {
     const classes = useStyles();
     const { t } = useTranslation();
 

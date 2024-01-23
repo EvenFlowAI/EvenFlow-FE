@@ -18,7 +18,7 @@ type TProps = {
     onChangeSlot: TCallback;
 }
 
-export const AppointmentSelectedDate: React.FC<React.PropsWithChildren<TProps>> = ({onChangeSlot}) => {
+export const AppointmentSelectedDate: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onChangeSlot}) => {
     const {appointment, serviceValetAppointment, waitListSettings} = useSelector((state: RootState) => state.appointment);
     const { dropOffSettings, customerLoadedData } = useSelector((state: RootState) => state.appointment);
     const {serviceTypeOption, isAppointmentSaving, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);

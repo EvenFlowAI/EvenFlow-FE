@@ -40,9 +40,9 @@ export const DemandWindows = () => {
             try {
                 setSaving(true);
                 await dispatch(setTimeWindows({
-                    serviceCenterId: selectedSC.id,
-                    type: t,
                     ...mappedTW[t],
+                    serviceCenterId: mappedTW[t]?.serviceCenterId ?? selectedSC.id,
+                    type: mappedTW[t]?.type ?? t,
                     isEligibility: checked
                 }));
             } catch (e) {

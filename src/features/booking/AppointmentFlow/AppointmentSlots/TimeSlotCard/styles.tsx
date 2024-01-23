@@ -1,4 +1,4 @@
-import { darken, lighten, styled, Theme, Tooltip } from "@mui/material";
+import { darken, lighten, styled, Tooltip } from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
 import React from "react";
 
@@ -24,15 +24,7 @@ type TSlotsWrapperProps = {
     waitListBackground?: string;
 }
 
-export const Wrapper = styled(({
-                                   available,
-                                   offPeak,
-                                   selected,
-                                   isWaitList,
-                                   waitListTextColor,
-                                   waitListBackground,
-                                   ...props
-                               }) => <div {...props}/>)<Theme, TSlotsWrapperProps>(({
+export const Wrapper = styled("div")<TSlotsWrapperProps>(({
                                                                                         theme,
                                                                                         available,
                                                                                         offPeak,

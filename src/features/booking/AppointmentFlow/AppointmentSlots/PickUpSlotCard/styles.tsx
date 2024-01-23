@@ -61,8 +61,7 @@ export type TPickUpSlotsWrapperProps = {
     selected?: boolean,
 }
 
-export const PickUpWrapper = styled(({available, selected, ...props}: TPickUpSlotsWrapperProps) =>
-    <div {...props}/>)<TPickUpSlotsWrapperProps>(({theme, available, selected}) => ({
+export const PickUpWrapper = styled("div")<TPickUpSlotsWrapperProps>(({theme, available, selected}) => ({
     maxHeight: 315,
     display: "grid",
     gridTemplateColumns: '4fr 6fr',

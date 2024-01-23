@@ -11,7 +11,7 @@ type TServiceRequestsProps = {
     onCheckboxClick: (item: TCellData, requestId: number) => void;
 }
 
-export const IntervalUpsellAndOptions: React.FC<React.PropsWithChildren<TServiceRequestsProps>> = (props) => {
+export const IntervalUpsellAndOptions: React.FC<React.PropsWithChildren<React.PropsWithChildren<TServiceRequestsProps>>> = (props) => {
     const classes = useTableStyles();
 
     const getCellClass = useCallback((cellIndex: number, rowIndex: number) => {

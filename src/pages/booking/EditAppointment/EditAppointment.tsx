@@ -52,7 +52,7 @@ export const EditAppointment = () => {
 
     const history = useHistory();
     const dispatch = useDispatch();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const {search} = useLocation<TLParams>();
     const isFromAdmin = useMemo(() => {

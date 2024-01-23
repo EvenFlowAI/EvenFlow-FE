@@ -28,7 +28,7 @@ const initialState: TForm = moment.weekdays().reduce((acc, d, dayOfWeek) => {
     return acc;
 }, {} as TForm);
 
-export const AppointmentCutoffModal: React.FC<React.PropsWithChildren<DialogProps>> = ({payload, onAction, ...props}) => {
+export const AppointmentCutoffModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({payload, onAction, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>(initialState);
 

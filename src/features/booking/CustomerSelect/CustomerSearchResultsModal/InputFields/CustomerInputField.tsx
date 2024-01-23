@@ -10,7 +10,7 @@ type TCustomerInputFieldProps = {
     onFieldChange: (fieldName: keyof ICustomerWithPhones) => (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const CustomerInputField: React.FC<React.PropsWithChildren<TCustomerInputFieldProps>> = ({
+export const CustomerInputField: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCustomerInputFieldProps>>> = ({
                                                                     editingElement,
                                                                     isEdit,
                                                                     onFieldChange,

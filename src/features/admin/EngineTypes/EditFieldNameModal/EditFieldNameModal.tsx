@@ -9,7 +9,7 @@ import {TextField} from "../../../../components/formControls/TextFieldStyled/Tex
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const EditFieldNameModal:React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
+export const EditFieldNameModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const [fieldName, setFieldName] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();

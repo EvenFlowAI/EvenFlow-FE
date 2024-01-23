@@ -41,7 +41,7 @@ type TEditZoneProps = DialogProps & {
     serviceType: TZonesServiceType;
 }
 
-const AddEditGeographicZone: React.FC<React.PropsWithChildren<TEditZoneProps>> = ({
+const AddEditGeographicZone: React.FC<React.PropsWithChildren<React.PropsWithChildren<TEditZoneProps>>> = ({
                                                              isEdit,
                                                              zone,
                                                              onRemoveZipOpen,

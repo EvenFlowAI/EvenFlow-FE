@@ -45,7 +45,7 @@ type TOpsCodesTableProps = {
     disabled: boolean;
 }
 
-export const OpsCodesTable: React.FC<React.PropsWithChildren<TOpsCodesTableProps>> = ({ selectedCodes, setSelectedCodes, disabled }) => {
+export const OpsCodesTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TOpsCodesTableProps>>> = ({ selectedCodes, setSelectedCodes, disabled }) => {
     const { allAssignedList, assignedLoading } = useSelector((state: RootState) => state.serviceRequests);
     const classes = useStyles()
 
