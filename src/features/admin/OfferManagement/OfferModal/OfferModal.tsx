@@ -17,7 +17,6 @@ import {createOffer, removeOffer, setArchiveOffer, updateOffer} from "../../../.
 import {SC_UNDEFINED, SOMETHING_WRONG, time12HourSeconds, timeSpanString} from "../../../../utils/constants";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
 import {loadSCRequestsShort} from "../../../../store/reducers/serviceRequests/actions";
-import moment from "moment";
 import {ViewOffer} from "./ViewOffer/ViewOffer";
 import {OfferForm} from "./OfferForm/OfferForm";
 import {selectAllSR, TOfferForm} from "../types";
@@ -31,7 +30,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {TEnumMap} from "../../../../store/reducers/types";
-import {ParsableDate} from "../../../../types/types";
+import {TParsableDate} from "../../../../types/types";
 import dayjs from "dayjs";
 
 const initialForm: TOfferForm = {
@@ -89,8 +88,8 @@ export const OfferModal:React.FC<React.PropsWithChildren<React.PropsWithChildren
                         if (dof) acc.push(dof);
                         return acc;
                     }, [] as TEnumMap<EDayOfWeek>[]),
-                    durationFrom: moment(payload.duration.start),
-                    durationTo: moment(payload.duration.end),
+                    durationFrom: dayjs(payload.duration.start),
+                    durationTo: dayjs(payload.duration.end),
                     timeOfDayFrom: dayjs(payload.timeOfDay.start, timeSpanString),
                     timeOfDayTo: dayjs(payload.timeOfDay.end, timeSpanString),
                     serviceType: payload.serviceType?.name,
@@ -158,7 +157,7 @@ export const OfferModal:React.FC<React.PropsWithChildren<React.PropsWithChildren
             setForm({...form, dayOfWeek: value});
         }
     }
-    const handleChangeDateTime = (name: keyof TOfferForm) => (date: ParsableDate) => {
+    const handleChangeDateTime = (name: keyof TOfferForm) => (date: TParsableDate) => {
         setFormIsChecked(false);
         setForm({...form, [name]: date});
     };

@@ -17,7 +17,13 @@ type TProps = {
     label?: string;
 }
 
-const CustomClockTimePicker: React.FC<TProps> = ({value, onChange, fullWidth, InputProps, label}) => {
+const CustomClockTimePicker: React.FC<TProps> = ({
+                                                    value,
+                                                    onChange,
+                                                    fullWidth,
+                                                    InputProps,
+                                                    label,
+                                                }) => {
     const classes = useDatePickerStyles();
 
     return <>
@@ -30,7 +36,15 @@ const CustomClockTimePicker: React.FC<TProps> = ({value, onChange, fullWidth, In
                     fullWidth,
                     InputProps
                 }
-            }}/>
+            }}
+            sx={{
+                "& .MuiOutlinedInput-root": {
+                    "&:hover > fieldset": {borderColor: "#C7C8CD"},
+                    borderRadius: 0,
+                    border: 0
+                }
+            }}
+        />
     </>
 };
 

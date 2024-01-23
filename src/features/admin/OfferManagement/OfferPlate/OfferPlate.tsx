@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button, Paper} from "@mui/material";
 import {customerSegmentsMap, dayOfWeekMap, EOfferType, IOffer} from "../../../../store/reducers/offers/types";
-import moment from "moment";
 import {calendarDateFormat, timeSpanString, time12HourFormat} from "../../../../utils/constants";
 import {useStyles} from "./styles";
 import dayjs from "dayjs";
@@ -36,11 +35,11 @@ export const OfferPlate: React.FC<React.PropsWithChildren<React.PropsWithChildre
                 </span>
                 <span>
                     <span className="nowrap">
-                        {moment(offer.duration.start).format(calendarDateFormat)}
+                        {dayjs(offer.duration.start).format(calendarDateFormat)}
                     </span>
                     <span> - </span>
                     <span className="nowrap">
-                        {moment(offer.duration.end).format(calendarDateFormat)}
+                        {dayjs(offer.duration.end).format(calendarDateFormat)}
                     </span>
                 </span>
             </div>

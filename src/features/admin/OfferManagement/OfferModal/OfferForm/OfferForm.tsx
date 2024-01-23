@@ -1,6 +1,16 @@
 import React, {useMemo} from 'react';
 import {TextField} from "../../../../../components/formControls/TextFieldStyled/TextField";
-import {Button, FormControlLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, Switch} from "@mui/material";
+import {
+    Button,
+    FormControlLabel,
+    InputLabel,
+    MenuItem,
+    Radio,
+    RadioGroup,
+    Select,
+    SelectChangeEvent,
+    Switch
+} from "@mui/material";
 import {
     customerPresence,
     customerSegments,
@@ -22,11 +32,12 @@ import {IAssignedServiceRequestShort} from "../../../../../store/reducers/servic
 import {EServiceCategoryType, ICategory} from "../../../../../store/reducers/categories/types";
 import HtmlEditor from "../../../../../components/modals/admin/HTMLEditor/HTMLEditor";
 import {useStyles} from "./styles";
-import {CustomDatePicker} from "../../../../../components/pickers/DatePicker/CustomDatePicker";
 import {useModal} from "../../../../../hooks/useModal/useModal";
 import {TEnumMap} from "../../../../../store/reducers/types";
 import CustomClockTimePicker from "../../../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
-import {Dayjs} from "dayjs";
+import {useDatePickerStyles} from "../../../../../hooks/styling/useDatePickerStyles";
+import {TParsableDate} from "../../../../../types/types";
+import {CustomMobileDatePicker} from "../../../../../components/pickers/CustomMobileDatePicker/CustomMobileDatePicker";
 
 type TProps = {
     form: TOfferForm;
@@ -34,7 +45,7 @@ type TProps = {
     onValueChange: (name: keyof TOfferForm, value: unknown) => void;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onRadio: (e: React.ChangeEvent<HTMLInputElement>, value: string) => void;
-    onChangeDateTime: (name: keyof TOfferForm) => (date: Dayjs|null) => void;
+    onChangeDateTime: (name: keyof TOfferForm) => (date: TParsableDate) => void;
     onDOWSelect: (e: any, value: TEnumMap<EDayOfWeek>[]) => void;
     onSegmentSelect: (e: any, value: TEnumMap<ECustomerSegment>[]) => void;
     onSRChange: (e: any, value: IAssignedServiceRequestShort[]) => void;
@@ -62,6 +73,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
     }, [serviceRequests]);
     const {isOpen, onOpen, onClose} = useModal();
     const classes = useStyles();
+    const pickerClasses = useDatePickerStyles();
 
     const handleSwitch = (e: any, value: boolean) => {
         onValueChange('isProductPageOn', value);
@@ -245,7 +257,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                         fullWidth
                         label={"Time of Day"}
                         InputProps={{
-                            endAdornment: <QueryBuilder color={"disabled"} />,
+                            endAdornment: <QueryBuilder color={"disabled"} cursor="pointer"/>,
                             error: formIsChecked && !form.timeOfDayFrom
                         }}
                         value={form.timeOfDayFrom ?? null}
@@ -256,7 +268,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                     <CustomClockTimePicker
                         fullWidth
                         InputProps={{
-                            endAdornment: <QueryBuilder color={"disabled"} />,
+                            endAdornment: <QueryBuilder color={"disabled"} cursor="pointer"/>,
                             error: formIsChecked && !form.timeOfDayTo
                         }}
                         value={form.timeOfDayTo ?? null}
@@ -265,31 +277,54 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
             </div>
             <div className={clsx(classes.inputContainer, classes.rowContainer)}>
                 <div className={classes.innerContainer}>
-                    <CustomDatePicker
-                        fullWidth
-                        label={"Start Date"}
-                        disablePast
-                        maxDate={form.durationTo || undefined}
-                        InputProps={{
-                            endAdornment: <DateRange color={"disabled"} />,
-                            error: formIsChecked && !form.durationFrom
-                        }}
+                    <InputLabel shrink className={pickerClasses.label}>Start Date</InputLabel>
+                    <CustomMobileDatePicker
                         value={form.durationFrom||null}
-                        onChange={onChangeDateTime("durationFrom")} />
+                        onChange={onChangeDateTime("durationFrom")}
+                        format="MMMM, DD"
+                        maxDate={form.durationTo || undefined}
+                        slotProps={{
+                            textField: {
+                                fullWidth: true,
+                                InputProps:{
+                                    endAdornment: <DateRange color={"disabled"} cursor="pointer"/>,
+                                    error: formIsChecked && !form.durationFrom
+                                }
+                            }
+                        }}
+                        sx={{
+                            "& .MuiOutlinedInput-root": {
+                                "&:hover > fieldset": { borderColor: "#C7C8CD" },
+                                borderRadius: 0,
+                                border: 0
+                            }}}
+                    />
                 </div>
                 <div className={classes.divider}>-</div>
                 <div className={classes.innerContainer}>
-                    <CustomDatePicker
-                        fullWidth
-                        disablePast
-                        label={"End Date"}
-                        minDate={form.durationFrom || undefined}
-                        InputProps={{
-                            endAdornment: <DateRange color={"disabled"} />,
-                            error: formIsChecked && !form.durationTo
-                        }}
+                    <InputLabel shrink className={pickerClasses.label}>End Date</InputLabel>
+                    <CustomMobileDatePicker
                         value={form.durationTo||null}
-                        onChange={onChangeDateTime("durationTo")} />
+                        onChange={onChangeDateTime("durationTo")}
+                        format="MMMM, DD"
+                        disablePast
+                        minDate={form.durationFrom || undefined}
+                        slotProps={{
+                            textField: {
+                                fullWidth: true,
+                                InputProps:{
+                                    endAdornment: <DateRange color={"disabled"} cursor="pointer"/>,
+                                    error: formIsChecked && !form.durationTo
+                                }
+                            }
+                        }}
+                        sx={{
+                            "& .MuiOutlinedInput-root": {
+                                "&:hover > fieldset": { borderColor: "#C7C8CD" },
+                                borderRadius: 0,
+                                border: 0
+                        }}}
+                    />
                 </div>
             </div>
             <div className={classes.lastRowContainer}>

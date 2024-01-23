@@ -5,7 +5,6 @@ import {
     EOfferType, IOffer,
 } from "../../../store/reducers/offers/types";
 import {IAssignedServiceRequestShort, IServiceRequestPriority} from "../../../store/reducers/serviceRequests/types";
-import moment from "moment";
 import {ICategory} from "../../../store/reducers/categories/types";
 import React from "react";
 import {TEnumMap} from "../../../store/reducers/types";
@@ -22,8 +21,8 @@ export type TOfferForm = {
     dayOfWeek: TEnumMap<EDayOfWeek>[];
     timeOfDayFrom?: Dayjs;
     timeOfDayTo?: Dayjs;
-    durationFrom?: moment.Moment;
-    durationTo?: moment.Moment;
+    durationFrom?: Dayjs;
+    durationTo?: Dayjs;
     serviceType?: string;
     isProductPageOn?: boolean;
 }
