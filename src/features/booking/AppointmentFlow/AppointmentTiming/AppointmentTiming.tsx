@@ -13,7 +13,7 @@ import {
     setTiming,
     setWelcomeScreenView
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
-import moment from "moment";
+import moment, {Moment} from "moment";
 import {EAppointmentTimingType,} from "../../../../store/reducers/appointment/types";
 import {selectAppointment, selectServiceValetAppointment,} from "../../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga4";
@@ -102,9 +102,9 @@ export const AppointmentTiming: React.FC<React.PropsWithChildren<React.PropsWith
         dispatch(selectServiceValetAppointment(null));
     }
 
-    const handleChangeTime = useCallback((t: moment.Moment|null) => {
-        dispatch(setTime(t));
-        if (!moment(selectedTime).isSame(t, 'date')) clearAppointmentSlots()
+    const handleChangeTime = useCallback((t: unknown) => {
+        dispatch(setTime(t as Moment|null));
+        if (!moment(selectedTime).isSame(t as Moment|null, 'date')) clearAppointmentSlots()
     }, [selectedTime])
 
     const isTimingValid = Boolean(

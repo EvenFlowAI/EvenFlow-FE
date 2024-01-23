@@ -7,8 +7,6 @@ import {setVehicle} from "../../../../../store/reducers/appointmentFrameReducer/
 import {Button, ButtonGroup, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper} from "@mui/material";
 import {MoreVert} from "@mui/icons-material";
 import {useStyles} from "./styles";
-import {TransitionProps} from "@mui/material/transitions";
-import {PopperPlacementType} from "@mui/base/Popper/Popper.types";
 
 type TCarActionProps = {
     car: ILoadedVehicle;
@@ -83,10 +81,11 @@ const CarCardAction: React.FC<React.PropsWithChildren<React.PropsWithChildren<TC
             anchorEl={anchorRef.current}
             placement={"bottom-end"}
             role="presentation"
-            transition disablePortal>
-            {({ props, placement }: {props: TransitionProps, placement: PopperPlacementType}) => (
+            transition
+            disablePortal>
+            {({ TransitionProps, placement }) => (
                 <Grow
-                    {...props}
+                    {...TransitionProps}
                     style={{
                         transformOrigin: placement === 'bottom' ? 'right top' : 'right bottom',
                     }}

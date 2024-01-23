@@ -9,7 +9,7 @@ import {loadDemandSegments} from "../../../store/reducers/demandSegments/actions
 import {loadMaxPriceDateRange, loadOptimizationWindows} from "../../../store/reducers/optimizationWindows/actions";
 import {
     EOptimizationWindowType,
-    optimizationWindowsList,
+    optimizationWindowsList, TOptContentData,
 } from "../../../store/reducers/optimizationWindows/types";
 import {OptimizationModal} from "../../../features/admin/OptimizationWindows/OptimizationModal/OptimizationModal";
 import {AppointmentCutoffModal} from "../../../features/admin/OptimizationWindows/AppointmentCutoffModal/AppointmentCutoffModal";
@@ -73,6 +73,8 @@ export const OptimizationWindowsPage = () => {
         }
     }, [dispatch, selectedSC, selectedPod, isDemandOpen]);
 
+    const optContentData: TOptContentData = optContent[selectedOpt];
+
     return <>
         <TitleContainer title="Optimization Windows" pad parent={capacityManagementRoot} />
         <Grid container spacing={3}>
@@ -107,7 +109,7 @@ export const OptimizationWindowsPage = () => {
             )}
             <OptimizationModal
                 open={isOptOpen}
-                content={optContent[selectedOpt]}
+                windowContent={optContentData}
                 payload={optMapped[selectedOpt]}
                 onClose={onOptClose}
             />

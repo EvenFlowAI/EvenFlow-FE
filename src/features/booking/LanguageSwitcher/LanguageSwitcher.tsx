@@ -19,11 +19,11 @@ const LanguageSwitcher = () => {
                 .then(() => dispatch(switchLanguage(e.target.value as TLanguage)));
         }
     }
-
+// todo check the switcher
     return (
         <Wrapper>
             <Select
-                value={language}
+                value={{value: language}}
                 onChange={handleChangeLanguage}
                 className={classes.select}
                 IconComponent="div"
@@ -31,8 +31,8 @@ const LanguageSwitcher = () => {
                     <TextField label='' inputProps={{ disableUnderline: true }}/>
                 }
             >
-                <MenuItem key="english" value="en" className={classes.menuItem}>English</MenuItem>
-                <MenuItem key="spanish" value="es">Español</MenuItem>
+                <MenuItem key="english" value={"en" as TLanguage} className={classes.menuItem}>English</MenuItem>
+                <MenuItem key="spanish" value={"es" as TLanguage}>Español</MenuItem>
             </Select>
         </Wrapper>
     );

@@ -40,6 +40,8 @@ export interface ICustomerWithPhones extends ICustomerByName {
     sortOrder?: number;
 }
 
+export interface ICustomerForTable extends Omit<ICustomerWithPhones, 'communications'|"warrantyExpiration"|"address"|"appointmentAddress"> {}
+
 export interface ICustomerVehicle {
     vehicleId: string;
     vehicleDmsId: string;

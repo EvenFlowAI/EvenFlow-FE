@@ -179,7 +179,7 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
                         onChange={handleRoleChange}
                         loading={shortLoading}
                         disableClearable
-                        value={form.role ?? ''}
+                        value={form.role ?? undefined}
                         renderInput={autocompleteRender({label: "Role", fullWidth: true, placeholder: "Select Role"})}
                     />}
             </Grid>

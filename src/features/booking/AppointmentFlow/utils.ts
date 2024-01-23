@@ -1,10 +1,9 @@
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TScreen} from "../../../types/types";
-
-type TData = { [K in TScreen]: number };
+import {ICurrentMenu, TData} from "./types";
 
 export const getCurrentMenu = (serviceType: EServiceType, advisor: boolean, transportation: boolean, isManaging: boolean): string[] => {
-    const menu = {
+    const menu: ICurrentMenu = {
         yourLocation: "Your Location",
         serviceNeeds: "Service Needs",
         advisorSelection: "Advisor Selection",

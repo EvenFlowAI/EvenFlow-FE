@@ -9,14 +9,13 @@ import {RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {TArgCallback, TCallback} from "../../../../../types/types";
 import {CardWrapper, MobileWrapper, StyledDate} from "./styles";
 import {TCard} from "../types";
-import {DateRangeIcon} from "@mui/x-date-pickers";
 
 type TCardProps = {
     card: TCard;
     active?: boolean;
     onClick: TCallback;
     selectedTime: moment.Moment|null;
-    onChangeTime: TArgCallback<moment.Moment|null>;
+    onChangeTime: TArgCallback<unknown>;
     isLoading: boolean;
 }
 
@@ -32,19 +31,19 @@ const AppointmentTimingCard: React.FC<React.PropsWithChildren<React.PropsWithChi
     useEffect(() => {
         if (cardRef?.current) cardRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
     }, [cardRef])
-
+// todo datepicker
     const content = card.name === EAppointmentTimingType.PreferredDate
         ? <StyledDate
             value={selectedTime}
             onChange={onChangeTime}
             disabled={!active}
-            placeholder={t("Choose here")}
+            // placeholder={t("Choose here")}
             disablePast
             // shouldDisableDate={shouldDisableDate}
-            InputProps={{
-                disableUnderline: true,
-                endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"}/>
-            }}
+            // InputProps={{
+            //     disableUnderline: true,
+            //     endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"}/>
+            // }}
         />
         : null;
 

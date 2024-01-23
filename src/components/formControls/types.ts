@@ -1,5 +1,5 @@
-import {AutocompleteRenderInputParams} from "@mui/lab";
 import {InputBaseProps} from "@mui/material/InputBase/InputBase";
+import {AutocompleteRenderInputParams} from "@mui/material/Autocomplete/Autocomplete";
 
 export interface IIconState {
     file: File | null;

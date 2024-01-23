@@ -67,7 +67,6 @@ export const PricingOptimization = () => {
                     </Label>
                     <Autocomplete
                         id="serviceRequest"
-                        placeholder="Select here"
                         popupIcon={<KeyboardArrowDown/>}
                         onChange={handleChange}
                         options={srList}
@@ -77,7 +76,8 @@ export const PricingOptimization = () => {
                             ...params, InputProps: {
                                 ...params.InputProps,
                                 disableUnderline: true,
-                                style: {padding: "4px 10px", border: 0 }
+                                style: {padding: "4px 10px", border: 0 },
+                                placeholder: "Select here"
                             }
                         }} placeholder="Select here"/>}
                     />
@@ -88,7 +88,6 @@ export const PricingOptimization = () => {
                     </Label>
                     <Autocomplete
                         id="timeOfYear"
-                        placeholder="Select here"
                         popupIcon={<KeyboardArrowDown/>}
                         value={demand}
                         onChange={handleDemandChange}
@@ -99,7 +98,8 @@ export const PricingOptimization = () => {
                             ...params, InputProps: {
                                 ...params.InputProps,
                                 disableUnderline: true,
-                                style: {padding: "4px 10px", border: 0}
+                                style: {padding: "4px 10px", border: 0},
+                                placeholder: "Select here"
                             }
                         }} placeholder="Select here"/>}
                     />

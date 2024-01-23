@@ -15,12 +15,12 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
 type TProps = DialogProps<IOptimizationWindow> & {
-    content: TOptContentData
+    windowContent: TOptContentData
 }
 
-export const OptimizationModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
+export const OptimizationModal: React.FC<TProps> = ({
     onAction,
-    content,
+    windowContent,
     payload,
     ...props}) => {
     const [val, setVal] = useState<number>(0);
@@ -58,14 +58,14 @@ export const OptimizationModal: React.FC<React.PropsWithChildren<React.PropsWith
     }
 
     return <BaseModal {...props} width={300}>
-        <DialogTitle onClose={props.onClose}>{content.title}</DialogTitle>
+        <DialogTitle onClose={props.onClose}>{windowContent.title}</DialogTitle>
         <DialogContent>
             <TextField
                 value={val}
                 fullWidth
-                label={content.label}
+                label={windowContent.label}
                 type="number"
-                endAdornment={content.suffix || undefined}
+                endAdornment={windowContent.suffix || undefined}
                 inputProps={{min: 0}}
                 onChange={handleChange}
             />
