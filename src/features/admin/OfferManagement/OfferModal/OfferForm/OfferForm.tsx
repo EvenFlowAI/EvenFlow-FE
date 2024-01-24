@@ -279,51 +279,31 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                 <div className={classes.innerContainer}>
                     <InputLabel shrink className={pickerClasses.label}>Start Date</InputLabel>
                     <CustomMobileDatePicker
+                        fullWidth
                         value={form.durationFrom||null}
                         onChange={onChangeDateTime("durationFrom")}
                         format="MMMM, DD"
                         maxDate={form.durationTo || undefined}
-                        slotProps={{
-                            textField: {
-                                fullWidth: true,
-                                InputProps:{
-                                    endAdornment: <DateRange color={"disabled"} cursor="pointer"/>,
-                                    error: formIsChecked && !form.durationFrom
-                                }
-                            }
+                        InputProps={{
+                            endAdornment: <DateRange color={"disabled"} cursor="pointer"/>,
+                            error: formIsChecked && !form.durationFrom
                         }}
-                        sx={{
-                            "& .MuiOutlinedInput-root": {
-                                "&:hover > fieldset": { borderColor: "#C7C8CD" },
-                                borderRadius: 0,
-                                border: 0
-                            }}}
                     />
                 </div>
                 <div className={classes.divider}>-</div>
                 <div className={classes.innerContainer}>
                     <InputLabel shrink className={pickerClasses.label}>End Date</InputLabel>
                     <CustomMobileDatePicker
+                        fullWidth
                         value={form.durationTo||null}
                         onChange={onChangeDateTime("durationTo")}
                         format="MMMM, DD"
                         disablePast
                         minDate={form.durationFrom || undefined}
-                        slotProps={{
-                            textField: {
-                                fullWidth: true,
-                                InputProps:{
-                                    endAdornment: <DateRange color={"disabled"} cursor="pointer"/>,
-                                    error: formIsChecked && !form.durationTo
-                                }
-                            }
+                        InputProps={{
+                            endAdornment: <DateRange color={"disabled"} cursor="pointer"/>,
+                            error: formIsChecked && !form.durationTo
                         }}
-                        sx={{
-                            "& .MuiOutlinedInput-root": {
-                                "&:hover > fieldset": { borderColor: "#C7C8CD" },
-                                borderRadius: 0,
-                                border: 0
-                        }}}
                     />
                 </div>
             </div>

@@ -56,7 +56,7 @@ export const ViewOffer: React.FC<React.PropsWithChildren<React.PropsWithChildren
                             `${dayjs(
                                 offer.timeOfDay.start, timeSpanString
                             ).format(time12HourFormat)} - ${dayjs(
-                                offer.timeOfDay.end, time12HourFormat
+                                offer.timeOfDay.end, timeSpanString
                             ).format(time12HourFormat)}`
                         }
                     />
