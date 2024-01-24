@@ -10,27 +10,28 @@ import {
     loadAllAssignedServiceRequests,
 } from "../../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../../store/rootReducer";
-import moment from "moment";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import { Autocomplete } from '@mui/material';
-import { ReactComponent as Calendar } from "../../../../assets/img/date_range.svg";
-import { ReactComponent as Watch } from "../../../../assets/img/watch_round.svg";
 import Checkbox from "../../../../components/formControls/Checkbox/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
+import {CheckBoxOutlineBlank, CheckBoxOutlined, DateRange, QueryBuilder} from "@mui/icons-material";
 import {Button, Divider} from "@mui/material";
 import {editTransportationOptionRules} from "../../../../store/reducers/transportationNeeds/actions";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {getOptions} from "../../../../utils/utils";
 import {useAutocompleteStyles, useMultipleACStyles, useStyles} from "./styles";
 import {TOption, TTimeObject} from "../types";
-import {CustomDatePicker} from "../../../../components/pickers/DatePicker/CustomDatePicker";
-import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import CustomClockTimePicker from "../../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
+import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
+import {CustomMobileDatePicker} from "../../../../components/pickers/CustomMobileDatePicker/CustomMobileDatePicker";
 
 type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;
 }
+
+// todo Autocomplete
 
 export const EditTransportationModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TEditTransportationOptionDialogProps>>> = ({ editingElement, ...props}) => {
     const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
@@ -104,18 +105,18 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                 const [endHours, endMinutes, endSeconds] = rules.timeOfDay.end.split(':');
 
                 setTimeOfDay(() => ({
-                    start: moment.utc()
-                        .hours(+startHours)
-                        .minutes(+startMinutes)
+                    start: dayjs.utc()
+                        .hour(+startHours)
+                        .minute(+startMinutes)
                         .second(+startSeconds),
-                    end: moment.utc()
-                        .hours(+endHours)
-                        .minutes(+endMinutes)
+                    end: dayjs.utc()
+                        .hour(+endHours)
+                        .minute(+endMinutes)
                         .second(+endSeconds),
                 }));
                 setDuration(() => ({
-                    start: moment.utc(rules.duration.start),
-                    end: moment.utc(rules.duration.end),
+                    start: dayjs.utc(rules.duration.start),
+                    end: dayjs.utc(rules.duration.end),
                 }));
             }
         }
@@ -126,27 +127,27 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
         setCustomerSegment(value)
     }
 
-    const handleTime = useCallback((type: keyof TTimeObject) => (date: moment.Moment | null): void => {
+    const handleTime = useCallback((type: keyof TTimeObject) => (date: TParsableDate): void => {
         setFormIsChecked(false);
         setTimeOfDay((prev) => {
             if (prev) {
-                if (prev.start && type === 'end' && moment(date).diff(prev.start) < 0) {
+                if (prev.start && type === 'end' && dayjs(date).diff(prev.start) < 0) {
                     showError('The End Time needs to be more than the Start Time')
                     return prev;
                 }
-                return {...prev, [type as keyof TTimeObject]: moment(date)};
+                return {...prev, [type as keyof TTimeObject]: dayjs(date)};
             } else {
-                return {[type as keyof TTimeObject]: moment(date)}
+                return {[type as keyof TTimeObject]: dayjs(date)}
             }
         })
     }, [])
 
-    const handleDateChange = useCallback((type: keyof TTimeObject) => (date: moment.Moment | null): void => {
+    const handleDateChange = useCallback((type: keyof TTimeObject) => (date: TParsableDate): void => {
         setFormIsChecked(false);
         setDuration((prev) => {
-            const value = moment.utc(date).hours(type === 'start' ? 0 : 1);
+            const value = dayjs.utc(date).hour(type === 'start' ? 0 : 1);
             if (prev) {
-                if (prev.start && type === 'end' && moment(date).diff(prev.start) / 1000 / 60 / 60 < -24) {
+                if (prev.start && type === 'end' && dayjs(date).diff(prev.start) / 1000 / 60 / 60 < -24) {
                     showError('The End Duration Date needs to be more than the Start Date');
                     return prev;
                 }
@@ -206,7 +207,7 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
     const renderDayOfWeekOption = useCallback((props: HTMLAttributes<HTMLLIElement>, option: TOption) => {
         const allOptionsSelected = Boolean(daysOfWeek.length && daysOfWeek.length === dayOFWeekOptions.length - 1);
         const checked = Boolean(daysOfWeek.find(item => item.value === option.value)) || allOptionsSelected;
-        return <React.Fragment>
+        return <li style={{display: 'flex', alignItems: 'center'}} {...props} key={option.name}>
             <Checkbox
                 color="primary"
                 icon={checked
@@ -216,12 +217,12 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                 onChange={e => onDayOfWeekCheckboxChange(e, option)}
             />
             {option.name}
-        </React.Fragment>
+        </li>
     }, [daysOfWeek, dayOFWeekOptions])
 
     const renderRequestOption = useCallback((props: HTMLAttributes<HTMLLIElement>, option: TOption) => {
         const checked = !!serviceRequests.find(item => item.value === option.value) || allRequestsSelected;
-        return <React.Fragment>
+        return <li style={{display: 'flex', alignItems: 'center'}} {...props} key={option.name}>
             <Checkbox
                 color="primary"
                 icon={checked
@@ -231,7 +232,7 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                 onChange={e => onRequestCheckboxChange(e, option)}
             />
             {option.name}
-        </React.Fragment>
+        </li>
     }, [serviceRequests, allAssignedList]);
 
     const onCancel = () => {
@@ -258,12 +259,12 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                 isAllServiceRequestsIncluded: allRequestsSelected,
             }
             if (duration) data.duration = {
-                start: moment(duration.start).toISOString(),
-                end: moment(duration.end).toISOString(),
+                start: dayjs(duration.start).toISOString(),
+                end: dayjs(duration.end).toISOString(),
             }
             if (timeOfDay) data.timeOfDay = {
-                start: moment(timeOfDay.start).format("HH:mm:ss"),
-                end: moment(timeOfDay.end).format("HH:mm:ss"),
+                start: dayjs(timeOfDay.start).format("HH:mm:ss"),
+                end: dayjs(timeOfDay.end).format("HH:mm:ss"),
             }
             if (customerSegment) data.customerSegments = [customerSegment.value];
             if (serviceRequests.length && !allRequestsSelected) {
@@ -353,48 +354,48 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                         />
                     <div className={classes.label}>Time Of Day</div>
                     <div className={classes.smallWrapper}>
-                        <TimePicker
-                            placeholder={"Start Time"}
+                        <CustomClockTimePicker
                             value={timeOfDay?.start ?? null}
-                            style={{ marginBottom: 20, width: '47%' }}
                             onChange={handleTime('start')}
-                            id={"Time Of Day From"}
+                            fullWidth
                             InputProps={{
-                                endAdornment: <Watch />,
+                                endAdornment: <QueryBuilder color={"disabled"} cursor="pointer" />,
                                 error: !timeOfDay?.start && formIsChecked,
+                                id: "Time Of Day From",
+                                placeholder: "Start Time"
                             }}
                         />
-                        <TimePicker
-                            placeholder={"End Time"}
+                        <CustomClockTimePicker
                             value={timeOfDay?.end ?? null}
                             onChange={handleTime('end')}
-                            style={{ marginBottom: 20, width: '47%' }}
-                            id={"Time Of Day To"}
+                            fullWidth
                             InputProps={{
-                                endAdornment: <Watch />,
+                                endAdornment: <QueryBuilder color={"disabled"} cursor="pointer" />,
                                 error: !timeOfDay?.end && formIsChecked,
+                                style: {marginBottom: 20},
+                                id: "Time Of Day To",
+                                placeholder: "End Time",
                             }}
                         />
                     </div>
                     <div className={classes.label}>Duration</div>
                     <div className={classes.smallWrapper}>
-                        <CustomDatePicker
+                        <CustomMobileDatePicker
                             value={duration?.start ?? null}
                             format="MMM D, YYYY"
-                            style={{ marginBottom: 20, width: '47%' }}
                             onChange={handleDateChange('start')}
                             InputProps={{
-                                endAdornment: <Calendar />,
+                                endAdornment: <DateRange color={"disabled"} cursor="pointer"/>,
                                 error: !duration?.start && formIsChecked,
+                                style: {marginBottom: 20}
                             }}
                         />
-                        <CustomDatePicker
+                        <CustomMobileDatePicker
                             value={duration?.end ?? null}
                             format="MMM D, YYYY"
-                            style={{ marginBottom: 20, width: '47%' }}
                             onChange={handleDateChange('end')}
                             InputProps={{
-                                endAdornment: <Calendar />,
+                                endAdornment: <DateRange color={"disabled"} cursor="pointer"/>,
                                 error: !duration?.end && formIsChecked,
                             }}
                         />

@@ -35,7 +35,8 @@ export const useStyles = makeStyles(() => ({
     },
     smallWrapper: {
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        gap: 16,
     },
     label: {
         textTransform: 'uppercase',
