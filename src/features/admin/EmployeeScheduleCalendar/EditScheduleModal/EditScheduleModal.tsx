@@ -18,7 +18,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadEmployeesSchedule, setEmployeesSchedule} from "../../../../store/reducers/schedules/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {CreateEmployee} from "../../../../components/modals/admin/CreateEmployee/CreateEmployee";
-import {Close} from "@mui/icons-material";
+import {Close, QueryBuilder} from "@mui/icons-material";
 import {API} from "../../../../api/api";
 import {TIds} from "../types";
 import {getRequestDate} from "../utils";
@@ -27,13 +27,15 @@ import {loadWeeklyHolidaysList} from "../../../../store/reducers/holidays/action
 import {getStartEndDates} from "../../../../utils/utils";
 import {TForm} from "./types";
 import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
-import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 import {useModal} from "../../../../hooks/useModal/useModal";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
+import CustomClockTimePicker from "../../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
+import {TParsableDate} from "../../../../types/types";
 
 type TProps = DialogProps<ISchedule> & {
     selectedDate: moment.Moment;
@@ -86,9 +88,9 @@ export const EditScheduleModal: React.FC<React.PropsWithChildren<React.PropsWith
         props.onClose();
     }
 
-    const handleUpdate = (name: keyof TForm) => (date: moment.Moment) => {
+    const handleUpdate = (name: keyof TForm) => (date: TParsableDate) => {
         setFormIsChecked(false);
-        setForm({...form, [name]: moment(date)});
+        setForm({...form, [name]: moment(dayjs(date).toDate())});
     }
     const handleSelectPod = (e: SelectChangeEvent<number>) => {
         setFormIsChecked(false);
@@ -198,19 +200,25 @@ export const EditScheduleModal: React.FC<React.PropsWithChildren<React.PropsWith
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <TimePicker
-                        value={form.timeStart}
+                    <CustomClockTimePicker
+                        value={dayjs(form.timeStart?.toDate())}
                         label="Starts at"
                         fullWidth
                         onChange={handleUpdate("timeStart")}
+                        InputProps={{
+                            endAdornment: <QueryBuilder color={"disabled"} cursor="pointer"/>
+                        }}
                         error={!form.timeStart && formIsChecked}
                         id="timeStart"
                         name="timeStart"
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <TimePicker
-                        value={form.timeEnd}
+                    <CustomClockTimePicker
+                        value={dayjs(form.timeEnd?.toDate())}
+                        InputProps={{
+                            endAdornment: <QueryBuilder color={"disabled"} cursor="pointer"/>
+                        }}
                         label="Finishes at"
                         fullWidth
                         error={!form.timeEnd && formIsChecked}
