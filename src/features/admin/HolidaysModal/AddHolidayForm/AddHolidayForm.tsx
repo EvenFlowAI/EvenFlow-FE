@@ -23,6 +23,9 @@ export const HolidayForm: React.FC<React.PropsWithChildren<React.PropsWithChildr
                     onChange={props.onDateChange}
                     label="Date"
                     fullWidth
+                    InputProps={{
+                        placeholder: "Select Date"
+                    }}
                     format="MMMM, DD"
                 />
             </Grid>

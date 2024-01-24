@@ -123,7 +123,7 @@ export const BreaksModal: React.FC<React.PropsWithChildren<React.PropsWithChildr
                 form={form} />
         </DialogContent>
         <DialogActions>
-            <Button onClick={onClose}>Close</Button>
+            <Button onClick={onClose} color="info">Close</Button>
             {!viewMode ? <LoadingButton
                 loading={saving}
                 variant="contained"

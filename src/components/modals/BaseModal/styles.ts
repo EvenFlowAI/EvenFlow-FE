@@ -9,7 +9,7 @@ export const useStyles = makeStyles({
             margin: "28px 0",
         },
         "& input": {
-            padding: 11,
+            padding: 9,
             fontSize: 14
         },
     },

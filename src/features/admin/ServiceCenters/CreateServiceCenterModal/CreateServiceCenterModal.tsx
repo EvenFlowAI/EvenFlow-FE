@@ -197,7 +197,7 @@ export const CreateServiceCenterModal:
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Close</Button>
+                <Button onClick={onClose} color="info">Close</Button>
                 {!readOnly ? <LoadingButton
                     color="primary"
                     loading={saving}

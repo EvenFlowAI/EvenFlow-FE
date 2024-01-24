@@ -72,7 +72,7 @@ export const EditAddressModal: React.FC<React.PropsWithChildren<React.PropsWithC
             <EditForm viewMode={viewMode} onChange={handleChange} onSelect={handleSelectState} form={form} />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Close</Button>
+            <Button onClick={props.onClose} color="info">Close</Button>
             {!viewMode ? <LoadingButton
                 loading={saving}
                 variant="contained"

@@ -17,5 +17,8 @@ export const colors: PaletteOptions = {
         main: '#89E5AB',
         contrastText: "#202021"
     },
+    info: {
+        main: '#202021',
+    }
 };
 

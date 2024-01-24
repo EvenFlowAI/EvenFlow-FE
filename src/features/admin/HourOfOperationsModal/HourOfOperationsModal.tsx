@@ -108,7 +108,7 @@ export const HourOfOperationsModal: React.FC<React.PropsWithChildren<React.Props
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={onClose}>Close</Button>
+            <Button onClick={onClose} color="info">Close</Button>
             {!viewMode ? <LoadingButton
                 variant="contained"
                 color="primary"

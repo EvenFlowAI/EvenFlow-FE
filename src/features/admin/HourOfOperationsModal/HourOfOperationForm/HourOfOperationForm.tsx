@@ -68,7 +68,7 @@ export const HourOfOperationForm: React.FC<React.PropsWithChildren<React.PropsWi
                     />
                 </Grid>
                 <Grid item hidden={isXS} xs={4} sm={3}>
-                    {(!idx && !viewMode) ? <Button onClick={onApply}>
+                    {(!idx && !viewMode) ? <Button onClick={onApply} color="info">
                         Apply to all
                     </Button> : null}
                 </Grid>

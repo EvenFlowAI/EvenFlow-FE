@@ -97,7 +97,7 @@ export const AddHolidayModal: React.FC<React.PropsWithChildren<React.PropsWithCh
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={props.onClose} color="info">Cancel</Button>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave}
