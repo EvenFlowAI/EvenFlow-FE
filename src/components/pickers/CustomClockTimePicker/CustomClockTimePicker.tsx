@@ -10,9 +10,14 @@ import {TParsableDate} from "../../../types/types";
 dayjs.extend(customParseFormat)
 
 type TProps = MobileTimePickerProps<TParsableDate> & {
-    fullWidth: boolean;
-    InputProps:TextInputProps;
+    fullWidth?: boolean;
+    InputProps?:TextInputProps;
     label?: string;
+    placeholder?: string;
+    error?: boolean;
+    disabled?: boolean,
+    id?: string;
+    name?: string;
 }
 
 const CustomClockTimePicker: React.FC<TProps> = ({
@@ -21,6 +26,11 @@ const CustomClockTimePicker: React.FC<TProps> = ({
                                                     fullWidth,
                                                     InputProps,
                                                     label,
+                                                     placeholder,
+                                                     error,
+                                                     disabled,
+                                                     id,
+    name
                                                 }) => {
     const classes = useDatePickerStyles();
 
@@ -32,9 +42,15 @@ const CustomClockTimePicker: React.FC<TProps> = ({
             slotProps={{
                 textField: {
                     fullWidth,
-                    InputProps
-                }
-            }}
+                    InputProps: {
+                        ...InputProps,
+                        placeholder: InputProps?.placeholder ?? placeholder,
+                        error: InputProps?.error ?? error,
+                        disabled: InputProps?.disabled ?? disabled,
+                        id: InputProps?.id ?? id,
+                        name: InputProps?.name ?? name
+                    }
+            }}}
             sx={{
                 "& .MuiOutlinedInput-root": {
                     "&:hover > fieldset": {borderColor: "#C7C8CD"},

@@ -6,13 +6,14 @@ import {DeleteOutline} from "@mui/icons-material";
 import {TBreak} from "../types";
 import {useStyles} from "./styles";
 import {blankRow} from "../constants";
-import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
+import CustomClockTimePicker from "../../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
+import {TParsableDate} from "../../../../types/types";
 
 type TProps = {
     form: TBreak[],
     workDays: number[],
     onCheck: (day: number, check: boolean) => () => void;
-    onChange: (day: number, t: "from" | "to") => (date: moment.Moment) => void;
+    onChange: (day: number, t: "from" | "to") => (date: TParsableDate) => void;
     formIsChecked: boolean;
 }
 
@@ -43,7 +44,7 @@ export const BreakForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                         </Grid>
                         <Grid item xs={1} hidden={isXS}/>
                         <Grid item xs={4} sm={3}>
-                            <TimePicker
+                            <CustomClockTimePicker
                                 label={d}
                                 fullWidth
                                 disabled={!data.checked || props.viewMode}
@@ -59,15 +60,16 @@ export const BreakForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                             data.checked && !isClosed(dayOfWeek) ? "to" : ""
                         }</Grid>
                         <Grid item xs={4} sm={3}>
-                            {data.checked && !isClosed(dayOfWeek) ? <TimePicker
-                                fullWidth
-                                id={`${d}End`}
-                                name={`${d}End`}
-                                value={data.to}
-                                error={!data.to && data.checked && props.formIsChecked}
-                                disabled={props.viewMode}
-                                onChange={props.onChange(dayOfWeek, "to")}
-                            /> : null}
+                            {data.checked && !isClosed(dayOfWeek)
+                                ? <CustomClockTimePicker
+                                    fullWidth
+                                    id={`${d}End`}
+                                    name={`${d}End`}
+                                    value={data.to}
+                                    error={!data.to && data.checked && props.formIsChecked}
+                                    disabled={props.viewMode}
+                                    onChange={props.onChange(dayOfWeek, "to")}
+                                /> : null}
                         </Grid>
                         <Grid item xs={2} sm={1}>
                             {(data.checked && !props.viewMode) ? <IconButton onClick={props.onCheck(dayOfWeek, false)} color="primary" size="large">

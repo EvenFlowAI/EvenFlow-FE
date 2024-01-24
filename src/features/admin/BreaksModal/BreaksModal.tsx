@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {Button} from "@mui/material";
-import moment from "moment";
 import {IBreak, IBreakFrom} from "../../../store/reducers/serviceCenters/types";
 import {timeSpanString} from "../../../utils/constants";
 import {TBreak} from "./types";
@@ -14,6 +13,8 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import {TParsableDate} from "../../../types/types";
+import dayjs from "dayjs";
 
 export const BreaksModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TViewMode>>> = ({viewMode, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
@@ -42,8 +43,8 @@ export const BreaksModal: React.FC<React.PropsWithChildren<React.PropsWithChildr
                         return {
                             ...fd,
                             checked: true,
-                            from: moment(fd.from, timeSpanString),
-                            to: moment(fd.to, timeSpanString)
+                            from: dayjs(fd.from, timeSpanString),
+                            to: dayjs(fd.to, timeSpanString)
                         }
                     }
                     return el;
@@ -58,7 +59,7 @@ export const BreaksModal: React.FC<React.PropsWithChildren<React.PropsWithChildr
         form[idx] = {...form[idx], checked};
         setForm([...form]);
     }
-    const handleChange = (dayOfWeek: number, v: "from" | "to") => (date: moment.Moment) => {
+    const handleChange = (dayOfWeek: number, v: "from" | "to") => (date: TParsableDate) => {
         setFormIsChecked(false);
         const idx = form.findIndex(d => d.dayOfWeek === dayOfWeek);
         form[idx] = {...form[idx], [v]: date};
@@ -84,8 +85,8 @@ export const BreaksModal: React.FC<React.PropsWithChildren<React.PropsWithChildr
                         }).map(fe => {
                             return {
                                 ...fe,
-                                from: moment(fe.from).format(timeSpanString),
-                                to: moment(fe.to).format(timeSpanString)
+                                from: dayjs(fe.from).format(timeSpanString),
+                                to: dayjs(fe.to).format(timeSpanString)
                             };
                         })};
                 try {
