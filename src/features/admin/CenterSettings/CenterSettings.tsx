@@ -9,17 +9,18 @@ import {loadCenterSettings, updateDmsAppointmentTime} from "../../../store/reduc
 import {RootState} from "../../../store/rootReducer";
 import {TDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/types";
 import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
-import {TimePicker} from "../../../components/pickers/TimePicker/TimePicker";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {ZonesOpsCodesPlate} from "./ZonesOpsCodesPlate/ZonesOpsCodesPlate";
 import ZonesOpsCodeModal from "./ZonesOpsCodesModal/ZonesOpsCodeModal";
-import {ParsableDate} from "../../../types/types";
+import {TParsableDate} from "../../../types/types";
+import CustomClockTimePicker from "../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
+import dayjs from "dayjs";
 
 const CenterSettings = () => {
     const {centerSettings, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
-    const [calendarValue, setCalendarValue] = useState<moment.Moment>(moment())
+    const [calendarValue, setCalendarValue] = useState<TParsableDate>(dayjs())
     const [isOpen, setOpen] = useState<boolean>(false);
     const {onOpen: onShowTimeOpen, isOpen: isShowTimeOpen, onClose: isShowTimeClose} = useModal();
     const {onOpen: onServiceValetOpsCodeOpen, isOpen: isServiceValetOpsCodeOpen, onClose: onServiceValetOpsCodeClose} = useModal();
@@ -30,7 +31,7 @@ const CenterSettings = () => {
     useEffect(() => {
         if (centerSettings?.dmsAppointmentTime) {
             const [hour, min, sec] = centerSettings.dmsAppointmentTime.split(':');
-            setCalendarValue(moment().set('hour', +hour).set('minute', +min).set('second', +sec));
+            setCalendarValue(dayjs().set('hour', +hour).set('minute', +min).set('second', +sec));
         }
     }, [centerSettings])
 
@@ -76,9 +77,9 @@ const CenterSettings = () => {
     }
     const onClose = () => setOpen(false)
 
-    const onChange = (date: ParsableDate) => {
+    const onChange = (date: TParsableDate) => {
         if (selectedSC) {
-            const data: TDmsAppointmentTime = {dmsAppointmentTime: moment(date).format('HH:mm:ss')}
+            const data: TDmsAppointmentTime = {dmsAppointmentTime: dayjs(date).format('HH:mm:ss')}
             dispatch(updateDmsAppointmentTime(selectedSC.id, data, onClose, showError))
         }
     }
@@ -103,12 +104,16 @@ const CenterSettings = () => {
                 <ZonesOpsCodesPlate onEdit={onServiceValetOpsCodeOpen} isLoading={isLoading}/>
             </>
             <div style={{visibility: 'hidden'}}>
-                <TimePicker
-                open={isOpen}
-                value={calendarValue}
-                onChange={onChange}
-                onClose={onClose}/>
+
             </div>
+            <CustomClockTimePicker
+                open={isOpen}
+                InputProps={{
+                    style: {visibility: 'hidden'}
+                }}
+                onAccept={onChange}
+                value={calendarValue}
+                onClose={onClose}/>
             <ShowDropOffTimeModal open={isShowTimeOpen} onClose={isShowTimeClose}/>
             <ZonesOpsCodeModal open={isServiceValetOpsCodeOpen} onClose={onServiceValetOpsCodeClose}/>
         </Grid>

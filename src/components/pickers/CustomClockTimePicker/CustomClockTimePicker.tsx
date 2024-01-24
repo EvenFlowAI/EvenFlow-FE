@@ -30,13 +30,15 @@ const CustomClockTimePicker: React.FC<TProps> = ({
                                                      error,
                                                      disabled,
                                                      id,
-    name
+                                                     name,
+                                                     ...props
                                                 }) => {
     const classes = useDatePickerStyles();
 
     return <>
         {label ? <InputLabel shrink className={classes.label}>{label}</InputLabel> : null}
         <MobileTimePicker
+            {...props}
             value={value}
             onChange={onChange}
             slotProps={{

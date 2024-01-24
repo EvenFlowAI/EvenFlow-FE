@@ -4,7 +4,9 @@ import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import moment from "moment";
 import {getFirstLastDaysOfWeek} from "../utils";
 import {useStyles} from "./styles";
-import {CustomDatePicker} from "../../../../components/pickers/DatePicker/CustomDatePicker";
+import {CustomMobileDatePicker} from "../../../../components/pickers/CustomMobileDatePicker/CustomMobileDatePicker";
+import dayjs from "dayjs";
+import {TParsableDate} from "../../../../types/types";
 
 type TProps = {
     isXS: boolean;
@@ -28,8 +30,8 @@ export const WeekControls: React.FC<React.PropsWithChildren<React.PropsWithChild
         setIsOpen(s);
     }
 
-    const handleDateChange = (date: moment.Moment) => {
-        onChange(moment(date));
+    const handleDateChange = (date: TParsableDate) => {
+        onChange(moment(dayjs(date).toDate()));
     }
 
     return (
@@ -43,13 +45,15 @@ export const WeekControls: React.FC<React.PropsWithChildren<React.PropsWithChild
             <Button onClick={handleRight} variant="outlined" className={classes.arrowButton}>
                 <ChevronRight />
             </Button>
-            <CustomDatePicker
-                style={{display: "none"}}
+            <CustomMobileDatePicker
                 onOpen={handleOpen(true)}
                 onClose={handleOpen(false)}
                 open={isOpen}
-                value={selectedDate}
-                onChange={handleDateChange}
+                InputProps={{
+                    style:{display: "none"}
+                }}
+                onAccept={handleDateChange}
+                value={dayjs(selectedDate.toDate())}
             />
         </div>
     );
