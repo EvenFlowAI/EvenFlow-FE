@@ -1,15 +1,9 @@
 import React from 'react';
-import dayjs from "dayjs";
 import {TextInputProps} from "../../formControls/types";
 import {MobileTimePicker, MobileTimePickerProps} from "@mui/x-date-pickers";
 import {useDatePickerStyles} from "../../../hooks/styling/useDatePickerStyles";
 import {InputLabel} from "@mui/material";
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import utc from 'dayjs/plugin/utc';
 import {TParsableDate} from "../../../types/types";
-
-dayjs.extend(customParseFormat)
-dayjs.extend(utc)
 
 type TProps = MobileTimePickerProps<TParsableDate> & {
     fullWidth?: boolean;

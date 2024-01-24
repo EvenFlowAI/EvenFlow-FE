@@ -11,7 +11,8 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
-import moment from "moment";
+import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
 
 const initialForm: THolidayForm = {
     date: null,
@@ -31,7 +32,11 @@ export const AddHolidayModal: React.FC<React.PropsWithChildren<React.PropsWithCh
             if (!payload) {
                 setForm(initialForm);
             } else {
-                setForm({...initialForm, ...payload});
+                setForm({
+                    ...initialForm,
+                    ...payload,
+                    date: dayjs(payload.date)
+                });
             }
         }
     }, [props.open, payload]);
@@ -43,7 +48,7 @@ export const AddHolidayModal: React.FC<React.PropsWithChildren<React.PropsWithCh
             setForm({...form, [e.target.name]: e.target.value});
         }
     }
-    const handleDateChange = (date: moment.Moment) => {
+    const handleDateChange = (date: TParsableDate) => {
         setForm({...form, date});
     }
     const handleCheck = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {

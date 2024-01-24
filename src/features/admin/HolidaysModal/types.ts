@@ -1,7 +1,7 @@
-import {ParsableDate} from "../../../types/types";
+import {TParsableDate} from "../../../types/types";
 
 export type THolidayForm = {
-    date: ParsableDate;
+    date: TParsableDate;
     isRecurring: boolean;
     description: string;
 };

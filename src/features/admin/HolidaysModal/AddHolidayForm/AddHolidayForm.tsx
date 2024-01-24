@@ -3,12 +3,12 @@ import {THolidayForm} from "../types";
 import {FormControlLabel, Grid, Switch} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useStyles} from "./styles";
-import {CustomDatePicker} from "../../../../components/pickers/DatePicker/CustomDatePicker";
-import moment from "moment";
+import {TParsableDate} from "../../../../types/types";
+import {CustomMobileDatePicker} from "../../../../components/pickers/CustomMobileDatePicker/CustomMobileDatePicker";
 
 type TProps = {
     form: THolidayForm
-    onDateChange: (date: moment.Moment) => void;
+    onDateChange: (date: TParsableDate) => void;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onCheck: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 }
@@ -18,11 +18,12 @@ export const HolidayForm: React.FC<React.PropsWithChildren<React.PropsWithChildr
     return <div>
         <Grid container spacing={2}>
             <Grid item xs={12}>
-                <CustomDatePicker
+                <CustomMobileDatePicker
                     value={props.form.date}
                     onChange={props.onDateChange}
                     label="Date"
                     fullWidth
+                    format="MMMM, DD"
                 />
             </Grid>
             <Grid item xs={12}>

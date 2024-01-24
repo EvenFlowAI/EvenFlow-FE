@@ -1,9 +1,9 @@
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
-import {IPageRequest, IPagingResponse, ParsableDate} from "../../../types/types";
+import {IPageRequest, IPagingResponse, TParsableDate} from "../../../types/types";
 
 export interface IHoliday {
     id?: number;
-    date: ParsableDate;
+    date: TParsableDate;
     isRecurring: boolean;
     description: string;
     serviceCenterId: number;

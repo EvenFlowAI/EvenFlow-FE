@@ -29,6 +29,7 @@ import {calendarDateFormat} from "../../../utils/constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
 
 export const EmployeeScheduleCalendar = () => {
     const {
@@ -110,9 +111,9 @@ export const EmployeeScheduleCalendar = () => {
 
     const getHoliday = useCallback((date: moment.Moment) => {
         const holiday = weeklyHolidaysList.find(h => {
-            const d = moment.utc(h.date).year(date.year()).startOf('day');
-            return moment(moment(d).format("YYYY-MM-DD"), "YYYY-MM-DD")
-                .isSame(moment(moment.utc(date).format("YYYY-MM-DD"), "YYYY-MM-DD"), "date");
+            const d = dayjs.utc(h.date).year(date.year()).startOf('day');
+            return dayjs(dayjs(d).format("YYYY-MM-DD"), "YYYY-MM-DD")
+                .isSame(dayjs(dayjs.utc(date.toDate()).format("YYYY-MM-DD"), "YYYY-MM-DD"), "date");
         });
         if (holiday) {
             const description = holiday.description?.length > 40
@@ -125,8 +126,8 @@ export const EmployeeScheduleCalendar = () => {
 
     const isWorkingDay = useCallback((date: Moment): boolean => {
         const holiday = weeklyHolidaysList.find(h => {
-            const d = moment.utc(h.date).year(date.year()).startOf('day');
-            return d.isSame(moment.utc(date), "date");
+            const d = dayjs.utc(h.date).year(date.year()).startOf('day');
+            return d.isSame(dayjs.utc(date.toDate()), "date");
         });
         return workingDays.includes(moment.utc(date).day() as EDay) && !holiday;
     }, [workingDays, weeklyHolidaysList])

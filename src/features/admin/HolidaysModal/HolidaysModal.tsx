@@ -9,7 +9,6 @@ import {IHoliday} from "../../../store/reducers/holidays/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadAllHolidays} from "../../../store/reducers/holidays/actions";
-import moment from "moment";
 import {setHolidayPageData} from "../../../store/reducers/holidays/actions";
 import {useStyles} from "./styles";
 import {Roles, TableRowDataType} from "../../../types/types";
@@ -21,10 +20,11 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
 
 const rowData: TableRowDataType<IHoliday>[] = [
     {header: "Description Title", val: v => v.description.length > 40 ? v.description.slice(0, 39).concat('...') : v.description},
-    {header: "Date", val: v => moment.utc(v.date).format("MMMM D")},
+    {header: "Date", val: v => dayjs.utc(v.date).format("MMMM D")},
     {header: "Recurring", val: v => v.isRecurring ? "Repeat" : "No Repeat"}
 ]
 
