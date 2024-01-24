@@ -1,17 +1,15 @@
 import React from 'react';
-import dayjs, {Dayjs} from "dayjs";
-import {FieldChangeHandlerContext} from "@mui/x-date-pickers/internals";
+import dayjs from "dayjs";
 import {TextInputProps} from "../../formControls/types";
-import {MobileTimePicker} from "@mui/x-date-pickers";
+import {MobileTimePicker, MobileTimePickerProps} from "@mui/x-date-pickers";
 import {useDatePickerStyles} from "../../../hooks/styling/useDatePickerStyles";
 import {InputLabel} from "@mui/material";
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import {TParsableDate} from "../../../types/types";
 
 dayjs.extend(customParseFormat)
 
-type TProps = {
-    value: Dayjs|null;
-    onChange:(value: Dayjs|null, context?: FieldChangeHandlerContext<any>) => void;
+type TProps = MobileTimePickerProps<TParsableDate> & {
     fullWidth: boolean;
     InputProps:TextInputProps;
     label?: string;

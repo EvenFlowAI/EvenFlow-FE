@@ -1,8 +1,8 @@
-import {ParsableDate} from "../../../types/types";
+import {TParsableDate} from "../../../types/types";
 
 export type THOOForm = {
     dayOfWeek: number;
-    from: ParsableDate;
-    to: ParsableDate;
+    from: TParsableDate;
+    to: TParsableDate;
     checked: boolean
 };

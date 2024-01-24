@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {Button} from "@mui/material";
-import moment from "moment";
 import {IHOODataForm} from "../../../store/reducers/serviceCenters/types";
 import {timeSpanString} from "../../../utils/constants";
 import {THOOForm} from "./types";
@@ -14,6 +13,8 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
+import {TParsableDate} from "../../../types/types";
 
 export const HourOfOperationsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TViewMode>>> = ({viewMode, ...props}) => {
     const {selectedSC} = useSCs();
@@ -31,8 +32,8 @@ export const HourOfOperationsModal: React.FC<React.PropsWithChildren<React.Props
                         return {
                             dayOfWeek: element.dayOfWeek,
                             checked: true,
-                            from: moment(element.from, timeSpanString),
-                            to: moment(element.to, timeSpanString)
+                            from: dayjs(element.from, timeSpanString),
+                            to: dayjs(element.to, timeSpanString)
                         };
                     }
                     return ie;
@@ -41,7 +42,7 @@ export const HourOfOperationsModal: React.FC<React.PropsWithChildren<React.Props
         }
     }, [selectedSC, setForm, props.open]);
 
-    const handleChange = (day: number, t: "from" | "to") => (date: moment.Moment) => {
+    const handleChange = (day: number, t: "from" | "to") => (date: TParsableDate) => {
         setFormIsChecked(false);
         const idx = form.findIndex(v => v.dayOfWeek === day);
         form[idx] = {...form[idx], [t]: date};
@@ -72,7 +73,7 @@ export const HourOfOperationsModal: React.FC<React.PropsWithChildren<React.Props
             } else {
                 setSaving(true);
                 const fd: IHOODataForm[] = form.filter(e => e.checked).map(e => ({
-                    ...e, from: moment(e.from).format(timeSpanString), to: moment(e.to).format(timeSpanString)
+                    ...e, from: dayjs(e.from).format(timeSpanString), to: dayjs(e.to).format(timeSpanString)
                 })) as IHOODataForm[];
                 try {
                     await Api.call(Api.endpoints.ServiceCenters.SetHOO, {data: {hoursOfOperations: fd}, urlParams: {id: selectedSC.id}});
@@ -102,6 +103,7 @@ export const HourOfOperationsModal: React.FC<React.PropsWithChildren<React.Props
                 onApply={handleApplyToAll}
                 onCheck={handleCheck}
                 form={form}
+                isLoading={saving}
                 onChange={handleChange}
             />
         </DialogContent>
