@@ -2,8 +2,6 @@ import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Grid, MenuItem, Paper, Select, IconButton, SelectChangeEvent} from "@mui/material";
 import {Clear} from '@mui/icons-material';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {CustomDatePicker} from "../../../../components/pickers/DatePicker/CustomDatePicker";
-import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
 import {loadSchedulerList, loadServiceBookList} from "../../../../store/reducers/appointments/actions";
 import {RootState} from "../../../../store/rootReducer";
@@ -15,12 +13,15 @@ import {EmptyMenuItem} from "./styles";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {EReportingStatus, reportingStatuses} from "../../../../api/types";
 import {useLabelStyles} from "../../../../hooks/styling/useLabelStyles";
+import {CustomMobileDatePicker} from "../../../../components/pickers/CustomMobileDatePicker/CustomMobileDatePicker";
+import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
 
 type TAppointmentFilterProps = {
     status: EReportingStatus | '' | unknown;
     scheduler: TScheduler|null;
     serviceBook: TServiceBook|null;
-    selectedDate: moment.Moment | null;
+    selectedDate: TParsableDate;
     setFilters: Dispatch<SetStateAction<TFilters>>;
 }
 
@@ -48,12 +49,12 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
         setOpen(s);
     }
 
-    const onChange = (date: moment.Moment | null): void => {
+    const onChange = (date: TParsableDate): void => {
         setFilters(prev => ({...prev, date, pageData: initialPaging}))
     }
 
-    const handleDateChange = (date: moment.Moment) => {
-        onChange(moment(date));
+    const handleDateChange = (date: TParsableDate) => {
+        onChange(dayjs(date));
     }
 
     const handleClear = (e: any) => {
@@ -92,15 +93,15 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
             <Grid container spacing={2} justifyContent="space-between" alignItems='flex-end'>
                 <Grid item xs={3}>
                     <div className={classes.label}>Date</div>
-                    <CustomDatePicker
-                        style={{width: "100%"}}
+                    <CustomMobileDatePicker
                         onOpen={handleOpen(true)}
                         onClose={handleOpen(false)}
                         open={isOpen}
-                        disabled={isLoading}
                         InputProps={{
                             label: "Date",
                             placeholder: "Select date",
+                            style: {width: "100%"},
+                            disabled: isLoading,
                             endAdornment:
                                 selectedDate
                                     ? (<IconButton onClick={(e) => handleClear(e)} size="large">
@@ -108,7 +109,7 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
                                 </IconButton>)
                                     : <CalendarIcon/> }}
                         value={selectedDate}
-                        onChange={handleDateChange}
+                        onAccept={handleDateChange}
                     />
                 </Grid>
                 <Grid item xs={3}>

@@ -31,8 +31,6 @@ type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;
 }
 
-// todo Autocomplete
-
 export const EditTransportationModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TEditTransportationOptionDialogProps>>> = ({ editingElement, ...props}) => {
     const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
     const [customerSegment, setCustomerSegment] = useState<TOption | null>(null);

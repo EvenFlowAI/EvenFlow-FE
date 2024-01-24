@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {IAppointmentsRequest} from "../../../../store/reducers/appointments/types";
 import {loadAppointments} from "../../../../store/reducers/appointments/actions";
 import {useDispatch, useSelector} from "react-redux";
-import moment, {Moment} from "moment";
+import moment from "moment";
 import {TAppointmentsByDate, TDay, TView} from "../types";
 import {RootState} from "../../../../store/rootReducer";
 import {CalendarControls} from "../../AvailableStaffCalendar/CalendarControls/CalendarControls";
@@ -15,15 +15,17 @@ import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {useStyles} from "./styles";
 import {useCalendarStyles} from "../../../../hooks/styling/useCalendarStyles";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
 
 type TCalendarProps = {
     selectedView: TView;
-    openDetails: (date: moment.Moment | null) => void;
+    openDetails: (date: TParsableDate) => void;
 }
 
 export const AppointmentsCalendar: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCalendarProps>>> = ({ openDetails, selectedView }) => {
     const { allAppointments, isLoading } = useSelector((state: RootState) => state.appointments);
-    const [startDate, setStartDate] = useState<Moment>(moment());
+    const [startDate, setStartDate] = useState<TParsableDate>(dayjs());
     const [appointmentsByDate, setAppointmentsByDate] = useState<TAppointmentsByDate>({})
 
     const calendarClasses = useCalendarStyles();
@@ -32,30 +34,30 @@ export const AppointmentsCalendar: React.FC<React.PropsWithChildren<React.PropsW
     const {selectedSC}= useSCs();
 
     const today = useMemo(() => {
-        return moment();
+        return dayjs();
     }, []);
 
-    const handleMonthChange = (m: Moment) => {
+    const handleMonthChange = (m: TParsableDate) => {
         setStartDate(m);
     }
 
     const days: TDay[] = useMemo(() => {
         const days: TDay[] = [];
-        const cur = moment(startDate).startOf("month");
+        const cur = dayjs(startDate).startOf("month");
         const daysInMonth = cur.daysInMonth();
         const startDay = cur.day();
         cur.subtract(startDay, 'days');
         for (let i=0; i < daysInMonth + startDay; i++) {
             days.push({
-                date: moment(cur),
+                date: dayjs(cur),
                 day: +cur.format("D"),
-                type: cur.month() === startDate.month() ? "cur" : "prev"
+                type: cur.month() === dayjs(startDate).month() ? "cur" : "prev"
             });
             cur.add(1, "day");
         }
         for (let i = 0; i < cur.day(); i++) {
             days.push({
-                date: moment(cur),
+                date: dayjs(cur),
                 day: +cur.format("D"),
                 type: "next"
             })
@@ -98,7 +100,7 @@ export const AppointmentsCalendar: React.FC<React.PropsWithChildren<React.PropsW
                     <div className={calendarClasses.weekDay} key={day}>{day}</div>
                 )}
                 {days.map(d =>{
-                    const dateString = moment(d.date).startOf('day').format('YYYY-MM-DD');
+                    const dateString = dayjs(d.date).startOf('day').format('YYYY-MM-DD');
                        return <div
                            onClick={() => openDetails(d.date)}
                             className={clsx(
@@ -106,7 +108,7 @@ export const AppointmentsCalendar: React.FC<React.PropsWithChildren<React.PropsW
                                 d.type === "cur"
                                     ? calendarClasses.currentMonth
                                     : calendarClasses.prevMonth,
-                                d.date.isSame(today, "day") ? calendarClasses.today : ""
+                                dayjs(d.date).isSame(today, "day") ? calendarClasses.today : ""
                             )}
                             key={`${d.day}-${d.type}`}>
                             <span className={calendarClasses.dayNumber}>{d.day}</span>

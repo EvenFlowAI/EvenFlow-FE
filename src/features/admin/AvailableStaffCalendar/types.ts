@@ -1,4 +1,4 @@
-import {Moment} from "moment/moment";
+import {TParsableDate} from "../../../types/types";
 
 export enum Directions {
     Next, Prev
@@ -7,7 +7,7 @@ export enum Directions {
 export type TDayType = "prev" | "cur" | "next"
 
 export type TDay = {
-    date: Moment,
+    date: TParsableDate,
     day: number,
     type: TDayType
 }
