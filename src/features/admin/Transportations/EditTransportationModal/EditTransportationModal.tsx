@@ -22,10 +22,10 @@ import {useAutocompleteStyles, useMultipleACStyles, useStyles} from "./styles";
 import {TOption, TTimeObject} from "../types";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import CustomClockTimePicker from "../../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
+import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
 import {TParsableDate} from "../../../../types/types";
 import dayjs from "dayjs";
-import {CustomMobileDatePicker} from "../../../../components/pickers/CustomMobileDatePicker/CustomMobileDatePicker";
+import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/CustomDatePicker";
 
 type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;
@@ -352,7 +352,7 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                         />
                     <div className={classes.label}>Time Of Day</div>
                     <div className={classes.smallWrapper}>
-                        <CustomClockTimePicker
+                        <ClockTimePicker
                             value={timeOfDay?.start ?? null}
                             onChange={handleTime('start')}
                             fullWidth
@@ -363,7 +363,7 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                                 placeholder: "Start Time"
                             }}
                         />
-                        <CustomClockTimePicker
+                        <ClockTimePicker
                             value={timeOfDay?.end ?? null}
                             onChange={handleTime('end')}
                             fullWidth
@@ -378,7 +378,7 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                     </div>
                     <div className={classes.label}>Duration</div>
                     <div className={classes.smallWrapper}>
-                        <CustomMobileDatePicker
+                        <CustomDatePicker
                             value={duration?.start ?? null}
                             format="MMM D, YYYY"
                             onChange={handleDateChange('start')}
@@ -388,7 +388,7 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                                 style: {marginBottom: 20}
                             }}
                         />
-                        <CustomMobileDatePicker
+                        <CustomDatePicker
                             value={duration?.end ?? null}
                             format="MMM D, YYYY"
                             onChange={handleDateChange('end')}

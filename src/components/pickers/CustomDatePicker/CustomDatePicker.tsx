@@ -11,7 +11,7 @@ type TProps = MobileDatePickerProps<TParsableDate> & {
     label?: string;
 }
 
-export const CustomMobileDatePicker: React.FC<TProps> = ({
+export const CustomDatePicker: React.FC<TProps> = ({
                                                              fullWidth,
                                                              InputProps,
                                                              label,
@@ -27,13 +27,16 @@ export const CustomMobileDatePicker: React.FC<TProps> = ({
                 textField: {
                     fullWidth,
                     InputProps,
-                }
+                },
             }}
             sx={{
                 "& .MuiOutlinedInput-root": {
                     "&:hover > fieldset": {borderColor: "#C7C8CD"},
                     borderRadius: 0,
                     border: 0
+                },
+                "& .MuiOutlinedInput-input": {
+                    padding: '9px'
                 }
             }}
         />

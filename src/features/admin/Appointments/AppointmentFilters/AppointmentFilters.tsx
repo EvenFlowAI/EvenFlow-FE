@@ -1,19 +1,17 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Grid, MenuItem, Paper, Select, IconButton, SelectChangeEvent} from "@mui/material";
-import {Clear} from '@mui/icons-material';
+import {Clear, DateRange} from '@mui/icons-material';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {loadSchedulerList, loadServiceBookList} from "../../../../store/reducers/appointments/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {TScheduler, TServiceBook} from "../../../../store/reducers/appointments/types";
-import {ReactComponent as CalendarIcon} from '../../../../assets/img/calendar_blue.svg';
 import {TFilters} from "../types";
 import {initialPaging} from "../Appointments";
 import {EmptyMenuItem} from "./styles";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {EReportingStatus, reportingStatuses} from "../../../../api/types";
-import {useLabelStyles} from "../../../../hooks/styling/useLabelStyles";
-import {CustomMobileDatePicker} from "../../../../components/pickers/CustomMobileDatePicker/CustomMobileDatePicker";
+import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/CustomDatePicker";
 import {TParsableDate} from "../../../../types/types";
 import dayjs from "dayjs";
 
@@ -34,7 +32,6 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
                                                                }) => {
     const {schedulerList, serviceBookList, isLoading} = useSelector((state: RootState) => state.appointments)
     const [isOpen, setOpen] = useState<boolean>(false);
-    const classes = useLabelStyles()
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
@@ -92,22 +89,23 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
         }}>
             <Grid container spacing={2} justifyContent="space-between" alignItems='flex-end'>
                 <Grid item xs={3}>
-                    <div className={classes.label}>Date</div>
-                    <CustomMobileDatePicker
+                    <CustomDatePicker
                         onOpen={handleOpen(true)}
                         onClose={handleOpen(false)}
                         open={isOpen}
+                        format="MMMM, DD"
+                        label="Date"
                         InputProps={{
-                            label: "Date",
                             placeholder: "Select date",
-                            style: {width: "100%"},
                             disabled: isLoading,
+                            fullWidth: true,
                             endAdornment:
                                 selectedDate
                                     ? (<IconButton onClick={(e) => handleClear(e)} size="large">
-                                    <Clear />
-                                </IconButton>)
-                                    : <CalendarIcon/> }}
+                                        <Clear />
+                                    </IconButton>)
+                                    : <DateRange cursor="pointer" color="disabled"/>
+                        }}
                         value={selectedDate}
                         onAccept={handleDateChange}
                     />

@@ -15,7 +15,7 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {time24HourFormat} from "../../../../utils/constants";
 import {TParsableDate} from "../../../../types/types";
 import dayjs from "dayjs";
-import CustomClockTimePicker from "../../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
+import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
 
 type TProps = DialogProps & {
     editingElement: ITimeRangeAndCapacity;
@@ -122,7 +122,7 @@ const EditTimeRangeAndCapacityModal: React.FC<React.PropsWithChildren<React.Prop
             <DialogContent style={{padding: '16px 120px'}}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={6}>
-                        <CustomClockTimePicker
+                        <ClockTimePicker
                             key="pickUpMin"
                             value={pickUpMin}
                             slotProps={{
@@ -141,7 +141,7 @@ const EditTimeRangeAndCapacityModal: React.FC<React.PropsWithChildren<React.Prop
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <CustomClockTimePicker
+                        <ClockTimePicker
                             key="pickUpMax"
                             value={pickUpMax}
                             slotProps={{
@@ -160,7 +160,7 @@ const EditTimeRangeAndCapacityModal: React.FC<React.PropsWithChildren<React.Prop
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <CustomClockTimePicker
+                        <ClockTimePicker
                             key="dropOffMin"
                             value={dropOffMin}
                             slotProps={{
@@ -179,7 +179,7 @@ const EditTimeRangeAndCapacityModal: React.FC<React.PropsWithChildren<React.Prop
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <CustomClockTimePicker
+                        <ClockTimePicker
                             key="dropOffMax"
                             value={dropOffMax}
                             slotProps={{

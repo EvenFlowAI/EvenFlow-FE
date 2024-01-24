@@ -34,7 +34,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
-import CustomClockTimePicker from "../../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
+import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
 import {TParsableDate} from "../../../../types/types";
 
 type TProps = DialogProps<ISchedule> & {
@@ -200,7 +200,7 @@ export const EditScheduleModal: React.FC<React.PropsWithChildren<React.PropsWith
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <CustomClockTimePicker
+                    <ClockTimePicker
                         value={dayjs(form.timeStart?.toDate())}
                         label="Starts at"
                         fullWidth
@@ -214,7 +214,7 @@ export const EditScheduleModal: React.FC<React.PropsWithChildren<React.PropsWith
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <CustomClockTimePicker
+                    <ClockTimePicker
                         value={dayjs(form.timeEnd?.toDate())}
                         InputProps={{
                             endAdornment: <QueryBuilder color={"disabled"} cursor="pointer"/>

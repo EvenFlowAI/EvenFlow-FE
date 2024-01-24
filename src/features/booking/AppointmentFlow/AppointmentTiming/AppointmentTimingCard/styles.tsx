@@ -1,15 +1,15 @@
 import {styled} from "@mui/material";
-import {DatePicker} from "@mui/x-date-pickers";
 import React from "react";
+import {CustomDatePicker} from "../../../../../components/pickers/CustomDatePicker/CustomDatePicker";
 
-export const StyledDate = styled(DatePicker)(({theme}) => ({
+export const StyledDate = styled(CustomDatePicker)(({theme}) => ({
     marginTop: 16,
     cursor: "pointer",
     "&>div:not(.Mui-disabled)": {
-        borderColor: theme.palette.primary.main,
+        borderColor: theme.palette.success.contrastText,
         cursor: "pointer",
         "&>input": {
-            color: theme.palette.primary.main,
+            color: theme.palette.success.contrastText,
             cursor: "pointer"
         }
     },

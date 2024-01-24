@@ -4,7 +4,7 @@ import {FormControlLabel, Grid, Switch} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useStyles} from "./styles";
 import {TParsableDate} from "../../../../types/types";
-import {CustomMobileDatePicker} from "../../../../components/pickers/CustomMobileDatePicker/CustomMobileDatePicker";
+import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/CustomDatePicker";
 
 type TProps = {
     form: THolidayForm
@@ -18,7 +18,7 @@ export const HolidayForm: React.FC<React.PropsWithChildren<React.PropsWithChildr
     return <div>
         <Grid container spacing={2}>
             <Grid item xs={12}>
-                <CustomMobileDatePicker
+                <CustomDatePicker
                     value={props.form.date}
                     onChange={props.onDateChange}
                     label="Date"

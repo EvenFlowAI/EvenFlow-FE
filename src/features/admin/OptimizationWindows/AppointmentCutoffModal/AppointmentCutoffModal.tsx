@@ -18,7 +18,7 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 import {ParsableDate, TParsableDate} from "../../../../types/types";
 import dayjs from "dayjs";
-import CustomClockTimePicker from "../../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
+import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
 
 type TForm = {
     [k in EDay]: TParsableDate;
@@ -92,7 +92,7 @@ export const AppointmentCutoffModal: React.FC<React.PropsWithChildren<React.Prop
         <DialogContent>
             {moment.weekdays().map((day, idx) => {
                 const isDisabled = Boolean(workingDays.length && !workingDays.includes(idx as EDay));
-                return <CustomClockTimePicker
+                return <ClockTimePicker
                     key={idx}
                     value={form[idx as EDay]}
                     fullWidth

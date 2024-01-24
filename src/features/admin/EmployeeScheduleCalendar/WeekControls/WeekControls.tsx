@@ -4,7 +4,7 @@ import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import moment from "moment";
 import {getFirstLastDaysOfWeek} from "../utils";
 import {useStyles} from "./styles";
-import {CustomMobileDatePicker} from "../../../../components/pickers/CustomMobileDatePicker/CustomMobileDatePicker";
+import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/CustomDatePicker";
 import dayjs from "dayjs";
 import {TParsableDate} from "../../../../types/types";
 
@@ -45,7 +45,7 @@ export const WeekControls: React.FC<React.PropsWithChildren<React.PropsWithChild
             <Button onClick={handleRight} variant="outlined" className={classes.arrowButton}>
                 <ChevronRight />
             </Button>
-            <CustomMobileDatePicker
+            <CustomDatePicker
                 onOpen={handleOpen(true)}
                 onClose={handleOpen(false)}
                 open={isOpen}

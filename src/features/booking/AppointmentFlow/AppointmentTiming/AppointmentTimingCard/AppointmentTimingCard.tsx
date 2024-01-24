@@ -6,9 +6,11 @@ import {RootState} from "../../../../../store/rootReducer";
 import moment from "moment";
 import {EAppointmentTimingType} from "../../../../../store/reducers/appointment/types";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
-import {TArgCallback, TCallback} from "../../../../../types/types";
+import {TArgCallback, TCallback, TParsableDate} from "../../../../../types/types";
 import {CardWrapper, MobileWrapper, StyledDate} from "./styles";
 import {TCard} from "../types";
+import {DateRangeIcon} from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 type TCardProps = {
     card: TCard;
@@ -26,24 +28,24 @@ const AppointmentTimingCard: React.FC<React.PropsWithChildren<React.PropsWithChi
     const {t} = useTranslation();
     const {appointmentSlots} = useSelector((state: RootState) => state.appointment)
     const cardRef = useRef<HTMLDivElement|null>(null);
-    const shouldDisableDate = (date: moment.Moment|null) => !appointmentSlots.find(item => moment(item.date).format("YYYY-MM-DD") === moment(date).format('YYYY-MM-DD'));
+    const shouldDisableDate = (date: TParsableDate) => !appointmentSlots.find(item => moment(item.date).format("YYYY-MM-DD") === dayjs(date).format('YYYY-MM-DD'));
 
     useEffect(() => {
         if (cardRef?.current) cardRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
     }, [cardRef])
-// todo datepicker
+
     const content = card.name === EAppointmentTimingType.PreferredDate
         ? <StyledDate
-            value={selectedTime}
+            value={dayjs(selectedTime?.toDate())}
             onChange={onChangeTime}
-            disabled={!active}
-            // placeholder={t("Choose here")}
             disablePast
-            // shouldDisableDate={shouldDisableDate}
-            // InputProps={{
-            //     disableUnderline: true,
-            //     endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"}/>
-            // }}
+            format="MMMM, DD"
+            shouldDisableDate={shouldDisableDate}
+            InputProps={{
+                endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"}/>,
+                placeholder: t("Choose here"),
+                disabled: !active
+            }}
         />
         : null;
 

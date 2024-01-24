@@ -15,7 +15,7 @@ import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {ZonesOpsCodesPlate} from "./ZonesOpsCodesPlate/ZonesOpsCodesPlate";
 import ZonesOpsCodeModal from "./ZonesOpsCodesModal/ZonesOpsCodeModal";
 import {TParsableDate} from "../../../types/types";
-import CustomClockTimePicker from "../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
+import ClockTimePicker from "../../../components/pickers/ClockTimePicker/ClockTimePicker";
 import dayjs from "dayjs";
 
 const CenterSettings = () => {
@@ -106,7 +106,7 @@ const CenterSettings = () => {
             <div style={{visibility: 'hidden'}}>
 
             </div>
-            <CustomClockTimePicker
+            <ClockTimePicker
                 open={isOpen}
                 InputProps={{
                     style: {visibility: 'hidden'}

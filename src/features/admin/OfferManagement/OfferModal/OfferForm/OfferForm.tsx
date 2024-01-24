@@ -34,10 +34,10 @@ import HtmlEditor from "../../../../../components/modals/admin/HTMLEditor/HTMLEd
 import {useStyles} from "./styles";
 import {useModal} from "../../../../../hooks/useModal/useModal";
 import {TEnumMap} from "../../../../../store/reducers/types";
-import CustomClockTimePicker from "../../../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
+import ClockTimePicker from "../../../../../components/pickers/ClockTimePicker/ClockTimePicker";
 import {useDatePickerStyles} from "../../../../../hooks/styling/useDatePickerStyles";
 import {TParsableDate} from "../../../../../types/types";
-import {CustomMobileDatePicker} from "../../../../../components/pickers/CustomMobileDatePicker/CustomMobileDatePicker";
+import {CustomDatePicker} from "../../../../../components/pickers/CustomDatePicker/CustomDatePicker";
 
 type TProps = {
     form: TOfferForm;
@@ -253,7 +253,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
             </div>
             <div className={clsx(classes.inputContainer, classes.rowContainer)}>
                 <div className={classes.innerContainer}>
-                    <CustomClockTimePicker
+                    <ClockTimePicker
                         fullWidth
                         label={"Time of Day"}
                         InputProps={{
@@ -265,7 +265,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                 </div>
                 <div className={classes.divider}>-</div>
                 <div className={classes.innerContainer}>
-                    <CustomClockTimePicker
+                    <ClockTimePicker
                         fullWidth
                         InputProps={{
                             endAdornment: <QueryBuilder color={"disabled"} cursor="pointer"/>,
@@ -278,7 +278,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
             <div className={clsx(classes.inputContainer, classes.rowContainer)}>
                 <div className={classes.innerContainer}>
                     <InputLabel shrink className={pickerClasses.label}>Start Date</InputLabel>
-                    <CustomMobileDatePicker
+                    <CustomDatePicker
                         fullWidth
                         value={form.durationFrom||null}
                         onChange={onChangeDateTime("durationFrom")}
@@ -293,7 +293,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                 <div className={classes.divider}>-</div>
                 <div className={classes.innerContainer}>
                     <InputLabel shrink className={pickerClasses.label}>End Date</InputLabel>
-                    <CustomMobileDatePicker
+                    <CustomDatePicker
                         fullWidth
                         value={form.durationTo||null}
                         onChange={onChangeDateTime("durationTo")}

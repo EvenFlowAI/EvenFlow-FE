@@ -5,7 +5,7 @@ import {Button, Grid, Switch, useMediaQuery, useTheme} from "@mui/material";
 import moment from "moment/moment";
 import {blankRow} from "../constants";
 import {useStyles} from "./styles";
-import CustomClockTimePicker from "../../../../components/pickers/CustomClockTimePicker/CustomClockTimePicker";
+import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
 import {TParsableDate} from "../../../../types/types";
 
 type THOOFormProps = TViewMode & {
@@ -38,7 +38,7 @@ export const HourOfOperationForm: React.FC<React.PropsWithChildren<React.PropsWi
                     <Switch onChange={onCheck(idx)} disabled={viewMode} checked={data.checked} color="primary"/>
                 </Grid>
                 <Grid item xs={5} sm={4} md={3}>
-                    <CustomClockTimePicker
+                    <ClockTimePicker
                         InputProps={{
                             placeholder: !data.checked ? "Closed" : "",
                             error: !data.from && data.checked && formIsChecked,
@@ -55,7 +55,7 @@ export const HourOfOperationForm: React.FC<React.PropsWithChildren<React.PropsWi
                     <span className={classes.toWrapper}>to</span>
                 </Grid>
                 <Grid item xs={5} sm={4} md={3}>
-                    <CustomClockTimePicker
+                    <ClockTimePicker
                         fullWidth
                         value={data.to}
                         InputProps={{

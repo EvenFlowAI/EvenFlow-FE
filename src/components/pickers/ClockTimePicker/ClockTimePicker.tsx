@@ -16,7 +16,7 @@ type TProps = MobileTimePickerProps<TParsableDate> & {
     name?: string;
 }
 
-const CustomClockTimePicker: React.FC<TProps> = ({
+const ClockTimePicker: React.FC<TProps> = ({
                                                     value,
                                                     onChange,
                                                     fullWidth,
@@ -60,4 +60,4 @@ const CustomClockTimePicker: React.FC<TProps> = ({
     </>
 };
 
-export default CustomClockTimePicker;
+export default ClockTimePicker;
