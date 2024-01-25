@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {IServiceValetAppointment} from "../../../../../store/reducers/appointment/types";
-import {TArgCallback} from "../../../../../types/types";
+import {TArgCallback, TParsableDate} from "../../../../../types/types";
 import moment from "moment";
 import {useTranslation} from "react-i18next";
 import {CheckCircleOutlined, HighlightOff, RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
@@ -8,12 +8,13 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {mockSlotTime} from "../constants";
 import {PickUpWrapper, useStyles} from "./styles";
+import dayjs from "dayjs";
 
 type TProps = {
     timeSlot: IServiceValetAppointment|null;
     selected: boolean;
     onSelect: TArgCallback<IServiceValetAppointment|null>;
-    date: moment.Moment|null;
+    date: TParsableDate;
 }
 
 export const PickUpSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =({timeSlot, onSelect, selected, date}) => {
@@ -28,7 +29,7 @@ export const PickUpSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChi
                 const timeSlotDate = timeSlot.date.toString().split('T')[0]
                 const [h, m, s] = timeSlot?.pickUpMin.split(":");
                 const timeSlotTime = moment(timeSlotDate).set('hour', +h).set('minute', +m).set('second', +s);
-                if (moment(timeSlotDate).isSame(moment(), 'day') && moment(date).isSame(moment(), 'day')) {
+                if (moment(timeSlotDate).isSame(moment(), 'day') && dayjs.utc(date).isSame(dayjs.utc(), 'day')) {
                     const differenceInMSeconds = moment(moment(timeSlotTime).format('YYYY-MM-DDTHH:mm:ss')).diff(moment());
                     if (differenceInMSeconds > 0) {
                         setTimeout(() => setTimePassed(true), differenceInMSeconds);
@@ -44,7 +45,7 @@ export const PickUpSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChi
 
     return (
         <PickUpWrapper
-            key={timeSlot ? moment(timeSlot.date).toISOString() : moment().toISOString()}
+            key={timeSlot ? dayjs(timeSlot.date).toISOString() : dayjs().toISOString()}
             available={Boolean(timeSlot) && !timePassed}
             selected={selected}
             onClick={() => timePassed ? {} : onSelect(timeSlot ?? null)}

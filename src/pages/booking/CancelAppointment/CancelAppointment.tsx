@@ -7,7 +7,6 @@ import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useDispatch} from "react-redux";
 import {clearStorage, loadSCProfile} from "../../../store/reducers/appointment/actions";
 import {Button, styled} from "@mui/material";
-import moment from "moment";
 import {Edit} from "@mui/icons-material";
 import {NotFoundError} from "../../../components/wrappers/NotFoundError/NotFoundError";
 import {encodeSCID} from "../../../utils/utils";
@@ -16,6 +15,7 @@ import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingBu
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {useException} from "../../../hooks/useException/useException";
 import {Routes} from "../../../routes/constants";
+import dayjs from "dayjs";
 
 type TState = "loading" | "new" | "canceled" | "already_canceled" | "error";
 
@@ -90,9 +90,9 @@ export const CancelAppointment = () => {
     const getDate = () => {
         if (appointment) {
             const {dateInUtc, timeSlot} = appointment;
-            return moment.utc(`${String(dateInUtc).split("T")[0]}T${timeSlot}Z`)
+            return dayjs.utc(`${String(dateInUtc).split("T")[0]}T${timeSlot}Z`)
         } else {
-            return moment();
+            return dayjs.utc();
         }
     }
 

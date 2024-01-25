@@ -14,7 +14,7 @@ import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
 import {TScheduler, TServiceBook} from "../store/reducers/appointments/types";
 import {TEnumKeyLabel} from "../store/reducers/types";
-import {ParsableDate} from "../types/types";
+import {ParsableDate, TParsableDate} from "../types/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 
@@ -146,9 +146,9 @@ export interface IBaseAppointment {
     id: number;
     hashKey: string;
     appointmentStatus: AppointmentStatus;
-    requestDate: ParsableDate;
-    dateInUtc: ParsableDate;
-    remindAtInUtc: ParsableDate;
+    requestDate: TParsableDate;
+    dateInUtc: TParsableDate;
+    remindAtInUtc: TParsableDate;
     timeSlot: string;
     vehicleId: number;
     vehicle: IVehicleData;

@@ -13,18 +13,18 @@ import {
     setTiming,
     setWelcomeScreenView
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
-import moment, {Moment} from "moment";
 import {EAppointmentTimingType,} from "../../../../store/reducers/appointment/types";
 import {selectAppointment, selectServiceValetAppointment,} from "../../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga4";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import AppointmentTimingCard from "./AppointmentTimingCard/AppointmentTimingCard";
 import {useTranslation} from "react-i18next";
-import {TArgCallback, TScreen} from "../../../../types/types";
+import {TArgCallback, TParsableDate, TScreen} from "../../../../types/types";
 import {useHistory, useParams} from "react-router-dom";
 import {TimingWrapper} from "./styles";
 import {TCard} from "./types";
 import {Routes} from "../../../../routes/constants";
+import dayjs from "dayjs";
 
 const cards: TCard[] = [
     {
@@ -103,8 +103,8 @@ export const AppointmentTiming: React.FC<React.PropsWithChildren<React.PropsWith
     }
 
     const handleChangeTime = useCallback((t: unknown) => {
-        dispatch(setTime(t as Moment|null));
-        if (!moment(selectedTime).isSame(t as Moment|null, 'date')) clearAppointmentSlots()
+        dispatch(setTime(t as TParsableDate));
+        if (!dayjs.utc(selectedTime).isSame(t as TParsableDate, 'date')) clearAppointmentSlots()
     }, [selectedTime])
 
     const isTimingValid = Boolean(

@@ -9,6 +9,7 @@ import {ReactComponent as CalendarIcon} from "../../../../../assets/img/empty_ca
 import {ReactComponent as CalendarIconWhite} from "../../../../../assets/img/empty_calendar_white.svg";
 import {monthFormat, XsMontFormat} from "../constants";
 import {DayCard} from "../../../../../components/styled/DayCard";
+import dayjs from "dayjs";
 
 type TProps = {
     day: string;
@@ -27,7 +28,7 @@ export const DaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChil
     const getMaxPrice = () => {
         if (appointment) {
             const prices = appointment.appointments
-                .filter(app => moment(app.appointmentDate).isSame(moment(appointment.date), 'day'))
+                .filter(app => dayjs(app.appointmentDate).isSame(dayjs(appointment.date), 'day'))
                 .map(item => item.price.value)
             return Math.max(...prices);
         }

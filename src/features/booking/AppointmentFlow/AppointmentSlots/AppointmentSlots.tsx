@@ -4,7 +4,6 @@ import {ActionButtons} from '../../ActionButtons/ActionButtons';
 import {SelectedAppointment} from "./SelectedAppointment/SelectedAppointment";
 import {AppointmentDateSelector} from "./AppointmentDateSelector/AppointmentDateSelector";
 import {AppointmentTimeSelector} from "./AppointmentTimeSelector/AppointmentTimeSelector";
-import moment from "moment";
 import {useHistory, useParams} from "react-router-dom";
 import {collectServiceRequestIds, decodeSCID, mapRecallsForRequest} from "../../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
@@ -24,7 +23,7 @@ import {TGroupedAppointments} from "../../../../utils/types";
 import ReactGA from "react-ga4";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {TArgCallback, TScreen} from "../../../../types/types";
+import {TArgCallback, TParsableDate, TScreen} from "../../../../types/types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector/SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
@@ -38,6 +37,7 @@ import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions
 import {Wrapper} from "./styles";
 import {groupAppointments} from "./utils";
 import {Routes} from "../../../../routes/constants";
+import dayjs from "dayjs";
 
 type TAppointmentSelectionProps = {
     handleSetScreen: TArgCallback<TScreen>;
@@ -88,8 +88,8 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
 
     const {allCategories} = useSelector((state: RootState) => state.categories);
 
-    const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
-    const [month, setMonth] = useState<moment.Moment>(moment.utc());
+    const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
+    const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
     const [loading, setLoading] = useState<boolean>(false);
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
@@ -138,7 +138,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     }, [selectedPackage, advisor, appointment])
 
     useEffect(() => {
-        if (selectedTime) setMonth(moment.utc(selectedTime))
+        if (selectedTime) setMonth(dayjs.utc(selectedTime))
     }, [selectedTime])
 
     useEffect(() => {
@@ -146,12 +146,12 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         const currentAppointment = serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetAppointment : appointment;
         if (currentSlots.length && isMount.current) {
             if (currentAppointment?.date) {
-                setDate(moment.utc(currentAppointment.date).startOf('day'))
+                setDate(dayjs.utc(currentAppointment.date).startOf('day'))
             } else {
                 if (selectedTime) {
-                    setDate(moment.utc(selectedTime).startOf('day'));
+                    setDate(dayjs.utc(selectedTime).startOf('day'));
                 } else {
-                    if (currentSlots?.length) setDate(moment(currentSlots[0].date).startOf('day'))
+                    if (currentSlots?.length) setDate(dayjs(currentSlots[0].date).startOf('day'))
                 }
             }
             isMount.current = false;
@@ -164,18 +164,18 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         dispatch(clearAppointmentSteps("appointmentSelection"));
     }
 
-    const updateDate = useCallback((d: moment.Moment) => {
+    const updateDate = useCallback((d: TParsableDate) => {
         clearData()
-        setDate(d.startOf('day'));
-        if (!d.isSame(month, 'month')) {
+        setDate(dayjs(d).startOf('day'));
+        if (!dayjs(d).isSame(month, 'month')) {
             setMonth(d);
         }
     }, [month, selectedTiming]);
 
 
-    const setDateCallback = useCallback((d: moment.Moment) => {
+    const setDateCallback = useCallback((d: TParsableDate) => {
         if (selectedTiming !== EAppointmentTimingType.FirstAvailable) {
-            setDate(d.startOf('day'));
+            setDate(dayjs(d).startOf('day'));
         }
     }, [selectedTiming]);
 
@@ -207,7 +207,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                             : selectedTiming,
                         serviceCenterId: decodeSCID(id),
                         consultantId: advisor?.id ?? null,
-                        fromDate: selectedTime ? moment(selectedTime).toISOString() : moment.utc().startOf("day"),
+                        fromDate: selectedTime ? dayjs.utc(selectedTime).toISOString() : dayjs.utc().startOf("day"),
                         maintenancePackageOption,
                         serviceRequestIds: collectServiceRequestIds(
                             service, subService, selectedPackage, selectedSR
@@ -267,7 +267,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             ReactGA.event({
                 category: 'EvenFlow User',
                 action: serviceTypeOption?.type === EServiceType.PickUpDropOff ? 'Selected Service Valet Appointment Slot' : 'Selected Appointment Slot',
-                label: `On ${moment(appointment.date).format('MM-DD-YYYY')} at ${moment(appointment.date).format('hh:mm A')}`,
+                label: `On ${dayjs.utc(appointment.date).format('MM-DD-YYYY')} at ${dayjs.utc(appointment.date).format('hh:mm A')}`,
             });
         }
     }, [appointment])
@@ -352,7 +352,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                         loading={loading}/>
                 : <AppointmentTimeSelector
                         appointments={
-                            groupedAppointments[date.toISOString().replace('.000', '')]
+                            groupedAppointments[dayjs(date).toISOString().replace('.000', '')]
                         }
                         date={date}
                         loading={loading}/>}

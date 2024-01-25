@@ -11,8 +11,7 @@ import {
     ITransportation
 } from "../../../api/types";
 import {EAppointmentTimingType, EReminderType, IServiceRequestPrice, TRecallForRequest} from "../appointment/types";
-import moment from "moment/moment";
-import {IRecallByVin, ParsableDate, TScreen, TView} from "../../../types/types";
+import {IRecallByVin, ParsableDate, TParsableDate, TScreen, TView} from "../../../types/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
 import {TPackagePrice} from "../packages/types";
@@ -114,7 +113,7 @@ export type TState = {
     advisor: IServiceConsultant | null;
     isAnyAdvisorSelected: boolean;
     selectedTiming: EAppointmentTimingType | null;
-    selectedTime: moment.Moment | null;
+    selectedTime: TParsableDate;
     selectedVehicle: ILoadedVehicle | null;
     customer: ICustomer;
     reminders: EReminderType[];

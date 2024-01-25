@@ -10,9 +10,11 @@ import {useTranslation} from "react-i18next";
 import {setSideBarSteps, setTransportation} from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {PickUpSlotCard} from "../PickUpSlotCard/PickUpSlotCard";
 import {PickUpSlotsWrapper, useStyles} from "./styles";
+import {TParsableDate} from "../../../../../types/types";
+import dayjs from "dayjs";
 
 type TProps = {
-    date: moment.Moment;
+    date: TParsableDate;
     loading: boolean;
 }
 
@@ -25,7 +27,7 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
         const classes = useStyles();
         const {t} = useTranslation();
         const currentSlots = useMemo(() => {
-            return serviceValetSlots.filter(slot => moment(slot.date).isSame(date, 'date'))
+            return serviceValetSlots.filter(slot => dayjs.utc(slot.date).isSame(date, 'date'))
         }, [serviceValetSlots, date])
 
         useEffect(() => {
@@ -69,7 +71,7 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
                                             selectedAppointment && timeSlot?.date === selectedAppointment.date
                                         )}
                                         timeSlot={timeSlot}
-                                        key={moment(timeSlot.date).toISOString()}
+                                        key={dayjs.utc(timeSlot.date).toISOString()}
                                     />
                                 })
                                 : <PickUpSlotCard

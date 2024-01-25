@@ -41,7 +41,6 @@ import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";
 import {API} from "../../../../api/api";
 import {isMobile} from 'react-device-detect';
-import moment from "moment/moment";
 import DetailedFeesManage from "../AppointmentConfirmation/DetailedFees/DetailedFeesManage";
 import {loadFirstScreenOptionsByQuery} from "../../../../store/reducers/serviceTypes/actions";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
@@ -54,6 +53,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../../routes/constants";
+import dayjs from "dayjs";
 
 type TProps = {
     onChangeSlot: TCallback;
@@ -233,7 +233,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                 title: "Cancel appointment",
                 content: <span>
                             Please confirm you want to cancel appointment on <br />
-                    {moment.utc(appointmentByKey.dateInUtc).format("LLL")}?
+                    {dayjs.utc(appointmentByKey.dateInUtc).format("LLL")}?
                         </span>,
                 onConfirm: handleCancelAppointment
             });

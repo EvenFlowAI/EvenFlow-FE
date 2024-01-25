@@ -10,9 +10,9 @@ import {RootState} from "./store/rootReducer";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
 import {loadBookingFlowConfig, setConfiguration} from "./store/reducers/bookingFlowConfig/actions";
 import {EServiceCenterName} from "./api/types";
-import moment from "moment";
 import {TScreen} from "./types/types";
 import AppRoutes from "./routes/AppRoutes/AppRoutes";
+import dayjs from "dayjs";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -23,16 +23,16 @@ const App = () => {
     const notificationsRef = useRef<SnackbarProvider|null>(null);
     const dispatch = useDispatch();
     const history = useHistory();
-    const lastLoadingTime = useMemo(() => moment().utc().toISOString(), []);
+    const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
 
     useEffect(() => {
         window.addEventListener('focus', () => {
-            const itIsTimeToReload = moment().utc(true).get('hour') > 2;
-            const isBefore = moment(lastLoadingTime).utc().isBefore(moment().utc(), 'day')
+            const itIsTimeToReload = dayjs().utc(true).get('hour') > 2;
+            const isBefore = dayjs(lastLoadingTime).utc().isBefore(dayjs().utc(), 'day')
             if (isBefore && itIsTimeToReload) {
-                localStorage.setItem('timestamp', moment().utc(true).toISOString())
+                localStorage.setItem('timestamp', dayjs().utc(true).toISOString())
                 history.go(0)
             }
         })

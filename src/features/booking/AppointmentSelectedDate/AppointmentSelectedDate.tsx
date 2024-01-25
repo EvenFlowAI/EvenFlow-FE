@@ -13,6 +13,7 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TServiceValetSlot} from "../../../api/types";
 import {TitleWrapper} from "./styles";
+import dayjs from "dayjs";
 
 type TProps = {
     onChangeSlot: TCallback;
@@ -51,22 +52,22 @@ export const AppointmentSelectedDate: React.FC<React.PropsWithChildren<React.Pro
     const getDateForUpdate = (): string => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {
             if (appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                return moment.utc(appointmentByKey.dateInUtc).format('ddd, MMMM D')
+                return dayjs.utc(appointmentByKey.dateInUtc).format('ddd, MMMM D')
             } else {
                 const [hh, mm] = appointmentByKey.timeSlot.split(':')
-                return moment.utc(appointmentByKey.dateInUtc).set('hour', +hh).set('minute', +mm).format('ddd, MMMM D, hh:mm A')
+                return dayjs.utc(appointmentByKey.dateInUtc).set('hour', +hh).set('minute', +mm).format('ddd, MMMM D, hh:mm A')
             }
         }
         return ''
     }
 
     const date = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
-        ? moment.utc(serviceValetAppointment?.date).format('ddd, MMMM D')
+        ? dayjs.utc(serviceValetAppointment?.date).format('ddd, MMMM D')
         : customerLoadedData?.isUpdating && appointmentByKey
             ? appointment?.date
-                ? moment.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')
+                ? dayjs.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')
                 : getDateForUpdate()
-            : moment.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')
+            : dayjs.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')
 
     const handleChangeSlot = () => {
         if (customerLoadedData?.isUpdating) {

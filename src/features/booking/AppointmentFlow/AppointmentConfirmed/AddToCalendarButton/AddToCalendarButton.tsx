@@ -8,7 +8,6 @@ import {
     time24HourFormat,
     timeSpanString
 } from "../../../../../utils/constants";
-import moment from "moment";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
@@ -16,6 +15,8 @@ import {RootState} from "../../../../../store/rootReducer";
 import {TItem} from "../types";
 import {getCalendarUrl} from "./utils";
 import {TServiceValetSlot} from "../../../../../api/types";
+import dayjs from "dayjs";
+import {TParsableDate} from "../../../../../types/types";
 
 type TProps = {
     serviceName: string,
@@ -77,47 +78,47 @@ const AddToCalendarButton: React.FC<React.PropsWithChildren<React.PropsWithChild
         }
     }, [serviceValetAppointment, appointmentByKey])
 
-    const getDateForUpdate = (): moment.Moment => {
+    const getDateForUpdate = (): TParsableDate => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {
             if (appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                return moment.utc(appointmentByKey.dateInUtc)
+                return dayjs.utc(appointmentByKey.dateInUtc)
             } else {
                 const [hh, mm] = appointmentByKey.timeSlot.split(':')
-                return moment.utc(appointmentByKey.dateInUtc).set('hour', +hh).set('minute', +mm)
+                return dayjs.utc(appointmentByKey.dateInUtc).set('hour', +hh).set('minute', +mm)
             }
         }
-        return moment()
+        return dayjs()
     }
 
     const date = isServiceValetApp
-        ? moment.utc(serviceValetAppointment?.date)
+        ? dayjs.utc(serviceValetAppointment?.date)
         : customerLoadedData?.isUpdating && appointmentByKey
             ? appointment?.date
-                ? moment.utc(appointment?.date)
+                ? dayjs.utc(appointment?.date)
                 : getDateForUpdate()
-            : moment.utc(appointment?.date)
+            : dayjs.utc(appointment?.date)
 
     const getDateForCalendar = useCallback(() => {
         let dateString: string;
         if (isServiceValetApp) {
-            dateString = moment(date).format(calendarDateFormat);
-            const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(serviceValetAppointment?.pickUpMin, timeSpanString)
-                .format(time24HourFormat)} ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, timeSpanString).format(time24HourFormat)}`
+            dateString = dayjs(date).format(calendarDateFormat);
+            const pickUpTime = `${t("Pick Up Time")}: ${dayjs.utc(serviceValetAppointment?.pickUpMin, timeSpanString)
+                .format(time24HourFormat)} ${t("to")} ${dayjs.utc(serviceValetAppointment?.pickUpMax, timeSpanString).format(time24HourFormat)}`
             dateString = dateString.concat('\n')
             dateString = dateString.concat(pickUpTime)
         } else {
             if (serviceTypeOption?.type === EServiceType.PickUpDropOff && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                dateString = moment(date).format(calendarDateFormat);
+                dateString = dayjs(date).format(calendarDateFormat);
                 const pickUpMin = appointmentByKey?.serviceValetTime?.pickUpMin;
                 const pickUpMax = appointmentByKey?.serviceValetTime?.pickUpMax;
                 if (pickUpMin && pickUpMax) {
-                    const pickUpTime = `${t("Pick Up Time")}: ${moment.utc(pickUpMin, timeSpanString)
-                        .format(time24HourFormat)} ${t("to")} ${moment.utc(pickUpMax, timeSpanString).format(time24HourFormat)}`
+                    const pickUpTime = `${t("Pick Up Time")}: ${dayjs.utc(pickUpMin, timeSpanString)
+                        .format(time24HourFormat)} ${t("to")} ${dayjs.utc(pickUpMax, timeSpanString).format(time24HourFormat)}`
                     dateString = dateString.concat('\n')
                     dateString = dateString.concat(pickUpTime)
                 }
             } else {
-                dateString = date.format(dateTimeString) ?? moment.utc().format(dateTimeString);
+                dateString = dayjs(date).format(dateTimeString) ?? dayjs.utc().format(dateTimeString);
             }
         }
         return dateString;
@@ -160,10 +161,10 @@ const AddToCalendarButton: React.FC<React.PropsWithChildren<React.PropsWithChild
     }, [vehicleData, serviceName, getDateForCalendar, isServiceValetApp, servicesList, advisor, scProfile, serviceTypeOption, getDateForCalendar])
 
     const handleAddToCalendar = () => {
-        const dateFrom = date.format(G_CALENDAR_FORMAT) + `${isServiceValetApp 
+        const dateFrom = dayjs.utc(date).format(G_CALENDAR_FORMAT) + `${isServiceValetApp 
             ? serviceValetTime?.pickUpMin.split(":").join('') ?? "000000" 
             : appointment?.time.split(":").join("")}`;
-        const dateTo = date.add(1, "hour").format(G_CALENDAR_FORMAT) + `${isServiceValetApp 
+        const dateTo = dayjs.utc(date).add(1, "hour").format(G_CALENDAR_FORMAT) + `${isServiceValetApp 
             ? serviceValetTime?.pickUpMax?.split(":").join('') ?? "000000" 
             : appointment?.time.split(":").join("")}`;
         const url = getCalendarUrl({

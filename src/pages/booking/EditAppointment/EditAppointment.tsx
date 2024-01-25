@@ -30,6 +30,7 @@ import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameR
 import {dateTimeFormat} from "../../../features/admin/Appointments/ViewAppointmentsModal/AppointmentDetails/AppointmentDetails";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {Routes} from "../../../routes/constants";
+import dayjs from "dayjs";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -102,8 +103,8 @@ export const EditAppointment = () => {
                     return;
                 }
                 const [hours, minutes] = data.timeSlot.split(":");
-                const formattedDate = moment(data.dateInUtc).format()
-                const dateTime = moment.utc(formattedDate).hours(+hours).minutes(+minutes).format(dateTimeFormat)
+                const formattedDate = dayjs(data.dateInUtc).format()
+                const dateTime = dayjs.utc(formattedDate).hour(+hours).minute(+minutes).format(dateTimeFormat)
                 if (moment.utc().diff(dateTime) >= 0) {
                     setState("passed");
                     return;

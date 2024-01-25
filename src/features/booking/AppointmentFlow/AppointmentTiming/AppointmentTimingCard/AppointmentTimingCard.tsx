@@ -3,7 +3,6 @@ import {useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
-import moment from "moment";
 import {EAppointmentTimingType} from "../../../../../store/reducers/appointment/types";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {TArgCallback, TCallback, TParsableDate} from "../../../../../types/types";
@@ -16,7 +15,7 @@ type TCardProps = {
     card: TCard;
     active?: boolean;
     onClick: TCallback;
-    selectedTime: moment.Moment|null;
+    selectedTime: TParsableDate;
     onChangeTime: TArgCallback<unknown>;
     isLoading: boolean;
 }
@@ -28,7 +27,7 @@ const AppointmentTimingCard: React.FC<React.PropsWithChildren<React.PropsWithChi
     const {t} = useTranslation();
     const {appointmentSlots} = useSelector((state: RootState) => state.appointment)
     const cardRef = useRef<HTMLDivElement|null>(null);
-    const shouldDisableDate = (date: TParsableDate) => !appointmentSlots.find(item => moment(item.date).format("YYYY-MM-DD") === dayjs(date).format('YYYY-MM-DD'));
+    const shouldDisableDate = (date: TParsableDate) => !appointmentSlots.find(item => dayjs.utc(item.date).format("YYYY-MM-DD") === dayjs(date).format('YYYY-MM-DD'));
 
     useEffect(() => {
         if (cardRef?.current) cardRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
@@ -36,7 +35,7 @@ const AppointmentTimingCard: React.FC<React.PropsWithChildren<React.PropsWithChi
 
     const content = card.name === EAppointmentTimingType.PreferredDate
         ? <StyledDate
-            value={dayjs(selectedTime?.toDate())}
+            value={selectedTime}
             onChange={onChangeTime}
             disablePast
             format="MMMM, DD"

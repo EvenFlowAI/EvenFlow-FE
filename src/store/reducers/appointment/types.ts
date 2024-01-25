@@ -1,7 +1,6 @@
 import {IAddress} from "../dealershipGroups/types";
 import {EDemandCategory, EPricingDisplayType} from "../pricingSettings/types";
 import {EOfferType, IOffer} from "../offers/types";
-import moment from "moment";
 import {
     EMaintenanceOptionType,
     ICreateAppointmentResp,
@@ -11,7 +10,7 @@ import {
 } from "../../../api/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
 import {TEmailRequirement} from "../screenSettings/types";
-import {ParsableDate} from "../../../types/types";
+import {ParsableDate, TParsableDate} from "../../../types/types";
 
 export interface IServiceCenterProfile {
     id: number;
@@ -110,8 +109,8 @@ export interface IAppointmentSlot {
 }
 
 export interface ISearchedDateRange {
-    from: ParsableDate;
-    to: ParsableDate;
+    from: TParsableDate;
+    to: TParsableDate;
 }
 
 export interface IAppointmentResponse {
@@ -175,7 +174,7 @@ export interface IAppointmentSlotsRequest {
 
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     id: string;
-    date: moment.Moment;
+    date: TParsableDate;
     serviceRequestPrices?: IServiceRequestPrice[];
     timingType?: number;
     appointmentDate?: string;
@@ -254,7 +253,7 @@ export interface IServiceValetAppointmentPrice {
 }
 
 export interface IServiceValetAppointment {
-    date: ParsableDate;
+    date: TParsableDate;
     pickUpMin: string;
     pickUpMax: string;
     dropOffDescription: string;

@@ -14,7 +14,6 @@ import {
     ITransportation,
     TAppointmentAdvisor
 } from "../../../api/types";
-import moment from "moment";
 import {
     EAppointmentTimingType,
     EReminderType,
@@ -40,7 +39,7 @@ import {
     AppThunk,
     IMaintenanceItem,
     IRecallByVin,
-    PaginatedAPIResponse,
+    PaginatedAPIResponse, TParsableDate,
     TScreen,
     TView
 } from "../../../types/types";
@@ -70,6 +69,7 @@ import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
 import {EScheduler} from "../appointments/types";
 import {setAppointmentsLoading} from "../appointments/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -79,7 +79,7 @@ export const setPackagePricingType = createAction<EPackagePricingType|null>("fAp
 export const setAdvisor = createAction<IServiceConsultant|null>("fAppointment/setAdvisor");
 export const setAnyAdvisorSelected = createAction<boolean>("fAppointment/setAnyAdvisorSelected");
 export const setTiming = createAction<EAppointmentTimingType|null>("fAppointment/setTiming");
-export const setTime = createAction<moment.Moment|null>("fAppointment/setTime");
+export const setTime = createAction<TParsableDate>("fAppointment/setTime");
 export const setVehicle = createAction<ILoadedVehicle|null>("fAppointment/setVehicle");
 export const updateVehicle = createAction<Partial<IVehicle>>("fAppointment/updateVehicle");
 export const setCustomer = createAction<ICustomer>("fAppointment/setCustomer");
@@ -687,7 +687,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
     }
 
     const date = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
-        ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
+        ? dayjs.utc(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
         : appointment.appointment
             ? appointment.appointment?.id.split("|")[0] || ""
             : appointmentFrame.appointmentByKey?.dateInUtc || ""
@@ -742,7 +742,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         comment: appointmentFrame.description,
         driver,
         vehicle,
-        gmt: moment().utcOffset(),
+        gmt: dayjs().utcOffset(),
         offerId: appointment.appointment?.offer?.id ?? null,
         reminderTypes: appointmentFrame.reminders,
         serviceCenterId: id,
@@ -836,7 +836,7 @@ export const loadAppointmentRequestsPrices = (serviceCenterId: number): AppThunk
         mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
     }
     const date = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
-        ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
+        ? dayjs.utc(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
         : appointment.appointment
             ? appointment.appointment?.id.split("|")[0] || ""
             : appointmentFrame.appointmentByKey?.dateInUtc || ""

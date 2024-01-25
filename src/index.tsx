@@ -13,9 +13,13 @@ import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import utc from "dayjs/plugin/utc";
+import minMax from "dayjs/plugin/minMax";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
+dayjs.extend(minMax)
+dayjs.extend(isSameOrBefore)
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface

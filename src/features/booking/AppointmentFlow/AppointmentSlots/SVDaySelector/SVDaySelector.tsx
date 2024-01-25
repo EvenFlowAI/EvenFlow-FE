@@ -1,7 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import moment from "moment";
 import {ChevronLeft, ChevronRight} from "@mui/icons-material";
-import {TArgCallback} from "../../../../../types/types";
+import {TArgCallback, TParsableDate} from "../../../../../types/types";
 import {useMediaQuery, useTheme} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
@@ -16,12 +15,13 @@ import {DaySelectorWrapper} from "../../../../../components/styled/DaySelectorWr
 import {DateSelectArrow} from "../../../../../components/styled/DateSelectArrow";
 import {getAppointmentDate} from "../utils";
 import {useModal} from "../../../../../hooks/useModal/useModal";
+import dayjs from "dayjs";
 
 type TProps = {
-    date: moment.Moment,
+    date: TParsableDate,
     dateRangeUpdated: boolean;
     onDateRangeSet: TArgCallback<boolean>;
-    onDateChange: TArgCallback<moment.Moment>;
+    onDateChange: TArgCallback<TParsableDate>;
     loading: boolean;
     appointments: IServiceValetAppointment[];
 }
@@ -46,19 +46,19 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
     const currentConfig = config.find(item => item.serviceType?.toString() === serviceType.toString());
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
-        let daysInMonth: number = date.daysInMonth();
+        let daysInMonth: number = dayjs(date).daysInMonth();
         let generatedDays: string[] = [];
         if (searchedDateRange) {
-            daysInMonth = Math.abs(moment.utc(searchedDateRange.from).diff(moment.utc(moment(searchedDateRange.to).add(1, 'day')), "days"));
-            let currentDate = moment.utc(searchedDateRange.from);
-            let endDate = moment.utc(searchedDateRange.to).endOf('day');
+            daysInMonth = Math.abs(dayjs.utc(searchedDateRange.from).diff(dayjs.utc(dayjs(searchedDateRange.to).add(1, 'day')), "days"));
+            let currentDate = dayjs.utc(searchedDateRange.from);
+            let endDate = dayjs.utc(searchedDateRange.to).endOf('day');
             let i = 0;
             const maxAvailableDaysAmount = daysInMonth < WHILE_LIMIT ? WHILE_LIMIT : daysInMonth;
             while (currentDate.isSameOrBefore(endDate, "date") && i < maxAvailableDaysAmount) {
                 generatedDays.push(
                     currentDate.startOf('day').toISOString().replace('.000', '')
                 );
-                currentDate = moment.utc(currentDate).add(1, "day");
+                currentDate = dayjs.utc(currentDate).add(1, "day");
                 i++;
             }
         } else {
@@ -74,7 +74,7 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
     useEffect(() => {
         if (!dateRangeUpdated && searchedDateRange) {
             const selectedDate = serviceValetAppointment?.date ?? date;
-            const formattedDate = moment(selectedDate).startOf('day').toISOString().replace('.000', '');
+            const formattedDate = dayjs.utc(selectedDate).startOf('day').toISOString().replace('.000', '');
             let dateIdx = days.findIndex(el => el === formattedDate);
             if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
                 setSliceIdx(0);
@@ -98,7 +98,7 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
     }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet, serviceValetAppointment, searchedDateRange]);
 
     const handleChangeDay = (date: string) => () => {
-        onDateChange(moment.utc(date));
+        onDateChange(dayjs.utc(date));
     }
 
     const nextAvailable = (): boolean => {
@@ -145,8 +145,8 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
                 <SVDaySelectCard
                     key={day}
                     isXs={isXs}
-                    isCurrent={date.isSame(moment.utc(day), 'date')}
-                    appointment={appointments.find(item => moment(item.date).isSame(moment(day), 'date'))}
+                    isCurrent={dayjs(date).isSame(dayjs.utc(day), 'date')}
+                    appointment={appointments.find(item => dayjs(item.date).isSame(dayjs.utc(day), 'date'))}
                     onClick={handleChangeDay(day)}
                     day={day}
                 />

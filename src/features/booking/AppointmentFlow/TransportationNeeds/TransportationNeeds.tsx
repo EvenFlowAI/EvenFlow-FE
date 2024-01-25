@@ -12,13 +12,13 @@ import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import {ETransportColumn} from "../../../../store/reducers/transportationNeeds/types";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
-import moment from "moment";
 import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions";
 import {TextWrapper, TransportationsWrapper} from "./styles";
 import {TransportationCard} from "./TransportationCard/TransportationCard";
 import {TTransportationData} from "./types";
 import {TActionProps} from "../../../../types/types";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
 
 export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWithChildren<TActionProps>>> = ({onNext, onBack}) => {
     const {
@@ -54,7 +54,7 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
         let fullDateString = ''
         if (appointmentByKey) {
             const [hh, mm] = appointmentByKey?.timeSlot.split(":");
-            fullDateString = moment.utc(appointmentByKey?.dateInUtc).set('hour', hh ? +hh : 0).set('minute', mm ? +mm : 0).toISOString(true)
+            fullDateString = dayjs.utc(appointmentByKey?.dateInUtc).set('hour', hh ? +hh : 0).set('minute', mm ? +mm : 0).toISOString()
         }
         if (appointment) {
             return appointment.appointmentDate

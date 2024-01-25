@@ -4,7 +4,6 @@ import {BaseModal, DialogContent, DialogTitle} from "../../../../components/moda
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {IAppointmentByQuery} from "../../../../api/types";
 import {API} from "../../../../api/api";
-import moment from "moment";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {NoData} from "../../../../components/wrappers/NoData/NoData";
 import {useDialogStyles} from "../../../../hooks/styling/useDialogStyles";
@@ -13,6 +12,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useStyles} from "./styles";
 import {useException} from "../../../../hooks/useException/useException";
+import dayjs from "dayjs";
 
 const CancelAppointmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&{hashKey: string, loadData: TArgCallback<boolean>}>>> = ({open, onClose, hashKey, loadData}) => {
     const {customerSearchData} = useSelector((state: RootState) => state.customers);
@@ -60,8 +60,8 @@ const CancelAppointmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                     ? <DialogContent>
                 <div className={classes.info}>
                     <div className={classes.question}>
-                        Confirm cancellation of Appointment on {moment.utc(data?.dateInUtc).format("dddd")}
-                        <div>{moment.utc(data?.dateInUtc).format("ddd, MMMM D, YYYY")} at {moment(data?.timeSlot, "hh:mm:ss").format("hh:mm A")} for customer {data.driver.fullName}</div>
+                        Confirm cancellation of Appointment on {dayjs.utc(data?.dateInUtc).format("dddd")}
+                        <div>{dayjs.utc(data?.dateInUtc).format("ddd, MMMM D, YYYY")} at {dayjs(data?.timeSlot, "hh:mm:ss").format("hh:mm A")} for customer {data.driver.fullName}</div>
                     </div>
                 </div>
             </DialogContent>
