@@ -1,13 +1,13 @@
 import React from "react";
 import {TViewMode} from "../../../../components/modals/BaseModal/types";
 import {Button, Grid, IconButton, useMediaQuery, useTheme} from "@mui/material";
-import moment from "moment/moment";
 import {DeleteOutline} from "@mui/icons-material";
 import {TBreak} from "../types";
 import {useStyles} from "./styles";
 import {blankRow} from "../constants";
 import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
 import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
 
 type TProps = {
     form: TBreak[],
@@ -27,7 +27,7 @@ export const BreakForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
     }
     return (
         <div>
-            {moment.weekdays().map((d, dayOfWeek) => {
+            {dayjs.weekdays().map((d, dayOfWeek) => {
                 const data = props.form.find(el => el.dayOfWeek === dayOfWeek) || {...blankRow, dayOfWeek};
                 return (
                     <Grid container className={classes.container} alignItems="flex-end" key={d}>

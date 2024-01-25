@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {centerSettingsList, ECenterSettingType, TOptContent} from "./types";
 import {Grid} from "@mui/material";
 import {CenterSettingsPlate} from "./CenterSettingsPlate/CenterSettingsPlate";
-import moment from "moment";
 import ShowDropOffTimeModal from "./ShowDropOffTimeModal/ShowDropOffTimeModal";
 import {useDispatch, useSelector} from "react-redux";
 import {loadCenterSettings, updateDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/actions";
@@ -59,7 +58,7 @@ const CenterSettings = () => {
         switch (k) {
             case ECenterSettingType.DmsAppointmentTime:
                 return centerSettings?.dmsAppointmentTime
-                    ? moment(centerSettings?.dmsAppointmentTime, "HH:mm:ss").format('HH:mm a')
+                    ? dayjs.utc(centerSettings?.dmsAppointmentTime, "HH:mm:ss").format('HH:mm a')
                     : 'Not Selected';
             default:
                 return centerSettings?.showDropOffTime ? "Yes" : "No";

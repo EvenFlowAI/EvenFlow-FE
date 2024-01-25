@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
-import moment from "moment";
 import {IServiceValetAppointment,} from "../../../../../store/reducers/appointment/types";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import {useDispatch, useSelector} from "react-redux";
@@ -79,7 +78,7 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
                                     onSelect={handleSelect}
                                     selected={false}
                                     timeSlot={null}
-                                    key={moment().toISOString()}
+                                    key={dayjs().toISOString()}
                                 />
                             }
                         </PickUpSlotsWrapper>

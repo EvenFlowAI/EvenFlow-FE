@@ -10,7 +10,6 @@ import {
     IPackageOptions,
     IServiceCategory
 } from "../api/types";
-import moment from "moment";
 import {decode, encode} from 'url-safe-base64';
 import {ETransportationType} from "../store/reducers/transportationNeeds/types";
 import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
@@ -210,8 +209,8 @@ export const getStartEndDates = (date: TParsableDate, isXS: boolean): [string, s
 }
 
 export const getYearOptions = () => {
-    let year = moment.utc().year()
-    if (moment().month() > 6) year = moment.utc().add(1, 'year').year();
+    let year = dayjs.utc().year()
+    if (dayjs().month() > 6) year = dayjs.utc().add(1, 'year').year();
     const YEARS = year - 1982;
     return Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 }

@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {TableBody, TableHead} from "@mui/material";
 import {SC_UNDEFINED} from "../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
-import moment from "moment";
 import {
     loadOverbookingFactor,
     loadWaitListSettings,
@@ -24,6 +23,7 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
+import dayjs from "dayjs";
 
 export const OverbookingFactor = () => {
     const [saving, setSaving] = useState<boolean>(false);
@@ -115,7 +115,7 @@ export const OverbookingFactor = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {moment.weekdays().map((wd, idx) =>
+                    {dayjs.weekdays().map((wd, idx) =>
                         <TableRow key={wd}>
                             <TableCell>{wd}</TableCell>
                             <TableCell>

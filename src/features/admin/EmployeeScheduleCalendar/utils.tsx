@@ -1,8 +1,7 @@
 import React from "react";
-import moment from "moment";
 import {ISchedule} from "../../../store/reducers/schedules/types";
 import {timeSpanString, time12HourFormat} from "../../../utils/constants";
-import {ParsableDate, TParsableDate} from "../../../types/types";
+import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
 
 export const getDaysOfWeek = (date: TParsableDate, isXS: boolean): TParsableDate[] => {
@@ -44,13 +43,13 @@ export const findScheduleDates = (date: TParsableDate, schedules: ISchedule[], i
     return "-"
 }
 
-export const getRequestDate = (date: moment.Moment | ParsableDate): {fromDate: ParsableDate, toDate: ParsableDate} => {
-    const dayOfWeek = moment(date).day();
-    let fromDate = moment(date).day("Monday").toISOString();
-    let toDate = moment(date).day("Friday").toISOString();
+export const getRequestDate = (date: TParsableDate): {fromDate: TParsableDate, toDate: TParsableDate} => {
+    const dayOfWeek = dayjs(date).day();
+    let fromDate = dayjs(date).day(1).toISOString();
+    let toDate = dayjs(date).day(4).toISOString();
     if (dayOfWeek === 0) {
-        fromDate = moment(date).subtract(1, 'day').startOf('week').add(1, 'day').toISOString()
-        toDate = moment(date).subtract(1, 'day').day("Friday").toISOString()
+        fromDate = dayjs(date).subtract(1, 'day').startOf('week').add(1, 'day').toISOString()
+        toDate = dayjs(date).subtract(1, 'day').day(4).toISOString()
     }
     return {fromDate, toDate};
 }

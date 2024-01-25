@@ -10,9 +10,9 @@ import {ReactComponent as Transportation} from "../../../../../assets/img/transp
 import {ReactComponent as ConvenienceFees} from "../../../../../assets/img/person_dollar.svg";
 import {ReactComponent as Address} from "../../../../../assets/img/address.svg";
 import {appointmentStatuses, IAppointment} from "../../../../../api/types";
-import moment from "moment";
 import {DetailsItem} from "../DetailsItem/DetailsItem";
 import {TitleWrapper} from "../styles";
+import dayjs from "dayjs";
 
 export const dateTimeFormat = "ddd, MMM DD, YYYY h:mm a"
 
@@ -31,7 +31,7 @@ export const AppointmentDetails: React.FC<React.PropsWithChildren<React.PropsWit
             />
             <DetailsItem
                 title="Scheduled Appointment"
-                text={moment.utc(payload.dateTime).format(dateTimeFormat)}
+                text={dayjs.utc(payload.dateTime).format(dateTimeFormat)}
                 icon={<Clock/>}
                 key="Scheduled"
             />

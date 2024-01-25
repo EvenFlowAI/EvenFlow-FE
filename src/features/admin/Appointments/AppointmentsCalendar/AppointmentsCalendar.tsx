@@ -2,7 +2,6 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {IAppointmentsRequest} from "../../../../store/reducers/appointments/types";
 import {loadAppointments} from "../../../../store/reducers/appointments/actions";
 import {useDispatch, useSelector} from "react-redux";
-import moment from "moment";
 import {TAppointmentsByDate, TDay, TView} from "../types";
 import {RootState} from "../../../../store/rootReducer";
 import {CalendarControls} from "../../AvailableStaffCalendar/CalendarControls/CalendarControls";
@@ -82,7 +81,7 @@ export const AppointmentsCalendar: React.FC<React.PropsWithChildren<React.PropsW
         setAppointmentsByDate(() => {
             const data: TAppointmentsByDate = {};
             allAppointments.forEach(item => {
-                const dateString = moment(item.dateTime).startOf('day').format('YYYY-MM-DD');
+                const dateString = dayjs.utc(item.dateTime).startOf('day').format('YYYY-MM-DD');
                 data[dateString] = data[dateString] ? [...data[dateString], item] : [item];
             })
             return data

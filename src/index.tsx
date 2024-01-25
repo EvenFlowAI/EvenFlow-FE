@@ -15,11 +15,15 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import utc from "dayjs/plugin/utc";
 import minMax from "dayjs/plugin/minMax";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import localeData from "dayjs/plugin/localeData";
 
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(minMax)
 dayjs.extend(isSameOrBefore)
+dayjs.extend(isSameOrAfter)
+dayjs.extend(localeData)
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface

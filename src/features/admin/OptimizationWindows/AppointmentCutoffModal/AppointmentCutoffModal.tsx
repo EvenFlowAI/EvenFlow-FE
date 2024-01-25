@@ -5,7 +5,6 @@ import {Button} from "@mui/material";
 import {SC_UNDEFINED, timeSpanString} from "../../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {EDay} from "../../../../store/reducers/demandSegments/types";
-import moment from "moment";
 import {loadAppointmentCutoff, setAppointmentCutoff} from "../../../../store/reducers/optimizationWindows/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {IAppointmentCutoff} from "../../../../store/reducers/optimizationWindows/types";
@@ -24,7 +23,7 @@ type TForm = {
     [k in EDay]: TParsableDate;
 }
 
-const initialState: TForm = moment.weekdays().reduce((acc, d, dayOfWeek) => {
+const initialState: TForm = dayjs.weekdays().reduce((acc, d, dayOfWeek) => {
     acc[dayOfWeek as EDay] = null;
     return acc;
 }, {} as TForm);
@@ -70,7 +69,7 @@ export const AppointmentCutoffModal: React.FC<React.PropsWithChildren<React.Prop
         } else {
             try {
                 setSaving(true);
-                const data: IAppointmentCutoff[] = moment.weekdays().map((d, idx) => ({
+                const data: IAppointmentCutoff[] = dayjs.weekdays().map((d, idx) => ({
                     day: idx,
                     value: form[idx as EDay] ? dayjs(form[idx as EDay]).format(timeSpanString) : "",
                     podId: selectedPod?.id,
@@ -90,7 +89,7 @@ export const AppointmentCutoffModal: React.FC<React.PropsWithChildren<React.Prop
     return <BaseModal {...props} width={300}>
         <DialogTitle onClose={props.onClose}>Set Appointment Cutoff</DialogTitle>
         <DialogContent>
-            {moment.weekdays().map((day, idx) => {
+            {dayjs.weekdays().map((day, idx) => {
                 const isDisabled = Boolean(workingDays.length && !workingDays.includes(idx as EDay));
                 return <ClockTimePicker
                     key={idx}

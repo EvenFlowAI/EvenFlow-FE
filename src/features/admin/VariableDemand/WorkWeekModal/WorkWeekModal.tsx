@@ -3,7 +3,6 @@ import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Box, Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import moment from "moment";
 import {EDay, EDemandCategory, IDayOfWeekSetting} from "../../../../store/reducers/pricingSettings/types";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {loadDayOfWeekPricing, setWorkWeekPricing} from "../../../../store/reducers/pricingSettings/actions";
@@ -16,6 +15,7 @@ import {SwitchButtons} from "../../../../components/buttons/SwitchButtons/Switch
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import dayjs from "dayjs";
 
 export const WorkWeekModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
@@ -73,7 +73,7 @@ export const WorkWeekModal: React.FC<React.PropsWithChildren<React.PropsWithChil
     }
 
     const getContent = () => {
-        const days = moment.weekdays().map((wd, idx) => {
+        const days = dayjs.weekdays().map((wd, idx) => {
             return <React.Fragment key={wd}>
                 <Box component="span" fontWeight="bold">{wd}</Box>
                 <Box>

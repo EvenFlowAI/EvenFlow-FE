@@ -13,7 +13,6 @@ import {
 } from "../../../store/reducers/optimizationWindows/types";
 import {OptimizationModal} from "../../../features/admin/OptimizationWindows/OptimizationModal/OptimizationModal";
 import {AppointmentCutoffModal} from "../../../features/admin/OptimizationWindows/AppointmentCutoffModal/AppointmentCutoffModal";
-import moment from "moment";
 import {capacityManagementRoot, timeSpanString} from "../../../utils/constants";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {MaxPriceDateRangeModal} from "../../../features/admin/OptimizationWindows/MaxPriceDateRangeModal/MaxPriceDateRangeModal";
@@ -22,6 +21,7 @@ import {blankWindowParam, optContent} from "./constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
+import dayjs from "dayjs";
 
 export const OptimizationWindowsPage = () => {
     const [selectedOpt, setSelectedOpt] = useState<EOptimizationWindowType>(EOptimizationWindowType.DemandSegments);
@@ -87,7 +87,7 @@ export const OptimizationWindowsPage = () => {
                             count={
                                 k === EOptimizationWindowType.AppointmentCutoff
                                     ? optMapped[k].value
-                                        ? moment(optMapped[k].value, timeSpanString).format("h:mm")
+                                        ? dayjs.utc(optMapped[k].value, timeSpanString).format("h:mm")
                                         : "-"
                                     : k === EOptimizationWindowType.MaxPriceDateRange
                                         ? maxPriceDateRange
@@ -97,7 +97,7 @@ export const OptimizationWindowsPage = () => {
                             }
                             label={k === EOptimizationWindowType.AppointmentCutoff
                                 ? optMapped[k].value
-                                    ? moment(optMapped[k].value, timeSpanString).format("a")
+                                    ? dayjs.utc(optMapped[k].value, timeSpanString).format("a")
                                     : "-"
                                 : plate.label}
                             prefix={plate.prefix}

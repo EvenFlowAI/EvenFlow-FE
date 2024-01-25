@@ -2,11 +2,11 @@ import {TViewMode} from "../../../../components/modals/BaseModal/types";
 import {THOOForm} from "../types";
 import React from "react";
 import {Button, Grid, Switch, useMediaQuery, useTheme} from "@mui/material";
-import moment from "moment/moment";
 import {blankRow} from "../constants";
 import {useStyles} from "./styles";
 import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
 import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
 
 type THOOFormProps = TViewMode & {
     form: THOOForm[];
@@ -30,7 +30,7 @@ export const HourOfOperationForm: React.FC<React.PropsWithChildren<React.PropsWi
     const classes = useStyles();
 
     return <>
-        {moment.weekdays().map((day, idx) => {
+        {dayjs.weekdays().map((day, idx) => {
             const data: THOOForm = form.filter(f => f.dayOfWeek === idx)[0] || {...blankRow, dayOfWeek: idx};
 
             return <Grid container spacing={1} alignItems="flex-end" key={day} className={classes.row}>

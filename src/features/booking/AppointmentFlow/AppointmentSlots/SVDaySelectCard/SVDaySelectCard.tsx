@@ -1,6 +1,5 @@
 import React from 'react';
 import {TCallback} from "../../../../../types/types";
-import moment from "moment";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EAppointmentTimingType, IServiceValetAppointment} from "../../../../../store/reducers/appointment/types";
@@ -8,6 +7,7 @@ import {useTranslation} from "react-i18next";
 import {EPricingDisplayType} from "../../../../../store/reducers/pricingSettings/types";
 import {defaultFormat, monthFormat, XsFormat, XsMontFormat} from "../constants";
 import {DayCard} from "../../../../../components/styled/DayCard";
+import dayjs from "dayjs";
 
 type TProps = {
     day: string;
@@ -31,7 +31,7 @@ export const SVDaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithCh
 
     const getLabel = () => {
         if (isXs) {
-            return moment.utc(day).format("D");
+            return dayjs.utc(day).format("D");
         }
         if (isCurrent) {
             if (appointment) {
@@ -64,7 +64,7 @@ export const SVDaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithCh
     }
 
     const getDayNameString = (): string => {
-        const name = moment.utc(day).format('ddd').toLowerCase();
+        const name = dayjs.utc(day).format('ddd').toLowerCase();
         return name.charAt(0).toUpperCase() + name.slice(1);
     }
 
@@ -74,7 +74,7 @@ export const SVDaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithCh
         isOffPeak={false}
     >
         <div className="dayName">{getDayNameString()}</div>
-        <div>{moment.utc(day).format(getFormat())}</div>
+        <div>{dayjs.utc(day).format(getFormat())}</div>
         <div className="day" onClick={onClick}>
             {getLabel()}
             {isXs ? <div className="padding" /> : null}

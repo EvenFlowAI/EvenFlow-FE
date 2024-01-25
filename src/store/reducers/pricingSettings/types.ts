@@ -1,7 +1,7 @@
 import {TEnumMap} from "../types";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
 import {IPackageOptionShort, IPackageShort} from "../packages/types";
-import {ParsableDate} from "../../../types/types";
+import {TParsableDate} from "../../../types/types";
 
 export type TValuePricingLevel = {
     demandCategory: EDemandCategory;
@@ -78,7 +78,7 @@ export interface ITimeOfYearSetting {
     serviceCenterId: number;
     demandCategory: EDemandCategory;
     id?: number;
-    date: ParsableDate;
+    date: TParsableDate;
     comment?: string;
 }
 

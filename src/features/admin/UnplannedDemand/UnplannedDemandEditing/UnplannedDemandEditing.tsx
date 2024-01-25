@@ -3,7 +3,6 @@ import {
     IUnplannedDemand,
     IUnplannedDemandBySlot, IUnplannedDemandSlotsRequest
 } from "../../../../store/reducers/demandSegments/types";
-import moment from "moment";
 import UnplannedDemandSlots from "../UnplannedDemandSlots/UnplannedDemandSlots";
 import {useDispatch, useSelector} from "react-redux";
 import {changeUnplannedSlots, loadUnplannedSlots} from "../../../../store/reducers/demandSegments/actions";
@@ -17,6 +16,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
+import dayjs from "dayjs";
 
 type TUnplannedDemandEditingProps = {
     isEdit: boolean;
@@ -84,7 +84,7 @@ const UnplannedDemandEditing: React.FC<React.PropsWithChildren<React.PropsWithCh
         <div className={classes.wrapper}>
             <div className={classes.titleLine}>
                 <div className={classes.dayName}>
-                    {editingElement ? moment().set('day', editingElement?.day).format('dddd') : ''}
+                    {editingElement ? dayjs().set('day', editingElement?.day).format('dddd') : ''}
                 </div>
                 <div className={classes.title}>Enter The Unplanned Demand By Appointment Slot</div>
                 <div>

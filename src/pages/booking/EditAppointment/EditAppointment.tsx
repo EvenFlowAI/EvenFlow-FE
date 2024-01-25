@@ -22,7 +22,6 @@ import {
     setUserType,
     setVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import moment from "moment";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {useTranslation} from "react-i18next";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
@@ -105,7 +104,7 @@ export const EditAppointment = () => {
                 const [hours, minutes] = data.timeSlot.split(":");
                 const formattedDate = dayjs(data.dateInUtc).format()
                 const dateTime = dayjs.utc(formattedDate).hour(+hours).minute(+minutes).format(dateTimeFormat)
-                if (moment.utc().diff(dateTime) >= 0) {
+                if (dayjs.utc().diff(dateTime) >= 0) {
                     setState("passed");
                     return;
                 }

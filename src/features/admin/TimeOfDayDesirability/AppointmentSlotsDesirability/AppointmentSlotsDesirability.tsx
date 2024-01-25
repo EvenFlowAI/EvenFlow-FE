@@ -22,7 +22,6 @@ import {
 import {RootState} from "../../../../store/rootReducer";
 import {CheckBoxOutlined} from "@mui/icons-material";
 import {Caption} from "../../../../components/wrappers/Caption/Caption";
-import moment from "moment";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {useStyles} from "./styles";
 import {TForm} from "./types";
@@ -34,6 +33,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
+import dayjs from "dayjs";
 
 const initialForm = {
     timeSlotType: ETimeSlotType.ThirtyMinutes,
@@ -138,8 +138,8 @@ export const AppointmentSlotsDesirability = () => {
                         {
                             ...i,
                             index: i.idx,
-                            start: moment(i.start).format('HH:mm:SS'),
-                            end: moment(i.end).format('HH:mm:SS')
+                            start: dayjs(i.start).format('HH:mm:SS'),
+                            end: dayjs(i.end).format('HH:mm:SS')
                         }
                         )),
                     form.timeSlotType, selectedSC.id, selectedPod?.id,

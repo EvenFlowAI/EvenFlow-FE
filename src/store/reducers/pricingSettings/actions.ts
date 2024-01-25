@@ -13,9 +13,9 @@ import {
 } from "./types";
 import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
-import moment from "moment";
 import {IPackageOptionShort, IPackageShort} from "../packages/types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
 
 export const setLoading = createAction<boolean>("PricingSettings/SetLoading");
 
@@ -107,8 +107,8 @@ export const loadTimeOfYearPricing = (serviceCenterId: number): AppThunk => asyn
         {
             params: {
                 serviceCenterId,
-                from: moment.utc().startOf("year").hour(0).minute(0).second(0).millisecond(0).toISOString(),
-                to: moment.utc().endOf("year").hour(0).minute(0).second(0).millisecond(0).toISOString()
+                from: dayjs.utc().startOf("year").hour(0).minute(0).second(0).millisecond(0).toISOString(),
+                to: dayjs.utc().endOf("year").hour(0).minute(0).second(0).millisecond(0).toISOString()
             }
         }
     );

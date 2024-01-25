@@ -242,7 +242,7 @@ export interface IAppointmentVehicle {
 }
 
 export type TDateAppointmentData = {
-    date: ParsableDate;
+    date: TParsableDate;
     scheduler: TScheduler;
 }
 
@@ -252,8 +252,8 @@ export interface IAppointment {
     appointmentNumber: string;
     appointmentStatus: AppointmentStatus;
     reportingStatus: EReportingStatus;
-    createdDateTime: ParsableDate;
-    dateTime: ParsableDate;
+    createdDateTime: TParsableDate;
+    dateTime: TParsableDate;
     customerInformation?: IAppointmentCustomerInfo;
     vehicle?: IAppointmentVehicle;
     serviceBook: TServiceBook;
