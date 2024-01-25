@@ -9,7 +9,6 @@ import {decodeSCID} from "../../../utils/utils";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {Button, Divider} from "@mui/material";
-import moment from "moment";
 import {
     checkCarIsValid,
     setAdditionalServicesChosen,
@@ -21,6 +20,7 @@ import {CustomSwitch, Label, useStyles} from "./styles";
 import {IRecallByVin} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
+import dayjs from "dayjs";
 
 type TRecallsByVinProps = DialogProps & {
     handleNext : () => void,
@@ -129,7 +129,7 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
                                 <div className={classes.recallDetailsWrapper}>
                                     <div>
                                         <div className={classes.label}>{t("Recall Open Date")}</div>
-                                        <div className={classes.data}>{moment(item.recallOpenDate).format("MMM DD, YYYY")}</div>
+                                        <div className={classes.data}>{dayjs(item.recallOpenDate).format("MMM DD, YYYY")}</div>
                                     </div>
                                     <div>
                                         <div className={classes.label}>{t("NHTSA Recall Number")}</div>

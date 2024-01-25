@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {AppointmentConfirmationTitle} from "../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
-import moment from "moment";
 import {Edit} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -90,16 +89,16 @@ export const AppointmentSelectedDate: React.FC<React.PropsWithChildren<React.Pro
             ? <div>
                 <div>
                     <span style={{fontWeight: 'bold'}}>{t("Pick Up Time")}: </span>
-                    <span> {moment.utc(serviceValetTime?.pickUpMin, "HH:mm:ss").format('hh:mm A')}</span>
+                    <span> {dayjs.utc(serviceValetTime?.pickUpMin, "HH:mm:ss").format('hh:mm A')}</span>
                     <span> {t("to")} </span>
-                    <span> {moment.utc(serviceValetTime?.pickUpMax, "HH:mm:ss").format('hh:mm A')}</span>
+                    <span> {dayjs.utc(serviceValetTime?.pickUpMax, "HH:mm:ss").format('hh:mm A')}</span>
                 </div>
                 {dropOffSettings?.showDropOffTime && serviceValetTime?.dropOffMin && serviceValetTime?.dropOffMax
                     ? <div>
                         <span style={{fontWeight: 'bold'}}>{t("Drop Off Time")}: </span>
-                        <span> {moment.utc(serviceValetTime?.dropOffMin, "HH:mm:ss").format('hh:mm A')}</span>
+                        <span> {dayjs.utc(serviceValetTime?.dropOffMin, "HH:mm:ss").format('hh:mm A')}</span>
                         <span> {t("to")} </span>
-                        <span> {moment.utc(serviceValetTime?.dropOffMax, "HH:mm:ss").format('hh:mm A')}</span>
+                        <span> {dayjs.utc(serviceValetTime?.dropOffMax, "HH:mm:ss").format('hh:mm A')}</span>
                     </div>
                     : null}
             </div>

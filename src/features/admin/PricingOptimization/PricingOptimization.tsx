@@ -5,7 +5,6 @@ import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceReque
 import {useDispatch, useSelector} from "react-redux";
 import {PaperTitle, TableContainer} from "../../../pages/admin/PricingSettings/UI";
 import {Box, Divider, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
-import moment from "moment";
 import {mappedCalculationsSelector} from "../../../store/reducers/pricingSettings/selectors";
 import {
     demandCategories,
@@ -23,6 +22,7 @@ import {DenseTable} from "../../../components/styled/DemandTable";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {TEnumMap} from "../../../store/reducers/types";
+import dayjs from "dayjs";
 
 export const PricingOptimization = () => {
     const [sr, setSr] = useState<IAssignedServiceRequestShort|null>(null);
@@ -120,7 +120,7 @@ export const PricingOptimization = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {moment.weekdays().map((wd, idx) => {
+                            {dayjs.weekdays().map((wd, idx) => {
                                 return <TableRow key={wd}>
                                     <TableCell>{wd}</TableCell>
                                     <TableCell align="center">

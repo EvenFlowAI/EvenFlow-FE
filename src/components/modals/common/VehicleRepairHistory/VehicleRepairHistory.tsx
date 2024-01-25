@@ -5,11 +5,11 @@ import {loadRepairHistory} from "../../../../store/reducers/enhancedCustomerSear
 import {BaseModal, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {DialogProps} from "../../BaseModal/types";
 import {Button, Divider, Table, TableBody, TableHead, TableRow} from "@mui/material";
-import moment from "moment";
 import {Loading} from "../../../wrappers/Loading/Loading";
 import classnames from 'classnames';
 import {NoData} from "../../../wrappers/NoData/NoData";
 import {HCell, TCell, useStyles} from "./styles";
+import dayjs from "dayjs";
 
 const VehicleRepairHistory: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {vehicleDmsId: string}>>> = ({vehicleDmsId, open, onClose}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -77,7 +77,7 @@ const VehicleRepairHistory: React.FC<React.PropsWithChildren<React.PropsWithChil
                                             {item.number ? `#${item.number}` : ''}
                                         </div>
                                         <div className={classnames(classes.titleNonUpperCase, classes.padding)}>
-                                            {moment(item.date.split('T')[0]).format('dddd, MMMM DD, YYYY')}
+                                            {dayjs(item.date.split('T')[0]).format('dddd, MMMM DD, YYYY')}
                                         </div>
                                     </div>
                                     <div className={classes.padding}>

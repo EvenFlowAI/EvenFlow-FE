@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {DialogTitle, DialogContent, BaseModal, DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {ITimeRangeAndCapacity} from "../../../../store/reducers/capacityServiceValet/types";
-import moment from "moment";
 import {Button, Divider, Grid} from "@mui/material";
 import {AccessTime} from "@mui/icons-material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
@@ -60,7 +59,7 @@ const EditTimeRangeAndCapacityModal: React.FC<React.PropsWithChildren<React.Prop
 
     const handleChangePickUpMax = (date: TParsableDate) => {
         setFormIsChecked(false)
-        if (moment(dayjs(pickUpMin).toDate()).diff(moment(dayjs(date).toDate())) <= 0) {
+        if (dayjs(pickUpMin).diff(dayjs(date)) <= 0) {
             setPickUpMax(dayjs(date))
         } else {
             showError('Pick Up Max Value must be more than Pick Up Min Value')
@@ -74,7 +73,7 @@ const EditTimeRangeAndCapacityModal: React.FC<React.PropsWithChildren<React.Prop
 
     const handleChangeDropOffMax = (date: TParsableDate) => {
         setFormIsChecked(false)
-        if (moment(dayjs(dropOffMin).toDate()).diff(moment(dayjs(date).toDate())) <= 0) {
+        if (dayjs(dropOffMin).diff(dayjs(date)) <= 0) {
             setDropOffMax(dayjs(date))
         } else {
             showError('Drop Off Max Value must be more than Drop Off Min Value')
@@ -117,7 +116,7 @@ const EditTimeRangeAndCapacityModal: React.FC<React.PropsWithChildren<React.Prop
     return (
         <BaseModal onClose={onCancel} open={open} width={575}>
             <DialogTitle onClose={onCancel}>Edit Time Ranges & Capacity of
-                <span style={{color: '#7898FF'}}> {editingElement.dayOfWeek ? moment().set('day', editingElement.dayOfWeek).format('dddd').toUpperCase() : ''}
+                <span style={{color: '#7898FF'}}> {editingElement.dayOfWeek ? dayjs().set('day', editingElement.dayOfWeek).format('dddd').toUpperCase() : ''}
                 </span></DialogTitle>
             <DialogContent style={{padding: '16px 120px'}}>
                 <Grid container spacing={4}>

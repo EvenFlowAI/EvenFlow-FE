@@ -1,6 +1,5 @@
 import React from 'react';
 import {TCallback} from "../../../../../types/types";
-import moment from "moment";
 import {TGroupedAppointment, TGroupedAppointments} from "../../../../../utils/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
@@ -36,7 +35,7 @@ export const DaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChil
 
     const getLabel = () => {
         if (isXs) {
-            return moment.utc(day).format("D");
+            return dayjs.utc(day).format("D");
         }
         if (isCurrent) {
             if (appointment) {
@@ -61,7 +60,7 @@ export const DaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChil
 
     const isOffPeak = Boolean(appointment?.amountOfSavingMoney);
     const getDayNameString = (): string => {
-        const name = moment.utc(day).format('ddd').toLowerCase();
+        const name = dayjs.utc(day).format('ddd').toLowerCase();
         return name.charAt(0).toUpperCase() + name.slice(1);
     }
 
@@ -71,7 +70,7 @@ export const DaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChil
             isOffPeak={isOffPeak}
         >
         <div className="dayName">{getDayNameString()}</div>
-        <div>{moment.utc(day).format(isXs ? XsMontFormat : monthFormat)}</div>
+        <div>{dayjs.utc(day).format(isXs ? XsMontFormat : monthFormat)}</div>
         <div className="day" onClick={onClick}>
             {isCurrent ? <CalendarIconWhite/> : <CalendarIcon/>}
             {getLabel()}

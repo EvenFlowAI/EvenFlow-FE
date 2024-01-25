@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {ITimeRangeAndCapacity} from "../../../store/reducers/capacityServiceValet/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import moment from "moment";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {Table} from "../../../components/tables/Table/Table";
 import {Button} from "@mui/material";
@@ -13,6 +12,7 @@ import {TableRowDataType} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {time24HourFormat} from "../../../utils/constants";
+import dayjs from "dayjs";
 
 const TimeRangesAndCapacity = () => {
     const {timeRangesAndCapacity, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
@@ -34,10 +34,10 @@ const TimeRangesAndCapacity = () => {
                     return {
                         serviceCenterId: selectedSC.id,
                         dayOfWeek: day,
-                        pickUpMin: timeRange?.pickUpMin ? moment(timeRange?.pickUpMin, timeWithSecond).format(time24HourFormat) : '-',
-                        pickUpMax: timeRange?.pickUpMax ? moment(timeRange?.pickUpMax, timeWithSecond).format(time24HourFormat) : '-',
-                        dropOffMin: timeRange?.dropOffMin ? moment(timeRange?.dropOffMin, timeWithSecond).format(time24HourFormat) : '-',
-                        dropOffMax: timeRange?.dropOffMax ? moment(timeRange?.dropOffMax, timeWithSecond).format(time24HourFormat) : '-',
+                        pickUpMin: timeRange?.pickUpMin ? dayjs(timeRange?.pickUpMin, timeWithSecond).format(time24HourFormat) : '-',
+                        pickUpMax: timeRange?.pickUpMax ? dayjs(timeRange?.pickUpMax, timeWithSecond).format(time24HourFormat) : '-',
+                        dropOffMin: timeRange?.dropOffMin ? dayjs(timeRange?.dropOffMin, timeWithSecond).format(time24HourFormat) : '-',
+                        dropOffMax: timeRange?.dropOffMax ? dayjs(timeRange?.dropOffMax, timeWithSecond).format(time24HourFormat) : '-',
                         capacity: timeRange?.capacity ?? 0,
                         id: timeRange?.id ?? 0,
                     }
@@ -54,7 +54,7 @@ const TimeRangesAndCapacity = () => {
     const RowData: TableRowDataType<ITimeRangeAndCapacity>[] = [
             {
                 header: 'Day Of Week'.toUpperCase(),
-                val: el => el.dayOfWeek?.toString().length ? moment().set('day', el.dayOfWeek).format('dddd') : '',
+                val: el => el.dayOfWeek?.toString().length ? dayjs().set('day', el.dayOfWeek).format('dddd') : '',
             },
             {
                 header: 'Pick Up Min'.toUpperCase(),
