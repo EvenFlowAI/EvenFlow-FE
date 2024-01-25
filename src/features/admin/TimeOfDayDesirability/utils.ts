@@ -35,8 +35,8 @@ export const generateSlots = (gap: ETimeSlotType,
     if (org === undefined) {
         org = gap;
     }
-    const start = dayjs(startTime ?? "8:00:00", inpFormat);
-    const end = dayjs(endTime ?? "18:00:00", inpFormat);
+    const start = dayjs.utc(startTime ?? "8:00:00", inpFormat);
+    const end = dayjs.utc(endTime ?? "18:00:00", inpFormat);
     const gapMinutes: number = gapToMin(gap);
     const gapOrg: number = gapToMin(org);
     const mappedItems = items.reduce((acc, i) => {
@@ -48,9 +48,9 @@ export const generateSlots = (gap: ETimeSlotType,
 
     const idxMod = orgSlotsCount / (slotsCount ? slotsCount : 1);
     const slots: TSlot[] = [];
-    let st = dayjs(start);
+    let st = dayjs.utc(start);
 
-    let nd = dayjs(st).add(gapMinutes, "minutes");
+    let nd = dayjs.utc(st).add(gapMinutes, "minutes");
     if (startTime && endTime && items.length) {
         for (let i=1; i <= slotsCount; i++) {
             const idx = i-1;
@@ -60,8 +60,8 @@ export const generateSlots = (gap: ETimeSlotType,
                 id: idxMod === 1 ? mappedItems[idxToLook]?.id : undefined,
                 desirability: mappedItems[idxToLook]
                     ? items[idxToLook].desirability : EDesirabilityState.Neutral,
-                start: items[idx]?.start && !createNewSlots ? dayjs(items[idx].start, 'HH:mm:SS') : dayjs(st),
-                end: items[idx]?.end && !createNewSlots ? dayjs(items[idx].end, 'HH:mm:SS') : dayjs(nd)
+                start: items[idx]?.start && !createNewSlots ? dayjs.utc(items[idx].start, 'HH:mm:SS') : dayjs.utc(st),
+                end: items[idx]?.end && !createNewSlots ? dayjs.utc(items[idx].end, 'HH:mm:SS') : dayjs.utc(nd)
             });
             st = st.add(gapMinutes, "minutes");
             nd = nd.add(gapMinutes, "minutes");

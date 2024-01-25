@@ -63,7 +63,7 @@ export const EmployeeScheduleCalendar = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadWorkingDays(selectedSC.id));
-            dispatch(loadWeeklyHolidaysList(dayjs.utc(daysOfWeek[0]).toISOString(), dayjs.utc(daysOfWeek[daysOfWeek.length-1]).toISOString()));
+            dispatch(loadWeeklyHolidaysList(dayjs(daysOfWeek[0]).toISOString(), dayjs(daysOfWeek[daysOfWeek.length-1]).toISOString()));
         }
     }, [daysOfWeek, selectedSC]);
 

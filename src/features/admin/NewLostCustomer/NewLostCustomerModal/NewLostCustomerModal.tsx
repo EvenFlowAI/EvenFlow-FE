@@ -75,7 +75,7 @@ export const NewLostCustomerModal: React.FC<React.PropsWithChildren<React.PropsW
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={props.onClose} color="info">Cancel</Button>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave}

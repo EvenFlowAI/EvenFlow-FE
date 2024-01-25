@@ -74,7 +74,7 @@ export const EndOfWarrantyModal: React.FC<React.PropsWithChildren<React.PropsWit
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Cancel
             </Button>
             <LoadingButton

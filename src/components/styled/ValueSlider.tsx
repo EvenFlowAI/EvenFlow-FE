@@ -34,7 +34,7 @@ export const ValueSlider = withStyles(theme => ({
     },
     valueLabel: {
         top: 15,
-        left: -8,
+        left: -22,
         backgroundColor: 'transparent',
         transition: theme.transitions.create(["box-shadow"]),
         '&:focus, &:hover, &:active': {

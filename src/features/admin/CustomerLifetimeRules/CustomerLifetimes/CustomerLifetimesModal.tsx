@@ -106,7 +106,7 @@ export const CustomerLifetimesModal: React.FC<React.PropsWithChildren<React.Prop
             </FormGroup>
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Cancel
             </Button>
             <LoadingButton

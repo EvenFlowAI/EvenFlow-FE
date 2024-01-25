@@ -120,7 +120,7 @@ export const EditDemandSegmentsModal:React.FC<React.PropsWithChildren<React.Prop
             })}
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Cancel
             </Button>
             <LoadingButton loading={isSaving} onClick={handleSave}>
