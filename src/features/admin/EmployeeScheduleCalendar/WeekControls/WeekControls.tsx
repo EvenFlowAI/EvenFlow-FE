@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {Button} from "@mui/material";
 import {ChevronLeft, ChevronRight} from "@mui/icons-material";
-import moment from "moment";
 import {getFirstLastDaysOfWeek} from "../utils";
 import {useStyles} from "./styles";
 import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/CustomDatePicker";
@@ -10,8 +9,8 @@ import {TParsableDate} from "../../../../types/types";
 
 type TProps = {
     isXS: boolean;
-    selectedDate: moment.Moment;
-    onChange: (date: moment.Moment) => void;
+    selectedDate: TParsableDate;
+    onChange: (date: TParsableDate) => void;
 }
 
 export const WeekControls: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({selectedDate, isXS, onChange}) => {
@@ -19,11 +18,11 @@ export const WeekControls: React.FC<React.PropsWithChildren<React.PropsWithChild
     const classes = useStyles();
 
     const handleLeft = () => {
-        onChange(moment(selectedDate).subtract(!isXS ? 7 : 1, "days"));
+        onChange(dayjs(selectedDate).subtract(!isXS ? 7 : 1, "days"));
     }
 
     const handleRight = () => {
-        onChange(moment(selectedDate).add(!isXS ? 7 : 1, "days"));
+        onChange(dayjs(selectedDate).add(!isXS ? 7 : 1, "days"));
     }
 
     const handleOpen = (s: boolean) => () => {
@@ -31,7 +30,7 @@ export const WeekControls: React.FC<React.PropsWithChildren<React.PropsWithChild
     }
 
     const handleDateChange = (date: TParsableDate) => {
-        onChange(moment(dayjs(date).toDate()));
+        onChange(date);
     }
 
     return (
@@ -53,7 +52,7 @@ export const WeekControls: React.FC<React.PropsWithChildren<React.PropsWithChild
                     style:{display: "none"}
                 }}
                 onAccept={handleDateChange}
-                value={dayjs(selectedDate.toDate())}
+                value={selectedDate}
             />
         </div>
     );

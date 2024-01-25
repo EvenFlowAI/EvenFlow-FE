@@ -2,42 +2,43 @@ import React from "react";
 import moment from "moment";
 import {ISchedule} from "../../../store/reducers/schedules/types";
 import {timeSpanString, time12HourFormat} from "../../../utils/constants";
-import {ParsableDate} from "../../../types/types";
+import {ParsableDate, TParsableDate} from "../../../types/types";
+import dayjs from "dayjs";
 
-export const getDaysOfWeek = (date: moment.Moment, isXS: boolean): moment.Moment[] => {
+export const getDaysOfWeek = (date: TParsableDate, isXS: boolean): TParsableDate[] => {
     if (isXS) {
-        return [moment.utc(date).startOf("day")];
+        return [dayjs.utc(date).startOf("day")];
     }
     const days = [];
-    const weekStart = moment.utc(date).startOf("week");
+    const weekStart = dayjs.utc(date).startOf("week");
     for (let i=1; i<=7; i++) {
-        days.push(moment(weekStart).add(i, "days"));
+        days.push(dayjs(weekStart).add(i, "days"));
     }
     return days;
 }
-export const getFirstLastDaysOfWeek = (date: moment.Moment, isSingle: boolean): string => {
+export const getFirstLastDaysOfWeek = (date: TParsableDate, isSingle: boolean): string => {
     if (isSingle) {
-        return date.format("ddd, MMM D YYYY");
+        return dayjs(date).format("ddd, MMM D YYYY");
     }
-    const weekStart = moment(date).startOf("week").add(1, 'days');
-    const weekEnd = moment(date).endOf("week").add(1, 'days');
+    const weekStart = dayjs(date).startOf("week").add(1, 'days');
+    const weekEnd = dayjs(date).endOf("week").add(1, 'days');
     return `${weekStart.format("MMM D")} - ${weekEnd.format("MMM D")}`;
 }
 
-export const getSchedule = (date: moment.Moment, schedules: ISchedule[]): ISchedule|undefined => {
+export const getSchedule = (date: TParsableDate, schedules: ISchedule[]): ISchedule|undefined => {
     const data = schedules.filter(s => {
-       return moment(s.date).isSame(moment(date), 'day')
+       return dayjs(s.date).isSame(dayjs(date), 'day')
     });
     return data.find(d => d.isLastSet);
 }
 
-export const findScheduleDates = (date: moment.Moment, schedules: ISchedule[], isWorkingDay: boolean): JSX.Element|string => {
+export const findScheduleDates = (date: TParsableDate, schedules: ISchedule[], isWorkingDay: boolean): JSX.Element|string => {
     const schedule = getSchedule(date, schedules);
     if (schedule && isWorkingDay) {
         return <>
-            <span className="nowrap">{moment(schedule.startAt, timeSpanString).format(time12HourFormat)}</span>
+            <span className="nowrap">{dayjs(schedule.startAt, timeSpanString).format(time12HourFormat)}</span>
             <span> - </span>
-            <span className="nowrap">{moment(schedule.finishAt, timeSpanString).format(time12HourFormat)}</span>
+            <span className="nowrap">{dayjs(schedule.finishAt, timeSpanString).format(time12HourFormat)}</span>
         </>
     }
     return "-"

@@ -16,10 +16,11 @@ import {ETransportationType} from "../store/reducers/transportationNeeds/types";
 import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
 import {EOfferType} from "../store/reducers/offers/types";
 import {EPackagePricingType, IValueService} from "../store/reducers/appointmentFrameReducer/types";
-import {IMaintenanceItem, IRecallByVin} from "../types/types";
+import {IMaintenanceItem, IRecallByVin, TParsableDate} from "../types/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
 import i18n from "../i18n";
 import {TOption} from "./types";
+import dayjs from "dayjs";
 
 export const getInitials = (name?: string) => {
     if (!name) {
@@ -191,20 +192,20 @@ export const getTransportationOptionString = (option: string) => {
     return array.join('');
 }
 
-export const getStartEndDates = (date: moment.Moment, isXS: boolean): [string, string] => {
-    const utcOffset = moment(date).utcOffset();
+export const getStartEndDates = (date: TParsableDate, isXS: boolean): [string, string] => {
+    const utcOffset = dayjs(date).utcOffset();
     if (isXS) {
         return [
-            moment(date).startOf("day").add(utcOffset, 'minutes').toISOString(),
-            moment(date).endOf("day").add(utcOffset, 'minutes').toISOString()
+            dayjs.utc(date).startOf("day").add(utcOffset, 'minute').toISOString(),
+            dayjs.utc(date).endOf("day").add(utcOffset, 'minute').toISOString()
         ]
     }
     let correctedDate = date;
-    const dayOfWeek = moment(date).day();
-    if (dayOfWeek === 0) correctedDate = moment(date).subtract('1', 'days');
+    const dayOfWeek = dayjs(date).day();
+    if (dayOfWeek === 0) correctedDate = dayjs(date).subtract(1, 'day');
     return [
-        moment(correctedDate).startOf("week").add(1, 'days').add(utcOffset, 'minutes').toISOString(),
-        moment(correctedDate).endOf("week").add(1, 'days').add(utcOffset, 'minutes').toISOString(),
+        dayjs(correctedDate).startOf("week").add(1, 'days').add(utcOffset, 'minute').toISOString(),
+        dayjs(correctedDate).endOf("week").add(1, 'days').add(utcOffset, 'minute').toISOString(),
     ]
 }
 

@@ -10,7 +10,6 @@ import {
     useTheme
 } from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import moment from "moment";
 import {IEmployee} from "../../../../store/reducers/employees/types";
 import {ISchedule, IScheduleForm, IScheduleForWeek} from "../../../../store/reducers/schedules/types";
 import {timeSpanString} from "../../../../utils/constants";
@@ -38,8 +37,8 @@ import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/Cloc
 import {TParsableDate} from "../../../../types/types";
 
 type TProps = DialogProps<ISchedule> & {
-    selectedDate: moment.Moment;
-    date: moment.Moment;
+    selectedDate: TParsableDate;
+    date: TParsableDate;
     employee: IEmployee;
     onEmployeeUpdate: (id: string) => void;
     recursiveId?: number;
@@ -65,15 +64,15 @@ export const EditScheduleModal: React.FC<React.PropsWithChildren<React.PropsWith
 
     useEffect(() => {
         selectedSC && dispatch(loadWorkingDays(selectedSC.id))
-        dispatch(loadWeeklyHolidaysList(moment().startOf('week'), moment().endOf('week')))
+        dispatch(loadWeeklyHolidaysList(dayjs().startOf('week'), dayjs().endOf('week')))
     }, [selectedSC])
 
     useEffect(() => {
         if (props.open) {
             if (payload) {
                 setForm({
-                    timeStart: moment(payload.startAt, timeSpanString),
-                    timeEnd: moment(payload.finishAt, timeSpanString),
+                    timeStart: dayjs(payload.startAt, timeSpanString),
+                    timeEnd: dayjs(payload.finishAt, timeSpanString),
                     podId: payload.podId,
                 });
             } else {
@@ -90,7 +89,7 @@ export const EditScheduleModal: React.FC<React.PropsWithChildren<React.PropsWith
 
     const handleUpdate = (name: keyof TForm) => (date: TParsableDate) => {
         setFormIsChecked(false);
-        setForm({...form, [name]: moment(dayjs(date).toDate())});
+        setForm({...form, [name]: date});
     }
     const handleSelectPod = (e: SelectChangeEvent<number>) => {
         setFormIsChecked(false);
@@ -130,7 +129,7 @@ export const EditScheduleModal: React.FC<React.PropsWithChildren<React.PropsWith
             try {
                 const data: IScheduleForm = {
                     ...payload,
-                    date: date.toISOString(),
+                    date: dayjs(date).toISOString(),
                     employeeId: employee.id,
                     startAt: form.timeStart?.format(timeSpanString),
                     finishAt: form.timeEnd?.format(timeSpanString),
@@ -196,12 +195,12 @@ export const EditScheduleModal: React.FC<React.PropsWithChildren<React.PropsWith
                         label="Date"
                         fullWidth
                         disabled
-                        value={date.format("MMM D, YYYY")}
+                        value={dayjs(date).format("MMM D, YYYY")}
                     />
                 </Grid>
                 <Grid item xs={6}>
                     <ClockTimePicker
-                        value={dayjs(form.timeStart?.toDate())}
+                        value={form.timeStart}
                         label="Starts at"
                         fullWidth
                         onChange={handleUpdate("timeStart")}
@@ -215,7 +214,7 @@ export const EditScheduleModal: React.FC<React.PropsWithChildren<React.PropsWith
                 </Grid>
                 <Grid item xs={6}>
                     <ClockTimePicker
-                        value={dayjs(form.timeEnd?.toDate())}
+                        value={form.timeEnd}
                         InputProps={{
                             endAdornment: <QueryBuilder color={"disabled"} cursor="pointer"/>
                         }}
@@ -256,13 +255,13 @@ export const EditScheduleModal: React.FC<React.PropsWithChildren<React.PropsWith
                         variant="outlined"
                         onClick={handleClear("recursiveId")}
                         startIcon={<Close />}>
-                        Clear schedule for {date.format("dddd")}
+                        Clear schedule for {dayjs(date).format("dddd")}
                     </LoadingButton> : <LoadingButton
                         onClick={handleClear("customId")}
                         startIcon={<Close />}
                         variant="outlined"
                         color="secondary">
-                        Clear schedule for {date.format("MMM D, YYYY")}
+                        Clear schedule for {dayjs(date).format("MMM D, YYYY")}
                     </LoadingButton>}
                 </Grid>
                     : null}
@@ -274,13 +273,13 @@ export const EditScheduleModal: React.FC<React.PropsWithChildren<React.PropsWith
                 loading={saving}
                 onClick={handleSave(false)}
             >
-                Set for {date.format("MMM DD, YYYY")}
+                Set for {dayjs(date).format("MMM DD, YYYY")}
             </LoadingButton>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave(true)}
             >
-                Set for {date.format("dddd")}
+                Set for {dayjs(date).format("dddd")}
             </LoadingButton>
             <LoadingButton
                 loading={saving}
