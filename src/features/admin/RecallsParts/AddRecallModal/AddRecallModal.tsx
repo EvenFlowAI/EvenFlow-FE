@@ -168,7 +168,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     renderInput={autocompleteRender({
                         label: "Model",
                         error: formIsChecked && !form.model,
-                        placeholder: 'Select Chip'
+                        placeholder: 'Select Model'
                     })}
                 />
                 <Autocomplete

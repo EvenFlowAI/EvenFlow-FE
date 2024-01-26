@@ -74,7 +74,7 @@ export const CreateBayModal: React.FC<React.PropsWithChildren<React.PropsWithChi
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={props.onClose} color="info">Cancel</Button>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave}

@@ -121,7 +121,7 @@ const AddOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>
+                <Button onClick={handleClose} color="info">
                     Close
                 </Button>
                 {handleSave && (

@@ -70,7 +70,7 @@ export const ConfirmModal: React.FC<React.PropsWithChildren<React.PropsWithChild
                     variant="contained">
                     {payload.cancelContent}
                 </LoadingButton>
-                : <Button onClick={onClose}>
+                : <Button onClick={onClose} color="info">
                     {payload.cancelContent ?? "Cancel"}
                 </Button>}
 

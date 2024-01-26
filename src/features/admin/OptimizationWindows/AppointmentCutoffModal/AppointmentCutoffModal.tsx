@@ -107,7 +107,7 @@ export const AppointmentCutoffModal: React.FC<React.PropsWithChildren<React.Prop
             })}
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Close
             </Button>
             <LoadingButton

@@ -72,6 +72,7 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
             header: "Recall Summary",
             val: el => <Button
                 variant="text"
+                color="info"
                 style={{textTransform: "none", textDecoration: "underline"}}
                 onClick={() => onSummaryClick(el)}>
                 See Recall Summary

@@ -112,7 +112,7 @@ export const RequiredSkillsModal: React.FC<React.PropsWithChildren<React.PropsWi
             </FormGroup>
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={props.onClose} color="info">Cancel</Button>
             <LoadingButton
                 loading={loading}
                 color="primary"

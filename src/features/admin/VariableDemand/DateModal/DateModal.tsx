@@ -108,7 +108,7 @@ export const DateModal: React.FC<React.PropsWithChildren<React.PropsWithChildren
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Close
             </Button>
             <LoadingButton

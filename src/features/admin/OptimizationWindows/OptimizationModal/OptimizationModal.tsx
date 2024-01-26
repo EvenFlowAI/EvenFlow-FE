@@ -71,7 +71,7 @@ export const OptimizationModal: React.FC<TProps> = ({
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={props.onClose} color="info">Cancel</Button>
             <LoadingButton
                 onClick={handleSave}
                 loading={saving}

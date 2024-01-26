@@ -53,7 +53,7 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
                 variant="outlined">
                 Edit
             </Button>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Close
             </Button>
         </DialogActions>

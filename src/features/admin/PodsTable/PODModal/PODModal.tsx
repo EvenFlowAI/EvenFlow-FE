@@ -534,7 +534,7 @@ export const PODModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={props.onClose}>
+                <Button onClick={props.onClose} color="info">
                     Cancel
                 </Button>
                 <LoadingButton

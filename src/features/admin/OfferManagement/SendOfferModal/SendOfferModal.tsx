@@ -124,7 +124,7 @@ export const SendOfferModal: React.FC<React.PropsWithChildren<React.PropsWithChi
             </Grid>
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Cancel
             </Button>
             <LoadingButton

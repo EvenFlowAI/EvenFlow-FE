@@ -329,7 +329,7 @@ export const OfferModal:React.FC<React.PropsWithChildren<React.PropsWithChildren
                     onCategoryChange={onCategoryChange}
                 />}
             <DialogActions>
-                <Button onClick={onCancel}>Cancel</Button>
+                <Button onClick={onCancel} color="info">Cancel</Button>
                 {viewMode ?
                     <>
                         <Button onClick={askRemove} color="secondary" variant="outlined">Delete</Button>

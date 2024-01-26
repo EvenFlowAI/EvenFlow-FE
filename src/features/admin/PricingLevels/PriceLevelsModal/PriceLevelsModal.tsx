@@ -67,7 +67,7 @@ export const PriceLevelsModal: React.FC<React.PropsWithChildren<React.PropsWithC
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Close</Button>
+            <Button onClick={props.onClose} color="info">Close</Button>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave}

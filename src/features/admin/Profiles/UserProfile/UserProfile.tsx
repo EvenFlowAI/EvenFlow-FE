@@ -160,6 +160,7 @@ export const UserProfile = () => {
                         <Button
                             style={{marginRight: 10}}
                             className={classes.centerButton}
+                            color="info"
                             onClick={handleCancel}>
                             Cancel
                         </Button>
@@ -251,6 +252,7 @@ export const UserProfile = () => {
                     <Button
                         style={{marginRight: 10}}
                         className={classes.centerButton}
+                        color="info"
                         onClick={cancelPasswordEdit}>
                         Cancel
                     </Button>

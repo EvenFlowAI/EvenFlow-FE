@@ -55,7 +55,7 @@ export const BookingModal: React.FC<React.PropsWithChildren<React.PropsWithChild
                 readOnly
                 value={link}
                 endAdornment={<ButtonGroup variant="text">
-                    <Button onClick={copyUrl}>Copy</Button>
+                    <Button onClick={copyUrl} color="info">Copy</Button>
                     <Button color="primary" onClick={handleGoTo}>Open</Button>
                 </ButtonGroup>}
                 fullWidth />
@@ -66,7 +66,7 @@ export const BookingModal: React.FC<React.PropsWithChildren<React.PropsWithChild
                 readOnly
                 fullWidth
                 multiline
-                endAdornment={<Button onClick={copyFrame}>Copy</Button>}
+                endAdornment={<Button onClick={copyFrame} color="info">Copy</Button>}
                 value={frame}
                 rows={4}
             />

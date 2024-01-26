@@ -100,7 +100,7 @@ export const WorkWeekModal: React.FC<React.PropsWithChildren<React.PropsWithChil
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={props.onClose}>Close</Button>
+                <Button onClick={props.onClose} color="info">Close</Button>
                 <LoadingButton
                     loading={saving}
                     onClick={handleSave}

@@ -131,6 +131,7 @@ export const DealershipGroupProfile = () => {
                     <Button
                         style={{marginRight: 10}}
                         className={classes.centerButton}
+                        color="info"
                         onClick={handleCancel}>
                         Cancel
                     </Button>

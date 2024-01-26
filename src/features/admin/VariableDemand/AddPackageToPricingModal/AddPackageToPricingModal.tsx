@@ -94,7 +94,7 @@ const AddPackageToPricingModal: React.FC<React.PropsWithChildren<React.PropsWith
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>
+                <Button onClick={handleClose} color="info">
                     Close
                 </Button>
                 <Button onClick={handleSave} color="primary" variant="contained">
