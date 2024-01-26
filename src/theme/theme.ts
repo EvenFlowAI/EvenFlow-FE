@@ -166,24 +166,33 @@ export const frameTheme: Theme = (theme: Theme) => createTheme({
             main: "#000000"
         }
     },
+    components: {
+        ...theme.components,
+        MuiButton: {
+            styleOverrides: {
+                ...theme.components?.MuiButton?.styleOverrides,
+                root: {
+                    borderRadius: 0,
+                    fontWeight: "bold"
+                }
+            }
+        },
+        MuiInput: {
+            styleOverrides: {
+                ...theme.components?.MuiInput?.styleOverrides,
+                root: {
+                    "&.Mui-error": {
+                        borderColor: "#FF0000",
+                        color: "#FF0000"
+                    }
+                }
+            }
+        }
+    }
 });
 
 frameTheme.components = {
-    ...frameTheme.components,
-    MuiButton: {
-       styleOverrides: {
-           root: {
-               borderRadius: 0
-           }
-       }
-    },
-    MuiInput: {
-      styleOverrides: {
-          error: {
-              borderColor: "#FF0000",
-              color: "#FF0000"
-          }
-      }
-    }
+
+
 }
 export default theme;

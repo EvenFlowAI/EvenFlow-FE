@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { CssBaseline, ThemeProvider, Theme, StyledEngineProvider } from "@mui/material";
 import './index.css';
 import App from './App';
@@ -30,8 +30,10 @@ declare module '@mui/styles/defaultTheme' {
   interface DefaultTheme extends Theme {}
 }
 
+const container = document.getElementById('root');
+const root = createRoot(container!);
 
-ReactDOM.render(
+root.render(
     <React.StrictMode>
         <Provider store={store}>
                 <StyledEngineProvider injectFirst>
@@ -45,8 +47,7 @@ ReactDOM.render(
                     </ThemeProvider>
                 </StyledEngineProvider>
         </Provider>
-    </React.StrictMode>,
-    document.getElementById('root')
+    </React.StrictMode>
 );
 
 
