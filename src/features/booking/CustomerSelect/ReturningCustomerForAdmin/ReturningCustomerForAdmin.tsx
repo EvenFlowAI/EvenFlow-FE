@@ -155,6 +155,7 @@ const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWit
                 <TextField
                     onKeyUp={onKeyUp}
                     name="firstName"
+                    variant="standard"
                     placeholder={t("Enter First Name")}
                     error={formIsChecked && (customerSearchData.firstName.length === 1 || !formIsValid)}
                     onChange={onTextChange('firstName')}
@@ -165,6 +166,7 @@ const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWit
                 <TextField
                     onKeyUp={onKeyUp}
                     name="lastName"
+                    variant="standard"
                     placeholder={t("Enter Last Name")}
                     error={formIsChecked && (customerSearchData.lastName.length === 1 || !formIsValid)}
                     onChange={onTextChange('lastName')}
@@ -208,6 +210,7 @@ const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWit
                         onChange={onTextChange('address')}
                         InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.address.length ?  <LoadingProcess /> : null }}
                         fullWidth
+                        variant="standard"
                         name="address"
                         disabled={isLoading}
                         style={{ marginBottom: 16 }}
@@ -216,6 +219,7 @@ const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWit
                     <TextField
                         onKeyUp={onKeyUp}
                         placeholder={t("Enter Last 8 VIN digits")}
+                        variant="standard"
                         error={formIsChecked &&
                             ((!!customerSearchData.lastVINCharacters.length && customerSearchData.lastVINCharacters.length < 8)
                                 || !formIsValid)}
