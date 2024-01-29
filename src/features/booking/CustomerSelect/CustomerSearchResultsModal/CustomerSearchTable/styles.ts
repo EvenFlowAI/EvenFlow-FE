@@ -3,26 +3,16 @@ import { styled, Tooltip } from "@mui/material";
 
 import withStyles from '@mui/styles/withStyles';
 
-export const CustomTableWrapper = styled("div")<{columnsCount: number}>(({theme, columnsCount}) => ({
-    width: columnsCount > 10 ? columnsCount * 150 : 1550,
-    overflowX: 'auto',
-    marginTop: 16,
-    borderTop: '1px solid #DADADA',
-    borderLeft: '1px solid #DADADA',
-    borderCollapse: 'unset',
-}))
-
 export const useStyles = makeStyles(() => ({
     tableWrapper: {
     },
-    wrapper: ({columnsCount}: {columnsCount: number}) => ({
-        width: columnsCount > 10 ? columnsCount * 150 : 1550,
+    wrapper: {
         overflowX: 'auto',
         marginTop: 16,
         borderTop: '1px solid #DADADA',
         borderLeft: '1px solid #DADADA',
         borderCollapse: 'unset',
-    }),
+    },
     emptyWrapper: {
         height: 500,
         display: 'flex',

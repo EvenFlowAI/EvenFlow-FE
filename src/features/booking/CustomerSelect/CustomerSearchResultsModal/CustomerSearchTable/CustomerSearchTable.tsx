@@ -305,7 +305,9 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
         ? <div className={classes.emptyWrapper}><Loading/></div>
         : <div style={{overflowX: 'auto'}}>
             <div className={classes.tableWrapper}>
-                <Table className={classes.wrapper}>
+                <Table
+                    className={classes.wrapper}
+                    style={{width: selectedColumns.length > 10 ? selectedColumns.length * 150 : 1550}}>
                     <TableHead>
                         <TableRow>
                             <TableCell className={classes.stickyTHeadCell}/>
