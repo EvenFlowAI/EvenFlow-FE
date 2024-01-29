@@ -1,15 +1,17 @@
 import makeStyles from '@mui/styles/makeStyles';
+import {styled} from "@mui/material";
 
 export type TStyleProps = {
     fw: boolean;
 }
 
+export const Wrapper = styled("div")<TStyleProps>(({theme, fw}) => ({
+    position: "relative",
+    width: fw ? "100%" : "auto",
+    display: "inline-flex"
+}))
+
 export const useStyles = makeStyles({
-    wrapper: ({fw}: TStyleProps) => ({
-        position: "relative",
-        width: fw ? "100%" : "auto",
-        display: "inline-flex"
-    }),
     buttonProgress: {
         position: 'absolute',
         top: '50%',
