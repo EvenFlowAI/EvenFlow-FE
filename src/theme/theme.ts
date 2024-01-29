@@ -197,8 +197,4 @@ export const frameTheme: Theme = (theme: Theme) => createTheme({
     }
 });
 
-frameTheme.components = {
-
-
-}
 export default theme;
