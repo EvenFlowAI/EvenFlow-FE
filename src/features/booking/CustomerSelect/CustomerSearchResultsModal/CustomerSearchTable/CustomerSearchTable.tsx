@@ -303,7 +303,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
 
     return isLoading
         ? <div className={classes.emptyWrapper}><Loading/></div>
-        : <div style={{overflow: 'auto'}}>
+        : <div style={{overflowX: 'auto'}}>
             <div className={classes.tableWrapper}>
                 <Table className={classes.wrapper}>
                     <TableHead>

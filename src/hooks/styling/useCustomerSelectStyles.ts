@@ -48,6 +48,6 @@ export const useCustomerSelectStyles = makeStyles((theme) => ({
         fontSize: 16,
         fontWeight: 600,
         cursor: "pointer",
-        marginBottom: 16
+        marginBottom: 9
     }
 }))
