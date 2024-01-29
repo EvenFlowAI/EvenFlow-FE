@@ -2,16 +2,17 @@ import makeStyles from '@mui/styles/makeStyles';
 import {styled} from "@mui/material";
 import {TStyleProps} from "./types";
 
+export const ZoneContainer = styled("div")<TStyleProps>(({theme, isSelected}) => ({
+    display: 'grid',
+    gridTemplateColumns: '2fr 3fr',
+    alignItems: "flex-start",
+    padding: 12,
+    borderRadius: 1,
+    border: isSelected ? '1px solid #2F80ED' : '1px solid #DADADA',
+    backgroundColor: "#FFFFFF",
+}))
+
 export const useStyles = makeStyles(() => ({
-    zoneContainer: ({isSelected}: TStyleProps) => ({
-        display: 'grid',
-        gridTemplateColumns: '2fr 3fr',
-        alignItems: "flex-start",
-        padding: 12,
-        borderRadius: 1,
-        border: isSelected ? '1px solid #2F80ED' : '1px solid #DADADA',
-        backgroundColor: "#FFFFFF",
-    }),
     zoneBox: {
         display: "flex",
         alignItems: 'center',

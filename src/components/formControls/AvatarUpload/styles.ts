@@ -1,23 +1,25 @@
 import makeStyles from '@mui/styles/makeStyles';
+import {Avatar, styled} from "@mui/material";
 
 type TStyleProps = {
     size: number;
     disabled?: boolean
 }
 
-export const useStyles = makeStyles(theme => ({
-    root: ({size, disabled}: TStyleProps) => ({
-        width: size,
-        height: size,
-        cursor: !disabled ? "pointer" : "auto",
-        backgroundColor: "#919191",
-        transition: theme.transitions.create(["opacity", "box-shadow"]),
-        opacity: .9,
-        "&:hover": {
-            boxShadow: !disabled ? theme.shadows[5] : undefined,
-            opacity: !disabled ? 1 : undefined
-        }
-    }),
+export const StyledAvatar = styled(Avatar)<TStyleProps>(({theme, size, disabled}) => ({
+    width: size,
+    height: size,
+    cursor: !disabled ? "pointer" : "auto",
+    backgroundColor: "#919191",
+    transition: theme.transitions.create(["opacity", "box-shadow"]),
+    opacity: .9,
+    "&:hover": {
+        boxShadow: !disabled ? theme.shadows[5] : undefined,
+        opacity: !disabled ? 1 : undefined
+    }
+}))
+
+export const useStyles = makeStyles({
     sign: {
         fontSize: 25,
         fontWeight: "bold",
@@ -32,4 +34,4 @@ export const useStyles = makeStyles(theme => ({
     input: {
         display: "none"
     }
-}));
+});

@@ -1,9 +1,31 @@
 import {EOfferType, IOffer} from "../../../../store/reducers/offers/types";
 import makeStyles from '@mui/styles/makeStyles';
+import {styled} from "@mui/material";
 
 export type TStyleProps = {
     t: IOffer['type']
 };
+
+export const Background = styled("div")<TStyleProps>(({theme, t}) => ({
+    position: "absolute",
+    top: 0,
+    left: "20%",
+    right: 0,
+    lineHeight: `${t === EOfferType.FreeService ? 8 : 11}rem`,
+    userSelect: "none",
+    fontSize: `${t === EOfferType.FreeService ? 8 : 11}rem`,
+    opacity: .05,
+    color: "#7898FF",
+    fontWeight: "bold",
+    textAlign: "center"
+}))
+
+export const Label = styled("span")<TStyleProps>(({theme, t}) => ({
+    paddingRight: "50%",
+    fontSize: t === EOfferType.FreeService ? 18 : 32,
+    fontWeight: "bold",
+    textTransform: "uppercase"
+}))
 
 export const useStyles = makeStyles({
     wrapper: {
@@ -27,12 +49,6 @@ export const useStyles = makeStyles({
         textTransform: "none",
         zIndex: 2
     },
-    label: ({t}: TStyleProps) => ({
-        paddingRight: "50%",
-        fontSize: t === EOfferType.FreeService ? 18 : 32,
-        fontWeight: "bold",
-        textTransform: "uppercase"
-    }),
     content: {
         height: "100%",
         justifyContent: "space-between",
@@ -61,17 +77,4 @@ export const useStyles = makeStyles({
             marginTop: 18,
         }
     },
-    background: ({t}: TStyleProps) => ({
-        position: "absolute",
-        top: 0,
-        left: "20%",
-        right: 0,
-        lineHeight: `${t === EOfferType.FreeService ? 8 : 11}rem`,
-        userSelect: "none",
-        fontSize: `${t === EOfferType.FreeService ? 8 : 11}rem`,
-        opacity: .05,
-        color: "#7898FF",
-        fontWeight: "bold",
-        textAlign: "center"
-    })
 });

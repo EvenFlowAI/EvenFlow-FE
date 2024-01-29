@@ -2,7 +2,7 @@ import React, {Dispatch, SetStateAction} from 'react';
 import {TZipCode, TZone} from "../../../store/reducers/mobileService/types";
 import Checkbox from "../../formControls/Checkbox/Checkbox";
 import {CloseOutlined} from "@mui/icons-material";
-import {useStyles, ZipCode} from "./styles";
+import {useStyles, ZipCode, ZoneContainer} from "./styles";
 
 type TZoneProps = {
     zone: TZone;
@@ -14,7 +14,7 @@ type TZoneProps = {
 }
 
 const GeographicZone: React.FC<React.PropsWithChildren<React.PropsWithChildren<TZoneProps>>> = ({isSelected, zone, zipCodes, setCurrentZip, onRemoveZip, setSelectedZone}) => {
-    const classes = useStyles({isSelected});
+    const classes = useStyles();
 
     const onClick = () => {
         setSelectedZone(zone);
@@ -26,7 +26,7 @@ const GeographicZone: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     }
 
     return (
-        <div className={classes.zoneContainer} role="presentation" onClick={onClick}>
+        <ZoneContainer isSelected={isSelected} role="presentation" onClick={onClick}>
             <div className={classes.zoneBox}>
                 <Checkbox checked={isSelected} color="primary"/>
                 <div>{zone.name}</div>
@@ -37,7 +37,7 @@ const GeographicZone: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     <CloseOutlined className={classes.icon} onClick={deleteZipCode(item)}/>
                 </ZipCode>)}
             </div>
-        </div>
+        </ZoneContainer>
     );
 };
 

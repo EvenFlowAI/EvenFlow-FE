@@ -1,10 +1,12 @@
 import makeStyles from '@mui/styles/makeStyles';
+import {Dialog, styled} from "@mui/material";
 
 type TStyleProps = {
-    maxWidth: number;
+    mW: number;
 }
-export const useStyles = makeStyles({
-    root: {
+
+export const StyledDialog = styled(Dialog)<TStyleProps>(({theme, mW}) => ({
+    '& .MuiDialogContent-root': {
         "& hr": {
             margin: "28px 0",
         },
@@ -13,6 +15,12 @@ export const useStyles = makeStyles({
             fontSize: 14
         },
     },
+    "& .MuiDialog-paper": {
+        maxWidth: mW,
+    },
+}))
+
+export const useStyles = makeStyles({
     dialogTitle: {
         textAlign: "center",
         fontSize: 19,
@@ -24,9 +32,6 @@ export const useStyles = makeStyles({
     },
     dialogContent: {
         padding: "10px 25px"
-    },
-    dialogPaper: ({maxWidth}: TStyleProps) => {
-        return maxWidth ? {maxWidth} : {};
     },
     dialogActions: {
         padding: "10px 25px 25px"

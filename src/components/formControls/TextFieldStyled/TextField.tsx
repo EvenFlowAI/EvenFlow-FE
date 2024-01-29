@@ -1,19 +1,23 @@
 import React, {forwardRef} from 'react';
-import {InputBase as DefaultTextField, InputLabel} from "@mui/material";
+import {InputBase as DefaultTextField} from "@mui/material";
 import theme from "../../../theme/theme";
 import {TextInputProps} from "../types";
-import {useStyles} from "./styles";
+import {Label} from "./styles";
 
 export const TextField = forwardRef<unknown, TextInputProps>(
     ({label, params, hideLabel, spacing, isLowerCase, ...props}, ref) => {
-    const classes = useStyles({visible: !hideLabel, lowerCase: isLowerCase});
     const {InputProps={}, InputLabelProps={}, ...p} = params || {};
 
     return <>
         {label &&
-            <InputLabel className={classes.label} shrink htmlFor={props.id} {...InputLabelProps}>
+            <Label
+                shrink
+                htmlFor={props.id}
+                {...InputLabelProps}
+                visible={!hideLabel}
+                lowerCase={isLowerCase}>
                 {label}{props.required ? <span>&#42;</span> : ''}
-            </InputLabel>
+            </Label>
         }
         <DefaultTextField ref={ref} {...{...p, ...InputProps}} {...props} style={{marginBottom: spacing === 'normal' ? theme.spacing(2) : 0, ...props.style}} />
     </>

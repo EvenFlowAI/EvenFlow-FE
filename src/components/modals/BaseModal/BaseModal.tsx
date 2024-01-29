@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    Dialog,
     DialogActions as DA,
     DialogActionsProps,
     DialogContent as DC,
@@ -11,25 +10,24 @@ import {
 } from "@mui/material";
 import {Close} from "@mui/icons-material";
 import {DialogProps} from "./types";
-import {useStyles} from "./styles";
+import {StyledDialog, useStyles} from "./styles";
 
 export const BaseModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = props => {
-    const classes = useStyles({maxWidth: props.width || 0});
-    return <Dialog maxWidth={"md"} fullWidth {...props} classes={{root: classes.root, paper: classes.dialogPaper}}/>;
+    return <StyledDialog mW={props.width || 0} maxWidth={props.width ? false : "md"} fullWidth {...props}/>;
 }
 
 export const DialogContent: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogContentProps>>> = props => {
-    const classes = useStyles({maxWidth: 0});
+    const classes = useStyles();
     return <DC {...props} className={classes.dialogContent} />
 }
 
 export const DialogActions: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogActionsProps>>> = props => {
-    const classes = useStyles({maxWidth: 0});
+    const classes = useStyles();
     return <DA {...props} className={classes.dialogActions} />
 }
 
 export const DialogTitle: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogTitleProps & {onClose?: () => void}>>> = ({children, onClose, ...props}) => {
-    const classes = useStyles({maxWidth: 0});
+    const classes = useStyles();
     return (
         <DT {...props} className={classes.dialogTitle}>
             {children}
