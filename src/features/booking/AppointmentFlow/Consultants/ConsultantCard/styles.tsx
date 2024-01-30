@@ -3,7 +3,7 @@ import {styled} from "@mui/material";
 
 export const ConsultantWrapper = styled("div")<{ active?: boolean }>(({theme, active}) => ({
     display: 'grid',
-    gridGap: 16,
+    gap: 16,
     gridTemplateColumns: '1fr 1fr',
     border: `1px solid ${active ? "#000000" : "#DADADA"}`,
     color: active ? "#FFFFFF" : theme.palette.text.primary,

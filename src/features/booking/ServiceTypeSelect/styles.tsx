@@ -45,7 +45,7 @@ export const ServiceTypeButton = styled("div")<{
     maxHeight: 285,
     display: "grid",
     gridTemplateRows: isTaglinePresent ? '1fr 2fr 3fr' : '1fr 3fr',
-    gridGap: isTaglinePresent ? 10 : 20,
+    gap: isTaglinePresent ? 10 : 20,
     fontWeight: "bold",
     fontSize: 32,
     textAlign: "center",

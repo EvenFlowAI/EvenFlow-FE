@@ -63,7 +63,7 @@ export const useCalendarStyles = makeStyles(theme => ({
     calendarWrapper: {
         marginTop: 11,
         overflowX: "auto",
-        gridGap: 1,
+        gap: 1,
         background: theme.palette.divider,
         border: `1px solid ${theme.palette.divider}`,
         display: "grid",

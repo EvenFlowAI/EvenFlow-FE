@@ -5,6 +5,6 @@ export const useStyles = makeStyles(() => ({
         width: '70%',
         display: "grid",
         gridTemplateColumns: '1fr 1fr',
-        gridGap: 24,
+        gap: 24,
     }
 }))

@@ -4,7 +4,7 @@ export const useStyles = makeStyles(() => ({
     inputsWrapper: {
         display: "grid",
         gridTemplateColumns: "1fr 1fr 1fr",
-        gridGap: 18,
+        gap: 18,
         marginBottom: 18,
     },
     uploadBtn: {
@@ -44,7 +44,7 @@ export const useStyles = makeStyles(() => ({
         width: '100%',
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
-        gridGap: 18,
+        gap: 18,
         marginBottom: 18,
         marginTop: 18,
     },

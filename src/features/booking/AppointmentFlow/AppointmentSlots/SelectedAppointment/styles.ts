@@ -3,7 +3,7 @@ import {styled} from "@mui/material";
 export const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "3fr 2fr",
-    gridGap: 10,
+    gap: 10,
     alignItems: "stretch",
     justifyContent: "space-between",
     [theme.breakpoints.down('sm')]: {

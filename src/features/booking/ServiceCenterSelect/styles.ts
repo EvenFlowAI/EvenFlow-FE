@@ -12,7 +12,7 @@ export const useStyles = makeStyles(theme => ({
     wrapper: {
         display: 'grid',
         gridTemplateColumns: "1fr 1fr 1fr",
-        gridGap: 20,
+        gap: 20,
         [theme.breakpoints.down('md')]: {
             gridTemplateColumns: "1fr 1fr",
             marginBottom: 20,

@@ -21,7 +21,7 @@ export const RowWrapper = styled('div')<{toggle: number}>(({toggle}) => ({
     width: '100%',
     display: 'grid',
     gridTemplateColumns: toggle ? '3fr 2fr 2fr' : '5fr 2fr',
-    gridGap: 16,
+    gap: 16,
 }));
 
 export const Label = withStyles({

@@ -14,8 +14,8 @@ export const TextField = forwardRef<unknown, TextInputProps>(
                 shrink
                 htmlFor={props.id}
                 {...InputLabelProps}
-                visible={!hideLabel}
-                lowerCase={isLowerCase}>
+                visible={Boolean(!hideLabel)}
+                lowerCase={Boolean(isLowerCase)}>
                 {label}{props.required ? <span>&#42;</span> : ''}
             </Label>
         }

@@ -47,7 +47,7 @@ export const useStyles = makeStyles(() => ({
     recallDetailsWrapper: {
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
-        gridGap: 10,
+        gap: 10,
         marginBottom: 20,
     },
     textBox: {

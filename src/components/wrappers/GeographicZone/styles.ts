@@ -30,7 +30,7 @@ export const useStyles = makeStyles(() => ({
         minHeight: 45,
         display: "grid",
         gridTemplateColumns: '1fr 1fr',
-        gridGap: 8,
+        gap: 8,
         padding: 8,
         border: "2px solid #DADADA",
         borderRadius: 2,

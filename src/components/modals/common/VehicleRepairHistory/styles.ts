@@ -11,12 +11,12 @@ export const useStyles = makeStyles({
     nameLineGrid: {
         display: 'grid',
         gridTemplateColumns: '2fr 1fr 1fr',
-        gridGap: 8,
+        gap: 8,
     },
     carDataGrid: {
         display: 'grid',
         gridTemplateColumns: '120px 1fr 1fr 1fr',
-        gridGap: 8,
+        gap: 8,
         marginBottom: 20,
     },
     titleBig: {
