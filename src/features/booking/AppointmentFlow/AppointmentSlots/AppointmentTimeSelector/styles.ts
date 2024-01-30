@@ -6,6 +6,7 @@ export const TimeSlotsWrapper = styled('div')(({theme}) => ({
     gridTemplateColumns: "repeat(6, 1fr)",
     gap: "20px 12px",
     justifyContent: "center",
+    fontSize: 14,
     "&>div": {
         flexGrow: 1
     },

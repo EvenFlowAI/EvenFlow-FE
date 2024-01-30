@@ -102,9 +102,9 @@ export const AppointmentTiming: React.FC<React.PropsWithChildren<React.PropsWith
         dispatch(selectServiceValetAppointment(null));
     }
 
-    const handleChangeTime = useCallback((t: unknown) => {
-        dispatch(setTime(t as TParsableDate));
-        if (!dayjs.utc(selectedTime).isSame(t as TParsableDate, 'date')) clearAppointmentSlots()
+    const handleChangeTime = useCallback((t: TParsableDate) => {
+        dispatch(setTime(t));
+        if (!dayjs.utc(selectedTime).isSame(t, 'date')) clearAppointmentSlots()
     }, [selectedTime])
 
     const isTimingValid = Boolean(

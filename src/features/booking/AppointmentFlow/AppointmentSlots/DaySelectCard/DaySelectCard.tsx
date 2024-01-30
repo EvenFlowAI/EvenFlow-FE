@@ -7,7 +7,7 @@ import {useTranslation} from "react-i18next";
 import {ReactComponent as CalendarIcon} from "../../../../../assets/img/empty_calendar.svg";
 import {ReactComponent as CalendarIconWhite} from "../../../../../assets/img/empty_calendar_white.svg";
 import {monthFormat, XsMontFormat} from "../constants";
-import {DayCard} from "../../../../../components/styled/DayCard";
+import {Date, Day, DayCard, DayName} from "../../../../../components/styled/DayCard";
 import dayjs from "dayjs";
 
 type TProps = {
@@ -69,12 +69,16 @@ export const DaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChil
             isCurrent={isCurrent}
             isOffPeak={isOffPeak}
         >
-        <div className="dayName">{getDayNameString()}</div>
-        <div>{dayjs.utc(day).format(isXs ? XsMontFormat : monthFormat)}</div>
-        <div className="day" onClick={onClick}>
+        <DayName>{getDayNameString()}</DayName>
+        <Date>{dayjs.utc(day).format(isXs ? XsMontFormat : monthFormat)}</Date>
+        <Day
+            available={Boolean(appointment)}
+            isCurrent={isCurrent}
+            isOffPeak={isOffPeak}
+            onClick={onClick}>
             {isCurrent ? <CalendarIconWhite/> : <CalendarIcon/>}
             {getLabel()}
             {isXs ? <div className="padding" /> : null}
-        </div>
+        </Day>
     </DayCard>
 };

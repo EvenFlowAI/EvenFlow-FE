@@ -3,7 +3,7 @@ import {styled} from "@mui/material";
 export const Wrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
-    gap: "80px",
+    gap: 80,
     "&>div": {
         display: "flex",
         flexDirection: "column",

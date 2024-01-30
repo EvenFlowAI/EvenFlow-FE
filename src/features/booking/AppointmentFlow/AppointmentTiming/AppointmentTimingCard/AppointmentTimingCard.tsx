@@ -16,7 +16,7 @@ type TCardProps = {
     active?: boolean;
     onClick: TCallback;
     selectedTime: TParsableDate;
-    onChangeTime: TArgCallback<unknown>;
+    onChangeTime: TArgCallback<TParsableDate>;
     isLoading: boolean;
 }
 
@@ -27,7 +27,7 @@ const AppointmentTimingCard: React.FC<React.PropsWithChildren<React.PropsWithChi
     const {t} = useTranslation();
     const {appointmentSlots} = useSelector((state: RootState) => state.appointment)
     const cardRef = useRef<HTMLDivElement|null>(null);
-    const shouldDisableDate = (date: TParsableDate) => !appointmentSlots.find(item => dayjs.utc(item.date).format("YYYY-MM-DD") === dayjs(date).format('YYYY-MM-DD'));
+    const shouldDisableDate = (date: TParsableDate) => !appointmentSlots.find(item => dayjs.utc(item.date).format("YYYY-MM-DD") === dayjs.utc(date).format('YYYY-MM-DD'));
 
     useEffect(() => {
         if (cardRef?.current) cardRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
@@ -39,7 +39,7 @@ const AppointmentTimingCard: React.FC<React.PropsWithChildren<React.PropsWithChi
             onChange={onChangeTime}
             disablePast
             format="MMMM, DD"
-            shouldDisableDate={shouldDisableDate}
+            // shouldDisableDate={shouldDisableDate}
             InputProps={{
                 endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"}/>,
                 placeholder: t("Choose here"),
