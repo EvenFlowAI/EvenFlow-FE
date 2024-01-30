@@ -10,6 +10,7 @@ export const ZoneContainer = styled("div")<TStyleProps>(({theme, isSelected}) =>
     borderRadius: 1,
     border: isSelected ? '1px solid #2F80ED' : '1px solid #DADADA',
     backgroundColor: "#FFFFFF",
+    fontSize: 14,
 }))
 
 export const useStyles = makeStyles(() => ({

@@ -195,6 +195,7 @@ const useStyles = makeStyles(() => ({
     applyText: {
         marginLeft: 5,
         fontWeight: 'bold',
+        fontSize: 14,
     }
 }))
 

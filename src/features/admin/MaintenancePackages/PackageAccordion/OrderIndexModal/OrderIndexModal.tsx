@@ -111,7 +111,7 @@ const OrderIndexModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
 
     return (
         <BaseModal open={open} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Describe Maintenance Package's Ops Codes</DialogTitle>
+            <DialogTitle onClose={onCancel}>Add Index To Maintenance Package's Ops Codes</DialogTitle>
             {isPackageLoading
                 ? <Loading/>
                 : <DialogContent>

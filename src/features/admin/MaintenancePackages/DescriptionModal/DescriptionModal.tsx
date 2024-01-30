@@ -73,7 +73,7 @@ const DescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren
             <DialogTitle onClose={onCancel}>Describe Maintenance Package's Ops Codes</DialogTitle>
             {isPackageLoading
                 ? <Loading/>
-                : <DialogContent>
+                : <DialogContent sx={{fontSize: 14}}>
                     <h3 className={classes.title}>Service Requests</h3>
                     <div className={classes.wrapper}>
                         <h4>Code</h4>

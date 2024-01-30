@@ -10,6 +10,7 @@ export const useStyles = makeStyles(() => ({
         color: 'white',
         borderRadius: 4,
         fontWeight: 'bold',
+        fontSize: 14,
         margin: 4,
         padding: 4,
     },

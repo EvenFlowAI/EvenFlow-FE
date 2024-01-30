@@ -224,7 +224,7 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
             </Grid>
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={props.onClose} color="info">Cancel</Button>
             <LoadingButton
                 loading={isLoading}
                 color="primary"

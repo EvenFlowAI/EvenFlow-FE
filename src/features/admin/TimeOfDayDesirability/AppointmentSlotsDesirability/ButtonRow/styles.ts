@@ -7,6 +7,7 @@ export const useStylesBR = makeStyles(theme => ({
     },
     time: {
         fontWeight: "bold",
+        fontSize: 14,
         [theme.breakpoints.down('sm')]: {
             fontSize: 11
         }

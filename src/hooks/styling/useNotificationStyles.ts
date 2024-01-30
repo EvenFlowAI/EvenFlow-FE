@@ -43,6 +43,7 @@ export const useNotificationStyles = makeStyles({
         alignItems: "center",
         gap: '8px',
         marginTop: 9,
+        fontSize: 14,
     },
     autocomplete: {
         '& > label': {

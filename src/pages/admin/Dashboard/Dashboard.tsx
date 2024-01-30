@@ -130,7 +130,7 @@ export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChi
         <SquarePaper variant="outlined">
             <Box className={classes.countWrapper} p={2}>
                 {overallData.map(d =>
-                    <Box key={d.label} display="flex" flexDirection="column" alignItems="center">
+                    <Box key={d.label} display="flex" flexDirection="column" alignItems="center" sx={{fontSize: 14}}>
                         <span>{d.label}</span>
                         <strong>{countData[d.value]}</strong>
                     </Box>
