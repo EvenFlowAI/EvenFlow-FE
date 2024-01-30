@@ -2,7 +2,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import {Dialog, styled} from "@mui/material";
 
 type TStyleProps = {
-    mW: number;
+    mW: number|undefined;
 }
 
 export const StyledDialog = styled(Dialog)<TStyleProps>(({theme, mW}) => ({
@@ -16,7 +16,7 @@ export const StyledDialog = styled(Dialog)<TStyleProps>(({theme, mW}) => ({
         },
     },
     "& .MuiDialog-paper": {
-        maxWidth: mW,
+        maxWidth: mW ?? 960,
     },
 }))
 
