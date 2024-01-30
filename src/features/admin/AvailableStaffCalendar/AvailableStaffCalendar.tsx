@@ -20,17 +20,17 @@ export const AvailableStaffCalendar = () => {
 
     const days: TDay[] = useMemo(() => {
         const days: TDay[] = [];
-        const cur = dayjs(date).startOf("month");
+        let cur = dayjs(date).startOf("month");
         const daysInMonth = cur.daysInMonth();
         const startDay = cur.day();
-        cur.subtract(startDay, 'days');
+        cur = cur.subtract(startDay, 'days');
         for (let i=0; i < daysInMonth + startDay; i++) {
             days.push({
                 date: dayjs(cur),
                 day: +cur.format("D"),
                 type: cur.month() === dayjs(date).month() ? "cur" : "prev"
             });
-            cur.add(1, "day");
+            cur = dayjs(cur).add(1, "day");
         }
         for (let i = 0; i < cur.day(); i++) {
             days.push({
@@ -38,7 +38,7 @@ export const AvailableStaffCalendar = () => {
                 day: +cur.format("D"),
                 type: "next"
             })
-            cur.add(1, "day");
+            cur = dayjs(cur).add(1, "day");
         }
 
         return days;
