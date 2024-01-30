@@ -13,7 +13,7 @@ import {DialogProps} from "./types";
 import {StyledDialog, useStyles} from "./styles";
 
 export const BaseModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = props => {
-    return <StyledDialog maxWidth={"md"} fullWidth {...props} mW={props.width}/>;
+    return <StyledDialog maxWidth={props.maxWidth ?? "md"} fullWidth {...props} mW={props.width}/>;
 }
 
 export const DialogContent: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogContentProps>>> = props => {

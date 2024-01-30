@@ -50,7 +50,7 @@ class AuthService {
             this.refreshRequest();
         } catch (e) {
             this.logout();
-            throw e;
+            console.log('refresh error', e)
         }
     }
 
@@ -61,7 +61,6 @@ class AuthService {
             this.refreshRequest();
         } catch (e) {
             console.error(e);
-            throw e;
         }
     }
 
@@ -71,8 +70,7 @@ class AuthService {
             this.setTokens(resp.data);
             this.refreshRequest();
         } catch (e) {
-            console.error(e);
-            throw e;
+            console.error('login error', e);
         }
     }
 

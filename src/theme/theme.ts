@@ -181,7 +181,6 @@ export const frameTheme: Theme = (theme: Theme) => createTheme({
             styleOverrides: {
                 ...theme.components?.MuiInput?.styleOverrides,
                 root: {
-                    border: 0,
                     "&.Mui-error": {
                         borderColor: "#FF0000",
                         color: "#FF0000"
@@ -199,7 +198,6 @@ export const frameTheme: Theme = (theme: Theme) => createTheme({
             styleOverrides: {
                 ...theme.components?.MuiInput?.styleOverrides,
                 root: {
-                    border: 0,
                     "&.Mui-error": {
                         borderColor: "#FF0000",
                         color: "#FF0000"

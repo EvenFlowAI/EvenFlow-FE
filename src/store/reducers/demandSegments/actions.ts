@@ -24,7 +24,7 @@ export const loadDemandSegments = (serviceCenterId: number, podId?: number): App
         dispatch(getDemandSegments(data));
     } catch (e) {
         dispatch(loadingDemandSegments(false));
-        throw e;
+        console.log('loadDemandSegments', e)
     }
 }
 export const createDemandSegment = (data: IDemandSegmentForm): AppThunk => async dispatch => {

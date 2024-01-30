@@ -18,7 +18,7 @@ export const ConfirmModal: React.FC<React.PropsWithChildren<React.PropsWithChild
             try {
                 await payload.onCancel();
             } catch (e) {
-                throw e;
+                console.log('on cancel error', e)
             } finally {
                 setLoading(false);
             }
@@ -32,7 +32,7 @@ export const ConfirmModal: React.FC<React.PropsWithChildren<React.PropsWithChild
             try {
                 await payload.onConfirm();
             } catch (e) {
-                throw e;
+                console.log('on confirm error', e)
             }
             finally {
                 setLoading(false);

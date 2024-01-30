@@ -25,7 +25,7 @@ export const loadBays = (serviceCenterId: number): AppThunk => async (dispatch, 
         dispatch(getFilteredBays(result));
     } catch (e) {
         dispatch(loading(false));
-        throw e;
+        console.log('load bays error', e)
     }
 }
 
@@ -37,7 +37,7 @@ export const createBay = (data: IBayForm): AppThunk => async dispatch => {
         dispatch(loadBays(data.serviceCenterId));
     } catch (e) {
         dispatch(saving(false));
-        throw e;
+        console.log('create bay error', e)
     }
 }
 
@@ -49,7 +49,7 @@ export const updateBay = (data: IBayForm, id: number): AppThunk => async dispatc
         dispatch(loadBays(data.serviceCenterId));
     } catch (e) {
         dispatch(saving(false));
-        throw e;
+        console.log('update bay error', e)
     }
 }
 export const removeBay = (data: IBay): AppThunk => async dispatch => {

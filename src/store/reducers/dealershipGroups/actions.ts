@@ -63,7 +63,7 @@ export const loadAll = (): AppThunk => (dispatch, getState) => {
         })
         .catch(err => {
             dispatch(loading(false));
-            throw err;
+            console.log('load all dealership', err)
         })
 }
 
@@ -82,7 +82,7 @@ export const create: ActionCreator<ThunkAction<
         dispatch(loadAll());
     } catch (e) {
         dispatch(saving(false));
-        throw e;
+        console.log('create dealership error', e)
     }
 }
 
@@ -100,7 +100,7 @@ export const remove: ActionCreator<ThunkAction<
         await Api.call(Api.endpoints.Dealerships.Remove, {urlParams: {id}})
         dispatch(_remove(id));
     } catch (e) {
-        throw e;
+        console.log('rempve dealership error', e)
     }
 }
 

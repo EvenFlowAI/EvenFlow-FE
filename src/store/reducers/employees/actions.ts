@@ -43,7 +43,7 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
         dispatch(getAll(employees));
     } catch (e) {
         dispatch(loading(false));
-        throw e;
+        console.log('loadAll', e)
     }
 };
 const loadingTechnicians = (payload: boolean): TEmployeeActions => ({type: "Employees/LoadingTechnicians", payload});
@@ -67,7 +67,7 @@ export const loadTechnicians = (serviceCenterId: number): AppThunk =>
         dispatch(_loadTechnicians(employees));
     } catch (e) {
         dispatch(loadingTechnicians(false));
-        throw e;
+        console.log('loadTechnicians', e)
     }
 };
 export const createEmployee = (payload: IEmployeeForm, avatar?: File): AppThunk => async dispatch => {
@@ -81,7 +81,7 @@ export const createEmployee = (payload: IEmployeeForm, avatar?: File): AppThunk 
         dispatch(loadByFilters())
     } catch (e) {
         dispatch(saving(false));
-        throw e;
+        console.log('createEmployee', e)
     }
 }
 
@@ -102,7 +102,7 @@ export const updateEmployee = (data: IEmployeeForm, id: string, avatar?: File): 
         dispatch(loadByFilters())
     } catch (e) {
         dispatch(saving(false));
-        throw e;
+        console.log('updateEmployee', e)
     }
 }
 
@@ -118,7 +118,7 @@ export const loadDealershipEmployees = (dealershipId: string, pageData: IPageReq
         dispatch(loadDealership(false));
     } catch (e) {
         dispatch(loadDealership(false));
-        throw e;
+        console.log('loadDealershipEmployees', e)
     }
 }
 
@@ -178,7 +178,7 @@ export const loadByFilters: ActionCreator<AppThunk> = () =>
             dispatch(getAll(employees));
         } catch (e) {
             dispatch(loading(false));
-            throw e;
+            console.log('loadByFilters', e)
         }
     };
 

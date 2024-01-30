@@ -26,7 +26,7 @@ export const loadCustomerLifetimes = (serviceCenterId: number, podId?: number): 
         if (e.response?.status === 400) {
             dispatch(getCustomerLifetimes(undefined));
         } else {
-            throw e;
+            console.log('updateUser', e)
         }
     }
 }
@@ -45,7 +45,7 @@ export const loadNewLostCustomers = (serviceCenterId: number, podId?: number): A
         if (e?.response?.status === 400) {
             dispatch(getNewLostCustomers([]));
         } else {
-            throw e;
+            console.log('loadNewLostCustomers', e)
         }
     }
 }
@@ -64,7 +64,7 @@ export const loadEndOfWarranty = (serviceCenterId: number, podId?: number): AppT
         if (e?.response?.status === 400) {
             dispatch(getEndOfWarranty(undefined));
         } else {
-            throw e;
+            console.log('loadEndOfWarranty', e)
         }
     }
 }

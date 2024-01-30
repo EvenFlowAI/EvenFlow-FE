@@ -67,7 +67,7 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
         dispatch(loading(false));
     } catch (e) {
         dispatch(loading(false));
-        throw e;
+        console.log('load all service centers error', e);
     }
 }
 export const setSCOrder = createAction<IOrder<IServiceCenterExtended>>("ServiceCenters/ChangeOrder");
@@ -94,7 +94,7 @@ export const createSC = (payload: IServiceCenterForm, avatar: File | null): AppT
         dispatch(loadAllSCs());
     } catch (e) {
         dispatch(saving(false));
-        throw e;
+        console.log('createSC', e)
     }
 }
 const shortLoading = (payload: boolean): TServiceCenterActions => ({
@@ -121,7 +121,7 @@ export const loadShortSC: ActionCreator<ThunkAction<void, RootState, void, TServ
         // @ts-ignore
         if (!customerLoadedData) dispatch(setWelcomeScreenView("select"))
         dispatch(shortLoading(false));
-        throw e;
+        console.log('loadShortSC error', e)
     }
 }
 
@@ -130,7 +130,7 @@ export const removeSC: ActionCreator<AppThunk> = (serviceCenterId: number) => as
         await Api.call(Api.endpoints.ServiceCenters.Remove, {urlParams: {id: serviceCenterId}});
         dispatch(loadAll())
     } catch (e) {
-        throw e;
+        console.log('removeSC error', e)
     }
 }
 
@@ -149,7 +149,7 @@ export const updateSC = (payload: IServiceCenterForm, id: number, avatar: File |
         dispatch(loadAllSCs());
     } catch (e) {
         dispatch(saving(false));
-        throw e;
+        console.log('updateSC error', e)
     }
 }
 
@@ -167,7 +167,7 @@ export const loadDealershipSCs = (dealershipId: string, pageData: IPageRequest):
         dispatch(loadingDealership(false));
     } catch (e) {
         dispatch(loadingDealership(false));
-        throw e;
+        console.log('loadDealershipSCs', e)
     }
 }
 const _loadAllSCS = (payload: IServiceCenter[]): TServiceCenterActions => ({type: "ServiceCenters/FullSCList", payload});

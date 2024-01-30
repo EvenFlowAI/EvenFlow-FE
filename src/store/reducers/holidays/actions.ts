@@ -20,7 +20,7 @@ export const loadAllHolidays = (serviceCenterId: number): AppThunk => async (dis
         dispatch(loading(false));
     } catch (e) {
         dispatch(loading(false));
-        throw e;
+        console.log('loadAllHolidays', e)
     }
 }
 export const getWeeklyHolidaysList = createAction<IHoliday[]>("Holidays/GetFullList");

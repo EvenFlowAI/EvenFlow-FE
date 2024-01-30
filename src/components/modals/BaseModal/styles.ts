@@ -16,7 +16,7 @@ export const StyledDialog = styled(Dialog)<TStyleProps>(({theme, mW}) => ({
         },
     },
     "& .MuiDialog-paper": {
-        maxWidth: mW ?? 960,
+        maxWidth: mW ?? '',
     },
 }))
 
