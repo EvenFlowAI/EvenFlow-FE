@@ -42,17 +42,17 @@ export const AppointmentsCalendar: React.FC<React.PropsWithChildren<React.PropsW
 
     const days: TDay[] = useMemo(() => {
         const days: TDay[] = [];
-        const cur = dayjs(startDate).startOf("month");
+        let cur = dayjs(startDate).startOf("month");
         const daysInMonth = cur.daysInMonth();
         const startDay = cur.day();
-        cur.subtract(startDay, 'days');
+        cur = cur.subtract(startDay, 'days');
         for (let i=0; i < daysInMonth + startDay; i++) {
             days.push({
                 date: dayjs(cur),
                 day: +cur.format("D"),
                 type: cur.month() === dayjs(startDate).month() ? "cur" : "prev"
             });
-            cur.add(1, "day");
+            cur = cur.add(1, "day");
         }
         for (let i = 0; i < cur.day(); i++) {
             days.push({
@@ -60,7 +60,7 @@ export const AppointmentsCalendar: React.FC<React.PropsWithChildren<React.PropsW
                 day: +cur.format("D"),
                 type: "next"
             })
-            cur.add(1, "day");
+            cur = cur.add(1, "day");
         }
 
         return days;
