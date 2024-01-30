@@ -16,7 +16,9 @@ export const List = styled('ul')({
     margin: "12px 0 0",
     padding: 0,
     listStyle: "none",
-    "& .service-item": {
-        textTransform: "capitalize"
-    }
 });
+
+export const ServiceItem = styled('li')({
+    textTransform: "capitalize",
+    fontSize: 14,
+})

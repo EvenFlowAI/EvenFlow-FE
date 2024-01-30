@@ -11,6 +11,7 @@ import {
     setServiceOptionChanged
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {List, TitleWrapper} from "./styles";
+import {ConfirmationItemWrapper} from "../../../../../components/styled/ConfirmationItemWrapper";
 
 const AddressManaging = () => {
     const {address, zipCode, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
@@ -25,7 +26,7 @@ const AddressManaging = () => {
     }
 
     return address && (serviceType === EServiceType.MobileService || serviceType === EServiceType.PickUpDropOff)
-        ? <div>
+        ? <ConfirmationItemWrapper>
             <TitleWrapper>
                 <AppointmentConfirmationTitle>
                     {serviceType === EServiceType.MobileService ? t("Service Address") : t("Pick Up Address")}
@@ -38,7 +39,7 @@ const AddressManaging = () => {
                     <div>{t("ZIP")}: {zipCode}</div>
                 </li>
             </List>
-        </div>
+        </ConfirmationItemWrapper>
         : null;
 };
 

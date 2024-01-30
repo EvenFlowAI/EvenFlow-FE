@@ -4,6 +4,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {Wrapper} from "./styles";
+import {ConfirmationItemWrapper} from "../../../../../components/styled/ConfirmationItemWrapper";
 
 export const Review = () => {
     const {
@@ -16,7 +17,7 @@ export const Review = () => {
     const transportationSelected = serviceTypeOption?.transportationOption || transportation;
 
     return (
-        <div>
+        <ConfirmationItemWrapper>
             <AppointmentConfirmationTitle>{t("Appointment Details")}</AppointmentConfirmationTitle>
             <Wrapper>
                 {transportationSelected
@@ -27,6 +28,6 @@ export const Review = () => {
                     : null
                 }
             </Wrapper>
-        </div>
+        </ConfirmationItemWrapper>
     );
 };

@@ -4,6 +4,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {Price} from "./styles";
+import {ConfirmationItemWrapper} from "../../../../../components/styled/ConfirmationItemWrapper";
 
 export const SelectedPriceManaging = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -13,7 +14,7 @@ export const SelectedPriceManaging = () => {
         .reduce((prev, current) => prev + (current.priceValue ?? 0),0)
 
     return (
-        <div>
+        <ConfirmationItemWrapper>
             <AppointmentConfirmationTitle>{t("Selected Price")}</AppointmentConfirmationTitle>
             <Price>
                 {price > 0
@@ -28,6 +29,6 @@ export const SelectedPriceManaging = () => {
                 {/*    ? <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>*/}
                 {/*    : null}*/}
             </Price>
-        </div>
+        </ConfirmationItemWrapper>
     );
 };

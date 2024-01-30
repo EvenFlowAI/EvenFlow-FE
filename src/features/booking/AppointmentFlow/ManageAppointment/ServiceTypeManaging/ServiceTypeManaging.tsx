@@ -15,6 +15,7 @@ import {
 import {useHistory, useParams} from "react-router-dom";
 import {TitleWrapper} from "./styles";
 import {Routes} from "../../../../../routes/constants";
+import {ConfirmationItemWrapper} from "../../../../../components/styled/ConfirmationItemWrapper";
 
 const ServiceTypeManaging = () => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
@@ -47,7 +48,7 @@ const ServiceTypeManaging = () => {
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     }
 
-    return <div>
+    return <ConfirmationItemWrapper>
         <TitleWrapper>
             <AppointmentConfirmationTitle>{serviceTypeOption?.note || serviceTypeOption?.name ? t("Service Option") : t("Location Of Service")}</AppointmentConfirmationTitle>
             {onlyNotVisitCenterExists || firstScreenOptions.length >= 2
@@ -55,7 +56,7 @@ const ServiceTypeManaging = () => {
             : null}
         </TitleWrapper>
         {getServiceName(serviceTypeOption, serviceType)}
-    </div>
+    </ConfirmationItemWrapper>
 };
 
 export default ServiceTypeManaging;

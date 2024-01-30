@@ -13,6 +13,7 @@ import {
 import {TServiceValetSlot} from "../../../api/types";
 import {TitleWrapper} from "./styles";
 import dayjs from "dayjs";
+import {ConfirmationItemWrapper} from "../../../components/styled/ConfirmationItemWrapper";
 
 type TProps = {
     onChangeSlot: TCallback;
@@ -75,7 +76,7 @@ export const AppointmentSelectedDate: React.FC<React.PropsWithChildren<React.Pro
         }
         if (!isAppointmentSaving) onChangeSlot();
     }
-    return <div>
+    return <ConfirmationItemWrapper>
         <TitleWrapper>
             <AppointmentConfirmationTitle>
                 {t("Selected Date & Time")}
@@ -110,5 +111,5 @@ export const AppointmentSelectedDate: React.FC<React.PropsWithChildren<React.Pro
                 {waitListSettings?.text ?? t("Waitlist only")}
         </div>
             : null}
-    </div>
+    </ConfirmationItemWrapper>
 };

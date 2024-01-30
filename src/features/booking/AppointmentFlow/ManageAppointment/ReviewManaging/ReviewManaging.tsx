@@ -11,6 +11,7 @@ import {
     setServiceOptionChanged
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {Wrapper} from "./styles";
+import {ConfirmationItemWrapper} from "../../../../../components/styled/ConfirmationItemWrapper";
 
 export const ReviewManaging = () => {
     const {
@@ -53,7 +54,7 @@ export const ReviewManaging = () => {
     }
 
     return (
-        <div>
+        <ConfirmationItemWrapper>
             <AppointmentConfirmationTitle>{t("Appointment Details")}</AppointmentConfirmationTitle>
             <Wrapper>
                 {transportationSelected
@@ -68,6 +69,6 @@ export const ReviewManaging = () => {
                     : null
                 }
             </Wrapper>
-        </div>
+        </ConfirmationItemWrapper>
     );
 };
