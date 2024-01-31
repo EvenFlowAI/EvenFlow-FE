@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles((theme) => ({
+//
+export const useStyles = makeStyles()((theme) => ({
     buttonsWrapper: {
         display: 'flex',
         justifyContent: "space-between",
@@ -38,4 +39,4 @@ export const useStyles = makeStyles((theme) => ({
             marginBottom: 16,
         },
     }
-}))
+}));

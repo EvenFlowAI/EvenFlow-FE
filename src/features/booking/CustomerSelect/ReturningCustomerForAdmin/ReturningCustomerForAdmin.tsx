@@ -50,8 +50,8 @@ const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWit
     const dispatch = useDispatch();
     const showError = useException();
 
-    const classes = useStyles();
-    const returningClasses = useCustomerSelectStyles();
+    const { classes  } = useStyles();
+    const { classes: returningClasses } = useCustomerSelectStyles();
     const formIsValid = useMemo(() => {
              return !!customerEnteredEmail.length
              || Object.values(customerSearchData).find(item => item.length)

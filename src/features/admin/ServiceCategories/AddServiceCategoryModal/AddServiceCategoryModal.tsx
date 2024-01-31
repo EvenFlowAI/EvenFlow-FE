@@ -57,7 +57,7 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
         || categoryType?.value === EServiceCategoryType.LinkToPage2

@@ -25,7 +25,7 @@ const OrderIndexModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
     const [serviceRequests, setServiceRequests] = useState<TExtendedService[]>([]);
     const [complimentary, setComplimentary] = useState<TExtendedComplimentary[]>([]);
     const [upsell, setUpsell] = useState<TIntervalUpsellForPackage[]>([]);
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
 

@@ -8,7 +8,7 @@ type TModelProps = {
 }
 
 export const Chip = ({name, onDelete}: TModelProps) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <div className={classes.wrapper}>{name}
         <CloseOutlined onClick={() => onDelete(name)} className={classes.icon}/></div>;
 };

@@ -60,8 +60,8 @@ const AddEditGeographicZone: React.FC<React.PropsWithChildren<React.PropsWithChi
 
     const {onOpen, onClose, isOpen} = useModal();
     const dispatch = useDispatch();
-    const classes = useStyles();
-    const autocompleteClasses = useAutocompleteStyles();
+    const { classes  } = useStyles();
+    const { classes: autocompleteClasses } = useAutocompleteStyles();
     const showError = useException();
     const showMessage = useMessage();
     const zonesList = useMemo(() => serviceType === 'serviceValet' ? valetZones : mobileZones, [serviceType, valetZones, mobileZones]);

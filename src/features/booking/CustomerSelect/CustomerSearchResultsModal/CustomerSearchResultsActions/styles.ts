@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+//
+export const useStyles = makeStyles()({
     wrapper: {
         position: 'sticky',
         left: 0,
@@ -56,4 +57,4 @@ export const useStyles = makeStyles({
     selectColumnsButton: {
         fontWeight: 400
     }
-})
+});

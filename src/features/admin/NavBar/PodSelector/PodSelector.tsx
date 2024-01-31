@@ -37,7 +37,7 @@ export const PodSelector = () => {
         const selectedPod = pods.find(p => p.id === val);
         dispatch(setSelectedPod(selectedPod || null));
     }
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     if (!show) return null;
 

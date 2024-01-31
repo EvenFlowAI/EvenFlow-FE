@@ -5,7 +5,7 @@ import {data} from "../mockData";
 import React from "react";
 
 export const Disclaimer = () => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     return <Grid item xs={12} sm={6} className={classes.disclaimer}>

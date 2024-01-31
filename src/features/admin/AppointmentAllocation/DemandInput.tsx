@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {IUnplannedDemandBySlot} from "../../../store/reducers/demandSegments/types";
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
 import {useException} from "../../../hooks/useException/useException";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
     inputWrapper: {
         width: 80,
         '& > input': {
             textAlign: "center"
         }
     }
-})
+});
 
 type TDemandInputProps = {
     item: IUnplannedDemandBySlot;
@@ -22,7 +22,7 @@ type TDemandInputProps = {
 const DemandInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDemandInputProps>>> = ({item,onBlur}) => {
     const [value, setValue] = useState<number|string>(0);
     const showError = useException();
-    const classes = useStyles();
+    const { classes } = useStyles();
 
     useEffect(() => {
         setValue(item.amount)

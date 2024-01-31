@@ -25,7 +25,7 @@ export const CenterSettingsPlate: React.FC<React.PropsWithChildren<React.PropsWi
                                                                              helperText,
                                                                              isLoading
                                                                          }) => {
-    const classes = useCenterSettingsStyles();
+    const { classes  } = useCenterSettingsStyles();
 
     return <Grid item xs={6} md={4}>
         <Paper className={classes.paper} variant={"outlined"} >

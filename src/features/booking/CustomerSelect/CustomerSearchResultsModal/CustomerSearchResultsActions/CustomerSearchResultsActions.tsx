@@ -28,7 +28,7 @@ const CustomerSearchResultsActions: React.FC<React.PropsWithChildren<React.Props
                                                                                         selectedColumns,
                                                                                         setSelectedColumns
 }) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
 

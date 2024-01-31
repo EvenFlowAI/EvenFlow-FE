@@ -1,8 +1,8 @@
 import { Table as MuiTable } from "@mui/material";
 
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 
-export const StyledTable = withStyles(theme => ({
+export const StyledTable = withStyles(MuiTable, theme => ({
     root: {
         "& .MuiTableCell-head": {
             textTransform: "uppercase",
@@ -30,4 +30,4 @@ export const StyledTable = withStyles(theme => ({
             color: theme.palette.primary.main
         }
     }
-}))(MuiTable);
+}));

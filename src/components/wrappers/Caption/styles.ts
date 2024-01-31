@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     caption: {
         display: "flex",
         fontSize: 16,

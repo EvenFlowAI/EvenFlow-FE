@@ -11,7 +11,7 @@ import {TLanguage} from "../../../store/reducers/appointmentFrameReducer/types";
 const LanguageSwitcher = () => {
     const {language} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const handleChangeLanguage = (e: SelectChangeEvent<{value: TLanguage }>) => {
         if (e.target.value === "en" || e.target.value === "es") {

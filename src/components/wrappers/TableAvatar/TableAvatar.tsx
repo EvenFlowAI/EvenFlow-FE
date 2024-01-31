@@ -9,7 +9,7 @@ type Props = {
 }
 
 export const TableAvatar: React.FC<React.PropsWithChildren<React.PropsWithChildren<Props>>> = props => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     return <Avatar src={props.src} className={classes.root}>
         {getInitials(props.name)}

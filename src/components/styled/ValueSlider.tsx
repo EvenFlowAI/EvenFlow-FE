@@ -1,8 +1,9 @@
 import { Slider } from "@mui/material";
+import theme from '../../theme/theme'
 
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 
-export const ValueSlider = withStyles(theme => ({
+export const ValueSlider = withStyles(Slider, {
     track: {
         height: 2,
     },
@@ -59,4 +60,4 @@ export const ValueSlider = withStyles(theme => ({
             }
         }
     }
-}))(Slider);
+});

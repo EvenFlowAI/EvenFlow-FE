@@ -11,7 +11,7 @@ export type TAvatarProps = {
 
 export const AvatarUpload: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAvatarProps>>> = (props) => {
     const [state, setState] = useState<IAvatarState>({file: null, dataUrl: props.dataUrl || undefined});
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const ref = createRef<HTMLInputElement>();
 

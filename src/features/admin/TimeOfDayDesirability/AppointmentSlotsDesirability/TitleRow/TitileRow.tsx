@@ -3,7 +3,7 @@ import {Grid} from "@mui/material";
 import React from "react";
 
 export const TitleRow = () => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     return <Grid container spacing={1}>
         <Grid className={classes.titleRow} item xs={6} sm={2} md={3}>

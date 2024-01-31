@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     wrapper: {
         fontSize: 20,
         width: "100%",
@@ -14,4 +15,4 @@ export const useStyles = makeStyles(theme => ({
             flexGrow: 1
         }
     }
-}))
+}));

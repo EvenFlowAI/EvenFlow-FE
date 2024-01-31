@@ -20,7 +20,7 @@ import dayjs from "dayjs";
 export const SelectedAppointment = () => {
     const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
     const { appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
-    const classes = useSelectedAppointmentStyles();
+    const { classes  } = useSelectedAppointmentStyles();
     const theme = useTheme();
     const {t} = useTranslation();
     const isSm = useMediaQuery(theme.breakpoints.down('md'));

@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
 const borderRule = '1px solid #E0E2E8';
 
@@ -7,7 +7,8 @@ const defaultBorder = {
     borderRight: borderRule,
 }
 
-export const useOptionsTableStyles = makeStyles(() => ({
+// 
+export const useOptionsTableStyles = makeStyles()(() => ({
     container: {
         overflowX: 'unset',
     },
@@ -62,4 +63,4 @@ export const useOptionsTableStyles = makeStyles(() => ({
             fontSize: 12,
         }
     }
-}))
+}));

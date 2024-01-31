@@ -1,5 +1,5 @@
 import {styled} from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
 export const PickUpSlotsWrapper = styled('div')(() => ({
     display: "grid",
@@ -9,7 +9,8 @@ export const PickUpSlotsWrapper = styled('div')(() => ({
     justifyContent: "stretch",
 }));
 
-export const useStyles = makeStyles(theme => ({
+//
+export const useStyles = makeStyles()(theme => ({
     wrapper: {
         maxHeight: '40vh',
         overflowY: "auto",
@@ -17,4 +18,4 @@ export const useStyles = makeStyles(theme => ({
             maxHeight: '30vh',
         }
     }
-}))
+}));

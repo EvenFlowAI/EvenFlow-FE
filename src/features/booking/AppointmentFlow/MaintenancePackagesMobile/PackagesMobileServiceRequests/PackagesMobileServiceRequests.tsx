@@ -9,7 +9,7 @@ type TProps = {
 }
 
 const PackagesMobileServiceRequests: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isBmWService, serviceRequests}) => {
-    const classes = usePackageMobileStyles();
+    const { classes  } = usePackageMobileStyles();
     return (
         <div className={classes.serviceRequests} style={{paddingBottom: 36}}>
             {serviceRequests

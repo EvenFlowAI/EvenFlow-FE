@@ -1,9 +1,9 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import { FormControlLabel, styled } from "@mui/material";
 
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles()({
     summaryText: {
         display: 'flex',
         alignItems: 'center',
@@ -15,7 +15,7 @@ export const useStyles = makeStyles({
         display: 'grid',
         gridTemplateColumns: '1fr 1fr 1fr',
     },
-})
+});
 
 export const RowWrapper = styled('div')<{toggle: number}>(({toggle}) => ({
     width: '100%',
@@ -24,7 +24,7 @@ export const RowWrapper = styled('div')<{toggle: number}>(({toggle}) => ({
     gap: 16,
 }));
 
-export const Label = withStyles({
+export const Label = withStyles(FormControlLabel, {
     root: {
         justifyContent: "flex-end",
         marginLeft: 0,
@@ -37,4 +37,4 @@ export const Label = withStyles({
         textTransform: "uppercase",
         color: "#3855F3",
     }
-})(FormControlLabel);
+});

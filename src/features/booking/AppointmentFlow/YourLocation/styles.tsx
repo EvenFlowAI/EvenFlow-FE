@@ -1,5 +1,5 @@
-import {styled, Theme} from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
+import {styled} from "@mui/material";
+import { makeStyles } from 'tss-react/mui';
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -18,7 +18,8 @@ export const SelectWrapper = styled('div')(({theme}) => ({
     }
 }));
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     select: {
         '& > div': {
             borderRadius: 0,
@@ -56,16 +57,12 @@ export const useStyles = makeStyles(() => ({
             }
         },
     }
-}))
+}));
 
-export interface TStyleProps {
-    error: boolean;
-}
-
-export const useAutocompleteStyles = makeStyles<Theme, TStyleProps>(() => ({
+export const useAutocompleteStyles = makeStyles<{error: boolean}>()((_theme, { error }) =>({
     root: {
         "& input::placeholder": {
-            color: props => props.error ? "red" : 'black'
+            color: error ? "red" : 'black'
         },
         "& > label": {
             textTransform: "uppercase",
@@ -76,4 +73,4 @@ export const useAutocompleteStyles = makeStyles<Theme, TStyleProps>(() => ({
     popupIndicator: {
         marginRight: 8
     },
-}))
+}));

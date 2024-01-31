@@ -17,7 +17,7 @@ type TTotalPriceRowProps = {
 
 const PackagesTotalPriceWithFee: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTotalPriceRowProps>>> = ({packages, handleClick, title, selectedPackage, packagePricingType}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
 
     return <Wrapper count={packages.length}>

@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const usePackageMobileStyles = makeStyles(() => ({
+//
+export const usePackageMobileStyles = makeStyles()(() => ({
     wrapper: {
         width: '100%',
         padding: 0,
@@ -179,4 +180,4 @@ export const usePackageMobileStyles = makeStyles(() => ({
     wrapperWithBorder: {
         border: '1px solid rgba(0, 0, 0, 0.15)'
     }
-}))
+}));

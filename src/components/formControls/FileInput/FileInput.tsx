@@ -16,7 +16,7 @@ export const FileInput: React.FC<React.PropsWithChildren<React.PropsWithChildren
     const ref = createRef<HTMLInputElement>();
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const handleFileChange: ChangeEventHandler<HTMLInputElement> = useCallback((event) => {
         if (event.target.files) {

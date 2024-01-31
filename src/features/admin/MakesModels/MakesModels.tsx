@@ -15,7 +15,7 @@ export const MakesModels = () => {
     const {selectedSC} = useSCs();
     const {onOpen, onClose, isOpen} = useModal();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (selectedSC) {

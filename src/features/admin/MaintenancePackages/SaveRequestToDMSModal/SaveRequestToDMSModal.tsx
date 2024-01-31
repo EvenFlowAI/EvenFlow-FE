@@ -16,7 +16,7 @@ const SaveRequestToDMSModal: React.FC<React.PropsWithChildren<React.PropsWithChi
     const [newRequests, setNewRequests] = useState<TExtendedService[]>([]);
     const [newUpsellRequests, setNewUpsellRequests] = useState<TIntervalUpsellForPackage[]>([]);
     const [temporaryData, setTemporaryData] = useState<IPackageById | null>(null);
-    const classes = useTableStyles();
+    const { classes  } = useTableStyles();
 
     useEffect(() => {
         setTemporaryData(packageData)

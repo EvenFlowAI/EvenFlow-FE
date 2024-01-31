@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {AddCircleOutline} from "@mui/icons-material";
 import {IconButton, Button, Divider} from "@mui/material";
@@ -57,7 +57,7 @@ const baseWrapper = {
     alignItems: 'center',
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
     formWrapper: {
        ...baseWrapper,
         '& .MuiAutocomplete-root': {
@@ -197,13 +197,13 @@ const useStyles = makeStyles(() => ({
         fontWeight: 'bold',
         fontSize: 14,
     }
-}))
+}));
 
-const useAutocompleteStyles = makeStyles(() => ({
+const useAutocompleteStyles = makeStyles()(() => ({
     clearIndicator: {
         width: 0,
     }
-}))
+}));
 
 const criteriaOptions = Object.keys(ECustomerCriteria).filter(key => Number.isNaN(+key));
 const yearOptions = getYearOptions();
@@ -244,8 +244,8 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
     const {isOpen: isComplimentaryOpen, onOpen: onComplimentaryOpen, onClose: onComplimentaryClose} = useModal();
     const {isOpen: isExistingOpen, onOpen: onExistingOpen, onClose: onExistingClose} = useModal();
 
-    const classes = useStyles();
-    const autoCompleteStyles = useAutocompleteStyles();
+    const { classes } = useStyles();
+    const { classes: autoCompleteStyles } = useAutocompleteStyles();
     const dispatch = useDispatch();
     const showError = useException();
 

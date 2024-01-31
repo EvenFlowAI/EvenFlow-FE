@@ -13,7 +13,7 @@ type TRowProps = {
 }
 
 export const ButtonRow:React.FC<React.PropsWithChildren<React.PropsWithChildren<TRowProps>>> = ({slot, onClick}) => {
-    const classes = useStylesBR();
+    const { classes  } = useStylesBR();
     return <Grid className={classes.dataRow} container spacing={1}>
         <Grid item xs={6} sm={2} md={3} className={classes.time}>
             {dayjs.utc(slot.start).format(time12HourFormat)}

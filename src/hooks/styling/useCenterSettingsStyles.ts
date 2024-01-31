@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useCenterSettingsStyles = makeStyles({
+// 
+export const useCenterSettingsStyles = makeStyles()({
     paper: {
         height: "100%",
         borderRadius: 0,

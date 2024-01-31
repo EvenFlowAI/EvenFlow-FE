@@ -39,7 +39,7 @@ const DayOfWeekOpsCode = () => {
     const showError = useException();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const getData = async (serviceCenterId: number) => {
         await dispatch(setAssignedPageData({ pageSize: 0, pageIndex: 0}));

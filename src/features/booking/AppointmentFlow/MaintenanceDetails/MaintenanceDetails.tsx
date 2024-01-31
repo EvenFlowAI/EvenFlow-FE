@@ -71,7 +71,7 @@ export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWit
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
     const {isOpen: isNoRecallsOpen, onOpen: onNoRecallsOpen, onClose: onNoRecallsClose} = useModal();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     const isSM = useMediaQuery(theme.breakpoints.down('md'));

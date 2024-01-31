@@ -1,7 +1,8 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {sideBarWidth} from "../../../theme/theme";
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     drawer: {
         flexShrink: 0,
         width: sideBarWidth,

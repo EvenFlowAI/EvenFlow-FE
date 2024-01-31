@@ -24,7 +24,7 @@ const LaborRateModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<D
     const [warranty, setWarranty] = useState<string>('0');
     const [internal, setInternal] = useState<string>('0');
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException()
     const showMessage = useMessage();

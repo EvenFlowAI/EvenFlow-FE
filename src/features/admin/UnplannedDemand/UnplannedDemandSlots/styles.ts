@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     headCell: {
         fontSize: 12,
         fontWeight: 700,
@@ -20,4 +21,4 @@ export const useStyles = makeStyles({
         borderRight: "1px solid #D9D9D9 !important",
         borderTop: "1px solid #D9D9D9 !important"
     },
-})
+});

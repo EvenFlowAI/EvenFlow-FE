@@ -27,7 +27,7 @@ const AddServiceManually: React.FC<React.PropsWithChildren<React.PropsWithChildr
     const showError = useException();
     const showMessage = useMessage();
     const {selectedSC} = useSCs();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (editedItem) {

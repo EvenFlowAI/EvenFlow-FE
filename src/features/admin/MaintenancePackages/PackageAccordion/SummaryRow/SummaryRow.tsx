@@ -34,7 +34,7 @@ const SummaryRow: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSumm
 }) => {
     const { isPackageLoading, currentPackage } = useSelector((state: RootState) => state.packages);
     const [values, setValues] = useState<TSummaryCell[]|undefined>([]);
-    const classes = useStyles(Boolean(toggleField));
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
 
     // todo logic for checked value

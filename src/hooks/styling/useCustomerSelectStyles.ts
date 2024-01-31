@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useCustomerSelectStyles = makeStyles((theme) => ({
+// 
+export const useCustomerSelectStyles = makeStyles()((theme) => ({
     greyText: {
         display: 'flex',
         justifyContent: "center",
@@ -50,4 +51,4 @@ export const useCustomerSelectStyles = makeStyles((theme) => ({
         cursor: "pointer",
         marginBottom: 9
     }
-}))
+}));

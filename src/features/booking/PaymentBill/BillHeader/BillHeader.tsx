@@ -6,7 +6,7 @@ import {data} from "../mockData";
 import React from "react";
 
 export const BillHeader = () => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     return (

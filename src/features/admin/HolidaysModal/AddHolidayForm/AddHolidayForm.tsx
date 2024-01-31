@@ -14,7 +14,7 @@ type TProps = {
 }
 
 export const HolidayForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = props => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <div>
         <Grid container spacing={2}>
             <Grid item xs={12}>

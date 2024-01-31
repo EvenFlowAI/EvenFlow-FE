@@ -64,8 +64,8 @@ const AssignOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildr
         setNonSelectedPageData
     );
     const dispatch = useDispatch();
-    const classes = useStyles();
-    const inputClasses = useInputStyles();
+    const { classes  } = useStyles();
+    const { classes: inputClasses } = useInputStyles();
     const showError = useException();
 
     useEffect(() => {

@@ -1,8 +1,9 @@
 import { FormControlLabel, Switch } from "@mui/material";
-import withStyles from '@mui/styles/withStyles';
-import makeStyles from '@mui/styles/makeStyles';
+import { withStyles } from 'tss-react/mui';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(() => ({
+//
+export const useStyles = makeStyles()(() => ({
     mainTitle: {
         fontSize: 24,
         fontWeight: "bold",
@@ -61,9 +62,9 @@ export const useStyles = makeStyles(() => ({
             marginLeft: 20,
         }
     }
-}))
+}));
 
-export const CustomSwitch = withStyles({
+export const CustomSwitch = withStyles(Switch, {
     thumb: {
         color: 'white',
         boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.1), 0px 3px 4px rgba(0, 0, 0, 0.3)",
@@ -72,13 +73,13 @@ export const CustomSwitch = withStyles({
     track: {
         backgroundColor: '#D3D3D3'
     }
-})(Switch)
+});
 
-export const Label = withStyles({
+export const Label = withStyles(FormControlLabel, {
     root: {
         marginLeft: 0,
     },
     label: {
         fontWeight: "bold"
     }
-})(FormControlLabel);
+});

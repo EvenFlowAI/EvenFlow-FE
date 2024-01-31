@@ -25,7 +25,7 @@ const EditPricingLevelModal: React.FC<React.PropsWithChildren<React.PropsWithChi
     const dispatch = useDispatch();
     const showError = useException();
     const {selectedSC} = useSCs();
-    const classes = useEditPricingLevelStyles();
+    const { classes  } = useEditPricingLevelStyles();
 
     useEffect(() => {
         if (prisingLevel && props.open) {

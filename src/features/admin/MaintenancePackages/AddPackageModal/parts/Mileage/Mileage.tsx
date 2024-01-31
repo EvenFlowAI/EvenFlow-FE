@@ -21,7 +21,7 @@ const Mileage: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMileage
                                               setSelectedMileages,
                                               setFormIsChecked }) => {
     const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
-    const classes = useAutocompleteStyles();
+    const { classes  } = useAutocompleteStyles();
 
     const sortMileage = (a: string, b: string) => {
         return selectedMileages.includes(a) ? selectedMileages.includes(b) ? 0 : -1 : 1

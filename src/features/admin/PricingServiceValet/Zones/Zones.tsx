@@ -15,7 +15,7 @@ type TZonesProps = {
 
 const Zones: React.FC<React.PropsWithChildren<React.PropsWithChildren<TZonesProps>>> = ({setCurrentZip, onRemoveZip, setSelectedZone, selectedZone }) => {
     const {zones, isLoading} = useSelector((state: RootState) => state.serviceValet);
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     return (
         <div className={classes.wrapper}>

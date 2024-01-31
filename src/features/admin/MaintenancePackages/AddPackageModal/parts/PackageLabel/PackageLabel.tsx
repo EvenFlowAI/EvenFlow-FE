@@ -9,7 +9,7 @@ type TPackageLabelProps = {
 }
 
 const PackageLabel: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPackageLabelProps>>> = ({ onDelete, pack }) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <div className={classes.wrapper}>{pack.name}
         <CloseOutlined onClick={() => onDelete(pack)} className={classes.icon}/>
     </div>

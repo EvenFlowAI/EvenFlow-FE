@@ -1,8 +1,8 @@
 import { darken, lighten, styled, Tooltip } from "@mui/material";
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 import React from "react";
 
-export const HtmlTooltip = withStyles({
+export const HtmlTooltip = withStyles(Tooltip, {
     tooltip: {
         fontSize: 12,
         color: '#202021',
@@ -13,7 +13,7 @@ export const HtmlTooltip = withStyles({
     popper: {
         borderRadius: 2,
     }
-})(Tooltip);
+});
 
 type TSlotsWrapperProps = {
     available?: boolean,

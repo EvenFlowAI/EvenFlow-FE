@@ -28,7 +28,7 @@ const WaitListSlotSettingsModal: React.FC<React.PropsWithChildren<React.PropsWit
     const dispatch = useDispatch()
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (waitListSettings && props.open) {

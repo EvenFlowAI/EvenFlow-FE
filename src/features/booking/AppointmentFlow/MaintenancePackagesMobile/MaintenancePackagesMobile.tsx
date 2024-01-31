@@ -44,7 +44,7 @@ const MaintenancePackagesMobile: React.FC<React.PropsWithChildren<React.PropsWit
                                                                        }) => {
     const [value, setValue] = useState<string>('1');
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const classes = usePackageMobileStyles();
+    const { classes  } = usePackageMobileStyles();
     const {t} = useTranslation();
 
     useEffect(() => {

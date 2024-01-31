@@ -44,7 +44,7 @@ import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../../routes/constants";
-import {SelectWrapper, TStyleProps, useAutocompleteStyles, useStyles} from "./styles";
+import {SelectWrapper, useAutocompleteStyles, useStyles} from "./styles";
 
 type TYourLocationProps = TActionProps & {
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
@@ -78,9 +78,9 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
-    const styleProps:TStyleProps = {error: isFormChecked && !zip};
-    const autocompleteClasses = useAutocompleteStyles(styleProps);
+    const { classes  } = useStyles();
+    const error = isFormChecked && !zip;
+    const { classes: autocompleteClasses } = useAutocompleteStyles({"error": error});
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
     const {id} = useParams<{id: string}>();

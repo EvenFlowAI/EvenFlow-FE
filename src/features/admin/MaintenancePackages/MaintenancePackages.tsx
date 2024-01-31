@@ -30,8 +30,8 @@ export const MaintenancePackages = () => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isDisclaimerOpen, setDisclaimerOpen] = useState<boolean>(false);
     const [presentedOptions, setPresentedOptions] = useState<TOption[]>([]);
-    const classes = useMaintenancePackagesStyles();
-    const autocompleteClasses = useAutocompleteStyles();
+    const { classes  } = useMaintenancePackagesStyles();
+    const { classes: autocompleteClasses } = useAutocompleteStyles();
     const dispatch = useDispatch();
     const showError = useException();
     const {onOpen, onClose, isOpen} = useModal();

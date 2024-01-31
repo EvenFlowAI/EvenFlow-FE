@@ -46,9 +46,9 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const autoCompleteStyles = useAutocompleteStyles();
-    const classes = useStyles();
-    const multipleACSClasses = useMultipleACStyles();
+    const { classes: autoCompleteStyles } = useAutocompleteStyles();
+    const { classes  } = useStyles();
+    const { classes: multipleACSClasses } = useMultipleACStyles();
     const showError = useException();
 
     const allRequestsSelected = useMemo(() => allAssignedList.length

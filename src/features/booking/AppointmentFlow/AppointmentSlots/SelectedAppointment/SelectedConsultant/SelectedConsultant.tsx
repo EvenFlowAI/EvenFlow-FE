@@ -18,7 +18,7 @@ const SelectedConsultant = () => {
     const { currentConfig, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const classes = useSelectedAppointmentStyles();
+    const { classes  } = useSelectedAppointmentStyles();
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville

@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 export const AvailableStaffCalendar = () => {
     const [date, setDate] = useState<TParsableDate>(dayjs());
     const today = useMemo(() => dayjs(), []);
-    const classes = useCalendarStyles();
+    const { classes  } = useCalendarStyles();
 
     const handleMonthChange = (m: TParsableDate) => {
         setDate(m);

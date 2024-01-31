@@ -1,9 +1,10 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import { TableCell } from "@mui/material";
 
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+//
+export const useStyles = makeStyles()({
     wrapper: {},
     rightHeaderPart: {
         width: '60%',
@@ -120,20 +121,20 @@ export const useStyles = makeStyles({
         display: "grid",
         gridTemplateColumns: '1fr 1fr 1fr'
     }
-})
+});
 
-export const TCell = withStyles({
+export const TCell = withStyles(TableCell, {
     root: {
         padding: 2,
         borderBottom: "none"
     }
-})(TableCell)
+});
 
-export const HCell = withStyles({
+export const HCell = withStyles(TCell, {
     root: {
         color: "grey",
         textTransform: "uppercase",
         fontSize: 10,
         fontWeight: 600
     }
-})(TCell)
+});

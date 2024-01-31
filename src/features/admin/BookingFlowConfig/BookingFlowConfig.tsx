@@ -22,7 +22,7 @@ export const BookingFlowConfig = () => {
     const {selectedSC} = useSCs();
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const visitCenterConfig = useMemo(() => configuration.find(item => item.serviceType === EServiceType.VisitCenter), [configuration])
     const mobileServiceConfig = useMemo(() => configuration.find(item => item.serviceType === EServiceType.MobileService), [configuration])

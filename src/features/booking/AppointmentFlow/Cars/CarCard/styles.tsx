@@ -1,5 +1,5 @@
 import { Button, styled } from "@mui/material";
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 import React from "react";
 
 export const Wrapper = styled("div")<{ active?: boolean}>(({theme, active}) => ({
@@ -43,11 +43,11 @@ export const CarInfo = styled('ul')({
     }
 });
 
-export const RepairBtn = withStyles({
+export const RepairBtn = withStyles(Button, {
     root: {
         textTransform: "none",
         textDecoration: "underline",
         fontSize: 14,
         fontWeight: 600
     }
-})(Button)
+});

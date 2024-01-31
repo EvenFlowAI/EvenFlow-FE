@@ -1,7 +1,8 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {mh400, mh600} from "../constants";
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     button: {
         height: "100%",
         maxHeight: 465,
@@ -38,4 +39,4 @@ export const useStyles = makeStyles(theme => ({
             }
         },
     },
-}))
+}));

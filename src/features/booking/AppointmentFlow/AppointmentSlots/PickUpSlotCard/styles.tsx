@@ -1,8 +1,9 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {styled} from "@mui/material";
 import React from "react";
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     dropOff: {
         display: 'flex',
         flexDirection: 'column',
@@ -54,7 +55,7 @@ export const useStyles = makeStyles(theme => ({
     rightText: {
         textAlign: 'right'
     }
-}))
+}));
 
 export type TPickUpSlotsWrapperProps = {
     available?: boolean,

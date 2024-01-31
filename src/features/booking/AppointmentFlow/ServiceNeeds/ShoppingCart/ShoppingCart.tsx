@@ -40,7 +40,7 @@ const ShoppingCart = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const theme = useTheme();
-    const classes = useStyles(theme);
+    const { classes  } = useStyles();
     const isSM = useMediaQuery(theme.breakpoints.down('md'));
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);

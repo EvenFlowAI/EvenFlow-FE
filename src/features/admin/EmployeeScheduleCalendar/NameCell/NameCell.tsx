@@ -9,7 +9,7 @@ type TProps = {
 }
 
 export const NameCell: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({employee}) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return (
         <div className={classes.wrapper}>
             <Avatar src={employee.avatarPath}>{getInitials(employee.fullName)}</Avatar>

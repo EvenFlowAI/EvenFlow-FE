@@ -82,7 +82,7 @@ export const PackageAccordion: React.FC<React.PropsWithChildren<React.PropsWithC
     const showError = useException();
 
     const accordClasses = useAccordionStyles();
-    const classes = usePackageAccordionStyles();
+    const { classes  } = usePackageAccordionStyles();
     const iconStyles = useIconStyles();
 
     useEffect(() => {

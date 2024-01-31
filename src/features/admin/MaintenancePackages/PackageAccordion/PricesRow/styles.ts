@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     topLineWrapper: {
         display: 'grid',
         gridTemplateColumns: '1fr 2fr',
@@ -32,4 +33,4 @@ export const useStyles = makeStyles(() => ({
         fontSize: 16,
         color: "#252733",
     }
-}))
+}));

@@ -20,7 +20,7 @@ export const DemandWindows = () => {
     const {selectedSC} = useSCs();
     const showError = useException();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const mappedTW = useMemo(() => {
         return timeWindows.reduce((acc, item) => {

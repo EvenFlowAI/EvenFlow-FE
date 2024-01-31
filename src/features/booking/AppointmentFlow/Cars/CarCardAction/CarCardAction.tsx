@@ -27,7 +27,7 @@ const CarCardAction: React.FC<React.PropsWithChildren<React.PropsWithChildren<TC
     const anchorRef = useRef<HTMLDivElement|null>(null);
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const classes = useStyles()
+    const { classes  } = useStyles()
 
     const handleMenuItemClick = useCallback((event: any, index:number) => {
         setSelectedIndex(index);

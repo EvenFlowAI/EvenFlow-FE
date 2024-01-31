@@ -26,7 +26,7 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
     const isSecondaryDisabled = useMemo(() => primaryMethod !== EAdvisorAssignMethod.LastAdvisor
         || noAssignment,[primaryMethod])
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException()
     const showMessage = useMessage();

@@ -26,7 +26,7 @@ const EmployeesFilters = () => {
     const [selectedRole, setSelectedRole] = useState<string>('');
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();
-    const classes = useLabelStyles();
+    const { classes  } = useLabelStyles();
     const {isOpen, onClose, onOpen} = useModal();
     const {changePage} = usePagination(
         (s: RootState) => s.employees.pageData,

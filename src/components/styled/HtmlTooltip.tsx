@@ -1,8 +1,8 @@
 import { Tooltip } from "@mui/material";
 
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 
-export const HtmlTooltip = withStyles({
+export const HtmlTooltip = withStyles(Tooltip, {
     tooltip: {
         fontSize: 13,
         color: '#202021',
@@ -11,4 +11,4 @@ export const HtmlTooltip = withStyles({
     popper: {
         borderRadius: 2,
     }
-})(Tooltip);
+});

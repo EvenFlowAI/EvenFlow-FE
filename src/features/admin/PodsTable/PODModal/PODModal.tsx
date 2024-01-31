@@ -74,7 +74,7 @@ export const PODModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
     const showMessage = useMessage();
     const dispatch = useDispatch();
     const {onOpen, isOpen, onClose} = useModal();
-    const classes = useAutocompleteStyles();
+    const { classes  } = useAutocompleteStyles();
 
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
     const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);

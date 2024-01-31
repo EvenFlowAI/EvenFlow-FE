@@ -13,7 +13,7 @@ export const DefaultMake = () => {
     const { makes, isLoading } = useSelector((state: RootState) => state.vehicleDetails);
     const [selectedMake, setSelectedMake] = useState<IMake|null>(null);
     const {selectedSC} = useSCs();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
 

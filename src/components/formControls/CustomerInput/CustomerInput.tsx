@@ -1,10 +1,10 @@
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 import {TextField} from "../TextFieldStyled/TextField";
 
-export const CustomerInput = withStyles({
+export const CustomerInput = withStyles(TextField, {
     root: {
         '& input': {
             padding: 4
         }
     }
-})(TextField)
+});

@@ -18,7 +18,7 @@ const CustomerVerification: React.FC<React.PropsWithChildren<React.PropsWithChil
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         selectedSC && setVerificationOn(selectedSC.isAuthRequired);

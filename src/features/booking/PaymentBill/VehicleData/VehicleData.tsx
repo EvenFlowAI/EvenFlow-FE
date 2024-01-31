@@ -5,7 +5,7 @@ import {data} from "../mockData";
 import React from "react";
 
 export const VehicleData = () => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     return <Grid container>

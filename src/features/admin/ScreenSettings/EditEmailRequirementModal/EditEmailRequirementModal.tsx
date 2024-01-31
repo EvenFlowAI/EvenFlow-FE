@@ -22,7 +22,7 @@ export const EditEmailRequirementModal: React.FC<React.PropsWithChildren<React.P
     const [data, setData] = useState<TEmailRequirement|null>(null);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const showError = useException();
     const showMessage = useMessage();
 

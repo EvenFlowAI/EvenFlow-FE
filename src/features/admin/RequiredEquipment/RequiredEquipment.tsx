@@ -34,7 +34,7 @@ export const RequiredEquipment: React.FC<React.PropsWithChildren<React.PropsWith
     const {askConfirm, closeConfirm} = useConfirm();
     const showMessage = useMessage();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();

@@ -46,7 +46,7 @@ const AddOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
          ...props}) => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {
         assignedList,
         assignedLoading,

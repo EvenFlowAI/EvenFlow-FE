@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {Dialog, styled} from "@mui/material";
 
 type TStyleProps = {
@@ -20,7 +20,8 @@ export const StyledDialog = styled(Dialog)<TStyleProps>(({theme, mW}) => ({
     },
 }))
 
-export const useStyles = makeStyles({
+//
+export const useStyles = makeStyles()({
     dialogTitle: {
         textAlign: "center",
         fontSize: 19,

@@ -27,7 +27,7 @@ const RoPredictionParameters = () => {
     const [defaultLaborHours, setDefaultLaborHours] = useState<string>('0');
     const [pickUpDropOffHours, setPickUpDropOffHours] = useState<string>('0');
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();

@@ -1,7 +1,8 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {mh400, mh600} from "./constants";
 
-export const useStyles = makeStyles(theme => ({
+//
+export const useStyles = makeStyles()(theme => ({
     buttonsContainer: {
         marginTop: "5%",
         marginBottom: 20,
@@ -111,4 +112,4 @@ export const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center'
     }
-}))
+}));

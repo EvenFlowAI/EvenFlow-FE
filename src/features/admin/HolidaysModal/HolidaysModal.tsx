@@ -44,7 +44,7 @@ export const HolidaysModal: React.FC<React.PropsWithChildren<React.PropsWithChil
     const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException()
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (props.open && selectedSC) {

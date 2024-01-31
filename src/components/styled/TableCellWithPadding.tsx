@@ -1,9 +1,9 @@
 import { TableCell as TC } from "@mui/material";
 
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 
-export const TableCellWithPadding = withStyles({
+export const TableCellWithPadding = withStyles(TC, {
     root: {
         padding: "12px 16px !important",
     }
-})(TC);
+});

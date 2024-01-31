@@ -1,8 +1,8 @@
 import { FormControlLabel } from "@mui/material";
-import withStyles from '@mui/styles/withStyles';
-import makeStyles from '@mui/styles/makeStyles';
+import { withStyles } from 'tss-react/mui';
+import { makeStyles } from 'tss-react/mui';
 
-export const Label = withStyles({
+export const Label = withStyles(FormControlLabel, {
     root: {
         justifyContent: "flex-end",
         marginLeft: 0,
@@ -14,9 +14,10 @@ export const Label = withStyles({
         textTransform: "uppercase",
         //transform: "translate(0, 1.5px) scale(0.75)",
     }
-})(FormControlLabel);
+});
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     inputsWrapper: {
         display: "grid",
         gridTemplateColumns: "1fr 1fr 1fr",
@@ -56,4 +57,4 @@ export const useStyles = makeStyles(() => ({
         display: 'flex',
         justifyContent: 'flex-end'
     },
-}))
+}));

@@ -35,7 +35,7 @@ export const EditDemandSegmentsModal:React.FC<React.PropsWithChildren<React.Prop
     const showMessage = useMessage();
     const showError = useException();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (props.open) {

@@ -15,7 +15,7 @@ type TProps = {
 
 export const WeekControls: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({selectedDate, isXS, onChange}) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const handleLeft = () => {
         onChange(dayjs(selectedDate).subtract(!isXS ? 7 : 1, "days"));

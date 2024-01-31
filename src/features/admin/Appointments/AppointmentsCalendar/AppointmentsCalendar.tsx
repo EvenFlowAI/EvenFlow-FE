@@ -27,8 +27,8 @@ export const AppointmentsCalendar: React.FC<React.PropsWithChildren<React.PropsW
     const [startDate, setStartDate] = useState<TParsableDate>(dayjs());
     const [appointmentsByDate, setAppointmentsByDate] = useState<TAppointmentsByDate>({})
 
-    const calendarClasses = useCalendarStyles();
-    const classes = useStyles();
+    const {classes: calendarClasses} = useCalendarStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const {selectedSC}= useSCs();
 

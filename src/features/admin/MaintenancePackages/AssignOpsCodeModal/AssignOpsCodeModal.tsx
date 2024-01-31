@@ -51,8 +51,8 @@ const AssignOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildr
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
-    const inputClasses = useInputStyles();
+    const { classes  } = useStyles();
+    const { classes: inputClasses } = useInputStyles();
 
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,

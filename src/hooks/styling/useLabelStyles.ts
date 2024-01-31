@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useLabelStyles = makeStyles({
+// 
+export const useLabelStyles = makeStyles()({
     label: {
         fontWeight: "bold",
         fontSize: 16,
@@ -8,4 +9,4 @@ export const useLabelStyles = makeStyles({
         transform: 'translate(0, 1.5px) scale(0.75)',
         transformOrigin: 'top left'
     }
-})
+});

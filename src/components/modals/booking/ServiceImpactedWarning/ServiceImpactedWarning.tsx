@@ -19,7 +19,7 @@ const ServiceImpactedWarning = () => {
     const {isServiceWarningOpen} = useSelector((state: RootState) => state.modals);
     const {appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
     const {id} = useParams<{id: string}>();
     const history = useHistory();

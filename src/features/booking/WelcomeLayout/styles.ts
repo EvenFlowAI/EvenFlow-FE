@@ -1,7 +1,8 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {mh400, mh600} from "../CustomerSelect/constants";
 
-export const useStyles = makeStyles((theme) => ({
+// 
+export const useStyles = makeStyles()((theme) => ({
     container: {
         width: "100vw",
         minHeight: 0,

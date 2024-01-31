@@ -4,7 +4,7 @@ import {Button} from "@mui/material";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import AddRecallModal from "./AddRecallModal/AddRecallModal";
 import {IRecall} from "../../../store/reducers/recall/types";
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
@@ -17,7 +17,7 @@ import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
     wrapper: {
         display: "flex",
         alignItems: "center",
@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => ({
     button: {
         marginLeft: 20
     }
-}))
+}));
 
 const RecallParts = () => {
     const [currentItem, setCurrentItem] = useState<IRecall | null>(null);
@@ -41,7 +41,7 @@ const RecallParts = () => {
     const {selectedSC} = useSCs();
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
     const {isOpen, onOpen, onClose} = useModal();
-    const classes = useStyles();
+    const { classes } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
 

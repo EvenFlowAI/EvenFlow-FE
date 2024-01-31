@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useMaintenancePackagesStyles = makeStyles(() => ({
+// 
+export const useMaintenancePackagesStyles = makeStyles()(() => ({
     titleWrapper: {
         marginBottom: 16,
     },
@@ -30,7 +31,8 @@ export const useMaintenancePackagesStyles = makeStyles(() => ({
     }
 }));
 
-export const usePackageAccordionStyles = makeStyles(() => ({
+// 
+export const usePackageAccordionStyles = makeStyles()(() => ({
     title: {
         fontSize: 20,
     },

@@ -7,11 +7,11 @@ import {useCustomerSelectStyles} from "../../../../hooks/styling/useCustomerSele
 import {useStyles} from "./styles";
 
 const NewCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWithChildren<{ handleNew: () => void}>>> = ({ handleNew }) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const { t } = useTranslation();
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('md'));
-    const returningClasses = useCustomerSelectStyles();
+    const { classes: returningClasses } = useCustomerSelectStyles();
 
     return <Grid item xs={12} sm={12} md={6} style={{maxWidth: 440, padding: isSm ? '16px 0' : 16}}>
         <div className={classes.button}>

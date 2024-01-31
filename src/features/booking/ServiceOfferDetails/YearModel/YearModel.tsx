@@ -21,7 +21,7 @@ export const YearModel: React.FC<React.PropsWithChildren<React.PropsWithChildren
     const [currentModels, setCurrentModels] = useState<TModel[]>([]);
     const [currentSeries, setCurrentSeries] = useState<TSeries[]>([]);
     const dispatch = useDispatch();
-    const classes = useOfferInputStyles();
+    const { classes  } = useOfferInputStyles();
     const yearOptions = useMemo(() => seriesModels.map(item => item.year.toString()), [seriesModels]);
     const isError = useMemo(() => Boolean(selectedVehicle && selectedVehicle?.make === "Other"), [selectedVehicle]);
     const showError = useException();

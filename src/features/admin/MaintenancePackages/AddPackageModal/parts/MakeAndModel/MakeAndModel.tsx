@@ -29,7 +29,7 @@ const MakeAndModel: React.FC<React.PropsWithChildren<React.PropsWithChildren<Mak
                                                    }) => {
     const { makes: makesFromDB } = useSelector((state: RootState) => state.packages);
     const [models, setModels] = useState<string[]>([]);
-    const classes = useAutocompleteStyles();
+    const { classes  } = useAutocompleteStyles();
 
     const filteredMakes = useMemo(() => makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase())),
         [makesFromDB, selectedMakes])

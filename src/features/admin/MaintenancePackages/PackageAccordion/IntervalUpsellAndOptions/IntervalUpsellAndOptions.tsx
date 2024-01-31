@@ -12,7 +12,7 @@ type TServiceRequestsProps = {
 }
 
 export const IntervalUpsellAndOptions: React.FC<React.PropsWithChildren<React.PropsWithChildren<TServiceRequestsProps>>> = (props) => {
-    const classes = useTableStyles();
+    const { classes  } = useTableStyles();
 
     const getCellClass = useCallback((cellIndex: number, rowIndex: number) => {
         if (props.packageData){

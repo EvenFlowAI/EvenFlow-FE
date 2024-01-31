@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { CssBaseline, ThemeProvider, Theme, StyledEngineProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider, StyledEngineProvider } from "@mui/material";
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -24,11 +24,6 @@ dayjs.extend(minMax)
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(localeData)
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 const container = document.getElementById('root');
 const root = createRoot(container!);

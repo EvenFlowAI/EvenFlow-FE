@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {useStyles} from "../styles";
 
 const NewSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChildren<{ handleNew: () => void}>>> = ({ handleNew }) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const { t } = useTranslation();
 
     return <Grid item xs={12} sm={12} md={6}>

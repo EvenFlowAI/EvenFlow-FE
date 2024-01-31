@@ -37,7 +37,7 @@ const TransportationNotifications: React.FC<React.PropsWithChildren<React.PropsW
     const {askConfirm} = useConfirm();
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useNotificationStyles();
+    const { classes  } = useNotificationStyles();
 
     const currentTransportationData = useMemo(() => {
         return allTransportationData?.transportationOptions?.find(el => el.id === selectedTransportation?.id)

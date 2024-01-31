@@ -25,7 +25,7 @@ const Complimentary: React.FC<React.PropsWithChildren<React.PropsWithChildren<TC
                                                           onComplimentaryClick,
                                                           setPackageData,
                                                       }) => {
-    const classes = usePackageAccordionStyles();
+    const { classes  } = usePackageAccordionStyles();
     const showError = useException();
     const complimentaryTitle = packageData?.segmentTitles?.find(el => el.type === ESegmentTitle.Complimentary)
 

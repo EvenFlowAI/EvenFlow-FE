@@ -15,7 +15,7 @@ export const EditFieldNameModal:React.FC<React.PropsWithChildren<React.PropsWith
     const {selectedSC} = useSCs();
     const dispatch = useDispatch()
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (selectedSC?.engineTypeFieldName) setFieldName(selectedSC.engineTypeFieldName);

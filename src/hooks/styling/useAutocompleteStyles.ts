@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useAutocompleteStyles = makeStyles(() => ({
+// 
+export const useAutocompleteStyles = makeStyles()(() => ({
     tag: {
         display: 'flex',
         alignItems: 'center',
@@ -24,4 +25,4 @@ export const useAutocompleteStyles = makeStyles(() => ({
         padding: 5,
         paddingRight: 8,
     },
-}))
+}));

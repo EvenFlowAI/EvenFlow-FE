@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     row: {
         display: "flex",
         flexFlow: "row nowrap",
@@ -20,4 +21,4 @@ export const useStyles = makeStyles({
         fontWeight: "bold",
         fontSize: 12
     }
-})
+});

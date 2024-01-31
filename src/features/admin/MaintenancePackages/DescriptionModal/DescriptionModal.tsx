@@ -25,7 +25,7 @@ const DescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren
     const {onOpen: onEditorOpen, isOpen: isEditorOpen, onClose: onEditorClose} = useModal();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const onCancel = () => {
         setEditingElement(null);

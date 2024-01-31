@@ -25,7 +25,7 @@ export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<React.PropsWith
                                                              setWrongOrderIndexes
 }) => {
     const { allAssignedList, assignedLoading } = useSelector((state: RootState) => state.serviceRequests);
-    const classes = useStyles()
+    const { classes  } = useStyles()
 
     const onSROrderChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()

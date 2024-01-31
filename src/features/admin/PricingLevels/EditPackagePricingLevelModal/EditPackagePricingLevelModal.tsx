@@ -22,7 +22,7 @@ const EditPackagePricingLevelModal: React.FC<React.PropsWithChildren<React.Props
     const dispatch = useDispatch();
     const showError = useException();
     const {selectedSC} = useSCs();
-    const classes = useEditPricingLevelStyles();
+    const { classes  } = useEditPricingLevelStyles();
 
     useEffect(() => {
         if (prisingLevel && props.open) {

@@ -13,7 +13,7 @@ type TProps = {
 }
 
 export const CalendarControls = (props: TProps) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const switchDate = (direction: Directions) => () => {
         if (direction === Directions.Prev) {
             props.onChange(dayjs(props.date).subtract(1, "month"));

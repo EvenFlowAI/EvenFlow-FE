@@ -1,10 +1,10 @@
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 
 import {LoadingButton} from "../buttons/LoadingButton/LoadingButton";
 
-export const LoginButton = withStyles(theme => ({
+export const LoginButton = withStyles(LoadingButton, theme => ({
     wrapper: {marginTop: 40},
     root: {
         padding: theme.spacing(2)
     }
-}))(LoadingButton);
+}));

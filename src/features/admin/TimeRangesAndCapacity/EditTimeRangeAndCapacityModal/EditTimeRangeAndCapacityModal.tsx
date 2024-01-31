@@ -29,7 +29,7 @@ const EditTimeRangeAndCapacityModal: React.FC<React.PropsWithChildren<React.Prop
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false)
     const {selectedSC} = useSCs();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
 
     useEffect(() => {

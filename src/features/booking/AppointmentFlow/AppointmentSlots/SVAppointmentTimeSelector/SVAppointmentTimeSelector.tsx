@@ -23,7 +23,7 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
         const {selectedTiming, sideBarSteps} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const firstCardRef = useRef<HTMLDivElement|null>(null);
-        const classes = useStyles();
+        const { classes  } = useStyles();
         const {t} = useTranslation();
         const currentSlots = useMemo(() => {
             return serviceValetSlots.filter(slot => dayjs.utc(slot.date).isSame(date, 'date'))

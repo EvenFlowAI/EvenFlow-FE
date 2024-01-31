@@ -1,8 +1,8 @@
 import { Tabs as Ts } from "@mui/material";
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 import {TabPanel as Tp} from "@mui/lab";
 
-const style = withStyles(() => ({
+export const Tabs = withStyles(Ts, {
     root: {
         padding: 0,
         borderBottom: `none`,
@@ -24,14 +24,10 @@ const style = withStyles(() => ({
     indicator: {
         backgroundColor: 'transparent'
     }
-}));
+});
 
-const styled = withStyles(() => ({
+export const TabPanel = withStyles(Tp,{
     root: {
         padding: 0,
     }
-}));
-
-export const Tabs = style(Ts);
-
-export const TabPanel = styled(Tp);
+});

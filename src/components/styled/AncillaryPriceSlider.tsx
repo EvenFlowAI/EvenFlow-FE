@@ -1,7 +1,7 @@
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 import {ValueSlider} from "./ValueSlider";
 
-export const AncillaryPriceSlider = withStyles((theme) => ({
+export const AncillaryPriceSlider = withStyles(ValueSlider, (theme) => ({
     rail: {
         background: "#3261FB",
         opacity: 1
@@ -52,4 +52,4 @@ export const AncillaryPriceSlider = withStyles((theme) => ({
             },
         }
     }
-}))(ValueSlider);
+}));

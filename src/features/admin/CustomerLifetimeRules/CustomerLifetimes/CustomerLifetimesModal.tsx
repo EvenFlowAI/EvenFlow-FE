@@ -28,7 +28,7 @@ export const CustomerLifetimesModal: React.FC<React.PropsWithChildren<React.Prop
     const showMessage = useMessage();
     const showError = useException();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (selectedSC && props.open) {

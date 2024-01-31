@@ -5,7 +5,7 @@ import {useDetailsItemStyles} from "../DetailsItem/styles";
 import dayjs from "dayjs";
 
 export const ModifiedData: React.FC<React.PropsWithChildren<React.PropsWithChildren<{data: TDateAppointmentData[]}>>> = ({data}) => {
-    const classes = useDetailsItemStyles();
+    const { classes  } = useDetailsItemStyles();
     return data?.length
         ? <div className={classes.wrapper}>
             <div className={classes.details}>

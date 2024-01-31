@@ -1,17 +1,17 @@
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 import {StyledTable} from "./StyledTable";
 
-export const DemandTable = withStyles(theme => ({
+export const DemandTable = withStyles(StyledTable, theme => ({
     root: {
         border: `1px solid ${theme.palette.divider}`
     }
-}))(StyledTable);
+}));
 
-export const DenseTable = withStyles({
+export const DenseTable = withStyles(DemandTable, {
     root: {
         "& .MuiTableCell-root": {
             padding: 12,
             fontSize: 15
         }
     }
-})(DemandTable);
+});

@@ -31,7 +31,7 @@ const UnplannedDemandEditing: React.FC<React.PropsWithChildren<React.PropsWithCh
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const showError = useException();
     const showMessage = useMessage();
 

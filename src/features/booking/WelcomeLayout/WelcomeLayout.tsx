@@ -8,7 +8,7 @@ type TProps = {
 }
 
 export const WelcomeLayout: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({children, title, subtitle}) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <div className={classes.container}>
         <Paper className={classes.paper} variant="outlined">
             {title

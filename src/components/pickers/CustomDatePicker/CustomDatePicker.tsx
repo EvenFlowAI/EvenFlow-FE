@@ -17,7 +17,7 @@ export const CustomDatePicker: React.FC<TProps> = ({
                                                              label,
                                                              ...props
                                                          }) => {
-    const classes = useDatePickerStyles();
+    const { classes  } = useDatePickerStyles();
 
     return <>
         {label ? <InputLabel shrink className={classes.label}>{label}</InputLabel> : null}

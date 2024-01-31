@@ -63,7 +63,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     const currentUser = useCurrentUser();
 
     const {id} = useParams<{id: string}>();
-    const classes = useServiceTypeStyles();
+    const { classes  } = useServiceTypeStyles();
     const dispatch = useDispatch();
     const history = useHistory();
     const showError = useException();

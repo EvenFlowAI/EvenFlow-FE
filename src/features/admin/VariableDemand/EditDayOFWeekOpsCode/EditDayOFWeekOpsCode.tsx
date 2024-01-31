@@ -30,7 +30,7 @@ const EditDayOfWeekOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (editingItem) setValues({low: editingItem.low, high: editingItem.high});

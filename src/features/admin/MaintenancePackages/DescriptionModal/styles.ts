@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     wrapper: {
         display: "grid",
         gap: 10,
@@ -15,4 +16,4 @@ export const useStyles = makeStyles({
     title: {
         textAlign: "center"
     }
-})
+});

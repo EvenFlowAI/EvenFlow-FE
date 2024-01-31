@@ -1,6 +1,6 @@
 import { FormLabel, styled } from "@mui/material";
 
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 
 export const TableWrapper = styled("div")(({theme}) => ({
     width: "100%",
@@ -12,7 +12,7 @@ export const TableWrapper = styled("div")(({theme}) => ({
     }
 }))
 
-export const Label = withStyles({
+export const Label = withStyles(FormLabel, {
     root: {
         fontSize: 15,
         fontWeight: "bold",
@@ -20,4 +20,4 @@ export const Label = withStyles({
         textTransform: "uppercase",
         color: "#9FA2B4",
     }
-})(FormLabel);
+});

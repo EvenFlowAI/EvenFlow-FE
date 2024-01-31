@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
 const baseCellStyles = {
     backgroundColor: 'white',
@@ -7,7 +7,8 @@ const baseCellStyles = {
 
 const border = '1px solid #E0E2E8';
 
-export const useTableStyles = makeStyles(() => ({
+// 
+export const useTableStyles = makeStyles()(() => ({
     wrapper: {
         marginBottom: 20,
         padding: 10,

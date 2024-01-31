@@ -34,7 +34,7 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
         const {selectedTiming, gap, hoursOfOperations, sideBarSteps, appointmentByKey} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const titleRef = useRef<HTMLDivElement|null>(null);
-        const classes = useStyles();
+        const { classes  } = useStyles();
         const {t} = useTranslation();
 
         useEffect(() => {

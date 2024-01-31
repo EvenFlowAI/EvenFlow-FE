@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {Avatar, styled} from "@mui/material";
 
 type TStyleProps = {
@@ -19,7 +19,8 @@ export const StyledAvatar = styled(Avatar)<TStyleProps>(({theme, size, disabled}
     }
 }))
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     sign: {
         fontSize: 25,
         fontWeight: "bold",

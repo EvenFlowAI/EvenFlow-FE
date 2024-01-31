@@ -14,7 +14,7 @@ type TZoneProps = {
 }
 
 const GeographicZone: React.FC<React.PropsWithChildren<React.PropsWithChildren<TZoneProps>>> = ({isSelected, zone, zipCodes, setCurrentZip, onRemoveZip, setSelectedZone}) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const onClick = () => {
         setSelectedZone(zone);

@@ -15,8 +15,8 @@ import {getOfferString} from "../../../../../utils/utils";
 const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({ open, onClose, }) => {
     const {appointment, scProfile, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const { serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
-    const dialogClasses = useDialogStyles();
-    const classes = useStyles();
+    const {classes: dialogClasses} = useDialogStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const price = useMemo(() => {

@@ -8,7 +8,7 @@ import {getAlphabeticalIndexes} from "./utils";
 
 export const RepairTable = () => {
     const indexes = getAlphabeticalIndexes();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     return <TableContainer>

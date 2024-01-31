@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {cellPadding, compactPadding, superCompactPadding} from "./constants";
 import {styled, TableCell} from "@mui/material";
 
@@ -33,7 +33,8 @@ export const StyledTableHead = styled(TableCell)<TStyleProps>(({theme, compact, 
     }
 }))
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     root: {
         maxWidth: theme.breakpoints.values.lg,
     },

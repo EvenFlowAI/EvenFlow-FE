@@ -11,7 +11,7 @@ type TProps = {
 }
 
 export const OfferPlate: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({offer, onClick}) => {
-    const classes = useStyles({t: offer.type});
+    const { classes  } = useStyles();
     return (
         <Paper variant="outlined" className={classes.wrapper}>
             <Button color="primary" onClick={onClick(offer)} className={classes.edit}>Edit</Button>

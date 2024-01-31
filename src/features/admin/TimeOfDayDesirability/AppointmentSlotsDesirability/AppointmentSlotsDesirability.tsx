@@ -153,7 +153,7 @@ export const AppointmentSlotsDesirability = () => {
         }
     }
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     return <Paper className={classes.paper} variant="outlined">
         <h2 className={classes.title}>

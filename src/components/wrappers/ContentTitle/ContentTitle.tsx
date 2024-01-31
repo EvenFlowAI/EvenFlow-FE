@@ -11,7 +11,7 @@ type TTitleProps = {
 }
 
 export const ContentTitle: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTitleProps>>> = (props) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <div className={classes.titleContainer}>
         <Typography className={classes.title} variant="h1">
             {props.parent

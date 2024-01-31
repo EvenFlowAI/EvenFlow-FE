@@ -1,6 +1,6 @@
 import { Button as DefaultButton, styled, TableCell } from "@mui/material";
 
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 
 export const SliderCell = styled(TableCell)(({theme}) => ({
     [theme.breakpoints.down('sm')]: {
@@ -9,7 +9,7 @@ export const SliderCell = styled(TableCell)(({theme}) => ({
 }))
 
 
-export const Button = withStyles(theme => ({
+export const Button = withStyles(DefaultButton, theme => ({
     root: {
         fontSize: 14,
         textTransform: "none",
@@ -20,4 +20,4 @@ export const Button = withStyles(theme => ({
             marginLeft: 0
         }
     }
-}))(DefaultButton);
+}));

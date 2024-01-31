@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {Theme} from "@mui/material";
 
 const titleSt = {
@@ -7,7 +7,8 @@ const titleSt = {
     margin: 0
 }
 
-export const useStyles = makeStyles((theme: Theme) => ({
+// 
+export const useStyles = makeStyles()((theme: Theme) => ({
     title: {
         ...titleSt,
         fontWeight: "bold",

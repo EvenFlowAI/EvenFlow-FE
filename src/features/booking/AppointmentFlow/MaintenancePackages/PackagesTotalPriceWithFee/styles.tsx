@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {styled} from "@mui/material";
 
 export const PriceValue = styled('div')<{
@@ -54,7 +54,8 @@ export const PriceValue = styled('div')<{
         left: 16
     }
 }))
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     priceText: {
         width: '100%',
         textAlign: 'right',
@@ -70,7 +71,7 @@ export const useStyles = makeStyles({
         display: 'grid',
 
     }
-})
+});
 export const Wrapper = styled('div')<{ count: number }>(({theme, count}) => ({
     display: "grid",
     gap: "0 16px",

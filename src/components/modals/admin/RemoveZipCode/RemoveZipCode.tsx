@@ -16,7 +16,7 @@ type TRemoveGeographicZoneProps = DialogProps & {
 }
 
 const RemoveZipCode: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRemoveGeographicZoneProps>>> = ({serviceType, zip, zone, ...props}) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 

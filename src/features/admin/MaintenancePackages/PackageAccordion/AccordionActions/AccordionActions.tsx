@@ -9,7 +9,7 @@ type TAccordionProps = {
 }
 
 const AccordionActions: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAccordionProps>>> = ({ onAddOpsCode, onCancel, onSave }) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return (
         <>
             <Divider/>

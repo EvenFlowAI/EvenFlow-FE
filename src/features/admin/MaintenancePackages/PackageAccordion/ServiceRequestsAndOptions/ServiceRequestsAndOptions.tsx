@@ -17,8 +17,8 @@ type TServiceRequestsProps = {
 }
 
 export const ServiceRequestsWithOptions: React.FC<React.PropsWithChildren<React.PropsWithChildren<TServiceRequestsProps>>> = (props) => {
-    const classes = useTableStyles();
-    const optionsClasses = useOptionsTableStyles();
+    const { classes  } = useTableStyles();
+    const { classes: optionsClasses } = useOptionsTableStyles();
     const showError = useException();
 
     const getCellClass = useCallback((cellIndex: number, rowIndex: number) => {

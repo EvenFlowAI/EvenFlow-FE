@@ -11,7 +11,7 @@ const AddDistanceRangeModal: React.FC<React.PropsWithChildren<React.PropsWithChi
     const [rangeMax, setRangeMax] = useState<number|''>('');
     const [costPerMile, setCostPerMile] = useState<number|''>('');
     const [formIsChecked, setFormChecked] = useState<boolean>(false);
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const onCancel = () => {
         setRangeMin('');

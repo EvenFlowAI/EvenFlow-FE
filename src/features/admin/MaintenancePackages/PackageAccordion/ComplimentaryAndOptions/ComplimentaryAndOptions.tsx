@@ -12,7 +12,7 @@ type TServiceRequestsProps = {
 }
 
 export const ComplimentaryAndOptions: React.FC<React.PropsWithChildren<React.PropsWithChildren<TServiceRequestsProps>>> = (props) => {
-    const classes = useTableStyles();
+    const { classes  } = useTableStyles();
 
     const getCellClass = useCallback((cellIndex: number, rowIndex: number) => {
         if (props.packageData){

@@ -18,7 +18,7 @@ type TProps = {
 }
 
 export const BreakForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps&TViewMode>>> = props => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 

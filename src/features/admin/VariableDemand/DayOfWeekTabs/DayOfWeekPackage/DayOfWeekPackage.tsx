@@ -30,7 +30,7 @@ const DayOfWeekPackage = () => {
     const showError = useException();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const setInitialSliders = useCallback((mpPricingSettings: IPackagePricingSettings[]) => {
         setSlidersState(() => {

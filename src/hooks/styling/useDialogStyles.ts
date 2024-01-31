@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useDialogStyles = makeStyles(theme => ({
+// 
+export const useDialogStyles = makeStyles()(theme => ({
     root: {
         "& hr": {
             margin: "28px 0",

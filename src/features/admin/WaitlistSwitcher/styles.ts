@@ -1,8 +1,8 @@
 import { FormControlLabel, styled } from "@mui/material";
 
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 
-export const SwitcherLabel = withStyles({
+export const SwitcherLabel = withStyles(FormControlLabel, {
     root: {
         justifyContent: "flex-end",
         marginLeft: 0,
@@ -14,7 +14,7 @@ export const SwitcherLabel = withStyles({
         fontSize: 14,
         textTransform: "uppercase",
     }
-})(FormControlLabel);
+});
 
 export const Wrapper = styled('div')({
     display: 'flex',

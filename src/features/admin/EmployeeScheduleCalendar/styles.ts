@@ -1,6 +1,6 @@
 import { styled, Table, TableCell } from "@mui/material";
 
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 
 export const ControlWrapper = styled("div")(({theme}) => ({
     display: "flex",
@@ -52,7 +52,7 @@ export const HeadCell = styled(TableCell)(({theme}) => ({
     }
 }));
 
-export const ScheduleTable = withStyles({
+export const ScheduleTable = withStyles(Table, {
     root: {
         "& .MuiTableCell-head": {
             textTransform: "uppercase",
@@ -74,4 +74,4 @@ export const ScheduleTable = withStyles({
             backgroundColor: "#F2F3F7"
         }
     }
-})(Table);
+});

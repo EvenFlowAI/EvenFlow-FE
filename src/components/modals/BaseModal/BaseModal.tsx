@@ -17,17 +17,17 @@ export const BaseModal: React.FC<React.PropsWithChildren<React.PropsWithChildren
 }
 
 export const DialogContent: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogContentProps>>> = props => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <DC {...props} className={classes.dialogContent} />
 }
 
 export const DialogActions: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogActionsProps>>> = props => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <DA {...props} className={classes.dialogActions} />
 }
 
 export const DialogTitle: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogTitleProps & {onClose?: () => void}>>> = ({children, onClose, ...props}) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return (
         <DT {...props} className={classes.dialogTitle}>
             {children}

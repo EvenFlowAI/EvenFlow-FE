@@ -17,7 +17,7 @@ type TProps = {
 
 const ColumnsSelectionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TProps>>> = ({onClose, open, selectedColumns, setSelectedColumns}) => {
     const [checkedColumns, setCheckedColumns] = useState<TSearchColumnName[]>([]);
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     useEffect(() => {

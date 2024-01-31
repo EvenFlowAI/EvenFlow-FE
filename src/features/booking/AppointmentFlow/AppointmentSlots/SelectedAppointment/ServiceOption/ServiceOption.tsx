@@ -38,7 +38,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{i
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const {t} = useTranslation();
-    const classes = useSelectedAppointmentStyles();
+    const { classes  } = useSelectedAppointmentStyles();
     const dispatch = useDispatch();
     const {id} = useParams<{id: string}>();
 

@@ -47,7 +47,7 @@ type TOpsCodesTableProps = {
 
 export const OpsCodesTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TOpsCodesTableProps>>> = ({ selectedCodes, setSelectedCodes, disabled }) => {
     const { allAssignedList, assignedLoading } = useSelector((state: RootState) => state.serviceRequests);
-    const classes = useStyles()
+    const { classes  } = useStyles()
 
     const handleSelect = useCallback((el: IAssignedServiceRequest) => {
         if (!disabled) {

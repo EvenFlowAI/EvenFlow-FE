@@ -6,8 +6,7 @@ import {convertToRaw, EditorState} from "draft-js";
 import {convertToHTML, convertFromHTML} from "draft-convert";
 import {Button} from "@mui/material";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import makeStyles from '@mui/styles/makeStyles';
-import classnames from 'classnames';
+import { makeStyles } from 'tss-react/mui';
 import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {useException} from "../../../../hooks/useException/useException";
 
@@ -17,16 +16,16 @@ type THTMLEditor = DialogProps & {
     payload?: string;
 }
 
-const useStyles = makeStyles(({
+const useStyles = makeStyles()({
     editor: {
         border: '1px solid #F1F1F1',
     }
-}))
+});
 
 const HtmlEditor: React.FC<React.PropsWithChildren<React.PropsWithChildren<THTMLEditor>>> = ({open, onClose, title, onSave, isLoading, payload}) => {
     const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty())
     const showError = useException();
-    const styles = useStyles();
+    const { classes: styles, cx } = useStyles();
 
     useEffect(() => {
         if (open) {
@@ -69,7 +68,7 @@ const HtmlEditor: React.FC<React.PropsWithChildren<React.PropsWithChildren<THTML
                         placeholder="Type Here..."
                         editorState={editorState}
                         wrapperClassName="wrapper-class"
-                        editorClassName={classnames("editor-class", styles.editor)}
+                        editorClassName={cx("editor-class", styles.editor)}
                         toolbarClassName="toolbar-class"
                         onEditorStateChange={onEditorStateChange}
                     />

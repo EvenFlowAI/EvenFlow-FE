@@ -21,7 +21,7 @@ export const AddMileageModal: React.FC<React.PropsWithChildren<React.PropsWithCh
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const onCancel = () => {
         setNewMileage('');

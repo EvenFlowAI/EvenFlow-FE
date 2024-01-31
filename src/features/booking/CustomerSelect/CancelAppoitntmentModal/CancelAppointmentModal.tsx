@@ -19,8 +19,8 @@ const CancelAppointmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
     const [data, setData] = useState<IAppointmentByQuery|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const showError = useException();
-    const classes = useStyles();
-    const dialogClasses = useDialogStyles();
+    const { classes  } = useStyles();
+    const {classes: dialogClasses} = useDialogStyles();
 
     useEffect(() => {
         if (open && hashKey) {

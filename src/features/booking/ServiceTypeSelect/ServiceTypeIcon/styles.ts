@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles((theme) => ({
+//
+export const useStyles = makeStyles()((theme) => ({
     icon: {
         width: '100%',
         maxHeight: 160,
@@ -43,4 +44,4 @@ export const useStyles = makeStyles((theme) => ({
             maxWidth: 224,
         }
     }
-}))
+}));

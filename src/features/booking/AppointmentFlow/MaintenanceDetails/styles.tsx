@@ -1,5 +1,5 @@
 import {styled} from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -11,7 +11,8 @@ export const SelectWrapper = styled('div')(({theme}) => ({
     }
 }));
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     vinWrapper: {
         '& > label': {
             textTransform: 'none',
@@ -20,4 +21,4 @@ export const useStyles = makeStyles(() => ({
             fontWeight: "normal",
         }
     }
-}))
+}));

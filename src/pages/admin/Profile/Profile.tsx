@@ -19,7 +19,7 @@ export const Profile = () => {
     const [selectedTab, setTab] = useState<string>("1");
     const [tabList, setTabList] = useState<TTab[]>([]);
     const currentUser = useCurrentUser();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         setTabList(currentUser?.role === "Owner" ? tabs : tabs.filter(item => item.id === "2"));

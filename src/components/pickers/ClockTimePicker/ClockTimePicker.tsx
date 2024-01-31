@@ -29,7 +29,7 @@ const ClockTimePicker: React.FC<TProps> = ({
                                                      name,
                                                      ...props
                                                 }) => {
-    const classes = useDatePickerStyles();
+    const { classes  } = useDatePickerStyles();
 
     return <>
         {label ? <InputLabel shrink className={classes.label}>{label}</InputLabel> : null}

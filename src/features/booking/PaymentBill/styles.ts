@@ -1,7 +1,8 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {styled} from "@mui/material";
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     headerWrapper: {
         color: "#202021",
     },
@@ -89,7 +90,7 @@ export const useStyles = makeStyles(() => ({
     detailsRow: {
         marginBottom: 10
     }
-}))
+}));
 
 export const Wrapper = styled('div')({
     display: "flex",

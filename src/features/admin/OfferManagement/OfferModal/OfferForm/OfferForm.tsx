@@ -72,8 +72,8 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
         return [selectAllSR, ...serviceRequests];
     }, [serviceRequests]);
     const {isOpen, onOpen, onClose} = useModal();
-    const classes = useStyles();
-    const pickerClasses = useDatePickerStyles();
+    const { classes  } = useStyles();
+    const { classes: pickerClasses } = useDatePickerStyles();
 
     const handleSwitch = (e: any, value: boolean) => {
         onValueChange('isProductPageOn', value);

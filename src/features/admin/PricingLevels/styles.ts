@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useEditPricingLevelStyles = makeStyles(() => ({
+// 
+export const useEditPricingLevelStyles = makeStyles()(() => ({
     wrapper: {
         display: 'flex',
         justifyContent: 'flex-end',
@@ -26,4 +27,4 @@ export const useEditPricingLevelStyles = makeStyles(() => ({
             color: '#7898FF'
         }
     },
-}))
+}));

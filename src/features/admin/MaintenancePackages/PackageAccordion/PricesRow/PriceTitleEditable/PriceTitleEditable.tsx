@@ -12,7 +12,7 @@ type TTitleEditableProps = {
 const PriceTitleEditable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTitleEditableProps>>> = ({text, onSave}) => {
     const [isEdit, setEdit] = useState<boolean>(false);
     const [newName, setNewName] = useState<string>('');
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const showError = useException();
 
     useEffect(() => {

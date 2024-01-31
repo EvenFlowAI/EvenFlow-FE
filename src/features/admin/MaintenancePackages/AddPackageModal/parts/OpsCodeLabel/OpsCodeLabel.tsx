@@ -9,7 +9,7 @@ type TOpsCodeProps = {
 }
 
 const OpsCode: React.FC<React.PropsWithChildren<React.PropsWithChildren<TOpsCodeProps>>> = ({ onDelete, serviceRequest }) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <div className={classes.wrapper}>{serviceRequest.code}
     <CloseOutlined onClick={() => onDelete(serviceRequest)} className={classes.icon}/></div>
 }

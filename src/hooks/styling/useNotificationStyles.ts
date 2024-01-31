@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useNotificationStyles = makeStyles({
+// 
+export const useNotificationStyles = makeStyles()({
     tabTitle: {
         fontSize: 16,
         fontWeight: 700,
@@ -50,4 +51,4 @@ export const useNotificationStyles = makeStyles({
             transformOrigin: "bottom left"
         }
     }
-})
+});

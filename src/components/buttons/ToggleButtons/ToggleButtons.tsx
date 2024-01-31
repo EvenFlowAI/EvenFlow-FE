@@ -16,7 +16,7 @@ type TProps = {
 }
 
 export const ToggleButtons: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = props => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     return <div>
         <InputLabel className={classes.label} shrink>{props.label}</InputLabel>

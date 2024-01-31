@@ -19,7 +19,7 @@ const PricingDisplay: React.FC<React.PropsWithChildren<React.PropsWithChildren<u
     const showError = useException();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         setValue(roundPrice ? 'round' : 'decimal');

@@ -18,7 +18,7 @@ const ServiceCenterSelect = () => {
     const {shortSC, shortLoading} = useSelector((state: RootState) => state.serviceCenters);
     const [centersList, setCentersList] = useState<IServiceCenter[]>([]);
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();
 

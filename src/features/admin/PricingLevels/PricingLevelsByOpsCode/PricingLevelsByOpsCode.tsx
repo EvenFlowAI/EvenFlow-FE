@@ -30,7 +30,7 @@ const PricingLevelsByOpsCode = () => {
     const {onOpen, onClose, isOpen} = useModal();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const onEditClick = async (el: TPricingLevel) => {
         await setEditElement(el);

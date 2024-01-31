@@ -40,7 +40,7 @@ export const CustomerSelect: React.FC<React.PropsWithChildren<React.PropsWithChi
     const {shortSC} = useSelector((state: RootState) => state.serviceCenters);
 
     const {id} = useParams<{id: string}>();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const currentUser = useCurrentUser();
     const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,

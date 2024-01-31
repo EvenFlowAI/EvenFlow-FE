@@ -40,7 +40,7 @@ export const DemandSegmentsDesirability = () => {
     const optSettings = useSelector((state: RootState) => state.slotScoring.optimizationSettings);
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (selectedSC) {

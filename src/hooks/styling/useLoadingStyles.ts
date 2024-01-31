@@ -1,9 +1,9 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useLoadingStyles = makeStyles(theme => ({
+export const useLoadingStyles = makeStyles()(theme => ({
     wrapper: {
         [theme.breakpoints.down('sm')]: {
             width: "100%",
         }
     }
-}))
+}));

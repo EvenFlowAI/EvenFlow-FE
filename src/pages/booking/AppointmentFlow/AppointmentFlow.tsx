@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import { ThemeProvider, Theme, StyledEngineProvider, useMediaQuery, useTheme } from "@mui/material";
+import { ThemeProvider, StyledEngineProvider, useMediaQuery, useTheme } from "@mui/material";
 import {
     Cars
 } from "../../../features/booking/AppointmentFlow/Cars/Cars";
@@ -86,11 +86,6 @@ import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {useException} from "../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../routes/constants";
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 export const AppointmentFlow = () => {
     const {

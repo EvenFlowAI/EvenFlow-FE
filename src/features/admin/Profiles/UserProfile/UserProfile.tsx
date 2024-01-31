@@ -24,7 +24,7 @@ export const UserProfile = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const theme = useTheme();
     const isSM = useMediaQuery(theme.breakpoints.down('md'));
 

@@ -48,7 +48,7 @@ export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChi
     }));
     const {selectedSC} = useSCs();
     const currentUser = useCurrentUser();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const isCCRView: boolean = useMemo(() => {
         return ["Call Center Rep", "Advisor"].includes(currentUser?.role || "")

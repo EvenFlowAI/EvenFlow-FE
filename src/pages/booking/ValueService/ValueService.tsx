@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import { ThemeProvider, Theme, StyledEngineProvider } from "@mui/material";
+import { ThemeProvider, StyledEngineProvider } from "@mui/material";
 import {frameTheme} from "../../../theme/theme";
 import {YearModel} from "../../../features/booking/ValueService/YearModel/YearModel";
 import {
@@ -17,13 +17,6 @@ import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/type
 import {TScreen} from "../../../types/types";
 import {TValueServiceScreen} from "./types";
 import {Container} from "./styles";
-
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
-
 
 type TValueServiceProps = {
     onBack: () => void;

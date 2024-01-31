@@ -1,7 +1,7 @@
 import {styled} from "@mui/material";
 import React from "react";
 import {mh400, mh600} from "../CustomerSelect/constants";
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
 export const ServiceTypeCardsWrapper = styled("div")
     <{ cardsAmount: number}>
@@ -80,7 +80,8 @@ export const ServiceTypeButton = styled("div")<{
         justifyContent: 'flex-end',
     },
 }));
-export const useServiceTypeStyles = makeStyles(() => ({
+//
+export const useServiceTypeStyles = makeStyles()(() => ({
     name: {
         width: "100%",
         fontSize: 28,
@@ -89,4 +90,4 @@ export const useServiceTypeStyles = makeStyles(() => ({
         display: 'flex',
         flexDirection: 'column',
     }
-}))
+}));

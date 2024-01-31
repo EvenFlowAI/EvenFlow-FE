@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useSelectedAppointmentStyles = makeStyles(theme => ({
+// 
+export const useSelectedAppointmentStyles = makeStyles()(theme => ({
     selectWrapper: {
         display: 'flex',
         alignItems: 'center',
@@ -32,4 +33,4 @@ export const useSelectedAppointmentStyles = makeStyles(theme => ({
         margin: '0 0 10px 0',
         textTransform: 'uppercase'
     }
-}))
+}));

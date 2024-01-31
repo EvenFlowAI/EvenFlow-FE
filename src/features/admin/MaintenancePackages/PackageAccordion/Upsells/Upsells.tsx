@@ -25,7 +25,7 @@ const Upsells: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUpsellT
                                                   onUpsellClick,
                                                   setPackageData,
                                               }) => {
-    const classes = usePackageAccordionStyles();
+    const { classes  } = usePackageAccordionStyles();
     const showError = useException();
     const upsellTitle = packageData?.segmentTitles?.find(el => el.type === ESegmentTitle.IntervalUpsell)
 

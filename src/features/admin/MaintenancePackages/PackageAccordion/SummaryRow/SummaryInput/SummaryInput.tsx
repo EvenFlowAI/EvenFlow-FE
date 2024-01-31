@@ -13,7 +13,7 @@ type TSummaryProps = {
 }
 
 const SummaryInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSummaryProps>>> = ({ isComplimentary, packageHasComplimentary, item,isEdit, setIsEdit, onChange}) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const [value, setValue] = useState<string>('')
 
     useEffect(() => {

@@ -25,7 +25,7 @@ export const AppointmentValueSettings = () => {
     const handleTabChange = (e: any, val: string) => {
         setTab(val);
     }
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <TabContext value={selectedTab}>
         <TitleContainer title="Appointment Value Settings" pad parent={capacityManagementRoot} />
         <TabList

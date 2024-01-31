@@ -19,7 +19,7 @@ export const DemandWindows = () => {
     const {onClose, onOpen, isOpen} = useModal();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const mappedPricingLevels: TPricingLevels = useMemo(() => {
         return pricingLevels.reduce((acc, item) => {

@@ -31,7 +31,7 @@ export const DealershipGroupProfile = () => {
 
     const theme = useTheme();
     const isSM = useMediaQuery(theme.breakpoints.down('md'));
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (profile) {

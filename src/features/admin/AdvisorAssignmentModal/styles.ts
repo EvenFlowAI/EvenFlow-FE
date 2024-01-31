@@ -1,6 +1,6 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(() => ({
+export const useStyles = makeStyles()(() => ({
     actionsWrapper: {
         display: 'flex',
         justifyContent: 'flex-end',
@@ -26,4 +26,4 @@ export const useStyles = makeStyles(() => ({
             color: '#7898FF'
         }
     },
-}))
+}));

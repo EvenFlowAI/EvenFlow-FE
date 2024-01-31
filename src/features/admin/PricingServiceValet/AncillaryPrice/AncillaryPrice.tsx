@@ -38,7 +38,7 @@ const AncillaryPrice = () => {
     const {pricingByDistance, pricingByZones, ancillaryPriceType, isPricingByZoneLoading, isLoading} = useSelector((state: RootState) => state.serviceValet);
     const [selectedTab, selectTab] = useState<string>("0");
     const [typeOfPrice, setTypeOfPrice] = useState<EAncillaryPriceType>(EAncillaryPriceType.Zone);
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const {askConfirm} = useConfirm();

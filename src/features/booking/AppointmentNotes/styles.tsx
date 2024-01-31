@@ -1,8 +1,9 @@
 import {styled} from "@mui/material";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+//
+export const useStyles = makeStyles()({
     title: {
         fontSize: 14,
         fontWeight: 700,
@@ -43,7 +44,7 @@ export const useStyles = makeStyles({
         textTransform: "uppercase",
         paddingLeft: 12,
     },
-})
+});
 
 export const Textarea = styled(TextField)({
     "& textarea": {

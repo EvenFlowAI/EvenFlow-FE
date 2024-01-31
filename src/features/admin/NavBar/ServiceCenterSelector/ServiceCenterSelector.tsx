@@ -30,7 +30,7 @@ export const ServiceCenterSelector = () => {
         }
     }
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     if (!scList || !scList.length) return null;
     if (!currentUser || currentUser.isSuperUser) return null;
     if (restrictedRoles.includes(currentUser.role)) return null;

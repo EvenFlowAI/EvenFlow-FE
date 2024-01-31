@@ -7,7 +7,7 @@ type Props =
     & ButtonProps;
 
 export const LoadingButton: React.FC<React.PropsWithChildren<React.PropsWithChildren<Props>>> = ({loading, classes, ...props}) => {
-    const classes_ = useStyles({fw: props.fullWidth || false});
+    const { classes: classes_} = useStyles();
     const buttonClasses = {...classes};
     if ("wrapper" in buttonClasses) {
         delete buttonClasses['wrapper'];

@@ -16,7 +16,7 @@ const buttons: TSwitchButton<string>[] = [
 ];
 
 export const TimeOfDay = () => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 

@@ -37,7 +37,7 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
     const {id} = useParams<{id: string}>();
     const showError = useException();
     const {t} = useTranslation();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {isOpen: isAddServiceOpen, onClose: onAddServiceClose, onOpen: onAddServiceOpen} = useModal();
 
     useEffect(() => {

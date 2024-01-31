@@ -35,7 +35,7 @@ const AddUpsellToPackageModal: React.FC<React.PropsWithChildren<React.PropsWithC
          ...props}) => {
         const {selectedSC} = useSCs();
         const dispatch = useDispatch();
-        const classes = useStyles();
+        const { classes  } = useStyles();
         const {
             intervalUpsellList,
             upsellLoading,

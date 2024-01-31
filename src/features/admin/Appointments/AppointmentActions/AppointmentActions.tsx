@@ -18,7 +18,7 @@ type TProps = {
 }
 
 export const AppointmentActions: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({handleChangeView, selectedView, searchTerm, handleSearchChange, onSearch, onFilterOpen}) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {selectedSC} = useSCs();
     const encoded = encodeSCID(selectedSC?.id ?? 0);
     const url = Routes.EndUser.Welcome + "/" + encoded + "?frame=1";

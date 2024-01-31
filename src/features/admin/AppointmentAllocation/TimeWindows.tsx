@@ -8,7 +8,7 @@ import {
     useMediaQuery,
     useTheme,
 } from "@mui/material";
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 import {loadTimeWindow, setTimeWindow} from "../../../store/reducers/demandSegments/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -22,12 +22,12 @@ import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
-const TableCell = withStyles({
+const TableCell = withStyles(TC, {
     root: {
         padding: "12px 16px !important",
         textAlign: "center",
     }
-})(TC);
+});
 
 const theadStyle = {
     fontWeight: "bold" as const, textTransform: "uppercase" as const
@@ -43,12 +43,12 @@ const defaultForm: TForm = {
     start: 0, stop: 0, duration1: 0, duration2: 0
 }
 
-const Button = withStyles({
+const Button = withStyles(Bt, {
     root: {
         fontSize: 16,
         textTransform: "none"
     }
-})(Bt);
+});
 const getData = (d: ITimeWindow): TForm => {
     return {
         start: d.startInHours,

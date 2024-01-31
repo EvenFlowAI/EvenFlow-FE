@@ -27,7 +27,7 @@ const AssignZipToZoneModal:React.FC<React.PropsWithChildren<React.PropsWithChild
     const {zones: mobileServiceZones, currentZone: currentMobileZone, isLoading: isMobileLoading} = useSelector((state: RootState) => state.mobileService);
     const [selectedZone, setSelectedZone] = useState<TZone|null>(null);
     const [data, setData] = useState<TZone[]>([]);
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();

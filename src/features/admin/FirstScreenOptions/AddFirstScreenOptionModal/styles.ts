@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     inputsWrapper: {
         display: "grid",
         gridTemplateColumns: "1fr 1fr 1fr",
@@ -48,4 +49,4 @@ export const useStyles = makeStyles(() => ({
         marginBottom: 18,
         marginTop: 18,
     },
-}))
+}));

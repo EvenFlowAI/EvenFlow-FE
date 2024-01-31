@@ -4,7 +4,7 @@ import {Container} from "@mui/material";
 import {useStyles} from "./styles";
 
 export const AvatarWrapper: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAvatarProps>>> = (props) => {
-    const classes = useStyles({maxWidth: 0});
+    const { classes  } = useStyles();
     return <Container className={classes.avatarWrapper}>
         <AvatarUpload {...props} />
     </Container>

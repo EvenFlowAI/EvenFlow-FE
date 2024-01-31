@@ -19,7 +19,7 @@ const ManageExEFAppointments = () => {
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         selectedSC && setManageOn(Boolean(selectedSC.isUpdateAdvisorInAppointments));

@@ -22,7 +22,7 @@ export const AdminPanel = () => {
     const {isOpened, onOpen, onClose} = useSideBar();
     const dispatch = useDispatch();
     const navBarRef = useRef<HTMLDivElement>(null);
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         function updateHeight() {

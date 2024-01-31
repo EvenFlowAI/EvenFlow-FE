@@ -1,15 +1,8 @@
-import { Grid, ThemeProvider, Theme, StyledEngineProvider } from "@mui/material";
+import { Grid, ThemeProvider, StyledEngineProvider } from "@mui/material";
 import React from "react";
 import {LoginSideBar} from "./LoginSideBar/LoginSideBar";
 import {loginTheme} from "../../../theme/theme";
 import LoginRoutes from "../../../routes/LoginRoutes/LoginRoutes";
-
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
-
 
 export const Login = () => {
     return (

@@ -14,8 +14,8 @@ type TProps = {
 export const ZonesOpsCodesPlate: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onEdit, isLoading}) => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
     const {zones} = useSelector((state: RootState) => state.serviceValet);
-    const centerSettingsClasses = useCenterSettingsStyles();
-    const classes = useStyles();
+    const { classes: centerSettingsClasses } = useCenterSettingsStyles();
+    const { classes  } = useStyles();
 
     const zonesData = useMemo(() => {
         if (centerSettings?.zoneServiceRequests) {

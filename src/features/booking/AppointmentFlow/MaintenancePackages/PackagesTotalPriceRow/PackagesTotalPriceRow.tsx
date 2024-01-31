@@ -20,7 +20,7 @@ type TTotalPriceRowProps = {
 const PackagesTotalPriceRow: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTotalPriceRowProps>>> = ({packages, handleClick, isUpsells, title, selectedPackage, packagePricingType}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const defaultString = `${t("Total")} (${t("excluding taxes & fees")})`;
 
     return <Wrapper count={packages.length}>

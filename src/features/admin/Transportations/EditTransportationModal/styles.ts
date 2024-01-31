@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useMultipleACStyles = makeStyles(() => ({
+// 
+export const useMultipleACStyles = makeStyles()(() => ({
     tag: {
         display: 'flex',
         alignItems: 'center',
@@ -22,9 +23,10 @@ export const useMultipleACStyles = makeStyles(() => ({
         padding: 5,
         paddingRight: 8,
     },
-}))
+}));
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     wrapper: {
         display: 'flex',
         flexDirection: 'column',
@@ -76,8 +78,9 @@ export const useStyles = makeStyles(() => ({
     },
 }));
 
-export const useAutocompleteStyles = makeStyles(() => ({
+// 
+export const useAutocompleteStyles = makeStyles()(() => ({
     clearIndicator: {
         width: 0,
     }
-}))
+}));

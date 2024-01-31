@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStylesBR = makeStyles(theme => ({
+// 
+export const useStylesBR = makeStyles()(theme => ({
     dataRow: {
         marginTop: 6,
         alignItems: "center"

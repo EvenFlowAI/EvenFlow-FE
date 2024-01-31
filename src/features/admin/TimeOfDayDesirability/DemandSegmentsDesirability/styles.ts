@@ -1,8 +1,8 @@
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 import {ValueSlider} from "../../../../components/styled/ValueSlider";
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const Slider = withStyles({
+export const Slider = withStyles(ValueSlider, {
     root: {
         margin: "0 25px",
         width: "calc(100% - 50px)"
@@ -15,9 +15,10 @@ export const Slider = withStyles({
             right: -25
         }
     },
-})(ValueSlider);
+});
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     table: {
         "& .MuiTableCell-head": {
             textAlign: "center"

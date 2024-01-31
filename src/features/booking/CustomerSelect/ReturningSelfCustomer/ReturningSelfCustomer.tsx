@@ -20,7 +20,7 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
     const {customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const loadingClasses = useLoadingStyles();
     const { t } = useTranslation();
     const isXs = useMediaQuery("xs");

@@ -15,7 +15,7 @@ type TLinkProps = {
 const Link: React.FC<React.PropsWithChildren<React.PropsWithChildren<TLinkProps>>> = ({link, closeSidebar}) => {
     const [isSubListOpen, setSubListOpen] = useState<boolean>(false);
     const currentUser = useCurrentUser();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const history = useHistory();
 
     useEffect(() => {

@@ -8,7 +8,7 @@ import {usePackageMobileStyles} from "../../../../../hooks/styling/usePackageMob
 
 const PackagesMobileTotalMaintenance: React.FC<React.PropsWithChildren<React.PropsWithChildren<{ item: TPackage }>>> = ({item}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const classes = usePackageMobileStyles();
+    const { classes  } = usePackageMobileStyles();
     const {t} = useTranslation();
 
     return scProfile?.isShowPriceDetails

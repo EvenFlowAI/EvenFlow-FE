@@ -14,8 +14,8 @@ import {getOfferString} from "../../../../../utils/utils";
 const DetailedFeesManage: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({ open, onClose, }) => {
     const { scProfile} = useSelector((state: RootState) => state.appointment);
     const { appointmentRequestsPrices} = useSelector((state: RootState) => state.appointmentFrame);
-    const dialogClasses = useDialogStyles();
-    const classes = useStyles();
+    const {classes: dialogClasses} = useDialogStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     const noDefinedPriceExists = useMemo(() => {

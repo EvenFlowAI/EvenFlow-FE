@@ -15,7 +15,7 @@ const AppointmentNotes = () => {
     const [isFocused, setFocused] = useState<boolean>(false);
     const [hasError, setHasError] = useState<boolean>(false);
     const [text, setText] = useState<string>('');
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const showError = useException(true);

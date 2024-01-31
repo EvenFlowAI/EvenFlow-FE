@@ -20,7 +20,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(defaultRowsPerPage);
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 

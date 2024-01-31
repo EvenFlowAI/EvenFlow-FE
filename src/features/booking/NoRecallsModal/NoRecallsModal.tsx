@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 import {useStyles} from "./styles";
 
 const NoRecallsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {handleNext : () => void}>>> = ({ open, onClose, handleNext }) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     const onProceed = () => {

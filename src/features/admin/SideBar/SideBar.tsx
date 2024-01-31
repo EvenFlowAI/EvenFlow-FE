@@ -23,7 +23,7 @@ type TProps = {
 };
 
 export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isOpened, onClose}) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const theme = useTheme();
     const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));

@@ -1,6 +1,7 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+//
+export const useStyles = makeStyles()(theme => ({
     info: {
         display: 'flex',
         flexDirection: 'column',
@@ -29,4 +30,4 @@ export const useStyles = makeStyles(theme => ({
             }
         }
     }
-}))
+}));

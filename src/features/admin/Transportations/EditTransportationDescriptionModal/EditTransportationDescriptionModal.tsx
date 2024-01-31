@@ -21,7 +21,7 @@ export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildre
     const [description, setDescription] = useState<string>('')
     const [column, setColumn] = useState<TOption>(initialColumn);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const columnOptions = Object.keys(ETransportColumn).filter(key => Number.isNaN(+key)).map((op, index) => ({name: op, value: index}));
     const dispatch = useDispatch();
     const showError = useException();

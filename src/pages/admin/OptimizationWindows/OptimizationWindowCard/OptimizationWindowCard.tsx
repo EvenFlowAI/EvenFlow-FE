@@ -21,7 +21,7 @@ export const OptimizationWindowCard: React.FC<React.PropsWithChildren<React.Prop
     label,
     helperText,
 }) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     return <Paper className={classes.paper} variant={"outlined"} >
         <h3 className={classes.title}>{title}</h3>

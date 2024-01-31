@@ -17,7 +17,7 @@ const RemindersModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<D
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {selectedSC} = useSCs();
 
     useEffect(() => {

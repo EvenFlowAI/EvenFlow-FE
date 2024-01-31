@@ -36,7 +36,7 @@ const PodAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<
     const {askConfirm} = useConfirm();
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useNotificationStyles();
+    const { classes  } = useNotificationStyles();
     const currentPodData = useMemo(() => allPodData.find(el => el.id === selectedPod?.id), [allPodData, selectedPod])
 
     useEffect(() => {

@@ -1,9 +1,10 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import { styled, Tooltip } from "@mui/material";
 
-import withStyles from '@mui/styles/withStyles';
+import { withStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(() => ({
+//
+export const useStyles = makeStyles()(() => ({
     tableWrapper: {
     },
     wrapper: {
@@ -72,7 +73,7 @@ export const useStyles = makeStyles(() => ({
         padding: '16px 8px',
         borderRight: '1px solid #DADADA',
     },
-}))
+}));
 
 export const IconsBlock = styled('div')({
     display: 'flex',
@@ -80,7 +81,7 @@ export const IconsBlock = styled('div')({
     alignItems: 'center',
 })
 
-export const HtmlTooltip = withStyles({
+export const HtmlTooltip = withStyles(Tooltip, {
     tooltip: {
         fontSize: 12,
         color: '#202021',
@@ -91,4 +92,4 @@ export const HtmlTooltip = withStyles({
     popper: {
         borderRadius: 0,
     }
-})(Tooltip);
+});

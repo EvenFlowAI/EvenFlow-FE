@@ -9,7 +9,7 @@ type TCartItemProps = {
     onClick: (item: IMaintenanceItem) => void;
 }
 export const CartItem: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCartItemProps>>> = ({item, onClick}) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return (
         <div className={classes.itemWrapper}>
             <div>{item.name}</div>

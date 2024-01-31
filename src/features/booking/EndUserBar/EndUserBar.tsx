@@ -12,7 +12,7 @@ export const EndUserBar = () => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <AppBar className={classes.bar} position="static">
         <Toolbar>
             <Avatar title={getInitials(scProfile?.name)} src={scProfile?.avatarPath}>

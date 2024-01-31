@@ -18,7 +18,7 @@ const mockSRC = 'https://app.mapline.com/map/map_36c1b7f/Pz8UPz4ZIEJDfz8UPxAUP1k
 
 const GeographicZonesMap = () => {
     const {onOpen, onClose, isOpen} = useModal();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const showMessage = useMessage();

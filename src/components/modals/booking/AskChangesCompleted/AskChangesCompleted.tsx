@@ -30,7 +30,7 @@ const AskChangesCompleted = () => {
     const {isChangesCompletedOpen} = useSelector((state: RootState) => state.modals);
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const showError = useException();
     const {t} = useTranslation();
     const {id} = useParams<{id: string}>();

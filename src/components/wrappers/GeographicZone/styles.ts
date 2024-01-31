@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {styled} from "@mui/material";
 import {TStyleProps} from "./types";
 
@@ -13,7 +13,8 @@ export const ZoneContainer = styled("div")<TStyleProps>(({theme, isSelected}) =>
     fontSize: 14,
 }))
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     zoneBox: {
         display: "flex",
         alignItems: 'center',
@@ -45,7 +46,7 @@ export const useStyles = makeStyles(() => ({
         backgroundColor: 'white',
         cursor: 'pointer',
     }
-}))
+}));
 
 export const ZipCode = styled('div')({
     display: 'flex',

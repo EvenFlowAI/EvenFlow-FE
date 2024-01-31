@@ -36,7 +36,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     const dispatch = useDispatch();
     const showError = useException();
     const {selectedSC} = useSCs();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (open && selectedSC) {

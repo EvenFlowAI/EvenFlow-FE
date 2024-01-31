@@ -49,7 +49,7 @@ export const AddFirstScreenOptionModal: React.FC<React.PropsWithChildren<React.P
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const enabledTransportationOptions = useMemo(() => options.filter(op => op.state), [options]);
     const isTransportationDisabled = useMemo(() => !enabledTransportationOptions.length ||

@@ -15,8 +15,8 @@ type TExistingCustomerErrorProps = DialogProps & {
 const ExistingCustomerError: React.FC<React.PropsWithChildren<React.PropsWithChildren<TExistingCustomerErrorProps>>> = ({open, onClose, onNext}) => {
     const dispatch = useDispatch();
     const {t} = useTranslation();
-    const dialogClasses = useDialogStyles();
-    const classes = useStyles();
+    const {classes: dialogClasses} = useDialogStyles();
+    const { classes  } = useStyles();
 
     const onNew = () => {
         dispatch(setCurrentFrameScreen("serviceNeeds"));

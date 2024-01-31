@@ -1,4 +1,4 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {styled} from "@mui/material";
 
 export type TStyleProps = {
@@ -11,7 +11,7 @@ export const Wrapper = styled("div")<TStyleProps>(({theme, fw}) => ({
     display: "inline-flex"
 }))
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles()({
     buttonProgress: {
         position: 'absolute',
         top: '50%',

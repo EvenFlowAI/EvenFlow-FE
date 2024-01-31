@@ -10,7 +10,7 @@ type TServiceTypeIconProps = {card: IFirstScreenOption}
 const ServiceTypeIcon: React.FC<React.PropsWithChildren<React.PropsWithChildren<TServiceTypeIconProps>>> = ({card}) => {
     const [isIconLoading, setIsIconLoading] = useState<boolean>(false);
     const [icon, setIcon] = useState<string>('');
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     const iconType = useMemo((): string => {

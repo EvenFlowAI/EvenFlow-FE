@@ -16,7 +16,7 @@ const VehicleRepairHistory: React.FC<React.PropsWithChildren<React.PropsWithChil
     const {repairHistoryLoading, repairHistory} = useSelector((state: RootState) => state.customers);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (scProfile && vehicleDmsId && open) {

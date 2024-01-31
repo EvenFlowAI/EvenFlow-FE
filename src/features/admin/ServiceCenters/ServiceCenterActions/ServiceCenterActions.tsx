@@ -21,7 +21,7 @@ export const ServiceCenterActions = () => {
     const currentUser = useCurrentUser();
     const {isOpen, onClose, onOpen} = useModal();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (currentUser?.isSuperUser) {

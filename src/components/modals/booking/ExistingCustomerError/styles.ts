@@ -1,7 +1,8 @@
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {styled} from "@mui/material";
 
-export const useStyles = makeStyles((theme) => ({
+// 
+export const useStyles = makeStyles()((theme) => ({
     info: {
         display: 'flex',
         flexDirection: 'column',
@@ -24,7 +25,7 @@ export const useStyles = makeStyles((theme) => ({
             padding: '0 20px'
         }
     }
-}))
+}));
 
 export const ButtonsRow = styled('div')(({theme}) => ({
     display: "flex",

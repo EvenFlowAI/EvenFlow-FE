@@ -22,7 +22,7 @@ const EngineTypes: React.FC<React.PropsWithChildren<React.PropsWithChildren<TEng
                                                        isApplyBusinessRules,
                                                    }) => {
     const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
-    const classes = useAutocompleteStyles();
+    const { classes  } = useAutocompleteStyles();
 
     const sortEngineTypes = (a: IEngineType, b: IEngineType) => {
         return selectedEngineTypes.find(el => a.id === el.id)

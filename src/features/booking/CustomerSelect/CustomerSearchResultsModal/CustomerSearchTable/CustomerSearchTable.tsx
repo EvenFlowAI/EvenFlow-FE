@@ -71,7 +71,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
     const {onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm} = useModal();
-    const classes = useStyles({columnsCount: selectedColumns.length});
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory();

@@ -27,7 +27,7 @@ const RecallAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildr
     const [formChecked, setFormChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useNotificationStyles();
+    const { classes  } = useNotificationStyles();
     const showError = useException();
     const showMessage = useMessage();
 

@@ -27,7 +27,7 @@ const ServiceCenterAppointments: React.FC<React.PropsWithChildren<React.PropsWit
     const [formChecked, setFormChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useNotificationStyles();
+    const { classes  } = useNotificationStyles();
     const showError = useException();
     const showMessage = useMessage();
 

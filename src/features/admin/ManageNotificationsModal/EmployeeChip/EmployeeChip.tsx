@@ -15,7 +15,7 @@ type TProps = {
 const EmployeeChip: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({item, deleteEmployee, isSaving}) => {
     const {loading} = useSelector((state: RootState) => state.employees);
     const {isLoading} = useSelector((state: RootState) => state.transportation);
-    const classes = useNotificationStyles();
+    const { classes  } = useNotificationStyles();
     return (
         <div className={classes.employeeWrapper} key={item.id}>
             <div>{item.fullName}</div>

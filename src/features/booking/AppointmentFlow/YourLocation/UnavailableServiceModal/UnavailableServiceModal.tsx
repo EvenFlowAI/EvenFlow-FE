@@ -28,8 +28,8 @@ const UnavailableServiceModal: React.FC<React.PropsWithChildren<React.PropsWithC
 }) => {
     const {serviceTypeOption, appointmentByKey, serviceOptionChangedFromSlotPage} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
-    const dialogClasses = useDialogStyles();
-    const classes = useStyles();
+    const { classes: dialogClasses } = useDialogStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
     const dispatch = useDispatch();
 

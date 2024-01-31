@@ -1,5 +1,5 @@
 import {EOfferType, IOffer} from "../../../../store/reducers/offers/types";
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 import {styled} from "@mui/material";
 
 export type TStyleProps = {
@@ -27,7 +27,8 @@ export const Label = styled("span")<TStyleProps>(({theme, t}) => ({
     textTransform: "uppercase"
 }))
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     wrapper: {
         borderRadius: 0,
         padding: 20,

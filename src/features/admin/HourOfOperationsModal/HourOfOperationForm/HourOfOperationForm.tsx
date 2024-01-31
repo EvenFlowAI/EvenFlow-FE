@@ -27,7 +27,7 @@ export const HourOfOperationForm: React.FC<React.PropsWithChildren<React.PropsWi
                                                                                                                    isLoading}) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     return <>
         {dayjs.weekdays().map((day, idx) => {

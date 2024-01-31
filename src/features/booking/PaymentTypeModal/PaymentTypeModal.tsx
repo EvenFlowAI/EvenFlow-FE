@@ -12,7 +12,7 @@ type TPaymentTypeProps = DialogProps & {
 }
 
 const PaymentTypeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPaymentTypeProps>>> = (props) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const {t} = useTranslation();
 

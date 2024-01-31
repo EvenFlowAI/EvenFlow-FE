@@ -24,7 +24,7 @@ export const AddMakeModelModal:React.FC<React.PropsWithChildren<React.PropsWithC
     const [make, setMake] = useState<string>('');
     const [models, setModels] = useState<string[]>([]);
     const [newModel, setNewModel] = useState<string>('');
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const showError = useException();
     const dispatch = useDispatch();
 

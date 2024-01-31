@@ -26,7 +26,7 @@ export const DateModal: React.FC<React.PropsWithChildren<React.PropsWithChildren
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (props.open) {

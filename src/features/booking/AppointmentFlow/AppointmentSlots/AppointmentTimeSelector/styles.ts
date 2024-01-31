@@ -1,5 +1,5 @@
 import {styled} from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from 'tss-react/mui';
 
 export const TimeSlotsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -21,7 +21,8 @@ export const TimeSlotsWrapper = styled('div')(({theme}) => ({
     }
 }));
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     wrapper: {
         maxHeight: '40vh',
         overflowY: "auto",
@@ -29,4 +30,4 @@ export const useStyles = makeStyles(theme => ({
             maxHeight: '30vh',
         }
     }
-}))
+}));
