@@ -158,6 +158,7 @@ export const endUserTheme = createTheme({
 });
 
 // @ts-ignore
+// @ts-ignore
 export const frameTheme: Theme = (theme: Theme) => createTheme({
     ...theme,
     palette: {
@@ -184,6 +185,9 @@ export const frameTheme: Theme = (theme: Theme) => createTheme({
                     "&.Mui-error": {
                         borderColor: "#FF0000",
                         color: "#FF0000"
+                    },
+                    '&.Mui-focused': {
+                        borderColor: "#aaaaaa"
                     }
                 },
                 input: {
@@ -191,7 +195,7 @@ export const frameTheme: Theme = (theme: Theme) => createTheme({
                     border: 0,
                     backgroundColor: "#F7F8FB",
                     fontWeight: "bold"
-                }
+                },
             }
         },
         MuiOutlinedInput: {
@@ -201,6 +205,9 @@ export const frameTheme: Theme = (theme: Theme) => createTheme({
                     "&.Mui-error": {
                         borderColor: "#FF0000",
                         color: "#FF0000"
+                    },
+                    '&.Mui-focused': {
+                        borderColor: "#aaaaaa"
                     }
                 },
                 input: {

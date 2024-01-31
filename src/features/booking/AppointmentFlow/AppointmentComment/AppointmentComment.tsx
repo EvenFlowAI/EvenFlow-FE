@@ -107,6 +107,7 @@ export const AppointmentComment: React.FC<React.PropsWithChildren<React.PropsWit
                 onChange={handleChange}
                 value={description}
                 rows={4}
+                InputProps={{disableUnderline: true}}
                 required={scProfile?.isCommentRequired}
                 placeholder={t("Describe what`s going on")}
             />
