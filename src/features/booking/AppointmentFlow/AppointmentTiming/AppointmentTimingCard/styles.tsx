@@ -1,8 +1,17 @@
 import {styled} from "@mui/material";
 import React from "react";
 import {CustomDatePicker} from "../../../../../components/pickers/CustomDatePicker/CustomDatePicker";
+import {withStyles} from "tss-react/mui";
 
-export const StyledDate = styled(CustomDatePicker)(({theme}) => ({
+
+const DatePicker = styled(CustomDatePicker)(({theme}) => ({
+    root: {
+
+    },
+    toolbar: {
+        backgroundColor: '#000000',
+        color: "#FFFFFF"
+    },
     marginTop: 16,
     cursor: "pointer",
     "&>div:not(.Mui-disabled)": {
@@ -21,6 +30,19 @@ export const StyledDate = styled(CustomDatePicker)(({theme}) => ({
         marginTop: 0
     }
 }))
+
+export const StyledDate = withStyles(DatePicker, {
+    root: {
+        '& .MuiPickersLayout-root': {
+            backgroundColor: '#000000',
+            color: "#FFFFFF"
+        }
+    },
+    toolbar: {
+        backgroundColor: '#000000',
+        color: "#FFFFFF"
+    },
+})
 
 export const CardWrapper = styled("div")<{ active?: boolean}>(({theme, active}) => ({
     border: "1px solid #DADADA",

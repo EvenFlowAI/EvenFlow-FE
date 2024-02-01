@@ -23,11 +23,15 @@ export const CustomDatePicker: React.FC<TProps> = ({
         {label ? <InputLabel shrink className={classes.label}>{label}</InputLabel> : null}
         <MobileDatePicker
             {...props}
+            className={classes.picker}
             slotProps={{
                 textField: {
                     fullWidth,
                     InputProps,
                 },
+                toolbar: {
+                    toolbarFormat: "ddd, MMM DD",
+                }
             }}
             sx={{
                 "& .MuiOutlinedInput-root": {
@@ -37,6 +41,9 @@ export const CustomDatePicker: React.FC<TProps> = ({
                 },
                 "& .MuiOutlinedInput-input": {
                     padding: '9px'
+                },
+                "& .MuiPickersToolbar-root": {
+                    backgroundColor: 'red'
                 }
             }}
         />

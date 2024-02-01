@@ -6,17 +6,18 @@ import {RootState} from "../../../../../store/rootReducer";
 import {EAppointmentTimingType} from "../../../../../store/reducers/appointment/types";
 import {RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {TArgCallback, TCallback, TParsableDate} from "../../../../../types/types";
-import {CardWrapper, MobileWrapper, StyledDate} from "./styles";
+import {CardWrapper, MobileWrapper} from "./styles";
 import {TCard} from "../types";
-import {DateRangeIcon} from "@mui/x-date-pickers";
+import {DateRangeIcon, MobileDatePicker} from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import './AppointmentTimingCard.css'
 
 type TCardProps = {
     card: TCard;
     active?: boolean;
     onClick: TCallback;
     selectedTime: TParsableDate;
-    onChangeTime: TArgCallback<TParsableDate>;
+    onChangeTime: TArgCallback<unknown>;
     isLoading: boolean;
 }
 
@@ -34,16 +35,44 @@ const AppointmentTimingCard: React.FC<React.PropsWithChildren<React.PropsWithChi
     }, [cardRef])
 
     const content = card.name === EAppointmentTimingType.PreferredDate
-        ? <StyledDate
+        ? <MobileDatePicker
             value={selectedTime}
             onChange={onChangeTime}
             disablePast
-            format="MMMM, DD"
             // shouldDisableDate={shouldDisableDate}
-            InputProps={{
-                endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"}/>,
-                placeholder: t("Choose here"),
-                disabled: !active
+            format="MMMM, DD"
+            dayOfWeekFormatter={(day, date) => dayjs(date as TParsableDate).format("ddd")}
+            slotProps={{
+                textField: {
+                    InputProps: {
+                        endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"}/>,
+                        placeholder: t("Choose here"),
+                        disabled: !active
+                    },
+                },
+                toolbar: {
+                    toolbarFormat: "ddd, MMM DD",
+                }
+            }}
+            sx={{
+                "& .MuiOutlinedInput-root": {
+                    "&:hover > fieldset": {borderColor: "#C7C8CD"},
+                    borderRadius: 0,
+                    border: 0,
+                    borderImageWidth: 0,
+                    outline: 'none',
+                },
+                "& .MuiOutlinedInput-input": {
+                    padding: '9px'
+                },
+                "&.MuiInputBase-root": {
+                    "&.Mui-focused": {
+                        border: 0,
+                        borderImageWidth: 0,
+                        outline: 'none',
+                    }
+                }
+
             }}
         />
         : null;

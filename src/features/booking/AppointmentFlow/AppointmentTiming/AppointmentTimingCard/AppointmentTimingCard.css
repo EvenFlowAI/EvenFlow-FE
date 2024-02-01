@@ -1,0 +1,14 @@
+.css-1g13lr1-MuiPickersToolbar-root-MuiDatePickerToolbar-root {
+    background-color: #000000;
+    color: #FFFFFF;
+}
+
+.css-bufl6g-MuiTypography-root {
+    color: #FFFFFF8A;
+}
+
+.css-1gi1maq-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused:focus {
+    border: 0;
+    outline: none;
+    border-image: none;
+}
