@@ -23,7 +23,6 @@ export const CustomDatePicker: React.FC<TProps> = ({
         {label ? <InputLabel shrink className={classes.label}>{label}</InputLabel> : null}
         <MobileDatePicker
             {...props}
-            className={classes.picker}
             slotProps={{
                 textField: {
                     fullWidth,
