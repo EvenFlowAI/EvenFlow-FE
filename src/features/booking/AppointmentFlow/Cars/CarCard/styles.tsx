@@ -1,8 +1,9 @@
 import { Button, styled } from "@mui/material";
 import { withStyles } from 'tss-react/mui';
-import React from "react";
 
-export const Wrapper = styled("div")<{ active?: boolean}>(({theme, active}) => ({
+export const Wrapper = styled("div", {
+    shouldForwardProp: (prop) => prop !== "active"
+})<{ active?: boolean}>(({theme, active}) => ({
     display: "flex",
     flex: "1 1 0px",
     padding: 22,

@@ -18,9 +18,7 @@ const selectedRoutes: string[] = [
 
 export const PodSelector = () => {
     const {selectedPod} = useSelectedPod();
-    const [pods] = useSelector((state: RootState) => [
-        state.pods.shortPodsList
-    ]);
+    const {shortPodsList: pods} = useSelector((state: RootState) => state.pods);
     const dispatch = useDispatch();
     const {pathname} = useLocation();
 

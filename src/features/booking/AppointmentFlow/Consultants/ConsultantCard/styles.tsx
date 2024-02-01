@@ -1,7 +1,9 @@
 import React from 'react';
 import {styled} from "@mui/material";
 
-export const ConsultantWrapper = styled("div")<{ active?: boolean }>(({theme, active}) => ({
+export const ConsultantWrapper = styled("div", {
+    shouldForwardProp: (prop) => prop !== "active"
+})<{ active?: boolean }>(({theme, active}) => ({
     display: 'grid',
     gap: 16,
     gridTemplateColumns: '1fr 1fr',
@@ -26,7 +28,9 @@ export const ConsultantWrapper = styled("div")<{ active?: boolean }>(({theme, ac
     color:active ? "#FFFFFF" : theme.palette.text.primary,
 }}));
 
-export const Avatar = styled('div')<{ src?: string, contain?: boolean }>(({ src, contain }) => ({
+export const Avatar = styled('div', {
+    shouldForwardProp: (prop) => prop !== "src" && prop !== "contain"
+})<{ src?: string, contain?: boolean }>(({ src, contain }) => ({
     width: 84,
     height: 84,
     borderRadius: "50%",

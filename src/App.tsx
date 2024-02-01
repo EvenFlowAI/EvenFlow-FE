@@ -13,6 +13,7 @@ import {EServiceCenterName} from "./api/types";
 import {TScreen} from "./types/types";
 import AppRoutes from "./routes/AppRoutes/AppRoutes";
 import dayjs from "dayjs";
+import {disableEmotionWarning} from "./utils/utils";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -69,6 +70,7 @@ const App = () => {
                 caches.delete(name);
             });
         })
+        disableEmotionWarning()
     }, [])
 
     const handleClose = (key: React.ReactText) => () => {

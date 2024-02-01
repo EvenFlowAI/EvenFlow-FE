@@ -23,7 +23,9 @@ export const Info = styled('div')({
     }
 });
 
-export const Arrow = styled("span")<{ disabled?: boolean }>(({theme, disabled}) => ({
+export const Arrow = styled("span", {
+    shouldForwardProp: (prop) => prop !== "disabled"
+})<{ disabled?: boolean }>(({theme, disabled}) => ({
     position: "relative",
     display: "flex",
     alignItems: "center",

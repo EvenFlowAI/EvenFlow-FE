@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
 export const useCustomerSelectStyles = makeStyles()((theme) => ({
     greyText: {
         display: 'flex',

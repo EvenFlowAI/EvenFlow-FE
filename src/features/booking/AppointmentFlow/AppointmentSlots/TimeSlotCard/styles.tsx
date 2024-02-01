@@ -24,7 +24,10 @@ type TSlotsWrapperProps = {
     waitListBackground?: string;
 }
 
-export const Wrapper = styled("div")<TSlotsWrapperProps>(({
+export const Wrapper = styled("div", {
+    shouldForwardProp: (prop) => prop !== "available" && prop !== "selected" && prop !== "offPeak"
+        && prop !== "isWaitList" && prop !== "waitListTextColor" && prop !== "waitListBackground"
+})<TSlotsWrapperProps>(({
                                                                                         theme,
                                                                                         available,
                                                                                         offPeak,

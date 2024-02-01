@@ -6,7 +6,9 @@ export type TStyleProps = {
     t: IOffer['type']
 };
 
-export const Background = styled("div")<TStyleProps>(({theme, t}) => ({
+export const Background = styled("div", {
+    shouldForwardProp: (prop) => prop !== "t"
+})<TStyleProps>(({theme, t}) => ({
     position: "absolute",
     top: 0,
     left: "20%",
@@ -20,14 +22,15 @@ export const Background = styled("div")<TStyleProps>(({theme, t}) => ({
     textAlign: "center"
 }))
 
-export const Label = styled("span")<TStyleProps>(({theme, t}) => ({
+export const Label = styled("span", {
+    shouldForwardProp: (prop) => prop !== "t"
+})<TStyleProps>(({theme, t}) => ({
     paddingRight: "50%",
     fontSize: t === EOfferType.FreeService ? 18 : 32,
     fontWeight: "bold",
     textTransform: "uppercase"
 }))
 
-// 
 export const useStyles = makeStyles()({
     wrapper: {
         borderRadius: 0,

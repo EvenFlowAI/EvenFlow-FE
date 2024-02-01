@@ -1,7 +1,7 @@
 import {styled} from "@mui/material";
 import React from "react";
 import {CustomDatePicker} from "../../../../../components/pickers/CustomDatePicker/CustomDatePicker";
-import {withStyles} from "tss-react/mui";
+import {makeStyles, withStyles} from "tss-react/mui";
 
 
 const DatePicker = styled(CustomDatePicker)(({theme}) => ({
@@ -44,7 +44,9 @@ export const StyledDate = withStyles(DatePicker, {
     },
 })
 
-export const CardWrapper = styled("div")<{ active?: boolean}>(({theme, active}) => ({
+export const CardWrapper = styled("div", {
+    shouldForwardProp: (prop) => prop !== "active"
+})<{ active?: boolean}>(({theme, active}) => ({
     border: "1px solid #DADADA",
     display: "flex",
     flexDirection: "column",
@@ -86,5 +88,15 @@ export const MobileWrapper = styled("div")({
     flexDirection: "column",
     "&>div+div": {
         marginTop: 8
+    }
+})
+
+export const useStyles = makeStyles()({
+    input: {
+        "&:focus, &:focus-within": {
+            border: 0,
+            borderImageWidth: 0,
+            outline: 0,
+        }
     }
 })

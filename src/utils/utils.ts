@@ -406,3 +406,14 @@ export const getMaintenanceList = (
     }
     return services;
 }
+
+export const disableEmotionWarning = () => {
+    const consoleError = console.error;
+
+    console.error = function filterErrors(msg, ...args) {
+        if (/server-side rendering/.test(msg)) {
+            return;
+        }
+        consoleError(msg, ...args);
+    };
+}

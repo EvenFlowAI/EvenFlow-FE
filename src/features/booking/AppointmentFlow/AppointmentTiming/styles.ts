@@ -1,6 +1,8 @@
 import {styled} from "@mui/material";
 
-export const TimingWrapper = styled('div')<{ columns: number }>(({theme, columns}) => ({
+export const TimingWrapper = styled('div', {
+    shouldForwardProp: (prop) => prop !== "columns"
+})<{ columns: number }>(({theme, columns}) => ({
     display: "grid",
     gridTemplateColumns: `repeat(${columns}, 1fr)`,
     width: "100%",
