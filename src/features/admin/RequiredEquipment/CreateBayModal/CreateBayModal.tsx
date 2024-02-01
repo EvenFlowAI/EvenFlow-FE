@@ -24,9 +24,7 @@ const initialForm: TBayForm = {
 
 export const CreateBayModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IBay>>>> = ({payload, onAction, ...props}) => {
     const [form, setForm] = useState<TBayForm>(initialForm);
-    const [saving] = useSelector((state: RootState) => [
-        state.bays.saving
-    ]);
+    const {saving} = useSelector((state: RootState) => state.bays);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const showError = useException();

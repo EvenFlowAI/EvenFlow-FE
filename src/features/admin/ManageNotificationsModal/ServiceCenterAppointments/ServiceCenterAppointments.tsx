@@ -147,6 +147,7 @@ const ServiceCenterAppointments: React.FC<React.PropsWithChildren<React.PropsWit
                         options={usersShort}
                         style={{width: 290}}
                         disabled={loading || isLoading}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
                         getOptionLabel={i => i.fullName}
                         value={currentEmployee}
                         onChange={onEmployeeChange}

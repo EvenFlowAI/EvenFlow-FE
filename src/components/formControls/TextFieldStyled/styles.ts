@@ -5,7 +5,9 @@ export type TStyleProps = {
     lowerCase?: boolean;
 }
 
-export const Label = styled(InputLabel)<TStyleProps>(({theme, visible, lowerCase}) => ({
+export const Label = styled(InputLabel, {
+    shouldForwardProp: (prop) => prop !== 'visible' && prop !== "lowerCase"
+})<TStyleProps>(({theme, visible, lowerCase}) => ({
     textTransform: lowerCase ? "none" : "uppercase",
     fontWeight: 'bold',
     color: theme.palette.text.primary,

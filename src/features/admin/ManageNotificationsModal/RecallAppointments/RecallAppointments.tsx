@@ -140,6 +140,7 @@ const RecallAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildr
                 <Autocomplete
                     className={classes.autocomplete}
                     options={usersShort}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
                     fullWidth
                     disabled={loading || isLoading}
                     getOptionLabel={i => i.fullName}

@@ -249,6 +249,7 @@ const TransportationNotifications: React.FC<React.PropsWithChildren<React.PropsW
                         <Autocomplete
                             options={options.filter(op => op.state === 1)}
                             fullWidth
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
                             disabled={loading || isSaving || isLoading}
                             getOptionLabel={i => getTransportationOptionString(i.type)}
                             value={selectedTransportation}
@@ -266,6 +267,7 @@ const TransportationNotifications: React.FC<React.PropsWithChildren<React.PropsW
                                 disabled={loading || isSaving || isLoading}
                                 fullWidth
                                 getOptionLabel={i => i.fullName}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
                                 value={currentEmployee}
                                 onChange={onEmployeeChange}
                                 renderInput={autocompleteRender({

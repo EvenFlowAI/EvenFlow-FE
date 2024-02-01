@@ -164,6 +164,7 @@ const PodAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                             options={shortPodsList}
                             fullWidth
                             disabled={loading || podsLoading || isLoading}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
                             getOptionLabel={i => i.name}
                             value={selectedPod}
                             onChange={onPodChange}
@@ -179,6 +180,7 @@ const PodAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                                 options={usersShort}
                                 disabled={loading || podsLoading || isLoading}
                                 fullWidth
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
                                 getOptionLabel={i => i.fullName}
                                 value={currentEmployee}
                                 onChange={onEmployeeChange}

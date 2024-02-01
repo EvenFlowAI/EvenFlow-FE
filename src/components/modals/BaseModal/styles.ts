@@ -5,7 +5,9 @@ type TStyleProps = {
     mW: number|undefined;
 }
 
-export const StyledDialog = styled(Dialog)<TStyleProps>(({theme, mW}) => ({
+export const StyledDialog = styled(Dialog, {
+    shouldForwardProp: (prop) => prop !== "mW"
+})<TStyleProps>(({theme, mW}) => ({
     '& .MuiDialogContent-root': {
         "& hr": {
             margin: "28px 0",
