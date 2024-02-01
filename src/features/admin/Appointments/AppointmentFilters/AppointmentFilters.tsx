@@ -88,7 +88,7 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
             borderRadius: 0, marginBottom: 18, padding: 18, width: '100%'
         }}>
             <Grid container spacing={2} justifyContent="space-between" alignItems='flex-end'>
-                <Grid item xs={3}>
+                <Grid item xs={3} key="datepicker">
                     <CustomDatePicker
                         onOpen={handleOpen(true)}
                         onClose={handleOpen(false)}
@@ -110,7 +110,7 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
                         onAccept={handleDateChange}
                     />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={3} key="status">
                     <Select
                         fullWidth
                         displayEmpty
@@ -128,7 +128,7 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
                         })}
                     </Select>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={3} key="scheduler">
                     <Select
                         fullWidth
                         displayEmpty
@@ -148,7 +148,7 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
                         })}
                     </Select>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={3} key="serviceBook">
                     <Select
                         fullWidth
                         displayEmpty
@@ -163,8 +163,8 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
                         <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
                         {[...serviceBookList]
                             .sort((a, b) => a.name.localeCompare(b.name))
-                            .map(serviceBook => {
-                            return <MenuItem key={serviceBook.id} value={serviceBook.id ?? serviceBook.name}>{serviceBook.name}</MenuItem>
+                            .map((serviceBook, index) => {
+                            return <MenuItem key={`${serviceBook.id} ${index}`} value={serviceBook.id ?? serviceBook.name}>{serviceBook.name}</MenuItem>
                         })}
                     </Select>
                 </Grid>
