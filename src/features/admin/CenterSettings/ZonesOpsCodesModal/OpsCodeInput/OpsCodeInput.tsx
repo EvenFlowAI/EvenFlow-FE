@@ -52,6 +52,7 @@ const OpsCodeInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPr
             value={selectedCode}
             onChange={onOpsCodeChange}
             getOptionLabel={o => o.serviceRequest.code}
+            isOptionEqualToValue={(option, value) => option.serviceRequest.id === value.serviceRequest.id}
             renderInput={autocompleteRender({
                 label: '',
                 placeholder: 'Unassigned',

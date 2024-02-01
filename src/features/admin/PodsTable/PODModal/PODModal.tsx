@@ -312,6 +312,7 @@ export const PODModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                             options={appointmentTypeOptions}
                             getOptionLabel={i => i.name}
                             value={appointmentType}
+                            isOptionEqualToValue={(o, v) => o.value === v.value}
                             onChange={onAppointmentTypeChange}
                             renderInput={autocompleteRender({
                                 label: "Appointment Type",
@@ -386,6 +387,7 @@ export const PODModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                     <Grid item xs={12} sm={12} md={6}>
                         <Autocomplete
                             options={jobTypeOptions}
+                            isOptionEqualToValue={(o, v) => o.value === v.value}
                             getOptionLabel={i => i.name}
                             value={jobType}
                             onChange={onJobTypeChange}

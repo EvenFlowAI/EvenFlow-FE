@@ -367,6 +367,7 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
                 <Autocomplete
                     options={filteredZipCodes}
                     freeSolo
+                    isOptionEqualToValue={(o, v) => o === v}
                     onChange={handleChangeZip}
                     fullWidth
                     classes={autocompleteClasses}

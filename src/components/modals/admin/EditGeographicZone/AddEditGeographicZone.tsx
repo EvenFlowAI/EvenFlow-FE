@@ -192,6 +192,7 @@ const AddEditGeographicZone: React.FC<React.PropsWithChildren<React.PropsWithChi
                                     multiple
                                     classes={autocompleteClasses}
                                     options={filteredZipCodes}
+                                    isOptionEqualToValue={(option, value) => option === value}
                                     onChange={handleChangeZip}
                                     fullWidth
                                     autoComplete={true}

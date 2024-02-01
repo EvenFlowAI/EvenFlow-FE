@@ -93,6 +93,7 @@ export const SendOfferModal: React.FC<React.PropsWithChildren<React.PropsWithChi
                         options={offers}
                         onChange={handleSelect("offer")}
                         getOptionLabel={option => option.title}
+                        isOptionEqualToValue={(o, v) => o.id === v.id}
                         value={form.offer||null}
                         renderInput={autocompleteRender({label: "Select offer", error: formIsChecked && !form.offer})}
                     />
@@ -101,6 +102,7 @@ export const SendOfferModal: React.FC<React.PropsWithChildren<React.PropsWithChi
                     <Autocomplete
                         options={Object.values(EAudience).filter(v => !isNaN(Number(v)))}
                         onChange={handleSelect("audience")}
+                        isOptionEqualToValue={(o, v) => o === v}
                         getOptionLabel={option => audienceLabels[option as EAudience]}
                         value={form.audience === undefined ? null : form.audience}
                         renderInput={autocompleteRender({label: "Audience", error: formIsChecked && !form.audience})}

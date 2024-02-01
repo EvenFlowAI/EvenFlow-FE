@@ -71,6 +71,7 @@ export const PricingOptimization = () => {
                         onChange={handleChange}
                         options={srList}
                         value={sr}
+                        isOptionEqualToValue={(o, v) => o.id === v.id}
                         getOptionLabel={option => option.code}
                         renderInput={params => <TextField {...{
                             ...params, InputProps: {

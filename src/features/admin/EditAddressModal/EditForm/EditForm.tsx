@@ -41,6 +41,7 @@ export const EditForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<
         <Grid item xs={6}>
             <Autocomplete
                 options={states}
+                isOptionEqualToValue={(option, value) => option === value}
                 disabled={viewMode}
                 onChange={props.onSelect}
                 renderInput={autocompleteRender({label: "State", fullWidth: true})}

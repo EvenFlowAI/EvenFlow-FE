@@ -162,6 +162,7 @@ export const MaintenancePackages = () => {
                             options={MaintenanceOptionTypes}
                             disableCloseOnSelect
                             getOptionLabel={o => o.name}
+                            isOptionEqualToValue={(o, v) => o.value === v.value}
                             value={presentedOptions}
                             onChange={onPresentedOptionsChange}
                             renderInput={autocompleteRender({

@@ -315,6 +315,7 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
                         disableClearable
                         options={categories.map((el, index) => `${index + 1}`).concat(`${categories.length + 1}`)}
                         value={orderIndex}
+                        isOptionEqualToValue={(o, v) => o === v}
                         onChange={onOrderIndexChange}
                         renderInput={autocompleteRender({
                             label: 'Order Index for Booking Flow',

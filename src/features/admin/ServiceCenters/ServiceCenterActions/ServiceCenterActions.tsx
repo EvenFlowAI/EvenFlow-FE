@@ -58,6 +58,7 @@ export const ServiceCenterActions = () => {
                 fullWidth
                 onChange={onGroupChange}
                 options={dealershipList.map(({ name, id }) => ({ name, id }))}
+                isOptionEqualToValue={(o, v) => o.id === v.id}
                 value={selectedGroup}
                 getOptionLabel={option => option.name}
                 className={classes.autocomplete}

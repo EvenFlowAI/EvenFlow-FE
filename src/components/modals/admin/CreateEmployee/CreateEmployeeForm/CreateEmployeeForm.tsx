@@ -176,6 +176,7 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
                     />
                     : <Autocomplete
                         options={currentUser && superRoles.includes(currentUser?.role) ? widerUserRoles : userRoles}
+                        isOptionEqualToValue={(option, value) => option === value}
                         onChange={handleRoleChange}
                         loading={shortLoading}
                         disableClearable

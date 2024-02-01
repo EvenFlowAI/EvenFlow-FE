@@ -368,6 +368,7 @@ export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWit
                         fullWidth
                         disableClearable
                         autoComplete={true}
+                        isOptionEqualToValue={(o, v) => o === v}
                         disabled={isExistingVehicle}
                         renderInput={autocompleteRender({
                             label: t("Year"),
@@ -380,6 +381,7 @@ export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWit
                     <Autocomplete
                         key="mileage"
                         style={orderMapStyles.mileage}
+                        isOptionEqualToValue={(o, v) => o === v}
                         options={mileage.map(item => item.value.toString())}
                         onChange={handleChange('mileage', false)}
                         fullWidth
@@ -399,6 +401,7 @@ export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWit
                         options={loadedOptions.make ?? []}
                         onChange={handleChange('make', false)}
                         fullWidth
+                        isOptionEqualToValue={(o, v) => o === v}
                         disableClearable
                         autoComplete={true}
                         disabled={isExistingVehicle}
@@ -438,6 +441,7 @@ export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWit
                         style={orderMapStyles.model}
                         fullWidth
                         disableClearable
+                        isOptionEqualToValue={(o, v) => o === v}
                         autoComplete={true}
                         disabled={isExistingVehicle}
                         renderInput={autocompleteRender({

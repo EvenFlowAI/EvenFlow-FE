@@ -191,6 +191,7 @@ export const DealershipGroupProfile = () => {
                     options={states}
                     disabled={!nameEdit}
                     onChange={handleSelectState}
+                    isOptionEqualToValue={(o, v) => o === v}
                     fullWidth
                     autoComplete={true}
                     renderInput={autocompleteRender({label: "State"})}

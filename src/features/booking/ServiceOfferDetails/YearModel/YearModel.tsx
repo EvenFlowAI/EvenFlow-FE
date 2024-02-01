@@ -108,6 +108,7 @@ export const YearModel: React.FC<React.PropsWithChildren<React.PropsWithChildren
                     fullWidth
                     disabled={isError}
                     className={classes.input}
+                    isOptionEqualToValue={(o, v) => o === v}
                     disableClearable
                     renderInput={autocompleteRender({
                         label: "Year",

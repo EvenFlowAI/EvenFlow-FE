@@ -234,6 +234,7 @@ export const AddFirstScreenOptionModal: React.FC<React.PropsWithChildren<React.P
                         disableClearable
                         options={['1', '2', '3', '4']}
                         value={orderIndex}
+                        isOptionEqualToValue={(o, v) => o === v}
                         onChange={onOrderIndexChange}
                         renderInput={autocompleteRender({
                             label: 'Order Index for Booking Flow',

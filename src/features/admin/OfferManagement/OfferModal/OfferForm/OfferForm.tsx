@@ -199,6 +199,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                     }}
                     disableCloseOnSelect
                     onChange={onSegmentSelect}
+                    isOptionEqualToValue={(o, v) => o.label === v.label}
                     getOptionLabel={i => i.label}
                     renderOption={autocompleteOptionsRender((e) => e.label)}
                     loading={false}
@@ -238,6 +239,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                             }}
                             disableCloseOnSelect
                             onChange={onDOWSelect}
+                            isOptionEqualToValue={(o, v) => o.label === v.label}
                             getOptionLabel={i => i.label}
                             renderOption={autocompleteOptionsRender((e) => e.label)}
                             loading={false}
