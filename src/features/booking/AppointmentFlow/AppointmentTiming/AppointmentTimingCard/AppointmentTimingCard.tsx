@@ -11,6 +11,7 @@ import {TCard} from "../types";
 import {DateRangeIcon, MobileDatePicker} from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import './AppointmentTimingCard.css';
+import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 
 type TCardProps = {
     card: TCard;
@@ -56,6 +57,17 @@ const AppointmentTimingCard: React.FC<React.PropsWithChildren<React.PropsWithChi
                         toolbarFormat: "ddd, MMM DD",
                     },
                     field: { className: classes.input },
+                    layout: {
+                        sx: {
+                            [`.${pickersLayoutClasses.toolbar}`]: {
+                                backgroundColor: 'black',
+                                color: "white"
+                            },
+                            [`.${pickersLayoutClasses.toolbar} > span`]: {
+                                color: "#FFFFFF8A"
+                            },
+                        },
+                    },
                 }}
                 sx={{
                     "& .MuiOutlinedInput-root": {

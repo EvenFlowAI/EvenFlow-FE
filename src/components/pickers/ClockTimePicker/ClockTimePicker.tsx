@@ -4,6 +4,7 @@ import {MobileTimePicker, MobileTimePickerProps} from "@mui/x-date-pickers";
 import {useDatePickerStyles} from "../../../hooks/styling/useDatePickerStyles";
 import {InputLabel} from "@mui/material";
 import {TParsableDate} from "../../../types/types";
+import {pickersLayoutClasses} from "@mui/x-date-pickers/PickersLayout";
 
 type TProps = MobileTimePickerProps<TParsableDate> & {
     fullWidth?: boolean;
@@ -48,7 +49,19 @@ const ClockTimePicker: React.FC<TProps> = ({
                         id: InputProps?.id ?? id,
                         name: InputProps?.name ?? name
                     }
-            }}}
+            },
+                layout: {
+                    sx: {
+                        [`.${pickersLayoutClasses.toolbar}`]: {
+                            backgroundColor: '#7898FF',
+                            color: "#FFFFFF"
+                        },
+                        [`.${pickersLayoutClasses.toolbar} > span`]: {
+                            color: "#FFFFFF8A"
+                        },
+                    },
+                },
+            }}
             sx={{
                 "& .MuiOutlinedInput-root": {
                     "&:hover > fieldset": {borderColor: "#C7C8CD"},

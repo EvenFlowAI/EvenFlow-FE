@@ -4,6 +4,7 @@ import {TextInputProps} from "../../formControls/types";
 import React from "react";
 import {useDatePickerStyles} from "../../../hooks/styling/useDatePickerStyles";
 import {InputLabel} from "@mui/material";
+import {pickersLayoutClasses} from "@mui/x-date-pickers/PickersLayout";
 
 type TProps = MobileDatePickerProps<TParsableDate> & {
     fullWidth?: boolean;
@@ -30,7 +31,25 @@ export const CustomDatePicker: React.FC<TProps> = ({
                 },
                 toolbar: {
                     toolbarFormat: "ddd, MMM DD",
-                }
+                },
+                day: {
+                    sx: {
+                        '&[aria-label:selected=true]': {
+                            backgroundColor: '#7898FF',
+                        }
+                    }
+                },
+                layout: {
+                    sx: {
+                        [`.${pickersLayoutClasses.toolbar}`]: {
+                            backgroundColor: '#7898FF',
+                            color: "#FFFFFF"
+                        },
+                        [`.${pickersLayoutClasses.toolbar} > span`]: {
+                            color: "#FFFFFF8A"
+                        },
+                    },
+                },
             }}
             sx={{
                 "& .MuiOutlinedInput-root": {
