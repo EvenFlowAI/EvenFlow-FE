@@ -22,7 +22,7 @@ import ServiceType from "./ServiceType/ServiceType";
 import {useTranslation} from "react-i18next";
 import {isMobile} from 'react-device-detect';
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {Info, Wrapper} from "./styles";
+import {Wrapper} from "./styles";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
@@ -129,7 +129,6 @@ export const AppointmentConfirmation: React.FC<TProps> = ({onBack, onChangeSlot,
             <div>
                 <AppointmentUserData errors={errors} setErrors={setErrors} isEmailRequired={isEmailRequired}/>
                 <AppointmentReminders isEmailRequired={isEmailRequired}/>
-                <Info>{t("terms of our Visitor Agreement")}.</Info>
             </div>
 
         </Wrapper>
