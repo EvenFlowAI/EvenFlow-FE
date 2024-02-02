@@ -194,7 +194,6 @@ export const frameTheme: Theme = (theme: Theme) => createTheme({
                     ...input,
                     border: 0,
                     backgroundColor: "#F7F8FB",
-                    fontWeight: "bold"
                 },
             }
         },

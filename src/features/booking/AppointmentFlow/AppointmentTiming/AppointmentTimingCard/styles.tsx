@@ -93,10 +93,6 @@ export const MobileWrapper = styled("div")({
 
 export const useStyles = makeStyles()({
     input: {
-        "&:focus, &:focus-within": {
-            border: 0,
-            borderImageWidth: 0,
-            outline: 0,
-        }
+        fontWeight: 'normal !important',
     }
 })

@@ -49,7 +49,7 @@ const ClockTimePicker: React.FC<TProps> = ({
                         id: InputProps?.id ?? id,
                         name: InputProps?.name ?? name
                     }
-            },
+                },
                 layout: {
                     sx: {
                         [`.${pickersLayoutClasses.toolbar}`]: {
@@ -67,7 +67,7 @@ const ClockTimePicker: React.FC<TProps> = ({
                     "&:hover > fieldset": {borderColor: "#C7C8CD"},
                     borderRadius: 0,
                     border: 0
-                }
+                },
             }}
         />
     </>

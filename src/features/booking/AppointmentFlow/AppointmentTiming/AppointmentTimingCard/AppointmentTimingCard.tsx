@@ -47,16 +47,18 @@ const AppointmentTimingCard: React.FC<React.PropsWithChildren<React.PropsWithChi
                 dayOfWeekFormatter={(day, date) => dayjs(date as TParsableDate).format("ddd")}
                 slotProps={{
                     textField: {
+                        variant: 'standard',
                         InputProps: {
                             endAdornment: <DateRangeIcon color={active ? "primary" : "disabled"}/>,
                             placeholder: t("Choose here"),
                             disabled: !active,
+                            className: classes.input,
+                            disableUnderline: true,
                         },
                     },
                     toolbar: {
                         toolbarFormat: "ddd, MMM DD",
                     },
-                    field: { className: classes.input },
                     layout: {
                         sx: {
                             [`.${pickersLayoutClasses.toolbar}`]: {
@@ -71,6 +73,7 @@ const AppointmentTimingCard: React.FC<React.PropsWithChildren<React.PropsWithChi
                 }}
                 sx={{
                     "& .MuiOutlinedInput-root": {
+                        fontWeight: 400,
                         "&:hover > fieldset": {borderColor: "#C7C8CD"},
                         borderRadius: 0,
                         border: 0,
@@ -78,24 +81,12 @@ const AppointmentTimingCard: React.FC<React.PropsWithChildren<React.PropsWithChi
                         outline: 'none',
                     },
                     "& .MuiOutlinedInput-input": {
-                        padding: '9px'
+                        padding: '9px',
+                        fontWeight: 400,
                     },
                     "&.MuiInputBase-root": {
-                        "&.Mui-focused": {
-                            border: 0,
-                            borderImageWidth: 0,
-                            outline: 'none',
-                        }
+                        fontWeight: 400,
                     },
-                    "& .MuiPickersToolbar-root": {
-                        backgroundColor: 'red'
-                    },
-                    "& .MuiPickersLayout-toolbar": {
-                        backgroundColor: 'red'
-                    },
-                    "& .MuiPickersLayout-root": {
-                        backgroundColor: 'red'
-                    }
                 }}
             />
         </div>
