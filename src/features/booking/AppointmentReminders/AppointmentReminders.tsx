@@ -1,12 +1,13 @@
 import React, {useEffect, useMemo} from 'react';
 import {AppointmentConfirmationTitle} from '../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle';
-import {Checkbox, FormControlLabel} from "@material-ui/core";
+import {Checkbox} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setReminders} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {EReminderType} from "../../../store/reducers/appointment/types";
 import {useTranslation} from "react-i18next";
-import {FlexGroup} from "./styles";
+import {FlexGroup, StyledLabel} from "./styles";
+import {Info} from "../AppointmentFlow/AppointmentConfirmation/styles";
 
 type TRemindersProps = {
     isEmailRequired: boolean
@@ -44,22 +45,24 @@ export const AppointmentReminders: React.FC<TRemindersProps> = ({isEmailRequired
         <div>
             <AppointmentConfirmationTitle>{t("Reminders")}</AppointmentConfirmationTitle>
             <FlexGroup>
-                <FormControlLabel
-                    label={t("Text")}
+                <StyledLabel
+                    label={t("Text confirmations & Reminders")}
                     disabled={!scProfile?.isSendReminders}
                     control={<Checkbox
                         checked={scProfile?.isSendReminders && reminders.includes(EReminderType.Sms)}
                         onChange={handleChange(EReminderType.Sms)}
                         color="primary" />}
                 />
-                <FormControlLabel
-                    label={t("E-mail")}
+                <Info>{t("By checking the box, you agree to receive the text messages from Performance Kings Honda Cincinnati and also agree to our Privacy Policy & terms of Service.\": \"By checking the box, you agree to receive the text messages from Performance Kings Honda Cincinnati and also agree to our Privacy Policy & terms of Service.")}.</Info>
+                <StyledLabel
+                    label={t("E-mail reminders")}
                     control={<Checkbox
                         disabled={!scProfile?.isSendReminders || (!isEmailRequired && !customer?.email)}
                         checked={scProfile?.isSendReminders && reminders.includes(EReminderType.Email)}
                         onChange={handleChange(EReminderType.Email)}
                         color="primary" />}
                 />
+                <Info>{t("By using this service, you accept the terms of our Visitor Agreement")}.</Info>
             </FlexGroup>
         </div>
     );
