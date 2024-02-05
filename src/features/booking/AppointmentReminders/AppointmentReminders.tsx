@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo} from 'react';
-import {AppointmentConfirmationTitle} from '../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle';
 import {Checkbox} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -46,31 +45,29 @@ export const AppointmentReminders: React.FC<{isEmailRequired: boolean}> = ({isEm
 
     return (
         <div>
-            <AppointmentConfirmationTitle>{t("Reminders")}</AppointmentConfirmationTitle>
-            <div>
-                <StyledLabel
-                    label={t("Text confirmations & Reminders")}
-                    disabled={!scProfile?.isSendReminders}
-                    control={<Checkbox
-                        icon={<CheckboxEmptyIcon/>}
-                        checkedIcon={<CheckboxIcon/>}
-                        checked={textChecked}
-                        onChange={handleChange(EReminderType.Sms)}
-                        color="primary" />}
-                />
-                <Info>{t("By checking the box, you agree to receive the text messages from Performance Kings Honda Cincinnati and also agree to our Privacy Policy & terms of Service.\": \"By checking the box, you agree to receive the text messages from Performance Kings Honda Cincinnati and also agree to our Privacy Policy & terms of Service.")}.</Info>
-                <StyledLabel
-                    label={t("E-mail reminders")}
-                    control={<Checkbox
-                        disabled={!scProfile?.isSendReminders || (!isEmailRequired && !customer?.email)}
-                        checked={emailChecked}
-                        icon={<CheckboxEmptyIcon/>}
-                        checkedIcon={<CheckboxIcon/>}
-                        onChange={handleChange(EReminderType.Email)}
-                        color="primary" />}
-                />
-                <Info>{t("By using this service, you accept the terms of our Visitor Agreement")}.</Info>
-            </div>
+            <StyledLabel
+                label={t("Text confirmations & Reminders")}
+                disabled={!scProfile?.isSendReminders}
+                control={<Checkbox
+                    icon={<CheckboxEmptyIcon/>}
+                    checkedIcon={<CheckboxIcon/>}
+                    checked={textChecked}
+                    onChange={handleChange(EReminderType.Sms)}
+                    color="primary" />}
+            />
+            <Info>{t("By checking the box, you agree to receive the text messages from Service Center and also agree to our Privacy Policy & terms of Service.",
+                {serviceCenterName: scProfile?.name ?? ''})}.</Info>
+            <StyledLabel
+                label={t("E-mail reminders")}
+                control={<Checkbox
+                    disabled={!scProfile?.isSendReminders || (!isEmailRequired && !customer?.email)}
+                    checked={emailChecked}
+                    icon={<CheckboxEmptyIcon/>}
+                    checkedIcon={<CheckboxIcon/>}
+                    onChange={handleChange(EReminderType.Email)}
+                    color="primary" />}
+            />
+            <Info>{t("By using this service, you accept the terms of our Visitor Agreement")}.</Info>
         </div>
     );
 };
