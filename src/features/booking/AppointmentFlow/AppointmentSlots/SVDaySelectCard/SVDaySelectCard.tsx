@@ -6,7 +6,7 @@ import {EAppointmentTimingType, IServiceValetAppointment} from "../../../../../s
 import {useTranslation} from "react-i18next";
 import {EPricingDisplayType} from "../../../../../store/reducers/pricingSettings/types";
 import {defaultFormat, monthFormat, XsFormat, XsMontFormat} from "../constants";
-import {DayCard} from "../../../../../components/styled/DayCard";
+import {Date, Day, DayCard, DayName} from "../../../../../components/styled/DayCard";
 import dayjs from "dayjs";
 
 type TProps = {
@@ -73,11 +73,14 @@ export const SVDaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithCh
         isCurrent={isCurrent}
         isOffPeak={false}
     >
-        <div className="dayName">{getDayNameString()}</div>
-        <div>{dayjs.utc(day).format(getFormat())}</div>
-        <div className="day" onClick={onClick}>
+        <DayName>{getDayNameString()}</DayName>
+        <Date>{dayjs.utc(day).format(getFormat())}</Date>
+        <Day
+            available={Boolean(appointment)}
+            isCurrent={isCurrent}
+            onClick={onClick}>
             {getLabel()}
             {isXs ? <div className="padding" /> : null}
-        </div>
+        </Day>
     </DayCard>
 };
