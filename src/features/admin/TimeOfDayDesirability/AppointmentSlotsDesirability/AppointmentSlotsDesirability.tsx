@@ -41,22 +41,19 @@ const initialForm = {
 };
 
 export const AppointmentSlotsDesirability = () => {
+    const {slotRange, isLoading, desirability: desirabilityItems} = useSelector((state: RootState) => state.slotScoring);
     const [form, setForm] = useState<TForm>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);
     const [isEdit, setEdit] = useState<boolean>(false);
-    const {slotRange, isLoading} = useSelector((state: RootState) => state.slotScoring);
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
+
     const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();
-
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const [desirabilityItems] = useSelector((state: RootState) => [
-        state.slotScoring.desirability
-    ]);
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadDesirability(selectedSC.id, selectedPod?.id, (e) => showError(e)));
