@@ -1,11 +1,14 @@
 import React, {Dispatch, SetStateAction, useEffect} from 'react';
-import {AppointmentConfirmationTitle} from "../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
+import {
+    AppointmentConfirmationTitle
+} from "../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setCustomer} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {Wrapper} from "./styles";
+import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 type TUserDataProps = {
     errors: string[],
@@ -15,7 +18,7 @@ type TUserDataProps = {
 
 export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUserDataProps>>> = ({ errors, setErrors, isEmailRequired }) => {
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
-    const {customer} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customer, userType} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {t} = useTranslation();
 
@@ -44,12 +47,14 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
                 value={customer?.fullName}
                 error={errors.includes('fullname')}
                 name="fullName"
+                disabled={userType === EUserType.Existing}
                 fullWidth
                 placeholder={t("Type here")}
                 label={`${t("Full Name")}:`} />
             <TextField
                 onChange={handleChange}
                 value={customer?.phoneNumber}
+                disabled={userType === EUserType.Existing}
                 name="phoneNumber"
                 fullWidth
                 error={errors.includes('phonenumber')}

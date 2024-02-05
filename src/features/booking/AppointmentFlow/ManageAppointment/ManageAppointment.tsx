@@ -45,7 +45,7 @@ import DetailedFeesManage from "../AppointmentConfirmation/DetailedFees/Detailed
 import {loadFirstScreenOptionsByQuery} from "../../../../store/reducers/serviceTypes/actions";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import AddressManaging from "./AddressManaging/AddressManaging";
-import {ButtonWrapper, Info, ManageTitle, Wrapper} from "./styles";
+import {ButtonWrapper, ManageTitle, Wrapper} from "./styles";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 
@@ -267,7 +267,6 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                     <div>
                         <AppointmentUserData errors={errors} setErrors={setErrors} isEmailRequired={isEmailRequired}/>
                         <AppointmentReminders isEmailRequired={isEmailRequired}/>
-                        <Info>{t("terms of our Visitor Agreement")}.</Info>
                     </div>
                 </React.Fragment>
             }

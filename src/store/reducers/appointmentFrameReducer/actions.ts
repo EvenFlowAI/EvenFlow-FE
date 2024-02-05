@@ -46,7 +46,7 @@ import {
 import {
     collectServiceRequestIds,
     decodeSCID,
-    getCategories, getVehicleData,
+    getCategories, getCategoriesForAppointment, getVehicleData,
     getYearOptions,
     mapRecallsForRequest
 } from "../../../utils/utils";
@@ -483,7 +483,9 @@ export const updateRecalls = (data: IAppointmentByKey, id: string): AppThunk => 
                         serviceType,
                     }}
             ).then(result => {
-                const category = result?.data?.result?.find(item => item.type === EServiceCategoryType.OpenRecalls)
+                const category = result?.data?.result?.find(item => {
+                    return data.serviceCategories.map(el => el.id).includes(item.id)
+                })
                 if (category) {
                     dispatch(selectCategoriesIds([category.id]))
                     if (category.page === 0) {
@@ -723,7 +725,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
     const isWaitListManaging = !appointment.appointment
         && Boolean(appointmentFrame.appointmentByKey?.isWaitlist)
         && appointmentFrame.appointmentByKey?.waitlistTextSettings?.isEnabled;
-    const isVisitCenterAppointment = appointmentFrame?.serviceTypeOption?.type === EServiceType.VisitCenter;
+    const isVisitCenterAppointment = appointmentFrame?.serviceTypeOption?.type === EServiceType.VisitCenter || !appointmentFrame.serviceTypeOption;
 
     const isWaitlist = isVisitCenterAppointment && (isWaitListSlotSelected || isWaitListManaging);
 
@@ -754,7 +756,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         slot,
         serviceRequestIds,
         date,
-        serviceCategoryIds: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
+        serviceCategoryIds: getCategoriesForAppointment(categories.allCategories, appointmentFrame.categoriesIds),
         maintenancePackageOption,
         valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
             ? [appointmentFrame?.valueService?.selectedService.id]
@@ -770,6 +772,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             : null,
         isWaitlist: Boolean(isWaitlist),
     };
+    console.log(getCategoriesForAppointment(categories.allCategories, appointmentFrame.categoriesIds))
 
     if (isAdmin) delete data.schedulerType;
 

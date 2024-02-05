@@ -11,7 +11,7 @@ import {NoData} from "../../../wrappers/NoData/NoData";
 import {HCell, TCell, useStyles} from "./styles";
 import dayjs from "dayjs";
 
-const VehicleRepairHistory: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {vehicleDmsId: string}>>> = ({vehicleDmsId, open, onClose}) => {
+const VehicleRepairHistory: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {vehicleId: string|number, customerId: number|string}>>> = ({customerId, vehicleId, open, onClose}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {repairHistoryLoading, repairHistory} = useSelector((state: RootState) => state.customers);
     const [pageIndex, setPageIndex] = useState<number>(0);
@@ -19,18 +19,17 @@ const VehicleRepairHistory: React.FC<React.PropsWithChildren<React.PropsWithChil
     const { classes  } = useStyles();
 
     useEffect(() => {
-        if (scProfile && vehicleDmsId && open) {
-            dispatch(loadRepairHistory(scProfile.id, vehicleDmsId, 0, 0));
+        if (customerId && vehicleId && open) {
+            dispatch(loadRepairHistory(customerId, vehicleId, 0, 0));
         }
-    }, [scProfile, vehicleDmsId, open])
+    }, [customerId, vehicleId, open])
 
     const onCancel = () => {
         onClose();
     }
 
     const onLoadMore = () => {
-        const index = pageIndex + 1;
-        setPageIndex(index);
+        setPageIndex(pageIndex + 1);
     }
 
     return (

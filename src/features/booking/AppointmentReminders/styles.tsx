@@ -1,10 +1,9 @@
-import {FormGroup, styled} from "@mui/material";
+import {FormControlLabel, styled} from "@material-ui/core";
 
-export const FlexGroup = styled(FormGroup)({
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    "& label": {
-        marginRight: 32
+export const StyledLabel = styled(FormControlLabel)({
+    textTransform: 'uppercase',
+    '& > span': {
+        fontWeight: 'bold',
+        fontSize: 10,
     }
 })

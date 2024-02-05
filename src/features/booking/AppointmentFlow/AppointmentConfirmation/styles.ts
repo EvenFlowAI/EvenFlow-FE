@@ -22,5 +22,6 @@ export const Wrapper = styled('div')(({theme}) => ({
 }));
 
 export const Info = styled('div')({
-    fontSize: 12
+    fontSize: 12,
+    color: "#828282"
 });
