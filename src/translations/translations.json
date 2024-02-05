@@ -339,7 +339,7 @@
       "Waitlist only": "Waitlist only",
       "Expected completion time for your vehicle cannot be provided with Waitlist Only appointments": "Expected completion time for your vehicle cannot \u2028be provided with Waitlist Only appointments",
       "Existing Customer": "Existing Customer",
-      "By checking the box, you agree to receive the text messages from Performance Kings Honda Cincinnati and also agree to our Privacy Policy & terms of Service.": "By checking the box, you agree to receive the text messages from Performance Kings Honda Cincinnati and also agree to our Privacy Policy & terms of Service.",
+      "By checking the box, you agree to receive the text messages from Service Center and also agree to our Privacy Policy & terms of Service.": "By checking the box, you agree to receive the text messages from {{serviceCenterName}} and also agree to our Privacy Policy & terms of Service.",
       "By using this service, you accept the terms of our Visitor Agreement": "By using this service, you accept the terms of our Visitor Agreement",
       "Text confirmations & Reminders": "Text confirmations & Reminders",
       "E-mail reminders": "E-mail reminders"
