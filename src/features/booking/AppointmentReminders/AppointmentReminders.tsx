@@ -11,11 +11,7 @@ import {ReactComponent as CheckboxIcon} from '../../../assets/img/checkbox_outli
 import {ReactComponent as CheckboxEmptyIcon} from '../../../assets/img/checkbox_empty1.svg'
 import {Info} from "../AppointmentFlow/AppointmentConfirmation/styles";
 
-type TRemindersProps = {
-    isEmailRequired: boolean
-}
-
-export const AppointmentReminders: React.FC<TRemindersProps> = ({isEmailRequired}) => {
+export const AppointmentReminders: React.FC<{isEmailRequired: boolean}> = ({isEmailRequired}) => {
     const {reminders, customer}= useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile}= useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
