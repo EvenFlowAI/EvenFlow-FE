@@ -164,6 +164,8 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{i
                     <Select
                         value={serviceTypeOption?.id}
                         className={classes.select}
+                        variant="standard"
+                        disableUnderline
                         onChange={handleServiceOptionChange}>
                         {firstScreenOptions
                             .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)

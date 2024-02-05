@@ -190,6 +190,7 @@ export const SelectOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
                             size="small">
                             <Search />
                         </IconButton>,
+                        disableUnderline: true,
                     }}
                 />
                 <CodesWrapper>

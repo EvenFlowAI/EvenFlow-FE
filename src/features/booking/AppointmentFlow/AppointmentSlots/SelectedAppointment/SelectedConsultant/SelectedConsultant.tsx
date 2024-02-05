@@ -42,6 +42,8 @@ const SelectedConsultant = () => {
                 <Select
                     value={advisor?.id || "Any"}
                     className={classes.select}
+                    variant="standard"
+                    disableUnderline
                     disabled={!!currentConfig && !consultants.length}
                     onChange={handleConsultantChange}>`
                     {consultants
