@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
 export const useDialogStyles = makeStyles()(theme => ({
     root: {
         "& hr": {

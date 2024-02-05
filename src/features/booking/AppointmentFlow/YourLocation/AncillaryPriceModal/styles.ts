@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-//
 export const useStyles = makeStyles()(theme => ({
     info: {
         display: 'flex',
@@ -19,7 +18,6 @@ export const useStyles = makeStyles()(theme => ({
     actionsWrapper: {
         display: 'flex',
         justifyContent: 'center',
-        marginBottom: 30,
         [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
             '& > div': {
                 flexDirection: 'column',
