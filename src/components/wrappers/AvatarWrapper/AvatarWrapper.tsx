@@ -1,10 +1,10 @@
 import React from "react";
 import {AvatarUpload, TAvatarProps} from "../../formControls/AvatarUpload/AvatarUpload";
-import {Container} from "@material-ui/core";
+import {Container} from "@mui/material";
 import {useStyles} from "./styles";
 
-export const AvatarWrapper: React.FC<TAvatarProps> = (props) => {
-    const classes = useStyles({maxWidth: 0});
+export const AvatarWrapper: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAvatarProps>>> = (props) => {
+    const { classes  } = useStyles();
     return <Container className={classes.avatarWrapper}>
         <AvatarUpload {...props} />
     </Container>

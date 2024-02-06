@@ -6,9 +6,9 @@ import {useTranslation} from "react-i18next";
 import {TPackage} from "../../MaintenancePackages/types";
 import {usePackageMobileStyles} from "../../../../../hooks/styling/usePackageMobileStyles";
 
-const PackagesMobileTotalMaintenance: React.FC<{ item: TPackage }> = ({item}) => {
+const PackagesMobileTotalMaintenance: React.FC<React.PropsWithChildren<React.PropsWithChildren<{ item: TPackage }>>> = ({item}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const classes = usePackageMobileStyles();
+    const { classes  } = usePackageMobileStyles();
     const {t} = useTranslation();
 
     return scProfile?.isShowPriceDetails

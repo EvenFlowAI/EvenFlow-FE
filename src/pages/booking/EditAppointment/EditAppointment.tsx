@@ -3,7 +3,7 @@ import {WelcomeLayout} from "../../../features/booking/WelcomeLayout/WelcomeLayo
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import {API} from "../../../api/api";
-import {Button, styled} from "@material-ui/core";
+import {Button, styled} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {
     clearStorage,
@@ -12,7 +12,7 @@ import {
     setCustomerLoadedData
 } from "../../../store/reducers/appointment/actions";
 import {AppointmentStatus, ICustomerLoadedData, ILoadedVehicle} from "../../../api/types";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {RootState} from "../../../store/rootReducer";
 import {NotFoundError} from "../../../components/wrappers/NotFoundError/NotFoundError";
 import {encodeSCID} from "../../../utils/utils";
@@ -22,7 +22,6 @@ import {
     setUserType,
     setVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import moment from "moment";
 import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions";
 import {useTranslation} from "react-i18next";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
@@ -30,6 +29,7 @@ import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameR
 import {dateTimeFormat} from "../../../features/admin/Appointments/ViewAppointmentsModal/AppointmentDetails/AppointmentDetails";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {Routes} from "../../../routes/constants";
+import dayjs from "dayjs";
 
 const ContentContainer = styled("div")({
     fontSize: 22,
@@ -52,7 +52,7 @@ export const EditAppointment = () => {
 
     const history = useHistory();
     const dispatch = useDispatch();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const {search} = useLocation<TLParams>();
     const isFromAdmin = useMemo(() => {
@@ -102,9 +102,9 @@ export const EditAppointment = () => {
                     return;
                 }
                 const [hours, minutes] = data.timeSlot.split(":");
-                const formattedDate = moment(data.dateInUtc).format()
-                const dateTime = moment.utc(formattedDate).hours(+hours).minutes(+minutes).format(dateTimeFormat)
-                if (moment.utc().diff(dateTime) >= 0) {
+                const formattedDate = dayjs(data.dateInUtc).format()
+                const dateTime = dayjs.utc(formattedDate).hour(+hours).minute(+minutes).format(dateTimeFormat)
+                if (dayjs.utc().diff(dateTime) >= 0) {
                     setState("passed");
                     return;
                 }

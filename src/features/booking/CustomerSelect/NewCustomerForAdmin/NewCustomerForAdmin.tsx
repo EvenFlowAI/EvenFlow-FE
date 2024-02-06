@@ -1,17 +1,17 @@
 import React from 'react';
-import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
+import {Button, Divider, Grid, useMediaQuery, useTheme} from "@mui/material";
 
 import {useTranslation} from "react-i18next";
 import {ReactComponent as UserIcon} from "../../../../assets/img/user.svg";
 import {useCustomerSelectStyles} from "../../../../hooks/styling/useCustomerSelectStyles";
 import {useStyles} from "./styles";
 
-const NewCustomerForAdmin: React.FC<{ handleNew: () => void}> = ({ handleNew }) => {
-    const classes = useStyles();
+const NewCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWithChildren<{ handleNew: () => void}>>> = ({ handleNew }) => {
+    const { classes  } = useStyles();
     const { t } = useTranslation();
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
-    const returningClasses = useCustomerSelectStyles();
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
+    const { classes: returningClasses } = useCustomerSelectStyles();
 
     return <Grid item xs={12} sm={12} md={6} style={{maxWidth: 440, padding: isSm ? '16px 0' : 16}}>
         <div className={classes.button}>

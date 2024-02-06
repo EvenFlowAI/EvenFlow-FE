@@ -1,6 +1,6 @@
 import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../../assets/img/done_icon_black.svg";
-import {InfoOutlined} from "@material-ui/icons";
+import {InfoOutlined} from "@mui/icons-material";
 import {IPackageOptions} from "../../../../../api/types";
 import {useTranslation} from "react-i18next";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
@@ -15,7 +15,7 @@ type TIncludedInPackageProps = {
     isBmWService: boolean;
 }
 
-const PackagesServiceRequests: React.FC<TIncludedInPackageProps> =
+const PackagesServiceRequests: React.FC<React.PropsWithChildren<React.PropsWithChildren<TIncludedInPackageProps>>> =
     ({packages, services, setClasses, isBmWService, handleClick}) => {
     const {t} = useTranslation();
     return <React.Fragment>

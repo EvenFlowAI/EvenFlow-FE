@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     wrapper: {
         fontSize: 16,
         color: "#202021",
@@ -10,4 +11,4 @@ export const useStyles = makeStyles({
         textTransform: "uppercase",
         marginBottom: 8
     }
-})
+});

@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/styled/Tabs";
-import {Tab} from "@material-ui/core";
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {Tab} from "@mui/material";
+import {TabContext, TabPanel} from "@mui/lab";
 import {ProximityTable} from "../../../features/admin/ProximityTable/ProximityTable";
 import {TimeOfDayDesirability} from "../../../features/admin/TimeOfDayDesirability/TimeOfDayDesirability";
 import {capacityManagementRoot} from "../../../utils/constants";

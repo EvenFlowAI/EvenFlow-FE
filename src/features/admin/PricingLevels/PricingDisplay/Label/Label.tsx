@@ -6,8 +6,8 @@ type TLabelProps = {
     text: string;
 }
 
-export const Label: React.FC<TLabelProps> = ({title, text}) => {
-    const classes = useStyles();
+export const Label: React.FC<React.PropsWithChildren<React.PropsWithChildren<TLabelProps>>> = ({title, text}) => {
+    const { classes  } = useStyles();
     return <div>
         <div className={classes.title}>{title}</div>
         <div className={classes.text}>{text}</div>

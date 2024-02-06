@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {setNewLostCustomers} from "../../../../store/reducers/valueSettings/actions";
@@ -14,7 +14,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
-export const NewLostCustomerModal: React.FC<DialogProps<INewLostCustomer> & {isNew: boolean}> = ({onAction, isNew=false, payload, ...props}) => {
+export const NewLostCustomerModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<INewLostCustomer> & {isNew: boolean}>>> = ({onAction, isNew=false, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [months, setMonths] = useState<string>("");
 
@@ -75,7 +75,7 @@ export const NewLostCustomerModal: React.FC<DialogProps<INewLostCustomer> & {isN
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={props.onClose} color="info">Cancel</Button>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave}

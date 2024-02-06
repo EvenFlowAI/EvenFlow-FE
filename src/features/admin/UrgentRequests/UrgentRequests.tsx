@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Button, IconButton} from "@material-ui/core";
+import {Button, IconButton} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
@@ -14,7 +14,7 @@ import {
 } from "../../../store/reducers/serviceRequests/types";
 import {UrgentRequestModal} from "./UrgentRequestsModal/UrgentRequestModal";
 import {SC_UNDEFINED} from "../../../utils/constants";
-import {DeleteOutline} from "@material-ui/icons";
+import {DeleteOutline} from "@mui/icons-material";
 import {TableRowDataType} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
@@ -32,24 +32,23 @@ const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
 ];
 
 export const UrgentRequests = () => {
-    const {onOpen, onClose, isOpen} = useModal();
+    const {
+        urgentList,
+        urgentLoading,
+        urgentPaging: {numberOfRecords}
+    } = useSelector(({serviceRequests}: RootState) => serviceRequests);
+
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const {askConfirm} = useConfirm();
     const showMessage = useMessage();
     const showError = useException();
+    const {onOpen, onClose, isOpen} = useModal();
     const {pageIndex, pageSize, changePage, changeRowsPerPage} = usePagination(
         state => state.serviceRequests.urgentPageData,
         pageDataUrgentServiceRequests
     )
     const dispatch = useDispatch();
-    const [
-        data, isLoading, count
-    ] = useSelector((state: RootState) => [
-        state.serviceRequests.urgentList,
-        state.serviceRequests.urgentLoading,
-        state.serviceRequests.urgentPaging.numberOfRecords
-    ]);
 
     useEffect(() => {
         if (selectedSC) {
@@ -84,9 +83,11 @@ export const UrgentRequests = () => {
         }
     }
     const actions = (el: IAssignedServiceRequestShort) => {
-        return <IconButton onClick={askRemove(el)}>
-            <DeleteOutline />
-        </IconButton>
+        return (
+            <IconButton onClick={askRemove(el)} size="large">
+                <DeleteOutline />
+            </IconButton>
+        );
     }
 
     return <div>
@@ -100,11 +101,11 @@ export const UrgentRequests = () => {
             </Button>
         </div>
         <Table<IAssignedServiceRequestShort>
-            data={data}
+            data={urgentList}
             rowData={rowData}
             index="id"
-            count={count}
-            isLoading={isLoading}
+            count={numberOfRecords}
+            isLoading={urgentLoading}
             page={pageIndex}
             rowsPerPage={pageSize}
             onChangePage={changePage}

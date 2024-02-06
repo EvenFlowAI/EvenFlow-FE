@@ -4,7 +4,7 @@ import {LoginTitle} from "../../../../components/wrappers/LoginTitle/LoginTitle"
 import {LoginTextContent} from "../../../../components/wrappers/LoginTextContent/LoginTextContent";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {LoginButton} from "../../../../components/styled/LoginButton";
-import {Typography} from "@material-ui/core";
+import {Typography} from "@mui/material";
 import {BackLink} from "../../../../components/wrappers/BackLink/BackLink";
 
 import {Routes} from "../../../../routes/constants";

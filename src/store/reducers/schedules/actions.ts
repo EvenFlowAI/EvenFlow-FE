@@ -1,9 +1,9 @@
 import {createAction} from "@reduxjs/toolkit";
 import {IEmployeeSchedule, IScheduleFilters, IScheduleForm} from "./types";
 import {AppThunk} from "../../../types/types";
-import moment from "moment";
 import {getStartEndDates} from "../../../utils/utils";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
 
 export const switchScheduleFilters = createAction<boolean>("Schedules/SwitchFilters");
 export const setScheduleFilters = createAction<Partial<IScheduleFilters>>("Schedules/SetFilters");
@@ -27,6 +27,6 @@ export const setEmployeesSchedule = (data: IScheduleForm, isXS: boolean): AppThu
         data.id ? Api.endpoints.EmployeeSchedule.Update : Api.endpoints.EmployeeSchedule.Create,
         {data, urlParams: {id: data.id}}
     );
-    const [st, nd] = getStartEndDates(moment(data.date), isXS);
+    const [st, nd] = getStartEndDates(dayjs(data.date), isXS);
     dispatch(loadEmployeesSchedule(st, nd, data.serviceCenterId));
 }

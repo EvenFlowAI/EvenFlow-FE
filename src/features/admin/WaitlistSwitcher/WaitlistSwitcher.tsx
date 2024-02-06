@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Switch} from "@material-ui/core";
+import {Button, Switch} from "@mui/material";
 import {
     toggleWaitListFunctionality
 } from "../../../store/reducers/optimizationWindows/actions";

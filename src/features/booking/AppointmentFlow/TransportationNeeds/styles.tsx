@@ -1,10 +1,10 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const TransportationsWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
     gap: "20px",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         gridTemplateColumns: "1fr"
     }
 }));

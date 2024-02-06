@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {TableHead, TableBody, CircularProgress} from "@material-ui/core";
+import {TableHead, TableBody, CircularProgress} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {loadDemandSegments, setDemandSegments} from "../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -27,10 +27,7 @@ export const DemandSegments = () => {
     const showError = useException();
     const showMessage = useMessage();
 
-    const [segments, loading] = useSelector((state: RootState) => [
-        state.demandSegments.demandSegmentList,
-        state.demandSegments.listLoading
-    ]);
+    const {demandSegmentList: segments, listLoading: loading} = useSelector((state: RootState) => state.demandSegments);
 
     useEffect(() => {
         if (selectedSC) {

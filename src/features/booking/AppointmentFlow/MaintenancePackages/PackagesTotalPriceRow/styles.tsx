@@ -1,16 +1,14 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {styled, Theme} from "@material-ui/core";
+import { makeStyles } from 'tss-react/mui';
+import {styled} from "@mui/material";
 
-export const PriceValue = styled('div')<Theme, {
+export const PriceValue = styled('div')<{
     selected: boolean,
     showDetails: boolean,
-    count: number,
     roundPrice?: boolean
 }>(({
         theme,
         selected,
         showDetails,
-        count,
         roundPrice
     }) => ({
     position: 'relative',
@@ -26,18 +24,18 @@ export const PriceValue = styled('div')<Theme, {
     padding: '22px 16px',
     lineHeight: '20px',
     cursor: 'pointer',
-    [`${theme.breakpoints.down("md")} and (orientation: landscape)`]: {
+    [`${theme.breakpoints.down('lg')} and (orientation: landscape)`]: {
         gridTemplateColumns: showDetails ? '1fr 2fr' : '1fr',
         padding: '11px 8px',
     },
-    [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+    [`${theme.breakpoints.down('md')} and (orientation: landscape)`]: {
         gridTemplateColumns: showDetails ? '1fr 3fr' : '1fr',
         padding: '8px 6px',
     },
     "& .prices": {
         display: 'flex',
         justifyContent: showDetails ? !roundPrice ? 'space-between' : 'space-evenly' : 'center',
-        [`${theme.breakpoints.down("md")} and (orientation: landscape)`]: {
+        [`${theme.breakpoints.down('lg')} and (orientation: landscape)`]: {
             flexDirection: 'column'
         }
     },
@@ -57,7 +55,7 @@ export const PriceValue = styled('div')<Theme, {
     }
 }))
 
-export const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) => ({
+export const Wrapper = styled('div')<{ count: number }>(({theme, count}) => ({
     display: "grid",
     gap: "0 16px",
     gridTemplateColumns: count === 3
@@ -67,12 +65,13 @@ export const Wrapper = styled('div')<Theme, { count: number }>(({theme, count}) 
             : '1fr 1fr',
     width: "100%",
     alignItems: "stretch",
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
         overflowX: "auto"
     },
 }))
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     priceText: {
         width: '100%',
         textAlign: 'right',
@@ -88,4 +87,4 @@ export const useStyles = makeStyles({
         display: 'grid',
 
     }
-})
+});

@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {TableBody, TableHead, Button} from "@material-ui/core";
-import moment from "moment";
+import {TableBody, TableHead, Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {loadUnplannedDemand} from "../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -13,6 +12,7 @@ import {TableRow} from "../../../components/styled/TableRow";
 import {TableCell} from "../../../components/styled/TableCell";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
+import dayjs from "dayjs";
 
 type TForm = number[];
 
@@ -62,7 +62,7 @@ export const UnplannedDemand = () => {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {moment.weekdays().map((d, idx) => {
+                {dayjs.weekdays().map((d, idx) => {
                     return <TableRow key={d}>
                         <TableCell>
                             {d}

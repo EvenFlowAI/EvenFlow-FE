@@ -1,7 +1,7 @@
-import {styled, Theme} from "@material-ui/core";
+import {styled} from "@mui/material";
 import React from "react";
 
-export const CardWrapper = styled(({active, selected, ...props}) => <div {...props}/>)<Theme, {
+export const CardWrapper = styled("div")<{
     active?: boolean,
     selected?: boolean
 }>(({theme, active, selected}) => {
@@ -19,7 +19,7 @@ export const CardWrapper = styled(({active, selected, ...props}) => <div {...pro
         background: active ? '#000000' : selected ? "#DEFFDF" : "transparent",
         border: `1px solid ${active ? '#000000' : selected ? '#89E5AB' : '#DADADA'}`,
         cursor: "pointer",
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             position: 'relative',
             maxWidth: 300,
             gridTemplateColumns: "1fr 3fr",
@@ -37,7 +37,7 @@ export const CardWrapper = styled(({active, selected, ...props}) => <div {...pro
             alignItems: 'center',
             flexWrap: 'wrap',
             padding: "0 12px",
-            [theme.breakpoints.down('sm')]: {
+            [theme.breakpoints.down('md')]: {
                 gridColumn: "1/3",
             }
         },
@@ -74,11 +74,11 @@ export const CardWrapper = styled(({active, selected, ...props}) => <div {...pro
         "& .infoIcon": {
             display: 'flex',
             justifyContent: 'flex-end',
-            [theme.breakpoints.down("sm")]: {
+            [theme.breakpoints.down('md')]: {
                 position: 'absolute',
                 top: 5,
                 right: 5,
             }
         },
-    }
+    };
 });

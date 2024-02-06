@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Button, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {NewLostCustomerModal} from "./NewLostCustomerModal/NewLostCustomerModal";
 import {useDispatch, useSelector} from "react-redux";
 import {loadNewLostCustomers} from "../../../store/reducers/valueSettings/actions";

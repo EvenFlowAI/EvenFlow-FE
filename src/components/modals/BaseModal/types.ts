@@ -1,4 +1,4 @@
-import {DialogProps as DP} from "@material-ui/core";
+import {DialogProps as DP} from "@mui/material";
 
 type DialogData<U={}> = {
     onClose: () => void,

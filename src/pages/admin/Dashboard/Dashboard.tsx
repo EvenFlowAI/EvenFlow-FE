@@ -1,11 +1,10 @@
-import React, {useMemo} from "react";
-import {Box, Grid, Paper} from "@material-ui/core";
+import React, {useEffect, useMemo, useState} from "react";
+import {Box, Grid, Paper} from "@mui/material";
 import {useSelector} from "react-redux";
 import {EditAddressModal} from "../../../features/admin/EditAddressModal/EditAddressModal";
 import {HourOfOperationsModal} from "../../../features/admin/HourOfOperationsModal/HourOfOperationsModal";
 import {HolidaysModal} from "../../../features/admin/HolidaysModal/HolidaysModal";
 import {BreaksModal} from "../../../features/admin/BreaksModal/BreaksModal";
-import {Technicians} from "../../../components/modals/admin/Technicians/Technicians";
 import {Bays} from "../../../components/modals/admin/Bays/Bays";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {concatAddress} from "../../../utils/utils";
@@ -27,28 +26,18 @@ import {EmployeeSchedule} from "../../../components/modals/admin/EmployeeSchedul
 import AdvisorAssignmentModal from "../../../features/admin/AdvisorAssignmentModal/AdvisorAssignmentModal";
 import ManageNotificationsModal from "../../../features/admin/ManageNotificationsModal/ManageNotificationsModal";
 import {useStyles} from "./styles";
-import {TCountData, TDataMap, TItem} from "./types";
+import {TCountData, TItem} from "./types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
+import {blankCountData, overallData} from "./constants";
 
-const overallData: TDataMap[] = [
-    {label: "Technicians", value: "technicians"},
-    {label: "Bays", value: "bays"},
-    {label: "Pods", value: "pods"},
-    {label: "Appointments Today", value: "appointments"},
-];
-
-export const AdminDashboard: React.FC = () => {
-    const countData: TCountData = useSelector(({serviceCenters: {analytics}}:RootState) => ({
-        technicians: analytics.countOfTechnicians,
-        bays: analytics.countOfBays,
-        appointments: analytics.countOfAppointmentsToday,
-        pods: analytics.countOfPods
-    }));
+export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChildren>> = () => {
+    const {analytics} = useSelector((state:RootState) => state.serviceCenters);
+    const [countData, setCountData] = useState<TCountData>(blankCountData)
     const {selectedSC} = useSCs();
     const currentUser = useCurrentUser();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const isCCRView: boolean = useMemo(() => {
         return ["Call Center Rep", "Advisor"].includes(currentUser?.role || "")
@@ -122,6 +111,15 @@ export const AdminDashboard: React.FC = () => {
         {label: "Service Center Notifications", icon: <NotificationsIcon />, action: onOpenManageNotifications},
     ];
 
+    useEffect(() => {
+        setCountData({
+            technicians: analytics.countOfTechnicians,
+            bays: analytics.countOfBays,
+            appointments: analytics.countOfAppointmentsToday,
+            pods: analytics.countOfPods
+        })
+    }, [analytics]);
+
     return <div className={classes.container}>
         {selectedSC ? <TitleContainer pad title={selectedSC.name}/> : null}
         <Box mb={2} className={classes.address}>
@@ -130,7 +128,7 @@ export const AdminDashboard: React.FC = () => {
         <SquarePaper variant="outlined">
             <Box className={classes.countWrapper} p={2}>
                 {overallData.map(d =>
-                    <Box key={d.label} display="flex" flexDirection="column" alignItems="center">
+                    <Box key={d.label} display="flex" flexDirection="column" alignItems="center" sx={{fontSize: 14}}>
                         <span>{d.label}</span>
                         <strong>{countData[d.value]}</strong>
                     </Box>

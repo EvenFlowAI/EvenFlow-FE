@@ -5,13 +5,14 @@ import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {Price} from "./styles";
+import {ConfirmationItemWrapper} from "../../../../../components/styled/ConfirmationItemWrapper";
 
 export const SelectedPrice = () => {
     const {appointment, scProfile, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
     return (
-        <div>
+        <ConfirmationItemWrapper>
             <AppointmentConfirmationTitle>{t("Selected Price")}</AppointmentConfirmationTitle>
             <Price>
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
@@ -33,6 +34,6 @@ export const SelectedPrice = () => {
                 {/*    ? <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>*/}
                 {/*    : null}*/}
             </Price>
-        </div>
+        </ConfirmationItemWrapper>
     );
 };

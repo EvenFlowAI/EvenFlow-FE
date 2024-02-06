@@ -3,7 +3,7 @@ import {useDispatch} from "react-redux";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {IUpsellServiceRequest, IUpsellServiceRequestUpdate} from "../../../../store/reducers/serviceRequests/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button, Grid} from "@material-ui/core";
+import {Button, Grid} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {updateUpsellServiceRequest} from "../../../../store/reducers/serviceRequests/actions";
 import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
@@ -28,7 +28,7 @@ const initialForm: TForm = {
     numberOfParts: "",
 };
 
-const IntervalUpsellModal: React.FC<DialogProps<IUpsellServiceRequest>> = ({payload, ...props}) => {
+const IntervalUpsellModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IUpsellServiceRequest>>>> = ({payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [isLoading, setLoading] = useState<boolean>(false);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
@@ -186,7 +186,7 @@ const IntervalUpsellModal: React.FC<DialogProps<IUpsellServiceRequest>> = ({payl
             </Grid>
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={props.onClose} color="info">Cancel</Button>
             <LoadingButton
                 loading={isLoading}
                 color="primary"

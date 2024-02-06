@@ -1,5 +1,6 @@
-import moment from "moment";
 import {EDesirabilityState, ETimeSlotType, IDesirability} from "../../../store/reducers/slotScoring/types";
+import {TParsableDate} from "../../../types/types";
+import dayjs from "dayjs";
 
 const inpFormat: string = "HH:mm:ss";
 
@@ -21,8 +22,8 @@ export type TSlot = {
     idx: number;
     id?: number;
     desirability: EDesirabilityState;
-    start: moment.Moment;
-    end: moment.Moment;
+    start: TParsableDate;
+    end: TParsableDate;
 }
 export const generateSlots = (gap: ETimeSlotType,
                               items: IDesirability[],
@@ -34,8 +35,8 @@ export const generateSlots = (gap: ETimeSlotType,
     if (org === undefined) {
         org = gap;
     }
-    const start = moment(startTime ?? "8:00:00", inpFormat);
-    const end = moment(endTime ?? "18:00:00", inpFormat);
+    const start = dayjs.utc(startTime ?? "8:00:00", inpFormat);
+    const end = dayjs.utc(endTime ?? "18:00:00", inpFormat);
     const gapMinutes: number = gapToMin(gap);
     const gapOrg: number = gapToMin(org);
     const mappedItems = items.reduce((acc, i) => {
@@ -47,9 +48,9 @@ export const generateSlots = (gap: ETimeSlotType,
 
     const idxMod = orgSlotsCount / (slotsCount ? slotsCount : 1);
     const slots: TSlot[] = [];
-    let st = moment(start);
+    let st = dayjs.utc(start);
 
-    let nd = moment(st).add(gapMinutes, "minutes");
+    let nd = dayjs.utc(st).add(gapMinutes, "minutes");
     if (startTime && endTime && items.length) {
         for (let i=1; i <= slotsCount; i++) {
             const idx = i-1;
@@ -59,8 +60,8 @@ export const generateSlots = (gap: ETimeSlotType,
                 id: idxMod === 1 ? mappedItems[idxToLook]?.id : undefined,
                 desirability: mappedItems[idxToLook]
                     ? items[idxToLook].desirability : EDesirabilityState.Neutral,
-                start: items[idx]?.start && !createNewSlots ? moment(items[idx].start, 'HH:mm:SS') : moment(st),
-                end: items[idx]?.end && !createNewSlots ? moment(items[idx].end, 'HH:mm:SS') : moment(nd)
+                start: items[idx]?.start && !createNewSlots ? dayjs.utc(items[idx].start, 'HH:mm:SS') : dayjs.utc(st),
+                end: items[idx]?.end && !createNewSlots ? dayjs.utc(items[idx].end, 'HH:mm:SS') : dayjs.utc(nd)
             });
             st = st.add(gapMinutes, "minutes");
             nd = nd.add(gapMinutes, "minutes");

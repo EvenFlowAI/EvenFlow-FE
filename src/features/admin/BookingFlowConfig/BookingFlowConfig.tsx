@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {SquarePaper} from "../../../components/styled/Paper";
 import {TableContainer} from "../../../pages/admin/PricingSettings/UI";
-import {Box, Button, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Box, Button, Switch, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";
 import {RootState} from "../../../store/rootReducer";
@@ -22,7 +22,7 @@ export const BookingFlowConfig = () => {
     const {selectedSC} = useSCs();
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const visitCenterConfig = useMemo(() => configuration.find(item => item.serviceType === EServiceType.VisitCenter), [configuration])
     const mobileServiceConfig = useMemo(() => configuration.find(item => item.serviceType === EServiceType.MobileService), [configuration])

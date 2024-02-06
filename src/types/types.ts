@@ -3,9 +3,11 @@ import {RootState} from "../store/rootReducer";
 import {Action} from "redux";
 import {TRole} from "../store/reducers/users/types";
 import React from "react";
-import {AutocompleteChangeDetails, AutocompleteChangeReason} from "@material-ui/lab";
+
+import { AutocompleteChangeReason, AutocompleteChangeDetails } from '@mui/material/useAutocomplete';
 
 import {TextInputProps} from "../components/formControls/types";
+import {Dayjs} from "dayjs";
 
 export type LinkType = {
     to: string;
@@ -316,3 +318,8 @@ export type TIdAndName = {
     id: number;
     name: string;
 }
+
+export type ParsableDate = object | string | number | Date | null | undefined;
+export type TParsableDate = string | number | Date | Dayjs | null | undefined;
+
+export type TAutocompleteChangeReason = "createOption" | "selectOption" | "removeOption" | "blur" | "clear"

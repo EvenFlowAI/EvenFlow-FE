@@ -1,43 +1,44 @@
 import React, {useMemo, useState} from "react";
-import {Paper} from "@material-ui/core";
+import {Paper} from "@mui/material";
 import {CalendarControls} from "./CalendarControls/CalendarControls";
 import {WeekDayNames} from "../../../utils/constants";
-import moment, {Moment} from "moment";
 import clsx from "clsx";
-import {Star, SupervisorAccount} from "@material-ui/icons";
+import {Star, SupervisorAccount} from "@mui/icons-material";
 import {TDay} from "./types";
 import {useCalendarStyles} from "../../../hooks/styling/useCalendarStyles";
+import {TParsableDate} from "../../../types/types";
+import dayjs from "dayjs";
 
 export const AvailableStaffCalendar = () => {
-    const [date, setDate] = useState<Moment>(moment());
-    const today = useMemo(() => moment(), []);
-    const classes = useCalendarStyles();
+    const [date, setDate] = useState<TParsableDate>(dayjs());
+    const today = useMemo(() => dayjs(), []);
+    const { classes  } = useCalendarStyles();
 
-    const handleMonthChange = (m: Moment) => {
+    const handleMonthChange = (m: TParsableDate) => {
         setDate(m);
     }
 
     const days: TDay[] = useMemo(() => {
         const days: TDay[] = [];
-        const cur = moment(date).startOf("month");
+        let cur = dayjs(date).startOf("month");
         const daysInMonth = cur.daysInMonth();
         const startDay = cur.day();
-        cur.subtract(startDay, 'days');
+        cur = cur.subtract(startDay, 'days');
         for (let i=0; i < daysInMonth + startDay; i++) {
             days.push({
-                date: moment(cur),
+                date: dayjs(cur),
                 day: +cur.format("D"),
-                type: cur.month() === date.month() ? "cur" : "prev"
+                type: cur.month() === dayjs(date).month() ? "cur" : "prev"
             });
-            cur.add(1, "day");
+            cur = dayjs(cur).add(1, "day");
         }
         for (let i = 0; i < cur.day(); i++) {
             days.push({
-                date: moment(cur),
+                date: dayjs(cur),
                 day: +cur.format("D"),
                 type: "next"
             })
-            cur.add(1, "day");
+            cur = dayjs(cur).add(1, "day");
         }
 
         return days;
@@ -56,7 +57,7 @@ export const AvailableStaffCalendar = () => {
                         className={clsx(
                             classes.dayCell,
                             d.type === "cur" ? classes.currentMonth : classes.prevMonth,
-                            d.date.isSame(today, "day") ? classes.today : ""
+                            dayjs(d.date).isSame(today, "day") ? classes.today : ""
                         )}
                         key={`${d.day}-${d.type}`}>
                         <span className={classes.dayNumber}>{d.day}</span>

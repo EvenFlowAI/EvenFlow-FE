@@ -6,8 +6,8 @@ import {
     IconButton,
     Menu, MenuItem,
     Typography
-} from "@material-ui/core";
-import {ExpandMore, MoreHoriz}from '@material-ui/icons';
+} from "@mui/material";
+import {ExpandMore, MoreHoriz}from '@mui/icons-material';
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {IPackageById, IPackageOptionDetailed, TSegmentTitle} from "../../../../api/types";
 import SummaryRow from "./SummaryRow/SummaryRow";
@@ -51,7 +51,7 @@ type TAccordionProps = {
     onOpenEdit: () => void;
 };
 
-export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
+export const PackageAccordion: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAccordionProps>>> = (props) => {
     const {
         id,
         title,
@@ -82,7 +82,7 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
     const showError = useException();
 
     const accordClasses = useAccordionStyles();
-    const classes = usePackageAccordionStyles();
+    const { classes  } = usePackageAccordionStyles();
     const iconStyles = useIconStyles();
 
     useEffect(() => {
@@ -348,183 +348,186 @@ export const PackageAccordion: React.FC<TAccordionProps> = (props) => {
         onRequestToDMSClose();
     }
 
-    return <MuiAccordion
-        classes={accordClasses}
-        defaultExpanded={defaultExpanded}
-        disabled={disabled}
-        expanded={expanded}
-        onChange={onChange}
-        square={true}
-    >
-        <AccordionSummary id={title}>
-            <div className={classes.titleWrapper}>
-                <div>
-                    <Typography className={classes.title}>{title}</Typography>
-                    <div style={{ fontSize: 16 }}>Package ID: {id}</div>
-                </div>
-                <div className={classes.iconsWrapper}>
-                    {expanded
-                        ? <>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                className={classes.addOrderButton}
-                                onClick={onOrderOpen}>
-                                Add Order
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={onDescriptionOpen}>
-                                To Describe Ops Codes
-                            </Button>
-                        </>
-                        : null
-                    }
-                    <IconButton
-                        className={classes.button}
-                        onClick={onMoreIconClick}
-                        ref={anchorRef}
-                        disabled={!expanded || !packageData}>
-                        <MoreHoriz />
-                    </IconButton>
-                    <IconButton className={classes.button} onClick={handleExpand}>
-                        <ExpandMore classes={expanded ? iconStyles : {}}/>
-                    </IconButton>
-                </div>
-            </div>
-        </AccordionSummary>
-        <AccordionDetails className={classes.details}>
-            {isPackageLoading
-                ? <Loading/>
-                : <div>
-                    <div className={classes.tablesWrapper}>
-                        {packageData && <ServiceRequestsWithOptions
-                            packageData={packageData}
-                            data={optionsData}
-                            editingOption={editingOption}
-                            setEditingOption={setEditingOption}
-                            onOptionNameChange={onOptionNameChange}
-                            onCheckboxClick={onCheckboxClick}/>
+    return (
+        <MuiAccordion
+            classes={accordClasses}
+            defaultExpanded={defaultExpanded}
+            disabled={disabled}
+            expanded={expanded}
+            onChange={onChange}
+            square={true}
+        >
+            <AccordionSummary id={title}>
+                <div className={classes.titleWrapper}>
+                    <div>
+                        <Typography className={classes.title}>{title}</Typography>
+                        <div style={{ fontSize: 16 }}>Package ID: {id}</div>
+                    </div>
+                    <div className={classes.iconsWrapper}>
+                        {expanded
+                            ? <>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.addOrderButton}
+                                    onClick={onOrderOpen}>
+                                    Add Order
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={onDescriptionOpen}>
+                                    To Describe Ops Codes
+                                </Button>
+                            </>
+                            : null
                         }
-                     </div>
-
-                    {detailsData && <React.Fragment>
-                        <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedRequestHours}/>
-                        <SummaryRow
-                            summaryText="Suggested Price:"
-                            valuesArray={detailsData.suggestedRequestPrice}
-                            toggleField="showSuggestedPrice"
-                            toggleLabel="Show Suggested Price"
-                            checked={currentPackage?.isShowSuggestedPrice}/>
-
-                        <Divider/>
-
-                        <SummaryRow
-                            isEdit={isEdit}
-                            setIsEdit={setIsEdit}
-                            summaryText="Invoiced Labor Hours:"
-                            valuesArray={detailsData.invoicedRequestLaborHours}
-                            onInputChange={onInputChange}/>
-                        <SummaryRow
-                            isEdit={isEdit}
-                            setIsEdit={setIsEdit}
-                            summaryText="Market Price:"
-                            valuesArray={detailsData.requestsPrice}
-                            onInputChange={onInputChange}
-                            // todo when new logic will be ready, uncomment
-                            // toggleField="manualOverride"
-                            // toggleLabel="Manual Override"
-                            // checked={currentPackage?.isManualOverridePrice}
-                        />
-
-                        <Upsells
-                            isUpsellNameEdit={isUpsellNameEdit}
-                            setPackageData={setPackageData}
-                            packageData={packageData}
-                            setUpsellNameEdit={setUpsellNameEdit}
-                            upsellData={upsellData}
-                            onUpsellClick={onUpsellClick}
-                            />
-
-                        <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedUpsellHours}/>
-                        <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedUpsellPrice}/>
-
-                        <Divider/>
-
-                        <SummaryRow
-                            isEdit={isEdit}
-                            setIsEdit={setIsEdit}
-                            isComplimentary
-                            packageHasComplimentary={Boolean(packageData?.intervalUpsells?.length)}
-                            summaryText="Invoiced Labor Hours:"
-                            valuesArray={detailsData.intervalUpsellLaborHours}
-                            onInputChange={onInputChange}/>
-                        <SummaryRow
-                            isEdit={isEdit}
-                            setIsEdit={setIsEdit}
-                            packageHasComplimentary={Boolean(packageData?.intervalUpsells?.length)}
-                            isComplimentary
-                            summaryText="Market Price:"
-                            valuesArray={detailsData.intervalUpsellPrice}
-                            onInputChange={onInputChange}/>
-
-                        <Complimentary
-                            isComplimentaryNameEdit={isComplimentaryNameEdit}
-                            setPackageData={setPackageData}
-                            packageData={packageData}
-                            setComplimentaryNameEdit={setComplimentaryNameEdit}
-                            complimentaryData={complimentaryData}
-                            onComplimentaryClick={onComplimentaryClick}
-                            />
-
-                        <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedComplimentaryHours}/>
-                        <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedComplimentaryPrice}/>
-
-                        <Divider/>
-
-                        <SummaryRow
-                            isEdit={isEdit}
-                            setIsEdit={setIsEdit}
-                            isComplimentary
-                            packageHasComplimentary={Boolean(packageData?.complimentaryServices?.length)}
-                            summaryText="Invoiced Labor Hours:"
-                            valuesArray={detailsData.complimentaryLaborHours}
-                            onInputChange={onInputChange}/>
-                        <SummaryRow
-                            isEdit={isEdit}
-                            setIsEdit={setIsEdit}
-                            packageHasComplimentary={Boolean(packageData?.complimentaryServices?.length)}
-                            isComplimentary
-                            summaryText="Market Price:"
-                            valuesArray={detailsData.complimentaryPrice}
-                            onInputChange={onInputChange}/>
-
-                      <PricesBlock
-                          packageData={packageData}
-                          suggestedPrices={detailsData.suggestedRequestPrice}
-                          setPackageData={setPackageData}/>
-
-                    </React.Fragment>}
-
-                    {<AccordionActions onAddOpsCode={handleAddOpsCode} onCancel={handleCancel}
-                                       onSave={handleSave}/>}
+                        <IconButton
+                            className={classes.button}
+                            onClick={onMoreIconClick}
+                            ref={anchorRef}
+                            disabled={!expanded || !packageData}
+                            size="large">
+                            <MoreHoriz />
+                        </IconButton>
+                        <IconButton className={classes.button} onClick={handleExpand} size="large">
+                            <ExpandMore classes={expanded ? iconStyles : {}}/>
+                        </IconButton>
+                    </div>
                 </div>
-            }
-        </AccordionDetails>
-        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleCloseMenu}>
-            <MenuItem onClick={handleEdit}>Edit</MenuItem>
-            <MenuItem onClick={askRemove}>Remove</MenuItem>
-        </Menu>
-        <AssignOpsCodeModal packageName={title} open={isAssignOpsCodeOpen} onClose={onAssignOpsCodeClose}/>
-        <SaveRequestToDms
-            open={isRequestToDMSOpen}
-            onClose={onRequestToDMSClose}
-            packageData={packageData}
-            setPackageData={setPackageData}
-            onSave={onRequestToDmsSave}
-        />
-        <DescriptionModal open={isDescriptionOpen} onClose={onDescriptionClose}/>
-        <OrderIndexModal onClose={onOrderClose} open={isOrderOpen}/>
-    </MuiAccordion>
+            </AccordionSummary>
+            <AccordionDetails className={classes.details}>
+                {isPackageLoading
+                    ? <Loading/>
+                    : <div>
+                        <div className={classes.tablesWrapper}>
+                            {packageData && <ServiceRequestsWithOptions
+                                packageData={packageData}
+                                data={optionsData}
+                                editingOption={editingOption}
+                                setEditingOption={setEditingOption}
+                                onOptionNameChange={onOptionNameChange}
+                                onCheckboxClick={onCheckboxClick}/>
+                            }
+                         </div>
+
+                        {detailsData && <React.Fragment>
+                            <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedRequestHours}/>
+                            <SummaryRow
+                                summaryText="Suggested Price:"
+                                valuesArray={detailsData.suggestedRequestPrice}
+                                toggleField="showSuggestedPrice"
+                                toggleLabel="Show Suggested Price"
+                                checked={currentPackage?.isShowSuggestedPrice}/>
+
+                            <Divider/>
+
+                            <SummaryRow
+                                isEdit={isEdit}
+                                setIsEdit={setIsEdit}
+                                summaryText="Invoiced Labor Hours:"
+                                valuesArray={detailsData.invoicedRequestLaborHours}
+                                onInputChange={onInputChange}/>
+                            <SummaryRow
+                                isEdit={isEdit}
+                                setIsEdit={setIsEdit}
+                                summaryText="Market Price:"
+                                valuesArray={detailsData.requestsPrice}
+                                onInputChange={onInputChange}
+                                // todo when new logic will be ready, uncomment
+                                // toggleField="manualOverride"
+                                // toggleLabel="Manual Override"
+                                // checked={currentPackage?.isManualOverridePrice}
+                            />
+
+                            <Upsells
+                                isUpsellNameEdit={isUpsellNameEdit}
+                                setPackageData={setPackageData}
+                                packageData={packageData}
+                                setUpsellNameEdit={setUpsellNameEdit}
+                                upsellData={upsellData}
+                                onUpsellClick={onUpsellClick}
+                                />
+
+                            <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedUpsellHours}/>
+                            <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedUpsellPrice}/>
+
+                            <Divider/>
+
+                            <SummaryRow
+                                isEdit={isEdit}
+                                setIsEdit={setIsEdit}
+                                isComplimentary
+                                packageHasComplimentary={Boolean(packageData?.intervalUpsells?.length)}
+                                summaryText="Invoiced Labor Hours:"
+                                valuesArray={detailsData.intervalUpsellLaborHours}
+                                onInputChange={onInputChange}/>
+                            <SummaryRow
+                                isEdit={isEdit}
+                                setIsEdit={setIsEdit}
+                                packageHasComplimentary={Boolean(packageData?.intervalUpsells?.length)}
+                                isComplimentary
+                                summaryText="Market Price:"
+                                valuesArray={detailsData.intervalUpsellPrice}
+                                onInputChange={onInputChange}/>
+
+                            <Complimentary
+                                isComplimentaryNameEdit={isComplimentaryNameEdit}
+                                setPackageData={setPackageData}
+                                packageData={packageData}
+                                setComplimentaryNameEdit={setComplimentaryNameEdit}
+                                complimentaryData={complimentaryData}
+                                onComplimentaryClick={onComplimentaryClick}
+                                />
+
+                            <SummaryRow summaryText="Suggested Labour Hours:" valuesArray={detailsData.suggestedComplimentaryHours}/>
+                            <SummaryRow summaryText="Suggested Price:" valuesArray={detailsData.suggestedComplimentaryPrice}/>
+
+                            <Divider/>
+
+                            <SummaryRow
+                                isEdit={isEdit}
+                                setIsEdit={setIsEdit}
+                                isComplimentary
+                                packageHasComplimentary={Boolean(packageData?.complimentaryServices?.length)}
+                                summaryText="Invoiced Labor Hours:"
+                                valuesArray={detailsData.complimentaryLaborHours}
+                                onInputChange={onInputChange}/>
+                            <SummaryRow
+                                isEdit={isEdit}
+                                setIsEdit={setIsEdit}
+                                packageHasComplimentary={Boolean(packageData?.complimentaryServices?.length)}
+                                isComplimentary
+                                summaryText="Market Price:"
+                                valuesArray={detailsData.complimentaryPrice}
+                                onInputChange={onInputChange}/>
+
+                          <PricesBlock
+                              packageData={packageData}
+                              suggestedPrices={detailsData.suggestedRequestPrice}
+                              setPackageData={setPackageData}/>
+
+                        </React.Fragment>}
+
+                        {<AccordionActions onAddOpsCode={handleAddOpsCode} onCancel={handleCancel}
+                                           onSave={handleSave}/>}
+                    </div>
+                }
+            </AccordionDetails>
+            <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleCloseMenu}>
+                <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                <MenuItem onClick={askRemove}>Remove</MenuItem>
+            </Menu>
+            <AssignOpsCodeModal packageName={title} open={isAssignOpsCodeOpen} onClose={onAssignOpsCodeClose}/>
+            <SaveRequestToDms
+                open={isRequestToDMSOpen}
+                onClose={onRequestToDMSClose}
+                packageData={packageData}
+                setPackageData={setPackageData}
+                onSave={onRequestToDmsSave}
+            />
+            <DescriptionModal open={isDescriptionOpen} onClose={onDescriptionClose}/>
+            <OrderIndexModal onClose={onOrderClose} open={isOrderOpen}/>
+        </MuiAccordion>
+    );
 }

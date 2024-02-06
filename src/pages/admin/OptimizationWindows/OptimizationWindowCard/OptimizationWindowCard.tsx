@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Paper} from "@material-ui/core";
+import {Button, Paper} from "@mui/material";
 import {useStyles} from "./styles";
 
 export type TOptimizationPlateProps = {
@@ -12,7 +12,7 @@ export type TOptimizationPlateProps = {
     helperText: string;
 }
 
-export const OptimizationWindowCard: React.FC<TOptimizationPlateProps> = ({
+export const OptimizationWindowCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TOptimizationPlateProps>>> = ({
     onEdit,
     title,
     count,
@@ -21,7 +21,7 @@ export const OptimizationWindowCard: React.FC<TOptimizationPlateProps> = ({
     label,
     helperText,
 }) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     return <Paper className={classes.paper} variant={"outlined"} >
         <h3 className={classes.title}>{title}</h3>

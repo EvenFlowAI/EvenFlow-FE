@@ -1,12 +1,12 @@
 import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {CarCard} from "./CarCard/CarCard";
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {TArgCallback, TCallback, TScreen} from "../../../../types/types";
 import {StepWrapper} from '../../../../components/styled/StepWrapper';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {ChevronLeft, ChevronRight} from "@material-ui/icons";
+import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import {ILoadedVehicle} from "../../../../api/types";
 import {
     clearAppointmentData,
@@ -39,7 +39,7 @@ type TProps = {
     onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
 }
 
-export const Cars: React.FC<TProps> = ({
+export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
                                                               onUpdateAppointment, onBack, loading, handleSetScreen,
                                                               needToShowServiceSelection, setNeedToShowServiceSelection
                                                           }) => {
@@ -58,12 +58,12 @@ export const Cars: React.FC<TProps> = ({
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();
-    const isXs = useMediaQuery(theme.breakpoints.down("xs"));
-    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const dispatch = useDispatch();
     const showError = useException();
     const {t} = useTranslation();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
 
     const vehiclesPerScreen = useMemo(() => {

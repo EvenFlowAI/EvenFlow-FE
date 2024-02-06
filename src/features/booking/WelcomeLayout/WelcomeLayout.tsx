@@ -1,5 +1,5 @@
 import React from 'react';
-import {Paper} from "@material-ui/core";
+import {Paper} from "@mui/material";
 import {useStyles} from "./styles";
 
 type TProps = {
@@ -7,8 +7,8 @@ type TProps = {
     subtitle?: string;
 }
 
-export const WelcomeLayout: React.FC<TProps> = ({children, title, subtitle}) => {
-    const classes = useStyles();
+export const WelcomeLayout: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({children, title, subtitle}) => {
+    const { classes  } = useStyles();
     return <div className={classes.container}>
         <Paper className={classes.paper} variant="outlined">
             {title

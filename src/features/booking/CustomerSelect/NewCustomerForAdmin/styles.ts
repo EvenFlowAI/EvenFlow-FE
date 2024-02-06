@@ -1,7 +1,8 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 import {mh400, mh600} from "../constants";
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     button: {
         height: "100%",
         maxHeight: 465,
@@ -23,14 +24,14 @@ export const useStyles = makeStyles(theme => ({
             fontSize: 18,
             padding: "2%"
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: 18,
             padding: "5%"
         }
     },
     submitButton: {
         minWidth: 144,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             width: "100%",
             "&:last-child": {
                 marginBottom: theme.spacing(2),
@@ -38,4 +39,4 @@ export const useStyles = makeStyles(theme => ({
             }
         },
     },
-}))
+}));

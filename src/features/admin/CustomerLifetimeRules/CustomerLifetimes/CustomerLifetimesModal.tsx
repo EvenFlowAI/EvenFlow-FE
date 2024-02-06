@@ -1,7 +1,7 @@
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import React, {useEffect, useState} from "react";
-import {Button, FormGroup, InputLabel} from "@material-ui/core";
+import {Button, FormGroup, InputLabel} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {ICustomerLifetime, ICustomerLifetimeForm} from "../../../../store/reducers/valueSettings/types";
 import {setCustomerLifetimes} from "../../../../store/reducers/valueSettings/actions";
@@ -20,7 +20,7 @@ const initialForm: TForm = {
     from: "", to: ""
 }
 
-export const CustomerLifetimesModal: React.FC<DialogProps<ICustomerLifetime>> = ({payload, onAction, ...props}) => {
+export const CustomerLifetimesModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<ICustomerLifetime>>>> = ({payload, onAction, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>(initialForm);
     const {selectedSC} = useSCs();
@@ -28,7 +28,7 @@ export const CustomerLifetimesModal: React.FC<DialogProps<ICustomerLifetime>> = 
     const showMessage = useMessage();
     const showError = useException();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (selectedSC && props.open) {
@@ -106,7 +106,7 @@ export const CustomerLifetimesModal: React.FC<DialogProps<ICustomerLifetime>> = 
             </FormGroup>
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Cancel
             </Button>
             <LoadingButton

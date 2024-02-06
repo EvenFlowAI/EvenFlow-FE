@@ -1,14 +1,14 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import {Table} from "../../../../components/tables/Table/Table";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {
     loadAssignedServiceRequests,
     setAssignedOrdering,
 } from "../../../../store/reducers/serviceRequests/actions";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {IOrder, TableRowDataType, TCallback} from "../../../../types/types";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {RootState} from "../../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {ServiceRequestCellData} from "../../../../components/wrappers/ServiceRequestCellData/ServiceRequestCellData";
@@ -107,18 +107,13 @@ type TProps = {
     changeRowsPerPage: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const ServiceRequestsTable: React.FC<TProps> = ({setEditedItem, onOOpen, editedItem, pageSize, pageIndex, changePage, changeRowsPerPage}) => {
-    const [
-        serviceRequestsList,
-        isLoading,
-        requestsCount,
-        order
-    ] = useSelector((state: RootState) => [
-        state.serviceRequests.assignedList,
-        state.serviceRequests.assignedLoading,
-        state.serviceRequests.assignedPaging.numberOfRecords,
-        state.serviceRequests.assignedOrdering
-    ]);
+export const ServiceRequestsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({setEditedItem, onOOpen, editedItem, pageSize, pageIndex, changePage, changeRowsPerPage}) => {
+    const {
+        assignedList,
+        assignedLoading,
+        assignedPaging: {numberOfRecords},
+        assignedOrdering
+    } = useSelector(({serviceRequests}: RootState) => serviceRequests);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const {selectedSC} = useSCs();
 
@@ -134,7 +129,7 @@ export const ServiceRequestsTable: React.FC<TProps> = ({setEditedItem, onOOpen, 
     }
 
     const actions = (el: IAssignedServiceRequest) => {
-        return <IconButton onClick={handleOpenMenu(el)}><MoreHoriz /></IconButton>
+        return <IconButton onClick={handleOpenMenu(el)} size="large"><MoreHoriz /></IconButton>;
     }
 
     const handleCloseMenu = () => {
@@ -182,9 +177,9 @@ export const ServiceRequestsTable: React.FC<TProps> = ({setEditedItem, onOOpen, 
     return (
         <>
             <Table<IAssignedServiceRequest>
-                data={serviceRequestsList}
-                order={order.orderBy}
-                isAscending={order.isAscending}
+                data={assignedList}
+                order={assignedOrdering.orderBy}
+                isAscending={assignedOrdering.isAscending}
                 onSort={handleSort}
                 index="id"
                 rowData={RowData}
@@ -192,10 +187,10 @@ export const ServiceRequestsTable: React.FC<TProps> = ({setEditedItem, onOOpen, 
                 page={pageIndex}
                 onChangePage={changePage}
                 onChangeRowsPerPage={changeRowsPerPage}
-                count={requestsCount}
-                hidePagination={requestsCount < 11}
+                count={numberOfRecords}
+                hidePagination={numberOfRecords < 11}
                 actions={actions}
-                isLoading={isLoading}
+                isLoading={assignedLoading}
             />
             <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleCloseMenu}>
                 <MenuItem onClick={handleEdit}>Edit</MenuItem>

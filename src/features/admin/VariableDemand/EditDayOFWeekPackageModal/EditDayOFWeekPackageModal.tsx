@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Box, Button, Divider} from "@material-ui/core";
+import {Box, Button, Divider} from "@mui/material";
 import {EDemandCategory, IPackagePricingSettings} from "../../../../store/reducers/pricingSettings/types";
 import {updatePackagePricingSettings} from "../../../../store/reducers/pricingSettings/actions";
 import {useDispatch} from "react-redux";
@@ -25,12 +25,12 @@ const initialValues: TState = {
     high: undefined
 }
 
-const EditDayOFWeekPackageModal: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem, ...props}) => {
+const EditDayOFWeekPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TEditDayOfWeekOpsCodeProps>>> = ({editingItem, ...props}) => {
     const [values, setValues] = useState<TState>(initialValues);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (editingItem) setValues({low: editingItem.low, high: editingItem.high});

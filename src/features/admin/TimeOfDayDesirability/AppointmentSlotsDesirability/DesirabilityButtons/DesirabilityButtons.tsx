@@ -15,7 +15,7 @@ type TButtonProps = {
     desirability: EDesirabilityState;
 }
 
-export const DesirabilityButtons: React.FC<TButtonProps> = ({onClick, desirability}) => {
+export const DesirabilityButtons: React.FC<React.PropsWithChildren<React.PropsWithChildren<TButtonProps>>> = ({onClick, desirability}) => {
     return <>
         {buttons.map(b => {
             return <DesirabilityButton

@@ -10,7 +10,7 @@ import {
     TableRow,
     useMediaQuery,
     useTheme
-} from "@material-ui/core";
+} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {createProximity, loadProximity} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
@@ -26,20 +26,18 @@ import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 export const ProximityTable = () => {
-    const {selectedSC} = useSCs();
-    const {selectedPod} = useSelectedPod();
-    const dispatch = useDispatch();
+    const {proximity} = useSelector((state: RootState) => state.slotScoring);
     const [edit, setEdit] = useState<EProximityType|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>(initialForm);
+
+    const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod();
+    const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
-
-    const [proximity] = useSelector((state: RootState) => [
-        state.slotScoring.proximity
-    ]);
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [closest, earliest] = useMemo(() => {
         return [

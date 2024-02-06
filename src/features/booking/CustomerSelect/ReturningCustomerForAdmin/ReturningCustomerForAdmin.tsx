@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {TextField} from "../../../../components/styled/EndUserInputs";
-import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
+import {Button, Divider, Grid, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -18,7 +18,7 @@ import CustomerNotFoundModal from "../CustomerNotFoundModal/CustomerNotFoundModa
 import {TCallback} from "../../../../types/types";
 import {defaultPageData} from "../../../../store/reducers/constants";
 import {TCustomerSearchData} from "../../../../store/reducers/enhancedCustomerSearch/types";
-import {KeyboardArrowDown, KeyboardArrowUp} from "@material-ui/icons";
+import {KeyboardArrowDown, KeyboardArrowUp} from "@mui/icons-material";
 import {useStyles} from "../styles";
 import {useCustomerSelectStyles} from "../../../../hooks/styling/useCustomerSelectStyles";
 import {TError} from "./types";
@@ -32,7 +32,7 @@ type TProps = {
     redirect: TCallback;
 };
 
-const ReturningCustomerForAdmin: React.FC<TProps> = ({
+const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
                                                          handleNew,
                                                          redirect
 }) => {
@@ -46,12 +46,12 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
     const {onOpen: onOpenNotFound, onClose: onCloseNotFound, isOpen: isOpenNotFound} = useModal();
     const { t } = useTranslation();
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const dispatch = useDispatch();
     const showError = useException();
 
-    const classes = useStyles();
-    const returningClasses = useCustomerSelectStyles();
+    const { classes  } = useStyles();
+    const { classes: returningClasses } = useCustomerSelectStyles();
     const formIsValid = useMemo(() => {
              return !!customerEnteredEmail.length
              || Object.values(customerSearchData).find(item => item.length)
@@ -155,6 +155,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                 <TextField
                     onKeyUp={onKeyUp}
                     name="firstName"
+                    variant="standard"
                     placeholder={t("Enter First Name")}
                     error={formIsChecked && (customerSearchData.firstName.length === 1 || !formIsValid)}
                     onChange={onTextChange('firstName')}
@@ -165,6 +166,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                 <TextField
                     onKeyUp={onKeyUp}
                     name="lastName"
+                    variant="standard"
                     placeholder={t("Enter Last Name")}
                     error={formIsChecked && (customerSearchData.lastName.length === 1 || !formIsValid)}
                     onChange={onTextChange('lastName')}
@@ -208,6 +210,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                         onChange={onTextChange('address')}
                         InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.address.length ?  <LoadingProcess /> : null }}
                         fullWidth
+                        variant="standard"
                         name="address"
                         disabled={isLoading}
                         style={{ marginBottom: 16 }}
@@ -216,6 +219,7 @@ const ReturningCustomerForAdmin: React.FC<TProps> = ({
                     <TextField
                         onKeyUp={onKeyUp}
                         placeholder={t("Enter Last 8 VIN digits")}
+                        variant="standard"
                         error={formIsChecked &&
                             ((!!customerSearchData.lastVINCharacters.length && customerSearchData.lastVINCharacters.length < 8)
                                 || !formIsValid)}

@@ -18,6 +18,7 @@ export const widerUserRoles: TRole[] = [
 ];
 
 export const timeSpanString = "HH:mm:ss";
+export const time12HourSeconds = "hh:mm:ss";
 export const time12HourFormat = "h:mm a";
 export const dateTimeString = "ddd, MMM D, h:mm A";
 export const time24HourFormat = "hh:mm A";

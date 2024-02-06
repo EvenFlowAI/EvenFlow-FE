@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo} from "react";
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {
     clearAppointmentData,
@@ -29,7 +29,7 @@ type TProps = {
     redirect: TCallback;
 };
 
-export const CustomerSelect: React.FC<TProps> = ({
+export const CustomerSelect: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
                                                      onComplete,
                                                      loading,
                                                      handleNew,
@@ -39,8 +39,8 @@ export const CustomerSelect: React.FC<TProps> = ({
     const {trackerCreated} = useSelector((state: RootState) => state.appointmentFrame);
     const {shortSC} = useSelector((state: RootState) => state.serviceCenters);
 
-    const {id} = useParams();
-    const classes = useStyles();
+    const {id} = useParams<{id: string}>();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const currentUser = useCurrentUser();
     const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,

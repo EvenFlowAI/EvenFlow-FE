@@ -5,9 +5,9 @@ import {Message} from "./ForgotPasswordMessage/ForgotPasswordMessage";
 import {useException} from "../../../hooks/useException/useException";
 
 export const ForgotPassword = () => {
-    const [showMessage, changeShow] = useState(false);
-    const [loading, setLoading] = useState();
-    const [email, changeEmail] = useState('');
+    const [showMessage, changeShow] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [email, changeEmail] = useState<string>('');
     const showError = useException();
 
     const handleChangeEmail: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>

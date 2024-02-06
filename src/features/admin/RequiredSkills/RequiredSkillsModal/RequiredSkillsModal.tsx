@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button, Checkbox, FormControlLabel, FormGroup} from "@material-ui/core";
+import {Button, Checkbox, FormControlLabel, FormGroup} from "@mui/material";
 import {IAssignedServiceRequest, IRequiredSkill} from "../../../../store/reducers/serviceRequests/types";
 import {useDispatch} from "react-redux";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
@@ -20,13 +20,13 @@ const initialForm: TForm = {
     technicianLevel3: false
 };
 
-export const RequiredSkillsModal: React.FC<DialogProps<IAssignedServiceRequest>> = ({onAction, payload, ...props}) => {
+export const RequiredSkillsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAssignedServiceRequest>>>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [loading, setLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (props.open) {
@@ -112,7 +112,7 @@ export const RequiredSkillsModal: React.FC<DialogProps<IAssignedServiceRequest>>
             </FormGroup>
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={props.onClose} color="info">Cancel</Button>
             <LoadingButton
                 loading={loading}
                 color="primary"

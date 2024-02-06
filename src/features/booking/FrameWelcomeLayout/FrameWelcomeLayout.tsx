@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -10,13 +10,13 @@ import {
 import {frameSmStyles, frameStyles, MainWrapper, nonFrameStyles, Title, Wrapper} from "./styles";
 import {useLayout} from "../../../hooks/useLayout/useLayout";
 
-export const FrameWelcomeLayout: React.FC<{}> = ({children }) => {
+export const FrameWelcomeLayout: React.FC<React.PropsWithChildren<React.PropsWithChildren<{}>>> = ({children }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {welcomeScreenView} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
     const isFrame = useLayout();
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt

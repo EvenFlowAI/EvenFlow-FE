@@ -1,6 +1,6 @@
 import React from 'react';
 import {TArgCallback} from "../../../../../types/types";
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
@@ -15,7 +15,7 @@ type TProps = {
     dateChangeDisabled: boolean;
 } & TMonthProps;
 
-export const SVAppointmentDateSelector: React.FC<TProps> = ({
+export const SVAppointmentDateSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
                                                                 date,
                                                                 loading,
                                                                 onDateChange,
@@ -25,7 +25,7 @@ export const SVAppointmentDateSelector: React.FC<TProps> = ({
 }) => {
     const {serviceValetSlots} = useSelector((state: RootState) => state.appointment);
     const theme = useTheme();
-    const isXs = useMediaQuery(theme.breakpoints.down("sm"));
+    const isXs = useMediaQuery(theme.breakpoints.down('md'));
     const {t} = useTranslation();
 
     return (

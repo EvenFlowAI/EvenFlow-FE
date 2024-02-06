@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const ButtonsRow = styled('div')(({theme}) => ({
     display: "flex",
@@ -9,7 +9,7 @@ export const ButtonsRow = styled('div')(({theme}) => ({
     "& button": {
         minWidth: 144
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
         flexDirection: "row",
         width: "100%",
         gap: "12px",

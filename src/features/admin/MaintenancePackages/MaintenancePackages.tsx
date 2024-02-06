@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Button, Switch} from "@material-ui/core";
+import {Button, Switch} from "@mui/material";
 import {ContentTitle} from "../../../components/wrappers/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
@@ -12,7 +12,7 @@ import LaborRate from "./LaborRate/LaborRate";
 import Disclaimer from "./Disclaimer/Disclaimer";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {autocompleteRender} from "../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {useMaintenancePackagesStyles} from "./styles";
 import {MaintenanceOptionTypes} from "./constants";
 import {TExpandedState, TOption} from "./types";
@@ -30,8 +30,8 @@ export const MaintenancePackages = () => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [isDisclaimerOpen, setDisclaimerOpen] = useState<boolean>(false);
     const [presentedOptions, setPresentedOptions] = useState<TOption[]>([]);
-    const classes = useMaintenancePackagesStyles();
-    const autocompleteClasses = useAutocompleteStyles();
+    const { classes  } = useMaintenancePackagesStyles();
+    const { classes: autocompleteClasses } = useAutocompleteStyles();
     const dispatch = useDispatch();
     const showError = useException();
     const {onOpen, onClose, isOpen} = useModal();
@@ -162,6 +162,7 @@ export const MaintenancePackages = () => {
                             options={MaintenanceOptionTypes}
                             disableCloseOnSelect
                             getOptionLabel={o => o.name}
+                            isOptionEqualToValue={(o, v) => o.value === v.value}
                             value={presentedOptions}
                             onChange={onPresentedOptionsChange}
                             renderInput={autocompleteRender({

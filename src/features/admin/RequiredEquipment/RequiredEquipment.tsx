@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@mui/material";
 import {Table} from "../../../components/tables/Table/Table";
 import {IBay} from "../../../store/reducers/bays/types";
-import {CheckCircle, MoreHoriz} from "@material-ui/icons";
+import {CheckCircle, MoreHoriz} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadBays, removeBay, setPageData} from "../../../store/reducers/bays/actions";
@@ -25,24 +25,17 @@ const rowData: TableRowDataType<IBay>[] = [
     {header: "Only Quick Service", val: v => v.onlyQuickService ? <CheckCircle color="primary" /> : "-", align: "center"},
 ];
 
-export const RequiredEquipment: React.FC<TViewMode> = ({viewMode}) => {
-    const {onOpen, onClose, isOpen} = useModal();
+export const RequiredEquipment: React.FC<React.PropsWithChildren<React.PropsWithChildren<TViewMode>>> = ({viewMode}) => {
+    const {loading, bays, paging:{numberOfRecords}} = useSelector(({bays}: RootState) => bays);
     const [editedItem, setEditedItem] = useState<IBay|undefined>();
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+
+    const {onOpen, onClose, isOpen} = useModal();
     const {askConfirm, closeConfirm} = useConfirm();
     const showMessage = useMessage();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
-    const [
-        loading,
-        bays,
-        size
-    ] = useSelector((state: RootState) => [
-        state.bays.loading,
-        state.bays.bays,
-        state.bays.paging.numberOfRecords
-    ]);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
@@ -96,9 +89,11 @@ export const RequiredEquipment: React.FC<TViewMode> = ({viewMode}) => {
     }
 
     const endActions = useCallback((el: IBay) => {
-        return <IconButton onClick={openMenu(el)}>
-            <MoreHoriz />
-        </IconButton>
+        return (
+            <IconButton onClick={openMenu(el)} size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }, []);
 
     return <div>
@@ -121,7 +116,7 @@ export const RequiredEquipment: React.FC<TViewMode> = ({viewMode}) => {
             onChangeRowsPerPage={changeRowsPerPage}
             rowsPerPage={pageSize}
             page={pageIndex}
-            count={size}
+            count={numberOfRecords}
             actions={endActions}
             rowData={rowData}
         />

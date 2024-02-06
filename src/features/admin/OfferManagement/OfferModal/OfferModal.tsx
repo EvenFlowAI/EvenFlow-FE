@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button, SelectChangeEvent} from "@mui/material";
 import {
     customerSegments,
     dayOfWeek,
@@ -14,11 +14,9 @@ import {
 } from "../../../../store/reducers/offers/types";
 import {useDispatch} from "react-redux";
 import {createOffer, removeOffer, setArchiveOffer, updateOffer} from "../../../../store/reducers/offers/actions";
-import {SC_UNDEFINED, SOMETHING_WRONG, timeSpanString} from "../../../../utils/constants";
+import {SC_UNDEFINED, SOMETHING_WRONG, time12HourSeconds, timeSpanString} from "../../../../utils/constants";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
 import {loadSCRequestsShort} from "../../../../store/reducers/serviceRequests/actions";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import moment from "moment";
 import {ViewOffer} from "./ViewOffer/ViewOffer";
 import {OfferForm} from "./OfferForm/OfferForm";
 import {selectAllSR, TOfferForm} from "../types";
@@ -32,6 +30,8 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {TEnumMap} from "../../../../store/reducers/types";
+import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
 
 const initialForm: TOfferForm = {
     offerValue: undefined,
@@ -42,12 +42,12 @@ const initialForm: TOfferForm = {
     customerSegments: [customerSegments[0]],
     customerPresence: ECustomerPresence.Both,
     dayOfWeek: [dayOfWeek[0]],
-    timeOfDayFrom: moment("00:00:00", "hh:mm:ss"),
-    timeOfDayTo: moment("23:59:59", "hh:mm:ss"),
+    timeOfDayFrom: dayjs("00:00:00", time12HourSeconds),
+    timeOfDayTo: dayjs("23:59:59", time12HourSeconds),
     isProductPageOn: false,
 }
 
-export const OfferModal:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({onAction, archive, payload, ...props}) => {
+export const OfferModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IOffer>&{archive?: boolean}>>> = ({onAction, archive, payload, ...props}) => {
     const [form, setForm] = useState<TOfferForm>(initialForm);
     const [archiving, setArchiving] = useState<boolean>(false);
     const [viewMode, setViewMode] = useState<boolean>(false);
@@ -88,10 +88,10 @@ export const OfferModal:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({on
                         if (dof) acc.push(dof);
                         return acc;
                     }, [] as TEnumMap<EDayOfWeek>[]),
-                    durationFrom: moment(payload.duration.start),
-                    durationTo: moment(payload.duration.end),
-                    timeOfDayFrom: moment(payload.timeOfDay.start, timeSpanString),
-                    timeOfDayTo: moment(payload.timeOfDay.end, timeSpanString),
+                    durationFrom: dayjs(payload.duration.start),
+                    durationTo: dayjs(payload.duration.end),
+                    timeOfDayFrom: dayjs(payload.timeOfDay.start, timeSpanString),
+                    timeOfDayTo: dayjs(payload.timeOfDay.end, timeSpanString),
                     serviceType: payload.serviceType?.name,
                     serviceCategories: payload.serviceCategories,
                 })
@@ -157,10 +157,10 @@ export const OfferModal:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({on
             setForm({...form, dayOfWeek: value});
         }
     }
-    const handleChangeDateTime = (name: keyof TOfferForm) => (date: MaterialUiPickersDate) => {
+    const handleChangeDateTime = (name: keyof TOfferForm) => (date: TParsableDate) => {
         setFormIsChecked(false);
         setForm({...form, [name]: date});
-    }
+    };
 
     const setEditMode = () => {
         setViewMode(false);
@@ -202,7 +202,8 @@ export const OfferModal:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({on
         setForm(prev => ({...prev, serviceCategories: value}))
     }
 
-    const handleSelect = ({target: {name, value}}: React.ChangeEvent<{name?: string, value: unknown}>) => {
+    const handleSelect = (e: SelectChangeEvent<ECustomerPresence>) => {
+        const {name, value} = e.target;
         setFormIsChecked(false);
         if (name) {
             setForm({...form, [name]: value});
@@ -282,8 +283,8 @@ export const OfferModal:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({on
                             end: form.durationTo?.toISOString()
                         },
                         timeOfDay: {
-                            start: form.timeOfDayFrom?.format(timeSpanString),
-                            end: form.timeOfDayTo?.format(timeSpanString),
+                            start: dayjs(form.timeOfDayFrom, time12HourSeconds).format(timeSpanString),
+                            end: dayjs(form.timeOfDayTo, time12HourSeconds).format(timeSpanString),
                         },
                         isAllServiceRequestsIncluded: Boolean(
                             form.serviceRequests.find(sr => sr.id === 0)
@@ -328,7 +329,7 @@ export const OfferModal:React.FC<DialogProps<IOffer>&{archive?: boolean}> = ({on
                     onCategoryChange={onCategoryChange}
                 />}
             <DialogActions>
-                <Button onClick={onCancel}>Cancel</Button>
+                <Button onClick={onCancel} color="info">Cancel</Button>
                 {viewMode ?
                     <>
                         <Button onClick={askRemove} color="secondary" variant="outlined">Delete</Button>

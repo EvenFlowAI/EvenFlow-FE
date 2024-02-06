@@ -1,16 +1,16 @@
 import React from 'react';
-import {ICustomerWithPhones} from "../../../../../store/reducers/enhancedCustomerSearch/types";
+import {ICustomerForTable, ICustomerWithPhones} from "../../../../../store/reducers/enhancedCustomerSearch/types";
 import {CustomerInput} from "../../../../../components/formControls/CustomerInput/CustomerInput";
 
 type TCustomerInputFieldProps = {
     editingElement: ICustomerWithPhones|null;
     isEdit: boolean;
-    fieldName: keyof ICustomerWithPhones;
+    fieldName: keyof ICustomerForTable;
     customer: ICustomerWithPhones;
-    onFieldChange: (fieldName: keyof ICustomerWithPhones) => (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onFieldChange: (fieldName: keyof ICustomerForTable) => (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const CustomerInputField: React.FC<TCustomerInputFieldProps> = ({
+export const CustomerInputField: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCustomerInputFieldProps>>> = ({
                                                                     editingElement,
                                                                     isEdit,
                                                                     onFieldChange,

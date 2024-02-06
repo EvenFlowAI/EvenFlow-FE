@@ -8,8 +8,7 @@ import {loadRecallsByVin} from "../../../store/reducers/recall/actions";
 import {decodeSCID} from "../../../utils/utils";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {Button, Divider} from "@material-ui/core";
-import moment from "moment";
+import {Button, Divider} from "@mui/material";
 import {
     checkCarIsValid,
     setAdditionalServicesChosen,
@@ -21,6 +20,7 @@ import {CustomSwitch, Label, useStyles} from "./styles";
 import {IRecallByVin} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
+import dayjs from "dayjs";
 
 type TRecallsByVinProps = DialogProps & {
     handleNext : () => void,
@@ -28,16 +28,16 @@ type TRecallsByVinProps = DialogProps & {
     handleAddServices: () => void,
 }
 
-const RecallsByVinModal: React.FC<TRecallsByVinProps> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
+const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallsByVinProps>>> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
     const {selectedVehicle, makes, isUsualFlowNeeded} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const [recalls, setRecalls] = useState<IRecallByVin[]>([]);
     const dispatch = useDispatch();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const showError = useException();
     const {t} = useTranslation();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {isOpen: isAddServiceOpen, onClose: onAddServiceClose, onOpen: onAddServiceOpen} = useModal();
 
     useEffect(() => {
@@ -129,7 +129,7 @@ const RecallsByVinModal: React.FC<TRecallsByVinProps> = ({open, onClose, handleN
                                 <div className={classes.recallDetailsWrapper}>
                                     <div>
                                         <div className={classes.label}>{t("Recall Open Date")}</div>
-                                        <div className={classes.data}>{moment(item.recallOpenDate).format("MMM DD, YYYY")}</div>
+                                        <div className={classes.data}>{dayjs(item.recallOpenDate).format("MMM DD, YYYY")}</div>
                                     </div>
                                     <div>
                                         <div className={classes.label}>{t("NHTSA Recall Number")}</div>

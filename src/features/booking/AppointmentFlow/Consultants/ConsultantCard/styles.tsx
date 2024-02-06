@@ -1,9 +1,11 @@
 import React from 'react';
-import {styled, Theme} from "@material-ui/core";
+import {styled} from "@mui/material";
 
-export const ConsultantWrapper = styled(({active, ...props}) => (<div {...props}/>))<Theme, { active?: boolean }>(({theme, active}) => ({
+export const ConsultantWrapper = styled("div", {
+    shouldForwardProp: (prop) => prop !== "active"
+})<{ active?: boolean }>(({theme, active}) => ({
     display: 'grid',
-    gridGap: 16,
+    gap: 16,
     gridTemplateColumns: '1fr 1fr',
     border: `1px solid ${active ? "#000000" : "#DADADA"}`,
     color: active ? "#FFFFFF" : theme.palette.text.primary,
@@ -26,13 +28,15 @@ export const ConsultantWrapper = styled(({active, ...props}) => (<div {...props}
     color:active ? "#FFFFFF" : theme.palette.text.primary,
 }}));
 
-export const Avatar = styled('div')<Theme, { src?: string, contain?: boolean }>({
+export const Avatar = styled('div', {
+    shouldForwardProp: (prop) => prop !== "src" && prop !== "contain"
+})<{ src?: string, contain?: boolean }>(({ src, contain }) => ({
     width: 84,
     height: 84,
     borderRadius: "50%",
     backgroundColor: "#FFFFFF",
-    backgroundSize: ({contain}) => contain ? "contain" : "cover",
-    backgroundImage: ({src}) => src ? `url('${src}')` : undefined,
+    backgroundSize: contain ? "contain" : "cover",
+    backgroundImage: src ? `url('${src}')` : undefined,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat"
-});
+}));

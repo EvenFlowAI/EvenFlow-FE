@@ -1,6 +1,6 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useDetailsItemStyles = makeStyles({
+export const useDetailsItemStyles = makeStyles()({
     wrapper: {
         display: "flex",
         justifyContent: "flex-start",
@@ -24,4 +24,4 @@ export const useDetailsItemStyles = makeStyles({
         color: "#858585",
         fontSize: 14,
     }
-})
+});

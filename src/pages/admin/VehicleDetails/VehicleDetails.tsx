@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {TabContext, TabPanel} from "@mui/lab";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/styled/Tabs";
-import {Tab} from "@material-ui/core";
+import {Tab} from "@mui/material";
 import {Mileage} from "../../../features/admin/Mileage/Mileage";
 import {bookingFlowRoot} from "../../../utils/constants";
 import {EngineTypes} from "../../../features/admin/EngineTypes/EngineTypes";

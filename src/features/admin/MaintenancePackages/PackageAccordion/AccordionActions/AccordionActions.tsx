@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Divider} from "@material-ui/core";
+import {Button, Divider} from "@mui/material";
 import {useStyles} from "./styles";
 
 type TAccordionProps = {
@@ -8,8 +8,8 @@ type TAccordionProps = {
     onAddOpsCode: () => void;
 }
 
-const AccordionActions: React.FC<TAccordionProps> = ({ onAddOpsCode, onCancel, onSave }) => {
-    const classes = useStyles();
+const AccordionActions: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAccordionProps>>> = ({ onAddOpsCode, onCancel, onSave }) => {
+    const { classes  } = useStyles();
     return (
         <>
             <Divider/>

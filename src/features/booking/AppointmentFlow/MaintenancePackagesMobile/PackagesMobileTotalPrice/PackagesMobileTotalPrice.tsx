@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
-import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import {RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {EPackagePricingType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {EMaintenanceOptionType, IPackageOptions} from "../../../../../api/types";
 import {useTranslation} from "react-i18next";
@@ -21,7 +21,7 @@ type TProps = {
     selectedPackage: IPackageOptions|null;
 }
 
-const PackagesMobileTotalPrice: React.FC<TProps> = ({
+const PackagesMobileTotalPrice: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
                                                 handleClick,
                                                 type,
                                                 isUpsellPrice,

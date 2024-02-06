@@ -1,6 +1,6 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
-export const OfferCardWrapper = styled('div')(({theme}) => ({
+export const OfferCardWrapper = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',

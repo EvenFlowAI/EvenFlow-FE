@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const TitleWrapper = styled('div')({
     display: "flex",
@@ -16,7 +16,9 @@ export const List = styled('ul')({
     margin: "12px 0 0",
     padding: 0,
     listStyle: "none",
-    "& .service-item": {
-        textTransform: "capitalize"
-    }
 });
+
+export const ServiceItem = styled('li')({
+    textTransform: "capitalize",
+    fontSize: 14,
+})

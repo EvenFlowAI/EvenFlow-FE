@@ -4,7 +4,7 @@ import {
 } from "../../../../store/reducers/pricingSettings/selectors";
 import {SquarePaper} from "../../../../components/styled/Paper";
 import {PaperTitle} from "../../../../pages/admin/PricingSettings/UI";
-import {Box, Button, Divider} from "@material-ui/core";
+import {Box, Button, Divider} from "@mui/material";
 import {SliderTable} from "../SliderTable/SliderTable";
 import {EDemandType} from "../../../../store/reducers/pricingSettings/types";
 import React from "react";

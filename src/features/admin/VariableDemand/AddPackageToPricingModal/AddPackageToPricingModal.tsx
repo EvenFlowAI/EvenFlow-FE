@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Table} from "../../../../components/tables/Table/Table";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {TNewPackagesToPricing} from "../../../../store/reducers/pricingSettings/types";
 import {addPackageToPricing} from "../../../../store/reducers/pricingSettings/actions";
 import {IPackageOptionShort} from "../../../../store/reducers/packages/types";
@@ -19,7 +19,7 @@ const tableData: TableRowDataType<IPackageOptionShort>[] = [
     {header: "PACKAGE NAME", val: el => el.maintenancePackageName, align: "left"},
 ]
 
-const AddPackageToPricingModal: React.FC<DialogProps> = (props) => {
+const AddPackageToPricingModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {mpOptionsList, mpPricingSettings} = useSelector((state: RootState) => state.pricingSettings);
     const [selectedPackages, setSelectedPackages] = useState<IPackageOptionShort[]>([]);
     const [filteredPackages, setFilteredPackages] = useState<IPackageOptionShort[]>([]);
@@ -94,7 +94,7 @@ const AddPackageToPricingModal: React.FC<DialogProps> = (props) => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>
+                <Button onClick={handleClose} color="info">
                     Close
                 </Button>
                 <Button onClick={handleSave} color="primary" variant="contained">

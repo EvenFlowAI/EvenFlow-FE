@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {BaseModal, DialogContent, DialogTitle, DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IBay, IBayForm} from "../../../../store/reducers/bays/types";
@@ -22,11 +22,9 @@ const initialForm: TBayForm = {
     name: ""
 }
 
-export const CreateBayModal: React.FC<DialogProps<IBay>> = ({payload, onAction, ...props}) => {
+export const CreateBayModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IBay>>>> = ({payload, onAction, ...props}) => {
     const [form, setForm] = useState<TBayForm>(initialForm);
-    const [saving] = useSelector((state: RootState) => [
-        state.bays.saving
-    ]);
+    const {saving} = useSelector((state: RootState) => state.bays);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const showError = useException();
@@ -74,7 +72,7 @@ export const CreateBayModal: React.FC<DialogProps<IBay>> = ({payload, onAction, 
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={props.onClose} color="info">Cancel</Button>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave}

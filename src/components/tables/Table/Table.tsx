@@ -2,7 +2,6 @@ import React, {useEffect, useMemo} from "react";
 import {
     Table as BaseTable,
     TableBody,
-    TableCell,
     TableContainer,
     TableHead,
     TablePagination,
@@ -10,26 +9,20 @@ import {
     TableSortLabel,
     useMediaQuery,
     useTheme
-} from "@material-ui/core";
+} from "@mui/material";
 import {defaultRowsPerPage, defaultRowsPerPageOptions} from "../../../config/config";
 import {NoData} from "../../wrappers/NoData/NoData";
 import {Loading} from "../../wrappers/Loading/Loading";
-import {useStyles} from "./styles";
+import {StyledTableCell, StyledTableHead, TStyleProps, useStyles} from "./styles";
 import {ITableProps} from "../../../types/types";
 
 export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITableProps<U>): JSX.Element {
-    const classes = useStyles({
-        compact: Boolean(props.compact),
-        smallHeaderFont: Boolean(props.smallHeaderFont),
-        superCompact: Boolean(props.superCompact),
-        borderHeader: Boolean(props.borderHeader),
-    });
-
-    const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
-
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(defaultRowsPerPage);
+
+    const { classes  } = useStyles();
+    const theme = useTheme();
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
     const nPage = useMemo(() => {
         return props.page !== undefined ? props.page : page;
@@ -40,6 +33,13 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
     const count = useMemo(() => {
         return props.count || props.data.length
     }, [props.data, props.count])
+
+    const styleProps: TStyleProps = useMemo(() => ({
+        compact: Boolean(props.compact),
+        smallHeaderFont: Boolean(props.smallHeaderFont),
+        superCompact: Boolean(props.superCompact),
+        borderHeader: Boolean(props.borderHeader),
+    }), [props])
 
     const handleChangePage = (e: React.MouseEvent | null, newPage: number) => {
         props.onChangePage ? props.onChangePage(e, newPage) : setPage(newPage);
@@ -67,13 +67,15 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
             <BaseTable>
                 {!props.hideHeader && <TableHead>
                     <TableRow>
-                        {props.startActions ? <TableCell className={classes.tableHead} /> : null}
+                        {props.startActions
+                            ? <StyledTableHead {...styleProps}/>
+                            : null}
                         {props.rowData.map((rE, idx) => (
-                            isXS && rE.xsHidden ? null : <TableCell
+                            isXS && rE.xsHidden ? null : <StyledTableHead
+                                {...styleProps}
                                 key={`t_${idx}`}
                                 width={rE.width}
-                                align={rE.align || "left"}
-                                className={classes.tableHead}>
+                                align={rE.align || "left"}>
                                 {rE.orderId
                                     ? <TableSortLabel
                                         onClick={props.onSort ? props.onSort({
@@ -85,9 +87,9 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                                         {rE.header}
                                     </TableSortLabel>
                                     : rE.header}
-                            </TableCell>
+                            </StyledTableHead>
                         ))}
-                        {(props.actions && !props.viewMode) ? <TableCell className={classes.tableHead} /> : null}
+                        {(props.actions && !props.viewMode) ? <StyledTableHead {...styleProps} /> : null}
                     </TableRow>
                 </TableHead>}
                 <TableBody>
@@ -96,25 +98,25 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                         return (
                             <TableRow key={`${rIdx}`} className={classes.tableRow}>
                                 {props.startActions
-                                    ? <TableCell className={classes.tableCell}>
+                                    ? <StyledTableCell {...styleProps}>
                                         {props.startActions(row)}
-                                    </TableCell>
+                                    </StyledTableCell>
                                 :null}
                                 {props.rowData.map((cellData, cIdx) => (
                                     isXS && cellData.xsHidden ? null :
-                                    <TableCell
+                                    <StyledTableCell
+                                        {...styleProps}
                                         width={cellData.width}
                                         style={{ width: cellData.width}}
                                         align={cellData.align || "left"}
-                                        className={classes.tableCell}
                                         key={`${rIdx}_${cIdx}`}>
                                         {cellData.val(row, idx) || '-'}
-                                    </TableCell>
+                                    </StyledTableCell>
                                 ))}
                                 {(props.actions && !props.viewMode)
-                                    ?   <TableCell align="right" className={classes.tableCell}>
+                                    ?   <StyledTableCell align="right" {...styleProps}>
                                             {props.actions(row)}
-                                        </TableCell>
+                                        </StyledTableCell>
                                     : null}
                             </TableRow>
                         );
@@ -128,8 +130,8 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
             component="div"
             count={count}
             page={nPage}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
             rowsPerPage={nRowsPerPage}
             rowsPerPageOptions={defaultRowsPerPageOptions}
         /> : null}

@@ -7,7 +7,7 @@ import {
     TableRow,
     useMediaQuery,
     useTheme,
-} from "@material-ui/core";
+} from "@mui/material";
 import {dayDemands, EDayDemand, EDemandCategory, EDemandType} from "../../../../store/reducers/pricingSettings/types";
 import {EditButton} from "../../../../components/buttons/EditButton/EditButton";
 import {TableContainer} from "../../../../pages/admin/PricingSettings/UI";
@@ -30,7 +30,7 @@ type TProps = {
     type: EDemandType
 }
 
-export const SliderTable: React.FC<TProps> = ({demand, type}) => {
+export const SliderTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({demand, type}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [edit, setEdit] = useState<EDayDemand|null>(null);
 
@@ -41,7 +41,7 @@ export const SliderTable: React.FC<TProps> = ({demand, type}) => {
     const dispatch = useDispatch();
 
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         setForm({

@@ -1,31 +1,40 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
+import {Dialog, styled} from "@mui/material";
 
 type TStyleProps = {
-    maxWidth: number;
+    mW: number|undefined;
 }
-export const useStyles = makeStyles({
-    root: {
+
+export const StyledDialog = styled(Dialog, {
+    shouldForwardProp: (prop) => prop !== "mW"
+})<TStyleProps>(({theme, mW}) => ({
+    '& .MuiDialogContent-root': {
         "& hr": {
             margin: "28px 0",
         },
         "& input": {
-            padding: 11,
+            padding: 9,
             fontSize: 14
-        }
+        },
     },
+    "& .MuiDialog-paper": {
+        maxWidth: mW ?? '',
+    },
+}))
+
+//
+export const useStyles = makeStyles()({
     dialogTitle: {
         textAlign: "center",
+        fontSize: 19,
+        fontWeight: "bold",
+        marginTop: 10,
         "&> h2": {
-            fontSize: 19,
-            fontWeight: "bold",
-            marginTop: 10,
+
         }
     },
     dialogContent: {
         padding: "10px 25px"
-    },
-    dialogPaper: ({maxWidth}: TStyleProps) => {
-        return maxWidth ? {maxWidth} : {};
     },
     dialogActions: {
         padding: "10px 25px 25px"
@@ -33,6 +42,6 @@ export const useStyles = makeStyles({
     closeButton: {
         position: "absolute",
         top: 0,
-        right: 0
+        right: 0,
     },
 });

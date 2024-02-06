@@ -1,5 +1,5 @@
 import {TCalendarProps} from "../../../../../utils/types";
-import queryString from "querystring";
+import queryString from 'query-string'
 
 export const getCalendarUrl = (params: TCalendarProps): string => {
     const data: { [k: string]: string | undefined } = {...params, dates: params.dates.join("/")};

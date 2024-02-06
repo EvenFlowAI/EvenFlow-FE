@@ -1,7 +1,7 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EMaintenanceOptionType,
-    EServiceCenterName,
+    EServiceCenterName, IAddressData,
     IAppointmentByKey,
     IConsultantsRequestData,
     ICreateAppointmentResp,
@@ -14,23 +14,35 @@ import {
     ITransportation,
     TAppointmentAdvisor
 } from "../../../api/types";
-import moment from "moment";
-import {EAppointmentTimingType, EReminderType, IMake, IServiceRequestPrice, IVehicle} from "../appointment/types";
+import {
+    EAppointmentTimingType,
+    EReminderType,
+    IMake,
+    IServiceRequestPrice,
+    IVehicle,
+} from "../appointment/types";
 import {
     EPackagePricingType,
     EServiceType,
     EUserType,
     IAncillaryByZipRequest,
-    IAppointmentId,
+    IAppointmentId, ICreateAppointmentRequest,
     IServiceOffer,
     IValueService,
-    TAncillaryPriceByZip,
+    TAncillaryPriceByZip, TDriverForRequest,
     TEditingPosition,
     TLanguage,
-    TMaintenanceDetails,
+    TMaintenanceDetails, TMaintenanceOption, TVehicleForRequest,
     TYear
 } from "./types";
-import {AppThunk, IMaintenanceItem, IRecallByVin, PaginatedAPIResponse, TScreen, TView} from "../../../types/types";
+import {
+    AppThunk,
+    IMaintenanceItem,
+    IRecallByVin,
+    PaginatedAPIResponse, TParsableDate,
+    TScreen,
+    TView
+} from "../../../types/types";
 import {
     collectServiceRequestIds,
     decodeSCID,
@@ -57,6 +69,7 @@ import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
 import {EScheduler} from "../appointments/types";
 import {setAppointmentsLoading} from "../appointments/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -66,7 +79,7 @@ export const setPackagePricingType = createAction<EPackagePricingType|null>("fAp
 export const setAdvisor = createAction<IServiceConsultant|null>("fAppointment/setAdvisor");
 export const setAnyAdvisorSelected = createAction<boolean>("fAppointment/setAnyAdvisorSelected");
 export const setTiming = createAction<EAppointmentTimingType|null>("fAppointment/setTiming");
-export const setTime = createAction<moment.Moment|null>("fAppointment/setTime");
+export const setTime = createAction<TParsableDate>("fAppointment/setTime");
 export const setVehicle = createAction<ILoadedVehicle|null>("fAppointment/setVehicle");
 export const updateVehicle = createAction<Partial<IVehicle>>("fAppointment/updateVehicle");
 export const setCustomer = createAction<ICustomer>("fAppointment/setCustomer");
@@ -659,7 +672,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
     const categories = getState().categories;
     const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
 
-    const vehicle = {
+    const vehicle:TVehicleForRequest = {
         dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
         engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
         model,
@@ -669,13 +682,14 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
         modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
     }
-    const driver = {
+
+    const driver:TDriverForRequest = {
         ...appointmentFrame.customer,
         email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
     }
 
     const date = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
-        ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
+        ? dayjs.utc(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
         : appointment.appointment
             ? appointment.appointment?.id.split("|")[0] || ""
             : appointmentFrame.appointmentByKey?.dateInUtc || ""
@@ -695,8 +709,8 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         appointment.selectedSR,
     )
 
-    const maintenancePackageOption = appointmentFrame.selectedPackage
-        ? {id: appointmentFrame.selectedPackage?.id, priceType: appointmentFrame.packagePricingType}
+    const maintenancePackageOption: TMaintenanceOption|null = appointmentFrame.selectedPackage
+        ? {id: appointmentFrame.selectedPackage.id, priceType: appointmentFrame.packagePricingType}
         : appointmentFrame.packageEMenuType !== null
             ? {optionType: appointmentFrame.packageEMenuType}
             : null;
@@ -715,7 +729,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
 
     const isWaitlist = isVisitCenterAppointment && (isWaitListSlotSelected || isWaitListManaging);
 
-    const addressData = {
+    const addressData: IAddressData = {
         address: appointmentFrame.streetName ?? '',
         city: appointmentFrame.city ?? '',
         state: appointmentFrame.politicalState ?? '',
@@ -723,14 +737,14 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         zipCode: appointmentFrame.zipCode ?? null,
     }
 
-    const data = {
+    const data: ICreateAppointmentRequest = {
         id: appointmentFrame.id,
         appointmentTimingType,
         customerId: appointment.customerLoadedData?.id ?? null,
         comment: appointmentFrame.description,
         driver,
         vehicle,
-        gmt: moment().utcOffset(),
+        gmt: dayjs().utcOffset(),
         offerId: appointment.appointment?.offer?.id ?? null,
         reminderTypes: appointmentFrame.reminders,
         serviceCenterId: id,
@@ -756,7 +770,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             || appointmentFrame.serviceTypeOption?.type === EServiceType.MobileService
             ? addressData
             : null,
-        isWaitlist,
+        isWaitlist: Boolean(isWaitlist),
     };
     console.log(getCategoriesForAppointment(categories.allCategories, appointmentFrame.categoriesIds))
 
@@ -825,7 +839,7 @@ export const loadAppointmentRequestsPrices = (serviceCenterId: number): AppThunk
         mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
     }
     const date = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
-        ? moment(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
+        ? dayjs.utc(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
         : appointment.appointment
             ? appointment.appointment?.id.split("|")[0] || ""
             : appointmentFrame.appointmentByKey?.dateInUtc || ""

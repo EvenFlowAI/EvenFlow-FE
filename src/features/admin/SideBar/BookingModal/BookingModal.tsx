@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Box, Button, ButtonGroup} from "@material-ui/core";
+import {Box, Button, ButtonGroup} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {encodeSCID} from "../../../../utils/utils";
 import {TRole} from "../../../../store/reducers/users/types";
@@ -14,7 +14,7 @@ import {Routes} from "../../../../routes/constants";
 
 const restrictedRoles: TRole[] = ["Call Center Rep", "Advisor", "Manager"]
 
-export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export const BookingModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onAction, payload, ...props}) => {
     const {selectedSC} = useSCs();
     const showMessage = useMessage();
     const currentUser = useCurrentUser();
@@ -55,7 +55,7 @@ export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props
                 readOnly
                 value={link}
                 endAdornment={<ButtonGroup variant="text">
-                    <Button onClick={copyUrl}>Copy</Button>
+                    <Button onClick={copyUrl} color="info">Copy</Button>
                     <Button color="primary" onClick={handleGoTo}>Open</Button>
                 </ButtonGroup>}
                 fullWidth />
@@ -66,7 +66,7 @@ export const BookingModal: React.FC<DialogProps> = ({onAction, payload, ...props
                 readOnly
                 fullWidth
                 multiline
-                endAdornment={<Button onClick={copyFrame}>Copy</Button>}
+                endAdornment={<Button onClick={copyFrame} color="info">Copy</Button>}
                 value={frame}
                 rows={4}
             />

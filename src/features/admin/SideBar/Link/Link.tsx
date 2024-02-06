@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {List, ListItem, ListItemSecondaryAction} from "@material-ui/core";
+import {List, ListItem, ListItemSecondaryAction} from "@mui/material";
 import clsx from "clsx";
 import {NavLink, useHistory} from "react-router-dom";
 import {LinkTypeWithSub} from "../../../../types/types";
-import {ExpandLess, ExpandMore} from "@material-ui/icons";
+import {ExpandLess, ExpandMore} from "@mui/icons-material";
 import {useStyles} from "./styles";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
@@ -12,10 +12,10 @@ type TLinkProps = {
     closeSidebar: () => void;
 }
 
-const Link: React.FC<TLinkProps> = ({link, closeSidebar}) => {
+const Link: React.FC<React.PropsWithChildren<React.PropsWithChildren<TLinkProps>>> = ({link, closeSidebar}) => {
     const [isSubListOpen, setSubListOpen] = useState<boolean>(false);
     const currentUser = useCurrentUser();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const history = useHistory();
 
     useEffect(() => {

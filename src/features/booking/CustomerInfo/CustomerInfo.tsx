@@ -8,7 +8,7 @@ import {useStyles} from "./styles";
 const CustomerInfo = () => {
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {selectedVehicle, userType} = useSelector((state: RootState) => state.appointmentFrame);
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
     const customerName = customerLoadedData?.fullName ?? `${customerLoadedData?.firstName ?? ''} ${customerLoadedData?.lastName ?? ''}`
 

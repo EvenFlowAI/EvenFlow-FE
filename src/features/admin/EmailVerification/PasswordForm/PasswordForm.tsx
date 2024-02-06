@@ -7,7 +7,7 @@ type TPasswordProps = {
     onChange: React.ChangeEventHandler<HTMLInputElement>
 }
 
-export const PasswordForm: React.FC<TPasswordProps> = ({password, password2, onChange}) => {
+export const PasswordForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPasswordProps>>> = ({password, password2, onChange}) => {
     return (<form autoComplete="new-password" id="new-password-form">
         <TextField
             value={password}

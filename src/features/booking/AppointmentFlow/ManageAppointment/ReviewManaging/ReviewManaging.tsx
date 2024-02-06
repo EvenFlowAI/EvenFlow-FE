@@ -3,7 +3,7 @@ import {AppointmentConfirmationTitle} from "../../../../../components/wrappers/A
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {
     setAdvisor,
     setCurrentFrameScreen,
@@ -11,29 +11,23 @@ import {
     setServiceOptionChanged
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {Wrapper} from "./styles";
+import {ConfirmationItemWrapper} from "../../../../../components/styled/ConfirmationItemWrapper";
 
 export const ReviewManaging = () => {
-    const [
+    const {
         advisor,
         isAnyAdvisorSelected,
         transportation,
         serviceTypeOption,
+        consultants,
+        appointmentByKey
+    } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
+    const {
         currentConfig,
         isTransportationAvailable,
         isAdvisorAvailable,
-        consultants,
-        appointmentByKey
-    ] = useSelector((state: RootState) => [
-        state.appointmentFrame.advisor,
-        state.appointmentFrame.isAnyAdvisorSelected,
-        state.appointmentFrame.transportation,
-        state.appointmentFrame.serviceTypeOption,
-        state.bookingFlowConfig.currentConfig,
-        state.bookingFlowConfig.isTransportationAvailable,
-        state.bookingFlowConfig.isAdvisorAvailable,
-        state.appointmentFrame.consultants,
-        state.appointmentFrame.appointmentByKey,
-    ]);
+    } = useSelector(({bookingFlowConfig}: RootState) => bookingFlowConfig)
+
     const {t} = useTranslation();
     const transportationSelected = serviceTypeOption?.transportationOption || transportation;
     const dispatch = useDispatch();
@@ -60,7 +54,7 @@ export const ReviewManaging = () => {
     }
 
     return (
-        <div>
+        <ConfirmationItemWrapper>
             <AppointmentConfirmationTitle>{t("Appointment Details")}</AppointmentConfirmationTitle>
             <Wrapper>
                 {transportationSelected
@@ -75,6 +69,6 @@ export const ReviewManaging = () => {
                     : null
                 }
             </Wrapper>
-        </div>
+        </ConfirmationItemWrapper>
     );
 };

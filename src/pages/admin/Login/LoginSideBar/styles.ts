@@ -1,7 +1,8 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 import bgImage from "../../../../assets/img/image_login.jpg";
 
-export const useStyles = makeStyles({
+//
+export const useStyles = makeStyles()({
     wrapper: {
         position: "relative",
         display: "flex",

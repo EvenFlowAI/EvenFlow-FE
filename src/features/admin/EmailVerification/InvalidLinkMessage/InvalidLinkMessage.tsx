@@ -1,11 +1,11 @@
 import React from "react";
 import {LoginTextContent} from "../../../../components/wrappers/LoginTextContent/LoginTextContent";
-import {Typography} from "@material-ui/core";
+import {Typography} from "@mui/material";
 import {BackLink} from "../../../../components/wrappers/BackLink/BackLink";
 
 import {Routes} from "../../../../routes/constants";
 
-export const InvalidLinkMessage: React.FC = () => {
+export const InvalidLinkMessage: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = () => {
     return <>
         <LoginTextContent content="Invalid url" />
         <Typography variant="body1" style={{textAlign: "center", marginTop: 20}}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {ReactComponent as CheckboxCircle} from "../../../../../assets/img/done_icon_black.svg";
-import {InfoOutlined} from "@material-ui/icons";
+import {InfoOutlined} from "@mui/icons-material";
 import {ESegmentTitle, IPackage, IPackageOptions} from "../../../../../api/types";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
@@ -19,7 +19,7 @@ type TComplimentaryProps = {
     loadedPackages: IPackage[];
 }
 
-const PackagesComplimentary: React.FC<TComplimentaryProps> =
+const PackagesComplimentary: React.FC<React.PropsWithChildren<React.PropsWithChildren<TComplimentaryProps>>> =
     ({complimentary, packages, setClasses, isBmWService, handleClick, loadedPackages}) => {
         const {scProfile} = useSelector((state: RootState) => state.appointment);
         const {t} = useTranslation();

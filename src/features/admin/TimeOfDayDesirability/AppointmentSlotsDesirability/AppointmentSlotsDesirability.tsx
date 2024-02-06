@@ -9,7 +9,7 @@ import {
     Paper,
     useMediaQuery,
     useTheme
-} from "@material-ui/core";
+} from "@mui/material";
 import {EDesirabilityState, ETimeSlotType} from "../../../../store/reducers/slotScoring/types";
 import {generateSlots, TSlot} from "../utils";
 import {useDispatch, useSelector} from "react-redux";
@@ -20,9 +20,8 @@ import {
     saveDesirability
 } from "../../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../../store/rootReducer";
-import {CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlined} from "@mui/icons-material";
 import {Caption} from "../../../../components/wrappers/Caption/Caption";
-import moment from "moment";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {useStyles} from "./styles";
 import {TForm} from "./types";
@@ -34,6 +33,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
+import dayjs from "dayjs";
 
 const initialForm = {
     timeSlotType: ETimeSlotType.ThirtyMinutes,
@@ -41,22 +41,19 @@ const initialForm = {
 };
 
 export const AppointmentSlotsDesirability = () => {
+    const {slotRange, isLoading, desirability: desirabilityItems} = useSelector((state: RootState) => state.slotScoring);
     const [form, setForm] = useState<TForm>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);
     const [isEdit, setEdit] = useState<boolean>(false);
-    const {slotRange, isLoading} = useSelector((state: RootState) => state.slotScoring);
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
+
     const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();
-
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const [desirabilityItems] = useSelector((state: RootState) => [
-        state.slotScoring.desirability
-    ]);
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadDesirability(selectedSC.id, selectedPod?.id, (e) => showError(e)));
@@ -138,8 +135,8 @@ export const AppointmentSlotsDesirability = () => {
                         {
                             ...i,
                             index: i.idx,
-                            start: moment(i.start).format('HH:mm:SS'),
-                            end: moment(i.end).format('HH:mm:SS')
+                            start: dayjs(i.start).format('HH:mm:SS'),
+                            end: dayjs(i.end).format('HH:mm:SS')
                         }
                         )),
                     form.timeSlotType, selectedSC.id, selectedPod?.id,
@@ -153,7 +150,7 @@ export const AppointmentSlotsDesirability = () => {
         }
     }
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     return <Paper className={classes.paper} variant="outlined">
         <h2 className={classes.title}>

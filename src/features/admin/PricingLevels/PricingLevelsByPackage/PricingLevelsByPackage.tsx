@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {Table} from "../../../../components/tables/Table/Table";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -29,7 +29,7 @@ const PricingLevelsByPackage = () => {
     const {onOpen, onClose, isOpen} = useModal();
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const onEditClick = async (el: TPackagePricingLevel) => {
         await setEditElement(el);

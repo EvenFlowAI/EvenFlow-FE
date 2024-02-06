@@ -1,12 +1,12 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button, TableBody, TableHead} from "@material-ui/core";
+import {Button, TableBody, TableHead} from "@mui/material";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EAdvisorAssignMethod, IAdvisorAssignment} from "../../../store/reducers/serviceCenters/types";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import {RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {loadAdvisorAssignment, updateAdvisorAssignment} from "../../../store/reducers/serviceCenters/actions";
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
@@ -18,7 +18,7 @@ import {useException} from "../../../hooks/useException/useException";
 
 type TMethod = "primary"|"secondary"
 
-const AdvisorAssignmentModal: React.FC<DialogProps> = (props) => {
+const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {selectedSC, advisorAssignment, advisorAssignmentLoading} = useSelector((state: RootState) => state.serviceCenters);
     const [primaryMethod, setPrimaryMethod] = useState<EAdvisorAssignMethod|null>(null);
     const [secondaryMethod, setSecondaryMethod] = useState<EAdvisorAssignMethod|null>(null);
@@ -26,7 +26,7 @@ const AdvisorAssignmentModal: React.FC<DialogProps> = (props) => {
     const isSecondaryDisabled = useMemo(() => primaryMethod !== EAdvisorAssignMethod.LastAdvisor
         || noAssignment,[primaryMethod])
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException()
     const showMessage = useMessage();

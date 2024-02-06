@@ -6,8 +6,8 @@ import {
     MenuItem,
     IconButton,
     Button
-} from "@material-ui/core";
-import {MoreHoriz} from "@material-ui/icons";
+} from "@mui/material";
+import {MoreHoriz} from "@mui/icons-material";
 import {HeaderTableCell, FirstCell, TableCell} from "../../../components/styled/AncillaryPriceComponents";
 import {IZonePriceSettings} from "../../../store/reducers/serviceValet/types";
 import {NoData} from "../../../components/wrappers/NoData/NoData";
@@ -24,7 +24,7 @@ type TByZoneProps = {
     isLoading: boolean;
 }
 
-const AncillaryPriceByZone: React.FC<TByZoneProps> = ({ data, onUpdate, isLoading }) => {
+const AncillaryPriceByZone: React.FC<React.PropsWithChildren<React.PropsWithChildren<TByZoneProps>>> = ({ data, onUpdate, isLoading }) => {
     const [zonesData, setZonesData] = useState<IZonePriceSettings[]>([]);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<IZonePriceSettings|null>(null);

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {loadArchivedOffers, setArchivedOffersPageData} from "../../../../store/reducers/offers/actions";
-import {Grid, TablePagination} from "@material-ui/core";
+import {Grid, TablePagination} from "@mui/material";
 import {NoItemsLoading} from "../../../../components/wrappers/NoItemsLoading/NoItemsLoading";
 import {OfferPlate} from "../OfferPlate/OfferPlate";
 import {EOfferStatus, IOffer} from "../../../../store/reducers/offers/types";
@@ -16,12 +16,12 @@ export const ArchiveOffers = () => {
     const {onOpen, onClose, isOpen} = useModal();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const [offers, offersLoading, pageData, count] = useSelector((state: RootState) => [
-        state.offers.archivedOffersList,
-        state.offers.archivedOffersLoading,
-        state.offers.archivedOffersPageData,
-        state.offers.archivedOffersPaging.numberOfRecords
-    ]);
+    const {
+        archivedOffersList: offers,
+        archivedOffersLoading: offersLoading,
+        archivedOffersPageData: pageData,
+        archivedOffersPaging: {numberOfRecords: count}
+    } = useSelector((state: RootState) => state.offers)
     const [editedItem, setEditedItem] = useState<IOffer|undefined>(undefined);
     const {changePage, changeRowsPerPage} = usePagination(
         s => s.offers.archivedOffersPageData,
@@ -64,8 +64,8 @@ export const ArchiveOffers = () => {
                 component="div"
                 count={count}
                 page={pageData.pageIndex}
-                onChangePage={changePage}
-                onChangeRowsPerPage={changeRowsPerPage}
+                onPageChange={changePage}
+                onRowsPerPageChange={changeRowsPerPage}
                 rowsPerPage={pageData.pageSize}
                 rowsPerPageOptions={defaultRowsPerPageOptions}
             />

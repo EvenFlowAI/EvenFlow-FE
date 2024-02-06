@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {IconButton, useMediaQuery, useTheme} from "@material-ui/core";
+import {IconButton, useMediaQuery, useTheme} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {loadSRs, setAppointmentWasChanged} from "../../../../../store/reducers/appointment/actions";
-import {ExpandLess, ExpandMore} from '@material-ui/icons';
+import {ExpandLess, ExpandMore} from '@mui/icons-material';
 import {
     deleteGeneralService,
     deleteIndService,
@@ -40,8 +40,8 @@ const ShoppingCart = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const theme = useTheme();
-    const classes = useStyles(theme);
-    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+    const { classes  } = useStyles();
+    const isSM = useMediaQuery(theme.breakpoints.down('md'));
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const selectedServices = useMemo(() => {
@@ -119,7 +119,7 @@ const ShoppingCart = () => {
         ? <div className={classes.wrapper}>
             <div className={classes.title}>
                 <span>{t("Selected Services")}</span>
-                {isSM && <IconButton onClick={() => setOpen(prev => !prev)}>
+                {isSM && <IconButton onClick={() => setOpen(prev => !prev)} size="large">
                     {isOpen ? <ExpandLess/> : <ExpandMore/>}
                 </IconButton>}
             </div>

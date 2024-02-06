@@ -1,17 +1,18 @@
-import {styled} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import {styled} from "@mui/material";
+import { makeStyles } from 'tss-react/mui';
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: "20px",
     width: "100%",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         gridTemplateColumns: "1fr"
     }
 }));
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     vinWrapper: {
         '& > label': {
             textTransform: 'none',
@@ -20,4 +21,4 @@ export const useStyles = makeStyles(() => ({
             fontWeight: "normal",
         }
     }
-}))
+}));

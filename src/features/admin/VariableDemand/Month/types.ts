@@ -1,7 +1,7 @@
-import moment from "moment";
 import {ITimeOfYearSetting} from "../../../../store/reducers/pricingSettings/types";
+import {TParsableDate} from "../../../../types/types";
 
 export type TDate = {
-    date: moment.Moment;
+    date: TParsableDate;
     data?: ITimeOfYearSetting;
 }

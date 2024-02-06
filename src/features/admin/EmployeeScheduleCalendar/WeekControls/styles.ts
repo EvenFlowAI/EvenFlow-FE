@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+//
+export const useStyles = makeStyles()({
     container: {
         display: "inline-flex",
         alignSelf: 'flex-end',
@@ -11,11 +12,16 @@ export const useStyles = makeStyles({
     arrowButton: {
         minWidth: 10,
         padding: 5,
-        background: "#ffffff"
+        background: "#ffffff",
+        border: '1px solid #DADADA',
+        color: "#000000"
     },
     dateButton: {
-        background: "#ffffff",
+        minWidth: 140,
         textTransform: "none",
-        minWidth: 140
+        padding: '5px 15px',
+        border: '1px solid #DADADA',
+        background: "#ffffff",
+        color: "#000000"
     }
 });

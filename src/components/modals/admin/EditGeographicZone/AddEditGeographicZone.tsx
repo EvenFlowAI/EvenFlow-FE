@@ -1,10 +1,10 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
-import {Button, Divider, IconButton} from "@material-ui/core";
+import {Button, Divider, IconButton} from "@mui/material";
 import {DialogProps} from "../../BaseModal/types";
 import {TZipCode, TZone, TZoneNew, TZonesServiceType, TZoneUpdate} from "../../../../store/reducers/mobileService/types";
 import {TextField} from "../../../formControls/TextFieldStyled/TextField";
-import {Close} from "@material-ui/icons";
+import {Close} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addServiceValetZone,
@@ -22,7 +22,7 @@ import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/t
 import {RootState} from "../../../../store/rootReducer";
 import {Loading} from "../../../wrappers/Loading/Loading";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {loadFilteredZip, setFilteredZipCodes} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useStyles} from "./styles";
 import {useAutocompleteStyles} from "../../../../hooks/styling/useAutocompleteStyles";
@@ -41,7 +41,7 @@ type TEditZoneProps = DialogProps & {
     serviceType: TZonesServiceType;
 }
 
-const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
+const AddEditGeographicZone: React.FC<React.PropsWithChildren<React.PropsWithChildren<TEditZoneProps>>> = ({
                                                              isEdit,
                                                              zone,
                                                              onRemoveZipOpen,
@@ -60,8 +60,8 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
 
     const {onOpen, onClose, isOpen} = useModal();
     const dispatch = useDispatch();
-    const classes = useStyles();
-    const autocompleteClasses = useAutocompleteStyles();
+    const { classes  } = useStyles();
+    const { classes: autocompleteClasses } = useAutocompleteStyles();
     const showError = useException();
     const showMessage = useMessage();
     const zonesList = useMemo(() => serviceType === 'serviceValet' ? valetZones : mobileZones, [serviceType, valetZones, mobileZones]);
@@ -192,6 +192,7 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                     multiple
                                     classes={autocompleteClasses}
                                     options={filteredZipCodes}
+                                    isOptionEqualToValue={(option, value) => option === value}
                                     onChange={handleChangeZip}
                                     fullWidth
                                     autoComplete={true}
@@ -209,11 +210,14 @@ const AddEditGeographicZone: React.FC<TEditZoneProps> = ({
                                     <div className={classes.zipCode}>{code}</div>
                                     <div className={classes.zipActions}>
                                         { isEdit
-                                            ? <IconButton disabled={zonesList.length < 2} onClick={() => onChangeZoneClick(code)}>
+                                            ? <IconButton
+                                            disabled={zonesList.length < 2}
+                                            onClick={() => onChangeZoneClick(code)}
+                                            size="large">
                                                 <ChangeZone/>
                                             </IconButton>
                                             : null }
-                                        <IconButton onClick={() => onRemoveZipClick(code)}>
+                                        <IconButton onClick={() => onRemoveZipClick(code)} size="large">
                                             <Close/>
                                         </IconButton>
                                     </div>

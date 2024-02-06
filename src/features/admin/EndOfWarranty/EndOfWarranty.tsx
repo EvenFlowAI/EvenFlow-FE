@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Button, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadEndOfWarranty} from "../../../store/reducers/valueSettings/actions";

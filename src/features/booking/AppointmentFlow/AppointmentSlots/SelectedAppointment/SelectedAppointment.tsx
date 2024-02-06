@@ -1,5 +1,5 @@
 import React from 'react';
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
@@ -15,14 +15,15 @@ import {useSelectedAppointmentStyles} from "../../../../../hooks/styling/useSele
 import {DateWrapper} from "../../../../../components/styled/DateWrapper";
 import {List, PriceWrapper, Wrapper} from "./styles";
 import {WaitListLabel} from "../WaitListLabel/WaitListLabel";
+import dayjs from "dayjs";
 
 export const SelectedAppointment = () => {
     const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
     const { appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
-    const classes = useSelectedAppointmentStyles();
+    const { classes  } = useSelectedAppointmentStyles();
     const theme = useTheme();
     const {t} = useTranslation();
-    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
 
     const price = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
         ? serviceValetAppointment?.price.value ?? 0
@@ -48,7 +49,7 @@ export const SelectedAppointment = () => {
                         <ServiceOption isSm={isSm}/>
                         {appointment && isSm
                             ? <DateWrapper>
-                                {appointment.date.format('ddd, MMMM D, h:mm A')}
+                                {dayjs.utc(appointment.date).format('ddd, MMMM D, h:mm A')}
                                 <WaitListLabel/>
                         </DateWrapper>
                             : serviceValetAppointment && isSm
@@ -60,7 +61,7 @@ export const SelectedAppointment = () => {
                 <PriceWrapper>
                     {appointment && !isSm
                         ? <DateWrapper>
-                            {t("Date & Time")}: <br /> {appointment.date.format('ddd, MMMM D, h:mm A')}
+                            {t("Date & Time")}: <br /> {dayjs.utc(appointment.date).format('ddd, MMMM D, h:mm A')}
                         </DateWrapper>
                         : serviceValetAppointment && !isSm
                             ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/>

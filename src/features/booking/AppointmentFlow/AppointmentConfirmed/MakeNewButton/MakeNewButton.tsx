@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {
@@ -18,7 +18,7 @@ const MakeNewButton = () => {
     const dispatch = useDispatch();
     const isFrame = window.top !== window.self;
     const {t} = useTranslation();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
 
     const clearAddress = async () => {

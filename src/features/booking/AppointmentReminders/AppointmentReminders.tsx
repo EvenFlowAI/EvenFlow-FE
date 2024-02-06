@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo} from 'react';
-import {Checkbox} from "@material-ui/core";
+import {Checkbox} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setReminders} from "../../../store/reducers/appointmentFrameReducer/actions";

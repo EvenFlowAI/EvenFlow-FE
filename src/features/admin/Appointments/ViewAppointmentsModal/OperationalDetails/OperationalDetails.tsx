@@ -3,14 +3,14 @@ import {IAppointment} from "../../../../../api/types";
 import {DetailsItem} from "../DetailsItem/DetailsItem";
 import {dateTimeFormat} from "../AppointmentDetails/AppointmentDetails";
 import {ModifiedData} from "../ModifiedData/ModifiedData";
-import moment from "moment";
 import {TitleWrapper} from "../styles";
+import dayjs from "dayjs";
 
-export const OperationalDetails: React.FC<{payload: IAppointment}> = ({payload}) => {
+export const OperationalDetails: React.FC<React.PropsWithChildren<React.PropsWithChildren<{payload: IAppointment}>>> = ({payload}) => {
     const date = payload.createdDateTime
         ? payload.createdDateTime.toString().split('.')[0]
         : payload.createdDateTime
-    const createdText = [moment(date).format(dateTimeFormat), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
+    const createdText = [dayjs.utc(date).format(dateTimeFormat), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
 
     return (
         <div>

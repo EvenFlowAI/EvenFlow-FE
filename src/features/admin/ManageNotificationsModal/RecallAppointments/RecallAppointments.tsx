@@ -1,9 +1,9 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Button, Divider, IconButton, Switch} from "@material-ui/core";
+import {Button, Divider, IconButton, Switch} from "@mui/material";
 import {ReactComponent as PlusIcon} from "../../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../../assets/img/close.svg";
 import {DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
@@ -18,7 +18,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState, onClose}) => {
+const RecallAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<TNotificatonsProps>>> = ({setChangesState, onClose}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);
     const {recallNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort|null>(null);
@@ -27,7 +27,7 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState, onCl
     const [formChecked, setFormChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useNotificationStyles();
+    const { classes  } = useNotificationStyles();
     const showError = useException();
     const showMessage = useMessage();
 
@@ -138,7 +138,9 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState, onCl
                 </div>
                 <div className={classes.selectWrapper}>
                 <Autocomplete
+                    className={classes.autocomplete}
                     options={usersShort}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
                     fullWidth
                     disabled={loading || isLoading}
                     getOptionLabel={i => i.fullName}
@@ -164,7 +166,10 @@ const RecallAppointments: React.FC<TNotificatonsProps> = ({setChangesState, onCl
                         <div className={classes.employeeWrapper} key={item.id}>
                             <div>{item.fullName}</div>
                             <div>{item.email}</div>
-                            <IconButton onClick={() => deleteEmployee(item.id)} disabled={loading || isLoading}><DeleteIcon/></IconButton>
+                            <IconButton
+                                onClick={() => deleteEmployee(item.id)}
+                                disabled={loading || isLoading}
+                                size="large"><DeleteIcon/></IconButton>
                         </div>
                     ))}
                 </div>

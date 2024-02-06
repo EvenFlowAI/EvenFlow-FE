@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
-import {Button, Divider, Switch} from "@material-ui/core";
+import {Button, Divider, Switch} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {updateAuth} from "../../../../store/reducers/serviceCenters/actions";
@@ -11,14 +11,14 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-const CustomerVerification: React.FC<DialogProps> = (props) => {
+const CustomerVerification: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const [isVerificationOn, setVerificationOn] = useState<boolean>(false);
     const { remindersLoading } = useSelector((state: RootState) => state.serviceCenters);
     const {selectedSC} = useSCs();
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         selectedSC && setVerificationOn(selectedSC.isAuthRequired);

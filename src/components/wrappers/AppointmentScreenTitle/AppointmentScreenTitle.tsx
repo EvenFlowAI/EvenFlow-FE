@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 import React from "react";
 
 const Wrapper = styled('h1')(({theme}) => ({
@@ -6,7 +6,7 @@ const Wrapper = styled('h1')(({theme}) => ({
     fontWeight: 700,
     margin: 0,
     alignSelf: "flex-start",
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
         alignSelf: "center",
         textAlign: "center",
         fontSize: 22,
@@ -15,7 +15,7 @@ const Wrapper = styled('h1')(({theme}) => ({
     }
 }))
 
-export const AppointmentScreenTitle: React.FC = ({children}) => {
+export const AppointmentScreenTitle: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = ({children}) => {
     return (
         <Wrapper>
             {children}

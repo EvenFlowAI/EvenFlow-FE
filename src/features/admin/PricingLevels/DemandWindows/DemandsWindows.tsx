@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Divider, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Divider, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {EditButton} from "../../../../components/buttons/EditButton/EditButton";
 import {PriceLevelsModal} from "../PriceLevelsModal/PriceLevelsModal";
 import {EDemandCategory, IPricingLevel, TPricingLevels} from "../../../../store/reducers/pricingSettings/types";
@@ -19,7 +19,7 @@ export const DemandWindows = () => {
     const {onClose, onOpen, isOpen} = useModal();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const mappedPricingLevels: TPricingLevels = useMemo(() => {
         return pricingLevels.reduce((acc, item) => {
@@ -38,8 +38,9 @@ export const DemandWindows = () => {
         if (selectedSC) {
             const item = mappedPricingLevels[t];
             setEditedItem({
-                serviceCenterId: selectedSC.id, percentage: 100, demandCategory: t,
-                ...item
+                serviceCenterId: item?.serviceCenterId ?? selectedSC.id,
+                percentage: item?.percentage ?? 100,
+                demandCategory: item.demandCategory ?? t,
             });
             onOpen();
         }

@@ -52,7 +52,7 @@ export const loadNonSelectedServiceRequests = (serviceCenterId: number, isAssign
         dispatch(setLoadingNonSelected(false));
     } catch (e) {
         setLoadingNonSelected(false);
-        throw e;
+        console.log('loadNonSelectedServiceRequests', e)
     }
 }
 
@@ -101,7 +101,7 @@ export const loadAssignedServiceRequests = (serviceCenterId: number, isEligible?
         dispatch(setAssignedPaging(paging));
     }catch (e) {
         dispatch(setAssignedLoading(false));
-        throw e;
+        console.log('loadAssignedServiceRequests', e)
     }
 }
 
@@ -170,7 +170,7 @@ async (dispatch, getState) => {
         dispatch(pagingUrgentServiceRequests(paging));
     } catch (e) {
         dispatch(loadingUrgentServiceRequests(false));
-        throw e;
+        console.log('loadUrgentServiceRequests', e)
     }
 }
 export const setUrgentRequests = (ids: number[], serviceCenterId?: number, podId?: number): AppThunk => async dispatch => {
@@ -207,7 +207,7 @@ async (dispatch, getState) => {
         dispatch(pagingNonUrgentServiceRequests(paging));
     } catch (e) {
         dispatch(loadingNonUrgentServiceRequests(false));
-        throw e;
+        console.log('loadNonUrgentServiceRequests', e)
     }
 }
 
@@ -241,7 +241,7 @@ export const loadUpsellServiceRequests = (serviceCenterId: number): AppThunk =>
             dispatch(setUpsellPaging(paging));
         } catch (e) {
             dispatch(setUpsellLoading(false));
-            throw e;
+            console.log('loadUpsellServiceRequests', e)
         }
     }
 

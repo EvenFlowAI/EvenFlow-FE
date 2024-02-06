@@ -1,8 +1,7 @@
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {IAssignedServiceRequestShort} from "../serviceRequests/types";
 import {ICategory} from "../categories/types";
 import {TEnumKeyLabel, TEnumMap} from "../types";
-import {IPageRequest, IPagingResponse} from "../../../types/types";
+import {IPageRequest, IPagingResponse, TParsableDate} from "../../../types/types";
 
 export enum EOfferType {
     AmountOff, PercentOff, FreeService
@@ -78,12 +77,12 @@ export const customerPresence: TEnumMap<ECustomerPresence>[] = [
 ];
 
 export interface IDuration {
-    start: ParsableDate;
-    end: ParsableDate;
+    start: TParsableDate;
+    end: TParsableDate;
 }
 export interface ITimeOfDay {
-    start: ParsableDate;
-    end: ParsableDate;
+    start: TParsableDate;
+    end: TParsableDate;
 }
 export interface IServiceType {
     name: string;

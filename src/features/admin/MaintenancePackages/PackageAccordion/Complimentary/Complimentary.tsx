@@ -1,8 +1,8 @@
 import React, {Dispatch, SetStateAction} from 'react';
-import {Input} from "@material-ui/core";
+import {Input} from "@mui/material";
 import {ComplimentaryAndOptions} from "../ComplimentaryAndOptions/ComplimentaryAndOptions";
 import {ESegmentTitle, IPackageById} from "../../../../../api/types";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {TRequestRow, TCellData} from "../../types";
 import {usePackageAccordionStyles} from "../../styles";
 import {defaultComplimentaryTitle} from "../../constants";
@@ -17,7 +17,7 @@ type TComplimentaryProps = {
     onComplimentaryClick: (item: TCellData, requestId: number) => void;
 }
 
-const Complimentary: React.FC<TComplimentaryProps> = ({
+const Complimentary: React.FC<React.PropsWithChildren<React.PropsWithChildren<TComplimentaryProps>>> = ({
                                                           isComplimentaryNameEdit,
                                                           packageData,
                                                           setComplimentaryNameEdit,
@@ -25,7 +25,7 @@ const Complimentary: React.FC<TComplimentaryProps> = ({
                                                           onComplimentaryClick,
                                                           setPackageData,
                                                       }) => {
-    const classes = usePackageAccordionStyles();
+    const { classes  } = usePackageAccordionStyles();
     const showError = useException();
     const complimentaryTitle = packageData?.segmentTitles?.find(el => el.type === ESegmentTitle.Complimentary)
 

@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Table} from "../../../components/tables/Table/Table";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
@@ -9,7 +9,7 @@ import {
     setAssignedFilter,
     setAssignedPageData
 } from "../../../store/reducers/serviceRequests/actions";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {RequiredSkillsModal} from "./RequiredSkillsModal/RequiredSkillsModal";
 import {CheckmarkCircle} from "../../../components/wrappers/ChekmarkCircle/ChekmarkCircle";
 import {TableRowDataType} from "../../../types/types";
@@ -46,11 +46,11 @@ const rowData: TableRowDataType<IAssignedServiceRequest>[] = [
 ]
 
 export const RequiredSkills = () => {
-    const [data, loading, count] = useSelector((state: RootState) => [
-        state.serviceRequests.assignedList,
-        state.serviceRequests.assignedLoading,
-        state.serviceRequests.assignedPaging.numberOfRecords
-    ]);
+    const {
+        assignedList,
+        assignedLoading,
+        assignedPaging: {numberOfRecords}
+    } = useSelector(({serviceRequests}: RootState) => serviceRequests);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [editedItem, setEditedItem] = useState<IAssignedServiceRequest|undefined>();
     const {pageSize, pageIndex, changeRowsPerPage, changePage} = usePagination(
@@ -86,7 +86,7 @@ export const RequiredSkills = () => {
         setEditedItem(undefined);
     }
     const actions = (el: IAssignedServiceRequest) => {
-        return <IconButton onClick={openMenu(el)}><MoreHoriz /></IconButton>
+        return <IconButton onClick={openMenu(el)} size="large"><MoreHoriz /></IconButton>;
     }
 
     const openEdit = () => {
@@ -99,11 +99,11 @@ export const RequiredSkills = () => {
     return <div>
         <Table<IAssignedServiceRequest>
             rowData={rowData}
-            data={data}
-            isLoading={loading}
+            data={assignedList}
+            isLoading={assignedLoading}
             index="id"
             compact
-            count={count}
+            count={numberOfRecords}
             page={pageIndex}
             actions={actions}
             rowsPerPage={pageSize}

@@ -1,21 +1,19 @@
-import {Button, ButtonClassKey, ButtonProps, CircularProgress} from "@material-ui/core";
+import {Button, ButtonClassKey, ButtonProps, CircularProgress} from "@mui/material";
 import React from "react";
-import clsx from "clsx";
-import {useStyles} from "./styles";
+import {useStyles, Wrapper} from "./styles";
 
 type Props =
     { loading?: boolean, classes?: Partial<Record<ButtonClassKey, string> & { wrapper?: string }> }
     & ButtonProps;
 
-export const LoadingButton: React.FC<Props> = ({loading, classes, ...props}) => {
-    const classes_ = useStyles({fw: props.fullWidth || false});
-    const wrapperClassName = clsx(classes?.wrapper, classes_.wrapper);
+export const LoadingButton: React.FC<React.PropsWithChildren<React.PropsWithChildren<Props>>> = ({loading, classes, ...props}) => {
+    const { classes: classes_} = useStyles();
     const buttonClasses = {...classes};
     if ("wrapper" in buttonClasses) {
         delete buttonClasses['wrapper'];
     }
 
-    return <div className={wrapperClassName}>
+    return <Wrapper className={classes?.wrapper} fw={props.fullWidth || false}>
         <Button variant={props.variant ?? "contained"}
                 color={props.color ?? "primary"}
                 fullWidth
@@ -23,5 +21,5 @@ export const LoadingButton: React.FC<Props> = ({loading, classes, ...props}) => 
                 {...props}
                 disabled={loading || props.disabled}/>
         {loading && <CircularProgress size={28} className={classes_.buttonProgress}/>}
-    </div>;
+    </Wrapper>;
 }

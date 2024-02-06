@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, CircularProgress} from "@material-ui/core";
+import {Button, CircularProgress} from "@mui/material";
 
 type TSaveEditProps = {
     onSave: () => void;
@@ -10,7 +10,7 @@ type TSaveEditProps = {
     isLowerCase?:boolean;
 }
 
-export const SaveEditBlock: React.FC<TSaveEditProps> = ({isEdit, isSaving, onEdit, onCancel, onSave, isLowerCase}) => {
+export const SaveEditBlock: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSaveEditProps>>> = ({isEdit, isSaving, onEdit, onCancel, onSave, isLowerCase}) => {
     if (!isEdit) {
         return <Button
             onClick={onEdit}

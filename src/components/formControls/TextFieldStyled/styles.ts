@@ -1,16 +1,15 @@
-import {makeStyles} from "@material-ui/core/styles";
+import {InputLabel, styled} from "@mui/material";
 
 export type TStyleProps = {
     visible: boolean;
     lowerCase?: boolean;
 }
 
-export const useStyles = makeStyles(theme => ({
-    label: ({visible, lowerCase}: TStyleProps) => ({
-        textTransform: lowerCase ? "none" : "uppercase",
-        marginBottom: theme.spacing(.5),
-        fontWeight: theme.typography.fontWeightBold,
-        color: theme.palette.text.primary,
-        visibility: visible ? "visible" : "hidden",
-    })
-}));
+export const Label = styled(InputLabel, {
+    shouldForwardProp: (prop) => prop !== 'visible' && prop !== "lowerCase"
+})<TStyleProps>(({theme, visible, lowerCase}) => ({
+    textTransform: lowerCase ? "none" : "uppercase",
+    fontWeight: 'bold',
+    color: theme.palette.text.primary,
+    visibility: visible ? "visible" : "hidden",
+}))

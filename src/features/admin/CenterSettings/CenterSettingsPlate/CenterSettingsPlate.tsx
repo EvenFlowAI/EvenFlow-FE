@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Grid, Paper} from "@material-ui/core";
+import {Button, Grid, Paper} from "@mui/material";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 
 import {useCenterSettingsStyles} from "../../../../hooks/styling/useCenterSettingsStyles";
@@ -15,7 +15,7 @@ type TCenterSettingsPlateProps = {
     isLoading: boolean;
 }
 
-export const CenterSettingsPlate: React.FC<TCenterSettingsPlateProps> = ({
+export const CenterSettingsPlate: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCenterSettingsPlateProps>>> = ({
                                                                              onEdit,
                                                                              title,
                                                                              count,
@@ -25,7 +25,7 @@ export const CenterSettingsPlate: React.FC<TCenterSettingsPlateProps> = ({
                                                                              helperText,
                                                                              isLoading
                                                                          }) => {
-    const classes = useCenterSettingsStyles();
+    const { classes  } = useCenterSettingsStyles();
 
     return <Grid item xs={6} md={4}>
         <Paper className={classes.paper} variant={"outlined"} >

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {IUpsellServiceRequest} from "../../../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../../../store/rootReducer";
@@ -28,27 +28,22 @@ const tableData: TableRowDataType<IUpsellServiceRequest>[] = [
     {header: "INVOICE AMOUNT", val: el => `$${el.invoiceAmount ?? el.serviceRequest?.invoiceAmount}`, align: "left"},
 ]
 
-const AddUpsellToPackageModal: React.FC<TAddUpsellProps> =
+const AddUpsellToPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddUpsellProps>>> =
     ({ handleSelect,
          disabledIds,
          selectedCodes,
          ...props}) => {
         const {selectedSC} = useSCs();
         const dispatch = useDispatch();
-        const classes = useStyles();
-        const [
-            serviceRequestsList,
-            isLoading,
-            requestsCount,
-            pageData,
-            search,
-        ] = useSelector((state: RootState) => [
-            state.serviceRequests.intervalUpsellList,
-            state.serviceRequests.upsellLoading,
-            state.serviceRequests.upsellPaging.numberOfRecords,
-            state.serviceRequests.upsellPageData,
-            state.serviceRequests.upsellFilter.searchTerm,
-        ]);
+        const { classes  } = useStyles();
+        const {
+            intervalUpsellList,
+            upsellLoading,
+            upsellPaging: {numberOfRecords},
+            upsellPageData,
+            upsellFilter: {searchTerm}
+        } = useSelector((state: RootState) => state.serviceRequests)
+
         const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
             (s: RootState) => s.serviceRequests.upsellPageData,
             setUpsellPageData
@@ -91,22 +86,22 @@ const AddUpsellToPackageModal: React.FC<TAddUpsellProps> =
                 <DialogTitle onClose={handleClose}>Add Interval Upsell</DialogTitle>
                 <DialogContent>
                     <div className={classes.wrapper}>
-                        <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
+                        <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={searchTerm} />
                     </div>
                     <Table<IUpsellServiceRequest>
-                        data={serviceRequestsList}
+                        data={intervalUpsellList}
                         index="id"
                         smallHeaderFont
                         startActions={preActions}
-                        hidePagination={requestsCount <= pageData.pageSize}
+                        hidePagination={numberOfRecords <= upsellPageData.pageSize}
                         compact
                         rowData={tableData}
-                        isLoading={isLoading}
+                        isLoading={upsellLoading}
                         page={pageIndex}
                         rowsPerPage={pageSize}
                         onChangePage={changePage}
                         onChangeRowsPerPage={changeRowsPerPage}
-                        count={requestsCount}
+                        count={numberOfRecords}
                     />
                 </DialogContent>
                 <DialogActions>

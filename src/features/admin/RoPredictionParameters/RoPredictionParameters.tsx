@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {TableBody, TableHead} from "@material-ui/core";
+import {TableBody, TableHead} from "@mui/material";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -27,7 +27,7 @@ const RoPredictionParameters = () => {
     const [defaultLaborHours, setDefaultLaborHours] = useState<string>('0');
     const [pickUpDropOffHours, setPickUpDropOffHours] = useState<string>('0');
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();

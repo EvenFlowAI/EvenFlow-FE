@@ -1,4 +1,4 @@
-import {Button, styled} from "@material-ui/core";
+import {Button, styled} from "@mui/material";
 
 export const ChangeButton = styled(Button)(({theme}) => ({
     width: 'fit-content',
@@ -9,10 +9,10 @@ export const ChangeButton = styled(Button)(({theme}) => ({
     textTransform: 'unset',
     textDecoration: 'underline',
     fontWeight: 'normal',
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
         marginBottom: 30,
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         marginBottom: 20,
     }
 }))

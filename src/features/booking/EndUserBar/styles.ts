@@ -1,13 +1,14 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+//
+export const useStyles = makeStyles()(theme => ({
     grow: {
         flexGrow: 1
     },
     contacts: {
         fontSize: 19,
         fontWeight: "bold",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             display: "none"
         }
     },
@@ -20,4 +21,4 @@ export const useStyles = makeStyles(theme => ({
     bar: {
         background: "#252733"
     }
-}))
+}));

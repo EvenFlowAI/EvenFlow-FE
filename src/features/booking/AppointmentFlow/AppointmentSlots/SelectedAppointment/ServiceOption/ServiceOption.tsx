@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {EServiceType} from "../../../../../../store/reducers/appointmentFrameReducer/types";
-import {MenuItem, Select} from "@material-ui/core";
+import {MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
@@ -24,7 +24,7 @@ import {setAdvisorAvailable} from "../../../../../../store/reducers/bookingFlowC
 import {IServiceConsultant} from "../../../../../../api/types";
 import {useSelectedAppointmentStyles} from "../../../../../../hooks/styling/useSelectedAppointmentStyles";
 
-const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
+const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{isSm: boolean}>>> = ({isSm}) => {
     const {
         serviceTypeOption,
         sideBarSteps,
@@ -38,9 +38,9 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const {t} = useTranslation();
-    const classes = useSelectedAppointmentStyles();
+    const { classes  } = useSelectedAppointmentStyles();
     const dispatch = useDispatch();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceValetIsPossibleToUse = useMemo(() => {
@@ -146,7 +146,7 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
         dispatch(checkCarIsValid(() => onCarIsValid(option, shouldLoadAdvisors, isAdvisorSelectionOn), undefined, true))
     }
 
-    const handleServiceOptionChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    const handleServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
         clearTransportation()
         const option = firstScreenOptions.find(item => item.id === e.target.value);
         if (option) {
@@ -164,6 +164,8 @@ const ServiceOption: React.FC<{isSm: boolean}> = ({isSm}) => {
                     <Select
                         value={serviceTypeOption?.id}
                         className={classes.select}
+                        variant="standard"
+                        disableUnderline
                         onChange={handleServiceOptionChange}>
                         {firstScreenOptions
                             .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)

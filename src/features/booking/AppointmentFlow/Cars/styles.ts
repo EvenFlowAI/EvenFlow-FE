@@ -1,4 +1,4 @@
-import {styled, Theme} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const CarsWrapper = styled('div')(({theme}) => ({
     width: "100%",
@@ -6,7 +6,7 @@ export const CarsWrapper = styled('div')(({theme}) => ({
     alignItems: "center",
     gap: "20px",
     justifyContent: "stretch",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         height: 350,
     }
 }));
@@ -23,7 +23,9 @@ export const Info = styled('div')({
     }
 });
 
-export const Arrow = styled("span")<Theme, { disabled?: boolean }>(({theme, disabled}) => ({
+export const Arrow = styled("span", {
+    shouldForwardProp: (prop) => prop !== "disabled"
+})<{ disabled?: boolean }>(({theme, disabled}) => ({
     position: "relative",
     display: "flex",
     alignItems: "center",
@@ -44,7 +46,7 @@ export const Arrow = styled("span")<Theme, { disabled?: boolean }>(({theme, disa
         bottom: -24,
         fontSize: 12,
         whiteSpace: 'nowrap',
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             bottom: -40,
             fontSize: 12,
             whiteSpace: 'normal',

@@ -17,9 +17,9 @@ type TProps = {
     suggestedPrices: TSummaryCell[];
 }
 
-const PricesRow: React.FC<TProps> = ({packageData, suggestedPrices, setPackageData}) => {
+const PricesRow: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({packageData, suggestedPrices, setPackageData}) => {
     const {currentPackage} = useSelector((state: RootState) => state.packages);
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showMessage = useMessage();
 

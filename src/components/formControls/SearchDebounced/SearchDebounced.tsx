@@ -1,10 +1,10 @@
 import React, {useEffect, useRef} from "react";
 import {TextField} from "../TextFieldStyled/TextField";
-import {Search} from "@material-ui/icons";
+import {Search} from "@mui/icons-material";
 import {TSearchInputProps} from "../../../types/types";
 import {useDebounce} from "../../../hooks/useDebounce/useDebounce";
 
-export const SearchDebounced: React.FC<TSearchInputProps> = ({
+export const SearchDebounced: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSearchInputProps>>> = ({
                                                                  placeholder,
                                                                  onSearch,
                                                                  value,

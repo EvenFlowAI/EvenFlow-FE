@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import {Autocomplete} from '@mui/material';
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -10,18 +10,18 @@ import {
     clearAppointmentData,
     loadAncillaryPriceByZip,
     loadFilteredZip,
-    setCity,
-    setPoliticalState,
     setAddress,
+    setCity,
     setCurrentFrameScreen,
+    setDefaultVisitCenterOption,
+    setPoliticalState,
     setServiceTypeOption,
     setShowServiceCentersList,
     setSideBarSteps,
     setStreetName,
     setWelcomeScreenView,
-    setZipCode, setDefaultVisitCenterOption,
+    setZipCode,
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {makeStyles} from "@material-ui/core/styles";
 import {
     EAncillaryType,
     EServiceType,
@@ -29,10 +29,9 @@ import {
     TAncillaryPriceByZip
 } from "../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
-import {styled, Theme} from "@material-ui/core";
 import AncillaryPriceModal from "./AncillaryPriceModal/AncillaryPriceModal";
 import UnavailableServiceModal from "./UnavailableServiceModal/UnavailableServiceModal";
-import {KeyboardArrowDown} from "@material-ui/icons";
+import {KeyboardArrowDown} from "@mui/icons-material";
 import {TActionProps, TArgCallback, TView} from "../../../../types/types";
 import {useHistory, useParams} from "react-router-dom";
 import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";
@@ -45,23 +44,7 @@ import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../../routes/constants";
-
-export const SelectWrapper = styled('div')(({theme}) => ({
-    width: "100%",
-    display: "grid",
-    gridTemplateColumns: "47% 47%",
-    justifyContent: 'space-between',
-    "& .label": {
-        fontWeight: 700,
-        margin: '0 0 4px 0',
-        textTransform: 'uppercase',
-        fontSize: 12,
-    },
-    [theme.breakpoints.down("sm")]: {
-        gridTemplateColumns: "100%",
-        gap: "20px",
-    }
-}));
+import {SelectWrapper, useAutocompleteStyles, useStyles} from "./styles";
 
 type TYourLocationProps = TActionProps & {
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
@@ -69,64 +52,7 @@ type TYourLocationProps = TActionProps & {
     onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
 }
 
-const useStyles = makeStyles(() => ({
-    select: {
-        '& > div': {
-            borderRadius: 0,
-            backgroundColor: '#F7F8FB',
-            padding: 2,
-            border: "1px solid #DADADA",
-            '& > div > div': {
-                fontSize: '1rem',
-                color: '#212121',
-                backgroundColor: 'transparent',
-            },
-        },
-    },
-    emptySelect: {
-        '& > div': {
-            borderRadius: 0,
-            backgroundColor: '#F7F8FB',
-            padding: 2,
-            border: "1px solid #DADADA",
-            '& > div > div': {
-                fontSize: '1rem',
-            },
-        }
-    },
-    errorSelect: {
-        '& > div': {
-            borderRadius: 0,
-            backgroundColor: '#F7F8FB',
-            padding: 2,
-            border: "1px solid red",
-            '& > div > div': {
-                fontSize: '1rem',
-                color: '#ff00006b',
-                opacity: 1
-            }
-        },
-    }
-}))
-
-export interface TStyleProps {
-    error: boolean;
-}
-
-const useAutocompleteStyles = makeStyles<Theme, TStyleProps>(() => ({
-    root: {
-        "& input::placeholder": {
-            color: props => props.error ? "red" : 'black'
-        },
-    },
-    popupIndicator: {
-        marginRight: 8
-    },
-}))
-
-const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToShowServiceSelection, onGoToFirstScreen, onUpdateAppointment}) => {
-    const [zip, setZip] = useState<string>("");
-    const [isFormChecked, setFormChecked] = useState<boolean>(false);
+const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYourLocationProps>>> = ({onBack, onNext, setNeedToShowServiceSelection, onGoToFirstScreen, onUpdateAppointment}) => {
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {
         zipCode: zipCodeValue,
@@ -144,16 +70,20 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {isAdvisorAvailable, isAppointmentTimingAvailable, config} = useSelector((state: RootState) => state.bookingFlowConfig);
+
+    const [zip, setZip] = useState<string>("");
+    const [isFormChecked, setFormChecked] = useState<boolean>(false);
+
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
-    const styleProps:TStyleProps = {error: isFormChecked && !zip};
-    const autocompleteClasses = useAutocompleteStyles(styleProps);
+    const { classes  } = useStyles();
+    const error = isFormChecked && !zip;
+    const { classes: autocompleteClasses } = useAutocompleteStyles({"error": error});
     const {t} = useTranslation();
     const currentUser = useCurrentUser();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
@@ -174,8 +104,10 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
         [serviceOptionChangedFromSlotPage, serviceTypeOption]);
 
     useEffect(() => {
-        setZip(zipCodeValue ?? "")
-    }, [zipCodeValue])
+         if (!zip && zipCodeValue) {
+             setZip(zipCodeValue)
+         }
+    }, [zipCodeValue, zip])
 
     useEffect(() => {
         if (customerLoadedData?.address && !address) {
@@ -434,6 +366,8 @@ const YourLocation: React.FC<TYourLocationProps> = ({onBack, onNext, setNeedToSh
 
                 <Autocomplete
                     options={filteredZipCodes}
+                    freeSolo
+                    isOptionEqualToValue={(o, v) => o === v}
                     onChange={handleChangeZip}
                     fullWidth
                     classes={autocompleteClasses}

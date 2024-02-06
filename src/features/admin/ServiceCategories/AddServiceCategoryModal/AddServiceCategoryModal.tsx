@@ -7,10 +7,10 @@ import {
     TNewCategory,
     TUpdateCategoryData
 } from "../../../../store/reducers/categories/types";
-import {Button, Divider, FormControlLabel, Radio, RadioGroup, Switch} from "@material-ui/core";
+import {Button, Divider, FormControlLabel, Radio, RadioGroup, Switch} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {SearchInput} from "../../../../components/formControls/SearchInput/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
 import {loadAllAssignedServiceRequests, setAssignedFilter,} from "../../../../store/reducers/serviceRequests/actions";
@@ -36,7 +36,7 @@ type TAddServiceCategoryProps = DialogProps & {
 
 const initialFileState = {file: null, dataUrl: undefined};
 
-export const AddServiceCategoryModal: React.FC<TAddServiceCategoryProps> = ({editingItem, tabValue, ...props}) => {
+export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddServiceCategoryProps>>> = ({editingItem, tabValue, ...props}) => {
     const {allAssignedList, assignedFilter} = useSelector((state: RootState) => state.serviceRequests);
     const {categories, page, filter} = useSelector((state: RootState) => state.categories);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -57,7 +57,7 @@ export const AddServiceCategoryModal: React.FC<TAddServiceCategoryProps> = ({edi
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
         || categoryType?.value === EServiceCategoryType.LinkToPage2
@@ -285,7 +285,7 @@ export const AddServiceCategoryModal: React.FC<TAddServiceCategoryProps> = ({edi
                     </div>
                     <Autocomplete
                         options={getPageOptions(selectedServiceType)}
-                        getOptionSelected={(option) => option.value === definedPage?.value}
+                        isOptionEqualToValue={(option) => option.value === definedPage?.value}
                         getOptionLabel={option => option.name}
                         value={definedPage}
                         onChange={onDefinedPageChange}
@@ -301,7 +301,7 @@ export const AddServiceCategoryModal: React.FC<TAddServiceCategoryProps> = ({edi
                     </div>
                     <Autocomplete
                         options={getCategoryOptions()}
-                        getOptionSelected={(option) => option.value === categoryType?.value}
+                        isOptionEqualToValue={(option) => option.value === categoryType?.value}
                         getOptionLabel={getOptionLabel}
                         value={categoryType}
                         onChange={onCategoryTypeChange}
@@ -315,6 +315,7 @@ export const AddServiceCategoryModal: React.FC<TAddServiceCategoryProps> = ({edi
                         disableClearable
                         options={categories.map((el, index) => `${index + 1}`).concat(`${categories.length + 1}`)}
                         value={orderIndex}
+                        isOptionEqualToValue={(o, v) => o === v}
                         onChange={onOrderIndexChange}
                         renderInput={autocompleteRender({
                             label: 'Order Index for Booking Flow',

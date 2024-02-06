@@ -6,8 +6,8 @@ import {
     MenuItem,
     IconButton,
     Button
-} from "@material-ui/core";
-import {MoreHoriz} from "@material-ui/icons";
+} from "@mui/material";
+import {MoreHoriz} from "@mui/icons-material";
 import AddDistanceRangeModal from "./AddDistanceRangeModal/AddDistanceRangeModal";
 import {IDistancePriceSettings, TDistanceRange} from "../../../store/reducers/serviceValet/types";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
@@ -28,7 +28,7 @@ type TByDistanceProps = {
     isLoading: boolean;
 }
 
-const AncillaryPriceByDistance: React.FC<TByDistanceProps> = ({ data, onItemDelete, onItemSave, onAddRange, isLoading }) => {
+const AncillaryPriceByDistance: React.FC<React.PropsWithChildren<React.PropsWithChildren<TByDistanceProps>>> = ({ data, onItemDelete, onItemSave, onAddRange, isLoading }) => {
     const [distanceData, setDistanceData] = useState<IDistancePriceSettings[]>([]);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const [editedItem, setEditedItem] = useState<IDistancePriceSettings|null>(null);

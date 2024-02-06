@@ -28,8 +28,8 @@ import {
     setSessionId,
     setWaitListSettings
 } from "./actions";
-import moment from "moment";
 import {setPackage} from "../appointmentFrameReducer/actions";
+import dayjs from "dayjs";
 
 const blankPersonalInfo: IPersonalInformation = {
     fullName: "",
@@ -115,7 +115,7 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getAppointmentSlots, (state, {payload}) => {
         let appointmentSlots = payload.map(sl => {
             const date = `${String(sl.date).split("T")[0]}T${sl.time}Z`;
-            return {...sl, id: `${sl.date}|${sl.time}`, date: moment.utc(date)}
+            return {...sl, id: `${sl.date}|${sl.time}`, date: dayjs.utc(date)}
         });
 
         return {...state, appointmentSlots};

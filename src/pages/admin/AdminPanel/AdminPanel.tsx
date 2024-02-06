@@ -3,7 +3,7 @@ import {SideBar} from "../../../features/admin/SideBar/SideBar";
 import {Redirect, Switch} from "react-router-dom";
 import {AdminRoutes} from "../../../routes/AdminRoutes/AdminRoutes";
 import {NavBar} from "../../../features/admin/NavBar/NavBar";
-import {Toolbar} from "@material-ui/core";
+import {Toolbar} from "@mui/material";
 import {PrivateRoute} from "../../../routes/PrivateRoute/PrivateRoute";
 import {useDispatch} from "react-redux";
 import {getCurrentUser} from "../../../store/reducers/users/actions";
@@ -22,7 +22,7 @@ export const AdminPanel = () => {
     const {isOpened, onOpen, onClose} = useSideBar();
     const dispatch = useDispatch();
     const navBarRef = useRef<HTMLDivElement>(null);
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         function updateHeight() {

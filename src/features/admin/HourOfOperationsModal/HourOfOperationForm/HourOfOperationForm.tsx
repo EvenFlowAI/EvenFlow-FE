@@ -1,28 +1,36 @@
 import {TViewMode} from "../../../../components/modals/BaseModal/types";
 import {THOOForm} from "../types";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import React from "react";
-import {Button, Grid, Switch, useMediaQuery, useTheme} from "@material-ui/core";
-import moment from "moment/moment";
+import {Button, Grid, Switch, useMediaQuery, useTheme} from "@mui/material";
 import {blankRow} from "../constants";
 import {useStyles} from "./styles";
-import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
+import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
+import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
 
 type THOOFormProps = TViewMode & {
     form: THOOForm[];
     onApply: () => void;
-    onChange: (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => void;
+    onChange: (day: number, t: "from" | "to") => (date: TParsableDate) => void;
     onCheck: (day: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
     formIsChecked: boolean;
+    isLoading: boolean;
 }
 
-export const HourOfOperationForm: React.FC<THOOFormProps> = ({form, onApply, onChange, onCheck, viewMode, formIsChecked}) => {
+export const HourOfOperationForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<THOOFormProps>>> = ({
+                                                                                                                   form,
+                                                                                                                   onApply,
+                                                                                                                   onChange,
+                                                                                                                   onCheck,
+                                                                                                                   viewMode,
+                                                                                                                   formIsChecked,
+                                                                                                                   isLoading}) => {
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
-    const classes = useStyles();
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
+    const { classes  } = useStyles();
 
     return <>
-        {moment.weekdays().map((day, idx) => {
+        {dayjs.weekdays().map((day, idx) => {
             const data: THOOForm = form.filter(f => f.dayOfWeek === idx)[0] || {...blankRow, dayOfWeek: idx};
 
             return <Grid container spacing={1} alignItems="flex-end" key={day} className={classes.row}>
@@ -30,32 +38,37 @@ export const HourOfOperationForm: React.FC<THOOFormProps> = ({form, onApply, onC
                     <Switch onChange={onCheck(idx)} disabled={viewMode} checked={data.checked} color="primary"/>
                 </Grid>
                 <Grid item xs={5} sm={4} md={3}>
-                    <TimePicker
-                        disabled={!data.checked || viewMode}
-                        placeholder={!data.checked ? "Closed" : ""}
+                    <ClockTimePicker
+                        InputProps={{
+                            placeholder: !data.checked ? "Closed" : "",
+                            error: !data.from && data.checked && formIsChecked,
+                            disabled: !data.checked || viewMode || isLoading,
+                            id: `from-${day}`
+                        }}
                         fullWidth
                         value={data.from}
-                        error={!data.from && data.checked && formIsChecked}
                         onChange={onChange(idx, "from")}
                         label={day}
-                        id={`from-${day}`}
                     />
                 </Grid>
                 <Grid item xs={2} sm={1}>
                     <span className={classes.toWrapper}>to</span>
                 </Grid>
                 <Grid item xs={5} sm={4} md={3}>
-                    <TimePicker
+                    <ClockTimePicker
                         fullWidth
                         value={data.to}
-                        disabled={!data.checked || viewMode}
-                        error={!data.to && data.checked && formIsChecked}
+                        InputProps={{
+                            placeholder: !data.checked ? "Closed" : "",
+                            disabled: !data.checked || viewMode || isLoading,
+                            error: !data.to && data.checked && formIsChecked,
+                            id: `to-${day}`
+                        }}
                         onChange={onChange(idx, "to")}
-                        id={`to-${day}`}
                     />
                 </Grid>
                 <Grid item hidden={isXS} xs={4} sm={3}>
-                    {(!idx && !viewMode) ? <Button onClick={onApply}>
+                    {(!idx && !viewMode) ? <Button onClick={onApply} color="info">
                         Apply to all
                     </Button> : null}
                 </Grid>

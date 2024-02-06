@@ -1,10 +1,10 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {Table} from "../../../../components/tables/Table/Table";
 import {IServiceCenterExtended, IServiceCenterForm} from "../../../../store/reducers/serviceCenters/types";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {RootState} from "../../../../store/rootReducer";
 import {changePageData, loadAll, removeSC, setSCOrder} from "../../../../store/reducers/serviceCenters/actions";
-import {MoreHoriz, Visibility} from "@material-ui/icons";
+import {MoreHoriz, Visibility} from "@mui/icons-material";
 import {TableAvatar} from "../../../../components/wrappers/TableAvatar/TableAvatar";
 import {IOrder, TableRowDataType, TCallback} from "../../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -36,14 +36,14 @@ type TProps = {
     onOpen: TCallback;
 }
 
-const ServiceCentersTable: React.FC<TProps> = ({setEditedItem, editedItem, onOpen}) => {
-    const [data, loading, count, order, search] = useSelector((state: RootState) => [
-        state.serviceCenters.serviceCenters,
-        state.serviceCenters.loading,
-        state.serviceCenters.paging.numberOfRecords,
-        state.serviceCenters.order,
-        state.serviceCenters.searchTerm
-    ]);
+const ServiceCentersTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({setEditedItem, editedItem, onOpen}) => {
+    const {
+        serviceCenters,
+        loading,
+        paging: {numberOfRecords},
+        order,
+        searchTerm
+    } = useSelector(({serviceCenters}: RootState) => serviceCenters);
 
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement & EventTarget | null>(null);
     const currentUser = useCurrentUser();
@@ -61,7 +61,7 @@ const ServiceCentersTable: React.FC<TProps> = ({setEditedItem, editedItem, onOpe
 
     useEffect(() => {
         dispatch(loadAll())
-    }, [dispatch, order, search]);
+    }, [dispatch, order, searchTerm]);
 
     const handleView = (el: IServiceCenterExtended) => () => {
         setEditedItem(el);
@@ -114,7 +114,7 @@ const ServiceCentersTable: React.FC<TProps> = ({setEditedItem, editedItem, onOpe
     return (
         <>
             <Table<IServiceCenterExtended>
-                data={data}
+                data={serviceCenters}
                 order={order.orderBy}
                 onSort={handleSort}
                 isAscending={order.isAscending}
@@ -123,7 +123,7 @@ const ServiceCentersTable: React.FC<TProps> = ({setEditedItem, editedItem, onOpe
                 rowData={rowData}
                 onChangePage={changePage}
                 onChangeRowsPerPage={changeRowsPerPage}
-                count={count}
+                count={numberOfRecords}
                 page={pageIndex}
                 rowsPerPage={pageSize}
                 startActions={startActions}
