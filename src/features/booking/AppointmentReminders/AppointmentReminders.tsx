@@ -33,7 +33,7 @@ export const AppointmentReminders: React.FC<{isEmailRequired: boolean}> = ({isEm
 
     useEffect(() => {
         if (customer?.email) dispatch(setReminders(Array.from(new Set([...reminders, EReminderType.Email]))))
-    }, [customer])
+    }, [customer?.email])
 
     const handleChange = (t: EReminderType) => () => {
         if (reminders.includes(t)) {
