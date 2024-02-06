@@ -1,18 +1,16 @@
 import React, {useEffect, useMemo} from 'react';
-import {AppointmentConfirmationTitle} from '../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle';
-import {Checkbox, FormControlLabel} from "@material-ui/core";
+import {Checkbox} from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {setReminders} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {EReminderType} from "../../../store/reducers/appointment/types";
 import {useTranslation} from "react-i18next";
-import {FlexGroup} from "./styles";
+import {StyledLabel} from "./styles";
+import {ReactComponent as CheckboxIcon} from '../../../assets/img/checkbox_outlined.svg'
+import {ReactComponent as CheckboxEmptyIcon} from '../../../assets/img/checkbox_empty1.svg'
+import {Info} from "../AppointmentFlow/AppointmentConfirmation/styles";
 
-type TRemindersProps = {
-    isEmailRequired: boolean
-}
-
-export const AppointmentReminders: React.FC<TRemindersProps> = ({isEmailRequired}) => {
+export const AppointmentReminders: React.FC<{isEmailRequired: boolean}> = ({isEmailRequired}) => {
     const {reminders, customer}= useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile}= useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
@@ -22,6 +20,11 @@ export const AppointmentReminders: React.FC<TRemindersProps> = ({isEmailRequired
         return typeof reminder !== "undefined"
     }, [reminders])
 
+    const textChecked = useMemo(() => scProfile?.isSendReminders && reminders.includes(EReminderType.Sms),
+        [scProfile, reminders])
+    const emailChecked = useMemo(() => scProfile?.isSendReminders && reminders.includes(EReminderType.Email),
+        [scProfile, reminders])
+
     useEffect(() => {
         if (!isEmailRequired && emailReminder && !customer?.email) {
             dispatch(setReminders(reminders.filter(el => el.toString() !== EReminderType.Email.toString())));
@@ -30,7 +33,7 @@ export const AppointmentReminders: React.FC<TRemindersProps> = ({isEmailRequired
 
     useEffect(() => {
         if (customer?.email) dispatch(setReminders(Array.from(new Set([...reminders, EReminderType.Email]))))
-    }, [customer])
+    }, [customer?.email])
 
     const handleChange = (t: EReminderType) => () => {
         if (reminders.includes(t)) {
@@ -42,25 +45,28 @@ export const AppointmentReminders: React.FC<TRemindersProps> = ({isEmailRequired
 
     return (
         <div>
-            <AppointmentConfirmationTitle>{t("Reminders")}</AppointmentConfirmationTitle>
-            <FlexGroup>
-                <FormControlLabel
-                    label={t("Text")}
-                    disabled={!scProfile?.isSendReminders}
-                    control={<Checkbox
-                        checked={scProfile?.isSendReminders && reminders.includes(EReminderType.Sms)}
-                        onChange={handleChange(EReminderType.Sms)}
-                        color="primary" />}
-                />
-                <FormControlLabel
-                    label={t("E-mail")}
-                    control={<Checkbox
-                        disabled={!scProfile?.isSendReminders || (!isEmailRequired && !customer?.email)}
-                        checked={scProfile?.isSendReminders && reminders.includes(EReminderType.Email)}
-                        onChange={handleChange(EReminderType.Email)}
-                        color="primary" />}
-                />
-            </FlexGroup>
+            <StyledLabel
+                label={t("Text consent")}
+                disabled={!scProfile?.isSendReminders}
+                control={<Checkbox
+                    icon={<CheckboxEmptyIcon/>}
+                    checkedIcon={<CheckboxIcon/>}
+                    checked={textChecked}
+                    onChange={handleChange(EReminderType.Sms)}
+                    color="primary" />}
+            />
+            <Info>{t("By checking the box, you agree to receive")} <strong>{t("text messages")}</strong> {t("regarding your upcoming service appointment from", {serviceCenterName: scProfile?.name ?? ''})}</Info>
+            <StyledLabel
+                label={t("Email consent")}
+                control={<Checkbox
+                    disabled={!scProfile?.isSendReminders || (!isEmailRequired && !customer?.email)}
+                    checked={emailChecked}
+                    icon={<CheckboxEmptyIcon/>}
+                    checkedIcon={<CheckboxIcon/>}
+                    onChange={handleChange(EReminderType.Email)}
+                    color="primary" />}
+            />
+            <Info>{t("By checking the box, you agree to receive")} <strong>{t("emails")}</strong> {t("regarding your upcoming service appointment from", {serviceCenterName: scProfile?.name ?? ''})}</Info>
         </div>
     );
 };
