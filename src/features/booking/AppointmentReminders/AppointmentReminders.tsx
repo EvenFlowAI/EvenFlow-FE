@@ -46,7 +46,7 @@ export const AppointmentReminders: React.FC<{isEmailRequired: boolean}> = ({isEm
     return (
         <div>
             <StyledLabel
-                label={t("Text confirmations & Reminders")}
+                label={t("Text consent")}
                 disabled={!scProfile?.isSendReminders}
                 control={<Checkbox
                     icon={<CheckboxEmptyIcon/>}
@@ -55,10 +55,9 @@ export const AppointmentReminders: React.FC<{isEmailRequired: boolean}> = ({isEm
                     onChange={handleChange(EReminderType.Sms)}
                     color="primary" />}
             />
-            <Info>{t("By checking the box, you agree to receive the text messages from Service Center and also agree to our Privacy Policy & terms of Service.",
-                {serviceCenterName: scProfile?.name ?? ''})}.</Info>
+            <Info>{t("By checking the box, you agree to receive")} <strong>{t("text messages")}</strong> {t("regarding your upcoming service appointment from", {serviceCenterName: scProfile?.name ?? ''})}</Info>
             <StyledLabel
-                label={t("E-mail reminders")}
+                label={t("Email consent")}
                 control={<Checkbox
                     disabled={!scProfile?.isSendReminders || (!isEmailRequired && !customer?.email)}
                     checked={emailChecked}
@@ -67,7 +66,7 @@ export const AppointmentReminders: React.FC<{isEmailRequired: boolean}> = ({isEm
                     onChange={handleChange(EReminderType.Email)}
                     color="primary" />}
             />
-            <Info>{t("By using this service, you accept the terms of our Visitor Agreement")}.</Info>
+            <Info>{t("By checking the box, you agree to receive")} <strong>{t("emails")}</strong> {t("regarding your upcoming service appointment from", {serviceCenterName: scProfile?.name ?? ''})}</Info>
         </div>
     );
 };
