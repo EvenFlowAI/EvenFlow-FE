@@ -311,7 +311,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                     style={{width: selectedColumns.length > 10 ? selectedColumns.length * 150 : 1550}}>
                     <TableHead>
                         <TableRow>
-                            <TableCell className={classes.stickyTHeadCell}/>
+                            <TableCell className={classes.stickyTHeadCell} key="emptyCell"/>
                             {selectedColumns.map(({name, order}, index) => {
                                 return <TableCell
                                     key={name}
@@ -364,7 +364,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                             }}/>
                             {selectedColumns
                                 .slice(0, selectedColumns.length - 2)
-                                .map(() => <TableCell className={classes.bodyCell} width={150} style={{borderBottom: 0}}/>)}
+                                .map((_, index) => <TableCell className={classes.bodyCell} width={150} style={{borderBottom: 0}} key={index}/>)}
                         </TableRow>
                         {data.slice(currentFirstItemIndex, currentLastItemIndex).map((customer, index) =>
                             (<TableRow key={customer.vin + index}>
