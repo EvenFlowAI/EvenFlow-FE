@@ -113,7 +113,8 @@ export class Api {
         Employees: {
             Create: {route: "/employees", method: "post"},
             Update: {route: "/employees/{id}", method: "put"},
-            GetAll: {route: "/employees/by-query", method: "post"}
+            GetAll: {route: "/employees/by-query", method: "post"},
+            GetBaseSummary: {route: "/employee-schedules/base-summary", method: "post"}
         },
         EmployeeSchedule: {
             Create: {route: "/employee-schedules", method: "post"},

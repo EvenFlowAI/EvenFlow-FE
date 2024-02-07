@@ -1,7 +1,7 @@
 import {ActionCreator} from "redux";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {AppThunk, IOrder, IPageRequest, PaginatedAPIResponse, Roles} from "../../../types/types";
-import {IEmployee, IEmployeeFilters, IEmployeeForm, TDmsAdvisor, TEmployeeActions} from "./types";
+import {IBaseSummary, IEmployee, IEmployeeFilters, IEmployeeForm, TDmsAdvisor, TEmployeeActions} from "./types";
 import {saveEmployeeAvatar} from "../users/actions";
 import {createAction} from "@reduxjs/toolkit";
 import {IAdvisorShort} from "../users/types";
@@ -195,6 +195,22 @@ export const loadUsersShort = (serviceCenterId: number): AppThunk => dispatch =>
         })
         .catch(err => {
             console.log('load users short error', err)
+        })
+        .finally(() => dispatch(loading(false)))
+}
+
+export const getBaseSummary = createAction<IBaseSummary>("Employees/GetSummary");
+export const loadBaseSummary = (serviceCenterId: number, orderBy: string, isAscending = true): AppThunk => dispatch => {
+    dispatch(loading(true))
+    Api.call<IBaseSummary>(Api.endpoints.Employees.GetBaseSummary, {data: {serviceCenterId, isAscending, orderBy}})
+        .then(result => {
+            if (result) {
+                console.log(result)
+               // dispatch(getBaseSummary(result.data))
+            }
+        })
+        .catch(err => {
+            console.log('load base summary error', err)
         })
         .finally(() => dispatch(loading(false)))
 }

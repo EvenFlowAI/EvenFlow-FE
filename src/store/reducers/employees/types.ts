@@ -3,6 +3,7 @@ import {IServiceCenter} from "../serviceCenters/types";
 import {IAdvisorShort} from "../users/types";
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
+import {EDayOfWeek} from "../offers/types";
 
 export interface IEmployeeInfo {
     hourlyRate: number;
@@ -67,6 +68,7 @@ export type TChangePaging = TChangePagingGeneric<"Employees/ChangePaging">;
 export type TChangePageData = TChangePageDataGeneric<"Employees/ChangePageData">;
 export type TLoadingDMSAdvisors = { type: "SCEmployees/LoadingDMSAdvisors", payload: boolean };
 export type TGetUsersShort = {type: "Employees/GetUsersShort", payload: IAdvisorShort[]};
+export type TGetBaseSummary = {type: "Employees/GetBaseSummary", payload: IBaseSummary};
 
 export type TEmployeeActions =
     | TGetDealershipEmployees
@@ -82,7 +84,8 @@ export type TEmployeeActions =
     | TChangeFilters
     | TGetAll
     | TLoadingDMSAdvisors
-    | TGetUsersShort;
+    | TGetUsersShort
+    | TGetBaseSummary;
 
 export type TDmsAdvisor = {
     id: string;
@@ -104,9 +107,27 @@ export type TEmployeesState = {
     pageData: IPageRequest;
     filters: IEmployeeFilters;
     usersShort: IAdvisorShort[];
+    baseSummary: IBaseSummary|null;
 }
 export type TSCState = {
     advisorsList: IAdvisorShort[];
     techniciansList: IAdvisorShort[];
     DmsAdvisors: TDmsAdvisor[];
+}
+
+export type TDayHours = {
+    day: EDayOfWeek;
+    value: number;
+}
+
+export interface IRoleHours {
+    role: string;
+    serviceBook: string;
+    serviceBookId: number;
+    dailyHours: TDayHours[];
+}
+
+export interface IBaseSummary {
+    roleHours: IRoleHours[];
+    totalHours: TDayHours[];
 }
