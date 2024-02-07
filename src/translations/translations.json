@@ -338,7 +338,15 @@
       "Pick Up Address": "Pick Up Address",
       "Waitlist only": "Waitlist only",
       "Expected completion time for your vehicle cannot be provided with Waitlist Only appointments": "Expected completion time for your vehicle cannot \u2028be provided with Waitlist Only appointments",
-      "Existing Customer": "Existing Customer"
+      "Existing Customer": "Existing Customer",
+      "By checking the box, you agree to receive": "By checking the box, you agree to receive",
+      "text messages":"text messages",
+      "emails":"emails",
+      "regarding your upcoming service appointment from": "regarding your upcoming service appointment from {{serviceCenterName}} and also agree to our Privacy Policy & terms of Service.",
+      "Text confirmations & Reminders": "Text confirmations & Reminders",
+      "E-mail reminders": "E-mail reminders",
+      "Email consent": "Email consent",
+      "Text consent": "Text consent"
     }
   },
   "es": {
