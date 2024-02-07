@@ -772,7 +772,6 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             : null,
         isWaitlist: Boolean(isWaitlist),
     };
-    console.log(getCategoriesForAppointment(categories.allCategories, appointmentFrame.categoriesIds))
 
     if (isAdmin) delete data.schedulerType;
 

@@ -78,6 +78,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
 
     const [errors, setErrors] = useState<string[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
     const currentUser = useCurrentUser();
     const {id} = useParams<{id: string}>();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
@@ -183,6 +184,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     }
 
     const onCancelChanges = () => {
+        setLoading(true)
         if (selectedVehicle) {
             const vehicle = {
                 ...selectedVehicle,
@@ -194,6 +196,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
             dispatch(clearAppointmentData())
             dispatch(setServiceOptionChanged(false));
             onUpdateAppointment(vehicle)
+            setTimeout(() => setLoading(false), 3000)
         }
     }
 
@@ -277,6 +280,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
             ? null
             :  <ActionButtons
                 loading={isAppointmentSaving}
+                nextDisabled={loading}
                 onBack={onCancelConfirmOpen}
                 onNext={handleCreateAppointment}
                 nextLabel="Confirm Changes"
