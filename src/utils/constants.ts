@@ -43,6 +43,11 @@ export const pricingRoot: TTitle = {
     title: "Pricing"
 }
 
+export const employeesRoot: TTitle = {
+    to: Routes.Employees.Base,
+    title: "Employees"
+}
+
 export const SCREENS = {
     carSelection: 'Car Selection',
     serviceNeeds: 'Service Needs',
