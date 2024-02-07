@@ -47,6 +47,8 @@ import {HtmlTooltip, IconsBlock, useStyles} from "./styles";
 import {useModal} from "../../../../../hooks/useModal/useModal";
 import {usePagination} from "../../../../../hooks/usePaginations/usePaginations";
 import {useException} from "../../../../../hooks/useException/useException";
+import {useConfirm} from "../../../../../hooks/useConfirm/useConfirm";
+import {useTranslation} from "react-i18next";
 
 type TCustomerSearchTableProps = {
     onClose: TCallback;
@@ -75,6 +77,9 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory();
+    const {t} = useTranslation();
+    const {askConfirm} = useConfirm();
+
     const [currentFirstItemIndex, currentLastItemIndex] = useMemo(() => {
         return [pageData.pageIndex * pageData.pageSize, (pageData.pageIndex + 1) * pageData.pageSize]
     }, [pageData]);
@@ -230,16 +235,35 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
         setEditingElement(null);
         setEdit(false);
     }
-
-    const onSaveInfo = async () => {
-        if (editingElement) {
-            dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err)));
-        }
+    const checkPhonesChanged = (): boolean => {
+        const currentCustomer = customers.find(customer => {
+            return editingElement?.vehicleId === customer.vehicleId && editingElement?.customerId === customer.customerId
+        });
+        if (!currentCustomer) return false;
+        return currentCustomer?.otherPhone !== editingElement?.otherPhone
+            || currentCustomer?.workPhone !== editingElement?.workPhone
+            || currentCustomer?.homePhone !== editingElement?.homePhone
+            || currentCustomer?.cellPhone !== editingElement?.cellPhone
     }
 
     const onCancelEditing = () => {
         setData(customers.slice().sort(sortCustomers))
         setEdit(false)
+    }
+
+    const onSaveInfo = async () => {
+        if (editingElement) {
+            if (checkPhonesChanged()) {
+                askConfirm({
+                    isRemove: false,
+                    title: t("Please confirm the changes you made to the Customer Profile"),
+                    onConfirm: () => dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err))),
+                    onCancel: onCancelEditing
+                })
+            } else {
+                dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err)));
+            }
+        }
     }
 
     const handleChangePage = async (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
