@@ -200,8 +200,8 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsW
                     : t("Date and time"),
                 content: isWaitList
                     ? [
-                        <div>{getDate()}</div>,
-                        <div
+                        <div key={getDate()}>{getDate()}</div>,
+                        <div key="textWaitList"
                             style={{
                                 color: waitListSettings?.textHex
                                     ? `#${waitListSettings?.textHex}`
