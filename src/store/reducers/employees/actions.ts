@@ -199,14 +199,13 @@ export const loadUsersShort = (serviceCenterId: number): AppThunk => dispatch =>
         .finally(() => dispatch(loading(false)))
 }
 
-export const getBaseSummary = createAction<IBaseSummary>("Employees/GetSummary");
+export const getBaseSummary = createAction<IBaseSummary>("Employees/GetBaseSummary");
 export const loadBaseSummary = (serviceCenterId: number, orderBy: string, isAscending = true): AppThunk => dispatch => {
     dispatch(loading(true))
     Api.call<IBaseSummary>(Api.endpoints.Employees.GetBaseSummary, {data: {serviceCenterId, isAscending, orderBy}})
         .then(result => {
             if (result) {
-                console.log(result)
-               // dispatch(getBaseSummary(result.data))
+               dispatch(getBaseSummary(result.data))
             }
         })
         .catch(err => {
