@@ -17,11 +17,13 @@ import minMax from "dayjs/plugin/minMax";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import localeData from "dayjs/plugin/localeData";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(minMax)
 dayjs.extend(isSameOrBefore)
+dayjs.extend(advancedFormat)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(localeData)
 

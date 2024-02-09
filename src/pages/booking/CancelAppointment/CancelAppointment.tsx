@@ -118,7 +118,7 @@ export const CancelAppointment = () => {
                 return <NotFoundError />
             case "new":
                 return <div>
-                    <p>{t("Please confirm you want to cancel your appointment for")} {getDate().format("dddd, MMM D, h:mm a")}?</p>
+                    <p>{t("Please confirm you want to cancel your appointment for")} {getDate().format("dddd, MMM Do, h:mm a")}?</p>
                     <LoadingButton
                         onClick={handleCancel}
                         loading={saving}
