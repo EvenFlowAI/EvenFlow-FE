@@ -287,7 +287,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                         format="MMMM, DD"
                         maxDate={form.durationTo || undefined}
                         InputProps={{
-                            endAdornment: <DateRange color={"disabled"} cursor="pointer"/>,
+                            endAdornment: <DateRange htmlColor="rgba(0, 0, 0, 0.54)" cursor="pointer"/>,
                             error: formIsChecked && !form.durationFrom
                         }}
                     />
@@ -303,7 +303,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                         disablePast
                         minDate={form.durationFrom || undefined}
                         InputProps={{
-                            endAdornment: <DateRange color={"disabled"} cursor="pointer"/>,
+                            endAdornment: <DateRange htmlColor="rgba(0, 0, 0, 0.54)" cursor="pointer"/>,
                             error: formIsChecked && !form.durationTo
                         }}
                     />

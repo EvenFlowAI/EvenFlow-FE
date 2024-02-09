@@ -383,7 +383,7 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                             format="MMM D, YYYY"
                             onChange={handleDateChange('start')}
                             InputProps={{
-                                endAdornment: <DateRange color={"disabled"} cursor="pointer"/>,
+                                endAdornment: <DateRange htmlColor="rgba(0, 0, 0, 0.54)" cursor="pointer"/>,
                                 error: !duration?.start && formIsChecked,
                                 style: {marginBottom: 20}
                             }}
@@ -393,7 +393,7 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                             format="MMM D, YYYY"
                             onChange={handleDateChange('end')}
                             InputProps={{
-                                endAdornment: <DateRange color={"disabled"} cursor="pointer"/>,
+                                endAdornment: <DateRange htmlColor="rgba(0, 0, 0, 0.54)" cursor="pointer"/>,
                                 error: !duration?.end && formIsChecked,
                             }}
                         />

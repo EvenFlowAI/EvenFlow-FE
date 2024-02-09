@@ -5,9 +5,9 @@ import theme from '../../theme/theme'
 
 export const Tabs = withStyles(T, {
     root: {
-        width: `calc(100% + calc(${theme.spacing(4)} * 2))`,
-        marginLeft: -theme.spacing(4),
-        marginRight: -theme.spacing(4),
+        width: `calc(100% + 64px)`,
+        marginLeft: `-${theme.spacing(4)}`,
+        marginRight: `-${theme.spacing(4)}`,
         paddingLeft: theme.spacing(4),
         paddingRight: theme.spacing(4),
         borderBottom: `1px solid ${theme.palette.divider}`,
@@ -24,9 +24,9 @@ export const Tabs = withStyles(T, {
 
 export const TabList = withStyles(TL, {
     root: {
-        width: `calc(100% + calc(${theme.spacing(4)} * 2))`,
-        marginLeft: -theme.spacing(4),
-        marginRight: -theme.spacing(4),
+        width: `calc(100% + 64px)`,
+        marginLeft: `-${theme.spacing(4)}`,
+        marginRight: `-${theme.spacing(4)}`,
         paddingLeft: theme.spacing(4),
         paddingRight: theme.spacing(4),
         borderBottom: `1px solid ${theme.palette.divider}`,

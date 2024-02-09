@@ -41,24 +41,46 @@ const ClockTimePicker: React.FC<TProps> = ({
             slotProps={{
                 textField: {
                     fullWidth,
+                    variant: "standard",
                     InputProps: {
                         ...InputProps,
                         placeholder: InputProps?.placeholder ?? placeholder,
                         error: InputProps?.error ?? error,
                         disabled: InputProps?.disabled ?? disabled,
                         id: InputProps?.id ?? id,
-                        name: InputProps?.name ?? name
+                        name: InputProps?.name ?? name,
                     }
                 },
                 layout: {
                     sx: {
                         [`.${pickersLayoutClasses.toolbar}`]: {
                             backgroundColor: '#7898FF',
-                            color: "#FFFFFF"
+                            color: "#FFFFFF",
+                            justifyContent: 'center',
                         },
                         [`.${pickersLayoutClasses.toolbar} > span`]: {
+                            color: "#FFFFFF8A",
+                            display: 'none',
+                        },
+                        [`.${pickersLayoutClasses.toolbar} `]: {
                             color: "#FFFFFF8A"
                         },
+                        '& .MuiPickersToolbarText-root': {
+                            color: "#FFFFFF8A",
+                        } ,
+                        "& .MuiTimePickerToolbar-hourMinuteLabel span": {
+                            fontSize: 60,
+                            fontWeight: 300,
+                        },
+                        '& .MuiPickersToolbarText-root.Mui-selected': {
+                            color: "#FFFFFF"
+                        } ,
+                        '& .MuiTimePickerToolbar-ampmLabel': {
+                            fontSize: 18
+                        },
+                        "& .MuiTimePickerToolbar-ampmSelection": {
+                            marginRight: 0
+                        }
                     },
                 },
             }}

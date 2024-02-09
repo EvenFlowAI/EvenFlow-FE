@@ -43,7 +43,7 @@ export const HourOfOperationForm: React.FC<React.PropsWithChildren<React.PropsWi
                             placeholder: !data.checked ? "Closed" : "",
                             error: !data.from && data.checked && formIsChecked,
                             disabled: !data.checked || viewMode || isLoading,
-                            id: `from-${day}`
+                            id: `from-${day}`,
                         }}
                         fullWidth
                         value={data.from}
