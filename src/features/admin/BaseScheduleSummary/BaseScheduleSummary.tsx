@@ -7,6 +7,8 @@ import {loadBaseSummary} from "../../../store/reducers/employees/actions";
 import {TOrder, TSortColumns} from "./types";
 import dayjs from "dayjs";
 
+const daysList = [1, 2, 3, 4, 5, 6, 7]
+
 const BaseScheduleSummary = () => {
     const [order, setOrder] = useState<TOrder>({orderBy: "Role", isAscending: true})
     const dispatch = useDispatch();
@@ -29,7 +31,7 @@ const BaseScheduleSummary = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                        <TableCell>
+                        <TableCell key="role">
                             <TableSortLabel
                                 direction={order.isAscending ? "desc" : "asc"}
                                 onClick={() => onSort("Role")}
@@ -38,7 +40,7 @@ const BaseScheduleSummary = () => {
                                 ROLE
                             </TableSortLabel>
                         </TableCell>
-                            <TableCell>
+                            <TableCell key="serviceBook">
                                 <TableSortLabel
                                     direction={order.isAscending ? "desc" : "asc"}
                                     onClick={() => onSort("ServiceBook")}
@@ -47,7 +49,9 @@ const BaseScheduleSummary = () => {
                                     SERVICE BOOK
                                 </TableSortLabel>
                             </TableCell>
-
+                            {daysList.map(item => <TableCell key={item}>
+                                {dayjs().set('day', item).format('ddd')}
+                            </TableCell>)}
                         </TableRow>
                     </TableHead>
                 </Table>
