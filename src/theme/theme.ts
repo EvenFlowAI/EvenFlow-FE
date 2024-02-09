@@ -108,6 +108,7 @@ theme.components = {
     MuiTab: {
         styleOverrides: {
             root: {
+                padding: '6px 12px',
                 '&.Mui-selected': {
                     color: '#000000'
                 }

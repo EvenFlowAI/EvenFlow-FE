@@ -135,8 +135,8 @@ export const AppointmentSlotsDesirability = () => {
                         {
                             ...i,
                             index: i.idx,
-                            start: dayjs(i.start).format('HH:mm:SS'),
-                            end: dayjs(i.end).format('HH:mm:SS')
+                            start: dayjs(i.start).format('HH:mm:ss'),
+                            end: dayjs(i.end).format('HH:mm:ss')
                         }
                         )),
                     form.timeSlotType, selectedSC.id, selectedPod?.id,

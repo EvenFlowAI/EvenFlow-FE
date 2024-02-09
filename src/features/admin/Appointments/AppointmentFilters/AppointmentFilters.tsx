@@ -93,7 +93,8 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
                         onOpen={handleOpen(true)}
                         onClose={handleOpen(false)}
                         open={isOpen}
-                        format="MMMM, DD"
+                        format="MMMM Do"
+                        fullWidth
                         label="Date"
                         InputProps={{
                             placeholder: "Select date",
@@ -104,7 +105,7 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
                                     ? (<IconButton onClick={(e) => handleClear(e)} size="large">
                                         <Clear />
                                     </IconButton>)
-                                    : <DateRange cursor="pointer" color="disabled"/>
+                                    : <DateRange cursor="pointer" htmlColor="rgba(0, 0, 0, 0.54)"/>
                         }}
                         value={selectedDate}
                         onAccept={handleDateChange}

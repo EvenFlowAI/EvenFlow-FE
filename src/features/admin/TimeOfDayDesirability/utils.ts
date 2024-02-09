@@ -60,8 +60,8 @@ export const generateSlots = (gap: ETimeSlotType,
                 id: idxMod === 1 ? mappedItems[idxToLook]?.id : undefined,
                 desirability: mappedItems[idxToLook]
                     ? items[idxToLook].desirability : EDesirabilityState.Neutral,
-                start: items[idx]?.start && !createNewSlots ? dayjs.utc(items[idx].start, 'HH:mm:SS') : dayjs.utc(st),
-                end: items[idx]?.end && !createNewSlots ? dayjs.utc(items[idx].end, 'HH:mm:SS') : dayjs.utc(nd)
+                start: items[idx]?.start && !createNewSlots ? dayjs.utc(items[idx].start, 'HH:mm:ss') : dayjs.utc(st),
+                end: items[idx]?.end && !createNewSlots ? dayjs.utc(items[idx].end, 'HH:mm:ss') : dayjs.utc(nd)
             });
             st = st.add(gapMinutes, "minutes");
             nd = nd.add(gapMinutes, "minutes");

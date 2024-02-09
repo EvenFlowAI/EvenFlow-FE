@@ -40,7 +40,7 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
     const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const [transportations, setTransportations] = useState<ITransportation[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const dispatch = useDispatch();
 
@@ -73,7 +73,7 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
 
     useEffect(() => {
         if (selectedVehicle) {
-            setLoading(true);
+            // setLoading(true);
             const maintenancePackageOption = selectedPackage
                 ? {id: selectedPackage?.id, priceType: packagePricingType}
                 : packageEMenuType !== null
@@ -104,6 +104,8 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
                 .finally(() => {
                     setLoading(false)
                 })
+        } else {
+            setTimeout(() => setLoading(false), 500)
         }
     }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls,
         packagePricingType, packageEMenuType, selectedPackage, categoriesIds, hashKey, date]);
