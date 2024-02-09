@@ -29,6 +29,7 @@ import {AppointmentScreenTitle} from "../../../../components/wrappers/Appointmen
 import {checkSelectedCar} from "./utils";
 import {useException} from "../../../../hooks/useException/useException";
 import {Routes} from "../../../../routes/constants";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 
 type TProps = {
     onBack: TCallback;
@@ -65,6 +66,9 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     const {t} = useTranslation();
     const {id} = useParams<{id: string}>();
     const history = useHistory();
+    const shouldHideScreen = useMemo(() => {
+       return customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)
+    }, [customerLoadedData])
 
     const vehiclesPerScreen = useMemo(() => {
         return isXs ? 1 : 2;
@@ -92,7 +96,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     }, [serviceType, valueService, isAdvisorAvailable, consultants])
 
     useEffect(() => {
-        if (customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)) {
+        if (shouldHideScreen) {
             if (needToShowServiceSelection) {
                 setNeedToShowServiceSelection(false);
                 handleServiceTypeSelection()
@@ -103,7 +107,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customerLoadedData, selectedVehicle, scProfile, needToShowServiceSelection]);
+    }, [shouldHideScreen, selectedVehicle, scProfile, needToShowServiceSelection]);
 
     const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - vehiclesPerScreen;
     const prevDisabled = () => idx <= 0;
@@ -196,45 +200,49 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
 
     return (
         <StepWrapper>
-            <AppointmentScreenTitle>{t("Which vehicle are you coming in for?")}</AppointmentScreenTitle>
-            <CarsWrapper>
-                {customerLoadedData?.vehicles.length ?
-                    <>
-                        <Arrow onClick={prev} disabled={prevDisabled()}>
-                            <ChevronLeft />
-                            <span className="text" style={{left: isSm ? -6 : -27}}>Previous Vehicle</span>
-                        </Arrow>
-                        {customerLoadedData.vehicles
-                            .slice(idx, idx + vehiclesPerScreen)
-                            .map((vehicle, index) =>
-                                <CarCard
-                                    hasOrders={vehicle.hasRepairOrders}
-                                    onNext={onNext}
-                                    onSelectCar={onSelectCar}
-                                    onAddNewAppointment={handleAddNewCarAppointment}
-                                    selected={isSelected(vehicle)}
-                                    clearData={clearData}
-                                    car={vehicle}
-                                    key={vehicle.dmsId || new Date().toISOString() + index}/>
-                            )}
-                        <Arrow onClick={next} disabled={nextDisabled()}>
-                            <ChevronRight />
-                            <span className="text" style={{left: isSm ? -4 : -13}}>Next Vehicle</span>
-                        </Arrow>
-                    </> : <p>{t("No vehicles present")}</p>
-                }
-            </CarsWrapper>
-            <Info>
-                {t("Click here to")} <span onClick={handleAddNewVehicle}>{t("add new vehicle")}</span>
-            </Info>
-            <ActionButtons
-                hideNext
-                onBack={onBack}
-                nextLabel={t("Next")}
-                onNext={onNext}
-                nextDisabled={!selectedVehicle
-                    || !checkSelectedCar(selectedVehicle, customerLoadedData?.vehicles)}
-                loading={loading} />
+            {loading || shouldHideScreen
+                ? <Loading/>
+                : <>
+                    <AppointmentScreenTitle>{t("Which vehicle are you coming in for?")}</AppointmentScreenTitle>
+                    <CarsWrapper>
+                        {customerLoadedData?.vehicles.length ?
+                            <>
+                                <Arrow onClick={prev} disabled={prevDisabled()}>
+                                    <ChevronLeft />
+                                    <span className="text" style={{left: isSm ? -6 : -27}}>Previous Vehicle</span>
+                                </Arrow>
+                                {customerLoadedData.vehicles
+                                    .slice(idx, idx + vehiclesPerScreen)
+                                    .map((vehicle, index) =>
+                                        <CarCard
+                                            hasOrders={vehicle.hasRepairOrders}
+                                            onNext={onNext}
+                                            onSelectCar={onSelectCar}
+                                            onAddNewAppointment={handleAddNewCarAppointment}
+                                            selected={isSelected(vehicle)}
+                                            clearData={clearData}
+                                            car={vehicle}
+                                            key={vehicle.dmsId || new Date().toISOString() + index}/>
+                                    )}
+                                <Arrow onClick={next} disabled={nextDisabled()}>
+                                    <ChevronRight />
+                                    <span className="text" style={{left: isSm ? -4 : -13}}>Next Vehicle</span>
+                                </Arrow>
+                            </> : <p>{t("No vehicles present")}</p>
+                        }
+                    </CarsWrapper>
+                    <Info>
+                        {t("Click here to")} <span onClick={handleAddNewVehicle}>{t("add new vehicle")}</span>
+                    </Info>
+                    <ActionButtons
+                        hideNext
+                        onBack={onBack}
+                        nextLabel={t("Next")}
+                        onNext={onNext}
+                        nextDisabled={!selectedVehicle
+                            || !checkSelectedCar(selectedVehicle, customerLoadedData?.vehicles)}
+                        loading={loading} />
+                </>}
         </StepWrapper>
     );
 };
