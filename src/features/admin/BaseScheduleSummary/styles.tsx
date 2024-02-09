@@ -1,7 +1,8 @@
 import {styled, TableCell, TableRow} from "@mui/material";
 
 export const StyledCell = styled(TableCell)({
-    borderBottom: "none"
+    borderBottom: "none",
+    fontSize: 16,
 })
 
 export const TableTitleWrapper = styled("div")({
