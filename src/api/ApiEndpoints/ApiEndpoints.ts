@@ -114,7 +114,6 @@ export class Api {
             Create: {route: "/employees", method: "post"},
             Update: {route: "/employees/{id}", method: "put"},
             GetAll: {route: "/employees/by-query", method: "post"},
-            GetBaseSummary: {route: "/employee-schedules/base-summary", method: "post"}
         },
         EmployeeSchedule: {
             Create: {route: "/employee-schedules", method: "post"},
@@ -123,6 +122,8 @@ export class Api {
             Remove: {route: "/employee-schedules/{id}", method: "delete"},
             GetAll: {route: "/employee-schedules/by-query", method: "post"},
             SetForWeek: {route: "/employee-schedules/batch-update", method: "put"},
+            GetBaseSummary: {route: "/employee-schedules/base-summary", method: "post"},
+            GetSummaryByEmployee: {route: "/employee-schedules/base-summary-by-employee", method: "post"}
         },
         GeographicZones: {
             GetZones: {route: "/geographic-zones/by-query", method: "post"},

@@ -69,6 +69,7 @@ export type TChangePageData = TChangePageDataGeneric<"Employees/ChangePageData">
 export type TLoadingDMSAdvisors = { type: "SCEmployees/LoadingDMSAdvisors", payload: boolean };
 export type TGetUsersShort = {type: "Employees/GetUsersShort", payload: IAdvisorShort[]};
 export type TGetBaseSummary = {type: "Employees/GetBaseSummary", payload: IBaseSummary};
+export type TGetBaseScheduleByEmployee = {type: "Employees/GetBaseScheduleByEmployee", payload: IEmployeeRoleHours[]};
 
 export type TEmployeeActions =
     | TGetDealershipEmployees
@@ -85,7 +86,8 @@ export type TEmployeeActions =
     | TGetAll
     | TLoadingDMSAdvisors
     | TGetUsersShort
-    | TGetBaseSummary;
+    | TGetBaseSummary
+    | TGetBaseScheduleByEmployee;
 
 export type TDmsAdvisor = {
     id: string;
@@ -108,6 +110,7 @@ export type TEmployeesState = {
     filters: IEmployeeFilters;
     usersShort: IAdvisorShort[];
     baseSummary: IBaseSummary|null;
+    employeeRoleHours: IEmployeeRoleHours[];
 }
 export type TSCState = {
     advisorsList: IAdvisorShort[];
@@ -130,4 +133,23 @@ export interface IRoleHours {
 export interface IBaseSummary {
     roleHours: IRoleHours[];
     totalHours: TDayHours[];
+}
+
+export interface IEmployeeRoleHours extends IRoleHours {
+    employeeId: string;
+    employeeName: string;
+}
+
+export interface IBaseScheduleByEmployee {
+    roleHours: IEmployeeRoleHours[];
+}
+
+export type TScheduleByEmployeeRequestData = {
+    serviceCenterId: number;
+    orderBy: string;
+    isAscending: boolean;
+    serviceBookId: number|null;
+    isServiceBookServiceCenter: boolean;
+    name?: string;
+    role?: string;
 }

@@ -1,7 +1,16 @@
 import {ActionCreator} from "redux";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {AppThunk, IOrder, IPageRequest, PaginatedAPIResponse, Roles} from "../../../types/types";
-import {IBaseSummary, IEmployee, IEmployeeFilters, IEmployeeForm, TDmsAdvisor, TEmployeeActions} from "./types";
+import {
+    IBaseScheduleByEmployee,
+    IBaseSummary,
+    IEmployee,
+    IEmployeeFilters,
+    IEmployeeForm,
+    IEmployeeRoleHours,
+    TDmsAdvisor,
+    TEmployeeActions, TScheduleByEmployeeRequestData
+} from "./types";
 import {saveEmployeeAvatar} from "../users/actions";
 import {createAction} from "@reduxjs/toolkit";
 import {IAdvisorShort} from "../users/types";
@@ -202,10 +211,25 @@ export const loadUsersShort = (serviceCenterId: number): AppThunk => dispatch =>
 export const getBaseSummary = createAction<IBaseSummary>("Employees/GetBaseSummary");
 export const loadBaseSummary = (serviceCenterId: number, orderBy: string, isAscending = true): AppThunk => dispatch => {
     dispatch(loading(true))
-    Api.call<IBaseSummary>(Api.endpoints.Employees.GetBaseSummary, {data: {serviceCenterId, isAscending, orderBy}})
+    Api.call<IBaseSummary>(Api.endpoints.EmployeeSchedule.GetBaseSummary, {data: {serviceCenterId, isAscending, orderBy}})
         .then(result => {
             if (result) {
                dispatch(getBaseSummary(result.data))
+            }
+        })
+        .catch(err => {
+            console.log('load base summary error', err)
+        })
+        .finally(() => dispatch(loading(false)))
+}
+
+export const getBaseSummaryByEmployee = createAction<IEmployeeRoleHours[]>("Employees/GetBaseScheduleByEmployee");
+export const loadBaseSummaryByEmployee = (data: TScheduleByEmployeeRequestData): AppThunk => dispatch => {
+    dispatch(loading(true))
+    Api.call<IBaseScheduleByEmployee>(Api.endpoints.EmployeeSchedule.GetSummaryByEmployee, {data})
+        .then(result => {
+            if (result) {
+                dispatch(getBaseSummaryByEmployee(result.data.roleHours))
             }
         })
         .catch(err => {

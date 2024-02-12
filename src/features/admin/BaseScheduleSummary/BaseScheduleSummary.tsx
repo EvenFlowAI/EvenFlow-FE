@@ -1,24 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {Paper, Table, TableBody, TableHead, TableRow, TableSortLabel} from "@mui/material";
-import {
-    DayNameCell, StyledCell,
-    TableFooterRow,
-    TableHeaderCell,
-    TableHeaderRow,
-    TableTitle,
-    TableTitleWrapper,
-    TableTotalCell
-} from "./styles";
 import {useDispatch, useSelector} from "react-redux";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {loadBaseSummary} from "../../../store/reducers/employees/actions";
 import {TOrder, TSortColumns} from "./types";
 import dayjs from "dayjs";
 import {RootState} from "../../../store/rootReducer";
+import {
+    ScheduleDayNameCell, ScheduleTableFooterRow,
+    ScheduleTableHeaderCell, ScheduleTableHeaderRow, ScheduleTableTitle, Wrapper,
+    ScheduleTableTotalCell, StyledScheduleCell
+} from "../../../components/styled/ScheduleTableElements";
 
 const daysList = [1, 2, 3, 4, 5, 6, 7]
 
-const BaseScheduleSummary = () => {
+const BaseScheduleByEmployee = () => {
     const {baseSummary} = useSelector((state: RootState) => state.employees)
     const [order, setOrder] = useState<TOrder>({orderBy: "Role", isAscending: true})
     const dispatch = useDispatch();
@@ -36,13 +32,13 @@ const BaseScheduleSummary = () => {
 
     return (
         <Paper>
-            <TableTitleWrapper>
-                <TableTitle>BASE SCHEDULE SUMMARY</TableTitle>
-            </TableTitleWrapper>
-                <Table>
-                    <TableHead>
-                        <TableHeaderRow>
-                        <TableHeaderCell key="role" width={300}>
+            <Wrapper>
+                <ScheduleTableTitle>BASE SCHEDULE SUMMARY</ScheduleTableTitle>
+            </Wrapper>
+            <Table>
+                <TableHead>
+                    <ScheduleTableHeaderRow>
+                        <ScheduleTableHeaderCell key="role" width={300}>
                             <TableSortLabel
                                 direction={order.isAscending ? "desc" : "asc"}
                                 onClick={() => onSort("Role")}
@@ -50,47 +46,47 @@ const BaseScheduleSummary = () => {
                             >
                                 ROLE
                             </TableSortLabel>
-                        </TableHeaderCell>
-                            <TableHeaderCell key="serviceBook" width={180}>
-                                <TableSortLabel
-                                    direction={order.isAscending ? "desc" : "asc"}
-                                    onClick={() => onSort("ServiceBook")}
-                                    active={order.orderBy === "ServiceBook"}
-                                >
-                                    SERVICE BOOK
-                                </TableSortLabel>
-                            </TableHeaderCell>
-                            {daysList.map(item => <DayNameCell key={item}>
-                                {dayjs().set('day', item).format('ddd')}
-                            </DayNameCell>)}
-                        </TableHeaderRow>
-                    </TableHead>
-                    {baseSummary ? <TableBody>
+                        </ScheduleTableHeaderCell>
+                        <ScheduleTableHeaderCell key="serviceBook" width={180}>
+                            <TableSortLabel
+                                direction={order.isAscending ? "desc" : "asc"}
+                                onClick={() => onSort("ServiceBook")}
+                                active={order.orderBy === "ServiceBook"}
+                            >
+                                SERVICE BOOK
+                            </TableSortLabel>
+                        </ScheduleTableHeaderCell>
+                        {daysList.map(item => <ScheduleDayNameCell key={item}>
+                            {dayjs().set('day', item).format('ddd')}
+                        </ScheduleDayNameCell>)}
+                    </ScheduleTableHeaderRow>
+                </TableHead>
+                {baseSummary ? <TableBody>
                         {baseSummary.roleHours.map((item, index) => {
                             return <TableRow key={index}>
-                                <StyledCell key="role">
+                                <StyledScheduleCell key="role">
                                     {item.role}
-                                </StyledCell>
-                                <StyledCell key="serviceBook">
+                                </StyledScheduleCell>
+                                <StyledScheduleCell key="serviceBook">
                                     {item.serviceBook}
-                                </StyledCell>
+                                </StyledScheduleCell>
                                 {item.dailyHours.map((day) => {
-                                    return <StyledCell key={day.day}>{day.value.toFixed(1)}</StyledCell>
+                                    return <StyledScheduleCell key={day.day}>{day.value.toFixed(1)}</StyledScheduleCell>
                                 })}
                             </TableRow>
                         })}
-                        <TableFooterRow key="total">
-                            <StyledCell/>
-                            <TableTotalCell key="totalCell">Total</TableTotalCell>
+                        <ScheduleTableFooterRow key="total">
+                            <StyledScheduleCell/>
+                            <ScheduleTableTotalCell key="totalCell">Total</ScheduleTableTotalCell>
                             {baseSummary.totalHours.map((item) => {
-                                return <StyledCell key={item.day}>{item.value.toFixed(1)}</StyledCell>
+                                return <StyledScheduleCell key={item.day}>{item.value.toFixed(1)}</StyledScheduleCell>
                             })}
-                        </TableFooterRow>
+                        </ScheduleTableFooterRow>
                     </TableBody>
-                        : null}
-                </Table>
+                    : null}
+            </Table>
         </Paper>
     );
 };
 
-export default BaseScheduleSummary;
+export default BaseScheduleByEmployee;

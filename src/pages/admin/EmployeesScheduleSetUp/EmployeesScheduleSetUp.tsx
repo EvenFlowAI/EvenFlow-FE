@@ -5,6 +5,7 @@ import {Tab} from "@mui/material";
 import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@mui/lab";
 import BaseScheduleSummary from "../../../features/admin/BaseScheduleSummary/BaseScheduleSummary";
+import BaseScheduleByEmployee from "../../../features/admin/BaseScheduleByEmployee/BaseScheduleByEmployee";
 
 const tabNames = [
     "Base Schedule Summary",
@@ -32,7 +33,7 @@ const EmployeesScheduleSetUp = () => {
                 <BaseScheduleSummary/>
             </TabPanel>
             <TabPanel style={{width: "100%", padding: "24px 0"}} value="1" key="1">
-
+                <BaseScheduleByEmployee/>
             </TabPanel>
         </TabContext>
         </>;
