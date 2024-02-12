@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {FileInput} from "../../../../components/formControls/FileInput/FileInput";
 import {setAssignedFilter} from "../../../../store/reducers/serviceRequests/actions";
@@ -32,7 +32,7 @@ type TAddFirstScreenOptionProps = DialogProps & {
     editingItem: IFirstScreenOption | null;
 }
 
-export const AddFirstScreenOptionModal: React.FC<TAddFirstScreenOptionProps> = ({editingItem, ...props}) => {
+export const AddFirstScreenOptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddFirstScreenOptionProps>>> = ({editingItem, ...props}) => {
     const {options} = useSelector((state: RootState) => state.transportation);
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
     const [firstScreenOptionName, setFirstScreenOptionName] = useState<string>('');
@@ -49,7 +49,7 @@ export const AddFirstScreenOptionModal: React.FC<TAddFirstScreenOptionProps> = (
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const enabledTransportationOptions = useMemo(() => options.filter(op => op.state), [options]);
     const isTransportationDisabled = useMemo(() => !enabledTransportationOptions.length ||
@@ -220,7 +220,7 @@ export const AddFirstScreenOptionModal: React.FC<TAddFirstScreenOptionProps> = (
                     </div>
                     <Autocomplete
                         options={getServiceTypeOptions()}
-                        getOptionSelected={(option) => option.value === selectedServiceType?.value}
+                        isOptionEqualToValue={(option) => option.value === selectedServiceType?.value}
                         getOptionLabel={o => o.name}
                         value={selectedServiceType}
                         onChange={onServiceTypeChange}
@@ -234,6 +234,7 @@ export const AddFirstScreenOptionModal: React.FC<TAddFirstScreenOptionProps> = (
                         disableClearable
                         options={['1', '2', '3', '4']}
                         value={orderIndex}
+                        isOptionEqualToValue={(o, v) => o === v}
                         onChange={onOrderIndexChange}
                         renderInput={autocompleteRender({
                             label: 'Order Index for Booking Flow',
@@ -243,7 +244,7 @@ export const AddFirstScreenOptionModal: React.FC<TAddFirstScreenOptionProps> = (
                     />
                     <Autocomplete
                         options={enabledTransportationOptions}
-                        getOptionSelected={(option) => option.id === defaultTransportation?.id}
+                        isOptionEqualToValue={(option) => option.id === defaultTransportation?.id}
                         getOptionLabel={o => getTransportationOptionString(o.type)}
                         value={defaultTransportation}
                         onChange={onTransportationChange}

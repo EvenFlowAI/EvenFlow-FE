@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {useDispatch} from "react-redux";
 import {
@@ -27,7 +27,7 @@ const initialForm: TForm = [
     {from: 3, to: 3}
 ]
 
-export const EditDemandSegmentsModal:React.FC<DialogProps<IOptimizationSetting[]>> = ({onAction, payload, ...props}) => {
+export const EditDemandSegmentsModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IOptimizationSetting[]>>>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [isSaving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
@@ -35,7 +35,7 @@ export const EditDemandSegmentsModal:React.FC<DialogProps<IOptimizationSetting[]
     const showMessage = useMessage();
     const showError = useException();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (props.open) {
@@ -120,7 +120,7 @@ export const EditDemandSegmentsModal:React.FC<DialogProps<IOptimizationSetting[]
             })}
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Cancel
             </Button>
             <LoadingButton loading={isSaving} onClick={handleSave}>

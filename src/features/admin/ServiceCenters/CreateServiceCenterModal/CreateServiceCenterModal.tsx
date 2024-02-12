@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {states} from "../../../../utils/constants";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {CreateServiceCenterForm} from "../CreateServiceCenterForm/CreateServiceCenterForm";
 import {useDispatch, useSelector} from "react-redux";
 import {IServiceCenterForm} from "../../../../store/reducers/serviceCenters/types";
@@ -43,7 +43,7 @@ const initialFormState: TSCFormState = {
 }
 
 export const CreateServiceCenterModal:
-    React.FC<DialogProps<IServiceCenterForm>&{readOnly?: boolean}> =
+    React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IServiceCenterForm>&{readOnly?: boolean}>>> =
     ({payload, readOnly, ...props}) => {
         const saving = useSelector((state: RootState) => state.serviceCenters.saving);
 
@@ -197,7 +197,7 @@ export const CreateServiceCenterModal:
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Close</Button>
+                <Button onClick={onClose} color="info">Close</Button>
                 {!readOnly ? <LoadingButton
                     color="primary"
                     loading={saving}

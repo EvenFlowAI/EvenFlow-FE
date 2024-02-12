@@ -8,7 +8,7 @@ type TConfirmProps = DialogProps & {
     onSave: () => void;
 }
 
-const ConfirmChangeOption: React.FC<TConfirmProps> = (props) => {
+const ConfirmChangeOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TConfirmProps>>> = (props) => {
     const {t} = useTranslation();
     return (
         <BaseModal

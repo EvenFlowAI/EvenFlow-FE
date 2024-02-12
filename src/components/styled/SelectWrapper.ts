@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const SelectWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -7,7 +7,7 @@ export const SelectWrapper = styled('div')(({theme}) => ({
     width: "100%",
     backgroundColor: "#828282",
     padding: 20,
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         gridTemplateColumns: "1fr"
     },
 }));

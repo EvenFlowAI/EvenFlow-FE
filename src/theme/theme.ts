@@ -1,8 +1,10 @@
-import {unstable_createMuiStrictModeTheme as createMuiTheme, ThemeOptions} from "@material-ui/core";
-import {fonts} from "./fonts";
+import {
+    createTheme, Theme,
+    ThemeOptions,
+} from "@mui/material";
 import {colors} from "./colors";
 
-declare module "@material-ui/core/styles/createBreakpoints" {
+declare module "@mui/material/styles" {
     interface BreakpointOverrides {
         xs: true;
         sm: true;
@@ -14,7 +16,6 @@ declare module "@material-ui/core/styles/createBreakpoints" {
 }
 
 export const sideBarWidth = 255;
-
 
 const themeOptions: ThemeOptions = {
     breakpoints: {
@@ -29,8 +30,6 @@ const themeOptions: ThemeOptions = {
     },
     typography: {
         fontFamily: [
-            // '-apple-system',
-            // 'BlinkMacSystemFont',
             '"Proxima Nova"',
             'Roboto',
             'sans-serif',
@@ -39,73 +38,93 @@ const themeOptions: ThemeOptions = {
             '"Segoe UI Symbol"'
         ].join(','),
     },
-    overrides: {
-        MuiCssBaseline: {
-            '@global': {
-                '@font-face': fonts
-            }
-        },
+    components: {
         MuiIconButton: {
-            root: {
-                padding: 9
+            styleOverrides: {
+                root: {
+                    padding: 9,
+                }
             }
         }
     },
     palette: colors,
 };
+
 const input = {
     border: "none",
-    padding: 11,
+    padding: 9,
     fontSize: 16,
     background: "transparent",
-    // fontWeight: "bold" as const,
 }
-const theme = createMuiTheme(themeOptions);
-theme.overrides = {
-    ...theme.overrides,
+
+const theme = createTheme(themeOptions);
+theme.components = {
+    ...theme.components,
     MuiInputBase: {
-        root: {
-            backgroundColor: "#F7F8FB",
-            border: '1px solid #DADADA',
-            "&.MuiInputBase-adornedStart": {
-                paddingLeft: 8
-            },
-            "&.MuiInputBase-adornedEnd": {
-                paddingRight: 8
-            },
-            "&.Mui-disabled": {
-                background: "#F7F8FB"
-            },
-            transition: theme.transitions.create(['border-color']),
-            '&.Mui-focused': {
-            //     boxShadow: `${fade(theme.palette.grey.A400, 0.25)} 0 0 0 0.2rem`,
-                borderColor: theme.palette.grey.A200
-            },
-        },
-        inputMultiline: {
-            padding: theme.spacing(2)
-        },
-        input: {
-            ...input,
-        }
+       styleOverrides: {
+           root: {
+               backgroundColor: "#F7F8FB",
+               border: '1px solid #DADADA',
+               "&.MuiInputBase-adornedStart": {
+                   paddingLeft: 8
+               },
+               "&.MuiInputBase-adornedEnd": {
+                   paddingRight: 8
+               },
+               "&.Mui-disabled": {
+                   background: "#F7F8FB"
+               },
+               transition: theme.transitions.create(['border-color']),
+               '&.Mui-focused': {
+                   borderColor: theme.palette.grey.A200
+               },
+           },
+           inputMultiline: {
+               padding: theme.spacing(2)
+           },
+           input: {
+               ...input,
+           },
+       }
     },
     MuiButton: {
-        contained: {
-            boxShadow: "none"
-        },
-        root: {
-            borderRadius: 4,
-            fontWeight: "bold",
+        styleOverrides: {
+            contained: {
+                boxShadow: "none"
+            },
+            root: {
+                borderRadius: 4,
+                fontWeight: "bold",
+            },
         }
     },
     MuiCheckbox: {
-        root: {
-            color: "#DADADA"
+        styleOverrides: {
+            root: {
+                color: "#DADADA"
+            }
         }
-    }
+    },
+    MuiTab: {
+        styleOverrides: {
+            root: {
+                padding: '6px 12px',
+                '&.Mui-selected': {
+                    color: '#000000'
+                }
+            }
+        }
+    },
+    MuiChip: {
+        styleOverrides: {
+            deleteIcon: {
+                color: "#FFFFFF"
+            }
+        }
+    },
 }
 
-export const loginTheme = createMuiTheme({
+export const loginTheme = createTheme({
     ...theme,
     palette: {
         ...theme.palette,
@@ -113,20 +132,23 @@ export const loginTheme = createMuiTheme({
             main: "#3855F3",
         },
     },
-    overrides: {
-        ...theme.overrides,
+    components: {
         MuiInputBase: {
-            input: {
-                ...input,
-                padding: theme.spacing(2),
-                border: '1px solid #DADADA',
-                backgroundColor: "#F7F8FB",
-                fontWeight: "bold"
+            styleOverrides: {
+                input: {
+                    ...input,
+                    padding: theme.spacing(2),
+                    border: '1px solid #DADADA',
+                    backgroundColor: "#F7F8FB",
+                    fontWeight: "bold"
+                }
             }
         }
     }
 });
-export const endUserTheme = createMuiTheme({
+
+// @ts-ignore
+export const endUserTheme = createTheme({
     ...theme,
     palette: {
         ...theme.palette,
@@ -135,7 +157,10 @@ export const endUserTheme = createMuiTheme({
         },
     },
 });
-export const frameTheme = createMuiTheme({
+
+// @ts-ignore
+// @ts-ignore
+export const frameTheme: Theme = (theme: Theme) => createTheme({
     ...theme,
     palette: {
         ...theme.palette,
@@ -143,22 +168,56 @@ export const frameTheme = createMuiTheme({
             main: "#000000"
         }
     },
-});
-frameTheme.overrides = {
-    ...frameTheme.overrides,
-    MuiButton: {
-        ...frameTheme.overrides?.MuiButton,
-        root: {
-            ...frameTheme.overrides?.MuiButton?.root,
-            borderRadius: 0
-        }
-    },
-    MuiInput: {
-        ...frameTheme.overrides?.MuiInput,
-        error: {
-            borderColor: "#FF0000",
-            color: "#FF0000"
+    components: {
+        ...theme.components,
+        MuiButton: {
+            styleOverrides: {
+                ...theme.components?.MuiButton?.styleOverrides,
+                root: {
+                    borderRadius: 0,
+                    fontWeight: "bold"
+                }
+            }
+        },
+        MuiInput: {
+            styleOverrides: {
+                ...theme.components?.MuiInput?.styleOverrides,
+                root: {
+                    "&.Mui-error": {
+                        borderColor: "#FF0000",
+                        color: "#FF0000"
+                    },
+                    '&.Mui-focused': {
+                        borderColor: "#aaaaaa"
+                    }
+                },
+                input: {
+                    ...input,
+                    border: 0,
+                    backgroundColor: "#F7F8FB",
+                },
+            }
+        },
+        MuiOutlinedInput: {
+            styleOverrides: {
+                ...theme.components?.MuiInput?.styleOverrides,
+                root: {
+                    "&.Mui-error": {
+                        borderColor: "#FF0000",
+                        color: "#FF0000"
+                    },
+                    '&.Mui-focused': {
+                        borderColor: "#aaaaaa"
+                    }
+                },
+                input: {
+                    ...input,
+                    border: 0,
+                    backgroundColor: "#F7F8FB",
+                }
+            }
         }
     }
-}
+});
+
 export default theme;

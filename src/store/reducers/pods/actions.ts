@@ -25,7 +25,7 @@ export const loadPods = (serviceCenterId: number): AppThunk => async (dispatch, 
         dispatch(setPodsLoading(false));
     } catch (e) {
         dispatch(setPodsLoading(false));
-        throw e;
+        console.log('loadPods', e)
     }
 }
 export const createPod = (data: IPodForm): AppThunk => async dispatch => {

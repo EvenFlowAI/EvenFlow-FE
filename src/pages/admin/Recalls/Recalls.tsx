@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {TabContext, TabPanel} from "@mui/lab";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/styled/Tabs";
-import {Tab} from "@material-ui/core";
+import {Tab} from "@mui/material";
 import RecallParts from "../../../features/admin/RecallsParts/RecallParts";
 import RecallsAllOtherParts from "../../../features/admin/RecallsAllOtherParts/RecallsAllOtherParts";
 import {capacityManagementRoot} from "../../../utils/constants";

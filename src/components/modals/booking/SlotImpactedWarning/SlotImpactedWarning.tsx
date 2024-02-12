@@ -13,9 +13,9 @@ const SlotImpactedWarning = () => {
     const {isSlotsWarningOpen} = useSelector((state: RootState) => state.modals);
     const {isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
 
     const onNext = () => {

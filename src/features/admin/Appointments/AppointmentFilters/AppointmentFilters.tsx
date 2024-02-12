@@ -1,31 +1,29 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {Grid, MenuItem, Paper, Select, IconButton} from "@material-ui/core";
-import {Clear} from '@material-ui/icons';
+import {Grid, MenuItem, Paper, Select, IconButton, SelectChangeEvent} from "@mui/material";
+import {Clear, DateRange} from '@mui/icons-material';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {DatePicker} from "@material-ui/pickers";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
 import {loadSchedulerList, loadServiceBookList} from "../../../../store/reducers/appointments/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {TScheduler, TServiceBook} from "../../../../store/reducers/appointments/types";
-import {ReactComponent as CalendarIcon} from '../../../../assets/img/calendar_blue.svg';
 import {TFilters} from "../types";
 import {initialPaging} from "../Appointments";
 import {EmptyMenuItem} from "./styles";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {EReportingStatus, reportingStatuses} from "../../../../api/types";
-import {useLabelStyles} from "../../../../hooks/styling/useLabelStyles";
+import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/CustomDatePicker";
+import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
 
 type TAppointmentFilterProps = {
     status: EReportingStatus | '' | unknown;
     scheduler: TScheduler|null;
     serviceBook: TServiceBook|null;
-    selectedDate: moment.Moment | null;
+    selectedDate: TParsableDate;
     setFilters: Dispatch<SetStateAction<TFilters>>;
 }
 
-export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
+export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAppointmentFilterProps>>> = ({
                                                                           status,
                                                                           selectedDate,
                                                                           setFilters,
@@ -34,7 +32,6 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                }) => {
     const {schedulerList, serviceBookList, isLoading} = useSelector((state: RootState) => state.appointments)
     const [isOpen, setOpen] = useState<boolean>(false);
-    const classes = useLabelStyles()
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
@@ -49,12 +46,12 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         setOpen(s);
     }
 
-    const onChange = (date: moment.Moment | null): void => {
+    const onChange = (date: TParsableDate): void => {
         setFilters(prev => ({...prev, date, pageData: initialPaging}))
     }
 
-    const handleDateChange = (date: MaterialUiPickersDate) => {
-        onChange(moment(date));
+    const handleDateChange = (date: TParsableDate) => {
+        onChange(dayjs(date));
     }
 
     const handleClear = (e: any) => {
@@ -62,11 +59,11 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         onChange(null);
     }
 
-    const handleSelectStatus = (e: React.ChangeEvent<{value: unknown}>) => {
+    const handleSelectStatus = (e: SelectChangeEvent<string | number | unknown>) => {
         setFilters(prev => ({...prev, reportingStatus: e.target.value, pageData: initialPaging}))
     }
 
-    const handleSelectServiceBook = (e: React.ChangeEvent<{value: unknown}>) => {
+    const handleSelectServiceBook = (e: SelectChangeEvent<string | number>) => {
         if (e.target.value) {
             const selected = serviceBookList.find(item => item.id === e.target.value || item.name === e.target.value)
             setFilters(prev => ({...prev, serviceBook: selected ?? null, pageData: initialPaging}))
@@ -75,7 +72,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         }
     }
 
-    const handleSelectScheduler = (e: React.ChangeEvent<{value: unknown}>) => {
+    const handleSelectScheduler = (e: SelectChangeEvent<string | number>) => {
         if (e.target.value) {
             const selected = schedulerList.find(item => item.id
                 ? item.id.toString() === e.target.value
@@ -90,29 +87,31 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         <Paper variant="outlined" style={{
             borderRadius: 0, marginBottom: 18, padding: 18, width: '100%'
         }}>
-            <Grid container spacing={2} justify="space-between" alignItems='flex-end'>
-                <Grid item xs={3}>
-                    <div className={classes.label}>Date</div>
-                    <DatePicker
-                        style={{width: "100%"}}
+            <Grid container spacing={2} justifyContent="space-between" alignItems='flex-end'>
+                <Grid item xs={3} key="datepicker">
+                    <CustomDatePicker
                         onOpen={handleOpen(true)}
                         onClose={handleOpen(false)}
                         open={isOpen}
-                        disabled={isLoading}
+                        format="MMMM Do"
+                        fullWidth
+                        label="Date"
                         InputProps={{
-                            label: "Date",
                             placeholder: "Select date",
+                            disabled: isLoading,
+                            fullWidth: true,
                             endAdornment:
                                 selectedDate
-                                    ? (<IconButton onClick={(e) => handleClear(e)}>
-                                    <Clear />
-                                </IconButton>)
-                                    : <CalendarIcon/> }}
+                                    ? (<IconButton onClick={(e) => handleClear(e)} size="large">
+                                        <Clear />
+                                    </IconButton>)
+                                    : <DateRange cursor="pointer" htmlColor="rgba(0, 0, 0, 0.54)"/>
+                        }}
                         value={selectedDate}
-                        onChange={handleDateChange}
+                        onAccept={handleDateChange}
                     />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={3} key="status">
                     <Select
                         fullWidth
                         displayEmpty
@@ -130,7 +129,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         })}
                     </Select>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={3} key="scheduler">
                     <Select
                         fullWidth
                         displayEmpty
@@ -150,7 +149,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         })}
                     </Select>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={3} key="serviceBook">
                     <Select
                         fullWidth
                         displayEmpty
@@ -165,8 +164,8 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
                         {[...serviceBookList]
                             .sort((a, b) => a.name.localeCompare(b.name))
-                            .map(serviceBook => {
-                            return <MenuItem key={serviceBook.id} value={serviceBook.id ?? serviceBook.name}>{serviceBook.name}</MenuItem>
+                            .map((serviceBook, index) => {
+                            return <MenuItem key={`${serviceBook.id} ${index}`} value={serviceBook.id ?? serviceBook.name}>{serviceBook.name}</MenuItem>
                         })}
                     </Select>
                 </Grid>

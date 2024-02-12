@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button, FormControlLabel, Grid, Radio, RadioGroup} from "@material-ui/core";
+import {Button, FormControlLabel, Grid, Radio, RadioGroup} from "@mui/material";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IOffer} from "../../../../store/reducers/offers/types";
@@ -34,7 +34,7 @@ const initialForm: TForm = {
     channel: EChannel.Text
 }
 
-export const SendOfferModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export const SendOfferModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const offers = useSelector((state: RootState) => state.offers.offersList);
@@ -93,6 +93,7 @@ export const SendOfferModal: React.FC<DialogProps> = ({onAction, payload, ...pro
                         options={offers}
                         onChange={handleSelect("offer")}
                         getOptionLabel={option => option.title}
+                        isOptionEqualToValue={(o, v) => o.id === v.id}
                         value={form.offer||null}
                         renderInput={autocompleteRender({label: "Select offer", error: formIsChecked && !form.offer})}
                     />
@@ -101,6 +102,7 @@ export const SendOfferModal: React.FC<DialogProps> = ({onAction, payload, ...pro
                     <Autocomplete
                         options={Object.values(EAudience).filter(v => !isNaN(Number(v)))}
                         onChange={handleSelect("audience")}
+                        isOptionEqualToValue={(o, v) => o === v}
                         getOptionLabel={option => audienceLabels[option as EAudience]}
                         value={form.audience === undefined ? null : form.audience}
                         renderInput={autocompleteRender({label: "Audience", error: formIsChecked && !form.audience})}
@@ -124,7 +126,7 @@ export const SendOfferModal: React.FC<DialogProps> = ({onAction, payload, ...pro
             </Grid>
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Cancel
             </Button>
             <LoadingButton

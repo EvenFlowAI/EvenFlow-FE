@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@mui/material";
 import {Table} from "../../../components/tables/Table/Table";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {AddHolidayModal} from "./AddHolidayModal/AddHolidayModal";
 import {IHoliday} from "../../../store/reducers/holidays/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadAllHolidays} from "../../../store/reducers/holidays/actions";
-import moment from "moment";
 import {setHolidayPageData} from "../../../store/reducers/holidays/actions";
 import {useStyles} from "./styles";
 import {Roles, TableRowDataType} from "../../../types/types";
@@ -21,25 +20,20 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
 
 const rowData: TableRowDataType<IHoliday>[] = [
     {header: "Description Title", val: v => v.description.length > 40 ? v.description.slice(0, 39).concat('...') : v.description},
-    {header: "Date", val: v => moment.utc(v.date).format("MMMM D")},
+    {header: "Date", val: v => dayjs.utc(v.date).format("MMMM D")},
     {header: "Recurring", val: v => v.isRecurring ? "Repeat" : "No Repeat"}
 ]
 
-export const HolidaysModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
-    const [
-        holidays,
-        isLoading,
-        currentUser,
-    ] = useSelector((state: RootState) => [
-        state.holidays.holidaysList,
-        state.holidays.loading,
-        state.users.currentUser,
-    ]);
+export const HolidaysModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TViewMode>>> = ({viewMode, ...props}) => {
+    const {holidaysList, loading} = useSelector(({holidays}: RootState) => holidays);
+    const {currentUser} = useSelector(({users}: RootState) => users);
     const [editedItem, setEditedItem] = useState<IHoliday|undefined>();
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+
     const {selectedSC} = useSCs();
     const {askConfirm, closeConfirm} = useConfirm();
     const {onOpen, onClose, isOpen} = useModal();
@@ -50,7 +44,7 @@ export const HolidaysModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...pro
     const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException()
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (props.open && selectedSC) {
@@ -107,9 +101,14 @@ export const HolidaysModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...pro
     }
 
     const actions = (el: IHoliday) => {
-        return <IconButton onClick={openMenu(el)} disabled={currentUser?.role === Roles.Manager}>
-            <MoreHoriz />
-        </IconButton>
+        return (
+            <IconButton
+                onClick={openMenu(el)}
+                disabled={currentUser?.role === Roles.Manager}
+                size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }
 
     const handleOpenCreate = () => {
@@ -129,8 +128,8 @@ export const HolidaysModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...pro
             rowsPerPage={pageSize}
             onChangeRowsPerPage={changeRowsPerPage}
             compact
-            isLoading={isLoading}
-            data={holidays}
+            isLoading={loading}
+            data={holidaysList}
             index={"id"}
             rowData={rowData}
             actions={actions}

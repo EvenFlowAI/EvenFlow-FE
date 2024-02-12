@@ -1,8 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button, Grid} from "@material-ui/core";
-import moment from "moment";
+import {Button, Grid} from "@mui/material";
 import {Month} from "../Month/Month";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -11,9 +10,11 @@ import {DateModal} from "../DateModal/DateModal";
 import {loadTimeOfYearPricing} from "../../../../store/reducers/pricingSettings/actions";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import dayjs from "dayjs";
+import {TParsableDate} from "../../../../types/types";
 
-export const TimeOfYearModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
-    const [editedDate, setEditedDate] = useState<moment.Moment|undefined>(undefined);
+export const TimeOfYearModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onAction, payload, ...props}) => {
+    const [editedDate, setEditedDate] = useState<TParsableDate>(undefined);
     const [toy, setToy] = useState<ITimeOfYearSetting|undefined>(undefined);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -30,12 +31,12 @@ export const TimeOfYearModal: React.FC<DialogProps> = ({onAction, payload, ...pr
     const monthData = useMemo(() => {
         const months: ITimeOfYearSetting[][] = [[], [], [], [], [], [], [], [], [], [], [], []];
         for (let data of timeOfYearData) {
-            months[moment(data.date).month()].push(data);
+            months[dayjs(data.date).month()].push(data);
         }
         return months;
     }, [timeOfYearData]);
 
-    const handleClick = (date: moment.Moment, data?: ITimeOfYearSetting) => {
+    const handleClick = (date: TParsableDate, data?: ITimeOfYearSetting) => {
         setEditedDate(date);
         setToy(data);
         onOpen();
@@ -48,7 +49,7 @@ export const TimeOfYearModal: React.FC<DialogProps> = ({onAction, payload, ...pr
         </DialogTitle>
         <DialogContent>
             <Grid container spacing={3} style={{padding: "0 24px"}}>
-                {moment.months().map((m, idx) => {
+                {dayjs.months().map((m, idx) => {
                     return <Grid item md={3} xs={12} key={m}>
                         <Month month={idx} data={monthData[idx]} onClick={handleClick} />
                     </Grid>

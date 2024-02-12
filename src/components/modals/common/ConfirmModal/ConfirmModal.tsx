@@ -1,13 +1,13 @@
 import React, {useCallback, useState} from "react";
-import {Button, Divider, Grid} from "@material-ui/core";
+import {Button, Divider, Grid} from "@mui/material";
 import {BaseModal, DialogContent, DialogTitle, DialogActions} from '../../BaseModal/BaseModal';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {ReportProblemOutlined} from "@material-ui/icons";
+import {ReportProblemOutlined} from "@mui/icons-material";
 import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 
-export const ConfirmModal: React.FC = () => {
+export const ConfirmModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = () => {
     const {open, payload} = useSelector((state: RootState) => state.modals.confirm);
     const {closeConfirm} = useConfirm();
     const [loading, setLoading] = useState<boolean>(false);
@@ -18,7 +18,7 @@ export const ConfirmModal: React.FC = () => {
             try {
                 await payload.onCancel();
             } catch (e) {
-                throw e;
+                console.log('on cancel error', e)
             } finally {
                 setLoading(false);
             }
@@ -32,7 +32,7 @@ export const ConfirmModal: React.FC = () => {
             try {
                 await payload.onConfirm();
             } catch (e) {
-                throw e;
+                console.log('on confirm error', e)
             }
             finally {
                 setLoading(false);
@@ -70,7 +70,7 @@ export const ConfirmModal: React.FC = () => {
                     variant="contained">
                     {payload.cancelContent}
                 </LoadingButton>
-                : <Button onClick={onClose}>
+                : <Button onClick={onClose} color="info">
                     {payload.cancelContent ?? "Cancel"}
                 </Button>}
 

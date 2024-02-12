@@ -1,6 +1,6 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles()({
     linkBtn: {
         fontSize: 14,
         fontWeight: 700,
@@ -9,4 +9,4 @@ export const useStyles = makeStyles({
         textDecoration: 'none',
         marginRight: 20
     }
-})
+});

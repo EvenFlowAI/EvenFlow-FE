@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     container: {
         "& input": {
             backgroundColor: "#fff"
@@ -9,7 +10,7 @@ export const useStyles = makeStyles(theme => ({
     editButtonContainer: {
         textAlign: "right",
         marginTop: 15,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             textAlign: "center"
         }
     },
@@ -26,7 +27,7 @@ export const useStyles = makeStyles(theme => ({
     avatarContainer: {
         display: "flex",
         alignItems: "center",
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             justifyContent: "center",
             marginBottom: theme.spacing(1)
         }

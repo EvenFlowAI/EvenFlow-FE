@@ -32,7 +32,7 @@ import {ConsultantCard} from "./ConsultantCard/ConsultantCard";
 import {TActionProps} from "../../../../types/types";
 import {useException} from "../../../../hooks/useException/useException";
 
-export const Consultants: React.FC<TActionProps> = ({onNext, onBack}) => {
+export const Consultants: React.FC<React.PropsWithChildren<React.PropsWithChildren<TActionProps>>> = ({onNext, onBack}) => {
     const {
         advisor: selectedConsultant,
         consultants,
@@ -52,7 +52,7 @@ export const Consultants: React.FC<TActionProps> = ({onNext, onBack}) => {
     const {allCategories} = useSelector((state: RootState) => state.categories);
     const {isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const showError = useException();
     const isGoingFromManageScreen = customerLoadedData?.isUpdating && !serviceOptionChangedFromSlotPage;

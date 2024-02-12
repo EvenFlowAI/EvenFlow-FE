@@ -1,8 +1,9 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+//
+export const useStyles = makeStyles()(theme => ({
     controls: {
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             textAlign: "center"
         }
     },
@@ -15,4 +16,4 @@ export const useStyles = makeStyles(theme => ({
     controlDay: {
         padding: "5px 20px !important"
     }
-}))
+}));

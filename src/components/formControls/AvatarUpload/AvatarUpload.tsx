@@ -1,6 +1,5 @@
 import React, {ChangeEventHandler, createRef, useState} from "react";
-import {Avatar} from "@material-ui/core";
-import {useStyles} from "./styles";
+import {StyledAvatar, useStyles} from "./styles";
 import {IAvatarState} from "./types";
 
 export type TAvatarProps = {
@@ -10,9 +9,9 @@ export type TAvatarProps = {
     disabled?: boolean;
 }
 
-export const AvatarUpload: React.FC<TAvatarProps> = (props) => {
+export const AvatarUpload: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAvatarProps>>> = (props) => {
     const [state, setState] = useState<IAvatarState>({file: null, dataUrl: props.dataUrl || undefined});
-    const classes = useStyles({size: props.size || 74, disabled: props.disabled});
+    const { classes  } = useStyles();
 
     const ref = createRef<HTMLInputElement>();
 
@@ -41,11 +40,12 @@ export const AvatarUpload: React.FC<TAvatarProps> = (props) => {
     }
 
     return <label htmlFor="avatarInput">
-        <Avatar
-            src={state.dataUrl}
-            className={classes.root}>
+        <StyledAvatar
+            size={props.size || 74}
+            disabled={props.disabled}
+            src={state.dataUrl}>
             <span className={classes.sign}>+</span>
-        </Avatar>
+        </StyledAvatar>
         <input
             onChange={handleChange}
             disabled={props.disabled}

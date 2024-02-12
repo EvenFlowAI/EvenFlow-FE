@@ -6,7 +6,7 @@ import {Table} from "../../../../../../components/tables/Table/Table";
 import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {TableRowDataType} from "../../../../../../types/types";
 
 type TAssignOpsCodeModalProps = DialogProps & {
@@ -18,7 +18,7 @@ export const existingPackagesTableData: TableRowDataType<IPackageByQuery>[] = [
     {header: "Package Name", val: el => el.name, width: '90%'}
 ]
 
-const ExistingPackagesModal: React.FC<TAssignOpsCodeModalProps> = ({selectedPackages, setSelectedPackages, ...props}) => {
+const ExistingPackagesModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAssignOpsCodeModalProps>>> = ({selectedPackages, setSelectedPackages, ...props}) => {
     const { packages } = useSelector((state: RootState) => state.packages);
 
     const handleSelect = useCallback((el: IPackageByQuery) => {

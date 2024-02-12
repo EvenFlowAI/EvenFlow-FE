@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {DialogTitle, BaseModal, DialogContent} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {ButtonsWrapper, TopWrapper} from "../styles";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -15,7 +15,7 @@ import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import OpsCodeInput from "./OpsCodeInput/OpsCodeInput";
 import {updateServiceValetZonesOpsCodes} from "../../../../store/reducers/capacityServiceValet/actions";
 
-const ZonesOpsCodeModal: React.FC<DialogProps> = ({onClose, open}) => {
+const ZonesOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onClose, open}) => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
     const {zones, isLoading} = useSelector((state: RootState) => state.serviceValet);
     const [zonesOpsCodes, setZonesOpsCodes] = useState<ISVZoneDefaultOpsCode[]>([])

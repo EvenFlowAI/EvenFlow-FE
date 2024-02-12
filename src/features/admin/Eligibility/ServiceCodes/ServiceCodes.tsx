@@ -7,7 +7,7 @@ import {
     loadSrList,
 } from "../../../../store/reducers/pricingSettings/actions";
 import {NoItemsLoading} from "../../../../components/wrappers/NoItemsLoading/NoItemsLoading";
-import {TableBody, TableHead, Radio, RadioGroup, FormControlLabel} from "@material-ui/core";
+import {TableBody, TableHead, Radio, RadioGroup, FormControlLabel} from "@mui/material";
 import {EPricingDisplayType} from "../../../../store/reducers/pricingSettings/types";
 import {headCellStyles, leftAlign, TableWrapper} from "../styles";
 import {DemandTable} from "../../../../components/styled/DemandTable";

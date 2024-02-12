@@ -1,25 +1,25 @@
 import React, {useEffect, useState} from 'react';
 import {IServiceValetAppointment} from "../../../../../store/reducers/appointment/types";
-import {TArgCallback} from "../../../../../types/types";
-import moment from "moment";
+import {TArgCallback, TParsableDate} from "../../../../../types/types";
 import {useTranslation} from "react-i18next";
-import {CheckCircleOutlined, HighlightOff, RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import {CheckCircleOutlined, HighlightOff, RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {mockSlotTime} from "../constants";
 import {PickUpWrapper, useStyles} from "./styles";
+import dayjs from "dayjs";
 
 type TProps = {
     timeSlot: IServiceValetAppointment|null;
     selected: boolean;
     onSelect: TArgCallback<IServiceValetAppointment|null>;
-    date: moment.Moment|null;
+    date: TParsableDate;
 }
 
-export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, date}) => {
+export const PickUpSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =({timeSlot, onSelect, selected, date}) => {
     const [timePassed, setTimePassed] = useState<boolean>(false);
     const {dropOffSettings} = useSelector((state: RootState) => state.appointment);
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     useEffect(() => {
@@ -27,9 +27,9 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
             if (timeSlot?.date) {
                 const timeSlotDate = timeSlot.date.toString().split('T')[0]
                 const [h, m, s] = timeSlot?.pickUpMin.split(":");
-                const timeSlotTime = moment(timeSlotDate).set('hour', +h).set('minute', +m).set('second', +s);
-                if (moment(timeSlotDate).isSame(moment(), 'day') && moment(date).isSame(moment(), 'day')) {
-                    const differenceInMSeconds = moment(moment(timeSlotTime).format('YYYY-MM-DDTHH:mm:ss')).diff(moment());
+                const timeSlotTime = dayjs.utc(timeSlotDate).set('hour', +h).set('minute', +m).set('second', +s);
+                if (dayjs.utc(timeSlotDate).isSame(dayjs.utc(), 'day') && dayjs.utc(date).isSame(dayjs.utc(), 'day')) {
+                    const differenceInMSeconds = dayjs(dayjs.utc(timeSlotTime).format('YYYY-MM-DDTHH:mm:ss')).diff(dayjs());
                     if (differenceInMSeconds > 0) {
                         setTimeout(() => setTimePassed(true), differenceInMSeconds);
                     } else {
@@ -44,7 +44,7 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
 
     return (
         <PickUpWrapper
-            key={timeSlot ? moment(timeSlot.date).toISOString() : moment().toISOString()}
+            key={timeSlot ? dayjs(timeSlot.date).toISOString() : dayjs().toISOString()}
             available={Boolean(timeSlot) && !timePassed}
             selected={selected}
             onClick={() => timePassed ? {} : onSelect(timeSlot ?? null)}
@@ -56,9 +56,9 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
                 <div className={classes.text}>
                     <div>{t("Pick Up Time")}:</div>
                     <div>
-                        {timeSlot ? moment(timeSlot.pickUpMin, 'HH:mm').format('hh:mm A') : moment(mockSlotTime.pickUpMin, 'HH:mm').format('hh:mm A')}
+                        {timeSlot ? dayjs.utc(timeSlot.pickUpMin, 'HH:mm').format('hh:mm A') : dayjs.utc(mockSlotTime.pickUpMin, 'HH:mm').format('hh:mm A')}
                         <span> {t("to")} </span>
-                        {timeSlot ? moment(timeSlot?.pickUpMax, 'HH:mm').format('hh:mm A') : moment(mockSlotTime.pickUpMax, 'HH:mm').format('hh:mm A')}
+                        {timeSlot ? dayjs.utc(timeSlot?.pickUpMax, 'HH:mm').format('hh:mm A') : dayjs.utc(mockSlotTime.pickUpMax, 'HH:mm').format('hh:mm A')}
                     </div>
                 </div>
             </div>
@@ -79,9 +79,9 @@ export const PickUpSlotCard: React.FC<TProps> =({timeSlot, onSelect, selected, d
                     ? <div className={classes.dropOff}>
                         <div>{t("Drop Off Time")}:</div>
                         <div className={classes.rightText}>
-                            {timeSlot ? moment(timeSlot?.dropOffMin, 'HH:mm').format('hh:mm A') : moment(mockSlotTime.dropOffMin, 'HH:mm').format('hh:mm A')}
+                            {timeSlot ? dayjs.utc(timeSlot?.dropOffMin, 'HH:mm').format('hh:mm A') : dayjs.utc(mockSlotTime.dropOffMin, 'HH:mm').format('hh:mm A')}
                             <span> {t("to")} </span>
-                            {timeSlot ? moment(timeSlot?.dropOffMax, 'HH:mm').format('hh:mm A') : moment(mockSlotTime.dropOffMax, 'HH:mm').format('hh:mm A')}
+                            {timeSlot ? dayjs.utc(timeSlot?.dropOffMax, 'HH:mm').format('hh:mm A') : dayjs.utc(mockSlotTime.dropOffMax, 'HH:mm').format('hh:mm A')}
                         </div>
                     </div>
                     : <div className={classes.dropOff} style={{textAlign: 'justify', paddingBottom: 16}}>{dropOffSettings?.description}</div>

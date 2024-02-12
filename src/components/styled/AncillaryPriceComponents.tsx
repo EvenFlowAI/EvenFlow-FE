@@ -1,13 +1,15 @@
-import {TableCell as TC, withStyles} from "@material-ui/core";
+import { TableCell as TC } from "@mui/material";
 
-export const TableCell = withStyles({
+import { withStyles } from 'tss-react/mui';
+
+export const TableCell = withStyles(TC, {
     root: {
         border: "none !important",
         padding: "12px 16px !important",
     }
-})(TC);
+});
 
-export const HeaderTableCell = withStyles({
+export const HeaderTableCell = withStyles(TableCell, {
     root: {
         color: '#9FA2B4',
         '& .distanceCell': {
@@ -20,10 +22,10 @@ export const HeaderTableCell = withStyles({
             }
         }
     }
-})(TableCell)
+});
 
-export const FirstCell = withStyles(({
+export const FirstCell = withStyles(TableCell, {
     root: {
         color: '#9FA2B4',
     }
-}))(TableCell)
+});

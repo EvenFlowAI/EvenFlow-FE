@@ -1,7 +1,8 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 import {mh400, mh600} from "./constants";
 
-export const useStyles = makeStyles(theme => ({
+//
+export const useStyles = makeStyles()(theme => ({
     buttonsContainer: {
         marginTop: "5%",
         marginBottom: 20,
@@ -9,7 +10,7 @@ export const useStyles = makeStyles(theme => ({
         [mh600]: {
             marginTop: "2%"
         },
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             marginTop: theme.spacing(5),
         }
     },
@@ -34,7 +35,7 @@ export const useStyles = makeStyles(theme => ({
             fontSize: 18,
             padding: "2%"
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: 18,
             padding: "5%"
         },
@@ -64,14 +65,14 @@ export const useStyles = makeStyles(theme => ({
             fontSize: 18,
             padding: "2%"
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: 18,
             padding: "5%"
         }
     },
     loadingButton: {
         minWidth: 144,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             width: "100%",
             "&:last-child": {
                 order: -1,
@@ -81,7 +82,7 @@ export const useStyles = makeStyles(theme => ({
     },
     submitButton: {
         minWidth: 144,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             width: "100%",
             "&:last-child": {
                 marginBottom: theme.spacing(2),
@@ -101,7 +102,7 @@ export const useStyles = makeStyles(theme => ({
         position: "absolute",
         right: '31%',
         bottom: 0,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             right: '22%',
         }
     },
@@ -111,4 +112,4 @@ export const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center'
     }
-}))
+}));

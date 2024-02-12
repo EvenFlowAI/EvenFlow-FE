@@ -6,6 +6,7 @@ import {EServiceType} from "../../../../../store/reducers/appointmentFrameReduce
 import {useTranslation} from "react-i18next";
 import {IFirstScreenOption} from "../../../../../store/reducers/serviceTypes/types";
 import {TitleWrapper} from "./styles";
+import {ConfirmationItemWrapper} from "../../../../../components/styled/ConfirmationItemWrapper";
 
 const ServiceType = () => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
@@ -24,12 +25,12 @@ const ServiceType = () => {
                 return t("Visit Center");
         }
     }
-    return <div>
+    return <ConfirmationItemWrapper>
         <TitleWrapper>
             <AppointmentConfirmationTitle>{serviceTypeOption?.note || serviceTypeOption?.name ? t("Service Option") : t("Location Of Service")}</AppointmentConfirmationTitle>
         </TitleWrapper>
         {getServiceName(serviceTypeOption, serviceType)}
-    </div>
+    </ConfirmationItemWrapper>
 };
 
 export default ServiceType;

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {IAddress} from "../../../store/reducers/dealershipGroups/types";
 import {TSelectChange} from "../../../types/types";
 import {IServiceCenterExtended} from "../../../store/reducers/serviceCenters/types";
@@ -20,7 +20,7 @@ const initialAddress: IAddress = {
     zipCode: ""
 }
 
-export const EditAddressModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
+export const EditAddressModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TViewMode>>> = ({viewMode, ...props}) => {
     const [form, setForm] = useState<IAddress>(initialAddress);
     const [saving, setSave] = useState<boolean>(false);
     const showError = useException();
@@ -72,7 +72,7 @@ export const EditAddressModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...
             <EditForm viewMode={viewMode} onChange={handleChange} onSelect={handleSelectState} form={form} />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Close</Button>
+            <Button onClick={props.onClose} color="info">Close</Button>
             {!viewMode ? <LoadingButton
                 loading={saving}
                 variant="contained"

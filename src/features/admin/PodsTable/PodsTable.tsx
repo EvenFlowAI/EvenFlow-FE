@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {PODModal} from "./PODModal/PODModal";
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@mui/material";
 import {EAppointmentType, EJobType, IPod} from "../../../store/reducers/pods/types";
 import {useDispatch, useSelector} from "react-redux";
 import {loadPods, removePod, setPodsPageData} from "../../../store/reducers/pods/actions";
 import {RootState} from "../../../store/rootReducer";
 import {Table} from "../../../components/tables/Table/Table";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {TViewMode} from "../../../components/modals/BaseModal/types";
 import {getTransportationOptionString} from "../../../utils/utils";
 import {getNameFromEnum} from "./utils";
@@ -106,12 +106,12 @@ const rowData: TableRowDataTypeResp<IPod>[] = [
     },
 ]
 
-export const PodsTable:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode}) => {
-    const [pods, podsCount, isLoading] = useSelector((state: RootState) => [
-        state.pods.podsList,
-        state.pods.podsPaging.numberOfRecords,
-        state.pods.podsLoading
-    ]);
+export const PodsTable:React.FC<React.PropsWithChildren<React.PropsWithChildren<{dense?: boolean}&TViewMode>>> = ({dense, viewMode}) => {
+    const {
+        podsList,
+        podsPaging: {numberOfRecords},
+        podsLoading
+    } = useSelector(({pods}: RootState) => pods);
     const [editedItem, setEditedItem] = useState<IPod|undefined>(undefined);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 
@@ -167,9 +167,11 @@ export const PodsTable:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode
     }
 
     const actions = (el: IPod) => {
-        return <IconButton onClick={handleOpenMenu(el)}>
-            <MoreHoriz />
-        </IconButton>
+        return (
+            <IconButton onClick={handleOpenMenu(el)} size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }
 
     return <div>
@@ -183,7 +185,7 @@ export const PodsTable:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode
             </Button>
         </div> : null}
         <Table<IPod>
-            data={pods}
+            data={podsList}
             viewMode={viewMode}
             index='id'
             rowData={rowData}
@@ -192,10 +194,10 @@ export const PodsTable:React.FC<{dense?: boolean}&TViewMode> = ({dense, viewMode
             rowsPerPage={pageSize}
             onChangePage={changePage}
             onChangeRowsPerPage={changeRowsPerPage}
-            count={podsCount}
+            count={numberOfRecords}
             actions={actions}
             startActions={actions}
-            isLoading={isLoading}
+            isLoading={podsLoading}
         />
         <PODModal open={isOpen} onClose={onClose} payload={editedItem} />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>

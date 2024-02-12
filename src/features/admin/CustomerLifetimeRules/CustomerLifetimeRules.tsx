@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Button, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {CustomerLifetimesModal} from "./CustomerLifetimes/CustomerLifetimesModal";
 import {useDispatch, useSelector} from "react-redux";
 import {loadCustomerLifetimes} from "../../../store/reducers/valueSettings/actions";

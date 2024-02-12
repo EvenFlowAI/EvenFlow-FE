@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {DialogProps} from "../../BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {useSelector} from "react-redux";
@@ -12,7 +12,7 @@ type TMapIframeLinkProps = DialogProps & {
     onSave: (link: string) => void;
 }
 
-const MapIframeLink: React.FC<TMapIframeLinkProps> = ({onClose, open, onSave}) => {
+const MapIframeLink: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMapIframeLinkProps>>> = ({onClose, open, onSave}) => {
     const {isLoading} = useSelector((state: RootState) => state.mobileService);
     const [iframeLink, setIframeLink] = useState<string>('')
     const [isError, setError] = useState<boolean>(false);

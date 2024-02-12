@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useMemo} from 'react';
 import {DialogContent, DialogTitle} from "../../../../../components/modals/BaseModal/BaseModal";
-import {Button, Dialog} from "@material-ui/core";
+import {Button, Dialog} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useDialogStyles} from "../../../../../hooks/styling/useDialogStyles";
@@ -18,7 +18,7 @@ type TUnavailableServiceProps = DialogProps & {
     onBackToSelectSlotsForVisitCenter: TCallback;
 }
 
-const UnavailableServiceModal: React.FC<TUnavailableServiceProps> = ({
+const UnavailableServiceModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUnavailableServiceProps>>> = ({
                                                                     onClose,
                                                                     open,
                                                                     setFormChecked,
@@ -28,8 +28,8 @@ const UnavailableServiceModal: React.FC<TUnavailableServiceProps> = ({
 }) => {
     const {serviceTypeOption, appointmentByKey, serviceOptionChangedFromSlotPage} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
-    const dialogClasses = useDialogStyles();
-    const classes = useStyles();
+    const { classes: dialogClasses } = useDialogStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
     const dispatch = useDispatch();
 

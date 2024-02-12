@@ -43,7 +43,7 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
         dispatch(getAll(employees));
     } catch (e) {
         dispatch(loading(false));
-        throw e;
+        console.log('loadAll', e)
     }
 };
 const loadingTechnicians = (payload: boolean): TEmployeeActions => ({type: "Employees/LoadingTechnicians", payload});
@@ -67,7 +67,7 @@ export const loadTechnicians = (serviceCenterId: number): AppThunk =>
         dispatch(_loadTechnicians(employees));
     } catch (e) {
         dispatch(loadingTechnicians(false));
-        throw e;
+        console.log('loadTechnicians', e)
     }
 };
 export const createEmployee = (payload: IEmployeeForm, avatar?: File): AppThunk => async dispatch => {
@@ -81,7 +81,7 @@ export const createEmployee = (payload: IEmployeeForm, avatar?: File): AppThunk 
         dispatch(loadByFilters())
     } catch (e) {
         dispatch(saving(false));
-        throw e;
+        console.log('createEmployee', e)
     }
 }
 
@@ -102,14 +102,14 @@ export const updateEmployee = (data: IEmployeeForm, id: string, avatar?: File): 
         dispatch(loadByFilters())
     } catch (e) {
         dispatch(saving(false));
-        throw e;
+        console.log('updateEmployee', e)
     }
 }
 
 const changeDPaging = changePagingGeneric("Employees/ChangeDPaging");
 const loadDealership = (payload: boolean): TEmployeeActions => ({type: "Employees/LoadingDealership", payload});
 const _loadDealership = (payload: IEmployee[]): TEmployeeActions => ({type: "Employees/GetDealershipEmployees", payload});
-export const loadDealershipEmployees = (dealershipId: number, pageData: IPageRequest): AppThunk => async (dispatch) => {
+export const loadDealershipEmployees = (dealershipId: string, pageData: IPageRequest): AppThunk => async (dispatch) => {
     dispatch(loadDealership(true));
     try {
         const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IEmployee>>(Api.endpoints.Users.GetAll, {data: {...pageData, dealershipId}});
@@ -118,7 +118,7 @@ export const loadDealershipEmployees = (dealershipId: number, pageData: IPageReq
         dispatch(loadDealership(false));
     } catch (e) {
         dispatch(loadDealership(false));
-        throw e;
+        console.log('loadDealershipEmployees', e)
     }
 }
 
@@ -178,7 +178,7 @@ export const loadByFilters: ActionCreator<AppThunk> = () =>
             dispatch(getAll(employees));
         } catch (e) {
             dispatch(loading(false));
-            throw e;
+            console.log('loadByFilters', e)
         }
     };
 

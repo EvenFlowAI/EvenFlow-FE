@@ -27,6 +27,6 @@ export const useAnalyticsBySCId = (id: string, trackerCreated: boolean, setTrack
     }, [id])
 
     useEffect(() => {
-        trackerCreated && ReactGA.ga('pageview', window.location.pathname + window.location.search);
+        trackerCreated && ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search });
     }, [trackerCreated])
 }

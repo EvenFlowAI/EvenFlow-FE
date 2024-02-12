@@ -13,9 +13,9 @@ type TZonesProps = {
     setSelectedZone: Dispatch<SetStateAction<TZone|null>>
 }
 
-const Zones: React.FC<TZonesProps> = ({ setCurrentZip, onRemoveZip, setSelectedZone, selectedZone }) => {
+const Zones: React.FC<React.PropsWithChildren<React.PropsWithChildren<TZonesProps>>> = ({ setCurrentZip, onRemoveZip, setSelectedZone, selectedZone }) => {
     const {zones, isLoading} = useSelector((state: RootState) => state.mobileService);
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     return (
         <div className={classes.wrapper}>

@@ -1,12 +1,12 @@
 import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {CarCard} from "./CarCard/CarCard";
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {TArgCallback, TCallback, TScreen} from "../../../../types/types";
 import {StepWrapper} from '../../../../components/styled/StepWrapper';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {ChevronLeft, ChevronRight} from "@material-ui/icons";
+import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import {ILoadedVehicle} from "../../../../api/types";
 import {
     clearAppointmentData,
@@ -29,6 +29,7 @@ import {AppointmentScreenTitle} from "../../../../components/wrappers/Appointmen
 import {checkSelectedCar} from "./utils";
 import {useException} from "../../../../hooks/useException/useException";
 import {Routes} from "../../../../routes/constants";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 
 type TProps = {
     onBack: TCallback;
@@ -39,7 +40,7 @@ type TProps = {
     onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
 }
 
-export const Cars: React.FC<TProps> = ({
+export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
                                                               onUpdateAppointment, onBack, loading, handleSetScreen,
                                                               needToShowServiceSelection, setNeedToShowServiceSelection
                                                           }) => {
@@ -58,13 +59,16 @@ export const Cars: React.FC<TProps> = ({
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const [idx, setIdx] = useState<number>(0);
     const theme = useTheme();
-    const isXs = useMediaQuery(theme.breakpoints.down("xs"));
-    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const dispatch = useDispatch();
     const showError = useException();
     const {t} = useTranslation();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
+    const shouldHideScreen = useMemo(() => {
+       return customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)
+    }, [customerLoadedData])
 
     const vehiclesPerScreen = useMemo(() => {
         return isXs ? 1 : 2;
@@ -92,7 +96,7 @@ export const Cars: React.FC<TProps> = ({
     }, [serviceType, valueService, isAdvisorAvailable, consultants])
 
     useEffect(() => {
-        if (customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)) {
+        if (shouldHideScreen) {
             if (needToShowServiceSelection) {
                 setNeedToShowServiceSelection(false);
                 handleServiceTypeSelection()
@@ -103,7 +107,7 @@ export const Cars: React.FC<TProps> = ({
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customerLoadedData, selectedVehicle, scProfile, needToShowServiceSelection]);
+    }, [shouldHideScreen, selectedVehicle, scProfile, needToShowServiceSelection]);
 
     const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - vehiclesPerScreen;
     const prevDisabled = () => idx <= 0;
@@ -196,45 +200,49 @@ export const Cars: React.FC<TProps> = ({
 
     return (
         <StepWrapper>
-            <AppointmentScreenTitle>{t("Which vehicle are you coming in for?")}</AppointmentScreenTitle>
-            <CarsWrapper>
-                {customerLoadedData?.vehicles.length ?
-                    <>
-                        <Arrow onClick={prev} disabled={prevDisabled()}>
-                            <ChevronLeft />
-                            <span className="text" style={{left: isSm ? -6 : -27}}>Previous Vehicle</span>
-                        </Arrow>
-                        {customerLoadedData.vehicles
-                            .slice(idx, idx + vehiclesPerScreen)
-                            .map((vehicle, index) =>
-                                <CarCard
-                                    hasOrders={vehicle.hasRepairOrders}
-                                    onNext={onNext}
-                                    onSelectCar={onSelectCar}
-                                    onAddNewAppointment={handleAddNewCarAppointment}
-                                    selected={isSelected(vehicle)}
-                                    clearData={clearData}
-                                    car={vehicle}
-                                    key={vehicle.dmsId || new Date().toISOString() + index}/>
-                            )}
-                        <Arrow onClick={next} disabled={nextDisabled()}>
-                            <ChevronRight />
-                            <span className="text" style={{left: isSm ? -4 : -13}}>Next Vehicle</span>
-                        </Arrow>
-                    </> : <p>{t("No vehicles present")}</p>
-                }
-            </CarsWrapper>
-            <Info>
-                {t("Click here to")} <span onClick={handleAddNewVehicle}>{t("add new vehicle")}</span>
-            </Info>
-            <ActionButtons
-                hideNext
-                onBack={onBack}
-                nextLabel={t("Next")}
-                onNext={onNext}
-                nextDisabled={!selectedVehicle
-                    || !checkSelectedCar(selectedVehicle, customerLoadedData?.vehicles)}
-                loading={loading} />
+            {loading || shouldHideScreen
+                ? <Loading/>
+                : <>
+                    <AppointmentScreenTitle>{t("Which vehicle are you coming in for?")}</AppointmentScreenTitle>
+                    <CarsWrapper>
+                        {customerLoadedData?.vehicles.length ?
+                            <>
+                                <Arrow onClick={prev} disabled={prevDisabled()}>
+                                    <ChevronLeft />
+                                    <span className="text" style={{left: isSm ? -6 : -27}}>Previous Vehicle</span>
+                                </Arrow>
+                                {customerLoadedData.vehicles
+                                    .slice(idx, idx + vehiclesPerScreen)
+                                    .map((vehicle, index) =>
+                                        <CarCard
+                                            hasOrders={vehicle.hasRepairOrders}
+                                            onNext={onNext}
+                                            onSelectCar={onSelectCar}
+                                            onAddNewAppointment={handleAddNewCarAppointment}
+                                            selected={isSelected(vehicle)}
+                                            clearData={clearData}
+                                            car={vehicle}
+                                            key={vehicle.dmsId || new Date().toISOString() + index}/>
+                                    )}
+                                <Arrow onClick={next} disabled={nextDisabled()}>
+                                    <ChevronRight />
+                                    <span className="text" style={{left: isSm ? -4 : -13}}>Next Vehicle</span>
+                                </Arrow>
+                            </> : <p>{t("No vehicles present")}</p>
+                        }
+                    </CarsWrapper>
+                    <Info>
+                        {t("Click here to")} <span onClick={handleAddNewVehicle}>{t("add new vehicle")}</span>
+                    </Info>
+                    <ActionButtons
+                        hideNext
+                        onBack={onBack}
+                        nextLabel={t("Next")}
+                        onNext={onNext}
+                        nextDisabled={!selectedVehicle
+                            || !checkSelectedCar(selectedVehicle, customerLoadedData?.vehicles)}
+                        loading={loading} />
+                </>}
         </StepWrapper>
     );
 };

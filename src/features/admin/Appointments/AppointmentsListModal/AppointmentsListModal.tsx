@@ -1,18 +1,18 @@
 import React, {Dispatch, SetStateAction, useEffect} from 'react';
 import {DialogTitle, BaseModal, DialogContent} from "../../../../components/modals/BaseModal/BaseModal";
-import moment from "moment";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {IAppointmentsRequest} from "../../../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";
 import {IAppointment} from "../../../../api/types";
 import {AppointmentsTable} from "../AppointmentsTable/AppointmentsTable";
-import {IOrder} from "../../../../types/types";
+import {IOrder, TParsableDate} from "../../../../types/types";
 import {RootState} from "../../../../store/rootReducer";
 import {useStatePagination} from "../../../../hooks/usePaginations/usePaginations";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import dayjs from "dayjs";
 
 type TDialogProps = DialogProps & {
-    date: moment.Moment | null;
+    date: TParsableDate;
     refresh: () => void;
     order: IOrder<IAppointment>;
     setOrder: React.Dispatch<React.SetStateAction<IOrder<IAppointment>>>
@@ -20,7 +20,7 @@ type TDialogProps = DialogProps & {
     setViewItem?: Dispatch<SetStateAction<IAppointment|undefined>>
 }
 
-export const AppointmentsListModal: React.FC<TDialogProps> = ({
+export const AppointmentsListModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDialogProps>>> = ({
                                                             date,
                                                             refresh,
                                                             order,
@@ -38,7 +38,7 @@ export const AppointmentsListModal: React.FC<TDialogProps> = ({
             const data: IAppointmentsRequest = {
                 pageIndex: pageData.pageIndex,
                 pageSize: pageData.pageSize,
-                date: moment(date).add(moment(date).utcOffset(), 'minute'),
+                date: dayjs(date).add(dayjs(date).utcOffset(), 'minute'),
                 serviceCenterId: selectedSC.id,
             }
             // todo uncomment for calendar functionality
@@ -47,8 +47,8 @@ export const AppointmentsListModal: React.FC<TDialogProps> = ({
     }, [selectedSC, date, props.open, pageData])
 
     return (
-        <BaseModal {...props} width={1200} onClose={props.onClose} onExit={props.onClose}>
-            <DialogTitle onClose={props.onClose}>Appointments for {date ? moment(date).format('YYYY-MM-DD') : ''}</DialogTitle>
+        <BaseModal {...props} width={1200} onClose={props.onClose}>
+            <DialogTitle onClose={props.onClose}>Appointments for {date ? dayjs(date).format('YYYY-MM-DD') : ''}</DialogTitle>
             <DialogContent style={{ overflowY: 'auto' }}>
                 <AppointmentsTable
                     viewItem={viewItem}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Typography} from "@material-ui/core";
+import {Typography} from "@mui/material";
 import {useStyles} from "./styles";
 import {TTitle} from "../../../types/types";
 import {collectParents} from "./utils";
@@ -10,8 +10,8 @@ type TTitleProps = {
     subtitle?: string;
 }
 
-export const ContentTitle: React.FC<TTitleProps> = (props) => {
-    const classes = useStyles();
+export const ContentTitle: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTitleProps>>> = (props) => {
+    const { classes  } = useStyles();
     return <div className={classes.titleContainer}>
         <Typography className={classes.title} variant="h1">
             {props.parent

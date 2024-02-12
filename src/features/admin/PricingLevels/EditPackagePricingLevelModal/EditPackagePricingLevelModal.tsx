@@ -4,7 +4,7 @@ import {EDemandCategory} from "../../../../store/reducers/pricingSettings/types"
 import {updateMPPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Box, Button, Divider} from "@material-ui/core";
+import {Box, Button, Divider} from "@mui/material";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {TPackagePricingLevel, TUpdatedSettings} from "../types";
 import {useEditPricingLevelStyles} from "../styles";
@@ -15,14 +15,14 @@ type TEditPricingLevelsProps = DialogProps & {
     prisingLevel: TPackagePricingLevel | null;
 };
 
-const EditPackagePricingLevelModal: React.FC<TEditPricingLevelsProps> = ({ prisingLevel, ...props}) => {
+const EditPackagePricingLevelModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TEditPricingLevelsProps>>> = ({ prisingLevel, ...props}) => {
     const [discount, setDiscount] = useState<string>('');
     const [premium, setPremium] = useState<string>('');
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const dispatch = useDispatch();
     const showError = useException();
     const {selectedSC} = useSCs();
-    const classes = useEditPricingLevelStyles();
+    const { classes  } = useEditPricingLevelStyles();
 
     useEffect(() => {
         if (prisingLevel && props.open) {

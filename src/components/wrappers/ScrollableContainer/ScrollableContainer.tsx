@@ -1,8 +1,8 @@
 import React, {useLayoutEffect, useRef} from "react";
-import {Box} from "@material-ui/core";
+import {Box} from "@mui/material";
 import {SCContainer, Shadow} from "./styles";
 
-export const ScrollableContainer: React.FC = ({children}) => {
+export const ScrollableContainer: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = ({children}) => {
     const isScrolling = useRef(false);
     const shadowRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);

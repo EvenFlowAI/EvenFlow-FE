@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
-import moment from "moment";
+import {Button} from "@mui/material";
 import {IBreak, IBreakFrom} from "../../../store/reducers/serviceCenters/types";
 import {timeSpanString} from "../../../utils/constants";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {TBreak} from "./types";
 import {initialBreaks} from "./constants";
 import {BreakForm} from "./BreakForm/BreakForm";
@@ -15,8 +13,10 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import {TParsableDate} from "../../../types/types";
+import dayjs from "dayjs";
 
-export const BreaksModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
+export const BreaksModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TViewMode>>> = ({viewMode, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [form, setForm] = useState<TBreak[]>(initialBreaks);
@@ -43,8 +43,8 @@ export const BreaksModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props
                         return {
                             ...fd,
                             checked: true,
-                            from: moment(fd.from, timeSpanString),
-                            to: moment(fd.to, timeSpanString)
+                            from: dayjs(fd.from, timeSpanString),
+                            to: dayjs(fd.to, timeSpanString)
                         }
                     }
                     return el;
@@ -59,7 +59,7 @@ export const BreaksModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props
         form[idx] = {...form[idx], checked};
         setForm([...form]);
     }
-    const handleChange = (dayOfWeek: number, v: "from" | "to") => (date: MaterialUiPickersDate) => {
+    const handleChange = (dayOfWeek: number, v: "from" | "to") => (date: TParsableDate) => {
         setFormIsChecked(false);
         const idx = form.findIndex(d => d.dayOfWeek === dayOfWeek);
         form[idx] = {...form[idx], [v]: date};
@@ -85,8 +85,8 @@ export const BreaksModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props
                         }).map(fe => {
                             return {
                                 ...fe,
-                                from: moment(fe.from).format(timeSpanString),
-                                to: moment(fe.to).format(timeSpanString)
+                                from: dayjs(fe.from).format(timeSpanString),
+                                to: dayjs(fe.to).format(timeSpanString)
                             };
                         })};
                 try {
@@ -123,7 +123,7 @@ export const BreaksModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props
                 form={form} />
         </DialogContent>
         <DialogActions>
-            <Button onClick={onClose}>Close</Button>
+            <Button onClick={onClose} color="info">Close</Button>
             {!viewMode ? <LoadingButton
                 loading={saving}
                 variant="contained"

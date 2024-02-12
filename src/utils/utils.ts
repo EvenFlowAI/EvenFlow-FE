@@ -10,16 +10,19 @@ import {
     IPackageOptions,
     IServiceCategory
 } from "../api/types";
-import moment from "moment";
 import {decode, encode} from 'url-safe-base64';
 import {ETransportationType} from "../store/reducers/transportationNeeds/types";
 import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
 import {EOfferType} from "../store/reducers/offers/types";
 import {EPackagePricingType, IValueService} from "../store/reducers/appointmentFrameReducer/types";
-import {IMaintenanceItem, IRecallByVin} from "../types/types";
+import {IMaintenanceItem, IRecallByVin, TParsableDate} from "../types/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
 import i18n from "../i18n";
 import {TOption} from "./types";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 export const getInitials = (name?: string) => {
     if (!name) {
@@ -191,26 +194,26 @@ export const getTransportationOptionString = (option: string) => {
     return array.join('');
 }
 
-export const getStartEndDates = (date: moment.Moment, isXS: boolean): [string, string] => {
-    const utcOffset = moment(date).utcOffset();
+export const getStartEndDates = (date: TParsableDate, isXS: boolean): [string, string] => {
+    const utcOffset = dayjs(date).utcOffset();
     if (isXS) {
         return [
-            moment(date).startOf("day").add(utcOffset, 'minutes').toISOString(),
-            moment(date).endOf("day").add(utcOffset, 'minutes').toISOString()
+            dayjs.utc(date).startOf("day").add(utcOffset, 'minute').toISOString(),
+            dayjs.utc(date).endOf("day").add(utcOffset, 'minute').toISOString()
         ]
     }
     let correctedDate = date;
-    const dayOfWeek = moment(date).day();
-    if (dayOfWeek === 0) correctedDate = moment(date).subtract('1', 'days');
+    const dayOfWeek = dayjs(date).day();
+    if (dayOfWeek === 0) correctedDate = dayjs(date).subtract(1, 'day');
     return [
-        moment(correctedDate).startOf("week").add(1, 'days').add(utcOffset, 'minutes').toISOString(),
-        moment(correctedDate).endOf("week").add(1, 'days').add(utcOffset, 'minutes').toISOString(),
+        dayjs(correctedDate).startOf("week").add(1, 'days').add(utcOffset, 'minute').toISOString(),
+        dayjs(correctedDate).endOf("week").add(1, 'days').add(utcOffset, 'minute').toISOString(),
     ]
 }
 
 export const getYearOptions = () => {
-    let year = moment.utc().year()
-    if (moment().month() > 6) year = moment.utc().add(1, 'year').year();
+    let year = dayjs().utc().year()
+    if (dayjs().month() > 6) year = dayjs().utc().add(1, 'year').year();
     const YEARS = year - 1982;
     return Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 }
@@ -411,4 +414,15 @@ export const getMaintenanceList = (
         })
     }
     return services;
+}
+
+export const disableEmotionWarning = () => {
+    const consoleError = console.error;
+
+    console.error = function filterErrors(msg, ...args) {
+        if (/server-side rendering/.test(msg)) {
+            return;
+        }
+        consoleError(msg, ...args);
+    };
 }

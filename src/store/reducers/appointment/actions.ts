@@ -15,8 +15,7 @@ import {
     ISR, ISVAppointmentResponse, IWaitListData,
     TAppointmentState,
 } from "./types";
-import {AppThunk, PaginatedAPIResponse, TCallback} from "../../../types/types";
-import moment from "moment";
+import {AppThunk, PaginatedAPIResponse, TCallback, TParsableDate} from "../../../types/types";
 import {
     ICreateAppointmentResp,
     ICustomerLoadedData,
@@ -24,6 +23,7 @@ import {
 } from "../../../api/types";
 import {getSlotsGap} from "../appointmentFrameReducer/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
 
 export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLoading');
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>("Appointment/GetSCProfile");
@@ -66,7 +66,7 @@ export const getSlotsConsultantId = createAction<string|null>("Appointment/GetSl
 export const setAppointmentWasChanged = createAction<boolean>("Appointment/SetAppointmentWasChanged");
 export const setWaitListSettings = createAction<IWaitListData|null>("Appointment/SetWaitListSettings");
 
-export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void, loadCB?: TCallback): AppThunk => async dispatch => {
+export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: TParsableDate) => void, loadCB?: TCallback): AppThunk => async dispatch => {
     try {
         const {data: {items, searchedDateRange, slotGapMinutes, consultantId, waitlistSettings}} = await Api.call<IAppointmentResponse>(
             Api.endpoints.AppointmentSlots.GetSlots,
@@ -79,9 +79,9 @@ export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: mo
         if (loadCB) {
             loadCB();
         }
-        searchedDateRange && await dispatch(setLoadedDateRange(searchedDateRange))
+        searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)))
         if (cb && data.appointmentTimingType === EAppointmentTimingType.FirstAvailable && searchedDateRange) {
-            return cb(moment.utc(searchedDateRange.from));
+            return cb(dayjs.utc(searchedDateRange.from));
         }
         return res;
     } catch {
@@ -92,7 +92,7 @@ export const setLoadedReducer = createAction<TAppointmentState>("Appointment/Rel
 export const saveAppointmentReducer = (): AppThunk => (d, getState) => {
     const state = JSON.stringify({...getState().appointment});
     localStorage.setItem(APPOINTMENT_STATE_KEY, state);
-    localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, moment().toISOString());
+    localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, dayjs().toISOString());
 }
 export const clearStorage = () => {
     localStorage.removeItem(APPOINTMENT_STATE_KEY);
@@ -103,7 +103,7 @@ export const loadAppointmentReducer = (): AppThunk => async (dispatch) => {
     if (!date) {
         clearStorage();
     } else {
-        if (moment().diff(moment(date), "hours") >= 1) {
+        if (dayjs().diff(dayjs(date), "hours") >= 1) {
             clearStorage();
         } else {
             try {
@@ -113,7 +113,7 @@ export const loadAppointmentReducer = (): AppThunk => async (dispatch) => {
                 } else {
                     const data: TAppointmentState = JSON.parse(i);
                     await dispatch(setLoadedReducer(data));
-                    localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, moment().toISOString());
+                    localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, dayjs().toISOString());
                 }
             } catch {
                 clearStorage();
@@ -194,7 +194,7 @@ export const loadAllServiceCategories = (serviceCenterId: number): AppThunk => d
 }
 export const getServiceValetSlots = createAction<IServiceValetAppointment[]>("Appointment/GetServiceValetSlots");
 export const getDropOffSettings = createAction<IDropOffSettings>("Appointment/GetDropOffSettings");
-export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: moment.Moment) => void, loadCB?: TCallback): AppThunk => dispatch => {
+export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: TParsableDate) => void, loadCB?: TCallback): AppThunk => dispatch => {
     Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
         .then(result => {
             const {items, searchedDateRange, dropOffSettings} = result.data;

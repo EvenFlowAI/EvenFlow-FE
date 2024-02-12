@@ -1,5 +1,5 @@
 import React from 'react';
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const AppointmentConfirmationTitle = styled("h4")({
     fontWeight: 700,

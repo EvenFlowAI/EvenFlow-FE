@@ -11,7 +11,7 @@ type TConfirmCancelUpdateProps = DialogProps &  {
 }
 
 const ConfirmCancelUpdate = (props: TConfirmCancelUpdateProps) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     const onCancelChanges = () => {

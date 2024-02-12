@@ -1,8 +1,10 @@
 import React from "react";
-import {Button, withStyles} from "@material-ui/core";
+import { Button } from "@mui/material";
 
-export const EditButton = withStyles({
+import { withStyles } from 'tss-react/mui';
+
+export const EditButton = withStyles(Button, {
     root: {
         textTransform: "none"
     }
-})(Button);
+});

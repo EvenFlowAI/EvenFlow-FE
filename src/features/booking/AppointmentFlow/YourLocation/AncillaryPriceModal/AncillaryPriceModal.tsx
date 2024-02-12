@@ -20,7 +20,7 @@ type TDisplayAncillaryPriceProps = DialogProps & {
     onBackToSelectSlotsForVisitCenter: TCallback;
 }
 
-const AncillaryPriceModal: React.FC<TDisplayAncillaryPriceProps> = ({
+const AncillaryPriceModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDisplayAncillaryPriceProps>>> = ({
                                                                           open,
                                                                           onClose,
                                                                           onNext,
@@ -34,8 +34,8 @@ const AncillaryPriceModal: React.FC<TDisplayAncillaryPriceProps> = ({
         serviceOptionChangedFromSlotPage,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
-    const dialogClasses = useDialogStyles();
-    const classes = useStyles();
+    const {classes: dialogClasses} = useDialogStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);

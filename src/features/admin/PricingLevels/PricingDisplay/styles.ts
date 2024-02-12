@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(() => ({
+//
+export const useStyles = makeStyles()(() => ({
     checkedOption: {
         border: '1px solid #3855F3',
         borderRadius: 2,
@@ -31,4 +32,4 @@ export const useStyles = makeStyles(() => ({
         padding: 8,
         marginBottom: 15,
     }
-}))
+}));

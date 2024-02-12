@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, CircularProgress, Grid, TablePagination} from "@material-ui/core";
+import {Button, CircularProgress, Grid, TablePagination} from "@mui/material";
 import {OfferModal} from "../OfferModal/OfferModal";
 import {useDispatch, useSelector} from "react-redux";
 import {loadOffers, setOffersPageData} from "../../../../store/reducers/offers/actions";
@@ -19,12 +19,12 @@ export const ActiveOffers = () => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const [editedItem, setEditedItem] = useState<IOffer|undefined>(undefined);
-    const [offers, offersLoading, pageData, count] = useSelector((state: RootState) => [
-        state.offers.offersList,
-        state.offers.offersLoading,
-        state.offers.offersPageData,
-        state.offers.offersPaging.numberOfRecords
-    ]);
+    const {
+        offersList: offers,
+        offersLoading,
+        offersPageData,
+        offersPaging: {numberOfRecords}
+    } = useSelector((state: RootState) => state.offers)
     const {changeRowsPerPage, changePage} = usePagination(
         (s: RootState) => s.offers.offersPageData,
         setOffersPageData
@@ -34,7 +34,7 @@ export const ActiveOffers = () => {
         if (selectedSC) {
             dispatch(loadOffers(selectedSC.id));
         }
-    }, [selectedSC, dispatch, pageData]);
+    }, [selectedSC, dispatch, offersPageData]);
 
     useEffect(() => {
         if (editedItem) {
@@ -87,11 +87,11 @@ export const ActiveOffers = () => {
                 <Grid item xs={12}>
                     <TablePagination
                         component="div"
-                        count={count}
-                        page={pageData.pageIndex}
-                        onChangePage={changePage}
-                        onChangeRowsPerPage={changeRowsPerPage}
-                        rowsPerPage={pageData.pageSize}
+                        count={numberOfRecords}
+                        page={offersPageData.pageIndex}
+                        onPageChange={changePage}
+                        onRowsPerPageChange={changeRowsPerPage}
+                        rowsPerPage={offersPageData.pageSize}
                         rowsPerPageOptions={defaultRowsPerPageOptions}
                     />
                 </Grid>

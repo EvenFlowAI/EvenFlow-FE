@@ -3,19 +3,19 @@ import {DialogContent, DialogTitle} from "../../../../../components/modals/BaseM
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {DialogProps} from "../../../../../components/modals/BaseModal/types";
-import {Dialog} from "@material-ui/core";
-import {ErrorOutline} from "@material-ui/icons";
+import {Dialog} from "@mui/material";
+import {ErrorOutline} from "@mui/icons-material";
 import {useTranslation} from "react-i18next";
 import {EOfferType} from "../../../../../store/reducers/offers/types";
 import {DetailedFeesInfo, DetailedFeesList, useStyles} from "./styles";
 import {useDialogStyles} from "../../../../../hooks/styling/useDialogStyles";
 import {getOfferString} from "../../../../../utils/utils";
 
-const DetailedFeesManage: React.FC<DialogProps> = ({ open, onClose, }) => {
+const DetailedFeesManage: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({ open, onClose, }) => {
     const { scProfile} = useSelector((state: RootState) => state.appointment);
     const { appointmentRequestsPrices} = useSelector((state: RootState) => state.appointmentFrame);
-    const dialogClasses = useDialogStyles();
-    const classes = useStyles();
+    const {classes: dialogClasses} = useDialogStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     const noDefinedPriceExists = useMemo(() => {

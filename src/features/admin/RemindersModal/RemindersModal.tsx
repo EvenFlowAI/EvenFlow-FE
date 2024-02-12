@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button, Divider, Switch} from "@material-ui/core";
+import {Button, Divider, Switch} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadReminders, updateReminders} from "../../../store/reducers/serviceCenters/actions";
@@ -11,13 +11,13 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 
-const RemindersModal: React.FC<DialogProps> = (props) => {
+const RemindersModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const [isRemindersOn, setRemindersOn] = useState<boolean>(false);
     const { reminders, remindersLoading } = useSelector((state: RootState) => state.serviceCenters);
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {selectedSC} = useSCs();
 
     useEffect(() => {

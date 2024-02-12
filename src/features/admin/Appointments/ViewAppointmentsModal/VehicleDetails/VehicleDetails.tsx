@@ -1,10 +1,10 @@
 import React from 'react';
 import {IAppointment} from "../../../../../api/types";
 import {DetailsItem} from "../DetailsItem/DetailsItem";
-import {Divider} from "@material-ui/core";
+import {Divider} from "@mui/material";
 import {TitleWrapper} from "../styles";
 
-export const VehicleDetails:React.FC<{payload: IAppointment}> = ({payload}) => {
+export const VehicleDetails:React.FC<React.PropsWithChildren<React.PropsWithChildren<{payload: IAppointment}>>> = ({payload}) => {
     return (
         <div>
             <TitleWrapper>Vehicle Details</TitleWrapper>

@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {TextField} from "../../../../components/styled/EndUserInputs";
-import {Grid, useMediaQuery} from "@material-ui/core";
+import {Grid, useMediaQuery} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -16,11 +16,11 @@ type TProps = {
     loading: boolean;
 }
 
-const ReturningSelfCustomer: React.FC<TProps> = ({loading, onComplete}) => {
+const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({loading, onComplete}) => {
     const {customerEnteredEmail} = useSelector((state: RootState) => state.appointment);
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const loadingClasses = useLoadingStyles();
     const { t } = useTranslation();
     const isXs = useMediaQuery("xs");

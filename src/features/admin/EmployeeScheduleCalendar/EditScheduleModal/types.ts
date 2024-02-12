@@ -1,7 +1,7 @@
-import moment from "moment/moment";
+import {Dayjs} from "dayjs";
 
 export type TForm = {
-    timeStart: moment.Moment|null;
-    timeEnd: moment.Moment|null;
+    timeStart: Dayjs|null;
+    timeEnd: Dayjs|null;
     podId?: number;
 }

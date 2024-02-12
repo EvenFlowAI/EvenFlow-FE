@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useNotificationStyles = makeStyles({
+// 
+export const useNotificationStyles = makeStyles()({
     tabTitle: {
         fontSize: 16,
         fontWeight: 700,
@@ -43,5 +44,11 @@ export const useNotificationStyles = makeStyles({
         alignItems: "center",
         gap: '8px',
         marginTop: 9,
+        fontSize: 14,
+    },
+    autocomplete: {
+        '& > label': {
+            transformOrigin: "bottom left"
+        }
     }
-})
+});

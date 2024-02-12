@@ -12,26 +12,20 @@ import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import {ETransportColumn} from "../../../../store/reducers/transportationNeeds/types";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
-import moment from "moment";
 import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions";
 import {TextWrapper, TransportationsWrapper} from "./styles";
 import {TransportationCard} from "./TransportationCard/TransportationCard";
 import {TTransportationData} from "./types";
 import {TActionProps} from "../../../../types/types";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
 
-export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) => {
-    const {id} = useParams();
-    const {t} = useTranslation();
-    const [transportations, setTransportations] = useState<ITransportation[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [
-        s,
-        ss,
-        individualOps,
+export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWithChildren<TActionProps>>> = ({onNext, onBack}) => {
+    const {
+        subService,
+        service,
         categoriesIds,
-        packageOpt,
-        appointment,
+        isUsualFlowNeeded,
         hashKey,
         selectedRecalls,
         transportation,
@@ -39,41 +33,28 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
         selectedPackage,
         selectedVehicle,
         packageEMenuType,
-        allCategories,
-        appointmentByKey,
-        isUsualFlowNeeded,
-        customerLoadedData,
-    ] = useSelector((state: RootState) => [
-        state.appointmentFrame.service,
-        state.appointmentFrame.subService,
-        state.appointment.selectedSR,
-        state.appointmentFrame.categoriesIds,
-        state.appointmentFrame.selectedPackage,
-        state.appointment.appointment,
-        state.appointmentFrame.hashKey,
-        state.appointmentFrame.selectedRecalls,
-        state.appointmentFrame.transportation,
-        state.appointmentFrame.packagePricingType,
-        state.appointmentFrame.selectedPackage,
-        state.appointmentFrame.selectedVehicle,
-        state.appointmentFrame.packageEMenuType,
-        state.categories.allCategories,
-        state.appointmentFrame.appointmentByKey,
-        state.appointmentFrame.isUsualFlowNeeded,
-        state.appointment.customerLoadedData,
-    ]);
+        appointmentByKey
+    } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
+    const {selectedSR, customerLoadedData, appointment} = useSelector(({appointment}: RootState) => appointment)
+    const {allCategories} = useSelector(({categories}: RootState) => categories)
+    const {id} = useParams<{id: string}>();
+    const {t} = useTranslation();
+    const [transportations, setTransportations] = useState<ITransportation[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+
     const dispatch = useDispatch();
 
     const serviceRequestIds = useMemo(() => {
-        return collectServiceRequestIds(s, ss, null, individualOps);
-    }, [s, ss, individualOps]);
+        return collectServiceRequestIds(service, subService, null, selectedSR);
+    }, [service, subService, selectedSR]);
     const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
     const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])
+
     const date = useMemo(() => {
         let fullDateString = ''
         if (appointmentByKey) {
             const [hh, mm] = appointmentByKey?.timeSlot.split(":");
-            fullDateString = moment.utc(appointmentByKey?.dateInUtc).set('hour', hh ? +hh : 0).set('minute', mm ? +mm : 0).toISOString(true)
+            fullDateString = dayjs.utc(appointmentByKey?.dateInUtc).set('hour', hh ? +hh : 0).set('minute', mm ? +mm : 0).toISOString()
         }
         if (appointment) {
             return appointment.appointmentDate
@@ -92,7 +73,7 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
 
     useEffect(() => {
         if (selectedVehicle) {
-            setLoading(true);
+            // setLoading(true);
             const maintenancePackageOption = selectedPackage
                 ? {id: selectedPackage?.id, priceType: packagePricingType}
                 : packageEMenuType !== null
@@ -123,9 +104,11 @@ export const TransportationNeeds: React.FC<TActionProps> = ({onNext, onBack}) =>
                 .finally(() => {
                     setLoading(false)
                 })
+        } else {
+            setTimeout(() => setLoading(false), 500)
         }
     }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls,
-        packagePricingType, packageEMenuType, packageOpt, categoriesIds, hashKey, date]);
+        packagePricingType, packageEMenuType, selectedPackage, categoriesIds, hashKey, date]);
 
     const handleNext = (transportation: ITransportation|null): void => {
         ReactGA.event({

@@ -1,13 +1,13 @@
 import React from 'react';
 import {TCallback} from "../../../../../types/types";
-import moment from "moment";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EAppointmentTimingType, IServiceValetAppointment} from "../../../../../store/reducers/appointment/types";
 import {useTranslation} from "react-i18next";
 import {EPricingDisplayType} from "../../../../../store/reducers/pricingSettings/types";
 import {defaultFormat, monthFormat, XsFormat, XsMontFormat} from "../constants";
-import {DayCard} from "../../../../../components/styled/DayCard";
+import {Date, Day, DayCard, DayName} from "../../../../../components/styled/DayCard";
+import dayjs from "dayjs";
 
 type TProps = {
     day: string;
@@ -17,7 +17,7 @@ type TProps = {
     isXs: boolean;
 };
 
-export const SVDaySelectCard: React.FC<TProps> = ({
+export const SVDaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
                                                     day, onClick, appointment, isCurrent, isXs
                                                 }) => {
     const isCustomRange = useSelector((state: RootState) => {
@@ -31,7 +31,7 @@ export const SVDaySelectCard: React.FC<TProps> = ({
 
     const getLabel = () => {
         if (isXs) {
-            return moment.utc(day).format("D");
+            return dayjs.utc(day).format("D");
         }
         if (isCurrent) {
             if (appointment) {
@@ -64,7 +64,7 @@ export const SVDaySelectCard: React.FC<TProps> = ({
     }
 
     const getDayNameString = (): string => {
-        const name = moment.utc(day).format('ddd').toLowerCase();
+        const name = dayjs.utc(day).format('ddd').toLowerCase();
         return name.charAt(0).toUpperCase() + name.slice(1);
     }
 
@@ -73,11 +73,14 @@ export const SVDaySelectCard: React.FC<TProps> = ({
         isCurrent={isCurrent}
         isOffPeak={false}
     >
-        <div className="dayName">{getDayNameString()}</div>
-        <div>{moment.utc(day).format(getFormat())}</div>
-        <div className="day" onClick={onClick}>
+        <DayName>{getDayNameString()}</DayName>
+        <Date>{dayjs.utc(day).format(getFormat())}</Date>
+        <Day
+            available={Boolean(appointment)}
+            isCurrent={isCurrent}
+            onClick={onClick}>
             {getLabel()}
             {isXs ? <div className="padding" /> : null}
-        </div>
+        </Day>
     </DayCard>
 };

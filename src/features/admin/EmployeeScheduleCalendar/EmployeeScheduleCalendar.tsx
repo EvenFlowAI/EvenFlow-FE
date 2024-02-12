@@ -8,8 +8,7 @@ import {
     TableRow,
     Tooltip,
     useMediaQuery, useTheme
-} from "@material-ui/core";
-import moment, {Moment} from "moment";
+} from "@mui/material";
 import {WeekControls} from "./WeekControls/WeekControls";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEmployeesSchedule} from "../../../store/reducers/schedules/actions";
@@ -29,31 +28,29 @@ import {calendarDateFormat} from "../../../utils/constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
+import {TParsableDate} from "../../../types/types";
 
 export const EmployeeScheduleCalendar = () => {
-    const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
-    const [editedDate, setEditedDate] = useState<moment.Moment>(moment());
-    const [editedEmployee, setEditedEmployee] = useState<IEmployee>({} as IEmployee);
-    const [editedSchedule, setEditedSchedule] = useState<ISchedule|undefined>(undefined);
-    const [ids, setIds] = useState<TIds>({});
-    const {selectedSC} = useSCs();
-    const dispatch = useDispatch();
-    const [
+    const {
         employeesList,
         employeesLoading,
         filters,
-        workingDays,
-        holidaysList
-    ] = useSelector((state: RootState) => [
-        state.employeesSchedule.employeesList,
-        state.employeesSchedule.employeesLoading,
-        state.employeesSchedule.filters,
-        state.serviceCenters.workingDays,
-        state.holidays.weeklyHolidaysList,
-    ]);
+    } = useSelector(({employeesSchedule}: RootState) => employeesSchedule)
+    const {workingDays} = useSelector(({serviceCenters}: RootState) => serviceCenters)
+    const {weeklyHolidaysList} = useSelector(({holidays}: RootState) => holidays)
+
+    const [selectedDate, setSelectedDate] = useState<TParsableDate>(dayjs());
+    const [editedDate, setEditedDate] = useState<TParsableDate>(dayjs());
+    const [editedEmployee, setEditedEmployee] = useState<IEmployee>({} as IEmployee);
+    const [editedSchedule, setEditedSchedule] = useState<ISchedule|undefined>(undefined);
+    const [ids, setIds] = useState<TIds>({});
+
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
     const {isOpen, onOpen, onClose} = useModal();
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     const [start, end] = useMemo(() => getStartEndDates(selectedDate, isXS), [selectedDate, isXS, selectedSC])
     const daysOfWeek = useMemo(() => getDaysOfWeek(selectedDate, isXS), [selectedDate, isXS, selectedSC]);
 
@@ -66,11 +63,11 @@ export const EmployeeScheduleCalendar = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadWorkingDays(selectedSC.id));
-            dispatch(loadWeeklyHolidaysList(daysOfWeek[0].toISOString(), daysOfWeek[daysOfWeek.length-1].toISOString()));
+            dispatch(loadWeeklyHolidaysList(dayjs(daysOfWeek[0]).toISOString(), dayjs(daysOfWeek[daysOfWeek.length-1]).toISOString()));
         }
     }, [daysOfWeek, selectedSC]);
 
-    const handleChange = (date: moment.Moment) => {
+    const handleChange = (date: TParsableDate) => {
         setSelectedDate(date);
     }
 
@@ -93,15 +90,15 @@ export const EmployeeScheduleCalendar = () => {
         }
     }
 
-    const getIds = useCallback((date: moment.Moment, schedules: ISchedule[]): TIds => {
-        const data = schedules.filter(s => s.dayOfWeek === moment(date).day());
+    const getIds = useCallback((date: TParsableDate, schedules: ISchedule[]): TIds => {
+        const data = schedules.filter(s => s.dayOfWeek === dayjs(date).day());
         return {
             customId: data.find(s => !s.isRecurring)?.id,
             recursiveId: data.find(s => s.isRecurring)?.id
         }
     }, [])
 
-    const handleEdit = useCallback((employee: IEmployee, date: moment.Moment, schedules?: ISchedule[]) => async () => {
+    const handleEdit = useCallback((employee: IEmployee, date: TParsableDate, schedules?: ISchedule[]) => async () => {
         setEditedDate(date);
         setEditedEmployee({...employee, serviceCenter: selectedSC});
         setIds(getIds(date, schedules||[]));
@@ -112,11 +109,11 @@ export const EmployeeScheduleCalendar = () => {
 
     const getCellStyle = (nonWorking: boolean) => nonWorking ? nonWorkingStyle : {};
 
-    const getHoliday = useCallback((date: moment.Moment) => {
-        const holiday = holidaysList.find(h => {
-            const d = moment.utc(h.date).year(date.year()).startOf('day');
-            return moment(moment(d).format("YYYY-MM-DD"), "YYYY-MM-DD")
-                .isSame(moment(moment.utc(date).format("YYYY-MM-DD"), "YYYY-MM-DD"), "date");
+    const getHoliday = useCallback((date: TParsableDate) => {
+        const holiday = weeklyHolidaysList.find(h => {
+            const d = dayjs.utc(h.date).year(dayjs(date).year()).startOf('day');
+            return dayjs(dayjs(d).format("YYYY-MM-DD"), "YYYY-MM-DD")
+                .isSame(dayjs(dayjs.utc(dayjs(date).toDate()).format("YYYY-MM-DD"), "YYYY-MM-DD"), "date");
         });
         if (holiday) {
             const description = holiday.description?.length > 40
@@ -125,15 +122,15 @@ export const EmployeeScheduleCalendar = () => {
             return <Tooltip title={holiday.description}><Holiday>{description}</Holiday></Tooltip>;
         }
         return null;
-    }, [holidaysList])
+    }, [weeklyHolidaysList])
 
-    const isWorkingDay = useCallback((date: Moment): boolean => {
-        const holiday = holidaysList.find(h => {
-            const d = moment.utc(h.date).year(date.year()).startOf('day');
-            return d.isSame(moment.utc(date), "date");
+    const isWorkingDay = useCallback((date: TParsableDate): boolean => {
+        const holiday = weeklyHolidaysList.find(h => {
+            const d = dayjs.utc(h.date).year(dayjs(date).year()).startOf('day');
+            return d.isSame(dayjs.utc(dayjs(date).toDate()), "date");
         });
-        return workingDays.includes(moment.utc(date).day() as EDay) && !holiday;
-    }, [workingDays, holidaysList])
+        return workingDays.includes(dayjs.utc(date).day() as EDay) && !holiday;
+    }, [workingDays, weeklyHolidaysList])
 
     return (
         <div>
@@ -150,10 +147,10 @@ export const EmployeeScheduleCalendar = () => {
                     <TableRow>
                         <TableCell style={{verticalAlign: "bottom"}}>Employees</TableCell>
                         {daysOfWeek.map((date) => {
-                            return <HeadCell key={date.toISOString()}>
+                            return <HeadCell key={dayjs(date).toISOString()}>
                                 <div className="content">
                                     {getHoliday(date)}
-                                    <span>{date.format(calendarDateFormat)}</span>
+                                    <span>{dayjs(date).format(calendarDateFormat)}</span>
                                 </div>
                             </HeadCell>
                         })}
@@ -173,7 +170,7 @@ export const EmployeeScheduleCalendar = () => {
                                 </TableCell>
                                 {daysOfWeek.map((date) => {
                                     return <TableCell
-                                        key={date.toISOString()}
+                                        key={dayjs(date).toISOString()}
                                         onClick={isWorkingDay(date) ? handleEdit(employee, date, schedules) : noop}
                                         style={{
                                             cursor: "pointer",

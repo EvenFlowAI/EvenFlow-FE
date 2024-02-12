@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button, TableBody, TableHead} from "@material-ui/core";
+import {Button, TableBody, TableHead} from "@mui/material";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -18,13 +18,13 @@ import {useException} from "../../../hooks/useException/useException";
 
 const fixedToTwo = /(^-?\d*\.?\d{1,2}?)$/;
 
-const LaborRateModal: React.FC<DialogProps> = (props) => {
+const LaborRateModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {laborRate, selectedSC, predictionParamsLoading} = useSelector((state: RootState) => state.serviceCenters);
     const [customerPay, setCustomerPay] = useState<string>('0');
     const [warranty, setWarranty] = useState<string>('0');
     const [internal, setInternal] = useState<string>('0');
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException()
     const showMessage = useMessage();

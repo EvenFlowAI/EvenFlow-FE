@@ -1,6 +1,6 @@
 import {IAppointment} from "../../../../api/types";
-import moment from "moment/moment";
+import dayjs from "dayjs";
 
 export const getAppointmentDate = (appointment: IAppointment) => {
-    return moment.utc(appointment.dateTime);
+    return dayjs.utc(appointment.dateTime);
 }

@@ -1,8 +1,12 @@
-import {PaletteOptions} from "@material-ui/core/styles/createPalette";
+import { PaletteOptions } from '@mui/material/styles';
 
 export const colors: PaletteOptions = {
     primary: {
         main: '#7898FF',
+        contrastText: "#FFFFFF"
+    },
+    secondary: {
+        main: "#f50057",
         contrastText: "#FFFFFF"
     },
     background: {
@@ -12,6 +16,9 @@ export const colors: PaletteOptions = {
     success: {
         main: '#89E5AB',
         contrastText: "#202021"
+    },
+    info: {
+        main: '#202021',
     }
 };
 

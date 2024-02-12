@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {Button, Grid, Paper} from "@material-ui/core";
+import {Button, Grid, Paper} from "@mui/material";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {useCenterSettingsStyles} from "../../../../hooks/styling/useCenterSettingsStyles";
 import {useStyles} from "./styles";
@@ -11,11 +11,11 @@ type TProps = {
     isLoading: boolean;
 }
 
-export const ZonesOpsCodesPlate: React.FC<TProps> = ({onEdit, isLoading}) => {
+export const ZonesOpsCodesPlate: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onEdit, isLoading}) => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
     const {zones} = useSelector((state: RootState) => state.serviceValet);
-    const centerSettingsClasses = useCenterSettingsStyles();
-    const classes = useStyles();
+    const { classes: centerSettingsClasses } = useCenterSettingsStyles();
+    const { classes  } = useStyles();
 
     const zonesData = useMemo(() => {
         if (centerSettings?.zoneServiceRequests) {

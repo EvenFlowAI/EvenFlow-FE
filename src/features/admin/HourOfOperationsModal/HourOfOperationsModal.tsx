@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
-import moment from "moment";
+import {Button} from "@mui/material";
 import {IHOODataForm} from "../../../store/reducers/serviceCenters/types";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {timeSpanString} from "../../../utils/constants";
 import {THOOForm} from "./types";
 import {initialForm} from "./constants";
@@ -15,8 +13,10 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
+import {TParsableDate} from "../../../types/types";
 
-export const HourOfOperationsModal: React.FC<DialogProps&TViewMode> = ({viewMode, ...props}) => {
+export const HourOfOperationsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TViewMode>>> = ({viewMode, ...props}) => {
     const {selectedSC} = useSCs();
     const [form, setForm] = useState<THOOForm[]>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);
@@ -32,8 +32,8 @@ export const HourOfOperationsModal: React.FC<DialogProps&TViewMode> = ({viewMode
                         return {
                             dayOfWeek: element.dayOfWeek,
                             checked: true,
-                            from: moment(element.from, timeSpanString),
-                            to: moment(element.to, timeSpanString)
+                            from: dayjs(element.from, timeSpanString),
+                            to: dayjs(element.to, timeSpanString)
                         };
                     }
                     return ie;
@@ -42,7 +42,7 @@ export const HourOfOperationsModal: React.FC<DialogProps&TViewMode> = ({viewMode
         }
     }, [selectedSC, setForm, props.open]);
 
-    const handleChange = (day: number, t: "from" | "to") => (date: MaterialUiPickersDate) => {
+    const handleChange = (day: number, t: "from" | "to") => (date: TParsableDate) => {
         setFormIsChecked(false);
         const idx = form.findIndex(v => v.dayOfWeek === day);
         form[idx] = {...form[idx], [t]: date};
@@ -73,7 +73,7 @@ export const HourOfOperationsModal: React.FC<DialogProps&TViewMode> = ({viewMode
             } else {
                 setSaving(true);
                 const fd: IHOODataForm[] = form.filter(e => e.checked).map(e => ({
-                    ...e, from: moment(e.from).format(timeSpanString), to: moment(e.to).format(timeSpanString)
+                    ...e, from: dayjs(e.from).format(timeSpanString), to: dayjs(e.to).format(timeSpanString)
                 })) as IHOODataForm[];
                 try {
                     await Api.call(Api.endpoints.ServiceCenters.SetHOO, {data: {hoursOfOperations: fd}, urlParams: {id: selectedSC.id}});
@@ -103,11 +103,12 @@ export const HourOfOperationsModal: React.FC<DialogProps&TViewMode> = ({viewMode
                 onApply={handleApplyToAll}
                 onCheck={handleCheck}
                 form={form}
+                isLoading={saving}
                 onChange={handleChange}
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={onClose}>Close</Button>
+            <Button onClick={onClose} color="info">Close</Button>
             {!viewMode ? <LoadingButton
                 variant="contained"
                 color="primary"

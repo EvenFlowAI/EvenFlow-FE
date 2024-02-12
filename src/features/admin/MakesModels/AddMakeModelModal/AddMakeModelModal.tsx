@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button, Divider, IconButton} from "@material-ui/core";
+import {Button, Divider, IconButton} from "@mui/material";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {AddCircleOutline} from "@material-ui/icons";
+import {AddCircleOutline} from "@mui/icons-material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Chip} from "../../../../components/wrappers/Chip/Chip";
 import {useDispatch, useSelector} from "react-redux";
@@ -17,14 +17,14 @@ type TAddMakeModalProps = DialogProps & {
     isEditing?: boolean;
 };
 
-export const AddMakeModelModal:React.FC<TAddMakeModalProps> = ({ isEditing, onClose, ...props}) => {
+export const AddMakeModelModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddMakeModalProps>>> = ({ isEditing, onClose, ...props}) => {
     const { currentMake, makes } = useSelector((state: RootState) => state.vehicleDetails);
     const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [make, setMake] = useState<string>('');
     const [models, setModels] = useState<string[]>([]);
     const [newModel, setNewModel] = useState<string>('');
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const showError = useException();
     const dispatch = useDispatch();
 
@@ -97,7 +97,7 @@ export const AddMakeModelModal:React.FC<TAddMakeModalProps> = ({ isEditing, onCl
         setModels(prev => prev.filter(item => item !== model));
     }
 
-    const onKeyDown = (e: React.KeyboardEvent<{}>) => {
+    const onKeyUp = (e: React.KeyboardEvent<{}>) => {
         if (e.key === 'Enter') addModel();
     }
 
@@ -115,7 +115,7 @@ export const AddMakeModelModal:React.FC<TAddMakeModalProps> = ({ isEditing, onCl
                 {Boolean(models.length) && <div className={classes.modelsWrapper}>
                     {models.map(model => <Chip key={model} name={model} onDelete={onModelDelete}/>)}
                 </div>}
-                <div className={classes.addModel} role="presentation" onKeyPress={onKeyDown}>
+                <div className={classes.addModel} role="presentation" onKeyUp={onKeyUp}>
                     <div style={{width: '90%'}}>
                     <TextField
                         fullWidth
@@ -125,7 +125,7 @@ export const AddMakeModelModal:React.FC<TAddMakeModalProps> = ({ isEditing, onCl
                         onChange={onModelChange}
                         value={newModel}/>
                     </div>
-                    <IconButton onClick={addModel} className={classes.iconPlus}>
+                    <IconButton onClick={addModel} className={classes.iconPlus} size="large">
                         <AddCircleOutline/>
                     </IconButton>
                 </div>

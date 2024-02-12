@@ -1,7 +1,8 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     input: {
         marginBottom: "12px !important"
     }
-})
+});

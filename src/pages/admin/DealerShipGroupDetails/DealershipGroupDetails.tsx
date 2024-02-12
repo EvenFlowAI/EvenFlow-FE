@@ -3,9 +3,9 @@ import {useParams} from "react-router-dom";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {IDealershipGroupExtended} from "../../../store/reducers/dealershipGroups/types";
 import {concatAddress} from "../../../utils/utils";
-import {Tab} from "@material-ui/core";
+import {Tab} from "@mui/material";
 import {TabList} from "../../../components/styled/Tabs";
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {TabContext, TabPanel} from "@mui/lab";
 import {DetailsServiceCenters} from "../../../features/admin/DealershipGroupDetails/DetailsServiceCenters/DetailsServiceCenters";
 import {DetailsEmployees} from "../../../features/admin/DealershipGroupDetails/DetailsEmployees/DetailsEmployees";
 import {useDispatch} from "react-redux";
@@ -21,7 +21,7 @@ const tabs: TTab[] = [
 ];
 
 export const DealershipGroupDetails = () => {
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const [dealership, setDS] = useState<IDealershipGroupExtended | undefined>();
     const [selectedTab, setTab] = useState<string>("1");
     const dispatch = useDispatch();

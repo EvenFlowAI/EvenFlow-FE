@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const Wrapper = styled("div")(({theme}) => ({
     padding: theme.spacing(1),
@@ -7,7 +7,7 @@ export const Wrapper = styled("div")(({theme}) => ({
     justifyContent: "flex-start"
 }))
 
-export const Label = styled("span")(({theme}) => ({
+export const Label = styled("span")(() => ({
     top: 0,
     left: 0,
     bottom: 0,

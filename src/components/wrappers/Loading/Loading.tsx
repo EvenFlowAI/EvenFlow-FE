@@ -1,6 +1,6 @@
 import React from "react";
-import {CircularProgressProps, CircularProgress, Grid} from "@material-ui/core";
+import {CircularProgressProps, CircularProgress, Grid} from "@mui/material";
 
-export const Loading: React.FC<CircularProgressProps> = props => {
-    return <Grid container justify="center"><CircularProgress {...props} /></Grid>;
+export const Loading: React.FC<React.PropsWithChildren<React.PropsWithChildren<CircularProgressProps>>> = props => {
+    return <Grid container justifyContent="center"><CircularProgress {...props} /></Grid>;
 }

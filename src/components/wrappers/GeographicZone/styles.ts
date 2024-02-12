@@ -1,21 +1,23 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {styled} from "@material-ui/core";
+import { makeStyles } from 'tss-react/mui';
+import {styled} from "@mui/material";
 import {TStyleProps} from "./types";
 
-export const useStyles = makeStyles(() => ({
-    zoneContainer: ({isSelected}: TStyleProps) => ({
-        display: 'grid',
-        gridTemplateColumns: '2fr 3fr',
-        alignItems: "flex-start",
-        padding: 12,
-        borderRadius: 1,
-        border: isSelected ? '1px solid #2F80ED' : '1px solid #DADADA',
-        backgroundColor: "#FFFFFF",
-    }),
+export const ZoneContainer = styled("div")<TStyleProps>(({theme, isSelected}) => ({
+    display: 'grid',
+    gridTemplateColumns: '2fr 3fr',
+    alignItems: "flex-start",
+    padding: 12,
+    borderRadius: 1,
+    border: isSelected ? '1px solid #2F80ED' : '1px solid #DADADA',
+    backgroundColor: "#FFFFFF",
+    fontSize: 14,
+}))
+
+// 
+export const useStyles = makeStyles()(() => ({
     zoneBox: {
         display: "flex",
         alignItems: 'center',
-        gap: 10,
         backgroundColor: "#F2F3F7",
         border: '1px solid #DADADA',
         borderRadius: 2,
@@ -30,7 +32,7 @@ export const useStyles = makeStyles(() => ({
         minHeight: 45,
         display: "grid",
         gridTemplateColumns: '1fr 1fr',
-        gridGap: 8,
+        gap: 8,
         padding: 8,
         border: "2px solid #DADADA",
         borderRadius: 2,
@@ -44,7 +46,7 @@ export const useStyles = makeStyles(() => ({
         backgroundColor: 'white',
         cursor: 'pointer',
     }
-}))
+}));
 
 export const ZipCode = styled('div')({
     display: 'flex',

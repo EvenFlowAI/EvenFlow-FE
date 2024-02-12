@@ -1,8 +1,8 @@
-import moment from "moment/moment";
+import {TParsableDate} from "../../../types/types";
 
 export type TTimeObject = {
-    start?: string | moment.Moment;
-    end?: string | moment.Moment;
+    start?: TParsableDate;
+    end?: TParsableDate;
 }
 
 export type TOption = {

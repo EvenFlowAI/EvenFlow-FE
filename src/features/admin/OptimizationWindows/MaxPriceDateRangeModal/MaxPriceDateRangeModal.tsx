@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -13,7 +13,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const MaxPriceDateRangeModal: React.FC<DialogProps> = ({payload, onAction, ...props}) => {
+export const MaxPriceDateRangeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({payload, onAction, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [val, setVal] = useState<number>(0);
 
@@ -62,7 +62,7 @@ export const MaxPriceDateRangeModal: React.FC<DialogProps> = ({payload, onAction
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Close
             </Button>
             <LoadingButton

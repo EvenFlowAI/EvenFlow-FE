@@ -2,9 +2,9 @@ import {TViewMode} from "../../../../components/modals/BaseModal/types";
 import React from "react";
 import {TSelectChange} from "../../../../types/types";
 import {IAddress} from "../../../../store/reducers/dealershipGroups/types";
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {states} from "../../../../utils/constants";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 
@@ -14,7 +14,7 @@ type TEditFormProps = TViewMode & {
     form: IAddress;
 }
 
-export const EditForm: React.FC<TEditFormProps> = ({viewMode, ...props}) => {
+export const EditForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TEditFormProps>>> = ({viewMode, ...props}) => {
     return <Grid container spacing={3}>
         <Grid item xs={12}>
             <TextField
@@ -41,6 +41,7 @@ export const EditForm: React.FC<TEditFormProps> = ({viewMode, ...props}) => {
         <Grid item xs={6}>
             <Autocomplete
                 options={states}
+                isOptionEqualToValue={(option, value) => option === value}
                 disabled={viewMode}
                 onChange={props.onSelect}
                 renderInput={autocompleteRender({label: "State", fullWidth: true})}

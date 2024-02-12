@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {ChangeEvent, HTMLAttributes, useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {
@@ -10,29 +10,28 @@ import {
     loadAllAssignedServiceRequests,
 } from "../../../../store/reducers/serviceRequests/actions";
 import {RootState} from "../../../../store/rootReducer";
-import moment from "moment";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
-import { ReactComponent as Calendar } from "../../../../assets/img/date_range.svg";
-import { ReactComponent as Watch } from "../../../../assets/img/watch_round.svg";
+import { Autocomplete } from '@mui/material';
 import Checkbox from "../../../../components/formControls/Checkbox/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
-import {Button, Divider} from "@material-ui/core";
+import {CheckBoxOutlineBlank, CheckBoxOutlined, DateRange, QueryBuilder} from "@mui/icons-material";
+import {Button, Divider} from "@mui/material";
 import {editTransportationOptionRules} from "../../../../store/reducers/transportationNeeds/actions";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {getOptions} from "../../../../utils/utils";
 import {useAutocompleteStyles, useMultipleACStyles, useStyles} from "./styles";
 import {TOption, TTimeObject} from "../types";
-import {DatePicker} from "../../../../components/pickers/DatePicker/DatePicker";
-import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
+import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
+import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/CustomDatePicker";
 
 type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;
 }
 
-export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOptionDialogProps> = ({ editingElement, ...props}) => {
+export const EditTransportationModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TEditTransportationOptionDialogProps>>> = ({ editingElement, ...props}) => {
     const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
     const [customerSegment, setCustomerSegment] = useState<TOption | null>(null);
     const [daysOfWeek, setDaysOfWeek] = useState<TOption[]>([]);
@@ -47,9 +46,9 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const autoCompleteStyles = useAutocompleteStyles();
-    const classes = useStyles();
-    const multipleACSClasses = useMultipleACStyles();
+    const { classes: autoCompleteStyles } = useAutocompleteStyles();
+    const { classes  } = useStyles();
+    const { classes: multipleACSClasses } = useMultipleACStyles();
     const showError = useException();
 
     const allRequestsSelected = useMemo(() => allAssignedList.length
@@ -104,18 +103,18 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
                 const [endHours, endMinutes, endSeconds] = rules.timeOfDay.end.split(':');
 
                 setTimeOfDay(() => ({
-                    start: moment.utc()
-                        .hours(+startHours)
-                        .minutes(+startMinutes)
+                    start: dayjs.utc()
+                        .hour(+startHours)
+                        .minute(+startMinutes)
                         .second(+startSeconds),
-                    end: moment.utc()
-                        .hours(+endHours)
-                        .minutes(+endMinutes)
+                    end: dayjs.utc()
+                        .hour(+endHours)
+                        .minute(+endMinutes)
                         .second(+endSeconds),
                 }));
                 setDuration(() => ({
-                    start: moment.utc(rules.duration.start),
-                    end: moment.utc(rules.duration.end),
+                    start: dayjs.utc(rules.duration.start),
+                    end: dayjs.utc(rules.duration.end),
                 }));
             }
         }
@@ -126,27 +125,27 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
         setCustomerSegment(value)
     }
 
-    const handleTime = useCallback((type: keyof TTimeObject) => (date: moment.Moment | null): void => {
+    const handleTime = useCallback((type: keyof TTimeObject) => (date: TParsableDate): void => {
         setFormIsChecked(false);
         setTimeOfDay((prev) => {
             if (prev) {
-                if (prev.start && type === 'end' && moment(date).diff(prev.start) < 0) {
+                if (prev.start && type === 'end' && dayjs(date).diff(prev.start) < 0) {
                     showError('The End Time needs to be more than the Start Time')
                     return prev;
                 }
-                return {...prev, [type as keyof TTimeObject]: moment(date)};
+                return {...prev, [type as keyof TTimeObject]: dayjs(date)};
             } else {
-                return {[type as keyof TTimeObject]: moment(date)}
+                return {[type as keyof TTimeObject]: dayjs(date)}
             }
         })
     }, [])
 
-    const handleDateChange = useCallback((type: keyof TTimeObject) => (date: moment.Moment | null): void => {
+    const handleDateChange = useCallback((type: keyof TTimeObject) => (date: TParsableDate): void => {
         setFormIsChecked(false);
         setDuration((prev) => {
-            const value = moment.utc(date).hours(type === 'start' ? 0 : 1);
+            const value = dayjs.utc(date).hour(type === 'start' ? 0 : 1);
             if (prev) {
-                if (prev.start && type === 'end' && moment(date).diff(prev.start) / 1000 / 60 / 60 < -24) {
+                if (prev.start && type === 'end' && dayjs(date).diff(prev.start) / 1000 / 60 / 60 < -24) {
                     showError('The End Duration Date needs to be more than the Start Date');
                     return prev;
                 }
@@ -203,10 +202,10 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
         }
     }, [daysOfWeek])
 
-    const renderDayOfWeekOption = useCallback((option: TOption) => {
+    const renderDayOfWeekOption = useCallback((props: HTMLAttributes<HTMLLIElement>, option: TOption) => {
         const allOptionsSelected = Boolean(daysOfWeek.length && daysOfWeek.length === dayOFWeekOptions.length - 1);
         const checked = Boolean(daysOfWeek.find(item => item.value === option.value)) || allOptionsSelected;
-        return <React.Fragment>
+        return <li style={{display: 'flex', alignItems: 'center'}} {...props} key={option.name}>
             <Checkbox
                 color="primary"
                 icon={checked
@@ -216,12 +215,12 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
                 onChange={e => onDayOfWeekCheckboxChange(e, option)}
             />
             {option.name}
-        </React.Fragment>
+        </li>
     }, [daysOfWeek, dayOFWeekOptions])
 
-    const renderRequestOption = useCallback((option: TOption) => {
+    const renderRequestOption = useCallback((props: HTMLAttributes<HTMLLIElement>, option: TOption) => {
         const checked = !!serviceRequests.find(item => item.value === option.value) || allRequestsSelected;
-        return <React.Fragment>
+        return <li style={{display: 'flex', alignItems: 'center'}} {...props} key={option.name}>
             <Checkbox
                 color="primary"
                 icon={checked
@@ -231,7 +230,7 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
                 onChange={e => onRequestCheckboxChange(e, option)}
             />
             {option.name}
-        </React.Fragment>
+        </li>
     }, [serviceRequests, allAssignedList]);
 
     const onCancel = () => {
@@ -258,12 +257,12 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
                 isAllServiceRequestsIncluded: allRequestsSelected,
             }
             if (duration) data.duration = {
-                start: moment(duration.start).toISOString(),
-                end: moment(duration.end).toISOString(),
+                start: dayjs(duration.start).toISOString(),
+                end: dayjs(duration.end).toISOString(),
             }
             if (timeOfDay) data.timeOfDay = {
-                start: moment(timeOfDay.start).format("HH:mm:ss"),
-                end: moment(timeOfDay.end).format("HH:mm:ss"),
+                start: dayjs(timeOfDay.start).format("HH:mm:ss"),
+                end: dayjs(timeOfDay.end).format("HH:mm:ss"),
             }
             if (customerSegment) data.customerSegments = [customerSegment.value];
             if (serviceRequests.length && !allRequestsSelected) {
@@ -294,149 +293,151 @@ export const EditTransportationModal:React.FC<DialogProps&TEditTransportationOpt
         if (Number.isInteger(+e.target.value) && +e.target.value >= 0) setSlotsCount(e.target.value);
     }
 
-    return <BaseModal {...props} width={500} onClose={onCancel}>
-        <DialogTitle onClose={onCancel}>Manage Rules</DialogTitle>
-        <DialogContent>
-            <div className={classes.wrapper}>
-                <Autocomplete
-                    fullWidth
-                    classes={autoCompleteStyles}
-                    style={{ marginBottom: 20 }}
-                    getOptionLabel={option => option.name}
-                    options={segmentOptions}
-                    getOptionSelected={(option, value) => option.name === ECustomerSegment[+value]}
-                    value={customerSegment}
-                    onChange={onCustomerSegmentChange}
-                    renderInput={autocompleteRender({
-                        label: 'Applicable Customer Segment',
-                        placeholder: 'Select Customer Segment',
-                        error: !customerSegment && formIsChecked,
-                    })}
-                />
-                <Autocomplete
-                    multiple
-                    style={{ marginBottom: 20 }}
-                    classes={multipleACSClasses}
-                    options={requestsOptions}
-                    disableCloseOnSelect
-                    disableClearable
-                    getOptionLabel={option => option.name}
-                    getOptionSelected={(o, v) => o.value === v.value}
-                    renderOption={renderRequestOption}
-                    value={serviceRequests}
-                    onChange={onRequestChange}
-                    renderInput={autocompleteRender({
-                        label: "Service Requests",
-                        error: !serviceRequests.length && formIsChecked,
-                        placeholder: 'Select Service Requests'
-                    })}
-                />
+    return (
+        <BaseModal {...props} width={500} onClose={onCancel}>
+            <DialogTitle onClose={onCancel}>Manage Rules</DialogTitle>
+            <DialogContent>
+                <div className={classes.wrapper}>
                     <Autocomplete
-                        multiple
                         fullWidth
-                        classes={multipleACSClasses}
-                        options={dayOFWeekOptions}
+                        classes={autoCompleteStyles}
                         style={{ marginBottom: 20 }}
                         getOptionLabel={option => option.name}
-                        getOptionSelected={(o, v) => o.value === v.value}
-                        disableClearable
-                        disableCloseOnSelect
-                        renderOption={renderDayOfWeekOption}
-                        value={daysOfWeek}
-                        onChange={onDayOfWeekChange}
+                        options={segmentOptions}
+                        isOptionEqualToValue={(option, value) => option.name === ECustomerSegment[+value]}
+                        value={customerSegment}
+                        onChange={onCustomerSegmentChange}
                         renderInput={autocompleteRender({
-                            label: 'Day Of Week',
-                            placeholder: 'Select Day Of Week',
-                            error: !daysOfWeek.length && formIsChecked,
+                            label: 'Applicable Customer Segment',
+                            placeholder: 'Select Customer Segment',
+                            error: !customerSegment && formIsChecked,
                         })}
                     />
-                <div className={classes.label}>Time Of Day</div>
-                <div className={classes.smallWrapper}>
-                    <TimePicker
-                        placeholder={"Start Time"}
-                        value={timeOfDay?.start ?? null}
-                        style={{ marginBottom: 20, width: '47%' }}
-                        onChange={handleTime('start')}
-                        id={"Time Of Day From"}
-                        InputProps={{
-                            endAdornment: <Watch />,
-                            error: !timeOfDay?.start && formIsChecked,
-                        }}
+                    <Autocomplete
+                        multiple
+                        style={{ marginBottom: 20 }}
+                        classes={multipleACSClasses}
+                        options={requestsOptions}
+                        disableCloseOnSelect
+                        disableClearable
+                        getOptionLabel={option => option.name}
+                        isOptionEqualToValue={(o, v) => o.value === v.value}
+                        renderOption={renderRequestOption}
+                        value={serviceRequests}
+                        onChange={onRequestChange}
+                        renderInput={autocompleteRender({
+                            label: "Service Requests",
+                            error: !serviceRequests.length && formIsChecked,
+                            placeholder: 'Select Service Requests'
+                        })}
                     />
-                    <TimePicker
-                        placeholder={"End Time"}
-                        value={timeOfDay?.end ?? null}
-                        onChange={handleTime('end')}
-                        style={{ marginBottom: 20, width: '47%' }}
-                        id={"Time Of Day To"}
-                        InputProps={{
-                            endAdornment: <Watch />,
-                            error: !timeOfDay?.end && formIsChecked,
-                        }}
-                    />
+                        <Autocomplete
+                            multiple
+                            fullWidth
+                            classes={multipleACSClasses}
+                            options={dayOFWeekOptions}
+                            style={{ marginBottom: 20 }}
+                            getOptionLabel={option => option.name}
+                            isOptionEqualToValue={(o, v) => o.value === v.value}
+                            disableClearable
+                            disableCloseOnSelect
+                            renderOption={renderDayOfWeekOption}
+                            value={daysOfWeek}
+                            onChange={onDayOfWeekChange}
+                            renderInput={autocompleteRender({
+                                label: 'Day Of Week',
+                                placeholder: 'Select Day Of Week',
+                                error: !daysOfWeek.length && formIsChecked,
+                            })}
+                        />
+                    <div className={classes.label}>Time Of Day</div>
+                    <div className={classes.smallWrapper}>
+                        <ClockTimePicker
+                            value={timeOfDay?.start ?? null}
+                            onChange={handleTime('start')}
+                            fullWidth
+                            InputProps={{
+                                endAdornment: <QueryBuilder color={"disabled"} cursor="pointer" />,
+                                error: !timeOfDay?.start && formIsChecked,
+                                id: "Time Of Day From",
+                                placeholder: "Start Time"
+                            }}
+                        />
+                        <ClockTimePicker
+                            value={timeOfDay?.end ?? null}
+                            onChange={handleTime('end')}
+                            fullWidth
+                            InputProps={{
+                                endAdornment: <QueryBuilder color={"disabled"} cursor="pointer" />,
+                                error: !timeOfDay?.end && formIsChecked,
+                                style: {marginBottom: 20},
+                                id: "Time Of Day To",
+                                placeholder: "End Time",
+                            }}
+                        />
+                    </div>
+                    <div className={classes.label}>Duration</div>
+                    <div className={classes.smallWrapper}>
+                        <CustomDatePicker
+                            value={duration?.start ?? null}
+                            format="MMM D, YYYY"
+                            onChange={handleDateChange('start')}
+                            InputProps={{
+                                endAdornment: <DateRange htmlColor="rgba(0, 0, 0, 0.54)" cursor="pointer"/>,
+                                error: !duration?.start && formIsChecked,
+                                style: {marginBottom: 20}
+                            }}
+                        />
+                        <CustomDatePicker
+                            value={duration?.end ?? null}
+                            format="MMM D, YYYY"
+                            onChange={handleDateChange('end')}
+                            InputProps={{
+                                endAdornment: <DateRange htmlColor="rgba(0, 0, 0, 0.54)" cursor="pointer"/>,
+                                error: !duration?.end && formIsChecked,
+                            }}
+                        />
+                    </div>
+                    <div className={classes.bigLabel}>CONSTRAINTS</div>
+                    <Divider style={{ margin: '0 0 10px 0' }}/>
+                    <TextField
+                        fullWidth
+                        type="number"
+                        inputProps={{min: 1, step: 1}}
+                        label='Capacity'
+                        style={{ marginBottom: 20}}
+                        placeholder='Type Number'
+                        error={Boolean(capacity) && !Number.isInteger(+capacity)}
+                        onChange={onCapacityChange}
+                        value={capacity ?? ''}/>
+                    <TextField
+                        fullWidth
+                        type="number"
+                        inputProps={{min: 1, step: 1}}
+                        label='Per appointment slots'
+                        placeholder='Type Number'
+                        error={Boolean(slotsCount) && !Number.isInteger(+slotsCount)}
+                        onChange={onSlotsCountChange}
+                        value={slotsCount ?? ''}/>
                 </div>
-                <div className={classes.label}>Duration</div>
-                <div className={classes.smallWrapper}>
-                    <DatePicker
-                        value={duration?.start ?? null}
-                        format="MMM D, YYYY"
-                        style={{ marginBottom: 20, width: '47%' }}
-                        onChange={handleDateChange('start')}
-                        InputProps={{
-                            endAdornment: <Calendar />,
-                            error: !duration?.start && formIsChecked,
-                        }}
-                    />
-                    <DatePicker
-                        value={duration?.end ?? null}
-                        format="MMM D, YYYY"
-                        style={{ marginBottom: 20, width: '47%' }}
-                        onChange={handleDateChange('end')}
-                        InputProps={{
-                            endAdornment: <Calendar />,
-                            error: !duration?.end && formIsChecked,
-                        }}
-                    />
+            </DialogContent>
+            <Divider style={{ margin: 0 }}/>
+            <DialogActions>
+                <div className={classes.actionsWrapper}>
+                    <div className={classes.buttonsWrapper}>
+                        <Button
+                            onClick={onCancel}
+                            className={classes.cancelButton}>
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={onSave}
+                            className={classes.saveButton}>
+                            Save
+                        </Button>
+                    </div>
                 </div>
-                <div className={classes.bigLabel}>CONSTRAINTS</div>
-                <Divider style={{ margin: '0 0 10px 0' }}/>
-                <TextField
-                    fullWidth
-                    type="number"
-                    inputProps={{min: 1, step: 1}}
-                    label='Capacity'
-                    style={{ marginBottom: 20}}
-                    placeholder='Type Number'
-                    error={Boolean(capacity) && !Number.isInteger(+capacity)}
-                    onChange={onCapacityChange}
-                    value={capacity ?? ''}/>
-                <TextField
-                    fullWidth
-                    type="number"
-                    inputProps={{min: 1, step: 1}}
-                    label='Per appointment slots'
-                    placeholder='Type Number'
-                    error={Boolean(slotsCount) && !Number.isInteger(+slotsCount)}
-                    onChange={onSlotsCountChange}
-                    value={slotsCount ?? ''}/>
-            </div>
-        </DialogContent>
-        <Divider style={{ margin: 0 }}/>
-        <DialogActions>
-            <div className={classes.actionsWrapper}>
-                <div className={classes.buttonsWrapper}>
-                    <Button
-                        onClick={onCancel}
-                        className={classes.cancelButton}>
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={onSave}
-                        className={classes.saveButton}>
-                        Save
-                    </Button>
-                </div>
-            </div>
-        </DialogActions>
-    </BaseModal>;
+            </DialogActions>
+        </BaseModal>
+    );
 };

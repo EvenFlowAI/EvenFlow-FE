@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Button, MenuItem, Select} from "@material-ui/core";
+import {Button, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
@@ -26,7 +26,7 @@ const EmployeesFilters = () => {
     const [selectedRole, setSelectedRole] = useState<string>('');
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();
-    const classes = useLabelStyles();
+    const { classes  } = useLabelStyles();
     const {isOpen, onClose, onOpen} = useModal();
     const {changePage} = usePagination(
         (s: RootState) => s.employees.pageData,
@@ -37,14 +37,12 @@ const EmployeesFilters = () => {
         setSelectedRole(filters.role ?? '')
     }, [filters])
 
-    const handleSelectRole = (e: React.ChangeEvent<{value: unknown}>) => {
-        if (typeof e.target.value === 'string') {
-            dispatch(setEmployeeFilters({role: e.target.value}))
-            changePage(null, 0)
-        }
+    const handleSelectRole = (e: SelectChangeEvent<string>) => {
+        dispatch(setEmployeeFilters({role: e.target.value}))
+        changePage(null, 0)
     }
 
-    const handleSelectCenter = (e: React.ChangeEvent<{value: unknown}>) => {
+    const handleSelectCenter = (e: SelectChangeEvent<number>) => {
         const center = fullSCList.find(el => el.id === e.target.value);
         if (center) {
             dispatch(setEmployeeFilters({serviceCenterId: center.id}))

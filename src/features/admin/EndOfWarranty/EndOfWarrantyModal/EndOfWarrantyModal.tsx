@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {SC_UNDEFINED} from "../../../../utils/constants";
@@ -14,7 +14,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
-export const EndOfWarrantyModal: React.FC<DialogProps<IEndOfWarranty>> = ({payload, onAction, ...props}) => {
+export const EndOfWarrantyModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IEndOfWarranty>>>> = ({payload, onAction, ...props}) => {
     const [saving, setSaving] = useState<boolean>();
     const [months, setMonths] = useState<string>("");
     const {selectedSC} = useSCs();
@@ -74,7 +74,7 @@ export const EndOfWarrantyModal: React.FC<DialogProps<IEndOfWarranty>> = ({paylo
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Cancel
             </Button>
             <LoadingButton

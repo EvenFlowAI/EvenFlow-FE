@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     switchWrapper: {
         display: 'flex',
         alignItems: 'center',
@@ -39,4 +40,4 @@ export const useStyles = makeStyles(() => ({
             color: '#7898FF'
         }
     },
-}))
+}));

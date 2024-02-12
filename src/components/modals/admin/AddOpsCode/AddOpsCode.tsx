@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, SetStateAction, Dispatch} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {DialogProps} from "../../BaseModal/types";
 import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../store/rootReducer";
@@ -36,7 +36,7 @@ const tableData: TableRowDataType<IAssignedServiceRequest>[] = [
     {header: "INVOICE AMOUNT", val: el => `$${el.serviceRequestOverride?.invoiceAmount || el.serviceRequest.invoiceAmount}`, align: "left"},
 ]
 
-const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
+const AddOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAssignOpsCodeModalProps>>> =
     ({ handleSelect,
          isEligible,
          disabledIds,
@@ -46,20 +46,15 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
          ...props}) => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles();
-    const [
-        serviceList,
-        isLoading,
-        servicesCount,
-        search,
+    const { classes  } = useStyles();
+    const {
+        assignedList,
+        assignedLoading,
         assignedPageData,
-    ] = useSelector((state: RootState) => [
-        state.serviceRequests.assignedList,
-        state.serviceRequests.assignedLoading,
-        state.serviceRequests.assignedPaging.numberOfRecords,
-        state.serviceRequests.assignedFilter.searchTerm,
-        state.serviceRequests.assignedPageData,
-    ]);
+        assignedPaging: {numberOfRecords},
+        assignedFilter: {searchTerm}
+    } = useSelector((state: RootState) => state.serviceRequests)
+
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.assignedPageData,
         setAssignedPageData
@@ -107,26 +102,26 @@ const AddOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
             <DialogTitle onClose={handleClose}>Add Ops Codes</DialogTitle>
             <DialogContent>
                 <div className={classes.wrapper}>
-                    <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
+                    <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={    searchTerm} />
                 </div>
                 <Table<IAssignedServiceRequest>
-                    data={serviceList}
+                    data={assignedList}
                     index="id"
                     smallHeaderFont
                     startActions={preActions}
-                    hidePagination={servicesCount <= assignedPageData.pageSize}
+                    hidePagination={numberOfRecords <= assignedPageData.pageSize}
                     compact
                     rowData={tableData}
-                    isLoading={isLoading}
+                    isLoading={assignedLoading}
                     page={pageIndex}
                     rowsPerPage={pageSize}
                     onChangePage={changePage}
                     onChangeRowsPerPage={changeRowsPerPage}
-                    count={servicesCount}
+                    count={numberOfRecords}
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>
+                <Button onClick={handleClose} color="info">
                     Close
                 </Button>
                 {handleSave && (

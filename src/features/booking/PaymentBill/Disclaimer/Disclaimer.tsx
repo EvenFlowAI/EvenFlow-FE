@@ -1,11 +1,11 @@
 import {useStyles} from "../styles";
 import {useTranslation} from "react-i18next";
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import {data} from "../mockData";
 import React from "react";
 
 export const Disclaimer = () => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     return <Grid item xs={12} sm={6} className={classes.disclaimer}>

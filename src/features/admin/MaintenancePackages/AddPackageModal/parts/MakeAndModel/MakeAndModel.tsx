@@ -1,13 +1,14 @@
-import React, {ChangeEvent, useCallback, Dispatch, SetStateAction, useState, useEffect} from 'react';
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import {Autocomplete} from '@mui/material';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {IMake} from "../../../../../../api/types";
-import {upperCase} from "./utils";
+import {removeDuplicates, upperCase} from "./utils";
 import {useAutocompleteStyles} from "../../../../../../hooks/styling/useAutocompleteStyles";
+import {ApplyToAll} from "../constants";
 
 type MakeAndModelProps = {
     setSelectedMakes: Dispatch<SetStateAction<string[]>>;
@@ -18,7 +19,7 @@ type MakeAndModelProps = {
     disabled: boolean;
 }
 
-const MakeAndModel: React.FC<MakeAndModelProps> = ({
+const MakeAndModel: React.FC<React.PropsWithChildren<React.PropsWithChildren<MakeAndModelProps>>> = ({
                                                        disabled,
                                                        setSelectedMakes,
                                                        selectedModels,
@@ -28,110 +29,79 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
                                                    }) => {
     const { makes: makesFromDB } = useSelector((state: RootState) => state.packages);
     const [models, setModels] = useState<string[]>([]);
-    const classes = useAutocompleteStyles();
+    const { classes  } = useAutocompleteStyles();
+
+    const filteredMakes = useMemo(() => makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase())),
+        [makesFromDB, selectedMakes])
 
     useEffect(() => {
-        const filteredMakes = makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase()));
-        setModels(getSortedModels(filteredMakes))
-    }, [makesFromDB])
+        const sorted = getSortedModelsOptions(filteredMakes)
+        setModels(removeDuplicates(sorted))
+    }, [filteredMakes])
 
-    const getSortedMakes = useCallback((makesFromDB: IMake[]): string[] => {
+    const sortMakes = (a: string, b: string) => {
+        return upperCase(selectedMakes).includes(a.toUpperCase())
+            ? upperCase(selectedMakes).includes(b.toUpperCase())
+                ? 0
+                : -1
+            : 1
+    }
+
+    const sortModels = (a: string, b: string) => {
+        return upperCase(selectedModels).includes(a.toUpperCase())
+            ? upperCase(selectedModels).includes(b.toUpperCase())
+                ? 0
+                : -1
+            : 1
+    }
+
+    const getSortedMakesOptions = useCallback((makesFromDB: IMake[]): string[] => {
         const data: string[] = makesFromDB
             .map(make => make.name)
-            .sort((a, b) => upperCase(selectedMakes).includes(a.toUpperCase())
-                ? upperCase(selectedMakes).includes(b.toUpperCase())
-                    ? 0
-                    : -1
-                : 1);
-        if (data.length) data.unshift('Apply To All');
-        return data;
-    }, [makesFromDB, selectedMakes])
+            .sort(sortMakes);
+        if (data.length) data.unshift(ApplyToAll);
+        return data
+    }, [selectedMakes])
 
-    const getSortedModels = useCallback((makesFromDB: IMake[]): string[] => {
+    const getSortedModelsOptions = useCallback((makesFromDB: IMake[]): string[] => {
         const data: string[] = makesFromDB
             .map(make => make.models)
             .flat(1)
-            .sort((a, b) => upperCase(selectedModels).includes(a.toUpperCase())
-                ? upperCase(selectedModels).includes(b.toUpperCase())
-                    ? 0
-                    : -1
-                : 1);
-        if (data.length) data.unshift('Apply To All');
-        return data;
-    }, [makesFromDB, selectedModels])
-
-    const onMakeChange = useCallback((e: ChangeEvent<{}>, value: string[]) => {
-        if (value.includes('Apply To All')) {
-            setSelectedMakes(() => makesFromDB.map(item => item.name));
-            setModels(getSortedModels(makesFromDB));
-        } else {
-            setSelectedMakes(value);
-            const filteredMakes = makesFromDB.filter(item => upperCase(value).includes(item.name.toUpperCase()))
-            setModels(getSortedModels(filteredMakes));
-            setSelectedModels(prev => prev.filter(item => filteredMakes.find(make => upperCase(make.models).includes(item.toUpperCase()))))
-        }
-    }, [makesFromDB, getSortedModels])
-
-    const onModelChange = useCallback((e: ChangeEvent<{}>, value: string[]) => {
-        if (value.includes('Apply To All')) {
-            const filteredMakes = makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase()));
-            setSelectedModels(() => filteredMakes
-                .map(item => item.models)
-                .flat(1));
-        } else setSelectedModels(value);
-    }, [makesFromDB, selectedMakes])
-
-    const onMakeCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: string) => {
-        setFormIsChecked(false);
-        if (!e.target.checked) {
-            setSelectedMakes(prev => {
-                let data = option === 'Apply To All' ? [] : prev;
-                return data
-                    .filter(item => item !== option)
-                    .sort((a, b) => upperCase(selectedMakes).includes(a.toUpperCase())
-                        ? upperCase(selectedMakes).includes(b.toUpperCase())
-                            ? 0
-                            : -1
-                        : 1)
-            })
-        }
-    }, [selectedMakes])
-
-    const onModelCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: string) => {
-        setFormIsChecked(false);
-        if (!e.target.checked) {
-            setSelectedModels(prev => {
-                let data = option === 'Apply To All' ? [] : prev;
-                return data
-                    .filter(item => item !== option)
-                    .sort((a, b) => upperCase(selectedModels).includes(a.toUpperCase())
-                        ? upperCase(selectedModels).includes(b.toUpperCase())
-                            ? 0
-                            : -1
-                        : 1)
-            })
-        }
+            .sort(sortModels);
+        if (data.length) data.unshift(ApplyToAll);
+        return removeDuplicates(data);
     }, [selectedModels])
 
-    const renderMakeOption = useCallback((option: string) => {
-        const checked = upperCase(selectedMakes).includes(option.toUpperCase())
-            || Boolean(!makesFromDB.find(make => !upperCase(selectedMakes).includes(make.name.toUpperCase())));
-        return <React.Fragment>
+    const renderMakeOption = useCallback((props: any, option: any) => {
+        const currentOptionSelected = upperCase(selectedMakes).includes(option.toUpperCase())
+        const allSelected = Boolean(!makesFromDB.find(make => !upperCase(selectedMakes).includes(make.name.toUpperCase())))
+        const checked = currentOptionSelected || allSelected;
+        return <li style={{display: 'flex', alignItems: 'center'}} {...props} key={option}>
             <Checkbox
                 color="primary"
                 icon={checked
                     ? <CheckBoxOutlined htmlColor="#3855FE"/>
                     : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
                 checked={checked}
-                onChange={e => onMakeCheckboxChange(e, option)}
             />
             {option}
-        </React.Fragment>
+        </li>
     }, [makesFromDB, selectedMakes]);
 
-    const renderModelOption = useCallback((option: string) => {
-        const filteredMakes = makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase()));
 
+    const getFilteredModels = (): string[] => {
+        const data = models.filter(el => el !== ApplyToAll).sort(sortModels)
+        if (data.length) data.unshift(ApplyToAll)
+        return data
+    }
+
+    const setInitialModels = () => {
+        const sorted = getSortedModelsOptions(makesFromDB)
+        setModels(removeDuplicates(sorted));
+    }
+
+    const renderModelOption = useCallback((props: any, option: any) => {
+        const filteredMakes = makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase()))
         const allModelsSelected = filteredMakes.length
             ? Boolean(!filteredMakes
             .map(item => item.models)
@@ -140,54 +110,86 @@ const MakeAndModel: React.FC<MakeAndModelProps> = ({
             : false;
 
         const checked = upperCase(selectedModels).includes(option.toUpperCase()) || allModelsSelected;
-        return <React.Fragment>
+        return <li style={{display: 'flex', alignItems: 'center'}} {...props} key={option + Math.random()} >
             <Checkbox
                 color="primary"
                 icon={checked
                     ? <CheckBoxOutlined htmlColor="#3855FE"/>
                     : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
                 checked={checked}
-                onChange={e => onModelCheckboxChange(e, option)}
             />
             {option}
-        </React.Fragment>
-    }, [makesFromDB, selectedModels, selectedMakes, onModelCheckboxChange]);
+        </li>
+    }, [selectedModels, selectedMakes]);
+
+    const onMakeChange = (e: React.SyntheticEvent, value: string[]) => {
+        setFormIsChecked(false)
+        if (value.includes(ApplyToAll)) {
+            if (makesFromDB.length && value.length === makesFromDB.length + 1) {
+                setSelectedModels([])
+                setSelectedMakes([])
+            } else {
+                setSelectedMakes(() => makesFromDB.map(item => item.name));
+                setInitialModels()
+            }
+        } else {
+            setSelectedMakes(value);
+        }
+    }
+
+    const onModelChange = (e: React.SyntheticEvent, value: string[]) => {
+        setFormIsChecked(false)
+        const filteredModels = filteredMakes.map(item => item.models).flat(1);
+        const modelsSet = removeDuplicates(filteredModels);
+        if (value.includes(ApplyToAll)) {
+            if (modelsSet.length && value.length === modelsSet.length + 1) {
+                setSelectedModels([])
+            } else {
+                setSelectedModels(modelsSet);
+            }
+        } else {
+            setSelectedModels(value);
+        }
+    }
 
     return (
-            <div>
-                <Autocomplete
-                    multiple
-                    style={{ marginBottom: 10 }}
-                    classes={classes}
-                    disabled={disabled}
-                    options={getSortedMakes(makesFromDB)}
-                    disableCloseOnSelect
-                    getOptionSelected={(o, v) => o.toLowerCase() === v.toLowerCase()}
-                    renderOption={renderMakeOption}
-                    value={selectedMakes}
-                    onChange={onMakeChange}
-                    renderInput={autocompleteRender({
-                        label: "Make",
-                        placeholder: 'Select Make'
-                    })}
-                />
-                <Autocomplete
-                    multiple
-                    style={{ marginBottom: 10 }}
-                    classes={classes}
-                    disabled={disabled}
-                    options={models}
-                    disableCloseOnSelect
-                    renderOption={renderModelOption}
-                    getOptionSelected={(o, v) => o.toLowerCase() === v.toLowerCase()}
-                    value={selectedModels}
-                    onChange={onModelChange}
-                    renderInput={autocompleteRender({
-                        label: "Model",
-                        placeholder: 'Select Chip'
-                    })}
-                />
-            </div>
+        <div>
+            <Autocomplete
+                multiple
+                style={{ marginBottom: 10 }}
+                classes={classes}
+                disabled={disabled}
+                options={getSortedMakesOptions(makesFromDB)}
+                disableCloseOnSelect
+                onChange={onMakeChange}
+                getOptionLabel={o => o ?? null}
+                isOptionEqualToValue={(o, v) => o.toLowerCase() === v.toLowerCase()}
+                renderOption={renderMakeOption}
+                value={selectedMakes}
+                renderInput={autocompleteRender({
+                    label: "Make",
+                    placeholder: 'Select Make'
+                })}
+            />
+            <Autocomplete
+                multiple
+                style={{ marginBottom: 10 }}
+                classes={classes}
+                disabled={disabled}
+                disablePortal
+                options={getFilteredModels()}
+                disableCloseOnSelect
+                onChange={onModelChange}
+                renderOption={renderModelOption}
+                getOptionLabel={o => o ?? null}
+                isOptionEqualToValue={(o, v) => o.toLowerCase() === v.toLowerCase()}
+                value={selectedModels}
+                renderInput={autocompleteRender({
+                    label: "Model",
+                    placeholder: 'Select Model'
+                })}
+            />
+        </div>
     );
 };
 

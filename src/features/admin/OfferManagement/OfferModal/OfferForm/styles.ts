@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+//
+export const useStyles = makeStyles()(theme => ({
     inputContainer: {
         marginTop: 10,
         "&:first-child": {
@@ -12,7 +13,7 @@ export const useStyles = makeStyles(theme => ({
         alignItems: "flex-end",
         justifyContent: "space-between",
         flexFlow: "row nowrap",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             flexDirection: "column",
             alignItems: "stretch",
             marginTop: theme.spacing(4)
@@ -23,7 +24,7 @@ export const useStyles = makeStyles(theme => ({
         alignItems: "center",
         justifyContent: "space-between",
         flexFlow: "row nowrap",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             flexDirection: "column",
             alignItems: "stretch",
             marginTop: theme.spacing(4)
@@ -35,7 +36,7 @@ export const useStyles = makeStyles(theme => ({
     },
     divider: {
         padding: 10,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             visibility: "hidden",
             height: theme.spacing(1)
         }

@@ -19,7 +19,7 @@ type TServiceSelectionProps = {
     onBack: () => void;
 }
 
-const ServiceSelection: React.FC<TServiceSelectionProps> = ({onNext, onBack}) => {
+const ServiceSelection: React.FC<React.PropsWithChildren<React.PropsWithChildren<TServiceSelectionProps>>> = ({onNext, onBack}) => {
     const {valueService, serviceOffers, offersLoading} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();

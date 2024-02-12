@@ -5,9 +5,10 @@ import {
     TableBody,
     TableCell as TC,
     TableRow,
-    useMediaQuery, useTheme,
-    withStyles
-} from "@material-ui/core";
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
+import { withStyles } from 'tss-react/mui';
 import {loadTimeWindow, setTimeWindow} from "../../../store/reducers/demandSegments/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -21,12 +22,12 @@ import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
-const TableCell = withStyles({
+const TableCell = withStyles(TC, {
     root: {
         padding: "12px 16px !important",
         textAlign: "center",
     }
-})(TC);
+});
 
 const theadStyle = {
     fontWeight: "bold" as const, textTransform: "uppercase" as const
@@ -42,12 +43,12 @@ const defaultForm: TForm = {
     start: 0, stop: 0, duration1: 0, duration2: 0
 }
 
-const Button = withStyles({
+const Button = withStyles(Bt, {
     root: {
         fontSize: 16,
         textTransform: "none"
     }
-})(Bt);
+});
 const getData = (d: ITimeWindow): TForm => {
     return {
         start: d.startInHours,
@@ -56,14 +57,14 @@ const getData = (d: ITimeWindow): TForm => {
         duration2: d.durationInHours
     };
 }
-const InputOrValue: React.FC<{
+const InputOrValue: React.FC<React.PropsWithChildren<React.PropsWithChildren<{
     name: string;
     value: number;
     onChange: React.ChangeEventHandler
     isEdit: boolean;
-}> = ({name, value, isEdit, onChange}) => {
+}>>> = ({name, value, isEdit, onChange}) => {
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     if (!isEdit) return <span>{value ? String(value) : "0"}</span>;
     return <TextField
         name={name}

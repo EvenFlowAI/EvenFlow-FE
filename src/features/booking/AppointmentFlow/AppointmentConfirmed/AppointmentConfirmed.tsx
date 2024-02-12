@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 import ReactGA from 'react-ga4';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
-import moment from "moment";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {concatAddress, getMaintenanceDescription} from "../../../../utils/utils";
@@ -18,67 +17,43 @@ import {ButtonsWrapper, Divider, Paper, Wrapper} from "./styles";
 import {TItem} from "./types";
 import {getAddressLabel, getServiceName} from "./utils";
 import {calendarDateFormat, dateTimeString, time24HourFormat, timeSpanString} from "../../../../utils/constants";
+import dayjs from "dayjs";
 
 type TProps = {
     onUpdateAppointment: TArgCallback<ILoadedVehicle>;
 }
 
-export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) => {
-    const [
+export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onUpdateAppointment}) => {
+    const {
         appointment,
         serviceValetAppointment,
-        srList,
+        serviceRequests,
         selectedSR,
         scProfile,
-        s,
-        ss,
+        dropOffSettings,
+        waitListSettings,
+    } = useSelector((state: RootState) => state.appointment)
+    const {
+        service,
+        subService,
         selectedPackage,
         packagePricingType,
         packageEMenuType,
         customer,
-        vehicle,
-        allCategories,
+        selectedVehicle,
         categoriesIds,
         serviceTypeOption,
         address,
         zipCode,
         valueService,
-        engineTypes,
         selectedRecalls,
         packagePriceTitles,
-        dropOffSettings,
         isAppointmentSaving,
         appointmentByKey,
         transactionValue,
-        waitListSettings,
-    ] = useSelector((state: RootState) => [
-        state.appointment.appointment,
-        state.appointment.serviceValetAppointment,
-        state.appointment.serviceRequests,
-        state.appointment.selectedSR,
-        state.appointment.scProfile,
-        state.appointmentFrame.service,
-        state.appointmentFrame.subService,
-        state.appointmentFrame.selectedPackage,
-        state.appointmentFrame.packagePricingType,
-        state.appointmentFrame.packageEMenuType,
-        state.appointmentFrame.customer,
-        state.appointmentFrame.selectedVehicle,
-        state.categories.allCategories,
-        state.appointmentFrame.categoriesIds,
-        state.appointmentFrame.serviceTypeOption,
-        state.appointmentFrame.address,
-        state.appointmentFrame.zipCode,
-        state.appointmentFrame.valueService,
-        state.vehicleDetails.engineTypes,
-        state.appointmentFrame.selectedRecalls,
-        state.appointmentFrame.packagePriceTitles,
-        state.appointment.dropOffSettings,
-        state.appointmentFrame.isAppointmentSaving,
-        state.appointmentFrame.appointmentByKey,
-        state.appointmentFrame.transactionValue,
-        state.appointment.waitListSettings,
-    ]);
+    } = useSelector((state: RootState) => state.appointmentFrame)
+    const {allCategories} = useSelector((state: RootState) => state.categories)
+    const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails)
 
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -88,7 +63,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         : EServiceType.VisitCenter, [serviceTypeOption]);
     const servicesList = useMemo(() => {
             return getMaintenanceDescription(
-                srList,
+                serviceRequests,
                 selectedRecalls,
                 packagePriceTitles,
                 selectedSR,
@@ -101,15 +76,15 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 scProfile?.maintenancePackageOptionTypes
             )
         },
-        [srList, selectedSR, selectedRecalls, selectedPackage, allCategories, packagePriceTitles, categoriesIds,
+        [serviceRequests, selectedSR, selectedRecalls, selectedPackage, allCategories, packagePriceTitles, categoriesIds,
             valueService, packagePricingType, packageEMenuType, scProfile])
 
-    const engine = useMemo(() => engineTypes.find(item => item.id === Number(vehicle?.engineTypeId)), [engineTypes, vehicle])
+    const engine = useMemo(() => engineTypes.find(item => item.id === Number(selectedVehicle?.engineTypeId)), [engineTypes, selectedVehicle])
 
     const serviceName = useMemo(() => getServiceName(serviceTypeOption, serviceType), [serviceTypeOption, serviceType])
 
-    const vehicleData = vehicle?.year
-        ? `${vehicle.year} ${vehicle.make} ${vehicle.model} ${engine?.name ?? ""}`
+    const vehicleData = selectedVehicle?.year
+        ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} ${engine?.name ?? ""}`
         : valueService?.year
             ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
             : ''
@@ -155,17 +130,17 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
     }
 
     const getDate = () => {
-        let date = moment.utc().format(dateTimeString);
+        let date = dayjs.utc().format(dateTimeString);
         if (isServiceValetApp) {
-            date =  moment.utc(serviceValetAppointment?.date).format(calendarDateFormat)
+            date =  dayjs.utc(serviceValetAppointment?.date).format(calendarDateFormat)
         } else if (appointment) {
-            date = appointment?.date.format(dateTimeString)
+            date = dayjs(appointment?.date).format(dateTimeString)
         } else if (appointmentByKey?.dateInUtc) {
             if (appointmentByKey.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                date = moment(appointmentByKey.dateInUtc).utc().format(calendarDateFormat)
+                date = dayjs(appointmentByKey.dateInUtc).utc().format(calendarDateFormat)
             } else {
                 const [hh, mm] = appointmentByKey.timeSlot.split(":")
-                date = moment(appointmentByKey.dateInUtc).utc().set('hour', +hh).set('minute', +mm).format(dateTimeString)
+                date = dayjs(appointmentByKey.dateInUtc).utc().set('hour', +hh).set('minute', +mm).format(dateTimeString)
             }
         }
         return date;
@@ -178,15 +153,15 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 0,
                 {
                     label: t("Pick Up Time"),
-                    content: `${moment.utc(serviceValetAppointment?.pickUpMin, timeSpanString).format(time24HourFormat)}
-            ${t("to")} ${moment.utc(serviceValetAppointment?.pickUpMax, timeSpanString).format(time24HourFormat)}`
+                    content: `${dayjs.utc(serviceValetAppointment?.pickUpMin, timeSpanString).format(time24HourFormat)}
+            ${t("to")} ${dayjs.utc(serviceValetAppointment?.pickUpMax, timeSpanString).format(time24HourFormat)}`
                 }
             )
             if (dropOffSettings?.showDropOffTime && serviceValetAppointment?.dropOffMin && serviceValetAppointment?.dropOffMax) {
                 list.splice(2, 0, {
                     label: t("Drop Off Time"),
-                    content: `${moment.utc(serviceValetAppointment?.dropOffMin, timeSpanString).format(time24HourFormat)}
-            ${t("to")} ${moment.utc(serviceValetAppointment?.dropOffMax, timeSpanString).format(time24HourFormat)}`
+                    content: `${dayjs.utc(serviceValetAppointment?.dropOffMin, timeSpanString).format(time24HourFormat)}
+            ${t("to")} ${dayjs.utc(serviceValetAppointment?.dropOffMax, timeSpanString).format(time24HourFormat)}`
                 })
             }
         } else if (isServiceValetManage) {
@@ -195,15 +170,15 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                 0,
                 {
                     label: t("Pick Up Time"),
-                    content: `${moment.utc(appointmentByKey?.serviceValetTime?.pickUpMin, timeSpanString).format(time24HourFormat)}
-            ${t("to")} ${moment.utc(appointmentByKey?.serviceValetTime?.pickUpMax, timeSpanString).format(time24HourFormat)}`
+                    content: `${dayjs.utc(appointmentByKey?.serviceValetTime?.pickUpMin, timeSpanString).format(time24HourFormat)}
+            ${t("to")} ${dayjs.utc(appointmentByKey?.serviceValetTime?.pickUpMax, timeSpanString).format(time24HourFormat)}`
                 }
             )
             if (dropOffSettings?.showDropOffTime && appointmentByKey?.serviceValetTime?.dropOffMin && appointmentByKey?.serviceValetTime?.dropOffMax) {
                 list.splice(2, 0, {
                     label: t("Drop Off Time"),
-                    content: `${moment.utc(appointmentByKey?.serviceValetTime?.dropOffMin, timeSpanString).format(time24HourFormat)}
-            ${t("to")} ${moment.utc(appointmentByKey?.serviceValetTime?.dropOffMax, timeSpanString).format(time24HourFormat)}`
+                    content: `${dayjs.utc(appointmentByKey?.serviceValetTime?.dropOffMin, timeSpanString).format(time24HourFormat)}
+            ${t("to")} ${dayjs.utc(appointmentByKey?.serviceValetTime?.dropOffMax, timeSpanString).format(time24HourFormat)}`
                 })
             }
         }
@@ -225,8 +200,8 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
                     : t("Date and time"),
                 content: isWaitList
                     ? [
-                        <div>{getDate()}</div>,
-                        <div
+                        <div key={getDate()}>{getDate()}</div>,
+                        <div key="textWaitList"
                             style={{
                                 color: waitListSettings?.textHex
                                     ? `#${waitListSettings?.textHex}`
@@ -272,7 +247,7 @@ export const AppointmentConfirmed: React.FC<TProps> = ({onUpdateAppointment}) =>
         ]
 
         return insertPickUpTime(list);
-    }, [ appointment, scProfile, s, ss, customer, vehicle, srList, selectedPackage, selectedSR,
+    }, [ appointment, scProfile, service, subService, customer, selectedVehicle, serviceRequests, selectedPackage, selectedSR,
         isServiceValetApp, isServiceValetManage, insertPickUpTime, serviceName, serviceType, waitListSettings, appointmentByKey]);
 
     return <StepWrapper>

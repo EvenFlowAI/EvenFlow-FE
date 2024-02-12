@@ -1,5 +1,5 @@
-import {styled} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import {styled} from "@mui/material";
+import { makeStyles } from 'tss-react/mui';
 
 export const Wrapper = styled('div')({
     width: "100%",
@@ -7,7 +7,8 @@ export const Wrapper = styled('div')({
     justifyContent: "flex-end",
 })
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     select: {
         borderRadius: 0,
         border: 'none',
@@ -23,4 +24,4 @@ export const useStyles = makeStyles(() => ({
         },
     },
     menuItem: {}
-}))
+}));

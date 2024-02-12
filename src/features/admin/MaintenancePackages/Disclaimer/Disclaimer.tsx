@@ -1,6 +1,6 @@
 import React, {Dispatch, useCallback, useEffect, useState} from 'react';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {updatePackageDisclaimer} from "../../../../store/reducers/serviceCenters/actions";
 import {useDispatch} from "react-redux";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
@@ -15,7 +15,7 @@ type TDisclaimerProps = {
     setDisclaimerOpen: Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Disclaimer: React.FC<TDisclaimerProps> = ({setDisclaimerOpen}) => {
+const Disclaimer: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDisclaimerProps>>> = ({setDisclaimerOpen}) => {
     const {selectedSC} = useSCs();
     const [disclaimer, setDisclaimer] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);

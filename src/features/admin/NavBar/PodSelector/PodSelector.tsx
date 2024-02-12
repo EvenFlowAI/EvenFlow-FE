@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {MenuItem, Select} from "@material-ui/core";
+import {MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {RootState} from "../../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
@@ -18,9 +18,7 @@ const selectedRoutes: string[] = [
 
 export const PodSelector = () => {
     const {selectedPod} = useSelectedPod();
-    const [pods] = useSelector((state: RootState) => [
-        state.pods.shortPodsList
-    ]);
+    const {shortPodsList: pods} = useSelector((state: RootState) => state.pods);
     const dispatch = useDispatch();
     const {pathname} = useLocation();
 
@@ -32,12 +30,12 @@ export const PodSelector = () => {
         return false;
     }, [pathname]);
 
-    const handleSelectPod = (e: React.ChangeEvent<{value: unknown}>) => {
+    const handleSelectPod = (e: SelectChangeEvent<unknown>) => {
         const val = e.target.value as number;
         const selectedPod = pods.find(p => p.id === val);
         dispatch(setSelectedPod(selectedPod || null));
     }
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     if (!show) return null;
 

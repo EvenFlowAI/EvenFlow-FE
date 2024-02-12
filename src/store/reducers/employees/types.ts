@@ -46,7 +46,7 @@ export interface IEmployeeOrdering {
 export interface IEmployeeForm {
     firstName: string;
     lastName: string;
-    serviceCenterId: number | null;
+    serviceCenterId?: number | null;
     email?: string;
     phoneNumber?: string;
     employeeInfo?: IEmployeeInfo,

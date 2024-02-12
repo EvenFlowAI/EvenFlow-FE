@@ -1,10 +1,10 @@
 import React from "react";
 import {DialogProps} from "../../BaseModal/types";
 import {BaseModal, DialogActions, DialogTitle} from "../../BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {TechniciansTable} from "../../../../features/admin/TechniciansTable/TechniciansTable";
 
-export const Technicians: React.FC<DialogProps> = props => {
+export const Technicians: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = props => {
     return <BaseModal {...props}>
         <DialogTitle onClose={props.onClose}>Technicians</DialogTitle>
         <TechniciansTable />

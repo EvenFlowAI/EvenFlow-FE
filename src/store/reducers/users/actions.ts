@@ -49,7 +49,7 @@ export const createUser = (payload: IUserForm, avatar?: File): AppThunk => async
         dispatch(saving(false))
     } catch (e) {
         dispatch(saving(false));
-        throw e;
+        console.log('createUser', e)
     }
 };
 export const updateUser = (payload: IUserForm, id: string, avatar?: File): AppThunk => async dispatch => {
@@ -64,6 +64,6 @@ export const updateUser = (payload: IUserForm, id: string, avatar?: File): AppTh
         dispatch(loadByFilters())
     } catch (e) {
         dispatch(saving(false));
-        throw e;
+        console.log('updateUser', e)
     }
 }

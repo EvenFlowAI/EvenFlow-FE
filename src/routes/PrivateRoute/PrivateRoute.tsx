@@ -5,7 +5,7 @@ import {useCurrentUser} from "../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../constants";
 import {authService} from "../../api/AuthService/AuthService";
 
-export const PrivateRoute: React.FC<RouteProps> = (
+export const PrivateRoute: React.FC<React.PropsWithChildren<React.PropsWithChildren<RouteProps>>> = (
     {component: Component, ...rest}) => {
     const currentUser = useCurrentUser();
     return <Route {...rest} render={props => {

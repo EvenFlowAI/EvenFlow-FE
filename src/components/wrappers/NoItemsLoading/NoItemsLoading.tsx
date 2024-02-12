@@ -1,5 +1,5 @@
 import React from 'react';
-import {CircularProgress} from "@material-ui/core";
+import {CircularProgress} from "@mui/material";
 import {useTranslation} from "react-i18next";
 
 type TProps = {
@@ -11,7 +11,7 @@ type TProps = {
 
 const divStyles = {textAlign: "center" as const, width: "100%"};
 
-export const NoItemsLoading: React.FC<TProps> = ({loading, items, label, wrapperStyles}) => {
+export const NoItemsLoading: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({loading, items, label, wrapperStyles}) => {
     const {t} = useTranslation();
     if (loading) {
         return <div style={{...divStyles, ...(wrapperStyles ?? {})}}>

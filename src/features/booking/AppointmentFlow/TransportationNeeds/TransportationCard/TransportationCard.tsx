@@ -3,7 +3,7 @@ import {TArgCallback} from "../../../../../types/types";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {CardOptions, CardWrapper} from "./styles";
-import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import {RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 
 export type TTransportationProps = {
     transportation: string;
@@ -13,7 +13,7 @@ export type TTransportationProps = {
     onSelectOption: TArgCallback<ITransportation>;
 }
 
-export const TransportationCard: React.FC<TTransportationProps> = ({
+export const TransportationCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTransportationProps>>> = ({
                                                                        selectedTransportation,
                                                                        transportation,
                                                                        active,

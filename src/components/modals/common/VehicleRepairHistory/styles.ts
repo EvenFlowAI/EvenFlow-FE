@@ -1,7 +1,10 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {TableCell, withStyles} from "@material-ui/core";
+import { makeStyles } from 'tss-react/mui';
+import { TableCell } from "@mui/material";
 
-export const useStyles = makeStyles({
+import { withStyles } from 'tss-react/mui';
+
+//
+export const useStyles = makeStyles()({
     wrapper: {},
     rightHeaderPart: {
         width: '60%',
@@ -9,12 +12,12 @@ export const useStyles = makeStyles({
     nameLineGrid: {
         display: 'grid',
         gridTemplateColumns: '2fr 1fr 1fr',
-        gridGap: 8,
+        gap: 8,
     },
     carDataGrid: {
         display: 'grid',
         gridTemplateColumns: '120px 1fr 1fr 1fr',
-        gridGap: 8,
+        gap: 8,
         marginBottom: 20,
     },
     titleBig: {
@@ -118,20 +121,20 @@ export const useStyles = makeStyles({
         display: "grid",
         gridTemplateColumns: '1fr 1fr 1fr'
     }
-})
+});
 
-export const TCell = withStyles({
+export const TCell = withStyles(TableCell, {
     root: {
         padding: 2,
         borderBottom: "none"
     }
-})(TableCell)
+});
 
-export const HCell = withStyles({
+export const HCell = withStyles(TCell, {
     root: {
         color: "grey",
         textTransform: "uppercase",
         fontSize: 10,
         fontWeight: 600
     }
-})(TCell)
+});

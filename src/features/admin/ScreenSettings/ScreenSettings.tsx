@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEmailRequirement} from "../../../store/reducers/screenSettings/actions";
 import {screenSettingsList, TOptContent} from "../../../store/reducers/screenSettings/types";
@@ -13,7 +13,7 @@ type TProps = {
     onEmailEditOpen: TCallback;
 }
 
-export const ScreenSettings: React.FC<TProps> = ({onEmailEditOpen}) => {
+export const ScreenSettings: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onEmailEditOpen}) => {
     const {emailRequirement, isEmailRequirementLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();

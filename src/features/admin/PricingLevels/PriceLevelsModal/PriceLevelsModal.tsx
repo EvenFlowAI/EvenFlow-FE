@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {EDemandCategory, IPricingLevel} from "../../../../store/reducers/pricingSettings/types";
@@ -12,7 +12,7 @@ import {LoadingButton} from "../../../../components/buttons/LoadingButton/Loadin
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 
-export const PriceLevelsModal: React.FC<DialogProps<IPricingLevel>>
+export const PriceLevelsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IPricingLevel>>>>
     = ({onAction, payload, ...props}) => {
     const [priceSetting, setSetting] = useState<string>("100");
     const [saving, setSaving] = useState<boolean>(false);
@@ -67,7 +67,7 @@ export const PriceLevelsModal: React.FC<DialogProps<IPricingLevel>>
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Close</Button>
+            <Button onClick={props.onClose} color="info">Close</Button>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave}

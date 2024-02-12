@@ -1,11 +1,12 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
 const baseCellStyles = {
     backgroundColor: 'white',
     border: "none",
 }
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     title: {
         textAlign: "center"
     },
@@ -15,4 +16,4 @@ export const useStyles = makeStyles(() => ({
         fontWeight: 'bold',
         justifyContent: 'left',
     }
-}))
+}));

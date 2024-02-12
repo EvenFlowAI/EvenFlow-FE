@@ -10,7 +10,7 @@ type TTotalMaintenanceProps = {
     packages: TPackage[];
 }
 
-const PackagesTotalMaintenance: React.FC<TTotalMaintenanceProps> = ({ packages, isBmWService, setClasses }) => {
+const PackagesTotalMaintenance: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTotalMaintenanceProps>>> = ({ packages, isBmWService, setClasses }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
 

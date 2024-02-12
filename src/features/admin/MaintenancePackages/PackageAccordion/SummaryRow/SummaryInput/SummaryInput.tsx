@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {TSummaryCell} from "../../../types";
 import {useStyles} from "./styles";
 
@@ -12,8 +12,8 @@ type TSummaryProps = {
     setIsEdit?: Dispatch<SetStateAction<boolean>>;
 }
 
-const SummaryInput: React.FC<TSummaryProps> = ({ isComplimentary, packageHasComplimentary, item,isEdit, setIsEdit, onChange}) => {
-    const classes = useStyles();
+const SummaryInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSummaryProps>>> = ({ isComplimentary, packageHasComplimentary, item,isEdit, setIsEdit, onChange}) => {
+    const { classes  } = useStyles();
     const [value, setValue] = useState<string>('')
 
     useEffect(() => {

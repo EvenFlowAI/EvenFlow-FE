@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {PaperTitle} from "../../../../pages/admin/PricingSettings/UI";
-import {Divider, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
+import {Divider, FormControlLabel, Radio, RadioGroup} from "@mui/material";
 import {SquarePaper} from "../../../../components/styled/Paper";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -12,14 +12,14 @@ import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-const PricingDisplay: React.FC = () => {
+const PricingDisplay: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = () => {
     const { isRoundPriceLoading, roundPrice } = useSelector((state: RootState) => state.pricingSettings);
     const [value, setValue] = useState<string>('decimal');
     const {askConfirm} = useConfirm();
     const showError = useException();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         setValue(roundPrice ? 'round' : 'decimal');

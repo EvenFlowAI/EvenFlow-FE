@@ -4,6 +4,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {TitleWrapper} from "./styles";
+import {ConfirmationItemWrapper} from "../../../components/styled/ConfirmationItemWrapper";
 
 const AppointmentVehicleInfo = () => {
     const {selectedVehicle, valueService} = useSelector((state: RootState) => state.appointmentFrame);
@@ -12,7 +13,7 @@ const AppointmentVehicleInfo = () => {
     const engine = useMemo(() => engineTypes.find(item => item.id === Number(selectedVehicle?.engineTypeId)), [engineTypes, selectedVehicle])
 
     return (
-        <div>
+        <ConfirmationItemWrapper>
             <TitleWrapper>
                 <AppointmentConfirmationTitle>{t("Vehicle")}</AppointmentConfirmationTitle>
             </TitleWrapper>
@@ -21,7 +22,7 @@ const AppointmentVehicleInfo = () => {
             </> : <>
                 {selectedVehicle?.year} <span style={{textTransform: 'uppercase'}}>{selectedVehicle?.make}</span> {selectedVehicle?.model} {engine?.name ?? ""}
             </>}
-        </div>
+        </ConfirmationItemWrapper>
     );
 };
 

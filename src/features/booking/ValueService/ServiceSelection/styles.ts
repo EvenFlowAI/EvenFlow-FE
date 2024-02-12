@@ -1,4 +1,4 @@
-import {Button, styled} from "@material-ui/core";
+import {Button, styled} from "@mui/material";
 
 export const Price = styled('span')(() => ({
     fontSize: 20,

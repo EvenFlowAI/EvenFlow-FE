@@ -3,8 +3,8 @@ import {IRecall} from "../../../../store/reducers/recall/types";
 import {Table} from "../../../../components/tables/Table/Table";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
-import {MoreHoriz} from "@material-ui/icons";
+import {Button, IconButton, Menu, MenuItem} from "@mui/material";
+import {MoreHoriz} from "@mui/icons-material";
 import {deleteRecall, loadRecalls, setRecallPageData} from "../../../../store/reducers/recall/actions";
 import {RecallSummary} from "../RecallSummary/RecallSummary";
 import {TableRowDataType} from "../../../../types/types";
@@ -20,7 +20,7 @@ type TRecallTableProps = {
     setCurrentItem: Dispatch<SetStateAction<IRecall|null>>;
 }
 
-const RecallTable: React.FC<TRecallTableProps> = ({onOpenModal, currentItem, setCurrentItem}) => {
+const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>> = ({onOpenModal, currentItem, setCurrentItem}) => {
     const {recalls, recallsCount} = useSelector((state: RootState) => state.recalls);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 
@@ -72,6 +72,7 @@ const RecallTable: React.FC<TRecallTableProps> = ({onOpenModal, currentItem, set
             header: "Recall Summary",
             val: el => <Button
                 variant="text"
+                color="info"
                 style={{textTransform: "none", textDecoration: "underline"}}
                 onClick={() => onSummaryClick(el)}>
                 See Recall Summary
@@ -97,9 +98,11 @@ const RecallTable: React.FC<TRecallTableProps> = ({onOpenModal, currentItem, set
     }
 
     const tableActions = (el: IRecall) => {
-        return <IconButton onClick={openMenu(el)}>
-            <MoreHoriz />
-        </IconButton>;
+        return (
+            <IconButton onClick={openMenu(el)} size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }
 
     const openEdit = () => {

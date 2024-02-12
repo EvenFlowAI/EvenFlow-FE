@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Box, Button} from "@material-ui/core";
+import {Box, Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import moment from "moment";
 import {EDay, EDemandCategory, IDayOfWeekSetting} from "../../../../store/reducers/pricingSettings/types";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {loadDayOfWeekPricing, setWorkWeekPricing} from "../../../../store/reducers/pricingSettings/actions";
@@ -16,8 +15,9 @@ import {SwitchButtons} from "../../../../components/buttons/SwitchButtons/Switch
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import dayjs from "dayjs";
 
-export const WorkWeekModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export const WorkWeekModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);
     const showError = useException();
@@ -73,7 +73,7 @@ export const WorkWeekModal: React.FC<DialogProps> = ({onAction, payload, ...prop
     }
 
     const getContent = () => {
-        const days = moment.weekdays().map((wd, idx) => {
+        const days = dayjs.weekdays().map((wd, idx) => {
             return <React.Fragment key={wd}>
                 <Box component="span" fontWeight="bold">{wd}</Box>
                 <Box>
@@ -89,24 +89,26 @@ export const WorkWeekModal: React.FC<DialogProps> = ({onAction, payload, ...prop
         days.push(sunday)
         return days;
     }
-    return <BaseModal {...props} width={400}>
-        <DialogTitle onClose={props.onClose}>Work Week Settings</DialogTitle>
-        <DialogContent>
-            <Box display="grid" gridGap={10} gridTemplateColumns="1fr 220px">
-                <Box component="span" fontWeight="bold" color={"text.disabled"}>Day</Box>
-                <Box component="span" fontWeight="bold" color={"text.disabled"}>Demand Category</Box>
-                {getContent()}
-            </Box>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={props.onClose}>Close</Button>
-            <LoadingButton
-                loading={saving}
-                onClick={handleSave}
-                color="primary"
-                variant="contained">
-                Save
-            </LoadingButton>
-        </DialogActions>
-    </BaseModal>
+    return (
+        <BaseModal {...props} width={400}>
+            <DialogTitle onClose={props.onClose}>Work Week Settings</DialogTitle>
+            <DialogContent>
+                <Box display="grid" gap={'10px'} gridTemplateColumns="1fr 220px">
+                    <Box component="span" fontWeight="bold" color={"text.disabled"}>Day</Box>
+                    <Box component="span" fontWeight="bold" color={"text.disabled"}>Demand Category</Box>
+                    {getContent()}
+                </Box>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={props.onClose} color="info">Close</Button>
+                <LoadingButton
+                    loading={saving}
+                    onClick={handleSave}
+                    color="primary"
+                    variant="contained">
+                    Save
+                </LoadingButton>
+            </DialogActions>
+        </BaseModal>
+    );
 };

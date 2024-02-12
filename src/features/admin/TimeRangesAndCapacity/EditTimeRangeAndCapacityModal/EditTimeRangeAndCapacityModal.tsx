@@ -2,42 +2,42 @@ import React, {useEffect, useState} from 'react';
 import {DialogTitle, DialogContent, BaseModal, DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {ITimeRangeAndCapacity} from "../../../../store/reducers/capacityServiceValet/types";
-import moment from "moment";
-import {Button, Divider, Grid} from "@material-ui/core";
-import {AccessTime} from "@material-ui/icons";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {Button, Divider, Grid} from "@mui/material";
+import {AccessTime} from "@mui/icons-material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
 import {useDispatch} from "react-redux";
 import {createTimeRange, updateTimeRange} from "../../../../store/reducers/capacityServiceValet/actions";
 import {timeWithSecond} from "../constants";
-import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {time24HourFormat} from "../../../../utils/constants";
+import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
+import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
 
 type TProps = DialogProps & {
     editingElement: ITimeRangeAndCapacity;
 }
 
-const EditTimeRangeAndCapacityModal: React.FC<TProps> = ({onClose, open, editingElement}) => {
-    const [pickUpMin, setPickUpMin] = useState<moment.Moment|null>(null)
-    const [pickUpMax, setPickUpMax] = useState<moment.Moment|null>(null)
-    const [dropOffMin, setDropOffMin] = useState<moment.Moment|null>(null)
-    const [dropOffMax, setDropOffMax] = useState<moment.Moment|null>(null)
+const EditTimeRangeAndCapacityModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onClose, open, editingElement}) => {
+    const [pickUpMin, setPickUpMin] = useState<TParsableDate>(null)
+    const [pickUpMax, setPickUpMax] = useState<TParsableDate>(null)
+    const [dropOffMin, setDropOffMin] = useState<TParsableDate>(null)
+    const [dropOffMax, setDropOffMax] = useState<TParsableDate>(null)
     const [dailyCapacity, setDailyCapacity] = useState<number|string>('')
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false)
     const {selectedSC} = useSCs();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (open && editingElement) {
-            if (editingElement.pickUpMin !== '-') setPickUpMin(moment(editingElement.pickUpMin, time24HourFormat))
-            if (editingElement.pickUpMax !== '-') setPickUpMax(moment(editingElement.pickUpMax, time24HourFormat))
-            if (editingElement.dropOffMin !== '-') setDropOffMin(moment(editingElement.dropOffMin, time24HourFormat))
-            if (editingElement.dropOffMax !== '-') setDropOffMax(moment(editingElement.dropOffMax, time24HourFormat))
+            if (editingElement.pickUpMin !== '-') setPickUpMin(dayjs(editingElement.pickUpMin, time24HourFormat))
+            if (editingElement.pickUpMax !== '-') setPickUpMax(dayjs(editingElement.pickUpMax, time24HourFormat))
+            if (editingElement.dropOffMin !== '-') setDropOffMin(dayjs(editingElement.dropOffMin, time24HourFormat))
+            if (editingElement.dropOffMax !== '-') setDropOffMax(dayjs(editingElement.dropOffMax, time24HourFormat))
             if (editingElement.capacity) setDailyCapacity(editingElement.capacity)
         }
     }, [editingElement, open])
@@ -52,29 +52,29 @@ const EditTimeRangeAndCapacityModal: React.FC<TProps> = ({onClose, open, editing
         onClose()
     }
 
-    const handleChangePickUpMin = (date: ParsableDate) => {
+    const handleChangePickUpMin = (date: TParsableDate) => {
         setFormIsChecked(false)
-        setPickUpMin(moment(date))
+        setPickUpMin(dayjs(date))
     }
 
-    const handleChangePickUpMax = (date: ParsableDate) => {
+    const handleChangePickUpMax = (date: TParsableDate) => {
         setFormIsChecked(false)
-        if (moment(pickUpMin).diff(moment(date)) <= 0) {
-            setPickUpMax(moment(date))
+        if (dayjs(pickUpMin).diff(dayjs(date)) <= 0) {
+            setPickUpMax(dayjs(date))
         } else {
             showError('Pick Up Max Value must be more than Pick Up Min Value')
         }
     }
 
-    const handleChangeDropOffMin = (date: ParsableDate) => {
+    const handleChangeDropOffMin = (date: TParsableDate) => {
         setFormIsChecked(false)
-        setDropOffMin(moment(date))
+        setDropOffMin(dayjs(date))
     }
 
-    const handleChangeDropOffMax = (date: ParsableDate) => {
+    const handleChangeDropOffMax = (date: TParsableDate) => {
         setFormIsChecked(false)
-        if (moment(dropOffMin).diff(moment(date)) <= 0) {
-            setDropOffMax(moment(date))
+        if (dayjs(dropOffMin).diff(dayjs(date)) <= 0) {
+            setDropOffMax(dayjs(date))
         } else {
             showError('Drop Off Max Value must be more than Drop Off Min Value')
         }
@@ -98,10 +98,10 @@ const EditTimeRangeAndCapacityModal: React.FC<TProps> = ({onClose, open, editing
         if (selectedSC && checkIsValid()) {
             const data: ITimeRangeAndCapacity = {
                 serviceCenterId: selectedSC.id,
-                pickUpMin: moment(pickUpMin).format(timeWithSecond),
-                pickUpMax: moment(pickUpMax).format(timeWithSecond),
-                dropOffMin: moment(dropOffMin).format(timeWithSecond),
-                dropOffMax: moment(dropOffMax).format(timeWithSecond),
+                pickUpMin: dayjs(pickUpMin).format(timeWithSecond),
+                pickUpMax: dayjs(pickUpMax).format(timeWithSecond),
+                dropOffMin: dayjs(dropOffMin).format(timeWithSecond),
+                dropOffMax: dayjs(dropOffMax).format(timeWithSecond),
                 capacity: +dailyCapacity,
             }
             if (editingElement.id) {
@@ -116,19 +116,22 @@ const EditTimeRangeAndCapacityModal: React.FC<TProps> = ({onClose, open, editing
     return (
         <BaseModal onClose={onCancel} open={open} width={575}>
             <DialogTitle onClose={onCancel}>Edit Time Ranges & Capacity of
-                <span style={{color: '#7898FF'}}> {editingElement.dayOfWeek ? moment().set('day', editingElement.dayOfWeek).format('dddd').toUpperCase() : ''}
+                <span style={{color: '#7898FF'}}> {editingElement.dayOfWeek ? dayjs().set('day', editingElement.dayOfWeek).format('dddd').toUpperCase() : ''}
                 </span></DialogTitle>
             <DialogContent style={{padding: '16px 120px'}}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={6}>
-                        <TimePicker
+                        <ClockTimePicker
                             key="pickUpMin"
                             value={pickUpMin}
-                            clearable
+                            slotProps={{
+                                actionBar: {
+                                    actions: ['clear'],
+                                },
+                            }}
                             fullWidth
-                            style={{cursor: "pointer"}}
                             InputProps={{
-                                endAdornment: <AccessTime color="primary" />,
+                                endAdornment: <AccessTime color="primary" cursor="pointer"/>,
                                 error: formIsChecked && !pickUpMin,
                             }}
                             name="pickUpMin"
@@ -137,14 +140,17 @@ const EditTimeRangeAndCapacityModal: React.FC<TProps> = ({onClose, open, editing
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <TimePicker
+                        <ClockTimePicker
                             key="pickUpMax"
                             value={pickUpMax}
-                            clearable
+                            slotProps={{
+                                actionBar: {
+                                    actions: ['clear'],
+                                },
+                            }}
                             fullWidth
-                            style={{cursor: "pointer"}}
                             InputProps={{
-                                endAdornment: <AccessTime color="primary" />,
+                                endAdornment: <AccessTime color="primary" cursor="pointer"/>,
                                 error: formIsChecked && !pickUpMax,
                             }}
                             name="pickUpMax"
@@ -153,14 +159,17 @@ const EditTimeRangeAndCapacityModal: React.FC<TProps> = ({onClose, open, editing
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <TimePicker
+                        <ClockTimePicker
                             key="dropOffMin"
                             value={dropOffMin}
-                            clearable
+                            slotProps={{
+                                actionBar: {
+                                    actions: ['clear'],
+                                },
+                            }}
                             fullWidth
-                            style={{cursor: "pointer"}}
                             InputProps={{
-                                endAdornment: <AccessTime color="primary" />,
+                                endAdornment: <AccessTime color="primary" cursor="pointer"/>,
                                 error: formIsChecked && !dropOffMin,
                             }}
                             name="dropOffMin"
@@ -169,14 +178,17 @@ const EditTimeRangeAndCapacityModal: React.FC<TProps> = ({onClose, open, editing
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <TimePicker
+                        <ClockTimePicker
                             key="dropOffMax"
                             value={dropOffMax}
-                            clearable
+                            slotProps={{
+                                actionBar: {
+                                    actions: ['clear'],
+                                },
+                            }}
                             fullWidth
-                            style={{cursor: "pointer"}}
                             InputProps={{
-                                endAdornment: <AccessTime color="primary" />,
+                                endAdornment: <AccessTime color="primary" cursor="pointer"/>,
                                 error: formIsChecked && !dropOffMax,
                             }}
                             name="dropOffMax"

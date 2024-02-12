@@ -2,8 +2,8 @@ import React, {useEffect, useState} from "react";
 import {IServiceValetAppointment} from "../../../../../../store/reducers/appointment/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
-import moment from "moment";
 import {DateWrapper} from "../../../../../../components/styled/DateWrapper";
+import dayjs from "dayjs";
 
 type TDropOffTime = {
     hoursDMin: string;
@@ -12,7 +12,7 @@ type TDropOffTime = {
     minutesDMax: string;
 }
 
-const ServiceValetDateTime: React.FC<{serviceValetAppointment: IServiceValetAppointment}> = ({serviceValetAppointment}) => {
+const ServiceValetDateTime: React.FC<React.PropsWithChildren<React.PropsWithChildren<{serviceValetAppointment: IServiceValetAppointment}>>> = ({serviceValetAppointment}) => {
     const { dropOffSettings } = useSelector((state: RootState) => state.appointment);
     const [dropOffTime, setDropOffTime] = useState<TDropOffTime|null>(null);
     const [hoursPMin, minutesPMin] = serviceValetAppointment.pickUpMin.split(":");
@@ -30,13 +30,13 @@ const ServiceValetDateTime: React.FC<{serviceValetAppointment: IServiceValetAppo
     }, [serviceValetAppointment])
 
     return <DateWrapper>
-        <div>Date: <span>{moment.utc(serviceValetAppointment.date).format('ddd, MMMM D')}</span></div>
+        <div>Date: <span>{dayjs.utc(serviceValetAppointment.date).format('ddd, MMMM D')}</span></div>
         <div>Pick Up Time:
-            <span> {moment(serviceValetAppointment.date).set('hour', +hoursPMin).set('minute', +minutesPMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +hoursPMax).set('minute', +minutesPMax).format("hh:mm A")}</span>
+            <span> {dayjs.utc(serviceValetAppointment.date).set('hour', +hoursPMin).set('minute', +minutesPMin).format("hh:mm A")} to {dayjs.utc(serviceValetAppointment.date).set('hour', +hoursPMax).set('minute', +minutesPMax).format("hh:mm A")}</span>
         </div>
         {dropOffSettings?.showDropOffTime && dropOffTime
             ? <div>Drop Off Time:
-                <span> {moment(serviceValetAppointment.date).set('hour', +dropOffTime.hoursDMin).set('minute', +dropOffTime.minutesDMin).format("hh:mm A")} to {moment(serviceValetAppointment.date).set('hour', +dropOffTime.hoursDMax).set('minute', +dropOffTime.minutesDMax).format("hh:mm A")}</span>
+                <span> {dayjs(serviceValetAppointment.date).set('hour', +dropOffTime.hoursDMin).set('minute', +dropOffTime.minutesDMin).format("hh:mm A")} to {dayjs.utc(serviceValetAppointment.date).set('hour', +dropOffTime.hoursDMax).set('minute', +dropOffTime.minutesDMax).format("hh:mm A")}</span>
             </div>
             : null}
     </DateWrapper>

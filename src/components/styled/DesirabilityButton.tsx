@@ -1,6 +1,8 @@
-import {Button, withStyles} from "@material-ui/core";
+import { Button } from "@mui/material";
 
-export const DesirabilityButton = withStyles(theme => ({
+import { withStyles } from 'tss-react/mui';
+
+export const DesirabilityButton = withStyles(Button, theme => ({
     root: {
         textTransform: "none",
         fontSize: 9,
@@ -21,4 +23,4 @@ export const DesirabilityButton = withStyles(theme => ({
             boxShadow: "none"
         }
     }
-}))(Button);
+}));

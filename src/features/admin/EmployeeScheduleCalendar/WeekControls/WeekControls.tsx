@@ -1,36 +1,36 @@
 import React, {useState} from 'react';
-import {Button} from "@material-ui/core";
-import {ChevronLeft, ChevronRight} from "@material-ui/icons";
-import moment from "moment";
+import {Button} from "@mui/material";
+import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import {getFirstLastDaysOfWeek} from "../utils";
-import {DatePicker} from "@material-ui/pickers";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {useStyles} from "./styles";
+import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/CustomDatePicker";
+import dayjs from "dayjs";
+import {TParsableDate} from "../../../../types/types";
 
 type TProps = {
     isXS: boolean;
-    selectedDate: moment.Moment;
-    onChange: (date: moment.Moment) => void;
+    selectedDate: TParsableDate;
+    onChange: (date: TParsableDate) => void;
 }
 
-export const WeekControls: React.FC<TProps> = ({selectedDate, isXS, onChange}) => {
+export const WeekControls: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({selectedDate, isXS, onChange}) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const handleLeft = () => {
-        onChange(moment(selectedDate).subtract(!isXS ? 7 : 1, "days"));
+        onChange(dayjs(selectedDate).subtract(!isXS ? 7 : 1, "days"));
     }
 
     const handleRight = () => {
-        onChange(moment(selectedDate).add(!isXS ? 7 : 1, "days"));
+        onChange(dayjs(selectedDate).add(!isXS ? 7 : 1, "days"));
     }
 
     const handleOpen = (s: boolean) => () => {
         setIsOpen(s);
     }
 
-    const handleDateChange = (date: MaterialUiPickersDate) => {
-        onChange(moment(date));
+    const handleDateChange = (date: TParsableDate) => {
+        onChange(date);
     }
 
     return (
@@ -44,13 +44,15 @@ export const WeekControls: React.FC<TProps> = ({selectedDate, isXS, onChange}) =
             <Button onClick={handleRight} variant="outlined" className={classes.arrowButton}>
                 <ChevronRight />
             </Button>
-            <DatePicker
-                style={{display: "none"}}
+            <CustomDatePicker
                 onOpen={handleOpen(true)}
                 onClose={handleOpen(false)}
                 open={isOpen}
+                InputProps={{
+                    style:{display: "none"}
+                }}
+                onAccept={handleDateChange}
                 value={selectedDate}
-                onChange={handleDateChange}
             />
         </div>
     );

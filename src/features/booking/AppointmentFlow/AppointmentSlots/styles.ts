@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const Wrapper = styled('div')(({theme}) => ({
         display: "flex",
@@ -10,7 +10,7 @@ export const Wrapper = styled('div')(({theme}) => ({
         "&>div": {
             border: "1px solid #DADADA",
             padding: "18px 44px",
-            [theme.breakpoints.down('xs')]: {
+            [theme.breakpoints.down('sm')]: {
                 padding: "18px 20px",
             },
             "&>h4": {

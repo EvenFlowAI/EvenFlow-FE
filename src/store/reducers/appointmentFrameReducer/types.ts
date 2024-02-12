@@ -1,5 +1,5 @@
 import {
-    EMaintenanceOptionType,
+    EMaintenanceOptionType, IAddressData,
     IAppointmentByKey,
     ICustomer,
     ILoadedVehicle,
@@ -10,12 +10,12 @@ import {
     IServiceConsultant,
     ITransportation
 } from "../../../api/types";
-import {EAppointmentTimingType, EReminderType, IServiceRequestPrice} from "../appointment/types";
-import moment from "moment/moment";
-import {IRecallByVin, TScreen, TView} from "../../../types/types";
+import {EAppointmentTimingType, EReminderType, IServiceRequestPrice, TRecallForRequest} from "../appointment/types";
+import {IRecallByVin, ParsableDate, TParsableDate, TScreen, TView} from "../../../types/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {IFirstScreenOption} from "../serviceTypes/types";
 import {TPackagePrice} from "../packages/types";
+import {EScheduler} from "../appointments/types";
 
 export interface IAppointmentId {
     id: number;
@@ -113,7 +113,7 @@ export type TState = {
     advisor: IServiceConsultant | null;
     isAnyAdvisorSelected: boolean;
     selectedTiming: EAppointmentTimingType | null;
-    selectedTime: moment.Moment | null;
+    selectedTime: TParsableDate;
     selectedVehicle: ILoadedVehicle | null;
     customer: ICustomer;
     reminders: EReminderType[];
@@ -180,3 +180,63 @@ export type TState = {
     transactionValue: number;
     passedScreens: TScreen[];
 }
+
+type TPackageOptionRequestData = {
+    id: number;
+    priceType: EPackagePricingType|null;
+}
+
+type TEMenuOption = {
+    optionType: EMaintenanceOptionType | null;
+}
+export type TMaintenanceOption = TEMenuOption | TPackageOptionRequestData;
+
+export type TDriverForRequest = {
+    fullName: string;
+    phoneNumber: string;
+    city?: string;
+    email: string|null
+}
+
+export type TVehicleForRequest = {
+    dmsId: string|null;
+    engineTypeId: number|null;
+    model: string|null;
+    make: string|null;
+    year: string|null;
+    vin: string;
+    mileage: number|null;
+    modelDetails: string;
+}
+
+export interface ICreateAppointmentRequest {
+    id?: number;
+    appointmentTimingType: EAppointmentTimingType;
+    customerId: string|null;
+    comment: string;
+    driver: TDriverForRequest;
+    vehicle: TVehicleForRequest;
+    gmt: ParsableDate;
+    offerId: number|null;
+    reminderTypes: EReminderType[];
+    serviceCenterId: number;
+    advisor: {
+        id: string | null;
+        isAnySelected: boolean;
+    },
+    transportationOptionId: number|null,
+    slot: string;
+    serviceRequestIds: number[];
+    date: ParsableDate;
+    serviceCategoryIds: number[];
+    maintenancePackageOption: TMaintenanceOption|null;
+    valueServiceOfferIds: number[];
+    searchTerm: string;
+    serviceTypeOptionId: number|null;
+    recalls: TRecallForRequest[];
+    schedulerType?: EScheduler;
+    notes: string;
+    address: IAddressData|null;
+    isWaitlist: boolean;
+}
+

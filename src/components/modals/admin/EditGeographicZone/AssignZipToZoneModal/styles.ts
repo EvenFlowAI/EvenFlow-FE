@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     text: {
         display: 'flex',
         justifyContent: 'center',
@@ -32,4 +33,4 @@ export const useStyles = makeStyles(() => ({
             color: '#7898FF'
         }
     },
-}))
+}));

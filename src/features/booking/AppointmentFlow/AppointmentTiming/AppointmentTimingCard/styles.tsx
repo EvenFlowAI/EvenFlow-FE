@@ -1,15 +1,24 @@
-import {styled, Theme} from "@material-ui/core";
-import {DatePicker} from "@material-ui/pickers";
+import {styled} from "@mui/material";
 import React from "react";
+import {CustomDatePicker} from "../../../../../components/pickers/CustomDatePicker/CustomDatePicker";
+import {makeStyles, withStyles} from "tss-react/mui";
 
-export const StyledDate = styled(DatePicker)(({theme}) => ({
+
+const DatePicker = styled(CustomDatePicker)(({theme}) => ({
+    root: {
+
+    },
+    toolbar: {
+        backgroundColor: '#000000',
+        color: "#FFFFFF"
+    },
     marginTop: 16,
     cursor: "pointer",
     "&>div:not(.Mui-disabled)": {
-        borderColor: theme.palette.primary.main,
+        borderColor: theme.palette.success.contrastText,
         cursor: "pointer",
         "&>input": {
-            color: theme.palette.primary.main,
+            color: theme.palette.success.contrastText,
             cursor: "pointer"
         }
     },
@@ -17,15 +26,27 @@ export const StyledDate = styled(DatePicker)(({theme}) => ({
         paddingRight: 4,
         backgroundColor: "#fff"
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('sm')]: {
         marginTop: 0
     }
 }))
 
-export const CardWrapper = styled(({active, ...props}) => <div {...props}/>)<Theme, { active?: boolean }>(({
-                                                                                                               theme,
-                                                                                                               active
-                                                                                                           }) => ({
+export const StyledDate = withStyles(DatePicker, {
+    root: {
+        '& .MuiPickersLayout-root': {
+            backgroundColor: '#000000',
+            color: "#FFFFFF"
+        }
+    },
+    toolbar: {
+        backgroundColor: '#000000',
+        color: "#FFFFFF"
+    },
+})
+
+export const CardWrapper = styled("div", {
+    shouldForwardProp: (prop) => prop !== "active"
+})<{ active?: boolean}>(({theme, active}) => ({
     border: "1px solid #DADADA",
     display: "flex",
     flexDirection: "column",
@@ -46,14 +67,14 @@ export const CardWrapper = styled(({active, ...props}) => <div {...props}/>)<The
         alignItems: "center",
         justifyContent: "center",
         background: active ? "#FFFFFF" : "#E7E7E7",
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             display: "none"
         }
     },
     "&>div:last-child": {
         marginTop: "auto",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         flexDirection: "row",
     }
 }));
@@ -67,5 +88,11 @@ export const MobileWrapper = styled("div")({
     flexDirection: "column",
     "&>div+div": {
         marginTop: 8
+    }
+})
+
+export const useStyles = makeStyles()({
+    input: {
+        fontWeight: 'normal !important',
     }
 })

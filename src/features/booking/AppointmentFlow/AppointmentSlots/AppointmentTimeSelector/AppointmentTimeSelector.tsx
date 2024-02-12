@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
-import moment from "moment";
 import {IRemappedAppointmentSlot} from "../../../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "../TimeSlotCard/TimeSlotCard";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
@@ -16,14 +15,16 @@ import {
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {TSlot} from "../types";
 import {TimeSlotsWrapper, useStyles} from "./styles";
+import {TParsableDate} from "../../../../../types/types";
+import dayjs from "dayjs";
 
 type TProps = {
-    date: moment.Moment;
+    date: TParsableDate;
     loading: boolean;
     appointments?: TGroupedAppointment;
 }
 
-export const AppointmentTimeSelector: React.FC<TProps> =
+export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =
     ({date, loading, appointments}) => {
         const {
             appointment: selectedAppointment,
@@ -33,7 +34,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
         const {selectedTiming, gap, hoursOfOperations, sideBarSteps, appointmentByKey} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const titleRef = useRef<HTMLDivElement|null>(null);
-        const classes = useStyles();
+        const { classes  } = useStyles();
         const {t} = useTranslation();
 
         useEffect(() => {
@@ -44,19 +45,19 @@ export const AppointmentTimeSelector: React.FC<TProps> =
 
         const generateSlots = (startHours: number|string, startMinutes: number|string, endHours: number|string, endMinutes: number|string): TSlot[] => {
             const slots: TSlot[] = [];
-            let start = moment.utc(date).hour(+startHours).minutes(+startMinutes).second(0).millisecond(0);
-            const end  = moment.utc(date).hour(+endHours).minutes(+endMinutes).second(0).millisecond(0);
-            let cDate = moment.utc(start);
-            while (cDate.isSameOrBefore(end, 'minute')) {
-                slots.push({date: moment.utc(cDate), label: cDate.format("h:mm a")});
-                cDate = moment.utc(cDate).add(gap, 'minutes');
+            let start = dayjs.utc(date).hour(+startHours).minute(+startMinutes).second(0).millisecond(0);
+            const end  = dayjs.utc(date).hour(+endHours).minute(+endMinutes).second(0).millisecond(0);
+            let cDate = dayjs.utc(start);
+            while (dayjs(cDate).isSameOrBefore(end, 'minute')) {
+                slots.push({date: dayjs.utc(cDate), label: dayjs.utc(cDate).format("h:mm a")});
+                cDate = dayjs.utc(cDate).add(gap ?? 0, 'minute');
             }
             return slots;
         }
 
         const slots: TSlot[] = useMemo(() => {
             let slots: TSlot[] = [];
-            const currentSCSchedule = hoursOfOperations.find(item => item.dayOfWeek === moment(date).day())
+            const currentSCSchedule = hoursOfOperations.find(item => item.dayOfWeek === dayjs(date).day())
             if (gap) {
                 if (currentSCSchedule) {
                     const [startHours, startMinutes] = currentSCSchedule.from.split(':');
@@ -107,7 +108,7 @@ export const AppointmentTimeSelector: React.FC<TProps> =
                     ? <TimeSlotsWrapper>
                         {slots.map((timeSlot) => {
                             const appointment = appointments?.appointments.find(
-                                a => a.date.isSame(timeSlot.date, 'minute')
+                                a => dayjs.utc(a.date).isSame(timeSlot.date, 'minute')
                             );
                             return <TimeSlotCard
                                 date={date}

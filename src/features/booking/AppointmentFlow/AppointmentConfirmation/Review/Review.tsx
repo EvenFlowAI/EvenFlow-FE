@@ -4,34 +4,30 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {Wrapper} from "./styles";
+import {ConfirmationItemWrapper} from "../../../../../components/styled/ConfirmationItemWrapper";
 
 export const Review = () => {
-    const [
-        consultant,
+    const {
+        advisor,
         transportation,
         serviceTypeOption,
-        currentConfig,
-    ] = useSelector((state: RootState) => [
-        state.appointmentFrame.advisor,
-        state.appointmentFrame.transportation,
-        state.appointmentFrame.serviceTypeOption,
-        state.bookingFlowConfig.currentConfig,
-    ]);
+    } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
+    const {currentConfig} = useSelector(({bookingFlowConfig}: RootState) => bookingFlowConfig)
     const {t} = useTranslation();
     const transportationSelected = serviceTypeOption?.transportationOption || transportation;
 
     return (
-        <div>
+        <ConfirmationItemWrapper>
             <AppointmentConfirmationTitle>{t("Appointment Details")}</AppointmentConfirmationTitle>
             <Wrapper>
                 {transportationSelected
                     ? <li>Transportation needs: {transportationSelected?.description}</li>
                     : null}
                 {currentConfig?.advisorSelection
-                    ? <li>{t("Service Advisor")}: {consultant?.name ?? t("Any Available")}</li>
+                    ? <li>{t("Service Advisor")}: {advisor?.name ?? t("Any Available")}</li>
                     : null
                 }
             </Wrapper>
-        </div>
+        </ConfirmationItemWrapper>
     );
 };

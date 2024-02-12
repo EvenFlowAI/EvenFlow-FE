@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import { Autocomplete } from '@mui/material';
+import {useMediaQuery, useTheme} from "@mui/material";
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {useDispatch, useSelector} from "react-redux";
@@ -40,7 +40,7 @@ type TMaintenanceDetailsProps = {
 
 const blankOptions: TOptionsState = {};
 
-export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, onBack}) => {
+export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>> = ({onNext, onBack}) => {
     const {
         selectedVehicle,
         makes,
@@ -67,14 +67,14 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
     const dispatch = useDispatch();
     const showError = useException();
     const theme = useTheme();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
     const {isOpen: isNoRecallsOpen, onOpen: onNoRecallsOpen, onClose: onNoRecallsClose} = useModal();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
-    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSM = useMediaQuery(theme.breakpoints.down('md'));
     const requiredFields: TKey[] = ["model", "year", "make", "mileage"];
     const nextLogicalScreen = useMemo(() => {
          return isAdvisorAvailable
@@ -355,135 +355,141 @@ export const MaintenanceDetails: React.FC<TMaintenanceDetailsProps> = ({onNext, 
         engineType: {order: isSM ? 4 : 3}
     }
 
-    return (<StepWrapper>
-        {isLoading
-            ? <Loading/>
-            : <SelectWrapper>
-                <Autocomplete
-                    key="year"
-                    style={orderMapStyles.year}
-                    options={getYearOptions()}
-                    onChange={handleChange('year', false)}
-                    fullWidth
-                    disableClearable
-                    autoComplete={true}
-                    disabled={isExistingVehicle}
-                    renderInput={autocompleteRender({
-                        label: t("Year"),
-                        placeholder: errors.includes("year") ? `${t("Year")} ${t("required")}` : `${t("Select")} ${t("Year")}`,
-                        error: errors.includes("year"),
-                        required: requiredFields.includes('year')
-                    })}
-                    value={selectedVehicle?.year ? selectedVehicle.year.toString() : ''}
-                />
-                <Autocomplete
-                    key="mileage"
-                    style={orderMapStyles.mileage}
-                    options={mileage.map(item => item.value.toString())}
-                    onChange={handleChange('mileage', false)}
-                    fullWidth
-                    disableClearable
-                    autoComplete={true}
-                    renderInput={autocompleteRender({
-                        label: t("Estimated mileage"),
-                        placeholder: errors.includes("mileage") ? `${t("Estimated mileage")} ${t("required")}` : `${t("Select")} ${t("Estimated mileage")}`,
-                        error: errors.includes("mileage"),
-                        required: requiredFields.includes('mileage')
-                    })}
-                    value={selectedVehicle?.mileage ? selectedVehicle.mileage.toString() : ''}
-                />
-                <Autocomplete
-                    key="make"
-                    style={orderMapStyles.make}
-                    options={loadedOptions.make ?? []}
-                    onChange={handleChange('make', false)}
-                    fullWidth
-                    disableClearable
-                    autoComplete={true}
-                    disabled={isExistingVehicle}
-                    renderInput={autocompleteRender({
-                        label: t("Make"),
-                        placeholder: errors.includes("make") ? `${t("Make")} ${t("required")}` : `${t("Select")} ${t("Make")}`,
-                        error: errors.includes("make"),
-                        required: requiredFields.includes('make')
-                    })}
-                    value={selectedVehicle?.make ? selectedVehicle.make?.toString() : ''}
-                />
-                {currentConfig?.engineType
-                    ? <Autocomplete
-                        key="Engine Type"
-                        style={orderMapStyles.engineType}
-                        options={engineTypes}
-                        onChange={handleEngineTypeChange}
+    return (
+        <StepWrapper>
+            {isLoading
+                ? <Loading/>
+                : <SelectWrapper>
+                    <Autocomplete
+                        key="year"
+                        style={orderMapStyles.year}
+                        options={getYearOptions()}
+                        onChange={handleChange('year', false)}
                         fullWidth
-                        getOptionLabel={o => o.name}
-                        getOptionSelected={o => o.id === selectedEngine?.id}
-                        disabled={Boolean(selectedEngine) && Boolean(appointmentByKey?.vehicle?.engineTypeId)}
+                        disableClearable
+                        autoComplete={true}
+                        isOptionEqualToValue={(o, v) => o === v}
+                        disabled={isExistingVehicle}
                         renderInput={autocompleteRender({
-                            label: scProfile?.engineTypeFieldName ?? t("Engine Type"),
-                            placeholder: errors.includes("engineTypeId")
-                                ? `${scProfile?.engineTypeFieldName ?? t("Engine Type")} ${t("required")}`
-                                : `${t("Select")} ${scProfile?.engineTypeFieldName ?? t("Engine Type")}`,
-                            error: errors.includes("engineTypeId"),
-                            required: true,
+                            label: t("Year"),
+                            placeholder: errors.includes("year") ? `${t("Year")} ${t("required")}` : `${t("Select")} ${t("Year")}`,
+                            error: errors.includes("year"),
+                            required: requiredFields.includes('year')
                         })}
-                        value={selectedEngine}
+                        value={selectedVehicle?.year ? selectedVehicle.year.toString() : ''}
                     />
-                    : null}
-                <Autocomplete
-                    key="model"
-                    options={loadedOptions.model ?? []}
-                    onChange={handleChange('model', false)}
-                    style={orderMapStyles.model}
-                    fullWidth
-                    disableClearable
-                    autoComplete={true}
-                    disabled={isExistingVehicle}
-                    renderInput={autocompleteRender({
-                        label: t("Model"),
-                        placeholder: errors.includes("model") ? `${t("Model")} ${t("required")}` : `${t("Select")} ${t("Model")}`,
-                        error: errors.includes("model"),
-                        required: requiredFields.includes('model')
-                    })}
-                    value={selectedVehicle?.model ? selectedVehicle.model.toString() : ''}
-                />
-                {recallsToggledOn || isRecallsCategorySelected
-                    ? <div key="vin"
-                           className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}
-                           style={orderMapStyles.vin}>
-                        <TextField
-                            onChange={handleTextChange("vin")}
-                            label={recallsToggledOn && !isRecallsCategorySelected
-                                ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
-                                : `${t("VIN")}${isRecallsCategorySelected ? "" : `(${ t("Optional")})`}`
-                            }
-                            name={"vin"}
-                            error={errors.includes("vin")}
-                            required={requiredFields.includes("vin") || isRecallsCategorySelected}
+                    <Autocomplete
+                        key="mileage"
+                        style={orderMapStyles.mileage}
+                        isOptionEqualToValue={(o, v) => o === v}
+                        options={mileage.map(item => item.value.toString())}
+                        onChange={handleChange('mileage', false)}
+                        fullWidth
+                        disableClearable
+                        autoComplete={true}
+                        renderInput={autocompleteRender({
+                            label: t("Estimated mileage"),
+                            placeholder: errors.includes("mileage") ? `${t("Estimated mileage")} ${t("required")}` : `${t("Select")} ${t("Estimated mileage")}`,
+                            error: errors.includes("mileage"),
+                            required: requiredFields.includes('mileage')
+                        })}
+                        value={selectedVehicle?.mileage ? selectedVehicle.mileage.toString() : ''}
+                    />
+                    <Autocomplete
+                        key="make"
+                        style={orderMapStyles.make}
+                        options={loadedOptions.make ?? []}
+                        onChange={handleChange('make', false)}
+                        fullWidth
+                        isOptionEqualToValue={(o, v) => o === v}
+                        disableClearable
+                        autoComplete={true}
+                        disabled={isExistingVehicle}
+                        renderInput={autocompleteRender({
+                            label: t("Make"),
+                            placeholder: errors.includes("make") ? `${t("Make")} ${t("required")}` : `${t("Select")} ${t("Make")}`,
+                            error: errors.includes("make"),
+                            required: requiredFields.includes('make')
+                        })}
+                        value={selectedVehicle?.make ? selectedVehicle.make?.toString() : ''}
+                    />
+                    {currentConfig?.engineType
+                        ? <Autocomplete
+                            key="Engine Type"
+                            style={orderMapStyles.engineType}
+                            options={engineTypes}
+                            onChange={handleEngineTypeChange}
                             fullWidth
-                            disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length && isExistingVin)}
-                            value={selectedVehicle ? selectedVehicle.vin : ""}
-                            placeholder={errors.includes("vin")
-                                ? `${t("VIN")} ${t("required")}`
-                                : `${t("Type")} ${t("VIN")} ${isRecallsCategorySelected ? "" : `(${t("Optional")})`}`}
+                            getOptionLabel={o => o.name}
+                            isOptionEqualToValue={o => o.id === selectedEngine?.id}
+                            disabled={Boolean(selectedEngine) && Boolean(appointmentByKey?.vehicle?.engineTypeId)}
+                            renderInput={autocompleteRender({
+                                label: scProfile?.engineTypeFieldName ?? t("Engine Type"),
+                                placeholder: errors.includes("engineTypeId")
+                                    ? `${scProfile?.engineTypeFieldName ?? t("Engine Type")} ${t("required")}`
+                                    : `${t("Select")} ${scProfile?.engineTypeFieldName ?? t("Engine Type")}`,
+                                error: errors.includes("engineTypeId"),
+                                required: true,
+                            })}
+                            value={selectedEngine}
                         />
-                    </div> : null}
-            </SelectWrapper>
-        }
-        <ActionButtons
-            onBack={handleBack}
-            onNext={handleSubmit}
-            prevDisabled={isLoading}
-            nextDisabled={isNextDisabled || isLoading}
-            nextLabel={isRecallsCategorySelected ? t("Check for Recalls") : t("Next")}
-        />
-        <RecallsByVinModal
-            open={isOpen}
-            onClose={onClose}
-            handleNext={handleNext}
-            handleAddServices={handleAddServices}
-            onDeclineRecalls={handleDeclineRecalls}
-        />
-        <NoRecallsModal open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleDeclineRecalls}/>
-    </StepWrapper>);
+                        : null}
+                    <Autocomplete
+                        key="model"
+                        options={loadedOptions.model ?? []}
+                        onChange={handleChange('model', false)}
+                        style={orderMapStyles.model}
+                        fullWidth
+                        disableClearable
+                        isOptionEqualToValue={(o, v) => o === v}
+                        autoComplete={true}
+                        disabled={isExistingVehicle}
+                        renderInput={autocompleteRender({
+                            label: t("Model"),
+                            placeholder: errors.includes("model") ? `${t("Model")} ${t("required")}` : `${t("Select")} ${t("Model")}`,
+                            error: errors.includes("model"),
+                            required: requiredFields.includes('model')
+                        })}
+                        value={selectedVehicle?.model ? selectedVehicle.model.toString() : ''}
+                    />
+                    {recallsToggledOn || isRecallsCategorySelected
+                        ? <div key="vin"
+                               className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}
+                               style={orderMapStyles.vin}>
+                            <TextField
+                                onChange={handleTextChange("vin")}
+                                label={recallsToggledOn && !isRecallsCategorySelected
+                                    ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
+                                    : `${t("VIN")}${isRecallsCategorySelected ? "" : `(${ t("Optional")})`}`
+                                }
+                                name={"vin"}
+                                error={errors.includes("vin")}
+                                required={requiredFields.includes("vin") || isRecallsCategorySelected}
+                                fullWidth
+                                disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length && isExistingVin)}
+                                value={selectedVehicle ? selectedVehicle.vin : ""}
+                                placeholder={errors.includes("vin")
+                                    ? `${t("VIN")} ${t("required")}`
+                                    : `${t("Type")} ${t("VIN")} ${isRecallsCategorySelected ? "" : `(${t("Optional")})`}`}
+                            />
+                        </div> : null}
+                </SelectWrapper>
+            }
+            <ActionButtons
+                onBack={handleBack}
+                onNext={handleSubmit}
+                prevDisabled={isLoading}
+                nextDisabled={isNextDisabled || isLoading}
+                nextLabel={isRecallsCategorySelected ? t("Check for Recalls") : t("Next")}
+            />
+            <RecallsByVinModal
+                open={isOpen}
+                onClose={onClose}
+                handleNext={handleNext}
+                handleAddServices={handleAddServices}
+                onDeclineRecalls={handleDeclineRecalls}
+            />
+            <NoRecallsModal open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleDeclineRecalls}/>
+        </StepWrapper>
+    );
 };

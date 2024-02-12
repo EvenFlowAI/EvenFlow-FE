@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {SearchInput} from "../../../components/formControls/SearchInput/SearchInput";
-import {Button, IconButton, Menu, MenuItem} from "@material-ui/core";
+import {Button, IconButton, Menu, MenuItem} from "@mui/material";
 import {
     changeComplimentaryPageData,
     loadComplimentary, setComplimentaryPageData,
@@ -12,7 +12,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {IComplimentaryServiceByQuery} from "../../../store/reducers/packages/types";
 import {Table} from "../../../components/tables/Table/Table";
 import {RootState} from "../../../store/rootReducer";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {capacityManagementRoot, SC_UNDEFINED} from "../../../utils/constants";
 import AddServiceManually from "./AddServiceManually/AddServiceManually";
 import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
@@ -28,25 +28,19 @@ import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const ComplimentaryServices = () => {
-    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const [editedItem, setEditedItem] = useState<IComplimentaryServiceByQuery|undefined>(undefined);
+    const {
+        complimentary,
+        isComplimentaryLoading,
+        complimentaryPaging: {numberOfRecords},
+        complimentarySortOrder,
+        complimentarySearchTerm,
+        allComplimentary,
+    } = useSelector((state: RootState) => state.packages);
+
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [editedItem, setEditedItem] = useState<IComplimentaryServiceByQuery | undefined>(undefined);
     const [selectedOpsCodes, setSelectedOpsCodes] = useState<number[]>([]);
 
-    const [
-        complimentary,
-        isLoading,
-        servicesCount,
-        sortOrder,
-        searchTerm,
-        allComplimentary,
-    ] = useSelector((state: RootState) => [
-        state.packages.complimentary,
-        state.packages.isComplimentaryLoading,
-        state.packages.complimentaryPaging.numberOfRecords,
-        state.packages.complimentarySortOrder,
-        state.packages.complimentarySearchTerm,
-        state.packages.allComplimentary,
-    ]);
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
         changeComplimentaryPageData
@@ -140,7 +134,7 @@ export const ComplimentaryServices = () => {
     }
 
     const actions = (el:IComplimentaryServiceByQuery) => {
-        return <IconButton onClick={handleOpenMenu(el)}><MoreHoriz /></IconButton>
+        return <IconButton onClick={handleOpenMenu(el)} size="large"><MoreHoriz /></IconButton>;
     }
 
     const onAddOpsCode = async (selectedCodes: number[], serviceCenterId: number) => {
@@ -177,7 +171,7 @@ export const ComplimentaryServices = () => {
                 actions={<div style={{display: "flex", alignItems: "center"}}>
                     <SearchInput
                         onChange={handleSearchChange}
-                        value={searchTerm}
+                        value={complimentarySearchTerm}
                         onSearch={handleSearch}
                     />
                     <Button
@@ -202,17 +196,17 @@ export const ComplimentaryServices = () => {
                 <Table<IComplimentaryServiceByQuery>
                     data={complimentary}
                     index="id"
-                    order={sortOrder?.orderBy}
-                    isAscending={sortOrder?.isAscending}
+                    order={complimentarySortOrder?.orderBy}
+                    isAscending={complimentarySortOrder?.isAscending}
                     rowData={tableData}
-                    isLoading={isLoading}
+                    isLoading={isComplimentaryLoading}
                     page={pageIndex}
                     onSort={handleSort}
-                    hidePagination={servicesCount < 11}
+                    hidePagination={numberOfRecords < 11}
                     rowsPerPage={pageSize}
                     onChangePage={changePage}
                     onChangeRowsPerPage={changeRowsPerPage}
-                    count={servicesCount}
+                    count={numberOfRecords}
                     actions={actions}
                 />
             </div>

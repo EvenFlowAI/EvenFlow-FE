@@ -1,9 +1,9 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Button, Divider, IconButton, Switch} from "@material-ui/core";
+import {Button, Divider, IconButton, Switch} from "@mui/material";
 import {DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
 import {ReactComponent as PlusIcon} from "../../../../assets/img/plus.svg";
 import {ReactComponent as DeleteIcon} from "../../../../assets/img/close.svg";
@@ -18,7 +18,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesState, onClose}) => {
+const ServiceCenterAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<TNotificatonsProps>>> = ({setChangesState, onClose}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);
     const {scNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
     const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort|null>(null);
@@ -27,7 +27,7 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
     const [formChecked, setFormChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useNotificationStyles();
+    const { classes  } = useNotificationStyles();
     const showError = useException();
     const showMessage = useMessage();
 
@@ -143,9 +143,11 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
                 </div>
                 <div className={classes.selectWrapper}>
                     <Autocomplete
+                        className={classes.autocomplete}
                         options={usersShort}
                         style={{width: 290}}
                         disabled={loading || isLoading}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
                         getOptionLabel={i => i.fullName}
                         value={currentEmployee}
                         onChange={onEmployeeChange}
@@ -169,7 +171,10 @@ const ServiceCenterAppointments: React.FC<TNotificatonsProps> = ({setChangesStat
                         <div className={classes.employeeWrapper} key={item.id}>
                             <div>{item.fullName}</div>
                             <div>{item.email}</div>
-                            <IconButton onClick={() => deleteEmployee(item.id)} disabled={loading || isLoading}><DeleteIcon/></IconButton>
+                            <IconButton
+                                onClick={() => deleteEmployee(item.id)}
+                                disabled={loading || isLoading}
+                                size="large"><DeleteIcon/></IconButton>
                         </div>
                     ))}
                 </div>

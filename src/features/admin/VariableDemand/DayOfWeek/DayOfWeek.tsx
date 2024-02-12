@@ -1,7 +1,7 @@
 import React from 'react';
 import {SquarePaper} from "../../../../components/styled/Paper";
 import {PaperTitle} from "../../../../pages/admin/PricingSettings/UI";
-import {Box, Button, Divider} from "@material-ui/core";
+import {Box, Button, Divider} from "@mui/material";
 import {useSelector} from "react-redux";
 import {mappedPricingDemandsSelectorDWeek} from "../../../../store/reducers/pricingSettings/selectors";
 import {SliderTable} from "../SliderTable/SliderTable";

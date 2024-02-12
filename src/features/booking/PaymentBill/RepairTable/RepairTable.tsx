@@ -1,6 +1,6 @@
 import {useStyles} from "../styles";
 import {useTranslation} from "react-i18next";
-import {Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {data} from "../mockData";
 import React from "react";
 import {TableContainer} from "./styles";
@@ -8,7 +8,7 @@ import {getAlphabeticalIndexes} from "./utils";
 
 export const RepairTable = () => {
     const indexes = getAlphabeticalIndexes();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     return <TableContainer>

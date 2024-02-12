@@ -3,7 +3,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {
     Button,
     CircularProgress,
-} from "@material-ui/core";
+} from "@mui/material";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {AppointmentStatus, IAppointment} from "../../../../api/types";
 import {AppointmentDetails} from "./AppointmentDetails/AppointmentDetails";
@@ -17,7 +17,7 @@ type TCallbackProps = {
     onCancelAppointment: () => void;
 }
 
-export const ViewAppointmentsModal: React.FC<DialogProps<IAppointment>&TCallbackProps> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
+export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAppointment>&TCallbackProps>>> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
     return <BaseModal {...props} width={940}>
         <DialogTitle onClose={props.onClose}>View Appointment</DialogTitle>
         <DialogContent>
@@ -53,7 +53,7 @@ export const ViewAppointmentsModal: React.FC<DialogProps<IAppointment>&TCallback
                 variant="outlined">
                 Edit
             </Button>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Close
             </Button>
         </DialogActions>

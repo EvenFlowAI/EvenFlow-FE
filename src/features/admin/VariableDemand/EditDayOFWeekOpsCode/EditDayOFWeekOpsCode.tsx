@@ -3,7 +3,7 @@ import {DialogTitle, BaseModal, DialogActions, DialogContent} from "../../../../
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {SliderRange, TOpsCode} from "../types";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Button, Divider} from "@material-ui/core";
+import {Button, Divider} from "@mui/material";
 import {EDemandCategory, IRequestPricingSettings} from "../../../../store/reducers/pricingSettings/types";
 import {updateSRPricingSettings} from "../../../../store/reducers/pricingSettings/actions";
 import {useDispatch} from "react-redux";
@@ -25,12 +25,12 @@ const initialValues: TState = {
     high: undefined
 }
 
-const EditDayOfWeekOpsCode: React.FC<TEditDayOfWeekOpsCodeProps> = ({editingItem, ...props}) => {
+const EditDayOfWeekOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChildren<TEditDayOfWeekOpsCodeProps>>> = ({editingItem, ...props}) => {
     const [values, setValues] = useState<TState>(initialValues);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (editingItem) setValues({low: editingItem.low, high: editingItem.high});

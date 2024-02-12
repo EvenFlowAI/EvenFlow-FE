@@ -1,8 +1,9 @@
-import {MenuItem, withStyles} from "@material-ui/core";
+import { MenuItem } from "@mui/material";
 
+import { withStyles } from 'tss-react/mui';
 
-export const EmptyMenuItem = withStyles({
+export const EmptyMenuItem = withStyles(MenuItem, {
     root: {
         color: '#858585'
     }
-})(MenuItem)
+});

@@ -1,11 +1,11 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     wrapper: {
         maxHeight: 180,
         display: 'grid',
         gridTemplateColumns: '1fr 3fr',
-        gridGap: 25,
         gap: 25,
         overflowY: 'auto',
         border: "1px solid #DADADA",
@@ -20,4 +20,4 @@ export const useStyles = makeStyles({
     emptyWrapper: {
         height: '100%',
     }
-})
+});

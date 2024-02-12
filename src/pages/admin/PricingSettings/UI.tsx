@@ -1,26 +1,26 @@
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
+import {styled} from "@mui/material";
 
 type TStyleProps = {
     nPd: boolean;
 }
-const useStyles = makeStyles({
-    title: ({nPd}: TStyleProps) => ({
-        fontSize: 16,
-        fontWeight: "bold",
-        textTransform: "uppercase",
-        margin: nPd ? 0 : "16px 32px"
-    })
-});
+
+const Title = styled("h4", {
+    shouldForwardProp: (prop) => prop !== "nPd"
+})<TStyleProps>(({theme, nPd}) => ({
+    fontSize: 16,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    margin: nPd ? 0 : "16px 32px"
+}))
 
 type TProps = {
     noPadding?: boolean;
 }
-export const PaperTitle: React.FC<TProps> = ({children, noPadding}) => {
-    const classes = useStyles({nPd: Boolean(noPadding)});
-    return <h4 className={classes.title}>{children}</h4>;
+export const PaperTitle: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({children, noPadding}) => {
+    return <Title nPd={Boolean(noPadding)}>{children}</Title>;
 };
 
-export const TableContainer: React.FC = ({children}) => {
+export const TableContainer: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = ({children}) => {
     return <div style={{padding: 16}}>{children}</div>;
 }

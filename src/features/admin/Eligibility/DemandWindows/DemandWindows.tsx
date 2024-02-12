@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {SquarePaper} from "../../../../components/styled/Paper";
 import {PaperTitle, TableContainer} from "../../../../pages/admin/PricingSettings/UI";
-import {Box, Divider, Switch, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Box, Divider, Switch, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {loadTimeWindows, setTimeWindows} from "../../../../store/reducers/pricingSettings/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -20,7 +20,7 @@ export const DemandWindows = () => {
     const {selectedSC} = useSCs();
     const showError = useException();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const mappedTW = useMemo(() => {
         return timeWindows.reduce((acc, item) => {
@@ -40,9 +40,9 @@ export const DemandWindows = () => {
             try {
                 setSaving(true);
                 await dispatch(setTimeWindows({
-                    serviceCenterId: selectedSC.id,
-                    type: t,
                     ...mappedTW[t],
+                    serviceCenterId: mappedTW[t]?.serviceCenterId ?? selectedSC.id,
+                    type: mappedTW[t]?.type ?? t,
                     isEligibility: checked
                 }));
             } catch (e) {

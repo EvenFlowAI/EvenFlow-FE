@@ -1,13 +1,13 @@
-import {TArgCallback} from "../../../../types/types";
-import moment from "moment/moment";
+import {TArgCallback, TParsableDate} from "../../../../types/types";
+import {Dayjs} from "dayjs";
 
 export type TMonthProps = {
-    date: moment.Moment,
+    date: TParsableDate,
     loading: boolean;
-    onDateChange: TArgCallback<moment.Moment>;
+    onDateChange: TArgCallback<TParsableDate>;
 }
 
 export type TSlot = {
-    date: moment.Moment;
+    date: Dayjs;
     label: string;
 }

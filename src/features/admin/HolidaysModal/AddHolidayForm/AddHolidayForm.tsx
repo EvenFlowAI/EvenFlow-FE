@@ -1,28 +1,32 @@
 import React from "react";
 import {THolidayForm} from "../types";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import {FormControlLabel, Grid, Switch} from "@material-ui/core";
+import {FormControlLabel, Grid, Switch} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useStyles} from "./styles";
-import {DatePicker} from "../../../../components/pickers/DatePicker/DatePicker";
+import {TParsableDate} from "../../../../types/types";
+import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/CustomDatePicker";
 
 type TProps = {
     form: THolidayForm
-    onDateChange: (date: MaterialUiPickersDate) => void;
+    onDateChange: (date: TParsableDate) => void;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onCheck: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 }
 
-export const HolidayForm: React.FC<TProps> = props => {
-    const classes = useStyles();
+export const HolidayForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = props => {
+    const { classes  } = useStyles();
     return <div>
         <Grid container spacing={2}>
             <Grid item xs={12}>
-                <DatePicker
+                <CustomDatePicker
                     value={props.form.date}
                     onChange={props.onDateChange}
                     label="Date"
                     fullWidth
+                    InputProps={{
+                        placeholder: "Select Date"
+                    }}
+                    format="MMMM, DD"
                 />
             </Grid>
             <Grid item xs={12}>

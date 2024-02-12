@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
@@ -27,7 +27,7 @@ import ReactGA from "react-ga4";
 //import ReactGA from "react-ga";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
-import {InfoOutlined} from "@material-ui/icons";
+import {InfoOutlined} from "@mui/icons-material";
 import ServiceTypeIcon from "./ServiceTypeIcon/ServiceTypeIcon";
 import {ActionButtons} from "../ActionButtons/ActionButtons";
 import {decodeSCID, encodeSCID} from "../../../utils/utils";
@@ -49,7 +49,7 @@ type TProps = {
     loading: boolean;
 };
 
-const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading }) => {
+const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({handleValueServiceConfig, loading }) => {
     const {
         trackerCreated,
         userType,
@@ -62,8 +62,8 @@ const ServiceTypeSelect: React.FC<TProps> = ({handleValueServiceConfig, loading 
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const currentUser = useCurrentUser();
 
-    const {id} = useParams();
-    const classes = useServiceTypeStyles();
+    const {id} = useParams<{id: string}>();
+    const { classes  } = useServiceTypeStyles();
     const dispatch = useDispatch();
     const history = useHistory();
     const showError = useException();

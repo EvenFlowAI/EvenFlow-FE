@@ -5,7 +5,7 @@ import {
     Switch,
     TableCell,
     TableRow,
-} from "@material-ui/core";
+} from "@mui/material";
 import {ValueSlider} from "../../../../components/styled/ValueSlider";
 import {IValueSettings} from "../../../../store/reducers/valueSettings/types";
 import {SliderRange, TRow} from "../types";
@@ -20,14 +20,14 @@ type TRowProps = {
     disabled: boolean;
     editing: boolean;
     onSwitch: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
-    onSlide: (e: React.ChangeEvent<{}>, val: number | number[]) => void;
+    onSlide: (e: Event, val: number | number[]) => void;
     onEdit: () => void;
     onTabChange: () => void
     onCancel: () => void;
     onSave: () => void;
 }
 
-export const ValueIndicatorsRow: React.FC<TRowProps> = props => {
+export const ValueIndicatorsRow: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRowProps>>> = props => {
     return <TableRow>
         {!props.isXS ? <TableCell>{props.rowData.title}</TableCell> : null}
         <SliderCell>

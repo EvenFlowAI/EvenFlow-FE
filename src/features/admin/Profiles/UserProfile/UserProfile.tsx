@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Divider, Grid, useMediaQuery, useTheme} from "@material-ui/core";
+import {Button, Divider, Grid, useMediaQuery, useTheme} from "@mui/material";
 import {AvatarUpload} from "../../../../components/formControls/AvatarUpload/AvatarUpload";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch} from "react-redux";
@@ -24,9 +24,9 @@ export const UserProfile = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const theme = useTheme();
-    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+    const isSM = useMediaQuery(theme.breakpoints.down('md'));
 
     useEffect(() => {
         if (currentUser) {
@@ -160,6 +160,7 @@ export const UserProfile = () => {
                         <Button
                             style={{marginRight: 10}}
                             className={classes.centerButton}
+                            color="info"
                             onClick={handleCancel}>
                             Cancel
                         </Button>
@@ -251,6 +252,7 @@ export const UserProfile = () => {
                     <Button
                         style={{marginRight: 10}}
                         className={classes.centerButton}
+                        color="info"
                         onClick={cancelPasswordEdit}>
                         Cancel
                     </Button>

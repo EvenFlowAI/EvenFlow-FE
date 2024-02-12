@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Divider} from "@material-ui/core";
+import {Button, Divider} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -15,7 +15,7 @@ const AppointmentNotes = () => {
     const [isFocused, setFocused] = useState<boolean>(false);
     const [hasError, setHasError] = useState<boolean>(false);
     const [text, setText] = useState<string>('');
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const showError = useException(true);

@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {TabList} from "../../../components/styled/Tabs";
-import {Tab} from "@material-ui/core";
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {Tab} from "@mui/material";
+import {TabContext, TabPanel} from "@mui/lab";
 import {useDispatch} from "react-redux";
 import ServiceCenterAppointments from "./ServiceCenterAppointments/ServiceCenterAppointments";
 import PodAppointments from "./PodAppointments/PodAppointments";
@@ -15,7 +15,7 @@ import {TChangesState} from "./types";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 
-const ManageNotificationsModal:React.FC<DialogProps> = (props) => {
+const ManageNotificationsModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const [currentTab, setCurrentTab] = useState<string>("0");
     const [changesState, setChangesState] = useState<TChangesState>({
         scNotificationsSaved: true,

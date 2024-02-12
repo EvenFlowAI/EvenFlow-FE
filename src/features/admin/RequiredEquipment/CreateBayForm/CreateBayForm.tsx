@@ -1,7 +1,7 @@
 import React from "react";
 import {TBayForm} from "../types";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Checkbox, FormControlLabel, FormGroup} from "@material-ui/core";
+import {Checkbox, FormControlLabel, FormGroup} from "@mui/material";
 
 type TProps = {
     onChange: React.ChangeEventHandler<HTMLInputElement>,
@@ -9,7 +9,7 @@ type TProps = {
     onCheck: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export const CreateBayForm: React.FC<TProps> = props => {
+export const CreateBayForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = props => {
     return <div>
         <TextField
             label="Name"

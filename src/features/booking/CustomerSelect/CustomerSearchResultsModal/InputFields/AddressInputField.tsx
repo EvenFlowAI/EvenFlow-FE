@@ -11,7 +11,7 @@ type TAddressInputFieldProps = {
     onFieldChange: (fieldName: keyof IAddressData) => (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const AddressInputField:React.FC<TAddressInputFieldProps> = ({
+export const AddressInputField:React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddressInputFieldProps>>> = ({
                                                                         editingElement,
                                                                         isEdit,
                                                                         onFieldChange,

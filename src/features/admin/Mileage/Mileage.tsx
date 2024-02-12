@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {AddMileageModal} from "./AddMileageModal/AddMileageModal";
 import {MileageTable} from "./MileageTable/MileageTable";
 import {Wrapper} from "./styles";

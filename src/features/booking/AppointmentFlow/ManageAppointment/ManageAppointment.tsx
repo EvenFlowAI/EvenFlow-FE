@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {AppointmentUserData} from "../../AppointmentUserData/AppointmentUserData";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {AppointmentSelectedDate} from "../../AppointmentSelectedDate/AppointmentSelectedDate";
 import {AppointmentReminders} from "../../AppointmentReminders/AppointmentReminders";
 import {TArgCallback, TCallback, TError} from "../../../../types/types";
@@ -41,7 +41,6 @@ import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";
 import {API} from "../../../../api/api";
 import {isMobile} from 'react-device-detect';
-import moment from "moment/moment";
 import DetailedFeesManage from "../AppointmentConfirmation/DetailedFees/DetailedFeesManage";
 import {loadFirstScreenOptionsByQuery} from "../../../../store/reducers/serviceTypes/actions";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
@@ -54,23 +53,34 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../../routes/constants";
+import dayjs from "dayjs";
 
 type TProps = {
     onChangeSlot: TCallback;
     onUpdateAppointment: TArgCallback<ILoadedVehicle>;
 };
 
-export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppointment}) => {
-    const [appointment, appointmentFrame, saving] = useSelector((state: RootState) => [
-        state.appointment,
-        state.appointmentFrame,
-        state.appointmentFrame.isAppointmentSaving,
-    ]);
-    const {isAdvisorAvailable, currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
+export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onChangeSlot, onUpdateAppointment}) => {
+    const {isAdvisorAvailable, currentConfig} = useSelector(({bookingFlowConfig}: RootState) => bookingFlowConfig);
+    const {
+        scProfile,
+        appointmentWasChanged,
+        serviceValetAppointment,
+        appointment,
+    } = useSelector(({appointment}: RootState) => appointment);
+    const {
+        isAppointmentSaving,
+        serviceTypeOption,
+        customer,
+        selectedVehicle,
+        appointmentByKey,
+        transportation,
+    } = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
 
     const [errors, setErrors] = useState<string[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
     const currentUser = useCurrentUser();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
     const {isOpen: isCancelConfirmOpen, onClose: onCancelConfirmClose, onOpen: onCancelConfirmOpen} = useModal();
@@ -84,33 +94,33 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
 
     const isEmailRequired = useMemo(() => {
         return currentUser
-            ? Boolean(appointment.scProfile?.emailRequirement?.adminAndEmployeesEnabled)
-            : Boolean(appointment.scProfile?.emailRequirement?.customerSelfServiceEnabled)
-    }, [currentUser, appointment.scProfile])
+            ? Boolean(scProfile?.emailRequirement?.adminAndEmployeesEnabled)
+            : Boolean(scProfile?.emailRequirement?.customerSelfServiceEnabled)
+    }, [currentUser, scProfile])
 
 
     useEffect(() => {
-        if (appointment?.scProfile) {
-            dispatch(loadCategoriesByQuery(appointment.scProfile.id))
-            dispatch(loadSRs(appointment.scProfile.id))
+        if (scProfile) {
+            dispatch(loadCategoriesByQuery(scProfile.id))
+            dispatch(loadSRs(scProfile.id))
         }
-    }, [appointment.scProfile, appointmentFrame.serviceTypeOption])
+    }, [scProfile, serviceTypeOption])
 
     useEffect(() => {
-        if (appointment.scProfile) {
-            dispatch(loadAllServiceCategories(appointment.scProfile.id));
+        if (scProfile) {
+            dispatch(loadAllServiceCategories(scProfile.id));
         }
-    }, [appointment.scProfile, id])
+    }, [scProfile, id])
 
     useEffect(() => {
-        if (currentConfig && appointment.scProfile) dispatch(loadFirstScreenOptionsByQuery(appointment.scProfile.id))
-    }, [currentConfig, appointment.scProfile])
+        if (currentConfig && scProfile) dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
+    }, [currentConfig, scProfile])
 
     useEffect(() => {
-        if (appointment?.scProfile && appointment.appointmentWasChanged) {
-            dispatch(loadAppointmentRequestsPrices(appointment.scProfile.id))
+        if (scProfile && appointmentWasChanged) {
+            dispatch(loadAppointmentRequestsPrices(scProfile.id))
         }
-    }, [appointment?.scProfile, appointment.appointmentWasChanged])
+    }, [scProfile, appointmentWasChanged])
 
     useEffect(() => {
         dispatch(setReminders([0, 2]));
@@ -119,26 +129,26 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     const checkIsValid = () => {
         let isValid = true;
         const localErrors: string[] = [];
-        if (!appointmentFrame.customer.email && isEmailRequired) {
+        if (!customer.email && isEmailRequired) {
             isValid = false;
             localErrors.push('email')
             showError('"Email" must not be empty')
         }
-        if (!appointmentFrame.customer?.fullName) {
+        if (!customer?.fullName) {
             isValid = false;
             localErrors.push('fullname')
             showError('"Full Name" must not be empty')
         }
-        if (!appointmentFrame.customer?.phoneNumber) {
+        if (!customer?.phoneNumber) {
             isValid = false;
             localErrors.push('phonenumber')
             showError('"Phone Number" must not be empty')
         }
-        if (appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff && !appointment.serviceValetAppointment && !appointmentFrame.appointmentByKey?.serviceValetTime) {
+        if (serviceTypeOption?.type === EServiceType.PickUpDropOff && !serviceValetAppointment && !appointmentByKey?.serviceValetTime) {
             isValid = false;
             showError('Please select correct Appointment Date and Time')
         }
-        if (appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff && !appointment.appointment && appointmentFrame.appointmentByKey?.serviceValetTime) {
+        if (serviceTypeOption?.type !== EServiceType.PickUpDropOff && !appointment && appointmentByKey?.serviceValetTime) {
             isValid = false;
             showError('Please select correct Appointment Date and Time')
         }
@@ -174,25 +184,27 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     }
 
     const onCancelChanges = () => {
-        if (appointmentFrame.selectedVehicle) {
+        setLoading(true)
+        if (selectedVehicle) {
             const vehicle = {
-                ...appointmentFrame.selectedVehicle,
-                vin: appointmentFrame.appointmentByKey?.vehicle?.vin ?? '',
-                mileage: appointmentFrame.appointmentByKey?.vehicle?.mileage ?? null,
-                engineTypeId: appointmentFrame.appointmentByKey?.vehicle?.engineTypeId ?? null,
+                ...selectedVehicle,
+                vin: appointmentByKey?.vehicle?.vin ?? '',
+                mileage: appointmentByKey?.vehicle?.mileage ?? null,
+                engineTypeId: appointmentByKey?.vehicle?.engineTypeId ?? null,
             };
             dispatch(setVehicle(vehicle));
             dispatch(clearAppointmentData())
             dispatch(setServiceOptionChanged(false));
             onUpdateAppointment(vehicle)
+            setTimeout(() => setLoading(false), 3000)
         }
     }
 
     const handleCancelAppointment = async () => {
-        if (appointmentFrame.appointmentByKey) {
+        if (appointmentByKey) {
             dispatch(setAppointmentSaving(true))
             try {
-                const key = appointmentFrame.appointmentByKey.hashKey;
+                const key = appointmentByKey.hashKey;
                 await API.appointment.cancelByKey(key);
                 await showMessage(
                     <div>
@@ -217,14 +229,14 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     }
 
     const onCancelAppointment = () => {
-        if (appointmentFrame.appointmentByKey) {
+        if (appointmentByKey) {
             askConfirm({
                 isRemove: true,
                 confirmContent: "Cancel appointment",
                 title: "Cancel appointment",
                 content: <span>
                             Please confirm you want to cancel appointment on <br />
-                    {moment.utc(appointmentFrame.appointmentByKey.dateInUtc).format("LLL")}?
+                    {dayjs.utc(appointmentByKey.dateInUtc).format("LLL")}?
                         </span>,
                 onConfirm: handleCancelAppointment
             });
@@ -235,7 +247,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
     return <StepWrapper>
         <ManageTitle>Manage Appointment</ManageTitle>
         <Wrapper>
-            {saving
+            {isAppointmentSaving
                 ? <Loading/>
                 : <React.Fragment>
                     <div>
@@ -251,7 +263,7 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
                             {t("View itemized fees of services")}
                         </div>
                         <ServiceTypeManaging/>
-                        {appointmentFrame.transportation || appointmentFrame.serviceTypeOption?.transportationOption || isAdvisorAvailable
+                        {transportation || serviceTypeOption?.transportationOption || isAdvisorAvailable
                             ? <ReviewManaging/>
                             : null}
                     </div>
@@ -264,21 +276,22 @@ export const ManageAppointment: React.FC<TProps> = ({onChangeSlot, onUpdateAppoi
 
         </Wrapper>
         {/*todo change to open payment window on next*/}
-        {saving
+        {isAppointmentSaving
             ? null
             :  <ActionButtons
-                loading={saving}
+                loading={isAppointmentSaving}
+                nextDisabled={loading}
                 onBack={onCancelConfirmOpen}
                 onNext={handleCreateAppointment}
                 nextLabel="Confirm Changes"
                 prevLabel="Cancel Changes"
             />}
 
-        {saving
+        {isAppointmentSaving
             ? null
             :  <ButtonWrapper>
                 <Button
-                    disabled={saving}
+                    disabled={isAppointmentSaving}
                     variant="text"
                     onClick={onCancelAppointment}>
                     Cancel Appointment

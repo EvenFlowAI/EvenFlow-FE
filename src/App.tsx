@@ -1,18 +1,19 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import './App.css';
-import {Container, IconButton} from '@material-ui/core';
+import {Container, IconButton} from '@mui/material';
 import {useHistory} from 'react-router-dom';
 import {ConfirmModal} from './components/modals/common/ConfirmModal/ConfirmModal';
-import {ProviderContext, SnackbarProvider} from "notistack";
-import {Close} from "@material-ui/icons";
+import {SnackbarProvider} from "notistack";
+import {Close} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/rootReducer";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
 import {loadBookingFlowConfig, setConfiguration} from "./store/reducers/bookingFlowConfig/actions";
 import {EServiceCenterName} from "./api/types";
-import moment from "moment";
 import {TScreen} from "./types/types";
 import AppRoutes from "./routes/AppRoutes/AppRoutes";
+import dayjs from "dayjs";
+import {disableEmotionWarning} from "./utils/utils";
 
 const App = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -20,19 +21,19 @@ const App = () => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
     const [valueServicePreviousScreen, setValueServicePreviousScreen] = useState<TScreen>("serviceNeeds");
-    const notificationsRef = useRef<ProviderContext>();
+    const notificationsRef = useRef<SnackbarProvider|null>(null);
     const dispatch = useDispatch();
     const history = useHistory();
-    const lastLoadingTime = useMemo(() => moment().utc().toISOString(), []);
+    const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
 
     useEffect(() => {
         window.addEventListener('focus', () => {
-            const itIsTimeToReload = moment().utc(true).get('hour') > 2;
-            const isBefore = moment(lastLoadingTime).utc().isBefore(moment().utc(), 'day')
+            const itIsTimeToReload = dayjs().utc(true).get('hour') > 2;
+            const isBefore = dayjs(lastLoadingTime).utc().isBefore(dayjs().utc(), 'day')
             if (isBefore && itIsTimeToReload) {
-                localStorage.setItem('timestamp', moment().utc(true).toISOString())
+                localStorage.setItem('timestamp', dayjs().utc(true).toISOString())
                 history.go(0)
             }
         })
@@ -69,6 +70,7 @@ const App = () => {
                 caches.delete(name);
             });
         })
+        disableEmotionWarning()
     }, [])
 
     const handleClose = (key: React.ReactText) => () => {

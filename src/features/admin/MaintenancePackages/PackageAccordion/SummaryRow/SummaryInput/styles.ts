@@ -1,4 +1,4 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
 const cellStyles = {
     width: 56,
@@ -10,7 +10,8 @@ const cellStyles = {
     border: '1px solid #E0E2E8',
 }
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     cell: {
         ...cellStyles,
         '& input': {
@@ -44,4 +45,4 @@ export const useStyles = makeStyles(() => ({
         textAlign: 'center',
         color: '#9FA2B4',
     }
-}))
+}));

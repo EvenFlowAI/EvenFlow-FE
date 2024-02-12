@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button, TableBody, TableHead} from "@material-ui/core";
+import {Button, TableBody, TableHead} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {RadioButtonChecked, RadioButtonUnchecked} from "@material-ui/icons";
+import {RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {TEmailRequirement} from "../../../../store/reducers/screenSettings/types";
 import {updateEmailRequirement} from "../../../../store/reducers/screenSettings/actions";
 import {useStyles} from "./styles";
@@ -17,12 +17,12 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const EditEmailRequirementModal: React.FC<DialogProps> = ({onClose, ...props}) => {
+export const EditEmailRequirementModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onClose, ...props}) => {
     const {emailRequirement, isEmailRequirementLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
     const [data, setData] = useState<TEmailRequirement|null>(null);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const showError = useException();
     const showMessage = useMessage();
 

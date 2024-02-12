@@ -22,7 +22,7 @@ type TProps = {
     hasOrders?: boolean;
 }
 
-export const CarCard: React.FC<TProps> = ({
+export const CarCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
     onNext,
     car,
     selected,

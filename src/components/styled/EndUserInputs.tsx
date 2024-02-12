@@ -1,6 +1,8 @@
-import {withStyles, TextField as TF} from "@material-ui/core";
+import { TextField as TF } from "@mui/material";
 
-export const TextField = withStyles({
+import { withStyles } from 'tss-react/mui';
+
+export const TextField = withStyles(TF, {
     root: {
         "&::placeholder": {
             textTransform: "uppercase"
@@ -10,4 +12,4 @@ export const TextField = withStyles({
             fontWeight: "bold",
         }
     },
-})(TF);
+});

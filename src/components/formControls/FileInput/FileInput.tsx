@@ -12,11 +12,11 @@ type TFileInputProps = {
     label: string;
 }
 
-export const FileInput: React.FC<TFileInputProps> = ({ setState, label }) => {
+export const FileInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TFileInputProps>>> = ({ setState, label }) => {
     const ref = createRef<HTMLInputElement>();
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const handleFileChange: ChangeEventHandler<HTMLInputElement> = useCallback((event) => {
         if (event.target.files) {

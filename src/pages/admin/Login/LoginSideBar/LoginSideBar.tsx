@@ -3,7 +3,7 @@ import logo from "../../../../assets/img/logoLogin.svg";
 import {useStyles} from "./styles";
 
 export const LoginSideBar = () => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <div className={classes.wrapper}>
         <div className={classes.image} />
         <div className={classes.gradient} />

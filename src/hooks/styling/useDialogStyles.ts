@@ -1,6 +1,6 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useDialogStyles = makeStyles(theme => ({
+export const useDialogStyles = makeStyles()(theme => ({
     root: {
         "& hr": {
             margin: "28px 0",
@@ -29,7 +29,7 @@ export const useDialogStyles = makeStyles(theme => ({
         backgroundColor: '#E5E5E5',
         maxWidth: 525,
         paddingBottom: 24,
-        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+        [`${theme.breakpoints.down('md')} and (orientation: landscape)`]: {
             paddingBottom: 12,
         }
     }

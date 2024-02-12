@@ -1,7 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {AppointmentConfirmationTitle} from "../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
-import moment from "moment";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {TCallback} from "../../../types/types";
@@ -13,12 +12,14 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TServiceValetSlot} from "../../../api/types";
 import {TitleWrapper} from "./styles";
+import dayjs from "dayjs";
+import {ConfirmationItemWrapper} from "../../../components/styled/ConfirmationItemWrapper";
 
 type TProps = {
     onChangeSlot: TCallback;
 }
 
-export const AppointmentSelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
+export const AppointmentSelectedDate: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onChangeSlot}) => {
     const {appointment, serviceValetAppointment, waitListSettings} = useSelector((state: RootState) => state.appointment);
     const { dropOffSettings, customerLoadedData } = useSelector((state: RootState) => state.appointment);
     const {serviceTypeOption, isAppointmentSaving, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
@@ -58,22 +59,22 @@ export const AppointmentSelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
     const getDateForUpdate = (): string => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {
             if (appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                return moment.utc(appointmentByKey.dateInUtc).format('ddd, MMMM D')
+                return dayjs.utc(appointmentByKey.dateInUtc).format('ddd, MMMM D')
             } else {
                 const [hh, mm] = appointmentByKey.timeSlot.split(':')
-                return moment.utc(appointmentByKey.dateInUtc).set('hour', +hh).set('minute', +mm).format('ddd, MMMM D, hh:mm A')
+                return dayjs.utc(appointmentByKey.dateInUtc).set('hour', +hh).set('minute', +mm).format('ddd, MMMM D, hh:mm A')
             }
         }
         return ''
     }
 
     const date = serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
-        ? moment.utc(serviceValetAppointment?.date).format('ddd, MMMM D')
+        ? dayjs.utc(serviceValetAppointment?.date).format('ddd, MMMM D')
         : customerLoadedData?.isUpdating && appointmentByKey
             ? appointment?.date
-                ? moment.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')
+                ? dayjs.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')
                 : getDateForUpdate()
-            : moment.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')
+            : dayjs.utc(appointment?.date).format('ddd, MMMM D, hh:mm A')
 
     const handleChangeSlot = () => {
         if (customerLoadedData?.isUpdating) {
@@ -82,7 +83,7 @@ export const AppointmentSelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
         }
         if (!isAppointmentSaving) onChangeSlot();
     }
-    return <div>
+    return <ConfirmationItemWrapper>
         <TitleWrapper>
             <AppointmentConfirmationTitle>
                 {t("Selected Date & Time")}
@@ -96,16 +97,16 @@ export const AppointmentSelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
             ? <div>
                 <div>
                     <span style={{fontWeight: 'bold'}}>{t("Pick Up Time")}: </span>
-                    <span> {moment.utc(serviceValetTime?.pickUpMin, "HH:mm:ss").format('hh:mm A')}</span>
+                    <span> {dayjs.utc(serviceValetTime?.pickUpMin, "HH:mm:ss").format('hh:mm A')}</span>
                     <span> {t("to")} </span>
-                    <span> {moment.utc(serviceValetTime?.pickUpMax, "HH:mm:ss").format('hh:mm A')}</span>
+                    <span> {dayjs.utc(serviceValetTime?.pickUpMax, "HH:mm:ss").format('hh:mm A')}</span>
                 </div>
                 {dropOffSettings?.showDropOffTime && serviceValetTime?.dropOffMin && serviceValetTime?.dropOffMax
                     ? <div>
                         <span style={{fontWeight: 'bold'}}>{t("Drop Off Time")}: </span>
-                        <span> {moment.utc(serviceValetTime?.dropOffMin, "HH:mm:ss").format('hh:mm A')}</span>
+                        <span> {dayjs.utc(serviceValetTime?.dropOffMin, "HH:mm:ss").format('hh:mm A')}</span>
                         <span> {t("to")} </span>
-                        <span> {moment.utc(serviceValetTime?.dropOffMax, "HH:mm:ss").format('hh:mm A')}</span>
+                        <span> {dayjs.utc(serviceValetTime?.dropOffMax, "HH:mm:ss").format('hh:mm A')}</span>
                     </div>
                     : null}
             </div>
@@ -117,5 +118,5 @@ export const AppointmentSelectedDate: React.FC<TProps> = ({onChangeSlot}) => {
                 {waitListData?.text ?? t("Waitlist only")}
         </div>
             : null}
-    </div>
+    </ConfirmationItemWrapper>
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import {AppBar, Avatar, Toolbar, Typography, useMediaQuery, useTheme} from "@material-ui/core";
+import {AppBar, Avatar, Toolbar, Typography, useMediaQuery, useTheme} from "@mui/material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {getInitials} from "../../../utils/utils";
@@ -10,9 +10,9 @@ export const EndUserBar = () => {
         return state.appointment.scProfile;
     })
     const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <AppBar className={classes.bar} position="static">
         <Toolbar>
             <Avatar title={getInitials(scProfile?.name)} src={scProfile?.avatarPath}>

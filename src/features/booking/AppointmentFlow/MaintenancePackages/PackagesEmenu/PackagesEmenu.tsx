@@ -13,14 +13,14 @@ type TProps = {
 
 const primaryString = 'https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&';
 
-const PackagesEmenu: React.FC<TProps> = ({onBack, onNext}) => {
+const PackagesEmenu: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onBack, onNext}) => {
     const {selectedVehicle, makes} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const [isLoading, setLoading] = useState<boolean>(false);
     const [srcLink, setSrcLink] = useState<string>('');
     const showError = useException();
 
-    const getStringByModel = useCallback((str): string => {
+    const getStringByModel = useCallback((str: any): string => {
         if (selectedVehicle) {
             const modelCodes = makes.find(item => item.name === selectedVehicle.make)?.modelCodes;
             const modelId = modelCodes?.find(item => item.name === selectedVehicle.model)?.code;
