@@ -46,7 +46,8 @@ export const CustomDatePicker: React.FC<TProps> = ({
                             color: "#FFFFFF"
                         },
                         [`.${pickersLayoutClasses.toolbar} > span`]: {
-                            color: "#FFFFFF8A"
+                            color: "#FFFFFF8A",
+                            display: 'none',
                         },
                     },
                 },

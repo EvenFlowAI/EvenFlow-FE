@@ -66,7 +66,8 @@ const AppointmentTimingCard: React.FC<React.PropsWithChildren<React.PropsWithChi
                                 color: "white"
                             },
                             [`.${pickersLayoutClasses.toolbar} > span`]: {
-                                color: "#FFFFFF8A"
+                                color: "#FFFFFF8A",
+                                display: 'none'
                             },
                         },
                     },
