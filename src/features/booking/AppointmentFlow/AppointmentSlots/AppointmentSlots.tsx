@@ -194,6 +194,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     useEffect(() => {
         async function loadData () {
             if (id) {
+                const utcOffset = dayjs().utcOffset()
                 setLoading(true);
                 try {
                     const maintenancePackageOption: MPOptionShort|null = selectedPackage
@@ -207,7 +208,9 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                             : selectedTiming,
                         serviceCenterId: decodeSCID(id),
                         consultantId: advisor?.id ?? null,
-                        fromDate: selectedTime ? dayjs.utc(selectedTime).toISOString() : dayjs.utc().startOf("day"),
+                        fromDate: selectedTime
+                            ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
+                            : dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),
                         maintenancePackageOption,
                         serviceRequestIds: collectServiceRequestIds(
                             service, subService, selectedPackage, selectedSR
