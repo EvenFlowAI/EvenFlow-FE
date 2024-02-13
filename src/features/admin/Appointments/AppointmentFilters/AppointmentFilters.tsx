@@ -31,6 +31,7 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
                                                                           serviceBook,
                                                                }) => {
     const {schedulerList, serviceBookList, isLoading} = useSelector((state: RootState) => state.appointments)
+    const [isOpen, setOpen] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
@@ -40,6 +41,10 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
             dispatch(loadSchedulerList(selectedSC.id))
         }
     }, [selectedSC])
+
+    const handleOpen = (s: boolean) => () => {
+        setOpen(s);
+    }
 
     const onChange = (date: TParsableDate): void => {
         setFilters(prev => ({...prev, date, pageData: initialPaging}))
@@ -85,6 +90,9 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
             <Grid container spacing={2} justifyContent="space-between" alignItems='flex-end'>
                 <Grid item xs={3} key="datepicker">
                     <CustomDatePicker
+                        onOpen={handleOpen(true)}
+                        onClose={handleOpen(false)}
+                        open={isOpen}
                         format="MMMM Do"
                         fullWidth
                         label="Date"
@@ -100,7 +108,7 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
                                     : <DateRange cursor="pointer" htmlColor="rgba(0, 0, 0, 0.54)"/>
                         }}
                         value={selectedDate}
-                        onChange={handleDateChange}
+                        onAccept={handleDateChange}
                     />
                 </Grid>
                 <Grid item xs={3} key="status">
