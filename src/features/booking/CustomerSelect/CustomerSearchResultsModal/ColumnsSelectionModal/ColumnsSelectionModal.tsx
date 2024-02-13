@@ -4,7 +4,7 @@ import {DialogProps} from "../../../../../components/modals/BaseModal/types";
 import {ReactComponent as CheckboxChecked} from "../../../../../assets/img/checkbox_checcked.svg";
 import {ReactComponent as CheckboxUnchecked} from "../../../../../assets/img/checkbox_empty.svg";
 import {ReactComponent as CheckboxDisabled} from "../../../../../assets/img/checkbox_checked_disabled.svg";
-import {Button, FormControlLabel} from "@material-ui/core";
+import {Button, FormControlLabel} from "@mui/material";
 import {TSearchColumnName} from "../types";
 import {useTranslation} from "react-i18next";
 import {customerDataColumns, requiredColumnsNames} from "../constants";
@@ -15,9 +15,9 @@ type TProps = {
     setSelectedColumns: Dispatch<SetStateAction<TSearchColumnName[]>>;
 }
 
-const ColumnsSelectionModal: React.FC<DialogProps&TProps> = ({onClose, open, selectedColumns, setSelectedColumns}) => {
+const ColumnsSelectionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TProps>>> = ({onClose, open, selectedColumns, setSelectedColumns}) => {
     const [checkedColumns, setCheckedColumns] = useState<TSearchColumnName[]>([]);
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     useEffect(() => {

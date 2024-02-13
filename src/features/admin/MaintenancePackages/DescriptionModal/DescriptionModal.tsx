@@ -3,8 +3,8 @@ import {BaseModal, DialogContent, DialogTitle} from "../../../../components/moda
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Delete, EditOutlined} from "@material-ui/icons";
-import {Divider, IconButton} from "@material-ui/core";
+import {Delete, EditOutlined} from "@mui/icons-material";
+import {Divider, IconButton} from "@mui/material";
 import HtmlEditor from "../../../../components/modals/admin/HTMLEditor/HTMLEditor";
 import {TExtendedComplimentary, TExtendedService} from "../../../../api/types";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
@@ -18,14 +18,14 @@ import {useException} from "../../../../hooks/useException/useException";
 
 type TDescriptionProps = DialogProps;
 
-const DescriptionModal: React.FC<TDescriptionProps>  = ({open, onClose}) => {
+const DescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDescriptionProps>>>  = ({open, onClose}) => {
     const { isPackageLoading, currentPackage } = useSelector((state: RootState) => state.packages);
     const [editingElement, setEditingElement] = useState<TExtendedService|TExtendedComplimentary|null>(null);
     const [editingElementType, setEditingElementType] = useState<"service"|"complimentary"|null>(null);
     const {onOpen: onEditorOpen, isOpen: isEditorOpen, onClose: onEditorClose} = useModal();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const onCancel = () => {
         setEditingElement(null);
@@ -73,7 +73,7 @@ const DescriptionModal: React.FC<TDescriptionProps>  = ({open, onClose}) => {
             <DialogTitle onClose={onCancel}>Describe Maintenance Package's Ops Codes</DialogTitle>
             {isPackageLoading
                 ? <Loading/>
-                : <DialogContent>
+                : <DialogContent sx={{fontSize: 14}}>
                     <h3 className={classes.title}>Service Requests</h3>
                     <div className={classes.wrapper}>
                         <h4>Code</h4>

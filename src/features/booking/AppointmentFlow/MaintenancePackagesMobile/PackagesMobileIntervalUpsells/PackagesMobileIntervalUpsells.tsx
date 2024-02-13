@@ -10,8 +10,8 @@ type TProps = {
     loadedPackages: IPackage[];
 }
 
-const PackagesMobileIntervalUpsells: React.FC<TProps> = ({intervalUpsells, isBmWService, loadedPackages}) => {
-    const classes = usePackageMobileStyles();
+const PackagesMobileIntervalUpsells: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({intervalUpsells, isBmWService, loadedPackages}) => {
+    const { classes  } = usePackageMobileStyles();
     const {t} = useTranslation();
     const title = loadedPackages[0]?.segmentTitles?.find(el => el.type === ESegmentTitle.IntervalUpsell)?.title
 

@@ -1,4 +1,3 @@
-import moment from "moment";
 import {
     EMaintenanceOptionType,
     EReportingStatus,
@@ -10,7 +9,7 @@ import {
 } from "../../../api/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType, TRecallForRequest} from "../appointment/types";
-import {IPageRequest} from "../../../types/types";
+import {IPageRequest, TParsableDate} from "../../../types/types";
 
 export interface IAppointmentsRequest {
     pageIndex: number;
@@ -18,7 +17,7 @@ export interface IAppointmentsRequest {
     serviceCenterId: number;
     orderBy?: keyof IListAppointment | string | undefined;
     isAscending?: boolean;
-    date?: moment.Moment | null;
+    date?: TParsableDate;
     reportingStatus? :EReportingStatus | null | unknown;
     searchTerm?: string;
     serviceBookId?: number|unknown;

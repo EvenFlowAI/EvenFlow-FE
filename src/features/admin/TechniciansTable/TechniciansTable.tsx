@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import {Table} from "../../../components/tables/Table/Table";
 import {IEmployee} from "../../../store/reducers/employees/types";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {loadTechnicians, removeEmployee} from "../../../store/reducers/employees/actions";
 import {RootState} from "../../../store/rootReducer";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {TableAvatar} from "../../../components/wrappers/TableAvatar/TableAvatar";
 import {CreateEmployee} from "../../../components/modals/admin/CreateEmployee/CreateEmployee";
 
@@ -86,9 +86,11 @@ export const TechniciansTable = () => {
     }
 
     const actions = (u: IEmployee) => {
-        return <IconButton onClick={openMenu(u)}>
-            <MoreHoriz />
-        </IconButton>
+        return (
+            <IconButton onClick={openMenu(u)} size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }
     const startActions = (el: IEmployee) => (
         <TableAvatar name={el.fullName} src={el.avatarPath} />

@@ -26,7 +26,7 @@ export const ServiceCenterSwitcher = () => {
     const {welcomeScreenView, isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
     const {shortLoading, shortSC} = useSelector((state: RootState) => state.serviceCenters);
     const currentUser = useCurrentUser();
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory()

@@ -1,4 +1,4 @@
-import {FormControlLabel, styled} from "@material-ui/core";
+import {FormControlLabel, styled} from "@mui/material";
 
 export const ControlLabel = styled(FormControlLabel)({
     textTransform: "uppercase",

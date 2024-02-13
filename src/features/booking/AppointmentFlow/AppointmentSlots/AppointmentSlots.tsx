@@ -4,7 +4,6 @@ import {ActionButtons} from '../../ActionButtons/ActionButtons';
 import {SelectedAppointment} from "./SelectedAppointment/SelectedAppointment";
 import {AppointmentDateSelector} from "./AppointmentDateSelector/AppointmentDateSelector";
 import {AppointmentTimeSelector} from "./AppointmentTimeSelector/AppointmentTimeSelector";
-import moment from "moment";
 import {useHistory, useParams} from "react-router-dom";
 import {collectServiceRequestIds, decodeSCID, mapRecallsForRequest} from "../../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
@@ -24,7 +23,7 @@ import {TGroupedAppointments} from "../../../../utils/types";
 import ReactGA from "react-ga4";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {TArgCallback, TScreen} from "../../../../types/types";
+import {TArgCallback, TParsableDate, TScreen} from "../../../../types/types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector/SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
@@ -38,30 +37,33 @@ import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions
 import {Wrapper} from "./styles";
 import {groupAppointments} from "./utils";
 import {Routes} from "../../../../routes/constants";
+import dayjs from "dayjs";
 
 type TAppointmentSelectionProps = {
     handleSetScreen: TArgCallback<TScreen>;
 }
 
-export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSetScreen}) => {
-    const [
-        slots,
+export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAppointmentSelectionProps>>> = ({handleSetScreen}) => {
+    const {
+        appointmentSlots,
         serviceValetSlots,
-        selectedTimingType,
+        customerLoadedData,
+        selectedSR,
+        appointment,
+        serviceValetAppointment,
+        customerEnteredEmail,
+    } = useSelector((state: RootState) => state.appointment)
+
+    const {
+        selectedTiming,
         selectedTime,
-        customerData,
         selectedVehicle,
         service,
         subService,
         selectedPackage,
-        selectedOpsCodes,
-        appointment,
-        serviceValetAppointment,
-        consultant,
+        advisor,
         categoriesIds,
-        allCategories,
         valueService,
-        customerEnteredEmail,
         userType,
         hashKey,
         zipCode,
@@ -71,57 +73,27 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
         packagePricingType,
         packageEMenuType,
         consultants,
-        currentConfig,
-        isTransportationAvailable,
         isUsualFlowNeeded,
         prevScreen,
         appointmentByKey,
+        isConsultantsLoading,
+    } = useSelector((state: RootState) => state.appointmentFrame)
+
+    const {
+        currentConfig,
+        isTransportationAvailable,
         isAppointmentTimingAvailable,
         isAdvisorAvailable,
-        isConsultantsLoading,
-    ] = useSelector((state: RootState) => [
-        state.appointment.appointmentSlots,
-        state.appointment.serviceValetSlots,
-        state.appointmentFrame.selectedTiming,
-        state.appointmentFrame.selectedTime,
-        state.appointment.customerLoadedData,
-        state.appointmentFrame.selectedVehicle,
-        state.appointmentFrame.service,
-        state.appointmentFrame.subService,
-        state.appointmentFrame.selectedPackage,
-        state.appointment.selectedSR,
-        state.appointment.appointment,
-        state.appointment.serviceValetAppointment,
-        state.appointmentFrame.advisor,
-        state.appointmentFrame.categoriesIds,
-        state.categories.allCategories,
-        state.appointmentFrame.valueService,
-        state.appointment.customerEnteredEmail,
-        state.appointmentFrame.userType,
-        state.appointmentFrame.hashKey,
-        state.appointmentFrame.zipCode,
-        state.appointmentFrame.address,
-        state.appointmentFrame.selectedRecalls,
-        state.appointmentFrame.serviceTypeOption,
-        state.appointmentFrame.packagePricingType,
-        state.appointmentFrame.packageEMenuType,
-        state.appointmentFrame.consultants,
-        state.bookingFlowConfig.currentConfig,
-        state.bookingFlowConfig.isTransportationAvailable,
-        state.appointmentFrame.isUsualFlowNeeded,
-        state.appointmentFrame.prevScreen,
-        state.appointmentFrame.appointmentByKey,
-        state.bookingFlowConfig.isAppointmentTimingAvailable,
-        state.bookingFlowConfig.isAdvisorAvailable,
-        state.appointmentFrame.isConsultantsLoading,
-    ]);
+    } = useSelector((state: RootState) => state.bookingFlowConfig)
 
-    const [date, setDate] = useState<moment.Moment>(moment.utc().startOf('day'));
-    const [month, setMonth] = useState<moment.Moment>(moment.utc());
+    const {allCategories} = useSelector((state: RootState) => state.categories);
+
+    const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
+    const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
     const [loading, setLoading] = useState<boolean>(false);
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const initRef = useRef<boolean>(false);
     const isMount = useRef(true);
     const dispatch = useDispatch();
@@ -138,15 +110,15 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
     }, [serviceTypeOption, appointmentByKey])
 
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
-        return groupAppointments(slots);
-    }, [slots]);
+        return groupAppointments(appointmentSlots);
+    }, [appointmentSlots]);
 
     const handleGALandingOnPage = useCallback(() => {
         if (consultants?.length && currentConfig?.advisorSelection) {
             ReactGA.event({
                 category: 'EvenFlow User',
                 action: 'Selected advisor',
-                label: consultant ? consultant.name : 'Any available',
+                label: advisor ? advisor.name : 'Any available',
                 nonInteraction: true
             });
         }
@@ -159,32 +131,32 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
                 ${!isNaN(appointment?.price?.value) ? `with Total Price $${+appointment.price.value}` : ''}`,
             });
         }
-    }, [consultant, appointment, consultants, currentConfig])
+    }, [advisor, appointment, consultants, currentConfig])
 
     useEffect(() => {
         handleGALandingOnPage();
-    }, [selectedPackage, consultant, appointment])
+    }, [selectedPackage, advisor, appointment])
 
     useEffect(() => {
-        if (selectedTime) setMonth(moment.utc(selectedTime))
+        if (selectedTime) setMonth(dayjs.utc(selectedTime))
     }, [selectedTime])
 
     useEffect(() => {
-        const currentSlots = serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : slots;
+        const currentSlots = serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : appointmentSlots;
         const currentAppointment = serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetAppointment : appointment;
         if (currentSlots.length && isMount.current) {
             if (currentAppointment?.date) {
-                setDate(moment.utc(currentAppointment.date).startOf('day'))
+                setDate(dayjs.utc(currentAppointment.date).startOf('day'))
             } else {
                 if (selectedTime) {
-                    setDate(moment.utc(selectedTime).startOf('day'));
+                    setDate(dayjs.utc(selectedTime).startOf('day'));
                 } else {
-                    if (currentSlots?.length) setDate(moment(currentSlots[0].date).startOf('day'))
+                    if (currentSlots?.length) setDate(dayjs(currentSlots[0].date).startOf('day'))
                 }
             }
             isMount.current = false;
         }
-    }, [slots, selectedTime, appointment, serviceTypeOption, serviceValetSlots, serviceValetAppointment]);
+    }, [appointmentSlots, selectedTime, appointment, serviceTypeOption, serviceValetSlots, serviceValetAppointment]);
 
     const clearData = () => {
         dispatch(selectAppointment(null));
@@ -192,20 +164,20 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
         dispatch(clearAppointmentSteps("appointmentSelection"));
     }
 
-    const updateDate = useCallback((d: moment.Moment) => {
+    const updateDate = useCallback((d: TParsableDate) => {
         clearData()
-        setDate(d.startOf('day'));
-        if (!d.isSame(month, 'month')) {
+        setDate(dayjs(d).startOf('day'));
+        if (!dayjs(d).isSame(month, 'month')) {
             setMonth(d);
         }
-    }, [month, selectedTimingType]);
+    }, [month, selectedTiming]);
 
 
-    const setDateCallback = useCallback((d: moment.Moment) => {
-        if (selectedTimingType !== EAppointmentTimingType.FirstAvailable) {
-            setDate(d.startOf('day'));
+    const setDateCallback = useCallback((d: TParsableDate) => {
+        if (selectedTiming !== EAppointmentTimingType.FirstAvailable) {
+            setDate(dayjs(d).startOf('day'));
         }
-    }, [selectedTimingType]);
+    }, [selectedTiming]);
 
     const handleDateRangeSet = useCallback((v: boolean) => {
         initRef.current = v;
@@ -222,6 +194,7 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
     useEffect(() => {
         async function loadData () {
             if (id) {
+                const utcOffset = dayjs().utcOffset()
                 setLoading(true);
                 try {
                     const maintenancePackageOption: MPOptionShort|null = selectedPackage
@@ -230,18 +203,20 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
                             ? {optionType: packageEMenuType}
                             : null;
                     const data: IAppointmentSlotsRequest = {
-                        appointmentTimingType: serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTimingType
+                        appointmentTimingType: serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTiming
                             ? EAppointmentTimingType.FirstAvailable
-                            : selectedTimingType,
+                            : selectedTiming,
                         serviceCenterId: decodeSCID(id),
-                        consultantId: consultant?.id ?? null,
-                        fromDate: selectedTime ? moment(selectedTime).toISOString() : moment.utc().startOf("day"),
+                        consultantId: advisor?.id ?? null,
+                        fromDate: selectedTime
+                            ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
+                            : dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),
                         maintenancePackageOption,
                         serviceRequestIds: collectServiceRequestIds(
-                            service, subService, selectedPackage, selectedOpsCodes
+                            service, subService, selectedPackage, selectedSR
                         ),
                         serviceCategoryIds: getCategories(),
-                        customerId: customerData?.id,
+                        customerId: customerLoadedData?.id,
                         warrantyExpiration: selectedVehicle?.warrantyExpiration,
                         serviceTypeOptionId: serviceTypeOption?.id ?? null,
                         recalls: mapRecallsForRequest(selectedRecalls),
@@ -285,9 +260,9 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
         }
         loadData().finally();
     }, [
-        dispatch, id, selectedTimingType,
-        selectedVehicle, customerData, service, packagePricingType, packageEMenuType, serviceTypeOption,
-        subService, selectedPackage, selectedOpsCodes, consultant, valueService, serviceType, selectedTime, zipCode, address,
+        dispatch, id, selectedTiming,
+        selectedVehicle, customerLoadedData, service, packagePricingType, packageEMenuType, serviceTypeOption,
+        subService, selectedPackage, selectedSR, advisor, valueService, serviceType, selectedTime, zipCode, address,
     ]);
 
     const handleGANext = useCallback(() => {
@@ -295,7 +270,7 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
             ReactGA.event({
                 category: 'EvenFlow User',
                 action: serviceTypeOption?.type === EServiceType.PickUpDropOff ? 'Selected Service Valet Appointment Slot' : 'Selected Appointment Slot',
-                label: `On ${moment(appointment.date).format('MM-DD-YYYY')} at ${moment(appointment.date).format('hh:mm A')}`,
+                label: `On ${dayjs.utc(appointment.date).format('MM-DD-YYYY')} at ${dayjs.utc(appointment.date).format('hh:mm A')}`,
             });
         }
     }, [appointment])
@@ -320,12 +295,12 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
     const handleNext = useCallback((): void => {
         handleGANext();
         dispatch(setTransportation(null))
-        if (customerData?.isUpdating) {
+        if (customerLoadedData?.isUpdating) {
             handleTransportation()
         } else {
             handleSetScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption ? 'transportationNeeds' : 'appointmentConfirmation');
         }
-    }, [isTransportationAvailable, serviceTypeOption, handleTransportation, customerData, handleGANext])
+    }, [isTransportationAvailable, serviceTypeOption, handleTransportation, customerLoadedData, handleGANext])
 
     const definePrevScreen = useCallback((): TScreen => {
         let previousLogicalScreen: TScreen = currentConfig?.appointmentSelection
@@ -333,12 +308,12 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
             : isAdvisorAvailable
                 ? 'consultantSelection'
                 : "serviceNeeds"
-        const isManageFlow = customerData?.isUpdating && !isUsualFlowNeeded
+        const isManageFlow = customerLoadedData?.isUpdating && !isUsualFlowNeeded
         if (prevScreen && isManageFlow) {
             previousLogicalScreen = prevScreen
         }
         return previousLogicalScreen
-    }, [currentConfig, isAdvisorAvailable, customerData, isUsualFlowNeeded, prevScreen])
+    }, [currentConfig, isAdvisorAvailable, customerLoadedData, isUsualFlowNeeded, prevScreen])
 
     const handleBack = useCallback((): void => {
         handleGABack();
@@ -361,12 +336,12 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}
                         dateRangeUpdated={initRef.current}
-                        dateChangeDisabled={selectedTimingType !== EAppointmentTimingType.SpecialOffers}
+                        dateChangeDisabled={selectedTiming !== EAppointmentTimingType.SpecialOffers}
                         date={date}
                         loading={loading}
                         onDateChange={updateDate} />
                     : <AppointmentDateSelector
-                        dateChangeDisabled={selectedTimingType !== EAppointmentTimingType.SpecialOffers}
+                        dateChangeDisabled={selectedTiming !== EAppointmentTimingType.SpecialOffers}
                         appointments={groupedAppointments}
                         date={date}
                         onDateRangeSet={handleDateRangeSet}
@@ -380,7 +355,7 @@ export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = ({handleSe
                         loading={loading}/>
                 : <AppointmentTimeSelector
                         appointments={
-                            groupedAppointments[date.toISOString().replace('.000', '')]
+                            groupedAppointments[dayjs(date).toISOString().replace('.000', '')]
                         }
                         date={date}
                         loading={loading}/>}

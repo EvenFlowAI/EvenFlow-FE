@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addServiceRequestsToPricing,
@@ -39,7 +39,7 @@ const DayOfWeekOpsCode = () => {
     const showError = useException();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const getData = async (serviceCenterId: number) => {
         await dispatch(setAssignedPageData({ pageSize: 0, pageIndex: 0}));

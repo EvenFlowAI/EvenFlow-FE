@@ -21,7 +21,7 @@ type TGeographicZonesProps = {
     onAddZoneOpen: () => void;
 }
 
-const GeographicZones: React.FC<TGeographicZonesProps> = ({ onAddZoneOpen }) => {
+const GeographicZones: React.FC<React.PropsWithChildren<React.PropsWithChildren<TGeographicZonesProps>>> = ({ onAddZoneOpen }) => {
     const [currentZip, setCurrentZip] = useState<TZipCode|null>(null);
     const [selectedZone, setSelectedZone] = useState<TZone|null>(null);
     const {onOpen: onEditZoneOpen, onClose: onEditZoneClose, isOpen: isEditZoneOpen} = useModal();

@@ -16,7 +16,7 @@ type TUserDataProps = {
     isEmailRequired: boolean;
 };
 
-export const AppointmentUserData: React.FC<TUserDataProps> = ({ errors, setErrors, isEmailRequired }) => {
+export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUserDataProps>>> = ({ errors, setErrors, isEmailRequired }) => {
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {customer, userType} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();

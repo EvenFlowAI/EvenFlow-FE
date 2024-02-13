@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const Price = styled('div')({
     marginTop: 8,

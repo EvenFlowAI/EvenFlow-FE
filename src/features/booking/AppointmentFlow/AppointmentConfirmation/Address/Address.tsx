@@ -5,13 +5,14 @@ import {RootState} from "../../../../../store/rootReducer";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import {List, TitleWrapper} from "./styles";
+import {ConfirmationItemWrapper} from "../../../../../components/styled/ConfirmationItemWrapper";
 
 const Address = () => {
     const {address, zipCode, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     return address && (serviceType === EServiceType.MobileService || serviceType === EServiceType.PickUpDropOff)
-        ? <div>
+        ? <ConfirmationItemWrapper>
             <TitleWrapper>
                 <AppointmentConfirmationTitle>
                     {serviceType === EServiceType.MobileService ? t("Service Address") : t("Pick Up Address")}
@@ -23,7 +24,7 @@ const Address = () => {
                     <div>{t("ZIP")}: {zipCode}</div>
                 </li>
             </List>
-        </div>
+        </ConfirmationItemWrapper>
         : null;
 };
 

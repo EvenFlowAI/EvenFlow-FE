@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import SummaryInput from "./SummaryInput/SummaryInput";
-import {Switch} from "@material-ui/core";
+import {Switch} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {updateManualOverride, updateShowSuggestedPrice} from "../../../../../store/reducers/packages/actions";
 import {RootState} from "../../../../../store/rootReducer";
@@ -20,7 +20,7 @@ type TSummaryProps = {
     checked?: boolean;
 }
 
-const SummaryRow: React.FC<TSummaryProps> = ({
+const SummaryRow: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSummaryProps>>> = ({
                                                  isComplimentary,
                                                  packageHasComplimentary,
                                                  summaryText,
@@ -34,7 +34,7 @@ const SummaryRow: React.FC<TSummaryProps> = ({
 }) => {
     const { isPackageLoading, currentPackage } = useSelector((state: RootState) => state.packages);
     const [values, setValues] = useState<TSummaryCell[]|undefined>([]);
-    const classes = useStyles(Boolean(toggleField));
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
 
     // todo logic for checked value

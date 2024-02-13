@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Table} from "../../../../components/tables/Table/Table";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {removeEngineType} from "../../../../store/reducers/vehicleDetails/actions";
 import {IOrder} from "../../../../types/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -39,9 +39,11 @@ export const EngineTypesTable = () => {
     }
 
     const tableActions = (el: IEngineType) => {
-        return <IconButton onClick={openMenu(el)}>
-            <MoreHoriz />
-        </IconButton>;
+        return (
+            <IconButton onClick={openMenu(el)} size="large">
+                <MoreHoriz />
+            </IconButton>
+        );
     }
 
     const onRemoveSuccess = () => {

@@ -3,8 +3,8 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Chip} from "../../../../components/wrappers/Chip/Chip";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button, Divider, IconButton} from "@material-ui/core";
-import {AddCircleOutline} from "@material-ui/icons";
+import {Button, Divider, IconButton} from "@mui/material";
+import {AddCircleOutline} from "@mui/icons-material";
 import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {createMileage} from "../../../../store/reducers/vehicleDetails/actions";
@@ -13,7 +13,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const AddMileageModal: React.FC<DialogProps> = (props) => {
+export const AddMileageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const [newMileage, setNewMileage] = useState<string>('');
     const [mileages, setMileages] = useState<string[]>([]);
@@ -21,7 +21,7 @@ export const AddMileageModal: React.FC<DialogProps> = (props) => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const onCancel = () => {
         setNewMileage('');
@@ -46,7 +46,7 @@ export const AddMileageModal: React.FC<DialogProps> = (props) => {
         setNewMileage('');
     }
 
-    const onKeyDown = (e: React.KeyboardEvent<{}>) => {
+    const onKeyUp = (e: React.KeyboardEvent<{}>) => {
         if (e.key === 'Enter') addMileage();
     }
 
@@ -73,7 +73,7 @@ export const AddMileageModal: React.FC<DialogProps> = (props) => {
                 {Boolean(mileages.length) && <div className={classes.modelsWrapper}>
                     {mileages.map(mileage => <Chip key={mileage} name={mileage} onDelete={onMileageDelete}/>)}
                 </div>}
-                <div className={classes.addModel} role="presentation" onKeyPress={onKeyDown}>
+                <div className={classes.addModel} role="presentation" onKeyUp={onKeyUp}>
                     <div style={{width: '90%'}}>
                         <TextField
                             fullWidth
@@ -85,7 +85,7 @@ export const AddMileageModal: React.FC<DialogProps> = (props) => {
                             onChange={onMileageChange}
                             value={newMileage}/>
                     </div>
-                    <IconButton onClick={addMileage} className={classes.iconPlus}>
+                    <IconButton onClick={addMileage} className={classes.iconPlus} size="large">
                         <AddCircleOutline/>
                     </IconButton>
                 </div>

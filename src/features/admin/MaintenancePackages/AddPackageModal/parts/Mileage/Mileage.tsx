@@ -1,11 +1,12 @@
-import React, {ChangeEvent, Dispatch, SetStateAction, useCallback} from 'react';
+import React, {Dispatch, SetStateAction, useCallback} from 'react';
 import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import {useAutocompleteStyles} from "../../../../../../hooks/styling/useAutocompleteStyles";
+import {ApplyToAll} from "../constants";
 
 type TMileageProps = {
     disabled: boolean;
@@ -14,57 +15,54 @@ type TMileageProps = {
     setSelectedMileages: Dispatch<SetStateAction<string[]>>;
 }
 
-const Mileage: React.FC<TMileageProps> = ({
+const Mileage: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMileageProps>>> = ({
                                               disabled,
                                               selectedMileages,
                                               setSelectedMileages,
                                               setFormIsChecked }) => {
     const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
-    const classes = useAutocompleteStyles();
+    const { classes  } = useAutocompleteStyles();
+
+    const sortMileage = (a: string, b: string) => {
+        return selectedMileages.includes(a) ? selectedMileages.includes(b) ? 0 : -1 : 1
+    }
 
     const getOptions = useCallback(() => {
-        const options = mileage.map(item => item.value.toString());
-        if (options.length) options.unshift('Apply To All')
+        let options = mileage.map(item => item.value.toString());
+        options = options.sort(sortMileage);
+        if (options.length) options.unshift(ApplyToAll)
         return options;
     }, [mileage])
 
-    const onMileageChange = useCallback((e: ChangeEvent<{}>, value: string[]) => {
-        if (value.includes('Apply To All')) {
-            setSelectedMileages(() => mileage.map(item => item.value.toString()));
-        } else {
-            setSelectedMileages(value);
-        }
-    }, [mileage])
-
-    const onMileageCheckboxChange = useCallback((e: ChangeEvent<HTMLInputElement>, option: string) => {
-        setFormIsChecked(false);
-        if (!e.target.checked) {
-            setSelectedMileages(prev => {
-                let data = option === 'Apply To All' ? [] : prev;
-                return data
-                    .filter(item => item !== option)
-                    .sort((a, b) => selectedMileages.includes(a) ? selectedMileages.includes(b) ? 0 : -1 : 1)
-            })
-        }
-    }, [selectedMileages])
-
-    const renderOption = useCallback((option: string) => {
+    const renderOption = useCallback((props: any, option: string) => {
         const allMileagesSelected = mileage.length
             ? mileage.every(item => selectedMileages.includes(item.value.toString()))
             : false;
         const checked = selectedMileages.includes(option) || allMileagesSelected;
-        return <React.Fragment>
+        return <li style={{display: 'flex', alignItems: 'center'}} key={option} {...props}>
             <Checkbox
                 color="primary"
                 icon={checked
                     ? <CheckBoxOutlined htmlColor="#3855FE"/>
                     : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
                 checked={checked}
-                onChange={e => onMileageCheckboxChange(e, option)}
             />
             {option}
-        </React.Fragment>
+        </li>
     }, [mileage, selectedMileages]);
+
+    const onChange = (e: React.SyntheticEvent, value: string[]) => {
+        setFormIsChecked(false);
+        if (value.includes(ApplyToAll)) {
+            if (mileage.length && value.length === mileage.length + 1) {
+                setSelectedMileages([])
+            } else {
+                setSelectedMileages(mileage.map(item => item.value.toString()));
+            }
+        } else {
+            setSelectedMileages(value);
+        }
+    }
 
     return (
         <Autocomplete
@@ -74,10 +72,11 @@ const Mileage: React.FC<TMileageProps> = ({
             disabled={disabled}
             options={getOptions()}
             disableCloseOnSelect
-            getOptionSelected={(o, v) => o.toLowerCase() === v.toLowerCase()}
+            getOptionLabel={o => o ?? null}
+            isOptionEqualToValue={(o, v) => o.toLowerCase() === v.toLowerCase()}
             renderOption={renderOption}
             value={selectedMileages}
-            onChange={onMileageChange}
+            onChange={onChange}
             renderInput={autocompleteRender({
                 label: "Mileage",
                 placeholder: 'Select Mileage'

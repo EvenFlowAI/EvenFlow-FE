@@ -1,21 +1,23 @@
-import {Button as DefaultButton, styled, TableCell, withStyles} from "@material-ui/core";
+import { Button as DefaultButton, styled, TableCell } from "@mui/material";
+
+import { withStyles } from 'tss-react/mui';
 
 export const SliderCell = styled(TableCell)(({theme}) => ({
-    [theme.breakpoints.down("xs")]: {
-        padding: `${theme.spacing(1)}px ${theme.spacing(2)}px !important`
+    [theme.breakpoints.down('sm')]: {
+        padding: `${theme.spacing(1)} ${theme.spacing(2)} !important`
     }
 }))
 
 
-export const Button = withStyles(theme => ({
+export const Button = withStyles(DefaultButton, theme => ({
     root: {
         fontSize: 14,
         textTransform: "none",
         minWidth: 0,
         padding: "4px 2px",
         marginLeft: 8,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             marginLeft: 0
         }
     }
-}))(DefaultButton);
+}));

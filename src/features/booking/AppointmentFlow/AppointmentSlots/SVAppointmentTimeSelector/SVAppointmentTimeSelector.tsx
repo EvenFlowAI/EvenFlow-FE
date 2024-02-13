@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
-import moment from "moment";
 import {IServiceValetAppointment,} from "../../../../../store/reducers/appointment/types";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,22 +9,24 @@ import {useTranslation} from "react-i18next";
 import {setSideBarSteps, setTransportation} from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {PickUpSlotCard} from "../PickUpSlotCard/PickUpSlotCard";
 import {PickUpSlotsWrapper, useStyles} from "./styles";
+import {TParsableDate} from "../../../../../types/types";
+import dayjs from "dayjs";
 
 type TProps = {
-    date: moment.Moment;
+    date: TParsableDate;
     loading: boolean;
 }
 
-export const SVAppointmentTimeSelector: React.FC<TProps> =
+export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =
     ({date, loading}) => {
         const {serviceValetAppointment: selectedAppointment, serviceValetSlots} = useSelector((state: RootState) => state.appointment);
         const {selectedTiming, sideBarSteps} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const firstCardRef = useRef<HTMLDivElement|null>(null);
-        const classes = useStyles();
+        const { classes  } = useStyles();
         const {t} = useTranslation();
         const currentSlots = useMemo(() => {
-            return serviceValetSlots.filter(slot => moment(slot.date).isSame(date, 'date'))
+            return serviceValetSlots.filter(slot => dayjs.utc(slot.date).isSame(date, 'date'))
         }, [serviceValetSlots, date])
 
         useEffect(() => {
@@ -69,7 +70,7 @@ export const SVAppointmentTimeSelector: React.FC<TProps> =
                                             selectedAppointment && timeSlot?.date === selectedAppointment.date
                                         )}
                                         timeSlot={timeSlot}
-                                        key={moment(timeSlot.date).toISOString()}
+                                        key={dayjs.utc(timeSlot.date).toISOString()}
                                     />
                                 })
                                 : <PickUpSlotCard
@@ -77,7 +78,7 @@ export const SVAppointmentTimeSelector: React.FC<TProps> =
                                     onSelect={handleSelect}
                                     selected={false}
                                     timeSlot={null}
-                                    key={moment().toISOString()}
+                                    key={dayjs().toISOString()}
                                 />
                             }
                         </PickUpSlotsWrapper>

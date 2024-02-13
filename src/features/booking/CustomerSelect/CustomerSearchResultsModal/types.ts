@@ -30,3 +30,15 @@ export type TColumn = {
 
 export type TSortOrder = {isAscending: boolean, order: TSortColumn|null }
 export type TOffset = {secondColumn: number, thirdColumn: number}
+
+export type TEditableFieldName =
+    "lastName" |
+    "firstName" |
+    "homePhone" |
+    "cellPhone" |
+    "otherPhone" |
+    "email" |
+    "address" |
+    "city" |
+    "state" |
+    "zipCode"

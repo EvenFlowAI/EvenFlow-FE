@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
@@ -26,7 +26,7 @@ const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
     {header: "Description", val: el => el.description}
 ];
 
-export const UrgentRequestModal: React.FC<DialogProps> = ({onAction, payload, ...props}) => {
+export const UrgentRequestModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onAction, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [selected, setSelected] = useState<number[]>([]);
     const dispatch = useDispatch();
@@ -34,11 +34,11 @@ export const UrgentRequestModal: React.FC<DialogProps> = ({onAction, payload, ..
     const {selectedPod} = useSelectedPod();
     const showError = useException();
     const showMessage = useMessage();
-    const [data, isLoading, count] = useSelector((state: RootState) => [
-        state.serviceRequests.nonUrgentList,
-        state.serviceRequests.nonUrgentLoading,
-        state.serviceRequests.nonUrgentPaging.numberOfRecords
-    ]);
+    const {
+        nonUrgentList,
+        nonUrgentLoading,
+        nonUrgentPaging: {numberOfRecords}
+    } = useSelector(({serviceRequests}: RootState) => serviceRequests);
     const {pageIndex, pageSize, changePage, changeRowsPerPage} = usePagination(
         state => state.serviceRequests.nonUrgentPageData,
         pageDataNonUrgentServiceRequests
@@ -94,21 +94,21 @@ export const UrgentRequestModal: React.FC<DialogProps> = ({onAction, payload, ..
         <DialogTitle onClose={props.onClose}>Add Urgent Request</DialogTitle>
         <DialogContent>
             <Table<IAssignedServiceRequestShort>
-                data={data}
+                data={nonUrgentList}
                 index="id"
                 rowData={rowData}
-                isLoading={isLoading}
+                isLoading={nonUrgentLoading}
                 compact
                 page={pageIndex}
                 rowsPerPage={pageSize}
                 onChangePage={changePage}
                 onChangeRowsPerPage={changeRowsPerPage}
                 actions={actions}
-                count={count}
+                count={numberOfRecords}
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>
+            <Button onClick={props.onClose} color="info">
                 Close
             </Button>
             <LoadingButton

@@ -9,8 +9,8 @@ import {
 } from "./types";
 import {AppThunk} from "../../../types/types";
 import {IHOODataForm} from "../serviceCenters/types";
-import moment from "moment";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
 
 export const setLoading = createAction<boolean>("SlotScoring/SetLoading");
 
@@ -108,15 +108,17 @@ export const loadHoursOfOperations = (id: number): AppThunk => dispatch => {
     Api.call<IHOODataForm[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id}})
         .then(result => {
             if (result?.data) {
-                const startTimes = result.data.map(item => moment(item.from, 'HH:mm:SS'));
-                const endTimes = result.data.map(item => moment(item.to, 'HH:mm:SS'));
-                const maxTime = moment.max(endTimes).format('HH:mm:SS');
-                const minTime = moment.min(startTimes).format('HH:mm:SS');
-                const data: ISlotRange = {
-                    start: minTime,
-                    end: maxTime,
+                const startTimes = result.data.map(item => dayjs(item.from, 'HH:mm:ss'));
+                const endTimes = result.data.map(item => dayjs(item.to, 'HH:mm:ss'));
+                const maxTime = dayjs.max(endTimes)?.format('HH:mm:ss');
+                const minTime = dayjs.min(startTimes)?.format('HH:mm:ss');
+                if (maxTime && minTime) {
+                    const data: ISlotRange = {
+                        start: minTime,
+                        end: maxTime,
+                    }
+                    dispatch(getRange(data));
                 }
-                dispatch(getRange(data));
             }
         })
         .catch(err => {

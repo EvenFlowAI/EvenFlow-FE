@@ -1,9 +1,9 @@
-import {Button, styled, Theme, withStyles} from "@material-ui/core";
-import React from "react";
+import { Button, styled } from "@mui/material";
+import { withStyles } from 'tss-react/mui';
 
-export const Wrapper = styled((({active, ...props}) => (<div {...props}/>)))<Theme, {
-    active?: boolean
-}>(({theme}) => ({
+export const Wrapper = styled("div", {
+    shouldForwardProp: (prop) => prop !== "active"
+})<{ active?: boolean}>(({theme, active}) => ({
     display: "flex",
     flex: "1 1 0px",
     padding: 22,
@@ -44,11 +44,11 @@ export const CarInfo = styled('ul')({
     }
 });
 
-export const RepairBtn = withStyles({
+export const RepairBtn = withStyles(Button, {
     root: {
         textTransform: "none",
         textDecoration: "underline",
         fontSize: 14,
         fontWeight: 600
     }
-})(Button)
+});

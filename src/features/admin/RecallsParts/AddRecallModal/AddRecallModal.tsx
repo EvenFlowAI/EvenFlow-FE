@@ -2,10 +2,10 @@ import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {ICreateUpdateRecall, IRecall} from "../../../../store/reducers/recall/types";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {RootState} from "../../../../store/rootReducer";
 import {IMakeExtended, IModel} from "../../../../api/types";
@@ -27,7 +27,7 @@ type TAddRecallProps = DialogProps & {
 
 const yearOptions = getYearOptions()
 
-const AddRecallModal: React.FC<TAddRecallProps> = ({editingItem, open, onClose, setEditingItem}) => {
+const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddRecallProps>>> = ({editingItem, open, onClose, setEditingItem}) => {
     const {makesModels} = useSelector((state: RootState) => state.vehicleDetails);
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
     const [form, setForm] = useState<TForm>(initialForm);
@@ -36,7 +36,7 @@ const AddRecallModal: React.FC<TAddRecallProps> = ({editingItem, open, onClose, 
     const dispatch = useDispatch();
     const showError = useException();
     const {selectedSC} = useSCs();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (open && selectedSC) {
@@ -148,7 +148,7 @@ const AddRecallModal: React.FC<TAddRecallProps> = ({editingItem, open, onClose, 
                     style={{ marginBottom: 10 }}
                     options={makesModels}
                     value={form.make}
-                    getOptionSelected={(o, v) => o.id === v.id}
+                    isOptionEqualToValue={(o, v) => o.id === v.id}
                     getOptionLabel={o => o.name}
                     onChange={onMakeChange}
                     renderInput={autocompleteRender({
@@ -161,21 +161,21 @@ const AddRecallModal: React.FC<TAddRecallProps> = ({editingItem, open, onClose, 
                     style={{ marginBottom: 10 }}
                     disabled={!form.make}
                     options={form.make?.models ?? []}
-                    getOptionSelected={(o, v) => o.id === v.id}
+                    isOptionEqualToValue={(o, v) => o.id === v.id}
                     getOptionLabel={o => o.name}
                     value={form.model}
                     onChange={onModelChange}
                     renderInput={autocompleteRender({
                         label: "Model",
                         error: formIsChecked && !form.model,
-                        placeholder: 'Select Chip'
+                        placeholder: 'Select Model'
                     })}
                 />
                 <Autocomplete
                     disableClearable
                     style={{ marginBottom: 10 }}
                     options={yearOptions}
-                    getOptionSelected={(option, value) => option === value}
+                    isOptionEqualToValue={(option, value) => option === value}
                     value={form?.yearFrom}
                     onChange={onYearChange("yearFrom")}
                     renderInput={autocompleteRender({
@@ -189,7 +189,7 @@ const AddRecallModal: React.FC<TAddRecallProps> = ({editingItem, open, onClose, 
                     disableClearable
                     style={{ marginBottom: 10 }}
                     options={yearOptions}
-                    getOptionSelected={(option, value) => option === value}
+                    isOptionEqualToValue={(option, value) => option === value}
                     value={form?.yearTo}
                     onChange={onYearChange("yearTo")}
                     renderInput={autocompleteRender({
@@ -223,7 +223,7 @@ const AddRecallModal: React.FC<TAddRecallProps> = ({editingItem, open, onClose, 
                 <Autocomplete
                     style={{ marginBottom: 10 }}
                     options={allAssignedList}
-                    getOptionSelected={(o, v) => o.id === v.id}
+                    isOptionEqualToValue={(o, v) => o.id === v.id}
                     getOptionLabel={o => o.serviceRequest.code}
                     value={form.serviceRequest}
                     onChange={onSRChange}

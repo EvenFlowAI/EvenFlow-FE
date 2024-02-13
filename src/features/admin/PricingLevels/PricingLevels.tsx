@@ -1,7 +1,7 @@
 import React from 'react';
 import {DemandWindows} from "./DemandWindows/DemandsWindows";
 import PricingDisplay from "./PricingDisplay/PricingDisplay";
-import {Box} from "@material-ui/core";
+import {Box} from "@mui/material";
 import PricingLevelsBy from "./PricingLevelsBy/PricingLevelsBy";
 
 export const PricingLevels = () => {

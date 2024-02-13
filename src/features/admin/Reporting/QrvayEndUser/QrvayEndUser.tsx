@@ -1,7 +1,7 @@
 import React from 'react';
 import {IEndUserConfig} from "../types";
 
-export const QrveyEndUser: React.FC<{ settings: IEndUserConfig }> = ({settings}) => {
+export const QrveyEndUser: React.FC<React.PropsWithChildren<React.PropsWithChildren<{ settings: IEndUserConfig }>>> = ({settings}) => {
     // @ts-ignore
     window['endUserConfig'] = settings;
 

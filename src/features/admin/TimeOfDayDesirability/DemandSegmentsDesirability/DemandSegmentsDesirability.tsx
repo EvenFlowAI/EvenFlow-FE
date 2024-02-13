@@ -7,7 +7,7 @@ import {
     TableCell,
     TableHead,
     TableRow,
-} from "@material-ui/core";
+} from "@mui/material";
 import {StyledTable} from '../../../../components/styled/StyledTable'
 import {EditDemandSegmentsModal} from '../EditDemandSegmentsModal/EditDemandSegmentsModal';
 import {useDispatch, useSelector} from "react-redux";
@@ -40,7 +40,7 @@ export const DemandSegmentsDesirability = () => {
     const optSettings = useSelector((state: RootState) => state.slotScoring.optimizationSettings);
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (selectedSC) {

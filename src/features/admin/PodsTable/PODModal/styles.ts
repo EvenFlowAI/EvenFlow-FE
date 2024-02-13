@@ -1,10 +1,12 @@
-import {FormControlLabel, withStyles} from "@material-ui/core";
+import { FormControlLabel } from "@mui/material";
 
-export const Label = withStyles({
+import { withStyles } from 'tss-react/mui';
+
+export const Label = withStyles(FormControlLabel, {
     label: {
         fontWeight: "bold",
         color: '#7898FF',
         textTransform: 'uppercase',
         fontSize: 14,
     }
-})(FormControlLabel);
+});

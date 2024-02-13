@@ -2,8 +2,8 @@ import React from "react";
 import {DesirabilityButton} from "../../styled/DesirabilityButton";
 import {TSwitchButtonsProps} from "../../../types/types";
 
-const getButtonColor = <U extends string | number>(ds: U, cds: U): "primary" | "default" => {
-    return ds === cds ? "primary" : "default";
+const getButtonColor = <U extends string | number>(ds: U, cds: U): "primary" | "inherit" => {
+    return ds === cds ? "primary" : "inherit";
 }
 export const SwitchButtons
     = <U extends string | number>({onClick, buttons, active}: TSwitchButtonsProps<U>):

@@ -1,11 +1,12 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles((theme) => ({
+//
+export const useStyles = makeStyles()((theme) => ({
     wrapper: {
         width: '100%',
         display: "flex",
         flexDirection: "column",
-        [theme.breakpoints.down("sm")]: {}
+        [theme.breakpoints.down('md')]: {}
     },
     itemWrapper: {
         display: "flex",
@@ -15,7 +16,7 @@ export const useStyles = makeStyles((theme) => ({
         background: "white",
         border: "1px solid #DADADA",
         fontSize: 18,
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             padding: '24px 16px',
         }
     },
@@ -29,4 +30,4 @@ export const useStyles = makeStyles((theme) => ({
         fontWeight: 'bold',
         textTransform: 'uppercase',
     }
-}))
+}));

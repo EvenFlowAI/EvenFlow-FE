@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {Table} from "../../../../components/tables/Table/Table";
-import {IconButton, Menu, MenuItem, Typography} from "@material-ui/core";
-import {MoreHoriz} from "@material-ui/icons";
+import {IconButton, Menu, MenuItem, Typography} from "@mui/material";
+import {MoreHoriz} from "@mui/icons-material";
 import {IDealershipGroupExtended} from "../../../../store/reducers/dealershipGroups/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";

@@ -1,9 +1,10 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     wrapper: {
         display: "grid",
-        gridGap: 10,
+        gap: 10,
         gridTemplateColumns: "1fr 3fr 4fr 1fr 1fr",
         alignItems: "baseline",
     },
@@ -15,4 +16,4 @@ export const useStyles = makeStyles({
     title: {
         textAlign: "center"
     }
-})
+});

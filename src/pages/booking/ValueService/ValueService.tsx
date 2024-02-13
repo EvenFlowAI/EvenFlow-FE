@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {MuiThemeProvider} from "@material-ui/core";
+import { ThemeProvider, StyledEngineProvider } from "@mui/material";
 import {frameTheme} from "../../../theme/theme";
 import {YearModel} from "../../../features/booking/ValueService/YearModel/YearModel";
 import {
@@ -23,12 +23,12 @@ type TValueServiceProps = {
     nextScreen: TScreen;
 }
 
-const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
+const ValueService: React.FC<React.PropsWithChildren<React.PropsWithChildren<TValueServiceProps>>> = ({onBack, nextScreen}) => {
     const [screen, setScreen] = useState<TValueServiceScreen>("vehicleDetails");
     const { serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const isServiceDetailsPageOn = useMemo(() => {
         return Boolean(config.find(item => item.serviceType.toString() === serviceType.toString())?.productPageForValueService)
@@ -68,11 +68,13 @@ const ValueService: React.FC<TValueServiceProps> = ({onBack, nextScreen}) => {
     }, [screen])
 
     return (
-        <MuiThemeProvider theme={frameTheme}>
-            <Container>
-                {component}
-            </Container>
-        </MuiThemeProvider>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={frameTheme}>
+                <Container>
+                    {component}
+                </Container>
+            </ThemeProvider>
+        </StyledEngineProvider>
     );
 };
 

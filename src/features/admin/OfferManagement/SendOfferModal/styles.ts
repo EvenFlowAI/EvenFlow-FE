@@ -1,10 +1,12 @@
-import {FormLabel, withStyles} from "@material-ui/core";
+import { FormLabel } from "@mui/material";
 
-export const Label = withStyles(theme => ({
+import { withStyles } from 'tss-react/mui';
+
+export const Label = withStyles(FormLabel, theme => ({
     root: {
         textTransform: "uppercase",
         fontSize: 12,
         fontWeight: "bold",
         color: theme.palette.text.primary
     }
-}))(FormLabel);
+}));

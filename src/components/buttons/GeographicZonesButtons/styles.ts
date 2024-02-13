@@ -1,4 +1,4 @@
-import {Button, styled} from "@material-ui/core";
+import {Button, styled} from "@mui/material";
 
 export const TextButton = styled(Button)({
     textTransform: 'none',

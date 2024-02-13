@@ -1,7 +1,8 @@
-import {darken, lighten, styled, Theme, Tooltip, withStyles} from "@material-ui/core";
+import { darken, lighten, styled, Tooltip } from "@mui/material";
+import { withStyles } from 'tss-react/mui';
 import React from "react";
 
-export const HtmlTooltip = withStyles({
+export const HtmlTooltip = withStyles(Tooltip, {
     tooltip: {
         fontSize: 12,
         color: '#202021',
@@ -12,7 +13,7 @@ export const HtmlTooltip = withStyles({
     popper: {
         borderRadius: 2,
     }
-})(Tooltip);
+});
 
 type TSlotsWrapperProps = {
     available?: boolean,
@@ -23,15 +24,10 @@ type TSlotsWrapperProps = {
     waitListBackground?: string;
 }
 
-export const Wrapper = styled(({
-                                   available,
-                                   offPeak,
-                                   selected,
-                                   isWaitList,
-                                   waitListTextColor,
-                                   waitListBackground,
-                                   ...props
-                               }) => <div {...props}/>)<Theme, TSlotsWrapperProps>(({
+export const Wrapper = styled("div", {
+    shouldForwardProp: (prop) => prop !== "available" && prop !== "selected" && prop !== "offPeak"
+        && prop !== "isWaitList" && prop !== "waitListTextColor" && prop !== "waitListBackground"
+})<TSlotsWrapperProps>(({
                                                                                         theme,
                                                                                         available,
                                                                                         offPeak,

@@ -13,7 +13,7 @@ type TTotalComplimentaryProps = {
     isBmWService: boolean;
 }
 
-const PackagesTotalComplimentary: React.FC<TTotalComplimentaryProps> = ({isBmWService, packages, setClasses, handleClick}) => {
+const PackagesTotalComplimentary: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTotalComplimentaryProps>>> = ({isBmWService, packages, setClasses, handleClick}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
 

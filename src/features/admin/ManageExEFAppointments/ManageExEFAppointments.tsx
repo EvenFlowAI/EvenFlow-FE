@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Divider, Switch} from "@material-ui/core";
+import {Button, Divider, Switch} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {updateAdvisor} from "../../../store/reducers/serviceCenters/actions";
@@ -19,7 +19,7 @@ const ManageExEFAppointments = () => {
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         selectedSC && setManageOn(Boolean(selectedSC.isUpdateAdvisorInAppointments));

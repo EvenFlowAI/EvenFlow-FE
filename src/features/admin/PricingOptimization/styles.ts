@@ -1,16 +1,18 @@
-import {FormLabel, styled, withStyles} from "@material-ui/core";
+import { FormLabel, styled } from "@mui/material";
+
+import { withStyles } from 'tss-react/mui';
 
 export const TableWrapper = styled("div")(({theme}) => ({
     width: "100%",
     overflowX: "auto",
     "& .MuiTableCell-root": {
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: "10px !important"
         }
     }
 }))
 
-export const Label = withStyles({
+export const Label = withStyles(FormLabel, {
     root: {
         fontSize: 15,
         fontWeight: "bold",
@@ -18,4 +20,4 @@ export const Label = withStyles({
         textTransform: "uppercase",
         color: "#9FA2B4",
     }
-})(FormLabel);
+});

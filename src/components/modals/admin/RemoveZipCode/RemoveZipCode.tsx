@@ -1,6 +1,6 @@
 import React from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
-import {Button, Divider} from "@material-ui/core";
+import {Button, Divider} from "@mui/material";
 import {DialogProps} from "../../BaseModal/types";
 import {useDispatch} from "react-redux";
 import {removeZipFromMobServiceZone} from "../../../../store/reducers/mobileService/actions";
@@ -15,8 +15,8 @@ type TRemoveGeographicZoneProps = DialogProps & {
     serviceType: TZonesServiceType;
 }
 
-const RemoveZipCode: React.FC<TRemoveGeographicZoneProps> = ({serviceType, zip, zone, ...props}) => {
-    const classes = useStyles();
+const RemoveZipCode: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRemoveGeographicZoneProps>>> = ({serviceType, zip, zone, ...props}) => {
+    const { classes  } = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 

@@ -4,11 +4,10 @@ import {
     EReportingStatus,
     reportingStatuses, IAppointment,
 } from "../../../../api/types";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {ViewAppointmentsModal} from "../ViewAppointmentsModal/ViewAppointmentsModal";
-import moment from "moment";
 import {API} from "../../../../api/api";
-import {MoreHoriz} from "@material-ui/icons";
+import {MoreHoriz} from "@mui/icons-material";
 import {IOrder, IPageRequest, TableRowDataType} from "../../../../types/types";
 import {time12HourFormat} from "../../../../utils/constants";
 import {useSelector} from "react-redux";
@@ -19,11 +18,12 @@ import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {getAppointmentDate} from "./utils";
+import dayjs from "dayjs";
 
 const cols: TableRowDataType<IAppointment>[] = [
-    {header: "Date", val: el => el.dateTime ? moment.utc(el.dateTime).format("MMMM D, YYYY") : "", orderId: "date", width: 150},
-    {header: "Day", val: el => el.dateTime ? moment.utc(el.dateTime).format("ddd") : ""},
-    {header: "Time", val: el => el.dateTime ? moment.utc(el.dateTime).format(time12HourFormat) : "", width: 100},
+    {header: "Date", val: el => el.dateTime ? dayjs.utc(el.dateTime).format("MMMM D, YYYY") : "", orderId: "date", width: 150},
+    {header: "Day", val: el => el.dateTime ? dayjs.utc(el.dateTime).format("ddd") : ""},
+    {header: "Time", val: el => el.dateTime ? dayjs.utc(el.dateTime).format(time12HourFormat) : "", width: 100},
     {header: "Customer Name", val: el => el.customerInformation?.fullName ?? "", orderId: "fullName"},
     {header: "Vehicle", val: el => `${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${el.vehicle?.year ?? ''}`},
     {header: "Service Book", val: el => el.serviceBook?.name ?? ''},
@@ -43,7 +43,7 @@ type TAppointmentsTable = {
     setViewItem?: Dispatch<SetStateAction<IAppointment|undefined>>
 }
 
-export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setViewItem, isLoading, refresh, setOrder, order, pageData, onChangeRowsPerPage, onChangePage }) => {
+export const AppointmentsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAppointmentsTable>>> = ({ viewItem, setViewItem, isLoading, refresh, setOrder, order, pageData, onChangeRowsPerPage, onChangePage }) => {
     const { appointments, count } = useSelector((state: RootState) => state.appointments);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 
@@ -86,7 +86,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({ viewItem, setV
                     title: "Cancel appointment",
                     content: <span>
                         Please confirm you want to cancel appointment on <br />
-                        {moment.utc(viewItem.dateTime).format("LLL")}?
+                        {dayjs.utc(viewItem.dateTime).format("LLL")}?
                     </span>,
                     onConfirm: _handleCancel
                 });

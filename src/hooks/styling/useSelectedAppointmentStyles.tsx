@@ -1,13 +1,14 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useSelectedAppointmentStyles = makeStyles(theme => ({
+// 
+export const useSelectedAppointmentStyles = makeStyles()(theme => ({
     selectWrapper: {
         display: 'flex',
         alignItems: 'center',
         '& > span': {
             marginLeft: 5,
         },
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             '& > div > div': {
                 padding: 5
             }
@@ -32,4 +33,4 @@ export const useSelectedAppointmentStyles = makeStyles(theme => ({
         margin: '0 0 10px 0',
         textTransform: 'uppercase'
     }
-}))
+}));

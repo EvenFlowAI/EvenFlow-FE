@@ -1,7 +1,7 @@
 import React from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {useTranslation} from "react-i18next";
@@ -17,10 +17,10 @@ type TServiceDetails = {
     onNext: () => void;
 }
 
-const ServiceDetails: React.FC<TServiceDetails> = ({onChangeVehicle, onBack, onNext}) => {
+const ServiceDetails: React.FC<React.PropsWithChildren<React.PropsWithChildren<TServiceDetails>>> = ({onChangeVehicle, onBack, onNext}) => {
     const {valueService} = useSelector((state: RootState) => state.appointmentFrame);
     const theme = useTheme();
-    const isSM = useMediaQuery(theme.breakpoints.down("sm"));
+    const isSM = useMediaQuery(theme.breakpoints.down('md'));
     const {t} = useTranslation();
 
     return valueService?.selectedService ? (

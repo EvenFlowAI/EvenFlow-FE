@@ -1,14 +1,14 @@
 import {IEmployee} from "../employees/types";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
+import {ParsableDate, TParsableDate} from "../../../types/types";
 
 enum EWorkingStatus {
     Working, NonWorking, NonActive
 }
 export interface ISchedule {
     id: number;
-    date: ParsableDate;
-    startAt: ParsableDate;
-    finishAt: ParsableDate;
+    date: TParsableDate;
+    startAt: TParsableDate;
+    finishAt: TParsableDate;
     isRecurring: boolean;
     status: EWorkingStatus;
     dayOfWeek?: number;
@@ -22,9 +22,9 @@ export interface IEmployeeSchedule {
 
 export interface IScheduleForm {
     id?: number;
-    date: ParsableDate;
-    startAt: ParsableDate;
-    finishAt: ParsableDate;
+    date: TParsableDate;
+    startAt: TParsableDate;
+    finishAt: TParsableDate;
     employeeId: string;
     serviceCenterId: number;
     podId?: number;

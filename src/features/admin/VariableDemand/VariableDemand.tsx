@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Box} from "@material-ui/core";
+import {Box} from "@mui/material";
 import {TimeOfDay} from "./TimeOfDay/TimeOfDay";
 import {DayOfWeek} from "./DayOfWeek/DayOfWeek";
 import {useDispatch} from "react-redux";

@@ -8,9 +8,10 @@ import {
     setEditingPosition,
     setServiceOptionChanged
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {List, TitleWrapper} from "./styles";
 import {getMaintenanceDescription} from "../../../../../utils/utils";
+import {ConfirmationItemWrapper} from "../../../../../components/styled/ConfirmationItemWrapper";
 
 const ServiceRequestsManaging = () => {
     const {
@@ -52,7 +53,7 @@ const ServiceRequestsManaging = () => {
             valueService, packagePricingType, packageEMenuType, scProfile])
 
     return servicesList?.length
-        ? <div>
+        ? <ConfirmationItemWrapper>
             <TitleWrapper>
                 <AppointmentConfirmationTitle>{t("Service Requests")}</AppointmentConfirmationTitle>
                 <Edit htmlColor="#142EA1" fontSize="small" style={{cursor: "pointer"}} onClick={handleEditServiceRequests}/>
@@ -62,7 +63,7 @@ const ServiceRequestsManaging = () => {
                     <li className="service-item" key={item}>{item}</li>
                 ))}
             </List>
-        </div>
+        </ConfirmationItemWrapper>
         : null;
 };
 

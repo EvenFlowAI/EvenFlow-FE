@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {MenuItem, Select, useMediaQuery, useTheme} from "@material-ui/core";
+import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {
     getSlotsConsultantId,
@@ -18,17 +18,16 @@ const SelectedConsultant = () => {
     const { currentConfig, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const classes = useSelectedAppointmentStyles();
+    const { classes  } = useSelectedAppointmentStyles();
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
-    const handleConsultantChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    const handleConsultantChange = (e: SelectChangeEvent<unknown>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
         if (isBmWService && e.target.value !== advisor?.id) {
             dispatch(selectAppointment(null));
-            //dispatch(setWaitListSettings(null));
             dispatch(selectServiceValetAppointment(null));
         }
         dispatch(setAdvisor(consultant ? consultant : null))
@@ -43,6 +42,8 @@ const SelectedConsultant = () => {
                 <Select
                     value={advisor?.id || "Any"}
                     className={classes.select}
+                    variant="standard"
+                    disableUnderline
                     disabled={!!currentConfig && !consultants.length}
                     onChange={handleConsultantChange}>`
                     {consultants

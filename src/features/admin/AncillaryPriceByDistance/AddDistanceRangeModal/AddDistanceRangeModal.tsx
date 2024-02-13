@@ -2,16 +2,16 @@ import React, {useState} from 'react';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button, Divider} from "@material-ui/core";
+import {Button, Divider} from "@mui/material";
 import {TDistanceRange} from "../../../../store/reducers/serviceValet/types";
 import {useStyles} from "./styles";
 
-const AddDistanceRangeModal: React.FC<DialogProps & {onAddRange: (data: TDistanceRange) => void}> = (props) => {
+const AddDistanceRangeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {onAddRange: (data: TDistanceRange) => void}>>> = (props) => {
     const [rangeMin, setRangeMin] = useState<number|''>('');
     const [rangeMax, setRangeMax] = useState<number|''>('');
     const [costPerMile, setCostPerMile] = useState<number|''>('');
     const [formIsChecked, setFormChecked] = useState<boolean>(false);
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const onCancel = () => {
         setRangeMin('');

@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {updateWaitListSettings} from "../../../../store/reducers/optimizationWindows/actions";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {Button, Switch} from "@material-ui/core";
+import {Button, Switch} from "@mui/material";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {SwitcherLabel} from "../styles";
@@ -15,7 +15,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 
-const WaitListSlotSettingsModal: React.FC<DialogProps> = (props) => {
+const WaitListSlotSettingsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {waitListSettings, isWaitListLoading} = useSelector((state: RootState) => state.optimizationWindows);
     const [slotText, setSlotText] = useState<string>('');
     const [slotTextHex, setSlotTextHex] = useState<string>('');
@@ -28,7 +28,7 @@ const WaitListSlotSettingsModal: React.FC<DialogProps> = (props) => {
     const dispatch = useDispatch()
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (waitListSettings && props.open) {

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {OPsCodesListDialog} from "../../../components/modals/admin/OPsCodesListDialog/OPsCodesListDialog";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -23,15 +23,11 @@ import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 export const ServiceRequestsScreen = () => {
-    const [
-        pageData,
-        search,
-        order
-    ] = useSelector((state: RootState) => [
-        state.serviceRequests.assignedPageData,
-        state.serviceRequests.assignedFilter.searchTerm,
-        state.serviceRequests.assignedOrdering
-    ]);
+    const {
+        assignedPageData,
+        assignedFilter: {searchTerm},
+        assignedOrdering
+        } = useSelector(({serviceRequests}: RootState) => serviceRequests);
 
     const [editedItem, setEditedItem] = useState<IAssignedServiceRequest|undefined>(undefined);
     const {selectedSC} = useSCs();
@@ -49,7 +45,7 @@ export const ServiceRequestsScreen = () => {
         if (selectedSC) {
             dispatch(loadAssignedServiceRequests(selectedSC.id));
         }
-    }, [selectedSC, dispatch, pageData, order]);
+    }, [selectedSC, dispatch, assignedPageData, assignedOrdering]);
 
     const handleAddOpsCode = () => {
         setEditedItem(undefined);
@@ -83,7 +79,7 @@ export const ServiceRequestsScreen = () => {
             actions={<div style={{display: "flex", alignItems: "center"}}>
                 <SearchInput
                     onChange={handleSearchChange}
-                    value={search}
+                    value={searchTerm}
                     onSearch={handleSearch}
                 />
                 <Button

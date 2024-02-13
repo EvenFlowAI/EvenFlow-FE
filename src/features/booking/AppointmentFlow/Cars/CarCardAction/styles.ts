@@ -1,12 +1,13 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     wrapper: {
         fontSize: 20,
         width: "100%",
         "&>div:first-child": {
             width: "100%",
-            [theme.breakpoints.down("xs")]: {
+            [theme.breakpoints.down('sm')]: {
                 width: 200,
             }
         },
@@ -14,4 +15,4 @@ export const useStyles = makeStyles(theme => ({
             flexGrow: 1
         }
     }
-}))
+}));

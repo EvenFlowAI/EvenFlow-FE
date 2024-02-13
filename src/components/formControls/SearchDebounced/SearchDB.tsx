@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {TextField} from "../TextFieldStyled/TextField";
-import {Search} from "@material-ui/icons";
+import {Search} from "@mui/icons-material";
 import {TextInputProps} from "../types";
 import {useDebounce} from "../../../hooks/useDebounce/useDebounce";
 
@@ -9,7 +9,7 @@ type TProps = TextInputProps & {
     search: string;
 };
 
-export const SearchDB: React.FC<TProps> = ({onSearch, search, ...props}) => {
+export const SearchDB: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onSearch, search, ...props}) => {
     const isInit = useRef(true);
     const [innerSearch, setInner] = useState<string>(search);
     const dbSearch = useDebounce<string>(innerSearch, 1000);

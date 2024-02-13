@@ -4,7 +4,7 @@ import {TextField} from "../../../../../components/formControls/TextFieldStyled/
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import Checkbox from "../../../../../components/formControls/Checkbox/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@material-ui/icons";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
 import {Table} from "../../../../../components/tables/Table/Table";
 import {useStyles} from "./styles";
 import {TableRowDataType} from "../../../../../types/types";
@@ -17,7 +17,7 @@ type TOpsCodesTableProps = {
     setWrongOrderIndexes: Dispatch<SetStateAction<number[]>>;
 }
 
-export const OpsCodesOrderTable:React.FC<TOpsCodesTableProps> = ({
+export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<React.PropsWithChildren<TOpsCodesTableProps>>> = ({
                                                              selectedCodes,
                                                              setSelectedCodes,
                                                              disabled,
@@ -25,7 +25,7 @@ export const OpsCodesOrderTable:React.FC<TOpsCodesTableProps> = ({
                                                              setWrongOrderIndexes
 }) => {
     const { allAssignedList, assignedLoading } = useSelector((state: RootState) => state.serviceRequests);
-    const classes = useStyles()
+    const { classes  } = useStyles()
 
     const onSROrderChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()

@@ -1,17 +1,19 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {styled, Tooltip, withStyles} from "@material-ui/core";
+import { makeStyles } from 'tss-react/mui';
+import { styled, Tooltip } from "@mui/material";
 
-export const useStyles = makeStyles(theme => ({
+import { withStyles } from 'tss-react/mui';
+
+//
+export const useStyles = makeStyles()(() => ({
     tableWrapper: {
     },
-    wrapper: ({columnsCount}: {columnsCount: number}) => ({
-        width: columnsCount > 10 ? columnsCount * 150 : 1550,
+    wrapper: {
         overflowX: 'auto',
         marginTop: 16,
         borderTop: '1px solid #DADADA',
         borderLeft: '1px solid #DADADA',
         borderCollapse: 'unset',
-    }),
+    },
     emptyWrapper: {
         height: 500,
         display: 'flex',
@@ -71,7 +73,7 @@ export const useStyles = makeStyles(theme => ({
         padding: '16px 8px',
         borderRight: '1px solid #DADADA',
     },
-}))
+}));
 
 export const IconsBlock = styled('div')({
     display: 'flex',
@@ -79,7 +81,7 @@ export const IconsBlock = styled('div')({
     alignItems: 'center',
 })
 
-export const HtmlTooltip = withStyles({
+export const HtmlTooltip = withStyles(Tooltip, {
     tooltip: {
         fontSize: 12,
         color: '#202021',
@@ -90,4 +92,4 @@ export const HtmlTooltip = withStyles({
     popper: {
         borderRadius: 0,
     }
-})(Tooltip);
+});

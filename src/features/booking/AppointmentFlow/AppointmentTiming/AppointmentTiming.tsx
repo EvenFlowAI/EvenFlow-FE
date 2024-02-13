@@ -13,18 +13,18 @@ import {
     setTiming,
     setWelcomeScreenView
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
-import moment from "moment";
 import {EAppointmentTimingType,} from "../../../../store/reducers/appointment/types";
 import {selectAppointment, selectServiceValetAppointment,} from "../../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga4";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import AppointmentTimingCard from "./AppointmentTimingCard/AppointmentTimingCard";
 import {useTranslation} from "react-i18next";
-import {TArgCallback, TScreen} from "../../../../types/types";
+import {TArgCallback, TParsableDate, TScreen} from "../../../../types/types";
 import {useHistory, useParams} from "react-router-dom";
 import {TimingWrapper} from "./styles";
 import {TCard} from "./types";
 import {Routes} from "../../../../routes/constants";
+import dayjs from "dayjs";
 
 const cards: TCard[] = [
     {
@@ -46,35 +46,23 @@ const cards: TCard[] = [
 
 const timingTypes = ['Special Offers', 'Preferred Date', 'First Available Date'];
 
-export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>}> = ({handleSetScreen}) => {
-    const [isLoading, setLoading] = useState<boolean>(false);
-    const [
-        selectedType,
+export const AppointmentTiming: React.FC<React.PropsWithChildren<React.PropsWithChildren<{handleSetScreen: TArgCallback<TScreen>}>>> = ({handleSetScreen}) => {
+    const {appointment, customerLoadedData} = useSelector((state: RootState) => state.appointment)
+    const {
+        selectedTiming,
         selectedTime,
-        appointment,
         serviceTypeOption,
         sideBarSteps,
-        isAdvisorAvailable,
         consultants,
         appointmentByKey,
-        editingPosition,
-        customerLoadedData,
-    ] = useSelector(
-        (state: RootState) => [
-            state.appointmentFrame.selectedTiming,
-            state.appointmentFrame.selectedTime,
-            state.appointment.appointment,
-            state.appointmentFrame.serviceTypeOption,
-            state.appointmentFrame.sideBarSteps,
-            state.bookingFlowConfig.isAdvisorAvailable,
-            state.appointmentFrame.consultants,
-            state.appointmentFrame.appointmentByKey,
-            state.appointmentFrame.editingPosition,
-            state.appointment.customerLoadedData,
-        ]);
+        editingPosition
+    } = useSelector((state: RootState) => state.appointmentFrame)
+    const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
+
+    const [isLoading, setLoading] = useState<boolean>(false);
     const dispatch = useDispatch();
     const {t} = useTranslation();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const history = useHistory();
 
     const fromServiceValetToVisitCenter = useMemo(() => {
@@ -114,14 +102,14 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
         dispatch(selectServiceValetAppointment(null));
     }
 
-    const handleChangeTime = useCallback((t: moment.Moment|null) => {
-        dispatch(setTime(t));
-        if (!moment(selectedTime).isSame(t, 'date')) clearAppointmentSlots()
+    const handleChangeTime = useCallback((t: unknown) => {
+        dispatch(setTime(t as TParsableDate));
+        if (!dayjs.utc(selectedTime).isSame(t as TParsableDate, 'date')) clearAppointmentSlots()
     }, [selectedTime])
 
     const isTimingValid = Boolean(
-        selectedType !== null
-        && (selectedType !== EAppointmentTimingType.PreferredDate || selectedTime)
+        selectedTiming !== null
+        && (selectedTiming !== EAppointmentTimingType.PreferredDate || selectedTime)
     );
 
     const handleSideBar = () => {
@@ -133,17 +121,17 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
     }
 
     const onSubmit = useCallback((): void => {
-        if (selectedType) {
+        if (selectedTiming) {
             ReactGA.event({
                 category: 'EvenFlow User',
                 action: 'Selected Timing Type',
-                label: `Selected ${timingTypes[selectedType]}`,
+                label: `Selected ${timingTypes[selectedTiming]}`,
             });
         }
-        if (appointment?.timingType !== selectedType) clearAppointmentSlots()
+        if (appointment?.timingType !== selectedTiming) clearAppointmentSlots()
         handleSideBar();
         onNext();
-    }, [appointment, dispatch, onNext, selectedType])
+    }, [appointment, dispatch, onNext, selectedTiming])
 
     return (
         <StepWrapper>
@@ -162,7 +150,7 @@ export const AppointmentTiming: React.FC<{handleSetScreen: TArgCallback<TScreen>
                         isLoading={isLoading}
                         onChangeTime={handleChangeTime}
                         selectedTime={selectedTime}
-                        active={selectedType === card.name}
+                        active={selectedTiming === card.name}
                         key={card.name}/>
                 })}
             </TimingWrapper>

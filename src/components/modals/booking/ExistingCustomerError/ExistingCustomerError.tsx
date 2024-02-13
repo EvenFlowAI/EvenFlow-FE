@@ -5,18 +5,18 @@ import {DialogProps} from "../../BaseModal/types";
 import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
 import {setCurrentFrameScreen,} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {ButtonsRow, useStyles} from "./styles";
 
 type TExistingCustomerErrorProps = DialogProps & {
     onNext: () => void;
 }
 
-const ExistingCustomerError: React.FC<TExistingCustomerErrorProps> = ({open, onClose, onNext}) => {
+const ExistingCustomerError: React.FC<React.PropsWithChildren<React.PropsWithChildren<TExistingCustomerErrorProps>>> = ({open, onClose, onNext}) => {
     const dispatch = useDispatch();
     const {t} = useTranslation();
-    const dialogClasses = useDialogStyles();
-    const classes = useStyles();
+    const {classes: dialogClasses} = useDialogStyles();
+    const { classes  } = useStyles();
 
     const onNew = () => {
         dispatch(setCurrentFrameScreen("serviceNeeds"));

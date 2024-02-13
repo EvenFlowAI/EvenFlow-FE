@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     wrapper: {
         display: 'flex',
         justifyContent: 'space-between',
@@ -29,10 +30,11 @@ export const useStyles = makeStyles(() => ({
         fontSize: 14,
         maxWidth: '40%',
     }
-}))
+}));
 
-export const useInputStyles = makeStyles(() => ({
+// 
+export const useInputStyles = makeStyles()(() => ({
     inputRoot: {
         fontWeight: 'bold',
     }
-}))
+}));

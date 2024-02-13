@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useMemo} from 'react';
 import {InputWrapper} from "../styles";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../../utils/autocompleteRenders";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
@@ -16,7 +16,7 @@ type TProps = {
     formChecked: boolean;
 }
 
-const OpsCodeInput: React.FC<TProps> = ({zone, zonesOpsCodes, setZonesOpsCodes, formChecked, setFormChecked}) => {
+const OpsCodeInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({zone, zonesOpsCodes, setZonesOpsCodes, formChecked, setFormChecked}) => {
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
 
     const zoneOpsCode = useMemo(() => {
@@ -52,6 +52,7 @@ const OpsCodeInput: React.FC<TProps> = ({zone, zonesOpsCodes, setZonesOpsCodes, 
             value={selectedCode}
             onChange={onOpsCodeChange}
             getOptionLabel={o => o.serviceRequest.code}
+            isOptionEqualToValue={(option, value) => option.serviceRequest.id === value.serviceRequest.id}
             renderInput={autocompleteRender({
                 label: '',
                 placeholder: 'Unassigned',

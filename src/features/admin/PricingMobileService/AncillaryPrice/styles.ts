@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     wrapper: {
         display: 'flex',
         justifyContent: 'flex-end',
@@ -25,4 +26,4 @@ export const useStyles = makeStyles(() => ({
         padding: 8,
         marginBottom: 15,
     }
-}))
+}));

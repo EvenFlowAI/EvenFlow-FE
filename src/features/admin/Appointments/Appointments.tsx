@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import moment from "moment";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {loadAppointments} from "../../../store/reducers/appointments/actions";
 import {AppointmentActions} from "./AppointmentActions/AppointmentActions";
@@ -11,10 +10,11 @@ import {AppointmentsTable} from "./AppointmentsTable/AppointmentsTable";
 import {RootState} from "../../../store/rootReducer";
 import {IAppointmentsRequest} from "../../../store/reducers/appointments/types";
 import {IAppointment} from "../../../api/types";
-import {IOrder, Titles} from "../../../types/types";
+import {IOrder, Titles, TParsableDate} from "../../../types/types";
 import {TFilters, TView} from "./types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import dayjs from "dayjs";
 
 const initialOrder = {
     orderBy: "date",
@@ -55,7 +55,7 @@ export const Appointments = () => {
                 serviceCenterId: filters.scId,
                 orderBy: order.orderBy,
                 isAscending: order.isAscending,
-                date: moment(filters.date).add(moment(filters.date).utcOffset(), 'minute'),
+                date: dayjs(filters.date).add(dayjs(filters.date).utcOffset(), 'minute'),
                 // @ts-ignore
                 reportingStatus: filters.reportingStatus ? +filters.reportingStatus : undefined,
                 scheduler: filters.scheduler ? {id: filters.scheduler.id, type: filters.scheduler.type} : null,
@@ -101,7 +101,7 @@ export const Appointments = () => {
         }
     }
 
-    const handleOpenDetails = (date: moment.Moment | null): void => {
+    const handleOpenDetails = (date: TParsableDate): void => {
         setFilters(prev => ({...prev, date}))
         onListOpen();
     }

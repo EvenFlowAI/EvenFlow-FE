@@ -1,7 +1,8 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {lighten} from "@material-ui/core";
+import { makeStyles } from 'tss-react/mui';
+import {lighten} from "@mui/material";
 
-export const useCalendarStyles = makeStyles(theme => ({
+// 
+export const useCalendarStyles = makeStyles()(theme => ({
     title: {
         textAlign: "center",
         position: "absolute",
@@ -10,7 +11,7 @@ export const useCalendarStyles = makeStyles(theme => ({
         right: 0,
         margin: 0,
         fontSize: 16,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             position: "static",
             marginBottom: theme.spacing(1)
         }
@@ -29,7 +30,7 @@ export const useCalendarStyles = makeStyles(theme => ({
         top: 4, left: 4
     },
     prevMonth: {
-        color: theme.palette.text.hint
+        color: theme.palette.text.secondary
     },
     dayCell: {
         background: theme.palette.common.white,
@@ -63,7 +64,7 @@ export const useCalendarStyles = makeStyles(theme => ({
     calendarWrapper: {
         marginTop: 11,
         overflowX: "auto",
-        gridGap: 1,
+        gap: 1,
         background: theme.palette.divider,
         border: `1px solid ${theme.palette.divider}`,
         display: "grid",

@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {TabContext, TabPanel} from "@mui/lab";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/styled/Tabs";
-import {Tab} from "@material-ui/core";
+import {Tab} from "@mui/material";
 import {CustomerLifetimeRules} from "../../../features/admin/CustomerLifetimeRules/CustomerLifetimeRules";
 import {NewLostCustomer} from "../../../features/admin/NewLostCustomer/NewLostCustomer";
 import {EndOfWarranty} from "../../../features/admin/EndOfWarranty/EndOfWarranty";
@@ -25,7 +25,7 @@ export const AppointmentValueSettings = () => {
     const handleTabChange = (e: any, val: string) => {
         setTab(val);
     }
-    const classes = useStyles();
+    const { classes  } = useStyles();
     return <TabContext value={selectedTab}>
         <TitleContainer title="Appointment Value Settings" pad parent={capacityManagementRoot} />
         <TabList

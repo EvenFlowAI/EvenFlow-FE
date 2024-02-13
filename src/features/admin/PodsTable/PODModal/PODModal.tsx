@@ -2,7 +2,7 @@ import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "rea
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {EAppointmentType, EJobType, IPod, IPodForm} from "../../../../store/reducers/pods/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button, Grid, Switch} from "@material-ui/core";
+import {Button, Grid, Switch} from "@mui/material";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
@@ -10,7 +10,7 @@ import {IAdvisorShort} from "../../../../store/reducers/users/types";
 import {IBayShort} from "../../../../store/reducers/bays/types";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
 import {autocompleteOptionsRender, autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {RootState} from "../../../../store/rootReducer";
 import {
     loadSCAdvisors,
@@ -37,6 +37,7 @@ import {useModal} from "../../../../hooks/useModal/useModal";
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useAutocompleteStyles} from "../../../../hooks/styling/useAutocompleteStyles";
 
 const initialForm: TForm = {
     name: "",
@@ -48,9 +49,16 @@ const initialForm: TForm = {
     isVisitCenter: true,
 }
 
-export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...props}) => {
+export const PODModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IPod>>>> = ({onAction, payload, ...props}) => {
+    const {advisorsList, techniciansList} = useSelector(({scEmployees}: RootState) => scEmployees);
+    const {scRequestsShort: serviceRequests} = useSelector(({serviceRequests}: RootState) => serviceRequests);
+    const {baysShort: baysList} = useSelector(({bays}: RootState) => bays);
+    const {makesModels, engineTypes} = useSelector(({vehicleDetails}: RootState) => vehicleDetails);
+    const {options: transportations, isLoading: isTransportationLoading} = useSelector(({transportation}: RootState) => transportation);
+    const {zones: serviceValetZones} = useSelector(({serviceValet}: RootState) => serviceValet);
+    const {zones} = useSelector(({mobileService}: RootState) => mobileService);
+
     const [form, setForm] = useState<TForm>(initialForm);
-    const {selectedSC} = useSCs();
     const [loading, setLoading] = useState<boolean>();
     const [selectedMakes, setSelectedMakes] = useState<IMakeExtended[]>([]);
     const [modelsOptions, setModelsOptions] = useState<IModel[]>([]);
@@ -61,33 +69,12 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
     const [jobType, setJobType] = useState<TOption|null>(null);
     const [appointmentType, setAppointmentType] = useState<TOption|null>(null);
     const [transportationOptions, setTransportationOptions] = useState<ITransportationOptionFull[]>([]);
-    const {onOpen, isOpen, onClose} = useModal();
+    const {selectedSC} = useSCs();
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
-    const [
-        advisorsList,
-        techniciansList,
-        serviceRequests,
-        baysList,
-        makesModels,
-        zones,
-        serviceValetZones,
-        engineTypes,
-        transportations,
-        isTransportationLoading,
-    ] = useSelector((state: RootState) => [
-        state.scEmployees.advisorsList,
-        state.scEmployees.techniciansList,
-        state.serviceRequests.scRequestsShort,
-        state.bays.baysShort,
-        state.vehicleDetails.makesModels,
-        state.mobileService.zones,
-        state.serviceValet.zones,
-        state.vehicleDetails.engineTypes,
-        state.transportation.options,
-        state.transportation.isLoading,
-    ]);
+    const {onOpen, isOpen, onClose} = useModal();
+    const { classes  } = useAutocompleteStyles();
 
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
     const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);
@@ -277,287 +264,291 @@ export const PODModal: React.FC<DialogProps<IPod>> = ({onAction, payload, ...pro
         setForm(prev => ({...prev, isVisitCenter: !form.isVisitCenter}))
     }
 
-    return <BaseModal {...props} maxWidth="md">
-        <DialogTitle onClose={props.onClose}>
-            {payload ? "Edit POD" : "Add POD"}
-        </DialogTitle>
-        <DialogContent>
-            <Grid container spacing={3}>
-                <Grid item xs={12} sm={6} md={4}>
-                    <TextField
-                        id="name"
-                        name="name"
-                        label="Name"
-                        placeholder="Type Name"
-                        fullWidth
-                        autoComplete="pod-name pod"
-                        onChange={handleChange}
-                        value={form.name}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                    <TextField
-                        id="description"
-                        name="description"
-                        label="Description"
-                        placeholder="Type Description"
-                        fullWidth
-                        autoComplete="pod-description"
-                        onChange={handleChange}
-                        value={form.description}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={4}>
-                    <Autocomplete
-                        options={advisorsList}
-                        onChange={handleSelectAdv}
-                        getOptionLabel={i => i.fullName}
-                        getOptionSelected={(o, s) => o.id === s.id}
-                        loading={false}
-                        value={form.advisor}
-                        renderInput={autocompleteRender({label: "Advisor", fullWidth: true, placeholder: "Select Advisor"})}
-                    />
-                </Grid>
-
-                <Grid item xs={12} sm={12} md={6}>
-                    <Autocomplete
-                        options={appointmentTypeOptions}
-                        getOptionLabel={i => i.name}
-                        value={appointmentType}
-                        onChange={onAppointmentTypeChange}
-                        renderInput={autocompleteRender({
-                            label: "Appointment Type",
-                            placeholder: 'Appointment Type'
-                        })}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <Autocomplete
-                        options={serviceRequests}
-                        multiple
-                        fullWidth
-                        ChipProps={{
-                            color: "primary",
-                            style: {borderRadius: 4},
-                            size: "small"
-                        }}
-                        disableCloseOnSelect
-                        onChange={handleSCChange}
-                        getOptionLabel={i => i.code}
-                        getOptionSelected={(o, v) => o.id === v.id}
-                        renderOption={autocompleteOptionsRender((e) => e.code)}
-                        loading={false}
-                        value={form.serviceRequests}
-                        renderInput={autocompleteRender({label: "Service Requests", fullWidth: true, placeholder: "Select Service Requests"})}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <Autocomplete
-                        multiple
-                        style={{ marginBottom: 10 }}
-                        ChipProps={{
-                            color: "primary",
-                            style: {borderRadius: 4},
-                            size: "small"
-                        }}
-                        options={getSortedMakes()}
-                        disableCloseOnSelect
-                        getOptionLabel={i => i.name}
-                        getOptionSelected={(o, v) => o.id === v.id}
-                        renderOption={autocompleteOptionsRender((e) => e.name)}
-                        value={selectedMakes}
-                        onChange={onMakeChange}
-                        renderInput={autocompleteRender({
-                            label: "Makes",
-                            placeholder: 'Select Makes'
-                        })}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <Autocomplete
-                        multiple
-                        style={{ marginBottom: 10 }}
-                        ChipProps={{
-                            color: "primary",
-                            style: {borderRadius: 4},
-                            size: "small"
-                        }}
-                        options={getSortedModels()}
-                        disableCloseOnSelect
-                        getOptionLabel={i => i.name}
-                        renderOption={autocompleteOptionsRender((e) => e.name)}
-                        getOptionSelected={(o, v) => o.id === v.id}
-                        value={selectedModels}
-                        onChange={onModelChange}
-                        renderInput={autocompleteRender({
-                            label: "Models",
-                            placeholder: 'Select Models'
-                        })}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <Autocomplete
-                        options={jobTypeOptions}
-                        getOptionLabel={i => i.name}
-                        value={jobType}
-                        onChange={onJobTypeChange}
-                        renderInput={autocompleteRender({
-                            label: "Job Type",
-                            placeholder: 'Job Type'
-                        })}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <Autocomplete
-                        options={engineTypes}
-                        multiple
-                        fullWidth
-                        ChipProps={{
-                            color: "primary",
-                            style: {borderRadius: 4},
-                            size: "small"
-                        }}
-                        disableCloseOnSelect
-                        getOptionSelected={(o, v) => o.id === v.id}
-                        onChange={handleEngineTypesChange}
-                        getOptionLabel={i => i.name}
-                        renderOption={autocompleteOptionsRender((e) => e.name)}
-                        loading={false}
-                        value={selectedEngineTypes}
-                        renderInput={autocompleteRender({label: "Engine Types", fullWidth: true, placeholder: "Select Engine Types"})}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <Autocomplete
-                        options={serviceValetZones}
-                        multiple
-                        fullWidth
-                        ChipProps={{
-                            color: "primary",
-                            style: {borderRadius: 4},
-                            size: "small"
-                        }}
-                        disableCloseOnSelect
-                        getOptionSelected={(o, v) => o.id === v.id}
-                        onChange={handleServiceValetZoneChange}
-                        getOptionLabel={i => i.name}
-                        renderOption={autocompleteOptionsRender((e) => e.name)}
-                        loading={false}
-                        value={selectedServiceValetZones}
-                        renderInput={autocompleteRender({label: "Service Valet Zones", fullWidth: true, placeholder: "Select Service Valet Zones"})}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <Autocomplete
-                        options={zones}
-                        multiple
-                        fullWidth
-                        ChipProps={{
-                            color: "primary",
-                            style: {borderRadius: 4},
-                            size: "small"
-                        }}
-                        disableCloseOnSelect
-                        getOptionSelected={(o, v) => o.id === v.id}
-                        onChange={handleZoneChange}
-                        getOptionLabel={i => i.name}
-                        renderOption={autocompleteOptionsRender((e) => e.name)}
-                        loading={false}
-                        value={mobileZones}
-                        renderInput={autocompleteRender({label: "Mobile Zones", fullWidth: true, placeholder: "Select Mobile Zones"})}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <Autocomplete
-                        options={techniciansList}
-                        multiple
-                        ChipProps={{
-                            color: "primary",
-                            style: {borderRadius: 4},
-                            size: "small"
-                        }}
-                        disableCloseOnSelect
-                        onChange={handleTechniciansChange}
-                        getOptionLabel={i => i.fullName}
-                        getOptionSelected={(o, v) => o.id === v.id}
-                        renderOption={autocompleteOptionsRender((e) => e.fullName)}
-                        loading={false}
-                        value={form.technicians}
-                        renderInput={autocompleteRender({label: "Technicians", fullWidth: true, placeholder: "Select Technicians"})}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <Autocomplete
-                        options={baysList}
-                        multiple
-                        ChipProps={{
-                            color: "primary",
-                            style: {borderRadius: 4},
-                            size: "small"
-                        }}
-                        disableCloseOnSelect
-                        onChange={handleBaysChange}
-                        getOptionLabel={i => i.name}
-                        getOptionSelected={(o, v) => o.id === v.id}
-                        renderOption={autocompleteOptionsRender((e) => e.name)}
-                        loading={false}
-                        value={form.bays}
-                        renderInput={autocompleteRender({label: "Bays", fullWidth: true, placeholder: "Select Bays"})}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                    <Autocomplete
-                        options={transportations}
-                        multiple
-                        ChipProps={{
-                            color: "primary",
-                            style: {borderRadius: 4},
-                            size: "small"
-                        }}
-                        disableCloseOnSelect
-                        onChange={handleTransportationsChange}
-                        getOptionLabel={i => getTransportationOptionString(i.type)}
-                        getOptionSelected={(o, v) => o.id === v.id}
-                        renderOption={autocompleteOptionsRender((e) => getTransportationOptionString(e.type))}
-                        loading={isTransportationLoading}
-                        value={transportationOptions}
-                        renderInput={autocompleteRender({label: "Transportation Options", fullWidth: true, placeholder: "Select Transportation Options"})}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <div style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
-                        <Button onClick={onOpen}
-                                color="primary">
-                            Go To Employees Schedule
-                        </Button>
-                    </div>
-                </Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                    <div style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
-                        <Label
-                            checked={form.isVisitCenter}
-                            onChange={() => onIsVisitCenterChange()}
-                            label={"For Visit Center Only"}
-                            labelPlacement="start"
-                            control={<Switch color="primary" />}
+    return (
+        <BaseModal {...props} maxWidth="md">
+            <DialogTitle onClose={props.onClose}>
+                {payload ? "Edit POD" : "Add POD"}
+            </DialogTitle>
+            <DialogContent>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            id="name"
+                            name="name"
+                            label="Name"
+                            placeholder="Type Name"
+                            fullWidth
+                            autoComplete="pod-name pod"
+                            onChange={handleChange}
+                            value={form.name}
                         />
-                    </div>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            id="description"
+                            name="description"
+                            label="Description"
+                            placeholder="Type Description"
+                            fullWidth
+                            autoComplete="pod-description"
+                            onChange={handleChange}
+                            value={form.description}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={4}>
+                        <Autocomplete
+                            options={advisorsList}
+                            onChange={handleSelectAdv}
+                            getOptionLabel={i => i.fullName}
+                            isOptionEqualToValue={(o, s) => o.id === s.id}
+                            loading={false}
+                            value={form.advisor}
+                            renderInput={autocompleteRender({label: "Advisor", fullWidth: true, placeholder: "Select Advisor"})}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={12} md={6}>
+                        <Autocomplete
+                            options={appointmentTypeOptions}
+                            getOptionLabel={i => i.name}
+                            value={appointmentType}
+                            isOptionEqualToValue={(o, v) => o.value === v.value}
+                            onChange={onAppointmentTypeChange}
+                            renderInput={autocompleteRender({
+                                label: "Appointment Type",
+                                placeholder: 'Appointment Type'
+                            })}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <Autocomplete
+                            options={serviceRequests}
+                            multiple
+                            fullWidth
+                            ChipProps={{
+                                color: "primary",
+                                style: {borderRadius: 4},
+                                size: "small"
+                            }}
+                            disableCloseOnSelect
+                            onChange={handleSCChange}
+                            getOptionLabel={i => i.code}
+                            isOptionEqualToValue={(o, v) => o.id === v.id}
+                            renderOption={autocompleteOptionsRender((e) => e.code)}
+                            loading={false}
+                            value={form.serviceRequests}
+                            renderInput={autocompleteRender({label: "Service Requests", fullWidth: true, placeholder: "Select Service Requests"})}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <Autocomplete
+                            multiple
+                            style={{ marginBottom: 10 }}
+                            ChipProps={{
+                                color: "primary",
+                                style: {borderRadius: 4},
+                                size: "small"
+                            }}
+                            options={getSortedMakes()}
+                            disableCloseOnSelect
+                            getOptionLabel={i => i.name}
+                            isOptionEqualToValue={(o, v) => o.id === v.id}
+                            renderOption={autocompleteOptionsRender((e) => e.name)}
+                            value={selectedMakes}
+                            onChange={onMakeChange}
+                            renderInput={autocompleteRender({
+                                label: "Makes",
+                                placeholder: 'Select Makes'
+                            })}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <Autocomplete
+                            multiple
+                            style={{ marginBottom: 10 }}
+                            ChipProps={{
+                                color: "primary",
+                                style: {borderRadius: 4},
+                                size: "small"
+                            }}
+                            options={getSortedModels()}
+                            disableCloseOnSelect
+                            getOptionLabel={i => i.name}
+                            renderOption={autocompleteOptionsRender((e) => e.name)}
+                            isOptionEqualToValue={(o, v) => o.id === v.id}
+                            value={selectedModels}
+                            onChange={onModelChange}
+                            renderInput={autocompleteRender({
+                                label: "Models",
+                                placeholder: 'Select Models'
+                            })}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <Autocomplete
+                            options={jobTypeOptions}
+                            isOptionEqualToValue={(o, v) => o.value === v.value}
+                            getOptionLabel={i => i.name}
+                            value={jobType}
+                            onChange={onJobTypeChange}
+                            renderInput={autocompleteRender({
+                                label: "Job Type",
+                                placeholder: 'Job Type'
+                            })}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <Autocomplete
+                            options={engineTypes}
+                            multiple
+                            fullWidth
+                            ChipProps={{
+                                color: "primary",
+                                style: {borderRadius: 4},
+                                size: "small"
+                            }}
+                            disableCloseOnSelect
+                            isOptionEqualToValue={(o, v) => o.id === v.id}
+                            onChange={handleEngineTypesChange}
+                            getOptionLabel={i => i.name}
+                            renderOption={autocompleteOptionsRender((e) => e.name)}
+                            loading={false}
+                            value={selectedEngineTypes}
+                            renderInput={autocompleteRender({label: "Engine Types", fullWidth: true, placeholder: "Select Engine Types"})}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <Autocomplete
+                            options={serviceValetZones}
+                            multiple
+                            fullWidth
+                            ChipProps={{
+                                color: "primary",
+                                style: {borderRadius: 4},
+                                size: "small"
+                            }}
+                            disableCloseOnSelect
+                            isOptionEqualToValue={(o, v) => o.id === v.id}
+                            onChange={handleServiceValetZoneChange}
+                            getOptionLabel={i => i.name}
+                            renderOption={autocompleteOptionsRender((e) => e.name)}
+                            loading={false}
+                            value={selectedServiceValetZones}
+                            renderInput={autocompleteRender({label: "Service Valet Zones", fullWidth: true, placeholder: "Select Service Valet Zones"})}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <Autocomplete
+                            options={zones}
+                            multiple
+                            fullWidth
+                            ChipProps={{
+                                color: "primary",
+                                style: {borderRadius: 4},
+                                size: "small"
+                            }}
+                            disableCloseOnSelect
+                            isOptionEqualToValue={(o, v) => o.id === v.id}
+                            onChange={handleZoneChange}
+                            getOptionLabel={i => i.name}
+                            renderOption={autocompleteOptionsRender((e) => e.name)}
+                            loading={false}
+                            value={mobileZones}
+                            renderInput={autocompleteRender({label: "Mobile Zones", fullWidth: true, placeholder: "Select Mobile Zones"})}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <Autocomplete
+                            options={techniciansList}
+                            multiple
+                            ChipProps={{
+                                color: "primary",
+                                style: {borderRadius: 4},
+                                size: "small"
+                            }}
+                            disableCloseOnSelect
+                            onChange={handleTechniciansChange}
+                            getOptionLabel={i => i.fullName}
+                            isOptionEqualToValue={(o, v) => o.id === v.id}
+                            renderOption={autocompleteOptionsRender((e) => e.fullName)}
+                            loading={false}
+                            value={form.technicians}
+                            renderInput={autocompleteRender({label: "Technicians", fullWidth: true, placeholder: "Select Technicians"})}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <Autocomplete
+                            options={baysList}
+                            multiple
+                            ChipProps={{
+                                color: "primary",
+                                style: {borderRadius: 4},
+                                size: "small"
+                            }}
+                            disableCloseOnSelect
+                            onChange={handleBaysChange}
+                            getOptionLabel={i => i.name}
+                            isOptionEqualToValue={(o, v) => o.id === v.id}
+                            renderOption={autocompleteOptionsRender((e) => e.name)}
+                            loading={false}
+                            value={form.bays}
+                            renderInput={autocompleteRender({label: "Bays", fullWidth: true, placeholder: "Select Bays"})}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                        <Autocomplete
+                            options={transportations}
+                            multiple
+                            ChipProps={{
+                                color: "primary",
+                                style: {borderRadius: 4},
+                                size: "small"
+                            }}
+                            disableCloseOnSelect
+                            onChange={handleTransportationsChange}
+                            getOptionLabel={i => getTransportationOptionString(i.type)}
+                            isOptionEqualToValue={(o, v) => o.id === v.id}
+                            renderOption={autocompleteOptionsRender((e) => getTransportationOptionString(e.type))}
+                            loading={isTransportationLoading}
+                            value={transportationOptions}
+                            renderInput={autocompleteRender({label: "Transportation Options", fullWidth: true, placeholder: "Select Transportation Options"})}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <div style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
+                            <Button onClick={onOpen}
+                                    color="primary">
+                                Go To Employees Schedule
+                            </Button>
+                        </div>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <div style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
+                            <Label
+                                checked={form.isVisitCenter}
+                                onChange={() => onIsVisitCenterChange()}
+                                label={"For Visit Center Only"}
+                                labelPlacement="start"
+                                control={<Switch color="primary" />}
+                            />
+                        </div>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={props.onClose}>
-                Cancel
-            </Button>
-            <LoadingButton
-                onClick={handleSave}
-                loading={loading}
-                variant="contained"
-                color="primary"
-            >
-                Save
-            </LoadingButton>
-        </DialogActions>
-        <EmployeeSchedule open={isOpen} onClose={onClose}/>
-    </BaseModal>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={props.onClose} color="info">
+                    Cancel
+                </Button>
+                <LoadingButton
+                    onClick={handleSave}
+                    loading={loading}
+                    variant="contained"
+                    color="primary"
+                >
+                    Save
+                </LoadingButton>
+            </DialogActions>
+            <EmployeeSchedule open={isOpen} onClose={onClose}/>
+        </BaseModal>
+    );
 }

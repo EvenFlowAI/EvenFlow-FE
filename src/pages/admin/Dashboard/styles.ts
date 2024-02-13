@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     paper: {
         display: "flex",
         padding: theme.spacing(2),
@@ -27,7 +28,7 @@ export const useStyles = makeStyles(theme => ({
         textTransform: "uppercase",
         textAlign: "center",
         margin: 0,
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             fontSize: 14
         }
     },
@@ -43,21 +44,21 @@ export const useStyles = makeStyles(theme => ({
         "&:hover": {
             color: theme.palette.primary.dark
         },
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             alignSelf: "center"
         }
     },
     address: {
         fontSize: 18,
         color: theme.palette.text.disabled,
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             textAlign: "center"
         }
     },
     countWrapper: {
         display: "flex",
         justifyContent: "space-around",
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('md')]: {
             flexWrap: "wrap",
             "&>*": {
                 textAlign: "center",

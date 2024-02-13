@@ -1,12 +1,9 @@
 import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
-import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {makeStyles} from "@material-ui/core/styles";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {AddCircleOutline} from "@material-ui/icons";
-import {IconButton, Button, Divider} from "@material-ui/core";
+import {AddCircleOutline} from "@mui/icons-material";
+import {Autocomplete, Button, Divider, IconButton} from "@mui/material";
 import OpsCode from "./parts/OpsCodeLabel/OpsCodeLabel";
-import {Autocomplete} from "@material-ui/lab";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import AssignOpsCode from "./parts/AssignOpsCodeModal/AssignOpsCodeModal";
 import AddOpsCode from "../../../../components/modals/admin/AddOpsCode/AddOpsCode";
@@ -26,7 +23,8 @@ import {INewPackage, IUpdatedPackage, TAssignedRequest} from "../../../../store/
 import AddComplimentary from "./parts/AddComplimentaryModal/AddComplimentaryModal";
 import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
 import {
-    loadAllAssignedServiceRequests, loadUpsellServiceRequests,
+    loadAllAssignedServiceRequests,
+    loadUpsellServiceRequests,
 } from "../../../../store/reducers/serviceRequests/actions";
 import {loadEngineType, loadMileage} from "../../../../store/reducers/vehicleDetails/actions";
 import Mileage from "./parts/Mileage/Mileage";
@@ -34,189 +32,14 @@ import AssignedOpsCodes from "./parts/AssignedOpsCodes/AssignedOpsCodes";
 import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
 import EngineTypes from "./parts/EngineTypes/EngineTypes";
 import AddUpsellToPackageModal from "./parts/AddUpsellToPackageModal/AddUpsellToPackageModal";
-import {getYearOptions} from "../../../../utils/utils";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useAutocompleteStyles, useStyles} from "./styles";
+import {IVehiclesData, TModalProps} from "./types";
+import {criteriaOptions, initialValues, yearOptions} from "./constants";
 
-
-type TModalProps = DialogProps & {
-    isEditing?: boolean;
-};
-
-interface IVehiclesData {
-    yearFrom: string;
-    yearTo: string;
-    customerCriteria: ECustomerCriteria;
-    isApplyBusinessRules?: boolean;
-}
-
-const baseWrapper = {
-    display: "flex",
-    justifyContent: 'space-between',
-    alignItems: 'center',
-}
-
-const useStyles = makeStyles(() => ({
-    formWrapper: {
-       ...baseWrapper,
-        '& .MuiAutocomplete-root': {
-            width: '47%',
-        }
-    },
-    addExisting: {
-        display: "flex",
-        alignItems: 'center',
-        color: '#7898FF',
-        fontSize: 12,
-        marginBottom: 30,
-    },
-    wideButton: {
-        // width: '100%',
-        color: '#7898FF',
-        border: '1px solid #7898FF',
-        borderRadius: 0,
-        marginBottom: 16,
-        fontSize: 12,
-    },
-    redButton: {
-        width: '100%',
-        color: '#7898FF',
-        border: '1px solid red',
-        borderRadius: 0,
-        marginBottom: 16,
-        fontSize: 12,
-    },
-    label: {
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        fontSize: 12,
-        marginBottom: 10,
-    },
-    btnsWrapper: {
-        ...baseWrapper,
-
-        '& > button:not(:first-child)': {
-            marginLeft: 12,
-        },
-        '& > button': {
-            fontSize: 12,
-        }
-    },
-    opsCodesWrapper: {
-        height: 124,
-        display: 'flex',
-        alignItems: 'start',
-        alignContent: 'start',
-        justifyContent: 'stretch',
-        flexWrap: 'wrap',
-        overflowY: 'auto',
-        marginBottom: 16,
-        background: '#F7F8FB',
-        color: '#B8B9BF',
-        padding: '6px 12px',
-    },
-    emptyOpsCodes: {
-        height: 124,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: "center",
-        overflowY: 'auto',
-        marginBottom: 16,
-        background: '#F7F8FB',
-        color: '#B8B9BF',
-    },
-    errorOpsCodes: {
-        height: 124,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: "center",
-        overflowY: 'auto',
-        marginBottom: 16,
-        background: '#F7F8FB',
-        color: '#B8B9BF',
-        border: '1px solid red'
-    },
-    fullWidth: {
-        '& .MuiInputBase-root': {
-            width: '100%',
-        }
-    },
-    contentWrapper: {
-        padding: 20,
-    },
-    iconPlus: {
-        marginLeft: -9,
-        '& .MuiSvgIcon-root': {
-            fill: '#7898FF',
-        }
-    },
-    checkbox: {
-        padding: '9px 0',
-    },
-    twoFieldsWrapper: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        columnGap: 8,
-        '& .MuiAutocomplete-root': {
-            width: '100%',
-        }
-    },
-    wrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-    cancelButton: {
-        color: '#9FA2B4',
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-    },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        }
-    },
-    applyRulesWrapper: {
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    applyText: {
-        marginLeft: 5,
-        fontWeight: 'bold',
-    }
-}))
-
-const useAutocompleteStyles = makeStyles(() => ({
-    clearIndicator: {
-        width: 0,
-    }
-}))
-
-const criteriaOptions = Object.keys(ECustomerCriteria).filter(key => Number.isNaN(+key));
-const yearOptions = getYearOptions();
-
-const initialValues = {
-    mileageFrom: '',
-    mileageTo: '',
-    yearFrom: '',
-    yearTo: '',
-    customerCriteria: ECustomerCriteria.Any,
-    isApplyBusinessRules: false,
-}
-
-const AddPackageModal: React.FC<TModalProps> = ({ isEditing, ...props}) => {
+const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TModalProps>>> = ({ isEditing, ...props}) => {
     const { packages, currentPackage, isPackageLoading } = useSelector((state: RootState) => state.packages);
     const { allAssignedList, intervalUpsellList } = useSelector((state: RootState) => state.serviceRequests);
     const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
@@ -243,8 +66,8 @@ const AddPackageModal: React.FC<TModalProps> = ({ isEditing, ...props}) => {
     const {isOpen: isComplimentaryOpen, onOpen: onComplimentaryOpen, onClose: onComplimentaryClose} = useModal();
     const {isOpen: isExistingOpen, onOpen: onExistingOpen, onClose: onExistingClose} = useModal();
 
-    const classes = useStyles();
-    const autoCompleteStyles = useAutocompleteStyles();
+    const { classes } = useStyles();
+    const { classes: autoCompleteStyles } = useAutocompleteStyles();
     const dispatch = useDispatch();
     const showError = useException();
 
@@ -313,7 +136,6 @@ const AddPackageModal: React.FC<TModalProps> = ({ isEditing, ...props}) => {
         setFormIsChecked(false);
         setPackageName(e.target.value);
     }, [])
-
 
     const onFormFieldChange = useCallback(
         (fieldName: keyof IVehiclesData) =>
@@ -443,7 +265,7 @@ const AddPackageModal: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                     })}
 
                     <div className={classes.addExisting}>
-                        <IconButton onClick={onExistingOpen} className={classes.iconPlus}>
+                        <IconButton onClick={onExistingOpen} className={classes.iconPlus} size="large">
                             <AddCircleOutline/>
                         </IconButton>
                         <span> Add Existing Maintenance Package</span>
@@ -540,7 +362,7 @@ const AddPackageModal: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                                 disableClearable
                                 options={yearOptions}
                                 disableCloseOnSelect
-                                getOptionSelected={(option, value) => option.toLowerCase() === value.toLowerCase()}
+                                isOptionEqualToValue={(option, value) => option.toLowerCase() === value.toLowerCase()}
                                 value={vehiclesData?.yearFrom}
                                 onChange={onFormFieldChange('yearFrom')}
                                 renderInput={autocompleteRender({
@@ -554,7 +376,7 @@ const AddPackageModal: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                                 options={yearOptions}
                                 disableClearable
                                 disableCloseOnSelect
-                                getOptionSelected={(option, value) => option.toLowerCase() === value.toLowerCase()}
+                                isOptionEqualToValue={(option, value) => option.toLowerCase() === value.toLowerCase()}
                                 value={vehiclesData?.yearTo}
                                 onChange={onFormFieldChange('yearTo')}
                                 renderInput={autocompleteRender({
@@ -569,7 +391,7 @@ const AddPackageModal: React.FC<TModalProps> = ({ isEditing, ...props}) => {
                             classes={autoCompleteStyles}
                             disableClearable
                             options={criteriaOptions}
-                            getOptionSelected={(option, value) => option === value}
+                            isOptionEqualToValue={(option, value) => option === value}
                             disabled={!isApplyBusinessRules}
                             value={vehiclesData?.customerCriteria ? ECustomerCriteria[vehiclesData.customerCriteria].toString() : ECustomerCriteria[ECustomerCriteria.Any]}
                             onChange={onFormFieldChange('customerCriteria')}

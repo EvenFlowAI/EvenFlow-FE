@@ -1,6 +1,8 @@
-import {TableRow as TR, withStyles} from "@material-ui/core";
+import { TableRow as TR } from "@mui/material";
 
-export const TableRow = withStyles(theme => ({
+import { withStyles } from 'tss-react/mui';
+
+export const TableRow = withStyles(TR, theme => ({
     root: {
         "&:nth-child(2n) .MuiTableCell-root": {
             backgroundColor: "#F2F3F7"
@@ -13,4 +15,4 @@ export const TableRow = withStyles(theme => ({
             borderBottom: `1px solid ${theme.palette.divider}`
         }
     }
-}))(TR);
+}));

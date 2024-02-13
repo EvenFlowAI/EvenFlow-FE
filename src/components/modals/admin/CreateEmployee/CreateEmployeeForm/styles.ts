@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useMultipleAutocompleteStyles = makeStyles(() => ({
+// 
+export const useMultipleAutocompleteStyles = makeStyles()(() => ({
     tag: {
         display: 'flex',
         alignItems: 'center',
@@ -22,4 +23,4 @@ export const useMultipleAutocompleteStyles = makeStyles(() => ({
         padding: 0,
         paddingRight: 0,
     },
-}))
+}));

@@ -4,18 +4,19 @@ import {RootState} from "../../../../store/rootReducer";
 import {loadRepairHistory} from "../../../../store/reducers/enhancedCustomerSearch/actions";
 import {BaseModal, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {DialogProps} from "../../BaseModal/types";
-import {Button, Divider, Table, TableBody, TableHead, TableRow} from "@material-ui/core";
-import moment from "moment";
+import {Button, Divider, Table, TableBody, TableHead, TableRow} from "@mui/material";
 import {Loading} from "../../../wrappers/Loading/Loading";
 import classnames from 'classnames';
 import {NoData} from "../../../wrappers/NoData/NoData";
 import {HCell, TCell, useStyles} from "./styles";
+import dayjs from "dayjs";
 
-const VehicleRepairHistory: React.FC<DialogProps & {vehicleId: string|number, customerId: number|string}> = ({customerId, vehicleId, open, onClose}) => {
+const VehicleRepairHistory: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {vehicleId: string|number, customerId: number|string}>>> = ({customerId, vehicleId, open, onClose}) => {
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {repairHistoryLoading, repairHistory} = useSelector((state: RootState) => state.customers);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (customerId && vehicleId && open) {
@@ -75,7 +76,7 @@ const VehicleRepairHistory: React.FC<DialogProps & {vehicleId: string|number, cu
                                             {item.number ? `#${item.number}` : ''}
                                         </div>
                                         <div className={classnames(classes.titleNonUpperCase, classes.padding)}>
-                                            {moment(item.date.split('T')[0]).format('dddd, MMMM DD, YYYY')}
+                                            {dayjs(item.date.split('T')[0]).format('dddd, MMMM DD, YYYY')}
                                         </div>
                                     </div>
                                     <div className={classes.padding}>

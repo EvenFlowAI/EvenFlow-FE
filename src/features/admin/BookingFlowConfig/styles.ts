@@ -1,6 +1,6 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     switchCell: {
         fontSize: "12px !important",
         padding: "2px 12px !important"
@@ -8,13 +8,13 @@ export const useStyles = makeStyles(theme => ({
     tableWrapper: {
         width: "100%",
         "& .MuiTableCell-root": {
-            [theme.breakpoints.down("xs")]: {
+            [theme.breakpoints.down('sm')]: {
                 fontSize: "12px !important"
             }
         }
     },
     headerCell: {
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: "12px !important"
         }
     },

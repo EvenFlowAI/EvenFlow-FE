@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
+import {Button} from "@mui/material";
 import {IHoliday} from "../../../../store/reducers/holidays/types";
 import {THolidayForm} from "../types";
 import {HolidayForm} from "../AddHolidayForm/AddHolidayForm";
@@ -12,6 +11,8 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
+import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
 
 const initialForm: THolidayForm = {
     date: null,
@@ -19,7 +20,7 @@ const initialForm: THolidayForm = {
     description: ""
 }
 
-export const AddHolidayModal: React.FC<DialogProps<IHoliday>> = ({onAction, payload, ...props}) => {
+export const AddHolidayModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IHoliday>>>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<THolidayForm>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
@@ -31,7 +32,11 @@ export const AddHolidayModal: React.FC<DialogProps<IHoliday>> = ({onAction, payl
             if (!payload) {
                 setForm(initialForm);
             } else {
-                setForm({...initialForm, ...payload});
+                setForm({
+                    ...initialForm,
+                    ...payload,
+                    date: dayjs(payload.date)
+                });
             }
         }
     }, [props.open, payload]);
@@ -43,7 +48,7 @@ export const AddHolidayModal: React.FC<DialogProps<IHoliday>> = ({onAction, payl
             setForm({...form, [e.target.name]: e.target.value});
         }
     }
-    const handleDateChange = (date: MaterialUiPickersDate) => {
+    const handleDateChange = (date: TParsableDate) => {
         setForm({...form, date});
     }
     const handleCheck = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -92,7 +97,7 @@ export const AddHolidayModal: React.FC<DialogProps<IHoliday>> = ({onAction, payl
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={props.onClose} color="info">Cancel</Button>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave}

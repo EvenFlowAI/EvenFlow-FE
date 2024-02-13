@@ -1,8 +1,8 @@
 import React, {Dispatch, SetStateAction} from 'react';
-import {Input} from "@material-ui/core";
+import {Input} from "@mui/material";
 import {IntervalUpsellAndOptions} from "../IntervalUpsellAndOptions/IntervalUpsellAndOptions";
 import {ESegmentTitle, IPackageById} from "../../../../../api/types";
-import {Edit} from "@material-ui/icons";
+import {Edit} from "@mui/icons-material";
 import {TRequestRow, TCellData} from "../../types";
 import {usePackageAccordionStyles} from "../../styles";
 import {defaultUpsellTitle} from "../../constants";
@@ -17,7 +17,7 @@ type TUpsellTitleProps = {
     setPackageData: Dispatch<SetStateAction<IPackageById|null>>;
 }
 
-const Upsells: React.FC<TUpsellTitleProps> = ({
+const Upsells: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUpsellTitleProps>>> = ({
                                                   isUpsellNameEdit,
                                                   packageData,
                                                   setUpsellNameEdit,
@@ -25,7 +25,7 @@ const Upsells: React.FC<TUpsellTitleProps> = ({
                                                   onUpsellClick,
                                                   setPackageData,
                                               }) => {
-    const classes = usePackageAccordionStyles();
+    const { classes  } = usePackageAccordionStyles();
     const showError = useException();
     const upsellTitle = packageData?.segmentTitles?.find(el => el.type === ESegmentTitle.IntervalUpsell)
 

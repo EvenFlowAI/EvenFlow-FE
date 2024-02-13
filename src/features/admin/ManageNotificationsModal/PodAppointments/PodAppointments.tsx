@@ -1,9 +1,9 @@
 import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Button, Divider, IconButton} from "@material-ui/core";
+import {Button, Divider, IconButton} from "@mui/material";
 import {DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
 import {IPodShort} from "../../../../store/reducers/pods/types";
 import {ReactComponent as PlusIcon} from "../../../../assets/img/plus.svg";
@@ -22,7 +22,7 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changesState, onClose}) => {
+const PodAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<TNotificatonsProps>>> = ({setChangesState, changesState, onClose}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);
     const {shortPodsList, podsLoading} = useSelector((state: RootState) => state.pods);
     const {podNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
@@ -36,7 +36,7 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
     const {askConfirm} = useConfirm();
     const showError = useException();
     const showMessage = useMessage();
-    const classes = useNotificationStyles();
+    const { classes  } = useNotificationStyles();
     const currentPodData = useMemo(() => allPodData.find(el => el.id === selectedPod?.id), [allPodData, selectedPod])
 
     useEffect(() => {
@@ -164,6 +164,7 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
                             options={shortPodsList}
                             fullWidth
                             disabled={loading || podsLoading || isLoading}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
                             getOptionLabel={i => i.name}
                             value={selectedPod}
                             onChange={onPodChange}
@@ -175,9 +176,11 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
                         />
                         <div className={classes.selectWrapper}>
                             <Autocomplete
+                                className={classes.autocomplete}
                                 options={usersShort}
                                 disabled={loading || podsLoading || isLoading}
                                 fullWidth
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
                                 getOptionLabel={i => i.fullName}
                                 value={currentEmployee}
                                 onChange={onEmployeeChange}
@@ -203,7 +206,8 @@ const PodAppointments: React.FC<TNotificatonsProps> = ({setChangesState, changes
                                     <div>{item.email}</div>
                                     <IconButton
                                         onClick={() => deleteEmployee(item.id)}
-                                        disabled={loading || podsLoading || isLoading}>
+                                        disabled={loading || podsLoading || isLoading}
+                                        size="large">
                                         <DeleteIcon/>
                                     </IconButton>
                                 </div>

@@ -1,8 +1,8 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {Table} from "../../../../components/tables/Table/Table";
 import {IEmployee} from "../../../../store/reducers/employees/types";
-import {IconButton, Menu, MenuItem} from "@material-ui/core";
-import {MoreHoriz, Visibility} from "@material-ui/icons";
+import {IconButton, Menu, MenuItem} from "@mui/material";
+import {MoreHoriz, Visibility} from "@mui/icons-material";
 import {TableAvatar} from "../../../../components/wrappers/TableAvatar/TableAvatar";
 import {IOrder, Roles, TableRowDataType, TCallback} from "../../../../types/types";
 import {
@@ -51,14 +51,14 @@ type TProps = {
     onOpen: TCallback;
 }
 
-const EmployeesTable:React.FC<TProps> = ({editedItem, setEditedItem, onOpen}) => {
-    const [data, isLoading, count,  order, searchTerm] = useSelector((state: RootState) => [
-        state.employees.employeesList,
-        state.employees.loading,
-        state.employees.paging.numberOfRecords,
-        state.employees.order,
-        state.employees.searchTerm,
-    ]);
+const EmployeesTable:React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({editedItem, setEditedItem, onOpen}) => {
+    const {
+        employeesList,
+        loading,
+        paging: {numberOfRecords},
+        order,
+        searchTerm
+    } = useSelector(({employees}: RootState) => employees);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const {selectedSC} = useSCs();
     const currentUser = useCurrentUser();
@@ -139,22 +139,22 @@ const EmployeesTable:React.FC<TProps> = ({editedItem, setEditedItem, onOpen}) =>
     return (
         <>
             <Table<IEmployee>
-                data={data}
+                data={employeesList}
                 order={order.orderBy}
                 isAscending={order.isAscending}
                 onSort={handleOrder}
                 noDataTitle="No employees present"
-                isLoading={isLoading}
+                isLoading={loading}
                 rowData={rowData}
                 onChangePage={changePage}
                 onChangeRowsPerPage={changeRowsPerPage}
-                count={count}
+                count={numberOfRecords}
                 page={pageIndex}
                 rowsPerPage={pageSize}
                 startActions={startActions}
                 index="id"
                 actions={viewActions}
-                hidePagination={count < 11}
+                hidePagination={numberOfRecords < 11}
             />
             <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
                 <MenuItem onClick={editEmployee}>Edit</MenuItem>

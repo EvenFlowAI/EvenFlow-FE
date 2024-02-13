@@ -4,7 +4,8 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import {List, TitleWrapper} from "./styles";
+import {List, ServiceItem, TitleWrapper} from "./styles";
+import {ConfirmationItemWrapper} from "../../../../../components/styled/ConfirmationItemWrapper";
 
 const ServiceRequests = () => {
     const {appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
@@ -15,7 +16,7 @@ const ServiceRequests = () => {
     }, [serviceTypeOption, serviceValetAppointment, appointment])
 
     return currentAppointment?.serviceRequestPrices?.length
-        ? <div>
+        ? <ConfirmationItemWrapper>
             <TitleWrapper>
                 <AppointmentConfirmationTitle>{t("Service Requests")}</AppointmentConfirmationTitle>
             </TitleWrapper>
@@ -23,18 +24,18 @@ const ServiceRequests = () => {
                 {
                     serviceTypeOption?.type === EServiceType.PickUpDropOff
                         ? serviceValetAppointment?.serviceRequestPrices?.map(item => (
-                            <li className="service-item" key={item.requestName}>
+                            <ServiceItem key={item.requestName}>
                                 {item.requestName.includes("Going") ? t("My Description of Needs") : item.requestName}
-                            </li>
+                            </ServiceItem>
                         ))
                         : appointment?.serviceRequestPrices?.map(item => (
-                            <li className="service-item" key={item.requestName}>
+                            <ServiceItem key={item.requestName}>
                                 {item.requestName.includes("Going") ? t("My Description of Needs") : item.requestName}
-                            </li>
+                            </ServiceItem>
                         ))
                 }
             </List>
-        </div>
+        </ConfirmationItemWrapper>
         : null;
 };
 

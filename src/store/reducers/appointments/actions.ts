@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IAppointment, ILoadedVehicle, IPackageAppointments} from "../../../api/types";
+import {IAppointment, IPackageAppointments, IVehicleForRequest} from "../../../api/types";
 import {IAppointmentsRequest, ICheckPodRequest, TScheduler, TServiceBook} from "./types";
 import {AppThunk, IPageRequest, TArgCallback} from "../../../types/types";
 import {API} from "../../../api/api";
@@ -46,7 +46,7 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
 
     const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
 
-    const vehicle: ILoadedVehicle = {
+    const vehicle: IVehicleForRequest = {
         ...(appointmentFrame.selectedVehicle ?? {}),
         engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
         model: model ?? "",

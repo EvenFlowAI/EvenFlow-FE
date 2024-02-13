@@ -1,15 +1,15 @@
 import React from 'react';
 import {IEmployee} from "../../../../store/reducers/employees/types";
 import {getInitials} from "../../../../utils/utils";
-import {Avatar} from "@material-ui/core";
+import {Avatar} from "@mui/material";
 import {useStyles} from "./styles";
 
 type TProps = {
     employee: IEmployee;
 }
 
-export const NameCell: React.FC<TProps> = ({employee}) => {
-    const classes = useStyles();
+export const NameCell: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({employee}) => {
+    const { classes  } = useStyles();
     return (
         <div className={classes.wrapper}>
             <Avatar src={employee.avatarPath}>{getInitials(employee.fullName)}</Avatar>

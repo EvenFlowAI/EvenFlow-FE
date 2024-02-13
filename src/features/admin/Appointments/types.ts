@@ -1,7 +1,6 @@
 import {TScheduler, TServiceBook} from "../../../store/reducers/appointments/types";
 import {EReportingStatus, IAppointment} from "../../../api/types";
-import moment, {Moment} from "moment/moment";
-import {IPageRequest} from "../../../types/types";
+import {IPageRequest, TParsableDate} from "../../../types/types";
 
 export type TView = "calendar" | "list";
 
@@ -10,7 +9,7 @@ export type TFilters = {
     serviceBook: TServiceBook|null;
     scheduler: TScheduler|null;
     reportingStatus: EReportingStatus | '' | unknown;
-    date: moment.Moment | null;
+    date: TParsableDate;
     scId: number|null;
     pageData: IPageRequest;
 }
@@ -25,7 +24,7 @@ export const views: TViewButton[] = [
 export type TDayType = "prev" | "cur" | "next"
 
 export type TDay = {
-    date: Moment,
+    date: TParsableDate,
     day: number,
     type: TDayType
 }

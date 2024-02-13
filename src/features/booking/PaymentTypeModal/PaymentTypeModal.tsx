@@ -1,6 +1,6 @@
 import React from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch} from "react-redux";
 import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -11,8 +11,8 @@ type TPaymentTypeProps = DialogProps & {
     onNo: () => void;
 }
 
-const PaymentTypeModal: React.FC<TPaymentTypeProps> = (props) => {
-    const classes = useStyles();
+const PaymentTypeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPaymentTypeProps>>> = (props) => {
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const {t} = useTranslation();
 

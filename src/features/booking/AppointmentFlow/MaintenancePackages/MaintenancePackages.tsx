@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
@@ -45,7 +45,7 @@ type TPackageSelectionProps = {
     onAddServices: () => void;
 }
 
-export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({onBack, onNext, onAddServices}) => {
+export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPackageSelectionProps>>> = ({onBack, onNext, onAddServices}) => {
     const {scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {
@@ -65,7 +65,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({onBack, o
     const theme = useTheme();
     const { isOpen, onOpen, onClose } = useModal();
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
-    const isXs = useMediaQuery(theme.breakpoints.down('xs'));
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const {t} = useTranslation();
     const showError = useException();
 
@@ -76,7 +76,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({onBack, o
         [loadedPackages]);
 
     const dispatch = useDispatch();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
 
     useEffect(() => {
         setLocalSelectedPackage(selectedPackage);

@@ -1,8 +1,9 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     root: {
-        padding: `0 ${theme.spacing(4)}px ${theme.spacing(4)}px`,
+        padding: `0 ${theme.spacing(4)} ${theme.spacing(4)}`,
         display: "flex",
         flexFlow: "column nowrap",
         alignItems: "center",

@@ -9,9 +9,9 @@ type TAssignedOpsCodesProps = {
     codes: TAssignedRequest[];
 }
 
-const AssignedOpsCodes:React.FC<TAssignedOpsCodesProps> = ({codes}) => {
+const AssignedOpsCodes:React.FC<React.PropsWithChildren<React.PropsWithChildren<TAssignedOpsCodesProps>>> = ({codes}) => {
     const {currentPackage} = useSelector((state: RootState) => state.packages);
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const getOptionName = (option: string) => {
         const optionType = Number(option);

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {TabContext, TabPanel} from "@mui/lab";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/styled/Tabs";
-import {Tab} from "@material-ui/core";
+import {Tab} from "@mui/material";
 import ZoneRouting from "../../../features/admin/ZoneRouting/ZoneRouting";
 import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
 import {useDispatch} from "react-redux";

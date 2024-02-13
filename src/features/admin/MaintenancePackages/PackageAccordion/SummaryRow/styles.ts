@@ -1,7 +1,9 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {FormControlLabel, styled, Theme, withStyles} from "@material-ui/core";
+import { makeStyles } from 'tss-react/mui';
+import { FormControlLabel, styled } from "@mui/material";
 
-export const useStyles = makeStyles({
+import { withStyles } from 'tss-react/mui';
+
+export const useStyles = makeStyles()({
     summaryText: {
         display: 'flex',
         alignItems: 'center',
@@ -13,16 +15,18 @@ export const useStyles = makeStyles({
         display: 'grid',
         gridTemplateColumns: '1fr 1fr 1fr',
     },
-})
+});
 
-export const RowWrapper = styled('div')<Theme, {toggle: number}>(({theme, toggle}) => ({
+export const RowWrapper = styled('div', {
+    shouldForwardProp: (prop) => prop !== "toggle"
+})<{toggle: number}>(({toggle}) => ({
     width: '100%',
     display: 'grid',
     gridTemplateColumns: toggle ? '3fr 2fr 2fr' : '5fr 2fr',
-    gridGap: 16,
+    gap: 16,
 }));
 
-export const Label = withStyles({
+export const Label = withStyles(FormControlLabel, {
     root: {
         justifyContent: "flex-end",
         marginLeft: 0,
@@ -35,4 +39,4 @@ export const Label = withStyles({
         textTransform: "uppercase",
         color: "#3855F3",
     }
-})(FormControlLabel);
+});

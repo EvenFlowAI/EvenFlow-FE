@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Box} from "@material-ui/core";
+import {Button, Box} from "@mui/material";
 import {TView} from "../types";
 import {NavLink} from "react-router-dom";
 import {encodeSCID} from "../../../../utils/utils";
@@ -17,10 +17,10 @@ type TProps = {
     handleChangeView: (type: TView) => () => void;
 }
 
-export const AppointmentActions: React.FC<TProps> = ({handleChangeView, selectedView, searchTerm, handleSearchChange, onSearch, onFilterOpen}) => {
-    const classes = useStyles();
+export const AppointmentActions: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({handleChangeView, selectedView, searchTerm, handleSearchChange, onSearch, onFilterOpen}) => {
+    const { classes  } = useStyles();
     const {selectedSC} = useSCs();
-    const encoded = encodeSCID(selectedSC?.id??0);
+    const encoded = encodeSCID(selectedSC?.id ?? 0);
     const url = Routes.EndUser.Welcome + "/" + encoded + "?frame=1";
 
     return <Box>

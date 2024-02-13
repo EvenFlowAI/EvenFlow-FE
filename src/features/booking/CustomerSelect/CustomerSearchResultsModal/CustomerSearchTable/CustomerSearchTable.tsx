@@ -16,7 +16,7 @@ import {
     TableHead,
     TablePagination,
     TableRow, TableSortLabel,
-} from "@material-ui/core";
+} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {IAddressData, ICustomerLoadedData} from "../../../../../api/types";
 import {
@@ -47,6 +47,8 @@ import {HtmlTooltip, IconsBlock, useStyles} from "./styles";
 import {useModal} from "../../../../../hooks/useModal/useModal";
 import {usePagination} from "../../../../../hooks/usePaginations/usePaginations";
 import {useException} from "../../../../../hooks/useException/useException";
+import {useConfirm} from "../../../../../hooks/useConfirm/useConfirm";
+import {useTranslation} from "react-i18next";
 
 type TCustomerSearchTableProps = {
     onClose: TCallback;
@@ -56,23 +58,28 @@ type TCustomerSearchTableProps = {
     selectedColumns: TColumn[];
 }
 
-const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColumns, onClose, loadData, isNewVehicleMode, redirect}) => {
+const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCustomerSearchTableProps>>> = ({selectedColumns, onClose, loadData, isNewVehicleMode, redirect}) => {
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+
     const [data, setData] = useState<ICustomerWithPhones[]>([]);
     const [sorting, setSorting] = useState<TSortOrder>({isAscending: true, order: null});
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<ICustomerWithPhones|null>(null);
     const [offset, setOffset] = useState<TOffset>(initialColumnOffset);
+
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
     const {onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm} = useModal();
-    const classes = useStyles({columnsCount: selectedColumns.length});
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory();
+    const {t} = useTranslation();
+    const {askConfirm} = useConfirm();
+
     const [currentFirstItemIndex, currentLastItemIndex] = useMemo(() => {
         return [pageData.pageIndex * pageData.pageSize, (pageData.pageIndex + 1) * pageData.pageSize]
     }, [pageData]);
@@ -228,16 +235,35 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
         setEditingElement(null);
         setEdit(false);
     }
-
-    const onSaveInfo = async () => {
-        if (editingElement) {
-            dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err)));
-        }
+    const checkPhonesChanged = (): boolean => {
+        const currentCustomer = customers.find(customer => {
+            return editingElement?.vehicleId === customer.vehicleId && editingElement?.customerId === customer.customerId
+        });
+        if (!currentCustomer) return false;
+        return currentCustomer?.otherPhone !== editingElement?.otherPhone
+            || currentCustomer?.workPhone !== editingElement?.workPhone
+            || currentCustomer?.homePhone !== editingElement?.homePhone
+            || currentCustomer?.cellPhone !== editingElement?.cellPhone
     }
 
     const onCancelEditing = () => {
         setData(customers.slice().sort(sortCustomers))
         setEdit(false)
+    }
+
+    const onSaveInfo = async () => {
+        if (editingElement) {
+            if (checkPhonesChanged()) {
+                askConfirm({
+                    isRemove: false,
+                    title: t("Please confirm the changes you made to the Customer Profile"),
+                    onConfirm: () => dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err))),
+                    onCancel: onCancelEditing
+                })
+            } else {
+                dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err)));
+            }
+        }
     }
 
     const handleChangePage = async (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
@@ -302,12 +328,14 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
 
     return isLoading
         ? <div className={classes.emptyWrapper}><Loading/></div>
-        : <div style={{overflow: 'auto'}}>
+        : <div style={{overflowX: 'auto'}}>
             <div className={classes.tableWrapper}>
-                <Table className={classes.wrapper}>
+                <Table
+                    className={classes.wrapper}
+                    style={{width: selectedColumns.length > 10 ? selectedColumns.length * 150 : 1550}}>
                     <TableHead>
                         <TableRow>
-                            <TableCell className={classes.stickyTHeadCell}/>
+                            <TableCell className={classes.stickyTHeadCell} key="emptyCell"/>
                             {selectedColumns.map(({name, order}, index) => {
                                 return <TableCell
                                     key={name}
@@ -360,7 +388,7 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                             }}/>
                             {selectedColumns
                                 .slice(0, selectedColumns.length - 2)
-                                .map(() => <TableCell className={classes.bodyCell} width={150} style={{borderBottom: 0}}/>)}
+                                .map((_, index) => <TableCell className={classes.bodyCell} width={150} style={{borderBottom: 0}} key={index}/>)}
                         </TableRow>
                         {data.slice(currentFirstItemIndex, currentLastItemIndex).map((customer, index) =>
                             (<TableRow key={customer.vin + index}>
@@ -398,7 +426,8 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                                 <HtmlTooltip title="Create Appointment">
                                                     <IconButton
                                                         style={{padding: 4}}
-                                                        onClick={() => onCreateNewForCar(customer)}>
+                                                        onClick={() => onCreateNewForCar(customer)}
+                                                        size="large">
                                                         <Create/>
                                                     </IconButton>
                                                 </HtmlTooltip>
@@ -406,39 +435,38 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                                                     ? <HtmlTooltip title="Edit Appointment">
                                                         <IconButton
                                                             style={{padding: 4}}
-                                                            onClick={() => onUpdateAppForCar(customer)}>
+                                                            onClick={() => onUpdateAppForCar(customer)}
+                                                            size="large">
                                                             <Update/>
                                                         </IconButton>
                                                     </HtmlTooltip>
-                                                    : <IconButton style={{padding: 4}} disabled><EditDisabled/></IconButton>
+                                                    : <IconButton style={{padding: 4}} disabled size="large"><EditDisabled/></IconButton>
                                                 }
                                                 {customer.appointmentHashKey?.length
                                                     ? <HtmlTooltip title="Cancel Appointment">
                                                         <IconButton
                                                             style={{padding: 4}}
-                                                            onClick={() => onCancelAppointment(customer)}>
+                                                            onClick={() => onCancelAppointment(customer)}
+                                                            size="large">
                                                             <CancelApp/>
                                                         </IconButton>
                                                     </HtmlTooltip>
-                                                    : <IconButton style={{padding: 4}} disabled><CancelAppDisabled/></IconButton>
+                                                    : <IconButton style={{padding: 4}} disabled size="large"><CancelAppDisabled/></IconButton>
                                                 }
                                                 {customer.hasOrders
                                                     ? <HtmlTooltip title="View Repair History">
                                                         <IconButton
                                                             style={{padding: 4}}
-                                                            onClick={() => onViewRepairHistory(customer)}>
+                                                            onClick={() => onViewRepairHistory(customer)}
+                                                            size="large">
                                                             <Search/>
                                                         </IconButton>
                                                     </HtmlTooltip>
-                                                    : <IconButton
-                                                        style={{padding: 4}}
-                                                        disabled>
+                                                    : <IconButton style={{padding: 4}} disabled size="large">
                                                         <SearchDisabled/>
                                                     </IconButton>}
                                                 <HtmlTooltip title="Edit Customer Information">
-                                                    <IconButton
-                                                        style={{padding: 4}}
-                                                        onClick={() => onEditData(customer)}>
+                                                    <IconButton style={{padding: 4}} onClick={() => onEditData(customer)} size="large">
                                                         <Edit/>
                                                     </IconButton>
                                                 </HtmlTooltip>
@@ -578,11 +606,11 @@ const CustomerSearchTable: React.FC<TCustomerSearchTableProps> = ({selectedColum
                     component="div"
                     count={paging.numberOfRecords}
                     page={pageData.pageIndex}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRows}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRows}
                     rowsPerPage={pageData.pageSize}/>
                 : null }
-        </div>
+        </div>;
 };
 
 export default CustomerSearchTable;

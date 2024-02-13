@@ -4,8 +4,8 @@ import React, {useCallback, useMemo, useRef, useState} from "react";
 import {useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {setVehicle} from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import {Button, ButtonGroup, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper,} from "@material-ui/core";
-import {MoreVert} from "@material-ui/icons";
+import {Button, ButtonGroup, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper} from "@mui/material";
+import {MoreVert} from "@mui/icons-material";
 import {useStyles} from "./styles";
 
 type TCarActionProps = {
@@ -21,13 +21,13 @@ const options: string[] = [
     "Schedule New Appointment"
 ];
 
-const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, clearData, onNext, onSelectCar}) => {
+const CarCardAction: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCarActionProps>>> = ({car, onAddNewAppointment, clearData, onNext, onSelectCar}) => {
     const [open, setOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState<number>(1);
     const anchorRef = useRef<HTMLDivElement|null>(null);
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const classes = useStyles()
+    const { classes  } = useStyles()
 
     const handleMenuItemClick = useCallback((event: any, index:number) => {
         setSelectedIndex(index);
@@ -35,7 +35,7 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
         onAddNewAppointment(car);
     }, [car]);
 
-    const handleClose = useCallback((event: React.MouseEvent<Document, MouseEvent>) => {
+    const handleClose = useCallback((event: MouseEvent | TouchEvent) => {
         if (anchorRef.current && anchorRef.current?.contains(event?.target as Node)) {
             return;
         }
@@ -81,7 +81,8 @@ const CarCardAction: React.FC<TCarActionProps> = ({car, onAddNewAppointment, cle
             anchorEl={anchorRef.current}
             placement={"bottom-end"}
             role="presentation"
-            transition disablePortal>
+            transition
+            disablePortal>
             {({ TransitionProps, placement }) => (
                 <Grow
                     {...TransitionProps}

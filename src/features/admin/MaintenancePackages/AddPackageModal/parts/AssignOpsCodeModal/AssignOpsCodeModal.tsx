@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, SetStateAction, Dispatch, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {Button, Radio} from "@material-ui/core";
+import {Button, Radio} from "@mui/material";
 import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {IServiceRequest} from "../../../../../../store/reducers/serviceRequests/types";
 import {RootState} from "../../../../../../store/rootReducer";
@@ -13,7 +13,7 @@ import {
     setNonSelectedPageData
 } from "../../../../../../store/reducers/serviceRequests/actions";
 
-import {Autocomplete} from "@material-ui/lab";
+import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../../../utils/autocompleteRenders";
 import {MaintenanceOptions} from "../../../constants";
 import {TAssignedRequest} from "../../../../../../store/reducers/packages/types";
@@ -40,7 +40,7 @@ const tableData: TableRowDataType<IServiceRequest>[] = [
     {header: "DESCRIPTION", val: el => el.description, width: '80%'},
 ]
 
-const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
+const AssignOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAssignOpsCodeModalProps>>> =
     ({
          selectedCodes,
          setSelectedCodes,
@@ -51,28 +51,21 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
          ...props}) => {
     const {selectedSC} = useSCs();
     const [selectedOption, setSelectedOption] = useState<TSelectedOption | null>(null);
-    const [
-        serviceList,
-        isLoading,
-        servicesCount,
-        search,
-        currentPackage,
-        nonSelectedPageData,
-    ] = useSelector((state: RootState) => [
-        state.serviceRequests.nonSelectedList,
-        state.serviceRequests.nonSelectedLoading,
-        state.serviceRequests.nonSelectedPaging.numberOfRecords,
-        state.serviceRequests.nonSelectedFilter.searchTerm,
-        state.packages.currentPackage,
-        state.serviceRequests.nonSelectedPageData
-    ]);
+        const {currentPackage} = useSelector((state: RootState) => state.packages)
+        const {
+            nonSelectedList,
+            nonSelectedLoading,
+            nonSelectedPageData,
+            nonSelectedPaging: {numberOfRecords},
+            nonSelectedFilter: {searchTerm}
+        } = useSelector((state: RootState) => state.serviceRequests)
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.serviceRequests.nonSelectedPageData,
         setNonSelectedPageData
     );
     const dispatch = useDispatch();
-    const classes = useStyles();
-    const inputClasses = useInputStyles();
+    const { classes  } = useStyles();
+    const { classes: inputClasses } = useInputStyles();
     const showError = useException();
 
     useEffect(() => {
@@ -169,7 +162,7 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
                    <Autocomplete
                         classes={inputClasses}
                         options={getOptions(currentPackage)}
-                        getOptionSelected={(option, value) => option.type === value.type}
+                        isOptionEqualToValue={(option, value) => option.type === value.type}
                         getOptionLabel={option => option.name}
                         onChange={onSelectOption}
                         renderInput={autocompleteRender({
@@ -182,21 +175,21 @@ const AssignOpsCodeModal: React.FC<TAssignOpsCodeModalProps> =
                     {currentPackage && selectedOption && isEditing && <div className={classes.selectedCode}>
                         Selected:  {getSelectedOpsCode(selectedOption)}
                     </div>}
-                    <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={search} />
+                    <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={searchTerm} />
                 </div>
                 <Table<IServiceRequest>
-                    data={serviceList}
+                    data={nonSelectedList}
                     index="id"
                     startActions={preActions}
                     compact
-                    hidePagination={servicesCount <= nonSelectedPageData.pageSize}
+                    hidePagination={numberOfRecords <= nonSelectedPageData.pageSize}
                     rowData={tableData}
-                    isLoading={isLoading}
+                    isLoading={nonSelectedLoading}
                     page={pageIndex}
                     rowsPerPage={pageSize}
                     onChangePage={changePage}
                     onChangeRowsPerPage={changeRowsPerPage}
-                    count={servicesCount}
+                    count={numberOfRecords}
                 />
             </DialogContent>
             <DialogActions>

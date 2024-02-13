@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const Wrapper = styled('ul')(({theme}) => ({
     listStyle: "none",
@@ -15,7 +15,7 @@ export const Wrapper = styled('ul')(({theme}) => ({
         fontSize: 18,
         textTransform: "none"
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         marginBottom: "auto"
     }
 }));

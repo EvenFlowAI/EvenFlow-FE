@@ -7,14 +7,14 @@ import {
     IWaitListSettings
 } from "./types";
 import {AppThunk} from "../../../types/types";
-import moment from "moment";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
 
 export const getOptimizationWindows = createAction<IOptimizationWindow[]>("OptimizationWindows/GetParams");
 export const loadOptimizationWindows = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
     const {data} = await Api.call<IOptimizationWindow[]>(
         Api.endpoints.OptimizationWindows.GetParams,
-        {params: {serviceCenterId, podId, day: moment().day()}}
+        {params: {serviceCenterId, podId, day: dayjs().day()}}
     );
     dispatch(getOptimizationWindows(data));
 }

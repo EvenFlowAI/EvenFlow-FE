@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+// 
+export const useStyles = makeStyles()({
     wrapper: {
         height: 300,
         display: 'flex',
@@ -15,4 +16,4 @@ export const useStyles = makeStyles({
     checkbox: {
         marginRight: 12
     },
-})
+});

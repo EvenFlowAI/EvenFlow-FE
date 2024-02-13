@@ -1,7 +1,8 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {lighten} from "@material-ui/core";
+import { makeStyles } from 'tss-react/mui';
+import {lighten} from "@mui/material";
 
-export const useStyles = makeStyles((theme) => ({
+// 
+export const useStyles = makeStyles()((theme) => ({
     listItem: {
         color: "#FFFFFF",
         textTransform: "uppercase",
@@ -41,4 +42,4 @@ export const useStyles = makeStyles((theme) => ({
             color: "#FFFFFF"
         },
     }
-}))
+}));

@@ -1,5 +1,5 @@
-import {styled} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import {styled} from "@mui/material";
+import { makeStyles } from 'tss-react/mui';
 
 export const Date = styled("h4")(({theme}) => ({
     fontSize: 19,
@@ -9,7 +9,8 @@ export const Date = styled("h4")(({theme}) => ({
     color: theme.palette.text.disabled
 }));
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     low: {
         color: "#00ADB8",
         "&.Mui-checked": {

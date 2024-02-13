@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useMultipleACStyles = makeStyles(() => ({
+// 
+export const useMultipleACStyles = makeStyles()(() => ({
     tag: {
         display: 'flex',
         alignItems: 'center',
@@ -22,9 +23,10 @@ export const useMultipleACStyles = makeStyles(() => ({
         padding: 5,
         paddingRight: 8,
     },
-}))
+}));
 
-export const useStyles = makeStyles(() => ({
+// 
+export const useStyles = makeStyles()(() => ({
     wrapper: {
         display: 'flex',
         flexDirection: 'column',
@@ -35,7 +37,8 @@ export const useStyles = makeStyles(() => ({
     },
     smallWrapper: {
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        gap: 16,
     },
     label: {
         textTransform: 'uppercase',
@@ -75,8 +78,9 @@ export const useStyles = makeStyles(() => ({
     },
 }));
 
-export const useAutocompleteStyles = makeStyles(() => ({
+// 
+export const useAutocompleteStyles = makeStyles()(() => ({
     clearIndicator: {
         width: 0,
     }
-}))
+}));

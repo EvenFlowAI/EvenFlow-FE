@@ -1,10 +1,10 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useDatePickerStyles = makeStyles(theme => ({
+export const useDatePickerStyles = makeStyles()(theme => ({
     label: {
         textTransform: "uppercase",
-        marginBottom: theme.spacing(.5),
-        fontWeight: theme.typography.fontWeightBold,
+        marginBottom: theme.spacing(.2),
+        fontWeight: 'bold',
         color: theme.palette.text.primary,
-    }
+    },
 }));

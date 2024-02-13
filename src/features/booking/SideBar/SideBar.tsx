@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
-import {Button, useMediaQuery, useTheme} from "@material-ui/core";
+import {Button, useMediaQuery, useTheme} from "@mui/material";
 import {
     setAdditionalServicesChosen,
     setSideBarActualSteps,
@@ -22,7 +22,7 @@ type TProps = {
     handleSetScreen: (screen: TScreen) => void;
 }
 
-export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
+export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({screen, handleSetScreen}) => {
     const {
         sideBarSteps,
         sideBarMenu,
@@ -35,7 +35,7 @@ export const SideBar: React.FC<TProps> = ({screen, handleSetScreen}) => {
     const {currentConfig, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const theme = useTheme();
     const dispatch = useDispatch();
-    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const {t} = useTranslation();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);

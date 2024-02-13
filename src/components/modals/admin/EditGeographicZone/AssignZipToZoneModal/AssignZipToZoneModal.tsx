@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {DialogProps} from "../../../BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
-import {Button, Divider, MenuItem, Select} from "@material-ui/core";
+import {Button, Divider, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {TReassignZip, TZipCode, TZone, TZonesServiceType} from "../../../../../store/reducers/mobileService/types";
 import {TextField} from "../../../../formControls/TextFieldStyled/TextField";
 import {assignZipToMobServiceZone} from "../../../../../store/reducers/mobileService/actions";
@@ -22,12 +22,12 @@ type TAssignZipToZoneProps = DialogProps & {
     zone?: TZone|null;
 }
 
-const AssignZipToZoneModal:React.FC<TAssignZipToZoneProps> = ({zip, zone, serviceType, ...props}) => {
+const AssignZipToZoneModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<TAssignZipToZoneProps>>> = ({zip, zone, serviceType, ...props}) => {
     const {zones: serviceValetZones, currentZone: currentValetZone, isLoading: isValetLoading} = useSelector((state: RootState) => state.serviceValet);
     const {zones: mobileServiceZones, currentZone: currentMobileZone, isLoading: isMobileLoading} = useSelector((state: RootState) => state.mobileService);
     const [selectedZone, setSelectedZone] = useState<TZone|null>(null);
     const [data, setData] = useState<TZone[]>([]);
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
@@ -65,10 +65,10 @@ const AssignZipToZoneModal:React.FC<TAssignZipToZoneProps> = ({zip, zone, servic
             }
         }
     }
-    const onChange = (e: React.ChangeEvent<{value: unknown}>) => {
+    const onChange = (e: SelectChangeEvent<number>) => {
         const selected = serviceType === 'serviceValet'
-            ? serviceValetZones.find(item => item.id === e.target.value as number)
-            : mobileServiceZones.find(item => item.id === e.target.value as number)
+            ? serviceValetZones.find(item => item.id === +e.target.value)
+            : mobileServiceZones.find(item => item.id === +e.target.value)
         if (selected) setSelectedZone(selected);
     }
 

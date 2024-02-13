@@ -1,12 +1,12 @@
 import React from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useStyles} from "./styles";
 
-const NoRecallsModal: React.FC<DialogProps & {handleNext : () => void}> = ({ open, onClose, handleNext }) => {
-    const classes = useStyles();
+const NoRecallsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {handleNext : () => void}>>> = ({ open, onClose, handleNext }) => {
+    const { classes  } = useStyles();
     const {t} = useTranslation();
 
     const onProceed = () => {

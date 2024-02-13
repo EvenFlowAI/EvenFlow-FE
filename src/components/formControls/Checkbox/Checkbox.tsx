@@ -1,8 +1,8 @@
 import React from 'react';
-import {Checkbox as MuiCheckbox, CheckboxProps} from "@material-ui/core";
-import {CheckBoxOutlined} from "@material-ui/icons";
+import {Checkbox as MuiCheckbox, CheckboxProps} from "@mui/material";
+import {CheckBoxOutlined} from "@mui/icons-material";
 
-const Checkbox: React.FC<CheckboxProps> = (props) => {
+const Checkbox: React.FC<React.PropsWithChildren<React.PropsWithChildren<CheckboxProps>>> = (props) => {
     return (
         <div>
             <MuiCheckbox

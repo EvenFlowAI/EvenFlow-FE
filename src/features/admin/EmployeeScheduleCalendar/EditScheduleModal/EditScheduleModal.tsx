@@ -5,21 +5,19 @@ import {
     Button,
     Grid,
     MenuItem,
-    Select,
+    Select, SelectChangeEvent,
     useMediaQuery,
     useTheme
-} from "@material-ui/core";
+} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import moment from "moment";
 import {IEmployee} from "../../../../store/reducers/employees/types";
 import {ISchedule, IScheduleForm, IScheduleForWeek} from "../../../../store/reducers/schedules/types";
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {timeSpanString} from "../../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {loadEmployeesSchedule, setEmployeesSchedule} from "../../../../store/reducers/schedules/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {CreateEmployee} from "../../../../components/modals/admin/CreateEmployee/CreateEmployee";
-import {Close} from "@material-ui/icons";
+import {Close, QueryBuilder} from "@mui/icons-material";
 import {API} from "../../../../api/api";
 import {TIds} from "../types";
 import {getRequestDate} from "../utils";
@@ -28,17 +26,19 @@ import {loadWeeklyHolidaysList} from "../../../../store/reducers/holidays/action
 import {getStartEndDates} from "../../../../utils/utils";
 import {TForm} from "./types";
 import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
-import {TimePicker} from "../../../../components/pickers/TimePicker/TimePicker";
 import {useModal} from "../../../../hooks/useModal/useModal";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
+import dayjs from "dayjs";
+import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
+import {TParsableDate} from "../../../../types/types";
 
 type TProps = DialogProps<ISchedule> & {
-    selectedDate: moment.Moment;
-    date: moment.Moment;
+    selectedDate: TParsableDate;
+    date: TParsableDate;
     employee: IEmployee;
     onEmployeeUpdate: (id: string) => void;
     recursiveId?: number;
@@ -46,7 +46,7 @@ type TProps = DialogProps<ISchedule> & {
     onClear: (t: keyof TIds) => void;
 }
 
-export const EditScheduleModal: React.FC<TProps> = ({selectedDate, date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
+export const EditScheduleModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({selectedDate, date, onClear, recursiveId, customId, employee, onEmployeeUpdate, onAction, payload, ...props}) => {
     const [saving, setSaving] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>({timeStart: null, timeEnd: null});
     const [isCleared, setCleared] = useState<boolean>(false);
@@ -60,19 +60,19 @@ export const EditScheduleModal: React.FC<TProps> = ({selectedDate, date, onClear
 
     const theme = useTheme();
     const {selectedSC} = useSCs();
-    const isXS = useMediaQuery(theme.breakpoints.down("xs"));
+    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         selectedSC && dispatch(loadWorkingDays(selectedSC.id))
-        dispatch(loadWeeklyHolidaysList(moment().startOf('week'), moment().endOf('week')))
+        dispatch(loadWeeklyHolidaysList(dayjs().startOf('week'), dayjs().endOf('week')))
     }, [selectedSC])
 
     useEffect(() => {
         if (props.open) {
             if (payload) {
                 setForm({
-                    timeStart: moment(payload.startAt, timeSpanString),
-                    timeEnd: moment(payload.finishAt, timeSpanString),
+                    timeStart: dayjs(payload.startAt, timeSpanString),
+                    timeEnd: dayjs(payload.finishAt, timeSpanString),
                     podId: payload.podId,
                 });
             } else {
@@ -87,11 +87,11 @@ export const EditScheduleModal: React.FC<TProps> = ({selectedDate, date, onClear
         props.onClose();
     }
 
-    const handleUpdate = (name: keyof TForm) => (date: MaterialUiPickersDate) => {
+    const handleUpdate = (name: keyof TForm) => (date: TParsableDate) => {
         setFormIsChecked(false);
-        setForm({...form, [name]: moment(date)});
+        setForm({...form, [name]: date});
     }
-    const handleSelectPod = (e: React.ChangeEvent<{value: unknown, name?: string}>) => {
+    const handleSelectPod = (e: SelectChangeEvent<number>) => {
         setFormIsChecked(false);
         setForm({...form, podId: e.target.value ? Number(e.target.value) : undefined});
     }
@@ -129,7 +129,7 @@ export const EditScheduleModal: React.FC<TProps> = ({selectedDate, date, onClear
             try {
                 const data: IScheduleForm = {
                     ...payload,
-                    date: date.toISOString(),
+                    date: dayjs(date).toISOString(),
                     employeeId: employee.id,
                     startAt: form.timeStart?.format(timeSpanString),
                     finishAt: form.timeEnd?.format(timeSpanString),
@@ -195,23 +195,29 @@ export const EditScheduleModal: React.FC<TProps> = ({selectedDate, date, onClear
                         label="Date"
                         fullWidth
                         disabled
-                        value={date.format("MMM D, YYYY")}
+                        value={dayjs(date).format("MMM D, YYYY")}
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <TimePicker
+                    <ClockTimePicker
                         value={form.timeStart}
                         label="Starts at"
                         fullWidth
                         onChange={handleUpdate("timeStart")}
+                        InputProps={{
+                            endAdornment: <QueryBuilder color={"disabled"} cursor="pointer"/>
+                        }}
                         error={!form.timeStart && formIsChecked}
                         id="timeStart"
                         name="timeStart"
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <TimePicker
+                    <ClockTimePicker
                         value={form.timeEnd}
+                        InputProps={{
+                            endAdornment: <QueryBuilder color={"disabled"} cursor="pointer"/>
+                        }}
                         label="Finishes at"
                         fullWidth
                         error={!form.timeEnd && formIsChecked}
@@ -249,13 +255,13 @@ export const EditScheduleModal: React.FC<TProps> = ({selectedDate, date, onClear
                         variant="outlined"
                         onClick={handleClear("recursiveId")}
                         startIcon={<Close />}>
-                        Clear schedule for {date.format("dddd")}
+                        Clear schedule for {dayjs(date).format("dddd")}
                     </LoadingButton> : <LoadingButton
                         onClick={handleClear("customId")}
                         startIcon={<Close />}
                         variant="outlined"
                         color="secondary">
-                        Clear schedule for {date.format("MMM D, YYYY")}
+                        Clear schedule for {dayjs(date).format("MMM D, YYYY")}
                     </LoadingButton>}
                 </Grid>
                     : null}
@@ -267,13 +273,13 @@ export const EditScheduleModal: React.FC<TProps> = ({selectedDate, date, onClear
                 loading={saving}
                 onClick={handleSave(false)}
             >
-                Set for {date.format("MMM DD, YYYY")}
+                Set for {dayjs(date).format("MMM DD, YYYY")}
             </LoadingButton>
             <LoadingButton
                 loading={saving}
                 onClick={handleSave(true)}
             >
-                Set for {date.format("dddd")}
+                Set for {dayjs(date).format("dddd")}
             </LoadingButton>
             <LoadingButton
                 loading={saving}

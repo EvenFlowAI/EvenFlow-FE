@@ -1,5 +1,4 @@
 import {AxiosResponse} from "axios";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {
     EReminderType, IServiceRequestPrice,
     IVehicleData, IVehicleForSlots, IWaitListData, MPOptionShort, TRecallForRequest
@@ -15,6 +14,7 @@ import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
 import {TScheduler, TServiceBook} from "../store/reducers/appointments/types";
 import {TEnumKeyLabel} from "../store/reducers/types";
+import {ParsableDate, TParsableDate} from "../types/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 
@@ -91,6 +91,13 @@ export interface ILoadedVehicle  extends IVehicle {
     hasOrders?: boolean;
 }
 
+export interface IVehicleForRequest extends IVehicle {
+    dmsId?: string;
+    appointmentHashKeys?: string[];
+    hasRepairOrders?: boolean;
+    warrantyExpiration?: ParsableDate;
+}
+
 export interface IPasswordRecoveryData {
     email: string;
 }
@@ -141,9 +148,9 @@ export interface IBaseAppointment {
     id: number;
     hashKey: string;
     appointmentStatus: AppointmentStatus;
-    requestDate: ParsableDate;
-    dateInUtc: ParsableDate;
-    remindAtInUtc: ParsableDate;
+    requestDate: TParsableDate;
+    dateInUtc: TParsableDate;
+    remindAtInUtc: TParsableDate;
     timeSlot: string;
     vehicleId: number;
     vehicle: IVehicleData;
@@ -237,7 +244,7 @@ export interface IAppointmentVehicle {
 }
 
 export type TDateAppointmentData = {
-    date: ParsableDate;
+    date: TParsableDate;
     scheduler: TScheduler;
 }
 
@@ -247,8 +254,8 @@ export interface IAppointment {
     appointmentNumber: string;
     appointmentStatus: AppointmentStatus;
     reportingStatus: EReportingStatus;
-    createdDateTime: ParsableDate;
-    dateTime: ParsableDate;
+    createdDateTime: TParsableDate;
+    dateTime: TParsableDate;
     customerInformation?: IAppointmentCustomerInfo;
     vehicle?: IAppointmentVehicle;
     serviceBook: TServiceBook;

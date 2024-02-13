@@ -1,7 +1,7 @@
 import React from "react";
 import {ContentTitle} from "../ContentTitle/ContentTitle";
 import {TTitle} from "../../../types/types";
-import {useStyles} from "./styles";
+import {EmptyTitle, StyledContainer} from "./styles";
 
 type TProps = {
     title?: string;
@@ -11,10 +11,9 @@ type TProps = {
     actions?: boolean | JSX.Element;
 }
 
-export const TitleContainer: React.FC<TProps> = ({pad, parent, title, subtitle, actions}) => {
-    const classes = useStyles({pad: Boolean(pad)});
-    return <div className={classes.container}>
-        {title ? <ContentTitle parent={parent} title={title} subtitle={subtitle} /> : <div className={classes.emptyTitle}/>}
+export const TitleContainer: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({pad, parent, title, subtitle, actions}) => {
+    return <StyledContainer pad={Boolean(pad)}>
+        {title ? <ContentTitle parent={parent} title={title} subtitle={subtitle} /> : <EmptyTitle/>}
         {actions}
-    </div>;
+    </StyledContainer>;
 }

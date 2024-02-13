@@ -1,14 +1,15 @@
-import moment from "moment/moment";
 import {IRemappedAppointmentSlot} from "../../../../store/reducers/appointment/types";
 import {TGroupedAppointments} from "../../../../utils/types";
+import {TParsableDate} from "../../../../types/types";
+import dayjs from "dayjs";
 
-export const getAppointmentDate = (date: moment.Moment, d: number) => {
-    return moment.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
+export const getAppointmentDate = (date: TParsableDate, d: number) => {
+    return dayjs.utc(date).date(d).startOf('day').toISOString().replace('.000', '');
 }
 export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAppointments => {
     const appointments: TGroupedAppointments = {};
     for (let slot of slots) {
-        const date = moment(slot.date);
+        const date = dayjs.utc(slot.date);
         const idx = slot.id.split("|")[0];
         if (appointments[idx]) {
             appointments[idx].appointments.push(slot);

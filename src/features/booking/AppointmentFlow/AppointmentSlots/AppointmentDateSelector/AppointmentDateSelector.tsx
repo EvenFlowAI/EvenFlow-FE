@@ -1,6 +1,6 @@
 import React from 'react';
 import {TArgCallback} from "../../../../../types/types";
-import {useMediaQuery, useTheme} from "@material-ui/core";
+import {useMediaQuery, useTheme} from "@mui/material";
 import {DaySelector} from "../DaySelector/DaySelector";
 import {TGroupedAppointments} from "../../../../../utils/types";
 import {useTranslation} from "react-i18next";
@@ -14,11 +14,11 @@ type TProps = {
     dateChangeDisabled: boolean;
 } & TMonthProps;
 
-export const AppointmentDateSelector: React.FC<TProps> = ({date, loading, onDateChange,
+export const AppointmentDateSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({date, loading, onDateChange,
     appointments, dateChangeDisabled,
     dateRangeUpdated, onDateRangeSet}) => {
     const theme = useTheme();
-    const isXs = useMediaQuery(theme.breakpoints.down("sm"));
+    const isXs = useMediaQuery(theme.breakpoints.down('md'));
     const {t} = useTranslation();
 
     return (

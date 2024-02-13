@@ -22,11 +22,11 @@ export const loadCustomerLifetimes = (serviceCenterId: number, podId?: number): 
             Api.endpoints.ValueSettings.GetCL, {params: {serviceCenterId, podId}}
         );
         dispatch(getCustomerLifetimes(data));
-    } catch (e) {
-        if (e?.response?.status === 400) {
+    } catch (e: any) {
+        if (e.response?.status === 400) {
             dispatch(getCustomerLifetimes(undefined));
         } else {
-            throw e;
+            console.log('updateUser', e)
         }
     }
 }
@@ -41,11 +41,11 @@ export const loadNewLostCustomers = (serviceCenterId: number, podId?: number): A
             Api.endpoints.ValueSettings.GetCTS, {params: {serviceCenterId, podId}}
         );
         dispatch(getNewLostCustomers(data));
-    } catch (e) {
+    } catch (e: any) {
         if (e?.response?.status === 400) {
             dispatch(getNewLostCustomers([]));
         } else {
-            throw e;
+            console.log('loadNewLostCustomers', e)
         }
     }
 }
@@ -60,11 +60,11 @@ export const loadEndOfWarranty = (serviceCenterId: number, podId?: number): AppT
             Api.endpoints.ValueSettings.GetWS, {params: {serviceCenterId, podId}}
         );
         dispatch(getEndOfWarranty(data[0]));
-    } catch (e) {
+    } catch (e: any) {
         if (e?.response?.status === 400) {
             dispatch(getEndOfWarranty(undefined));
         } else {
-            throw e;
+            console.log('loadEndOfWarranty', e)
         }
     }
 }

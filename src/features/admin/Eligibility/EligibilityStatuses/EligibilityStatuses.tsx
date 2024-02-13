@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import {Tab} from "@material-ui/core";
+import {Tab} from "@mui/material";
 import {ServiceCodes} from "../ServiceCodes/ServiceCodes";
 import MaintenancePackages from "../MaintenancePackages/MaintenancePackages";
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {TabContext, TabPanel} from "@mui/lab";
 import {TabList} from "../../../../components/styled/Tabs";
 import {SquarePaper} from "../../../../components/styled/Paper";
 import {PaperTitle} from "../../../../pages/admin/PricingSettings/UI";

@@ -1,3 +1,5 @@
-import {Paper, withStyles} from "@material-ui/core";
+import { Paper } from "@mui/material";
 
-export const SquarePaper = withStyles({root: {borderRadius: 2}})(Paper);
+import { withStyles } from 'tss-react/mui';
+
+export const SquarePaper = withStyles(Paper, {root: {borderRadius: 2}});

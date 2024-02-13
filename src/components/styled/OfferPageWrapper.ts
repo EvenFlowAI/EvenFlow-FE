@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const OfferPageWrapper = styled('div')(({theme}) => ({
     minWidth: '50vw',
@@ -7,10 +7,10 @@ export const OfferPageWrapper = styled('div')(({theme}) => ({
     justifyContent: 'center',
     padding: 40,
     border: '1px solid #DADADA',
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
         padding: 30,
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('md')]: {
         padding: 20,
     }
 }))

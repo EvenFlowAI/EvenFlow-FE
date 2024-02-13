@@ -3,7 +3,7 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {TPricingLevel} from "../types";
-import {Box, Button, Divider} from "@material-ui/core";
+import {Box, Button, Divider} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {updateSRPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
 import {EDemandCategory} from "../../../../store/reducers/pricingSettings/types";
@@ -16,7 +16,7 @@ type TEditPricingLevelsProps = DialogProps & {
   prisingLevel: TPricingLevel | null;
 };
 
-const EditPricingLevelModal: React.FC<TEditPricingLevelsProps> = ({ prisingLevel, ...props}) => {
+const EditPricingLevelModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TEditPricingLevelsProps>>> = ({ prisingLevel, ...props}) => {
     const [service, setService] = useState<string>('');
     const [opsCode, setOpsCode] = useState<string>('');
     const [discount, setDiscount] = useState<string>('');
@@ -25,7 +25,7 @@ const EditPricingLevelModal: React.FC<TEditPricingLevelsProps> = ({ prisingLevel
     const dispatch = useDispatch();
     const showError = useException();
     const {selectedSC} = useSCs();
-    const classes = useEditPricingLevelStyles();
+    const { classes  } = useEditPricingLevelStyles();
 
     useEffect(() => {
         if (prisingLevel && props.open) {

@@ -7,14 +7,14 @@ import {
     EOfferType,
     IOffer
 } from "../../../../../store/reducers/offers/types";
-import {Grid, Switch} from "@material-ui/core";
+import {Grid, Switch} from "@mui/material";
 import {TextField} from "../../../../../components/formControls/TextFieldStyled/TextField";
-import moment from "moment";
 import {calendarDateFormat, timeSpanString, time12HourFormat} from "../../../../../utils/constants";
 import {Label} from "./styles";
+import dayjs from "dayjs";
 
-export const ViewOffer: React.FC<{
-    onArchive: () => void, archiving: boolean, offer: IOffer}> = ({offer, onArchive, archiving}) => {
+export const ViewOffer: React.FC<React.PropsWithChildren<React.PropsWithChildren<{
+    onArchive: () => void, archiving: boolean, offer: IOffer}>>> = ({offer, onArchive, archiving}) => {
     const getOfferValue = () => {
         return offer.type !== EOfferType.FreeService ?
             `${offer.value}${offer.type === EOfferType.AmountOff ? "$" : "%"}` :
@@ -53,10 +53,10 @@ export const ViewOffer: React.FC<{
                         label="Time of Day"
                         disabled
                         value={
-                            `${moment(
+                            `${dayjs(
                                 offer.timeOfDay.start, timeSpanString
-                            ).format(time12HourFormat)} - ${moment(
-                                offer.timeOfDay.end, time12HourFormat
+                            ).format(time12HourFormat)} - ${dayjs(
+                                offer.timeOfDay.end, timeSpanString
                             ).format(time12HourFormat)}`
                         }
                     />
@@ -75,9 +75,9 @@ export const ViewOffer: React.FC<{
                         disabled
                         label="Start Date - End Date"
                         value={
-                            `${moment(
+                            `${dayjs(
                                 offer.duration.start
-                            ).format(calendarDateFormat)} - ${moment(
+                            ).format(calendarDateFormat)} - ${dayjs(
                                 offer.duration.end
                             ).format(calendarDateFormat)}`
                         }

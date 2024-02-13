@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/styled/Tabs";
-import {Switch, Tab} from "@material-ui/core";
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {Switch, Tab} from "@mui/material";
+import {TabContext, TabPanel} from "@mui/lab";
 import { PricingLevels } from '../../../features/admin/PricingLevels/PricingLevels';
 import {Eligibility} from "../../../features/admin/Eligibility/Eligibility";
 import {PricingOptimization} from "../../../features/admin/PricingOptimization/PricingOptimization";

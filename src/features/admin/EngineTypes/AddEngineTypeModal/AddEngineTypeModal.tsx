@@ -3,8 +3,8 @@ import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Chip} from "../../../../components/wrappers/Chip/Chip";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button, Divider, IconButton} from "@material-ui/core";
-import {AddCircleOutline} from "@material-ui/icons";
+import {Button, Divider, IconButton} from "@mui/material";
+import {AddCircleOutline} from "@mui/icons-material";
 import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {createEngineType} from "../../../../store/reducers/vehicleDetails/actions";
@@ -13,7 +13,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const AddEngineTypeModal: React.FC<DialogProps> = (props) => {
+export const AddEngineTypeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
     const [newEngineType, setNewEngineType] = useState<string>('');
     const [types, setTypes] = useState<string[]>([]);
@@ -21,7 +21,7 @@ export const AddEngineTypeModal: React.FC<DialogProps> = (props) => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const onCancel = () => {
         setNewEngineType('');
@@ -53,7 +53,7 @@ export const AddEngineTypeModal: React.FC<DialogProps> = (props) => {
         setNewEngineType('');
     }
 
-    const onKeyDown = (e: React.KeyboardEvent<{}>) => {
+    const onKeyUp = (e: React.KeyboardEvent<{}>) => {
         if (e.key === 'Enter') addEngineType();
     }
 
@@ -80,7 +80,7 @@ export const AddEngineTypeModal: React.FC<DialogProps> = (props) => {
                 {Boolean(types.length) && <div className={classes.modelsWrapper}>
                     {types.map(type => <Chip key={type} name={type} onDelete={onEngineTypeDelete}/>)}
                 </div>}
-                <div className={classes.addModel} role="presentation" onKeyPress={onKeyDown}>
+                <div className={classes.addModel} role="presentation" onKeyUp={onKeyUp}>
                     <div style={{width: '90%'}}>
                         <TextField
                             fullWidth
@@ -90,7 +90,7 @@ export const AddEngineTypeModal: React.FC<DialogProps> = (props) => {
                             onChange={onEngineTypeChange}
                             value={newEngineType}/>
                     </div>
-                    <IconButton onClick={addEngineType} className={classes.iconPlus}>
+                    <IconButton onClick={addEngineType} className={classes.iconPlus} size="large">
                         <AddCircleOutline/>
                     </IconButton>
                 </div>

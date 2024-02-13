@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const Container = styled('div')({
     display: "flex",
@@ -18,7 +18,7 @@ export const SidebarWrapper = styled('div')(({theme}) => ({
     alignItems: "flex-start",
     width: "100%",
     marginTop: 28,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
         gridTemplateColumns: "1fr"
     }
 }));

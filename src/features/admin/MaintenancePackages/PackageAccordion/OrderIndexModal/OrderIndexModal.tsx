@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../components/modals/BaseModal/BaseModal";
-import {TableBody, TableCell, TableContainer, TableHead, TableRow, Table, Button} from "@material-ui/core";
+import {TableBody, TableCell, TableContainer, TableHead, TableRow, Table, Button} from "@mui/material";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
@@ -20,12 +20,12 @@ type TOrderIndexProps = {
     open: boolean;
 }
 
-const OrderIndexModal: React.FC<TOrderIndexProps> = ({onClose, open}) => {
+const OrderIndexModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TOrderIndexProps>>> = ({onClose, open}) => {
     const {isPackageLoading, currentPackage} = useSelector((state: RootState) => state.packages);
     const [serviceRequests, setServiceRequests] = useState<TExtendedService[]>([]);
     const [complimentary, setComplimentary] = useState<TExtendedComplimentary[]>([]);
     const [upsell, setUpsell] = useState<TIntervalUpsellForPackage[]>([]);
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
 
@@ -111,7 +111,7 @@ const OrderIndexModal: React.FC<TOrderIndexProps> = ({onClose, open}) => {
 
     return (
         <BaseModal open={open} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Describe Maintenance Package's Ops Codes</DialogTitle>
+            <DialogTitle onClose={onCancel}>Add Index To Maintenance Package's Ops Codes</DialogTitle>
             {isPackageLoading
                 ? <Loading/>
                 : <DialogContent>

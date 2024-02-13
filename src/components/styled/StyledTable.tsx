@@ -1,18 +1,20 @@
-import {Table as MuiTable, withStyles} from "@material-ui/core";
+import { Table as MuiTable } from "@mui/material";
 
-export const StyledTable = withStyles(theme => ({
+import { withStyles } from 'tss-react/mui';
+
+export const StyledTable = withStyles(MuiTable, theme => ({
     root: {
         "& .MuiTableCell-head": {
             textTransform: "uppercase",
             padding: 17,
             fontWeight: "bold",
-            [theme.breakpoints.down("xs")]: {
+            [theme.breakpoints.down('sm')]: {
                 fontSize: 14,
             }
         },
         "& .MuiTableCell-body": {
             padding: "33px 17px",
-            [theme.breakpoints.down("xs")]: {
+            [theme.breakpoints.down('sm')]: {
                 padding: theme.spacing(1)
             }
         },
@@ -20,7 +22,7 @@ export const StyledTable = withStyles(theme => ({
             fontSize: 16,
             backgroundColor: "#FFFFFF",
             border: `1px solid ${theme.palette.divider}`,
-            [theme.breakpoints.down("xs")]: {
+            [theme.breakpoints.down('sm')]: {
                 fontSize: 14,
             }
         },
@@ -28,4 +30,4 @@ export const StyledTable = withStyles(theme => ({
             color: theme.palette.primary.main
         }
     }
-}))(MuiTable);
+}));

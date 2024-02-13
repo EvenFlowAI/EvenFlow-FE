@@ -1,11 +1,11 @@
 import React, {Dispatch, SetStateAction} from 'react';
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {TCallback} from "../../../../../types/types";
 import {ReactComponent as SelectColumns} from "../../../../../assets/img/select_columns.svg";
 import {TSearchColumnName} from "../types";
 import ColumnsSelectionModal from "../ColumnsSelectionModal/ColumnsSelectionModal";
-import {InfoOutlined} from "@material-ui/icons";
+import {InfoOutlined} from "@mui/icons-material";
 import {useStyles} from "./styles";
 import {useModal} from "../../../../../hooks/useModal/useModal";
 
@@ -19,7 +19,7 @@ type TCustomerSearchResultsActionsProps = {
     setSelectedColumns: Dispatch<SetStateAction<TSearchColumnName[]>>;
 }
 
-const CustomerSearchResultsActions: React.FC<TCustomerSearchResultsActionsProps> = ({
+const CustomerSearchResultsActions: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCustomerSearchResultsActionsProps>>> = ({
                                                                                         onBack,
                                                                                         onNewSearch,
                                                                                         isNewVehicleMode,
@@ -28,7 +28,7 @@ const CustomerSearchResultsActions: React.FC<TCustomerSearchResultsActionsProps>
                                                                                         selectedColumns,
                                                                                         setSelectedColumns
 }) => {
-    const classes = useStyles();
+    const { classes  } = useStyles();
     const {t} = useTranslation();
     const {isOpen, onOpen, onClose} = useModal();
 

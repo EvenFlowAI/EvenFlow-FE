@@ -4,7 +4,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IServiceCategory} from "../../../../api/types";
 import {useTranslation} from "react-i18next";
-import moment from "moment";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {
     selectCategoriesIds,
@@ -18,6 +17,7 @@ import {OfferPageWrapper} from "../../../../components/styled/OfferPageWrapper";
 import {SubTitle} from "../../../../components/styled/SubTitle";
 import {Description, PriceAndDate} from "./styles";
 import {getOfferString} from "../../../../utils/utils";
+import dayjs from "dayjs";
 
 type TOfferProductPageProps = {
     category: IServiceCategory|null;
@@ -26,7 +26,7 @@ type TOfferProductPageProps = {
     lastCategory: IServiceCategory|null;
 }
 
-const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeVehicle, handleSetScreen, lastCategory}) => {
+const OfferProductPage: React.FC<React.PropsWithChildren<React.PropsWithChildren<TOfferProductPageProps>>> = ({category, onChangeVehicle, handleSetScreen, lastCategory}) => {
     const {selectedVehicle, categoriesIds, subService, service} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
@@ -97,7 +97,7 @@ const OfferProductPage: React.FC<TOfferProductPageProps> = ({category, onChangeV
                         : null}
                     {category?.offer ? <div className="greenText">{getOfferString(category.offer, Boolean(scProfile?.isRoundPrice))}</div> : null}
                     {category?.offer?.expiringDate
-                        ? <div className="date">{t("Exp.date")} {moment(category.offer.expiringDate).format('MM/DD/YY')}</div>
+                        ? <div className="date">{t("Exp.date")} {dayjs(category.offer.expiringDate).format('MM/DD/YY')}</div>
                         : null
                     }
                 </div>

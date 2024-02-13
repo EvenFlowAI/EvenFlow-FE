@@ -1,25 +1,25 @@
 import React, {useEffect, useState} from 'react';
 import {centerSettingsList, ECenterSettingType, TOptContent} from "./types";
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import {CenterSettingsPlate} from "./CenterSettingsPlate/CenterSettingsPlate";
-import moment from "moment";
 import ShowDropOffTimeModal from "./ShowDropOffTimeModal/ShowDropOffTimeModal";
 import {useDispatch, useSelector} from "react-redux";
 import {loadCenterSettings, updateDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/actions";
 import {RootState} from "../../../store/rootReducer";
-import {ParsableDate} from "@material-ui/pickers/constants/prop-types";
 import {TDmsAppointmentTime} from "../../../store/reducers/capacityServiceValet/types";
 import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
-import {TimePicker} from "../../../components/pickers/TimePicker/TimePicker";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {ZonesOpsCodesPlate} from "./ZonesOpsCodesPlate/ZonesOpsCodesPlate";
 import ZonesOpsCodeModal from "./ZonesOpsCodesModal/ZonesOpsCodeModal";
+import {TParsableDate} from "../../../types/types";
+import ClockTimePicker from "../../../components/pickers/ClockTimePicker/ClockTimePicker";
+import dayjs from "dayjs";
 
 const CenterSettings = () => {
     const {centerSettings, isLoading} = useSelector((state: RootState) => state.capacityServiceValet);
-    const [calendarValue, setCalendarValue] = useState<moment.Moment>(moment())
+    const [calendarValue, setCalendarValue] = useState<TParsableDate>(dayjs())
     const [isOpen, setOpen] = useState<boolean>(false);
     const {onOpen: onShowTimeOpen, isOpen: isShowTimeOpen, onClose: isShowTimeClose} = useModal();
     const {onOpen: onServiceValetOpsCodeOpen, isOpen: isServiceValetOpsCodeOpen, onClose: onServiceValetOpsCodeClose} = useModal();
@@ -30,7 +30,7 @@ const CenterSettings = () => {
     useEffect(() => {
         if (centerSettings?.dmsAppointmentTime) {
             const [hour, min, sec] = centerSettings.dmsAppointmentTime.split(':');
-            setCalendarValue(moment().set('hour', +hour).set('minute', +min).set('second', +sec));
+            setCalendarValue(dayjs().set('hour', +hour).set('minute', +min).set('second', +sec));
         }
     }, [centerSettings])
 
@@ -58,7 +58,7 @@ const CenterSettings = () => {
         switch (k) {
             case ECenterSettingType.DmsAppointmentTime:
                 return centerSettings?.dmsAppointmentTime
-                    ? moment(centerSettings?.dmsAppointmentTime, "HH:mm:ss").format('HH:mm a')
+                    ? dayjs.utc(centerSettings?.dmsAppointmentTime, "HH:mm:ss").format('HH:mm a')
                     : 'Not Selected';
             default:
                 return centerSettings?.showDropOffTime ? "Yes" : "No";
@@ -76,9 +76,9 @@ const CenterSettings = () => {
     }
     const onClose = () => setOpen(false)
 
-    const onChange = (date: ParsableDate) => {
+    const onChange = (date: TParsableDate) => {
         if (selectedSC) {
-            const data: TDmsAppointmentTime = {dmsAppointmentTime: moment(date).format('HH:mm:ss')}
+            const data: TDmsAppointmentTime = {dmsAppointmentTime: dayjs(date).format('HH:mm:ss')}
             dispatch(updateDmsAppointmentTime(selectedSC.id, data, onClose, showError))
         }
     }
@@ -103,12 +103,16 @@ const CenterSettings = () => {
                 <ZonesOpsCodesPlate onEdit={onServiceValetOpsCodeOpen} isLoading={isLoading}/>
             </>
             <div style={{visibility: 'hidden'}}>
-                <TimePicker
-                open={isOpen}
-                value={calendarValue}
-                onChange={onChange}
-                onClose={onClose}/>
+
             </div>
+            <ClockTimePicker
+                open={isOpen}
+                InputProps={{
+                    style: {visibility: 'hidden'}
+                }}
+                onAccept={onChange}
+                value={calendarValue}
+                onClose={onClose}/>
             <ShowDropOffTimeModal open={isShowTimeOpen} onClose={isShowTimeClose}/>
             <ZonesOpsCodeModal open={isServiceValetOpsCodeOpen} onClose={onServiceValetOpsCodeClose}/>
         </Grid>

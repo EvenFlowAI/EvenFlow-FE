@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
-import {TabContext} from "@material-ui/lab";
+import {TabContext} from "@mui/lab";
 import {TabList} from "../../../components/styled/Tabs";
-import {Tab} from "@material-ui/core";
+import {Tab} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {
     loadCategoriesByPage,

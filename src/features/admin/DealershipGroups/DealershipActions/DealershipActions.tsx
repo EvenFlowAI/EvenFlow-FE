@@ -1,5 +1,5 @@
 import React, {useCallback} from "react";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {CreateDealershipGroupModal} from "../CreateDealershipGroupModal/CreateDealershipGroupModal";
 import {SearchInput} from "../../../../components/formControls/SearchInput/SearchInput";
 import {useDispatch, useSelector} from "react-redux";
@@ -12,7 +12,7 @@ export const DealershipActions = () => {
     const { searchTerm } = useSelector((state: RootState) => state.dealershipGroups);
     const {isOpen, onOpen, onClose} = useModal();
     const dispatch = useDispatch();
-    const classes = useStyles();
+    const { classes  } = useStyles();
 
     const handleSearch = useCallback(() => {
         dispatch(loadAll());

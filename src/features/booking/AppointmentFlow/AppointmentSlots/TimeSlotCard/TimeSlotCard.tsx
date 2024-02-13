@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {IRemappedAppointmentSlot} from "../../../../../store/reducers/appointment/types";
-import {TArgCallback} from "../../../../../types/types";
-import moment from "moment";
+import {TArgCallback, TParsableDate} from "../../../../../types/types";
 import {useTranslation} from "react-i18next";
 import {ReactComponent as ClockIcon} from "../../../../../assets/img/clock-black.svg";
 import {ReactComponent as ClockIconWhite} from "../../../../../assets/img/clock-white.svg";
@@ -9,16 +8,17 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {TSlot} from "../types";
 import {HtmlTooltip, Wrapper} from "./styles";
+import dayjs from "dayjs";
 
 type TProps = {
     timeSlot: TSlot;
     slot?: IRemappedAppointmentSlot;
     selected: boolean;
     onSelect: TArgCallback<IRemappedAppointmentSlot|null>;
-    date: moment.Moment|null;
+    date: TParsableDate;
 }
 
-export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selected, date}) => {
+export const TimeSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =({timeSlot, slot, onSelect, selected, date}) => {
     const {waitListSettings} = useSelector((state: RootState) => state.appointment);
     const [timePassed, setTimePassed] = useState<boolean>(false);
     const {t} = useTranslation();
@@ -27,8 +27,8 @@ export const TimeSlotCard: React.FC<TProps> =({timeSlot, slot, onSelect, selecte
     const isWaitList = Boolean(slot?.isOverbookingApplied && waitListSettings?.isEnabled);
 
     useEffect(() => {
-        if (slot?.date && moment(slot?.date).isSame(moment(), 'day') && moment(date).isSame(moment(), 'day')) {
-            const differenceInMSeconds = moment(slot?.date.format('YYYY-MM-DDTHH:mm:ss')).diff(moment());
+        if (slot?.date && dayjs.utc(slot?.date).isSame(dayjs(), 'day') && dayjs.utc(date).isSame(dayjs.utc(), 'day')) {
+            const differenceInMSeconds = dayjs.utc(dayjs.utc(slot?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(dayjs.utc());
             if (differenceInMSeconds > 0) {
                 setTimeout(() => setTimePassed(true), differenceInMSeconds);
             } else {

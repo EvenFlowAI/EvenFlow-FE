@@ -1,7 +1,8 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 import {sideBarWidth} from "../../../theme/theme";
 
-export const useStyles = makeStyles(theme => ({
+// 
+export const useStyles = makeStyles()(theme => ({
     root: {
         display: "flex",
         minHeight: "100vh",
@@ -20,7 +21,7 @@ export const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up("lg")]: {
             marginLeft: 0
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             marginLeft: "-100%"
         }
     },

@@ -1,6 +1,7 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles((theme) => ({
+// 
+export const useStyles = makeStyles()((theme) => ({
     info: {
         display: 'flex',
         flexDirection: 'column',
@@ -16,7 +17,7 @@ export const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         alignItems: 'center',
         margin: '20px 0',
-        [`${theme.breakpoints.down("sm")} and (orientation: landscape)`]: {
+        [`${theme.breakpoints.down('md')} and (orientation: landscape)`]: {
             margin: 0,
         }
     },
@@ -25,4 +26,4 @@ export const useStyles = makeStyles((theme) => ({
         fontSize: 18,
         textDecoration: 'underline',
     }
-}))
+}));

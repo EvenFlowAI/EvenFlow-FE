@@ -1,4 +1,4 @@
-import {styled} from "@material-ui/core";
+import {styled} from "@mui/material";
 
 export const DaySelectorWrapper = styled('div')(({theme}) => ({
     marginTop: 20,
@@ -8,7 +8,7 @@ export const DaySelectorWrapper = styled('div')(({theme}) => ({
     textAlign: "center",
     gap: "12px",
     width: "100%",
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
         marginTop: 0,
         gap: "10px",
     }

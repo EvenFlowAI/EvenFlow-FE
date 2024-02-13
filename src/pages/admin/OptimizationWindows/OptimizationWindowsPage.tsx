@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {OptimizationWindowCard} from "./OptimizationWindowCard/OptimizationWindowCard";
-import {Grid} from "@material-ui/core";
+import {Grid} from "@mui/material";
 import {DemandSegmentsModal} from "../../../features/admin/DemandSegmentsModal/DemandSegmentsModal";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -9,11 +9,10 @@ import {loadDemandSegments} from "../../../store/reducers/demandSegments/actions
 import {loadMaxPriceDateRange, loadOptimizationWindows} from "../../../store/reducers/optimizationWindows/actions";
 import {
     EOptimizationWindowType,
-    optimizationWindowsList,
+    optimizationWindowsList, TOptContentData,
 } from "../../../store/reducers/optimizationWindows/types";
 import {OptimizationModal} from "../../../features/admin/OptimizationWindows/OptimizationModal/OptimizationModal";
 import {AppointmentCutoffModal} from "../../../features/admin/OptimizationWindows/AppointmentCutoffModal/AppointmentCutoffModal";
-import moment from "moment";
 import {capacityManagementRoot, timeSpanString} from "../../../utils/constants";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {MaxPriceDateRangeModal} from "../../../features/admin/OptimizationWindows/MaxPriceDateRangeModal/MaxPriceDateRangeModal";
@@ -22,6 +21,7 @@ import {blankWindowParam, optContent} from "./constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
+import dayjs from "dayjs";
 
 export const OptimizationWindowsPage = () => {
     const [selectedOpt, setSelectedOpt] = useState<EOptimizationWindowType>(EOptimizationWindowType.DemandSegments);
@@ -73,6 +73,8 @@ export const OptimizationWindowsPage = () => {
         }
     }, [dispatch, selectedSC, selectedPod, isDemandOpen]);
 
+    const optContentData: TOptContentData = optContent[selectedOpt];
+
     return <>
         <TitleContainer title="Optimization Windows" pad parent={capacityManagementRoot} />
         <Grid container spacing={3}>
@@ -85,7 +87,7 @@ export const OptimizationWindowsPage = () => {
                             count={
                                 k === EOptimizationWindowType.AppointmentCutoff
                                     ? optMapped[k].value
-                                        ? moment(optMapped[k].value, timeSpanString).format("h:mm")
+                                        ? dayjs.utc(optMapped[k].value, timeSpanString).format("h:mm")
                                         : "-"
                                     : k === EOptimizationWindowType.MaxPriceDateRange
                                         ? maxPriceDateRange
@@ -95,7 +97,7 @@ export const OptimizationWindowsPage = () => {
                             }
                             label={k === EOptimizationWindowType.AppointmentCutoff
                                 ? optMapped[k].value
-                                    ? moment(optMapped[k].value, timeSpanString).format("a")
+                                    ? dayjs.utc(optMapped[k].value, timeSpanString).format("a")
                                     : "-"
                                 : plate.label}
                             prefix={plate.prefix}
@@ -107,7 +109,7 @@ export const OptimizationWindowsPage = () => {
             )}
             <OptimizationModal
                 open={isOptOpen}
-                content={optContent[selectedOpt]}
+                windowContent={optContentData}
                 payload={optMapped[selectedOpt]}
                 onClose={onOptClose}
             />

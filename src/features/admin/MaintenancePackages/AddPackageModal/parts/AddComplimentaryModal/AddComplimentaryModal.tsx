@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, SetStateAction, Dispatch} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {RootState} from "../../../../../../store/rootReducer";
 import {Table} from "../../../../../../components/tables/Table/Table";
@@ -29,19 +29,16 @@ const tableData: TableRowDataType<IComplimentaryServiceByQuery>[] = [
     {header: "REGULAR INVOICE", val: el => el.price.toFixed(2), align: 'center'},
 ]
 
-const AddComplimentaryModal: React.FC<TAssignOpsCodeModalProps> =
+const AddComplimentaryModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAssignOpsCodeModalProps>>> =
     ({selectedCodes, setSelectedCodes, isComplimentary, title, ...props}) => {
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const [
+    const {
         complimentary,
-        isLoading,
-        servicesCount,
-    ] = useSelector((state: RootState) => [
-        state.packages.complimentary,
-        state.packages.isComplimentaryLoading,
-        state.packages.complimentaryPaging.numberOfRecords,
-    ]);
+        isComplimentaryLoading,
+        complimentaryPaging: {numberOfRecords}
+    } = useSelector((state: RootState) => state.packages)
+
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.packages.complimentaryPageData,
         changeComplimentaryPageData
@@ -76,14 +73,14 @@ const AddComplimentaryModal: React.FC<TAssignOpsCodeModalProps> =
                     index="id"
                     startActions={preActions}
                     compact
-                    hidePagination={servicesCount < 11}
+                    hidePagination={numberOfRecords < 11}
                     rowData={tableData}
-                    isLoading={isLoading}
+                    isLoading={isComplimentaryLoading}
                     page={pageIndex}
                     rowsPerPage={pageSize}
                     onChangePage={changePage}
                     onChangeRowsPerPage={changeRowsPerPage}
-                    count={servicesCount}
+                    count={numberOfRecords}
                 />
             </DialogContent>
             <DialogActions>

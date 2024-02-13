@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {TableBody, TableHead, Switch} from '@material-ui/core';
+import {TableBody, TableHead, Switch} from '@mui/material';
 import {ECustomerSegmentMobileService, TSegmentType} from "./types";
 import {EligibleSegmentTable, HeaderTableCell, TableCell} from "./styles";
 import {TableRow} from "../../../../components/styled/TableRow";

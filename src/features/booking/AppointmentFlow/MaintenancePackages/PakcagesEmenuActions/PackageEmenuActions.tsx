@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
@@ -13,7 +13,7 @@ type TProps = {
     onNext: () => void,
 }
 
-const PackageEMenuActions: React.FC<TProps> = ({isLoading, onBack, onNext}) => {
+const PackageEMenuActions: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isLoading, onBack, onNext}) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {t} = useTranslation();

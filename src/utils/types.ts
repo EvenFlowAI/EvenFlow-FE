@@ -1,6 +1,6 @@
 import {TRole} from "../store/reducers/users/types";
 import {IRemappedAppointmentSlot} from "../store/reducers/appointment/types";
-import moment from "moment";
+import {TParsableDate} from "../types/types";
 
 export type TCalendarProps = {
     text: string;
@@ -15,7 +15,7 @@ export type TRouteRoleMap = {
 }
 
 export type TGroupedAppointment = {
-    date: moment.Moment;
+    date: TParsableDate;
     lowestPrice: number;
     idx: string;
     offers: boolean;

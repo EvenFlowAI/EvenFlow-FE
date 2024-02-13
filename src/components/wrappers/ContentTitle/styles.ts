@@ -1,5 +1,5 @@
-import {makeStyles} from "@material-ui/core/styles";
-import {Theme} from "@material-ui/core";
+import { makeStyles } from 'tss-react/mui';
+import {Theme} from "@mui/material";
 
 const titleSt = {
     fontSize: 24,
@@ -7,11 +7,12 @@ const titleSt = {
     margin: 0
 }
 
-export const useStyles = makeStyles((theme: Theme) => ({
+// 
+export const useStyles = makeStyles()((theme: Theme) => ({
     title: {
         ...titleSt,
         fontWeight: "bold",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             textAlign: "center"
         }
     },
@@ -19,7 +20,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     titleContainer: {
         display: "flex",
         flexDirection: "column",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             marginBottom: theme.spacing(2)
         }
     },
@@ -33,7 +34,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
                 textDecoration: "underline"
             }
         },
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('sm')]: {
             display: "block"
         }
     }
