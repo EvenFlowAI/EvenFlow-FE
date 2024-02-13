@@ -117,9 +117,9 @@ const BaseScheduleByEmployee = () => {
                                 SERVICE BOOK
                             </TableSortLabel>
                         </ScheduleTableHeaderCell>
-                        <ScheduleTableHeaderCell key="breakHours" width={75}>
-                            BREAK HOURS
-                        </ScheduleTableHeaderCell>
+                        {/*<ScheduleTableHeaderCell key="breakHours" width={75}>*/}
+                        {/*    BREAK HOURS*/}
+                        {/*</ScheduleTableHeaderCell>*/}
                         {daysList.map(item => <ScheduleDayNameCell key={item}>
                             {dayjs().set('day', item).format('ddd')}
                         </ScheduleDayNameCell>)}
@@ -137,9 +137,9 @@ const BaseScheduleByEmployee = () => {
                                 <StyledScheduleCell key="serviceBook">
                                     {item.serviceBook}
                                 </StyledScheduleCell>
-                                <ScheduleDataCell key="breakHours">
-                                    0.0
-                                </ScheduleDataCell>
+                                {/*<ScheduleDataCell key="breakHours">*/}
+                                {/*    0.0*/}
+                                {/*</ScheduleDataCell>*/}
                                 {item.dailyHours.map((day) => {
                                     return <ScheduleDataCell onClick={() => onTableClick(item.employeeId)} key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
                                 })}
