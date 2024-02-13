@@ -64,5 +64,6 @@ export const ScheduleDayNameCell = styled(StyledScheduleCell)({
 })
 
 export const ScheduleDataCell = styled(StyledScheduleCell)({
-    color: "#7898FF"
+    color: "#7898FF",
+    cursor: "pointer",
 })

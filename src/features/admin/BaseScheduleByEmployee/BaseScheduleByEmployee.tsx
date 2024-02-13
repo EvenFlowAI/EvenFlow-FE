@@ -39,6 +39,7 @@ const BaseScheduleByEmployee = () => {
     const [serviceBook, setServiceBook] = useState<TServiceBook|null>(null);
     const [role, setRole] = useState<TRole|null>(null);
     const [name, setName] = useState<string>('');
+    const [currentEmployeeId, setCurrentEmployeeId] = useState<string>("");
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
 
@@ -66,6 +67,10 @@ const BaseScheduleByEmployee = () => {
 
     const onSort = (sort: TSortColumns) => {
         setOrder(prev => ({orderBy: sort, isAscending: prev.orderBy === sort ? !prev.isAscending : true}))
+    }
+
+    const onTableClick = (id: string) => {
+        setCurrentEmployeeId(id)
     }
 
     return (
@@ -136,7 +141,7 @@ const BaseScheduleByEmployee = () => {
                                     0.0
                                 </ScheduleDataCell>
                                 {item.dailyHours.map((day) => {
-                                    return <ScheduleDataCell key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
+                                    return <ScheduleDataCell onClick={() => onTableClick(item.employeeId)} key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
                                 })}
                             </TableRow>
                         })}
