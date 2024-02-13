@@ -216,7 +216,6 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
 }
 
 export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void, onSuccess?: (data: IServiceConsultant[]) => void): AppThunk => async (dispatch, getState) => {
-    dispatch(setConsultantsLoading(true))
     const {selectedPackage, packagePricingType, packageEMenuType, selectedRecalls, selectedVehicle, address, zipCode, valueService,
         service, subService, categoriesIds, sideBarSteps} = getState().appointmentFrame;
     const {selectedSR} = getState().appointment;
@@ -228,6 +227,7 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
         })
         .map(item => item.id);
     if (selectedVehicle) {
+        dispatch(setConsultantsLoading(true))
         const maintenancePackageOption = selectedPackage
             ? {id: selectedPackage?.id, priceType: packagePricingType}
             : packageEMenuType !== null
