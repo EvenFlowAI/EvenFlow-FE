@@ -227,7 +227,6 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
         })
         .map(item => item.id);
     if (selectedVehicle) {
-        dispatch(setConsultantsLoading(true))
         const maintenancePackageOption = selectedPackage
             ? {id: selectedPackage?.id, priceType: packagePricingType}
             : packageEMenuType !== null
@@ -236,6 +235,7 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
         const recalls = mapRecallsForRequest(selectedRecalls);
         const serviceRequestIds = collectServiceRequestIds(service, subService, null, selectedSR)
         if (serviceRequestIds.length || maintenancePackageOption || serviceCategoryIds.length || recalls.length) {
+            dispatch(setConsultantsLoading(true))
             const data: IConsultantsRequestData = {
                 serviceCenterId: decodeSCID(id),
                 pageIndex: 0,
