@@ -107,7 +107,7 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
          if (!zip && zipCodeValue) {
              setZip(zipCodeValue)
          }
-    }, [zipCodeValue, zip])
+    }, [zipCodeValue])
 
     useEffect(() => {
         if (customerLoadedData?.address && !address) {
@@ -173,7 +173,7 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
     }
 
     const onGetZipCodesList = (list: string[], postalCode: string) => {
-        if (list.includes(postalCode)) dispatch(setZipCode(postalCode))
+        if (list.includes(postalCode)) setZip(postalCode)
     }
 
     const handleChangeAddress = async (e: any) => {
