@@ -29,6 +29,7 @@ import {loadServiceBookList} from "../../../store/reducers/appointments/actions"
 import {TServiceBook} from "../../../store/reducers/appointments/types";
 import BaseScheduleFilters from "./BaseScheduleFilters/BaseScheduleFilters";
 import {NoData} from "../../../components/wrappers/NoData/NoData";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 
 const daysList = [1, 2, 3, 4, 5, 6, 7]
 
@@ -86,73 +87,75 @@ const BaseScheduleByEmployee = () => {
                     setName={setName}
                     setRole={setRole}/>
             </ScheduleEmployeeTitleWrapper>
-            {employeeRoleHours.length
-                ? <Table>
-                <TableHead>
-                    <ScheduleTableHeaderRow>
-                        <ScheduleTableHeaderCell key="name">
-                            <TableSortLabel
-                                direction={order.isAscending ? "desc" : "asc"}
-                                onClick={() => onSort("Name")}
-                                active={order.orderBy === "Name"}
-                            >
-                                NAME
-                            </TableSortLabel>
-                        </ScheduleTableHeaderCell>
-                        <ScheduleTableHeaderCell key="role" width={110}>
-                            <TableSortLabel
-                                direction={order.isAscending ? "desc" : "asc"}
-                                onClick={() => onSort("Role")}
-                                active={order.orderBy === "Role"}
-                            >
-                                ROLE
-                            </TableSortLabel>
-                        </ScheduleTableHeaderCell>
-                        <ScheduleTableHeaderCell key="serviceBook" width={100}>
-                            <TableSortLabel
-                                direction={order.isAscending ? "desc" : "asc"}
-                                onClick={() => onSort("ServiceBook")}
-                                active={order.orderBy === "ServiceBook"}
-                            >
-                                SERVICE BOOK
-                            </TableSortLabel>
-                        </ScheduleTableHeaderCell>
-                        {/*<ScheduleTableHeaderCell key="breakHours" width={75}>*/}
-                        {/*    BREAK HOURS*/}
-                        {/*</ScheduleTableHeaderCell>*/}
-                        {daysList.map(item => <ScheduleDayNameCell key={item}>
-                            {dayjs().set('day', item).format('ddd')}
-                        </ScheduleDayNameCell>)}
-                    </ScheduleTableHeaderRow>
-                </TableHead>
-                    <TableBody>
-                        {employeeRoleHours.map((item, index) => {
-                            return <TableRow key={index}>
-                                <StyledScheduleCell key={item.employeeId}>
-                                    {item.employeeName}
-                                </StyledScheduleCell>
-                                <StyledScheduleCell key="role">
-                                    {item.role}
-                                </StyledScheduleCell>
-                                <StyledScheduleCell key="serviceBook">
-                                    {item.serviceBook}
-                                </StyledScheduleCell>
-                                {/*<ScheduleDataCell key="breakHours">*/}
-                                {/*    0.0*/}
-                                {/*</ScheduleDataCell>*/}
-                                {item.dailyHours.map((day) => {
-                                    return <ScheduleDataCell onClick={() => onTableClick(item)} key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
-                                })}
-                            </TableRow>
-                        })}
-                    </TableBody>
-            </Table>
-                : <div>
-                    <Divider/>
-                    <Wrapper>
-                        <NoData title="No employees present"/>
-                    </Wrapper>
-                </div>
+            { loading
+                ? <Loading/>
+                : employeeRoleHours.length
+                    ? <Table>
+                        <TableHead>
+                            <ScheduleTableHeaderRow>
+                                <ScheduleTableHeaderCell key="name">
+                                    <TableSortLabel
+                                        direction={order.isAscending ? "desc" : "asc"}
+                                        onClick={() => onSort("Name")}
+                                        active={order.orderBy === "Name"}
+                                    >
+                                        NAME
+                                    </TableSortLabel>
+                                </ScheduleTableHeaderCell>
+                                <ScheduleTableHeaderCell key="role" width={110}>
+                                    <TableSortLabel
+                                        direction={order.isAscending ? "desc" : "asc"}
+                                        onClick={() => onSort("Role")}
+                                        active={order.orderBy === "Role"}
+                                    >
+                                        ROLE
+                                    </TableSortLabel>
+                                </ScheduleTableHeaderCell>
+                                <ScheduleTableHeaderCell key="serviceBook" width={100}>
+                                    <TableSortLabel
+                                        direction={order.isAscending ? "desc" : "asc"}
+                                        onClick={() => onSort("ServiceBook")}
+                                        active={order.orderBy === "ServiceBook"}
+                                    >
+                                        SERVICE BOOK
+                                    </TableSortLabel>
+                                </ScheduleTableHeaderCell>
+                                {/*<ScheduleTableHeaderCell key="breakHours" width={75}>*/}
+                                {/*    BREAK HOURS*/}
+                                {/*</ScheduleTableHeaderCell>*/}
+                                {daysList.map(item => <ScheduleDayNameCell key={item}>
+                                    {dayjs().set('day', item).format('ddd')}
+                                </ScheduleDayNameCell>)}
+                            </ScheduleTableHeaderRow>
+                        </TableHead>
+                        <TableBody>
+                            {employeeRoleHours.map((item, index) => {
+                                return <TableRow key={index}>
+                                    <StyledScheduleCell key={item.employeeId}>
+                                        {item.employeeName}
+                                    </StyledScheduleCell>
+                                    <StyledScheduleCell key="role">
+                                        {item.role}
+                                    </StyledScheduleCell>
+                                    <StyledScheduleCell key="serviceBook">
+                                        {item.serviceBook}
+                                    </StyledScheduleCell>
+                                    {/*<ScheduleDataCell key="breakHours">*/}
+                                    {/*    0.0*/}
+                                    {/*</ScheduleDataCell>*/}
+                                    {item.dailyHours.map((day) => {
+                                        return <ScheduleDataCell onClick={() => onTableClick(item)} key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
+                                    })}
+                                </TableRow>
+                            })}
+                        </TableBody>
+                    </Table>
+                    : <div>
+                        <Divider/>
+                        <Wrapper>
+                            <NoData title="No employees present"/>
+                        </Wrapper>
+                    </div>
             }
         </Paper>
     );

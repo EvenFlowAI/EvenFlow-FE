@@ -129,7 +129,7 @@ export type TDayHours = {
 export interface IRoleHours {
     role: string;
     serviceBook: string;
-    serviceBookId: number;
+    serviceBookId?: number;
     dailyHours: TDayHours[];
 }
 
@@ -158,9 +158,10 @@ export type TScheduleByEmployeeRequestData = {
 }
 
 export type TDaySchedule = {
-    dayOfWeek: string;
+    dayOfWeek: number;
     from: string;
     to: string;
+    isEnabled?: boolean;
 }
 
 export interface IEmployeeSchedule {

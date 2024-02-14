@@ -12,8 +12,8 @@ import {hourFormat} from "../../../utils/constants";
 type TProps = {
     start: string;
     end: string;
-    value: string;
-    onChange: (newValue: string) => void;
+    value?: string;
+    onChange: (newValue: string|null) => void;
     period: TDayPeriod|null;
     onPeriodChange: (newPeriod: TDayPeriod|null) => void;
     gap?: number;

@@ -19,4 +19,23 @@ export const RowWrapper = styled("div")({
     gridTemplateColumns: '1fr 1fr 4fr',
     textTransform: 'uppercase',
     fontWeight: 700,
+    marginBottom: 24,
+})
+
+export const DayName = styled('div')({
+    fontSize: 18,
+    fontWeight: 700
+})
+
+export const SwitcherLabel = styled('p')({
+    fontSize: 14,
+    fontWeight: 700
+})
+
+export const PickersWrapper = styled("div")({
+    display: 'grid',
+    justifyContent: 'space-between',
+    gap: 24,
+    fontSize: 18,
+    fontWeight: 700
 })
