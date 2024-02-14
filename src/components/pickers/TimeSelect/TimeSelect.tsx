@@ -3,21 +3,21 @@ import {ArrowWrapper, ButtonAmPm, Wrapper} from "./styles";
 import dayjs from "dayjs";
 import {Autocomplete, TextField} from "@mui/material";
 import {ReactComponent as CounterUp} from '../../../assets/img/counter1.svg'
+import {ReactComponent as CounterUpDisabled} from '../../../assets/img/counter1_disabled.svg'
 import {ReactComponent as CounterDown} from '../../../assets/img/counter2.svg'
-
-type TPeriod = "am"|"pm";
+import {ReactComponent as CounterDownDisabled} from '../../../assets/img/counter2_disabled.svg'
+import {TDayPeriod} from "../../../types/types";
+import {hourFormat} from "../../../utils/constants";
 
 type TProps = {
     start: string;
     end: string;
     value: string;
     onChange: (newValue: string) => void;
-    period: TPeriod|null;
-    onPeriodChange: (newPeriod: TPeriod|null) => void;
+    period: TDayPeriod|null;
+    onPeriodChange: (newPeriod: TDayPeriod|null) => void;
     gap?: number;
 }
-
-const hourFormat = "HH:mm"
 
 const TimeSelect: React.FC<TProps> = ({
                                           gap = 30,
@@ -76,8 +76,12 @@ const TimeSelect: React.FC<TProps> = ({
                         style: {padding: '0 5px', width: 86, borderRadius: 2, fontSize: 14 },
                         placeholder: start,
                         endAdornment: <div>
-                            <ArrowWrapper onClick={onClickUp}><CounterUp/></ArrowWrapper>
-                            <ArrowWrapper onClick={onClickDown}><CounterDown/></ArrowWrapper>
+                            <ArrowWrapper disabled={!upEnabled} onClick={onClickUp}>
+                                {upEnabled ? <CounterUp/> : <CounterUpDisabled/>}
+                            </ArrowWrapper>
+                            <ArrowWrapper disabled={!downEnabled} onClick={onClickDown}>
+                                {downEnabled ? <CounterDown/> : <CounterDownDisabled/>}
+                            </ArrowWrapper>
                         </div>
                     }}}/>
             }
