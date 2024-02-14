@@ -123,7 +123,9 @@ export class Api {
             GetAll: {route: "/employee-schedules/by-query", method: "post"},
             SetForWeek: {route: "/employee-schedules/batch-update", method: "put"},
             GetBaseSummary: {route: "/employee-schedules/base-summary", method: "post"},
-            GetSummaryByEmployee: {route: "/employee-schedules/base-summary-by-employee", method: "post"}
+            GetSummaryByEmployee: {route: "/employee-schedules/base-summary-by-employee", method: "post"},
+            GetTimeScheduleByEmployee: {route: "/employee-schedules/get-base-schedule-by-service-book", method: "get"},
+            SetTimeScheduleByEmployee: {route: "/employee-schedules/set-base-schedule-by-service-book", method: "post"},
         },
         GeographicZones: {
             GetZones: {route: "/geographic-zones/by-query", method: "post"},

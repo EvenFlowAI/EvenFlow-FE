@@ -70,6 +70,7 @@ export type TLoadingDMSAdvisors = { type: "SCEmployees/LoadingDMSAdvisors", payl
 export type TGetUsersShort = {type: "Employees/GetUsersShort", payload: IAdvisorShort[]};
 export type TGetBaseSummary = {type: "Employees/GetBaseSummary", payload: IBaseSummary};
 export type TGetBaseScheduleByEmployee = {type: "Employees/GetBaseScheduleByEmployee", payload: IEmployeeRoleHours[]};
+export type TGetScheduleTimeByEmployee = {type: "Employees/GetScheduleTimeByEmployee", payload: IEmployeeSchedule};
 
 export type TEmployeeActions =
     | TGetDealershipEmployees
@@ -87,7 +88,8 @@ export type TEmployeeActions =
     | TLoadingDMSAdvisors
     | TGetUsersShort
     | TGetBaseSummary
-    | TGetBaseScheduleByEmployee;
+    | TGetBaseScheduleByEmployee
+    | TGetScheduleTimeByEmployee;
 
 export type TDmsAdvisor = {
     id: string;
@@ -111,6 +113,7 @@ export type TEmployeesState = {
     usersShort: IAdvisorShort[];
     baseSummary: IBaseSummary|null;
     employeeRoleHours: IEmployeeRoleHours[];
+    employeeSchedule: IEmployeeSchedule|null;
 }
 export type TSCState = {
     advisorsList: IAdvisorShort[];
@@ -152,4 +155,33 @@ export type TScheduleByEmployeeRequestData = {
     isServiceBookServiceCenter: boolean;
     name?: string;
     role?: string;
+}
+
+export type TDaySchedule = {
+    dayOfWeek: string;
+    from: string;
+    to: string;
+}
+
+export interface IEmployeeSchedule {
+    employeeId: string;
+    serviceCenterId: number;
+    dayOfWeekSchedules: TDaySchedule[];
+    role: string;
+    employeeName: string;
+    serviceBookId?: number;
+    serviceBook?: string;
+}
+
+export type TBaseScheduleRequest = {
+    serviceCenterId: number;
+    employeeId: string;
+    serviceBookId?: number;
+}
+
+export type TSetScheduleData = {
+    serviceCenterId: number;
+    employeeId: string;
+    dayOfWeekSchedules: TDaySchedule[];
+    serviceBookId?: number;
 }

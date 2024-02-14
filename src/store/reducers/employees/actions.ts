@@ -7,9 +7,9 @@ import {
     IEmployee,
     IEmployeeFilters,
     IEmployeeForm,
-    IEmployeeRoleHours,
+    IEmployeeRoleHours, IEmployeeSchedule, TBaseScheduleRequest,
     TDmsAdvisor,
-    TEmployeeActions, TScheduleByEmployeeRequestData
+    TEmployeeActions, TScheduleByEmployeeRequestData, TSetScheduleData
 } from "./types";
 import {saveEmployeeAvatar} from "../users/actions";
 import {createAction} from "@reduxjs/toolkit";
@@ -234,6 +234,33 @@ export const loadBaseSummaryByEmployee = (data: TScheduleByEmployeeRequestData):
         })
         .catch(err => {
             console.log('load base summary error', err)
+        })
+        .finally(() => dispatch(loading(false)))
+}
+
+export const getBaseEmployeeSchedule = createAction<IEmployeeSchedule>("Employees/GetScheduleTimeByEmployee");
+export const loadBaseEmployeeSchedule = (serviceCenterId: number, employeeId: string, serviceBookId?: number): AppThunk => dispatch => {
+    const data: TBaseScheduleRequest = {serviceCenterId, employeeId}
+    if (serviceBookId) data.serviceBookId = serviceBookId;
+    dispatch(loading(true))
+    Api.call<IEmployeeSchedule>(Api.endpoints.EmployeeSchedule.GetTimeScheduleByEmployee, {params: data})
+        .then(res => {
+            if (res.data) dispatch(getBaseEmployeeSchedule(res.data))
+        })
+        .catch(err => {
+            console.log('load base employee schedule error', err)
+        })
+        .finally(() => dispatch(loading(false)))
+}
+
+export const updateBaseEmployeeSchedule = (data: TSetScheduleData): AppThunk => dispatch => {
+    dispatch(loading(true))
+    Api.call(Api.endpoints.EmployeeSchedule.SetTimeScheduleByEmployee, {data})
+        .then(res => {
+            if (res.data) dispatch(loadBaseEmployeeSchedule(data.serviceCenterId, data.employeeId, data.serviceBookId ?? undefined))
+        })
+        .catch(err => {
+            console.log('load base employee schedule error', err)
         })
         .finally(() => dispatch(loading(false)))
 }

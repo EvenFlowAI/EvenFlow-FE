@@ -22,6 +22,7 @@ const initialState: TEmployeesState = {
     usersShort: [],
     baseSummary: null,
     employeeRoleHours: [],
+    employeeSchedule: null,
 }
 
 export const employeesReducer = (state=initialState, action: TEmployeeActions): TEmployeesState => {
@@ -56,6 +57,8 @@ export const employeesReducer = (state=initialState, action: TEmployeeActions): 
             return {...state, baseSummary: action.payload};
         case "Employees/GetBaseScheduleByEmployee":
             return {...state, employeeRoleHours: action.payload};
+        case "Employees/GetScheduleTimeByEmployee":
+            return {...state, employeeSchedule: action.payload};
 
         case setEmplSearch.type:
             if (setEmplSearch.match(action)) {

@@ -23,7 +23,7 @@ import {
     ScheduleTableTitle, Wrapper,
     StyledScheduleCell
 } from "../../../components/styled/ScheduleTableElements";
-import {TScheduleByEmployeeRequestData} from "../../../store/reducers/employees/types";
+import {IEmployeeRoleHours, TScheduleByEmployeeRequestData} from "../../../store/reducers/employees/types";
 import {TRole} from "../../../store/reducers/users/types";
 import {loadServiceBookList} from "../../../store/reducers/appointments/actions";
 import {TServiceBook} from "../../../store/reducers/appointments/types";
@@ -39,7 +39,7 @@ const BaseScheduleByEmployee = () => {
     const [serviceBook, setServiceBook] = useState<TServiceBook|null>(null);
     const [role, setRole] = useState<TRole|null>(null);
     const [name, setName] = useState<string>('');
-    const [currentEmployeeId, setCurrentEmployeeId] = useState<string>("");
+    const [currentEmployee, setCurrentEmployee] = useState<IEmployeeRoleHours|null>(null);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
 
@@ -69,8 +69,8 @@ const BaseScheduleByEmployee = () => {
         setOrder(prev => ({orderBy: sort, isAscending: prev.orderBy === sort ? !prev.isAscending : true}))
     }
 
-    const onTableClick = (id: string) => {
-        setCurrentEmployeeId(id)
+    const onTableClick = (item: IEmployeeRoleHours) => {
+        setCurrentEmployee(item)
     }
 
     return (
@@ -141,7 +141,7 @@ const BaseScheduleByEmployee = () => {
                                 {/*    0.0*/}
                                 {/*</ScheduleDataCell>*/}
                                 {item.dailyHours.map((day) => {
-                                    return <ScheduleDataCell onClick={() => onTableClick(item.employeeId)} key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
+                                    return <ScheduleDataCell onClick={() => onTableClick(item)} key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
                                 })}
                             </TableRow>
                         })}
