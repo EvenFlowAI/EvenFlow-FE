@@ -7,15 +7,15 @@ export const Wrapper = styled("div")({
     gap: 8
 })
 
-export const ArrowWrapper = styled("div")({
+export const ArrowWrapper = styled("div")<{disabled: boolean}>(({disabled}) =>({
     width: 16,
     height: 8,
     display: "flex",
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "#EAEBEE",
+    backgroundColor: disabled ? 'transparent' : "#EAEBEE",
     cursor: 'pointer'
-})
+}))
 
 export const ButtonAmPm = styled(Button)<{selected: boolean, isUpper?: boolean}>(({selected, isUpper}) => ({
     minWidth: 0,
