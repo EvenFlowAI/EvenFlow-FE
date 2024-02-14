@@ -7,7 +7,7 @@ import {ReactComponent as CounterUpDisabled} from '../../../assets/img/counter1_
 import {ReactComponent as CounterDown} from '../../../assets/img/counter2.svg'
 import {ReactComponent as CounterDownDisabled} from '../../../assets/img/counter2_disabled.svg'
 import {TDayPeriod} from "../../../types/types";
-import {hourFormat, time12HourFormat, timeSpanString} from "../../../utils/constants";
+import {hourFormat, time12HourFormat, timeSpanString, twelveHourFormat} from "../../../utils/constants";
 
 type TProps = {
     start: string;
@@ -80,7 +80,7 @@ const TimeSelect: React.FC<TProps> = ({
                 disabled={disabled}
                 isOptionEqualToValue={(o, v) => dayjs(o, hourFormat).isSame(dayjs(v, timeSpanString), 'minute')}
                 onChange={onAutocompleteChange}
-                value={dayjs(value, timeSpanString).format(hourFormat)}
+                value={dayjs(value, timeSpanString).format(twelveHourFormat)}
                 renderInput={params => <TextField {...{
                     ...params, InputProps: {
                         ...params.InputProps,

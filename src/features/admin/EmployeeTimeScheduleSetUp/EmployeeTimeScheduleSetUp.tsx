@@ -22,6 +22,7 @@ const daysList = [1, 2, 3, 4, 5, 6, 7]
 
 const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem}) => {
     const {employeeSchedule, loading} = useSelector((state: RootState) => state.employees);
+    const {workingDays} = useSelector((state: RootState) => state.serviceCenters);
     const {hoursOfOperations} = useSelector((state: RootState) => state.appointmentFrame);
     const [currentSchedule, setCurrentSchedule] = useState<TDaySchedule[]>([]);
     const {selectedSC} = useSCs();
@@ -111,20 +112,21 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                             <Switch
                                 onChange={handleSwitch(day)}
                                 checked={checked}
+                                disabled={!workingDays.includes(day)}
                                 color="primary"
                             />
                             <SwitcherLabel>ON</SwitcherLabel>
                         </SwitcherWrapper>
                         <PickersWrapper>
                             <TimeSelect
-                                disabled={!checked}
+                                disabled={!checked || !workingDays.includes(day)}
                                 start={schedule?.from ?? "09:00:00"}
                                 end={schedule?.to ?? "17:00:00"}
                                 value={scheduleItem?.from}
                                 onChange={(value) => onTimeChange(day, 'from', value)}/>
                             <div>TO</div>
                             <TimeSelect
-                                disabled={!checked}
+                                disabled={!checked || !workingDays.includes(day)}
                                 start={schedule?.from ?? "09:00:00"}
                                 end={schedule?.to ?? "17:00:00"}
                                 value={scheduleItem?.to}

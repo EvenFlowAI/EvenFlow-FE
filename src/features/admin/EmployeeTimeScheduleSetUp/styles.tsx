@@ -22,6 +22,7 @@ export const RowWrapper = styled("div")({
     textTransform: 'uppercase',
     fontWeight: 700,
     marginBottom: 24,
+    padding: '0 16px'
 })
 
 export const DayName = styled('div')({
