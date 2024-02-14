@@ -1,0 +1,7 @@
+<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="icon / 16px / counter">
+    <rect id="bottom button" x="1.5" y="8.5" width="14" height="7" fill="#EAEBEE"/>
+<rect id="top button" x="1.5" y="1.5" width="14" height="7" fill="#EAEBEE"/>
+    <path id="Subtract" fill-rule="evenodd" clip-rule="evenodd" d="M4.5 7.5L8.5 3.5L12.5 7.5H10.5L8.5 5.5L6.5 7.5H4.5ZM10.5 9.5H12.5L8.5 13.5L4.5 9.5H6.5L8.5 11.5L10.5 9.5Z" fill="#5E5F66"/>
+</g>
+</svg>
