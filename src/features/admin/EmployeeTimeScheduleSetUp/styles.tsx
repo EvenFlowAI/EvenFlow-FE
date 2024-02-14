@@ -11,20 +11,24 @@ export const UserWrapper = styled("div")({
     },
     '& > div:not(:last-child)': {
         borderRight: '1px solid #DADADA'
-    }
+    },
+    marginBottom: 24,
 })
 
 export const RowWrapper = styled("div")({
+    width: "100%",
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr 4fr',
+    gridTemplateColumns: '1fr 1fr 2fr',
     textTransform: 'uppercase',
     fontWeight: 700,
     marginBottom: 24,
 })
 
 export const DayName = styled('div')({
+    display: 'flex',
+    alignItems: "center",
     fontSize: 18,
-    fontWeight: 700
+    fontWeight: 700,
 })
 
 export const SwitcherLabel = styled('p')({
@@ -32,9 +36,16 @@ export const SwitcherLabel = styled('p')({
     fontWeight: 700
 })
 
+export const SwitcherWrapper = styled('div')({
+    display: 'flex',
+    alignItems: 'center',
+    gap: 20
+})
+
 export const PickersWrapper = styled("div")({
-    display: 'grid',
+    display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
     gap: 24,
     fontSize: 18,
     fontWeight: 700

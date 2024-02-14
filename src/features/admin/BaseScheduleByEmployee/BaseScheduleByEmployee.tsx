@@ -30,6 +30,8 @@ import {TServiceBook} from "../../../store/reducers/appointments/types";
 import BaseScheduleFilters from "./BaseScheduleFilters/BaseScheduleFilters";
 import {NoData} from "../../../components/wrappers/NoData/NoData";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
+import {useModal} from "../../../hooks/useModal/useModal";
+import EmployeeTimeScheduleSetUp from "../EmployeeTimeScheduleSetUp/EmployeeTimeScheduleSetUp";
 
 const daysList = [1, 2, 3, 4, 5, 6, 7]
 
@@ -43,6 +45,7 @@ const BaseScheduleByEmployee = () => {
     const [currentEmployee, setCurrentEmployee] = useState<IEmployeeRoleHours|null>(null);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const {isOpen, onOpen, onClose} = useModal();
 
     useEffect(() => {
         if (selectedSC?.id) {
@@ -72,6 +75,7 @@ const BaseScheduleByEmployee = () => {
 
     const onTableClick = (item: IEmployeeRoleHours) => {
         setCurrentEmployee(item)
+        onOpen()
     }
 
     return (
@@ -157,6 +161,7 @@ const BaseScheduleByEmployee = () => {
                         </Wrapper>
                     </div>
             }
+            <EmployeeTimeScheduleSetUp open={isOpen} onClose={onClose} editingItem={currentEmployee}/>
         </Paper>
     );
 };

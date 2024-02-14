@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {ArrowWrapper, ButtonAmPm, Wrapper} from "./styles";
 import dayjs from "dayjs";
 import {Autocomplete, TextField} from "@mui/material";
@@ -7,58 +7,68 @@ import {ReactComponent as CounterUpDisabled} from '../../../assets/img/counter1_
 import {ReactComponent as CounterDown} from '../../../assets/img/counter2.svg'
 import {ReactComponent as CounterDownDisabled} from '../../../assets/img/counter2_disabled.svg'
 import {TDayPeriod} from "../../../types/types";
-import {hourFormat} from "../../../utils/constants";
+import {hourFormat, time12HourFormat, timeSpanString} from "../../../utils/constants";
 
 type TProps = {
     start: string;
     end: string;
     value?: string;
-    onChange: (newValue: string|null) => void;
-    period: TDayPeriod|null;
-    onPeriodChange: (newPeriod: TDayPeriod|null) => void;
+    onChange: (newValue: string) => void;
     gap?: number;
+    disabled?: boolean;
 }
 
 const TimeSelect: React.FC<TProps> = ({
                                           gap = 30,
                                           start = '08:00',
                                           end= "18:00",
-                                          onPeriodChange,
                                           value,
                                           onChange,
-                                          period}) => {
+                                          disabled}) => {
+    const [period, setPeriod] = useState<TDayPeriod>("am")
+
     const timeOptions = useMemo(() => {
-       const startTime = dayjs(start, hourFormat)
-       const endTime = dayjs(end, hourFormat)
+        const startTime = dayjs("01:00", hourFormat)
+        const endTime = dayjs("12:00", hourFormat)
         const options: string[] = [];
-       let currentTime = startTime;
-       while (currentTime.isBefore(endTime)) {
-           options.push(currentTime.format(hourFormat))
-           currentTime = currentTime.add(gap, 'minute')
-       }
-       return options;
+        let currentTime = startTime;
+        while (currentTime.isBefore(endTime)) {
+            options.push(currentTime.format(hourFormat))
+            currentTime = currentTime.add(gap, 'minute')
+        }
+        return options;
     }, [gap, start, end])
 
+    useEffect(() => {
+        if (value) {
+            setPeriod(dayjs(value, timeSpanString).format("a") as TDayPeriod)
+        }
+    }, [value])
+
     const upEnabled = useMemo(() => {
-        return dayjs(value, hourFormat).isBefore(dayjs(end, hourFormat))
+        return dayjs(value, timeSpanString).isBefore(dayjs(end, timeSpanString))
     }, [value, end])
 
     const downEnabled = useMemo(() => {
-        return dayjs(value, hourFormat).isAfter(dayjs(start, hourFormat))
+        return dayjs(value, timeSpanString).isAfter(dayjs(start, timeSpanString))
     }, [value, start])
 
+    const onPeriodChange = (value: TDayPeriod) => {
+        setPeriod(value);
+    }
+
     const onAutocompleteChange = (e: React.ChangeEvent<{}>, option: string) => {
-       onChange(option)
+       onChange(dayjs(`${option} ${period}`, time12HourFormat).format(timeSpanString))
     }
 
     const onClickUp = () => {
         if (upEnabled) {
-            onChange(dayjs(value, hourFormat).add(gap, 'minute').format(hourFormat))
+            onChange(dayjs(value, timeSpanString).add(gap, 'minute').format(timeSpanString))
         }
     }
     const onClickDown = () => {
         if (downEnabled) {
-            onChange(dayjs(value, hourFormat).subtract(gap, 'minute').format(hourFormat))
+            onChange(dayjs(value, timeSpanString).subtract(gap, 'minute').format(timeSpanString))
         }
     }
 
@@ -67,28 +77,42 @@ const TimeSelect: React.FC<TProps> = ({
             <Autocomplete
                 options={timeOptions}
                 disableClearable
+                disabled={disabled}
+                isOptionEqualToValue={(o, v) => dayjs(o, hourFormat).isSame(dayjs(v, timeSpanString), 'minute')}
                 onChange={onAutocompleteChange}
-                value={value}
+                value={dayjs(value, timeSpanString).format(hourFormat)}
                 renderInput={params => <TextField {...{
                     ...params, InputProps: {
                         ...params.InputProps,
                         disableUnderline: true,
-                        style: {padding: '0 5px', width: 86, borderRadius: 2, fontSize: 14 },
+                        style: {padding: '2px 5px', width: 86, borderRadius: 2, fontSize: 14, border: 0 },
                         placeholder: start,
                         endAdornment: <div>
-                            <ArrowWrapper disabled={!upEnabled} onClick={onClickUp}>
-                                {upEnabled ? <CounterUp/> : <CounterUpDisabled/>}
+                            <ArrowWrapper disabled={Boolean(disabled)} onClick={onClickUp}>
+                                {!disabled ? <CounterUp/> : <CounterUpDisabled/>}
                             </ArrowWrapper>
-                            <ArrowWrapper disabled={!downEnabled} onClick={onClickDown}>
-                                {downEnabled ? <CounterDown/> : <CounterDownDisabled/>}
+                            <ArrowWrapper disabled={Boolean(disabled)} onClick={onClickDown}>
+                                {!disabled ? <CounterDown/> : <CounterDownDisabled/>}
                             </ArrowWrapper>
                         </div>
-                    }}}/>
+                    }}}
+                />
             }
             />
             <div style={{lineHeight: 0}}>
-                <ButtonAmPm isUpper onClick={() => onPeriodChange("am")} selected={period === "am"}>AM</ButtonAmPm>
-                <ButtonAmPm onClick={() => onPeriodChange("pm")} selected={period === "pm"}>PM</ButtonAmPm>
+                <ButtonAmPm
+                    isUpper
+                    onClick={() => onPeriodChange("am")}
+                    selected={period === "am" as TDayPeriod}
+                    disabled={disabled || !upEnabled}>
+                    AM
+                </ButtonAmPm>
+                <ButtonAmPm
+                    onClick={() => onPeriodChange("pm")}
+                    disabled={disabled || !downEnabled}
+                    selected={period === "pm" as TDayPeriod}>
+                    PM
+                </ButtonAmPm>
             </div>
         </Wrapper>
     );
