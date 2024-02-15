@@ -4,7 +4,7 @@ import {loadAppointments} from "../../../../store/reducers/appointments/actions"
 import {useDispatch, useSelector} from "react-redux";
 import {TAppointmentsByDate, TDay, TView} from "../types";
 import {RootState} from "../../../../store/rootReducer";
-import {CalendarControls} from "../../AvailableStaffCalendar/CalendarControls/CalendarControls";
+import {CalendarControls} from "../../../../components/DataCalendar/CalendarControls/CalendarControls";
 import {WeekDayNames} from "../../../../utils/constants";
 import clsx from "clsx";
 import {Paper} from '@mui/material';

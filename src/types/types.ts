@@ -2,7 +2,7 @@ import {ThunkAction} from "redux-thunk";
 import {RootState} from "../store/rootReducer";
 import {Action} from "redux";
 import {TRole} from "../store/reducers/users/types";
-import React from "react";
+import React, {Dispatch, ReactElement, SetStateAction} from "react";
 
 import {AutocompleteChangeDetails, AutocompleteChangeReason} from '@mui/material/useAutocomplete';
 
@@ -324,3 +324,16 @@ export type TParsableDate = string | number | Date | Dayjs | null | undefined;
 
 export type TAutocompleteChangeReason = "createOption" | "selectOption" | "removeOption" | "blur" | "clear"
 export type TDayPeriod = "am" | "pm";
+
+export interface IDataCalendarProps<Data> {
+    data: Data[];
+    firstIcon: ReactElement;
+    secondIcon: ReactElement;
+    firstIconFieldName: keyof Data;
+    secondIconFieldName: keyof Data;
+    date: TParsableDate;
+    setDate: Dispatch<SetStateAction<TParsableDate>>;
+    dateFieldName: keyof Data;
+    onDayClick: (data: Data|undefined) => void;
+    index?: keyof Data;
+}

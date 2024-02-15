@@ -1,7 +1,7 @@
 import { makeStyles } from 'tss-react/mui';
 import {lighten} from "@mui/material";
 
-export const useCalendarStyles = makeStyles()(theme => ({
+export const useStyles = makeStyles()(theme => ({
     title: {
         textAlign: "center",
         position: "absolute",

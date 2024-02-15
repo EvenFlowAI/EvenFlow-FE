@@ -3,8 +3,8 @@ import {Button} from "@mui/material";
 import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import clsx from "clsx";
 import {useStyles} from "./styles";
-import {Directions} from "../types";
-import {TParsableDate} from "../../../../types/types";
+import {Directions} from "../../../features/admin/AvailableStaffCalendar/types";
+import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
 
 type TProps = {
