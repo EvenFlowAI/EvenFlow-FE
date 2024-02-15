@@ -23,7 +23,7 @@ export const time12HourFormat = "h:mm a";
 export const dateTimeString = "ddd, MMM D, h:mm A";
 export const time24HourFormat = "hh:mm A";
 export const hourFormat = "HH:mm";
-export const twelveHourFormat = "h:mm";
+export const twelveHourFormat = "hh:mm";
 
 export const SC_UNDEFINED = "Service center is not loaded";
 export const SOMETHING_WRONG = "Something wrong";

@@ -17,6 +17,7 @@ import {useActionButtonsStyles} from "../../../hooks/styling/useActionButtonsSty
 import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
+import {timeSpanString} from "../../../utils/constants";
 
 type TProps = DialogProps & {
     editingItem: IEmployeeRoleHours | null;
@@ -29,6 +30,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
     const {workingDays} = useSelector((state: RootState) => state.serviceCenters);
     const {hoursOfOperations} = useSelector((state: RootState) => state.appointmentFrame);
     const [currentSchedule, setCurrentSchedule] = useState<TDaySchedule[]>([]);
+    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showMessage = useMessage();
@@ -75,6 +77,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
     }, [setInitialData])
 
     const handleSwitch = (day: number) => (e: any, value: boolean) => {
+        setFormIsChecked(false)
         setCurrentSchedule(prev => {
             const data = [...prev];
             let element = data.find(el => el.dayOfWeek === day);
@@ -88,6 +91,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
     }
 
     const onTimeChange = (day: number, field: "from" | "to", value: string) => {
+        setFormIsChecked(false)
         setCurrentSchedule(prev => {
             const data = [...prev];
             let element = data.find(el => el.dayOfWeek === day);
@@ -101,21 +105,33 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
     }
 
     const onCancel = () => {
+        setFormIsChecked(false)
         setInitialData()
         onClose()
     }
 
     const onSuccess = () => showMessage("Employee schedule updated")
 
+    const checkIsValid = (): boolean => {
+        return currentSchedule
+            .filter(item => item.isEnabled)
+            .every(item => dayjs(item.to, timeSpanString).isAfter(dayjs(item.from, timeSpanString)))
+    }
+
     const onSave = () => {
         if (selectedSC && editingItem) {
-            const data: TSetScheduleData = {
-                serviceCenterId: selectedSC.id,
-                employeeId: editingItem?.employeeId,
-                dayOfWeekSchedules: currentSchedule.filter(item => item.isEnabled),
+            setFormIsChecked(true)
+            if (checkIsValid()) {
+                const data: TSetScheduleData = {
+                    serviceCenterId: selectedSC.id,
+                    employeeId: editingItem?.employeeId,
+                    dayOfWeekSchedules: currentSchedule.filter(item => item.isEnabled),
+                }
+                if (editingItem.serviceBookId) data.serviceBookId = employeeSchedule?.serviceBookId
+                dispatch(updateBaseEmployeeSchedule(data, onSuccess, showError))
+            } else {
+                showError('"To" must be later then "From"')
             }
-            if (editingItem.serviceBookId) data.serviceBookId = employeeSchedule?.serviceBookId
-            dispatch(updateBaseEmployeeSchedule(data, onSuccess, showError))
         }
     }
 
@@ -135,7 +151,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                     const scheduleItem = currentSchedule.find(el => el.dayOfWeek === day)
                     const schedule = hoursOfOperations.find(el => el.dayOfWeek === day);
                     const checked = scheduleItem?.isEnabled
-                    return <RowWrapper>
+                    return <RowWrapper key={day}>
                         <DayName>{dayjs().set('day', day).format("dddd")}</DayName>
                         <SwitcherWrapper>
                             <SwitcherLabel>OFF</SwitcherLabel>
@@ -149,6 +165,8 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                         </SwitcherWrapper>
                         <PickersWrapper>
                             <TimeSelect
+                                error={formIsChecked && scheduleItem?.isEnabled
+                                    && dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(dayjs(scheduleItem.from, timeSpanString))}
                                 disabled={!checked || !workingDays.includes(day)}
                                 start={schedule?.from ?? "09:00:00"}
                                 end={schedule?.to ?? "17:00:00"}
@@ -156,6 +174,8 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                                 onChange={(value) => onTimeChange(day, 'from', value)}/>
                             <div>TO</div>
                             <TimeSelect
+                                error={formIsChecked && scheduleItem?.isEnabled
+                                    && dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(dayjs(scheduleItem.from, timeSpanString))}
                                 disabled={!checked || !workingDays.includes(day)}
                                 start={schedule?.from ?? "09:00:00"}
                                 end={schedule?.to ?? "17:00:00"}
@@ -173,8 +193,10 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                         <LoadingButton
                             loading={loading}
                             onClick={onCancel}
-                            className={classes.cancelButton}>
-                            Cancel
+                            variant="text"
+                            style={{marginRight: 20}}
+                            color="info">
+                            Close
                         </LoadingButton>
                         <LoadingButton
                             loading={loading}

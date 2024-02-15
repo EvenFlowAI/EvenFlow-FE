@@ -16,6 +16,7 @@ type TProps = {
     onChange: (newValue: string) => void;
     gap?: number;
     disabled?: boolean;
+    error?: boolean;
 }
 
 const TimeSelect: React.FC<TProps> = ({
@@ -24,7 +25,8 @@ const TimeSelect: React.FC<TProps> = ({
                                           end= "18:00",
                                           value,
                                           onChange,
-                                          disabled}) => {
+                                          disabled,
+                                          error}) => {
     const [period, setPeriod] = useState<TDayPeriod>("am")
 
     const timeOptions = useMemo(() => {
@@ -53,8 +55,10 @@ const TimeSelect: React.FC<TProps> = ({
         return dayjs(value, timeSpanString).isAfter(dayjs(start, timeSpanString))
     }, [value, start])
 
-    const onPeriodChange = (value: TDayPeriod) => {
-        setPeriod(value);
+    const onPeriodChange = (period: TDayPeriod) => {
+        setPeriod(period);
+        const pureHours = dayjs(value, timeSpanString).format(twelveHourFormat)
+        onChange(dayjs(`${pureHours} ${period}`, time12HourFormat).format(timeSpanString))
     }
 
     const onAutocompleteChange = (e: React.ChangeEvent<{}>, option: string) => {
@@ -78,7 +82,7 @@ const TimeSelect: React.FC<TProps> = ({
                 options={timeOptions}
                 disableClearable
                 disabled={disabled}
-                isOptionEqualToValue={(o, v) => dayjs(o, hourFormat).isSame(dayjs(v, timeSpanString), 'minute')}
+                isOptionEqualToValue={(option, value) => dayjs(`${option} ${period}`, time12HourFormat).isSame(dayjs(value, timeSpanString), 'minute')}
                 onChange={onAutocompleteChange}
                 value={dayjs(value, timeSpanString).format(twelveHourFormat)}
                 renderInput={params => <TextField {...{
@@ -87,11 +91,12 @@ const TimeSelect: React.FC<TProps> = ({
                         disableUnderline: true,
                         style: {padding: '2px 5px', width: 86, borderRadius: 2, fontSize: 14, border: 0 },
                         placeholder: start,
+                        error,
                         endAdornment: <div>
-                            <ArrowWrapper disabled={Boolean(disabled)} onClick={onClickUp}>
+                            <ArrowWrapper disabled={Boolean(disabled || error)} onClick={onClickUp}>
                                 {!disabled ? <CounterUp/> : <CounterUpDisabled/>}
                             </ArrowWrapper>
-                            <ArrowWrapper disabled={Boolean(disabled)} onClick={onClickDown}>
+                            <ArrowWrapper disabled={Boolean(disabled || error)} onClick={onClickDown}>
                                 {!disabled ? <CounterDown/> : <CounterDownDisabled/>}
                             </ArrowWrapper>
                         </div>
@@ -104,12 +109,12 @@ const TimeSelect: React.FC<TProps> = ({
                     isUpper
                     onClick={() => onPeriodChange("am")}
                     selected={period === "am" as TDayPeriod}
-                    disabled={disabled || !upEnabled}>
+                    disabled={disabled}>
                     AM
                 </ButtonAmPm>
                 <ButtonAmPm
                     onClick={() => onPeriodChange("pm")}
-                    disabled={disabled || !downEnabled}
+                    disabled={disabled}
                     selected={period === "pm" as TDayPeriod}>
                     PM
                 </ButtonAmPm>
