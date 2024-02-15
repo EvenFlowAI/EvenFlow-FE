@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
-import {IEmployeeRoleHours, TDaySchedule} from "../../../store/reducers/employees/types";
+import {IEmployeeRoleHours, TDaySchedule, TSetScheduleData} from "../../../store/reducers/employees/types";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useDispatch, useSelector} from "react-redux";
-import {loadBaseEmployeeSchedule} from "../../../store/reducers/employees/actions";
+import {loadBaseEmployeeSchedule, updateBaseEmployeeSchedule} from "../../../store/reducers/employees/actions";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {DayName, PickersWrapper, RowWrapper, SwitcherLabel, SwitcherWrapper, UserWrapper} from "./styles";
 import {RootState} from "../../../store/rootReducer";
@@ -13,6 +13,10 @@ import dayjs from "dayjs";
 import {Switch} from "@mui/material";
 import TimeSelect from "../../../components/pickers/TimeSelect/TimeSelect";
 import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {useActionButtonsStyles} from "../../../hooks/styling/useActionButtonsStyles";
+import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
 
 type TProps = DialogProps & {
     editingItem: IEmployeeRoleHours | null;
@@ -27,6 +31,9 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
     const [currentSchedule, setCurrentSchedule] = useState<TDaySchedule[]>([]);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const showMessage = useMessage();
+    const showError = useException();
+    const {classes} = useActionButtonsStyles();
 
     useEffect(() => {
         if (editingItem && selectedSC && open) {
@@ -36,7 +43,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
         }
     }, [selectedSC, editingItem, open])
 
-    useEffect(() => {
+    const setInitialData = useCallback(() => {
         if (employeeSchedule) {
             setCurrentSchedule(daysList.map(dayNumber => {
                 const existingSchedule = employeeSchedule.dayOfWeekSchedules
@@ -62,6 +69,10 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
             }))
         }
     }, [employeeSchedule, hoursOfOperations])
+
+    useEffect(() => {
+        setInitialData()
+    }, [setInitialData])
 
     const handleSwitch = (day: number) => (e: any, value: boolean) => {
         setCurrentSchedule(prev => {
@@ -89,9 +100,28 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
         })
     }
 
+    const onCancel = () => {
+        setInitialData()
+        onClose()
+    }
+
+    const onSuccess = () => showMessage("Employee schedule updated")
+
+    const onSave = () => {
+        if (selectedSC && editingItem) {
+            const data: TSetScheduleData = {
+                serviceCenterId: selectedSC.id,
+                employeeId: editingItem?.employeeId,
+                dayOfWeekSchedules: currentSchedule.filter(item => item.isEnabled),
+            }
+            if (editingItem.serviceBookId) data.serviceBookId = employeeSchedule?.serviceBookId
+            dispatch(updateBaseEmployeeSchedule(data, onSuccess, showError))
+        }
+    }
+
     return (
-        <BaseModal open={open} onClose={onClose} width={780}>
-            <DialogTitle onClose={onClose}>Employee Time Schedule Set Up</DialogTitle>
+        <BaseModal open={open} onClose={onCancel} width={780}>
+            <DialogTitle onClose={onCancel}>Employee Time Schedule Set Up</DialogTitle>
             <DialogContent>
                 {loading ?
                     <Loading/>
@@ -138,7 +168,22 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                 }
             </DialogContent>
             <DialogActions>
-
+                <div className={classes.wrapper}>
+                    <div className={classes.buttonsWrapper}>
+                        <LoadingButton
+                            loading={loading}
+                            onClick={onCancel}
+                            className={classes.cancelButton}>
+                            Cancel
+                        </LoadingButton>
+                        <LoadingButton
+                            loading={loading}
+                            onClick={onSave}
+                            className={classes.saveButton}>
+                            Save
+                        </LoadingButton>
+                    </div>
+                </div>
             </DialogActions>
         </BaseModal>
     );
