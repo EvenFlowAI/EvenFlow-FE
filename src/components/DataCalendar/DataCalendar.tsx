@@ -53,9 +53,6 @@ export function DataCalendar<U>({
         return days;
     }, [date]);
 
-    console.log(data)
-    console.log(days)
-
     return <div style={{width: "100%"}}>
         <Paper className={classes.paper} variant="outlined">
             <h2 className={classes.title}>Calendar</h2>
@@ -72,11 +69,11 @@ export function DataCalendar<U>({
                                 d.type === "cur" ? classes.currentMonth : classes.prevMonth,
                                 dayjs(d.date).isSame(today, "day") ? classes.today : ""
                             )}
-                            onClick={() => onDayClick(dayData)}
+                            onClick={() => dayData ? onDayClick(dayData) : null}
                             key={`${d.day}-${d.type}`}>
                             <span className={classes.dayNumber}>{d.day}</span>
-                            <span className={classes.iconBlock}>{firstIcon} {dayData ? ` - ${dayData[firstIconFieldName]}` : 0}</span>
-                            <span className={classes.iconBlock}>{secondIcon} {dayData ? ` - ${dayData[secondIconFieldName]}` : 0}</span>
+                            <span className={classes.iconBlock}>{firstIcon} {dayData ? ` - ${dayData[firstIconFieldName]}` : ' - 0'}</span>
+                            <span className={classes.iconBlock}>{secondIcon} {dayData ? ` - ${dayData[secondIconFieldName]}` : ' - 0'}</span>
                         </div>
                     }
                 )}

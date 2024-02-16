@@ -28,6 +28,9 @@ export const AvailableStaffCalendar = () => {
         })))
     }, [])
 
+    const onDayClick = (el: TData|undefined) => {
+    }
+
     return <DataCalendar
         data={data}
         firstIcon={<SupervisorAccount/>}
@@ -37,5 +40,5 @@ export const AvailableStaffCalendar = () => {
         date={date}
         setDate={setDate}
         dateFieldName={'date'}
-        onDayClick={(el) => console.log(el)}/>
+        onDayClick={onDayClick}/>
 }
