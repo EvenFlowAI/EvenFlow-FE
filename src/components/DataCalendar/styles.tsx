@@ -17,7 +17,7 @@ export const useStyles = makeStyles()(theme => ({
     paper: {
         borderRadius: 0,
         position: "relative",
-        padding: 11,
+        padding: 24,
         color: "#252733"
     },
     weekDay: {
@@ -43,6 +43,10 @@ export const useStyles = makeStyles()(theme => ({
         "& svg, & > span": {
             color: '#B8B9BF !important',
         },
+        "& > span > svg > g > path, & > span > svg, & > svg": {
+            fill: '#B8B9BF',
+            color: '#B8B9BF',
+        }
     },
     dayCell: {
         background: theme.palette.common.white,
@@ -60,26 +64,23 @@ export const useStyles = makeStyles()(theme => ({
         justifyContent: "center",
         fontSize: 12,
         margin: 3,
-        "&>.MuiSvgIcon-root": {
-            fontSize: 20,
-        }
+        "& > svg": {
+          marginRight: 2
+        },
     },
     today: {
         color: `${theme.palette.success.dark} !important`,
-        "& svg:hover, & > span": {
-            color: `${theme.palette.success.dark} !important`,
-        }
+        "& > span > svg > g > path, & > span > svg, & > svg": {
+            fill: theme.palette.success.dark,
+            color: theme.palette.success.dark,
+        },
     },
     currentMonth: {
         color: theme.palette.text.primary,
         cursor: "pointer",
         "&:hover": {
             background: lighten(theme.palette.primary.light, .9),
-            color: '#7898FF',
         },
-        "& svg:hover": {
-            color: '#7898FF',
-        }
     },
     calendarWrapper: {
         marginTop: 11,

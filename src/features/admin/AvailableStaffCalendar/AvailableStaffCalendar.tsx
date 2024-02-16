@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {Star, SupervisorAccount} from "@mui/icons-material";
 import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
+import {ReactComponent as Star} from "../../../assets/img/star.svg";
+import {ReactComponent as User} from "../../../assets/img/persons.svg";
 import {DataCalendar} from "../../../components/DataCalendar/DataCalendar";
 
 type TData = {
@@ -33,7 +34,7 @@ export const AvailableStaffCalendar = () => {
 
     return <DataCalendar
         data={data}
-        firstIcon={<SupervisorAccount/>}
+        firstIcon={<User/>}
         secondIcon={<Star />}
         firstIconFieldName={'techniciansAmount'}
         secondIconFieldName={'advisorsAmount'}
