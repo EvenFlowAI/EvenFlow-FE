@@ -89,8 +89,7 @@ export const AppointmentsTable: React.FC<React.PropsWithChildren<React.PropsWith
                     confirmContent: "Cancel appointment",
                     title: "Cancel appointment",
                     content: <span>
-                        Please confirm you want to cancel appointment on <br />
-                        {dayjs.utc(viewItem.dateTime).format("LLL")}?
+                        Please confirm you want to cancel appointment on {dayjs.utc(viewItem.dateTime).format("LLL")}?
                     </span>,
                     onConfirm: _handleCancel
                 });
