@@ -25,7 +25,11 @@ const cols: TableRowDataType<IAppointment>[] = [
     {header: "Day", val: el => el.dateTime ? dayjs.utc(el.dateTime).format("ddd") : ""},
     {header: "Time", val: el => el.dateTime ? dayjs.utc(el.dateTime).format(time12HourFormat) : "", width: 100},
     {header: "Customer Name", val: el => el.customerInformation?.fullName ?? "", orderId: "fullName"},
-    {header: "Vehicle", val: el => `${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${el.vehicle?.year ?? ''}`},
+    {header: "Vehicle", val: el => {
+        const vehicleData =`${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${Boolean(el.vehicle?.year) ? el.vehicle?.year : ''}`
+            return el.vehicle?.make || el.vehicle?.model || Boolean(el.vehicle?.year) ? vehicleData : "DMS missing vehicle data"
+        }
+    },
     {header: "Service Book", val: el => el.serviceBook?.name ?? ''},
     {header: "Scheduler", val: el => `${el.scheduler?.fullName ?? ''}`},
     {header: "Status", val: el => typeof el.reportingStatus !== 'undefined' && Number.isInteger(el.reportingStatus) ? reportingStatuses[el.reportingStatus] : "", orderId: "reportingStatus"},
