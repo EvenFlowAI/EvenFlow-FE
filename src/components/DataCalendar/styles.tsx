@@ -1,7 +1,7 @@
 import { makeStyles } from 'tss-react/mui';
 import {lighten} from "@mui/material";
 
-export const useCalendarStyles = makeStyles()(theme => ({
+export const useStyles = makeStyles()(theme => ({
     title: {
         textAlign: "center",
         position: "absolute",
@@ -9,7 +9,6 @@ export const useCalendarStyles = makeStyles()(theme => ({
         left: 0,
         right: 0,
         margin: 0,
-        fontSize: 16,
         [theme.breakpoints.down('sm')]: {
             position: "static",
             marginBottom: theme.spacing(1)
@@ -18,54 +17,77 @@ export const useCalendarStyles = makeStyles()(theme => ({
     paper: {
         borderRadius: 0,
         position: "relative",
-        padding: 11
+        padding: 24,
+        color: "#252733"
     },
     weekDay: {
+        fontSize: 12,
+        fontWeight: 700,
+        letterSpacing: 0.2,
+        textTransform: 'uppercase',
         textAlign: "center",
-        background: theme.palette.common.white
+        background: theme.palette.common.white,
+        padding: '4px 0',
+        borderBottom: '1px solid #B8B9BF',
     },
     dayNumber: {
         position: "absolute",
-        top: 4, left: 4
+        top: 4,
+        left: 4,
+        fontSize: 12,
+        fontWeight: 700,
+        color: "#7898FF",
     },
     prevMonth: {
-        color: theme.palette.text.secondary
+        color: theme.palette.text.secondary,
+        "& svg, & > span": {
+            color: '#B8B9BF !important',
+        },
+        "& > span > svg > g > path, & > span > svg, & > svg": {
+            fill: '#B8B9BF',
+            color: '#B8B9BF',
+        }
     },
     dayCell: {
         background: theme.palette.common.white,
-        minHeight: 70,
+        minHeight: 54,
         position: "relative",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        cursor: "pointer",
+        padding: "20px 24px",
         transition: theme.transitions.create(["background"]),
-        "&:hover": {
-            background: lighten(theme.palette.primary.light, .9)
-        }
     },
     iconBlock: {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: 10,
+        fontSize: 12,
         margin: 3,
-        "&>.MuiSvgIcon-root": {
-            fontSize: 20
-        }
+        "& > svg": {
+          marginRight: 2
+        },
     },
     today: {
         color: `${theme.palette.success.dark} !important`,
+        "& > span > svg > g > path, & > span > svg, & > svg": {
+            fill: theme.palette.success.dark,
+            color: theme.palette.success.dark,
+        },
     },
     currentMonth: {
-        color: theme.palette.text.primary
+        color: theme.palette.text.primary,
+        cursor: "pointer",
+        "&:hover": {
+            background: lighten(theme.palette.primary.light, .9),
+        },
     },
     calendarWrapper: {
         marginTop: 11,
         overflowX: "auto",
         gap: 1,
         background: theme.palette.divider,
-        border: `1px solid ${theme.palette.divider}`,
+        border: `1px solid #B8B9BF`,
         display: "grid",
         gridTemplateColumns: "repeat(7, 1fr)"
     }
