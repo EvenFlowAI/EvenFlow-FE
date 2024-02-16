@@ -336,4 +336,6 @@ export interface IDataCalendarProps<Data> {
     dateFieldName: keyof Data;
     onDayClick: (data: Data|undefined) => void;
     index?: keyof Data;
+    firstIconText?: string;
+    secondIconText?: string;
 }

@@ -7,6 +7,7 @@ import {IDataCalendarProps, TParsableDate} from "../../types/types";
 import {TDay} from "../../features/admin/AvailableStaffCalendar/types";
 import {CalendarControls} from "./CalendarControls/CalendarControls";
 import {WeekDayNames} from "../../utils/constants";
+import {IconsBlock} from "./IconsBlock/IconsBlock";
 
 export function DataCalendar<U>({
                                     date,
@@ -19,6 +20,8 @@ export function DataCalendar<U>({
                                     secondIcon,
                                     index,
                                     dateFieldName,
+    firstIconText,
+    secondIconText
                                 }: IDataCalendarProps<U>) {
     const today = useMemo(() => dayjs(), []);
     const { classes  } = useStyles();
@@ -72,8 +75,16 @@ export function DataCalendar<U>({
                             onClick={() => dayData ? onDayClick(dayData) : null}
                             key={`${d.day}-${d.type}`}>
                             <span className={classes.dayNumber}>{d.day}</span>
-                            <span className={classes.iconBlock}>{firstIcon} {dayData ? ` - ${dayData[firstIconFieldName]}` : ' - 0'}</span>
-                            <span className={classes.iconBlock}>{secondIcon} {dayData ? ` - ${dayData[secondIconFieldName]}` : ' - 0'}</span>
+                            <IconsBlock
+                                icon={firstIcon}
+                                index={'firstIcon'}
+                                tooltipText={firstIconText}
+                                value={dayData ? dayData[firstIconFieldName] : undefined}/>
+                            <IconsBlock
+                                index={'secondIcon'}
+                                icon={secondIcon}
+                                tooltipText={secondIconText}
+                                value={dayData ? dayData[secondIconFieldName] : undefined}/>
                         </div>
                     }
                 )}

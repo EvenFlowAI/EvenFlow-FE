@@ -36,9 +36,11 @@ export const AvailableStaffCalendar = () => {
         data={data}
         firstIcon={<User/>}
         secondIcon={<Star />}
-        firstIconFieldName={'techniciansAmount'}
-        secondIconFieldName={'advisorsAmount'}
+        firstIconFieldName={'advisorsAmount'}
+        secondIconFieldName={'techniciansAmount'}
         date={date}
+        // firstIconText={"The number of advisors scheduled for the day"}
+        // secondIconText={"The number of technicians scheduled for the day"}
         setDate={setDate}
         dateFieldName={'date'}
         onDayClick={onDayClick}/>
