@@ -1,6 +1,13 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ICalendarItem, IEmployeeSchedule, IScheduleByDate, IScheduleFilters, IScheduleForm} from "./types";
-import {AppThunk} from "../../../types/types";
+import {
+    ICalendarItem,
+    IEmployeeSchedule,
+    IScheduleByDate,
+    IScheduleFilters,
+    IScheduleForm,
+    IUpdateByDateRequest
+} from "./types";
+import {AppThunk, TParsableDate} from "../../../types/types";
 import {getStartEndDates} from "../../../utils/utils";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
@@ -47,7 +54,7 @@ export const loadScheduleCalendar = (serviceCenterId: number, startDate: string,
         .finally(() => dispatch(loading(false)))
 }
 
-export const loadScheduleByDate = (id: number, date: string): AppThunk => dispatch => {
+export const loadScheduleByDate = (id: number, date: TParsableDate): AppThunk => dispatch => {
     dispatch(loading(true))
     Api.call<IScheduleByDate>(Api.endpoints.EmployeeSchedule.GetByDate, {urlParams: {id}, params: {date}})
         .then(result => {
@@ -57,4 +64,19 @@ export const loadScheduleByDate = (id: number, date: string): AppThunk => dispat
         .catch(err => {
             console.log('load schedule by date', err)
         })
+        .finally(() => dispatch(loading(false)))
+}
+
+export const updateScheduleByDate = (data: IUpdateByDateRequest): AppThunk => dispatch => {
+    dispatch(loading(true))
+    Api.call(Api.endpoints.EmployeeSchedule.UpdateByDate, {data})
+        .then(result => {
+            if (result) {
+                dispatch(loadScheduleByDate(data.serviceCenterId, data.date))
+            }
+        })
+        .catch(err => {
+            console.log('update schedule by date error', err)
+        })
+        .finally(() => dispatch(loading(false)))
 }
