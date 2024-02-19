@@ -122,6 +122,8 @@ export class Api {
             Remove: {route: "/employee-schedules/{id}", method: "delete"},
             GetAll: {route: "/employee-schedules/by-query", method: "post"},
             SetForWeek: {route: "/employee-schedules/batch-update", method: "put"},
+            GetCalendarSummary: {route: "/employee-schedules/date-range-summary-per-role", method: "post"},
+            GetByDate: {route: "/employee-schedules/{id}/get-by-date", method: "get"},
         },
         GeographicZones: {
             GetZones: {route: "/geographic-zones/by-query", method: "post"},

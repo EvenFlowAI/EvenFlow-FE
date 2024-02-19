@@ -1,7 +1,15 @@
 import {ActionCreator} from "redux";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {AppThunk, IOrder, IPageRequest, PaginatedAPIResponse, Roles} from "../../../types/types";
-import {IEmployee, IEmployeeFilters, IEmployeeForm, TDmsAdvisor, TEmployeeActions} from "./types";
+import {
+    ICalendarItem,
+    IEmployee,
+    IEmployeeFilters,
+    IEmployeeForm,
+    IScheduleByDate,
+    TDmsAdvisor,
+    TEmployeeActions
+} from "./types";
 import {saveEmployeeAvatar} from "../users/actions";
 import {createAction} from "@reduxjs/toolkit";
 import {IAdvisorShort} from "../users/types";
@@ -201,4 +209,31 @@ export const loadUsersShort = (serviceCenterId: number): AppThunk => dispatch =>
             console.log('load users short error', err)
         })
         .finally(() => dispatch(loading(false)))
+}
+
+export const getScheduleCalendar = createAction<ICalendarItem[]>("Employees/GetCalendarData");
+export const getScheduleByDate = createAction<IScheduleByDate>("Employees/GetScheduleByDate");
+
+export const loadScheduleCalendar = (serviceCenterId: number, startDate: string, endDate: string): AppThunk => dispatch => {
+    dispatch(loading(true))
+    Api.call<ICalendarItem[]>(Api.endpoints.EmployeeSchedule.GetCalendarSummary, {data: {serviceCenterId, startDate, endDate}})
+        .then(result => {
+            if (result.data) dispatch(getScheduleCalendar(result.data))
+        })
+        .catch(err => {
+            console.log('load schedule calendar', err)
+        })
+        .finally(() => dispatch(loading(false)))
+}
+
+export const loadScheduleByDate = (id: number, date: string): AppThunk => dispatch => {
+    dispatch(loading(true))
+    Api.call<IScheduleByDate>(Api.endpoints.EmployeeSchedule.GetByDate, {urlParams: {id}, params: {date}})
+        .then(result => {
+            if (result.data) console.log(result.data)
+            //dispatch(getScheduleByDate(result.data))
+        })
+        .catch(err => {
+            console.log('load schedule by date', err)
+        })
 }

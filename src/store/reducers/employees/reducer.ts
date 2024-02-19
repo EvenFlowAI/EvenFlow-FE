@@ -20,6 +20,8 @@ const initialState: TEmployeesState = {
     pageData: {...defaultPageData},
     filters: {},
     usersShort: [],
+    calendarData: [],
+    scheduleByDate: null,
 }
 
 export const employeesReducer = (state=initialState, action: TEmployeeActions): TEmployeesState => {
@@ -50,6 +52,10 @@ export const employeesReducer = (state=initialState, action: TEmployeeActions): 
             return {...state, loadingDMSAdvisors: action.payload};
         case "Employees/GetUsersShort":
             return {...state, usersShort: action.payload};
+        case "Employees/GetCalendarData":
+            return {...state, calendarData: action.payload};
+        case "Employees/GetScheduleByDate":
+            return {...state, scheduleByDate: action.payload};
         case setEmplSearch.type:
             if (setEmplSearch.match(action)) {
                 return {...state, searchTerm: action.payload, pageData: {...state.pageData, pageIndex: 0}};
