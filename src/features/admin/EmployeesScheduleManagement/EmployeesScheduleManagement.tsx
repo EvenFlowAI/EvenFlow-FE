@@ -24,15 +24,17 @@ const EmployeesScheduleManagement = () => {
 
     useEffect(() => {
         if (selectedSC && timePeriod.startDate && timePeriod.endDate) {
-            const start = dayjs(timePeriod.startDate).startOf("day").toISOString()
-            const end = dayjs(timePeriod.endDate).startOf("day").toISOString()
+            const utcOffset = dayjs().utcOffset()
+            const start = dayjs(timePeriod.startDate).add(utcOffset, 'minute').startOf("day").toISOString()
+            const end = dayjs(timePeriod.endDate).add(utcOffset, 'minute').startOf("day").toISOString()
             dispatch(loadScheduleCalendar(selectedSC.id, start, end))
         }
     }, [selectedSC, timePeriod])
 
     const onDayClick = (el: ICalendarItem|undefined) => {
         if (selectedSC && el) {
-            dispatch(loadScheduleByDate(selectedSC.id, dayjs(el.date).startOf("day").toISOString()))
+            const utcOffset = dayjs().utcOffset()
+            dispatch(loadScheduleByDate(selectedSC.id, dayjs(el.date).add(utcOffset, 'minute').startOf("day").toISOString()))
         }
     }
 
