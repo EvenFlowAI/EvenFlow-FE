@@ -1,4 +1,4 @@
-import React, {useMemo} from "react";
+import React, {useEffect, useMemo} from "react";
 import {Paper} from "@mui/material";
 import clsx from "clsx";
 import {useStyles} from "./styles";
@@ -21,7 +21,8 @@ export function DataCalendar<U>({
                                     index,
                                     dateFieldName,
     firstIconText,
-    secondIconText
+    secondIconText,
+                                    setTimePeriod
                                 }: IDataCalendarProps<U>) {
     const today = useMemo(() => dayjs(), []);
     const { classes  } = useStyles();
@@ -55,6 +56,12 @@ export function DataCalendar<U>({
 
         return days;
     }, [date]);
+
+    useEffect(() => {
+        if (days.length) {
+            setTimePeriod({startDate: days[0]?.date, endDate: days[days.length - 1]?.date})
+        }
+    }, [days])
 
     return <div style={{width: "100%"}}>
         <Paper className={classes.paper} variant="outlined">

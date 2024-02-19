@@ -1,9 +1,10 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IEmployeeSchedule, IScheduleFilters, IScheduleForm} from "./types";
+import {ICalendarItem, IEmployeeSchedule, IScheduleByDate, IScheduleFilters, IScheduleForm} from "./types";
 import {AppThunk} from "../../../types/types";
 import {getStartEndDates} from "../../../utils/utils";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
+import {loading} from "../employees/actions";
 
 export const switchScheduleFilters = createAction<boolean>("Schedules/SwitchFilters");
 export const setScheduleFilters = createAction<Partial<IScheduleFilters>>("Schedules/SetFilters");
@@ -29,4 +30,31 @@ export const setEmployeesSchedule = (data: IScheduleForm, isXS: boolean): AppThu
     );
     const [st, nd] = getStartEndDates(dayjs(data.date), isXS);
     dispatch(loadEmployeesSchedule(st, nd, data.serviceCenterId));
+}
+
+export const getScheduleCalendar = createAction<ICalendarItem[]>("Employees/GetCalendarData");
+export const getScheduleByDate = createAction<IScheduleByDate>("Employees/GetScheduleByDate");
+
+export const loadScheduleCalendar = (serviceCenterId: number, startDate: string, endDate: string): AppThunk => dispatch => {
+    dispatch(loading(true))
+    Api.call<ICalendarItem[]>(Api.endpoints.EmployeeSchedule.GetCalendarSummary, {data: {serviceCenterId, startDate, endDate}})
+        .then(result => {
+            if (result.data) dispatch(getScheduleCalendar(result.data))
+        })
+        .catch(err => {
+            console.log('load schedule calendar', err)
+        })
+        .finally(() => dispatch(loading(false)))
+}
+
+export const loadScheduleByDate = (id: number, date: string): AppThunk => dispatch => {
+    dispatch(loading(true))
+    Api.call<IScheduleByDate>(Api.endpoints.EmployeeSchedule.GetByDate, {urlParams: {id}, params: {date}})
+        .then(result => {
+            if (result.data) console.log(result.data)
+            //dispatch(getScheduleByDate(result.data))
+        })
+        .catch(err => {
+            console.log('load schedule by date', err)
+        })
 }

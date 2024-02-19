@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import {ReactComponent as Star} from "../../../assets/img/star.svg";
 import {ReactComponent as User} from "../../../assets/img/persons.svg";
 import {DataCalendar} from "../../../components/DataCalendar/DataCalendar";
+import {TTimePeriod} from "../../../store/reducers/schedules/types";
 
 type TData = {
     date: TParsableDate;
@@ -14,6 +15,10 @@ type TData = {
 export const AvailableStaffCalendar = () => {
     const [date, setDate] = useState<TParsableDate>(dayjs());
     const [data, setData] = useState<TData[]>([]);
+    const [timePeriod, setTimePeriod] = useState<TTimePeriod>({
+        startDate: null,
+        endDate: null,
+    })
 
     useEffect(() => {
         const dates = []
@@ -41,6 +46,7 @@ export const AvailableStaffCalendar = () => {
         date={date}
         // firstIconText={"The number of advisors scheduled for the day"}
         // secondIconText={"The number of technicians scheduled for the day"}
+        setTimePeriod={setTimePeriod}
         setDate={setDate}
         dateFieldName={'date'}
         onDayClick={onDayClick}/>

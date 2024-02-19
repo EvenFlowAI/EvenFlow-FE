@@ -2,7 +2,7 @@ import {IDealershipGroupExtended} from "../dealershipGroups/types";
 import {IServiceCenter} from "../serviceCenters/types";
 import {IAdvisorShort} from "../users/types";
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
-import {IOrder, IPageRequest, IPagingResponse, TParsableDate} from "../../../types/types";
+import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 
 export interface IEmployeeInfo {
     hourlyRate: number;
@@ -63,8 +63,6 @@ export type TChangePaging = TChangePagingGeneric<"Employees/ChangePaging">;
 export type TChangePageData = TChangePageDataGeneric<"Employees/ChangePageData">;
 export type TLoadingDMSAdvisors = { type: "SCEmployees/LoadingDMSAdvisors", payload: boolean };
 export type TGetUsersShort = {type: "Employees/GetUsersShort", payload: IAdvisorShort[]};
-export type TGetCalendarData = {type: "Employees/GetCalendarData", payload: ICalendarItem[]};
-export type TGetScheduleByDate = {type: "Employees/GetScheduleByDate", payload: IScheduleByDate|null};
 
 export type TEmployeeActions =
     | TGetDealershipEmployees
@@ -81,8 +79,6 @@ export type TEmployeeActions =
     | TGetAll
     | TLoadingDMSAdvisors
     | TGetUsersShort
-    | TGetCalendarData
-    | TGetScheduleByDate;
 
 export type TDmsAdvisor = {
     id: string;
@@ -104,8 +100,6 @@ export type TEmployeesState = {
     pageData: IPageRequest;
     filters: IEmployeeFilters;
     usersShort: IAdvisorShort[];
-    calendarData: ICalendarItem[];
-    scheduleByDate: IScheduleByDate|null;
 }
 export type TSCState = {
     advisorsList: IAdvisorShort[];
@@ -113,19 +107,3 @@ export type TSCState = {
     DmsAdvisors: TDmsAdvisor[];
 }
 
-export interface ICalendarItem {
-    date: TParsableDate;
-    techniciansCount: number;
-    advisorsCount: number;
-}
-
-export interface IScheduleByDate {
-    employeeName: string;
-    role: string;
-    serviceBook: string;
-    serviceBookId: number;
-    employeeId: string;
-    isOnSchedule: boolean;
-    startAt: string;
-    finishAt: string;
-}
