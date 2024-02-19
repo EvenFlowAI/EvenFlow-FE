@@ -25,8 +25,9 @@ const EmployeesScheduleManagement = () => {
     useEffect(() => {
         if (selectedSC && timePeriod.startDate && timePeriod.endDate) {
             const utcOffset = dayjs().utcOffset()
+            // todo check logic with the dates
             const start = dayjs(timePeriod.startDate).add(utcOffset, 'minute').startOf("day").toISOString()
-            const end = dayjs(timePeriod.endDate).add(utcOffset, 'minute').startOf("day").toISOString()
+            const end = dayjs(timePeriod.endDate).subtract(utcOffset, 'minute').endOf("day").toISOString()
             dispatch(loadScheduleCalendar(selectedSC.id, start, end))
         }
     }, [selectedSC, timePeriod])
