@@ -1,8 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import { ThemeProvider, StyledEngineProvider, useMediaQuery, useTheme } from "@mui/material";
-import {
-    Cars
-} from "../../../features/booking/AppointmentFlow/Cars/Cars";
+import {Cars} from "../../../features/booking/AppointmentFlow/Cars/Cars";
 import {frameTheme} from "../../../theme/theme";
 import {ServiceNeedsFrame} from "../../../features/booking/AppointmentFlow/ServiceNeeds/ServiceNeedsFrame";
 import {SideBar} from "../../../features/booking/SideBar/SideBar";
@@ -103,7 +101,7 @@ export const AppointmentFlow = () => {
         zipCode,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
-    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
+    const {firstScreenOptions, withoutOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {engineTypes, mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const {currentConfig, isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
 
@@ -204,7 +202,9 @@ export const AppointmentFlow = () => {
                 await updateServiceRequests(data.serviceRequests);
                 handleServiceTypeOption(data)
                 await dispatch(handleSideBarAppointmentUpdate());
-                option && (await dispatch(loadConsultantsForUpdating(id, option.id, data)))
+                if (option || withoutOptions) {
+                    await dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data))
+                }
                 await dispatch(updateConsultant(data.advisor))
                 await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
                 await dispatch(checkCarIsValid());
@@ -228,7 +228,7 @@ export const AppointmentFlow = () => {
         if (someRequestsSelected && requestDataIsValid) {
             dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
         }
-    }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id, address, zipCode])
+    }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id, address, zipCode, withoutOptions])
 
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
