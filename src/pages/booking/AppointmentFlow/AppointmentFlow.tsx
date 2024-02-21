@@ -202,9 +202,7 @@ export const AppointmentFlow = () => {
                 await updateServiceRequests(data.serviceRequests);
                 handleServiceTypeOption(data)
                 await dispatch(handleSideBarAppointmentUpdate());
-                if (option || withoutOptions) {
-                    await dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data))
-                }
+                await dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data))
                 await dispatch(updateConsultant(data.advisor))
                 await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
                 await dispatch(checkCarIsValid());
@@ -220,7 +218,8 @@ export const AppointmentFlow = () => {
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
         handleServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
         updateRecalls, updatePackageOption, goToServiceTypeSelection,
-        isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes, isAuth])
+        isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable,
+        selectedVehicle, engineTypes, isAuth, withoutOptions])
 
     const onCarIsValid = useCallback(() => {
         const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
@@ -262,7 +261,7 @@ export const AppointmentFlow = () => {
             dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
             onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
         }
-    }, [customerLoadedData, selectedVehicle, firstScreenOptions])
+    }, [customerLoadedData, selectedVehicle])
 
     useEffect(() => {
         if (!customerLoadedData) {
