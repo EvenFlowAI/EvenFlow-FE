@@ -1,8 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import { ThemeProvider, StyledEngineProvider, useMediaQuery, useTheme } from "@mui/material";
-import {
-    Cars
-} from "../../../features/booking/AppointmentFlow/Cars/Cars";
+import {Cars} from "../../../features/booking/AppointmentFlow/Cars/Cars";
 import {frameTheme} from "../../../theme/theme";
 import {ServiceNeedsFrame} from "../../../features/booking/AppointmentFlow/ServiceNeeds/ServiceNeedsFrame";
 import {SideBar} from "../../../features/booking/SideBar/SideBar";
@@ -204,7 +202,7 @@ export const AppointmentFlow = () => {
                 await updateServiceRequests(data.serviceRequests);
                 handleServiceTypeOption(data)
                 await dispatch(handleSideBarAppointmentUpdate());
-                option && (await dispatch(loadConsultantsForUpdating(id, option.id, data)))
+                await dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data))
                 await dispatch(updateConsultant(data.advisor))
                 await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
                 await dispatch(checkCarIsValid());
@@ -220,7 +218,8 @@ export const AppointmentFlow = () => {
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
         handleServiceTypeOption, needToShowServiceTypes, serviceTypeOption, id,
         updateRecalls, updatePackageOption, goToServiceTypeSelection,
-        isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, selectedVehicle, engineTypes, isAuth])
+        isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable,
+        selectedVehicle, engineTypes, isAuth])
 
     const onCarIsValid = useCallback(() => {
         const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
@@ -262,7 +261,7 @@ export const AppointmentFlow = () => {
             dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
             onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
         }
-    }, [customerLoadedData, selectedVehicle, firstScreenOptions])
+    }, [customerLoadedData, selectedVehicle])
 
     useEffect(() => {
         if (!customerLoadedData) {
