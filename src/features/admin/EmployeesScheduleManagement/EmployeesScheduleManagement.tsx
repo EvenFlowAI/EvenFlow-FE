@@ -11,6 +11,8 @@ import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {loadScheduleByDate, loadScheduleCalendar} from "../../../store/reducers/schedules/actions";
 import {useModal} from "../../../hooks/useModal/useModal";
 import EmployeeScheduleModal from "./EmployeeScheduleModal/EmployeeScheduleModal";
+import {employeesRoot} from "../../../utils/constants";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 
 const initialPeriod = {
     startDate: null,
@@ -44,6 +46,7 @@ const EmployeesScheduleManagement = () => {
     }
 
     return <>
+        <TitleContainer title={"Schedule Management"} pad parent={employeesRoot}/>
         <DataCalendar
             data={calendarData}
             firstIcon={<User/>}
