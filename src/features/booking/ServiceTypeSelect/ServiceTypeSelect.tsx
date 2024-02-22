@@ -24,7 +24,6 @@ import {
     setWelcomeScreenView
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import ReactGA from "react-ga4";
-//import ReactGA from "react-ga";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {InfoOutlined} from "@mui/icons-material";

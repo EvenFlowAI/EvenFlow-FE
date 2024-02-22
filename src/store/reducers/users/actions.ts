@@ -38,7 +38,7 @@ export const saveEmployeeAvatar = (avatar: File, id: string): AppThunk => async 
     dispatch(getCurrentUser());
 }
 const saving = (payload: boolean): TUserActions => ({type: "User/Saving", payload});
-export const createUser = (payload: IUserForm, avatar?: File): AppThunk => async dispatch => {
+export const createUser = (payload: IUserForm, onSuccess: () => void, onError: (err: any) => void, avatar?: File): AppThunk => async dispatch => {
     dispatch(saving(true));
     try {
         const {data} = await Api.call<IEmployee|string>(Api.endpoints.Users.Create, {data: payload})
@@ -47,12 +47,14 @@ export const createUser = (payload: IUserForm, avatar?: File): AppThunk => async
         }
         dispatch(loadByFilters())
         dispatch(saving(false))
+        onSuccess()
     } catch (e) {
         dispatch(saving(false));
+        onError(e)
         console.log('createUser', e)
     }
 };
-export const updateUser = (payload: IUserForm, id: string, avatar?: File): AppThunk => async dispatch => {
+export const updateUser = (payload: IUserForm, id: string, onSuccess: () => void, onError: (err: any) => void, avatar?: File): AppThunk => async dispatch => {
     dispatch(saving(true));
     try {
         await Api.call(Api.endpoints.Users.Update, {urlParams: {id}, data: payload});
@@ -62,8 +64,10 @@ export const updateUser = (payload: IUserForm, id: string, avatar?: File): AppTh
         dispatch(saving(false));
         dispatch(getCurrentUser());
         dispatch(loadByFilters())
+        onSuccess();
     } catch (e) {
         dispatch(saving(false));
+        onError(e)
         console.log('updateUser', e)
     }
 }

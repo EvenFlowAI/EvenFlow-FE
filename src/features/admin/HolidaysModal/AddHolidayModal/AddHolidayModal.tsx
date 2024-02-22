@@ -49,7 +49,8 @@ export const AddHolidayModal: React.FC<React.PropsWithChildren<React.PropsWithCh
         }
     }
     const handleDateChange = (date: TParsableDate) => {
-        setForm({...form, date});
+        const utcOffset = dayjs().utcOffset()
+        setForm({...form, date: dayjs(date).add(utcOffset, 'minute')});
     }
     const handleCheck = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         setForm({...form, [e.target.name]: checked});

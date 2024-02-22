@@ -42,4 +42,5 @@ export type TNewFirstScreenOption = TUpdateFirstScreenOption & {
 export type TState = {
     firstScreenOptions: IFirstScreenOption[];
     isLoading: boolean;
+    withoutOptions: boolean;
 }

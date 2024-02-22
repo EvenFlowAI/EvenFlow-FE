@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-//
 export const usePackageMobileStyles = makeStyles()(() => ({
     wrapper: {
         width: '100%',
@@ -27,6 +26,9 @@ export const usePackageMobileStyles = makeStyles()(() => ({
         fontSize: 10,
         fontWeight: 'bold',
         border: '1px solid black',
+        '&.Mui-selected': {
+            color: 'white',
+        }
     },
     iconWrapper: {
         '& > svg': {
