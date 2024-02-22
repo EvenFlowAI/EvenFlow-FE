@@ -30,17 +30,17 @@ const EmployeesScheduleManagement = () => {
     useEffect(() => {
         if (selectedSC && timePeriod.startDate && timePeriod.endDate) {
             const utcOffset = dayjs().utcOffset()
-            // todo check logic with the dates
-            const start = dayjs(timePeriod.startDate).add(utcOffset, 'minute').startOf("day").toISOString()
-            const end = dayjs(timePeriod.endDate).subtract(utcOffset, 'minute').endOf("day").toISOString()
+            const start = dayjs(timePeriod.startDate).startOf("day").add(utcOffset, 'minute').toISOString()
+            const end = dayjs(timePeriod.endDate).endOf("day").subtract(utcOffset, 'minute').toISOString()
             dispatch(loadScheduleCalendar(selectedSC.id, start, end))
         }
     }, [selectedSC, timePeriod])
 
-    const onDayClick = (el: ICalendarItem|undefined) => {
+    const onDayClick = (el: ICalendarItem|undefined, date: TParsableDate) => {
         if (selectedSC && el) {
             const utcOffset = dayjs().utcOffset()
-            dispatch(loadScheduleByDate(selectedSC.id, dayjs(el.date).add(utcOffset, 'minute').startOf("day").toISOString()))
+            setDate(date)
+            dispatch(loadScheduleByDate(selectedSC.id, dayjs(el.date).startOf("day").add(utcOffset, 'minute').format("YYYY-MM-DD")))
             onOpen()
         }
     }

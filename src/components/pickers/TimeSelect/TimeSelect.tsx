@@ -84,13 +84,13 @@ const TimeSelect: React.FC<TProps> = ({
                 disabled={disabled}
                 isOptionEqualToValue={(option, value) => dayjs(`${option} ${period}`, time12HourFormat).isSame(dayjs(value, timeSpanString), 'minute')}
                 onChange={onAutocompleteChange}
-                value={dayjs(value, timeSpanString).format(twelveHourFormat)}
+                value={value ? dayjs(value, timeSpanString).format(twelveHourFormat) : ''}
                 renderInput={params => <TextField {...{
                     ...params, InputProps: {
                         ...params.InputProps,
                         disableUnderline: true,
                         style: {padding: '2px 5px', width: 86, borderRadius: 2, fontSize: 14, border: 0 },
-                        placeholder: start,
+                        placeholder: "Select",
                         error,
                         endAdornment: <div>
                             <ArrowWrapper disabled={Boolean(disabled || error)} onClick={onClickUp}>

@@ -54,12 +54,13 @@ export const loadScheduleCalendar = (serviceCenterId: number, startDate: string,
         .finally(() => dispatch(loading(false)))
 }
 
-export const loadScheduleByDate = (id: number, date: TParsableDate): AppThunk => dispatch => {
+export const loadScheduleByDate = (serviceCenterId: number, date: TParsableDate): AppThunk => dispatch => {
     dispatch(loading(true))
-    Api.call<IScheduleByDate>(Api.endpoints.EmployeeSchedule.GetByDate, {urlParams: {id}, params: {date}})
+    Api.call<IScheduleByDate[]>(Api.endpoints.EmployeeSchedule.GetByDate, {params: {date, serviceCenterId}})
         .then(result => {
-            if (result.data) console.log(result.data)
-            //dispatch(getScheduleByDate(result.data))
+            if (result.data) {
+                dispatch(getScheduleByDate(result.data))
+            }
         })
         .catch(err => {
             console.log('load schedule by date', err)

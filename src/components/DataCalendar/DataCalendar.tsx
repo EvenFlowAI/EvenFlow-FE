@@ -79,7 +79,7 @@ export function DataCalendar<U>({
                                 d.type === "cur" ? classes.currentMonth : classes.prevMonth,
                                 dayjs(d.date).isSame(today, "day") ? classes.today : ""
                             )}
-                            onClick={() => dayData ? onDayClick(dayData) : null}
+                            onClick={() => dayData ? onDayClick(dayData, d.date) : null}
                             key={`${d.day}-${d.type}`}>
                             <span className={classes.dayNumber}>{d.day}</span>
                             <IconsBlock

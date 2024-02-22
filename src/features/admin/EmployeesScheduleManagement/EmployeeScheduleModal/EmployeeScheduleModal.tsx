@@ -42,7 +42,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
     }, [selectedSC])
 
     useEffect(() => {
-        if (open) setCurrentSchedule(scheduleByDate.sort(compareName))
+        if (open) setCurrentSchedule([...scheduleByDate].sort(compareName))
     }, [scheduleByDate, open])
 
     const handleShowOnBookingChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -51,7 +51,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
 
     const onCancel = () => {
         setFormChecked(false)
-        setCurrentSchedule(scheduleByDate)
+        setCurrentSchedule([...scheduleByDate].sort(compareName))
         onClose()
     }
 
@@ -63,7 +63,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
             if (itemToUpdate) {
                 const updated = {...itemToUpdate, isOnSchedule: value};
                 const filtered = prev
-                    .filter(item => item.employeeId !== el.employeeId && item.serviceBookId !== el.serviceBookId)
+                    .filter(item => item.employeeId !== el.employeeId)
                 return [...filtered, updated].sort(compareName)
             }
             return prev;
@@ -78,7 +78,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
             if (element) {
                 element = {...element, [field]: value}
                 const filtered = prev
-                    .filter(item => el.employeeId !== item.employeeId && el.serviceBookId !== item.serviceBookId)
+                    .filter(item => item.employeeId !== el.employeeId)
                 return [...filtered, element].sort(compareName)
             }
             return prev
@@ -118,7 +118,8 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
                 <PickersWrapper>
                     <TimeSelect
                         error={formIsChecked && el.isOnSchedule
-                            && dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString))}
+                            && (!el.startAt
+                                || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString)))}
                         disabled={!el.isOnSchedule}
                         start={schedule?.from ?? "09:00:00"}
                         end={schedule?.to ?? "17:00:00"}
@@ -127,7 +128,8 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
                     <div>TO</div>
                     <TimeSelect
                         error={formIsChecked && el.isOnSchedule
-                            && dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString))}
+                            && (!el.finishAt
+                                || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString)))}
                         disabled={!el.isOnSchedule}
                         start={schedule?.from ?? "09:00:00"}
                         end={schedule?.to ?? "17:00:00"}
@@ -139,9 +141,18 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
     ]
 
     const checkIsValid = (): boolean => {
-        return currentSchedule
+        let valid = true;
+        const filtered = currentSchedule
             .filter(item => item.isOnSchedule)
-            .every(item => dayjs(item.finishAt, timeSpanString).isAfter(dayjs(item.startAt, timeSpanString)))
+        if (!filtered.every(item => item.finishAt && item.startAt)) {
+            valid = false;
+            showError('Schedule for Employee that is "On Schedule" must not be empty')
+        }
+        if (!filtered.every(item => dayjs(item.finishAt, timeSpanString).isAfter(dayjs(item.startAt, timeSpanString)))) {
+            valid = false;
+            showError('"End" value must be later than "Start"')
+        }
+        return valid
     }
 
     const onSave = () => {
@@ -166,11 +177,11 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
     }
 
     return (
-        <BaseModal open={open} onClose={onCancel}>
+        <BaseModal open={open} onClose={onCancel} width={1050}>
             <DialogTitle onClose={onCancel}>Employee Schedule: {dayjs(date).format("dddd, MMMM D, YYYY")}</DialogTitle>
-            <DialogContent>
+            <DialogContent style={{padding: "12px 32px"}}>
                 <FormControlLabel
-                    style={{width: '100%', display: 'flex', justifyContent: 'space-between', marginLeft: 2, marginBottom: 20}}
+                    style={{width: '35%', display: 'flex', justifyContent: 'space-between', marginBottom: 20}}
                     labelPlacement="start"
                     control={
                         <Switch
@@ -179,11 +190,12 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
                             checked={isForWeek}
                             color="primary"/>
                     }
-                    label={<span style={{fontWeight: 'bold', textTransform: 'uppercase', fontSize: 13}}>Apply changes to entire week</span>}/>
+                    label={<span style={{fontWeight: 'bold', textTransform: 'uppercase', fontSize: 14}}>Apply changes to entire week</span>}/>
                 <Table<IScheduleByDate>
                     data={currentSchedule}
                     index={"employeeId"}
                     isLoading={employeesLoading}
+                    hidePagination
                     rowData={rowData}/>
             </DialogContent>
             <DialogActions>

@@ -123,7 +123,7 @@ export class Api {
             GetAll: {route: "/employee-schedules/by-query", method: "post"},
             SetForWeek: {route: "/employee-schedules/batch-update", method: "put"},
             GetCalendarSummary: {route: "/employee-schedules/date-range-summary-per-role", method: "post"},
-            GetByDate: {route: "/employee-schedules/{id}/get-by-date", method: "get"},
+            GetByDate: {route: "/employee-schedules/get-by-date", method: "get"},
             UpdateByDate: {route: "/employee-schedules/set-for-date-range", method: "put"},
             GetBaseSummary: {route: "/employee-schedules/base-summary", method: "post"},
             GetSummaryByEmployee: {route: "/employee-schedules/base-summary-by-employee", method: "post"},

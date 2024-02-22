@@ -34,7 +34,7 @@ export const AvailableStaffCalendar = () => {
         })))
     }, [])
 
-    const onDayClick = (el: TData|undefined) => {
+    const onDayClick = (el: TData|undefined, date: TParsableDate) => {
     }
 
     return <DataCalendar
