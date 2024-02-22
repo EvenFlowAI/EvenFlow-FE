@@ -14,7 +14,7 @@ const initialState: TState = {
     filtersOpened: false,
     filters: {},
     calendarData: [],
-    scheduleByDate: null,
+    scheduleByDate: [],
 }
 
 export const schedulesReducer = createReducer(initialState, builder => builder

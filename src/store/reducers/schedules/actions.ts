@@ -40,7 +40,7 @@ export const setEmployeesSchedule = (data: IScheduleForm, isXS: boolean): AppThu
 }
 
 export const getScheduleCalendar = createAction<ICalendarItem[]>("Employees/GetCalendarData");
-export const getScheduleByDate = createAction<IScheduleByDate>("Employees/GetScheduleByDate");
+export const getScheduleByDate = createAction<IScheduleByDate[]>("Employees/GetScheduleByDate");
 
 export const loadScheduleCalendar = (serviceCenterId: number, startDate: string, endDate: string): AppThunk => dispatch => {
     dispatch(loading(true))
@@ -67,16 +67,18 @@ export const loadScheduleByDate = (id: number, date: TParsableDate): AppThunk =>
         .finally(() => dispatch(loading(false)))
 }
 
-export const updateScheduleByDate = (data: IUpdateByDateRequest): AppThunk => dispatch => {
+export const updateScheduleByDate = (data: IUpdateByDateRequest, onSuccess: () => void, onError: (err: any) => void): AppThunk => dispatch => {
     dispatch(loading(true))
     Api.call(Api.endpoints.EmployeeSchedule.UpdateByDate, {data})
         .then(result => {
             if (result) {
                 dispatch(loadScheduleByDate(data.serviceCenterId, data.date))
+                onSuccess()
             }
         })
         .catch(err => {
             console.log('update schedule by date error', err)
+            onError(err)
         })
         .finally(() => dispatch(loading(false)))
 }

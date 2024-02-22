@@ -7,7 +7,9 @@ export const Wrapper = styled("div")({
     gap: 8
 })
 
-export const ArrowWrapper = styled("div")<{disabled: boolean}>(({disabled}) =>({
+export const ArrowWrapper = styled("div", {
+    shouldForwardProp: (prop) => prop !== "disabled"
+})<{disabled: boolean}>(({disabled}) =>({
     width: 16,
     height: 8,
     display: "flex",
@@ -17,7 +19,9 @@ export const ArrowWrapper = styled("div")<{disabled: boolean}>(({disabled}) =>({
     cursor: 'pointer'
 }))
 
-export const ButtonAmPm = styled(Button)<{selected: boolean, disabled?: boolean, isUpper?: boolean}>(({selected, disabled, isUpper}) => ({
+export const ButtonAmPm = styled(Button, {
+    shouldForwardProp: (prop) => prop !== "disabled" && prop !== "selected" && prop !== "isUpper"
+})<{selected: boolean, disabled?: boolean, isUpper?: boolean}>(({selected, disabled, isUpper}) => ({
     minWidth: 0,
     borderRadius: isUpper ? "4px 4px 0 0" : "0 0 4px 4px",
     width: 54,

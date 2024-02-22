@@ -9,6 +9,8 @@ import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {loadScheduleByDate, loadScheduleCalendar} from "../../../store/reducers/schedules/actions";
+import {useModal} from "../../../hooks/useModal/useModal";
+import EmployeeScheduleModal from "./EmployeeScheduleModal/EmployeeScheduleModal";
 
 const initialPeriod = {
     startDate: null,
@@ -21,6 +23,7 @@ const EmployeesScheduleManagement = () => {
     const [timePeriod, setTimePeriod] = useState<TTimePeriod>(initialPeriod);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const {onOpen, isOpen, onClose} = useModal();
 
     useEffect(() => {
         if (selectedSC && timePeriod.startDate && timePeriod.endDate) {
@@ -36,22 +39,26 @@ const EmployeesScheduleManagement = () => {
         if (selectedSC && el) {
             const utcOffset = dayjs().utcOffset()
             dispatch(loadScheduleByDate(selectedSC.id, dayjs(el.date).add(utcOffset, 'minute').startOf("day").toISOString()))
+            onOpen()
         }
     }
 
-    return <DataCalendar
-        data={calendarData}
-        firstIcon={<User/>}
-        secondIcon={<Hand />}
-        firstIconFieldName={'advisorsCount'}
-        secondIconFieldName={'techniciansCount'}
-        date={date}
-        firstIconText={"The number of advisors scheduled for the day"}
-        secondIconText={"The number of technicians scheduled for the day"}
-        dateFieldName={'date'}
-        setDate={setDate}
-        setTimePeriod={setTimePeriod}
-        onDayClick={onDayClick}/>
+    return <>
+        <DataCalendar
+            data={calendarData}
+            firstIcon={<User/>}
+            secondIcon={<Hand />}
+            firstIconFieldName={'advisorsCount'}
+            secondIconFieldName={'techniciansCount'}
+            date={date}
+            firstIconText={"The number of advisors scheduled for the day"}
+            secondIconText={"The number of technicians scheduled for the day"}
+            dateFieldName={'date'}
+            setDate={setDate}
+            setTimePeriod={setTimePeriod}
+            onDayClick={onDayClick}/>
+        <EmployeeScheduleModal open={isOpen} onClose={onClose} date={date}/>
+    </>
 };
 
 export default EmployeesScheduleManagement;

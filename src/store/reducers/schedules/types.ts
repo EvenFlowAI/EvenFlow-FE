@@ -55,7 +55,7 @@ export type TState = {
     filters: IScheduleFilters;
     filtersOpened: boolean;
     calendarData: ICalendarItem[];
-    scheduleByDate: IScheduleByDate|null;
+    scheduleByDate: IScheduleByDate[];
 }
 
 export interface ICalendarItem {
