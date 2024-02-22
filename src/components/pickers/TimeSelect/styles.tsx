@@ -35,9 +35,11 @@ export const ButtonAmPm = styled(Button, {
             ? "#B8B9BF"
             : "#EAEBEE",
     color: selected
-        ? "#FFFFFF"
+        ? disabled
+            ?"#B8B9BF"
+            : "#FFFFFF"
         : disabled
-            ? "#B8B9BF"
+            ? "#FFFFFF"
             : "#858585",
     display: 'flex'
 }))
