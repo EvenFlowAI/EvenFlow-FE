@@ -76,6 +76,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         appointmentByKey,
         transportation,
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
+    const {isLoading} = useSelector(({recalls}: RootState) => recalls);
 
     const [errors, setErrors] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -235,8 +236,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                 confirmContent: "Cancel appointment",
                 title: "Cancel appointment",
                 content: <span>
-                            Please confirm you want to cancel appointment on <br />
-                    {dayjs.utc(appointmentByKey.dateInUtc).format("LLL")}?
+                            Please confirm you want to cancel appointment on {dayjs.utc(appointmentByKey.dateInUtc).format("LLL")}?
                         </span>,
                 onConfirm: handleCancelAppointment
             });
@@ -253,7 +253,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                     <div>
                         <AppointmentSelectedDate onChangeSlot={onChangeSlot} />
                         <AppointmentVehicleInfo/>
-                        <ServiceRequestsManaging/>
+                        {isLoading ? <Loading/> : <ServiceRequestsManaging/>}
                         <AddressManaging/>
                         <SelectedPriceManaging/>
                         <div

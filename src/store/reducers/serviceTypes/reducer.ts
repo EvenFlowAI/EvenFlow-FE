@@ -5,6 +5,7 @@ import {getFirstScreenOptionsByQuery, setFirstScreenOptionsLoading} from "./acti
 const initialState: TState = {
     firstScreenOptions: [],
     isLoading: false,
+    withoutOptions: false,
 }
 
 export const firstScreenOptionsReducer = createReducer(initialState, builder => builder
@@ -12,6 +13,6 @@ export const firstScreenOptionsReducer = createReducer(initialState, builder => 
         return {...state, isLoading: payload};
     })
     .addCase(getFirstScreenOptionsByQuery, (state, {payload}) => {
-        return {...state, firstScreenOptions: payload};
+        return {...state, firstScreenOptions: payload, withoutOptions: !payload.length};
     })
 )
