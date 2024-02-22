@@ -3,6 +3,7 @@ import {IServiceCenter} from "../serviceCenters/types";
 import {IAdvisorShort} from "../users/types";
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
+import {EDayOfWeek} from "../offers/types";
 
 export interface IEmployeeInfo {
     hourlyRate: number;
@@ -63,6 +64,9 @@ export type TChangePaging = TChangePagingGeneric<"Employees/ChangePaging">;
 export type TChangePageData = TChangePageDataGeneric<"Employees/ChangePageData">;
 export type TLoadingDMSAdvisors = { type: "SCEmployees/LoadingDMSAdvisors", payload: boolean };
 export type TGetUsersShort = {type: "Employees/GetUsersShort", payload: IAdvisorShort[]};
+export type TGetBaseSummary = {type: "Employees/GetBaseSummary", payload: IBaseSummary};
+export type TGetBaseScheduleByEmployee = {type: "Employees/GetBaseScheduleByEmployee", payload: IEmployeeRoleHours[]};
+export type TGetScheduleTimeByEmployee = {type: "Employees/GetScheduleTimeByEmployee", payload: IEmployeeSchedule};
 
 export type TEmployeeActions =
     | TGetDealershipEmployees
@@ -79,6 +83,9 @@ export type TEmployeeActions =
     | TGetAll
     | TLoadingDMSAdvisors
     | TGetUsersShort
+    | TGetBaseSummary
+    | TGetBaseScheduleByEmployee
+    | TGetScheduleTimeByEmployee;
 
 export type TDmsAdvisor = {
     id: string;
@@ -100,6 +107,9 @@ export type TEmployeesState = {
     pageData: IPageRequest;
     filters: IEmployeeFilters;
     usersShort: IAdvisorShort[];
+    baseSummary: IBaseSummary|null;
+    employeeRoleHours: IEmployeeRoleHours[];
+    employeeSchedule: IEmployeeSchedule|null;
 }
 export type TSCState = {
     advisorsList: IAdvisorShort[];
@@ -107,3 +117,68 @@ export type TSCState = {
     DmsAdvisors: TDmsAdvisor[];
 }
 
+export type TDayHours = {
+    day: EDayOfWeek;
+    value: number;
+}
+
+export interface IRoleHours {
+    role: string;
+    serviceBook: string;
+    serviceBookId?: number;
+    dailyHours: TDayHours[];
+}
+
+export interface IBaseSummary {
+    roleHours: IRoleHours[];
+    totalHours: TDayHours[];
+}
+
+export interface IEmployeeRoleHours extends IRoleHours {
+    employeeId: string;
+    employeeName: string;
+}
+
+export interface IBaseScheduleByEmployee {
+    roleHours: IEmployeeRoleHours[];
+}
+
+export type TScheduleByEmployeeRequestData = {
+    serviceCenterId: number;
+    orderBy: string;
+    isAscending: boolean;
+    serviceBookId: number|null;
+    isServiceBookServiceCenter: boolean;
+    name?: string;
+    role?: string;
+}
+
+export type TDaySchedule = {
+    dayOfWeek: number;
+    from: string;
+    to: string;
+    isEnabled?: boolean;
+}
+
+export interface IEmployeeSchedule {
+    employeeId: string;
+    serviceCenterId: number;
+    dayOfWeekSchedules: TDaySchedule[];
+    role: string;
+    employeeName: string;
+    serviceBookId?: number;
+    serviceBook?: string;
+}
+
+export type TBaseScheduleRequest = {
+    serviceCenterId: number;
+    employeeId: string;
+    serviceBookId?: number;
+}
+
+export type TSetScheduleData = {
+    serviceCenterId: number;
+    employeeId: string;
+    dayOfWeekSchedules: TDaySchedule[];
+    serviceBookId?: number;
+}

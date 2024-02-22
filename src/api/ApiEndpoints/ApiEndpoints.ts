@@ -113,7 +113,7 @@ export class Api {
         Employees: {
             Create: {route: "/employees", method: "post"},
             Update: {route: "/employees/{id}", method: "put"},
-            GetAll: {route: "/employees/by-query", method: "post"}
+            GetAll: {route: "/employees/by-query", method: "post"},
         },
         EmployeeSchedule: {
             Create: {route: "/employee-schedules", method: "post"},
@@ -125,6 +125,10 @@ export class Api {
             GetCalendarSummary: {route: "/employee-schedules/date-range-summary-per-role", method: "post"},
             GetByDate: {route: "/employee-schedules/{id}/get-by-date", method: "get"},
             UpdateByDate: {route: "/employee-schedules/set-for-date-range", method: "put"},
+            GetBaseSummary: {route: "/employee-schedules/base-summary", method: "post"},
+            GetSummaryByEmployee: {route: "/employee-schedules/base-summary-by-employee", method: "post"},
+            GetTimeScheduleByEmployee: {route: "/employee-schedules/get-base-schedule-by-service-book", method: "get"},
+            SetTimeScheduleByEmployee: {route: "/employee-schedules/set-base-schedule-by-service-book", method: "post"},
         },
         GeographicZones: {
             GetZones: {route: "/geographic-zones/by-query", method: "post"},
