@@ -3,8 +3,8 @@ import {Button} from "@mui/material";
 import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import clsx from "clsx";
 import {useStyles} from "./styles";
-import {Directions} from "../types";
-import {TParsableDate} from "../../../../types/types";
+import {Directions} from "../../../features/admin/AvailableStaffCalendar/types";
+import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
 
 type TProps = {
@@ -26,16 +26,16 @@ export const CalendarControls = (props: TProps) => {
             className={classes.controlButton}
             onClick={switchDate(Directions.Prev)}
             color="info"
-            variant="outlined">
+            variant="text">
             <ChevronLeft />
         </Button>
-        <Button className={clsx(classes.controlButton, classes.controlDay)}  variant="outlined" color="info">
+        <Button className={clsx(classes.controlButton, classes.controlDay)}  variant="text" color="info">
             {dayjs(props.date).format("MMMM YYYY")}
         </Button>
         <Button
             className={classes.controlButton}
             onClick={switchDate(Directions.Next)}
-            variant="outlined"
+            variant="text"
             color="info">
             <ChevronRight />
         </Button>

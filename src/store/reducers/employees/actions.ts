@@ -79,7 +79,7 @@ export const loadTechnicians = (serviceCenterId: number): AppThunk =>
         console.log('loadTechnicians', e)
     }
 };
-export const createEmployee = (payload: IEmployeeForm, avatar?: File): AppThunk => async dispatch => {
+export const createEmployee = (payload: IEmployeeForm, onSuccess: () => void, onError: (err: any) => void, avatar?: File): AppThunk => async dispatch => {
     dispatch(saving(true));
     try {
         const {data} = await Api.call<IEmployee|string>(Api.endpoints.Employees.Create, {data: payload});
@@ -88,8 +88,10 @@ export const createEmployee = (payload: IEmployeeForm, avatar?: File): AppThunk 
         }
         dispatch(saving(false));
         dispatch(loadByFilters())
+        onSuccess()
     } catch (e) {
         dispatch(saving(false));
+        onError(e)
         console.log('createEmployee', e)
     }
 }
@@ -100,7 +102,7 @@ export const removeEmployee = (id: string): AppThunk => async (dispatch) => {
     await Api.call(Api.endpoints.Users.Remove, {urlParams: {id}});
     dispatch(loadByFilters())
 }
-export const updateEmployee = (data: IEmployeeForm, id: string, avatar?: File): AppThunk => async dispatch => {
+export const updateEmployee = (data: IEmployeeForm, id: string, onSuccess: () => void, onError: (err: any) => void, avatar?: File): AppThunk => async dispatch => {
     dispatch(saving(true));
     try {
         await Api.call(Api.endpoints.Employees.Update, {urlParams: {id}, data});
@@ -109,8 +111,10 @@ export const updateEmployee = (data: IEmployeeForm, id: string, avatar?: File): 
         }
         dispatch(saving(false));
         dispatch(loadByFilters())
+        onSuccess()
     } catch (e) {
         dispatch(saving(false));
+        onError(e)
         console.log('updateEmployee', e)
     }
 }

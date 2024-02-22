@@ -155,9 +155,13 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
 
     const onNextStep = () => {
         if (customerLoadedData?.isUpdating) {
-            changedToPickUpFromSlots || (appointmentByKey?.address?.zipCode && zipCodeValue !== appointmentByKey?.address?.zipCode)
-                ? scProfile && dispatch(checkPodChanged(scProfile.id, showError))
-                : handleManagingFlow();
+            if ((mobileServiceSelected || mobileServiceChanged) && editingPosition === 'serviceOption') {
+                handleManagingFlow();
+            } else {
+                changedToPickUpFromSlots || (appointmentByKey?.address?.zipCode && zipCodeValue !== appointmentByKey?.address?.zipCode)
+                    ? scProfile && dispatch(checkPodChanged(scProfile.id, showError))
+                    : handleManagingFlow();
+            }
         } else {
             changedToPickUpFromSlots
                 ? goToSlotsSelection()

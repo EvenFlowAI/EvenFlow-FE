@@ -97,6 +97,8 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
         return !Boolean(err.length)
     }
 
+    const onSuccess = () => showMessage(`Employee ${isEdit ? "updated" : "created"}`);
+
     const handleCreate = async () => {
         setFormIsChecked(true);
         const isValid = checkIsValid();
@@ -132,18 +134,17 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
             try {
                 if (employeeForm.role !== Roles.Technician) {
                     if (payload?.id) {
-                        await dispatch(updateUser(data as IUserForm, payload.id, avatar));
+                        await dispatch(updateUser(data as IUserForm, payload.id, onSuccess, showError, avatar));
                     } else {
-                        await dispatch(createUser(data as IUserForm, avatar));
+                        await dispatch(createUser(data as IUserForm, onSuccess, showError, avatar));
                     }
                 } else {
                     if (payload?.id) {
-                        await dispatch(updateEmployee(data as IEmployeeForm, payload.id, avatar));
+                        await dispatch(updateEmployee(data as IEmployeeForm, payload.id, onSuccess, showError, avatar));
                     } else {
-                        await dispatch(createEmployee(data as IEmployeeForm, avatar));
+                        await dispatch(createEmployee(data as IEmployeeForm, onSuccess, showError, avatar));
                     }
                 }
-                showMessage(`Employee ${isEdit ? "updated" : "created"}`);
                 setEmployeeForm(initialEmployeeForm);
                 setFormIsChecked(false);
                 if (onAction) {

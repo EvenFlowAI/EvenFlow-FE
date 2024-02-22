@@ -72,15 +72,19 @@ export const UserProfile = () => {
         }
     }
 
+    const onSuccess = () => showMessage("Profile updated");
+
     const handleSave = async () => {
         if (currentUser) {
             setSaving(true);
             try {
-                await dispatch(updateUser({
-                    ...currentUser,
-                    ...form
-                }, currentUser.id));
-                showMessage("Profile updated");
+                await dispatch(updateUser(
+                    {...currentUser,
+                    ...form},
+                    currentUser.id,
+                    onSuccess,
+                    showError));
+
                 setEdit(false);
                 setSaving(false);
             } catch (e) {
