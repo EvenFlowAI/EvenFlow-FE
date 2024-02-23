@@ -63,7 +63,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
             if (itemToUpdate) {
                 const updated = {...itemToUpdate, isOnSchedule: value};
                 const filtered = prev
-                    .filter(item => item.employeeId !== el.employeeId)
+                    .filter(item => item.employeeId !== el.employeeId && item.serviceBookId === el.serviceBookId)
                 return [...filtered, updated].sort(compareName)
             }
             return prev;
@@ -78,7 +78,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
             if (element) {
                 element = {...element, [field]: value}
                 const filtered = prev
-                    .filter(item => item.employeeId !== el.employeeId)
+                    .filter(item => item.employeeId !== el.employeeId && item.serviceBookId === el.serviceBookId)
                 return [...filtered, element].sort(compareName)
             }
             return prev

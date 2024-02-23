@@ -1,18 +1,16 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {IEmployeeRoleHours, TDaySchedule, TSetScheduleData} from "../../../store/reducers/employees/types";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useDispatch, useSelector} from "react-redux";
 import {loadBaseEmployeeSchedule, updateBaseEmployeeSchedule} from "../../../store/reducers/employees/actions";
-import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {DayName, PickersWrapper, RowWrapper, SwitcherLabel, SwitcherWrapper, UserWrapper} from "./styles";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import dayjs from "dayjs";
 import {Switch} from "@mui/material";
 import TimeSelect from "../../../components/pickers/TimeSelect/TimeSelect";
-import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useActionButtonsStyles} from "../../../hooks/styling/useActionButtonsStyles";
 import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
@@ -27,7 +25,6 @@ const daysList = [1, 2, 3, 4, 5, 6, 7]
 
 const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem}) => {
     const {employeeSchedule, loading} = useSelector((state: RootState) => state.employees);
-    const {workingDays} = useSelector((state: RootState) => state.serviceCenters);
     const {hoursOfOperations} = useSelector((state: RootState) => state.appointmentFrame);
     const [currentSchedule, setCurrentSchedule] = useState<TDaySchedule[]>([]);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
@@ -36,12 +33,13 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
     const showMessage = useMessage();
     const showError = useException();
     const {classes} = useActionButtonsStyles();
+    const workingDays = useMemo(() => {
+        return hoursOfOperations.map(el => el.dayOfWeek)
+    }, [hoursOfOperations])
 
     useEffect(() => {
         if (editingItem && selectedSC && open) {
             dispatch(loadBaseEmployeeSchedule(selectedSC.id, editingItem.employeeId, editingItem.serviceBookId ?? undefined))
-            dispatch(loadWorkingDays(selectedSC.id))
-            dispatch(loadHoursOfOperations(selectedSC.id))
         }
     }, [selectedSC, editingItem, open])
 
