@@ -43,7 +43,7 @@ export const getScheduleCalendar = createAction<ICalendarItem[]>("Employees/GetC
 export const getScheduleByDate = createAction<IScheduleByDate[]>("Employees/GetScheduleByDate");
 
 export const loadScheduleCalendar = (serviceCenterId: number, startDate: string, endDate: string): AppThunk => dispatch => {
-    dispatch(loading(true))
+    dispatch(loadingEmployeesSchedule(true))
     Api.call<ICalendarItem[]>(Api.endpoints.EmployeeSchedule.GetCalendarSummary, {data: {serviceCenterId, startDate, endDate}})
         .then(result => {
             if (result.data) dispatch(getScheduleCalendar(result.data))
@@ -51,7 +51,7 @@ export const loadScheduleCalendar = (serviceCenterId: number, startDate: string,
         .catch(err => {
             console.log('load schedule calendar', err)
         })
-        .finally(() => dispatch(loading(false)))
+        .finally(() => dispatch(loadingEmployeesSchedule(false)))
 }
 
 export const loadScheduleByDate = (serviceCenterId: number, date: TParsableDate): AppThunk => dispatch => {

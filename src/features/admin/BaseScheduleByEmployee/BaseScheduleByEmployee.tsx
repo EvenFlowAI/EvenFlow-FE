@@ -32,6 +32,8 @@ import {NoData} from "../../../components/wrappers/NoData/NoData";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useModal} from "../../../hooks/useModal/useModal";
 import EmployeeTimeScheduleSetUp from "../EmployeeTimeScheduleSetUp/EmployeeTimeScheduleSetUp";
+import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
+import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 const daysList = [1, 2, 3, 4, 5, 6, 7]
 
@@ -60,6 +62,8 @@ const BaseScheduleByEmployee = () => {
             if (name) data.name = name;
             if (role) data.role = role;
             dispatch(loadBaseSummaryByEmployee(data))
+            dispatch(loadWorkingDays(selectedSC.id))
+            dispatch(loadHoursOfOperations(selectedSC.id))
         }
     }, [selectedSC, order, serviceBook, name, role])
 
