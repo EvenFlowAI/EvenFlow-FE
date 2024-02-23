@@ -77,6 +77,7 @@ export enum EmployeeRoutes {
     Base = "/admin/employees",
     AddDelete = "/admin/employees/add-delete",
     ScheduleSetUp = "/admin/employees/schedule-set-up",
+    ScheduleManagement = "/admin/employees/schedule-management",
 }
 
 export enum EndUser {

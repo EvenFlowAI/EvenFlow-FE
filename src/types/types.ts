@@ -8,6 +8,7 @@ import {AutocompleteChangeDetails, AutocompleteChangeReason} from '@mui/material
 
 import {TextInputProps} from "../components/formControls/types";
 import {Dayjs} from "dayjs";
+import {TTimePeriod} from "../store/reducers/schedules/types";
 
 export type LinkType = {
     to: string;
@@ -334,8 +335,9 @@ export interface IDataCalendarProps<Data> {
     date: TParsableDate;
     setDate: Dispatch<SetStateAction<TParsableDate>>;
     dateFieldName: keyof Data;
-    onDayClick: (data: Data|undefined) => void;
+    onDayClick: (data: Data|undefined, date: TParsableDate) => void;
     index?: keyof Data;
     firstIconText?: string;
     secondIconText?: string;
+    setTimePeriod: Dispatch<SetStateAction<TTimePeriod>>;
 }

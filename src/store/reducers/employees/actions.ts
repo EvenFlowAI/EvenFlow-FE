@@ -7,9 +7,13 @@ import {
     IEmployee,
     IEmployeeFilters,
     IEmployeeForm,
-    IEmployeeRoleHours, IEmployeeSchedule, TBaseScheduleRequest,
+    IEmployeeRoleHours,
+    IEmployeeSchedule,
+    TBaseScheduleRequest,
     TDmsAdvisor,
-    TEmployeeActions, TScheduleByEmployeeRequestData, TSetScheduleData
+    TEmployeeActions,
+    TScheduleByEmployeeRequestData,
+    TSetScheduleData
 } from "./types";
 import {saveEmployeeAvatar} from "../users/actions";
 import {createAction} from "@reduxjs/toolkit";

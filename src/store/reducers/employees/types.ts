@@ -39,10 +39,6 @@ export interface IEmployeeFilters {
     serviceCenterId?: number|null;
     searchTerm?: string;
 }
-export interface IEmployeeOrdering {
-    isAscending: boolean;
-    orderBy: string;
-}
 
 export interface IEmployeeForm {
     firstName: string;
