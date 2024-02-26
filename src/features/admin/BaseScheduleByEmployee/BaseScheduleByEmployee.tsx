@@ -86,6 +86,13 @@ const BaseScheduleByEmployee = () => {
         onOpen()
     }
 
+    const getDailyHoursFromMonday = (item: IEmployeeRoleHours) => {
+        const hours = item.dailyHours.slice(1, item.dailyHours.length);
+        return [...hours, item.dailyHours[0]].map((day) => {
+            return <ScheduleDataCell onClick={() => onTableClick(item)} key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
+        })
+    }
+
     return (
         <Paper>
             <ScheduleEmployeeTitleWrapper>
@@ -155,9 +162,7 @@ const BaseScheduleByEmployee = () => {
                                     {/*<ScheduleDataCell key="breakHours">*/}
                                     {/*    0.0*/}
                                     {/*</ScheduleDataCell>*/}
-                                    {item.dailyHours.map((day) => {
-                                        return <ScheduleDataCell onClick={() => onTableClick(item)} key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
-                                    })}
+                                    {getDailyHoursFromMonday(item)}
                                 </TableRow>
                             })}
                         </TableBody>
