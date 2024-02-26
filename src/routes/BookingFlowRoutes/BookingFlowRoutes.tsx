@@ -10,7 +10,9 @@ const BookingFlowRoutes = () => {
         <Switch>
             <Route path={Routes.EndUser.Base} exact component={Welcome} />
             <Route path={Routes.EndUser.CancelAppointment} exact component={CancelAppointment} />
+            <Route path={Routes.EndUser.CancelAppointmentFromEmail} exact component={CancelAppointment} />
             <Route path={Routes.EndUser.EditAppointment} exact component={EditAppointment} />
+            <Route path={Routes.EndUser.EditAppointmentFromEmail} exact component={EditAppointment} />
         </Switch>
     );
 };
