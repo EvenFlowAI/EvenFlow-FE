@@ -180,17 +180,17 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
         <BaseModal open={open} onClose={onCancel} width={1050}>
             <DialogTitle onClose={onCancel}>Employee Schedule: {dayjs(date).format("dddd, MMMM D, YYYY")}</DialogTitle>
             <DialogContent style={{padding: "12px 32px"}}>
-                <FormControlLabel
-                    style={{width: '35%', display: 'flex', justifyContent: 'space-between', marginBottom: 20}}
-                    labelPlacement="start"
-                    control={
-                        <Switch
-                            name="name"
-                            onChange={handleShowOnBookingChange}
-                            checked={isForWeek}
-                            color="primary"/>
-                    }
-                    label={<span style={{fontWeight: 'bold', textTransform: 'uppercase', fontSize: 14}}>Apply changes to entire week</span>}/>
+                {/*<FormControlLabel*/}
+                {/*    style={{width: '35%', display: 'flex', justifyContent: 'space-between', marginBottom: 20}}*/}
+                {/*    labelPlacement="start"*/}
+                {/*    control={*/}
+                {/*        <Switch*/}
+                {/*            name="name"*/}
+                {/*            onChange={handleShowOnBookingChange}*/}
+                {/*            checked={isForWeek}*/}
+                {/*            color="primary"/>*/}
+                {/*    }*/}
+                {/*    label={<span style={{fontWeight: 'bold', textTransform: 'uppercase', fontSize: 14}}>Apply changes to entire week</span>}/>*/}
                 <Table<IScheduleByDate>
                     data={currentSchedule}
                     index={"employeeId"}
