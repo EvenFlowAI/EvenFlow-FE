@@ -73,7 +73,7 @@ export const EditAppointment = () => {
     }, [selectedSC])
 
     useEffect(() => {
-        const requestFunc = isFromAdmin || id.includes('by-key')
+        const requestFunc = isFromAdmin || !id.includes('by-key')
             ? API.appointment.getByKey
             : API.appointment.getFromEmail
         requestFunc(id)
