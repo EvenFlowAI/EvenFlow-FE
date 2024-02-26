@@ -70,6 +70,12 @@ const BaseScheduleByEmployee = () => {
     }, [getData])
 
     useEffect(() => {
+        if (name) setName('');
+        if (role) setRole(null);
+        if (serviceBook) setServiceBook(null);
+    }, [selectedSC])
+
+    useEffect(() => {
         if (selectedSC?.id) {
             dispatch(loadServiceBookList(selectedSC.id))
             dispatch(loadWorkingDays(selectedSC.id))
