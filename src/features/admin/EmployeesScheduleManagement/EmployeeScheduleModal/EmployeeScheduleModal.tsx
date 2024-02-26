@@ -59,11 +59,11 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
         setFormChecked(false)
         setCurrentSchedule(prev => {
             const itemToUpdate = prev
-                .find(item => item.employeeId === el.employeeId && item.serviceBookId === el.serviceBookId);
+                .find(item => item.id === el.id);
             if (itemToUpdate) {
                 const updated = {...itemToUpdate, isOnSchedule: value};
                 const filtered = prev
-                    .filter(item => item.employeeId !== el.employeeId)
+                    .filter(item => item.id !== el.id)
                 return [...filtered, updated].sort(compareName)
             }
             return prev;
@@ -74,11 +74,11 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
         setFormChecked(false)
         setCurrentSchedule(prev => {
             let element = prev
-                .find(item => el.employeeId === item.employeeId && el.serviceBookId === item.serviceBookId);
+                .find(item => item.id === el.id);
             if (element) {
                 element = {...element, [field]: value}
                 const filtered = prev
-                    .filter(item => item.employeeId !== el.employeeId)
+                    .filter(item => item.id !== el.id)
                 return [...filtered, element].sort(compareName)
             }
             return prev

@@ -12,6 +12,7 @@ import {getStartEndDates} from "../../../utils/utils";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 import {loading} from "../employees/actions";
+import {v4 as uuidv4} from "uuid";
 
 export const switchScheduleFilters = createAction<boolean>("Schedules/SwitchFilters");
 export const setScheduleFilters = createAction<Partial<IScheduleFilters>>("Schedules/SetFilters");
@@ -59,7 +60,7 @@ export const loadScheduleByDate = (serviceCenterId: number, date: TParsableDate)
     Api.call<IScheduleByDate[]>(Api.endpoints.EmployeeSchedule.GetByDate, {params: {date, serviceCenterId}})
         .then(result => {
             if (result.data) {
-                dispatch(getScheduleByDate(result.data))
+                dispatch(getScheduleByDate(result.data.map(el => ({...el, id: uuidv4()}))))
             }
         })
         .catch(err => {
