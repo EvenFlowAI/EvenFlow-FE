@@ -35,7 +35,7 @@ import EmployeeTimeScheduleSetUp from "../EmployeeTimeScheduleSetUp/EmployeeTime
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
 
-const daysList = [1, 2, 3, 4, 5, 6, 7]
+const daysList = [1, 2, 3, 4, 5, 6, 0]
 
 const BaseScheduleByEmployee = () => {
     const {employeeRoleHours, loading} = useSelector((state: RootState) => state.employees)
