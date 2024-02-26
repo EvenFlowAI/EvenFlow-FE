@@ -29,17 +29,17 @@ export const ButtonAmPm = styled(Button, {
     margin: 0,
     backgroundColor: selected
         ? disabled
-            ? "#EAEBEE"
+            ? "#B8B9BF"
             : "#7898FF"
         : disabled
-            ? "#B8B9BF"
+            ? "#EAEBEE"
             : "#EAEBEE",
     color: selected
         ? disabled
-            ?"#B8B9BF"
+            ? "#FFFFFF"
             : "#FFFFFF"
         : disabled
-            ? "#FFFFFF"
+            ? "#B8B9BF"
             : "#858585",
     display: 'flex'
 }))
