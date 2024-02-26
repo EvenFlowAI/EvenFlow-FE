@@ -264,8 +264,8 @@ export const loadBaseEmployeeSchedule = (serviceCenterId: number, employeeId: st
 export const updateBaseEmployeeSchedule = (data: TSetScheduleData, onSuccess: () => void, onError: (err: any) => void): AppThunk => dispatch => {
     dispatch(loading(true))
     Api.call(Api.endpoints.EmployeeSchedule.SetTimeScheduleByEmployee, {data})
-        .then(res => {
-            if (res.data) dispatch(loadBaseEmployeeSchedule(data.serviceCenterId, data.employeeId, data.serviceBookId ?? undefined))
+        .then(() => {
+            dispatch(loadBaseEmployeeSchedule(data.serviceCenterId, data.employeeId, data.serviceBookId ?? undefined))
             onSuccess()
         })
         .catch(err => {
