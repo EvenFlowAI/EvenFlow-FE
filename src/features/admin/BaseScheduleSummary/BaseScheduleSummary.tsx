@@ -13,6 +13,7 @@ import {
 } from "../../../components/styled/ScheduleTableElements";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {IRoleHours} from "../../../store/reducers/employees/types";
+import {NoData} from "../../../components/wrappers/NoData/NoData";
 
 const daysList = [1, 2, 3, 4, 5, 6, 0]
 
@@ -40,12 +41,13 @@ const BaseScheduleByEmployee = () => {
     }
 
     const getTotalHoursFromMonday = () => {
-        if (baseSummary) {
+        if (baseSummary?.totalHours?.length) {
             const hours = baseSummary.totalHours.slice(1, baseSummary.totalHours.length);
             return [...hours, baseSummary.totalHours[0]].map((item) => {
                 return <StyledScheduleCell key={item.day}>{item.value.toFixed(1)}</StyledScheduleCell>
             })
         }
+        return null
     }
 
     return (
@@ -54,53 +56,59 @@ const BaseScheduleByEmployee = () => {
                 <ScheduleTableTitle>BASE SCHEDULE SUMMARY</ScheduleTableTitle>
             </Wrapper>
             {
-                loading ? <Loading/>
-                    : <Table>
-                        <TableHead>
-                            <ScheduleTableHeaderRow>
-                                <ScheduleTableHeaderCell key="role" width={300}>
-                                    <TableSortLabel
-                                        direction={order.isAscending ? "desc" : "asc"}
-                                        onClick={() => onSort("Role")}
-                                        active={order.orderBy === "Role"}
-                                    >
-                                        ROLE
-                                    </TableSortLabel>
-                                </ScheduleTableHeaderCell>
-                                <ScheduleTableHeaderCell key="serviceBook" width={180}>
-                                    <TableSortLabel
-                                        direction={order.isAscending ? "desc" : "asc"}
-                                        onClick={() => onSort("ServiceBook")}
-                                        active={order.orderBy === "ServiceBook"}
-                                    >
-                                        SERVICE BOOK
-                                    </TableSortLabel>
-                                </ScheduleTableHeaderCell>
-                                {daysList.map(item => <ScheduleDayNameCell key={item}>
-                                    {dayjs().set('day', item).format('ddd')}
-                                </ScheduleDayNameCell>)}
-                            </ScheduleTableHeaderRow>
-                        </TableHead>
-                        {baseSummary ? <TableBody>
-                                {baseSummary.roleHours.map((item, index) => {
-                                    return <TableRow key={index}>
-                                        <StyledScheduleCell key="role">
-                                            {item.role}
-                                        </StyledScheduleCell>
-                                        <StyledScheduleCell key="serviceBook">
-                                            {item.serviceBook}
-                                        </StyledScheduleCell>
-                                        {getDailyHoursFromMonday(item)}
-                                    </TableRow>
-                                })}
-                                <ScheduleTableFooterRow key="total">
-                                    <StyledScheduleCell/>
-                                    <ScheduleTableTotalCell key="totalCell">Total</ScheduleTableTotalCell>
-                                    {getTotalHoursFromMonday()}
-                                </ScheduleTableFooterRow>
-                            </TableBody>
-                            : null}
-                    </Table>
+                loading
+                    ? <Loading/>
+                    : !baseSummary?.roleHours?.length
+                        ? <Wrapper style={{width: "100%", display: 'flex', justifyContent: 'center'}}>
+                            <NoData title="No employees present" />
+                        </Wrapper>
+                        : <Table>
+                            <TableHead>
+                                <ScheduleTableHeaderRow>
+                                    <ScheduleTableHeaderCell key="role" width={300}>
+                                        <TableSortLabel
+                                            direction={order.isAscending ? "desc" : "asc"}
+                                            onClick={() => onSort("Role")}
+                                            active={order.orderBy === "Role"}
+                                        >
+                                            ROLE
+                                        </TableSortLabel>
+                                    </ScheduleTableHeaderCell>
+                                    <ScheduleTableHeaderCell key="serviceBook" width={180}>
+                                        <TableSortLabel
+                                            direction={order.isAscending ? "desc" : "asc"}
+                                            onClick={() => onSort("ServiceBook")}
+                                            active={order.orderBy === "ServiceBook"}
+                                        >
+                                            SERVICE BOOK
+                                        </TableSortLabel>
+                                    </ScheduleTableHeaderCell>
+                                    {daysList.map(item => <ScheduleDayNameCell key={item}>
+                                        {dayjs().set('day', item).format('ddd')}
+                                    </ScheduleDayNameCell>)}
+                                </ScheduleTableHeaderRow>
+                            </TableHead>
+                            {baseSummary
+                                ? <TableBody>
+                                    {baseSummary.roleHours.map((item, index) => {
+                                        return <TableRow key={index}>
+                                            <StyledScheduleCell key="role">
+                                                {item.role}
+                                            </StyledScheduleCell>
+                                            <StyledScheduleCell key="serviceBook">
+                                                {item.serviceBook}
+                                            </StyledScheduleCell>
+                                            {getDailyHoursFromMonday(item)}
+                                        </TableRow>
+                                    })}
+                                    <ScheduleTableFooterRow key="total">
+                                        <StyledScheduleCell/>
+                                        <ScheduleTableTotalCell key="totalCell">Total</ScheduleTableTotalCell>
+                                        {getTotalHoursFromMonday()}
+                                    </ScheduleTableFooterRow>
+                                </TableBody>
+                                : null}
+                        </Table>
             }
 
         </Paper>

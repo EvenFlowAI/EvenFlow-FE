@@ -107,13 +107,13 @@ const TimeSelect: React.FC<TProps> = ({
             <div style={{lineHeight: 0}}>
                 <ButtonAmPm
                     isUpper
-                    onClick={() => onPeriodChange("am")}
+                    onClick={() => disabled ? {} : onPeriodChange("am")}
                     selected={period === "am" as TDayPeriod}
                     disabled={disabled}>
                     AM
                 </ButtonAmPm>
                 <ButtonAmPm
-                    onClick={() => onPeriodChange("pm")}
+                    onClick={() => disabled ? {} : onPeriodChange("pm")}
                     disabled={disabled}
                     selected={period === "pm" as TDayPeriod}>
                     PM
