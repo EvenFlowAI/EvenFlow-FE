@@ -12,8 +12,9 @@ import {
     ScheduleTableTotalCell, StyledScheduleCell
 } from "../../../components/styled/ScheduleTableElements";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
+import {IRoleHours} from "../../../store/reducers/employees/types";
 
-const daysList = [1, 2, 3, 4, 5, 6, 7]
+const daysList = [1, 2, 3, 4, 5, 6, 0]
 
 const BaseScheduleByEmployee = () => {
     const {baseSummary, loading} = useSelector((state: RootState) => state.employees)
@@ -29,6 +30,22 @@ const BaseScheduleByEmployee = () => {
 
     const onSort = (sort: TSortColumns) => {
         setOrder(prev => ({orderBy: sort, isAscending: prev.orderBy === sort ? !prev.isAscending : true}))
+    }
+
+    const getDailyHoursFromMonday = (item: IRoleHours) => {
+        const hours = item.dailyHours.slice(1, item.dailyHours.length);
+        return [...hours, item.dailyHours[0]].map((day) => {
+            return <StyledScheduleCell key={day.day}>{day.value.toFixed(1)}</StyledScheduleCell>
+        })
+    }
+
+    const getTotalHoursFromMonday = () => {
+        if (baseSummary) {
+            const hours = baseSummary.totalHours.slice(1, baseSummary.totalHours.length);
+            return [...hours, baseSummary.totalHours[0]].map((item) => {
+                return <StyledScheduleCell key={item.day}>{item.value.toFixed(1)}</StyledScheduleCell>
+            })
+        }
     }
 
     return (
@@ -73,17 +90,13 @@ const BaseScheduleByEmployee = () => {
                                         <StyledScheduleCell key="serviceBook">
                                             {item.serviceBook}
                                         </StyledScheduleCell>
-                                        {item.dailyHours.map((day) => {
-                                            return <StyledScheduleCell key={day.day}>{day.value.toFixed(1)}</StyledScheduleCell>
-                                        })}
+                                        {getDailyHoursFromMonday(item)}
                                     </TableRow>
                                 })}
                                 <ScheduleTableFooterRow key="total">
                                     <StyledScheduleCell/>
                                     <ScheduleTableTotalCell key="totalCell">Total</ScheduleTableTotalCell>
-                                    {baseSummary.totalHours.map((item) => {
-                                        return <StyledScheduleCell key={item.day}>{item.value.toFixed(1)}</StyledScheduleCell>
-                                    })}
+                                    {getTotalHoursFromMonday()}
                                 </ScheduleTableFooterRow>
                             </TableBody>
                             : null}

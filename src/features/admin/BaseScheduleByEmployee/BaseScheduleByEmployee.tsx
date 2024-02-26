@@ -35,7 +35,7 @@ import EmployeeTimeScheduleSetUp from "../EmployeeTimeScheduleSetUp/EmployeeTime
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
 
-const daysList = [1, 2, 3, 4, 5, 6, 7]
+const daysList = [1, 2, 3, 4, 5, 6, 0]
 
 const BaseScheduleByEmployee = () => {
     const {employeeRoleHours, loading} = useSelector((state: RootState) => state.employees)
@@ -84,6 +84,13 @@ const BaseScheduleByEmployee = () => {
     const onTableClick = (item: IEmployeeRoleHours) => {
         setCurrentEmployee(item)
         onOpen()
+    }
+
+    const getDailyHoursFromMonday = (item: IEmployeeRoleHours) => {
+        const hours = item.dailyHours.slice(1, item.dailyHours.length);
+        return [...hours, item.dailyHours[0]].map((day) => {
+            return <ScheduleDataCell onClick={() => onTableClick(item)} key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
+        })
     }
 
     return (
@@ -155,9 +162,7 @@ const BaseScheduleByEmployee = () => {
                                     {/*<ScheduleDataCell key="breakHours">*/}
                                     {/*    0.0*/}
                                     {/*</ScheduleDataCell>*/}
-                                    {item.dailyHours.map((day) => {
-                                        return <ScheduleDataCell onClick={() => onTableClick(item)} key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
-                                    })}
+                                    {getDailyHoursFromMonday(item)}
                                 </TableRow>
                             })}
                         </TableBody>
