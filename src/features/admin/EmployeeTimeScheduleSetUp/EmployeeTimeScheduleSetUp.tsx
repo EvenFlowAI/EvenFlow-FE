@@ -19,11 +19,12 @@ import {timeSpanString} from "../../../utils/constants";
 
 type TProps = DialogProps & {
     editingItem: IEmployeeRoleHours | null;
+    getData: () => void;
 }
 
 const daysList = [1, 2, 3, 4, 5, 6, 7]
 
-const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem}) => {
+const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem, getData}) => {
     const {employeeSchedule, loading} = useSelector((state: RootState) => state.employees);
     const {hoursOfOperations} = useSelector((state: RootState) => state.appointmentFrame);
     const [currentSchedule, setCurrentSchedule] = useState<TDaySchedule[]>([]);
@@ -108,7 +109,10 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
         onClose()
     }
 
-    const onSuccess = () => showMessage("Employee schedule updated")
+    const onSuccess = () => {
+        showMessage("Employee schedule updated")
+        getData()
+    }
 
     const checkIsValid = (): boolean => {
         return currentSchedule

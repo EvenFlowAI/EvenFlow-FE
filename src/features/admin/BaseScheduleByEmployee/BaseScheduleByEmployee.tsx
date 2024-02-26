@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
     Divider,
     Paper,
@@ -49,7 +49,7 @@ const BaseScheduleByEmployee = () => {
     const {selectedSC} = useSCs();
     const {isOpen, onOpen, onClose} = useModal();
 
-    useEffect(() => {
+    const getData = useCallback(() => {
         if (selectedSC?.id) {
             const isServiceBookServiceCenter = Boolean(serviceBook && !serviceBook.id);
             const data: TScheduleByEmployeeRequestData = {
@@ -62,14 +62,18 @@ const BaseScheduleByEmployee = () => {
             if (name) data.name = name;
             if (role) data.role = role;
             dispatch(loadBaseSummaryByEmployee(data))
-            dispatch(loadWorkingDays(selectedSC.id))
-            dispatch(loadHoursOfOperations(selectedSC.id))
         }
     }, [selectedSC, order, serviceBook, name, role])
 
     useEffect(() => {
+        getData()
+    }, [getData])
+
+    useEffect(() => {
         if (selectedSC?.id) {
             dispatch(loadServiceBookList(selectedSC.id))
+            dispatch(loadWorkingDays(selectedSC.id))
+            dispatch(loadHoursOfOperations(selectedSC.id))
         }
     }, [selectedSC])
 
@@ -165,7 +169,7 @@ const BaseScheduleByEmployee = () => {
                         </Wrapper>
                     </div>
             }
-            <EmployeeTimeScheduleSetUp open={isOpen} onClose={onClose} editingItem={currentEmployee}/>
+            <EmployeeTimeScheduleSetUp open={isOpen} onClose={onClose} editingItem={currentEmployee} getData={getData}/>
         </Paper>
     );
 };
