@@ -36,7 +36,8 @@ const CancelAppointmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
 
     const handleSubmit = () => {
         setLoading(true)
-        API.appointment.cancelFromEmail(hashKey)
+        const requestFunc = hashKey.includes('by-key') ? API.appointment.cancelByKey : API.appointment.cancelFromEmail
+        requestFunc(hashKey)
             .then(() => {
                 setLoading(false)
                 loadData(Boolean(customerSearchData.firstName.length || customerSearchData.lastName.length))
