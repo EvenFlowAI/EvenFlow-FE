@@ -11,6 +11,7 @@ import {AppThunk} from "../../../types/types";
 import {IHOODataForm} from "../serviceCenters/types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
+import {loadingEmployeesSchedule} from "../schedules/actions";
 
 export const setLoading = createAction<boolean>("SlotScoring/SetLoading");
 
@@ -105,6 +106,7 @@ export const loadRange = (serviceCenterId: number, podId?: number): AppThunk => 
 }
 
 export const loadHoursOfOperations = (id: number): AppThunk => dispatch => {
+    dispatch(loadingEmployeesSchedule(true))
     Api.call<IHOODataForm[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id}})
         .then(result => {
             if (result?.data) {
@@ -124,4 +126,5 @@ export const loadHoursOfOperations = (id: number): AppThunk => dispatch => {
         .catch(err => {
             console.log('get hours of operations error', err)
         })
+        .finally(() => dispatch(loadingEmployeesSchedule(false)))
 }
