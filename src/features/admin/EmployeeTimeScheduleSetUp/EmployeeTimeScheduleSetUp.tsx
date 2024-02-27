@@ -50,22 +50,11 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                 const existingSchedule = employeeSchedule.dayOfWeekSchedules
                     .find(el => el.dayOfWeek === dayNumber)
                 const schedule = hoursOfOperations.find(el => el.dayOfWeek === dayNumber);
-                return existingSchedule ? {...existingSchedule, isEnabled: true} : {
+                return existingSchedule ? existingSchedule : {
                     dayOfWeek: dayNumber,
                     from: schedule?.from ?? "09:00:00",
                     to: schedule?.to ?? "17:00:00",
-                    isEnabled: false,
-                }
-            }))
-        } else {
-            // todo delete mock
-            setCurrentSchedule(daysList.map(dayNumber => {
-                const schedule = hoursOfOperations.find(el => el.dayOfWeek === dayNumber);
-                return {
-                    dayOfWeek: dayNumber,
-                    from: schedule?.from ?? "09:00:00",
-                    to: schedule?.to ?? "17:00:00",
-                    isEnabled: false,
+                    isOnSchedule: false,
                 }
             }))
         }
@@ -81,7 +70,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
             const data = [...prev];
             let element = data.find(el => el.dayOfWeek === day);
             if (element) {
-                element = {...element, isEnabled: value}
+                element = {...element, isOnSchedule: value}
                 const filtered = data.filter(item => item.dayOfWeek !== day)
                 return [...filtered, element].sort((a, b) => a.dayOfWeek - b.dayOfWeek)
             }
@@ -116,8 +105,13 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
 
     const checkIsValid = (): boolean => {
         return currentSchedule
-            .filter(item => item.isEnabled)
-            .every(item => dayjs(item.to, timeSpanString).isAfter(dayjs(item.from, timeSpanString)))
+            .filter(item => item.isOnSchedule)
+            .every(item => {
+                const schedule = hoursOfOperations.find(el => el.dayOfWeek === item.dayOfWeek);
+                return dayjs(item.to, timeSpanString).isAfter(dayjs(item.from, timeSpanString))
+                    && dayjs(item.to, timeSpanString).isSameOrBefore(dayjs(schedule?.to))
+                    && dayjs(item.from, timeSpanString).isSameOrAfter(dayjs(schedule?.from))
+            })
     }
 
     const onSave = () => {
@@ -127,12 +121,12 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                 const data: TSetScheduleData = {
                     serviceCenterId: selectedSC.id,
                     employeeId: editingItem?.employeeId,
-                    dayOfWeekSchedules: currentSchedule.filter(item => item.isEnabled),
+                    dayOfWeekSchedules: currentSchedule.filter(item => item.isOnSchedule),
                 }
                 if (editingItem.serviceBookId) data.serviceBookId = employeeSchedule?.serviceBookId
                 dispatch(updateBaseEmployeeSchedule(data, onSuccess, showError))
             } else {
-                showError('"To" must be later then "From"')
+                showError('"To" must be later then "From" and inside of the Hours Of Operations')
             }
         }
     }
@@ -144,48 +138,54 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                 {loading ?
                     <Loading/>
                     : <>
-                    <UserWrapper>
-                    <div>{employeeSchedule?.employeeName ?? null}</div>
-                    <div>{employeeSchedule?.role ?? null}</div>
-                    <div>{employeeSchedule?.serviceBook ?? null}</div>
-                </UserWrapper>
-                {daysList.map(day => {
-                    const scheduleItem = currentSchedule.find(el => el.dayOfWeek === day)
-                    const schedule = hoursOfOperations.find(el => el.dayOfWeek === day);
-                    const checked = scheduleItem?.isEnabled
-                    return <RowWrapper key={day}>
-                        <DayName>{dayjs().set('day', day).format("dddd")}</DayName>
-                        <SwitcherWrapper>
-                            <SwitcherLabel>OFF</SwitcherLabel>
-                            <Switch
-                                onChange={handleSwitch(day)}
-                                checked={checked}
-                                disabled={!workingDays.includes(day)}
-                                color="primary"
-                            />
-                            <SwitcherLabel>ON</SwitcherLabel>
-                        </SwitcherWrapper>
-                        <PickersWrapper>
-                            <TimeSelect
-                                error={formIsChecked && scheduleItem?.isEnabled
-                                    && dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(dayjs(scheduleItem.from, timeSpanString))}
-                                disabled={!checked || !workingDays.includes(day)}
-                                start={schedule?.from ?? "09:00:00"}
-                                end={schedule?.to ?? "17:00:00"}
-                                value={scheduleItem?.from}
-                                onChange={(value) => onTimeChange(day, 'from', value)}/>
-                            <div>TO</div>
-                            <TimeSelect
-                                error={formIsChecked && scheduleItem?.isEnabled
-                                    && dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(dayjs(scheduleItem.from, timeSpanString))}
-                                disabled={!checked || !workingDays.includes(day)}
-                                start={schedule?.from ?? "09:00:00"}
-                                end={schedule?.to ?? "17:00:00"}
-                                value={scheduleItem?.to}
-                                onChange={(value) => onTimeChange(day, 'to', value)}/>
-                        </PickersWrapper>
-                    </RowWrapper>
-                })}
+                        <UserWrapper>
+                            <div>{employeeSchedule?.employeeName ?? null}</div>
+                            <div>{employeeSchedule?.role ?? null}</div>
+                            <div>{employeeSchedule?.serviceBook ?? null}</div>
+                        </UserWrapper>
+                        {daysList.map(day => {
+                            const scheduleItem = currentSchedule.find(el => el.dayOfWeek === day)
+                            const schedule = hoursOfOperations.find(el => el.dayOfWeek === day);
+                            const checked = scheduleItem?.isOnSchedule
+                            return <RowWrapper key={day}>
+                                <DayName>{dayjs().set('day', day).format("dddd")}</DayName>
+                                <SwitcherWrapper>
+                                    <SwitcherLabel>OFF</SwitcherLabel>
+                                    <Switch
+                                        onChange={handleSwitch(day)}
+                                        checked={checked}
+                                        disabled={!workingDays.includes(day)}
+                                        color="primary"
+                                    />
+                                    <SwitcherLabel>ON</SwitcherLabel>
+                                </SwitcherWrapper>
+                                <PickersWrapper>
+                                    <TimeSelect
+                                        error={
+                                            formIsChecked && scheduleItem?.isOnSchedule
+                                            && (dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(dayjs(scheduleItem.from, timeSpanString))
+                                            || dayjs(scheduleItem.from, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString)))
+                                        }
+                                        disabled={!checked || !workingDays.includes(day)}
+                                        start={schedule?.from ?? ""}
+                                        end={schedule?.to ?? ""}
+                                        value={scheduleItem?.from}
+                                        onChange={(value) => onTimeChange(day, 'from', value)}/>
+                                    <div>TO</div>
+                                    <TimeSelect
+                                        error={
+                                            formIsChecked && scheduleItem?.isOnSchedule
+                                            && (dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(dayjs(scheduleItem.from, timeSpanString))
+                                            || dayjs(scheduleItem.to, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString)))
+                                        }
+                                        disabled={!checked || !workingDays.includes(day)}
+                                        start={schedule?.from ?? ""}
+                                        end={schedule?.to ?? ""}
+                                        value={scheduleItem?.to}
+                                        onChange={(value) => onTimeChange(day, 'to', value)}/>
+                                </PickersWrapper>
+                            </RowWrapper>
+                        })}
                     </>
                 }
             </DialogContent>
