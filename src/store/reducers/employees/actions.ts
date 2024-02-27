@@ -228,7 +228,7 @@ export const loadBaseSummary = (serviceCenterId: number, orderBy: string, isAsce
         .catch(err => {
             console.log('load base summary error', err)
         })
-        .finally(() => dispatch(loading(false)))
+        .finally(() => setTimeout(() => dispatch(loading(false)), 500))
 }
 
 export const getBaseSummaryByEmployee = createAction<IEmployeeRoleHours[]>("Employees/GetBaseScheduleByEmployee");
