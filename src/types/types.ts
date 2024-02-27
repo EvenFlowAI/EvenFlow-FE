@@ -339,5 +339,6 @@ export interface IDataCalendarProps<Data> {
     index?: keyof Data;
     firstIconText?: string;
     secondIconText?: string;
-    setTimePeriod: Dispatch<SetStateAction<TTimePeriod>>;
+    setTimePeriod: Dispatch<SetStateAction<TTimePeriod|null>>;
+    timePeriod: TTimePeriod|null;
 }

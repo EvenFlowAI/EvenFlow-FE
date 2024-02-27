@@ -20,9 +20,10 @@ export function DataCalendar<U>({
                                     secondIcon,
                                     index,
                                     dateFieldName,
-    firstIconText,
-    secondIconText,
-                                    setTimePeriod
+                                    firstIconText,
+                                    secondIconText,
+                                    setTimePeriod,
+                                    timePeriod,
                                 }: IDataCalendarProps<U>) {
     const today = useMemo(() => dayjs(), []);
     const { classes  } = useStyles();
@@ -59,9 +60,12 @@ export function DataCalendar<U>({
 
     useEffect(() => {
         if (days.length) {
-            setTimePeriod({startDate: days[0]?.date, endDate: days[days.length - 1]?.date})
+            if (!dayjs(timePeriod?.startDate).isSame(dayjs(days[0]?.date))
+                || !dayjs(timePeriod?.endDate).isSame(dayjs(days[days.length - 1]?.date))) {
+                setTimePeriod({startDate: days[0]?.date, endDate: days[days.length - 1]?.date})
+            }
         }
-    }, [days])
+    }, [days, timePeriod])
 
     return <div style={{width: "100%"}}>
         <Paper className={classes.paper} variant="outlined">

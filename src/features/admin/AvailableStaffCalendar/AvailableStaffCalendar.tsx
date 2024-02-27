@@ -15,10 +15,7 @@ type TData = {
 export const AvailableStaffCalendar = () => {
     const [date, setDate] = useState<TParsableDate>(dayjs());
     const [data, setData] = useState<TData[]>([]);
-    const [timePeriod, setTimePeriod] = useState<TTimePeriod>({
-        startDate: null,
-        endDate: null,
-    })
+    const [timePeriod, setTimePeriod] = useState<TTimePeriod|null>(null)
 
     useEffect(() => {
         const dates = []
@@ -47,6 +44,7 @@ export const AvailableStaffCalendar = () => {
         // firstIconText={"The number of advisors scheduled for the day"}
         // secondIconText={"The number of technicians scheduled for the day"}
         setTimePeriod={setTimePeriod}
+        timePeriod={timePeriod}
         setDate={setDate}
         dateFieldName={'date'}
         onDayClick={onDayClick}/>
