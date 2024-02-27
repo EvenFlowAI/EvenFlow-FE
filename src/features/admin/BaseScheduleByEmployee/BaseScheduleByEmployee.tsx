@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
     Divider,
     Paper,
@@ -41,6 +41,7 @@ const BaseScheduleByEmployee = () => {
     const {employeesLoading} = useSelector((state: RootState) => state.employeesSchedule)
     const {isLoading} = useSelector((state: RootState) => state.appointments)
     const {isLoading: hoursIsLoading} = useSelector((state: RootState) => state.slotScoring)
+    const [loader, setLoader] = useState<boolean>(false);
     const [order, setOrder] = useState<TOrder>({orderBy: "Name", isAscending: true})
     const [serviceBook, setServiceBook] = useState<TServiceBook|null>(null);
     const [role, setRole] = useState<TRole|null>(null);
@@ -50,8 +51,12 @@ const BaseScheduleByEmployee = () => {
     const {selectedSC} = useSCs();
     const {isOpen, onOpen, onClose} = useModal();
 
+    const saving = useMemo(() => loading || employeesLoading || hoursIsLoading || loader || isLoading,
+        [loading, employeesLoading, hoursIsLoading, loader, isLoading])
+
     const getData = useCallback(() => {
         if (selectedSC?.id) {
+            setLoader(true)
             const isServiceBookServiceCenter = Boolean(serviceBook && !serviceBook.id);
             const data: TScheduleByEmployeeRequestData = {
                 serviceCenterId: selectedSC.id,
@@ -63,17 +68,20 @@ const BaseScheduleByEmployee = () => {
             if (name) data.name = name;
             if (role) data.role = role;
             dispatch(loadBaseSummaryByEmployee(data))
+            setLoader(false)
         }
-    }, [selectedSC, order, serviceBook, name, role])
+    }, [])
 
     useEffect(() => {
         getData()
-    }, [getData])
+    }, [selectedSC, order, serviceBook, name, role, getData])
 
     useEffect(() => {
+        setLoader(true)
         if (name) setName('');
         if (role) setRole(null);
         if (serviceBook) setServiceBook(null);
+        setLoader(false)
     }, [selectedSC])
 
     useEffect(() => {
@@ -84,7 +92,9 @@ const BaseScheduleByEmployee = () => {
     }, [selectedSC])
 
     const onSort = (sort: TSortColumns) => {
+        setLoader(true)
         setOrder(prev => ({orderBy: sort, isAscending: prev.orderBy === sort ? !prev.isAscending : true}))
+        setLoader(false)
     }
 
     const onTableClick = (item: IEmployeeRoleHours) => {
@@ -104,7 +114,7 @@ const BaseScheduleByEmployee = () => {
             <ScheduleEmployeeTitleWrapper>
                 <ScheduleTableTitle>BASE SCHEDULE BY EMPLOYEE</ScheduleTableTitle>
                 <BaseScheduleFilters
-                    isLoading={isLoading||loading}
+                    isLoading={saving}
                     serviceBook={serviceBook}
                     role={role}
                     setServiceBook={setServiceBook}
@@ -112,7 +122,7 @@ const BaseScheduleByEmployee = () => {
                     setName={setName}
                     setRole={setRole}/>
             </ScheduleEmployeeTitleWrapper>
-            { loading || employeesLoading || hoursIsLoading
+            { saving
                 ? <Loading/>
                 : employeeRoleHours.length
                     ? <Table>
