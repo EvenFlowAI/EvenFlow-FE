@@ -117,9 +117,13 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
             val: el => (
                 <PickersWrapper>
                     <TimeSelect
-                        error={formIsChecked && el.isOnSchedule
+                        error={
+                            formIsChecked && el.isOnSchedule
                             && (!el.startAt
-                                || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString)))}
+                                || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString))
+                                || dayjs(el.startAt, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString))
+                            || dayjs(el.startAt, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString)))
+                        }
                         disabled={!el.isOnSchedule}
                         start={schedule?.from ?? "09:00:00"}
                         end={schedule?.to ?? "17:00:00"}
@@ -127,9 +131,13 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
                         onChange={(value) => onTimeChange(el, 'startAt', value)}/>
                     <div>TO</div>
                     <TimeSelect
-                        error={formIsChecked && el.isOnSchedule
+                        error={
+                            formIsChecked && el.isOnSchedule
                             && (!el.finishAt
-                                || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString)))}
+                                || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString))
+                                || dayjs(el.finishAt, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString))
+                                || dayjs(el.finishAt, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString)))
+                        }
                         disabled={!el.isOnSchedule}
                         start={schedule?.from ?? "09:00:00"}
                         end={schedule?.to ?? "17:00:00"}
@@ -152,6 +160,17 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
             valid = false;
             showError('"End" value must be later than "Start"')
         }
+        if (!filtered.every(item => dayjs(item.finishAt, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString)))
+        || !filtered.every(item => dayjs(item.finishAt, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString)))) {
+            valid = false;
+            showError('"End" value must be inside of the Hours Of Operations')
+        }
+        if (!filtered.every(item => dayjs(item.startAt, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString)))
+        || !filtered.every(item => dayjs(item.startAt, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString)))) {
+            valid = false;
+            showError('"Start" value must be inside of the Hours Of Operations')
+        }
+
         return valid
     }
 
