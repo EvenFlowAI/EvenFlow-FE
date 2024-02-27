@@ -66,12 +66,12 @@ const TimeSelect: React.FC<TProps> = ({
     }
 
     const onClickUp = () => {
-        if (upEnabled) {
+        if (upEnabled && !disabled) {
             onChange(dayjs(value, timeSpanString).add(gap, 'minute').format(timeSpanString))
         }
     }
     const onClickDown = () => {
-        if (downEnabled) {
+        if (downEnabled && !disabled) {
             onChange(dayjs(value, timeSpanString).subtract(gap, 'minute').format(timeSpanString))
         }
     }

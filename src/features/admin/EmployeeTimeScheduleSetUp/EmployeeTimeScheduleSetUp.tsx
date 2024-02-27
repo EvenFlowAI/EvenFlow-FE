@@ -27,6 +27,7 @@ const daysList = [1, 2, 3, 4, 5, 6, 7]
 const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem, getData}) => {
     const {employeeSchedule, loading} = useSelector((state: RootState) => state.employees);
     const {hoursOfOperations} = useSelector((state: RootState) => state.appointmentFrame);
+    const {employeesLoading} = useSelector((state: RootState) => state.employeesSchedule);
     const [currentSchedule, setCurrentSchedule] = useState<TDaySchedule[]>([]);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
@@ -108,9 +109,10 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
             .filter(item => item.isOnSchedule)
             .every(item => {
                 const schedule = hoursOfOperations.find(el => el.dayOfWeek === item.dayOfWeek);
+                console.log()
                 return dayjs(item.to, timeSpanString).isAfter(dayjs(item.from, timeSpanString))
-                    && dayjs(item.to, timeSpanString).isSameOrBefore(dayjs(schedule?.to))
-                    && dayjs(item.from, timeSpanString).isSameOrAfter(dayjs(schedule?.from))
+                    && dayjs(item.to, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString))
+                    && dayjs(item.from, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString))
             })
     }
 
@@ -135,7 +137,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
         <BaseModal open={open} onClose={onCancel} width={780}>
             <DialogTitle onClose={onCancel}>Employee Time Schedule Set Up</DialogTitle>
             <DialogContent>
-                {loading ?
+                {loading || employeesLoading ?
                     <Loading/>
                     : <>
                         <UserWrapper>
@@ -195,7 +197,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                 <div className={classes.wrapper}>
                     <div className={classes.buttonsWrapper}>
                         <LoadingButton
-                            loading={loading}
+                            loading={loading || employeesLoading}
                             onClick={onCancel}
                             variant="text"
                             style={{marginRight: 20}}
@@ -203,7 +205,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                             Close
                         </LoadingButton>
                         <LoadingButton
-                            loading={loading}
+                            loading={loading || employeesLoading}
                             onClick={onSave}
                             className={classes.saveButton}>
                             Save
