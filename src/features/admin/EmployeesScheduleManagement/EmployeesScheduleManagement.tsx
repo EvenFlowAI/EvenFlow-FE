@@ -14,21 +14,16 @@ import EmployeeScheduleModal from "./EmployeeScheduleModal/EmployeeScheduleModal
 import {employeesRoot} from "../../../utils/constants";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 
-const initialPeriod = {
-    startDate: null,
-    endDate: null,
-}
-
 const EmployeesScheduleManagement = () => {
     const {calendarData} = useSelector((state: RootState) => state.employeesSchedule)
     const [date, setDate] = useState<TParsableDate>(dayjs());
-    const [timePeriod, setTimePeriod] = useState<TTimePeriod>(initialPeriod);
+    const [timePeriod, setTimePeriod] = useState<TTimePeriod|null>(null);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const {onOpen, isOpen, onClose} = useModal();
 
     useEffect(() => {
-        if (selectedSC && timePeriod.startDate && timePeriod.endDate) {
+        if (selectedSC && timePeriod) {
             const utcOffset = dayjs().utcOffset()
             const start = dayjs(timePeriod.startDate).startOf("day").add(utcOffset, 'minute').toISOString()
             const end = dayjs(timePeriod.endDate).endOf("day").subtract(utcOffset, 'minute').toISOString()
@@ -58,6 +53,7 @@ const EmployeesScheduleManagement = () => {
             secondIconText={"The number of technicians scheduled for the day"}
             dateFieldName={'date'}
             setDate={setDate}
+            timePeriod={timePeriod}
             setTimePeriod={setTimePeriod}
             onDayClick={onDayClick}/>
         <EmployeeScheduleModal open={isOpen} onClose={onClose} date={date}/>
