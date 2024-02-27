@@ -34,7 +34,7 @@ const TimeSelect: React.FC<TProps> = ({
         const endTime = dayjs("12:00", hourFormat)
         const options: string[] = [];
         let currentTime = startTime;
-        while (currentTime.isBefore(endTime)) {
+        while (currentTime.isSameOrBefore(endTime)) {
             options.push(currentTime.format(hourFormat))
             currentTime = currentTime.add(gap, 'minute')
         }

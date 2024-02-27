@@ -157,7 +157,7 @@ export type TDaySchedule = {
     dayOfWeek: number;
     from: string;
     to: string;
-    isEnabled?: boolean;
+    isOnSchedule: boolean;
 }
 
 export interface IEmployeeSchedule {
