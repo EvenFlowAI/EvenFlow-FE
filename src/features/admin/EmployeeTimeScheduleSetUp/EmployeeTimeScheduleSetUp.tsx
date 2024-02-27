@@ -109,7 +109,6 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
             .filter(item => item.isOnSchedule)
             .every(item => {
                 const schedule = hoursOfOperations.find(el => el.dayOfWeek === item.dayOfWeek);
-                console.log()
                 return dayjs(item.to, timeSpanString).isAfter(dayjs(item.from, timeSpanString))
                     && dayjs(item.to, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString))
                     && dayjs(item.from, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString))
