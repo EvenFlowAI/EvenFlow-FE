@@ -32,14 +32,15 @@ import {NoData} from "../../../components/wrappers/NoData/NoData";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useModal} from "../../../hooks/useModal/useModal";
 import EmployeeTimeScheduleSetUp from "../EmployeeTimeScheduleSetUp/EmployeeTimeScheduleSetUp";
-import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 const daysList = [1, 2, 3, 4, 5, 6, 0]
 
 const BaseScheduleByEmployee = () => {
     const {employeeRoleHours, loading} = useSelector((state: RootState) => state.employees)
+    const {employeesLoading} = useSelector((state: RootState) => state.employeesSchedule)
     const {isLoading} = useSelector((state: RootState) => state.appointments)
+    const {isLoading: hoursIsLoading} = useSelector((state: RootState) => state.slotScoring)
     const [order, setOrder] = useState<TOrder>({orderBy: "Name", isAscending: true})
     const [serviceBook, setServiceBook] = useState<TServiceBook|null>(null);
     const [role, setRole] = useState<TRole|null>(null);
@@ -78,7 +79,6 @@ const BaseScheduleByEmployee = () => {
     useEffect(() => {
         if (selectedSC?.id) {
             dispatch(loadServiceBookList(selectedSC.id))
-            dispatch(loadWorkingDays(selectedSC.id))
             dispatch(loadHoursOfOperations(selectedSC.id))
         }
     }, [selectedSC])
@@ -112,7 +112,7 @@ const BaseScheduleByEmployee = () => {
                     setName={setName}
                     setRole={setRole}/>
             </ScheduleEmployeeTitleWrapper>
-            { loading
+            { loading || employeesLoading || hoursIsLoading
                 ? <Loading/>
                 : employeeRoleHours.length
                     ? <Table>
