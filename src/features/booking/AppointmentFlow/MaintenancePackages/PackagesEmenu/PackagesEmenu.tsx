@@ -11,7 +11,9 @@ type TProps = {
     onNext: () => void,
 }
 
-const primaryString = 'https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&';
+// https://prodfix.emenusautomotive.com/my/index.php?go=api.pdf&
+
+const primaryString = 'https://my.emenusllc.com/index.php?go=api.pdf&';
 
 const PackagesEmenu: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onBack, onNext}) => {
     const {selectedVehicle, makes} = useSelector((state: RootState) => state.appointmentFrame);
