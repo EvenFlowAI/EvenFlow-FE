@@ -8,6 +8,7 @@ import {TDay, TDayType} from "../../features/admin/AvailableStaffCalendar/types"
 import {CalendarControls} from "./CalendarControls/CalendarControls";
 import {WeekDayNames} from "../../utils/constants";
 import {IconsBlock} from "./IconsBlock/IconsBlock";
+import {Loading} from "../wrappers/Loading/Loading";
 
 export function DataCalendar<U>({
                                     date,
@@ -25,6 +26,7 @@ export function DataCalendar<U>({
                                     setTimePeriod,
                                     timePeriod,
                                     disabledDates,
+                                    loading
                                 }: IDataCalendarProps<U>) {
     const today = useMemo(() => dayjs(), []);
     const { classes  } = useStyles();
@@ -78,35 +80,38 @@ export function DataCalendar<U>({
         <Paper className={classes.paper} variant="outlined">
             <h2 className={classes.title}>Calendar</h2>
             <CalendarControls date={date} onChange={handleMonthChange} />
-            <div className={classes.calendarWrapper}>
-                {WeekDayNames.map(day =>
-                    <div className={classes.weekDay} key={day}>{day}</div>
-                )}
-                {days.map(d => {
-                        const dayData = data.find(el => dayjs(el[dateFieldName] as TParsableDate).isSame(d.date, "date"))
-                        return <div
-                            className={clsx(
-                                classes.dayCell,
-                                d.type === "cur" ? classes.currentMonth : classes.prevMonth,
-                                dayjs(d.date).isSame(today, "day") ? classes.today : ""
-                            )}
-                            onClick={() => onClick(dayData, d.date, d.type)}
-                            key={`${d.day}-${d.type}`}>
-                            <span className={classes.dayNumber}>{d.day}</span>
-                            <IconsBlock
-                                icon={firstIcon}
-                                index={'firstIcon'}
-                                tooltipText={firstIconText}
-                                value={dayData ? dayData[firstIconFieldName] : undefined}/>
-                            <IconsBlock
-                                index={'secondIcon'}
-                                icon={secondIcon}
-                                tooltipText={secondIconText}
-                                value={dayData ? dayData[secondIconFieldName] : undefined}/>
-                        </div>
-                    }
-                )}
-            </div>
+            {loading
+                ? <Loading/>
+                : <div className={classes.calendarWrapper}>
+                    {WeekDayNames.map(day =>
+                        <div className={classes.weekDay} key={day}>{day}</div>
+                    )}
+                    {days.map(d => {
+                            const dayData = data.find(el => dayjs(el[dateFieldName] as TParsableDate).isSame(d.date, "date"))
+                            return <div
+                                className={clsx(
+                                    classes.dayCell,
+                                    d.type === "cur" ? classes.currentMonth : classes.prevMonth,
+                                    dayjs(d.date).isSame(today, "day") ? classes.today : ""
+                                )}
+                                onClick={() => onClick(dayData, d.date, d.type)}
+                                key={`${d.day}-${d.type}`}>
+                                <span className={classes.dayNumber}>{d.day}</span>
+                                <IconsBlock
+                                    icon={firstIcon}
+                                    index={'firstIcon'}
+                                    tooltipText={firstIconText}
+                                    value={dayData ? dayData[firstIconFieldName] : undefined}/>
+                                <IconsBlock
+                                    index={'secondIcon'}
+                                    icon={secondIcon}
+                                    tooltipText={secondIconText}
+                                    value={dayData ? dayData[secondIconFieldName] : undefined}/>
+                            </div>
+                        }
+                    )}
+                </div>
+            }
         </Paper>
     </div>
 }
