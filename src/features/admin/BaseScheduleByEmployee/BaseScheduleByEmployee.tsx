@@ -21,7 +21,7 @@ import {
     ScheduleTableHeaderCell,
     ScheduleTableHeaderRow,
     ScheduleTableTitle, Wrapper,
-    StyledScheduleCell
+    StyledScheduleCell, DisabledDataCell
 } from "../../../components/styled/ScheduleTableElements";
 import {IEmployeeRoleHours, TScheduleByEmployeeRequestData} from "../../../store/reducers/employees/types";
 import {TRole} from "../../../store/reducers/users/types";
@@ -33,12 +33,14 @@ import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useModal} from "../../../hooks/useModal/useModal";
 import EmployeeTimeScheduleSetUp from "../EmployeeTimeScheduleSetUp/EmployeeTimeScheduleSetUp";
 import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 
 const daysList = [1, 2, 3, 4, 5, 6, 0]
 
 const BaseScheduleByEmployee = () => {
     const {employeeRoleHours, loading} = useSelector((state: RootState) => state.employees)
     const {employeesLoading} = useSelector((state: RootState) => state.employeesSchedule)
+    const {workingDays} = useSelector(({serviceCenters}: RootState) => serviceCenters)
     const {isLoading} = useSelector((state: RootState) => state.appointments)
     const {isLoading: hoursIsLoading} = useSelector((state: RootState) => state.slotScoring)
     const [loader, setLoader] = useState<boolean>(false);
@@ -88,6 +90,7 @@ const BaseScheduleByEmployee = () => {
         if (selectedSC?.id) {
             dispatch(loadServiceBookList(selectedSC.id))
             dispatch(loadHoursOfOperations(selectedSC.id))
+            dispatch(loadWorkingDays(selectedSC.id))
         }
     }, [selectedSC])
 
@@ -105,7 +108,11 @@ const BaseScheduleByEmployee = () => {
     const getDailyHoursFromMonday = (item: IEmployeeRoleHours) => {
         const hours = item.dailyHours.slice(1, item.dailyHours.length);
         return [...hours, item.dailyHours[0]].map((day) => {
-            return <ScheduleDataCell onClick={() => onTableClick(item)} key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
+            if (workingDays.includes(day.day as number)) {
+                return <ScheduleDataCell onClick={() => onTableClick(item)} key={day.day}>{day.value.toFixed(1)}</ScheduleDataCell>
+            } else {
+                return <DisabledDataCell key={day.day}>{day.value.toFixed(1)}</DisabledDataCell>
+            }
         })
     }
 

@@ -67,3 +67,7 @@ export const ScheduleDataCell = styled(StyledScheduleCell)({
     color: "#7898FF",
     cursor: "pointer",
 })
+
+export const DisabledDataCell = styled(StyledScheduleCell)({
+    color: "#858585",
+})
