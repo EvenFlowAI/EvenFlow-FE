@@ -18,14 +18,16 @@ import {useActionButtonsStyles} from "../../../../hooks/styling/useActionButtons
 import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 import {updateScheduleByDate} from "../../../../store/reducers/schedules/actions";
 import {useException} from "../../../../hooks/useException/useException";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 
-type TProps = DialogProps & {date: TParsableDate}
+type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean}
 
 const compareName = (a: IScheduleByDate, b: IScheduleByDate) => a.employeeName.localeCompare(b.employeeName)
 
-const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
+const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose, disabledDate}) => {
     const {hoursOfOperations} = useSelector((state: RootState) => state.appointmentFrame);
     const {scheduleByDate, employeesLoading} = useSelector((state: RootState) => state.employeesSchedule);
+    const {loading} = useSelector((state: RootState) => state.employees);
     const [isForWeek, setForWeek] = useState<boolean>(false);
     const [formIsChecked, setFormChecked] = useState<boolean>(false);
     const [currentSchedule, setCurrentSchedule] = useState<IScheduleByDate[]>([]);
@@ -104,6 +106,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
                 return <SwitcherWrapper>
                     <SwitcherLabel>NO</SwitcherLabel>
                     <Switch
+                        disabled={disabledDate}
                         onChange={handleSwitch(el)}
                         checked={el.isOnSchedule}
                         color="primary"
@@ -122,9 +125,9 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
                             && (!el.startAt
                                 || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString))
                                 || dayjs(el.startAt, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString))
-                            || dayjs(el.startAt, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString)))
+                                || dayjs(el.startAt, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString)))
                         }
-                        disabled={!el.isOnSchedule}
+                        disabled={!el.isOnSchedule || disabledDate}
                         start={schedule?.from ?? "09:00:00"}
                         end={schedule?.to ?? "17:00:00"}
                         value={el.startAt}
@@ -138,7 +141,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
                                 || dayjs(el.finishAt, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString))
                                 || dayjs(el.finishAt, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString)))
                         }
-                        disabled={!el.isOnSchedule}
+                        disabled={!el.isOnSchedule || disabledDate}
                         start={schedule?.from ?? "09:00:00"}
                         end={schedule?.to ?? "17:00:00"}
                         value={el.finishAt}
@@ -161,12 +164,12 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
             showError('"End" value must be later than "Start"')
         }
         if (!filtered.every(item => dayjs(item.finishAt, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString)))
-        || !filtered.every(item => dayjs(item.finishAt, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString)))) {
+            || !filtered.every(item => dayjs(item.finishAt, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString)))) {
             valid = false;
             showError('"End" value must be inside of the Hours Of Operations')
         }
         if (!filtered.every(item => dayjs(item.startAt, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString)))
-        || !filtered.every(item => dayjs(item.startAt, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString)))) {
+            || !filtered.every(item => dayjs(item.startAt, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString)))) {
             valid = false;
             showError('"Start" value must be inside of the Hours Of Operations')
         }
@@ -199,6 +202,14 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
         <BaseModal open={open} onClose={onCancel} width={1050}>
             <DialogTitle onClose={onCancel}>Employee Schedule: {dayjs(date).format("dddd, MMMM D, YYYY")}</DialogTitle>
             <DialogContent style={{padding: "12px 32px"}}>
+                {loading
+                    ? <Loading/>
+                    :  <Table<IScheduleByDate>
+                        data={currentSchedule}
+                        index={"employeeId"}
+                        isLoading={employeesLoading}
+                        hidePagination
+                        rowData={rowData}/>}
                 {/*<FormControlLabel*/}
                 {/*    style={{width: '35%', display: 'flex', justifyContent: 'space-between', marginBottom: 20}}*/}
                 {/*    labelPlacement="start"*/}
@@ -210,18 +221,13 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
                 {/*            color="primary"/>*/}
                 {/*    }*/}
                 {/*    label={<span style={{fontWeight: 'bold', textTransform: 'uppercase', fontSize: 14}}>Apply changes to entire week</span>}/>*/}
-                <Table<IScheduleByDate>
-                    data={currentSchedule}
-                    index={"employeeId"}
-                    isLoading={employeesLoading}
-                    hidePagination
-                    rowData={rowData}/>
+
             </DialogContent>
             <DialogActions>
                 <div className={classes.wrapper}>
                     <div className={classes.buttonsWrapper}>
                         <LoadingButton
-                            loading={employeesLoading}
+                            loading={employeesLoading || loading}
                             onClick={onCancel}
                             variant="text"
                             style={{marginRight: 20}}
@@ -229,8 +235,9 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose}) => {
                             Close
                         </LoadingButton>
                         <LoadingButton
-                            loading={employeesLoading}
+                            loading={employeesLoading || loading}
                             onClick={onSave}
+                            disabled={disabledDate}
                             className={classes.saveButton}>
                             Save
                         </LoadingButton>

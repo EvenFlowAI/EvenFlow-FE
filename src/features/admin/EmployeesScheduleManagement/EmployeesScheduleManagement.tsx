@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {DataCalendar} from "../../../components/DataCalendar/DataCalendar";
@@ -13,9 +13,13 @@ import {useModal} from "../../../hooks/useModal/useModal";
 import EmployeeScheduleModal from "./EmployeeScheduleModal/EmployeeScheduleModal";
 import {employeesRoot} from "../../../utils/constants";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
+import {EDay} from "../../../store/reducers/demandSegments/types";
+import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 
 const EmployeesScheduleManagement = () => {
     const {calendarData} = useSelector((state: RootState) => state.employeesSchedule)
+    const {workingDays} = useSelector(({serviceCenters}: RootState) => serviceCenters)
+    const {weeklyHolidaysList} = useSelector(({holidays}: RootState) => holidays)
     const [date, setDate] = useState<TParsableDate>(dayjs());
     const [timePeriod, setTimePeriod] = useState<TTimePeriod|null>(null);
     const {selectedSC} = useSCs();
@@ -31,6 +35,10 @@ const EmployeesScheduleManagement = () => {
         }
     }, [selectedSC, timePeriod])
 
+    useEffect(() => {
+      if (selectedSC) dispatch(loadWorkingDays(selectedSC.id))
+    }, [selectedSC])
+
     const onDayClick = (el: ICalendarItem|undefined, date: TParsableDate) => {
         if (selectedSC && el) {
             const utcOffset = dayjs().utcOffset()
@@ -39,6 +47,16 @@ const EmployeesScheduleManagement = () => {
             onOpen()
         }
     }
+
+    const checkIsWorkingDay = useCallback((date: TParsableDate): boolean => {
+        const holiday = weeklyHolidaysList.find(h => {
+            const d = dayjs.utc(h.date).year(dayjs(date).year()).startOf('day');
+            return d.isSame(dayjs.utc(dayjs(date).toDate()), "date");
+        });
+        return workingDays.includes(dayjs.utc(date).day() as EDay) && !holiday;
+    }, [workingDays, weeklyHolidaysList])
+
+    const disabledDates = calendarData.filter(el => !checkIsWorkingDay(el.date)).map(el => el.date)
 
     return <>
         <TitleContainer title={"Schedule Management"} pad parent={employeesRoot}/>
@@ -49,6 +67,7 @@ const EmployeesScheduleManagement = () => {
             firstIconFieldName={'advisorsCount'}
             secondIconFieldName={'techniciansCount'}
             date={date}
+            disabledDates={disabledDates}
             firstIconText={"The number of advisors scheduled for the day"}
             secondIconText={"The number of technicians scheduled for the day"}
             dateFieldName={'date'}
@@ -56,7 +75,12 @@ const EmployeesScheduleManagement = () => {
             timePeriod={timePeriod}
             setTimePeriod={setTimePeriod}
             onDayClick={onDayClick}/>
-        <EmployeeScheduleModal open={isOpen} onClose={onClose} date={date}/>
+        <EmployeeScheduleModal
+            open={isOpen}
+            onClose={onClose}
+            date={date}
+            disabledDate={Boolean(disabledDates.find(el => dayjs(el).isSame(date, 'date')))}
+        />
     </>
 };
 

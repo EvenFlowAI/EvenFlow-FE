@@ -4,7 +4,7 @@ import clsx from "clsx";
 import {useStyles} from "./styles";
 import dayjs from "dayjs";
 import {IDataCalendarProps, TParsableDate} from "../../types/types";
-import {TDay} from "../../features/admin/AvailableStaffCalendar/types";
+import {TDay, TDayType} from "../../features/admin/AvailableStaffCalendar/types";
 import {CalendarControls} from "./CalendarControls/CalendarControls";
 import {WeekDayNames} from "../../utils/constants";
 import {IconsBlock} from "./IconsBlock/IconsBlock";
@@ -24,6 +24,7 @@ export function DataCalendar<U>({
                                     secondIconText,
                                     setTimePeriod,
                                     timePeriod,
+                                    disabledDates,
                                 }: IDataCalendarProps<U>) {
     const today = useMemo(() => dayjs(), []);
     const { classes  } = useStyles();
@@ -67,6 +68,12 @@ export function DataCalendar<U>({
         }
     }, [days, timePeriod])
 
+    const onClick = (data: U|undefined, date: TParsableDate, dayType: TDayType) => {
+        if (data && dayType === "cur") {
+            onDayClick(data, date, dayType)
+        }
+    }
+
     return <div style={{width: "100%"}}>
         <Paper className={classes.paper} variant="outlined">
             <h2 className={classes.title}>Calendar</h2>
@@ -83,7 +90,7 @@ export function DataCalendar<U>({
                                 d.type === "cur" ? classes.currentMonth : classes.prevMonth,
                                 dayjs(d.date).isSame(today, "day") ? classes.today : ""
                             )}
-                            onClick={() => dayData ? onDayClick(dayData, d.date) : null}
+                            onClick={() => onClick(dayData, d.date, d.type)}
                             key={`${d.day}-${d.type}`}>
                             <span className={classes.dayNumber}>{d.day}</span>
                             <IconsBlock
