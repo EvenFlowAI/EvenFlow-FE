@@ -72,11 +72,11 @@ const BaseScheduleByEmployee = () => {
             dispatch(loadBaseSummaryByEmployee(data))
             setLoader(false)
         }
-    }, [])
+    }, [selectedSC, order, serviceBook, name, role])
 
     useEffect(() => {
         getData()
-    }, [selectedSC, order, serviceBook, name, role, getData])
+    }, [getData])
 
     useEffect(() => {
         setLoader(true)
