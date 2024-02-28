@@ -7,9 +7,9 @@ import {ICapacitySetting} from "./types";
 export const setLoading = createAction<boolean>('CapacitySettings/SetLoading');
 export const getCapacitySettings = createAction<ICapacitySetting[]>('CapacitySettings/GetCapacitySettings');
 
-export const loadCapacitySettings = (id: number): AppThunk => dispatch => {
+export const loadCapacitySettings = (serviceCenterId: number, day: string): AppThunk => dispatch => {
     dispatch(setLoading(true))
-    Api.call(Api.endpoints.CapacityManagement.GetCapacitySettings, {urlParams: {id}})
+    Api.call(Api.endpoints.CapacitySettings.GetCapacitySettings, {params: {serviceCenterId, day}})
         .then(res => {
             if (res.data) dispatch(getCapacitySettings(res.data))
         })

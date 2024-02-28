@@ -1,13 +1,15 @@
+import {ETimeSlotType} from "../slotScoring/types";
+
 export interface ICapacitySetting {
-    id: number;
     serviceBookName: string;
-    slotsGap: number;
+    gapSlotsType: ETimeSlotType;
     appointmentsPerSlot: number;
     appointmentLeadTime: number;
-    appointmentCutOff: string;
+    cutOffTime?: string;
     technicianEfficiency: number;
-    averageBillHours: number;
-    advisorStaffingFactor: boolean;
+    avarageBillHoursPerRO: number;
+    advisorStaffingFactor?: string;
+    serviceBookId?: number;
 }
 
 export interface InitialState {

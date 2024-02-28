@@ -85,7 +85,9 @@ export class Api {
         },
         CapacityManagement: {
             Reallocate: {route: "/capacity-management/capacity-data-reallocate", method: "put"},
-            GetCapacitySettings: {route: "/capacity-management/{id}/capacity-settings", method: "get"},
+        },
+        CapacitySettings:{
+            GetCapacitySettings: {route: "/capacity-settings", method: "get"},
         },
         ComplimentaryServices: {
             GetByQuery: {route: "/complimentary-services/by-query", method: "post"},
