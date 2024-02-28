@@ -75,7 +75,12 @@ const EmployeesScheduleManagement = () => {
             timePeriod={timePeriod}
             setTimePeriod={setTimePeriod}
             onDayClick={onDayClick}/>
-        <EmployeeScheduleModal open={isOpen} onClose={onClose} date={date}/>
+        <EmployeeScheduleModal
+            open={isOpen}
+            onClose={onClose}
+            date={date}
+            disabledDate={Boolean(disabledDates.find(el => dayjs(el).isSame(date, 'date')))}
+        />
     </>
 };
 

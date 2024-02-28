@@ -69,8 +69,7 @@ export function DataCalendar<U>({
     }, [days, timePeriod])
 
     const onClick = (data: U|undefined, date: TParsableDate, dayType: TDayType) => {
-        const dayIsWorking = !disabledDates?.find(el => dayjs(el).isSame(date, 'date'))
-        if (data && dayType === "cur" && (dayIsWorking || !disabledDates?.length)) {
+        if (data && dayType === "cur") {
             onDayClick(data, date, dayType)
         }
     }
@@ -85,14 +84,12 @@ export function DataCalendar<U>({
                 )}
                 {days.map(d => {
                         const dayData = data.find(el => dayjs(el[dateFieldName] as TParsableDate).isSame(d.date, "date"))
-                        const dayIsWorking = !disabledDates?.find(el => dayjs(el).isSame(d.date, 'date'))
                         return <div
                             className={clsx(
                                 classes.dayCell,
                                 d.type === "cur" ? classes.currentMonth : classes.prevMonth,
                                 dayjs(d.date).isSame(today, "day") ? classes.today : ""
                             )}
-                            style={{cursor: dayIsWorking && d.type === "cur" ? "pointer" : "unset"}}
                             onClick={() => onClick(dayData, d.date, d.type)}
                             key={`${d.day}-${d.type}`}>
                             <span className={classes.dayNumber}>{d.day}</span>
