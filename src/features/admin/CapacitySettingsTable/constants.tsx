@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import {timeSpanString} from "../../../utils/constants";
 import {ETimeSlotType} from "../../../store/reducers/slotScoring/types";
 
-const SlotGapMap = {
+export const SlotGapMap = {
     [ETimeSlotType.TenMinutes]: '10-minutes',
     [ETimeSlotType.FifteenMinutes]: '15-minutes',
     [ETimeSlotType.ThirtyMinutes]: '30-minutes',
