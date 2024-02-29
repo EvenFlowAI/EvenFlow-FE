@@ -22,7 +22,7 @@ type TProps = DialogProps & {
     getData: () => void;
 }
 
-const daysList = [1, 2, 3, 4, 5, 6, 7]
+const daysList = [1, 2, 3, 4, 5, 6, 0]
 
 const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem, getData}) => {
     const {employeeSchedule, loading} = useSelector((state: RootState) => state.employees);
