@@ -43,6 +43,8 @@ export const initialForm: TForm = {
     cutOffTime: [],
 }
 
+const daysList = [0, 1, 2, 3, 4, 5, 6,]
+
 const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
     const [form, setForm] = useState<TForm>(initialForm)
     const {classes} = useActionButtonsStyles();
@@ -66,13 +68,20 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                     ...prev,
                     cutOffTime: [...filtered, updated]
                         .sort((a, b) => dayjs(a.day, 'dddd').day() - dayjs(b.day, 'dddd').day())}
+            } else {
+                const newItem:TDayTime = {day, time: dayjs(date).format(timeSpanString)}
+                return {
+                    ...prev,
+                    cutOffTime: [...prev.cutOffTime, newItem]
+                        .sort((a, b) => dayjs(a.day, 'dddd').day() - dayjs(b.day, 'dddd').day())}
             }
-            return prev;
         })
     }
 
     const onCancel = () => {}
+
     const onSave = () => {}
+
     return (
         <BaseModal open={open} onClose={onCancel} width={500}>
             <DialogTitle onClose={onCancel}>Employee Time Schedule Set Up</DialogTitle>
@@ -131,6 +140,23 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                         />
                     </Grid>
                     <Grid xs={12}><SubTitle>Appointment Cut Off</SubTitle></Grid>
+                    {daysList.map(day => {
+                        const existingTime = form.cutOffTime.find(el => dayjs(el.day, 'dddd').day() === day);
+                        return <Grid item xs={6} md={3}>
+                            <ClockTimePicker
+                                fullWidth
+                                value={existingTime ? dayjs(existingTime.time, timeSpanString) : null}
+                                InputProps={{
+                                    placeholder: "",
+                                    label: existingTime?.day ?? dayjs(day).format('dddd'),
+                                    id: existingTime?.day ?? dayjs(day).format('dddd'),
+                                    // disabled: !data.checked || viewMode || isLoading,
+                                    //error: !data.to && data.checked && formIsChecked,
+                                }}
+                                onChange={handleTimeChange(existingTime?.day ?? dayjs(day).format('dddd'))}
+                            />
+                        </Grid>
+                    })}
                     {form.cutOffTime.map(el => (
                         <Grid item xs={6} md={3}>
                             <ClockTimePicker
