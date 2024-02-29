@@ -15,11 +15,12 @@ import {employeesRoot} from "../../../utils/constants";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
+import {loadAllHolidays} from "../../../store/reducers/holidays/actions";
 
 const EmployeesScheduleManagement = () => {
     const {calendarData, employeesLoading} = useSelector((state: RootState) => state.employeesSchedule)
     const {workingDays} = useSelector(({serviceCenters}: RootState) => serviceCenters)
-    const {weeklyHolidaysList} = useSelector(({holidays}: RootState) => holidays)
+    const {holidaysList} = useSelector(({holidays}: RootState) => holidays)
     const [date, setDate] = useState<TParsableDate>(dayjs());
     const [timePeriod, setTimePeriod] = useState<TTimePeriod|null>(null);
     const {selectedSC} = useSCs();
@@ -36,7 +37,10 @@ const EmployeesScheduleManagement = () => {
     }, [selectedSC, timePeriod])
 
     useEffect(() => {
-      if (selectedSC) dispatch(loadWorkingDays(selectedSC.id))
+      if (selectedSC) {
+          dispatch(loadWorkingDays(selectedSC.id))
+          dispatch(loadAllHolidays(selectedSC.id))
+      }
     }, [selectedSC])
 
     const onDayClick = (el: ICalendarItem|undefined, date: TParsableDate) => {
@@ -49,12 +53,12 @@ const EmployeesScheduleManagement = () => {
     }
 
     const checkIsWorkingDay = useCallback((date: TParsableDate): boolean => {
-        const holiday = weeklyHolidaysList.find(h => {
+        const holiday = holidaysList.find(h => {
             const d = dayjs.utc(h.date).year(dayjs(date).year()).startOf('day');
             return d.isSame(dayjs.utc(dayjs(date).toDate()), "date");
         });
         return workingDays.includes(dayjs.utc(date).day() as EDay) && !holiday;
-    }, [workingDays, weeklyHolidaysList])
+    }, [workingDays, holidaysList])
 
     const disabledDates = calendarData.filter(el => !checkIsWorkingDay(el.date)).map(el => el.date)
 
