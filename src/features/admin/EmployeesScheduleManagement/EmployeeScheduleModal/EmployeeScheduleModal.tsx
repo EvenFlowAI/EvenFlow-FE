@@ -44,8 +44,8 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose, disabledD
     }, [selectedSC])
 
     useEffect(() => {
-        if (open) setCurrentSchedule([...scheduleByDate].sort(compareName))
-    }, [scheduleByDate, open])
+        setCurrentSchedule([...scheduleByDate].sort(compareName))
+    }, [scheduleByDate])
 
     const handleShowOnBookingChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         setForWeek(checked)

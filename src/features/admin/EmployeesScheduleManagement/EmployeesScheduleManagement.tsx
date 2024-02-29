@@ -17,7 +17,7 @@ import {EDay} from "../../../store/reducers/demandSegments/types";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 
 const EmployeesScheduleManagement = () => {
-    const {calendarData} = useSelector((state: RootState) => state.employeesSchedule)
+    const {calendarData, employeesLoading} = useSelector((state: RootState) => state.employeesSchedule)
     const {workingDays} = useSelector(({serviceCenters}: RootState) => serviceCenters)
     const {weeklyHolidaysList} = useSelector(({holidays}: RootState) => holidays)
     const [date, setDate] = useState<TParsableDate>(dayjs());
@@ -61,6 +61,7 @@ const EmployeesScheduleManagement = () => {
     return <>
         <TitleContainer title={"Schedule Management"} pad parent={employeesRoot}/>
         <DataCalendar
+            loading={employeesLoading}
             data={calendarData}
             firstIcon={<User/>}
             secondIcon={<Hand />}

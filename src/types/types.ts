@@ -343,4 +343,5 @@ export interface IDataCalendarProps<Data> {
     setTimePeriod: Dispatch<SetStateAction<TTimePeriod|null>>;
     timePeriod: TTimePeriod|null;
     disabledDates?: TParsableDate[];
+    loading?: boolean;
 }
