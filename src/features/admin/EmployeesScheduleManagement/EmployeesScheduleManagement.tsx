@@ -53,9 +53,11 @@ const EmployeesScheduleManagement = () => {
     }
 
     const checkIsWorkingDay = useCallback((date: TParsableDate): boolean => {
-        const holiday = holidaysList.find(h => {
-            const d = dayjs.utc(h.date).year(dayjs(date).year()).startOf('day');
-            return d.isSame(dayjs.utc(dayjs(date).toDate()), "date");
+        const holiday = holidaysList.find(holiday => {
+            const originalDate = dayjs.utc(holiday.date);
+            const d = dayjs.utc(holiday.date).year(dayjs(date).year()).startOf('day');
+            return (d.isSame(dayjs.utc(dayjs(date).toDate()), "date") && holiday.isRecurring)
+            || originalDate.isSame(dayjs.utc(date).toDate(), "date");
         });
         return workingDays.includes(dayjs.utc(date).day() as EDay) && !holiday;
     }, [workingDays, holidaysList])
