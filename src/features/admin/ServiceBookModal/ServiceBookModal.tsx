@@ -2,8 +2,6 @@ import React, {useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 import {useActionButtonsStyles} from "../../../hooks/styling/useActionButtonsStyles";
-import {DialogProps} from "../../../components/modals/BaseModal/types";
-import {ICapacitySetting} from "../../../store/reducers/capacityManagement/types";
 import {ETimeSlotType} from "../../../store/reducers/slotScoring/types";
 import {Autocomplete, Grid} from "@mui/material";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
@@ -15,35 +13,8 @@ import ClockTimePicker from "../../../components/pickers/ClockTimePicker/ClockTi
 import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
 import {timeSpanString} from "../../../utils/constants";
-
-type TProps = DialogProps & {editingItem: ICapacitySetting};
-
-export type TDayTime = {
-    day: string;
-    time: string;
-}
-
-export interface TForm {
-    serviceBookName: string;
-    gapSlotsType: TOption|null;
-    appointmentPerSlots: number|null;
-    appointmentLeadTime: number|null;
-    technicianEfficiency: number|null;
-    avarageBillHoursPerRO: number|null;
-    cutOffTime: TDayTime[];
-}
-
-export const initialForm: TForm = {
-    serviceBookName: '',
-    gapSlotsType: null,
-    appointmentPerSlots: null,
-    appointmentLeadTime: null,
-    technicianEfficiency: null,
-    avarageBillHoursPerRO: null,
-    cutOffTime: [],
-}
-
-const daysList = [0, 1, 2, 3, 4, 5, 6,]
+import {TDayTime, TForm, TProps} from "./types";
+import {daysList, initialForm} from "./constants";
 
 const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
     const [form, setForm] = useState<TForm>(initialForm)
