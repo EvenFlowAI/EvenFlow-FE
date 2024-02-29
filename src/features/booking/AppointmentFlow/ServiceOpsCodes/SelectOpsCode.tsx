@@ -183,6 +183,7 @@ export const SelectOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
                 <SearchInput
                     placeholder={t("Type here")}
                     value={searchInput}
+                    variant="standard"
                     onChange={handleSearchChange}
                     style={{flexShrink: 0}}
                     InputProps={{
