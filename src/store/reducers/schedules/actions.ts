@@ -69,12 +69,13 @@ export const loadScheduleByDate = (serviceCenterId: number, date: TParsableDate)
         .finally(() => dispatch(loading(false)))
 }
 
-export const updateScheduleByDate = (data: IUpdateByDateRequest, onSuccess: () => void, onError: (err: any) => void): AppThunk => dispatch => {
+export const updateScheduleByDate = (data: IUpdateByDateRequest, startDate: string, endDate: string, onSuccess: () => void, onError: (err: any) => void): AppThunk => dispatch => {
     dispatch(loading(true))
     Api.call(Api.endpoints.EmployeeSchedule.UpdateByDate, {data})
         .then(result => {
             if (result) {
                 dispatch(loadScheduleByDate(data.serviceCenterId, data.date))
+                dispatch(loadScheduleCalendar(data.serviceCenterId, startDate, endDate))
                 onSuccess()
             }
         })
