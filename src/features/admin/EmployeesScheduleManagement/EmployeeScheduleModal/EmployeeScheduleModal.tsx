@@ -20,11 +20,18 @@ import {updateScheduleByDate} from "../../../../store/reducers/schedules/actions
 import {useException} from "../../../../hooks/useException/useException";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 
-type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean}
+type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean, startDate?: TParsableDate, endDate?: TParsableDate}
 
 const compareName = (a: IScheduleByDate, b: IScheduleByDate) => a.employeeName.localeCompare(b.employeeName)
 
-const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose, disabledDate}) => {
+const EmployeeScheduleModal: React.FC<TProps> = ({
+                                                     date,
+                                                     open,
+                                                     onClose,
+                                                     disabledDate,
+                                                     startDate,
+                                                     endDate,
+                                                 }) => {
     const {hoursOfOperations} = useSelector((state: RootState) => state.appointmentFrame);
     const {scheduleByDate, employeesLoading} = useSelector((state: RootState) => state.employeesSchedule);
     const {loading} = useSelector((state: RootState) => state.employees);
@@ -179,8 +186,11 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose, disabledD
 
     const onSave = () => {
         setFormChecked(true)
-        if (selectedSC && checkIsValid()) {
+        if (selectedSC && checkIsValid() && startDate && endDate) {
             const utcOffset = dayjs().utcOffset()
+            const start = dayjs(startDate).startOf("day").add(utcOffset, 'minute').format("YYYY-MM-DD")
+            const end = dayjs(endDate).endOf("day").subtract(utcOffset, 'minute').format("YYYY-MM-DD")
+
             const data: IUpdateByDateRequest = {
                 date: dayjs(date).add(utcOffset, 'minute').format("YYYY-MM-DD"),
                 serviceCenterId: selectedSC.id,
@@ -194,7 +204,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose, disabledD
                         finishAt
                     }))
             }
-            dispatch(updateScheduleByDate(data, onCancel, showError))
+            dispatch(updateScheduleByDate(data, start, end, onCancel, showError))
         }
     }
 
