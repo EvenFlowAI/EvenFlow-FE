@@ -73,7 +73,10 @@ export const EditAppointment = () => {
     }, [selectedSC])
 
     useEffect(() => {
-        API.appointment.getByKey(id)
+        const requestFunc = isFromAdmin || !id.includes('by-key')
+            ? API.appointment.getByKey
+            : API.appointment.getFromEmail
+        requestFunc(id)
             .then(async ({data}) => {
                 await dispatch(loadSCProfile(data.serviceCenterId));
                 dispatch(setUserType(EUserType.Existing))

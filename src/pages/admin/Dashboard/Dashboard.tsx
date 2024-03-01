@@ -15,14 +15,12 @@ import {ReactComponent as HoursIcon} from "../../../assets/img/Icon 2 Hours of o
 import {ReactComponent as AddressIcon} from "../../../assets/img/Icon_1_Address.svg";
 import {ReactComponent as BaysIcon} from "../../../assets/img/Icon_6 _Bays.svg";
 import {ReactComponent as RemindersIcon} from "../../../assets/img/Icon_36px_Appointment_reminders.svg";
-import {ReactComponent as EmployeeScheduleIcon} from "../../../assets/img/Subtract.svg";
 import {ReactComponent as BreaksIcon} from "../../../assets/img/Icon 4 Breaks.svg";
 import {ReactComponent as LockOutlined} from "../../../assets/img/Icon 5 Holidays.svg";
 import {ReactComponent as AdvisorIcon} from "../../../assets/img/advisor_assignment.svg";
 import {ReactComponent as NotificationsIcon} from "../../../assets/img/notifications.svg";
 import RemindersModal from "../../../features/admin/RemindersModal/RemindersModal";
 import LaborRateModal from "../../../features/admin/LaborRateModal/LaborRateModal";
-import {EmployeeSchedule} from "../../../components/modals/admin/EmployeeSchedule/EmployeeSchedule";
 import AdvisorAssignmentModal from "../../../features/admin/AdvisorAssignmentModal/AdvisorAssignmentModal";
 import ManageNotificationsModal from "../../../features/admin/ManageNotificationsModal/ManageNotificationsModal";
 import {useStyles} from "./styles";
@@ -83,11 +81,6 @@ export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChi
         isOpen: isOpenLaborRate,
     } = useModal();
     const {
-        onClose: onCloseEmployeeSchedule,
-        onOpen: onOpenEmployeeSchedule,
-        isOpen: isOpenEmployeeSchedule,
-    } = useModal();
-    const {
         onClose: onCloseAdvisorAssignment,
         onOpen: onOpenAdvisorAssignment,
         isOpen: isOpenAdvisorAssignment,
@@ -101,7 +94,6 @@ export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChi
     const items: TItem[] = [
         {label: "Address", icon: <AddressIcon />, action: onOpenAddress},
         {label: "Hours of operation", icon: <HoursIcon />, action: onOpenHOO},
-        {label: "Employee Schedule", icon: <EmployeeScheduleIcon />, action: onOpenEmployeeSchedule},
         {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
         {label: "Breaks", icon: <BreaksIcon />, action: onOpenB},
         {label: "Bays", icon: <BaysIcon />, action: onOpenBays},
@@ -154,7 +146,6 @@ export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChi
         </Grid>
         <EditAddressModal open={isAddressOpen} viewMode={isCCRView} onClose={onCloseAddress} />
         <HourOfOperationsModal viewMode={isCCRView} open={isHOOOpen} onClose={onCloseHOO} />
-        <EmployeeSchedule open={isOpenEmployeeSchedule} onClose={onCloseEmployeeSchedule}/>
         <HolidaysModal viewMode={isCCRView} open={isHOpen} onClose={onCloseH} />
         <BreaksModal viewMode={isCCRView} open={isBOpen} onClose={onCloseB} />
         <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
