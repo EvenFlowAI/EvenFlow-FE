@@ -1,9 +1,10 @@
 import {InitialState} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
-import {getCapacitySettings, setLoading} from "./actions";
+import {getCapacitySettings, setCurrentSetting, setLoading} from "./actions";
 
 const initialState: InitialState = {
     capacitySettings: [],
+    currentSetting: null,
     isLoading: false,
 }
 
@@ -13,5 +14,8 @@ export const capacityManagementReducer = createReducer(initialState, builder => 
     })
     .addCase(getCapacitySettings, (state, {payload}) => {
         return {...state, capacitySettings: payload};
+    })
+    .addCase(setCurrentSetting, (state, {payload}) => {
+        return {...state, currentSetting: payload};
     })
 )

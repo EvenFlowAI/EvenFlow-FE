@@ -14,5 +14,6 @@ export interface ICapacitySetting {
 
 export interface InitialState {
     capacitySettings: ICapacitySetting[];
+    currentSetting: ICapacitySetting|null;
     isLoading: boolean;
 }

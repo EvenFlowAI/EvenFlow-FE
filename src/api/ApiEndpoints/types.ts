@@ -27,7 +27,7 @@ export interface IApiEndpoints {
     BookingFlowConfig: Record<"Get" | "Update", TApiEndpoint>,
     BookingFlowScreenSettings: Record<"GetEmailRequirement" | "UpdateEmailRequirement", TApiEndpoint>,
     CapacityManagement: Record<"Reallocate", TApiEndpoint>,
-    CapacitySettings: Record<"GetCapacitySettings", TApiEndpoint>,
+    CapacitySettings: Record<"GetAll" | "GetById" | "Update", TApiEndpoint>,
     ComplimentaryServices: Record<"GetByQuery" | "Remove" | "Update" | "AddFromList" | "Create", TApiEndpoint>,
     Customers: Record<"GetByName" | "Update" | "GetRepairHistory" | "GetBySearchTerm" | "GetSingleCustomerVehicles", TApiEndpoint>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"

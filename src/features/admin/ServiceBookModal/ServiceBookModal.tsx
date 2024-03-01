@@ -1,24 +1,39 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 import {useActionButtonsStyles} from "../../../hooks/styling/useActionButtonsStyles";
 import {ETimeSlotType} from "../../../store/reducers/slotScoring/types";
-import {Autocomplete, Grid} from "@mui/material";
+import {Autocomplete, Grid, Switch} from "@mui/material";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {TOption} from "../PodsTable/PODModal/types";
 import {getOptions} from "../../../utils/utils";
 import {autocompleteRender} from "../../../utils/autocompleteRenders";
-import {SubTitle} from "./styles";
+import {Label, SubTitle} from "./styles";
 import ClockTimePicker from "../../../components/pickers/ClockTimePicker/ClockTimePicker";
 import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
 import {timeSpanString} from "../../../utils/constants";
 import {TDayTime, TForm, TProps} from "./types";
 import {daysList, initialForm} from "./constants";
+import {SwitcherLabel, SwitcherWrapper} from "../EmployeesScheduleManagement/EmployeeScheduleModal/styles";
+import {IScheduleByDate} from "../../../store/reducers/schedules/types";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {loadCapacitySettingById} from "../../../store/reducers/capacityManagement/actions";
 
 const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
+    const {currentSetting, isLoading} = useSelector((state: RootState) => state.capacityManagement)
     const [form, setForm] = useState<TForm>(initialForm)
     const {classes} = useActionButtonsStyles();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (editingItem && open) {
+            // todo change to real id
+            dispatch(loadCapacitySettingById(12, editingItem.serviceBookId))
+        }
+    }, [editingItem, open])
+
     const gapSlotTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(ETimeSlotType).filter(key => Number.isNaN(+key))), []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,6 +62,10 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                         .sort((a, b) => dayjs(a.day, 'dddd').day() - dayjs(b.day, 'dddd').day())}
             }
         })
+    }
+
+    const handleSwitch = (e: any, value: boolean) => {
+        setForm(prev => ({...prev, advisorStaffingFactor: value}))
     }
 
     const onCancel = () => {}
@@ -144,6 +163,45 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                             />
                         </Grid>
                     ))}
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            id="technicianEfficiency"
+                            name="technicianEfficiency"
+                            label="Technician Efficiency"
+                            placeholder="Type Efficiency"
+                            fullWidth
+                            type="number"
+                            inputProps={{min: 0}}
+                            onChange={handleChange}
+                            renderSuffix={() => '%'}
+                            value={form.technicianEfficiency}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            id="avarageBillHoursPerRO"
+                            name="avarageBillHoursPerRO"
+                            label="Average Bill Hours Per RO"
+                            placeholder="Type Bill Hours"
+                            fullWidth
+                            type="number"
+                            inputProps={{min: 0}}
+                            onChange={handleChange}
+                            value={form.avarageBillHoursPerRO}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Label>Advisor Staffing Factor</Label>
+                        <SwitcherWrapper>
+                            <SwitcherLabel>OFF</SwitcherLabel>
+                            <Switch
+                                onChange={handleSwitch}
+                                checked={form.advisorStaffingFactor}
+                                color="primary"
+                            />
+                            <SwitcherLabel>ON</SwitcherLabel>
+                        </SwitcherWrapper>
+                    </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions>

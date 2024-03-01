@@ -5,3 +5,9 @@ export const SubTitle = styled("div")({
     fontWeight: 700,
     textTransform: 'uppercase'
 })
+
+export const Label = styled("div")({
+    fontSize: 12,
+    fontWeight: 700,
+    textTransform: 'uppercase'
+})
