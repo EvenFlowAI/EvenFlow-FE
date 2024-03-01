@@ -48,11 +48,11 @@ const TimeSelect: React.FC<TProps> = ({
     }, [value])
 
     const upEnabled = useMemo(() => {
-        return dayjs(value, timeSpanString).isBefore(dayjs(end, timeSpanString))
+        return dayjs(value, timeSpanString).isBefore(dayjs(end, timeSpanString), 'minute')
     }, [value, end])
 
     const downEnabled = useMemo(() => {
-        return dayjs(value, timeSpanString).isAfter(dayjs(start, timeSpanString))
+        return dayjs(value, timeSpanString).isAfter(dayjs(start, timeSpanString), 'minute')
     }, [value, start])
 
     const onPeriodChange = (period: TDayPeriod) => {

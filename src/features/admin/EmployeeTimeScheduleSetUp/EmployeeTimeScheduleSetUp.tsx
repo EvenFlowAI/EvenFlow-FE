@@ -109,9 +109,9 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
             .filter(item => item.isOnSchedule)
             .every(item => {
                 const schedule = hoursOfOperations.find(el => el.dayOfWeek === item.dayOfWeek);
-                return dayjs(item.to, timeSpanString).isAfter(dayjs(item.from, timeSpanString))
-                    && dayjs(item.to, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString))
-                    && dayjs(item.from, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString))
+                return dayjs(item.to, timeSpanString).isAfter(dayjs(item.from, timeSpanString), 'minute')
+                    && dayjs(item.to, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString), 'minute')
+                    && dayjs(item.from, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString), 'minute')
             })
     }
 
@@ -164,9 +164,9 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                                     <TimeSelect
                                         error={
                                             formIsChecked && scheduleItem?.isOnSchedule
-                                            && (dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(dayjs(scheduleItem.from, timeSpanString))
-                                                || dayjs(scheduleItem.from, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString))
-                                                || dayjs(scheduleItem.from, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString)))
+                                            && (dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(dayjs(scheduleItem.from, timeSpanString), 'minute')
+                                                || dayjs(scheduleItem.from, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString), 'minute')
+                                                || dayjs(scheduleItem.from, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString), 'minute'))
                                         }
                                         disabled={!checked || !workingDays.includes(day)}
                                         start={schedule?.from ?? ""}
@@ -177,9 +177,9 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                                     <TimeSelect
                                         error={
                                             formIsChecked && scheduleItem?.isOnSchedule
-                                            && (dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(dayjs(scheduleItem.from, timeSpanString))
-                                                || dayjs(scheduleItem.to, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString))
-                                                || dayjs(scheduleItem.to, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString)))
+                                            && (dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(dayjs(scheduleItem.from, timeSpanString), 'minute')
+                                                || dayjs(scheduleItem.to, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString), 'minute')
+                                                || dayjs(scheduleItem.to, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString), 'minute'))
                                         }
                                         disabled={!checked || !workingDays.includes(day)}
                                         start={schedule?.from ?? ""}
