@@ -1,9 +1,9 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 import {useActionButtonsStyles} from "../../../hooks/styling/useActionButtonsStyles";
 import {ETimeSlotType} from "../../../store/reducers/slotScoring/types";
-import {Autocomplete, Grid, Switch} from "@mui/material";
+import {Autocomplete, Grid, InputAdornment, Switch} from "@mui/material";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {TOption} from "../PodsTable/PODModal/types";
 import {getOptions} from "../../../utils/utils";
@@ -16,16 +16,22 @@ import {timeSpanString} from "../../../utils/constants";
 import {TDayTime, TForm, TProps} from "./types";
 import {daysList, initialForm} from "./constants";
 import {SwitcherLabel, SwitcherWrapper} from "../EmployeesScheduleManagement/EmployeeScheduleModal/styles";
-import {IScheduleByDate} from "../../../store/reducers/schedules/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadCapacitySettingById} from "../../../store/reducers/capacityManagement/actions";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
+import {ReactComponent as Time} from '../../../assets/img/time.svg';
+import {ReactComponent as TimeDisabled} from '../../../assets/img/time_disabled.svg';
+import {useException} from "../../../hooks/useException/useException";
 
 const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
     const {currentSetting, isLoading} = useSelector((state: RootState) => state.capacityManagement)
+    const {workingDays} = useSelector(({serviceCenters}: RootState) => serviceCenters)
     const [form, setForm] = useState<TForm>(initialForm)
     const {classes} = useActionButtonsStyles();
     const dispatch = useDispatch();
+    const showError = useException();
+    const gapSlotTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(ETimeSlotType).filter(key => Number.isNaN(+key))), []);
 
     useEffect(() => {
         if (editingItem && open) {
@@ -34,7 +40,25 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
         }
     }, [editingItem, open])
 
-    const gapSlotTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(ETimeSlotType).filter(key => Number.isNaN(+key))), []);
+    const setInitialData = useCallback(() => {
+        if (currentSetting) setForm(() => {
+            const {serviceBookName, advisorStaffingFactor, appointmentLeadTime, appointmentsPerSlot, technicianEfficiency, avarageBillHoursPerRO} = currentSetting;
+            return {
+                serviceBookName,
+                appointmentLeadTime,
+                appointmentsPerSlot,
+                technicianEfficiency,
+                avarageBillHoursPerRO,
+                advisorStaffingFactor,
+                cutOffTime: currentSetting.cutOffTime.map(el => ({day: el.day, time: el.value})),
+                gapSlotsType: gapSlotTypeOptions.find(el => el.value === currentSetting.gapSlotsType) ?? null,
+            }
+        })
+    }, [currentSetting])
+
+    useEffect(() => {
+        setInitialData()
+    }, [currentSetting])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
@@ -44,7 +68,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
         setForm({...form, gapSlotsType: val});
     }
 
-    const handleTimeChange = (day: string) => (date: TParsableDate) => {
+    const handleTimeChange = (day: number) => (date: TParsableDate) => {
         setForm(prev => {
             const itemToUpdate = prev.cutOffTime.find(el => el.day === day);
             if (itemToUpdate) {
@@ -53,13 +77,13 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                 return {
                     ...prev,
                     cutOffTime: [...filtered, updated]
-                        .sort((a, b) => dayjs(a.day, 'dddd').day() - dayjs(b.day, 'dddd').day())}
+                        .sort((a, b) => a.day - b.day)}
             } else {
                 const newItem:TDayTime = {day, time: dayjs(date).format(timeSpanString)}
                 return {
                     ...prev,
                     cutOffTime: [...prev.cutOffTime, newItem]
-                        .sort((a, b) => dayjs(a.day, 'dddd').day() - dayjs(b.day, 'dddd').day())}
+                        .sort((a, b) => a.day - b.day)}
             }
         })
     }
@@ -68,15 +92,30 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
         setForm(prev => ({...prev, advisorStaffingFactor: value}))
     }
 
-    const onCancel = () => {}
+    const onCancel = () => {
+        setInitialData()
+        onClose()
+    }
 
     const onSave = () => {}
 
+    const onSuccess = () => {}
+
+    const getDayLabel = (existingTime: TDayTime|undefined, day: number) => {
+        return existingTime?.day
+            ? dayjs().set('day', existingTime?.day).format('dddd')
+            : dayjs().set('day', day).format('dddd')
+    }
+
+    // todo required fields: gap slot and name
+
     return (
-        <BaseModal open={open} onClose={onCancel} width={500}>
+        <BaseModal open={open} onClose={onCancel} width={550}>
             <DialogTitle onClose={onCancel}>Employee Time Schedule Set Up</DialogTitle>
             <DialogContent>
-                <Grid container spacing={3}>
+                {isLoading
+                    ? <Loading/>
+                    : <Grid container spacing={3}>
                     <Grid item xs={12}>
                         <TextField
                             id="serviceBookName"
@@ -113,7 +152,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                             type="number"
                             inputProps={{min: 0}}
                             onChange={handleChange}
-                            value={form.appointmentPerSlots}
+                            value={form.appointmentsPerSlot}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -129,51 +168,36 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                             value={form.appointmentLeadTime}
                         />
                     </Grid>
-                    <Grid xs={12}><SubTitle>Appointment Cut Off</SubTitle></Grid>
+                    <Grid xs={12} item><SubTitle>Appointment Cut Off</SubTitle></Grid>
                     {daysList.map(day => {
-                        const existingTime = form.cutOffTime.find(el => dayjs(el.day, 'dddd').day() === day);
+                        const existingTime = form.cutOffTime.find(el => el.day === day);
                         return <Grid item xs={6} md={3}>
                             <ClockTimePicker
                                 fullWidth
                                 value={existingTime ? dayjs(existingTime.time, timeSpanString) : null}
+                                label={getDayLabel(existingTime, day)}
                                 InputProps={{
                                     placeholder: "",
-                                    label: existingTime?.day ?? dayjs(day).format('dddd'),
-                                    id: existingTime?.day ?? dayjs(day).format('dddd'),
-                                    // disabled: !data.checked || viewMode || isLoading,
+                                    id: getDayLabel(existingTime, day),
+                                    disabled: !workingDays.includes(day),
+                                    endAdornment: workingDays.includes(day) ? <Time width={27}/> : <TimeDisabled width={27}/>,
                                     //error: !data.to && data.checked && formIsChecked,
                                 }}
-                                onChange={handleTimeChange(existingTime?.day ?? dayjs(day).format('dddd'))}
+                                onChange={handleTimeChange(existingTime?.day ?? day)}
                             />
                         </Grid>
                     })}
-                    {form.cutOffTime.map(el => (
-                        <Grid item xs={6} md={3}>
-                            <ClockTimePicker
-                                fullWidth
-                                value={dayjs(el.time, timeSpanString)}
-                                InputProps={{
-                                    placeholder: "",
-                                    label: el.day,
-                                    id: el.day,
-                                    // disabled: !data.checked || viewMode || isLoading,
-                                    //error: !data.to && data.checked && formIsChecked,
-                                }}
-                                onChange={handleTimeChange(el.day)}
-                            />
-                        </Grid>
-                    ))}
                     <Grid item xs={12} md={6}>
                         <TextField
                             id="technicianEfficiency"
                             name="technicianEfficiency"
                             label="Technician Efficiency"
-                            placeholder="Type Efficiency"
+                            placeholder="Type Efficiency, %"
                             fullWidth
                             type="number"
+                            startAdornment={<InputAdornment position="start">%</InputAdornment>}
                             inputProps={{min: 0}}
                             onChange={handleChange}
-                            renderSuffix={() => '%'}
                             value={form.technicianEfficiency}
                         />
                     </Grid>
@@ -203,6 +227,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                         </SwitcherWrapper>
                     </Grid>
                 </Grid>
+                }
             </DialogContent>
             <DialogActions>
                 <div className={classes.wrapper}>
@@ -213,7 +238,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                             variant="text"
                             style={{marginRight: 20}}
                             color="info">
-                            Close
+                            Cancel
                         </LoadingButton>
                         <LoadingButton
                             // loading={loading || employeesLoading}

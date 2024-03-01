@@ -10,6 +10,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadCapacitySettings} from "../../../store/reducers/capacityManagement/actions";
 import {RootState} from "../../../store/rootReducer";
 import {RowData} from "./constants";
+import ServiceBookModal from "../ServiceBookModal/ServiceBookModal";
+import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 
 const CapacitySettingsTable = () => {
     const {capacitySettings} = useSelector((state: RootState) => state.capacityManagement);
@@ -21,7 +23,10 @@ const CapacitySettingsTable = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (selectedSC) dispatch(loadCapacitySettings(selectedSC.id, dayjs().format("dddd")))
+        if (selectedSC) {
+            dispatch(loadCapacitySettings(selectedSC.id, dayjs().format("dddd")))
+            dispatch(loadWorkingDays(selectedSC.id))
+        }
     }, [selectedSC])
 
     const openMenu = (el: ICapacitySetting) =>
@@ -61,6 +66,7 @@ const CapacitySettingsTable = () => {
                 <MenuItem onClick={handleConfigure}>Configure</MenuItem>
                 <MenuItem onClick={handleEdit}>Edit</MenuItem>
             </Menu>
+            <ServiceBookModal open={isEditOpen} onClose={onEditClose} editingItem={editedItem}/>
         </div>
     );
 };

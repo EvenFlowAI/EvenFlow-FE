@@ -3,7 +3,7 @@ import {TForm} from "./types";
 export const initialForm: TForm = {
     serviceBookName: '',
     gapSlotsType: null,
-    appointmentPerSlots: null,
+    appointmentsPerSlot: null,
     appointmentLeadTime: null,
     technicianEfficiency: null,
     avarageBillHoursPerRO: null,

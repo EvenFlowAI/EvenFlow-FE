@@ -2,11 +2,11 @@ import {createAction} from "@reduxjs/toolkit";
 import {AppThunk} from "../../../types/types";
 
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
-import {ICapacitySetting} from "./types";
+import {ICapacitySetting, ICapacitySettingById} from "./types";
 
 export const setLoading = createAction<boolean>('CapacitySettings/SetLoading');
 export const getCapacitySettings = createAction<ICapacitySetting[]>('CapacitySettings/GetCapacitySettings');
-export const setCurrentSetting = createAction<ICapacitySetting|null>('CapacitySettings/GetCapacitySettingById')
+export const setCurrentSetting = createAction<ICapacitySettingById|null>('CapacitySettings/GetCapacitySettingById')
 
 export const loadCapacitySettings = (serviceCenterId: number, day: string): AppThunk => dispatch => {
     dispatch(setLoading(true))

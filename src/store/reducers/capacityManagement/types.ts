@@ -1,4 +1,5 @@
 import {ETimeSlotType} from "../slotScoring/types";
+import {EDayOfWeek} from "../offers/types";
 
 export interface ICapacitySetting {
     serviceBookName: string;
@@ -12,8 +13,25 @@ export interface ICapacitySetting {
     serviceBookId?: number;
 }
 
+export type TCutOff = {
+    day: EDayOfWeek;
+    value: string;
+}
+
+export interface ICapacitySettingById {
+    serviceBookName: string;
+    gapSlotsType: ETimeSlotType;
+    appointmentsPerSlot: number;
+    appointmentLeadTime: number;
+    cutOffTime: TCutOff[];
+    technicianEfficiency: number;
+    avarageBillHoursPerRO: number;
+    advisorStaffingFactor?: boolean;
+    serviceBookId?: number;
+}
+
 export interface InitialState {
     capacitySettings: ICapacitySetting[];
-    currentSetting: ICapacitySetting|null;
+    currentSetting: ICapacitySettingById|null;
     isLoading: boolean;
 }
