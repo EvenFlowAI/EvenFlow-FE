@@ -30,8 +30,8 @@ const EmployeesScheduleManagement = () => {
     useEffect(() => {
         if (selectedSC && timePeriod) {
             const utcOffset = dayjs().utcOffset()
-            const start = dayjs(timePeriod.startDate).startOf("day").add(utcOffset, 'minute').toISOString()
-            const end = dayjs(timePeriod.endDate).endOf("day").subtract(utcOffset, 'minute').toISOString()
+            const start = dayjs(timePeriod.startDate).startOf("day").add(utcOffset, 'minute').format("YYYY-MM-DD")
+            const end = dayjs(timePeriod.endDate).endOf("day").subtract(utcOffset, 'minute').format("YYYY-MM-DD")
             dispatch(loadScheduleCalendar(selectedSC.id, start, end))
         }
     }, [selectedSC, timePeriod])
