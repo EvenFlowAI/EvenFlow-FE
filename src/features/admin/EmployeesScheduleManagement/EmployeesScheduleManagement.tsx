@@ -46,7 +46,7 @@ const EmployeesScheduleManagement = () => {
     const onDayClick = (el: ICalendarItem|undefined, date: TParsableDate) => {
         if (selectedSC && el) {
             setDate(date)
-            dispatch(loadScheduleByDate(selectedSC.id, dayjs(el.date).format("YYYY-MM-DD")))
+            dispatch(loadScheduleByDate(selectedSC.id, dayjs.utc(el.date).format("YYYY-MM-DD")))
             onOpen()
         }
     }
