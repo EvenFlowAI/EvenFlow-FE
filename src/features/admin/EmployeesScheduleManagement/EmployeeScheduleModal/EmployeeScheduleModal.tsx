@@ -9,7 +9,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {IScheduleByDate, IUpdateByDateRequest} from "../../../../store/reducers/schedules/types";
 import {SwitcherLabel, SwitcherWrapper} from "./styles";
 import TimeSelect from "../../../../components/pickers/TimeSelect/TimeSelect";
-import {timeSpanString} from "../../../../utils/constants";
+import {CALENDAR_FORMAT, timeSpanString} from "../../../../utils/constants";
 import {PickersWrapper} from "../../EmployeeTimeScheduleSetUp/styles";
 import {loadHoursOfOperations} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
@@ -188,10 +188,10 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
         setFormChecked(true)
         if (selectedSC && checkIsValid() && startDate && endDate) {
             const utcOffset = dayjs().utcOffset()
-            const start = dayjs(startDate).startOf("day").add(utcOffset, 'minute').format("YYYY-MM-DD")
-            const end = dayjs(endDate).endOf("day").subtract(utcOffset, 'minute').format("YYYY-MM-DD")
+            const start = dayjs(startDate).startOf("day").add(utcOffset, 'minute').format(CALENDAR_FORMAT)
+            const end = dayjs(endDate).endOf("day").subtract(utcOffset, 'minute').format(CALENDAR_FORMAT)
             const data: IUpdateByDateRequest = {
-                date: dayjs(date).format("YYYY-MM-DD"),
+                date: dayjs(date).format(CALENDAR_FORMAT),
                 serviceCenterId: selectedSC.id,
                 isSetForWeek: isForWeek,
                 employeeScheduledHours: currentSchedule.map(

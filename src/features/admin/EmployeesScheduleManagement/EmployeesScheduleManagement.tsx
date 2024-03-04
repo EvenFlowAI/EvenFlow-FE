@@ -11,7 +11,7 @@ import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {loadScheduleByDate, loadScheduleCalendar} from "../../../store/reducers/schedules/actions";
 import {useModal} from "../../../hooks/useModal/useModal";
 import EmployeeScheduleModal from "./EmployeeScheduleModal/EmployeeScheduleModal";
-import {employeesRoot} from "../../../utils/constants";
+import {CALENDAR_FORMAT, employeesRoot} from "../../../utils/constants";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
@@ -30,8 +30,8 @@ const EmployeesScheduleManagement = () => {
     useEffect(() => {
         if (selectedSC && timePeriod) {
             const utcOffset = dayjs().utcOffset()
-            const start = dayjs(timePeriod.startDate).startOf("day").add(utcOffset, 'minute').format("YYYY-MM-DD")
-            const end = dayjs(timePeriod.endDate).endOf("day").subtract(utcOffset, 'minute').format("YYYY-MM-DD")
+            const start = dayjs(timePeriod.startDate).startOf("day").add(utcOffset, 'minute').format(CALENDAR_FORMAT)
+            const end = dayjs(timePeriod.endDate).endOf("day").subtract(utcOffset, 'minute').format(CALENDAR_FORMAT)
             dispatch(loadScheduleCalendar(selectedSC.id, start, end))
         }
     }, [selectedSC, timePeriod])
@@ -45,9 +45,9 @@ const EmployeesScheduleManagement = () => {
 
     const onDayClick = (el: ICalendarItem|undefined, date: TParsableDate) => {
         if (selectedSC && el) {
-            const formattedDate = dayjs(date).format("YYYY-MM-DD");
-            setDate(dayjs(formattedDate, "YYYY-MM-DD"))
-            dispatch(loadScheduleByDate(selectedSC.id, dayjs(date).format("YYYY-MM-DD")))
+            const formattedDate = dayjs(date).format(CALENDAR_FORMAT);
+            setDate(dayjs(formattedDate, CALENDAR_FORMAT))
+            dispatch(loadScheduleByDate(selectedSC.id, dayjs(date).format(CALENDAR_FORMAT)))
             onOpen()
         }
     }
@@ -66,9 +66,9 @@ const EmployeesScheduleManagement = () => {
 
     const getDisabledDate = () => {
         return Boolean(disabledDates.find(el => {
-            const formattedEl = dayjs(el).format("YYYY-MM-DD");
-            const formattedDate = dayjs(date).format("YYYY-MM-DD");
-            return dayjs(formattedEl, "YYYY-MM-DD").isSame(dayjs.utc(formattedDate, "YYYY-MM-DD"), 'date')
+            const formattedEl = dayjs(el).format(CALENDAR_FORMAT);
+            const formattedDate = dayjs(date).format(CALENDAR_FORMAT);
+            return dayjs(formattedEl, CALENDAR_FORMAT).isSame(dayjs.utc(formattedDate, CALENDAR_FORMAT), 'date')
         }))
     }
 
