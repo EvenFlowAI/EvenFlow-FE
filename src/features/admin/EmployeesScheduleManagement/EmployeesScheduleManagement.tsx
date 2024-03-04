@@ -45,9 +45,8 @@ const EmployeesScheduleManagement = () => {
 
     const onDayClick = (el: ICalendarItem|undefined, date: TParsableDate) => {
         if (selectedSC && el) {
-            const utcOffset = dayjs().utcOffset()
             setDate(date)
-            dispatch(loadScheduleByDate(selectedSC.id, dayjs(el.date).startOf("day").add(utcOffset, 'minute').format("YYYY-MM-DD")))
+            dispatch(loadScheduleByDate(selectedSC.id, dayjs.utc(el.date).format("YYYY-MM-DD")))
             onOpen()
         }
     }
@@ -88,7 +87,7 @@ const EmployeesScheduleManagement = () => {
             startDate={timePeriod?.startDate}
             endDate={timePeriod?.endDate}
             date={date}
-            disabledDate={Boolean(disabledDates.find(el => dayjs(el).isSame(date, 'date')))}
+            disabledDate={Boolean(disabledDates.find(el => dayjs.utc(el).isSame(date, 'date')))}
         />
     </>
 };

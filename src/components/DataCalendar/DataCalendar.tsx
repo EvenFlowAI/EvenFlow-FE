@@ -86,9 +86,13 @@ export function DataCalendar<U>({
                     {WeekDayNames.map(day =>
                         <div className={classes.weekDay} key={day}>{day}</div>
                     )}
-                    {days.map(d => {
-                            const dayData = data.find(el => dayjs(el[dateFieldName] as TParsableDate).isSame(d.date, "date"))
-                            return <div
+                    {days.map((d, i) => {
+                            const dayData = data.find(el => {
+                                if (el[dateFieldName]) {
+                                    return dayjs.utc(el[dateFieldName] as TParsableDate).isSame(d.date, "date")
+                                }
+                            })
+                        return <div
                                 className={clsx(
                                     classes.dayCell,
                                     d.type === "cur" ? classes.currentMonth : classes.prevMonth,
