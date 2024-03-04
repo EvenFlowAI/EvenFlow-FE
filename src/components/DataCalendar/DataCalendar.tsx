@@ -89,21 +89,19 @@ export function DataCalendar<U>({
                     {days.map((d, i) => {
                             const dayData = data.find(el => {
                                 if (el[dateFieldName]) {
-                                    // if (dayjs.utc(el[dateFieldName] as TParsableDate).isSame(d.date, "date")) {
-                                    //     console.log(el[dateFieldName])
-                                    //     console.log(dayjs.utc(el[dateFieldName] as TParsableDate))
-                                    //     console.log(dayjs.utc(d.date))
-                                    // }
                                     return dayjs(el[dateFieldName] as TParsableDate).isSame(dayjs.utc(d.date), "date")
                                 }
                             })
+
                             return <div
                                 className={clsx(
                                     classes.dayCell,
                                     d.type === "cur" ? classes.currentMonth : classes.prevMonth,
                                     dayjs(d.date).isSame(today, "day") ? classes.today : ""
                                 )}
-                                onClick={() => onClick(dayData, d.date, d.type)}
+                                onClick={() => {
+                                    return onClick(dayData, d.date, d.type)
+                                }}
                                 key={`${d.day}-${d.type}`}>
                                 <span className={classes.dayNumber}>{d.day}</span>
                                 <IconsBlock
