@@ -65,11 +65,9 @@ const EmployeesScheduleManagement = () => {
     const disabledDates = calendarData.filter(el => !checkIsWorkingDay(el.date)).map(el => el.date)
 
     const getDisabledDate = () => {
-
         return Boolean(disabledDates.find(el => {
             const formattedEl = dayjs(el).format("YYYY-MM-DD");
             const formattedDate = dayjs(date).format("YYYY-MM-DD");
-
             return dayjs(formattedEl, "YYYY-MM-DD").isSame(dayjs.utc(formattedDate, "YYYY-MM-DD"), 'date')
         }))
     }
