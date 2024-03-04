@@ -87,7 +87,7 @@ const EmployeesScheduleManagement = () => {
             startDate={timePeriod?.startDate}
             endDate={timePeriod?.endDate}
             date={date}
-            disabledDate={Boolean(disabledDates.find(el => dayjs(el).isSame(date, 'date')))}
+            disabledDate={Boolean(disabledDates.find(el => dayjs.utc(el).isSame(date, 'date')))}
         />
     </>
 };
