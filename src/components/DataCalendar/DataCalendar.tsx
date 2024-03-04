@@ -86,7 +86,7 @@ export function DataCalendar<U>({
                     {WeekDayNames.map(day =>
                         <div className={classes.weekDay} key={day}>{day}</div>
                     )}
-                    {days.map(d => {
+                    {days.map((d, i) => {
                             const dayData = data.find(el => dayjs(el[dateFieldName] as TParsableDate).isSame(d.date, "date"))
                             return <div
                                 className={clsx(
