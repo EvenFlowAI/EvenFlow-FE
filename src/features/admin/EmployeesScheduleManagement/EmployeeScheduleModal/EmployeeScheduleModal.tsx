@@ -192,7 +192,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
             const end = dayjs(endDate).endOf("day").subtract(utcOffset, 'minute').format("YYYY-MM-DD")
 
             const data: IUpdateByDateRequest = {
-                date: dayjs(date).add(utcOffset, 'minute').format("YYYY-MM-DD"),
+                date: dayjs.utc(date).add(utcOffset, 'minute').format("YYYY-MM-DD"),
                 serviceCenterId: selectedSC.id,
                 isSetForWeek: isForWeek,
                 employeeScheduledHours: currentSchedule.map(
