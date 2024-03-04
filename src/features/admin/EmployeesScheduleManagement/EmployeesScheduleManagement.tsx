@@ -45,8 +45,9 @@ const EmployeesScheduleManagement = () => {
 
     const onDayClick = (el: ICalendarItem|undefined, date: TParsableDate) => {
         if (selectedSC && el) {
-            setDate(date)
-            dispatch(loadScheduleByDate(selectedSC.id, dayjs.utc(el.date).format("YYYY-MM-DD")))
+            const formattedDate = dayjs(date).format("YYYY-MM-DD");
+            setDate(dayjs(formattedDate, "YYYY-MM-DD"))
+            dispatch(loadScheduleByDate(selectedSC.id, dayjs(date).format("YYYY-MM-DD")))
             onOpen()
         }
     }
@@ -62,6 +63,14 @@ const EmployeesScheduleManagement = () => {
     }, [workingDays, holidaysList])
 
     const disabledDates = calendarData.filter(el => !checkIsWorkingDay(el.date)).map(el => el.date)
+
+    const getDisabledDate = () => {
+        return Boolean(disabledDates.find(el => {
+            const formattedEl = dayjs(el).format("YYYY-MM-DD");
+            const formattedDate = dayjs(date).format("YYYY-MM-DD");
+            return dayjs(formattedEl, "YYYY-MM-DD").isSame(dayjs.utc(formattedDate, "YYYY-MM-DD"), 'date')
+        }))
+    }
 
     return <>
         <TitleContainer title={"Schedule Management"} pad parent={employeesRoot}/>
@@ -87,7 +96,7 @@ const EmployeesScheduleManagement = () => {
             startDate={timePeriod?.startDate}
             endDate={timePeriod?.endDate}
             date={date}
-            disabledDate={Boolean(disabledDates.find(el => dayjs.utc(el).isSame(date, 'date')))}
+            disabledDate={getDisabledDate()}
         />
     </>
 };
