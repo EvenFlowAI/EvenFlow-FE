@@ -23,10 +23,12 @@ export const time12HourFormat = "h:mm a";
 export const dateTimeString = "ddd, MMM D, h:mm A";
 export const time24HourFormat = "hh:mm A";
 export const hourFormat = "HH:mm";
+export const twelveHourFormat = "hh:mm";
 
 export const SC_UNDEFINED = "Service center is not loaded";
 export const SOMETHING_WRONG = "Something wrong";
 export const G_CALENDAR_FORMAT = "YYYYMMDDT";
+export const CALENDAR_FORMAT = "YYYY-MM-DD";
 export const calendarDateFormat = "ddd, MMM D";
 
 export const capacityManagementRoot: TTitle = {
@@ -42,6 +44,11 @@ export const bookingFlowRoot: TTitle = {
 export const pricingRoot: TTitle = {
     to: Routes.Pricing.Base,
     title: "Pricing"
+}
+
+export const employeesRoot: TTitle = {
+    to: Routes.Employees.Base,
+    title: "Employees"
 }
 
 export const SCREENS = {

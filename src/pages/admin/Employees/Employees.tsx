@@ -5,14 +5,14 @@ import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleC
 import EmployeesFilters from "../../../features/admin/Employees/EmployeesFilters/EmployeesFilters";
 import EmployeesTable from "../../../features/admin/Employees/EmployeesTable/EmployeesTable";
 import {useModal} from "../../../hooks/useModal/useModal";
-import {Titles} from "../../../types/types";
+import {employeesRoot} from "../../../utils/constants";
 
 export const Employees = () => {
     const [editedItem, setEditedItem] = useState<IEmployee|undefined>();
     const {onOpen, isOpen, onClose} = useModal();
 
     return <>
-        <TitleContainer title={Titles.Employees} pad/>
+        <TitleContainer title={"Add & Delete"} pad parent={employeesRoot}/>
         <EmployeesFilters/>
         <EmployeesTable editedItem={editedItem} setEditedItem={setEditedItem} onOpen={onOpen} />
         <CreateEmployee open={isOpen} payload={editedItem} onClose={onClose} />

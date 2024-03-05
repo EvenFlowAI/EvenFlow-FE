@@ -70,6 +70,7 @@ import {EScheduler} from "../appointments/types";
 import {setAppointmentsLoading} from "../appointments/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
+import {setLoading} from "../slotScoring/actions";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -387,6 +388,7 @@ export const loadFilteredZip = (data: {serviceCenterId: number; search: string},
 }
 
 export const loadHoursOfOperations = (serviceCenterId: number): AppThunk => dispatch => {
+    dispatch(setLoading(true))
     Api.call<IHOODataForm[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id: serviceCenterId}})
         .then(result => {
             if (result?.data) {
@@ -396,6 +398,7 @@ export const loadHoursOfOperations = (serviceCenterId: number): AppThunk => disp
         .catch(err => {
             console.log('get hours of operations error', err)
         })
+        .finally(() => dispatch(setLoading(false)))
 }
 
 export const setDefaultVisitCenterOption = (): AppThunk => (dispatch, getState) => {

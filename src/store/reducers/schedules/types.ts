@@ -54,4 +54,43 @@ export type TState = {
     employeesLoading: boolean;
     filters: IScheduleFilters;
     filtersOpened: boolean;
+    calendarData: ICalendarItem[];
+    scheduleByDate: IScheduleByDate[];
+}
+
+export interface ICalendarItem {
+    date: TParsableDate;
+    techniciansCount: number;
+    advisorsCount: number;
+}
+
+export interface IBaseEmployeeSchedule {
+    employeeId: string;
+    isOnSchedule: boolean;
+    startAt?: string;
+    finishAt?: string;
+}
+
+export interface IEmployeeScheduledHours extends IBaseEmployeeSchedule {
+    serviceBookId: number|null;
+}
+
+export interface IScheduleByDate extends IBaseEmployeeSchedule {
+    employeeName: string;
+    role: string;
+    serviceBook: string;
+    serviceBookId: number;
+    id?: string;
+}
+
+export type TTimePeriod = {
+    startDate: TParsableDate|null;
+    endDate: TParsableDate|null;
+}
+
+export interface IUpdateByDateRequest {
+    date: TParsableDate;
+    serviceCenterId: number;
+    isSetForWeek: boolean;
+    employeeScheduledHours: IEmployeeScheduledHours[];
 }

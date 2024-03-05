@@ -29,7 +29,9 @@ const AppRoutes: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps
         <Switch>
             <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentFlow} />
             <Route path={Routes.EndUser.CancelAppointment} exact component={BookingFlow} />
+            <Route path={Routes.EndUser.CancelAppointmentFromEmail} exact component={BookingFlow} />
             <Route path={Routes.EndUser.EditAppointment} exact component={BookingFlow} />
+            <Route path={Routes.EndUser.EditAppointmentFromEmail} exact component={BookingFlow} />
             <Route path={Routes.EndUser.Base} exact component={BookingFlow} />
             <Route path={Routes.EndUser.PaymentBill} exact component={PaymentBill} />
             <Route path={Routes.Login.Base} component={Login} />

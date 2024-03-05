@@ -75,14 +75,18 @@ export enum PricingRoutes {
 
 export enum EmployeeRoutes {
     Base = "/admin/employees",
-    AddDelete = "/admin/employees/add-delete"
+    AddDelete = "/admin/employees/add-delete",
+    ScheduleSetUp = "/admin/employees/schedule-set-up",
+    ScheduleManagement = "/admin/employees/schedule-management",
 }
 
 export enum EndUser {
     Base = "/welcome/:id",
     Welcome = "/welcome",
     CancelAppointment = "/appointment-cancel/:id",
+    CancelAppointmentFromEmail = "/appointment-cancel/:id/by-key",
     EditAppointment = "/appointment-update/:id",
+    EditAppointmentFromEmail = "/appointment-update/:id/by-key",
     Appointment = "/appointment/:id",
     AppointmentFrame = "/f/appointment/:id",
     AppointmentFrameBase = "/f/appointment",

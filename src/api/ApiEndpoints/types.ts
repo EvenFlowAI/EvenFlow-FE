@@ -32,7 +32,9 @@ export interface IApiEndpoints {
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiEndpoint>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiEndpoint>,
-    EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove" | "SetForWeek", TApiEndpoint>,
+    EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove" | "SetForWeek" | "GetCalendarSummary"
+        | "GetByDate" | "UpdateByDate" | "GetBaseSummary" | "GetSummaryByEmployee" | "GetTimeScheduleByEmployee"
+        | "SetTimeScheduleByEmployee", TApiEndpoint>,
     GeographicZones: Record<"Create" | "Update" | "GetZones" | "ReassignZipCode"
         | "RemoveZipCode" | "Remove" | "GetById", TApiEndpoint>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiEndpoint>,
