@@ -37,10 +37,10 @@ const EmployeesScheduleManagement = () => {
     }, [selectedSC, timePeriod])
 
     useEffect(() => {
-      if (selectedSC) {
-          dispatch(loadWorkingDays(selectedSC.id))
-          dispatch(loadAllHolidays(selectedSC.id))
-      }
+        if (selectedSC) {
+            dispatch(loadWorkingDays(selectedSC.id))
+            dispatch(loadAllHolidays(selectedSC.id))
+        }
     }, [selectedSC])
 
     const onDayClick = (el: ICalendarItem|undefined, date: TParsableDate) => {
@@ -57,7 +57,7 @@ const EmployeesScheduleManagement = () => {
             const originalDate = dayjs.utc(holiday.date);
             const d = dayjs.utc(holiday.date).year(dayjs(date).year()).startOf('day');
             return (d.isSame(dayjs.utc(dayjs(date).toDate()), "date") && holiday.isRecurring)
-            || originalDate.isSame(dayjs.utc(date).toDate(), "date");
+                || originalDate.isSame(dayjs.utc(date).toDate(), "date");
         });
         return workingDays.includes(dayjs.utc(date).day() as EDay) && !holiday;
     }, [workingDays, holidaysList])
@@ -74,30 +74,35 @@ const EmployeesScheduleManagement = () => {
 
     return <>
         <TitleContainer title={"Schedule Management"} pad parent={employeesRoot}/>
-        <DataCalendar
-            loading={employeesLoading}
-            data={calendarData}
-            firstIcon={<User/>}
-            secondIcon={<Hand />}
-            firstIconFieldName={'advisorsCount'}
-            secondIconFieldName={'techniciansCount'}
-            date={date}
-            disabledDates={disabledDates}
-            firstIconText={"The number of advisors scheduled for the day"}
-            secondIconText={"The number of technicians scheduled for the day"}
-            dateFieldName={'date'}
-            setDate={setDate}
-            timePeriod={timePeriod}
-            setTimePeriod={setTimePeriod}
-            onDayClick={onDayClick}/>
-        <EmployeeScheduleModal
-            open={isOpen}
-            onClose={onClose}
-            startDate={timePeriod?.startDate}
-            endDate={timePeriod?.endDate}
-            date={date}
-            disabledDate={getDisabledDate()}
-        />
+        {window.location.href.includes("apps")
+            ? null
+            : <>
+                <DataCalendar
+                    loading={employeesLoading}
+                    data={calendarData}
+                    firstIcon={<User/>}
+                    secondIcon={<Hand />}
+                    firstIconFieldName={'advisorsCount'}
+                    secondIconFieldName={'techniciansCount'}
+                    date={date}
+                    disabledDates={disabledDates}
+                    firstIconText={"The number of advisors scheduled for the day"}
+                    secondIconText={"The number of technicians scheduled for the day"}
+                    dateFieldName={'date'}
+                    setDate={setDate}
+                    timePeriod={timePeriod}
+                    setTimePeriod={setTimePeriod}
+                    onDayClick={onDayClick}/>
+                <EmployeeScheduleModal
+                    open={isOpen}
+                    onClose={onClose}
+                    startDate={timePeriod?.startDate}
+                    endDate={timePeriod?.endDate}
+                    date={date}
+                    disabledDate={getDisabledDate()}
+                />
+            </>
+        }
     </>
 };
 
