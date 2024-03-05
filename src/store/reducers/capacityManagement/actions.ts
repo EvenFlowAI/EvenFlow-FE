@@ -20,7 +20,7 @@ export const loadCapacitySettings = (serviceCenterId: number, day: string): AppT
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const loadCapacitySettingById = (id: number, serviceBookId?: number): AppThunk => dispatch => {
+export const loadCapacitySettingById = (id: number, serviceBookId: number|undefined): AppThunk => dispatch => {
     dispatch(setLoading(true))
     Api.call(Api.endpoints.CapacitySettings.GetById, {params: {serviceBookId}, urlParams: {id}})
         .then(res => {

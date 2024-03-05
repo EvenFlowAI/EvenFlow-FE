@@ -23,6 +23,7 @@ import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {ReactComponent as Time} from '../../../assets/img/time.svg';
 import {ReactComponent as TimeDisabled} from '../../../assets/img/time_disabled.svg';
 import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
 
 const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
     const {currentSetting, isLoading} = useSelector((state: RootState) => state.capacityManagement)
@@ -31,14 +32,14 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
     const {classes} = useActionButtonsStyles();
     const dispatch = useDispatch();
     const showError = useException();
+    const {selectedSC} = useSCs();
     const gapSlotTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(ETimeSlotType).filter(key => Number.isNaN(+key))), []);
 
     useEffect(() => {
-        if (editingItem && open) {
-            // todo change to real id
-            dispatch(loadCapacitySettingById(12, editingItem.serviceBookId))
+        if (editingItem && open && selectedSC) {
+            dispatch(loadCapacitySettingById(selectedSC.id, editingItem.serviceBookId))
         }
-    }, [editingItem, open])
+    }, [editingItem, open, selectedSC])
 
     const setInitialData = useCallback(() => {
         if (currentSetting) setForm(() => {
@@ -54,7 +55,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                 gapSlotsType: gapSlotTypeOptions.find(el => el.value === currentSetting.gapSlotsType) ?? null,
             }
         })
-    }, [currentSetting])
+    }, [currentSetting, gapSlotTypeOptions])
 
     useEffect(() => {
         setInitialData()

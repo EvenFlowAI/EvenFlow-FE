@@ -2,6 +2,7 @@ import {ETimeSlotType} from "../slotScoring/types";
 import {EDayOfWeek} from "../offers/types";
 
 export interface ICapacitySetting {
+    id?: number;
     serviceBookName: string;
     gapSlotsType: ETimeSlotType;
     appointmentsPerSlot: number;
