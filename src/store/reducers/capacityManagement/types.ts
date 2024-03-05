@@ -31,6 +31,19 @@ export interface ICapacitySettingById {
     serviceBookId?: number;
 }
 
+export interface ICapacitySettingRequestData {
+    gapSlotsType: ETimeSlotType|null;
+    serviceCenterId: number;
+    serviceBookName?: string;
+    appointmentsPerSlot?: number;
+    appointmentLeadTime?: number;
+    cutOffTime?: TCutOff[];
+    technicianEfficiency?: number;
+    avarageBillHoursPerRO?: number;
+    advisorStaffingFactor?: boolean;
+    serviceBookId?: number;
+}
+
 export interface InitialState {
     capacitySettings: ICapacitySetting[];
     currentSetting: ICapacitySettingById|null;

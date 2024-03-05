@@ -18,20 +18,24 @@ import {daysList, initialForm} from "./constants";
 import {SwitcherLabel, SwitcherWrapper} from "../EmployeesScheduleManagement/EmployeeScheduleModal/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {loadCapacitySettingById} from "../../../store/reducers/capacityManagement/actions";
+import {loadCapacitySettingById, updateCapacitySettingById} from "../../../store/reducers/capacityManagement/actions";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {ReactComponent as Time} from '../../../assets/img/time.svg';
 import {ReactComponent as TimeDisabled} from '../../../assets/img/time_disabled.svg';
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {ICapacitySettingRequestData} from "../../../store/reducers/capacityManagement/types";
+import {useMessage} from "../../../hooks/useMessage/useMessage";
 
 const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
     const {currentSetting, isLoading} = useSelector((state: RootState) => state.capacityManagement)
     const {workingDays} = useSelector(({serviceCenters}: RootState) => serviceCenters)
     const [form, setForm] = useState<TForm>(initialForm)
+    const [formIsChecked, setFormChecked] = useState<boolean>(false);
     const {classes} = useActionButtonsStyles();
     const dispatch = useDispatch();
     const showError = useException();
+    const showMessage = useMessage();
     const {selectedSC} = useSCs();
     const gapSlotTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(ETimeSlotType).filter(key => Number.isNaN(+key))), []);
 
@@ -62,14 +66,17 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
     }, [currentSetting])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormChecked(false)
         setForm({...form, [e.target.name]: e.target.value});
     }
 
     const handleSelectGap = (e: React.ChangeEvent<{}>, val: TOption | null) => {
+        setFormChecked(false)
         setForm({...form, gapSlotsType: val});
     }
 
     const handleTimeChange = (day: number) => (date: TParsableDate) => {
+        setFormChecked(false)
         setForm(prev => {
             const itemToUpdate = prev.cutOffTime.find(el => el.day === day);
             if (itemToUpdate) {
@@ -90,25 +97,74 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
     }
 
     const handleSwitch = (e: any, value: boolean) => {
+        setFormChecked(false)
         setForm(prev => ({...prev, advisorStaffingFactor: value}))
     }
 
     const onCancel = () => {
+        setFormChecked(false)
         setInitialData()
         onClose()
     }
 
-    const onSave = () => {}
+    const onSuccess = () => {
+        setFormChecked(false);
+        onClose();
+        showMessage("Service Book updated")
+    }
 
-    const onSuccess = () => {}
+    const checkIsValid = () => {
+        setFormChecked(true)
+        let isValid = true;
+        if (!form.gapSlotsType) {
+            isValid = false
+            showError('"Appointment Gap Slots" must not be empty')
+        }
+        if (!form.serviceBookName && editingItem?.serviceBookId) {
+            isValid = false
+            showError('"Service Book Name" must not be empty')
+        }
+        if (form.avarageBillHoursPerRO && form.avarageBillHoursPerRO < 0) {
+            isValid = false;
+            showError('"Average Bill Per RO" must be equal or more than 0')
+        }
+        if (form.appointmentLeadTime && form.appointmentLeadTime < 0) {
+            isValid = false;
+            showError('"Appointment Lead Time" must be equal or more than 0')
+        }
+        if (form.appointmentsPerSlot && form.appointmentsPerSlot < 0) {
+            isValid = false;
+            showError('"Appointments Per Slots" must be equal or more than 0')
+        }
+        if (form.technicianEfficiency && (form.technicianEfficiency < 0 || form.technicianEfficiency > 999)) {
+            if (form.technicianEfficiency < 0) showError('"Technician Efficiency" must be equal or more than 0')
+            isValid = false
+        }
+            return isValid;
+    }
+
+    const onSave = () => {
+        if (checkIsValid() && selectedSC) {
+            const data: ICapacitySettingRequestData = {
+                serviceCenterId: selectedSC.id,
+                gapSlotsType: form.gapSlotsType?.value ?? null,
+                cutOffTime: form.cutOffTime.map(el => ({day: el.day, value: el.time})),
+                advisorStaffingFactor: form.advisorStaffingFactor,
+            };
+            if (editingItem?.serviceBookId && form.serviceBookName) data.serviceBookName = form.serviceBookName;
+            if (form.technicianEfficiency !== null && form.technicianEfficiency >= 0) data.technicianEfficiency = form.technicianEfficiency;
+            if (form.avarageBillHoursPerRO !== null && form.avarageBillHoursPerRO>= 0) data.avarageBillHoursPerRO = form.avarageBillHoursPerRO;
+            if (form.appointmentLeadTime !== null && form.appointmentLeadTime >= 0) data.appointmentLeadTime = form.appointmentLeadTime;
+            if (form.appointmentsPerSlot !== null && form.appointmentsPerSlot >= 0) data.appointmentsPerSlot = form.appointmentsPerSlot;
+            dispatch(updateCapacitySettingById(data, showError, onSuccess))
+        }
+    }
 
     const getDayLabel = (existingTime: TDayTime|undefined, day: number) => {
         return existingTime?.day
             ? dayjs().set('day', existingTime?.day).format('dddd')
             : dayjs().set('day', day).format('dddd')
     }
-
-    // todo required fields: gap slot and name
 
     return (
         <BaseModal open={open} onClose={onCancel} width={550}>
@@ -123,7 +179,9 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                             name="serviceBookName"
                             label="Service Book Name"
                             placeholder="Type Name"
+                            disabled={!editingItem?.serviceBookId}
                             fullWidth
+                            error={formIsChecked && !form.serviceBookName}
                             onChange={handleChange}
                             value={form.serviceBookName}
                         />
@@ -139,18 +197,20 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                             options={gapSlotTypeOptions}
                             renderInput={autocompleteRender({
                                 label: "Appointment Gap Slots",
-                                placeholder: 'Appointment Gap Slots'
+                                placeholder: 'Appointment Gap Slots',
+                                error: formIsChecked && !form.gapSlotsType
                             })}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <TextField
                             id="appointmentsPerSlot"
-                            name="appointmentPerSlots"
+                            name="appointmentsPerSlot"
                             label="Appointments Per Slot"
                             placeholder="Type Amount"
                             fullWidth
                             type="number"
+                            error={formIsChecked && form.appointmentsPerSlot !== null && form.appointmentsPerSlot < 0}
                             inputProps={{min: 0}}
                             onChange={handleChange}
                             value={form.appointmentsPerSlot}
@@ -162,6 +222,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                             name="appointmentLeadTime"
                             label="Appointment Lead Time"
                             placeholder="Type Time"
+                            error={formIsChecked && form.appointmentLeadTime !== null && form.appointmentLeadTime < 0}
                             fullWidth
                             type="number"
                             inputProps={{min: 0}}
@@ -182,7 +243,6 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                                     id: getDayLabel(existingTime, day),
                                     disabled: !workingDays.includes(day),
                                     endAdornment: workingDays.includes(day) ? <Time width={27}/> : <TimeDisabled width={27}/>,
-                                    //error: !data.to && data.checked && formIsChecked,
                                 }}
                                 onChange={handleTimeChange(existingTime?.day ?? day)}
                             />
@@ -197,6 +257,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                             fullWidth
                             type="number"
                             startAdornment={<InputAdornment position="start">%</InputAdornment>}
+                            error={formIsChecked && form.technicianEfficiency !== null && form.technicianEfficiency < 0}
                             inputProps={{min: 0}}
                             onChange={handleChange}
                             value={form.technicianEfficiency}
@@ -212,6 +273,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                             type="number"
                             inputProps={{min: 0}}
                             onChange={handleChange}
+                            error={formIsChecked && form.avarageBillHoursPerRO !== null && form.avarageBillHoursPerRO < 0}
                             value={form.avarageBillHoursPerRO}
                         />
                     </Grid>
@@ -234,7 +296,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                 <div className={classes.wrapper}>
                     <div className={classes.buttonsWrapper}>
                         <LoadingButton
-                            // loading={loading || employeesLoading}
+                            loading={isLoading}
                             onClick={onCancel}
                             variant="text"
                             style={{marginRight: 20}}
@@ -242,7 +304,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                             Cancel
                         </LoadingButton>
                         <LoadingButton
-                            // loading={loading || employeesLoading}
+                            loading={isLoading}
                             onClick={onSave}
                             className={classes.saveButton}>
                             Save

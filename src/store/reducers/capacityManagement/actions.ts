@@ -2,7 +2,8 @@ import {createAction} from "@reduxjs/toolkit";
 import {AppThunk} from "../../../types/types";
 
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
-import {ICapacitySetting, ICapacitySettingById} from "./types";
+import {ICapacitySetting, ICapacitySettingById, ICapacitySettingRequestData} from "./types";
+import dayjs from "dayjs";
 
 export const setLoading = createAction<boolean>('CapacitySettings/SetLoading');
 export const getCapacitySettings = createAction<ICapacitySetting[]>('CapacitySettings/GetCapacitySettings');
@@ -31,3 +32,21 @@ export const loadCapacitySettingById = (id: number, serviceBookId: number|undefi
         })
         .finally(() => dispatch(setLoading(false)))
 }
+
+export const updateCapacitySettingById = (data: ICapacitySettingRequestData, onError: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.CapacitySettings.Update, {data})
+        .then(res => {
+            if (res) {
+                // dispatch(loadCapacitySettingById(data.serviceCenterId, data.serviceBookId))
+                dispatch(loadCapacitySettings(data.serviceCenterId, dayjs().format("dddd")))
+                onSuccess()
+            }
+        })
+        .catch(err => {
+            console.log('load capacity setting by id err', err)
+            onError(err)
+        })
+        .finally(() => dispatch(setLoading(false)))
+}
+
