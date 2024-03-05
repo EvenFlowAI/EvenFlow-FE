@@ -30,6 +30,7 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
     const {currentSetting, isLoading} = useSelector((state: RootState) => state.capacityManagement)
     const {workingDays} = useSelector(({serviceCenters}: RootState) => serviceCenters)
+    const {hoursOfOperations} = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
     const [form, setForm] = useState<TForm>(initialForm)
     const [formIsChecked, setFormChecked] = useState<boolean>(false);
     const {classes} = useActionButtonsStyles();
@@ -113,9 +114,21 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
         showMessage("Service Book updated")
     }
 
+    const checkTimeItemIsValid = (el: TDayTime|undefined) => {
+        if (el) {
+            const day = hoursOfOperations.find(item => item.dayOfWeek === el.day)
+            const startTime = day?.from;
+            const endTime = day?.to;
+            const isAfterStart = dayjs(el.time, timeSpanString).isSameOrAfter(dayjs(startTime, timeSpanString))
+            const isBeforeEnd = dayjs(el.time, timeSpanString).isSameOrBefore(dayjs(endTime, timeSpanString))
+            return isAfterStart && isBeforeEnd
+        } else return true
+    }
+
     const checkIsValid = () => {
         setFormChecked(true)
         let isValid = true;
+
         if (!form.gapSlotsType) {
             isValid = false
             showError('"Appointment Gap Slots" must not be empty')
@@ -139,6 +152,10 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
         if (form.technicianEfficiency && (form.technicianEfficiency < 0 || form.technicianEfficiency > 999)) {
             if (form.technicianEfficiency < 0) showError('"Technician Efficiency" must be equal or more than 0')
             isValid = false
+        }
+        if (!form.cutOffTime.find(el => checkTimeItemIsValid(el))) {
+            isValid = false;
+            showError('"Appointment Cut Off" should bi inside of the working hours')
         }
             return isValid;
     }
@@ -243,6 +260,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                                     id: getDayLabel(existingTime, day),
                                     disabled: !workingDays.includes(day),
                                     endAdornment: workingDays.includes(day) ? <Time width={27}/> : <TimeDisabled width={27}/>,
+                                    error: formIsChecked && !checkTimeItemIsValid(existingTime)
                                 }}
                                 onChange={handleTimeChange(existingTime?.day ?? day)}
                             />

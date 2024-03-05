@@ -12,6 +12,7 @@ import {RootState} from "../../../store/rootReducer";
 import {RowData} from "./constants";
 import ServiceBookModal from "../ServiceBookModal/ServiceBookModal";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
+import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
 
 const CapacitySettingsTable = () => {
     const {capacitySettings} = useSelector((state: RootState) => state.capacityManagement);
@@ -26,6 +27,7 @@ const CapacitySettingsTable = () => {
         if (selectedSC) {
             dispatch(loadCapacitySettings(selectedSC.id, dayjs().format("dddd")))
             dispatch(loadWorkingDays(selectedSC.id))
+            dispatch(loadHoursOfOperations(selectedSC.id))
         }
     }, [selectedSC])
 
