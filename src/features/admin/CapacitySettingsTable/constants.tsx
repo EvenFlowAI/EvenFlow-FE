@@ -59,7 +59,7 @@ export const RowData: TableRowDataType<ICapacitySetting>[] = [
     },
     {
         header: "Advisor Staffing Factor",
-        val: (el) => el.advisorStaffingFactor ? el.advisorStaffingFactor.toString() : '-',
+        val: (el) => el.advisorStaffingFactor ? 'On' : "Off",
         align: "left",
         width: 135,
     }

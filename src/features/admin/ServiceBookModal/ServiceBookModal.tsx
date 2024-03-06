@@ -166,8 +166,8 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                 serviceCenterId: selectedSC.id,
                 gapSlotsType: form.gapSlotsType?.value ?? null,
                 cutOffTime: form.cutOffTime.map(el => ({day: el.day, value: el.time})),
-                advisorStaffingFactor: form.advisorStaffingFactor,
             };
+            if (form.advisorStaffingFactor) data.advisorStaffingFactor = form.advisorStaffingFactor;
             if (editingItem?.serviceBookId) data.serviceBookId = editingItem.serviceBookId;
             if (editingItem?.serviceBookId && form.serviceBookName) data.serviceBookName = form.serviceBookName;
             if (form.technicianEfficiency !== null && form.technicianEfficiency >= 0) data.technicianEfficiency = form.technicianEfficiency;
@@ -301,6 +301,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                         <SwitcherWrapper>
                             <SwitcherLabel>OFF</SwitcherLabel>
                             <Switch
+                                disabled={typeof currentSetting?.advisorStaffingFactor === 'undefined'}
                                 onChange={handleSwitch}
                                 checked={form.advisorStaffingFactor}
                                 color="primary"
