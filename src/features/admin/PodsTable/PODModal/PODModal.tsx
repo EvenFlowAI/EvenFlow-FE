@@ -17,7 +17,7 @@ import {
     loadSCEmployees
 } from "../../../../store/reducers/employees/actions";
 import {loadSCRequestsShort} from "../../../../store/reducers/serviceRequests/actions";
-import {createPod, updatePod} from "../../../../store/reducers/pods/actions";
+import {createPod, loadPodById, updatePod} from "../../../../store/reducers/pods/actions";
 import {loadBaysShort} from "../../../../store/reducers/bays/actions";
 import {IMakeExtended, IModel} from "../../../../api/types";
 import {getOptions, getTransportationOptionString} from "../../../../utils/utils";
@@ -49,7 +49,7 @@ const initialForm: TForm = {
     isVisitCenter: true,
 }
 
-export const PODModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IPod>>>> = ({onAction, payload, ...props}) => {
+export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}> = ({onAction, editingItemId, ...props}) => {
     const {advisorsList, techniciansList} = useSelector(({scEmployees}: RootState) => scEmployees);
     const {scRequestsShort: serviceRequests} = useSelector(({serviceRequests}: RootState) => serviceRequests);
     const {baysShort: baysList} = useSelector(({bays}: RootState) => bays);
@@ -57,6 +57,7 @@ export const PODModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
     const {options: transportations, isLoading: isTransportationLoading} = useSelector(({transportation}: RootState) => transportation);
     const {zones: serviceValetZones} = useSelector(({serviceValet}: RootState) => serviceValet);
     const {zones} = useSelector(({mobileService}: RootState) => mobileService);
+    const {podsLoading, podById} = useSelector(({pods}: RootState) => pods);
 
     const [form, setForm] = useState<TForm>(initialForm);
     const [loading, setLoading] = useState<boolean>();
@@ -80,70 +81,76 @@ export const PODModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
     const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);
 
     useEffect(() => {
+        if (editingItemId) {
+            dispatch(loadPodById(editingItemId))
+        }
+    }, [editingItemId])
+
+    useEffect(() => {
         if (props.open) {
             setForm({
                 ...initialForm,
-                ...payload,
-                bays: payload?.bays ?? [],
+                ...podById,
+                bays: podById?.bays ?? [],
             });
-            if (typeof payload?.jobType !== "undefined") {
-                const selectedJobType = jobTypeOptions.find(item => item.value === payload.jobType);
+            if (typeof podById?.jobType !== "undefined") {
+                const selectedJobType = jobTypeOptions.find(item => item.value === podById.jobType);
                 selectedJobType && setJobType(selectedJobType);
             } else {
                 setJobType(null);
             }
-            if (typeof payload?.appointmentType !== "undefined") {
-                const selectedAppointmentType = appointmentTypeOptions.find(item => item.value === payload.appointmentType);
+            if (typeof podById?.appointmentType !== "undefined") {
+                const selectedAppointmentType = appointmentTypeOptions.find(item => item.value === podById.appointmentType);
                 selectedAppointmentType && setAppointmentType(selectedAppointmentType);
             } else {
                 setAppointmentType(null)
             }
-            if (payload?.mobileZones) {
-                setMobileZones(zones.filter(zone => payload?.mobileZones?.find(item => item.id === zone.id)))
+            if (podById?.mobileZones) {
+                setMobileZones(zones.filter(zone => podById?.mobileZones?.find(item => item.id === zone.id)))
             } else {
                 setMobileZones([]);
             }
-            if (payload?.serviceValetZones) {
-                setSelectedServiceValetZones(serviceValetZones.filter(zone => payload?.serviceValetZones?.find(item => item.id === zone.id)))
+            if (podById?.serviceValetZones) {
+                setSelectedServiceValetZones(serviceValetZones.filter(zone => podById?.serviceValetZones?.find(item => item.id === zone.id)))
             } else {
                 setSelectedServiceValetZones([]);
             }
-            if (payload?.engineTypes) {
-                setSelectedEngineTypes(engineTypes.filter(zone => payload?.engineTypes?.find(item => item.id === zone.id)))
+            if (podById?.engineTypes) {
+                setSelectedEngineTypes(engineTypes.filter(zone => podById?.engineTypes?.find(item => item.id === zone.id)))
             } else {
                 setSelectedEngineTypes([]);
             }
-            if (payload?.transportationOptions) {
-                setTransportationOptions(transportations.filter(item => payload?.transportationOptions?.find(el => el.id === item.id)))
+            if (podById?.transportationOptions) {
+                setTransportationOptions(transportations.filter(item => podById?.transportationOptions?.find(el => el.id === item.id)))
             } else {
                 setTransportationOptions([]);
             }
         }
-    }, [props.open, payload, makesModels, engineTypes, serviceValetZones, zones, transportations]);
+    }, [props.open, podById, makesModels, engineTypes, serviceValetZones, zones, transportations]);
 
     useEffect(() => {
-        const filteredMakes = makesModels.filter(item => payload?.vehicleMakes?.find(el => el.id === item.id));
+        const filteredMakes = makesModels.filter(item => podById?.vehicleMakes?.find(el => el.id === item.id));
         const models: IModel[][] = [];
         makesModels.forEach(item => {
-            const makeIsSelected = payload?.vehicleMakes?.find(make => make.id === item.id);
+            const makeIsSelected = podById?.vehicleMakes?.find(make => make.id === item.id);
             if (makeIsSelected) {
                 models.push(item.models)
             }
         });
         setModelsOptions(filteredMakes.map(make => make.models).flat())
-        if (payload?.vehicleMakes) {
+        if (podById?.vehicleMakes) {
             setSelectedMakes(filteredMakes);
         } else {
             setSelectedMakes([])
         }
-        if (payload?.vehicleModels?.length) {
+        if (podById?.vehicleModels?.length) {
             const modelsIDs = models.flat().map(item => item.id);
-            const filteredModels = payload?.vehicleModels?.filter(item => modelsIDs.includes(item.id))
+            const filteredModels = podById?.vehicleModels?.filter(item => modelsIDs.includes(item.id))
             setSelectedModels(filteredModels);
         } else {
             setSelectedModels([])
         }
-    }, [makesModels, props.open, payload])
+    }, [makesModels, props.open, podById])
 
     useEffect(() => {
         if (selectedSC && props.open) {
@@ -215,13 +222,13 @@ export const PODModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                 if (jobType) data.jobType = jobType.value;
                 if (appointmentType) data.appointmentType = appointmentType.value;
                 if (transportationOptions?.length) data.transportationOptionIds = transportationOptions.map(el => el.id);
-                if (payload) {
-                    await dispatch(updatePod(data, payload.id));
+                if (editingItemId && podById) {
+                    await dispatch(updatePod(data, podById.id));
                 } else {
                     await dispatch(createPod(data));
                 }
                 setLoading(false);
-                showMessage(`POD ${payload ? "updated" : "created"}`);
+                showMessage(`POD ${podById ? "updated" : "created"}`);
                 props.onClose();
             } catch (e) {
                 setLoading(false);
@@ -267,11 +274,11 @@ export const PODModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
     return (
         <BaseModal {...props} maxWidth="md">
             <DialogTitle onClose={props.onClose}>
-                {payload ? "Edit POD" : "Add POD"}
+                {editingItemId ? "Edit Service Book" : "Add Service Book"}
             </DialogTitle>
             <DialogContent>
                 <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             id="name"
                             name="name"
@@ -283,19 +290,7 @@ export const PODModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                             value={form.name}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            id="description"
-                            name="description"
-                            label="Description"
-                            placeholder="Type Description"
-                            fullWidth
-                            autoComplete="pod-description"
-                            onChange={handleChange}
-                            value={form.description}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
+                    <Grid item xs={12} sm={6}>
                         <Autocomplete
                             options={advisorsList}
                             onChange={handleSelectAdv}

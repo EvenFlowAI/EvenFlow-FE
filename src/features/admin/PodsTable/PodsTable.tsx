@@ -199,7 +199,7 @@ export const PodsTable:React.FC<React.PropsWithChildren<React.PropsWithChildren<
             startActions={actions}
             isLoading={podsLoading}
         />
-        <PODModal open={isOpen} onClose={onClose} payload={editedItem} />
+        <PODModal open={isOpen} onClose={onClose} editingItemId={editedItem?.id} />
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
             <MenuItem onClick={handleEdit}>Edit</MenuItem>
             <MenuItem onClick={askRemove}>Remove</MenuItem>
