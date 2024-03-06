@@ -74,35 +74,30 @@ const EmployeesScheduleManagement = () => {
 
     return <>
         <TitleContainer title={"Schedule Management"} pad parent={employeesRoot}/>
-        {window.location.href.includes("apps")
-            ? null
-            : <>
-                <DataCalendar
-                    loading={employeesLoading}
-                    data={calendarData}
-                    firstIcon={<User/>}
-                    secondIcon={<Hand />}
-                    firstIconFieldName={'advisorsCount'}
-                    secondIconFieldName={'techniciansCount'}
-                    date={date}
-                    disabledDates={disabledDates}
-                    firstIconText={"The number of advisors scheduled for the day"}
-                    secondIconText={"The number of technicians scheduled for the day"}
-                    dateFieldName={'date'}
-                    setDate={setDate}
-                    timePeriod={timePeriod}
-                    setTimePeriod={setTimePeriod}
-                    onDayClick={onDayClick}/>
-                <EmployeeScheduleModal
-                    open={isOpen}
-                    onClose={onClose}
-                    startDate={timePeriod?.startDate}
-                    endDate={timePeriod?.endDate}
-                    date={date}
-                    disabledDate={getDisabledDate()}
-                />
-            </>
-        }
+        <DataCalendar
+            loading={employeesLoading}
+            data={calendarData}
+            firstIcon={<User/>}
+            secondIcon={<Hand />}
+            firstIconFieldName={'advisorsCount'}
+            secondIconFieldName={'techniciansCount'}
+            date={date}
+            disabledDates={disabledDates}
+            firstIconText={"The number of advisors scheduled for the day"}
+            secondIconText={"The number of technicians scheduled for the day"}
+            dateFieldName={'date'}
+            setDate={setDate}
+            timePeriod={timePeriod}
+            setTimePeriod={setTimePeriod}
+            onDayClick={onDayClick}/>
+        <EmployeeScheduleModal
+            open={isOpen}
+            onClose={onClose}
+            startDate={timePeriod?.startDate}
+            endDate={timePeriod?.endDate}
+            date={date}
+            disabledDate={getDisabledDate()}
+        />
     </>
 };
 
