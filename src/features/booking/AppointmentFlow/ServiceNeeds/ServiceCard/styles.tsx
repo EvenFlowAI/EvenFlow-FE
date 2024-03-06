@@ -26,8 +26,8 @@ export const CardWrapper = styled("div")<{
             gridTemplateRows: "1fr",
             fontSize: 18,
             ".cardIcon": {
-                width: 65,
-                height: 65
+                width: 78,
+                height: 78
             }
         },
         "& .priceWrapper": {

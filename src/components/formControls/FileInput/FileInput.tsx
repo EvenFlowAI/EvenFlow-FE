@@ -1,8 +1,6 @@
 import React, {ChangeEventHandler, createRef, Dispatch, SetStateAction, useCallback} from 'react';
 import {useStyles} from "./styles";
 import {IIconState} from "../types";
-
-import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 
 const allowedFileTypes = ['image/svg+xml', 'image/svg', 'image/png', 'image/jpeg', 'image/jpg'];
@@ -15,7 +13,6 @@ type TFileInputProps = {
 export const FileInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TFileInputProps>>> = ({ setState, label }) => {
     const ref = createRef<HTMLInputElement>();
     const showError = useException();
-    const showMessage = useMessage();
     const { classes  } = useStyles();
 
     const handleFileChange: ChangeEventHandler<HTMLInputElement> = useCallback((event) => {
@@ -31,7 +28,6 @@ export const FileInput: React.FC<React.PropsWithChildren<React.PropsWithChildren
                     setState(prev => ({...prev, dataUrl: e.target?.result
                             ? e.target.result as string : undefined
                     }));
-                    showMessage('Icon is ready to save')
                 }
             }
             setState(prev => ({...prev, file}));
