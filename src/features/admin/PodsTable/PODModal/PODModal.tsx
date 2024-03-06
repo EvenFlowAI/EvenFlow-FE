@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {EAppointmentType, EJobType, IPod, IPodForm} from "../../../../store/reducers/pods/types";
+import {EAppointmentType, EJobType, IPodForm} from "../../../../store/reducers/pods/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Button, Grid, Switch} from "@mui/material";
 import {SC_UNDEFINED} from "../../../../utils/constants";
@@ -17,7 +17,7 @@ import {
     loadSCEmployees
 } from "../../../../store/reducers/employees/actions";
 import {loadSCRequestsShort} from "../../../../store/reducers/serviceRequests/actions";
-import {createPod, loadPodById, updatePod} from "../../../../store/reducers/pods/actions";
+import {createPod, loadPodById, setPodById, updatePod} from "../../../../store/reducers/pods/actions";
 import {loadBaysShort} from "../../../../store/reducers/bays/actions";
 import {IMakeExtended, IModel} from "../../../../api/types";
 import {getOptions, getTransportationOptionString} from "../../../../utils/utils";
@@ -271,9 +271,14 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
         setForm(prev => ({...prev, isVisitCenter: !form.isVisitCenter}))
     }
 
+    const onCancel = () => {
+        dispatch(setPodById(null))
+        props.onClose()
+    }
+
     return (
         <BaseModal {...props} maxWidth="md">
-            <DialogTitle onClose={props.onClose}>
+            <DialogTitle onClose={onCancel}>
                 {editingItemId ? "Edit Service Book" : "Add Service Book"}
             </DialogTitle>
             <DialogContent>
@@ -288,12 +293,14 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                             autoComplete="pod-name pod"
                             onChange={handleChange}
                             value={form.name}
+                            disabled={podsLoading}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Autocomplete
                             options={advisorsList}
                             onChange={handleSelectAdv}
+                            disabled={podsLoading}
                             getOptionLabel={i => i.fullName}
                             isOptionEqualToValue={(o, s) => o.id === s.id}
                             loading={false}
@@ -306,6 +313,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                         <Autocomplete
                             options={appointmentTypeOptions}
                             getOptionLabel={i => i.name}
+                            disabled={podsLoading}
                             value={appointmentType}
                             isOptionEqualToValue={(o, v) => o.value === v.value}
                             onChange={onAppointmentTypeChange}
@@ -320,6 +328,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                             options={serviceRequests}
                             multiple
                             fullWidth
+                            disabled={podsLoading}
                             ChipProps={{
                                 color: "primary",
                                 style: {borderRadius: 4},
@@ -339,6 +348,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                         <Autocomplete
                             multiple
                             style={{ marginBottom: 10 }}
+                            disabled={podsLoading}
                             ChipProps={{
                                 color: "primary",
                                 style: {borderRadius: 4},
@@ -360,6 +370,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                     <Grid item xs={12} sm={12} md={6}>
                         <Autocomplete
                             multiple
+                            disabled={podsLoading}
                             style={{ marginBottom: 10 }}
                             ChipProps={{
                                 color: "primary",
@@ -381,6 +392,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                     </Grid>
                     <Grid item xs={12} sm={12} md={6}>
                         <Autocomplete
+                            disabled={podsLoading}
                             options={jobTypeOptions}
                             isOptionEqualToValue={(o, v) => o.value === v.value}
                             getOptionLabel={i => i.name}
@@ -394,6 +406,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                     </Grid>
                     <Grid item xs={12} sm={12} md={6}>
                         <Autocomplete
+                            disabled={podsLoading}
                             options={engineTypes}
                             multiple
                             fullWidth
@@ -414,6 +427,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                     </Grid>
                     <Grid item xs={12} sm={12} md={6}>
                         <Autocomplete
+                            disabled={podsLoading}
                             options={serviceValetZones}
                             multiple
                             fullWidth
@@ -434,6 +448,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                     </Grid>
                     <Grid item xs={12} sm={12} md={6}>
                         <Autocomplete
+                            disabled={podsLoading}
                             options={zones}
                             multiple
                             fullWidth
@@ -454,6 +469,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                     </Grid>
                     <Grid item xs={12} sm={12} md={6}>
                         <Autocomplete
+                            disabled={podsLoading}
                             options={techniciansList}
                             multiple
                             ChipProps={{
@@ -473,6 +489,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                     </Grid>
                     <Grid item xs={12} sm={12} md={6}>
                         <Autocomplete
+                            disabled={podsLoading}
                             options={baysList}
                             multiple
                             ChipProps={{
@@ -492,6 +509,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                     </Grid>
                     <Grid item xs={12} sm={12}>
                         <Autocomplete
+                            disabled={podsLoading}
                             options={transportations}
                             multiple
                             ChipProps={{
@@ -511,8 +529,10 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                     </Grid>
                     <Grid item xs={12} sm={12} md={6}>
                         <div style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
-                            <Button onClick={onOpen}
-                                    color="primary">
+                            <Button
+                                onClick={onOpen}
+                                disabled={podsLoading}
+                                color="primary">
                                 Go To Employees Schedule
                             </Button>
                         </div>
@@ -524,19 +544,19 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                                 onChange={() => onIsVisitCenterChange()}
                                 label={"For Visit Center Only"}
                                 labelPlacement="start"
-                                control={<Switch color="primary" />}
+                                control={<Switch color="primary" disabled={podsLoading}/>}
                             />
                         </div>
                     </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={props.onClose} color="info">
+                <Button onClick={onCancel} color="info" disabled={podsLoading}>
                     Cancel
                 </Button>
                 <LoadingButton
                     onClick={handleSave}
-                    loading={loading}
+                    loading={loading || podsLoading}
                     variant="contained"
                     color="primary"
                 >
