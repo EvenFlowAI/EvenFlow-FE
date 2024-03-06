@@ -9,7 +9,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {IScheduleByDate, IUpdateByDateRequest} from "../../../../store/reducers/schedules/types";
 import {SwitcherLabel, SwitcherWrapper} from "./styles";
 import TimeSelect from "../../../../components/pickers/TimeSelect/TimeSelect";
-import {timeSpanString} from "../../../../utils/constants";
+import {CALENDAR_FORMAT, timeSpanString} from "../../../../utils/constants";
 import {PickersWrapper} from "../../EmployeeTimeScheduleSetUp/styles";
 import {loadHoursOfOperations} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
@@ -20,11 +20,18 @@ import {updateScheduleByDate} from "../../../../store/reducers/schedules/actions
 import {useException} from "../../../../hooks/useException/useException";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 
-type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean}
+type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean, startDate?: TParsableDate, endDate?: TParsableDate}
 
 const compareName = (a: IScheduleByDate, b: IScheduleByDate) => a.employeeName.localeCompare(b.employeeName)
 
-const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose, disabledDate}) => {
+const EmployeeScheduleModal: React.FC<TProps> = ({
+                                                     date,
+                                                     open,
+                                                     onClose,
+                                                     disabledDate,
+                                                     startDate,
+                                                     endDate,
+                                                 }) => {
     const {hoursOfOperations} = useSelector((state: RootState) => state.appointmentFrame);
     const {scheduleByDate, employeesLoading} = useSelector((state: RootState) => state.employeesSchedule);
     const {loading} = useSelector((state: RootState) => state.employees);
@@ -123,9 +130,9 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose, disabledD
                         error={
                             formIsChecked && el.isOnSchedule
                             && (!el.startAt
-                                || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString))
-                                || dayjs(el.startAt, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString))
-                                || dayjs(el.startAt, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString)))
+                                || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString), 'minute')
+                                || dayjs(el.startAt, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString), 'minute')
+                                || dayjs(el.startAt, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString), 'minute'))
                         }
                         disabled={!el.isOnSchedule || disabledDate}
                         start={schedule?.from ?? "09:00:00"}
@@ -137,9 +144,9 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose, disabledD
                         error={
                             formIsChecked && el.isOnSchedule
                             && (!el.finishAt
-                                || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString))
-                                || dayjs(el.finishAt, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString))
-                                || dayjs(el.finishAt, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString)))
+                                || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString), 'minute')
+                                || dayjs(el.finishAt, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString), 'minute')
+                                || dayjs(el.finishAt, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString), 'minute'))
                         }
                         disabled={!el.isOnSchedule || disabledDate}
                         start={schedule?.from ?? "09:00:00"}
@@ -159,17 +166,17 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose, disabledD
             valid = false;
             showError('Schedule for Employee that is "On Schedule" must not be empty')
         }
-        if (!filtered.every(item => dayjs(item.finishAt, timeSpanString).isAfter(dayjs(item.startAt, timeSpanString)))) {
+        if (!filtered.every(item => dayjs(item.finishAt, timeSpanString).isAfter(dayjs(item.startAt, timeSpanString), 'minute'))) {
             valid = false;
             showError('"End" value must be later than "Start"')
         }
-        if (!filtered.every(item => dayjs(item.finishAt, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString)))
-            || !filtered.every(item => dayjs(item.finishAt, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString)))) {
+        if (!filtered.every(item => dayjs(item.finishAt, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString), 'minute'))
+            || !filtered.every(item => dayjs(item.finishAt, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString), 'minute'))) {
             valid = false;
             showError('"End" value must be inside of the Hours Of Operations')
         }
-        if (!filtered.every(item => dayjs(item.startAt, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString)))
-            || !filtered.every(item => dayjs(item.startAt, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString)))) {
+        if (!filtered.every(item => dayjs(item.startAt, timeSpanString).isSameOrAfter(dayjs(schedule?.from, timeSpanString), 'minute'))
+            || !filtered.every(item => dayjs(item.startAt, timeSpanString).isSameOrBefore(dayjs(schedule?.to, timeSpanString), 'minute'))) {
             valid = false;
             showError('"Start" value must be inside of the Hours Of Operations')
         }
@@ -179,10 +186,12 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose, disabledD
 
     const onSave = () => {
         setFormChecked(true)
-        if (selectedSC && checkIsValid()) {
+        if (selectedSC && checkIsValid() && startDate && endDate) {
             const utcOffset = dayjs().utcOffset()
+            const start = dayjs(startDate).startOf("day").add(utcOffset, 'minute').format(CALENDAR_FORMAT)
+            const end = dayjs(endDate).endOf("day").subtract(utcOffset, 'minute').format(CALENDAR_FORMAT)
             const data: IUpdateByDateRequest = {
-                date: dayjs(date).startOf('day').add(utcOffset, 'minute').toISOString(),
+                date: dayjs(date).format(CALENDAR_FORMAT),
                 serviceCenterId: selectedSC.id,
                 isSetForWeek: isForWeek,
                 employeeScheduledHours: currentSchedule.map(
@@ -194,7 +203,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({date, open, onClose, disabledD
                         finishAt
                     }))
             }
-            dispatch(updateScheduleByDate(data, onCancel, showError))
+            dispatch(updateScheduleByDate(data, start, end, onCancel, showError))
         }
     }
 

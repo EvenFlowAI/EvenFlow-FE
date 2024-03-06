@@ -28,6 +28,7 @@ export const twelveHourFormat = "hh:mm";
 export const SC_UNDEFINED = "Service center is not loaded";
 export const SOMETHING_WRONG = "Something wrong";
 export const G_CALENDAR_FORMAT = "YYYYMMDDT";
+export const CALENDAR_FORMAT = "YYYY-MM-DD";
 export const calendarDateFormat = "ddd, MMM D";
 
 export const capacityManagementRoot: TTitle = {

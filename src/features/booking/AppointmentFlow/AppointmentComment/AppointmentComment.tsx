@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
-import {TextField} from "../../../../components/formControls/TextField/TextField";
+import {TextField} from "../../../../components/styled/EndUserInputs";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
@@ -107,6 +107,7 @@ export const AppointmentComment: React.FC<React.PropsWithChildren<React.PropsWit
                 onChange={handleChange}
                 value={description}
                 rows={4}
+                variant="standard"
                 InputProps={{disableUnderline: true}}
                 required={scProfile?.isCommentRequired}
                 placeholder={t("Describe what`s going on")}

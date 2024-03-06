@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import {IDataCalendarProps, TParsableDate} from "../../types/types";
 import {TDay, TDayType} from "../../features/admin/AvailableStaffCalendar/types";
 import {CalendarControls} from "./CalendarControls/CalendarControls";
-import {WeekDayNames} from "../../utils/constants";
+import {CALENDAR_FORMAT, WeekDayNames} from "../../utils/constants";
 import {IconsBlock} from "./IconsBlock/IconsBlock";
 import {Loading} from "../wrappers/Loading/Loading";
 
@@ -86,15 +86,23 @@ export function DataCalendar<U>({
                     {WeekDayNames.map(day =>
                         <div className={classes.weekDay} key={day}>{day}</div>
                     )}
-                    {days.map(d => {
-                            const dayData = data.find(el => dayjs(el[dateFieldName] as TParsableDate).isSame(d.date, "date"))
+                    {days.map((d, i) => {
+                            const dayData = data.find(el => {
+                                if (el[dateFieldName]) {
+                                    const formatted = dayjs.utc(el[dateFieldName] as TParsableDate).format(CALENDAR_FORMAT);
+                                    return dayjs(formatted).isSame(dayjs.utc(d.date), "date")
+                                }
+                            })
+
                             return <div
                                 className={clsx(
                                     classes.dayCell,
                                     d.type === "cur" ? classes.currentMonth : classes.prevMonth,
                                     dayjs(d.date).isSame(today, "day") ? classes.today : ""
                                 )}
-                                onClick={() => onClick(dayData, d.date, d.type)}
+                                onClick={() => {
+                                    return onClick(dayData, d.date, d.type)
+                                }}
                                 key={`${d.day}-${d.type}`}>
                                 <span className={classes.dayNumber}>{d.day}</span>
                                 <IconsBlock
