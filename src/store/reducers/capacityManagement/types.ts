@@ -27,7 +27,7 @@ export interface ICapacitySettingById {
     cutOffTime: TCutOff[];
     technicianEfficiency: number;
     avarageBillHoursPerRO: number;
-    advisorStaffingFactor?: boolean;
+    isAdvisorStaffingFactor?: boolean;
     serviceBookId?: number;
 }
 
@@ -40,7 +40,7 @@ export interface ICapacitySettingRequestData {
     cutOffTime?: TCutOff[];
     technicianEfficiency?: number;
     avarageBillHoursPerRO?: number;
-    advisorStaffingFactor?: boolean;
+    isAdvisorStaffingFactor?: boolean;
     serviceBookId?: number;
 }
 

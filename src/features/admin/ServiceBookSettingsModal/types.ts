@@ -18,5 +18,5 @@ export interface TForm {
     technicianEfficiency: number | null;
     avarageBillHoursPerRO: number | null;
     cutOffTime: TDayTime[];
-    advisorStaffingFactor?: boolean;
+    isAdvisorStaffingFactor?: boolean;
 }

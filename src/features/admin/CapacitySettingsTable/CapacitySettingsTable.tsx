@@ -10,9 +10,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadCapacitySettings} from "../../../store/reducers/capacityManagement/actions";
 import {RootState} from "../../../store/rootReducer";
 import {RowData} from "./constants";
-import ServiceBookModal from "../ServiceBookModal/ServiceBookModal";
+import ServiceBookSettingsModal from "../ServiceBookSettingsModal/ServiceBookSettingsModal";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {PODModal} from "../PodsTable/PODModal/PODModal";
 
 const CapacitySettingsTable = () => {
     const {capacitySettings} = useSelector((state: RootState) => state.capacityManagement);
@@ -48,10 +49,12 @@ const CapacitySettingsTable = () => {
     }
 
     const handleConfigure = () => {
+        setAnchorEl(null)
         onConfigureOpen()
     }
 
     const handleEdit = () => {
+        setAnchorEl(null)
         onEditOpen()
     }
 
@@ -68,7 +71,8 @@ const CapacitySettingsTable = () => {
                 <MenuItem onClick={handleConfigure}>Configure</MenuItem>
                 <MenuItem onClick={handleEdit}>Edit</MenuItem>
             </Menu>
-            <ServiceBookModal open={isEditOpen} onClose={onEditClose} editingItem={editedItem}/>
+            <ServiceBookSettingsModal open={isEditOpen} onClose={onEditClose} editingItem={editedItem}/>
+            <PODModal open={isConfigureOpen} editingItemId={editedItem?.serviceBookId} onClose={onConfigureClose}/>
         </div>
     );
 };

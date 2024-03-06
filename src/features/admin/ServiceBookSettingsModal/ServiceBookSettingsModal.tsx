@@ -27,7 +27,7 @@ import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {ICapacitySettingRequestData} from "../../../store/reducers/capacityManagement/types";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 
-const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
+const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
     const {currentSetting, isLoading} = useSelector((state: RootState) => state.capacityManagement)
     const {workingDays} = useSelector(({serviceCenters}: RootState) => serviceCenters)
     const {hoursOfOperations} = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
@@ -48,14 +48,14 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
 
     const setInitialData = useCallback(() => {
         if (currentSetting) setForm(() => {
-            const {serviceBookName, advisorStaffingFactor, appointmentLeadTime, appointmentsPerSlot, technicianEfficiency, avarageBillHoursPerRO} = currentSetting;
+            const {serviceBookName, isAdvisorStaffingFactor, appointmentLeadTime, appointmentsPerSlot, technicianEfficiency, avarageBillHoursPerRO} = currentSetting;
             return {
                 serviceBookName,
                 appointmentLeadTime,
                 appointmentsPerSlot,
                 technicianEfficiency,
                 avarageBillHoursPerRO,
-                advisorStaffingFactor,
+                isAdvisorStaffingFactor: isAdvisorStaffingFactor,
                 cutOffTime: currentSetting.cutOffTime.map(el => ({day: el.day, time: el.value})),
                 gapSlotsType: gapSlotTypeOptions.find(el => el.value === currentSetting.gapSlotsType) ?? null,
             }
@@ -99,7 +99,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
 
     const handleSwitch = (e: any, value: boolean) => {
         setFormChecked(false)
-        setForm(prev => ({...prev, advisorStaffingFactor: value}))
+        setForm(prev => ({...prev, isAdvisorStaffingFactor: value}))
     }
 
     const onCancel = () => {
@@ -153,7 +153,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
             if (form.technicianEfficiency < 0) showError('"Technician Efficiency" must be equal or more than 0')
             isValid = false
         }
-        if (!form.cutOffTime.find(el => checkTimeItemIsValid(el))) {
+        if (form.cutOffTime.length && !form.cutOffTime.find(el => checkTimeItemIsValid(el))) {
             isValid = false;
             showError('"Appointment Cut Off" should bi inside of the working hours')
         }
@@ -167,7 +167,7 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                 gapSlotsType: form.gapSlotsType?.value ?? null,
                 cutOffTime: form.cutOffTime.map(el => ({day: el.day, value: el.time})),
             };
-            if (form.advisorStaffingFactor) data.advisorStaffingFactor = form.advisorStaffingFactor;
+            if (form.isAdvisorStaffingFactor) data.isAdvisorStaffingFactor = form.isAdvisorStaffingFactor;
             if (editingItem?.serviceBookId) data.serviceBookId = editingItem.serviceBookId;
             if (editingItem?.serviceBookId && form.serviceBookName) data.serviceBookName = form.serviceBookName;
             if (form.technicianEfficiency !== null && form.technicianEfficiency >= 0) data.technicianEfficiency = form.technicianEfficiency;
@@ -301,9 +301,9 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
                         <SwitcherWrapper>
                             <SwitcherLabel>OFF</SwitcherLabel>
                             <Switch
-                                disabled={typeof currentSetting?.advisorStaffingFactor === 'undefined'}
+                                disabled={typeof currentSetting?.isAdvisorStaffingFactor === 'undefined'}
                                 onChange={handleSwitch}
-                                checked={form.advisorStaffingFactor}
+                                checked={form.isAdvisorStaffingFactor}
                                 color="primary"
                             />
                             <SwitcherLabel>ON</SwitcherLabel>
@@ -336,4 +336,4 @@ const ServiceBookModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
     );
 };
 
-export default ServiceBookModal;
+export default ServiceBookSettingsModal;
