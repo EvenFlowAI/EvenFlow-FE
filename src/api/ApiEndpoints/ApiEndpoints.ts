@@ -100,6 +100,11 @@ export class Api {
             GetBySearchTerm: {route: "/customers/vehicles", method: "get"},
             GetSingleCustomerVehicles: {route: "/customers/single-customer-vehicles", method: "get"},
         },
+        CustomerConsent: {
+          GetAll: {route: "/customer-consents", method: "get"},
+          GetById: {route: "/customer-consents/{id}", method: "get"},
+          Update: {route: "/customer-consents", method: "put"},
+        },
         Dealerships: {
             Create: {route: "/dealerships", method: "post"},
             GetShort: {route: "/dealerships", method: "get"},

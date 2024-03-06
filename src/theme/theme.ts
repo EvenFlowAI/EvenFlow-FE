@@ -15,7 +15,7 @@ declare module "@mui/material/styles" {
     }
 }
 
-export const sideBarWidth = 255;
+export const sideBarWidth = 270;
 
 const themeOptions: ThemeOptions = {
     breakpoints: {
