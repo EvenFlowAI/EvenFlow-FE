@@ -43,12 +43,12 @@ export const deleteCategoryById = (id: number, serviceType: EServiceType): AppTh
         })
 }
 
-export const updateCategory = (id: number, data: TUpdateCategoryData, serviceType: EServiceType, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
+export const updateCategory = (id: number, data: TUpdateCategoryData, serviceType: EServiceType, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceCategories.Update, {urlParams: {id}, data})
         .then(result => {
             if (result) {
                 dispatch(loadCategoriesByPage(serviceType))
-                onSuccess()
+                onSuccess && onSuccess()
             }
         })
         .catch(err => {
@@ -57,13 +57,13 @@ export const updateCategory = (id: number, data: TUpdateCategoryData, serviceTyp
         })
 }
 
-export const createCategory = (data: TNewCategory, callback: TSuccessCallback, serviceType: EServiceType, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
+export const createCategory = (data: TNewCategory, callback: TSuccessCallback, serviceType: EServiceType, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceCategories.Create, {data})
         .then(result => {
             if (result) {
                 dispatch(loadCategoriesByPage(serviceType))
                 if (result.data?.id) callback(result.data.id);
-                onSuccess()
+                onSuccess && onSuccess()
             }
         })
         .catch(err => {
@@ -72,16 +72,18 @@ export const createCategory = (data: TNewCategory, callback: TSuccessCallback, s
         })
 }
 
-export const updateCategoryIcon = (id: number, file: File, serviceType: EServiceType): AppThunk => dispatch => {
+export const updateCategoryIcon = (id: number, file: File, serviceType: EServiceType, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
     const data = new FormData();
     data.append("file", file, file.name);
     Api.call(Api.endpoints.ServiceCategories.UpdateIcon, {urlParams: {id}, data})
         .then(result => {
             if (result) {
                 dispatch(loadCategoriesByPage(serviceType))
+                onSuccess && onSuccess()
             }
         })
         .catch(err => {
+            onError(err)
             console.log('update category icon error', err)
         })
 }
