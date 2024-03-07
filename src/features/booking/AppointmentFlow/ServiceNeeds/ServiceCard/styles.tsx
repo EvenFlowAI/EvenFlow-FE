@@ -22,12 +22,12 @@ export const CardWrapper = styled("div")<{
         [theme.breakpoints.down('md')]: {
             position: 'relative',
             maxWidth: 300,
-            gridTemplateColumns: "1fr 3fr",
+            gridTemplateColumns: "26% 1fr",
             gridTemplateRows: "1fr",
             fontSize: 18,
             ".cardIcon": {
-                width: 65,
-                height: 65
+                width: 78,
+                height: 78
             }
         },
         "& .priceWrapper": {
