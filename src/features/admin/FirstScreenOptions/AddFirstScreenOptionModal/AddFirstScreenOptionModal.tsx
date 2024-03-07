@@ -232,7 +232,7 @@ export const AddFirstScreenOptionModal: React.FC<React.PropsWithChildren<React.P
                     <FileInput setState={setFileState} label={`${fileState.file || editingItem?.iconPath ? 'Update' : 'Upload' } Service Category Icon`}/>
                     <Autocomplete
                         disableClearable
-                        options={['1', '2', '3', '4']}
+                        options={['1', '2', '3', '4', '5', '6', '7', '8']}
                         value={orderIndex}
                         isOptionEqualToValue={(o, v) => o === v}
                         onChange={onOrderIndexChange}
