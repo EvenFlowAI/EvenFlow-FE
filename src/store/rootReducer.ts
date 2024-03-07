@@ -31,7 +31,6 @@ import {capacityServiceValetReducer} from "./reducers/capacityServiceValet/reduc
 import {customerReducer} from "./reducers/enhancedCustomerSearch/reducer";
 import {screenSettingsReducer} from "./reducers/screenSettings/reducer";
 import {notificationsReducer} from "./reducers/notifications/reducer";
-import {consentsReducer} from "./reducers/customerConsent/reducer";
 
 export const rootReducer = combineReducers({
     appointment: appointmentReducer,
@@ -67,6 +66,5 @@ export const rootReducer = combineReducers({
     customers: customerReducer,
     screenSettingsBooking: screenSettingsReducer,
     notifications: notificationsReducer,
-    consents: consentsReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;

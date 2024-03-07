@@ -1,10 +1,12 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {TState} from "./types";
-import {getEmailRequirement, setEmailRequirementLoading} from "./actions";
+import {getEmailRequirement, setEmailRequirementLoading, setConsentsList, setConsentLoading} from "./actions";
 
 const initialState: TState = {
     emailRequirement: null,
     isEmailRequirementLoading: false,
+    consentsList: [],
+    isConsentLoading: false,
 }
 export const screenSettingsReducer = createReducer(initialState, builder => builder
     .addCase(getEmailRequirement, (state, {payload}) => {
@@ -12,5 +14,11 @@ export const screenSettingsReducer = createReducer(initialState, builder => buil
     })
     .addCase(setEmailRequirementLoading, (state, {payload}) => {
         return {...state, isEmailRequirementLoading: payload}
+    })
+    .addCase(setConsentLoading, (state, {payload}) => {
+        return {...state, isConsentLoading: payload};
+    })
+    .addCase(setConsentsList, (state, { payload }) => {
+        return {...state, consentsList: payload};
     })
 );

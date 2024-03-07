@@ -23,7 +23,16 @@ export type TOptContentData = {
 export type TOptContent = {
     [k in EScreenSettingsType]: TOptContentData;
 }
+
+export interface ICustomerConsent {
+    id: number;
+    name: string;
+    isEnabled: boolean;
+}
+
 export type TState = {
     emailRequirement: TEmailRequirement | null;
     isEmailRequirementLoading: boolean;
+    consentsList: ICustomerConsent[];
+    isConsentLoading: boolean;
 }

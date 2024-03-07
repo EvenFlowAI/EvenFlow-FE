@@ -1,10 +1,28 @@
 import {createAction} from "@reduxjs/toolkit";
 import {AppThunk} from "../../../types/types";
-import {TEmailRequirement} from "./types";
+import {ICustomerConsent, TEmailRequirement} from "./types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
-export const getEmailRequirement = createAction<TEmailRequirement>("ServiceCenters/getEmailRequirement");
-export const setEmailRequirementLoading = createAction<boolean>("ServiceCenters/SetEmailRequirementLoading");
+export const getEmailRequirement = createAction<TEmailRequirement>("ScreenSettings/getEmailRequirement");
+export const setEmailRequirementLoading = createAction<boolean>("ScreenSettings/SetEmailRequirementLoading");
+export const setConsentLoading = createAction<boolean>("ScreenSettings/SetConsentLoading");
+export const setConsentsList = createAction<ICustomerConsent[]>("ScreenSettings/SetConsentsList");
+
+export const loadConsentsList = (serviceCenterId: number, podId?: number): AppThunk => (dispatch) => {
+    dispatch(setConsentLoading(true));
+    Api.call<ICustomerConsent[]>(Api.endpoints.CustomerConsent.GetAll, {params: {serviceCenterId, podId}})
+        .then(result => {
+            if (result) {
+                dispatch(setConsentsList(result.data))
+            }
+        })
+        .catch(err => {
+            console.log('get categories by page error', err)
+        })
+        .finally(() => {
+            dispatch(setConsentLoading(false));
+        })
+}
 
 export const loadEmailRequirement = (id: number): AppThunk => dispatch => {
     dispatch(setEmailRequirementLoading(true))

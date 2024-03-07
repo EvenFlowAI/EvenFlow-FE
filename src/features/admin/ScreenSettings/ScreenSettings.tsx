@@ -5,21 +5,25 @@ import {loadEmailRequirement} from "../../../store/reducers/screenSettings/actio
 import {EScreenSettingsType, screenSettingsList, TOptContent} from "../../../store/reducers/screenSettings/types";
 import {RootState} from "../../../store/rootReducer";
 import {CenterSettingsPlate} from "../CenterSettings/CenterSettingsPlate/CenterSettingsPlate";
-import {TCallback} from "../../../types/types";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
-import {loadConsentsList} from "../../../store/reducers/customerConsent/actions";
+import {loadConsentsList} from "../../../store/reducers/screenSettings/actions";
+import {useModal} from "../../../hooks/useModal/useModal";
+import {EditEmailRequirementModal} from "./EditEmailRequirementModal/EditEmailRequirementModal";
+import {EditCustomerConsentModal} from "./EditCustomerConsentModal/EditCustomerConsentModal";
 
-type TProps = {
-    onEmailEditOpen: TCallback;
-}
-
-export const ScreenSettings: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onEmailEditOpen}) => {
-    const {emailRequirement, isEmailRequirementLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
-    const {consentsList, isLoading} = useSelector((state: RootState) => state.consents);
+export const ScreenSettings = () => {
+    const {
+        emailRequirement,
+        isEmailRequirementLoading,
+        consentsList,
+        isConsentLoading
+    } = useSelector((state: RootState) => state.screenSettingsBooking);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const {selectedPod} = useSelectedPod()
+    const {onOpen: onEmailEditOpen, isOpen: isEmailEditOpen, onClose: onEmailEditClose} = useModal();
+    const {onOpen: onConsentOpen, isOpen: isConsentOpen, onClose: onConsentClose} = useModal();
 
     useEffect(() => {
         if (selectedSC) {
@@ -74,7 +78,7 @@ export const ScreenSettings: React.FC<React.PropsWithChildren<React.PropsWithChi
             helperText: "Require customer consent for specific appointment requests",
             label: getCustomerConsentValue(),
             title: "Customer Consent",
-            isLoading: isLoading
+            isLoading: isConsentLoading
         },
     }
 
@@ -82,6 +86,9 @@ export const ScreenSettings: React.FC<React.PropsWithChildren<React.PropsWithChi
         switch (k) {
             case EScreenSettingsType.EmailRequirement:
                 onEmailEditOpen();
+                break;
+            case EScreenSettingsType.CustomerConsent:
+                onConsentOpen();
                 break;
             default:
                 return;
@@ -106,7 +113,8 @@ export const ScreenSettings: React.FC<React.PropsWithChildren<React.PropsWithChi
                     />
                 })}
             </Grid>
-
+            <EditEmailRequirementModal open={isEmailEditOpen} onClose={onEmailEditClose}/>
+            <EditCustomerConsentModal open={isConsentOpen} onClose={onConsentClose}/>
         </>
     );
 };
