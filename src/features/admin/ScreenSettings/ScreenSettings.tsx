@@ -10,7 +10,7 @@ import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 import {loadConsentsList} from "../../../store/reducers/screenSettings/actions";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {EditEmailRequirementModal} from "./EditEmailRequirementModal/EditEmailRequirementModal";
-import {EditCustomerConsentModal} from "./EditCustomerConsentModal/EditCustomerConsentModal";
+import {CustomerConsentsModal} from "./CustomerConsentsModal/CustomerConsentsModal";
 
 export const ScreenSettings = () => {
     const {
@@ -114,7 +114,7 @@ export const ScreenSettings = () => {
                 })}
             </Grid>
             <EditEmailRequirementModal open={isEmailEditOpen} onClose={onEmailEditClose}/>
-            <EditCustomerConsentModal open={isConsentOpen} onClose={onConsentClose}/>
+            <CustomerConsentsModal open={isConsentOpen} onClose={onConsentClose}/>
         </>
     );
 };

@@ -1,5 +1,6 @@
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {EAncillaryPriceType, TZone} from "../mobileService/types";
+import {TGeographicZoneShort} from "../../../types/types";
 
 export interface IZonePriceSettings {
     geographicZoneName: string;
@@ -46,4 +47,5 @@ export type TState = {
     pricingByDistance: IDistancePriceSettings[];
     isPricingByZoneLoading: boolean;
     ancillaryPriceType: EAncillaryPriceType;
+    svZonesShort: TGeographicZoneShort[];
 }

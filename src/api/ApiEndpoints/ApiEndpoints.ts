@@ -143,6 +143,7 @@ export class Api {
             ReassignZipCode: {route: "/geographic-zones/re-assign-zip-code/{id}", method: "put"},
             RemoveZipCode: {route: "/geographic-zones/zip-code/{id}", method: "delete"},
             GetById: {route: "/geographic-zones/{id}", method: "get"},
+            GetShort: {route: "/geographic-zones/short-by-query", method: "get"},
         },
         IntervalUpsell: {
             GetUpsellByQuery: {route: "/interval-upsells/by-query", method: "post"},
@@ -388,6 +389,7 @@ export class Api {
         TransportationOptions: {
             Edit: {route: "/transportation-options", method: "put"},
             Get: {route: "/transportation-options", method: "get"},
+            GetShort: {route: "/transportation-options/short-by-query", method: "get"},
             GetActive: {route: "/transportation-options/active/by-query", method: "post"},
             Rules: {route: "/transportation-options/{id}/rules", method: "put"},
             UpdateById: {route: "/transportation-options/{id}", method: "put"},

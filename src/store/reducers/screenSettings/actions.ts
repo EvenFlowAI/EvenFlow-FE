@@ -1,11 +1,15 @@
 import {createAction} from "@reduxjs/toolkit";
 import {AppThunk} from "../../../types/types";
-import {ICustomerConsent, TEmailRequirement} from "./types";
+import {ICustomerConsent, TEmailRequirement, TGeographicZone} from "./types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import {EServiceType} from "../appointmentFrameReducer/types";
+import {setMobileZonesShort} from "../mobileService/actions";
+import {setSVZonesShort} from "../serviceValet/actions";
 
 export const getEmailRequirement = createAction<TEmailRequirement>("ScreenSettings/getEmailRequirement");
 export const setEmailRequirementLoading = createAction<boolean>("ScreenSettings/SetEmailRequirementLoading");
 export const setConsentLoading = createAction<boolean>("ScreenSettings/SetConsentLoading");
+export const setLoading = createAction<boolean>("ScreenSettings/SetLoading");
 export const setConsentsList = createAction<ICustomerConsent[]>("ScreenSettings/SetConsentsList");
 
 export const loadConsentsList = (serviceCenterId: number, podId?: number): AppThunk => (dispatch) => {
@@ -54,4 +58,22 @@ export const updateEmailRequirement = (serviceCenterId: number, data: TEmailRequ
             onError(err)
         })
         .finally(() => dispatch(setEmailRequirementLoading(false)))
+}
+
+export const loadZonesByServiceType = (serviceCenterId: number, serviceType: EServiceType, podId?: number): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call<TGeographicZone[]>(Api.endpoints.GeographicZones.GetShort, {params: {serviceType, serviceCenterId, podId}})
+        .then(res => {
+            if (res?.data) {
+                if (serviceType === EServiceType.MobileService) {
+                    dispatch(setMobileZonesShort(res.data))
+                } else if (serviceType === EServiceType.PickUpDropOff) {
+                    dispatch(setSVZonesShort(res.data))
+                }
+            }
+        })
+        .catch(err => {
+            console.log("load zoneserror", err)
+        })
+        .finally(() => dispatch(setLoading(false)))
 }

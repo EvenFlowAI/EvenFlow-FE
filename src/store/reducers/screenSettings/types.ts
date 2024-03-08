@@ -1,3 +1,6 @@
+import {EDayOfWeek} from "../offers/types";
+import {EServiceType} from "../appointmentFrameReducer/types";
+
 export type TEmailRequirement = {
     adminAndEmployeesEnabled: boolean;
     customerSelfServiceEnabled: boolean;
@@ -30,9 +33,47 @@ export interface ICustomerConsent {
     isEnabled: boolean;
 }
 
+export type TGeographicZone = {
+    id: number;
+    name: string;
+    serviceType: EServiceType;
+}
+
 export type TState = {
     emailRequirement: TEmailRequirement | null;
     isEmailRequirementLoading: boolean;
     consentsList: ICustomerConsent[];
     isConsentLoading: boolean;
+    isLoading: boolean;
+}
+
+export enum ECustomerType {
+    New}
+
+export interface IBaseCustomerConsent {
+    serviceCenterId: number;
+     podId: number;
+     name: string;
+     title: string;
+     makeIds: number[];
+     modelIds: number[];
+     modelYearFrom: number;
+     modelYearTo: number;
+     customerType: ECustomerType;
+     serviceRequestIds: number[];
+     serviceBookIds: number[];
+     appointmentTimeFrom: string;
+     appointmentTimeTo: string;
+     daysOfWeek: EDayOfWeek[];
+     advisorIds: string[];
+     transportationOptionIds: number[];
+     mobileServiceZoneIds: number[];
+     serviceValetZoneIds: number[];
+     isWaitlistEnabled: boolean;
+     message: string;
+}
+
+export interface ICustomerConsentById extends IBaseCustomerConsent {
+    id: number;
+    isEnabled: boolean;
 }

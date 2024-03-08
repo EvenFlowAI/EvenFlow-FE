@@ -19,6 +19,7 @@ import {
 import {EServiceType} from "../appointmentFrameReducer/types";
 
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import {TGeographicZone} from "../screenSettings/types";
 
 export const setCurrentZone = createAction<TZone|null>('MobileService/SetCurrentZone');
 export const setLoading = createAction<boolean>('MobileService/SetLoading');
@@ -27,6 +28,7 @@ export const setMobileServicePrisingByZones = createAction<IZonePriceSettings[]>
 export const setMobileServicePrisingByDistance = createAction<IDistancePriceSettings[]>('MobileService/SetPrisingSettingsByDistance');
 export const setMobileServicePrisingOption = createAction<EAncillaryPriceType>('MobileService/SetMobileServicePrisingOption');
 export const setPricingOptionLoading = createAction<boolean>('MobileService/SetPricingOptionLoading');
+export const setMobileZonesShort = createAction<TGeographicZone[]>("MobileService/SetZonesShort");
 
 export const loadMobServiceZones = (id: number): AppThunk => dispatch => {
     dispatch(setLoading(true));
@@ -268,4 +270,18 @@ export const changeMobileServicePriceSettings = (id: number, ancillaryPriceType:
 
 export const saveLinkToMobServiceMap = (id: number, link: string, onErr: (err: string) => void, onSuccess: () => void): AppThunk => dispatch => {
     // todo request
+}
+
+export const loadZonesShortMobile = (serviceCenterId: number, podId?: number): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call<TGeographicZone[]>(Api.endpoints.GeographicZones.GetShort, {params: {serviceType: EServiceType.MobileService, serviceCenterId, podId}})
+        .then(res => {
+            if (res?.data) {
+                dispatch(setMobileZonesShort(res.data))
+            }
+        })
+        .catch(err => {
+            console.log("load zoneserror", err)
+        })
+        .finally(() => dispatch(setLoading(false)))
 }

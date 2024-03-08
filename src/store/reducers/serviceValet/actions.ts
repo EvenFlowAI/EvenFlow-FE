@@ -19,6 +19,7 @@ import {
 import {EServiceType} from "../appointmentFrameReducer/types";
 
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import {TGeographicZone} from "../screenSettings/types";
 
 export const setCurrentZone = createAction<TZone|null>('ServiceValet/SetCurrentZone');
 export const setLoading = createAction<boolean>('ServiceValet/SetLoading');
@@ -27,6 +28,7 @@ export const setServiceValetPrisingByZones = createAction<IZonePriceSettings[]>(
 export const setServiceValetPrisingByDistance = createAction<IDistancePriceSettings[]>('ServiceValet/SetPrisingSettingsByDistance');
 export const setServiceValetPrisingOption = createAction<EAncillaryPriceType>('ServiceValet/SetServiceValetPrisingOption');
 export const setPricingOptionLoading = createAction<boolean>('ServiceValet/SetPricingOptionLoading');
+export const setSVZonesShort = createAction<TGeographicZone[]>("ServiceValet/SetZonesShort");
 
 export const loadServiceValetZones = (id: number): AppThunk => dispatch => {
     dispatch(setLoading(true));
