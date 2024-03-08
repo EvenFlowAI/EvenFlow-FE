@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {AppThunk} from "../../../types/types";
-import {ICustomerConsent, TEmailRequirement, TGeographicZone} from "./types";
+import {ICustomerConsent, ICustomerConsentById, TEmailRequirement, TGeographicZone} from "./types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {setMobileZonesShort} from "../mobileService/actions";
@@ -11,6 +11,7 @@ export const setEmailRequirementLoading = createAction<boolean>("ScreenSettings/
 export const setConsentLoading = createAction<boolean>("ScreenSettings/SetConsentLoading");
 export const setLoading = createAction<boolean>("ScreenSettings/SetLoading");
 export const setConsentsList = createAction<ICustomerConsent[]>("ScreenSettings/SetConsentsList");
+export const getCurrentConsent = createAction<ICustomerConsentById|null>("ScreenSettings/SetConsentById")
 
 export const loadConsentsList = (serviceCenterId: number, podId?: number): AppThunk => (dispatch) => {
     dispatch(setConsentLoading(true));
@@ -18,6 +19,23 @@ export const loadConsentsList = (serviceCenterId: number, podId?: number): AppTh
         .then(result => {
             if (result) {
                 dispatch(setConsentsList(result.data))
+            }
+        })
+        .catch(err => {
+            console.log('get categories by page error', err)
+        })
+        .finally(() => {
+            dispatch(setConsentLoading(false));
+        })
+}
+
+export const loadConsentById = (id: number): AppThunk => (dispatch) => {
+    dispatch(setConsentLoading(true));
+    Api.call<ICustomerConsentById>(Api.endpoints.CustomerConsent.GetById, {urlParams: {id}})
+        .then(result => {
+            if (result) {
+                console.log(result)
+                //dispatch(getCurrentConsent(result.data))
             }
         })
         .catch(err => {

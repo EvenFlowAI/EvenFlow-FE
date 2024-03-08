@@ -1,5 +1,5 @@
 import {EDayOfWeek} from "../offers/types";
-import {EServiceType} from "../appointmentFrameReducer/types";
+import {EServiceType, EUserType} from "../appointmentFrameReducer/types";
 
 export type TEmailRequirement = {
     adminAndEmployeesEnabled: boolean;
@@ -45,6 +45,7 @@ export type TState = {
     consentsList: ICustomerConsent[];
     isConsentLoading: boolean;
     isLoading: boolean;
+    currentConsent: ICustomerConsentById|null;
 }
 
 export enum ECustomerType {
@@ -59,7 +60,7 @@ export interface IBaseCustomerConsent {
      modelIds: number[];
      modelYearFrom: number;
      modelYearTo: number;
-     customerType: ECustomerType;
+     customerType: EUserType;
      serviceRequestIds: number[];
      serviceBookIds: number[];
      appointmentTimeFrom: string;
