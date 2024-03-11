@@ -1,5 +1,8 @@
 import React, {useMemo} from 'react';
-import {EServiceType} from "../../../../../../store/reducers/appointmentFrameReducer/types";
+import {
+    EServiceType,
+    IAncillaryByZipRequest,
+} from "../../../../../../store/reducers/appointmentFrameReducer/types";
 import {MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
@@ -9,7 +12,7 @@ import {
     selectServiceValetAppointment,
 } from "../../../../../../store/reducers/appointment/actions";
 import {
-    checkCarIsValid,
+    checkCarIsValid, loadAncillaryPriceByZip,
     loadConsultants,
     setAdvisor,
     setCurrentFrameScreen,
@@ -23,6 +26,8 @@ import {IFirstScreenOption} from "../../../../../../store/reducers/serviceTypes/
 import {setAdvisorAvailable} from "../../../../../../store/reducers/bookingFlowConfig/actions";
 import {IServiceConsultant} from "../../../../../../api/types";
 import {useSelectedAppointmentStyles} from "../../../../../../hooks/styling/useSelectedAppointmentStyles";
+import {useException} from "../../../../../../hooks/useException/useException";
+import {setUnavailableServiceOpen} from "../../../../../../store/reducers/modals/actions";
 
 const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{isSm: boolean}>>> = ({isSm}) => {
     const {
@@ -35,11 +40,13 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{i
         advisor
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
+    const { scProfile } = useSelector(({appointment}: RootState) => appointment);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const {t} = useTranslation();
     const { classes  } = useSelectedAppointmentStyles();
     const dispatch = useDispatch();
+    const showError = useException();
     const {id} = useParams<{id: string}>();
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
@@ -85,14 +92,47 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{i
         if (showAdvisorScreen) dispatch(setCurrentFrameScreen('consultantSelection'))
     }
 
+    const redirectToLocation = () => {
+        dispatch(setCurrentFrameScreen("location"))
+        dispatch(setSideBarSteps([]))
+    }
+
+    const onUnavailableService = () => {
+        redirectToLocation()
+        dispatch(setUnavailableServiceOpen(true))
+    }
+
+    const onValidZip = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
+        const optionWasSelectedPreviously = selectedServiceOptions.find(el => el.id === option.id);
+        if (!serviceOptionChangedFromSlotPage || !optionWasSelectedPreviously) {
+            redirectToLocation()
+        }
+        handleAdvisorSelection(showAdvisorScreen)
+    }
+
+    const checkAncillaryPriceByZip = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
+        if (scProfile && address && zipCode){
+            const data: IAncillaryByZipRequest = {
+                address: typeof address === 'string' ? address : address.label,
+                zipCode: zipCode,
+                serviceCenterId: scProfile.id,
+                serviceTypeOptionId: option.id,
+            }
+            dispatch(loadAncillaryPriceByZip(data, () => onValidZip(option, showAdvisorScreen), showError, onUnavailableService))
+        }
+    }
+
     const onRedirectToLocation = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
         const optionWasSelectedPreviously = selectedServiceOptions.find(el => el.id === option.id);
         const shouldRedirectToLocation = !address || !zipCode || !serviceOptionChangedFromSlotPage || !optionWasSelectedPreviously;
-        if (shouldRedirectToLocation) {
-            dispatch(setCurrentFrameScreen("location"))
-            dispatch(setSideBarSteps([]))
+        if (address && zipCode) {
+            checkAncillaryPriceByZip(option, showAdvisorScreen)
         } else {
-            handleAdvisorSelection(showAdvisorScreen)
+            if (shouldRedirectToLocation) {
+                redirectToLocation();
+            } else {
+                handleAdvisorSelection(showAdvisorScreen)
+            }
         }
     }
 
@@ -114,7 +154,12 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{i
 
     const clearAdvisor = () => dispatch(setAdvisor(null));
 
-    const onEmptyList = () =>  dispatch(setAdvisorAvailable(false))
+    const onEmptyList = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
+        dispatch(setAdvisorAvailable(false))
+        if (option?.type === EServiceType.PickUpDropOff) {
+            onRedirectToLocation(option, showAdvisorScreen);
+        }
+    }
 
     const onFullList = (data: IServiceConsultant[], option: IFirstScreenOption, showAdvisorScreen: boolean) => {
         const prevAdvisor = advisor && data.map(el => el.id).includes(advisor?.id);
@@ -128,7 +173,12 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{i
 
     const onCarIsValid = (option: IFirstScreenOption, shouldLoadAdvisors: boolean, showAdvisorScreen: boolean) => {
         if (shouldLoadAdvisors) {
-            dispatch(loadConsultants(id, option.id, onEmptyList, (data) => onFullList(data, option, showAdvisorScreen)));
+            dispatch(loadConsultants(
+                id,
+                option.id,
+                () => onEmptyList(option, showAdvisorScreen),
+                (data) => onFullList(data, option, showAdvisorScreen)
+            ));
         } else {
             if (!showAdvisorScreen) dispatch(setAdvisor(null));
             redirectToNextScreen(option, showAdvisorScreen)
@@ -143,7 +193,10 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{i
         const shouldLoadAdvisors = option?.type === EServiceType.VisitCenter
             || Boolean(option?.type === EServiceType.PickUpDropOff && address && zipCode);
         let isAdvisorSelectionOn = Boolean(config.find(item => item.serviceType === option.type)?.advisorSelection);
-        dispatch(checkCarIsValid(() => onCarIsValid(option, shouldLoadAdvisors, isAdvisorSelectionOn), undefined, true))
+        dispatch(checkCarIsValid(
+            () => onCarIsValid(option, shouldLoadAdvisors, isAdvisorSelectionOn),
+            undefined,
+            true))
     }
 
     const handleServiceOptionChange = (e: SelectChangeEvent<unknown>) => {

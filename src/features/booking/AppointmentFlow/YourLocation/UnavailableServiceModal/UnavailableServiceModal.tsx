@@ -6,12 +6,12 @@ import {RootState} from "../../../../../store/rootReducer";
 import {useDialogStyles} from "../../../../../hooks/styling/useDialogStyles";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import {DialogProps} from "../../../../../components/modals/BaseModal/types";
 import {setAddress, setCurrentFrameScreen, setZipCode} from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {TCallback} from "../../../../../types/types";
 import {useStyles} from "./styles";
+import {setUnavailableServiceOpen} from "../../../../../store/reducers/modals/actions";
 
-type TUnavailableServiceProps = DialogProps & {
+type TUnavailableServiceProps = {
     setFormChecked: Dispatch<SetStateAction<boolean>>;
     onBackToServiceOption: TCallback;
     onVisitCenter: TCallback;
@@ -19,8 +19,6 @@ type TUnavailableServiceProps = DialogProps & {
 }
 
 const UnavailableServiceModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUnavailableServiceProps>>> = ({
-                                                                    onClose,
-                                                                    open,
                                                                     setFormChecked,
                                                                     onBackToSelectSlotsForVisitCenter,
                                                                     onBackToServiceOption,
@@ -28,6 +26,7 @@ const UnavailableServiceModal: React.FC<React.PropsWithChildren<React.PropsWithC
 }) => {
     const {serviceTypeOption, appointmentByKey, serviceOptionChangedFromSlotPage} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
+    const {isUnavailableServiceOpen} = useSelector((state: RootState) => state.modals);
     const { classes: dialogClasses } = useDialogStyles();
     const { classes  } = useStyles();
     const {t} = useTranslation();
@@ -47,6 +46,9 @@ const UnavailableServiceModal: React.FC<React.PropsWithChildren<React.PropsWithC
         ? isSameServiceTypeOption
             ? t("Keep Original Location")
             : t("Back") : t("Visit Center")
+
+
+    const onClose = () => dispatch(setUnavailableServiceOpen(false))
 
     const clearLocation = () => {
         setFormChecked(false);
@@ -81,7 +83,7 @@ const UnavailableServiceModal: React.FC<React.PropsWithChildren<React.PropsWithC
     }
 
     return (
-        <Dialog open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
+        <Dialog open={isUnavailableServiceOpen} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
             <DialogTitle onClose={onClose}/>
             <DialogContent>
                 <div className={classes.info}>
