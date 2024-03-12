@@ -20,6 +20,7 @@ import {loadZonesByServiceType} from "../../../../store/reducers/screenSettings/
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {loadTransportationOptionsShort} from "../../../../store/reducers/transportationNeeds/actions";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
+import EditCustomerConsentModal from "../EditCustomerConsentModal/EditCustomerConsentModal";
 
 export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onClose, ...props}) => {
     const {consentsList, isConsentLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
@@ -30,12 +31,11 @@ export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.Props
     const { classes  } = useStyles();
     const {askConfirm} = useConfirm();
     const {isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose} = useModal();
-    const {isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose} = useModal();
     const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setData(consentsList.sort((a, b) => a.name.localeCompare(b.name)))
+        setData([...consentsList].sort((a, b) => a.name.localeCompare(b.name)))
     }, [consentsList])
 
     useEffect(() => {
@@ -127,11 +127,12 @@ export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.Props
             </DialogTitle>
             <DialogContent>
                 <div className={classes.topBtnWrapper}>
-                    <Button variant="contained" onClick={onAddOpen}>Add Consent</Button>
+                    <Button variant="contained" onClick={onEditOpen}>Add Consent</Button>
                 </div>
                 {isConsentLoading
                     ? <Loading/>
                     : <Table
+                        borderHeader
                         data={data}
                         index={"id"}
                         rowData={rowData}
@@ -158,6 +159,7 @@ export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.Props
                     </div>
                 </div>
             </DialogActions>
+            <EditCustomerConsentModal open={isEditOpen} onClose={onEditClose} consentId={currentConsent?.id}/>
         </BaseModal>
     );
 };

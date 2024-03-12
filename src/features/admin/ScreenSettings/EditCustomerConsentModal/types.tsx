@@ -5,6 +5,7 @@ import {TGeographicZone} from "../../../../store/reducers/screenSettings/types";
 import {IMakeExtended, IModel} from "../../../../api/types";
 import {TTransportationShort} from "../../../../store/reducers/transportationNeeds/types";
 import {EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {IPodShort} from "../../../../store/reducers/pods/types";
 
 export type TForm = {
     name: string;
@@ -18,7 +19,7 @@ export type TForm = {
     modelYearFrom: number|null;
     modelYearTo: number|null;
     customerType: EUserType|null;
-    serviceBooks: [];
+    serviceBooks: IPodShort[];
     appointmentTimeFrom: string;
     appointmentTimeTo: string;
     daysOfWeek: EDayOfWeek[];

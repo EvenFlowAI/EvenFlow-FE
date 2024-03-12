@@ -34,8 +34,7 @@ export const loadConsentById = (id: number): AppThunk => (dispatch) => {
     Api.call<ICustomerConsentById>(Api.endpoints.CustomerConsent.GetById, {urlParams: {id}})
         .then(result => {
             if (result) {
-                console.log(result)
-                //dispatch(getCurrentConsent(result.data))
+                dispatch(getCurrentConsent(result.data))
             }
         })
         .catch(err => {

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
@@ -8,26 +8,37 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {RootState} from "../../../../store/rootReducer";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 import {TForm} from "./types";
-import {initialForm} from "./constants";
+import {customerTypeOptions, dayOfWeekOptions, initialForm, yearOptions} from "./constants";
 import {loadConsentById} from "../../../../store/reducers/screenSettings/actions";
 import {Autocomplete, Grid} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {autocompleteOptionsRender, autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {IMakeExtended, IModel} from "../../../../api/types";
-import {getOptions, getYearOptions} from "../../../../utils/utils";
 import {TOption} from "../../PodsTable/PODModal/types";
 import {EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {IPodShort} from "../../../../store/reducers/pods/types";
+import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
+import TimeSelect from "../../../../components/pickers/TimeSelect/TimeSelect";
+import dayjs from "dayjs";
+import {timeSpanString} from "../../../../utils/constants";
+import {EDayOfWeek} from "../../../../store/reducers/offers/types";
+import {IAdvisorShort} from "../../../../store/reducers/users/types";
+import {TTransportationShort} from "../../../../store/reducers/transportationNeeds/types";
+import {TGeographicZoneShort} from "../../../../types/types";
+import {Textarea} from "../../RecallsParts/AddRecallModal/styles";
+import {useActionButtonsStyles} from "../../../../hooks/styling/useActionButtonsStyles";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
+import {Label} from "./styles";
 
-const yearOptions = getYearOptions();
-const customerTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EUserType).filter(key => Number.isNaN(+key))), []);
-
-const EditCustomerConsentModal: React.FC<DialogProps & { id: number }> = ({open, onClose, id}) => {
+const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undefined }> = ({open, onClose, consentId}) => {
     const {advisorsList} = useSelector(({scEmployees}: RootState) => scEmployees);
     const {scRequestsShort: serviceRequests} = useSelector(({serviceRequests}: RootState) => serviceRequests);
     const {makesModels} = useSelector(({vehicleDetails}: RootState) => vehicleDetails);
     const {mobileZonesShort} = useSelector(({mobileService}: RootState) => mobileService);
     const {svZonesShort} = useSelector(({serviceValet}: RootState) => serviceValet);
-    const {optionsShort} = useSelector(({transportation}: RootState) => transportation);
+    const {optionsShort: transportationsShort} = useSelector(({transportation}: RootState) => transportation);
+    const {shortPodsList} = useSelector(({pods}: RootState) => pods);
+    const {slotRange} = useSelector(({slotScoring}: RootState) => slotScoring);
     const {currentConsent, isConsentLoading} = useSelector(({screenSettingsBooking}: RootState) => screenSettingsBooking);
     const [form, setForm] = useState<TForm>(initialForm);
     const [modelsOptions, setModelsOptions] = useState<IModel[]>([]);
@@ -37,10 +48,13 @@ const EditCustomerConsentModal: React.FC<DialogProps & { id: number }> = ({open,
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
+    const {classes} = useActionButtonsStyles();
+    // todo loading
+    const loading = false;
 
     useEffect(() => {
-        if (id && open) dispatch(loadConsentById(id))
-    }, [id, open])
+        if (consentId && open) dispatch(loadConsentById(consentId))
+    }, [consentId, open])
 
     useEffect(() => {
         if (open && currentConsent) {
@@ -63,10 +77,10 @@ const EditCustomerConsentModal: React.FC<DialogProps & { id: number }> = ({open,
                     customerType: currentConsent.customerType ?? null,
                     serviceRequests: serviceRequests.filter(el => currentConsent.serviceRequestIds.includes(el.id)),
                     advisors: advisorsList.filter(el => currentConsent.advisorIds.includes(el.id)),
-                    transportationOptions: optionsShort.filter(el => currentConsent.transportationOptionIds.includes(el.id)),
+                    transportationOptions: transportationsShort.filter(el => currentConsent.transportationOptionIds.includes(el.id)),
                     mobileServiceZones: mobileZonesShort.filter(el => currentConsent.mobileServiceZoneIds.includes(el.id)),
                     serviceValetZones: svZonesShort.filter(el => currentConsent.serviceValetZoneIds.includes(el.id)),
-                    serviceBooks: [],
+                    serviceBooks: shortPodsList.filter(el => currentConsent.serviceBookIds.includes(el.id)),
                 }
             })
         }
@@ -127,13 +141,54 @@ const EditCustomerConsentModal: React.FC<DialogProps & { id: number }> = ({open,
     }
 
     const onCustomerTypeChange = (e: ChangeEvent<{}>, value: TOption|null) => {
-        setForm(prev => ({...form, customerType: value ? value.value as EUserType : null}))
+        setForm(prev => ({...prev, customerType: value ? value.value as EUserType : null}))
+    }
+
+    const onServiceBooksChange = (e: ChangeEvent<{}>, value: IPodShort[]) => {
+        setForm(prev => ({...prev, serviceBooks: value}))
+    }
+
+    const onServiceRequestsChange = (e: ChangeEvent<{}>, value: IAssignedServiceRequestShort[]) => {
+        setForm(prev => ({...prev, serviceRequests: value}))
+    }
+
+    const onAppointmentTimeChange = (value: string, field: keyof TForm) => {
+        setForm(prev => ({...prev, [field]: value}))
+    }
+
+    const onDayOfWeekChange = (e: ChangeEvent<{}>, value: TOption[]) => {
+        setForm(prev => ({...prev, daysOfWeek: value.map(({value}) => value as EDayOfWeek)}))
+    }
+
+    const onAdvisorsChange = (e: ChangeEvent<{}>, value: IAdvisorShort[]) => {
+        setForm(prev => ({...prev, advisors: value}))
+    }
+
+    const onTransportationsChange = (e: ChangeEvent<{}>, value: TTransportationShort[]) => {
+        setForm(prev => ({...prev, transportationOptions: value}))
+    }
+
+    const onMobileZonesChange = (e: ChangeEvent<{}>, value: TGeographicZoneShort[]) => {
+        setForm(prev => ({...prev, mobileServiceZones: value}))
+    }
+
+    const onSvZonesChange = (e: ChangeEvent<{}>, value: TGeographicZoneShort[]) => {
+        setForm(prev => ({...prev, serviceValetZones: value}))
+    }
+
+    const onWaitListChange = (e: ChangeEvent<{}>, value: string|null) => {
+        setForm(prev => ({...prev, isWaitlistEnabled: value === "Yes"}))
+    }
+
+    const onMessageChange: React.ChangeEventHandler<HTMLTextAreaElement> = ({target: {value}}) => {
+        setFormIsChecked(false);
+        setForm(prev => ({...prev, message: value}))
     }
 
     return (
         <BaseModal open={open} width={940} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>
-                {currentConsent ? "Edit" : "Add"} Customer Consent
+                {consentId ? "Edit" : "Add"} Customer Consent
             </DialogTitle>
             <DialogContent>
                     <Grid container spacing={3}>
@@ -244,9 +299,184 @@ const EditCustomerConsentModal: React.FC<DialogProps & { id: number }> = ({open,
                                 })}
                             />
                         </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                options={shortPodsList}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                getOptionLabel={i => i.name}
+                                value={form.serviceBooks}
+                                onChange={onServiceBooksChange}
+                                renderInput={autocompleteRender({
+                                    label: "Service Books",
+                                    placeholder: 'Select Service Books'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                options={serviceRequests}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                getOptionLabel={i => i.code}
+                                value={form.serviceRequests}
+                                onChange={onServiceRequestsChange}
+                                renderInput={autocompleteRender({
+                                    label: "Service Requests",
+                                    placeholder: 'Select Service Requests'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <Label>Appointment Time From</Label>
+                            <TimeSelect
+                                width={"100%"}
+                                error={
+                                    formIsChecked
+                                    && (dayjs(form.appointmentTimeTo, timeSpanString).isSameOrBefore(dayjs(form.appointmentTimeFrom, timeSpanString), 'minute')
+                                        || dayjs(form.appointmentTimeFrom, timeSpanString).isBefore(dayjs(slotRange?.start, timeSpanString), 'minute')
+                                        || dayjs(form.appointmentTimeFrom, timeSpanString).isAfter(dayjs(slotRange?.end, timeSpanString), 'minute'))
+                                }
+                                gap={60}
+                                start={slotRange?.start ?? ""}
+                                end={slotRange?.end ?? ""}
+                                value={form.appointmentTimeFrom}
+                                onChange={(value) => onAppointmentTimeChange(value, "appointmentTimeFrom")}/>
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <Label>Appointment Time To</Label>
+                            <TimeSelect
+                                width={"100%"}
+                                error={
+                                    formIsChecked
+                                    && (dayjs(form.appointmentTimeTo, timeSpanString).isSameOrBefore(dayjs(form.appointmentTimeFrom, timeSpanString), 'minute')
+                                        || dayjs(form.appointmentTimeTo, timeSpanString).isAfter(dayjs(slotRange?.start, timeSpanString), 'minute')
+                                        || dayjs(form.appointmentTimeTo, timeSpanString).isBefore(dayjs(slotRange?.end, timeSpanString), 'minute'))
+                                }
+                                gap={60}
+                                start={slotRange?.start ?? ""}
+                                end={slotRange?.end ?? ""}
+                                value={form.appointmentTimeTo}
+                                onChange={(value) => onAppointmentTimeChange(value, "appointmentTimeTo")}/>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                options={dayOfWeekOptions}
+                                isOptionEqualToValue={(o, v) => o.value === v.value}
+                                getOptionLabel={i => i.name}
+                                value={dayOfWeekOptions.filter(el => form.daysOfWeek.includes(el.value as EDayOfWeek))}
+                                onChange={onDayOfWeekChange}
+                                renderInput={autocompleteRender({
+                                    label: "Appointment Days Of Week",
+                                    placeholder: 'Select Appointment Days Of Week'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                options={advisorsList}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                getOptionLabel={i => `${i.firstName} ${i.lastName}`}
+                                value={form.advisors}
+                                onChange={onAdvisorsChange}
+                                renderInput={autocompleteRender({
+                                    label: "Service Advisors",
+                                    placeholder: 'Select Service Advisors'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                options={transportationsShort}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                getOptionLabel={i => i.name}
+                                value={form.transportationOptions}
+                                onChange={onTransportationsChange}
+                                renderInput={autocompleteRender({
+                                    label: "Transportation Options",
+                                    placeholder: 'Select Transportation Options'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                options={mobileZonesShort}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                getOptionLabel={i => i.name}
+                                value={form.mobileServiceZones}
+                                onChange={onMobileZonesChange}
+                                renderInput={autocompleteRender({
+                                    label: "Mobile Service Zones",
+                                    placeholder: 'Select Mobile Service Zones'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                options={svZonesShort}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                getOptionLabel={i => i.name}
+                                value={form.serviceValetZones}
+                                onChange={onSvZonesChange}
+                                renderInput={autocompleteRender({
+                                    label: "Service Valet Zones",
+                                    placeholder: 'Select Service Valet Zones'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                options={['Yes', 'No']}
+                                isOptionEqualToValue={(o, v) => o === v}
+                                getOptionLabel={i => i}
+                                value={form.isWaitlistEnabled ? "Yes" : "No"}
+                                onChange={onWaitListChange}
+                                renderInput={autocompleteRender({
+                                    label: "Waitlist Appointment",
+                                    placeholder: 'Select Waitlist Appointment'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Textarea
+                                fullWidth
+                                multiline
+                                style={{ marginBottom: 10 }}
+                                error={formIsChecked && !form.message.length}
+                                placeholder="Type Consent Message"
+                                label="Consent Message"
+                                onChange={onMessageChange}
+                                value={form.message}
+                                rows={5}/>
+                        </Grid>
                 </Grid>
             </DialogContent>
-            <DialogActions></DialogActions>
+            <DialogActions>
+                <div className={classes.wrapper}>
+                    <div className={classes.buttonsWrapper}>
+                        <LoadingButton
+                            loading={loading}
+                            onClick={onCancel}
+                            variant="text"
+                            style={{marginRight: 20}}
+                            color="info">
+                            Close
+                        </LoadingButton>
+                        <LoadingButton
+                            loading={loading}
+                            onClick={onSave}
+                            disabled={!form.message.length || !form.name.length || !form.title.length}
+                            className={classes.saveButton}>
+                            Save
+                        </LoadingButton>
+                    </div>
+                </div>
+            </DialogActions>
         </BaseModal>
     );
 };

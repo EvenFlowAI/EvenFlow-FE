@@ -5,7 +5,7 @@ import {IEmployeeRoleHours, TDaySchedule, TSetScheduleData} from "../../../store
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useDispatch, useSelector} from "react-redux";
 import {loadBaseEmployeeSchedule, updateBaseEmployeeSchedule} from "../../../store/reducers/employees/actions";
-import {DayName, PickersWrapper, RowWrapper, SwitcherLabel, SwitcherWrapper, UserWrapper} from "./styles";
+import {DayName, RowWrapper, SwitcherLabel, SwitcherWrapper, UserWrapper} from "./styles";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import dayjs from "dayjs";
@@ -16,6 +16,7 @@ import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingBu
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {timeSpanString} from "../../../utils/constants";
+import {PickersWrapper} from "../../../components/styled/PickersWrapper";
 
 type TProps = DialogProps & {
     editingItem: IEmployeeRoleHours | null;

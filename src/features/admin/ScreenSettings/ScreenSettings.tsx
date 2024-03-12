@@ -11,6 +11,7 @@ import {loadConsentsList} from "../../../store/reducers/screenSettings/actions";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {EditEmailRequirementModal} from "./EditEmailRequirementModal/EditEmailRequirementModal";
 import {CustomerConsentsModal} from "./CustomerConsentsModal/CustomerConsentsModal";
+import {loadRange} from "../../../store/reducers/slotScoring/actions";
 
 export const ScreenSettings = () => {
     const {
@@ -34,6 +35,7 @@ export const ScreenSettings = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadConsentsList(selectedSC.id, selectedPod?.id))
+            dispatch(loadRange(selectedSC.id, selectedPod?.id))
         }
     }, [selectedSC, selectedPod])
 
