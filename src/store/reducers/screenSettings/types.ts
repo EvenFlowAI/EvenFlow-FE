@@ -53,14 +53,14 @@ export enum ECustomerType {
 
 export interface IBaseCustomerConsent {
     serviceCenterId: number;
-     podId: number;
+     podId: number|null;
      name: string;
      title: string;
      makeIds: number[];
      modelIds: number[];
-     modelYearFrom: number;
-     modelYearTo: number;
-     customerType: EUserType;
+     modelYearFrom: number|null;
+     modelYearTo: number|null;
+     customerType: EUserType|null;
      serviceRequestIds: number[];
      serviceBookIds: number[];
      appointmentTimeFrom: string;
@@ -76,5 +76,5 @@ export interface IBaseCustomerConsent {
 
 export interface ICustomerConsentById extends IBaseCustomerConsent {
     id: number;
-    isEnabled: boolean;
+    isEnabled?: boolean;
 }

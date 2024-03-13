@@ -1,6 +1,12 @@
 import {createAction} from "@reduxjs/toolkit";
-import {AppThunk} from "../../../types/types";
-import {ICustomerConsent, ICustomerConsentById, TEmailRequirement, TGeographicZone} from "./types";
+import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
+import {
+    IBaseCustomerConsent,
+    ICustomerConsent,
+    ICustomerConsentById,
+    TEmailRequirement,
+    TGeographicZone
+} from "./types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {setMobileZonesShort} from "../mobileService/actions";
@@ -13,7 +19,7 @@ export const setLoading = createAction<boolean>("ScreenSettings/SetLoading");
 export const setConsentsList = createAction<ICustomerConsent[]>("ScreenSettings/SetConsentsList");
 export const getCurrentConsent = createAction<ICustomerConsentById|null>("ScreenSettings/SetConsentById")
 
-export const loadConsentsList = (serviceCenterId: number, podId?: number): AppThunk => (dispatch) => {
+export const loadConsentsList = (serviceCenterId: number, podId?: number|null): AppThunk => (dispatch) => {
     dispatch(setConsentLoading(true));
     Api.call<ICustomerConsent[]>(Api.endpoints.CustomerConsent.GetAll, {params: {serviceCenterId, podId}})
         .then(result => {
@@ -93,4 +99,30 @@ export const loadZonesByServiceType = (serviceCenterId: number, serviceType: ESe
             console.log("load zoneserror", err)
         })
         .finally(() => dispatch(setLoading(false)))
+}
+
+export const createCustomerConsent = (data: IBaseCustomerConsent, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.CustomerConsent.Create, {data})
+        .then(res => {
+            if (res) dispatch(loadConsentsList(data.serviceCenterId, data.podId))
+            onSuccess()
+        })
+        .catch(err => {
+            console.log('create customer consent error', err)
+            onError(err)
+        })
+}
+
+export const updateCustomerConsent = (data: ICustomerConsentById, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.CustomerConsent.Update, {data})
+        .then(res => {
+            if (res) dispatch(loadConsentsList(data.serviceCenterId, data.podId))
+            onSuccess()
+        })
+        .catch(err => {
+            console.log('update customer consent error', err)
+            onError(err)
+        })
 }

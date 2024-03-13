@@ -29,7 +29,7 @@ export interface IApiEndpoints {
     CapacityManagement: Record<"Reallocate", TApiEndpoint>,
     ComplimentaryServices: Record<"GetByQuery" | "Remove" | "Update" | "AddFromList" | "Create", TApiEndpoint>,
     Customers: Record<"GetByName" | "Update" | "GetRepairHistory" | "GetBySearchTerm" | "GetSingleCustomerVehicles", TApiEndpoint>,
-    CustomerConsent: Record<"GetAll" | "Update" | "GetById", TApiEndpoint>,
+    CustomerConsent: Record<"GetAll" | "Update" | "GetById" | "Create", TApiEndpoint>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiEndpoint>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiEndpoint>,
