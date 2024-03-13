@@ -275,7 +275,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
     }
 
     return (
-        <BaseModal {...props} maxWidth="md">
+        <BaseModal {...props} maxWidth="md" onClose={onCancel}>
             <DialogTitle onClose={onCancel}>
                 {editingItemId ? "Configure Service Book" : "Add Service Book"}
             </DialogTitle>
