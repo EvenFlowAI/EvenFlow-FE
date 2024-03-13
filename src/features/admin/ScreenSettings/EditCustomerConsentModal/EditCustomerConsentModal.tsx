@@ -531,8 +531,8 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                             value={form.makes}
                             onChange={onMakeChange}
                             renderInput={autocompleteRender({
-                                label: "Makes",
-                                placeholder: 'Select Makes'
+                                label: "Vehicle Makes",
+                                placeholder: 'Vehicle Makes'
                             })}
                         />
                     </Grid>
@@ -553,8 +553,8 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                             value={form.models}
                             onChange={onModelChange}
                             renderInput={autocompleteRender({
-                                label: "Models",
-                                placeholder: 'Select Models'
+                                label: "Vehicle Models",
+                                placeholder: 'Vehicle Models'
                             })}
                         />
                     </Grid>
