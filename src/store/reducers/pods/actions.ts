@@ -11,6 +11,7 @@ export const setPodsPaging = createAction<IPagingResponse>("Pods/Paging");
 export const setPodsFilters = createAction<Partial<IPodFilters>>("Pods/Filters");
 export const getPodsShort = createAction<IPodShort[]>("Pods/GetPodsShort");
 export const setSelectedPod = createAction<IPodShort|null>("Pods/SetSelectedPod");
+export const setPodById = createAction<IPod|null>("Pods/SetPodById");
 
 export const loadPods = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
     const {podsFilters, podsPageData} = getState().pods;
@@ -55,4 +56,14 @@ export const loadPodsShort = (serviceCenterId: number): AppThunk => async dispat
         {data: {serviceCenterId, pageSize: 0}}
     );
     dispatch(getPodsShort(result));
+}
+
+export const loadPodById = (id: number): AppThunk => async dispatch => {
+    Api.call<IPod>(Api.endpoints.Pods.Retrieve, {urlParams: {id}})
+        .then(res => {
+            if (res.data) dispatch(setPodById(res.data))
+        })
+        .catch(err => {
+            console.log('get pod by id err', err)
+        })
 }
