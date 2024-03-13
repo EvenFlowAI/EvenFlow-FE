@@ -37,7 +37,6 @@ import {useModal} from "../../../../hooks/useModal/useModal";
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {useAutocompleteStyles} from "../../../../hooks/styling/useAutocompleteStyles";
 
 const initialForm: TForm = {
     name: "",
@@ -75,7 +74,6 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
     const showMessage = useMessage();
     const dispatch = useDispatch();
     const {onOpen, isOpen, onClose} = useModal();
-    const { classes  } = useAutocompleteStyles();
 
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
     const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);
@@ -279,7 +277,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
     return (
         <BaseModal {...props} maxWidth="md">
             <DialogTitle onClose={onCancel}>
-                {editingItemId ? "Edit Service Book" : "Add Service Book"}
+                {editingItemId ? "Configure Service Book" : "Add Service Book"}
             </DialogTitle>
             <DialogContent>
                 <Grid container spacing={3}>

@@ -186,7 +186,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
 
     return (
         <BaseModal open={open} onClose={onCancel} width={550}>
-            <DialogTitle onClose={onCancel}>Employee Time Schedule Set Up</DialogTitle>
+            <DialogTitle onClose={onCancel}>Edit Service Book</DialogTitle>
             <DialogContent>
                 {isLoading
                     ? <Loading/>
