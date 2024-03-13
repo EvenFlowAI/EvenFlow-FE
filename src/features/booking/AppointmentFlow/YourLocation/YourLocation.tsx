@@ -34,7 +34,11 @@ import UnavailableServiceModal from "./UnavailableServiceModal/UnavailableServic
 import {KeyboardArrowDown} from "@mui/icons-material";
 import {TActionProps, TArgCallback, TView} from "../../../../types/types";
 import {useHistory, useParams} from "react-router-dom";
-import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";
+import {
+    setServiceWarningOpen,
+    setSlotsWarningOpen,
+    setUnavailableServiceOpen
+} from "../../../../store/reducers/modals/actions";
 import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
 import {ILoadedVehicle} from "../../../../api/types";
 import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
@@ -75,7 +79,6 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
 
     const {isOpen, onClose, onOpen} = useModal();
-    const {isOpen: isUnavailableOpen, onClose: onUnavailableClose, onOpen: onUnavailableOpen} = useModal();
     const dispatch = useDispatch();
     const showError = useException();
     const { classes  } = useStyles();
@@ -300,6 +303,8 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
         if (!zip?.length) showError('"Zip Code" is required');
     }
 
+    const onUnavailableOpen = () => dispatch(setUnavailableServiceOpen(true))
+
     const loadAncillaryPrice = () => {
         if (address && zip.length && scProfile) {
             dispatch(setZipCode(zip));
@@ -401,8 +406,6 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
                 onBackToSelectSlotsForVisitCenter={onGoToSlotsForVisitCenter}
                 onVisitCenter={setDefaultVisitCenter}/>
             <UnavailableServiceModal
-                open={isUnavailableOpen}
-                onClose={onUnavailableClose}
                 setFormChecked={setFormChecked}
                 onBackToServiceOption={goToFirstScreen}
                 onBackToSelectSlotsForVisitCenter={onGoToSlotsForVisitCenter}
