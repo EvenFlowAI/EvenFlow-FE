@@ -84,17 +84,17 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                     modelYearTo,
                     appointmentTimeFrom,
                     appointmentTimeTo,
-                    daysOfWeek,
-                    makes: makesModels.filter(el => currentConsent.makeIds.includes(el.id)),
+                    daysOfWeek: daysOfWeek ?? [],
+                    makes: makesModels.filter(el => currentConsent.makeIds?.includes(el.id)),
                     models: makesModels
-                        .map(el => el.models).flat(1).filter(el => currentConsent.modelIds.includes(el.id)),
+                        .map(el => el.models).flat(1).filter(el => currentConsent.modelIds?.includes(el.id)),
                     customerType: currentConsent.customerType ?? null,
-                    serviceRequests: serviceRequests.filter(el => currentConsent.serviceRequestIds.includes(el.id)),
-                    advisors: advisorsList.filter(el => currentConsent.advisorIds.includes(el.id)),
-                    transportationOptions: transportationsShort.filter(el => currentConsent.transportationOptionIds.includes(el.id)),
-                    mobileServiceZones: mobileZonesShort.filter(el => currentConsent.mobileServiceZoneIds.includes(el.id)),
-                    serviceValetZones: svZonesShort.filter(el => currentConsent.serviceValetZoneIds.includes(el.id)),
-                    serviceBooks: shortPodsList.filter(el => currentConsent.serviceBookIds.includes(el.id)),
+                    serviceRequests: serviceRequests.filter(el => currentConsent.serviceRequestIds?.includes(el.id)),
+                    advisors: advisorsList.filter(el => currentConsent.advisorIds?.includes(el.id)),
+                    transportationOptions: transportationsShort.filter(el => currentConsent.transportationOptionIds?.includes(el.id)),
+                    mobileServiceZones: mobileZonesShort.filter(el => currentConsent.mobileServiceZoneIds?.includes(el.id)),
+                    serviceValetZones: svZonesShort.filter(el => currentConsent.serviceValetZoneIds?.includes(el.id)),
+                    serviceBooks: shortPodsList.filter(el => currentConsent.serviceBookIds?.includes(el.id)),
                 }
             })
         }
