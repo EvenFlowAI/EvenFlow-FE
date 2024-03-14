@@ -27,8 +27,8 @@ export const TimeSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChild
     const isWaitList = Boolean(slot?.isOverbookingApplied && waitListSettings?.isEnabled);
 
     useEffect(() => {
-        if (slot?.date && dayjs.utc(slot?.date).isSame(dayjs(), 'day') && dayjs.utc(date).isSame(dayjs.utc(), 'day')) {
-            const differenceInMSeconds = dayjs.utc(dayjs.utc(slot?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(dayjs.utc());
+        if (slot?.date && dayjs(slot?.date).isSame(dayjs.utc(), 'day') && dayjs(date).isSame(dayjs.utc(), 'day')) {
+            const differenceInMSeconds = dayjs(dayjs(slot?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(dayjs.utc());
             if (differenceInMSeconds > 0) {
                 setTimeout(() => setTimePassed(true), differenceInMSeconds);
             } else {

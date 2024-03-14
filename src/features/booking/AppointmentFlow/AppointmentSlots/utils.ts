@@ -9,7 +9,7 @@ export const getAppointmentDate = (date: TParsableDate, d: number) => {
 export const groupAppointments = (slots: IRemappedAppointmentSlot[]): TGroupedAppointments => {
     const appointments: TGroupedAppointments = {};
     for (let slot of slots) {
-        const date = dayjs.utc(slot.date);
+        const date = dayjs(slot.date);
         const idx = slot.id.split("|")[0];
         if (appointments[idx]) {
             appointments[idx].appointments.push(slot);
