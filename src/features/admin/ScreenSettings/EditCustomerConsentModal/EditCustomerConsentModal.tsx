@@ -9,7 +9,8 @@ import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 import {TForm} from "./types";
 import {customerTypeOptions, dayOfWeekOptions, initialForm, yearOptions} from "./constants";
 import {
-    createCustomerConsent, getCurrentConsent,
+    createCustomerConsent,
+    getCurrentConsent,
     loadConsentById,
     updateCustomerConsent
 } from "../../../../store/reducers/screenSettings/actions";
