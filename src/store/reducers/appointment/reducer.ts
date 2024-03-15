@@ -25,7 +25,7 @@ import {
     setLoadedReducer,
     setOldAppointmentId,
     setProfileLoading,
-    setSessionId,
+    setSessionId, setSlotPodId,
     setWaitListSettings
 } from "./actions";
 import {setPackage} from "../appointmentFrameReducer/actions";
@@ -73,6 +73,7 @@ const initialState: TAppointmentState = {
     dropOffSettings: null,
     appointmentWasChanged: false,
     waitListSettings: null,
+    slotPodId: null,
 }
 
 export const appointmentReducer = createReducer(initialState, builder => builder
@@ -107,7 +108,7 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {...state, personalInformation: {...state.personalInformation, ...payload}};
     })
     .addCase(selectAppointment, (state, {payload}) => {
-        return {...state, appointment: payload};
+        return {...state, appointment: payload, slotPodId: payload ? state.slotPodId : null};
     })
     .addCase(setLoadedDateRange, (state, {payload}) => {
         return {...state, searchedDateRange: payload};
@@ -182,7 +183,7 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {...state, serviceValetSlots: payload};
     })
     .addCase(selectServiceValetAppointment, (state, {payload}) => {
-        return {...state, serviceValetAppointment: payload};
+        return {...state, serviceValetAppointment: payload, slotPodId: payload ? state.slotPodId : null};
     })
     .addCase(getDropOffSettings, (state, {payload}) => {
         return {...state, dropOffSettings: payload};
@@ -192,5 +193,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(setWaitListSettings, (state, {payload}) => {
         return {...state, waitListSettings: payload};
+    })
+    .addCase(setSlotPodId, (state, {payload}) => {
+        return {...state, slotPodId: payload};
     })
 );

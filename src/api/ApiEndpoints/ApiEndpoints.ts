@@ -111,6 +111,7 @@ export class Api {
             GetById: {route: "/customer-consents/{id}", method: "get"},
             Remove: {route: "/customer-consents", method: "delete"},
             Update: {route: "/customer-consents", method: "post"},
+            Search: {route: "/customer-consents/search", method: "post"},
         },
         Dealerships: {
             Create: {route: "/dealerships", method: "post"},

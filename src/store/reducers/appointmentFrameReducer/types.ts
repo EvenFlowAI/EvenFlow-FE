@@ -179,6 +179,7 @@ export type TState = {
     serviceOptionChangedFromSlotPage: boolean;
     transactionValue: number;
     passedScreens: TScreen[];
+    consents: ICustomerConsentBooking[];
 }
 
 type TPackageOptionRequestData = {
@@ -240,3 +241,26 @@ export interface ICreateAppointmentRequest {
     isWaitlist: boolean;
 }
 
+export interface ISearchConsentsData {
+    serviceCenterId: number;
+    podId: number|null;
+    serviceRequestIds: number[];
+    makeId: number|null;
+    modelId: string|null;
+    modelYear: number|null;
+    customerType: EUserType;
+    appointmentTime: string;
+    advisorId: string|null;
+    geographicZoneId: number|null;
+    serviceType: EServiceType;
+    transportationOptionId: number|null;
+    isWaitlistEnabled: boolean;
+}
+
+export interface ICustomerConsentBooking {
+    id: number;
+    name: string;
+    title: string;
+    isEnabled: boolean;
+    message: string;
+}

@@ -119,6 +119,7 @@ export interface IAppointmentResponse {
     slotGapMinutes: number;
     consultantId?: string;
     waitlistSettings?: IWaitListData;
+    podId?: number;
 }
 
 export enum EAppointmentTimingType {
@@ -210,6 +211,7 @@ export type TAppointmentState = {
     dropOffSettings: IDropOffSettings|null;
     appointmentWasChanged: boolean;
     waitListSettings: IWaitListData|null;
+    slotPodId: number|null;
 };
 
 export enum EReminderType {

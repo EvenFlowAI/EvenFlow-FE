@@ -154,6 +154,7 @@ const initialState: TState = {
     serviceOptionChangedFromSlotPage: false,
     transactionValue: 0,
     passedScreens: [],
+    consents: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
