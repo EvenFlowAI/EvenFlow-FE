@@ -7,13 +7,14 @@ export type TStyleProps = {
     smallHeaderFont: boolean;
     superCompact: boolean;
     borderHeader: boolean;
+    withBorders?: boolean;
 }
 
 export const StyledTableCell = styled(TableCell, {
-    shouldForwardProp: (prop) => prop !== "compact" && prop !== "smallHeaderFont" && prop !== "superCompact" && prop !== "borderHeader"
-})<TStyleProps>(({theme, compact, superCompact}) => ({
+    shouldForwardProp: (prop) => prop !== "compact" && prop !== "smallHeaderFont" && prop !== "superCompact" && prop !== "borderHeader" && prop !== "withBorders"
+})<TStyleProps>(({theme, compact, superCompact, withBorders}) => ({
     fontSize: compact ? 14 : 16,
-    border: "none",
+    border: withBorders ? '1px solid #DADADA' : "none",
     // borderBottomColor: "#000000",
     padding: compact ? compactPadding : superCompact ? superCompactPadding : cellPadding,
     [theme.breakpoints.down('sm')]: {
@@ -23,10 +24,10 @@ export const StyledTableCell = styled(TableCell, {
 }))
 
 export const StyledTableHead = styled(TableCell, {
-    shouldForwardProp: (prop) => prop !== "compact" && prop !== "smallHeaderFont" && prop !== "superCompact" && prop !== "borderHeader"
-})<TStyleProps>(({theme, compact, smallHeaderFont, superCompact, borderHeader}) => ({
+    shouldForwardProp: (prop) => prop !== "compact" && prop !== "smallHeaderFont" && prop !== "superCompact" && prop !== "borderHeader" && prop !== "withBorders"
+})<TStyleProps>(({theme, compact, smallHeaderFont, superCompact, borderHeader, withBorders}) => ({
     fontSize: smallHeaderFont ? 12 : compact ? 14 : 16,
-    border: "none",
+    border: withBorders ? '1px solid #DADADA' : "none",
     borderBottom: borderHeader ? '1px solid #DADADA' : "none",
     padding: compact ? compactPadding : superCompact ? superCompactPadding : cellPadding,
     fontWeight: "bold",

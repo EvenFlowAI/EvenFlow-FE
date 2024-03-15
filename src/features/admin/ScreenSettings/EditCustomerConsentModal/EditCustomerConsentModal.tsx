@@ -4,13 +4,12 @@ import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useDispatch, useSelector} from "react-redux";
 import {useException} from "../../../../hooks/useException/useException";
-import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {RootState} from "../../../../store/rootReducer";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 import {TForm} from "./types";
 import {customerTypeOptions, dayOfWeekOptions, initialForm, yearOptions} from "./constants";
 import {
-    createCustomerConsent,
+    createCustomerConsent, getCurrentConsent,
     loadConsentById,
     updateCustomerConsent
 } from "../../../../store/reducers/screenSettings/actions";
@@ -52,7 +51,6 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
     const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch();
     const showError = useException();
-    const showMessage = useMessage();
     const {classes} = useActionButtonsStyles();
 
     const startTimeError = useMemo(() => {
@@ -105,7 +103,8 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
     }, [setInitialData, open, currentConsent])
 
     const onCancel = () => {
-        currentConsent ? setInitialData() : setForm(initialForm);
+        dispatch(getCurrentConsent(null))
+        setForm(initialForm);
         setFormIsChecked(false);
         onClose()
     }
@@ -142,7 +141,6 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                 showError('"Transportation Options" cannot be configured with "Mobile Service Zones"')
             }
         }
-
         return isValid;
     }
 
@@ -288,6 +286,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                                 name="name"
                                 label="Consent Name"
                                 placeholder="Name"
+                                required
                                 fullWidth
                                 error={formIsChecked && !form.name.length}
                                 onChange={handleChange}
@@ -298,6 +297,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                             <TextField
                                 id="title"
                                 name="title"
+                                required
                                 label="Booking Flow Consent Title"
                                 error={formIsChecked && !form.title.length}
                                 placeholder="Title"
@@ -311,6 +311,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                                 fullWidth
                                 multiline
                                 style={{ marginBottom: 10 }}
+                                required
                                 error={formIsChecked && !form.message.length}
                                 placeholder="Enter Error Message"
                                 label="Consent Message"

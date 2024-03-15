@@ -96,7 +96,7 @@ export const loadZonesByServiceType = (serviceCenterId: number, serviceType: ESe
             }
         })
         .catch(err => {
-            console.log("load zoneserror", err)
+            console.log("load zones error", err)
         })
         .finally(() => dispatch(setLoading(false)))
 }
@@ -111,7 +111,7 @@ export const createCustomerConsent = (data: IBaseCustomerConsent, onError: TArgC
         .catch(err => {
             console.log('create customer consent error', err)
             onError(err)
-        })
+        }).finally(() => dispatch(setLoading(false)))
 }
 
 export const updateCustomerConsent = (data: ICustomerConsentById, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
@@ -124,5 +124,17 @@ export const updateCustomerConsent = (data: ICustomerConsentById, onError: TArgC
         .catch(err => {
             console.log('update customer consent error', err)
             onError(err)
+        }).finally(() => dispatch(setLoading(false)))
+}
+
+export const removeCustomerConsent = (id: number, serviceCenterId: number, onError: TArgCallback<any>, podId?: number): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.CustomerConsent.Remove, {params: {id, serviceCenterId}})
+        .then(res => {
+            if (res) dispatch(loadConsentsList(serviceCenterId, podId))
         })
+        .catch(err => {
+            console.log('delete customer consent error', err)
+            onError(err)
+        }).finally(() => dispatch(setLoading(false)))
 }

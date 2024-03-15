@@ -169,6 +169,8 @@ export interface ITableProps<Data> {
     viewMode?: boolean;
     hideHeader?: boolean;
     borderHeader?: boolean;
+    withBorders?: boolean;
+    actionsAlign?: "center"|"left"|"right"
 }
 
 export type TScreen =

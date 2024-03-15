@@ -16,11 +16,12 @@ import {useModal} from "../../../../hooks/useModal/useModal";
 import {loadSCAdvisors} from "../../../../store/reducers/employees/actions";
 import {loadSCRequestsShort} from "../../../../store/reducers/serviceRequests/actions";
 import {loadMakesForPods} from "../../../../store/reducers/vehicleDetails/actions";
-import {loadZonesByServiceType} from "../../../../store/reducers/screenSettings/actions";
+import {loadZonesByServiceType, removeCustomerConsent} from "../../../../store/reducers/screenSettings/actions";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {loadTransportationOptionsShort} from "../../../../store/reducers/transportationNeeds/actions";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 import EditCustomerConsentModal from "../EditCustomerConsentModal/EditCustomerConsentModal";
+import {useException} from "../../../../hooks/useException/useException";
 
 export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onClose, ...props}) => {
     const {consentsList, isConsentLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
@@ -33,6 +34,7 @@ export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.Props
     const {isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose} = useModal();
     const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch();
+    const showError = useException();
 
     useEffect(() => {
         setData([...consentsList].sort((a, b) => a.name.localeCompare(b.name)))
@@ -71,7 +73,8 @@ export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.Props
     }
 
     const handleRemove = async () => {
-        if (selectedSC) {
+        if (selectedSC && currentConsent) {
+            dispatch(removeCustomerConsent(currentConsent.id, selectedSC.id, showError, selectedPod?.id))
         }
     }
 
@@ -83,7 +86,7 @@ export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.Props
 
     const tableActions = (el: ICustomerConsent) => {
         return (
-            <IconButton onClick={openMenu(el)} size="large">
+            <IconButton onClick={openMenu(el)} size="large" style={{padding: '0px 9px'}}>
                 <MoreHoriz />
             </IconButton>
         );
@@ -96,7 +99,7 @@ export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.Props
             width: 430
         },
         {
-            header: 'Status',
+            header: 'Status OFF/ON',
             val: (el) => (
                 <Switch
                     onChange={handleSwitch(el)}
@@ -104,7 +107,7 @@ export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.Props
                     color="primary"
                 />
             ),
-            width: 430
+            align: 'center'
         }
     ]
 
@@ -119,6 +122,15 @@ export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.Props
         }
     }
 
+    const onEdit = () => {
+        setAnchorEl(null)
+        onEditOpen();
+    }
+
+    const onAddConsent = () => {
+        setCurrentConsent(null);
+        onEditOpen()
+    }
 
     return (
         <BaseModal {...props} width={700} onClose={onCancel}>
@@ -127,14 +139,16 @@ export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.Props
             </DialogTitle>
             <DialogContent>
                 <div className={classes.topBtnWrapper}>
-                    <Button variant="contained" onClick={onEditOpen}>Add Consent</Button>
+                    <Button variant="contained" onClick={onAddConsent}>Add Consent</Button>
                 </div>
                 {isConsentLoading
                     ? <Loading/>
                     : <Table
+                        withBorders
                         borderHeader
                         data={data}
                         index={"id"}
+                        actionsAlign="center"
                         rowData={rowData}
                         actions={tableActions}
                         hidePagination/>}
@@ -143,7 +157,7 @@ export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.Props
                     onClose={() => {setAnchorEl(null);}}
                     anchorEl={anchorEl}
                 >
-                    <MenuItem onClick={() => onEditOpen()}>Edit</MenuItem>
+                    <MenuItem onClick={onEdit}>Edit</MenuItem>
                     <MenuItem onClick={askRemove}>Remove</MenuItem>
                 </Menu>
             </DialogContent>
