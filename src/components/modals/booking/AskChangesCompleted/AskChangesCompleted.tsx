@@ -39,6 +39,8 @@ const AskChangesCompleted = () => {
         return editingPosition === 'serviceOption' && serviceTypeOption?.id !== appointmentByKey?.serviceTypeOption?.id
     }, [editingPosition, serviceTypeOption, appointmentByKey])
 
+    // todo search consent call
+
     const onClose = () => {
         dispatch(setChangesCompletedOpen(false))
     }

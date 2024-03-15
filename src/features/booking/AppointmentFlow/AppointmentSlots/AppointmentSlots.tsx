@@ -27,7 +27,7 @@ import {TArgCallback, TParsableDate, TScreen} from "../../../../types/types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector/SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
-    clearAppointmentSteps,
+    clearAppointmentSteps, searchForCustomerConsents,
     setServiceTypeOption,
     setTransportation,
     setWelcomeScreenView
@@ -285,12 +285,13 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
 
     const handleTransportation = useCallback(() => {
         if (serviceTypeOption?.transportationOption || !isTransportationAvailable) {
+            dispatch(searchForCustomerConsents())
+            // todo replace next line to the onAccept Consent func
             dispatch(setChangesCompletedOpen(true))
         } else {
             handleSetScreen('transportationNeeds')
         }
     }, [serviceTypeOption, isTransportationAvailable])
-
 
     const handleNext = useCallback((): void => {
         handleGANext();
@@ -298,7 +299,13 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         if (customerLoadedData?.isUpdating) {
             handleTransportation()
         } else {
-            handleSetScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption ? 'transportationNeeds' : 'appointmentConfirmation');
+            if (isTransportationAvailable && !serviceTypeOption?.transportationOption) {
+                handleSetScreen("transportationNeeds")
+            } else {
+                dispatch(searchForCustomerConsents())
+                // todo replace next line to the onAccept Consent func
+                handleSetScreen("appointmentConfirmation")
+            }
         }
     }, [isTransportationAvailable, serviceTypeOption, handleTransportation, customerLoadedData, handleGANext])
 

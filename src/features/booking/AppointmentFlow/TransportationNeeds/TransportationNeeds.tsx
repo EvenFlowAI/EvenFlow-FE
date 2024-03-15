@@ -6,7 +6,11 @@ import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {ITransportation} from '../../../../api/types';
-import {setCurrentFrameScreen, setTransportation} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    searchForCustomerConsents,
+    setCurrentFrameScreen,
+    setTransportation
+} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
@@ -116,6 +120,8 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
             action: 'Selected Transportation Need',
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
         })
+        dispatch(searchForCustomerConsents())
+        // todo replace next lines to onAccept Consent func
         if (customerLoadedData?.isUpdating) {
             dispatch(setChangesCompletedOpen(true))
         } else {
