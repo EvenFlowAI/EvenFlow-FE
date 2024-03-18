@@ -23,6 +23,7 @@ import {TTransportationData} from "./types";
 import {TActionProps} from "../../../../types/types";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
+import CustomerConsents from "../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 
 export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWithChildren<TActionProps>>> = ({onNext, onBack}) => {
     const {
@@ -114,19 +115,21 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
     }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls,
         packagePricingType, packageEMenuType, selectedPackage, categoriesIds, hashKey, date]);
 
+    const handleConsentsAccepted = () => {
+        if (customerLoadedData?.isUpdating) {
+            dispatch(setChangesCompletedOpen(true))
+        } else {
+            onNext();
+        }
+    }
+
     const handleNext = (transportation: ITransportation|null): void => {
         ReactGA.event({
             category: 'EvenFlow User',
             action: 'Selected Transportation Need',
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
         })
-        dispatch(searchForCustomerConsents())
-        // todo replace next lines to onAccept Consent func
-        if (customerLoadedData?.isUpdating) {
-            dispatch(setChangesCompletedOpen(true))
-        } else {
-            onNext();
-        }
+        dispatch(searchForCustomerConsents(handleConsentsAccepted))
     }
 
     const handleSelectOption = (o: ITransportation|null) => {
@@ -172,5 +175,6 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
             onNext={onNext}
             nextDisabled={loading || Boolean(transportations.length) && !transportation}
         />
+        <CustomerConsents onNext={handleConsentsAccepted}/>
     </StepWrapper>
 };

@@ -10,7 +10,7 @@ import {
     getValueServiceOffers,
     selectCategoriesIds,
     selectService,
-    selectSubService,
+    selectSubService, setAcceptedConsentIds,
     setAdditionalServicesChosen,
     setAddress,
     setAdvisor,
@@ -155,6 +155,7 @@ const initialState: TState = {
     transactionValue: 0,
     passedScreens: [],
     consents: [],
+    acceptedConsentIds: [],
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -421,6 +422,9 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setPassedScreens, (state, {payload}) => {
         return {...state, passedScreens: payload}
+    })
+    .addCase(setAcceptedConsentIds, (state, {payload}) => {
+        return {...state, acceptedConsentIds: payload}
     })
     .addCase(deleteLastScreen, (state) => {
         const screens = state.passedScreens.slice(0, state.passedScreens.length - 1)

@@ -40,7 +40,7 @@ import {
     AppThunk,
     IMaintenanceItem,
     IRecallByVin,
-    PaginatedAPIResponse,
+    PaginatedAPIResponse, TCallback,
     TParsableDate,
     TScreen,
     TView
@@ -346,6 +346,7 @@ export const clearSelectedServices = (keepCategories?: boolean): AppThunk => (di
 export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dispatch) => {
     dispatch(clearSelectedServices(keepCategories));
     dispatch(selectAppointment(null));
+    dispatch(setAcceptedConsentIds([]));
     dispatch(selectServiceValetAppointment(null));
     dispatch(setTiming(null));
     dispatch(setFrameDescription(''));
@@ -357,6 +358,7 @@ export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dis
     dispatch(setAppointmentNotes(''))
     dispatch(setConsultants([]));
     dispatch(setWaitListSettings(null));
+    dispatch(setAcceptedConsentIds([]));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
@@ -779,6 +781,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             ? addressData
             : null,
         isWaitlist: Boolean(isWaitlist),
+        customerConsentIds: appointmentFrame.acceptedConsentIds,
     };
 
     if (isAdmin) delete data.schedulerType;
@@ -904,8 +907,9 @@ export const loadAppointmentRequestsPrices = (serviceCenterId: number): AppThunk
 }
 
 export const getCustomerConsentsBooking = createAction<ICustomerConsentBooking[]>("fAppointment/GetCustomerConsentBooking");
+export const setAcceptedConsentIds = createAction<number[]>("fAppointment/SetAcceptedConsentIds");
 
-export const searchForCustomerConsents = (): AppThunk => (dispatch, getState) => {
+export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (dispatch, getState) => {
     dispatch(setAppointmentSaving(true));
 
     const {scProfile, slotPodId, selectedSR,
@@ -916,7 +920,8 @@ export const searchForCustomerConsents = (): AppThunk => (dispatch, getState) =>
         transportation,
         userType,
         advisor,
-        appointmentByKey
+        appointmentByKey,
+        zipCode,
     } = getState().appointmentFrame;
 
     if (scProfile && selectedVehicle) {
@@ -937,13 +942,11 @@ export const searchForCustomerConsents = (): AppThunk => (dispatch, getState) =>
             ?? `${dayjs(serviceValetAppointment?.date).format("YYYY-MM-DD")}T00:00:00.000Z`
             ?? ""
 
-        // todo zipCode instead of geographic zone id
-
         const data: ISearchConsentsData = {
             serviceCenterId: scProfile.id,
             podId: slotPodId,
             makeId: makeId ?? null,
-            modelId: model?.code ?? null,
+            modelId: model?.id ?? null,
             serviceRequestIds: collectServiceRequestIds(service, subService, selectedPackage, selectedSR, selectedRecalls),
             modelYear: selectedVehicle.year,
             customerType: userType ?? EUserType.New,
@@ -952,13 +955,17 @@ export const searchForCustomerConsents = (): AppThunk => (dispatch, getState) =>
             advisorId: advisor?.id ?? null,
             appointmentTime: date,
             isWaitlistEnabled: isWaitlist,
-            geographicZoneId: null,
+            zipCode,
         }
+        if (appointmentByKey?.id) data.appointmentRequestId = appointmentByKey.id;
         Api.call<ICustomerConsentBooking[]>(Api.endpoints.CustomerConsent.Search, {data})
             .then(res => {
+                console.log(res?.data)
                 if (res?.data?.length) {
                     dispatch(getCustomerConsentsBooking(res.data));
                     dispatch(setConsentOpen(true));
+                } else {
+                    onEmptyList()
                 }
             })
             .catch(err => {

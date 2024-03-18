@@ -112,6 +112,7 @@ export class Api {
             Remove: {route: "/customer-consents", method: "delete"},
             Update: {route: "/customer-consents", method: "post"},
             Search: {route: "/customer-consents/search", method: "post"},
+            Toggle: {route: "/customer-consents", method: "patch"}
         },
         Dealerships: {
             Create: {route: "/dealerships", method: "post"},

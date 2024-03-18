@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";
 import {
-    createOrUpdateAppointment,
+    createOrUpdateAppointment, searchForCustomerConsents,
     setCurrentFrameScreen
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {decodeSCID} from "../../../../utils/utils";
@@ -17,6 +17,7 @@ import {useStyles} from "./styles";
 import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
+import CustomerConsents from "../CustomerConsents/CustomerConsents";
 
 const AskChangesCompleted = () => {
     const {
@@ -38,8 +39,6 @@ const AskChangesCompleted = () => {
     const isNewServiceOption = useMemo(() => {
         return editingPosition === 'serviceOption' && serviceTypeOption?.id !== appointmentByKey?.serviceTypeOption?.id
     }, [editingPosition, serviceTypeOption, appointmentByKey])
-
-    // todo search consent call
 
     const onClose = () => {
         dispatch(setChangesCompletedOpen(false))
@@ -75,8 +74,12 @@ const AskChangesCompleted = () => {
         }
     }
 
-    const handleChangesCompleted = async () => {
+    const handleChangesCompleted = () => {
         dispatch(createOrUpdateAppointment(decodeSCID(id), onSuccessAppointmentUpdate, handleError, isMobile, Boolean(currentUser)))
+    }
+
+    const handleConsents = () => {
+        dispatch(searchForCustomerConsents(handleChangesCompleted))
     }
 
     return (
@@ -97,7 +100,7 @@ const AskChangesCompleted = () => {
                     <LoadingButton
                         fullWidth
                         loading={isAppointmentSaving}
-                        onClick={handleChangesCompleted}
+                        onClick={handleConsents}
                         color="primary"
                         variant="contained">
                         {t("Yes")}
@@ -111,6 +114,7 @@ const AskChangesCompleted = () => {
                         {t("Cancel")}
                     </LoadingButton>
                 </div>
+            <CustomerConsents onNext={handleChangesCompleted}/>
         </BaseModal>
     );
 };

@@ -10,7 +10,7 @@ import {decodeSCID} from "../../../../utils/utils";
 import {
     clearAppointmentData,
     createOrUpdateAppointment,
-    loadAppointmentRequestsPrices,
+    loadAppointmentRequestsPrices, searchForCustomerConsents,
     setAppointmentSaving,
     setCurrentFrameScreen,
     setReminders,
@@ -184,6 +184,10 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         }
     }
 
+    const searchForConsents = () => {
+        dispatch(searchForCustomerConsents(handleCreateAppointment))
+    }
+
     const onCancelChanges = () => {
         setLoading(true)
         if (selectedVehicle) {
@@ -282,7 +286,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                 loading={isAppointmentSaving}
                 nextDisabled={loading}
                 onBack={onCancelConfirmOpen}
-                onNext={handleCreateAppointment}
+                onNext={searchForConsents}
                 nextLabel="Confirm Changes"
                 prevLabel="Cancel Changes"
             />}
@@ -299,7 +303,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
             </ButtonWrapper>}
 
         <DetailedFeesManage open={isFeesOpen} onClose={onFeesClose}/>
-        <PaymentTypeModal open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
+        <PaymentTypeModal open={isPaymentOpen} onClose={onPaymentClose} onNo={searchForConsents}/>
         <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
     </StepWrapper>
 };

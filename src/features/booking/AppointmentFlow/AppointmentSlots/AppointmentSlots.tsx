@@ -38,6 +38,7 @@ import {Wrapper} from "./styles";
 import {groupAppointments} from "./utils";
 import {Routes} from "../../../../routes/constants";
 import dayjs from "dayjs";
+import CustomerConsents from "../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 
 type TAppointmentSelectionProps = {
     handleSetScreen: TArgCallback<TScreen>;
@@ -285,13 +286,13 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
 
     const handleTransportation = useCallback(() => {
         if (serviceTypeOption?.transportationOption || !isTransportationAvailable) {
-            dispatch(searchForCustomerConsents())
-            // todo replace next line to the onAccept Consent func
             dispatch(setChangesCompletedOpen(true))
         } else {
             handleSetScreen('transportationNeeds')
         }
     }, [serviceTypeOption, isTransportationAvailable])
+
+    const handleConsents = () => handleSetScreen("appointmentConfirmation")
 
     const handleNext = useCallback((): void => {
         handleGANext();
@@ -302,9 +303,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             if (isTransportationAvailable && !serviceTypeOption?.transportationOption) {
                 handleSetScreen("transportationNeeds")
             } else {
-                dispatch(searchForCustomerConsents())
-                // todo replace next line to the onAccept Consent func
-                handleSetScreen("appointmentConfirmation")
+                dispatch(searchForCustomerConsents(handleConsents))
             }
         }
     }, [isTransportationAvailable, serviceTypeOption, handleTransportation, customerLoadedData, handleGANext])
@@ -367,6 +366,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                         date={date}
                         loading={loading}/>}
             </Wrapper>
+            <CustomerConsents onNext={handleConsents}/>
         </StepWrapper>
     );
 };

@@ -180,6 +180,7 @@ export type TState = {
     transactionValue: number;
     passedScreens: TScreen[];
     consents: ICustomerConsentBooking[];
+    acceptedConsentIds: number[];
 }
 
 type TPackageOptionRequestData = {
@@ -239,6 +240,7 @@ export interface ICreateAppointmentRequest {
     notes: string;
     address: IAddressData|null;
     isWaitlist: boolean;
+    customerConsentIds: number[];
 }
 
 export interface ISearchConsentsData {
@@ -246,15 +248,16 @@ export interface ISearchConsentsData {
     podId: number|null;
     serviceRequestIds: number[];
     makeId: number|null;
-    modelId: string|null;
+    modelId: number|null;
     modelYear: number|null;
     customerType: EUserType;
     appointmentTime: string;
     advisorId: string|null;
-    geographicZoneId: number|null;
+    zipCode: string;
     serviceType: EServiceType;
     transportationOptionId: number|null;
     isWaitlistEnabled: boolean;
+    appointmentRequestId?: number;
 }
 
 export interface ICustomerConsentBooking {

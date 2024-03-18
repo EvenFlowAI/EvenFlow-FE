@@ -138,3 +138,15 @@ export const removeCustomerConsent = (id: number, serviceCenterId: number, onErr
             onError(err)
         }).finally(() => dispatch(setLoading(false)))
 }
+
+export const toggleCustomerConsent = (serviceCenterId: number, id: number, isEnabled: boolean, onError: TArgCallback<any>, podId?: number): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.CustomerConsent.Toggle, {data: {serviceCenterId, id, isEnabled}})
+        .then(res => {
+            if (res) dispatch(loadConsentsList(serviceCenterId, podId))
+        })
+        .catch(err => {
+            console.log('toggle customer consent error', err)
+            onError(err)
+        }).finally(() => dispatch(setLoading(false)))
+}

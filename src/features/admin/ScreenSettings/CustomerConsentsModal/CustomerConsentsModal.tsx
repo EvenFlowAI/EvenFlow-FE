@@ -16,7 +16,11 @@ import {useModal} from "../../../../hooks/useModal/useModal";
 import {loadSCAdvisors} from "../../../../store/reducers/employees/actions";
 import {loadSCRequestsShort} from "../../../../store/reducers/serviceRequests/actions";
 import {loadMakesForPods} from "../../../../store/reducers/vehicleDetails/actions";
-import {loadZonesByServiceType, removeCustomerConsent} from "../../../../store/reducers/screenSettings/actions";
+import {
+    loadZonesByServiceType,
+    removeCustomerConsent,
+    toggleCustomerConsent
+} from "../../../../store/reducers/screenSettings/actions";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {loadTransportationOptionsShort} from "../../../../store/reducers/transportationNeeds/actions";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
@@ -61,15 +65,9 @@ export const CustomerConsentsModal: React.FC<React.PropsWithChildren<React.Props
     }
 
     const handleSwitch = (el: ICustomerConsent) => (e: any, value: boolean) => {
-        setData(prev => {
-            const itemToUpdate = prev.find(item => item.id === el.id)
-            if (itemToUpdate) {
-                const updated = {...itemToUpdate, isEnabled: value}
-                const filtered = prev.filter(item => item.id !== el.id)
-                return [...filtered, updated].sort((a, b) => a.name.localeCompare(b.name))
-            }
-            return prev
-        })
+       if (selectedSC) {
+           dispatch(toggleCustomerConsent(selectedSC.id, el.id, value, showError, selectedPod?.id))
+       }
     }
 
     const handleRemove = async () => {
