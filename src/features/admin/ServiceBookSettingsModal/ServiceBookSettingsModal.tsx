@@ -2,11 +2,9 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 import {useActionButtonsStyles} from "../../../hooks/styling/useActionButtonsStyles";
-import {ETimeSlotType} from "../../../store/reducers/slotScoring/types";
 import {Autocomplete, Grid, InputAdornment, Switch} from "@mui/material";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {TOption} from "../PodsTable/PODModal/types";
-import {getOptions} from "../../../utils/utils";
 import {autocompleteRender} from "../../../utils/autocompleteRenders";
 import {Label, SubTitle} from "./styles";
 import ClockTimePicker from "../../../components/pickers/ClockTimePicker/ClockTimePicker";
@@ -26,6 +24,7 @@ import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {ICapacitySettingRequestData} from "../../../store/reducers/capacityManagement/types";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {getGapSlotOptions} from "./utils";
 
 const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}) => {
     const {currentSetting, isLoading} = useSelector((state: RootState) => state.capacityManagement)
@@ -38,7 +37,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
     const showError = useException();
     const showMessage = useMessage();
     const {selectedSC} = useSCs();
-    const gapSlotTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(ETimeSlotType).filter(key => Number.isNaN(+key))), []);
+    const gapSlotTypeOptions: TOption[] = useMemo(() => getGapSlotOptions(), []);
 
     useEffect(() => {
         if (editingItem && open && selectedSC) {
@@ -166,6 +165,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                 serviceCenterId: selectedSC.id,
                 gapSlotsType: form.gapSlotsType?.value ?? null,
                 cutOffTime: form.cutOffTime.map(el => ({day: el.day, value: el.time})),
+                serviceBookName: form.serviceBookName,
             };
             if (form.isAdvisorStaffingFactor) data.isAdvisorStaffingFactor = form.isAdvisorStaffingFactor;
             if (editingItem?.serviceBookId) data.serviceBookId = editingItem.serviceBookId;
@@ -186,7 +186,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
 
     return (
         <BaseModal open={open} onClose={onCancel} width={550}>
-            <DialogTitle onClose={onCancel}>Employee Time Schedule Set Up</DialogTitle>
+            <DialogTitle onClose={onCancel}>Edit Service Book</DialogTitle>
             <DialogContent>
                 {isLoading
                     ? <Loading/>
