@@ -165,6 +165,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                 serviceCenterId: selectedSC.id,
                 gapSlotsType: form.gapSlotsType?.value ?? null,
                 cutOffTime: form.cutOffTime.map(el => ({day: el.day, value: el.time})),
+                serviceBookName: form.serviceBookName,
             };
             if (form.isAdvisorStaffingFactor) data.isAdvisorStaffingFactor = form.isAdvisorStaffingFactor;
             if (editingItem?.serviceBookId) data.serviceBookId = editingItem.serviceBookId;
