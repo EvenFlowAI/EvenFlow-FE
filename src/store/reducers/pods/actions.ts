@@ -59,6 +59,7 @@ export const loadPodsShort = (serviceCenterId: number): AppThunk => async dispat
 }
 
 export const loadPodById = (id: number): AppThunk => async dispatch => {
+    dispatch(setPodsLoading(true))
     Api.call<IPod>(Api.endpoints.Pods.Retrieve, {urlParams: {id}})
         .then(res => {
             if (res.data) dispatch(setPodById(res.data))
@@ -66,4 +67,5 @@ export const loadPodById = (id: number): AppThunk => async dispatch => {
         .catch(err => {
             console.log('get pod by id err', err)
         })
+        .finally(() => dispatch(setPodsLoading(false)))
 }
