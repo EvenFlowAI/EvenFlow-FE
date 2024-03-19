@@ -31,9 +31,10 @@ export const usePackageMobileStyles = makeStyles()(() => ({
         }
     },
     iconWrapper: {
+        marginLeft: 10,
         '& > svg': {
             fontSize: 16,
-            verticalAlign: 'middle'
+            verticalAlign: 'middle',
         },
     },
     icon: {
