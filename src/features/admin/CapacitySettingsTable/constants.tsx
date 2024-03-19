@@ -42,7 +42,7 @@ export const RowData: TableRowDataType<ICapacitySetting>[] = [
         width: 120,
     },
     {
-        header: "Appointment Cut Off",
+        header: `Appointment Cut Off for ${dayjs().format('dddd')}`,
         val: (el) => el.cutOffTime ? dayjs(el.cutOffTime, timeSpanString).format("h:mm a") : '-',
         align: "left",
         width: 120,

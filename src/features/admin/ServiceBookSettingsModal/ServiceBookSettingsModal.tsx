@@ -70,11 +70,6 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
         setForm({...form, [e.target.name]: e.target.value});
     }
 
-    const handleChangeEfficiency = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormChecked(false)
-        setForm({...form, technicianEfficiency: parseInt(e.target.value)});
-    }
-
     const handleSelectGap = (e: React.ChangeEvent<{}>, val: TOption | null) => {
         setFormChecked(false)
         setForm({...form, gapSlotsType: val});
@@ -153,9 +148,19 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
             isValid = false;
             showError('"Appointments Per Slots" must be equal or more than 0')
         }
-        if (form.technicianEfficiency && (form.technicianEfficiency < 0 || form.technicianEfficiency > 999)) {
-            if (form.technicianEfficiency < 0) showError('"Technician Efficiency" must be equal or more than 0')
-            isValid = false
+        if (form.technicianEfficiency) {
+            if (form.technicianEfficiency < 0) {
+                isValid = false
+                showError('"Technician Efficiency" must be equal or more than 0')
+            }
+            if (form.technicianEfficiency > 999) {
+                isValid = false
+                showError('"Technician Efficiency" must be less than 1000')
+            }
+            if (!Number.isInteger(+form.technicianEfficiency)) {
+                showError('"Technician Efficiency" must be a whole number')
+                isValid = false
+            }
         }
         if (form.cutOffTime.length && !form.cutOffTime.find(el => checkTimeItemIsValid(el))) {
             isValid = false;
@@ -283,9 +288,10 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                             fullWidth
                             type="number"
                             startAdornment={<InputAdornment position="start">%</InputAdornment>}
-                            error={formIsChecked && form.technicianEfficiency !== null && form.technicianEfficiency < 0}
+                            error={formIsChecked && form.technicianEfficiency !== null
+                                && (form.technicianEfficiency < 0 || form.technicianEfficiency > 999 || !Number.isInteger(+form.technicianEfficiency))}
                             inputProps={{min: 0, step: 1}}
-                            onChange={handleChangeEfficiency}
+                            onChange={handleChange}
                             value={form.technicianEfficiency}
                         />
                     </Grid>
