@@ -14,6 +14,7 @@ import ServiceBookSettingsModal from "../ServiceBookSettingsModal/ServiceBookSet
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {PODModal} from "../PodsTable/PODModal/PODModal";
+import {setPodById} from "../../../store/reducers/pods/actions";
 
 const CapacitySettingsTable = () => {
     const {capacitySettings} = useSelector((state: RootState) => state.capacityManagement);
@@ -60,6 +61,7 @@ const CapacitySettingsTable = () => {
 
     const onCloseConfigureModal = () => {
         onConfigureClose();
+        dispatch(setPodById(null));
         if (selectedSC) dispatch(loadCapacitySettings(selectedSC.id, dayjs().format("dddd")))
     }
 

@@ -172,7 +172,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                 cutOffTime: form.cutOffTime.map(el => ({day: el.day, value: el.time})),
                 serviceBookName: form.serviceBookName,
             };
-            if (form.isAdvisorStaffingFactor) data.isAdvisorStaffingFactor = form.isAdvisorStaffingFactor;
+            if (typeof form.isAdvisorStaffingFactor !== "undefined") data.isAdvisorStaffingFactor = form.isAdvisorStaffingFactor;
             if (editingItem?.serviceBookId) data.serviceBookId = editingItem.serviceBookId;
             if (editingItem?.serviceBookId && form.serviceBookName) data.serviceBookName = form.serviceBookName;
             if (form.technicianEfficiency !== null && form.technicianEfficiency >= 0) data.technicianEfficiency = form.technicianEfficiency;
