@@ -118,8 +118,8 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
             const day = hoursOfOperations.find(item => item.dayOfWeek === el.day)
             const startTime = day?.from;
             const endTime = day?.to;
-            const isAfterStart = dayjs(el.time, timeSpanString).isSameOrAfter(dayjs(startTime, timeSpanString))
-            const isBeforeEnd = dayjs(el.time, timeSpanString).isSameOrBefore(dayjs(endTime, timeSpanString))
+            const isAfterStart = dayjs(el.time, timeSpanString).set('second', 0).isSameOrAfter(dayjs(startTime, timeSpanString))
+            const isBeforeEnd = dayjs(el.time, timeSpanString).set('second', 0).isSameOrBefore(dayjs(endTime, timeSpanString))
             return isAfterStart && isBeforeEnd
         } else return true
     }
@@ -199,6 +199,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                             placeholder="Type Name"
                             disabled={!editingItem?.serviceBookId}
                             fullWidth
+                            required
                             error={formIsChecked && !form.serviceBookName}
                             onChange={handleChange}
                             value={form.serviceBookName}
@@ -216,7 +217,8 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                             renderInput={autocompleteRender({
                                 label: "Appointment Gap Slots",
                                 placeholder: 'Appointment Gap Slots',
-                                error: formIsChecked && !form.gapSlotsType
+                                error: formIsChecked && !form.gapSlotsType,
+                                required: true
                             })}
                         />
                     </Grid>

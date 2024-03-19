@@ -79,8 +79,12 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
     const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);
 
     useEffect(() => {
-        if (editingItemId) {
-            dispatch(loadPodById(editingItemId))
+        if (props.open) {
+            if (editingItemId) {
+                dispatch(loadPodById(editingItemId))
+            } else {
+                setForm(initialForm)
+            }
         }
     }, [editingItemId, props.open])
 
@@ -226,7 +230,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                     await dispatch(createPod(data));
                 }
                 setLoading(false);
-                showMessage(`POD ${podById ? "updated" : "created"}`);
+                showMessage(`Service Book ${podById ? "updated" : "created"}`);
                 props.onClose();
             } catch (e) {
                 setLoading(false);
@@ -288,6 +292,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                             label="Name"
                             placeholder="Type Name"
                             fullWidth
+                            required
                             autoComplete="pod-name pod"
                             onChange={handleChange}
                             value={form.name}
