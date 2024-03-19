@@ -40,7 +40,7 @@ const ClockTimePicker: React.FC<TProps> = ({
             onChange={onChange}
             slotProps={{
                 actionBar: {
-                    actions: ['clear'],
+                    actions: ['cancel', 'accept'],
                 },
                 textField: {
                     fullWidth,
