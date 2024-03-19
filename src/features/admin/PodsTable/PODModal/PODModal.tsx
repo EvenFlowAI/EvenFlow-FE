@@ -82,7 +82,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
         if (editingItemId) {
             dispatch(loadPodById(editingItemId))
         }
-    }, [editingItemId])
+    }, [editingItemId, props.open])
 
     useEffect(() => {
         if (props.open) {
