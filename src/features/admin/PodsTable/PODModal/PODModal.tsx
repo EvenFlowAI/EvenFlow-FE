@@ -292,6 +292,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                             label="Name"
                             placeholder="Type Name"
                             fullWidth
+                            required
                             autoComplete="pod-name pod"
                             onChange={handleChange}
                             value={form.name}

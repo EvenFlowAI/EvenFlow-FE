@@ -43,13 +43,13 @@ export const RowData: TableRowDataType<ICapacitySetting>[] = [
     },
     {
         header: "Appointment Cut Off",
-        val: (el) => el.cutOffTime ? dayjs(el.cutOffTime, timeSpanString).format("h:mm") : '-',
+        val: (el) => el.cutOffTime ? dayjs(el.cutOffTime, timeSpanString).format("h:mm a") : '-',
         align: "left",
         width: 120,
     },
     {
         header: "Technician Efficiency",
-        val: (el) => el.technicianEfficiency.toString(),
+        val: (el) => `${el.technicianEfficiency.toString()}%`,
         align: "left"
     },
     {
