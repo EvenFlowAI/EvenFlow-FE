@@ -49,13 +49,18 @@ const CapacitySettingsTable = () => {
     }
 
     const handleConfigure = () => {
-        setAnchorEl(null)
         onConfigureOpen()
+        setAnchorEl(null)
     }
 
     const handleEdit = () => {
         setAnchorEl(null)
         onEditOpen()
+    }
+
+    const onCloseConfigureModal = () => {
+        onConfigureClose();
+        if (selectedSC) dispatch(loadCapacitySettings(selectedSC.id, dayjs().format("dddd")))
     }
 
     return (
@@ -68,11 +73,11 @@ const CapacitySettingsTable = () => {
                 actions={menuActions}
                 hidePagination/>
             <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={closeMenu}>
-                <MenuItem onClick={handleConfigure}>Configure</MenuItem>
+                <MenuItem onClick={handleConfigure} disabled={!editedItem?.serviceBookId}>Configure</MenuItem>
                 <MenuItem onClick={handleEdit}>Edit</MenuItem>
             </Menu>
             <ServiceBookSettingsModal open={isEditOpen} onClose={onEditClose} editingItem={editedItem}/>
-            <PODModal open={isConfigureOpen} editingItemId={editedItem?.serviceBookId} onClose={onConfigureClose}/>
+            <PODModal open={isConfigureOpen} editingItemId={editedItem?.serviceBookId} onClose={onCloseConfigureModal}/>
         </div>
     );
 };
