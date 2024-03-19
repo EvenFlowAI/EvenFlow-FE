@@ -72,7 +72,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
 
     const handleChangeEfficiency = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormChecked(false)
-        setForm({...form, technicianEfficiency: e.target.value ? parseInt(e.target.value) : +e.target.value});
+        setForm({...form, technicianEfficiency: parseInt(e.target.value)});
     }
 
     const handleSelectGap = (e: React.ChangeEvent<{}>, val: TOption | null) => {
