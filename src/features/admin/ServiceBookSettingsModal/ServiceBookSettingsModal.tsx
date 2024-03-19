@@ -70,6 +70,11 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
         setForm({...form, [e.target.name]: e.target.value});
     }
 
+    const handleChangeEfficiency = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormChecked(false)
+        setForm({...form, technicianEfficiency: e.target.value ? parseInt(e.target.value) : +e.target.value});
+    }
+
     const handleSelectGap = (e: React.ChangeEvent<{}>, val: TOption | null) => {
         setFormChecked(false)
         setForm({...form, gapSlotsType: val});
@@ -279,8 +284,8 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                             type="number"
                             startAdornment={<InputAdornment position="start">%</InputAdornment>}
                             error={formIsChecked && form.technicianEfficiency !== null && form.technicianEfficiency < 0}
-                            inputProps={{min: 0}}
-                            onChange={handleChange}
+                            inputProps={{min: 0, step: 1}}
+                            onChange={handleChangeEfficiency}
                             value={form.technicianEfficiency}
                         />
                     </Grid>
