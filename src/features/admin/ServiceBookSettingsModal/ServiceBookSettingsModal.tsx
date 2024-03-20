@@ -212,6 +212,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                             placeholder="Type Name"
                             fullWidth
                             required
+                            disabled
                             error={formIsChecked && !form.serviceBookName}
                             onChange={handleChange}
                             value={form.serviceBookName}
