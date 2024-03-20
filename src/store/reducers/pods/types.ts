@@ -89,4 +89,5 @@ export type TState = {
     podsFilters: IPodFilters;
     shortPodsList: IPodShort[];
     selectedPod: IPodShort | null;
+    podById: IPod|null;
 }
