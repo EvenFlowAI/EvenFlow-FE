@@ -75,6 +75,8 @@ export type TState = {
     currentPackage: IPackageById | null;
     isPackageLoading: boolean;
     packages: IPackageByQuery[];
+    packagesPageData: IPageRequest;
+    packagesPaging: IPagingResponse;
     makes: IMake[];
     complimentary: IComplimentaryServiceByQuery[];
     isComplimentaryLoading: boolean;
@@ -83,4 +85,5 @@ export type TState = {
     complimentarySortOrder: IOrder<IComplimentaryServiceByQuery>;
     complimentarySearchTerm: string;
     allComplimentary: IComplimentaryServiceByQuery[];
+    allPackagesLoading: boolean,
 }

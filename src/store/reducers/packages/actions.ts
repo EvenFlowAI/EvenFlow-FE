@@ -7,10 +7,13 @@ import {
     IUpdatedPackage, TOrderIndex, TPackagePrice
 } from "./types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import {ActionCreator} from "redux";
 
 export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoading');
+export const setAllPackagesLoading = createAction<boolean>('Optimizer/SetAllPackagesLoading');
 export const getPackageById = createAction<IPackageById | null>('Optimizer/GetPackageById');
 export const getPackagesByQuery = createAction<IPackageByQuery[]>('Optimizer/GetPackages');
+export const getPackagesPaging = createAction<IPagingResponse>('Optimizer/GetPackagesPaging');
 export const getMakes = createAction<IMake[]>('Optimizer/GetVehicles');
 export const getComplimentary = createAction<IComplimentaryServiceByQuery[]>('Optimizer/GetComplimentary');
 export const getAllComplimentary = createAction<IComplimentaryServiceByQuery[]>('Optimizer/GetAllComplimentary');
@@ -19,6 +22,7 @@ export const setComplimentaryPagingResponse  = createAction<IPagingResponse>('Op
 export const setComplimentaryPageData  = createAction<Partial<IPageRequest>>('Optimizer/SetComplimentaryPageData');
 export const setComplimentarySort = createAction<IOrder<IComplimentaryServiceByQuery>>('Optimizer/SetComplimentarySort');
 export const setComplimentarySearchTerm = createAction<string>('Optimizer/SetComplimentarySearchTerm');
+export const setPageData = createAction<Partial<IPageRequest>>("Optimizer/PackagesSetPageData");
 
 export const changeComplimentaryPageData = (data: Partial<IPageRequest>): AppThunk => async (dispatch, getState) => {
     await dispatch(setComplimentaryPageData(data));
@@ -46,21 +50,25 @@ export const removePackageById = (packageId: number, serviceCenterId: number): A
     }).finally(() => dispatch(setPackageLoading(false)))
 }
 
-export const loadPackages = (serviceCenterId: number): AppThunk => async dispatch => {
+export const loadPackages = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
+    dispatch(setAllPackagesLoading(true))
+    const {packagesPageData} = getState().packages
     const data = {
         podId: null,
         serviceCenterId,
-        pageIndex: 0,
-        pageSize: 0,
+        pageIndex: packagesPageData.pageIndex,
+        pageSize: packagesPageData.pageSize,
     }
     Api.call(Api.endpoints.MaintenancePackages.GetByQuery, {data})
         .then(result => {
             if (result?.data?.result) {
+                if (result?.data?.paging) dispatch(getPackagesPaging(result?.data?.paging))
                 dispatch(getPackagesByQuery(result.data.result));
             }
         }).catch(err => {
         console.log(err);
     })
+        .finally(() => dispatch(setAllPackagesLoading(false)))
 }
 
 export const updatePackageOptions = (id: number, data: IPackageOptionDetailed[], showError: (err: string) => void): AppThunk => async dispatch => {
@@ -266,4 +274,10 @@ export const updateSegmentsTitles = (id: number, titles: TSegmentTitle[], onErro
             console.log('update package segment titles err', err)
             onError(err)
         }).finally(() => dispatch(setPackageLoading(false)))
+}
+
+export const changePageData: ActionCreator<AppThunk> = (payload: Partial<IPageRequest>) => {
+    return async dispatch => {
+        await dispatch(setPageData(payload));
+    }
 }
