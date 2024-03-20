@@ -108,6 +108,9 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
     }
 
     const onSuccess = () => {
+        if (currentSetting?.gapSlotsType && form.gapSlotsType && form.gapSlotsType.value !== currentSetting.gapSlotsType) {
+            showMessage("The Unplanned Demand Settings were reset", "warning")
+        }
         setFormChecked(false);
         onClose();
         showMessage("Service Book updated")
@@ -207,7 +210,6 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                             name="serviceBookName"
                             label="Service Book Name"
                             placeholder="Type Name"
-                            disabled={!editingItem?.serviceBookId}
                             fullWidth
                             required
                             error={formIsChecked && !form.serviceBookName}
