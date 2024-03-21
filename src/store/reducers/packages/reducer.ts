@@ -4,17 +4,17 @@ import {
     getComplimentary,
     getMakes,
     getPackageById,
-    getPackagesByQuery,
+    getPackagesByQuery, getPackagesPaging, setAllPackagesLoading,
     setComplimentaryLoading,
     setComplimentaryPageData,
     setComplimentaryPagingResponse,
     setComplimentarySearchTerm,
     setComplimentarySort,
-    setPackageLoading
+    setPackageLoading, setPageData
 } from "./actions";
 import {TState} from "./types";
 import {defaultOrder} from "../../../config/config";
-import {defaultPageData} from "../constants";
+import {defaultPageData, defaultPaging} from "../constants";
 
 const initialState: TState = {
     currentPackage: null,
@@ -31,6 +31,12 @@ const initialState: TState = {
     complimentarySortOrder: {...defaultOrder},
     complimentarySearchTerm: '',
     allComplimentary: [],
+    packagesPageData: {
+        pageSize: 5,
+        pageIndex: 0
+    },
+    packagesPaging: {...defaultPaging},
+    allPackagesLoading: false,
 }
 
 export const packagesReducer = createReducer(initialState, builder => builder
@@ -66,5 +72,14 @@ export const packagesReducer = createReducer(initialState, builder => builder
     })
     .addCase(getAllComplimentary, (state, { payload }) => {
         return {...state, allComplimentary: payload}
+    })
+    .addCase(setPageData, (state, { payload }) => {
+        return {...state, packagesPageData: {...state.packagesPageData, ...payload}};
+    })
+    .addCase(getPackagesPaging, (state, { payload }) => {
+        return {...state, packagesPaging: payload};
+    })
+    .addCase(setAllPackagesLoading, (state, { payload }) => {
+        return {...state, allPackagesLoading: payload};
     })
 );
