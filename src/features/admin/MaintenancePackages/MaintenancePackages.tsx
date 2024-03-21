@@ -52,7 +52,6 @@ export const MaintenancePackages = () => {
 
     useEffect(() => {
         if (allPackages) setPackages(allPackages);
-        if (allPackages.length) setExpanded({ id: allPackages[0].id, isOpen: true})
     }, [allPackages])
 
     const handleAddPackage = () => {
