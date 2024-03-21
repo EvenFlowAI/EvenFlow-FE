@@ -9,6 +9,8 @@ type TTabLabelProps = {
 
 export const TabLabel: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTabLabelProps>>> = ({text, isSelected}) => {
     const { classes  } = usePackageMobileStyles();
-    return <div className={classes.iconWrapper}>{isSelected &&
-        <Done className={classes.icon} htmlColor={'white'}/>} {text}</div>
+    return <div className={classes.iconWrapper}>
+        {/*{isSelected &&*/}
+        {/*<Done className={classes.icon} htmlColor={'white'}/>}*/}
+        {text}</div>
 }

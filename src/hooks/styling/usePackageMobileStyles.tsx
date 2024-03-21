@@ -31,16 +31,16 @@ export const usePackageMobileStyles = makeStyles()(() => ({
         }
     },
     iconWrapper: {
-        marginLeft: 10,
         '& > svg': {
+            position: "absolute",
+            top: 10,
+            left: 7,
             fontSize: 16,
             verticalAlign: 'middle',
         },
     },
     icon: {
-        position: "absolute",
-        top: '30%',
-        left: 7
+
     },
     packageName: {
         display: 'flex',
