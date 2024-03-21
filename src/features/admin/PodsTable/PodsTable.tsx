@@ -3,7 +3,7 @@ import {PODModal} from "./PODModal/PODModal";
 import {Button, IconButton, Menu, MenuItem} from "@mui/material";
 import {EAppointmentType, EJobType, IPod} from "../../../store/reducers/pods/types";
 import {useDispatch, useSelector} from "react-redux";
-import {loadPods, removePod, setPodsPageData} from "../../../store/reducers/pods/actions";
+import {loadPods, removePod, setPodById, setPodsPageData} from "../../../store/reducers/pods/actions";
 import {RootState} from "../../../store/rootReducer";
 import {Table} from "../../../components/tables/Table/Table";
 import {MoreHoriz} from "@mui/icons-material";
@@ -174,6 +174,14 @@ export const PodsTable:React.FC<React.PropsWithChildren<React.PropsWithChildren<
         );
     }
 
+    const onEditClose = () => {
+        setEditedItem(undefined);
+        dispatch(setPodById(null));
+        onClose()
+    }
+
+    const onCloseMenu = () => setAnchorEl(null)
+
     return <div>
         {!viewMode ? <div style={{textAlign: "right"}}>
             <Button
@@ -199,8 +207,8 @@ export const PodsTable:React.FC<React.PropsWithChildren<React.PropsWithChildren<
             startActions={actions}
             isLoading={podsLoading}
         />
-        <PODModal open={isOpen} onClose={onClose} payload={editedItem} />
-        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
+        <PODModal open={isOpen} onClose={onEditClose} editingItemId={editedItem?.id} />
+        <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={onCloseMenu}>
             <MenuItem onClick={handleEdit}>Edit</MenuItem>
             <MenuItem onClick={askRemove}>Remove</MenuItem>
         </Menu>

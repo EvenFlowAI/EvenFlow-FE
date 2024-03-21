@@ -1,7 +1,7 @@
 import {TState} from "./types";
 import {
     getPods,
-    getPodsShort,
+    getPodsShort, setPodById,
     setPodsFilters,
     setPodsLoading,
     setPodsPageData,
@@ -22,6 +22,7 @@ const initialState: TState = {
     },
     selectedPod: null,
     shortPodsList: [],
+    podById: null,
 }
 
 export const podsReducer = createReducer(initialState, builder => builder
@@ -45,5 +46,8 @@ export const podsReducer = createReducer(initialState, builder => builder
     })
     .addCase(setSelectedPod, (state, {payload}) => {
         return {...state, selectedPod: payload};
+    })
+    .addCase(setPodById, (state, {payload}) => {
+        return {...state, podById: payload};
     })
 )

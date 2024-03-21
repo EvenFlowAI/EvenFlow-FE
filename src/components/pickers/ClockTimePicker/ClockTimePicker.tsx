@@ -15,6 +15,7 @@ type TProps = MobileTimePickerProps<TParsableDate> & {
     disabled?: boolean,
     id?: string;
     name?: string;
+    onClear?: () => void;
 }
 
 const ClockTimePicker: React.FC<TProps> = ({
@@ -28,6 +29,7 @@ const ClockTimePicker: React.FC<TProps> = ({
                                                      disabled,
                                                      id,
                                                      name,
+                                               onClear,
                                                      ...props
                                                 }) => {
     const { classes  } = useDatePickerStyles();
@@ -39,6 +41,9 @@ const ClockTimePicker: React.FC<TProps> = ({
             value={value}
             onChange={onChange}
             slotProps={{
+                actionBar: {
+                    actions: ['cancel', 'accept'],
+                },
                 textField: {
                     fullWidth,
                     variant: "standard",
