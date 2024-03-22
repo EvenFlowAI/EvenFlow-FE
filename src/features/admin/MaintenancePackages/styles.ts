@@ -28,10 +28,12 @@ export const useMaintenancePackagesStyles = makeStyles()(() => ({
         textTransform: 'uppercase',
         whiteSpace: 'nowrap',
         marginRight: 10
+    },
+    pagination: {
+        marginTop: 24
     }
 }));
 
-// 
 export const usePackageAccordionStyles = makeStyles()(() => ({
     title: {
         fontSize: 20,

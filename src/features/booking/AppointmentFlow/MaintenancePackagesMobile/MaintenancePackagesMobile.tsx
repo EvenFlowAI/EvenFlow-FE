@@ -90,7 +90,7 @@ const MaintenancePackagesMobile: React.FC<React.PropsWithChildren<React.PropsWit
                                  key={item.id}
                                  className={index === +value ? classes.selectedTab : classes.tabWrapper}
                                  value={`${index}`}
-                                 label={<TabLabel text={item.name} isSelected={index === +value}/>}/>)
+                                 label={<TabLabel text={item.name}/>}/>)
                         )}
                     </Tabs>
 
