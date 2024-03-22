@@ -108,7 +108,9 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
     }
 
     const onSuccess = () => {
-        if (currentSetting?.gapSlotsType && form.gapSlotsType && form.gapSlotsType.value !== currentSetting.gapSlotsType) {
+        if (typeof currentSetting?.gapSlotsType !== "undefined"
+            && typeof form.gapSlotsType !== "undefined"
+            && form.gapSlotsType?.value !== currentSetting.gapSlotsType) {
             showMessage("The Unplanned Demand Settings were reset", "warning")
         }
         setFormChecked(false);
