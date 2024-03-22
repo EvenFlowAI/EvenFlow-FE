@@ -9,7 +9,7 @@ import {
 } from "../../../../../utils/autocompleteRenders";
 import {checkEmail, validatePhoneNumber} from "../../../../../utils/utils";
 import 'react-phone-number-input/style.css'
-import {superRoles} from "../constants";
+import {DmsRoles, superRoles} from "../constants";
 import {userRoles, widerUserRoles} from "../../../../../utils/constants";
 import {useCurrentUser} from "../../../../../hooks/useCurrentUser/useCurrentUser";
 import {Roles, TTechnicianLevel} from "../../../../../types/types";
@@ -28,7 +28,6 @@ type TTFormProps = {
     setEmployeeForm: Dispatch<SetStateAction<TEmployeeForm>>;
 };
 
-
 export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTFormProps>>> = ({
                                                               setEmployeeForm,
                                                               setFormIsChecked,
@@ -42,6 +41,7 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
     const [serviceCenters, setServiceCenters] = useState<IServiceCenter[]>([])
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();
+
     // todo multiple service centers
     const autocompleteClasses = useMultipleAutocompleteStyles();
 
@@ -189,11 +189,11 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
             </Grid>
             <Grid item xs={12} sm={6}>
                 <Autocomplete
-                    options={dmsAdvisors}
+                    options={dmsAdvisors.filter(el => el.role && form.role && DmsRoles[el.role] === form.role)}
                     onChange={handleDMSConsultantChange}
-                    getOptionLabel={i => `${i.name} - ${i.id}`}
+                    getOptionLabel={i => i.name ? `${i.name} - ${i.id}` : i.id}
                     isOptionEqualToValue={(o, s) => o.id === s.id}
-                    disabled={shortLoading || loadingDMSAdvisors}
+                    disabled={!form.role || shortLoading || loadingDMSAdvisors}
                     loading={shortLoading || loadingDMSAdvisors}
                     value={form?.dmsId ? dmsAdvisors.find(item => item.id.toString() === form.dmsId) : null}
                     renderInput={autocompleteRender({label: "Assign Employee from DMS", fullWidth: true, placeholder: "Assign Employee from DMS"})}

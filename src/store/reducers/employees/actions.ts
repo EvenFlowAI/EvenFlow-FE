@@ -162,7 +162,7 @@ export const getDMSAdvisors = createAction<TDmsAdvisor[]>("SCEmployees/GetDMSAdv
 export const loadingDMSAdvisors = createAction<boolean>("SCEmployees/LoadingDMSAdvisors");
 export const loadDMSAdvisors = (serviceCenterId: number): AppThunk => dispatch => {
     dispatch(loadingDMSAdvisors(true));
-    Api.call(Api.endpoints.ServiceConsultants.GetDmsAdvisors, {urlParams: {id: serviceCenterId}})
+    Api.call(Api.endpoints.ServiceConsultants.Retrieve, {urlParams: {id: serviceCenterId}})
         .then(result => {
             if (result?.data) {
                 dispatch(getDMSAdvisors(result.data))
