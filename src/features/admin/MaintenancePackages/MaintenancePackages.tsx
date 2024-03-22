@@ -212,7 +212,7 @@ export const MaintenancePackages = () => {
                 count={packagesPaging.numberOfRecords}
                 page={packagesPageData.pageIndex}
                 onPageChange={handleChangePage}
-                rowsPerPageOptions={[5, 10, 20]}
+                rowsPerPageOptions={[5, 10, 20, 50]}
                 onRowsPerPageChange={handleChangeRows}
                 rowsPerPage={packagesPageData.pageSize}/>
             : null }
