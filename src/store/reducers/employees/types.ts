@@ -90,6 +90,7 @@ export type TEmployeeActions =
 export type TDmsAdvisor = {
     id: string;
     name: string;
+    role: EDmsRole|null;
 }
 export type TEmployeesState = {
     employeesList: IEmployee[];
@@ -181,4 +182,11 @@ export type TSetScheduleData = {
     employeeId: string;
     dayOfWeekSchedules: TDaySchedule[];
     serviceBookId?: number;
+}
+
+export enum EDmsRole {
+    None,
+    Advisor,
+    Technician,
+    ServiceManager
 }
