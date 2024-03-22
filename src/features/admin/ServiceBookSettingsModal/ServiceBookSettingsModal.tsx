@@ -108,6 +108,11 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
     }
 
     const onSuccess = () => {
+        if (typeof currentSetting?.gapSlotsType !== "undefined"
+            && typeof form.gapSlotsType !== "undefined"
+            && form.gapSlotsType?.value !== currentSetting.gapSlotsType) {
+            showMessage("The Unplanned Demand Settings were reset", "warning")
+        }
         setFormChecked(false);
         onClose();
         showMessage("Service Book updated")
@@ -118,8 +123,8 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
             const day = hoursOfOperations.find(item => item.dayOfWeek === el.day)
             const startTime = day?.from;
             const endTime = day?.to;
-            const isAfterStart = dayjs(el.time, timeSpanString).isSameOrAfter(dayjs(startTime, timeSpanString))
-            const isBeforeEnd = dayjs(el.time, timeSpanString).isSameOrBefore(dayjs(endTime, timeSpanString))
+            const isAfterStart = dayjs(el.time, timeSpanString).set('second', 0).isSameOrAfter(dayjs(startTime, timeSpanString))
+            const isBeforeEnd = dayjs(el.time, timeSpanString).set('second', 0).isSameOrBefore(dayjs(endTime, timeSpanString))
             return isAfterStart && isBeforeEnd
         } else return true
     }
@@ -148,9 +153,19 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
             isValid = false;
             showError('"Appointments Per Slots" must be equal or more than 0')
         }
-        if (form.technicianEfficiency && (form.technicianEfficiency < 0 || form.technicianEfficiency > 999)) {
-            if (form.technicianEfficiency < 0) showError('"Technician Efficiency" must be equal or more than 0')
-            isValid = false
+        if (form.technicianEfficiency) {
+            if (form.technicianEfficiency < 0) {
+                isValid = false
+                showError('"Technician Efficiency" must be equal or more than 0')
+            }
+            if (form.technicianEfficiency > 999) {
+                isValid = false
+                showError('"Technician Efficiency" must be less than 1000')
+            }
+            if (!Number.isInteger(+form.technicianEfficiency)) {
+                showError('"Technician Efficiency" must be a whole number')
+                isValid = false
+            }
         }
         if (form.cutOffTime.length && !form.cutOffTime.find(el => checkTimeItemIsValid(el))) {
             isValid = false;
@@ -167,7 +182,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                 cutOffTime: form.cutOffTime.map(el => ({day: el.day, value: el.time})),
                 serviceBookName: form.serviceBookName,
             };
-            if (form.isAdvisorStaffingFactor) data.isAdvisorStaffingFactor = form.isAdvisorStaffingFactor;
+            if (typeof form.isAdvisorStaffingFactor !== "undefined") data.isAdvisorStaffingFactor = form.isAdvisorStaffingFactor;
             if (editingItem?.serviceBookId) data.serviceBookId = editingItem.serviceBookId;
             if (editingItem?.serviceBookId && form.serviceBookName) data.serviceBookName = form.serviceBookName;
             if (form.technicianEfficiency !== null && form.technicianEfficiency >= 0) data.technicianEfficiency = form.technicianEfficiency;
@@ -197,8 +212,9 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                             name="serviceBookName"
                             label="Service Book Name"
                             placeholder="Type Name"
-                            disabled={!editingItem?.serviceBookId}
                             fullWidth
+                            required
+                            disabled
                             error={formIsChecked && !form.serviceBookName}
                             onChange={handleChange}
                             value={form.serviceBookName}
@@ -216,7 +232,8 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                             renderInput={autocompleteRender({
                                 label: "Appointment Gap Slots",
                                 placeholder: 'Appointment Gap Slots',
-                                error: formIsChecked && !form.gapSlotsType
+                                error: formIsChecked && !form.gapSlotsType,
+                                required: true
                             })}
                         />
                     </Grid>
@@ -276,8 +293,9 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                             fullWidth
                             type="number"
                             startAdornment={<InputAdornment position="start">%</InputAdornment>}
-                            error={formIsChecked && form.technicianEfficiency !== null && form.technicianEfficiency < 0}
-                            inputProps={{min: 0}}
+                            error={formIsChecked && form.technicianEfficiency !== null
+                                && (form.technicianEfficiency < 0 || form.technicianEfficiency > 999 || !Number.isInteger(+form.technicianEfficiency))}
+                            inputProps={{min: 0, step: 1}}
                             onChange={handleChange}
                             value={form.technicianEfficiency}
                         />

@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Button, Switch} from "@mui/material";
+import {Button, Switch, TablePagination} from "@mui/material";
 import {ContentTitle} from "../../../components/wrappers/ContentTitle/ContentTitle";
 import {RootState} from "../../../store/rootReducer";
 import {PackageAccordion} from "./PackageAccordion/PackageAccordion";
@@ -21,9 +21,11 @@ import {useModal} from "../../../hooks/useModal/useModal";
 import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {usePagination} from "../../../hooks/usePaginations/usePaginations";
+import {changePageData} from "../../../store/reducers/packages/actions";
 
 export const MaintenancePackages = () => {
-    const {packages: allPackages} = useSelector((state: RootState) => state.packages);
+    const {packages: allPackages, packagesPaging, packagesPageData, allPackagesLoading} = useSelector((state: RootState) => state.packages);
     const {loading, packagesOptionsLoading} = useSelector((state: RootState) => state.serviceCenters);
     const [packages, setPackages] = useState<IPackageByQuery[]>([]);
     const [expanded, setExpanded] = useState<TExpandedState>({});
@@ -38,6 +40,7 @@ export const MaintenancePackages = () => {
     const {onOpen: onOpenEdit, onClose: onCloseEdit, isOpen: isOpenEdit} = useModal();
     const {askConfirm} = useConfirm();
     const {selectedSC} = useSCs();
+    const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.packages.packagesPageData, changePageData);
 
     useEffect(() => {
         if (selectedSC) {
@@ -45,11 +48,10 @@ export const MaintenancePackages = () => {
             const options = MaintenanceOptionTypes.filter(item => selectedSC.maintenancePackageOptionTypes?.includes(item.value))
             setPresentedOptions(options);
         }
-    }, [selectedSC])
+    }, [selectedSC, packagesPageData])
 
     useEffect(() => {
         if (allPackages) setPackages(allPackages);
-        if (allPackages.length) setExpanded({ id: allPackages[0].id, isOpen: true})
     }, [allPackages])
 
     const handleAddPackage = () => {
@@ -112,6 +114,13 @@ export const MaintenancePackages = () => {
             }
         }
     }, [selectedSC, presentedOptions, askRemove, showError, allPackages])
+
+    const handleChangePage = async (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
+        await changePage(e, pageNumber);
+    }
+    const handleChangeRows = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        await changeRowsPerPage(e);
+    }
 
     return <>
         <AddPackageModal onClose={isEditing ? onEditModalClose : onClose} open={isOpen || isOpenEdit} isEditing={isEditing}/>
@@ -180,17 +189,32 @@ export const MaintenancePackages = () => {
         <div className={classes.titleWrapper}>
             <ContentTitle title="Maintenance Package Pricing"/>
         </div>
-        {packages.map((item: IPackageByQuery, index) => {
-            return <PackageAccordion
-                setIsEditing={setIsEditing}
-                onOpenEdit={onOpenEdit}
-                key={item.id}
-                title={item.name}
-                defaultExpanded={index === 0}
-                id={item.id}
-                expanded={expanded.id === item.id && expanded.isOpen}
-                onExpandIconClick={() => onAccordionChange(item.id)}
-            />
-        })}
+        <>{allPackagesLoading
+                ? <Loading/>
+            : packages.map((item: IPackageByQuery, index) => {
+                return <PackageAccordion
+                    setIsEditing={setIsEditing}
+                    onOpenEdit={onOpenEdit}
+                    key={item.id}
+                    title={item.name}
+                    defaultExpanded={index === 0}
+                    id={item.id}
+                    expanded={expanded.id === item.id && expanded.isOpen}
+                    onExpandIconClick={() => onAccordionChange(item.id)}
+                />
+            })
+        }</>
+
+        {packagesPaging?.numberOfRecords > 5
+            ? <TablePagination
+                className={classes.pagination}
+                component="div"
+                count={packagesPaging.numberOfRecords}
+                page={packagesPageData.pageIndex}
+                onPageChange={handleChangePage}
+                rowsPerPageOptions={[5, 10, 20, 50]}
+                onRowsPerPageChange={handleChangeRows}
+                rowsPerPage={packagesPageData.pageSize}/>
+            : null }
     </>
 }

@@ -42,14 +42,14 @@ export const RowData: TableRowDataType<ICapacitySetting>[] = [
         width: 120,
     },
     {
-        header: "Appointment Cut Off",
-        val: (el) => el.cutOffTime ? dayjs(el.cutOffTime, timeSpanString).format("h:mm") : '-',
+        header: `Appointment Cut Off`,
+        val: (el) => el.cutOffTime ? dayjs(el.cutOffTime, timeSpanString).format("h:mm a") : '-',
         align: "left",
         width: 120,
     },
     {
         header: "Technician Efficiency",
-        val: (el) => el.technicianEfficiency.toString(),
+        val: (el) => `${el.technicianEfficiency.toString()}%`,
         align: "left"
     },
     {
@@ -59,7 +59,7 @@ export const RowData: TableRowDataType<ICapacitySetting>[] = [
     },
     {
         header: "Advisor Staffing Factor",
-        val: (el) => el.advisorStaffingFactor ? 'On' : "Off",
+        val: (el) => el.isAdvisorStaffingFactor ? 'On' : "Off",
         align: "left",
         width: 135,
     }

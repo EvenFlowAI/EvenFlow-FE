@@ -38,7 +38,6 @@ export const updateCapacitySettingById = (data: ICapacitySettingRequestData, onE
     Api.call(Api.endpoints.CapacitySettings.Update, {data})
         .then(res => {
             if (res) {
-                // dispatch(loadCapacitySettingById(data.serviceCenterId, data.serviceBookId))
                 dispatch(loadCapacitySettings(data.serviceCenterId, dayjs().format("dddd")))
                 onSuccess()
             }

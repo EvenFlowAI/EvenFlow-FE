@@ -10,7 +10,7 @@ export interface ICapacitySetting {
     cutOffTime?: string;
     technicianEfficiency: number;
     avarageBillHoursPerRO: number;
-    advisorStaffingFactor?: string;
+    isAdvisorStaffingFactor?: string;
     serviceBookId?: number;
 }
 
