@@ -35,7 +35,7 @@ export interface IPod {
     serviceCenterId: number;
     description?: string;
     advisorId?: string;
-    advisor?: IAdvisorShort;
+    advisors: IAdvisorShort[];
     bays?: IBayShort[];
     technicians?: IAdvisorShort[];
     serviceRequests?: IAssignedServiceRequestShort[];
@@ -58,7 +58,7 @@ export interface IPodForm {
     serviceCenterId: number;
     name: string;
     description?: string;
-    advisorId?: string | null;
+    advisors?: string[];
     technicians?: string[];
     serviceRequests?: number[];
     bays?: number[];
