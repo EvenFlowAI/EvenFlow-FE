@@ -159,7 +159,7 @@ export const SelectOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
     }
 
     const handleBack = () => {
-       handleSetScreen('serviceNeeds');
+        handleSetScreen('serviceNeeds');
     }
 
     const addServices = () => {
@@ -180,46 +180,48 @@ export const SelectOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
     return (
         <StepWrapper>
             <Wrapper>
-                <SearchInput
-                    placeholder={t("Type here")}
-                    value={searchInput}
-                    fullWidth
-                    onChange={handleSearchChange}
-                    style={{flexShrink: 0}}
-                    variant="standard"
-                    InputProps={{
-                        startAdornment: <IconButton
-                            size="small">
-                            <Search />
-                        </IconButton>,
-                        disableUnderline: true,
-                    }}
-                />
+                {opsCodesList.length > 10
+                    ? <SearchInput
+                        placeholder={t("Type here")}
+                        value={searchInput}
+                        fullWidth
+                        onChange={handleSearchChange}
+                        style={{flexShrink: 0}}
+                        variant="standard"
+                        InputProps={{
+                            startAdornment: <IconButton
+                                size="small">
+                                <Search/>
+                            </IconButton>,
+                            disableUnderline: true,
+                        }}
+                    />
+                    : null}
                 <CodesWrapper>
                     {opsCodesList.map(s => {
                         return <CodeWrapper key={`${s.code} ${s.id}`}>
                             <Code
-                            key={s.id}
-                            label={s?.description ?? s.code}
-                            labelPlacement={"end"}
-                            value={s.id}
-                            control={
-                                <Checkbox
-                                    onChange={handleSelectCode}
-                                    value={s.id}
-                                    size={"small"}
-                                    checked={selectedOpsCodes.includes(s.id)}
-                                    color="primary"
-                                />
-                            }/>
+                                key={s.id}
+                                label={s?.description ?? s.code}
+                                labelPlacement={"end"}
+                                value={s.id}
+                                control={
+                                    <Checkbox
+                                        onChange={handleSelectCode}
+                                        value={s.id}
+                                        size={"small"}
+                                        checked={selectedOpsCodes.includes(s.id)}
+                                        color="primary"
+                                    />
+                                }/>
                             <PricesWrapper>
                                 {/*todo uncomment for offer new functionality*/}
                                 {/*{s.offer ? <OfferPrice style={{fontWeight: s.offer.type === EOfferType.FreeService ? 400 : 600}}>*/}
                                 {/*    {getOfferString(s.offer, Boolean(scProfile?.isRoundPrice))}*/}
                                 {/*</OfferPrice> : null}*/}
-                            {Boolean(s.price)
-                                ? <Price>${scProfile?.isRoundPrice ? s.price : s.price.toFixed(2)}</Price>
-                                : <InfoOutlined style={{paddingRight: 8, fontSize: '2rem'}}/>}
+                                {Boolean(s.price)
+                                    ? <Price>${scProfile?.isRoundPrice ? s.price : s.price.toFixed(2)}</Price>
+                                    : <InfoOutlined style={{paddingRight: 8, fontSize: '2rem'}}/>}
                             </PricesWrapper>
                         </CodeWrapper>
                     })}
