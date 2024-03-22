@@ -76,6 +76,8 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
                 data.showOnBooking = payload.showOnBooking
             }
             setEmployeeForm(data)
+        } else {
+            setEmployeeForm(initialEmployeeForm)
         }
     }, [props.open, payload, shortSC]);
 
