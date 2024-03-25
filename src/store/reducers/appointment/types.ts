@@ -117,7 +117,7 @@ export interface IAppointmentResponse {
     items: IAppointmentSlot[];
     searchedDateRange: ISearchedDateRange;
     slotGapMinutes: number;
-    consultantId?: string;
+    advisorId?: string;
     waitlistSettings?: IWaitListData;
 }
 
@@ -160,7 +160,7 @@ export interface IAppointmentSlotsRequest {
     serviceRequestIds: number[];
     customerId?: string;
     warrantyExpiration?: ParsableDate;
-    consultantId?: string | null;
+    advisorId?: string | null;
     valueServiceOfferIds?: number[];
     vehicle?: IVehicleForSlots;
     searchTerm?: string;

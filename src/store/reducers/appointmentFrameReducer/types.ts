@@ -167,7 +167,6 @@ export type TState = {
     packagePricingType: EPackagePricingType | null;
     packagePriceTitles: TPackagePrice[];
     packageEMenuType: EMaintenanceOptionType | null;
-    slotsConsultantId: string | null;
     shouldShowServiceCentersList: boolean;
     isAppointmentSaving: boolean;
     appointmentByKey: IAppointmentByKey | null;

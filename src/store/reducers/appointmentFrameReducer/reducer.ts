@@ -52,7 +52,6 @@ import {
     setSelectedServiceTypeOptions,
     setServiceOptionChanged,
     setServiceTypeOption,
-    setShowServiceCentersList,
     setSideBarActualSteps,
     setSideBarMenu,
     setSideBarSteps,
@@ -75,7 +74,6 @@ import {
 } from "./actions";
 import {EAppointmentTimingType} from "../appointment/types";
 import {EServiceType, TState} from "./types";
-import {getSlotsConsultantId} from "../appointment/actions";
 
 const initialState: TState = {
     service: null,
@@ -142,7 +140,6 @@ const initialState: TState = {
     packagePricingType: null,
     packagePriceTitles: [],
     packageEMenuType: null,
-    slotsConsultantId: null,
     shouldShowServiceCentersList: true,
     isAppointmentSaving: false,
     appointmentByKey: null,
@@ -174,7 +171,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, selectedPackage: payload};
     })
     .addCase(setAdvisor, (state, {payload}) => {
-        return {...state, advisor: payload, slotsConsultantId: payload ? null : state.slotsConsultantId};
+        return {...state, advisor: payload};
     })
     .addCase(setAnyAdvisorSelected, (state, {payload}) => {
         return {...state, isAnyAdvisorSelected: payload};
@@ -366,12 +363,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setPackageEMenuType, (state, {payload}) => {
         return {...state, packageEMenuType: payload}
-    })
-    .addCase(getSlotsConsultantId, (state, {payload}) => {
-        return {...state, slotsConsultantId: payload}
-    })
-    .addCase(setShowServiceCentersList, (state, {payload}) => {
-        return {...state, shouldShowServiceCentersList: payload}
     })
     .addCase(setAppointmentSaving, (state, {payload}) => {
         return {...state, isAppointmentSaving: payload}
