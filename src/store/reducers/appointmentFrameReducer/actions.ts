@@ -51,7 +51,6 @@ import {
     mapRecallsForRequest
 } from "../../../utils/utils";
 import {
-    getSlotsConsultantId,
     saveCustomerCache,
     selectAppointment,
     selectServiceValetAppointment,
@@ -331,7 +330,6 @@ export const clearSelectedServices = (keepCategories?: boolean): AppThunk => (di
     dispatch(setValueService(null));
     dispatch(selectSR(null));
     dispatch(setAdvisor(null));
-    dispatch(getSlotsConsultantId(null));
     dispatch(setTransportation(null));
     dispatch(setRecallsAreShown(false));
     dispatch(setSelectedRecalls([]))
@@ -661,9 +659,7 @@ const findSelectedConsultant = (id: string): AppThunk => (dispatch, getState) =>
 export const updateConsultant = (advisor: TAppointmentAdvisor|null|undefined): AppThunk => dispatch => {
     dispatch(setAnyAdvisorSelected(advisor?.isAnySelected ?? true))
     if (advisor?.id) {
-        if (advisor?.isAnySelected) {
-            dispatch(getSlotsConsultantId(advisor.id))
-        } else {
+        if (!advisor?.isAnySelected) {
             dispatch(findSelectedConsultant(advisor.id))
         }
     }
@@ -752,7 +748,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         reminderTypes: appointmentFrame.reminders,
         serviceCenterId: id,
         advisor: {
-            id: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
+            id: appointmentFrame.advisor?.id ?? null,
             isAnySelected: !(Boolean(appointmentFrame.advisor))
         },
         transportationOptionId,
@@ -880,7 +876,7 @@ export const loadAppointmentRequestsPrices = (serviceCenterId: number): AppThunk
         time,
         serviceCenterId,
         appointmentTimingType,
-        advisorId: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
+        advisorId: appointmentFrame.advisor?.id,
         zipCode: appointmentFrame.zipCode ?? null,
         serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
         vehicle,
