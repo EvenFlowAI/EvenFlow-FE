@@ -9,7 +9,7 @@ import {AppointmentsListModal} from "./AppointmentsListModal/AppointmentsListMod
 import {AppointmentsTable} from "./AppointmentsTable/AppointmentsTable";
 import {RootState} from "../../../store/rootReducer";
 import {IAppointmentsRequest} from "../../../store/reducers/appointments/types";
-import {IAppointment} from "../../../api/types";
+import {EReportingStatus, IAppointment} from "../../../api/types";
 import {IOrder, Titles, TParsableDate} from "../../../types/types";
 import {TFilters, TView} from "./types";
 import {useModal} from "../../../hooks/useModal/useModal";
@@ -27,7 +27,7 @@ const initialFilters = {
     searchTerm: '',
     serviceBook: null,
     scheduler: null,
-    reportingStatus: '',
+    reportingStatus: EReportingStatus.Active,
     date: null,
     scId: null,
     pageData: initialPaging,
@@ -56,8 +56,7 @@ export const Appointments = () => {
                 orderBy: order.orderBy,
                 isAscending: order.isAscending,
                 date: dayjs(filters.date).add(dayjs(filters.date).utcOffset(), 'minute'),
-                // @ts-ignore
-                reportingStatus: filters.reportingStatus ? +filters.reportingStatus : undefined,
+                reportingStatus: filters.reportingStatus,
                 scheduler: filters.scheduler ? {id: filters.scheduler.id, type: filters.scheduler.type} : null,
                 serviceBookId,
                 searchTerm: filters.searchTerm,
