@@ -880,7 +880,7 @@ export const loadAppointmentRequestsPrices = (serviceCenterId: number): AppThunk
         time,
         serviceCenterId,
         appointmentTimingType,
-        consultantId: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
+        advisorId: appointmentFrame.advisor?.id ?? appointmentFrame?.slotsConsultantId,
         zipCode: appointmentFrame.zipCode ?? null,
         serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
         vehicle,

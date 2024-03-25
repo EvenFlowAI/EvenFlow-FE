@@ -68,13 +68,13 @@ export const setWaitListSettings = createAction<IWaitListData|null>("Appointment
 
 export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: TParsableDate) => void, loadCB?: TCallback): AppThunk => async dispatch => {
     try {
-        const {data: {items, searchedDateRange, slotGapMinutes, consultantId, waitlistSettings}} = await Api.call<IAppointmentResponse>(
+        const {data: {items, searchedDateRange, slotGapMinutes, advisorId, waitlistSettings}} = await Api.call<IAppointmentResponse>(
             Api.endpoints.AppointmentSlots.GetSlots,
             {data}
         );
         const res = dispatch(getAppointmentSlots(items));
         if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
-        dispatch(getSlotsConsultantId(consultantId ?? null))
+        dispatch(getSlotsConsultantId(advisorId ?? null))
         dispatch(setWaitListSettings(waitlistSettings ?? null))
         if (loadCB) {
             loadCB();
