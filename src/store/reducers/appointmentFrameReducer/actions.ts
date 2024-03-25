@@ -40,13 +40,14 @@ import {
     AppThunk,
     IMaintenanceItem,
     IRecallByVin,
-    PaginatedAPIResponse, TCallback,
+    PaginatedAPIResponse,
+    TCallback,
     TParsableDate,
     TScreen,
     TView
 } from "../../../types/types";
 import {
-    collectServiceRequestIds,
+    collectServiceRequestIds, collectServiceRequestsForSearch,
     decodeSCID,
     getCategories,
     getCategoriesForAppointment,
@@ -947,7 +948,7 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
             podId: slotPodId,
             makeId: makeId ?? null,
             modelId: model?.id ?? null,
-            serviceRequestIds: collectServiceRequestIds(service, subService, selectedPackage, selectedSR, selectedRecalls),
+            serviceRequestIds: collectServiceRequestsForSearch(service, subService, selectedPackage, selectedSR, selectedRecalls),
             modelYear: selectedVehicle.year,
             customerType: userType ?? EUserType.New,
             serviceType: serviceTypeOption?.type ?? EServiceType.VisitCenter,
@@ -958,9 +959,9 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
             zipCode,
         }
         if (appointmentByKey?.id) data.appointmentRequestId = appointmentByKey.id;
+        if (data.serviceType === EServiceType.VisitCenter) delete data.zipCode;
         Api.call<ICustomerConsentBooking[]>(Api.endpoints.CustomerConsent.Search, {data})
             .then(res => {
-                console.log(res?.data)
                 if (res?.data?.length) {
                     dispatch(getCustomerConsentsBooking(res.data));
                     dispatch(setConsentOpen(true));

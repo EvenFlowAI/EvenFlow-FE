@@ -253,7 +253,7 @@ export interface ISearchConsentsData {
     customerType: EUserType;
     appointmentTime: string;
     advisorId: string|null;
-    zipCode: string;
+    zipCode?: string;
     serviceType: EServiceType;
     transportationOptionId: number|null;
     isWaitlistEnabled: boolean;

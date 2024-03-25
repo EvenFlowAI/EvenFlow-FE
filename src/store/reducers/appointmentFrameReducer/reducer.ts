@@ -1,7 +1,7 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     deleteLastScreen,
-    getAppointmentRequestsPrices,
+    getAppointmentRequestsPrices, getCustomerConsentsBooking,
     getMakes,
     getModels,
     getSeriesModels,
@@ -425,6 +425,9 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setAcceptedConsentIds, (state, {payload}) => {
         return {...state, acceptedConsentIds: payload}
+    })
+    .addCase(getCustomerConsentsBooking, (state, {payload}) => {
+        return {...state, consents: payload}
     })
     .addCase(deleteLastScreen, (state) => {
         const screens = state.passedScreens.slice(0, state.passedScreens.length - 1)
