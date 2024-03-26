@@ -1,6 +1,14 @@
 import {ActionCreator} from "redux";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
-import {AppThunk, IOrder, IPageRequest, PaginatedAPIResponse, Roles} from "../../../types/types";
+import {
+    AppThunk,
+    IOrder,
+    IPageRequest,
+    PaginatedAPIResponse,
+    Roles,
+    TArgCallback,
+    TCallback
+} from "../../../types/types";
 import {
     IBaseScheduleByEmployee,
     IBaseSummary,
@@ -288,14 +296,16 @@ export const loadAssignmentSettings = (serviceCenterId: number): AppThunk => dis
         .finally(() => dispatch(loading(false)))
 }
 
-export const updateAssignmentSettings = (data: TUpdateAssignmentSettingsData): AppThunk => dispatch => {
+export const updateAssignmentSettings = (data: TUpdateAssignmentSettingsData, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
     dispatch(loading(true))
     Api.call(Api.endpoints.Employees.UpdateAssignmentSettings, {data})
         .then(result => {
             if (result) dispatch(loadAssignmentSettings(data.serviceCenterId));
+            onSuccess()
         })
         .catch(err => {
             console.log('update employee assignment settings error', err)
+            onError(err)
         })
         .finally(() => dispatch(loading(false)))
 }

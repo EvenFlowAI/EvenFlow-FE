@@ -223,7 +223,7 @@ export enum EDmsRole {
 }
 
 export type TServiceBookSetting = {
-    serviceBookId: number;
+    serviceBookId?: number;
     employeeAssignmentSettings: TEmployeeAssignmentSetting[];
 }
 
