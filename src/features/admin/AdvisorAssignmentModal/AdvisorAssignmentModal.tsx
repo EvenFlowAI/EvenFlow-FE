@@ -4,16 +4,13 @@ import {Autocomplete, Button, Table, TableBody, TableCell, TableHead} from "@mui
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {
-    IAdvisorAssignment
-} from "../../../store/reducers/serviceCenters/types";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {updateAdvisorAssignment} from "../../../store/reducers/serviceCenters/actions";
 import {TableRow} from "../../../components/styled/TableRow";
 import {
     SelectsWrapper,
     SubCellsWrapper,
-    SubCellTitle, TCellData,
+    SubCellTitle,
+    TCellData,
     THeadCell,
     THeadCellWithSub,
     useStyles
@@ -36,13 +33,13 @@ const methodOptions: TOption[] = getOptions(Object.keys(EAdvisorAssignMethod).fi
 
 const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {loading, assignmentSettings} = useSelector((state: RootState) => state.employees);
-    const [primaryMethod, setPrimaryMethod] = useState<EAdvisorAssignMethod|null>(null);
-    const [secondaryMethod, setSecondaryMethod] = useState<EAdvisorAssignMethod|null>(null);
-    const [noAssignment, setNoAssignment] = useState<boolean>(false);
     const [data, setData] = useState<IEmployeeAssignmentSetting[]>([]);
     const {selectedSC} = useSCs();
-    const isSecondaryDisabled = useMemo(() => primaryMethod !== EAdvisorAssignMethod.LastAdvisor
-        || noAssignment,[primaryMethod])
+
+    const advisorPrimaryMethod = data.find(item => item.employeeAssignmentSettings
+        .find(el => el.role === 'Advisor')?.methods?.find(el => el.level === EAssignmentLevel.Primary)?.type === EAdvisorAssignMethod.LastAdvisor);
+    const techPrimaryMethod = data.find(item => item.employeeAssignmentSettings
+        .find(el => el.role === 'Technician')?.methods?.find(el => el.level === EAssignmentLevel.Primary)?.type === EAdvisorAssignMethod.LastAdvisor);
 
     const { classes  } = useStyles();
     const dispatch = useDispatch();
@@ -60,9 +57,6 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
     }, [assignmentSettings])
 
     const onCancel = () => {
-        setPrimaryMethod(null);
-        setSecondaryMethod(null);
-        setNoAssignment(false);
         props.onClose();
     }
 
@@ -76,9 +70,7 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
     }
 
     const onSave = () => {
-        const data: IAdvisorAssignment = {primaryMethod};
-        if (secondaryMethod !== null) data.secondaryMethod = secondaryMethod;
-        selectedSC && dispatch(updateAdvisorAssignment(selectedSC.id, data, onSuccess, onError))
+
     }
 
     const onMethodChange = useCallback((item: IEmployeeAssignmentSetting, level: EAssignmentLevel, role: "Advisor"|"Technician") =>
@@ -90,12 +82,15 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                 methodToUpdate = methodToUpdate
                     ? {...methodToUpdate, type: value?.value ?? null}
                     : {level, type: value?.value ?? null}
-                roleToUpdate = {...roleToUpdate, methods: roleToUpdate.methods.filter(el => el.level === level).concat(methodToUpdate)}
+                roleToUpdate = {...roleToUpdate, methods: roleToUpdate.methods.filter(el => el.level !== level).concat(methodToUpdate)}
                 const newItem = {
                     ...itemToUpdate,
                     employeeAssignmentSettings: item.employeeAssignmentSettings.filter(el => el.role !== role).concat(roleToUpdate)
                 }
-                setData(data.filter(el => el.serviceBookId !== item.serviceBookId).concat(newItem))
+                setData(data.filter(el => el.serviceBookId
+                    ? el.serviceBookId !== item.serviceBookId
+                    : el.serviceBookName !== item.serviceBookName
+                ).concat(newItem))
             }
         }, [data])
 
@@ -112,19 +107,19 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                     : <Table style={{border: '1px solid #DADADA'}}>
                         <TableHead>
                             <TableRow>
-                                <THeadCell><div>Service Book</div></THeadCell>
-                                <THeadCellWithSub style={{borderRight: '1px solid #DADADA', borderLeft: '1px solid #DADADA'}}>
-                                    <SubCellTitle>Advisors</SubCellTitle>
-                                    <SubCellsWrapper>
-                                        <div>Primary</div>
-                                        <div style={{backgroundColor: isSecondaryDisabled ? "#DADADA" : ''}}>Secondary</div>
+                                <THeadCell key="serviceBook"><div>Service Book</div></THeadCell>
+                                <THeadCellWithSub key="advisors" style={{borderRight: '1px solid #DADADA', borderLeft: '1px solid #DADADA'}}>
+                                    <SubCellTitle key="title">Advisors</SubCellTitle>
+                                    <SubCellsWrapper key="subWrapper">
+                                        <div key="primary">Primary</div>
+                                        <div key="secondary" style={{backgroundColor: !advisorPrimaryMethod ? "#DADADA" : ''}}>Secondary</div>
                                     </SubCellsWrapper>
                                 </THeadCellWithSub>
-                                <THeadCellWithSub>
-                                    <SubCellTitle>Technicians</SubCellTitle>
-                                    <SubCellsWrapper>
-                                        <div>Primary</div>
-                                        <div style={{backgroundColor: isSecondaryDisabled ? "#DADADA" : ''}}>Secondary</div>
+                                <THeadCellWithSub key="technicians">
+                                    <SubCellTitle key="title">Technicians</SubCellTitle>
+                                    <SubCellsWrapper key="subWrapper">
+                                        <div key="primary">Primary</div>
+                                        <div key="secondary" style={{backgroundColor: !techPrimaryMethod ? "#DADADA" : ''}}>Secondary</div>
                                     </SubCellsWrapper>
                                 </THeadCellWithSub>
                             </TableRow>
@@ -145,7 +140,7 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                                     <TableCell key="name" style={{borderRight: "1px solid #DADADA"}}>{item.serviceBookName}</TableCell>
                                     <TCellData key="advisors">
                                         <SelectsWrapper>
-                                            <div>
+                                            <div key="advisor">
                                                 <Autocomplete
                                                     fullWidth
                                                     options={methodOptions}
@@ -159,7 +154,7 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                                                     })}
                                                 />
                                             </div>
-                                            <div style={{backgroundColor: isAdvisorSecondaryDisabled ? "#DADADA" : ''}}>
+                                            <div style={{backgroundColor: isAdvisorSecondaryDisabled ? "#DADADA" : ''}} key="technician">
                                                 <Autocomplete
                                                     fullWidth
                                                     options={methodOptions}
@@ -178,7 +173,7 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                                     </TCellData>
                                     <TCellData key="technicians">
                                         <SelectsWrapper>
-                                            <div>
+                                            <div key="advisor">
                                                 <Autocomplete
                                                     fullWidth
                                                     options={methodOptions}
@@ -192,7 +187,7 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                                                     })}
                                                 />
                                             </div>
-                                            <div style={{backgroundColor: isTechSecondaryDisabled ? "#DADADA" : ''}}>
+                                            <div style={{backgroundColor: isTechSecondaryDisabled ? "#DADADA" : ''}} key="technician">
                                                 <Autocomplete
                                                     fullWidth
                                                     options={methodOptions}
