@@ -43,11 +43,3 @@ export const SwitcherWrapper = styled('div')({
     gap: 20
 })
 
-export const PickersWrapper = styled("div")({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 24,
-    fontSize: 18,
-    fontWeight: 700
-})

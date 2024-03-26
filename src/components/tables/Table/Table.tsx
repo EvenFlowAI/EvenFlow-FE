@@ -39,6 +39,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
         smallHeaderFont: Boolean(props.smallHeaderFont),
         superCompact: Boolean(props.superCompact),
         borderHeader: Boolean(props.borderHeader),
+        withBorders: Boolean(props.withBorders),
     }), [props])
 
     const handleChangePage = (e: React.MouseEvent | null, newPage: number) => {
@@ -114,7 +115,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                                     </StyledTableCell>
                                 ))}
                                 {(props.actions && !props.viewMode)
-                                    ?   <StyledTableCell align="right" {...styleProps}>
+                                    ?   <StyledTableCell align={props.actionsAlign ?? "right"} {...styleProps}>
                                             {props.actions(row)}
                                         </StyledTableCell>
                                     : null}

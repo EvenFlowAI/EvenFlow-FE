@@ -309,6 +309,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                                 style: {borderRadius: 4},
                                 size: "small"
                             }}
+                            disableCloseOnSelect
                             disabled={podsLoading || loading}
                             getOptionLabel={i => i.fullName}
                             isOptionEqualToValue={(o, s) => o.id === s.id}

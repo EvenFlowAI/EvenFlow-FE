@@ -238,6 +238,47 @@ export const collectServiceRequestIds = (
     return Array.from(set);
 }
 
+export const collectServiceRequestsForSearch = (
+    s: IServiceCategory | null,
+    sub: IServiceCategory | null,
+    selectedPackage?: IPackageOptions | null,
+    individualOpsCodes?: number[],
+    selectedRecalls?: IRecallByVin[]): number[] => {
+    let ids = [];
+
+    if (selectedRecalls?.length) {
+        selectedRecalls.forEach(item => ids.push(item.serviceRequestId))
+    }
+    if (individualOpsCodes?.length) {
+        for (let c of individualOpsCodes) {
+            ids.push(c);
+        }
+    }
+    if (selectedPackage) {
+        for (let c of selectedPackage.serviceRequests) {
+            ids.push(c.id)
+        }
+        for (let c of selectedPackage.complimentaryServices) {
+            ids.push(c.id)
+        }
+        for (let c of selectedPackage.intervalUpsells) {
+            ids.push(c.id)
+        }
+    }
+    if (s) {
+        for (let c of s.serviceRequests) {
+            ids.push(c.id)
+        }
+    }
+    if (sub) {
+        for (let c of sub.serviceRequests) {
+            ids.push(c.id)
+        }
+    }
+    const set = new Set(ids)
+    return Array.from(set);
+}
+
 export const getOfferString = (offer: IOfferForCategory, isRoundPrice: boolean): string => {
     switch (offer.type) {
         case EOfferType.AmountOff:

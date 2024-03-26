@@ -5,7 +5,7 @@ import {
     setPricingOptionLoading,
     setServiceValetPrisingByDistance,
     setServiceValetPrisingByZones,
-    setServiceValetPrisingOption,
+    setServiceValetPrisingOption, setSVZonesShort,
     setZones
 } from "./actions";
 import {EAncillaryPriceType} from "../mobileService/types";
@@ -19,6 +19,7 @@ const initialState: TState = {
     pricingByDistance: [],
     isPricingByZoneLoading: false,
     ancillaryPriceType: EAncillaryPriceType.Zone,
+    svZonesShort: [],
 }
 
 export const serviceValetReducer = createReducer<TState>(initialState, builder => builder
@@ -42,5 +43,8 @@ export const serviceValetReducer = createReducer<TState>(initialState, builder =
     })
     .addCase(setPricingOptionLoading, (state, {payload}) => {
         return {...state, isPricingByZoneLoading: payload}
+    })
+    .addCase(setSVZonesShort, (state, {payload}) => {
+        return {...state, svZonesShort: payload}
     })
 )
