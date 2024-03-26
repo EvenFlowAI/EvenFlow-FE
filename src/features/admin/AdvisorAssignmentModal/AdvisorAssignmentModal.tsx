@@ -32,12 +32,12 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
     const isAdvisorSecondaryEnabled = useMemo(() => {
         return data.find(item => item.employeeAssignmentSettings
             .find(el => el.role === 'Advisor')?.methods
-            ?.find(el => el.level === EAssignmentLevel.Primary)?.type === EAdvisorAssignMethod.LastAdvisor);
+            ?.find(el => el.level === EAssignmentLevel.Primary)?.type === EAdvisorAssignMethod.LastEmployee);
     }, [data])
     const isTechSecondaryEnabled = useMemo(() => {
         return data.find(item => item.employeeAssignmentSettings
             .find(el => el.role === 'Technician')?.methods
-            ?.find(el => el.level === EAssignmentLevel.Primary)?.type === EAdvisorAssignMethod.LastAdvisor);
+            ?.find(el => el.level === EAssignmentLevel.Primary)?.type === EAdvisorAssignMethod.LastEmployee);
     }, [data])
 
     useEffect(() => {
@@ -87,7 +87,7 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                 methodToUpdate = methodToUpdate
                     ? {...methodToUpdate, type: value?.value ?? null}
                     : {level, type: value?.value ?? null}
-                if (methodToUpdate.level === EAssignmentLevel.Primary && value?.value !== EAdvisorAssignMethod.LastAdvisor) {
+                if (methodToUpdate.level === EAssignmentLevel.Primary && value?.value !== EAdvisorAssignMethod.LastEmployee) {
                     roleToUpdate = {...roleToUpdate, methods: [methodToUpdate, {level: EAssignmentLevel.Secondary, type: null}]}
                 } else {
                     roleToUpdate = {...roleToUpdate, methods: roleToUpdate.methods.filter(el => el.level !== level).concat(methodToUpdate)}

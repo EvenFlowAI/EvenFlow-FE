@@ -28,8 +28,8 @@ const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
         .find(el => el.role === 'Advisor')?.methods?.find(el => el.level === EAssignmentLevel.Secondary)?.type;
     const technicianSecondaryMethod = item.employeeAssignmentSettings
         .find(el => el.role === 'Technician')?.methods?.find(el => el.level === EAssignmentLevel.Secondary)?.type;
-    const isAdvisorSecondaryDisabled = advisorPrimaryMethod !== EAdvisorAssignMethod.LastAdvisor
-    const isTechSecondaryDisabled = technicianPrimaryMethod !== EAdvisorAssignMethod.LastAdvisor
+    const isAdvisorSecondaryDisabled = advisorPrimaryMethod !== EAdvisorAssignMethod.LastEmployee
+    const isTechSecondaryDisabled = technicianPrimaryMethod !== EAdvisorAssignMethod.LastEmployee
 
     return <TableRow key={item.serviceBookId ?? item.serviceBookName}>
         <TableCell key="name" style={{borderRight: "1px solid #DADADA"}}>{item.serviceBookName}</TableCell>

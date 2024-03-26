@@ -71,7 +71,7 @@ export type TGetScheduleTimeByEmployee = {type: "Employees/GetScheduleTimeByEmpl
 export enum EAdvisorAssignMethod {
     Rotational,
     MaxCapacity,
-    LastAdvisor,
+    LastEmployee,
     NoAssignment
 }
 
