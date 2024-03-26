@@ -14,15 +14,9 @@ import {ReactComponent as LaborRateIcon} from "../../../assets/img/labor_rate.sv
 import {ReactComponent as HoursIcon} from "../../../assets/img/Icon 2 Hours of operation.svg";
 import {ReactComponent as AddressIcon} from "../../../assets/img/Icon_1_Address.svg";
 import {ReactComponent as BaysIcon} from "../../../assets/img/Icon_6 _Bays.svg";
-import {ReactComponent as RemindersIcon} from "../../../assets/img/Icon_36px_Appointment_reminders.svg";
 import {ReactComponent as BreaksIcon} from "../../../assets/img/Icon 4 Breaks.svg";
 import {ReactComponent as LockOutlined} from "../../../assets/img/Icon 5 Holidays.svg";
-import {ReactComponent as AdvisorIcon} from "../../../assets/img/advisor_assignment.svg";
-import {ReactComponent as NotificationsIcon} from "../../../assets/img/notifications.svg";
-import RemindersModal from "../../../features/admin/RemindersModal/RemindersModal";
 import LaborRateModal from "../../../features/admin/LaborRateModal/LaborRateModal";
-import AdvisorAssignmentModal from "../../../features/admin/AdvisorAssignmentModal/AdvisorAssignmentModal";
-import ManageNotificationsModal from "../../../features/admin/ManageNotificationsModal/ManageNotificationsModal";
 import {useStyles} from "./styles";
 import {TCountData, TItem} from "./types";
 import {useModal} from "../../../hooks/useModal/useModal";
@@ -71,24 +65,9 @@ export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChi
         isOpen: isBaysOpen
     } = useModal();
     const {
-        onClose: onCloseReminders,
-        onOpen: onOpenReminders,
-        isOpen: isOpenReminders,
-    } = useModal();
-    const {
         onClose: onCloseLaborRate,
         onOpen: onOpenLaborRate,
         isOpen: isOpenLaborRate,
-    } = useModal();
-    const {
-        onClose: onCloseAdvisorAssignment,
-        onOpen: onOpenAdvisorAssignment,
-        isOpen: isOpenAdvisorAssignment,
-    } = useModal();
-    const {
-        onClose: onCloseManageNotifications,
-        onOpen: onOpenManageNotifications,
-        isOpen: isOpenManageNotifications,
     } = useModal();
 
     const items: TItem[] = [
@@ -98,9 +77,6 @@ export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChi
         {label: "Breaks", icon: <BreaksIcon />, action: onOpenB},
         {label: "Bays", icon: <BaysIcon />, action: onOpenBays},
         {label: "Labor Rate", icon: <LaborRateIcon />, action: onOpenLaborRate},
-        {label: "Appointment Reminders", icon: <RemindersIcon />, action: onOpenReminders},
-        {label: "Advisor Assignment", icon: <AdvisorIcon />, action: onOpenAdvisorAssignment},
-        {label: "Service Center Notifications", icon: <NotificationsIcon />, action: onOpenManageNotifications},
     ];
 
     useEffect(() => {
@@ -149,9 +125,6 @@ export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChi
         <HolidaysModal viewMode={isCCRView} open={isHOpen} onClose={onCloseH} />
         <BreaksModal viewMode={isCCRView} open={isBOpen} onClose={onCloseB} />
         <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
-        <RemindersModal open={isOpenReminders} onClose={onCloseReminders}/>
         <LaborRateModal open={isOpenLaborRate} onClose={onCloseLaborRate}/>
-        <AdvisorAssignmentModal open={isOpenAdvisorAssignment} onClose={onCloseAdvisorAssignment}/>
-        <ManageNotificationsModal open={isOpenManageNotifications} onClose={onCloseManageNotifications}/>
     </div>
 }
