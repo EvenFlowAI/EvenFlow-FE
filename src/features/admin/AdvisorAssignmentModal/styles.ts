@@ -62,6 +62,16 @@ export const TCellWithSub = styled(TableCell)({
     },
 })
 
+export const TCellData = styled(TableCell)({
+    padding: 0,
+    borderRight: '1px solid #DADADA',
+    '& > div': {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+})
+
 export const SubCellsWrapper = styled("div")({
     display: 'flex',
     justifyContent: "space-between",
@@ -78,6 +88,25 @@ export const SubCellsWrapper = styled("div")({
         '&:first-child': {
             borderRight: '1px solid #DADADA'
         }
+    },
+})
+
+export const SelectsWrapper = styled("div")({
+    display: 'flex',
+    justifyContent: "space-between",
+    alignItems: 'center',
+    color: "#858585",
+    fontSize: 16,
+    fontWeight: 700,
+    '& > div': {
+        width: "100%",
+        display: 'flex',
+        justifyContent: "space-between",
+        alignItems: 'center',
+        padding: '10px 16px',
+        '&:first-child': {
+            borderRight: '1px solid #DADADA',
+        },
     },
 })
 

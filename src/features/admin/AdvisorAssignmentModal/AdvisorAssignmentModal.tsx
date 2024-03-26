@@ -10,7 +10,14 @@ import {
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {updateAdvisorAssignment} from "../../../store/reducers/serviceCenters/actions";
 import {TableRow} from "../../../components/styled/TableRow";
-import {SubCellsWrapper, SubCellTitle, TCellWithSub, THeadCell, THeadCellWithSub, useStyles} from "./styles";
+import {
+    SelectsWrapper,
+    SubCellsWrapper,
+    SubCellTitle, TCellData,
+    THeadCell,
+    THeadCellWithSub,
+    useStyles
+} from "./styles";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
@@ -135,11 +142,12 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                                 const isAdvisorSecondaryDisabled = advisorPrimaryMethod !== EAdvisorAssignMethod.LastAdvisor
                                 const isTechSecondaryDisabled = technicianPrimaryMethod !== EAdvisorAssignMethod.LastAdvisor
                                 return <TableRow key={item.serviceBookId ?? item.serviceBookName}>
-                                    <TableCell key="name">{item.serviceBookName}</TableCell>
-                                    <TCellWithSub key="advisors">
-                                        <SubCellsWrapper>
+                                    <TableCell key="name" style={{borderRight: "1px solid #DADADA"}}>{item.serviceBookName}</TableCell>
+                                    <TCellData key="advisors">
+                                        <SelectsWrapper>
                                             <div>
                                                 <Autocomplete
+                                                    fullWidth
                                                     options={methodOptions}
                                                     isOptionEqualToValue={(o, v) => o.value === v.value}
                                                     getOptionLabel={i => i.name}
@@ -153,6 +161,7 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                                             </div>
                                             <div style={{backgroundColor: isAdvisorSecondaryDisabled ? "#DADADA" : ''}}>
                                                 <Autocomplete
+                                                    fullWidth
                                                     options={methodOptions}
                                                     disabled={isAdvisorSecondaryDisabled}
                                                     isOptionEqualToValue={(o, v) => o.value === v.value}
@@ -165,12 +174,13 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                                                     })}
                                                 />
                                             </div>
-                                        </SubCellsWrapper>
-                                    </TCellWithSub>
-                                    <TCellWithSub key="technicians">
-                                        <SubCellsWrapper>
+                                        </SelectsWrapper>
+                                    </TCellData>
+                                    <TCellData key="technicians">
+                                        <SelectsWrapper>
                                             <div>
                                                 <Autocomplete
+                                                    fullWidth
                                                     options={methodOptions}
                                                     isOptionEqualToValue={(o, v) => o.value === v.value}
                                                     getOptionLabel={i => i.name}
@@ -184,6 +194,7 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                                             </div>
                                             <div style={{backgroundColor: isTechSecondaryDisabled ? "#DADADA" : ''}}>
                                                 <Autocomplete
+                                                    fullWidth
                                                     options={methodOptions}
                                                     disabled={isTechSecondaryDisabled}
                                                     isOptionEqualToValue={(o, v) => o.value === v.value}
@@ -196,8 +207,8 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                                                     })}
                                                 />
                                             </div>
-                                        </SubCellsWrapper>
-                                    </TCellWithSub>
+                                        </SelectsWrapper>
+                                    </TCellData>
                                 </TableRow>
                             })}
                         </TableBody>
