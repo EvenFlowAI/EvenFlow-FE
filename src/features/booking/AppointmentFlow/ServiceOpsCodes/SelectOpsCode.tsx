@@ -180,7 +180,7 @@ export const SelectOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
     return (
         <StepWrapper>
             <Wrapper>
-                {opsCodesList.length > 10
+                {opsCodesList.length > 10 || searchInput.length
                     ? <SearchInput
                         placeholder={t("Type here")}
                         value={searchInput}
