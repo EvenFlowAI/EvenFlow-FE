@@ -1,7 +1,8 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
     EMaintenanceOptionType,
-    EServiceCenterName, IAddressData,
+    EServiceCenterName,
+    IAddressData,
     IAppointmentByKey,
     IConsultantsRequestData,
     ICreateAppointmentResp,
@@ -14,39 +15,43 @@ import {
     ITransportation,
     TAppointmentAdvisor
 } from "../../../api/types";
-import {
-    EAppointmentTimingType,
-    EReminderType,
-    IMake,
-    IServiceRequestPrice,
-    IVehicle,
-} from "../appointment/types";
+import {EAppointmentTimingType, EReminderType, IMake, IServiceRequestPrice, IVehicle,} from "../appointment/types";
 import {
     EPackagePricingType,
     EServiceType,
     EUserType,
     IAncillaryByZipRequest,
-    IAppointmentId, ICreateAppointmentRequest,
+    IAppointmentId,
+    ICreateAppointmentRequest,
+    ICustomerConsentBooking,
+    ISearchConsentsData,
     IServiceOffer,
     IValueService,
-    TAncillaryPriceByZip, TDriverForRequest,
+    TAncillaryPriceByZip,
+    TDriverForRequest,
     TEditingPosition,
     TLanguage,
-    TMaintenanceDetails, TMaintenanceOption, TVehicleForRequest,
+    TMaintenanceDetails,
+    TMaintenanceOption,
+    TVehicleForRequest,
     TYear
 } from "./types";
 import {
     AppThunk,
     IMaintenanceItem,
     IRecallByVin,
-    PaginatedAPIResponse, TParsableDate,
+    PaginatedAPIResponse,
+    TCallback,
+    TParsableDate,
     TScreen,
     TView
 } from "../../../types/types";
 import {
-    collectServiceRequestIds,
+    collectServiceRequestIds, collectServiceRequestsForSearch,
     decodeSCID,
-    getCategories, getCategoriesForAppointment, getVehicleData,
+    getCategories,
+    getCategoriesForAppointment,
+    getVehicleData,
     getYearOptions,
     mapRecallsForRequest
 } from "../../../utils/utils";
@@ -70,6 +75,7 @@ import {setAppointmentsLoading} from "../appointments/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 import {setLoading} from "../slotScoring/actions";
+import {setConsentOpen} from "../modals/actions";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -339,6 +345,7 @@ export const clearSelectedServices = (keepCategories?: boolean): AppThunk => (di
 export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dispatch) => {
     dispatch(clearSelectedServices(keepCategories));
     dispatch(selectAppointment(null));
+    dispatch(setAcceptedConsentIds([]));
     dispatch(selectServiceValetAppointment(null));
     dispatch(setTiming(null));
     dispatch(setFrameDescription(''));
@@ -350,6 +357,7 @@ export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dis
     dispatch(setAppointmentNotes(''))
     dispatch(setConsultants([]));
     dispatch(setWaitListSettings(null));
+    dispatch(setAcceptedConsentIds([]));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
@@ -770,6 +778,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
             ? addressData
             : null,
         isWaitlist: Boolean(isWaitlist),
+        customerConsentIds: appointmentFrame.acceptedConsentIds,
     };
 
     if (isAdmin) delete data.schedulerType;
@@ -891,5 +900,74 @@ export const loadAppointmentRequestsPrices = (serviceCenterId: number): AppThunk
                 console.log('get appointment requests prices list err', err)
             })
             .finally(() => dispatch(setAppointmentsLoading(false)))
+    }
+}
+
+export const getCustomerConsentsBooking = createAction<ICustomerConsentBooking[]>("fAppointment/GetCustomerConsentBooking");
+export const setAcceptedConsentIds = createAction<number[]>("fAppointment/SetAcceptedConsentIds");
+
+export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (dispatch, getState) => {
+    dispatch(setAppointmentSaving(true));
+
+    const {scProfile, slotPodId, selectedSR,
+        appointment, waitListSettings, serviceValetAppointment} = getState().appointment;
+    const {selectedVehicle, makes, service,
+        subService, selectedPackage, selectedRecalls,
+        serviceTypeOption,
+        transportation,
+        userType,
+        advisor,
+        appointmentByKey,
+        zipCode,
+    } = getState().appointmentFrame;
+
+    if (scProfile && selectedVehicle) {
+        const makeId = makes.find(el => el.name.toLowerCase() === selectedVehicle?.make?.toLowerCase())?.id
+        const model = makes
+            .map(el => el.modelCodes)
+            .flat(1)
+            .find(item => item?.name.toLowerCase() === selectedVehicle.model?.toLowerCase())
+        const settingsEnabled = Boolean(waitListSettings?.isEnabled)
+        const isWaitListSlotSelected = appointment?.isOverbookingApplied && settingsEnabled;
+        const isWaitListManaging = !appointment
+            && Boolean(appointmentByKey?.isWaitlist)
+            && appointmentByKey?.waitlistTextSettings?.isEnabled;
+        const isVisitCenterAppointment = serviceTypeOption?.type === EServiceType.VisitCenter || !serviceTypeOption;
+        const isWaitlist = Boolean(isVisitCenterAppointment && (isWaitListSlotSelected || isWaitListManaging));
+
+        const date = appointment?.appointmentDate
+            ?? `${dayjs(serviceValetAppointment?.date).format("YYYY-MM-DD")}T00:00:00.000Z`
+            ?? ""
+
+        const data: ISearchConsentsData = {
+            serviceCenterId: scProfile.id,
+            podId: slotPodId,
+            makeId: makeId ?? null,
+            modelId: model?.id ?? null,
+            serviceRequestIds: collectServiceRequestsForSearch(service, subService, selectedPackage, selectedSR, selectedRecalls),
+            modelYear: selectedVehicle.year,
+            customerType: userType ?? EUserType.New,
+            serviceType: serviceTypeOption?.type ?? EServiceType.VisitCenter,
+            transportationOptionId: serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
+            advisorId: advisor?.id ?? null,
+            appointmentTime: date,
+            isWaitlistEnabled: isWaitlist,
+            zipCode,
+        }
+        if (appointmentByKey?.id) data.appointmentRequestId = appointmentByKey.id;
+        if (data.serviceType === EServiceType.VisitCenter) delete data.zipCode;
+        Api.call<ICustomerConsentBooking[]>(Api.endpoints.CustomerConsent.Search, {data})
+            .then(res => {
+                if (res?.data?.length) {
+                    dispatch(getCustomerConsentsBooking(res.data));
+                    dispatch(setConsentOpen(true));
+                } else {
+                    onEmptyList()
+                }
+            })
+            .catch(err => {
+                console.log('search for customer consent error', err)
+            })
+            .finally(() => dispatch(setAppointmentSaving(false)))
     }
 }

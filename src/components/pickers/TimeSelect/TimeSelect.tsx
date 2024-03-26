@@ -17,6 +17,7 @@ type TProps = {
     gap?: number;
     disabled?: boolean;
     error?: boolean;
+    width?: number|string;
 }
 
 const TimeSelect: React.FC<TProps> = ({
@@ -26,7 +27,8 @@ const TimeSelect: React.FC<TProps> = ({
                                           value,
                                           onChange,
                                           disabled,
-                                          error}) => {
+                                          error,
+                                          width}) => {
     const [period, setPeriod] = useState<TDayPeriod>("am")
 
     const timeOptions = useMemo(() => {
@@ -82,6 +84,7 @@ const TimeSelect: React.FC<TProps> = ({
                 options={timeOptions}
                 disableClearable
                 disabled={disabled}
+                style={{width: width ?? 86}}
                 isOptionEqualToValue={(option, value) => dayjs(`${option} ${period}`, time12HourFormat).isSame(dayjs(value, timeSpanString), 'minute')}
                 onChange={onAutocompleteChange}
                 value={value ? dayjs(value, timeSpanString).format(twelveHourFormat) : ''}
@@ -89,7 +92,7 @@ const TimeSelect: React.FC<TProps> = ({
                     ...params, InputProps: {
                         ...params.InputProps,
                         disableUnderline: true,
-                        style: {padding: '2px 5px', width: 86, borderRadius: 2, fontSize: 14, border: 0 },
+                        style: {padding: '2px 5px', borderRadius: 2, fontSize: 14, border: 0 },
                         placeholder: "Select",
                         error,
                         endAdornment: <div>

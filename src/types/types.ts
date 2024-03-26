@@ -10,6 +10,7 @@ import {TextInputProps} from "../components/formControls/types";
 import {Dayjs} from "dayjs";
 import {TTimePeriod} from "../store/reducers/schedules/types";
 import {TDayType} from "../features/admin/AvailableStaffCalendar/types";
+import {EServiceType} from "../store/reducers/appointmentFrameReducer/types";
 
 export type LinkType = {
     to: string;
@@ -168,6 +169,8 @@ export interface ITableProps<Data> {
     viewMode?: boolean;
     hideHeader?: boolean;
     borderHeader?: boolean;
+    withBorders?: boolean;
+    actionsAlign?: "center"|"left"|"right"
 }
 
 export type TScreen =
@@ -344,4 +347,10 @@ export interface IDataCalendarProps<Data> {
     timePeriod: TTimePeriod|null;
     disabledDates?: TParsableDate[];
     loading?: boolean;
+}
+
+export type TGeographicZoneShort = {
+    id: number;
+    name: string;
+    serviceType: EServiceType;
 }

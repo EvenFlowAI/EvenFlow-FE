@@ -105,6 +105,15 @@ export class Api {
             GetBySearchTerm: {route: "/customers/vehicles", method: "get"},
             GetSingleCustomerVehicles: {route: "/customers/single-customer-vehicles", method: "get"},
         },
+        CustomerConsent: {
+            Create: {route: "/customer-consents", method: "post"},
+            GetAll: {route: "/customer-consents", method: "get"},
+            GetById: {route: "/customer-consents/{id}", method: "get"},
+            Remove: {route: "/customer-consents", method: "delete"},
+            Update: {route: "/customer-consents", method: "post"},
+            Search: {route: "/customer-consents/search", method: "post"},
+            Toggle: {route: "/customer-consents", method: "patch"}
+        },
         Dealerships: {
             Create: {route: "/dealerships", method: "post"},
             GetShort: {route: "/dealerships", method: "get"},
@@ -143,6 +152,7 @@ export class Api {
             ReassignZipCode: {route: "/geographic-zones/re-assign-zip-code/{id}", method: "put"},
             RemoveZipCode: {route: "/geographic-zones/zip-code/{id}", method: "delete"},
             GetById: {route: "/geographic-zones/{id}", method: "get"},
+            GetShort: {route: "/geographic-zones/short-by-query", method: "get"},
         },
         IntervalUpsell: {
             GetUpsellByQuery: {route: "/interval-upsells/by-query", method: "post"},
@@ -388,6 +398,7 @@ export class Api {
         TransportationOptions: {
             Edit: {route: "/transportation-options", method: "put"},
             Get: {route: "/transportation-options", method: "get"},
+            GetShort: {route: "/transportation-options/short-by-query", method: "get"},
             GetActive: {route: "/transportation-options/active/by-query", method: "post"},
             Rules: {route: "/transportation-options/{id}/rules", method: "put"},
             UpdateById: {route: "/transportation-options/{id}", method: "put"},

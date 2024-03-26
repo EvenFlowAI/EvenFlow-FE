@@ -37,7 +37,7 @@ export const Appointments = () => {
     const { isLoading } = useSelector((state: RootState) => state.appointments);
     const [viewItem, setViewItem] = useState<IAppointment|undefined>(undefined);
     const [filters, setFilters] = useState<TFilters>(initialFilters)
-    const [isFiltersOpen, setFiltersOpen] = useState<boolean>(false);
+    const [isFiltersOpen, setFiltersOpen] = useState<boolean>(true);
     const [selectedView, setSelectedView] = useState<TView>("list");
     const [order, setOrder] = useState<IOrder<IAppointment>>(initialOrder)
     const {selectedSC} = useSCs();

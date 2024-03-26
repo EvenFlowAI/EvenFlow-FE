@@ -1,11 +1,12 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ITransportationOptionFull, ITransportationOptionRules} from "./types";
+import {ITransportationOptionFull, ITransportationOptionRules, TTransportationShort} from "./types";
 import {AppThunk} from "../../../types/types";
 
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setTransportationLoading = createAction<boolean>("TransportationNeeds/SetLoading");
 export const getTransportationOptions = createAction<ITransportationOptionFull[]>("TransportationNeeds/GetOptions");
+export const getTransportationOptionsShort = createAction<TTransportationShort[]>("TransportationNeeds/GetOptionsShort");
 
 export const loadTransportationOptions = (serviceCenterId: number): AppThunk => dispatch => {
     dispatch(setTransportationLoading(true));
@@ -64,4 +65,18 @@ export const updateTransportationDescription = (optionId: number, data: ITranspo
         .catch(err => {
             console.log('update transportation description error', err)
         })
+}
+
+export const loadTransportationOptionsShort = (serviceCenterId: number, podId?: number): AppThunk => dispatch => {
+    dispatch(setTransportationLoading(true));
+    Api.call(Api.endpoints.TransportationOptions.GetShort, {params: {serviceCenterId, podId}})
+        .then(result => {
+            if (result.data) {
+                dispatch(getTransportationOptionsShort(result.data))
+            }
+        })
+        .catch(err => {
+            console.log('load transportation options short error', err)
+        })
+        .finally(() => dispatch(setTransportationLoading(false)));
 }

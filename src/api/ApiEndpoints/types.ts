@@ -30,6 +30,7 @@ export interface IApiEndpoints {
     CapacitySettings: Record<"GetAll" | "GetById" | "Update", TApiEndpoint>,
     ComplimentaryServices: Record<"GetByQuery" | "Remove" | "Update" | "AddFromList" | "Create", TApiEndpoint>,
     Customers: Record<"GetByName" | "Update" | "GetRepairHistory" | "GetBySearchTerm" | "GetSingleCustomerVehicles", TApiEndpoint>,
+    CustomerConsent: Record<"GetAll" | "Update" | "GetById" | "Create" | "Remove" | "Search" | "Toggle", TApiEndpoint>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiEndpoint>,
     Employees: Record<"Create" | "Update" | "GetAll", TApiEndpoint>,
@@ -37,7 +38,7 @@ export interface IApiEndpoints {
         | "GetByDate" | "UpdateByDate" | "GetBaseSummary" | "GetSummaryByEmployee" | "GetTimeScheduleByEmployee"
         | "SetTimeScheduleByEmployee", TApiEndpoint>,
     GeographicZones: Record<"Create" | "Update" | "GetZones" | "ReassignZipCode"
-        | "RemoveZipCode" | "Remove" | "GetById", TApiEndpoint>,
+        | "RemoveZipCode" | "Remove" | "GetById" | "GetShort", TApiEndpoint>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiEndpoint>,
     IntervalUpsell: Record<"GetUpsellByQuery" | "EditUpsell" | "RemoveUpsell" | "AddUpsell" | "GetUpsellById", TApiEndpoint>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"
@@ -81,7 +82,7 @@ export interface IApiEndpoints {
         | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange" | "GetSlotsGap", TApiEndpoint>,
     ServiceValet: Record<"GetZoneRouting" | "UpdateZoneRouting" | "GatAllCapacity" | "GetCapacityById" | "CreateCapacity" | "UpdateCapacity"
         | "ChangeShowDropOffTime" | "ChangeServiceRequest" | "ChangeDmsTimeStamp" | "GetServiceValetSettings" | "UpdateZonesServiceRequests", TApiEndpoint>,
-    TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules" | "UpdateById", TApiEndpoint>,
+    TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules" | "UpdateById" | "GetShort", TApiEndpoint>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiEndpoint>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiEndpoint>,
