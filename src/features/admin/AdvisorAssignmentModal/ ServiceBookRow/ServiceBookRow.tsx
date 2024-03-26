@@ -40,12 +40,14 @@ const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
                         fullWidth
                         options={methodOptions}
                         isOptionEqualToValue={(o, v) => o.value === v.value}
+                        disableClearable
                         getOptionLabel={i => i.name}
-                        value={methodOptions.find(el => el.value === advisorPrimaryMethod) ?? null}
+                        value={methodOptions.find(el => el.value === advisorPrimaryMethod)}
                         onChange={onMethodChange(item, EAssignmentLevel.Primary, "Advisor")}
                         renderInput={autocompleteRender({
                             label: '',
-                            placeholder: ''
+                            placeholder: '',
+                            error: advisorPrimaryMethod === advisorSecondaryMethod
                         })}
                     />
                 </div>
@@ -60,7 +62,8 @@ const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
                         onChange={onMethodChange(item, EAssignmentLevel.Secondary, "Advisor")}
                         renderInput={autocompleteRender({
                             label: '',
-                            placeholder: ''
+                            placeholder: '',
+                            error: advisorPrimaryMethod === advisorSecondaryMethod
                         })}
                     />
                 </div>
@@ -74,11 +77,13 @@ const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
                         options={methodOptions}
                         isOptionEqualToValue={(o, v) => o.value === v.value}
                         getOptionLabel={i => i.name}
-                        value={methodOptions.find(el => el.value === technicianPrimaryMethod) ?? null}
+                        disableClearable
+                        value={methodOptions.find(el => el.value === technicianPrimaryMethod)}
                         onChange={onMethodChange(item, EAssignmentLevel.Primary, "Technician")}
                         renderInput={autocompleteRender({
                             label: '',
-                            placeholder: ''
+                            placeholder: '',
+                            error: technicianPrimaryMethod === technicianSecondaryMethod
                         })}
                     />
                 </div>
@@ -93,7 +98,8 @@ const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
                         onChange={onMethodChange(item, EAssignmentLevel.Secondary, "Technician")}
                         renderInput={autocompleteRender({
                             label: '',
-                            placeholder: ''
+                            placeholder: '',
+                            error: technicianPrimaryMethod === technicianSecondaryMethod
                         })}
                     />
                 </div>

@@ -299,8 +299,7 @@ export const loadAssignmentSettings = (serviceCenterId: number): AppThunk => dis
 export const updateAssignmentSettings = (data: TUpdateAssignmentSettingsData, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
     dispatch(loading(true))
     Api.call(Api.endpoints.Employees.UpdateAssignmentSettings, {data})
-        .then(result => {
-            if (result) dispatch(loadAssignmentSettings(data.serviceCenterId));
+        .then(() => {
             onSuccess()
         })
         .catch(err => {

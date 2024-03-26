@@ -19,6 +19,7 @@ import {
 import {loadAssignmentSettings, updateAssignmentSettings} from "../../../store/reducers/employees/actions";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import ServiceBookRow from "./ ServiceBookRow/ServiceBookRow";
+import {sortServiceBooks} from "./utils";
 
 const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {loading, assignmentSettings} = useSelector((state: RootState) => state.employees);
@@ -47,11 +48,11 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
     }, [props.open, selectedSC])
 
     useEffect(() => {
-        setData(assignmentSettings)
+        setData([...assignmentSettings].sort(sortServiceBooks))
     }, [assignmentSettings])
 
     const onCancel = () => {
-        setData(assignmentSettings)
+        setData([])
         props.onClose();
     }
 
@@ -88,18 +89,30 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                     ? {...methodToUpdate, type: value?.value ?? null}
                     : {level, type: value?.value ?? null}
                 if (methodToUpdate.level === EAssignmentLevel.Primary && value?.value !== EAdvisorAssignMethod.LastEmployee) {
-                    roleToUpdate = {...roleToUpdate, methods: [methodToUpdate, {level: EAssignmentLevel.Secondary, type: null}]}
+                    roleToUpdate = {...roleToUpdate, methods: [methodToUpdate]}
+                } else if (methodToUpdate.level === EAssignmentLevel.Secondary && !value) {
+                    roleToUpdate = {
+                        ...roleToUpdate,
+                        methods: roleToUpdate.methods.filter(el => el.level !== EAssignmentLevel.Secondary)
+                    }
                 } else {
-                    roleToUpdate = {...roleToUpdate, methods: roleToUpdate.methods.filter(el => el.level !== level).concat(methodToUpdate)}
+                    roleToUpdate = {
+                        ...roleToUpdate,
+                        methods: roleToUpdate.methods.filter(el => el.level !== level).concat(methodToUpdate)
+                    }
                 }
                 const newItem = {
                     ...itemToUpdate,
-                    employeeAssignmentSettings: item.employeeAssignmentSettings.filter(el => el.role !== role).concat(roleToUpdate)
+                    employeeAssignmentSettings: item.employeeAssignmentSettings
+                        .filter(el => el.role !== role)
+                        .concat(roleToUpdate)
                 }
                 setData(data.filter(el => el.serviceBookId
                     ? el.serviceBookId !== item.serviceBookId
                     : el.serviceBookName !== item.serviceBookName
-                ).concat(newItem))
+                )
+                    .concat(newItem)
+                    .sort(sortServiceBooks))
             }
         }, [data])
 
@@ -117,14 +130,14 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                         <TableHead>
                             <TableRow>
                                 <THeadCell key="serviceBook"><div>Service Book</div></THeadCell>
-                                <THeadCellWithSub key="advisors" style={{borderRight: '1px solid #DADADA', borderLeft: '1px solid #DADADA'}}>
+                                <THeadCellWithSub key="advisors" style={{borderRight: '1px solid #DADADA', borderLeft: '1px solid #DADADA'}} width={400}>
                                     <SubCellTitle key="title">Advisors</SubCellTitle>
                                     <SubCellsWrapper key="subWrapper">
                                         <div key="primary">Primary</div>
                                         <div key="secondary" style={{backgroundColor: !isAdvisorSecondaryEnabled ? "#DADADA" : ''}}>Secondary</div>
                                     </SubCellsWrapper>
                                 </THeadCellWithSub>
-                                <THeadCellWithSub key="technicians">
+                                <THeadCellWithSub key="technicians" width={400}>
                                     <SubCellTitle key="title">Technicians</SubCellTitle>
                                     <SubCellsWrapper key="subWrapper">
                                         <div key="primary">Primary</div>
@@ -134,7 +147,9 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.map(item => <ServiceBookRow item={item} onMethodChange={onMethodChange}/>)}
+                            {data.map(item => (
+                                <ServiceBookRow item={item} onMethodChange={onMethodChange} key={item.serviceBookId ?? item.serviceBookName}/>
+                            ))}
                         </TableBody>
                     </Table>}
             </DialogContent>
