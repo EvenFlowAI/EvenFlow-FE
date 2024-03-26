@@ -208,7 +208,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                             ? EAppointmentTimingType.FirstAvailable
                             : selectedTiming,
                         serviceCenterId: decodeSCID(id),
-                        consultantId: advisor?.id ?? null,
+                        advisorId: advisor?.id ?? null,
                         fromDate: selectedTime
                             ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
                             : dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),

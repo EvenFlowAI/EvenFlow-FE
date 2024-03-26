@@ -41,7 +41,7 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 const initialForm: TForm = {
     name: "",
     description: "",
-    advisor: null,
+    advisors: [],
     technicians: [],
     bays: [],
     serviceRequests: [],
@@ -171,8 +171,8 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});
     }
-    const handleSelectAdv = (e: React.ChangeEvent<{}>, val: IAdvisorShort | null) => {
-        setForm({...form, advisor: val});
+    const handleSelectAdv = (e: React.ChangeEvent<{}>, val: IAdvisorShort[]) => {
+        setForm({...form, advisors: val});
     }
     const handleTechniciansChange = (e: any, val: IAdvisorShort[]) => {
         setForm({...form, technicians: val});
@@ -207,7 +207,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
             setLoading(true);
             try {
                 const data: IPodForm = {
-                    advisorId: form.advisor?.id || null,
+                    advisors: form.advisors.map(el => el.id),
                     bays: form.bays.map(item => item.id),
                     description: form.description,
                     name: form.name,
@@ -302,13 +302,20 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                     <Grid item xs={12} sm={6}>
                         <Autocomplete
                             options={advisorsList}
+                            multiple
                             onChange={handleSelectAdv}
+                            ChipProps={{
+                                color: "primary",
+                                style: {borderRadius: 4},
+                                size: "small"
+                            }}
                             disabled={podsLoading || loading}
                             getOptionLabel={i => i.fullName}
                             isOptionEqualToValue={(o, s) => o.id === s.id}
                             loading={false}
-                            value={form.advisor}
-                            renderInput={autocompleteRender({label: "Advisor", fullWidth: true, placeholder: "Select Advisor"})}
+                            value={form.advisors}
+                            renderOption={autocompleteOptionsRender((e) => e.fullName)}
+                            renderInput={autocompleteRender({label: "Advisors", fullWidth: true, placeholder: "Select Advisors"})}
                         />
                     </Grid>
 

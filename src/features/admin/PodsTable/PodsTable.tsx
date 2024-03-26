@@ -30,8 +30,8 @@ const rowData: TableRowDataTypeResp<IPod>[] = [
         xsHidden: true
     },
     {
-        header: "Advisor",
-        val: e => e.advisor?.fullName
+        header: "Advisors",
+        val: e => e.advisors.map(a => a.fullName).join(", ") || ""
     },
     {
         header: "Technicians",
