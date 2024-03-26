@@ -4,6 +4,7 @@ import {EMaintenanceOptionType} from "../../../api/types";
 import {TEmailRequirement} from "../screenSettings/types";
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
 import {EDay} from "../demandSegments/types";
+import {EAdvisorAssignMethod, IEmployeeAssignmentSetting} from "../employees/types";
 
 export interface IServiceCenter {
     id: number;
@@ -92,7 +93,7 @@ export type TSetPredictionParams = {type: "ServiceCenters/SetPredictionParams", 
 export type TSetLaborRate = {type: "ServiceCenters/SetLaborRate", payload: ILaborRate};
 export type TSetPredictionParamsLoading = {type: "ServiceCenters/SetParamsLoading", payload: boolean};
 export type TSetPackageOptionsLoading = {type: "ServiceCenters/PackageOptionsLoading", payload: boolean};
-export type TAdvisorAssignment = {type: "ServiceCenters/GetAdvisorAssignment", payload: IAdvisorAssignment};
+export type TAdvisorAssignment = {type: "ServiceCenters/GetAdvisorAssignment", payload: IEmployeeAssignmentSetting[]};
 export type TAdvisorAssignmentLoading = {type: "ServiceCenters/SetAdvisorAssignmentLoading", payload: boolean};
 
 export type TServiceCenterActions =
@@ -133,12 +134,6 @@ export interface ILaborRate {
     internal: number;
 }
 
-export enum EAdvisorAssignMethod {
-    Rotational,
-    MaxCapacity,
-    LastAdvisor
-}
-
 export interface IAdvisorAssignment {
     primaryMethod?: EAdvisorAssignMethod|null;
     secondaryMethod?: EAdvisorAssignMethod|null;
@@ -168,6 +163,6 @@ export type TServiceCenterState = {
     predictionParams: IPredictionParams,
     laborRate: ILaborRate,
     predictionParamsLoading: boolean,
-    advisorAssignment: IAdvisorAssignment;
+    employeeAssignment: IEmployeeAssignmentSetting[];
     advisorAssignmentLoading: boolean;
 };

@@ -119,6 +119,8 @@ export class Api {
             Create: {route: "/employees", method: "post"},
             Update: {route: "/employees/{id}", method: "put"},
             GetAll: {route: "/employees/by-query", method: "post"},
+            GetAssignmentSettings: {route: "/employees/assignment-settings/{serviceCenterId}", method: "get"},
+            UpdateAssignmentSettings: {route: "/employees/assignment-settings", method: "put"},
         },
         EmployeeSchedule: {
             Create: {route: "/employee-schedules", method: "post"},
