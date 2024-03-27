@@ -211,18 +211,18 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
             try {
                 const key = appointmentByKey.hashKey;
                 await API.appointment.cancelByKey(key);
-                await showMessage(
+                showMessage(
                     <div>
                         Your appointment has been canceled. <br/>
                         Please do not forget to update the appointment in your calendar.
                     </div>
                 );
-                await dispatch(setSideBarSteps([]));
-                await dispatch(setServiceOptionChanged(false));
-                await dispatch(setVehicle(null));
-                await dispatch(clearAppointmentData());
-                await dispatch(setCustomerLoadedData(null));
-                await dispatch(setWelcomeScreenView("select"))
+                dispatch(setSideBarSteps([]));
+                dispatch(setServiceOptionChanged(false));
+                dispatch(setVehicle(null));
+                dispatch(clearAppointmentData());
+                dispatch(setCustomerLoadedData(null));
+                dispatch(setWelcomeScreenView("select"))
                 history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1")
             } catch (e) {
                 showError(e);

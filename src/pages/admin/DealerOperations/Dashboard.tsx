@@ -4,7 +4,7 @@ import {ReactComponent as RemindersIcon} from "../../../assets/img/Icon_36px_App
 import {ReactComponent as AdvisorIcon} from "../../../assets/img/advisor_assignment.svg";
 import {ReactComponent as NotificationsIcon} from "../../../assets/img/notifications.svg";
 import RemindersModal from "../../../features/admin/RemindersModal/RemindersModal";
-import AdvisorAssignmentModal from "../../../features/admin/AdvisorAssignmentModal/AdvisorAssignmentModal";
+import EmployeeAssignmentModal from "../../../features/admin/EmployeeAssignmentModal/EmployeeAssignmentModal";
 import ManageNotificationsModal from "../../../features/admin/ManageNotificationsModal/ManageNotificationsModal";
 import {useStyles} from "./styles";
 import {TItem} from "./types";
@@ -65,7 +65,7 @@ export const DealerOperations: React.FC<React.PropsWithChildren<React.PropsWithC
             )}
         </Grid>
         <RemindersModal open={isOpenReminders} onClose={onCloseReminders}/>
-        <AdvisorAssignmentModal open={isOpenAdvisorAssignment} onClose={onCloseAdvisorAssignment}/>
+        <EmployeeAssignmentModal open={isOpenAdvisorAssignment} onClose={onCloseAdvisorAssignment}/>
         <ManageNotificationsModal open={isOpenManageNotifications} onClose={onCloseManageNotifications}/>
     </div>
 }

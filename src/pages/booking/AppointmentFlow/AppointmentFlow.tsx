@@ -188,6 +188,7 @@ export const AppointmentFlow = () => {
         if (key) {
             try {
                 const {data} = await API.appointment.getByKey(key);
+                if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
                 const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
                 if (data.waitlistTextSettings) {
                     dispatch(setWaitListSettings({
@@ -195,18 +196,17 @@ export const AppointmentFlow = () => {
                         textHex: data.waitlistTextSettings.textHex ?? ''
                     }))
                 }
-                await dispatch(updateRecalls(data, id));
-                await dispatch(setUpdateAppointment(data));
-                await dispatch(setAppointmentByKey(data));
-                await dispatch(updatePackageOption(data.maintenancePackageOption))
-                await updateServiceRequests(data.serviceRequests);
+                dispatch(updateRecalls(data, id));
+                dispatch(setUpdateAppointment(data));
+                dispatch(setAppointmentByKey(data));
+                dispatch(updatePackageOption(data.maintenancePackageOption))
+                updateServiceRequests(data.serviceRequests);
                 handleServiceTypeOption(data)
-                await dispatch(handleSideBarAppointmentUpdate());
-                await dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data))
-                await dispatch(updateConsultant(data.advisor))
-                await dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
-                await dispatch(checkCarIsValid());
-                if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
+                dispatch(handleSideBarAppointmentUpdate());
+                dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data))
+                dispatch(updateConsultant(data.advisor))
+                dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
+                dispatch(checkCarIsValid());
             } catch (e) {
                 console.log(e)
                 showError(e);
