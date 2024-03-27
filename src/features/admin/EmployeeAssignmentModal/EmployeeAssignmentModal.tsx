@@ -21,7 +21,7 @@ import {useSCs} from "../../../hooks/useSCs/useSCs";
 import ServiceBookRow from "./ ServiceBookRow/ServiceBookRow";
 import {sortServiceBooks} from "./utils";
 
-const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
+const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {loading, assignmentSettings} = useSelector((state: RootState) => state.employees);
     const [data, setData] = useState<IEmployeeAssignmentSetting[]>([]);
     const {selectedSC} = useSCs();
@@ -175,4 +175,4 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
     );
 };
 
-export default AdvisorAssignmentModal;
+export default EmployeeAssignmentModal;

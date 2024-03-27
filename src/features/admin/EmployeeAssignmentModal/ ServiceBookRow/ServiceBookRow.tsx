@@ -9,15 +9,13 @@ import {
 } from "../../../../store/reducers/employees/types";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {TOption} from "../../PodsTable/PODModal/types";
-import {getOptions} from "../../../../utils/utils";
+import {methodOptions, secondaryOptions} from "../constants";
 
 type TProps = {
     item: IEmployeeAssignmentSetting;
     onMethodChange: (item: IEmployeeAssignmentSetting, level: EAssignmentLevel, role: "Advisor"|"Technician") =>
         (e: ChangeEvent<{}>, value: TOption|null) => void;
 }
-
-const methodOptions: TOption[] = getOptions(Object.keys(EAdvisorAssignMethod).filter(key => Number.isNaN(+key)))
 
 const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
     const advisorPrimaryMethod = item.employeeAssignmentSettings
@@ -54,7 +52,7 @@ const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
                 <div style={{backgroundColor: isAdvisorSecondaryDisabled ? "#DADADA" : ''}} key="technician">
                     <Autocomplete
                         fullWidth
-                        options={methodOptions}
+                        options={secondaryOptions}
                         disabled={isAdvisorSecondaryDisabled}
                         isOptionEqualToValue={(o, v) => o.value === v.value}
                         getOptionLabel={i => i.name}
@@ -90,7 +88,7 @@ const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
                 <div style={{backgroundColor: isTechSecondaryDisabled ? "#DADADA" : ''}} key="technician">
                     <Autocomplete
                         fullWidth
-                        options={methodOptions}
+                        options={secondaryOptions}
                         disabled={isTechSecondaryDisabled}
                         isOptionEqualToValue={(o, v) => o.value === v.value}
                         getOptionLabel={i => i.name}
