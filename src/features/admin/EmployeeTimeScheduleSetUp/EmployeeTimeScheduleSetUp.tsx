@@ -163,6 +163,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                                 </SwitcherWrapper>
                                 <PickersWrapper>
                                     <TimeSelect
+                                        disableClearable
                                         error={
                                             formIsChecked && scheduleItem?.isOnSchedule
                                             && (dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(dayjs(scheduleItem.from, timeSpanString), 'minute')
@@ -176,6 +177,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                                         onChange={(value) => onTimeChange(day, 'from', value)}/>
                                     <div>TO</div>
                                     <TimeSelect
+                                        disableClearable
                                         error={
                                             formIsChecked && scheduleItem?.isOnSchedule
                                             && (dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(dayjs(scheduleItem.from, timeSpanString), 'minute')
