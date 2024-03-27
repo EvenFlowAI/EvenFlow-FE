@@ -2,7 +2,7 @@ import {TForm} from "./types";
 import {getOptions, getYearOptions} from "../../../../utils/utils";
 import {TOption} from "../../PodsTable/PODModal/types";
 import {EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {EDayOfWeek} from "../../../../store/reducers/offers/types";
+import {EDay} from "../../../../store/reducers/demandSegments/types";
 
 export const initialForm: TForm = {
     name: '',
@@ -26,4 +26,4 @@ export const initialForm: TForm = {
 }
 export const yearOptions = getYearOptions();
 export const customerTypeOptions: TOption[] = getOptions(Object.keys(EUserType).filter(key => Number.isNaN(+key)));
-export const dayOfWeekOptions = getOptions(Object.keys(EDayOfWeek).filter(key => Number.isNaN(+key)));
+export const dayOfWeekOptions = getOptions(Object.keys(EDay).filter(key => Number.isNaN(+key)));

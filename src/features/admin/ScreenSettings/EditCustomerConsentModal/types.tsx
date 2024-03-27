@@ -1,11 +1,11 @@
 import {IAdvisorShort} from "../../../../store/reducers/users/types";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
-import {EDayOfWeek} from "../../../../store/reducers/offers/types";
 import {TGeographicZone} from "../../../../store/reducers/screenSettings/types";
 import {IMakeExtended, IModel} from "../../../../api/types";
 import {TTransportationShort} from "../../../../store/reducers/transportationNeeds/types";
 import {EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {IPodShort} from "../../../../store/reducers/pods/types";
+import {EDay} from "../../../../store/reducers/demandSegments/types";
 
 export type TForm = {
     name: string;
@@ -22,7 +22,7 @@ export type TForm = {
     serviceBooks: IPodShort[];
     appointmentTimeFrom: string;
     appointmentTimeTo: string;
-    daysOfWeek: EDayOfWeek[];
+    daysOfWeek: EDay[];
     transportationOptions: TTransportationShort[];
     mobileServiceZones: TGeographicZone[];
     serviceValetZones: TGeographicZone[];

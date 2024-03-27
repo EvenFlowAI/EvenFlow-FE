@@ -1,5 +1,5 @@
-import {EDayOfWeek} from "../offers/types";
 import {EServiceType, EUserType} from "../appointmentFrameReducer/types";
+import {EDay} from "../demandSegments/types";
 
 export type TEmailRequirement = {
     adminAndEmployeesEnabled: boolean;
@@ -65,7 +65,7 @@ export interface IBaseCustomerConsent {
      serviceBookIds: number[];
      appointmentTimeFrom: string;
      appointmentTimeTo: string;
-     daysOfWeek: EDayOfWeek[];
+     daysOfWeek: EDay[];
      advisorIds: string[];
      transportationOptionIds: number[];
      mobileServiceZoneIds: number[];
