@@ -1,6 +1,6 @@
 import {IDealershipGroupExtended} from "../dealershipGroups/types";
 import {IServiceCenter} from "../serviceCenters/types";
-import {IAdvisorShort} from "../users/types";
+import {IAdvisorShort, TRole} from "../users/types";
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {EDayOfWeek} from "../offers/types";
@@ -68,6 +68,35 @@ export type TGetBaseSummary = {type: "Employees/GetBaseSummary", payload: IBaseS
 export type TGetBaseScheduleByEmployee = {type: "Employees/GetBaseScheduleByEmployee", payload: IEmployeeRoleHours[]};
 export type TGetScheduleTimeByEmployee = {type: "Employees/GetScheduleTimeByEmployee", payload: IEmployeeSchedule};
 
+export enum EAdvisorAssignMethod {
+    Rotational,
+    MaxCapacity,
+    LastEmployee,
+    NoAssignment
+}
+
+export enum EAssignmentLevel {
+    Primary,
+    Secondary
+}
+
+export type TEmployeeAssignmentMethod = {
+    level: EAssignmentLevel,
+    type: EAdvisorAssignMethod | null,
+}
+export type TEmployeeAssignmentSetting = {
+    role: TRole,
+    methods: TEmployeeAssignmentMethod[];
+}
+
+export interface IEmployeeAssignmentSetting {
+    serviceBookName: string;
+    serviceBookId?: number;
+    employeeAssignmentSettings: TEmployeeAssignmentSetting[];
+}
+
+export type TGetAssignmentSettings = {type: "Employees/GetAssignmentSettings", payload: IEmployeeAssignmentSetting[]};
+
 export type TEmployeeActions =
     | TGetDealershipEmployees
     | TLoadingTechnicians
@@ -85,7 +114,8 @@ export type TEmployeeActions =
     | TGetUsersShort
     | TGetBaseSummary
     | TGetBaseScheduleByEmployee
-    | TGetScheduleTimeByEmployee;
+    | TGetScheduleTimeByEmployee
+    | TGetAssignmentSettings;
 
 export type TDmsAdvisor = {
     id: string;
@@ -111,6 +141,7 @@ export type TEmployeesState = {
     baseSummary: IBaseSummary|null;
     employeeRoleHours: IEmployeeRoleHours[];
     employeeSchedule: IEmployeeSchedule|null;
+    assignmentSettings: IEmployeeAssignmentSetting[];
 }
 export type TSCState = {
     advisorsList: IAdvisorShort[];
@@ -189,4 +220,14 @@ export enum EDmsRole {
     Advisor,
     Technician,
     ServiceManager
+}
+
+export type TServiceBookSetting = {
+    serviceBookId?: number;
+    employeeAssignmentSettings: TEmployeeAssignmentSetting[];
+}
+
+export type TUpdateAssignmentSettingsData = {
+    serviceCenterId: number;
+    serviceBookSettings: TServiceBookSetting[];
 }

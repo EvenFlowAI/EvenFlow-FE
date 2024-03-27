@@ -1,10 +1,18 @@
 import {ActionCreator} from "redux";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
-import {AppThunk, IOrder, IPageRequest, PaginatedAPIResponse, Roles} from "../../../types/types";
+import {
+    AppThunk,
+    IOrder,
+    IPageRequest,
+    PaginatedAPIResponse,
+    Roles,
+    TArgCallback,
+    TCallback
+} from "../../../types/types";
 import {
     IBaseScheduleByEmployee,
     IBaseSummary,
-    IEmployee,
+    IEmployee, IEmployeeAssignmentSetting,
     IEmployeeFilters,
     IEmployeeForm,
     IEmployeeRoleHours,
@@ -13,7 +21,7 @@ import {
     TDmsAdvisor,
     TEmployeeActions,
     TScheduleByEmployeeRequestData,
-    TSetScheduleData
+    TSetScheduleData, TUpdateAssignmentSettingsData
 } from "./types";
 import {saveEmployeeAvatar} from "../users/actions";
 import {createAction} from "@reduxjs/toolkit";
@@ -271,6 +279,32 @@ export const updateBaseEmployeeSchedule = (data: TSetScheduleData, onSuccess: ()
         .catch(err => {
             onError(err)
             console.log('load base employee schedule error', err)
+        })
+        .finally(() => dispatch(loading(false)))
+}
+
+export const getAssignmentSettings = createAction<IEmployeeAssignmentSetting[]>("Employees/GetAssignmentSettings");
+export const loadAssignmentSettings = (serviceCenterId: number): AppThunk => dispatch => {
+    dispatch(loading(true))
+    Api.call(Api.endpoints.Employees.GetAssignmentSettings, {urlParams: {serviceCenterId}})
+        .then(result => {
+            if (result.data) dispatch(getAssignmentSettings(result.data));
+        })
+        .catch(err => {
+            console.log('load employee assignment settings error', err)
+        })
+        .finally(() => dispatch(loading(false)))
+}
+
+export const updateAssignmentSettings = (data: TUpdateAssignmentSettingsData, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
+    dispatch(loading(true))
+    Api.call(Api.endpoints.Employees.UpdateAssignmentSettings, {data})
+        .then(() => {
+            onSuccess()
+        })
+        .catch(err => {
+            console.log('update employee assignment settings error', err)
+            onError(err)
         })
         .finally(() => dispatch(loading(false)))
 }

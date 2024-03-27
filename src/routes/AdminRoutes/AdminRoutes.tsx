@@ -15,6 +15,7 @@ import DealershipGroups from "../../pages/admin/DealershipGroups/DealershipGroup
 import {useCurrentUser} from "../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../constants";
 import EmployeesRoutes from "../EmployeesRoutes/EmployeesRoutes";
+import {DealerOperations} from "../../pages/admin/DealerOperations/Dashboard";
 
 export const AdminRoutes = () => {
     const currentUser = useCurrentUser();
@@ -36,6 +37,9 @@ export const AdminRoutes = () => {
                 : null}
             {!currentUser.isSuperUser && !currentRoleIsRestricted
                 ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
+                : null}
+            {!currentUser.isSuperUser && !currentRoleIsRestricted
+                ? <PrivateRoute path={Routes.Dealer.Base} exact component={DealerOperations}/>
                 : null}
             {!currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.Pricing.Base} component={PricingRoutes}/>

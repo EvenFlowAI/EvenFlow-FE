@@ -1,58 +1,63 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button, TableBody, TableHead} from "@mui/material";
+import {Button, Table, TableBody, TableHead} from "@mui/material";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {EAdvisorAssignMethod, IAdvisorAssignment} from "../../../store/reducers/serviceCenters/types";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
-import {loadAdvisorAssignment, updateAdvisorAssignment} from "../../../store/reducers/serviceCenters/actions";
-import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
-import {useStyles} from "./styles";
-import {TableCellWithPadding} from "../../../components/styled/TableCellWithPadding";
-
+import {SubCellsWrapper, SubCellTitle, THeadCell, THeadCellWithSub, useStyles} from "./styles";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
-
-type TMethod = "primary"|"secondary"
+import {TOption} from "../PodsTable/PODModal/types";
+import {
+    EAdvisorAssignMethod,
+    EAssignmentLevel,
+    IEmployeeAssignmentSetting,
+    TUpdateAssignmentSettingsData
+} from "../../../store/reducers/employees/types";
+import {loadAssignmentSettings, updateAssignmentSettings} from "../../../store/reducers/employees/actions";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import ServiceBookRow from "./ ServiceBookRow/ServiceBookRow";
+import {sortServiceBooks} from "./utils";
 
 const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
-    const {selectedSC, advisorAssignment, advisorAssignmentLoading} = useSelector((state: RootState) => state.serviceCenters);
-    const [primaryMethod, setPrimaryMethod] = useState<EAdvisorAssignMethod|null>(null);
-    const [secondaryMethod, setSecondaryMethod] = useState<EAdvisorAssignMethod|null>(null);
-    const [noAssignment, setNoAssignment] = useState<boolean>(false);
-    const isSecondaryDisabled = useMemo(() => primaryMethod !== EAdvisorAssignMethod.LastAdvisor
-        || noAssignment,[primaryMethod])
-
+    const {loading, assignmentSettings} = useSelector((state: RootState) => state.employees);
+    const [data, setData] = useState<IEmployeeAssignmentSetting[]>([]);
+    const {selectedSC} = useSCs();
     const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException()
     const showMessage = useMessage();
 
+    const isAdvisorSecondaryEnabled = useMemo(() => {
+        return data.find(item => item.employeeAssignmentSettings
+            .find(el => el.role === 'Advisor')?.methods
+            ?.find(el => el.level === EAssignmentLevel.Primary)?.type === EAdvisorAssignMethod.LastEmployee);
+    }, [data])
+    const isTechSecondaryEnabled = useMemo(() => {
+        return data.find(item => item.employeeAssignmentSettings
+            .find(el => el.role === 'Technician')?.methods
+            ?.find(el => el.level === EAssignmentLevel.Primary)?.type === EAdvisorAssignMethod.LastEmployee);
+    }, [data])
+
     useEffect(() => {
         if (props.open) {
-            selectedSC && dispatch(loadAdvisorAssignment(selectedSC.id))
+            selectedSC && dispatch(loadAssignmentSettings(selectedSC.id))
         }
     }, [props.open, selectedSC])
 
     useEffect(() => {
-        const {primaryMethod, secondaryMethod} = advisorAssignment;
-        setPrimaryMethod( primaryMethod ?? null);
-        setSecondaryMethod(secondaryMethod ?? null);
-        setNoAssignment((primaryMethod === null || primaryMethod === undefined) && (secondaryMethod === null || secondaryMethod === undefined));
-    }, [advisorAssignment])
+        setData([...assignmentSettings].sort(sortServiceBooks))
+    }, [assignmentSettings])
 
     const onCancel = () => {
-        setPrimaryMethod(null);
-        setSecondaryMethod(null);
-        setNoAssignment(false);
+        setData([])
         props.onClose();
     }
 
     const onSuccess = () => {
-        showMessage('The Methods of Assigning Advisors to Appointments updated')
+        showMessage('The Methods of Assigning Employees to Appointments updated')
         onCancel();
     }
 
@@ -61,147 +66,105 @@ const AdvisorAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
     }
 
     const onSave = () => {
-        const data: IAdvisorAssignment = {primaryMethod};
-        if (secondaryMethod !== null) data.secondaryMethod = secondaryMethod;
-        selectedSC && dispatch(updateAdvisorAssignment(selectedSC.id, data, onSuccess, onError))
-    }
-
-    const onChange = (method: TMethod, type: EAdvisorAssignMethod) => {
-        setNoAssignment(false)
-        if (method === "primary") {
-            setPrimaryMethod(type)
-            if (type !== EAdvisorAssignMethod.LastAdvisor) setSecondaryMethod(null);
-        } else {
-            !isSecondaryDisabled && setSecondaryMethod(type)
+        if (selectedSC) {
+            const requestData: TUpdateAssignmentSettingsData = {
+                serviceCenterId: selectedSC.id,
+                serviceBookSettings: data.map(({employeeAssignmentSettings, serviceBookId}) => {
+                    return serviceBookId
+                        ? {serviceBookId, employeeAssignmentSettings}
+                        : {employeeAssignmentSettings}
+                })
+            }
+            dispatch(updateAssignmentSettings(requestData, onError, onSuccess))
         }
     }
 
-    const onNoAssignmentCheck = () => {
-        const noAssignmentSelected = !noAssignment;
-        setNoAssignment(prev => !prev)
-        if (noAssignmentSelected) {
-            setPrimaryMethod(null);
-            setSecondaryMethod(null);
-        }
-    }
+    const onMethodChange = useCallback((item: IEmployeeAssignmentSetting, level: EAssignmentLevel, role: "Advisor"|"Technician") =>
+        (e: ChangeEvent<{}>, value: TOption|null) => {
+            const itemToUpdate = data.find(el => el.serviceBookId === item.serviceBookId)
+            let roleToUpdate = itemToUpdate?.employeeAssignmentSettings.find(el => el.role === role);
+            let methodToUpdate = roleToUpdate?.methods?.find(el => el.level === level);
+            if (itemToUpdate && roleToUpdate) {
+                methodToUpdate = methodToUpdate
+                    ? {...methodToUpdate, type: value?.value ?? null}
+                    : {level, type: value?.value ?? null}
+                if (methodToUpdate.level === EAssignmentLevel.Primary && value?.value !== EAdvisorAssignMethod.LastEmployee) {
+                    roleToUpdate = {...roleToUpdate, methods: [methodToUpdate]}
+                } else if (methodToUpdate.level === EAssignmentLevel.Secondary && !value) {
+                    roleToUpdate = {
+                        ...roleToUpdate,
+                        methods: roleToUpdate.methods.filter(el => el.level !== EAssignmentLevel.Secondary)
+                    }
+                } else {
+                    roleToUpdate = {
+                        ...roleToUpdate,
+                        methods: roleToUpdate.methods.filter(el => el.level !== level).concat(methodToUpdate)
+                    }
+                }
+                const newItem = {
+                    ...itemToUpdate,
+                    employeeAssignmentSettings: item.employeeAssignmentSettings
+                        .filter(el => el.role !== role)
+                        .concat(roleToUpdate)
+                }
+                setData(data.filter(el => el.serviceBookId
+                    ? el.serviceBookId !== item.serviceBookId
+                    : el.serviceBookName !== item.serviceBookName
+                )
+                    .concat(newItem)
+                    .sort(sortServiceBooks))
+            }
+        }, [data])
 
     return (
-        <BaseModal {...props} width={550} onClose={onCancel}>
+        <BaseModal {...props} width={1100} onClose={onCancel}>
             <DialogTitle
                 onClose={onCancel}
                 style={{textTransform: 'uppercase', color: "#575757", padding: '16px 48px'}}>
-                Method to assign advisors to appointments
+                Method to assign employees to appointments
             </DialogTitle>
             <DialogContent>
-                {advisorAssignmentLoading
+                {loading
                     ? <Loading/>
-                    : <DemandTable>
+                    : <Table style={{border: '1px solid #DADADA'}}>
                         <TableHead>
                             <TableRow>
-                                <TableCellWithPadding style={{color: "#9FA2B4", fontSize: 12}} align="left">Option</TableCellWithPadding>
-                                <TableCellWithPadding style={{color: "#9FA2B4", fontSize: 12}} align="center">Primary Method</TableCellWithPadding>
-                                <TableCellWithPadding
-                                    style={{color: "#9FA2B4", fontSize: 12, backgroundColor: isSecondaryDisabled ? "#F4F4F4" : ""}}
-                                    align="center">
-                                    Secondary Method
-                                </TableCellWithPadding>
+                                <THeadCell key="serviceBook"><div>Service Book</div></THeadCell>
+                                <THeadCellWithSub key="advisors" style={{borderRight: '1px solid #DADADA', borderLeft: '1px solid #DADADA'}} width={400}>
+                                    <SubCellTitle key="title">Advisors</SubCellTitle>
+                                    <SubCellsWrapper key="subWrapper">
+                                        <div key="primary">Primary</div>
+                                        <div key="secondary" style={{backgroundColor: !isAdvisorSecondaryEnabled ? "#DADADA" : ''}}>Secondary</div>
+                                    </SubCellsWrapper>
+                                </THeadCellWithSub>
+                                <THeadCellWithSub key="technicians" width={400}>
+                                    <SubCellTitle key="title">Technicians</SubCellTitle>
+                                    <SubCellsWrapper key="subWrapper">
+                                        <div key="primary">Primary</div>
+                                        <div key="secondary" style={{backgroundColor: !isTechSecondaryEnabled ? "#DADADA" : ''}}>Secondary</div>
+                                    </SubCellsWrapper>
+                                </THeadCellWithSub>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableRow>
-                                <TableCellWithPadding>Rotational</TableCellWithPadding>
-                                <TableCellWithPadding align="center">
-                                    {primaryMethod === EAdvisorAssignMethod.Rotational
-                                        ? <RadioButtonChecked
-                                            htmlColor="#3855F3"
-                                            cursor="pointer"/>
-                                        : <RadioButtonUnchecked
-                                            htmlColor="#DADADA"
-                                            cursor="pointer"
-                                            onClick={() => onChange("primary", EAdvisorAssignMethod.Rotational)}/>}
-                                </TableCellWithPadding>
-                                <TableCellWithPadding align="center" style={{backgroundColor: isSecondaryDisabled ? "#F4F4F4" : ""}}>
-                                    {secondaryMethod === EAdvisorAssignMethod.Rotational
-                                        ? <RadioButtonChecked
-                                            cursor={isSecondaryDisabled ? "" : "pointer"}
-                                            htmlColor={isSecondaryDisabled ? "#DADADA" : "#3855F3"}/>
-                                        : <RadioButtonUnchecked
-                                            htmlColor="#DADADA"
-                                            cursor={isSecondaryDisabled ? "" : "pointer"}
-                                            onClick={() => onChange("secondary", EAdvisorAssignMethod.Rotational)}/>}
-                                </TableCellWithPadding>
-                            </TableRow>
-                            <TableRow>
-                                <TableCellWithPadding>Max Capacity</TableCellWithPadding>
-                                <TableCellWithPadding align="center">
-                                    {primaryMethod === EAdvisorAssignMethod.MaxCapacity
-                                        ? <RadioButtonChecked
-                                            htmlColor="#3855F3"
-                                            cursor="pointer"/>
-                                        : <RadioButtonUnchecked
-                                            htmlColor="#DADADA"
-                                            cursor="pointer"
-                                            onClick={() => onChange("primary", EAdvisorAssignMethod.MaxCapacity)}/>}
-                                </TableCellWithPadding>
-                                <TableCellWithPadding align="center" style={{backgroundColor: isSecondaryDisabled ? "#E8E9ED" : ""}}>
-                                    {secondaryMethod === EAdvisorAssignMethod.MaxCapacity
-                                        ? <RadioButtonChecked
-                                            htmlColor={isSecondaryDisabled ? "#DADADA" : "#3855F3"}
-                                            cursor={isSecondaryDisabled ? "" : "pointer"}/>
-                                        : <RadioButtonUnchecked
-                                            htmlColor="#DADADA"
-                                            cursor={isSecondaryDisabled ? "" : "pointer"}
-                                            onClick={() => onChange("secondary", EAdvisorAssignMethod.MaxCapacity)}/>}
-                                </TableCellWithPadding>
-                            </TableRow>
-                            <TableRow>
-                                <TableCellWithPadding>Last advisor</TableCellWithPadding>
-                                <TableCellWithPadding align="center">
-                                    {primaryMethod === EAdvisorAssignMethod.LastAdvisor
-                                        ? <RadioButtonChecked
-                                            htmlColor="#3855F3"
-                                            cursor="pointer"/>
-                                        : <RadioButtonUnchecked
-                                            htmlColor="#DADADA"
-                                            cursor="pointer"
-                                            onClick={() => onChange("primary", EAdvisorAssignMethod.LastAdvisor)}/>}
-                                </TableCellWithPadding>
-                                <TableCellWithPadding align="center" style={{backgroundColor: "#F4F4F4"}}>
-                                    <RadioButtonUnchecked htmlColor="#DADADA"/>
-                                </TableCellWithPadding>
-                            </TableRow>
-                            <TableRow>
-                                <TableCellWithPadding>No assignment</TableCellWithPadding>
-                                <TableCellWithPadding align="center">
-                                    {noAssignment
-                                        ? <RadioButtonChecked
-                                            htmlColor="#3855F3"
-                                            cursor="pointer"/>
-                                        : <RadioButtonUnchecked
-                                            htmlColor="#DADADA"
-                                            cursor="pointer"
-                                            onClick={onNoAssignmentCheck}/>}
-                                </TableCellWithPadding>
-                                <TableCellWithPadding align="center" style={{backgroundColor: "#F4F4F4"}}>
-                                    <RadioButtonUnchecked htmlColor="#DADADA"/>
-                                </TableCellWithPadding>
-                            </TableRow>
+                            {data.map(item => (
+                                <ServiceBookRow item={item} onMethodChange={onMethodChange} key={item.serviceBookId ?? item.serviceBookName}/>
+                            ))}
                         </TableBody>
-                    </DemandTable>
-                }
+                    </Table>}
             </DialogContent>
             <DialogActions>
                 <div className={classes.actionsWrapper}>
                     <div className={classes.buttonsWrapper}>
                         <Button
-                            disabled={advisorAssignmentLoading}
+                            disabled={loading}
                             onClick={onCancel}
                             className={classes.cancelButton}>
                             Cancel
                         </Button>
                         <Button
                             onClick={onSave}
-                            disabled={advisorAssignmentLoading}
+                            disabled={loading}
                             className={classes.saveButton}>
                             Save
                         </Button>

@@ -33,7 +33,7 @@ export interface IApiEndpoints {
     CustomerConsent: Record<"GetAll" | "Update" | "GetById" | "Create" | "Remove" | "Search" | "Toggle", TApiEndpoint>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiEndpoint>,
-    Employees: Record<"Create" | "Update" | "GetAll", TApiEndpoint>,
+    Employees: Record<"Create" | "Update" | "GetAll" | "GetAssignmentSettings" | "UpdateAssignmentSettings", TApiEndpoint>,
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove" | "SetForWeek" | "GetCalendarSummary"
         | "GetByDate" | "UpdateByDate" | "GetBaseSummary" | "GetSummaryByEmployee" | "GetTimeScheduleByEmployee"
         | "SetTimeScheduleByEmployee", TApiEndpoint>,

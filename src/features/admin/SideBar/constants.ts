@@ -176,5 +176,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
             },
         ]
     },
+    {to: Routes.Dealer.Base, name: "Dealer Operations", roles: ["Owner", 'Manager', "Service Director"]},
     {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
 ]
