@@ -19,7 +19,7 @@ export const FirstScreenOptionsPage = () => {
     return (
         <React.Fragment>
             <TitleContainer
-                title="First Screen"
+                title="First Screen Configuration"
                 pad
                 parent={bookingFlowRoot}
                 actions={
