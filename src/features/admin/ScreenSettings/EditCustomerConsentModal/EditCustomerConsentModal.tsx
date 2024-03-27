@@ -25,7 +25,6 @@ import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRe
 import TimeSelect from "../../../../components/pickers/TimeSelect/TimeSelect";
 import dayjs from "dayjs";
 import {timeSpanString} from "../../../../utils/constants";
-import {EDayOfWeek} from "../../../../store/reducers/offers/types";
 import {IAdvisorShort} from "../../../../store/reducers/users/types";
 import {TTransportationShort} from "../../../../store/reducers/transportationNeeds/types";
 import {TGeographicZoneShort} from "../../../../types/types";
@@ -35,6 +34,7 @@ import {LoadingButton} from "../../../../components/buttons/LoadingButton/Loadin
 import {Label, SectionTitle} from "./styles";
 import {IBaseCustomerConsent, ICustomerConsentById} from "../../../../store/reducers/screenSettings/types";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
+import {EDay} from "../../../../store/reducers/demandSegments/types";
 
 const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undefined }> = ({open, onClose, consentId}) => {
     const {advisorsList} = useSelector(({scEmployees}: RootState) => scEmployees);
@@ -241,7 +241,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
 
     const onDayOfWeekChange = (e: ChangeEvent<{}>, value: TOption[]) => {
         setFormIsChecked(false)
-        setForm(prev => ({...prev, daysOfWeek: value.map(({value}) => value as EDayOfWeek)}))
+        setForm(prev => ({...prev, daysOfWeek: value.map(({value}) => value as EDay)}))
     }
 
     const onAdvisorsChange = (e: ChangeEvent<{}>, value: IAdvisorShort[]) => {
@@ -579,7 +579,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                                 options={dayOfWeekOptions}
                                 isOptionEqualToValue={(o, v) => o.value === v.value}
                                 renderOption={autocompleteOptionsRender((e) => e.name)}
-                                value={dayOfWeekOptions.filter(el => form.daysOfWeek.includes(el.value as EDayOfWeek))}
+                                value={dayOfWeekOptions.filter(el => form.daysOfWeek.includes(el.value as EDay))}
                                 onChange={onDayOfWeekChange}
                                 getOptionLabel={i => i.name}
                                 renderInput={autocompleteRender({
