@@ -116,7 +116,7 @@ export const createCustomerConsent = (data: IBaseCustomerConsent, onError: TArgC
 
 export const updateCustomerConsent = (data: ICustomerConsentById, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
     dispatch(setLoading(true))
-    Api.call(Api.endpoints.CustomerConsent.Update, {data})
+    Api.call(Api.endpoints.CustomerConsent.Update, {data, urlParams: {id: data.id}})
         .then(res => {
             if (res) dispatch(loadConsentsList(data.serviceCenterId, data.podId))
             onSuccess()
