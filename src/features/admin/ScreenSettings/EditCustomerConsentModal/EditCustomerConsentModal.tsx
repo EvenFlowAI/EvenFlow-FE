@@ -234,7 +234,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
         setForm(prev => ({...prev, serviceRequests: value}))
     }
 
-    const onAppointmentTimeChange = (value: string, field: keyof TForm) => {
+    const onAppointmentTimeChange = (value: string|undefined, field: keyof TForm) => {
         setFormIsChecked(false)
         setForm(prev => ({...prev, [field]: value}))
     }
@@ -591,6 +591,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                         <Grid item xs={12} sm={6}>
                             <Label>Appointment Time Of Day From</Label>
                             <TimeSelect
+                                disableClearable={false}
                                 width={"100%"}
                                 error={startTimeError}
                                 gap={60}
@@ -602,6 +603,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                         <Grid item xs={12} sm={6}>
                             <Label>Appointment Time Of Day To</Label>
                             <TimeSelect
+                                disableClearable={false}
                                 width={"100%"}
                                 error={endTimeError}
                                 gap={60}

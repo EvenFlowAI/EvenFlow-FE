@@ -127,6 +127,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
             val: el => (
                 <PickersWrapper>
                     <TimeSelect
+                        disableClearable
                         error={
                             formIsChecked && el.isOnSchedule
                             && (!el.startAt
@@ -141,6 +142,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                         onChange={(value) => onTimeChange(el, 'startAt', value)}/>
                     <div>TO</div>
                     <TimeSelect
+                        disableClearable
                         error={
                             formIsChecked && el.isOnSchedule
                             && (!el.finishAt
