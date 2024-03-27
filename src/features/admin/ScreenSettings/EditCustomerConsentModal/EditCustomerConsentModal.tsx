@@ -126,7 +126,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
         }
         if (form.serviceValetZones.length && form.mobileServiceZones.length) {
             isValid = false;
-            showError('"Service Valet Zones" cannot bw configured with "Mobile Service Zones"')
+            showError('"Service Valet Zones" cannot be configured with "Mobile Service Zones"')
         }
         if (startTimeError || endTimeError) {
             isValid = false;
