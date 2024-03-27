@@ -34,6 +34,7 @@ import {useActionButtonsStyles} from "../../../../hooks/styling/useActionButtons
 import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 import {Label, SectionTitle} from "./styles";
 import {IBaseCustomerConsent, ICustomerConsentById} from "../../../../store/reducers/screenSettings/types";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 
 const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undefined }> = ({open, onClose, consentId}) => {
     const {advisorsList} = useSelector(({scEmployees}: RootState) => scEmployees);
@@ -61,8 +62,8 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
     }, [formIsChecked, slotRange, form])
     const endTimeError = useMemo(() => {
         return formIsChecked && (dayjs(form.appointmentTimeTo, timeSpanString).isSameOrBefore(dayjs(form.appointmentTimeFrom, timeSpanString), 'minute')
-            || dayjs(form.appointmentTimeTo, timeSpanString).isAfter(dayjs(slotRange?.start, timeSpanString), 'minute')
-            || dayjs(form.appointmentTimeTo, timeSpanString).isBefore(dayjs(slotRange?.end, timeSpanString), 'minute'))
+            || dayjs(form.appointmentTimeTo, timeSpanString).isBefore(dayjs(slotRange?.start, timeSpanString), 'minute')
+            || dayjs(form.appointmentTimeTo, timeSpanString).isAfter(dayjs(slotRange?.end, timeSpanString), 'minute'))
     }, [formIsChecked, slotRange, form])
 
     useEffect(() => {
@@ -126,7 +127,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
         }
         if (form.serviceValetZones.length && form.mobileServiceZones.length) {
             isValid = false;
-            showError('"Service Valet Zones" cannot bw configured with "Mobile Service Zones"')
+            showError('"Service Valet Zones" cannot be configured with "Mobile Service Zones"')
         }
         if (startTimeError || endTimeError) {
             isValid = false;
@@ -279,6 +280,9 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                 {consentId ? "Edit" : "Add"} Customer Consent
             </DialogTitle>
             <DialogContent>
+                {isConsentLoading || isLoading
+                    ? <Loading/>
+                    : <>
                     <Grid container spacing={3} style={{marginBottom: 36}}>
                         <Grid item xs={12}><SectionTitle>Consent</SectionTitle></Grid>
                         <Grid item xs={12} md={6}>
@@ -321,292 +325,293 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                                 rows={3}/>
                         </Grid>
                     </Grid>
-                <Grid container spacing={3} style={{marginBottom: 36}}>
-                    <Grid item xs={12}><SectionTitle>Appointment Request</SectionTitle></Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            multiple
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            options={serviceRequests}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            value={form.serviceRequests}
-                            getOptionLabel={i => i.code}
-                            onChange={onServiceRequestsChange}
-                            renderOption={autocompleteOptionsRender((e) => e.code)}
-                            renderInput={autocompleteRender({
-                                label: "Service Requests (Ops Codes)",
-                                placeholder: 'Service Requests (Ops Codes)'
-                            })}
-                        />
+                    <Grid container spacing={3} style={{marginBottom: 36}}>
+                        <Grid item xs={12}><SectionTitle>Appointment Request</SectionTitle></Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                options={serviceRequests}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                value={form.serviceRequests}
+                                getOptionLabel={i => i.code}
+                                onChange={onServiceRequestsChange}
+                                renderOption={autocompleteOptionsRender((e) => e.code)}
+                                renderInput={autocompleteRender({
+                                    label: "Service Requests (Ops Codes)",
+                                    placeholder: 'Service Requests (Ops Codes)'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                options={shortPodsList}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                value={form.serviceBooks}
+                                onChange={onServiceBooksChange}
+                                renderOption={autocompleteOptionsRender((e) => e.name)}
+                                getOptionLabel={i => i.name}
+                                renderInput={autocompleteRender({
+                                    label: "PODs (Service Books) Assignment",
+                                    placeholder: "PODs (Service Books) Assignment",
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                options={advisorsList}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                value={form.advisors}
+                                renderOption={autocompleteOptionsRender(i => `${i.firstName} ${i.lastName}`)}
+                                getOptionLabel={i => `${i.firstName} ${i.lastName}`}
+                                onChange={onAdvisorsChange}
+                                renderInput={autocompleteRender({
+                                    label: "Advisors Selection",
+                                    placeholder: 'Advisors Selection',
+                                    error: formIsChecked && !!form.advisors.length && !!form.mobileServiceZones.length
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                options={transportationsShort}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                value={form.transportationOptions}
+                                renderOption={autocompleteOptionsRender(i => i.name)}
+                                getOptionLabel={i => i.name}
+                                onChange={onTransportationsChange}
+                                renderInput={autocompleteRender({
+                                    label: "Transportation Options",
+                                    placeholder: 'Transportation Options',
+                                    error: formIsChecked && !!form.transportationOptions.length && !!form.mobileServiceZones.length
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                options={svZonesShort}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                renderOption={autocompleteOptionsRender(i => i.name)}
+                                getOptionLabel={i => i.name}
+                                value={form.serviceValetZones}
+                                onChange={onSvZonesChange}
+                                renderInput={autocompleteRender({
+                                    label: "Service Valet Zones",
+                                    placeholder: 'Select Service Valet Zones',
+                                    error: formIsChecked && !!form.mobileServiceZones.length && !!form.serviceValetZones.length
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                options={mobileZonesShort}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                renderOption={autocompleteOptionsRender(i => i.name)}
+                                value={form.mobileServiceZones}
+                                getOptionLabel={i => i.name}
+                                onChange={onMobileZonesChange}
+                                renderInput={autocompleteRender({
+                                    label: "Mobile Service Zones",
+                                    placeholder: 'Select Mobile Service Zones',
+                                    error: formIsChecked && !!form.mobileServiceZones.length && !!form.serviceValetZones.length
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Autocomplete
+                                options={['Yes', 'No']}
+                                isOptionEqualToValue={(o, v) => o === v}
+                                getOptionLabel={i => i}
+                                value={form.isWaitlistEnabled ? "Yes" : "No"}
+                                onChange={onWaitListChange}
+                                renderInput={autocompleteRender({
+                                    label: "Waitlist Appointment",
+                                    placeholder: 'Waitlist Appointment',
+                                    error: formIsChecked && form.isWaitlistEnabled
+                                        && (!!form.serviceValetZones.length || !!form.mobileServiceZones.length)
+                                })}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            multiple
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            options={shortPodsList}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            value={form.serviceBooks}
-                            onChange={onServiceBooksChange}
-                            renderOption={autocompleteOptionsRender((e) => e.name)}
-                            getOptionLabel={i => i.name}
-                            renderInput={autocompleteRender({
-                                label: "PODs (Service Books) Assignment",
-                                placeholder: "PODs (Service Books) Assignment",
-                            })}
-                        />
+                    <Grid container spacing={3} style={{marginBottom: 36}}>
+                        <Grid item xs={12}><SectionTitle>Customer & Vehicle</SectionTitle></Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <Autocomplete
+                                options={customerTypeOptions}
+                                isOptionEqualToValue={(o, v) => o.value === v.value}
+                                getOptionLabel={i => i.name}
+                                value={customerTypeOptions.find(el => el.value as EUserType === form.customerType) ?? null}
+                                onChange={onCustomerTypeChange}
+                                renderInput={autocompleteRender({
+                                    label: "Customer Type (New, Existing)",
+                                    placeholder: "Customer Type (New, Existing)",
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <Autocomplete
+                                style={{ marginBottom: 10 }}
+                                options={yearOptions}
+                                isOptionEqualToValue={(option, value) => option === value}
+                                value={form.modelYearFrom?.toString() ?? ''}
+                                onChange={onAutocompleteChange("modelYearFrom")}
+                                renderInput={autocompleteRender({
+                                    label: 'Vehicle Year From',
+                                    placeholder: 'Vehicle Year From',
+                                    error: formIsChecked
+                                        && ((!!form.modelYearFrom && !!form.modelYearTo && (form.modelYearFrom > form.modelYearTo))
+                                            || (!!form.modelYearTo && !form.modelYearFrom))
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <Autocomplete
+                                style={{ marginBottom: 10 }}
+                                options={yearOptions}
+                                isOptionEqualToValue={(option, value) => option === value}
+                                value={form.modelYearTo?.toString() ?? ''}
+                                onChange={onAutocompleteChange("modelYearTo")}
+                                renderInput={autocompleteRender({
+                                    label: 'Vehicle Year To',
+                                    placeholder: 'Vehicle Year To',
+                                    error: formIsChecked
+                                        && ((!!form.modelYearFrom && !!form.modelYearTo && (form.modelYearFrom > form.modelYearTo))
+                                            || (!!form.modelYearFrom && !form.modelYearTo))
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                style={{ marginBottom: 10 }}
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                options={getSortedMakes()}
+                                disableCloseOnSelect
+                                getOptionLabel={i => i.name}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                renderOption={autocompleteOptionsRender((e) => e.name)}
+                                value={form.makes}
+                                onChange={onMakeChange}
+                                renderInput={autocompleteRender({
+                                    label: "Vehicle Makes",
+                                    placeholder: 'Vehicle Makes'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                style={{ marginBottom: 10 }}
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                options={getSortedModels()}
+                                disableCloseOnSelect
+                                getOptionLabel={i => i.name}
+                                renderOption={autocompleteOptionsRender((e) => e.name)}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                value={form.models}
+                                onChange={onModelChange}
+                                renderInput={autocompleteRender({
+                                    label: "Vehicle Models",
+                                    placeholder: 'Vehicle Models'
+                                })}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            multiple
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            options={advisorsList}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            value={form.advisors}
-                            renderOption={autocompleteOptionsRender(i => `${i.firstName} ${i.lastName}`)}
-                            getOptionLabel={i => `${i.firstName} ${i.lastName}`}
-                            onChange={onAdvisorsChange}
-                            renderInput={autocompleteRender({
-                                label: "Advisors Selection",
-                                placeholder: 'Advisors Selection',
-                                error: formIsChecked && !!form.advisors.length && !!form.mobileServiceZones.length
-                            })}
-                        />
+                    <Grid container spacing={3} style={{marginBottom: 36}}>
+                        <Grid item xs={12}><SectionTitle>Time Factor</SectionTitle></Grid>
+                        <Grid item xs={12}>
+                            <Autocomplete
+                                multiple
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                options={dayOfWeekOptions}
+                                isOptionEqualToValue={(o, v) => o.value === v.value}
+                                renderOption={autocompleteOptionsRender((e) => e.name)}
+                                value={dayOfWeekOptions.filter(el => form.daysOfWeek.includes(el.value as EDayOfWeek))}
+                                onChange={onDayOfWeekChange}
+                                getOptionLabel={i => i.name}
+                                renderInput={autocompleteRender({
+                                    label: "Appointment Days Of Week",
+                                    placeholder: 'Select Appointment Days Of Week'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Label>Appointment Time Of Day From</Label>
+                            <TimeSelect
+                                width={"100%"}
+                                error={startTimeError}
+                                gap={60}
+                                start={slotRange?.start ?? ""}
+                                end={slotRange?.end ?? ""}
+                                value={form.appointmentTimeFrom}
+                                onChange={(value) => onAppointmentTimeChange(value, "appointmentTimeFrom")}/>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Label>Appointment Time Of Day To</Label>
+                            <TimeSelect
+                                width={"100%"}
+                                error={endTimeError}
+                                gap={60}
+                                start={slotRange?.start ?? ""}
+                                end={slotRange?.end ?? ""}
+                                value={form.appointmentTimeTo}
+                                onChange={(value) => onAppointmentTimeChange(value, "appointmentTimeTo")}/>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            multiple
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            options={transportationsShort}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            value={form.transportationOptions}
-                            renderOption={autocompleteOptionsRender(i => i.name)}
-                            getOptionLabel={i => i.name}
-                            onChange={onTransportationsChange}
-                            renderInput={autocompleteRender({
-                                label: "Transportation Options",
-                                placeholder: 'Transportation Options',
-                                error: formIsChecked && !!form.transportationOptions.length && !!form.mobileServiceZones.length
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            multiple
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            options={svZonesShort}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            renderOption={autocompleteOptionsRender(i => i.name)}
-                            getOptionLabel={i => i.name}
-                            value={form.serviceValetZones}
-                            onChange={onSvZonesChange}
-                            renderInput={autocompleteRender({
-                                label: "Service Valet Zones",
-                                placeholder: 'Select Service Valet Zones',
-                                error: formIsChecked && !!form.mobileServiceZones.length && !!form.serviceValetZones.length
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            multiple
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            options={mobileZonesShort}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            renderOption={autocompleteOptionsRender(i => i.name)}
-                            value={form.mobileServiceZones}
-                            getOptionLabel={i => i.name}
-                            onChange={onMobileZonesChange}
-                            renderInput={autocompleteRender({
-                                label: "Mobile Service Zones",
-                                placeholder: 'Select Mobile Service Zones',
-                                error: formIsChecked && !!form.mobileServiceZones.length && !!form.serviceValetZones.length
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Autocomplete
-                            options={['Yes', 'No']}
-                            isOptionEqualToValue={(o, v) => o === v}
-                            getOptionLabel={i => i}
-                            value={form.isWaitlistEnabled ? "Yes" : "No"}
-                            onChange={onWaitListChange}
-                            renderInput={autocompleteRender({
-                                label: "Waitlist Appointment",
-                                placeholder: 'Waitlist Appointment',
-                                error: formIsChecked && form.isWaitlistEnabled
-                                    && (!!form.serviceValetZones.length || !!form.mobileServiceZones.length)
-                            })}
-                        />
-                    </Grid>
-                </Grid>
-                <Grid container spacing={3} style={{marginBottom: 36}}>
-                    <Grid item xs={12}><SectionTitle>Customer & Vehicle</SectionTitle></Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Autocomplete
-                            options={customerTypeOptions}
-                            isOptionEqualToValue={(o, v) => o.value === v.value}
-                            getOptionLabel={i => i.name}
-                            value={customerTypeOptions.find(el => el.value as EUserType === form.customerType) ?? null}
-                            onChange={onCustomerTypeChange}
-                            renderInput={autocompleteRender({
-                                label: "Customer Type (New, Existing)",
-                                placeholder: "Customer Type (New, Existing)",
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Autocomplete
-                            style={{ marginBottom: 10 }}
-                            options={yearOptions}
-                            isOptionEqualToValue={(option, value) => option === value}
-                            value={form.modelYearFrom?.toString() ?? ''}
-                            onChange={onAutocompleteChange("modelYearFrom")}
-                            renderInput={autocompleteRender({
-                                label: 'Vehicle Year From',
-                                placeholder: 'Vehicle Year From',
-                                error: formIsChecked
-                                    && ((!!form.modelYearFrom && !!form.modelYearTo && (form.modelYearFrom > form.modelYearTo))
-                                        || (!!form.modelYearTo && !form.modelYearFrom))
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Autocomplete
-                            style={{ marginBottom: 10 }}
-                            options={yearOptions}
-                            isOptionEqualToValue={(option, value) => option === value}
-                            value={form.modelYearTo?.toString() ?? ''}
-                            onChange={onAutocompleteChange("modelYearTo")}
-                            renderInput={autocompleteRender({
-                                label: 'Vehicle Year To',
-                                placeholder: 'Vehicle Year To',
-                                error: formIsChecked
-                                    && ((!!form.modelYearFrom && !!form.modelYearTo && (form.modelYearFrom > form.modelYearTo))
-                                        || (!!form.modelYearFrom && !form.modelYearTo))
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Autocomplete
-                            multiple
-                            style={{ marginBottom: 10 }}
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            options={getSortedMakes()}
-                            disableCloseOnSelect
-                            getOptionLabel={i => i.name}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            renderOption={autocompleteOptionsRender((e) => e.name)}
-                            value={form.makes}
-                            onChange={onMakeChange}
-                            renderInput={autocompleteRender({
-                                label: "Vehicle Makes",
-                                placeholder: 'Vehicle Makes'
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            multiple
-                            style={{ marginBottom: 10 }}
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            options={getSortedModels()}
-                            disableCloseOnSelect
-                            getOptionLabel={i => i.name}
-                            renderOption={autocompleteOptionsRender((e) => e.name)}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            value={form.models}
-                            onChange={onModelChange}
-                            renderInput={autocompleteRender({
-                                label: "Vehicle Models",
-                                placeholder: 'Vehicle Models'
-                            })}
-                        />
-                    </Grid>
-                </Grid>
-                <Grid container spacing={3} style={{marginBottom: 36}}>
-                    <Grid item xs={12}><SectionTitle>Time Factor</SectionTitle></Grid>
-                    <Grid item xs={12}>
-                        <Autocomplete
-                            multiple
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            options={dayOfWeekOptions}
-                            isOptionEqualToValue={(o, v) => o.value === v.value}
-                            renderOption={autocompleteOptionsRender((e) => e.name)}
-                            value={dayOfWeekOptions.filter(el => form.daysOfWeek.includes(el.value as EDayOfWeek))}
-                            onChange={onDayOfWeekChange}
-                            getOptionLabel={i => i.name}
-                            renderInput={autocompleteRender({
-                                label: "Appointment Days Of Week",
-                                placeholder: 'Select Appointment Days Of Week'
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Label>Appointment Time Of Day From</Label>
-                        <TimeSelect
-                            width={"100%"}
-                            error={startTimeError}
-                            gap={60}
-                            start={slotRange?.start ?? ""}
-                            end={slotRange?.end ?? ""}
-                            value={form.appointmentTimeFrom}
-                            onChange={(value) => onAppointmentTimeChange(value, "appointmentTimeFrom")}/>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Label>Appointment Time Of Day To</Label>
-                        <TimeSelect
-                            width={"100%"}
-                            error={endTimeError}
-                            gap={60}
-                            start={slotRange?.start ?? ""}
-                            end={slotRange?.end ?? ""}
-                            value={form.appointmentTimeTo}
-                            onChange={(value) => onAppointmentTimeChange(value, "appointmentTimeTo")}/>
-                    </Grid>
-                </Grid>
+                </>}
             </DialogContent>
             <DialogActions>
                 <div className={classes.wrapper}>

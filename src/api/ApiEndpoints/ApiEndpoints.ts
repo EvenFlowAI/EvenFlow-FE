@@ -110,7 +110,7 @@ export class Api {
             GetAll: {route: "/customer-consents", method: "get"},
             GetById: {route: "/customer-consents/{id}", method: "get"},
             Remove: {route: "/customer-consents", method: "delete"},
-            Update: {route: "/customer-consents", method: "post"},
+            Update: {route: "/customer-consents/{id}", method: "put"},
             Search: {route: "/customer-consents/search", method: "post"},
             Toggle: {route: "/customer-consents", method: "patch"}
         },
