@@ -919,7 +919,9 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
         advisor,
         appointmentByKey,
         zipCode,
+        categoriesIds,
     } = getState().appointmentFrame;
+    const {allCategories} = getState().categories;
 
     if (scProfile && selectedVehicle) {
         const makeId = makes.find(el => el.name.toLowerCase() === selectedVehicle?.make?.toLowerCase())?.id
@@ -944,7 +946,7 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
             podId: slotPodId,
             makeId: makeId ?? null,
             modelId: model?.id ?? null,
-            serviceRequestIds: collectServiceRequestsForSearch(service, subService, selectedPackage, selectedSR, selectedRecalls),
+            serviceRequestIds: collectServiceRequestsForSearch(service, subService, categoriesIds, allCategories, selectedPackage, selectedSR, selectedRecalls),
             modelYear: selectedVehicle.year,
             customerType: userType ?? EUserType.New,
             serviceType: serviceTypeOption?.type ?? EServiceType.VisitCenter,

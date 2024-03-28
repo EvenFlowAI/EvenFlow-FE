@@ -241,9 +241,11 @@ export const collectServiceRequestIds = (
 export const collectServiceRequestsForSearch = (
     s: IServiceCategory | null,
     sub: IServiceCategory | null,
+    categoriesIds: number[],
+    allCategories: ICategory[],
     selectedPackage?: IPackageOptions | null,
     individualOpsCodes?: number[],
-    selectedRecalls?: IRecallByVin[]): number[] => {
+    selectedRecalls?: IRecallByVin[],): number[] => {
     let ids = [];
 
     if (selectedRecalls?.length) {
@@ -258,21 +260,26 @@ export const collectServiceRequestsForSearch = (
         for (let c of selectedPackage.serviceRequests) {
             ids.push(c.id)
         }
-        for (let c of selectedPackage.complimentaryServices) {
-            ids.push(c.id)
-        }
-        for (let c of selectedPackage.intervalUpsells) {
-            ids.push(c.id)
-        }
     }
-    if (s) {
+    if (s && s.type === EServiceCategoryType.GeneralCategory) {
         for (let c of s.serviceRequests) {
             ids.push(c.id)
         }
     }
-    if (sub) {
+    if (sub && sub.type === EServiceCategoryType.GeneralCategory) {
         for (let c of sub.serviceRequests) {
             ids.push(c.id)
+        }
+    }
+    if (categoriesIds.length && allCategories.length) {
+        const selected = allCategories
+            .filter(item => categoriesIds.includes(item.id) && item.type === EServiceCategoryType.GeneralCategory)
+        if (selected.length) {
+            const array = selected.map(el => el.serviceRequests)
+            const serviceRequests = array.flat(1)
+            for (let sr of serviceRequests) {
+                ids.push(sr.id)
+            }
         }
     }
     const set = new Set(ids)
