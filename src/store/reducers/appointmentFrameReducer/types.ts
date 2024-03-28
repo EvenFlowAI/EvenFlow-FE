@@ -246,8 +246,8 @@ export interface ISearchConsentsData {
     serviceCenterId: number;
     podId: number|null;
     serviceRequestIds: number[];
-    makeId: number|null;
-    modelId: number|null;
+    make: string|null;
+    model: string|null;
     modelYear: number|null;
     customerType: EUserType;
     appointmentTime: string;

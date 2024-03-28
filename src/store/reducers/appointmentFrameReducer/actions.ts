@@ -911,7 +911,7 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
 
     const {scProfile, slotPodId, selectedSR,
         appointment, waitListSettings, serviceValetAppointment} = getState().appointment;
-    const {selectedVehicle, makes, service,
+    const {selectedVehicle, service,
         subService, selectedPackage, selectedRecalls,
         serviceTypeOption,
         transportation,
@@ -924,11 +924,6 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
     const {allCategories} = getState().categories;
 
     if (scProfile && selectedVehicle) {
-        const makeId = makes.find(el => el.name.toLowerCase() === selectedVehicle?.make?.toLowerCase())?.id
-        const model = makes
-            .map(el => el.modelCodes)
-            .flat(1)
-            .find(item => item?.name.toLowerCase() === selectedVehicle.model?.toLowerCase())
         const settingsEnabled = Boolean(waitListSettings?.isEnabled)
         const isWaitListSlotSelected = appointment?.isOverbookingApplied && settingsEnabled;
         const isWaitListManaging = !appointment
@@ -944,8 +939,8 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
         const data: ISearchConsentsData = {
             serviceCenterId: scProfile.id,
             podId: slotPodId,
-            makeId: makeId ?? null,
-            modelId: model?.id ?? null,
+            make: selectedVehicle.make ?? null,
+            model: selectedVehicle.model ?? null,
             serviceRequestIds: collectServiceRequestsForSearch(service, subService, categoriesIds, allCategories, selectedPackage, selectedSR, selectedRecalls),
             modelYear: selectedVehicle.year,
             customerType: userType ?? EUserType.New,
