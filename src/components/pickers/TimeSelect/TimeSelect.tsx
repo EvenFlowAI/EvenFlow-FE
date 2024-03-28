@@ -95,7 +95,7 @@ const TimeSelect: React.FC<TProps> = ({
                 style={{width: width ?? 86}}
                 isOptionEqualToValue={(option, value) => dayjs(`${option} ${period}`, time12HourFormat).isSame(dayjs(value, timeSpanString), 'minute')}
                 onChange={onAutocompleteChange}
-                value={value ? dayjs(value, timeSpanString).format(twelveHourFormat) : undefined}
+                value={value ? dayjs(value, timeSpanString).format(twelveHourFormat) : ''}
                 renderInput={params => <TextField {...{
                     ...params, InputProps: {
                         ...params.InputProps,
