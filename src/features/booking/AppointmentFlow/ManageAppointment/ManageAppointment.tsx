@@ -54,6 +54,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../../routes/constants";
 import dayjs from "dayjs";
+import CustomerConsents from "../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 
 type TProps = {
     onChangeSlot: TCallback;
@@ -305,5 +306,6 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         <DetailedFeesManage open={isFeesOpen} onClose={onFeesClose}/>
         <PaymentTypeModal open={isPaymentOpen} onClose={onPaymentClose} onNo={searchForConsents}/>
         <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
+        <CustomerConsents onNext={handleCreateAppointment}/>
     </StepWrapper>
 };

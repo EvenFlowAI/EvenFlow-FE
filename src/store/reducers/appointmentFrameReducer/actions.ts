@@ -920,6 +920,7 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
         appointmentByKey,
         zipCode,
         categoriesIds,
+        acceptedConsentIds,
     } = getState().appointmentFrame;
     const {allCategories} = getState().categories;
 
@@ -956,8 +957,13 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
         Api.call<ICustomerConsentBooking[]>(Api.endpoints.CustomerConsent.Search, {data})
             .then(res => {
                 if (res?.data?.length) {
-                    dispatch(getCustomerConsentsBooking(res.data));
-                    dispatch(setConsentOpen(true));
+                    const filtered = res.data.filter(el => !acceptedConsentIds.includes(el.id))
+                    dispatch(getCustomerConsentsBooking(filtered));
+                    if (filtered.length) {
+                        dispatch(setConsentOpen(true));
+                    } else {
+                        onEmptyList()
+                    }
                 } else {
                     onEmptyList()
                 }
