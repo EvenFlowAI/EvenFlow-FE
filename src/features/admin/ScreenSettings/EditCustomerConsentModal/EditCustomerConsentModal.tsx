@@ -70,43 +70,42 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
         if (consentId && open) dispatch(loadConsentById(consentId))
     }, [consentId, open])
 
-    const setInitialData = useCallback(() => {
-        if (currentConsent) {
-            setForm(() => {
-                const {name, title, message, isWaitlistEnabled,
-                    modelYearFrom, modelYearTo, appointmentTimeFrom, appointmentTimeTo, daysOfWeek} = currentConsent
-                return {
-                    name,
-                    title,
-                    message,
-                    isWaitlistEnabled,
-                    modelYearFrom,
-                    modelYearTo,
-                    appointmentTimeFrom,
-                    appointmentTimeTo,
-                    daysOfWeek: daysOfWeek ?? [],
-                    makes: makesModels.filter(el => currentConsent.makeIds?.includes(el.id)),
-                    models: makesModels
-                        .map(el => el.models).flat(1).filter(el => currentConsent.modelIds?.includes(el.id)),
-                    customerType: currentConsent.customerType ?? null,
-                    serviceRequests: serviceRequests.filter(el => currentConsent.serviceRequestIds?.includes(el.id)),
-                    advisors: advisorsList.filter(el => currentConsent.advisorIds?.includes(el.id)),
-                    transportationOptions: transportationsShort.filter(el => currentConsent.transportationOptionIds?.includes(el.id)),
-                    mobileServiceZones: mobileZonesShort.filter(el => currentConsent.mobileServiceZoneIds?.includes(el.id)),
-                    serviceValetZones: svZonesShort.filter(el => currentConsent.serviceValetZoneIds?.includes(el.id)),
-                    serviceBooks: shortPodsList.filter(el => currentConsent.serviceBookIds?.includes(el.id)),
-                }
-            })
-        }
-    }, [currentConsent, makesModels, serviceRequests, advisorsList, transportationsShort, mobileZonesShort, svZonesShort, shortPodsList])
-
     useEffect(() => {
-        if (open && currentConsent) setInitialData()
-    }, [setInitialData, open, currentConsent])
+        if (open) {
+            if (currentConsent) {
+                setForm(() => {
+                    const {name, title, message, isWaitlistEnabled,
+                        modelYearFrom, modelYearTo, appointmentTimeFrom, appointmentTimeTo, daysOfWeek} = currentConsent
+                    return {
+                        name,
+                        title,
+                        message,
+                        isWaitlistEnabled,
+                        modelYearFrom,
+                        modelYearTo,
+                        appointmentTimeFrom,
+                        appointmentTimeTo,
+                        daysOfWeek: daysOfWeek ?? [],
+                        makes: makesModels.filter(el => currentConsent.makeIds?.includes(el.id)),
+                        models: makesModels
+                            .map(el => el.models).flat(1).filter(el => currentConsent.modelIds?.includes(el.id)),
+                        customerType: currentConsent.customerType ?? null,
+                        serviceRequests: serviceRequests.filter(el => currentConsent.serviceRequestIds?.includes(el.id)),
+                        advisors: advisorsList.filter(el => currentConsent.advisorIds?.includes(el.id)),
+                        transportationOptions: transportationsShort.filter(el => currentConsent.transportationOptionIds?.includes(el.id)),
+                        mobileServiceZones: mobileZonesShort.filter(el => currentConsent.mobileServiceZoneIds?.includes(el.id)),
+                        serviceValetZones: svZonesShort.filter(el => currentConsent.serviceValetZoneIds?.includes(el.id)),
+                        serviceBooks: shortPodsList.filter(el => currentConsent.serviceBookIds?.includes(el.id)),
+                    }
+                })
+            }
+        }
+    }, [open, currentConsent, makesModels, serviceRequests, advisorsList,
+        transportationsShort, mobileZonesShort, svZonesShort, shortPodsList])
 
     const onCancel = () => {
         dispatch(getCurrentConsent(null))
-        setForm(initialForm);
+        setForm(initialForm)
         setFormIsChecked(false);
         onClose()
     }
