@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";
 import {
-    createOrUpdateAppointment, searchForCustomerConsents, setAppointmentSaving,
+    createOrUpdateAppointment, searchForCustomerConsents,
     setCurrentFrameScreen
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {decodeSCID} from "../../../../utils/utils";
@@ -47,9 +47,6 @@ const AskChangesCompleted = () => {
     const redirectToAppointmentFrame = () => {
         if (history.location.pathname.includes("welcome")) {
             history.push( "/f/appointment/" + id);
-            dispatch(setAppointmentSaving(false));
-        } else {
-            dispatch(setAppointmentSaving(false));
         }
     }
 
