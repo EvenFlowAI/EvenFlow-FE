@@ -909,7 +909,6 @@ export const getCustomerConsentsBooking = createAction<ICustomerConsentBooking[]
 export const setAcceptedConsentIds = createAction<number[]>("fAppointment/SetAcceptedConsentIds");
 
 export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (dispatch, getState) => {
-    dispatch(setAppointmentSaving(true));
     dispatch(setConsentsLoading(true));
 
     const {scProfile, slotPodId, selectedSR,
@@ -973,10 +972,8 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
             })
             .catch(err => {
                 console.log('search for customer consent error', err)
-                dispatch(setAppointmentSaving(false))
             })
             .finally(() => {
-                dispatch(setAppointmentSaving(false))
                 dispatch(setConsentsLoading(false));
             })
     }

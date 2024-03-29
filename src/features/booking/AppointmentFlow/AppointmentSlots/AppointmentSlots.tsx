@@ -78,6 +78,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         prevScreen,
         appointmentByKey,
         isConsultantsLoading,
+        isConsentsLoading,
     } = useSelector((state: RootState) => state.appointmentFrame)
 
     const {
@@ -339,14 +340,19 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         <StepWrapper>
             <Wrapper>
                 <SelectedAppointment />
-                <ActionButtons onBack={handleBack} onNext={handleNext} nextDisabled={nextDisabled} nextLabel={t("Next")} loading={isConsultantsLoading}/>
+                <ActionButtons
+                    onBack={handleBack}
+                    onNext={handleNext}
+                    nextDisabled={nextDisabled}
+                    nextLabel={t("Next")}
+                    loading={isConsultantsLoading || isConsentsLoading}/>
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}
                         dateRangeUpdated={initRef.current}
                         dateChangeDisabled={selectedTiming !== EAppointmentTimingType.SpecialOffers}
                         date={date}
-                        loading={loading}
+                        loading={loading || isConsentsLoading}
                         onDateChange={updateDate} />
                     : <AppointmentDateSelector
                         dateChangeDisabled={selectedTiming !== EAppointmentTimingType.SpecialOffers}
@@ -354,19 +360,19 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                         date={date}
                         onDateRangeSet={handleDateRangeSet}
                         dateRangeUpdated={initRef.current}
-                        loading={loading}
+                        loading={loading || isConsentsLoading}
                         onDateChange={updateDate} />
                 }
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
                 ? <SVAppointmentTimeSelector
                         date={date}
-                        loading={loading}/>
+                        loading={loading || isConsentsLoading}/>
                 : <AppointmentTimeSelector
                         appointments={
                             groupedAppointments[dayjs(date).toISOString().replace('.000', '')]
                         }
                         date={date}
-                        loading={loading}/>}
+                        loading={loading || isConsentsLoading}/>}
             </Wrapper>
             <CustomerConsents onNext={handleConsents}/>
         </StepWrapper>
