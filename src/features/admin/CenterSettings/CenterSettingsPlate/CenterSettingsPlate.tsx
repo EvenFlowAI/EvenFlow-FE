@@ -23,7 +23,7 @@ export const CenterSettingsPlate: React.FC<React.PropsWithChildren<React.PropsWi
                                                                              suffix,
                                                                              label,
                                                                              helperText,
-                                                                             isLoading
+                                                                             isLoading,
                                                                          }) => {
     const { classes  } = useCenterSettingsStyles();
 

@@ -2,7 +2,6 @@ import React, {useMemo} from 'react';
 import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {
-    getSlotsConsultantId,
     selectAppointment,
     selectServiceValetAppointment,
 } from "../../../../../../store/reducers/appointment/actions";
@@ -32,7 +31,6 @@ const SelectedConsultant = () => {
         }
         dispatch(setAdvisor(consultant ? consultant : null))
         dispatch(setAnyAdvisorSelected(!Boolean(e.target.value)))
-        if (!consultant) dispatch(getSlotsConsultantId(null));
     }
 
     return isAdvisorAvailable && consultants.length

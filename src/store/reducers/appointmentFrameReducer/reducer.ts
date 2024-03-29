@@ -1,7 +1,7 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
     deleteLastScreen,
-    getAppointmentRequestsPrices,
+    getAppointmentRequestsPrices, getCustomerConsentsBooking,
     getMakes,
     getModels,
     getSeriesModels,
@@ -10,7 +10,7 @@ import {
     getValueServiceOffers,
     selectCategoriesIds,
     selectService,
-    selectSubService,
+    selectSubService, setAcceptedConsentIds,
     setAdditionalServicesChosen,
     setAddress,
     setAdvisor,
@@ -22,7 +22,7 @@ import {
     setAppointmentNotes,
     setAppointmentSaving,
     setCarIsValidForUpdate,
-    setCity,
+    setCity, setConsentsLoading,
     setConsultants,
     setConsultantsLoading,
     setCurrentFrameScreen,
@@ -52,7 +52,6 @@ import {
     setSelectedServiceTypeOptions,
     setServiceOptionChanged,
     setServiceTypeOption,
-    setShowServiceCentersList,
     setSideBarActualSteps,
     setSideBarMenu,
     setSideBarSteps,
@@ -75,7 +74,6 @@ import {
 } from "./actions";
 import {EAppointmentTimingType} from "../appointment/types";
 import {EServiceType, TState} from "./types";
-import {getSlotsConsultantId} from "../appointment/actions";
 
 const initialState: TState = {
     service: null,
@@ -142,7 +140,6 @@ const initialState: TState = {
     packagePricingType: null,
     packagePriceTitles: [],
     packageEMenuType: null,
-    slotsConsultantId: null,
     shouldShowServiceCentersList: true,
     isAppointmentSaving: false,
     appointmentByKey: null,
@@ -154,6 +151,9 @@ const initialState: TState = {
     serviceOptionChangedFromSlotPage: false,
     transactionValue: 0,
     passedScreens: [],
+    consents: [],
+    acceptedConsentIds: [],
+    isConsentsLoading: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -174,7 +174,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, selectedPackage: payload};
     })
     .addCase(setAdvisor, (state, {payload}) => {
-        return {...state, advisor: payload, slotsConsultantId: payload ? null : state.slotsConsultantId};
+        return {...state, advisor: payload};
     })
     .addCase(setAnyAdvisorSelected, (state, {payload}) => {
         return {...state, isAnyAdvisorSelected: payload};
@@ -367,12 +367,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     .addCase(setPackageEMenuType, (state, {payload}) => {
         return {...state, packageEMenuType: payload}
     })
-    .addCase(getSlotsConsultantId, (state, {payload}) => {
-        return {...state, slotsConsultantId: payload}
-    })
-    .addCase(setShowServiceCentersList, (state, {payload}) => {
-        return {...state, shouldShowServiceCentersList: payload}
-    })
     .addCase(setAppointmentSaving, (state, {payload}) => {
         return {...state, isAppointmentSaving: payload}
     })
@@ -421,8 +415,17 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     .addCase(setPassedScreens, (state, {payload}) => {
         return {...state, passedScreens: payload}
     })
+    .addCase(setAcceptedConsentIds, (state, {payload}) => {
+        return {...state, acceptedConsentIds: payload}
+    })
+    .addCase(getCustomerConsentsBooking, (state, {payload}) => {
+        return {...state, consents: payload}
+    })
     .addCase(deleteLastScreen, (state) => {
         const screens = state.passedScreens.slice(0, state.passedScreens.length - 1)
         return {...state, passedScreens: screens, currentScreen: screens[screens.length - 1]}
+    })
+    .addCase(setConsentsLoading, (state,  {payload}) => {
+        return {...state, isConsentsLoading: payload}
     })
 )

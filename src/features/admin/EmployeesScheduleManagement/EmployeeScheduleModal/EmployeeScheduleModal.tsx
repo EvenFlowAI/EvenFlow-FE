@@ -10,7 +10,6 @@ import {IScheduleByDate, IUpdateByDateRequest} from "../../../../store/reducers/
 import {SwitcherLabel, SwitcherWrapper} from "./styles";
 import TimeSelect from "../../../../components/pickers/TimeSelect/TimeSelect";
 import {CALENDAR_FORMAT, timeSpanString} from "../../../../utils/constants";
-import {PickersWrapper} from "../../EmployeeTimeScheduleSetUp/styles";
 import {loadHoursOfOperations} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Table} from "../../../../components/tables/Table/Table";
@@ -19,6 +18,7 @@ import {LoadingButton} from "../../../../components/buttons/LoadingButton/Loadin
 import {updateScheduleByDate} from "../../../../store/reducers/schedules/actions";
 import {useException} from "../../../../hooks/useException/useException";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
+import {PickersWrapper} from "../../../../components/styled/PickersWrapper";
 
 type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean, startDate?: TParsableDate, endDate?: TParsableDate}
 
@@ -127,6 +127,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
             val: el => (
                 <PickersWrapper>
                     <TimeSelect
+                        disableClearable
                         error={
                             formIsChecked && el.isOnSchedule
                             && (!el.startAt
@@ -141,6 +142,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                         onChange={(value) => onTimeChange(el, 'startAt', value)}/>
                     <div>TO</div>
                     <TimeSelect
+                        disableClearable
                         error={
                             formIsChecked && el.isOnSchedule
                             && (!el.finishAt

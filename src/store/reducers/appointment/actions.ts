@@ -62,20 +62,20 @@ export const getServiceCategories = createAction<IServiceCategory[]>("Appointmen
 export const getAllServiceCategories = createAction<IServiceCategoryShort[]>("Appointment/GetAllServiceCategories");
 export const setLoadedDateRange = createAction<ISearchedDateRange>("Appointment/SetLoadedDateRange");
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment/GetAppointmentSlots");
-export const getSlotsConsultantId = createAction<string|null>("Appointment/GetSlotsConsultantId");
 export const setAppointmentWasChanged = createAction<boolean>("Appointment/SetAppointmentWasChanged");
 export const setWaitListSettings = createAction<IWaitListData|null>("Appointment/SetWaitListSettings");
+export const setSlotPodId = createAction<number|null>("Appointment/SetSlotPodId");
 
 export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: TParsableDate) => void, loadCB?: TCallback): AppThunk => async dispatch => {
     try {
-        const {data: {items, searchedDateRange, slotGapMinutes, consultantId, waitlistSettings}} = await Api.call<IAppointmentResponse>(
+        const {data: {items, searchedDateRange, slotGapMinutes, waitlistSettings, podId}} = await Api.call<IAppointmentResponse>(
             Api.endpoints.AppointmentSlots.GetSlots,
             {data}
         );
         const res = dispatch(getAppointmentSlots(items));
         if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
-        dispatch(getSlotsConsultantId(consultantId ?? null))
         dispatch(setWaitListSettings(waitlistSettings ?? null))
+        dispatch(setSlotPodId(podId ?? null));
         if (loadCB) {
             loadCB();
         }
@@ -201,7 +201,6 @@ export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: T
             dispatch(getServiceValetSlots(items));
             if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange));
             if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings));
-            dispatch(getSlotsConsultantId(null));
             loadCB && loadCB();
         })
         .catch(err => {

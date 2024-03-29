@@ -27,7 +27,7 @@ import {TArgCallback, TParsableDate, TScreen} from "../../../../types/types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector/SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
-    clearAppointmentSteps,
+    clearAppointmentSteps, searchForCustomerConsents,
     setServiceTypeOption,
     setTransportation,
     setWelcomeScreenView
@@ -38,6 +38,7 @@ import {Wrapper} from "./styles";
 import {groupAppointments} from "./utils";
 import {Routes} from "../../../../routes/constants";
 import dayjs from "dayjs";
+import CustomerConsents from "../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 
 type TAppointmentSelectionProps = {
     handleSetScreen: TArgCallback<TScreen>;
@@ -207,7 +208,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                             ? EAppointmentTimingType.FirstAvailable
                             : selectedTiming,
                         serviceCenterId: decodeSCID(id),
-                        consultantId: advisor?.id ?? null,
+                        advisorId: advisor?.id ?? null,
                         fromDate: selectedTime
                             ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
                             : dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),
@@ -291,6 +292,9 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         }
     }, [serviceTypeOption, isTransportationAvailable])
 
+    const handleConsents = () => {
+        handleSetScreen("appointmentConfirmation")
+    }
 
     const handleNext = useCallback((): void => {
         handleGANext();
@@ -298,7 +302,11 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         if (customerLoadedData?.isUpdating) {
             handleTransportation()
         } else {
-            handleSetScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption ? 'transportationNeeds' : 'appointmentConfirmation');
+            if (isTransportationAvailable && !serviceTypeOption?.transportationOption) {
+                handleSetScreen("transportationNeeds")
+            } else {
+                dispatch(searchForCustomerConsents(handleConsents))
+            }
         }
     }, [isTransportationAvailable, serviceTypeOption, handleTransportation, customerLoadedData, handleGANext])
 
@@ -360,6 +368,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                         date={date}
                         loading={loading}/>}
             </Wrapper>
+            <CustomerConsents onNext={handleConsents}/>
         </StepWrapper>
     );
 };

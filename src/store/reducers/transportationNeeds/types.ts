@@ -93,4 +93,10 @@ export enum ETransportColumn {
 export type TState = {
     options: ITransportationOptionFull[];
     isLoading: boolean;
+    optionsShort: TTransportationShort[];
+}
+
+export type TTransportationShort = {
+    id: number;
+    name: string;
 }
