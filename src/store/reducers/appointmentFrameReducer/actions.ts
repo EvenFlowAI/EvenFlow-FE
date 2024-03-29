@@ -468,9 +468,8 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
     }
     if (onNext) {
         onNext()
-    } else {
-        dispatch(setAppointmentSaving(false))
     }
+    dispatch(setAppointmentSaving(false))
 }
 
 export const updateRecalls = (data: IAppointmentByKey, id: string): AppThunk => (dispatch, getState) => {
@@ -976,6 +975,9 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
                 console.log('search for customer consent error', err)
                 dispatch(setAppointmentSaving(false))
             })
-            .finally(() => dispatch(setConsentsLoading(false)))
+            .finally(() => {
+                dispatch(setAppointmentSaving(false))
+                dispatch(setConsentsLoading(false));
+            })
     }
 }

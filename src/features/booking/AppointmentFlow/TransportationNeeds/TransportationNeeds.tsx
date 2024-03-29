@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {ITransportation} from '../../../../api/types';
 import {
-    searchForCustomerConsents, setAppointmentSaving,
+    searchForCustomerConsents,
     setCurrentFrameScreen,
     setTransportation
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
@@ -121,7 +121,6 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
         } else {
             onNext();
         }
-        dispatch(setAppointmentSaving(false))
     }
 
     const handleNext = (transportation: ITransportation|null): void => {
