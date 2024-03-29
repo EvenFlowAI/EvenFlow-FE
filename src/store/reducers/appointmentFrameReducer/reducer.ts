@@ -22,7 +22,7 @@ import {
     setAppointmentNotes,
     setAppointmentSaving,
     setCarIsValidForUpdate,
-    setCity,
+    setCity, setConsentsLoading,
     setConsultants,
     setConsultantsLoading,
     setCurrentFrameScreen,
@@ -153,6 +153,7 @@ const initialState: TState = {
     passedScreens: [],
     consents: [],
     acceptedConsentIds: [],
+    isConsentsLoading: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -423,5 +424,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     .addCase(deleteLastScreen, (state) => {
         const screens = state.passedScreens.slice(0, state.passedScreens.length - 1)
         return {...state, passedScreens: screens, currentScreen: screens[screens.length - 1]}
+    })
+    .addCase(setConsentsLoading, (state,  {payload}) => {
+        return {...state, isConsentsLoading: payload}
     })
 )

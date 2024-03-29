@@ -180,6 +180,7 @@ export type TState = {
     passedScreens: TScreen[];
     consents: ICustomerConsentBooking[];
     acceptedConsentIds: number[];
+    isConsentsLoading: boolean;
 }
 
 type TPackageOptionRequestData = {

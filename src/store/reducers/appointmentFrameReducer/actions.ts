@@ -149,6 +149,7 @@ export const setServiceOptionChanged = createAction<boolean>("fAppointment/SetSe
 export const getTransactionValue = createAction<number>('fAppointment/GetTransactionValue');
 export const setPassedScreens = createAction<TScreen[]>('fAppointment/SetPassedScreens');
 export const deleteLastScreen = createAction('fAppointment/DeleteLastScreen')
+export const setConsentsLoading = createAction<boolean>('fAppointment/SetConsentsLoading')
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -465,7 +466,11 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
         dispatch(setCustomer(data.driver));
         saveCustomerCache(updatedData);
     }
-    onNext && onNext()
+    if (onNext) {
+        onNext()
+    } else {
+        dispatch(setAppointmentSaving(false))
+    }
 }
 
 export const updateRecalls = (data: IAppointmentByKey, id: string): AppThunk => (dispatch, getState) => {
@@ -678,6 +683,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
     const appointment = getState().appointment;
     const categories = getState().categories;
     const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
+    dispatch(setAppointmentSaving(true))
 
     const vehicle:TVehicleForRequest = {
         dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
@@ -787,7 +793,6 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         ? Api.endpoints.Appointments.UpdateByKey
         : Api.endpoints.Appointments.Create;
 
-    dispatch(setAppointmentSaving(true))
 
     Api.call<ICreateAppointmentResp>(endpoint, { data, urlParams: {id: appointmentFrame.hashKey} })
         .then(({data}) => {
@@ -796,8 +801,6 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         })
         .catch(e => {
             onError(e)
-        })
-        .finally(() => {
             dispatch(setAppointmentSaving(false))
         })
 }
@@ -908,6 +911,7 @@ export const setAcceptedConsentIds = createAction<number[]>("fAppointment/SetAcc
 
 export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (dispatch, getState) => {
     dispatch(setAppointmentSaving(true));
+    dispatch(setConsentsLoading(true));
 
     const {scProfile, slotPodId, selectedSR,
         appointment, waitListSettings, serviceValetAppointment} = getState().appointment;
@@ -970,7 +974,8 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
             })
             .catch(err => {
                 console.log('search for customer consent error', err)
+                dispatch(setAppointmentSaving(false))
             })
-            .finally(() => dispatch(setAppointmentSaving(false)))
+            .finally(() => dispatch(setConsentsLoading(false)))
     }
 }
