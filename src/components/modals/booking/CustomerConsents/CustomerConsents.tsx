@@ -17,7 +17,7 @@ import {useHistory, useParams} from "react-router-dom";
 
 const CustomerConsents: React.FC<{onNext: TCallback, onPrev?: TCallback}> = ({onNext, onPrev}) => {
     const {isConsentOpen} = useSelector((state: RootState) => state.modals);
-    const {isAppointmentSaving, consents} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isConsentsLoading, consents} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment)
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes)
     const dispatch = useDispatch();
@@ -61,7 +61,7 @@ const CustomerConsents: React.FC<{onNext: TCallback, onPrev?: TCallback}> = ({on
             </DialogContent>
             <DialogActions style={{paddingLeft: 72, paddingRight: 72}}>
                 <LoadingButton
-                    loading={isAppointmentSaving}
+                    loading={isConsentsLoading}
                     fullWidth
                     onClick={onChange}
                     variant="outlined"
@@ -70,7 +70,7 @@ const CustomerConsents: React.FC<{onNext: TCallback, onPrev?: TCallback}> = ({on
                 </LoadingButton>
                 <LoadingButton
                     fullWidth
-                    loading={isAppointmentSaving}
+                    loading={isConsentsLoading}
                     onClick={onAcknowledge}
                     color="primary"
                     variant="contained">

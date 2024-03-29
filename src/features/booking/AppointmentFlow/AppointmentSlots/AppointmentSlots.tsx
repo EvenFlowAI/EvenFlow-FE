@@ -27,7 +27,7 @@ import {TArgCallback, TParsableDate, TScreen} from "../../../../types/types";
 import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector/SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
-    clearAppointmentSteps, searchForCustomerConsents,
+    clearAppointmentSteps, searchForCustomerConsents, setAppointmentSaving,
     setServiceTypeOption,
     setTransportation,
     setWelcomeScreenView
@@ -292,7 +292,10 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         }
     }, [serviceTypeOption, isTransportationAvailable])
 
-    const handleConsents = () => handleSetScreen("appointmentConfirmation")
+    const handleConsents = () => {
+        handleSetScreen("appointmentConfirmation")
+        dispatch(setAppointmentSaving(false))
+    }
 
     const handleNext = useCallback((): void => {
         handleGANext();
