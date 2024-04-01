@@ -258,6 +258,7 @@ export interface ISearchConsentsData {
     transportationOptionId: number|null;
     isWaitlistEnabled: boolean;
     appointmentRequestId?: number;
+    maintenancePackageOptionId?: number;
 }
 
 export interface ICustomerConsentBooking {
