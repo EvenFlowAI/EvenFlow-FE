@@ -243,7 +243,6 @@ export const collectServiceRequestsForSearch = (
     sub: IServiceCategory | null,
     categoriesIds: number[],
     allCategories: ICategory[],
-    selectedPackage?: IPackageOptions | null,
     individualOpsCodes?: number[],
     selectedRecalls?: IRecallByVin[],): number[] => {
     let ids = [];
@@ -254,11 +253,6 @@ export const collectServiceRequestsForSearch = (
     if (individualOpsCodes?.length) {
         for (let c of individualOpsCodes) {
             ids.push(c);
-        }
-    }
-    if (selectedPackage) {
-        for (let c of selectedPackage.serviceRequests) {
-            ids.push(c.id)
         }
     }
     if (s && s.type === EServiceCategoryType.GeneralCategory) {
