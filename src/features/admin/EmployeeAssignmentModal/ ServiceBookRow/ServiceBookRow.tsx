@@ -10,6 +10,7 @@ import {
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {TOption} from "../../PodsTable/PODModal/types";
 import {methodOptions, secondaryOptions} from "../constants";
+import {getOptionsByRole} from "../utils";
 
 type TProps = {
     item: IEmployeeAssignmentSetting;
@@ -28,6 +29,8 @@ const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
         .find(el => el.role === 'Technician')?.methods?.find(el => el.level === EAssignmentLevel.Secondary)?.type;
     const isAdvisorSecondaryDisabled = advisorPrimaryMethod !== EAdvisorAssignMethod.LastEmployee
     const isTechSecondaryDisabled = technicianPrimaryMethod !== EAdvisorAssignMethod.LastEmployee
+    const advisorOptions = getOptionsByRole(methodOptions, "Advisor")
+    const technicianOptions = getOptionsByRole(methodOptions, "Technician")
 
     return <TableRow key={item.serviceBookId ?? item.serviceBookName}>
         <TableCell key="name" style={{borderRight: "1px solid #DADADA"}}>{item.serviceBookName}</TableCell>
@@ -36,11 +39,11 @@ const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
                 <div key="advisor">
                     <Autocomplete
                         fullWidth
-                        options={methodOptions}
+                        options={advisorOptions}
                         isOptionEqualToValue={(o, v) => o.value === v.value}
                         disableClearable
                         getOptionLabel={i => i.name}
-                        value={methodOptions.find(el => el.value === advisorPrimaryMethod)}
+                        value={advisorOptions.find(el => el.value === advisorPrimaryMethod)}
                         onChange={onMethodChange(item, EAssignmentLevel.Primary, "Advisor")}
                         renderInput={autocompleteRender({
                             label: '',
@@ -72,11 +75,11 @@ const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
                 <div key="advisor">
                     <Autocomplete
                         fullWidth
-                        options={methodOptions}
+                        options={technicianOptions}
                         isOptionEqualToValue={(o, v) => o.value === v.value}
                         getOptionLabel={i => i.name}
                         disableClearable
-                        value={methodOptions.find(el => el.value === technicianPrimaryMethod)}
+                        value={technicianOptions.find(el => el.value === technicianPrimaryMethod)}
                         onChange={onMethodChange(item, EAssignmentLevel.Primary, "Technician")}
                         renderInput={autocompleteRender({
                             label: '',
