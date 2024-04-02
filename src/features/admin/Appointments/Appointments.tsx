@@ -23,7 +23,7 @@ const initialOrder = {
 
 export const initialPaging = {pageIndex: 0, pageSize: 10}
 
-const initialFilters = {
+const initialFilters: TFilters = {
     searchTerm: '',
     serviceBook: null,
     scheduler: null,
@@ -31,6 +31,8 @@ const initialFilters = {
     date: null,
     scId: null,
     pageData: initialPaging,
+    advisor: null,
+    technician: null,
 }
 
 export const Appointments = () => {
@@ -62,6 +64,8 @@ export const Appointments = () => {
                 searchTerm: filters.searchTerm,
                 isServiceBookServiceCenter,
             }
+            if (filters.advisor) data.advisorId = filters.advisor.id;
+            if (filters.technician) data.technicianDmsId = filters.technician.dmsId;
             dispatch(loadAppointments(data));
         }
     }, [filters, selectedView, order]);
@@ -133,6 +137,8 @@ export const Appointments = () => {
                 scheduler={filters.scheduler}
                 serviceBook={filters.serviceBook}
                 selectedDate={filters.date}
+                advisor={filters.advisor}
+                technician={filters.technician}
             />
             : null}
         {selectedView === "list"

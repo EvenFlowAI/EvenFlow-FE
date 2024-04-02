@@ -1,4 +1,4 @@
-import {TScheduler, TServiceBook} from "../../../store/reducers/appointments/types";
+import {TScheduler, TServiceBook, TServiceConsultant} from "../../../store/reducers/appointments/types";
 import {EReportingStatus, IAppointment} from "../../../api/types";
 import {IPageRequest, TParsableDate} from "../../../types/types";
 
@@ -12,6 +12,8 @@ export type TFilters = {
     date: TParsableDate;
     scId: number|null;
     pageData: IPageRequest;
+    advisor: TServiceConsultant|null;
+    technician: TServiceConsultant|null;
 }
 
 export type TViewButton = { label: string, type: TView };
