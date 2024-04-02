@@ -10,6 +10,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {useStatePagination} from "../../../../hooks/usePaginations/usePaginations";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import dayjs from "dayjs";
+import {allColumns} from "../constants";
 
 type TDialogProps = DialogProps & {
     date: TParsableDate;
@@ -51,6 +52,7 @@ export const AppointmentsListModal: React.FC<React.PropsWithChildren<React.Props
             <DialogTitle onClose={props.onClose}>Appointments for {date ? dayjs(date).format('YYYY-MM-DD') : ''}</DialogTitle>
             <DialogContent style={{ overflowY: 'auto' }}>
                 <AppointmentsTable
+                    selectedColumns={allColumns}
                     viewItem={viewItem}
                     isLoading={isModalLoading}
                     refresh={refresh}

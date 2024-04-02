@@ -15,7 +15,16 @@ import {TFilters, TView} from "./types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import dayjs from "dayjs";
-import {initialFilters, initialOrder, initialPaging} from "./constants";
+import {
+    allColumns,
+    initialFilters,
+    initialOrder,
+    initialPaging,
+    localStorageItemName,
+    requiredColumns
+} from "./constants";
+import ColumnsSelectionModal
+    from "../../../components/modals/common/ColumnSelectionModal/ColumnsSelectionModal/ColumnsSelectionModal";
 
 export const Appointments = () => {
     const { isLoading } = useSelector((state: RootState) => state.appointments);
@@ -26,7 +35,9 @@ export const Appointments = () => {
     const [order, setOrder] = useState<IOrder<IAppointment>>(initialOrder)
     const {selectedSC} = useSCs();
     const [search, setSearch] = useState<string>('');
+    const [selectedColumns, setSelectedColumns] = useState<string[]>(requiredColumns);
     const {isOpen: isListOpen, onClose: onListClose, onOpen: onListOpen} = useModal();
+    const {isOpen: isColumnsOpen, onClose: onColumnsClose, onOpen: onColumnsOpen} = useModal();
     const dispatch = useDispatch();
 
     const getAppointments = useCallback(() => {
@@ -62,6 +73,13 @@ export const Appointments = () => {
             setSearch('')
         }
     }, [selectedSC, selectedView])
+
+    useEffect(() => {
+        const columns = localStorage.getItem(localStorageItemName)
+        if (columns) {
+            setSelectedColumns(JSON.parse(columns))
+        }
+    }, [])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value)
@@ -110,6 +128,7 @@ export const Appointments = () => {
                 handleChangeView={handleChangeView}
                 onFilterOpen={onFilterOpen}
                 handleSearchChange={handleSearchChange}
+                onColumnsOpen={onColumnsOpen}
                 onSearch={onSearch}/>}
         />
         {isFiltersOpen ?
@@ -125,6 +144,7 @@ export const Appointments = () => {
             : null}
         {selectedView === "list"
             ? <AppointmentsTable
+                selectedColumns={selectedColumns}
                 viewItem={viewItem}
                 setViewItem={setViewItem}
                 isLoading={isLoading}
@@ -149,5 +169,15 @@ export const Appointments = () => {
             refresh={getAppointments}
             order={order}
             setOrder={setOrder}/>
+        <ColumnsSelectionModal
+            defaultCheckboxes
+            titleAlign="center"
+            open={isColumnsOpen}
+            onClose={onColumnsClose}
+            selectedColumns={selectedColumns}
+            setSelectedColumns={setSelectedColumns}
+            requiredColumnsNames={requiredColumns}
+            columns={allColumns}
+            storageItemName={localStorageItemName}/>
     </>
 };

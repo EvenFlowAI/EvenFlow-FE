@@ -19,3 +19,6 @@ export const initialFilters: TFilters = {
     advisor: null,
     technician: null,
 }
+export const allColumns = ["Date", "Day", "Time", "Customer Name", "Service Advisor", "Technician", "Vehicle", "Service Book", "Scheduler", "Status"]
+export const requiredColumns = ["Date", "Day", "Time", "Customer Name", "Vehicle", "Status"]
+export const localStorageItemName = "appointmentsColumns";
