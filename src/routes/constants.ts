@@ -7,7 +7,7 @@ import {
     OfferManagementRoutes,
     CapacityManagementRoutes,
     PricingRoutes,
-    ReportingRoutes, EmployeeRoutes
+    ReportingRoutes, EmployeeRoutes, DealerRoutes
 } from "./types";
 
 export const Routes = {
@@ -22,4 +22,5 @@ export const Routes = {
     Pricing: PricingRoutes,
     Reporting: ReportingRoutes,
     Employees: EmployeeRoutes,
+    Dealer: DealerRoutes,
 }

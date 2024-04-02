@@ -117,8 +117,9 @@ export interface IAppointmentResponse {
     items: IAppointmentSlot[];
     searchedDateRange: ISearchedDateRange;
     slotGapMinutes: number;
-    consultantId?: string;
+    advisorId?: string;
     waitlistSettings?: IWaitListData;
+    podId?: number;
 }
 
 export enum EAppointmentTimingType {
@@ -160,7 +161,7 @@ export interface IAppointmentSlotsRequest {
     serviceRequestIds: number[];
     customerId?: string;
     warrantyExpiration?: ParsableDate;
-    consultantId?: string | null;
+    advisorId?: string | null;
     valueServiceOfferIds?: number[];
     vehicle?: IVehicleForSlots;
     searchTerm?: string;
@@ -210,6 +211,7 @@ export type TAppointmentState = {
     dropOffSettings: IDropOffSettings|null;
     appointmentWasChanged: boolean;
     waitListSettings: IWaitListData|null;
+    slotPodId: number|null;
 };
 
 export enum EReminderType {

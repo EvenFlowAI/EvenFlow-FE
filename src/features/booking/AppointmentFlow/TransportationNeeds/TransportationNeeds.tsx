@@ -6,7 +6,11 @@ import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {ITransportation} from '../../../../api/types';
-import {setCurrentFrameScreen, setTransportation} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    searchForCustomerConsents,
+    setCurrentFrameScreen,
+    setTransportation
+} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
@@ -19,6 +23,7 @@ import {TTransportationData} from "./types";
 import {TActionProps} from "../../../../types/types";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
+import CustomerConsents from "../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 
 export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWithChildren<TActionProps>>> = ({onNext, onBack}) => {
     const {
@@ -110,17 +115,21 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
     }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls,
         packagePricingType, packageEMenuType, selectedPackage, categoriesIds, hashKey, date]);
 
+    const handleConsentsAccepted = () => {
+        if (customerLoadedData?.isUpdating) {
+            dispatch(setChangesCompletedOpen(true))
+        } else {
+            onNext();
+        }
+    }
+
     const handleNext = (transportation: ITransportation|null): void => {
         ReactGA.event({
             category: 'EvenFlow User',
             action: 'Selected Transportation Need',
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
         })
-        if (customerLoadedData?.isUpdating) {
-            dispatch(setChangesCompletedOpen(true))
-        } else {
-            onNext();
-        }
+        dispatch(searchForCustomerConsents(handleConsentsAccepted))
     }
 
     const handleSelectOption = (o: ITransportation|null) => {
@@ -166,5 +175,6 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
             onNext={onNext}
             nextDisabled={loading || Boolean(transportations.length) && !transportation}
         />
+        <CustomerConsents onNext={handleConsentsAccepted}/>
     </StepWrapper>
 };

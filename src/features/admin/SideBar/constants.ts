@@ -131,10 +131,31 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
     },
 
     {
-        to: Routes.BookingFlow.Base, name: "Booking Flow", roles: ["Owner", "Manager", "Service Director"], subLinks: [
+        to: Routes.BookingFlow.Base, name: "Booking Experience", roles: ["Owner", "Manager", "Service Director"], subLinks: [
             {
                 to: Routes.BookingFlow.BookingFlowConfigDetails,
-                name: "Booking Flow Config",
+                name: "Booking Flow Configuration",
+                exact: true,
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
+            },
+            {
+                to: Routes.BookingFlow.FirstScreen,
+                name: "First Screen Configuration",
+                exact: true,
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
+            },
+            {
+                to: Routes.BookingFlow.ServiceOpsCodesMapping,
+                name: "Service Categories",
+                exact: true,
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
+            },
+            {
+                to: Routes.BookingFlow.ScreenSettings,
+                name: "Screen Settings",
                 exact: true,
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
@@ -147,34 +168,14 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.BookingFlow.ServiceOpsCodesMapping,
-                name: "Service Ops Code Mapping",
-                exact: true,
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
                 to: Routes.BookingFlow.VehicleDetails,
                 name: "Vehicle Detail Options",
                 exact: true,
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
-            {
-                to: Routes.BookingFlow.FirstScreen,
-                name: "First Screen",
-                exact: true,
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
-                to: Routes.BookingFlow.ScreenSettings,
-                name: "Screen Settings",
-                exact: true,
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
         ]
     },
+    {to: Routes.Dealer.Base, name: "Dealer Operations", roles: ["Owner", 'Manager', "Service Director"]},
     {to: Routes.Admin.Appointments, name: "Appointments", roles: true},
 ]

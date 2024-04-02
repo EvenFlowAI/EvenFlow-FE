@@ -167,7 +167,6 @@ export type TState = {
     packagePricingType: EPackagePricingType | null;
     packagePriceTitles: TPackagePrice[];
     packageEMenuType: EMaintenanceOptionType | null;
-    slotsConsultantId: string | null;
     shouldShowServiceCentersList: boolean;
     isAppointmentSaving: boolean;
     appointmentByKey: IAppointmentByKey | null;
@@ -179,6 +178,9 @@ export type TState = {
     serviceOptionChangedFromSlotPage: boolean;
     transactionValue: number;
     passedScreens: TScreen[];
+    consents: ICustomerConsentBooking[];
+    acceptedConsentIds: number[];
+    isConsentsLoading: boolean;
 }
 
 type TPackageOptionRequestData = {
@@ -238,5 +240,31 @@ export interface ICreateAppointmentRequest {
     notes: string;
     address: IAddressData|null;
     isWaitlist: boolean;
+    customerConsentIds: number[];
 }
 
+export interface ISearchConsentsData {
+    serviceCenterId: number;
+    podId: number|null;
+    serviceRequestIds: number[];
+    make: string|null;
+    model: string|null;
+    modelYear: number|null;
+    customerType: EUserType;
+    appointmentTime: string;
+    advisorId: string|null;
+    zipCode?: string;
+    serviceType: EServiceType;
+    transportationOptionId: number|null;
+    isWaitlistEnabled: boolean;
+    appointmentRequestId?: number;
+    maintenancePackageOptionId?: number;
+}
+
+export interface ICustomerConsentBooking {
+    id: number;
+    name: string;
+    title: string;
+    isEnabled: boolean;
+    message: string;
+}

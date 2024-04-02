@@ -23,7 +23,7 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {initialTransportationNotifications} from "../constants";
 import EmployeeChip from "../EmployeeChip/EmployeeChip";
 
-const TransportationNotifications: React.FC<React.PropsWithChildren<React.PropsWithChildren<TNotificatonsProps>>> = ({setChangesState, changesState, onClose}) => {
+const Transportations: React.FC<React.PropsWithChildren<React.PropsWithChildren<TNotificatonsProps>>> = ({setChangesState, changesState, onClose}) => {
     const {usersShort, loading} = useSelector((state: RootState) => state.employees);
     const {options, isLoading} = useSelector((state: RootState) => state.transportation);
     const {transportationNotifications, isLoading: isSaving} = useSelector((state: RootState) => state.notifications);
@@ -74,21 +74,21 @@ const TransportationNotifications: React.FC<React.PropsWithChildren<React.PropsW
         if (selectedSC) dispatch(loadTransportationOptions(selectedSC.id))
     }, [selectedSC])
 
-    useEffect(() => {
+    const setInitialTransportation = useCallback(() => {
         dispatch(setLoading(true))
         if (activeOptionsNotifications?.length) {
             const option = options.find(el => el.id === activeOptionsNotifications[0].id)
-            option && setSelectedTransportation(prevState => prevState ?? option)
+            option && setSelectedTransportation(option)
         }
         dispatch(setLoading(false))
     }, [activeOptionsNotifications, options])
 
-    useEffect(() => {
+    const setInitialEmployees = useCallback(() => {
         if (currentTransportationData?.usersList) {
             const selected = usersShort.filter(el => currentTransportationData?.usersList?.includes(el.id))
             setSelectedEmployees(selected)
         }
-    }, [usersShort, currentTransportationData])
+    }, [currentTransportationData, usersShort])
 
     const setInitialData = useCallback(() => {
         if (transportationNotifications?.transportationOptions) {
@@ -100,6 +100,14 @@ const TransportationNotifications: React.FC<React.PropsWithChildren<React.PropsW
             setAllTransportationData(transportationNotifications)
         }
     }, [transportationNotifications, activeOptionsNotifications, options])
+
+    useEffect(() => {
+        setInitialTransportation()
+    }, [setInitialTransportation])
+
+    useEffect(() => {
+        setInitialEmployees()
+    }, [setInitialEmployees])
 
     useEffect(() => {
         setInitialData()
@@ -123,9 +131,6 @@ const TransportationNotifications: React.FC<React.PropsWithChildren<React.PropsW
                     : prev)
             } else {
                 setSelectedTransportation(null)
-                // setAllTransportationData(prev => prev
-                //     ? {...prev, transportationOptions: prev.transportationOptions.filter(item => item.id !== selectedTransportation?.id)}
-                //     : prev)
             }
             setSelectedEmployees([])
         }
@@ -134,8 +139,8 @@ const TransportationNotifications: React.FC<React.PropsWithChildren<React.PropsW
 
     const clearData = () => {
         setInitialData();
-        setSelectedEmployees([])
-        setSelectedTransportation(null);
+        setInitialEmployees();
+        setInitialTransportation();
     }
 
     const onCancel = () => {
@@ -316,4 +321,4 @@ const TransportationNotifications: React.FC<React.PropsWithChildren<React.PropsW
     );
 };
 
-export default TransportationNotifications;
+export default Transportations;

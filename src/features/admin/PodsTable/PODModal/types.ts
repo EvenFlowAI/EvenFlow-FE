@@ -10,7 +10,7 @@ export type TOption = {
 export type TForm = {
     name: string;
     description: string;
-    advisor: IAdvisorShort | null;
+    advisors: IAdvisorShort[];
     technicians: IAdvisorShort[];
     bays: IBayShort[];
     serviceRequests: IAssignedServiceRequestShort[];

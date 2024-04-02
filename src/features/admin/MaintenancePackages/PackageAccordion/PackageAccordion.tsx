@@ -242,6 +242,7 @@ export const PackageAccordion: React.FC<React.PropsWithChildren<React.PropsWithC
         if (packageData && selectedSC) {
             try {
                 dispatch(removePackageById(packageData.id, selectedSC.id))
+                onExpandIconClick && onExpandIconClick(false)
             } catch (e) {
                 showError(e);
             }

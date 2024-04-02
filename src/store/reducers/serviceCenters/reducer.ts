@@ -35,7 +35,7 @@ const initialState: TServiceCenterState = {
         internal: 0,
     },
     predictionParamsLoading: false,
-    advisorAssignment: {},
+    employeeAssignment: [],
     advisorAssignmentLoading: false,
 };
 
@@ -82,7 +82,7 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
         case "ServiceCenters/PackageOptionsLoading":
             return {...state, packagesOptionsLoading: action.payload};
         case "ServiceCenters/GetAdvisorAssignment":
-            return {...state, advisorAssignment: action.payload};
+            return {...state, employeeAssignment: action.payload};
         case "ServiceCenters/SetAdvisorAssignmentLoading":
             return {...state, advisorAssignmentLoading: action.payload};
 

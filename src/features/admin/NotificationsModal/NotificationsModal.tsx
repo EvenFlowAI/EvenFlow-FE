@@ -10,12 +10,12 @@ import PodAppointments from "./PodAppointments/PodAppointments";
 import RecallAppointments from "./RecallAppointments/RecallAppointments";
 import {loadUsersShort} from "../../../store/reducers/employees/actions";
 import {loadNotifications} from "../../../store/reducers/notifications/actions";
-import TransportationNotifications from "./TransportationNotifications/TransportationNotifications";
+import Transportations from "./Transportations/Transportations";
 import {TChangesState} from "./types";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 
-const ManageNotificationsModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
+const NotificationsModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const [currentTab, setCurrentTab] = useState<string>("0");
     const [changesState, setChangesState] = useState<TChangesState>({
         scNotificationsSaved: true,
@@ -95,7 +95,7 @@ const ManageNotificationsModal:React.FC<React.PropsWithChildren<React.PropsWithC
                         <RecallAppointments setChangesState={setChangesState} onClose={onClose}/>
                     </TabPanel>
                     <TabPanel style={{width: "100%", padding: "24px 0"}} value="3">
-                        <TransportationNotifications setChangesState={setChangesState} changesState={changesState} onClose={onClose}/>
+                        <Transportations setChangesState={setChangesState} changesState={changesState} onClose={onClose}/>
                     </TabPanel>
                 </TabContext>
             </DialogContent>
@@ -103,4 +103,4 @@ const ManageNotificationsModal:React.FC<React.PropsWithChildren<React.PropsWithC
     );
 };
 
-export default ManageNotificationsModal;
+export default NotificationsModal;

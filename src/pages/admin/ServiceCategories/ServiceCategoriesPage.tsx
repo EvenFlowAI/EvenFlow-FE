@@ -45,7 +45,7 @@ export const ServiceCategoriesPage = () => {
 
     return (
             <TabContext value={selectedTab}>
-            <TitleContainer title="Service Ops Codes Mapping" pad parent={bookingFlowRoot}/>
+            <TitleContainer title="Service Categories" pad parent={bookingFlowRoot}/>
             <TabList
                 onChange={handleTabChange}
                 variant="scrollable"

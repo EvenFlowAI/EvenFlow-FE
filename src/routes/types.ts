@@ -93,3 +93,7 @@ export enum EndUser {
     ValueService = "/f/appointment/:id/valueService",
     PaymentBill = "/f/appointment/:id/payment-bill",
 }
+
+export enum DealerRoutes {
+    Base = "/admin/dealer-operations"
+}

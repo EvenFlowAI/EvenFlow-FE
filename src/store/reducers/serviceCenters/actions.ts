@@ -1,6 +1,5 @@
 import {
-    IAdvisorAssignment,
-    ILaborRate,
+    IAdvisorAssignment, ILaborRate,
     IPredictionParams,
     ISCAnalytics,
     IServiceCenter,
@@ -423,7 +422,7 @@ export const loadAdvisorAssignment = (id: number): AppThunk => dispatch => {
     dispatch(setAdvisorAssignmentLoading(true))
     Api.call(Api.endpoints.ServiceCenters.GetAssignedAdvisorMethod, {urlParams: {id}})
         .then(result => {
-            if (result.data) dispatch(getAdvisorAssignment(result.data));
+           if (result.data) dispatch(getAdvisorAssignment(result.data));
         })
         .catch(err => {
             console.log('load advisor assignment error', err)

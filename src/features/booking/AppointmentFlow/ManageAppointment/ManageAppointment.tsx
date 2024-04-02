@@ -10,7 +10,7 @@ import {decodeSCID} from "../../../../utils/utils";
 import {
     clearAppointmentData,
     createOrUpdateAppointment,
-    loadAppointmentRequestsPrices,
+    loadAppointmentRequestsPrices, searchForCustomerConsents,
     setAppointmentSaving,
     setCurrentFrameScreen,
     setReminders,
@@ -54,6 +54,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../../routes/constants";
 import dayjs from "dayjs";
+import CustomerConsents from "../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 
 type TProps = {
     onChangeSlot: TCallback;
@@ -184,6 +185,10 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         }
     }
 
+    const searchForConsents = () => {
+        dispatch(searchForCustomerConsents(handleCreateAppointment))
+    }
+
     const onCancelChanges = () => {
         setLoading(true)
         if (selectedVehicle) {
@@ -207,18 +212,18 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
             try {
                 const key = appointmentByKey.hashKey;
                 await API.appointment.cancelByKey(key);
-                await showMessage(
+                showMessage(
                     <div>
                         Your appointment has been canceled. <br/>
                         Please do not forget to update the appointment in your calendar.
                     </div>
                 );
-                await dispatch(setSideBarSteps([]));
-                await dispatch(setServiceOptionChanged(false));
-                await dispatch(setVehicle(null));
-                await dispatch(clearAppointmentData());
-                await dispatch(setCustomerLoadedData(null));
-                await dispatch(setWelcomeScreenView("select"))
+                dispatch(setSideBarSteps([]));
+                dispatch(setServiceOptionChanged(false));
+                dispatch(setVehicle(null));
+                dispatch(clearAppointmentData());
+                dispatch(setCustomerLoadedData(null));
+                dispatch(setWelcomeScreenView("select"))
                 history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1")
             } catch (e) {
                 showError(e);
@@ -282,7 +287,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                 loading={isAppointmentSaving}
                 nextDisabled={loading}
                 onBack={onCancelConfirmOpen}
-                onNext={handleCreateAppointment}
+                onNext={searchForConsents}
                 nextLabel="Confirm Changes"
                 prevLabel="Cancel Changes"
             />}
@@ -299,7 +304,8 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
             </ButtonWrapper>}
 
         <DetailedFeesManage open={isFeesOpen} onClose={onFeesClose}/>
-        <PaymentTypeModal open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
+        <PaymentTypeModal open={isPaymentOpen} onClose={onPaymentClose} onNo={searchForConsents}/>
         <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
+        <CustomerConsents onNext={handleCreateAppointment}/>
     </StepWrapper>
 };

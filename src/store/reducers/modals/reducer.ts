@@ -6,6 +6,7 @@ const initialState: TModalState = {
     isSlotsWarningOpen: false,
     isServiceWarningOpen: false,
     isUnavailableServiceOpen: false,
+    isConsentOpen: false,
 }
 
 export const modalsReducer = (state=initialState, action: TModalActions): TModalState => {
@@ -22,6 +23,8 @@ export const modalsReducer = (state=initialState, action: TModalActions): TModal
             return {...state, isServiceWarningOpen: action.payload};
         case "Modals/OpenUnavailableService":
             return {...state, isUnavailableServiceOpen: action.payload};
+        case "Modals/OpenConsent":
+            return {...state, isConsentOpen: action.payload};
         default:
             return state
     }

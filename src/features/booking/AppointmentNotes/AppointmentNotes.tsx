@@ -58,8 +58,10 @@ const AppointmentNotes = () => {
             setFocused(false)
             setHasError(false)
         } else {
-            setHasError(true)
-            showError("Please save or cancel Appointment Notes changes")
+            if (isFocused) {
+                setHasError(true)
+                showError("Please save or cancel Appointment Notes changes")
+            }
         }
     };
 
