@@ -945,7 +945,7 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
             podId: slotPodId,
             make: selectedVehicle.make ?? null,
             model: selectedVehicle.model ?? null,
-            serviceRequestIds: collectServiceRequestsForSearch(service, subService, categoriesIds, allCategories, selectedPackage, selectedSR, selectedRecalls),
+            serviceRequestIds: collectServiceRequestsForSearch(service, subService, categoriesIds, allCategories, selectedSR, selectedRecalls),
             modelYear: selectedVehicle.year,
             customerType: userType ?? EUserType.New,
             serviceType: serviceTypeOption?.type ?? EServiceType.VisitCenter,
@@ -957,6 +957,7 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
         }
         if (appointmentByKey?.id) data.appointmentRequestId = appointmentByKey.id;
         if (data.serviceType === EServiceType.VisitCenter) delete data.zipCode;
+        if (selectedPackage) data.maintenancePackageOptionId = selectedPackage.id;
         Api.call<ICustomerConsentBooking[]>(Api.endpoints.CustomerConsent.Search, {data})
             .then(res => {
                 if (res?.data?.length) {

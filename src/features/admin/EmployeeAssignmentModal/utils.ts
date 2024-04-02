@@ -1,4 +1,6 @@
-import {IEmployeeAssignmentSetting} from "../../../store/reducers/employees/types";
+import {EAdvisorAssignMethod, IEmployeeAssignmentSetting} from "../../../store/reducers/employees/types";
+import {TRole} from "../../../store/reducers/users/types";
+import {TOption} from "../PodsTable/PODModal/types";
 
 export const sortServiceBooks = (a: IEmployeeAssignmentSetting, b: IEmployeeAssignmentSetting) => {
     return a.serviceBookId && b.serviceBookId
@@ -8,4 +10,10 @@ export const sortServiceBooks = (a: IEmployeeAssignmentSetting, b: IEmployeeAssi
             : b.serviceBookId && !a.serviceBookId
                 ? 1
                 : 0
+}
+
+export const getOptionsByRole = (options: TOption[], role: TRole): TOption[] => {
+    return options.map(item => item.value as EAdvisorAssignMethod === EAdvisorAssignMethod.LastEmployee
+        ? {...item, name: `Last ${role}`}
+        : item)
 }
