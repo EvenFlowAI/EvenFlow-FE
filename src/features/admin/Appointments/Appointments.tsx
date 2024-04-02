@@ -9,31 +9,13 @@ import {AppointmentsListModal} from "./AppointmentsListModal/AppointmentsListMod
 import {AppointmentsTable} from "./AppointmentsTable/AppointmentsTable";
 import {RootState} from "../../../store/rootReducer";
 import {IAppointmentsRequest} from "../../../store/reducers/appointments/types";
-import {EReportingStatus, IAppointment} from "../../../api/types";
+import {IAppointment} from "../../../api/types";
 import {IOrder, Titles, TParsableDate} from "../../../types/types";
 import {TFilters, TView} from "./types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import dayjs from "dayjs";
-
-const initialOrder = {
-    orderBy: "date",
-    isAscending: true,
-}
-
-export const initialPaging = {pageIndex: 0, pageSize: 10}
-
-const initialFilters: TFilters = {
-    searchTerm: '',
-    serviceBook: null,
-    scheduler: null,
-    reportingStatus: EReportingStatus.Active,
-    date: null,
-    scId: null,
-    pageData: initialPaging,
-    advisor: null,
-    technician: null,
-}
+import {initialFilters, initialOrder, initialPaging} from "./constants";
 
 export const Appointments = () => {
     const { isLoading } = useSelector((state: RootState) => state.appointments);

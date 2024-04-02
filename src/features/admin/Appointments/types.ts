@@ -8,7 +8,7 @@ export type TFilters = {
     searchTerm: string;
     serviceBook: TServiceBook|null;
     scheduler: TScheduler|null;
-    reportingStatus: EReportingStatus | '' | unknown;
+    reportingStatus: EReportingStatus[];
     date: TParsableDate;
     scId: number|null;
     pageData: IPageRequest;

@@ -1,5 +1,5 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {Grid, Paper, IconButton, Autocomplete} from "@mui/material";
+import React, {useEffect, useState} from 'react';
+import {Autocomplete, Grid, IconButton, Paper} from "@mui/material";
 import {Clear, DateRange} from '@mui/icons-material';
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -9,29 +9,16 @@ import {
 } from "../../../../store/reducers/appointments/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {TScheduler, TServiceBook, TServiceConsultant} from "../../../../store/reducers/appointments/types";
-import {TFilters} from "../types";
-import {initialPaging} from "../Appointments";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {EReportingStatus, reportingStatuses} from "../../../../api/types";
+import {EReportingStatus} from "../../../../api/types";
 import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/CustomDatePicker";
 import {TOption, TParsableDate} from "../../../../types/types";
 import dayjs from "dayjs";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-
-type TAppointmentFilterProps = {
-    status: EReportingStatus | '' | unknown;
-    scheduler: TScheduler|null;
-    serviceBook: TServiceBook|null;
-    selectedDate: TParsableDate;
-    setFilters: Dispatch<SetStateAction<TFilters>>;
-    advisor: TServiceConsultant|null;
-    technician: TServiceConsultant|null,
-}
-
-const statusOptions: TOption[] = Object.entries(reportingStatuses).map(([number, status]) => ({
-    value: number,
-    name: status,
-}))
+import {useAutocompleteClasses} from "./styles";
+import {initialPaging} from "../constants";
+import {statusOptions} from "./constants";
+import {TAppointmentFilterProps} from "./types";
 
 export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                           status,
@@ -48,9 +35,10 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         serviceAdvisors,
         technicians} = useSelector((state: RootState) => state.appointments)
     const [isOpen, setOpen] = useState<boolean>(false);
-    const [selectedStatus, setSelectedStatus] = useState<TOption|null>(null)
+    const [selectedStatus, setSelectedStatus] = useState<TOption[]>([])
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const { classes: autocompleteClasses } = useAutocompleteClasses();
 
     useEffect(() => {
         if (selectedSC) {
@@ -61,7 +49,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     }, [selectedSC])
 
     useEffect(() => {
-        setSelectedStatus(statusOptions.find(el => +el.value === status) ?? null)
+        setSelectedStatus(statusOptions.filter(el => status.includes(+el.value)))
     }, [status])
 
     const handleOpen = (s: boolean) => () => {
@@ -89,8 +77,8 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         setFilters(prev => ({...prev, serviceBook: value, pageData: initialPaging}))
     }
 
-    const onStatusChange = (e: React.SyntheticEvent, value: TOption|null) => {
-        setFilters(prev => ({...prev, reportingStatus: value?.value ?? null, pageData: initialPaging}))
+    const onStatusChange = (e: React.SyntheticEvent, value: TOption[]) => {
+        setFilters(prev => ({...prev, reportingStatus: value.map(el => +el.value as EReportingStatus), pageData: initialPaging}))
     }
 
     const onAdvisorChange = (e: React.SyntheticEvent, value: TServiceConsultant|null) => {
@@ -105,7 +93,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         <Paper variant="outlined" style={{
             borderRadius: 0, marginBottom: 18, padding: 18, width: '100%'
         }}>
-            <Grid container spacing={2} justifyContent="space-between" alignItems='flex-end'>
+            <Grid container spacing={2} justifyContent="space-between" alignItems='flex-start'>
                 <Grid item xs={6} key="datepicker">
                     <CustomDatePicker
                         onOpen={handleOpen(true)}
@@ -194,6 +182,9 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                             label: "Status",
                             placeholder: 'Not selected'
                         })}
+                        multiple
+                        disableCloseOnSelect
+                        classes={autocompleteClasses}
                         disabled={isLoading}
                         onChange={onStatusChange}
                         value={selectedStatus}
