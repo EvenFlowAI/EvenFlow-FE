@@ -178,6 +178,8 @@ export const Appointments = () => {
             setSelectedColumns={setSelectedColumns}
             requiredColumnsNames={requiredColumns}
             columns={allColumns}
+            cancelBtnColor='info'
+            cancelBtnType="text"
             storageItemName={localStorageItemName}/>
     </>
 };

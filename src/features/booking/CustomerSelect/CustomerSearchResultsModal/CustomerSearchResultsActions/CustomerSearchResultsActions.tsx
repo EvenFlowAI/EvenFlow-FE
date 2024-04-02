@@ -3,11 +3,12 @@ import {Button} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {TCallback} from "../../../../../types/types";
 import {ReactComponent as SelectColumns} from "../../../../../assets/img/select_columns.svg";
-import {TSearchColumnName} from "../types";
-import ColumnsSelectionModal from "../ColumnsSelectionModal/ColumnsSelectionModal";
 import {InfoOutlined} from "@mui/icons-material";
 import {useStyles} from "./styles";
 import {useModal} from "../../../../../hooks/useModal/useModal";
+import ColumnsSelectionModal
+    from "../../../../../components/modals/common/ColumnSelectionModal/ColumnsSelectionModal/ColumnsSelectionModal";
+import {customerDataColumns, requiredColumnsNames} from "../constants";
 
 type TCustomerSearchResultsActionsProps = {
     onBack: TCallback;
@@ -15,8 +16,8 @@ type TCustomerSearchResultsActionsProps = {
     onCreateNewAppointment: TCallback;
     onAppointmentForNewVehicle: TCallback;
     isNewVehicleMode: boolean;
-    selectedColumns: TSearchColumnName[];
-    setSelectedColumns: Dispatch<SetStateAction<TSearchColumnName[]>>;
+    selectedColumns: string[];
+    setSelectedColumns: Dispatch<SetStateAction<string[]>>;
 }
 
 const CustomerSearchResultsActions: React.FC<React.PropsWithChildren<React.PropsWithChildren<TCustomerSearchResultsActionsProps>>> = ({
@@ -81,6 +82,10 @@ const CustomerSearchResultsActions: React.FC<React.PropsWithChildren<React.Props
                 </Button>
             </div>
             <ColumnsSelectionModal
+                requiredColumnsNames={requiredColumnsNames}
+                columns={customerDataColumns.map(el => el.name)}
+                storageItemName="columns"
+                titleAlign="left"
                 open={isOpen}
                 onClose={onClose}
                 selectedColumns={selectedColumns}

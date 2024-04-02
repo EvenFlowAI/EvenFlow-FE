@@ -16,6 +16,8 @@ type TProps = {
     columns: string[];
     storageItemName: string;
     titleAlign: "center"|"left";
+    cancelBtnType?: "outlined"|"contained"|"text";
+    cancelBtnColor?: "primary"|"info";
     defaultCheckboxes?: boolean;
 }
 
@@ -27,7 +29,9 @@ const ColumnsSelectionModal: React.FC<DialogProps&TProps> = ({
                                                                  requiredColumnsNames,
                                                                  columns,
                                                                  defaultCheckboxes,
-                                                                 titleAlign
+                                                                 titleAlign,
+                                                                 cancelBtnType,
+                                                                 cancelBtnColor
                                                              }) => {
     const [checkedColumns, setCheckedColumns] = useState<string[]>([]);
     const { classes  } = useStyles();
@@ -111,8 +115,8 @@ const ColumnsSelectionModal: React.FC<DialogProps&TProps> = ({
             <DialogActions>
                 <Button
                     onClick={onCancel}
-                    color="primary"
-                    variant="outlined">
+                    color={cancelBtnColor ?? "primary"}
+                    variant={cancelBtnType ?? "outlined"}>
                     {t("Cancel")}
                 </Button>
                 <Button
