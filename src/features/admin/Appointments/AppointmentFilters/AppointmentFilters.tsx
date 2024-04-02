@@ -1,19 +1,18 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {Grid, MenuItem, Paper, Select, IconButton, SelectChangeEvent} from "@mui/material";
+import {Grid, Paper, IconButton, Autocomplete} from "@mui/material";
 import {Clear, DateRange} from '@mui/icons-material';
-import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {loadSchedulerList, loadServiceBookList} from "../../../../store/reducers/appointments/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {TScheduler, TServiceBook} from "../../../../store/reducers/appointments/types";
 import {TFilters} from "../types";
 import {initialPaging} from "../Appointments";
-import {EmptyMenuItem} from "./styles";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {EReportingStatus, reportingStatuses} from "../../../../api/types";
 import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/CustomDatePicker";
-import {TParsableDate} from "../../../../types/types";
+import {TOption, TParsableDate} from "../../../../types/types";
 import dayjs from "dayjs";
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 
 type TAppointmentFilterProps = {
     status: EReportingStatus | '' | unknown;
@@ -22,6 +21,11 @@ type TAppointmentFilterProps = {
     selectedDate: TParsableDate;
     setFilters: Dispatch<SetStateAction<TFilters>>;
 }
+
+const statusOptions: TOption[] = Object.entries(reportingStatuses).map(([number, status]) => ({
+    value: number,
+    name: status,
+}))
 
 export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAppointmentFilterProps>>> = ({
                                                                           status,
@@ -32,6 +36,7 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
                                                                }) => {
     const {schedulerList, serviceBookList, isLoading} = useSelector((state: RootState) => state.appointments)
     const [isOpen, setOpen] = useState<boolean>(false);
+    const [selectedStatus, setSelectedStatus] = useState<TOption|null>(null)
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
@@ -41,6 +46,10 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
             dispatch(loadSchedulerList(selectedSC.id))
         }
     }, [selectedSC])
+
+    useEffect(() => {
+        setSelectedStatus(statusOptions.find(el => el.value === status) ?? null)
+    }, [status])
 
     const handleOpen = (s: boolean) => () => {
         setOpen(s);
@@ -59,28 +68,16 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
         onChange(null);
     }
 
-    const handleSelectStatus = (e: SelectChangeEvent<string | number | unknown>) => {
-        setFilters(prev => ({...prev, reportingStatus: e.target.value, pageData: initialPaging}))
+    const onSchedulerChange = (e: React.SyntheticEvent, value: TScheduler|null) => {
+        setFilters(prev => ({...prev, scheduler: value, pageData: initialPaging}))
     }
 
-    const handleSelectServiceBook = (e: SelectChangeEvent<string | number>) => {
-        if (e.target.value) {
-            const selected = serviceBookList.find(item => item.id === e.target.value || item.name === e.target.value)
-            setFilters(prev => ({...prev, serviceBook: selected ?? null, pageData: initialPaging}))
-        } else {
-            setFilters(prev => ({...prev, serviceBook: null, pageData: initialPaging}))
-        }
+    const onServiceBookChange = (e: React.SyntheticEvent, value: TServiceBook |null) => {
+        setFilters(prev => ({...prev, serviceBook: value, pageData: initialPaging}))
     }
 
-    const handleSelectScheduler = (e: SelectChangeEvent<string | number>) => {
-        if (e.target.value) {
-            const selected = schedulerList.find(item => item.id
-                ? item.id.toString() === e.target.value
-                : item.fullName === e.target.value)
-            setFilters(prev => ({...prev, scheduler: selected ?? null, pageData: initialPaging}))
-        } else {
-            setFilters(prev => ({...prev, scheduler: null, pageData: initialPaging}))
-        }
+    const onStatusChange = (e: React.SyntheticEvent, value: TOption|null) => {
+        setFilters(prev => ({...prev, reportingStatus: value?.value ?? null, pageData: initialPaging}))
     }
 
     return (
@@ -112,62 +109,49 @@ export const AppointmentFilters: React.FC<React.PropsWithChildren<React.PropsWit
                     />
                 </Grid>
                 <Grid item xs={3} key="status">
-                    <Select
-                        fullWidth
-                        displayEmpty
-                        disabled={isLoading}
-                        style={{color: status ? "inherit" : '#858585'}}
-                        onChange={handleSelectStatus}
-                        value={status}
-                        input={
-                            <TextField label='Status'/>
-                        }
-                    >
-                        <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
-                        {Object.entries(reportingStatuses).map(([number, status]) => {
-                            return <MenuItem key={number} value={number}>{status}</MenuItem>
+                    <Autocomplete
+                        renderInput={autocompleteRender({
+                            label: "Status",
+                            placeholder: 'Not selected'
                         })}
-                    </Select>
+                        disabled={isLoading}
+                        onChange={onStatusChange}
+                        value={selectedStatus}
+                        getOptionLabel={o => o.name}
+                        isOptionEqualToValue={(o, v) => o.value === v.value}
+                        options={statusOptions}
+                    />
                 </Grid>
                 <Grid item xs={3} key="scheduler">
-                    <Select
-                        fullWidth
-                        displayEmpty
-                        disabled={isLoading}
-                        style={{color: scheduler ? "inherit" : '#858585'}}
-                        onChange={handleSelectScheduler}
-                        value={scheduler?.id ?? scheduler?.fullName ?? ''}
-                        input={
-                            <TextField label='Scheduler'/>
-                        }
-                    >
-                        <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
-                        {[...schedulerList]
-                            .sort((a, b) => a.fullName.localeCompare(b.fullName))
-                            .map(scheduler => {
-                            return <MenuItem key={scheduler?.id ?? scheduler?.fullName} value={scheduler.id ?? scheduler?.fullName}>{scheduler?.fullName ?? ''}</MenuItem>
+                    <Autocomplete
+                        renderInput={autocompleteRender({
+                            label: "Scheduler",
+                            placeholder: 'Not selected'
                         })}
-                    </Select>
+                        disabled={isLoading}
+                        onChange={onSchedulerChange}
+                        value={scheduler}
+                        getOptionLabel={o => o.fullName}
+                        isOptionEqualToValue={(o, v) => o.id && v.id ? o.id === v.id : o.fullName === v.fullName}
+                        options={[...schedulerList]
+                        .sort((a, b) => a.fullName.localeCompare(b.fullName))}
+                    />
                 </Grid>
                 <Grid item xs={3} key="serviceBook">
-                    <Select
-                        fullWidth
-                        displayEmpty
-                        disabled={isLoading}
-                        style={{color: serviceBook ? "inherit" : '#858585'}}
-                        onChange={handleSelectServiceBook}
-                        value={serviceBook?.id ?? serviceBook?.name ?? ''}
-                        input={
-                            <TextField label='Service Book' />
-                        }
-                    >
-                        <EmptyMenuItem value=''>Not selected</EmptyMenuItem>
-                        {[...serviceBookList]
-                            .sort((a, b) => a.name.localeCompare(b.name))
-                            .map((serviceBook, index) => {
-                            return <MenuItem key={`${serviceBook.id} ${index}`} value={serviceBook.id ?? serviceBook.name}>{serviceBook.name}</MenuItem>
+                    <Autocomplete
+                        renderInput={autocompleteRender({
+                            label: "Service Book",
+                            placeholder: 'Not selected'
                         })}
-                    </Select>
+                        disabled={isLoading}
+                        fullWidth
+                        onChange={onServiceBookChange}
+                        value={serviceBook}
+                        getOptionLabel={o => o.name}
+                        isOptionEqualToValue={(o, v) => o.id && v.id ? o.id === v.id : o.name === v.name}
+                        options={[...serviceBookList]
+                            .sort((a, b) => a.name.localeCompare(b.name))}
+                    />
                 </Grid>
             </Grid>
         </Paper>
