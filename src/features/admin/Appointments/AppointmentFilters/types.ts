@@ -8,7 +8,8 @@ export type TAppointmentFilterProps = {
     status: EReportingStatus[];
     scheduler: TScheduler | null;
     serviceBook: TServiceBook | null;
-    selectedDate: TParsableDate;
+    dateFrom: TParsableDate;
+    dateTo: TParsableDate;
     setFilters: Dispatch<SetStateAction<TFilters>>;
     advisor: TServiceConsultant | null;
     technician: TServiceConsultant | null,

@@ -33,13 +33,14 @@ export const AppointmentsListModal: React.FC<React.PropsWithChildren<React.Props
     const {selectedSC}= useSCs();
     const dispatch = useDispatch();
     const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
+    // todo change dateFrom to needed date param
 
     useEffect(() => {
         if (selectedSC && props.open && date) {
             const data: IAppointmentsRequest = {
                 pageIndex: pageData.pageIndex,
                 pageSize: pageData.pageSize,
-                date: dayjs(date).add(dayjs(date).utcOffset(), 'minute'),
+                startDate: dayjs(date).add(dayjs(date).utcOffset(), 'minute'),
                 serviceCenterId: selectedSC.id,
             }
             // todo uncomment for calendar functionality

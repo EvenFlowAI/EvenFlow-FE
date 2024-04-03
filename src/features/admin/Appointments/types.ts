@@ -9,7 +9,8 @@ export type TFilters = {
     serviceBook: TServiceBook|null;
     scheduler: TScheduler|null;
     reportingStatus: EReportingStatus[];
-    date: TParsableDate;
+    dateFrom: TParsableDate;
+    dateTo: TParsableDate;
     scId: number|null;
     pageData: IPageRequest;
     advisor: TServiceConsultant|null;

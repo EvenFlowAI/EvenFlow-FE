@@ -34,7 +34,7 @@ export const loadAppointments = (data: IAppointmentsRequest): AppThunk => dispat
     dispatch(setAppointmentsLoading(true));
     API.appointment.list(data)
         .then(({data: {paging, result}}) => {
-            if (data.pageIndex === 0 && data.pageSize === 0 && !data.date) {
+            if (data.pageIndex === 0 && data.pageSize === 0 && !data.startDate && !data.endDate) {
                 dispatch(getAllAppointments(result));
                 dispatch(setAllAppointmentsCount(paging.numberOfRecords));
             } else {

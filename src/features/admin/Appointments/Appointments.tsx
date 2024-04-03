@@ -50,8 +50,9 @@ export const Appointments = () => {
                 serviceCenterId: filters.scId,
                 orderBy: order.orderBy,
                 isAscending: order.isAscending,
-                date: dayjs(filters.date).add(dayjs(filters.date).utcOffset(), 'minute'),
-                reportingStatus: filters.reportingStatus,
+                startDate: dayjs(filters.dateFrom).add(dayjs(filters.dateFrom).utcOffset(), 'minute'),
+                endDate: dayjs(filters.dateTo).add(dayjs(filters.dateTo).utcOffset(), 'minute'),
+                reportingStatuses: filters.reportingStatus,
                 scheduler: filters.scheduler ? {id: filters.scheduler.id, type: filters.scheduler.type} : null,
                 serviceBookId,
                 searchTerm: filters.searchTerm,
@@ -137,7 +138,8 @@ export const Appointments = () => {
                 setFilters={setFilters}
                 scheduler={filters.scheduler}
                 serviceBook={filters.serviceBook}
-                selectedDate={filters.date}
+                dateFrom={filters.dateFrom}
+                dateTo={filters.dateTo}
                 advisor={filters.advisor}
                 technician={filters.technician}
             />
@@ -162,7 +164,7 @@ export const Appointments = () => {
         }
         <AppointmentsListModal
             open={isListOpen}
-            date={filters.date}
+            date={filters.dateFrom}
             viewItem={viewItem}
             setViewItem={setViewItem}
             onClose={onListDialogClose}

@@ -22,7 +22,8 @@ import {TAppointmentFilterProps} from "./types";
 
 export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                           status,
-                                                                          selectedDate,
+                                                                          dateFrom,
+                                                                          dateTo,
                                                                           setFilters,
                                                                           scheduler,
                                                                           serviceBook,
@@ -34,7 +35,8 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         isLoading,
         serviceAdvisors,
         technicians} = useSelector((state: RootState) => state.appointments)
-    const [isOpen, setOpen] = useState<boolean>(false);
+    const [isOpenFrom, setOpenFrom] = useState<boolean>(false);
+    const [isOpenTo, setOpenTo] = useState<boolean>(false);
     const [selectedStatus, setSelectedStatus] = useState<TOption[]>([])
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -52,21 +54,27 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         setSelectedStatus(statusOptions.filter(el => status.includes(+el.value)))
     }, [status])
 
-    const handleOpen = (s: boolean) => () => {
-        setOpen(s);
+    const handleOpenFrom = (s: boolean) => () => {
+        setOpenFrom(s);
     }
 
-    const onChange = (date: TParsableDate): void => {
-        setFilters(prev => ({...prev, date, pageData: initialPaging}))
+    const handleOpenTo = (s: boolean) => () => {
+        setOpenTo(s);
     }
 
-    const handleDateChange = (date: TParsableDate) => {
-        onChange(dayjs(date));
+    const handleDateChange = (field: "dateFrom"|"dateTo") => (date: TParsableDate) => {
+        setFilters(prev => {
+          if (field === "dateFrom" && dayjs(date).isAfter(prev.dateTo)) {
+                return {...prev, [field]: dayjs(date), dateTo: null, pageData: initialPaging}
+            } else {
+                return {...prev, [field]: dayjs(date), pageData: initialPaging}
+            }
+        })
     }
 
-    const handleClear = (e: any) => {
+    const handleClear = (e: any, field: "dateFrom"|"dateTo") => {
         e.stopPropagation();
-        onChange(null);
+        setFilters(prev => ({...prev, [field]: null, pageData: initialPaging}))
     }
 
     const onSchedulerChange = (e: React.SyntheticEvent, value: TScheduler|null) => {
@@ -94,27 +102,51 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
             borderRadius: 0, marginBottom: 18, padding: 18, width: '100%'
         }}>
             <Grid container spacing={2} justifyContent="space-between" alignItems='flex-start'>
-                <Grid item xs={6} key="datepicker">
+                <Grid item xs={3} key="datepickerFrom">
                     <CustomDatePicker
-                        onOpen={handleOpen(true)}
-                        onClose={handleOpen(false)}
-                        open={isOpen}
+                        onOpen={handleOpenFrom(true)}
+                        onClose={handleOpenFrom(false)}
+                        open={isOpenFrom}
                         format="MMMM Do"
                         fullWidth
-                        label="Date"
+                        label="Appointment Date From"
                         InputProps={{
-                            placeholder: "Select date",
+                            placeholder: "Not selected",
                             disabled: isLoading,
                             fullWidth: true,
                             endAdornment:
-                                selectedDate
-                                    ? (<IconButton onClick={(e) => handleClear(e)} size="large">
+                                dateFrom
+                                    ? (<IconButton onClick={(e) => handleClear(e, "dateFrom")} size="large">
                                         <Clear />
                                     </IconButton>)
                                     : <DateRange cursor="pointer" htmlColor="rgba(0, 0, 0, 0.54)"/>
                         }}
-                        value={selectedDate}
-                        onAccept={handleDateChange}
+                        value={dateFrom}
+                        onAccept={handleDateChange("dateFrom")}
+                    />
+                </Grid>
+                <Grid item xs={3} key="datepickerTo">
+                    <CustomDatePicker
+                        onOpen={handleOpenTo(true)}
+                        onClose={handleOpenTo(false)}
+                        open={isOpenTo}
+                        format="MMMM Do"
+                        fullWidth
+                        shouldDisableDate={day => dayjs(day).isBefore(dateFrom)}
+                        label="Appointment Date To"
+                        InputProps={{
+                            placeholder: "Not selected",
+                            disabled: isLoading,
+                            fullWidth: true,
+                            endAdornment:
+                                dateTo
+                                    ? (<IconButton onClick={(e) => handleClear(e, "dateTo")} size="large">
+                                        <Clear />
+                                    </IconButton>)
+                                    : <DateRange cursor="pointer" htmlColor="rgba(0, 0, 0, 0.54)"/>
+                        }}
+                        value={dateTo}
+                        onAccept={handleDateChange('dateTo')}
                     />
                 </Grid>
                 <Grid item xs={3} key="service advisor">

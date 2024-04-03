@@ -17,8 +17,9 @@ export interface IAppointmentsRequest {
     serviceCenterId: number;
     orderBy?: keyof IListAppointment | string | undefined;
     isAscending?: boolean;
-    date?: TParsableDate;
-    reportingStatus? :EReportingStatus | null | unknown;
+    startDate?: TParsableDate;
+    endDate?: TParsableDate;
+    reportingStatuses? :EReportingStatus | null | unknown;
     searchTerm?: string;
     serviceBookId?: number|unknown;
     scheduler?: string|unknown;
