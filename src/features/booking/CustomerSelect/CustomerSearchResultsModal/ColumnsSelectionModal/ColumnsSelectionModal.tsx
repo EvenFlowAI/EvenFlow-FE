@@ -56,7 +56,7 @@ const ColumnsSelectionModal: React.FC<React.PropsWithChildren<React.PropsWithChi
 
     return (
         <BaseModal onClose={onCancel} open={open} width={550}>
-            <DialogTitle style={{textAlign: 'left'}} onClose={onCancel}>Select columns to display:</DialogTitle>
+            <DialogTitle style={{textAlign: 'left'}} onClose={onCancel}>Select Columns To Display:</DialogTitle>
             <DialogContent>
                 <div className={classes.wrapper}>
                     <FormControlLabel
