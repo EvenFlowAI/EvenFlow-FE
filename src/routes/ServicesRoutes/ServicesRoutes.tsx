@@ -3,12 +3,12 @@ import {ContentContainer} from "../../components/wrappers/ContentContainer/Conte
 import {Redirect, Switch} from "react-router-dom";
 import {Routes} from "../constants";
 import {PrivateRoute} from "../PrivateRoute/PrivateRoute";
-import {ServiceRequests} from "../../pages/admin/ServiceRequests/ServiceRequests";
+import {VehicleServices} from "../../pages/admin/VehicleServices/VehicleServices";
 
 const ServicesRoutes = () => {
     return <ContentContainer>
         <Switch>
-            <PrivateRoute path={Routes.Services.VehicleServices} component={ServiceRequests} />
+            <PrivateRoute path={Routes.Services.VehicleServices} component={VehicleServices} />
             <Redirect to={Routes.Services.VehicleServices}/>
         </Switch>
     </ContentContainer>

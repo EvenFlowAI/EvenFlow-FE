@@ -54,12 +54,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
         roles: ["Owner", "Manager", "Service Director"],
         subLinks: [
             {
-                to: Routes.CapacityManagement.ServiceRequests,
-                name: "Service Requests",
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
                 to: Routes.CapacityManagement.AppointmentValue,
                 name: "Appointment Value Settings",
                 sub: true,
@@ -93,12 +87,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
             {
                 to: Routes.CapacityManagement.CapacitySettings,
                 name: "Capacity Settings",
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
-                to: Routes.CapacityManagement.PartsAvailability,
-                name: "Parts Availability",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },

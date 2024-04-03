@@ -11,8 +11,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IntervalUpsell} from "../../../features/admin/IntervallUpsell/IntervalUpsell";
 import {servicesRoot} from "../../../utils/constants";
+import RecallParts from "../../../features/admin/RecallsParts/RecallParts";
 
-export const ServiceRequests = () => {
+export const VehicleServices = () => {
     const {srPageActiveTab} = useSelector((state: RootState) => state.serviceRequests);
     const dispatch = useDispatch();
 
@@ -32,6 +33,7 @@ export const ServiceRequests = () => {
             <Tab label="Maintenance Packages" value="1"/>
             <Tab label="Complimentary Services" value="2"/>
             <Tab label="Interval Upsell" value="3"/>
+            <Tab label="Recalls" value="4"/>
         </TabList>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="0">
             <ServiceRequestsScreen/>
@@ -44,6 +46,9 @@ export const ServiceRequests = () => {
         </TabPanel>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="3" >
             <IntervalUpsell/>
+        </TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="4" >
+            <RecallParts/>
         </TabPanel>
     </TabContext>;
 }

@@ -45,7 +45,7 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
 
     const rowData: TableRowDataType<IRecall>[] = [
         {
-            header: "Recall Campaign Number",
+            header: "Campaign #",
             val: el => el.recallCampaignNumber
         },
         {
@@ -57,11 +57,11 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
             val: el => el.model?.name ?? ''
         },
         {
-            header: "Year From",
+            header: "From",
             val: el => el.yearRange?.from?.toString() ?? '',
         },
         {
-            header: "Year To",
+            header: "To",
             val: el => el.yearRange?.to?.toString() ?? '',
         },
         {
@@ -69,27 +69,19 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
             val: el => el.recallComponent
         },
         {
-            header: "Recall Summary",
+            header: "Recall Instructions",
             val: el => <Button
                 variant="text"
                 color="info"
-                style={{textTransform: "none", textDecoration: "underline"}}
+                style={{textTransform: "none", color: "#7898FF", fontWeight: 400, fontSize: 16}}
                 onClick={() => onSummaryClick(el)}>
-                See Recall Summary
+                Recall Summary
             </Button>
         },
         {
-            header: "Ops Code Assignment",
+            header: "Ops Code",
             val: el => el.serviceRequest?.name ?? '',
         },
-        {
-            header: "Part Lead Time (days)",
-            val: el => el.partLeadDaysCount?.toString() ?? '',
-        },
-        {
-            header: "Daily Parts",
-            val: el => el.dailyPartsCount?.toString() ?? ''
-        }
     ]
 
     const openMenu = (el: IRecall) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
