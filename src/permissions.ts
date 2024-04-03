@@ -25,6 +25,8 @@ export const PERMISSIONS: TRouteRoleMap[] = [
     {route: Routes.CapacityManagement.OptimizationWindows, roles: ["Owner", "Manager", "Service Director"]},
     {route: Routes.CapacityManagement.PricingSettings, roles: ["Owner", "Manager", "Service Director"]},
     {route: Routes.CapacityManagement.ServiceRequests, roles: ["Owner", "Manager", "Service Director"]},
+    {route: Routes.Services.VehicleServices, roles: ["Owner", "Manager", "Service Director"]},
+    {route: Routes.Services.Base, roles: ["Owner", "Manager", "Service Director"]},
 
     {route: Routes.OfferManagement.Base, roles: ["Owner", "Manager", "Service Director"]},
 

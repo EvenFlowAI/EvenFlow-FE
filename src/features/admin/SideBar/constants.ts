@@ -34,6 +34,19 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
             }
         ]
     },
+    {
+        to: Routes.Services.Base,
+        name: "Services",
+        roles: ["Owner", "Manager", "Service Director"],
+        subLinks: [
+            {
+                to: Routes.Services.VehicleServices,
+                name: "Vehicle Services",
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
+            },
+        ],
+    },
     {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager", "Service Director"]},
     {
         to: Routes.CapacityManagement.Base,

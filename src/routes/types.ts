@@ -97,3 +97,11 @@ export enum EndUser {
 export enum DealerRoutes {
     Base = "/admin/dealer-operations"
 }
+
+export enum ServicesRoutes {
+    Base = "/admin/services",
+    VehicleServices = "/admin/services/vehicle-services",
+    ServiceValet = "/admin/services/service-valet",
+    MobileService = "/admin/services/mobile-service",
+    OtherTransportation = "/admin/services/other-transportation",
+}
