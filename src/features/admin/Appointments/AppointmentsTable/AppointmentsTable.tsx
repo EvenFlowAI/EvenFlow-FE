@@ -26,10 +26,12 @@ const cols: TableRowDataType<IAppointment>[] = [
     {header: "Time", val: el => el.dateTime ? dayjs.utc(el.dateTime).format(time12HourFormat) : "", width: 100},
     {header: "Customer Name", val: el => el.customerInformation?.fullName ?? "", orderId: "fullName"},
     {header: "Vehicle", val: el => {
-        const vehicleData =`${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${Boolean(el.vehicle?.year) ? el.vehicle?.year : ''}`
+            const vehicleData =`${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${Boolean(el.vehicle?.year) ? el.vehicle?.year : ''}`
             return el.vehicle?.make || el.vehicle?.model || Boolean(el.vehicle?.year) ? vehicleData : "DMS missing vehicle data"
         }
     },
+    {header: "Service Advisor", val: el => el.advisor ?? ""},
+    {header: "Technician", val: el => el.technician ?? ""},
     {header: "Service Book", val: el => el.serviceBook?.name ?? ''},
     {header: "Scheduler", val: el => `${el.scheduler?.fullName ?? ''}`},
     {header: "Status", val: el => typeof el.reportingStatus !== 'undefined' && Number.isInteger(el.reportingStatus) ? reportingStatuses[el.reportingStatus] : "", orderId: "reportingStatus"},
@@ -43,11 +45,23 @@ type TAppointmentsTable = {
     onChangeRowsPerPage: (e: React.ChangeEvent<HTMLInputElement>) => void;
     pageData: IPageRequest;
     isLoading: boolean;
+    selectedColumns: string[];
     viewItem?: IAppointment|undefined;
-    setViewItem?: Dispatch<SetStateAction<IAppointment|undefined>>
+    setViewItem?: Dispatch<SetStateAction<IAppointment|undefined>>;
 }
 
-export const AppointmentsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAppointmentsTable>>> = ({ viewItem, setViewItem, isLoading, refresh, setOrder, order, pageData, onChangeRowsPerPage, onChangePage }) => {
+export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
+                                                                    viewItem,
+                                                                    setViewItem,
+                                                                    isLoading,
+                                                                    refresh,
+                                                                    setOrder,
+                                                                    order,
+                                                                    pageData,
+                                                                    onChangeRowsPerPage,
+                                                                    onChangePage,
+                                                                    selectedColumns
+                                                                }) => {
     const { appointments, count } = useSelector((state: RootState) => state.appointments);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 
@@ -139,7 +153,7 @@ export const AppointmentsTable: React.FC<React.PropsWithChildren<React.PropsWith
             isAscending={order.isAscending}
             noDataTitle="No upcoming appointments scheduled"
             isLoading={isLoading}
-            rowData={cols}
+            rowData={cols.filter(col => selectedColumns.includes(col.header))}
             hidePagination={count < 11}
             onChangePage={onChangePage}
             onChangeRowsPerPage={onChangeRowsPerPage}
@@ -170,5 +184,5 @@ export const AppointmentsTable: React.FC<React.PropsWithChildren<React.PropsWith
             open={isOpen}
             payload={viewItem}
             onClose={onClose} />
-            </>
+    </>
 };

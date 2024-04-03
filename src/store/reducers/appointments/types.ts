@@ -17,12 +17,15 @@ export interface IAppointmentsRequest {
     serviceCenterId: number;
     orderBy?: keyof IListAppointment | string | undefined;
     isAscending?: boolean;
-    date?: TParsableDate;
-    reportingStatus? :EReportingStatus | null | unknown;
+    startDate?: TParsableDate;
+    endDate?: TParsableDate;
+    reportingStatuses? :EReportingStatus | null | unknown;
     searchTerm?: string;
     serviceBookId?: number|unknown;
     scheduler?: string|unknown;
-    isServiceBookServiceCenter?: boolean,
+    isServiceBookServiceCenter?: boolean;
+    advisorId?: number;
+    technicianDmsId?: string;
 }
 
 type TPackageOptionRequest = {
@@ -61,6 +64,20 @@ export type TScheduler = {
     fullName: string;
 }
 
+export enum EConsultantRole {
+    None,
+    Advisor,
+    Technician,
+    ServiceManager
+}
+
+export type TServiceConsultant = {
+    id: number;
+    dmsId: string;
+    fullName: string;
+    role: EConsultantRole;
+}
+
 export type TState = {
     appointments: IAppointment[];
     count: number;
@@ -72,4 +89,6 @@ export type TState = {
     serviceBookList: TServiceBook[];
     schedulerList: TScheduler[];
     pageData: IPageRequest,
+    serviceAdvisors: TServiceConsultant[];
+    technicians: TServiceConsultant[];
 }

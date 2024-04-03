@@ -7,7 +7,6 @@ import CustomerSearchTable from "./CustomerSearchTable/CustomerSearchTable";
 import {setPageData, setPaging} from "../../../../store/reducers/enhancedCustomerSearch/actions";
 import {defaultPageData} from "../../../../store/reducers/constants";
 import {useDispatch, useSelector} from "react-redux";
-import {TSearchColumnName} from "./types";
 import {RootState} from "../../../../store/rootReducer";
 import {columnsNames, customerDataColumns} from "./constants";
 
@@ -27,7 +26,7 @@ const CustomerSearchResultsModal: React.FC<React.PropsWithChildren<React.PropsWi
                                                                       redirect}) => {
     const {customerSearchData} = useSelector((state: RootState) => state.customers);
     const [isNewVehicleMode, setNewVehicleMode] = useState<boolean>(false);
-    const [selectedColumns, setSelectedColumns] = useState<TSearchColumnName[]>(columnsNames);
+    const [selectedColumns, setSelectedColumns] = useState<string[]>(columnsNames);
     const visibleColumns = useMemo(() => customerDataColumns.filter(el => selectedColumns.includes(el.name)), [selectedColumns])
     const dispatch = useDispatch();
 

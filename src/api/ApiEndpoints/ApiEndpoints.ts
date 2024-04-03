@@ -344,6 +344,7 @@ export class Api {
             Retrieve: {route: "/service-consultants/{id}", method: "get"},
             GetByQuery: {route: "/service-consultants/by-query", method: "post"},
             GetDmsAdvisors: {route: "/service-consultants/{id}/dms-service-advisors", method: "get"},
+            GetByRole: {route: "/service-consultants", method: "get"},
         },
         ServiceRequests: {
             Create: {route: "/service-requests", method: "post"},

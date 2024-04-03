@@ -70,7 +70,7 @@ export interface IApiEndpoints {
         | "UpdateDefaultOpsCode" | "UpdateDefaultMake" | "UpdatePresentedPackageOptions" | "UpdateEngineTypeFieldName"
         | "GetAssignedAdvisorMethod" | "UpdateAssignedAdvisorMethod" | "SetEmailRequired", TApiEndpoint>,
     ServiceConsultants: Record<"Create" | "Update" | "Remove" | "Retrieve"
-        | "GetByQuery" | "GetDmsAdvisors", TApiEndpoint>,
+        | "GetByQuery" | "GetDmsAdvisors" | "GetByRole", TApiEndpoint>,
     ServiceRequests: Record<"Create" | "Remove" | "Update" | "Retrieve" | "GetFiltered"
         | "UpdateStatus" | "CreateOverrides" | "EditOverrides" | "GetSROverrides"
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"

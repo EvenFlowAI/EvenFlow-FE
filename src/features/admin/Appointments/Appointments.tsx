@@ -9,29 +9,22 @@ import {AppointmentsListModal} from "./AppointmentsListModal/AppointmentsListMod
 import {AppointmentsTable} from "./AppointmentsTable/AppointmentsTable";
 import {RootState} from "../../../store/rootReducer";
 import {IAppointmentsRequest} from "../../../store/reducers/appointments/types";
-import {EReportingStatus, IAppointment} from "../../../api/types";
+import {IAppointment} from "../../../api/types";
 import {IOrder, Titles, TParsableDate} from "../../../types/types";
 import {TFilters, TView} from "./types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import dayjs from "dayjs";
-
-const initialOrder = {
-    orderBy: "date",
-    isAscending: true,
-}
-
-export const initialPaging = {pageIndex: 0, pageSize: 10}
-
-const initialFilters = {
-    searchTerm: '',
-    serviceBook: null,
-    scheduler: null,
-    reportingStatus: EReportingStatus.Active,
-    date: null,
-    scId: null,
-    pageData: initialPaging,
-}
+import {
+    allColumns,
+    initialFilters,
+    initialOrder,
+    initialPaging,
+    localStorageItemName,
+    requiredColumns
+} from "./constants";
+import ColumnsSelectionModal
+    from "../../../components/modals/common/ColumnSelectionModal/ColumnsSelectionModal/ColumnsSelectionModal";
 
 export const Appointments = () => {
     const { isLoading } = useSelector((state: RootState) => state.appointments);
@@ -42,7 +35,9 @@ export const Appointments = () => {
     const [order, setOrder] = useState<IOrder<IAppointment>>(initialOrder)
     const {selectedSC} = useSCs();
     const [search, setSearch] = useState<string>('');
+    const [selectedColumns, setSelectedColumns] = useState<string[]>(requiredColumns);
     const {isOpen: isListOpen, onClose: onListClose, onOpen: onListOpen} = useModal();
+    const {isOpen: isColumnsOpen, onClose: onColumnsClose, onOpen: onColumnsOpen} = useModal();
     const dispatch = useDispatch();
 
     const getAppointments = useCallback(() => {
@@ -55,13 +50,16 @@ export const Appointments = () => {
                 serviceCenterId: filters.scId,
                 orderBy: order.orderBy,
                 isAscending: order.isAscending,
-                date: dayjs(filters.date).add(dayjs(filters.date).utcOffset(), 'minute'),
-                reportingStatus: filters.reportingStatus,
+                startDate: dayjs(filters.dateFrom).add(dayjs(filters.dateFrom).utcOffset(), 'minute'),
+                endDate: dayjs(filters.dateTo).add(dayjs(filters.dateTo).utcOffset(), 'minute'),
+                reportingStatuses: filters.reportingStatus,
                 scheduler: filters.scheduler ? {id: filters.scheduler.id, type: filters.scheduler.type} : null,
                 serviceBookId,
                 searchTerm: filters.searchTerm,
                 isServiceBookServiceCenter,
             }
+            if (filters.advisor) data.advisorId = filters.advisor.id;
+            if (filters.technician) data.technicianDmsId = filters.technician.dmsId;
             dispatch(loadAppointments(data));
         }
     }, [filters, selectedView, order]);
@@ -76,6 +74,13 @@ export const Appointments = () => {
             setSearch('')
         }
     }, [selectedSC, selectedView])
+
+    useEffect(() => {
+        const columns = localStorage.getItem(localStorageItemName)
+        if (columns) {
+            setSelectedColumns(JSON.parse(columns))
+        }
+    }, [])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value)
@@ -124,6 +129,7 @@ export const Appointments = () => {
                 handleChangeView={handleChangeView}
                 onFilterOpen={onFilterOpen}
                 handleSearchChange={handleSearchChange}
+                onColumnsOpen={onColumnsOpen}
                 onSearch={onSearch}/>}
         />
         {isFiltersOpen ?
@@ -132,11 +138,15 @@ export const Appointments = () => {
                 setFilters={setFilters}
                 scheduler={filters.scheduler}
                 serviceBook={filters.serviceBook}
-                selectedDate={filters.date}
+                dateFrom={filters.dateFrom}
+                dateTo={filters.dateTo}
+                advisor={filters.advisor}
+                technician={filters.technician}
             />
             : null}
         {selectedView === "list"
             ? <AppointmentsTable
+                selectedColumns={selectedColumns}
                 viewItem={viewItem}
                 setViewItem={setViewItem}
                 isLoading={isLoading}
@@ -154,12 +164,24 @@ export const Appointments = () => {
         }
         <AppointmentsListModal
             open={isListOpen}
-            date={filters.date}
+            date={filters.dateFrom}
             viewItem={viewItem}
             setViewItem={setViewItem}
             onClose={onListDialogClose}
             refresh={getAppointments}
             order={order}
             setOrder={setOrder}/>
+        <ColumnsSelectionModal
+            defaultCheckboxes
+            titleAlign="center"
+            open={isColumnsOpen}
+            onClose={onColumnsClose}
+            selectedColumns={selectedColumns}
+            setSelectedColumns={setSelectedColumns}
+            requiredColumnsNames={requiredColumns}
+            columns={allColumns}
+            cancelBtnColor='info'
+            cancelBtnType="text"
+            storageItemName={localStorageItemName}/>
     </>
 };
