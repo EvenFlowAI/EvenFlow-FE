@@ -63,6 +63,10 @@ export const AppointmentCutoffModal: React.FC<React.PropsWithChildren<React.Prop
         setForm({...form, [day]: date});
     }
 
+    const handleError = (day: EDay) => () => {
+        setForm({...form, [day]: null});
+    }
+
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
@@ -95,6 +99,8 @@ export const AppointmentCutoffModal: React.FC<React.PropsWithChildren<React.Prop
                     key={idx}
                     value={form[idx as EDay]}
                     fullWidth
+                    withClear
+                    onError={handleError(idx)}
                     InputProps={{
                         style:{cursor: "pointer"},
                         endAdornment: <AccessTime color={!isDisabled ? "primary" : undefined} />,
