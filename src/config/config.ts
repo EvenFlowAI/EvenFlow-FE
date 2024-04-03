@@ -2,7 +2,7 @@ import {IOrder} from "../types/types";
 import {TRole} from "../store/reducers/users/types";
 
 let apiHost = "https://be.dev.evenflow.ai";
- apiHost = "http://localhost:5000";
+// apiHost = "http://localhost:5000";
 // apiHost = "https://api.evenflow.ai";
 switch(process.env.REACT_APP_ENV){
     case "production":
