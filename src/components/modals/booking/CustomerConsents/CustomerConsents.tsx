@@ -35,17 +35,17 @@ const CustomerConsents: React.FC<{onNext: TCallback, onPrev?: TCallback}> = ({on
 
     const onChange = () => {
         onClose()
-        if (customerLoadedData?.isUpdating) {
-            dispatch(setCurrentFrameScreen('manageAppointment'))
-        } else {
-            if (firstScreenOptions.length) {
-                dispatch(setWelcomeScreenView('serviceSelect'));
-                history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
-            } else {
-                dispatch(setCurrentFrameScreen('serviceNeeds'))
-                history.push(Routes.EndUser.AppointmentFrame.replace(":id", id));
-            }
-        }
+        // if (customerLoadedData?.isUpdating) {
+        //     dispatch(setCurrentFrameScreen('manageAppointment'))
+        // } else {
+        //     if (firstScreenOptions.length) {
+        //         dispatch(setWelcomeScreenView('serviceSelect'));
+        //         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        //     } else {
+        //         dispatch(setCurrentFrameScreen('serviceNeeds'))
+        //         history.push(Routes.EndUser.AppointmentFrame.replace(":id", id));
+        //     }
+        // }
         onPrev && onPrev()
     }
 
