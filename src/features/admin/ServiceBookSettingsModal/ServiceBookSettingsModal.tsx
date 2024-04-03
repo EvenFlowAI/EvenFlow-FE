@@ -96,6 +96,12 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
         })
     }
 
+    const onTimeError =  (day: number) => () => {
+        setForm(prev => ({
+            ...prev, cutOffTime: prev.cutOffTime.filter(el => el.day !== day)
+        }))
+    }
+
     const handleSwitch = (e: any, value: boolean) => {
         setFormChecked(false)
         setForm(prev => ({...prev, isAdvisorStaffingFactor: value}))
@@ -119,7 +125,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
     }
 
     const checkTimeItemIsValid = (el: TDayTime|undefined) => {
-        if (el) {
+        if (el?.time) {
             const day = hoursOfOperations.find(item => item.dayOfWeek === el.day)
             const startTime = day?.from;
             const endTime = day?.to;
@@ -167,7 +173,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                 isValid = false
             }
         }
-        if (form.cutOffTime.length && !form.cutOffTime.find(el => checkTimeItemIsValid(el))) {
+        if (form.cutOffTime.length && !form.cutOffTime.filter(el => el.time).find(el => checkTimeItemIsValid(el))) {
             isValid = false;
             showError('"Appointment Cut Off" should bi inside of the working hours')
         }
@@ -271,6 +277,8 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                         return <Grid item xs={6} md={3}>
                             <ClockTimePicker
                                 fullWidth
+                                withClear
+                                onError={onTimeError(existingTime?.day ?? day)}
                                 value={existingTime ? dayjs(existingTime.time, timeSpanString) : null}
                                 label={getDayLabel(existingTime, day)}
                                 InputProps={{

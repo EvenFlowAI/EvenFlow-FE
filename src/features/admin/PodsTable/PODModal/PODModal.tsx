@@ -21,7 +21,6 @@ import {createPod, loadPodById, setPodById, updatePod} from "../../../../store/r
 import {loadBaysShort} from "../../../../store/reducers/bays/actions";
 import {IMakeExtended, IModel} from "../../../../api/types";
 import {getOptions, getTransportationOptionString} from "../../../../utils/utils";
-import {EmployeeSchedule} from "../../../../components/modals/admin/EmployeeSchedule/EmployeeSchedule";
 import {loadEngineType, loadMakesForPods} from "../../../../store/reducers/vehicleDetails/actions";
 import {TZone} from "../../../../store/reducers/mobileService/types";
 import {loadMobServiceZones} from "../../../../store/reducers/mobileService/actions";
@@ -32,7 +31,6 @@ import {loadTransportationOptions} from "../../../../store/reducers/transportati
 import {Label} from "./styles";
 import {TForm, TOption} from "./types";
 import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
-import {useModal} from "../../../../hooks/useModal/useModal";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
@@ -73,7 +71,6 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
-    const {onOpen, isOpen, onClose} = useModal();
 
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
     const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);
@@ -539,17 +536,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6}>
-                        <div style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
-                            <Button
-                                onClick={onOpen}
-                                disabled={podsLoading}
-                                color="primary">
-                                Go To Employees Schedule
-                            </Button>
-                        </div>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <div style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
+                        <div style={{height: '100%', display: 'flex', alignItems: 'flex-end'}}>
                             <Label
                                 checked={form.isVisitCenter}
                                 onChange={() => onIsVisitCenterChange()}
@@ -574,7 +561,6 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                     Save
                 </LoadingButton>
             </DialogActions>
-            <EmployeeSchedule open={isOpen} onClose={onClose}/>
         </BaseModal>
     );
 }
