@@ -5,6 +5,7 @@ import {useDatePickerStyles} from "../../../hooks/styling/useDatePickerStyles";
 import {InputLabel} from "@mui/material";
 import {TParsableDate} from "../../../types/types";
 import {pickersLayoutClasses} from "@mui/x-date-pickers/PickersLayout";
+import dayjs from "dayjs";
 
 type TProps = MobileTimePickerProps<TParsableDate> & {
     fullWidth?: boolean;
@@ -38,11 +39,11 @@ const ClockTimePicker: React.FC<TProps> = ({
         {label ? <InputLabel shrink className={classes.label}>{label}</InputLabel> : null}
         <MobileTimePicker
             {...props}
-            value={value}
+            value={dayjs(value).isValid() ? value : undefined}
             onChange={onChange}
             slotProps={{
                 actionBar: {
-                    actions: ['cancel', 'accept'],
+                    actions: ['clear', 'cancel', 'accept'],
                 },
                 textField: {
                     fullWidth,

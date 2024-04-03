@@ -38,7 +38,8 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
         selectedPackage,
         selectedVehicle,
         packageEMenuType,
-        appointmentByKey
+        appointmentByKey,
+        isConsentsLoading
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
     const {selectedSR, customerLoadedData, appointment} = useSelector(({appointment}: RootState) => appointment)
     const {allCategories} = useSelector(({categories}: RootState) => categories)
@@ -147,7 +148,7 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
     }
 
     return <StepWrapper>
-        {loading ? <Loading/>
+        {loading || isConsentsLoading ? <Loading/>
             : transportations.length ? <TransportationsWrapper>
                     {transportationNo.length ? <TransportationCard
                         active
@@ -173,7 +174,7 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
             nextLabel={t("Next")}
             hideNext={!!transportations.length}
             onNext={onNext}
-            nextDisabled={loading || Boolean(transportations.length) && !transportation}
+            nextDisabled={loading || isConsentsLoading || Boolean(transportations.length) && !transportation}
         />
         <CustomerConsents onNext={handleConsentsAccepted}/>
     </StepWrapper>

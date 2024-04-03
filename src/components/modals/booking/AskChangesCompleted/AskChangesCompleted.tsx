@@ -27,6 +27,7 @@ const AskChangesCompleted = () => {
         appointmentByKey,
         serviceTypeOption,
         editingPosition,
+        isConsentsLoading,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {isChangesCompletedOpen} = useSelector((state: RootState) => state.modals);
     const currentUser = useCurrentUser();
@@ -99,14 +100,14 @@ const AskChangesCompleted = () => {
                         </Button>}
                     <LoadingButton
                         fullWidth
-                        loading={isAppointmentSaving}
+                        loading={isAppointmentSaving || isConsentsLoading}
                         onClick={handleConsents}
                         color="primary"
                         variant="contained">
                         {t("Yes")}
                     </LoadingButton>
                     <LoadingButton
-                        loading={isAppointmentSaving}
+                        loading={isAppointmentSaving || isConsentsLoading}
                         fullWidth
                         onClick={onClose}
                         variant="outlined"
