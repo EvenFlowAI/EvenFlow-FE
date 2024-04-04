@@ -94,7 +94,7 @@ export const Transportations = () => {
                                     <HeaderCell key="3" align="left">Description</HeaderCell>
                                     <HeaderCell key="2" align="left">Rules Configured</HeaderCell>
                                     <HeaderCell key="4" align="left">Manage</HeaderCell>
-                                    <HeaderCell key="5" align="left">Status (Off/ON)</HeaderCell>
+                                    <HeaderCell key="5" align="left" width={150}>Status (Off/ON)</HeaderCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
