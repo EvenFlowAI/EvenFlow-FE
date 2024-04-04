@@ -9,7 +9,6 @@ import { OptimizationWindowsPage } from "../../pages/admin/OptimizationWindows/O
 import {AppointmentAllocation} from "../../pages/admin/AppointmentAllocation/AppointmentAllocation";
 import ManageExEFAppointments from "../../features/admin/ManageExEFAppointments/ManageExEFAppointments";
 import Pods from "../../pages/admin/Pods/Pods";
-import CapacityServiceValet from "../../pages/admin/CapacityServiceValet/CapacityServiceValet";
 import {Routes} from "../constants";
 
 export const CapacityRoutes = () => {
@@ -22,7 +21,6 @@ export const CapacityRoutes = () => {
             <PrivateRoute path={Routes.CapacityManagement.OptimizationWindows} component={OptimizationWindowsPage} />
             <PrivateRoute path={Routes.CapacityManagement.Pods} component={Pods} />
             <PrivateRoute path={Routes.CapacityManagement.ManageEXEvenFlowAppointments} component={ManageExEFAppointments} />
-            <PrivateRoute path={Routes.CapacityManagement.ServiceValet} component={CapacityServiceValet} />
             <Redirect to={Routes.CapacityManagement.AppointmentValue} />
         </Switch>
     </ContentContainer>

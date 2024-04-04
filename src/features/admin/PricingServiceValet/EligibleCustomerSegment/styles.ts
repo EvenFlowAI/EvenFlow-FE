@@ -10,7 +10,6 @@ export const TableCell = withStyles(TC, {
 
 export const HeaderTableCell = withStyles(TableCell, {
     root: {
-        color: '#9FA2B4',
         textTransform: "none",
     }
 });

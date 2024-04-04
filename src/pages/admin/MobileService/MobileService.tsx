@@ -7,7 +7,7 @@ import GeographicZones from "../../../features/admin/PricingMobileService/Geogra
 import GeographicZonesMap from "../../../features/admin/PricingMobileService/GeograficZonesMap/GeographicZonesMap";
 import AddEditGeographicZone from "../../../components/modals/admin/EditGeographicZone/AddEditGeographicZone";
 import AncillaryPrice from "../../../features/admin/PricingMobileService/AncillaryPrice/AncillaryPrice";
-import {pricingRoot} from "../../../utils/constants";
+import {servicesRoot} from "../../../utils/constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 
 type TTab = {
@@ -16,14 +16,15 @@ type TTab = {
     component: JSX.Element
 }
 
-const PricingMobileService = () => {
+const MobileService = () => {
     const [selectedTab, selectTab] = useState<string>("0");
     const {onOpen: onAddZoneOpen, onClose: onAddZoneClose, isOpen: isAddZoneOpen} = useModal();
 
     const tabs: TTab[] = [
         {id: "0", label: "Geographic Zones", component: <GeographicZones onAddZoneOpen={onAddZoneOpen}/>},
         {id: "1", label: "Geographic Zones Map", component: <GeographicZonesMap />},
-        {id: "2", label: "Ancillary Price", component: <AncillaryPrice />},
+        // {id: "2", label: "Zone Routing", component: null},
+        {id: "3", label: "Convenience Fees", component: <AncillaryPrice />},
     ]
 
     const handleTabChange = (e: any, value: string) => {
@@ -31,7 +32,7 @@ const PricingMobileService = () => {
     }
 
     return <TabContext value={selectedTab}>
-            <TitleContainer title="Mobile Service" pad parent={pricingRoot}/>
+            <TitleContainer title="Mobile Service" pad parent={servicesRoot}/>
             <TabList
                 variant="scrollable"
                 scrollButtons="auto"
@@ -54,4 +55,4 @@ const PricingMobileService = () => {
         </TabContext>
 };
 
-export default PricingMobileService;
+export default MobileService;

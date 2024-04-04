@@ -38,7 +38,6 @@ export enum CapacityManagementRoutes {
     MobileService = "/admin/capacity-management/mobile-service",
     Pods = "/admin/capacity-management/pods",
     ManageEXEvenFlowAppointments = "/admin/capacity-management/manage-ex-evenflow-appointments",
-    ServiceValet = "/admin/capacity-management/service-valet",
 }
 
 export enum BookingFlowConfigRoutes {

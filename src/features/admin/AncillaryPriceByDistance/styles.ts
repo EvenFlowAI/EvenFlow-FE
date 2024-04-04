@@ -5,7 +5,7 @@ export const ButtonWrapper = styled('div')(() => ({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 32,
     marginRight: 24,
 }));
 
