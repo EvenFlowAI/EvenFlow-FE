@@ -3,7 +3,6 @@ import {ContentContainer} from "../../components/wrappers/ContentContainer/Conte
 import {Redirect, Switch} from "react-router-dom";
 import {PrivateRoute} from "../PrivateRoute/PrivateRoute";
 import {PricingSettingsPage} from "../../pages/admin/PricingSettings/PricingSettingsPage";
-import MobileService from "../../pages/admin/MobileService/MobileService";
 import {OfferManagementPage} from "../../pages/admin/OfferManagement/OfferManagementPage";
 
 import {useCurrentUser} from "../../hooks/useCurrentUser/useCurrentUser";
@@ -13,7 +12,6 @@ const PricingRoutes = () => {
     const currentUser = useCurrentUser();
     return <ContentContainer>
         <Switch>
-            <PrivateRoute path={Routes.Pricing.MobileService} component={MobileService} />
             <PrivateRoute path={Routes.Pricing.OfferManagement} component={OfferManagementPage} />
             <PrivateRoute path={Routes.Pricing.ServicePricingSettings} component={PricingSettingsPage} />
             <Redirect

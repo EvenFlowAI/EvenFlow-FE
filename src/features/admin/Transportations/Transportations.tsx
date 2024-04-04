@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {SquarePaper} from "../../../components/styled/Paper";
 import {TableContainer} from "../../../pages/admin/PricingSettings/UI";
 import {NoItemsLoading} from "../../../components/wrappers/NoItemsLoading/NoItemsLoading";
-import {IconButton, Menu, MenuItem, Switch, TableBody, TableHead} from "@mui/material";
+import {IconButton, Menu, MenuItem, Switch, TableBody, TableHead, TableCell} from "@mui/material";
 import {getTransportationOptionString} from "../../../utils/utils";
 import {ETransportColumn, ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
 import {MoreHoriz} from "@mui/icons-material";
@@ -12,19 +12,16 @@ import {
 } from "../../../store/reducers/transportationNeeds/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {headCellStyles, TableWrapper} from "./styles";
+import {HeaderCell, TableWrapper} from "./styles";
 import {EditTransportationModal} from "./EditTransportationModal/EditTransportationModal";
 import {EditTransportationDescriptionModal} from "./EditTransportationDescriptionModal/EditTransportationDescriptionModal";
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
-import {TableCell} from "../../../components/styled/TableCell";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
-
-const leftAlign = {
-    textAlign: "left" as const
-}
+import {servicesRoot} from "../../../utils/constants";
+import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 
 export const Transportations = () => {
     const { options, isLoading } = useSelector((state: RootState) => state.transportation);
@@ -84,40 +81,40 @@ export const Transportations = () => {
 
     return (
         <>
-            <SquarePaper variant="outlined">
-                <TableContainer>
+            <TitleContainer title="Other Transportation" pad parent={servicesRoot}/>
+                <div style={{padding: 16, width: "100%"}}>
                     <NoItemsLoading items={options} loading={isLoading} />
                     {initialOptions.length ? <TableWrapper>
                         <DemandTable>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell
+                                    <HeaderCell
                                         key="1"
-                                        style={{...headCellStyles, ...leftAlign}}>
-                                        Service needs
-                                    </TableCell>
-                                    <TableCell key="3" style={headCellStyles}>Description</TableCell>
-                                    <TableCell key="2" style={headCellStyles}>Mapping to Booking Flow</TableCell>
-                                    <TableCell key="4" style={headCellStyles}>Manage</TableCell>
-                                    <TableCell key="5" style={headCellStyles}>Status (Off/ON)</TableCell>
+                                        align="left">
+                                        Transportation Option
+                                    </HeaderCell>
+                                    <HeaderCell key="3" align="left">Description</HeaderCell>
+                                    <HeaderCell key="2" align="left">Rules Configured</HeaderCell>
+                                    <HeaderCell key="4" align="left">Manage</HeaderCell>
+                                    <HeaderCell key="5" align="left">Status (Off/ON)</HeaderCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {initialOptions.map(el => {
                                     return <TableRow key={el.type}>
-                                        <TableCell key="1" style={leftAlign}>{getTransportationOptionString(el.type)}</TableCell>
-                                        <TableCell key="3">
+                                        <TableCell key="1" align="left">{getTransportationOptionString(el.type)}</TableCell>
+                                        <TableCell key="3" align="left">
                                             {el.description}
                                         </TableCell>
-                                        <TableCell key="2">
+                                        <TableCell key="2" align="left">
                                             {el.column === ETransportColumn.Yes ? "Yes" : "No"}
                                         </TableCell>
-                                        <TableCell key="4">
-                                            <IconButton size="small" onClick={openMenu(el)}>
+                                        <TableCell key="4" align="left">
+                                            <IconButton size="small" onClick={openMenu(el)} >
                                                 <MoreHoriz />
                                             </IconButton>
                                         </TableCell>
-                                        <TableCell key="5">
+                                        <TableCell key="5" align="left">
                                             <Switch
                                                 disabled={isLoading}
                                                 onChange={handleSwitch(el.id)}
@@ -130,8 +127,7 @@ export const Transportations = () => {
                             </TableBody>
                         </DemandTable>
                     </TableWrapper> : null}
-                </TableContainer>
-            </SquarePaper>
+                </div>
             <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={closeMenu}>
                 <MenuItem onClick={() => onManageRules()}>Manage Rules</MenuItem>
                 <MenuItem onClick={() => onManageOption()}>Manage Option</MenuItem>
