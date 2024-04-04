@@ -12,7 +12,7 @@ export const useStyles = makeStyles()(() => ({
         alignItems: 'center',
     },
     cancelButton: {
-        color: '#9FA2B4',
+        color: '#212121',
         marginRight: 20,
         border: 'none',
         outline: 'none',

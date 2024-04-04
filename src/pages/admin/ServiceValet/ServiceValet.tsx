@@ -9,6 +9,9 @@ import AddEditGeographicZone from "../../../components/modals/admin/EditGeograph
 import AncillaryPrice from "../../../features/admin/PricingServiceValet/AncillaryPrice/AncillaryPrice";
 import {servicesRoot} from "../../../utils/constants";
 import {useModal} from "../../../hooks/useModal/useModal";
+import CenterSettings from "../../../features/admin/CenterSettings/CenterSettings";
+import ZoneRouting from "../../../features/admin/ZoneRouting/ZoneRouting";
+import TimeRangesAndCapacity from "../../../features/admin/TimeRangesAndCapacity/TimeRangesAndCapacity";
 
 type TTab = {
     id: string;
@@ -16,14 +19,17 @@ type TTab = {
     component: JSX.Element
 }
 
-const PricingServiceValet = () => {
+const ServiceValet = () => {
     const [selectedTab, selectTab] = useState<string>("0");
     const {onOpen: onAddZoneOpen, onClose: onAddZoneClose, isOpen: isAddZoneOpen} = useModal();
 
     const tabs: TTab[] = [
         {id: "0", label: "Geographic Zones", component: <GeographicZones onAddZoneOpen={onAddZoneOpen}/>},
         {id: "1", label: "Geographic Zones Map", component: <GeographicZonesMap />},
-        {id: "2", label: "Ancillary Price", component: <AncillaryPrice />},
+        {id: "2", label: "Center Settings", component: <CenterSettings />},
+        {id: "3", label: "Zone Routing", component: <ZoneRouting />},
+        {id: "4", label: "Time Ranges & Capacity", component: <TimeRangesAndCapacity />},
+        {id: "5", label: "Convenience Fees", component: <AncillaryPrice />},
     ]
 
     const handleTabChange = (e: any, value: string) => {
@@ -54,4 +60,4 @@ const PricingServiceValet = () => {
         </TabContext>
 };
 
-export default PricingServiceValet;
+export default ServiceValet;
