@@ -8,7 +8,12 @@ import {
     Button
 } from "@mui/material";
 import {MoreHoriz} from "@mui/icons-material";
-import {HeaderTableCell, FirstCell, TableCell} from "../../../components/styled/AncillaryPriceComponents";
+import {
+    HeaderTableCell,
+    FirstCell,
+    TableCell,
+    LastTableCell
+} from "../../../components/styled/AncillaryPriceComponents";
 import {IZonePriceSettings} from "../../../store/reducers/serviceValet/types";
 import {NoData} from "../../../components/wrappers/NoData/NoData";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
@@ -97,19 +102,19 @@ const AncillaryPriceByZone: React.FC<React.PropsWithChildren<React.PropsWithChil
             ? <DemandTable>
                 <TableHead>
                     <TableRow>
-                        <HeaderTableCell align="left" size="small">
+                        <HeaderTableCell align="center" size="small">
                             <div className="distanceCell">№</div>
                         </HeaderTableCell>
                         <HeaderTableCell align="left" size="small">
                             <div className="distanceCell">Zone</div>
                         </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small" width={100}>
+                        <HeaderTableCell align="left" size="small">
                             <div className="distanceCell">Flat Fee ($)</div>
                         </HeaderTableCell>
                         <HeaderTableCell align="left" size="small" width={450}>
                             <div className="distanceCell">Service Multiplier</div>
                         </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small" width={170}>
+                        <LastTableCell align="left" size="small" width={130}>
                             {isEdit
                                 ? <>
                                     <Button
@@ -128,13 +133,13 @@ const AncillaryPriceByZone: React.FC<React.PropsWithChildren<React.PropsWithChil
                                     </Button>
                                 </>
                                 : null }
-                        </HeaderTableCell>
+                        </LastTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {zonesData.map((item, index) => (
                         <TableRow key={item.geographicZoneId}>
-                            <FirstCell size="small">{index + 1}.</FirstCell>
+                            <FirstCell size="small" align="center" >{index + 1}.</FirstCell>
                             <TableCell size="small"> {item.geographicZoneName}</TableCell>
                             <TableCell size="small">
                                 {isEdit && (editedItem?.geographicZoneId === item.geographicZoneId)
@@ -162,7 +167,7 @@ const AncillaryPriceByZone: React.FC<React.PropsWithChildren<React.PropsWithChil
                                     onChange={handleSlide(item.geographicZoneId)}
                                 />
                             </TableCell>
-                            <TableCell size="small" align="right">
+                            <TableCell size="small" align="center">
                                 <IconButton
                                     size="small"
                                     onClick={handleMenuOpen(item)}>
