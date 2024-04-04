@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {SquarePaper} from "../../../components/styled/Paper";
-import {TableContainer} from "../../../pages/admin/PricingSettings/UI";
 import {NoItemsLoading} from "../../../components/wrappers/NoItemsLoading/NoItemsLoading";
 import {IconButton, Menu, MenuItem, Switch, TableBody, TableHead, TableCell} from "@mui/material";
 import {getTransportationOptionString} from "../../../utils/utils";
