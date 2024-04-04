@@ -3,7 +3,7 @@ import {Tab} from "@mui/material";
 import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@mui/lab";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
-import {ServiceRequestsScreen} from "../../../features/admin/ServiceRequests/ServiceRequestsScreen";
+import {ServiceRequests} from "../../../features/admin/ServiceRequests/ServiceRequests";
 import {MaintenancePackages} from "../../../features/admin/MaintenancePackages/MaintenancePackages";
 import {ComplimentaryServices} from "../../../features/admin/ComplimentaryServices/ComplimentaryServices";
 import {setServiceRequestsPageActiveTab} from "../../../store/reducers/serviceRequests/actions";
@@ -36,7 +36,7 @@ export const VehicleServices = () => {
             <Tab label="Recalls" value="4"/>
         </TabList>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="0">
-            <ServiceRequestsScreen/>
+            <ServiceRequests/>
         </TabPanel>
         <TabPanel style={{width: "100%", padding: "24px 0"}} value="1">
             <MaintenancePackages/>

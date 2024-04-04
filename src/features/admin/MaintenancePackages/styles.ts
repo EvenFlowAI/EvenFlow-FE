@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
 export const useMaintenancePackagesStyles = makeStyles()(() => ({
     titleWrapper: {
         marginBottom: 16,
@@ -14,13 +13,22 @@ export const useMaintenancePackagesStyles = makeStyles()(() => ({
         justifyContent: 'space-between',
         marginBottom: 10,
     },
+    selectWrapper: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: 'flex-end',
+        marginBottom: 10,
+        marginTop: 30,
+    },
     toggleWrapper: {
         display: "flex",
         alignItems: "center",
         justifyContent: 'space-between',
     },
     showPriceLabel: {
-        fontSize: 16,
+        fontSize: 14,
+        fontWeight: 700,
+        textTransform: 'uppercase',
     },
     optionsLabel: {
         fontSize: 12,
