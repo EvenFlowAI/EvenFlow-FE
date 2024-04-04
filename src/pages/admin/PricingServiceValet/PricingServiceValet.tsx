@@ -7,7 +7,7 @@ import GeographicZones from "../../../features/admin/PricingServiceValet/Geograp
 import GeographicZonesMap from "../../../features/admin/PricingServiceValet/GeographicZonesMap/GeographicZonesMap";
 import AddEditGeographicZone from "../../../components/modals/admin/EditGeographicZone/AddEditGeographicZone";
 import AncillaryPrice from "../../../features/admin/PricingServiceValet/AncillaryPrice/AncillaryPrice";
-import {pricingRoot} from "../../../utils/constants";
+import {servicesRoot} from "../../../utils/constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 
 type TTab = {
@@ -31,7 +31,7 @@ const PricingServiceValet = () => {
     }
 
     return <TabContext value={selectedTab}>
-            <TitleContainer title="Service Valet" pad parent={pricingRoot}/>
+            <TitleContainer title="Service Valet" pad parent={servicesRoot}/>
             <TabList
                 variant="scrollable"
                 scrollButtons="auto"

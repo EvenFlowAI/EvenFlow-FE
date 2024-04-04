@@ -16,7 +16,7 @@ const GeographicZonesButtons: React.FC<React.PropsWithChildren<React.PropsWithCh
         <ButtonsWrapper>
             <TextButton variant="text" onClick={onEditZoneOpen} disabled={!selectedZone}>Edit</TextButton>
             <TextButton variant="text" onClick={askRemove} disabled={!selectedZone}>Remove</TextButton>
-            <Button onClick={onAddZoneOpen} variant="contained" color="primary" style={{width: 160}}>Add Zone</Button>
+            <Button onClick={onAddZoneOpen} variant="contained" color="primary">Add Zone</Button>
         </ButtonsWrapper>
     );
 };

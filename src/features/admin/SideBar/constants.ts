@@ -45,6 +45,12 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
+            {
+                to: Routes.Services.ServiceValet,
+                name: "Service Valet",
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
+            },
         ],
     },
     {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager", "Service Director"]},
@@ -110,13 +116,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
             {
                 to: Routes.Pricing.MobileService,
                 name: "Mobile Service",
-                exact: true,
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
-                to: Routes.Pricing.ServiceValet,
-                name: "Service Valet",
                 exact: true,
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
