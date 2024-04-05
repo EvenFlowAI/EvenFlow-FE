@@ -4,6 +4,7 @@ import {IAdvisorShort, TRole} from "../users/types";
 import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {EDayOfWeek} from "../offers/types";
+import {TServiceConsultant} from "../appointments/types";
 
 export interface IEmployeeInfo {
     hourlyRate: number;
@@ -146,7 +147,7 @@ export type TEmployeesState = {
 export type TSCState = {
     advisorsList: IAdvisorShort[];
     techniciansList: IAdvisorShort[];
-    DmsAdvisors: TDmsAdvisor[];
+    DmsAdvisors: TServiceConsultant[];
 }
 
 export type TDayHours = {

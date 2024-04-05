@@ -21,7 +21,7 @@ import {
     initialOrder,
     initialPaging,
     localStorageItemName,
-    requiredColumns
+    requiredColumns,
 } from "./constants";
 import ColumnsSelectionModal
     from "../../../components/modals/common/ColumnSelectionModal/ColumnsSelectionModal/ColumnsSelectionModal";
