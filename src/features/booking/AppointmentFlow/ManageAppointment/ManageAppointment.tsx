@@ -76,6 +76,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         selectedVehicle,
         appointmentByKey,
         transportation,
+        isConsentsLoading,
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const {isLoading} = useSelector(({recalls}: RootState) => recalls);
 
@@ -252,7 +253,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     return <StepWrapper>
         <ManageTitle>Manage Appointment</ManageTitle>
         <Wrapper>
-            {isAppointmentSaving
+            {isAppointmentSaving || isConsentsLoading
                 ? <Loading/>
                 : <React.Fragment>
                     <div>
@@ -281,10 +282,10 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
 
         </Wrapper>
         {/*todo change to open payment window on next*/}
-        {isAppointmentSaving
+        {isAppointmentSaving || isConsentsLoading
             ? null
             :  <ActionButtons
-                loading={isAppointmentSaving}
+                loading={isAppointmentSaving || isConsentsLoading}
                 nextDisabled={loading}
                 onBack={onCancelConfirmOpen}
                 onNext={searchForConsents}
@@ -292,11 +293,11 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                 prevLabel="Cancel Changes"
             />}
 
-        {isAppointmentSaving
+        {isAppointmentSaving || isConsentsLoading
             ? null
             :  <ButtonWrapper>
                 <Button
-                    disabled={isAppointmentSaving}
+                    disabled={isAppointmentSaving || isConsentsLoading}
                     variant="text"
                     onClick={onCancelAppointment}>
                     Cancel Appointment

@@ -8,31 +8,31 @@ import {pickersLayoutClasses} from "@mui/x-date-pickers/PickersLayout";
 
 type TProps = MobileTimePickerProps<TParsableDate> & {
     fullWidth?: boolean;
-    InputProps?:TextInputProps;
+    InputProps?: TextInputProps;
     label?: string;
     placeholder?: string;
     error?: boolean;
     disabled?: boolean,
     id?: string;
     name?: string;
-    onClear?: () => void;
+    withClear?: boolean;
 }
 
 const ClockTimePicker: React.FC<TProps> = ({
-                                                    value,
-                                                    onChange,
-                                                    fullWidth,
-                                                    InputProps,
-                                                    label,
-                                                     placeholder,
-                                                     error,
-                                                     disabled,
-                                                     id,
-                                                     name,
-                                               onClear,
-                                                     ...props
-                                                }) => {
-    const { classes  } = useDatePickerStyles();
+                                               value,
+                                               onChange,
+                                               fullWidth,
+                                               InputProps,
+                                               label,
+                                               placeholder,
+                                               error,
+                                               disabled,
+                                               id,
+                                               name,
+                                               withClear,
+                                               ...props
+                                           }) => {
+    const {classes} = useDatePickerStyles();
 
     return <>
         {label ? <InputLabel shrink className={classes.label}>{label}</InputLabel> : null}
@@ -42,7 +42,7 @@ const ClockTimePicker: React.FC<TProps> = ({
             onChange={onChange}
             slotProps={{
                 actionBar: {
-                    actions: ['cancel', 'accept'],
+                    actions: withClear ? ['clear', 'cancel', 'accept'] : ['cancel', 'accept'],
                 },
                 textField: {
                     fullWidth,
