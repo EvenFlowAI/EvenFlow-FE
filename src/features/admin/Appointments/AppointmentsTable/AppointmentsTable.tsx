@@ -1,15 +1,11 @@
 import React, {Dispatch, SetStateAction, useCallback, useState} from 'react';
 import {Table} from "../../../../components/tables/Table/Table";
-import {
-    EReportingStatus,
-    reportingStatuses, IAppointment,
-} from "../../../../api/types";
+import {EReportingStatus, IAppointment,} from "../../../../api/types";
 import {IconButton, Menu, MenuItem} from "@mui/material";
 import {ViewAppointmentsModal} from "../ViewAppointmentsModal/ViewAppointmentsModal";
 import {API} from "../../../../api/api";
 import {MoreHoriz} from "@mui/icons-material";
-import {IOrder, IPageRequest, TableRowDataType} from "../../../../types/types";
-import {time12HourFormat} from "../../../../utils/constants";
+import {IOrder, IPageRequest} from "../../../../types/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useModal} from "../../../../hooks/useModal/useModal";
@@ -20,22 +16,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {getAppointmentDate} from "./utils";
 import dayjs from "dayjs";
 
-const cols: TableRowDataType<IAppointment>[] = [
-    {header: "Date", val: el => el.dateTime ? dayjs.utc(el.dateTime).format("MMMM D, YYYY") : "", orderId: "date", width: 150},
-    {header: "Day", val: el => el.dateTime ? dayjs.utc(el.dateTime).format("ddd") : ""},
-    {header: "Time", val: el => el.dateTime ? dayjs.utc(el.dateTime).format(time12HourFormat) : "", width: 100},
-    {header: "Customer Name", val: el => el.customerInformation?.fullName ?? "", orderId: "fullName"},
-    {header: "Vehicle", val: el => {
-            const vehicleData =`${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${Boolean(el.vehicle?.year) ? el.vehicle?.year : ''}`
-            return el.vehicle?.make || el.vehicle?.model || Boolean(el.vehicle?.year) ? vehicleData : "DMS missing vehicle data"
-        }
-    },
-    {header: "Service Advisor", val: el => el.advisor ?? ""},
-    {header: "Technician", val: el => el.technician ?? ""},
-    {header: "Service Book", val: el => el.serviceBook?.name ?? ''},
-    {header: "Scheduler", val: el => `${el.scheduler?.fullName ?? ''}`},
-    {header: "Status", val: el => typeof el.reportingStatus !== 'undefined' && Number.isInteger(el.reportingStatus) ? reportingStatuses[el.reportingStatus] : "", orderId: "reportingStatus"},
-]
+import {AppointmentsColumns} from "../constants";
 
 type TAppointmentsTable = {
     refresh: () => void;
@@ -153,7 +134,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
             isAscending={order.isAscending}
             noDataTitle="No upcoming appointments scheduled"
             isLoading={isLoading}
-            rowData={cols.filter(col => selectedColumns.includes(col.header))}
+            rowData={AppointmentsColumns.filter(col => selectedColumns.includes(col.header))}
             hidePagination={count < 11}
             onChangePage={onChangePage}
             onChangeRowsPerPage={onChangeRowsPerPage}
