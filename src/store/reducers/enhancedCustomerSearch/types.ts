@@ -81,7 +81,7 @@ export interface IRepairOrderPart {
 }
 
 export interface IRepairOrderLabor {
-    technicianId: string;
+    technicianDmsId: string;
     technicianName: string;
     title: string;
     description: string;
