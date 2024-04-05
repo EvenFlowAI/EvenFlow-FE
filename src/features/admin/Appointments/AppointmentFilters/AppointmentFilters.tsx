@@ -45,7 +45,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadServiceBookList(selectedSC.id))
-            dispatch(loadSchedulerList(selectedSC.id))
+            dispatch(loadSchedulerList())
             dispatch(loadServiceConsultants(selectedSC.id))
         }
     }, [selectedSC])

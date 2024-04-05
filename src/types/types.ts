@@ -138,7 +138,8 @@ export type TableRowDataType<DataEl> = {
     orderId?: keyof DataEl | string;
     val: (el: DataEl, idx: number) => string | JSX.Element | undefined | null;
     align?: AlignTypes;
-    width?: number | string,
+    width?: number | string;
+    required?: boolean;
 }
 export type TableRowDataTypeResp<DataEl> = TableRowDataType<DataEl> & {
     xsHidden?: boolean;
