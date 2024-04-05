@@ -12,7 +12,6 @@ import {HCell, TCell, useStyles} from "./styles";
 import dayjs from "dayjs";
 
 const VehicleRepairHistory: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {vehicleId: string|number, customerId: number|string}>>> = ({customerId, vehicleId, open, onClose}) => {
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {repairHistoryLoading, repairHistory} = useSelector((state: RootState) => state.customers);
     const [pageIndex, setPageIndex] = useState<number>(0);
     const dispatch = useDispatch();
@@ -134,7 +133,7 @@ const VehicleRepairHistory: React.FC<React.PropsWithChildren<React.PropsWithChil
                                                     <ul>
                                                         {service.labors.map(item => {
                                                             return <li key={item.title}>
-                                                                <div><span>[Tech {item.technicianId} {item.technicianName}]</span> <span className={classes.titleNonUpperCase}>{item.title}</span></div>
+                                                                <div><span>[Tech {item.technicianDmsId} {item.technicianName}]</span> <span className={classes.titleNonUpperCase}>{item.title}</span></div>
                                                                 <div><span className={classes.italic}>Description: </span> {item.description}</div>
                                                             </li>
                                                         })}
