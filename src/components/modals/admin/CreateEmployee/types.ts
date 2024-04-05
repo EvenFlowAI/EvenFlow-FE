@@ -2,6 +2,7 @@ import {IServiceCenter} from "../../../../store/reducers/serviceCenters/types";
 import {TTechnicianLevel} from "../../../../types/types";
 import React from "react";
 import {TRole} from "../../../../store/reducers/users/types";
+import {TServiceConsultant} from "../../../../store/reducers/appointments/types";
 
 export type TConsultantOption = {
     id: string;
@@ -48,4 +49,4 @@ export type TTechnicianForm = {
 
 export type TSelectChange = (e: React.ChangeEvent<{}>, value: IServiceCenter|null) => void;
 
-export type TDMSConsultantChange = (e: React.ChangeEvent<{}>, value: TConsultantOption | null) => void;
+export type TDMSConsultantChange = (e: React.ChangeEvent<{}>, value: TServiceConsultant | null) => void;
