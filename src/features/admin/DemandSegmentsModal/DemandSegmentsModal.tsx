@@ -21,10 +21,10 @@ import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 const rowData: TableRowDataType<IDemandSegment>[] = [
     {header: "Demand Segments",
-        val: (el, idx) => String(idx + 1), align: "center"},
-    {header: "Window 1", val: el => `${el.window1Point} %`, align: "center"},
-    {header: "Window 2", val: el => `${el.window2Point} %`, align: "center"},
-    {header: "Window 3", val: el => `${el.window3Point} %`, align: "center"},
+        val: (el, idx) => String(idx + 1)},
+    {header: "Window 1", val: el => `${el.window1Point} %`},
+    {header: "Window 2", val: el => `${el.window2Point} %`},
+    {header: "Window 3", val: el => `${el.window3Point} %`},
 ];
 
 export const DemandSegmentsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onAction, payload, ...props}) => {
@@ -106,7 +106,6 @@ export const DemandSegmentsModal: React.FC<React.PropsWithChildren<React.PropsWi
                 data={demandSegmentList}
                 index="id"
                 isLoading={listLoading}
-                compact
                 rowData={rowData}
                 actions={actions}
             />

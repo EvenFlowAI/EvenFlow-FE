@@ -19,7 +19,7 @@ import {
     IOptimizationSettingValueForm
 } from "../../../../store/reducers/slotScoring/types";
 import {SC_UNDEFINED} from "../../../../utils/constants";
-import {Slider, useStyles} from "./styles";
+import {BorderedTableCell, Slider, StyledTableCell, UpperTableCell, useStyles} from "./styles";
 import {SliderRange, TForm} from "./types";
 import {initialForm} from "./constants";
 import {useModal} from "../../../../hooks/useModal/useModal";
@@ -119,12 +119,14 @@ export const DemandSegmentsDesirability = () => {
         <StyledTable className={classes.table}>
             <TableHead>
                 <TableRow>
-                    <TableCell className={classes.buttonCell} colSpan={2}>
-                        Demand Segment
-                        <Button className={classes.edit} onClick={handleOpen} color="primary">Edit</Button>
-                    </TableCell>
-                    <TableCell width={183} rowSpan={2}>Time Windows</TableCell>
-                    <TableCell width={550} colSpan={2} style={{minWidth: 400}} className={classes.buttonCell}>
+                    <StyledTableCell className={classes.buttonCell} colSpan={3}>
+                        <div className={classes.cellInnerWrapper}>
+                            Demand Segment
+                            <Button className={classes.edit} onClick={handleOpen} color="primary">Edit</Button>
+                        </div>
+                    </StyledTableCell>
+                    <UpperTableCell width={550} colSpan={2} style={{minWidth: 400}} className={classes.buttonCell}>
+                        <div className={classes.cellInnerWrapper}>
                         Optimization Settings
                         {edit
                             ? saving ?
@@ -150,28 +152,30 @@ export const DemandSegmentsDesirability = () => {
                                 Edit
                             </Button>
                         }
-                    </TableCell>
+                        </div>
+                    </UpperTableCell>
                 </TableRow>
                 <TableRow>
-                    <TableCell className={classes.subtitleCell}>Segment Start</TableCell>
-                    <TableCell className={classes.subtitleCell}>Segment End</TableCell>
-                    <TableCell className={classes.subtitleCell}>Undesirable</TableCell>
-                    <TableCell className={classes.subtitleCell}>Desirable</TableCell>
+                    <StyledTableCell className={classes.subtitleCell}>Segment Start</StyledTableCell>
+                    <StyledTableCell className={classes.subtitleCell}>Segment End</StyledTableCell>
+                    <StyledTableCell className={classes.subtitleCell}>Time Windows</StyledTableCell>
+                    <BorderedTableCell className={classes.subtitleCell} align="left">Undesirable</BorderedTableCell>
+                    <BorderedTableCell className={classes.subtitleCell} align="left">Desirable</BorderedTableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
                 {optSettings.map((seg, idx) =>
                     <React.Fragment key={seg.id}>
                         <TableRow key={`${seg.id}-1`}>
-                            <TableCell rowSpan={2}>
+                            <StyledTableCell rowSpan={2} style={{fontSize: 14}}>
                                 from <span className={classes.segment}>{seg.from}</span>
-                            </TableCell>
-                            <TableCell rowSpan={2}>
+                            </StyledTableCell>
+                            <StyledTableCell rowSpan={2} style={{fontSize: 14}}>
                                 to <span className={classes.segment}>{seg.to}</span>
-                            </TableCell>
-                            <TableCell>
+                            </StyledTableCell>
+                            <StyledTableCell style={{fontSize: 14}}>
                                 {"< W3"}
-                            </TableCell>
+                            </StyledTableCell>
                             <TableCell>
                                 <Slider
                                     min={SliderRange.Min}
@@ -202,9 +206,9 @@ export const DemandSegmentsDesirability = () => {
                             </TableCell>
                         </TableRow>
                         <TableRow key={`${seg.id}-2`}>
-                            <TableCell>
+                            <StyledTableCell style={{fontSize: 14}}>
                                 {">= W3"}
-                            </TableCell>
+                            </StyledTableCell>
                             <TableCell>
                                 <Slider
                                     min={SliderRange.Min}

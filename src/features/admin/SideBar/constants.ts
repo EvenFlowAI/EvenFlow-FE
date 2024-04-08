@@ -73,6 +73,13 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
         name: "Capacity Optimization",
         roles: ["Owner", "Manager", "Service Director"],
         subLinks: [
+            {to: Routes.CapacityManagement.Pods, name: "Service Books", sub: true, roles: ["Owner", "Manager", "Service Director"]},
+            {
+                to: Routes.CapacityManagement.CapacitySettings,
+                name: "Capacity Settings",
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
+            },
             {
                 to: Routes.CapacityManagement.AppointmentValue,
                 name: "Appointment Value Settings",
@@ -97,7 +104,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
-            {to: Routes.CapacityManagement.Pods, name: "Pods", sub: true, roles: ["Owner", "Manager", "Service Director"]},
             {
                 to: Routes.CapacityManagement.ManageEXEvenFlowAppointments,
                 name: "Manage Ex EvenFlow Appointments",
@@ -105,8 +111,8 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.CapacityManagement.CapacitySettings,
-                name: "Capacity Settings",
+                to: Routes.CapacityManagement.RequestDifferentiation,
+                name: "Request Differentiation",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
