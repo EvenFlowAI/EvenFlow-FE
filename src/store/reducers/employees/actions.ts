@@ -18,7 +18,6 @@ import {
     IEmployeeRoleHours,
     IEmployeeSchedule,
     TBaseScheduleRequest,
-    TDmsAdvisor,
     TEmployeeActions,
     TScheduleByEmployeeRequestData,
     TSetScheduleData, TUpdateAssignmentSettingsData
@@ -27,6 +26,7 @@ import {saveEmployeeAvatar} from "../users/actions";
 import {createAction} from "@reduxjs/toolkit";
 import {IAdvisorShort} from "../users/types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import {TServiceConsultant} from "../appointments/types";
 
 export const getAll = (payload: IEmployee[]): TEmployeeActions => ({
    type: "Employees/GetAll", payload
@@ -166,11 +166,11 @@ export const loadSCEmployees = (serviceCenterId: number): AppThunk => async disp
 export const setEmplSearch = createAction<string>("SCEmployees/SetSearch");
 export const setEmplOrder = createAction<IOrder<IEmployee>>("SCEmployees/SetOrder")
 
-export const getDMSAdvisors = createAction<TDmsAdvisor[]>("SCEmployees/GetDMSAdvisors");
+export const getDMSAdvisors = createAction<TServiceConsultant[]>("SCEmployees/GetDMSAdvisors");
 export const loadingDMSAdvisors = createAction<boolean>("SCEmployees/LoadingDMSAdvisors");
 export const loadDMSAdvisors = (serviceCenterId: number): AppThunk => dispatch => {
     dispatch(loadingDMSAdvisors(true));
-    Api.call(Api.endpoints.ServiceConsultants.Retrieve, {urlParams: {id: serviceCenterId}})
+    Api.call(Api.endpoints.ServiceConsultants.GetByRole, {params: {serviceCenterId, showActive: true}})
         .then(result => {
             if (result?.data) {
                 dispatch(getDMSAdvisors(result.data))

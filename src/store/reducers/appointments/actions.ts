@@ -139,9 +139,9 @@ export const loadServiceBookList = (id: number): AppThunk => dispatch => {
         .finally(() => dispatch(setAppointmentsLoading(false)))
 }
 
-export const loadSchedulerList = (id: number): AppThunk => dispatch => {
+export const loadSchedulerList = (): AppThunk => dispatch => {
     dispatch(setAppointmentsLoading(true))
-    Api.call(Api.endpoints.Appointments.GetSchedulers, {urlParams: {id}})
+    Api.call(Api.endpoints.Appointments.GetSchedulers)
         .then(result => {
             if (result) dispatch(getScheduler(result.data))
         })
