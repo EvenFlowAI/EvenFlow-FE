@@ -8,26 +8,26 @@ import {
     TableHead,
     TableRow,
 } from "@mui/material";
-import {StyledTable} from '../../../../components/styled/StyledTable'
-import {EditDemandSegmentsModal} from '../EditDemandSegmentsModal/EditDemandSegmentsModal';
+import {StyledTable} from '../../../components/styled/StyledTable'
+import {EditDemandSegmentsModal} from '../TimeOfDayDesirability/EditDemandSegmentsModal/EditDemandSegmentsModal';
 import {useDispatch, useSelector} from "react-redux";
-import {loadOptimizationSettings, setSettingValues} from "../../../../store/reducers/slotScoring/actions";
-import {RootState} from "../../../../store/rootReducer";
+import {loadOptimizationSettings, setSettingValues} from "../../../store/reducers/slotScoring/actions";
+import {RootState} from "../../../store/rootReducer";
 import {
     EOptimizationSettingValueType,
     IOptimizationSettingValue,
     IOptimizationSettingValueForm
-} from "../../../../store/reducers/slotScoring/types";
-import {SC_UNDEFINED} from "../../../../utils/constants";
+} from "../../../store/reducers/slotScoring/types";
+import {SC_UNDEFINED} from "../../../utils/constants";
 import {BorderedTableCell, Slider, StyledTableCell, UpperTableCell, useStyles} from "./styles";
 import {SliderRange, TForm} from "./types";
 import {initialForm} from "./constants";
-import {useModal} from "../../../../hooks/useModal/useModal";
+import {useModal} from "../../../hooks/useModal/useModal";
 
-import {useMessage} from "../../../../hooks/useMessage/useMessage";
-import {useException} from "../../../../hooks/useException/useException";
-import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 export const DemandSegmentsDesirability = () => {
     const {onOpen, onClose, isOpen} = useModal();

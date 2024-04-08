@@ -6,12 +6,14 @@ import { withStyles } from 'tss-react/mui';
 export const ValueSlider = withStyles(Slider, {
     track: {
         height: 2,
+        backgroundColor: '#858585',
+        borderColor: "#858585"
     },
     root: {
         height: 4,
     },
     rail: {
-        height: 4
+        height: 4,
     },
     marked: {
         marginBottom: 0,

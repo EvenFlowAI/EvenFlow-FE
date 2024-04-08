@@ -1,5 +1,5 @@
 import { withStyles } from 'tss-react/mui';
-import {ValueSlider} from "../../../../components/styled/ValueSlider";
+import {ValueSlider} from "../../../components/styled/ValueSlider";
 import { makeStyles } from 'tss-react/mui';
 import {styled, TableCell} from "@mui/material";
 

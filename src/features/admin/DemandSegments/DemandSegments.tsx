@@ -3,7 +3,7 @@ import {ButtonContainer, TableContainer} from "./styles";
 import {Button} from "@mui/material";
 import {
     DemandSegmentsDesirability
-} from "../TimeOfDayDesirability/DemandSegmentsDesirability/DemandSegmentsDesirability";
+} from "../DemandSegmentsDesirability/DemandSegmentsDesirability";
 import {DemandSegmentsTable} from "../DemandSegmentsTable/DemandSegmentsTable";
 import {DemandSegmentsModal} from "../DemandSegmentsModal/DemandSegmentsModal";
 import {useModal} from "../../../hooks/useModal/useModal";

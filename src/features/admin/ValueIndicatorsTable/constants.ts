@@ -25,5 +25,5 @@ export const columns: TColumn[] = [
     {label: "Value Lever", id: 0, width: "25%"},
     {label: "Optimization Settings", id: 1, width: "auto"},
     {label: "OFF/ON", id: 2, width: "10%"},
-    {label: "", id: 3, width: "15%", cellProps: {align: "right"}}
+    {label: "", id: 3, width: '150px', cellProps: {align: "right"}}
 ]

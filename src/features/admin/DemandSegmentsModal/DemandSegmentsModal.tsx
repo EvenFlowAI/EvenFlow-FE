@@ -73,7 +73,7 @@ export const DemandSegmentsModal: React.FC<React.PropsWithChildren<React.PropsWi
         askConfirm({
             onConfirm: handleRemoveSegment(el),
             isRemove: true,
-            title: `Please confirm you want to remove Demand Segment ${segmentIndex + 1}`,
+            title: `Please confirm you want to delete Demand Segment ${segmentIndex + 1}`,
         });
     }
     const handleRemoveSegment = (el: IDemandSegment) => async () => {
