@@ -33,12 +33,12 @@ const SelectedConsultant = () => {
         dispatch(setAnyAdvisorSelected(!Boolean(e.target.value)))
     }
 
-    return isAdvisorAvailable && consultants.length
+    return isAdvisorAvailable && consultants?.length
         ? <div className={classes.selectWrapper}>
             <div className={classes.selectWrapper}>
                 {t("Advisor")}: {isSm ? <br/> : null}
                 <Select
-                    value={advisor?.id || "Any"}
+                    value={advisor?.id ?? "Any"}
                     className={classes.select}
                     variant="standard"
                     disableUnderline
