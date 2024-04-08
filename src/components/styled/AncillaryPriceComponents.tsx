@@ -16,9 +16,6 @@ export const HeaderTableCell = withStyles(TableCell, {
             display: 'flex',
             flexDirection: 'column',
             lineHeight: '15px',
-            '& > span': {
-                fontWeight: 400
-            }
         }
     }
 });

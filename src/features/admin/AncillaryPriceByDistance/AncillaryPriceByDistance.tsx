@@ -149,22 +149,21 @@ const AncillaryPriceByDistance: React.FC<React.PropsWithChildren<React.PropsWith
                     : <DemandTable>
                         <TableHead>
                             <TableRow>
-                                <HeaderTableCell align="left" size="small">
+                                <HeaderTableCell align="left" size="small" width={50}>
                                     <div className="distanceCell">№</div>
                                 </HeaderTableCell>
-                                <HeaderTableCell align="left" size="small">
+                                <HeaderTableCell align="left" size="small" width={120}>
                                     <div className="distanceCell">
-                                        Distance
-                                        <span>(Range min)</span>
+                                        Distance <span style={{fontSize: 12}}> (Range min)</span>
                                     </div>
                                 </HeaderTableCell>
-                                <HeaderTableCell align="left" size="small">
+                                <HeaderTableCell align="left" size="small" width={120}>
                                     <div className="distanceCell">
                                         Distance
-                                        <span>(Range max)</span>
+                                        <span style={{fontSize: 12}}> (Range max)</span>
                                     </div>
                                 </HeaderTableCell>
-                                <HeaderTableCell align="left" size="small">
+                                <HeaderTableCell align="left" size="small" width={190}>
                                     <div className="distanceCell">
                                         Cost Per Mile ($)
                                     </div>
