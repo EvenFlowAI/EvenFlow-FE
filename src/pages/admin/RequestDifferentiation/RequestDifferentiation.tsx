@@ -6,6 +6,7 @@ import {Tab} from "@mui/material";
 import {TabList} from "../../../components/styled/Tabs";
 import DemandSegments from "../../../features/admin/DemandSegments/DemandSegments";
 import {ValueIndicatorsTable} from "../../../features/admin/ValueIndicatorsTable/ValueIndicatorsTable";
+import {CustomerLifetimeRules} from "../../../features/admin/CustomerLifetimeRules/CustomerLifetimeRules";
 
 type TTab = {
     id: string;
@@ -16,6 +17,7 @@ type TTab = {
 const tabs: TTab[] = [
     {id: "0", label: "Demand Segments", component: <DemandSegments />},
     {id: "1", label: "Value Indicators", component: <ValueIndicatorsTable />},
+    {id: "2", label: "Customer Lifetime Rules", component: <CustomerLifetimeRules/>},
 ]
 
 const RequestDifferentiation = () => {

@@ -1,7 +1,7 @@
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import React, {useEffect, useState} from "react";
-import {Button, FormGroup, InputLabel} from "@mui/material";
+import {Button} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {ICustomerLifetime, ICustomerLifetimeForm} from "../../../../store/reducers/valueSettings/types";
 import {setCustomerLifetimes} from "../../../../store/reducers/valueSettings/actions";
@@ -10,7 +10,6 @@ import {SC_UNDEFINED} from "../../../../utils/constants";
 import {useStyles} from "./styles";
 import {TForm} from "./types";
 import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
-
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
@@ -77,33 +76,38 @@ export const CustomerLifetimesModal: React.FC<React.PropsWithChildren<React.Prop
         }
     }
 
-    return <BaseModal {...props} maxWidth="xs">
+    return <BaseModal {...props} width={490}>
         <DialogTitle onClose={props.onClose}>Edit Medium Value</DialogTitle>
         <DialogContent>
-            <InputLabel className={classes.label}>Customer Lifetime Value Range</InputLabel>
-            <FormGroup className={classes.group} row>
-                <TextField
-                    type="number"
-                    autoComplete="low-value value"
-                    id="low-value"
-                    startAdornment="$"
-                    name="low-value-f"
-                    inputProps={{min: 0}}
-                    value={form.from}
-                    onChange={handleChange("from")}
-                />
-                <span>-</span>
-                <TextField
-                    type="number"
-                    startAdornment="$"
-                    autoComplete="high-value value"
-                    inputProps={{min: Number(form.from) || 0}}
-                    id="high-value"
-                    name="high-value-t"
-                    value={form.to}
-                    onChange={handleChange("to")}
-                />
-            </FormGroup>
+            <div className={classes.group}>
+                <div>
+                    <TextField
+                        type="number"
+                        autoComplete="low-value value"
+                        id="low-value"
+                        startAdornment="$"
+                        name="low-value-f"
+                        inputProps={{min: 0}}
+                        value={form.from}
+                        label="Considered New Up To"
+                        onChange={handleChange("from")}
+                    />
+                </div>
+            <span style={{fontSize: 24}}> - </span>
+                <div>
+                    <TextField
+                        type="number"
+                        startAdornment="$"
+                        autoComplete="high-value value"
+                        inputProps={{min: Number(form.from) || 0}}
+                        id="high-value"
+                        name="high-value-t"
+                        value={form.to}
+                        label="Considered New Up To"
+                        onChange={handleChange("to")}
+                    />
+                </div>
+            </div>
         </DialogContent>
         <DialogActions>
             <Button onClick={props.onClose} color="info">

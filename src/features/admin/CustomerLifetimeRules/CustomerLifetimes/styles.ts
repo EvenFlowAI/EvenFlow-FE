@@ -5,7 +5,7 @@ export const useStyles = makeStyles()(theme => ({
     group: {
         display: "flex",
         flexFlow: "row nowrap",
-        alignItems: "center",
+        alignItems: "flex-end",
         "&>*:nth-child(2)": {
             flexGrow: 0,
             padding: 10
