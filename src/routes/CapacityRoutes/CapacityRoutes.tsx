@@ -3,7 +3,6 @@ import {ContentContainer} from "../../components/wrappers/ContentContainer/Conte
 import {Switch, Redirect} from "react-router-dom";
 import {PrivateRoute} from "../PrivateRoute/PrivateRoute";
 import {CapacitySettings} from "../../pages/admin/CapacitySettings/CapacitySettings";
-import {AppointmentValueSettings} from "../../pages/admin/AppointmentValueSettings/AppointmentValueSettings";
 import {AppointmentSlotScoring} from "../../pages/admin/AppointmentSlotScoring/AppointmentSlotScoring";
 import { OptimizationWindowsPage } from "../../pages/admin/OptimizationWindows/OptimizationWindowsPage";
 import {AppointmentAllocation} from "../../pages/admin/AppointmentAllocation/AppointmentAllocation";
@@ -15,7 +14,6 @@ import RequestDifferentiation from "../../pages/admin/RequestDifferentiation/Req
 export const CapacityRoutes = () => {
     return <ContentContainer>
         <Switch>
-            <PrivateRoute path={Routes.CapacityManagement.AppointmentValue} component={AppointmentValueSettings} />
             <PrivateRoute path={Routes.CapacityManagement.CapacitySettings} component={CapacitySettings} />
             <PrivateRoute path={Routes.CapacityManagement.AppointmentSlotScoring} component={AppointmentSlotScoring} />
             <PrivateRoute path={Routes.CapacityManagement.AppointmentAllocation} component={AppointmentAllocation} />
@@ -23,7 +21,7 @@ export const CapacityRoutes = () => {
             <PrivateRoute path={Routes.CapacityManagement.Pods} component={Pods} />
             <PrivateRoute path={Routes.CapacityManagement.ManageEXEvenFlowAppointments} component={ManageExEFAppointments} />
             <PrivateRoute path={Routes.CapacityManagement.RequestDifferentiation} component={RequestDifferentiation} />
-            <Redirect to={Routes.CapacityManagement.AppointmentValue} />
+            <Redirect to={Routes.CapacityManagement.Pods} />
         </Switch>
     </ContentContainer>
 }

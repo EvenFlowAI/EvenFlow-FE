@@ -81,12 +81,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.CapacityManagement.AppointmentValue,
-                name: "Appointment Value Settings",
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
                 to: Routes.CapacityManagement.AppointmentSlotScoring,
                 name: "Appointment Slot Scoring",
                 sub: true,
