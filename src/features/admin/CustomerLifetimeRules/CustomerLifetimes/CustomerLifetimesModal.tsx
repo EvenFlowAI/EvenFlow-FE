@@ -10,6 +10,7 @@ import {SC_UNDEFINED} from "../../../../utils/constants";
 import {useStyles} from "./styles";
 import {TForm} from "./types";
 import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
+
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
@@ -89,7 +90,7 @@ export const CustomerLifetimesModal: React.FC<React.PropsWithChildren<React.Prop
                         name="low-value-f"
                         inputProps={{min: 0}}
                         value={form.from}
-                        label="Considered New Up To"
+                        label="Customer Lifetime Value From"
                         onChange={handleChange("from")}
                     />
                 </div>
@@ -103,10 +104,11 @@ export const CustomerLifetimesModal: React.FC<React.PropsWithChildren<React.Prop
                         id="high-value"
                         name="high-value-t"
                         value={form.to}
-                        label="Considered New Up To"
+                        label="Customer Lifetime Value To"
                         onChange={handleChange("to")}
                     />
                 </div>
+
             </div>
         </DialogContent>
         <DialogActions>

@@ -7,6 +7,9 @@ import {TabList} from "../../../components/styled/Tabs";
 import DemandSegments from "../../../features/admin/DemandSegments/DemandSegments";
 import {ValueIndicatorsTable} from "../../../features/admin/ValueIndicatorsTable/ValueIndicatorsTable";
 import {CustomerLifetimeRules} from "../../../features/admin/CustomerLifetimeRules/CustomerLifetimeRules";
+import {UrgentRequests} from "../../../features/admin/UrgentRequests/UrgentRequests";
+import {NewLostCustomer} from "../../../features/admin/NewLostCustomer/NewLostCustomer";
+import {EndOfWarranty} from "../../../features/admin/EndOfWarranty/EndOfWarranty";
 
 type TTab = {
     id: string;
@@ -18,6 +21,9 @@ const tabs: TTab[] = [
     {id: "0", label: "Demand Segments", component: <DemandSegments />},
     {id: "1", label: "Value Indicators", component: <ValueIndicatorsTable />},
     {id: "2", label: "Customer Lifetime Rules", component: <CustomerLifetimeRules/>},
+    {id: "3", label: "Urgent Requests", component: <UrgentRequests/>},
+    {id: "4", label: "New/Lost Customer", component: <NewLostCustomer/>},
+    {id: "5", label: "End of Warranty", component: <EndOfWarranty/>},
 ]
 
 const RequestDifferentiation = () => {

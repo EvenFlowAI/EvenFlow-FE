@@ -18,7 +18,7 @@ const DemandSegments = () => {
                     variant="contained"
                     color="primary"
                     onClick={onDemandOpen}>
-                    Add Segment
+                    Manage Segments
                 </Button>
             </ButtonContainer>
             <TableContainer><DemandSegmentsTable/></TableContainer>
