@@ -21,7 +21,7 @@ export const useAutocompleteStyles = makeStyles()(() => ({
         fontSize: 15,
     },
     inputRoot: {
-        padding: 5,
+        padding: 0,
         paddingRight: 8,
     },
 }));

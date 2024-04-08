@@ -82,7 +82,7 @@ const EligibleCustomerSegment = () => {
                     <HeaderTableCell align="left">
                         Customer (Segment)
                     </HeaderTableCell>
-                    <HeaderTableCell>
+                    <HeaderTableCell width={100}>
                         OFF/ON
                     </HeaderTableCell>
                 </TableRow>

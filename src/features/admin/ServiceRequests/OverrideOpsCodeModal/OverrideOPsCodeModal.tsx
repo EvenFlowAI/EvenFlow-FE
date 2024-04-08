@@ -5,16 +5,17 @@ import {
     IServiceRequestOverrideEditRequest
 } from "../../../../store/reducers/serviceRequests/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button, Grid} from "@mui/material";
+import {Button, Grid, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {useDispatch} from "react-redux";
 import {updateAssignedServiceRequest} from "../../../../store/reducers/serviceRequests/actions";
-import {ToggleButtons} from "../../../../components/buttons/ToggleButtons/ToggleButtons";
 import {TForm} from "./types";
 import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
+import {TOption} from "../../../../utils/types";
+import {EmptyMenuItem} from "../../Appointments/AppointmentFilters/styles";
 
 const initialForm: TForm = {
     description: "",
@@ -26,6 +27,8 @@ const initialForm: TForm = {
     partsUnitCost: "",
     numberOfParts: "",
 };
+
+const levels: TOption[] = [{value: 1, name: 'Level 1'}, {value: 2, name: 'Level 2'}, {value: 2, name: 'Level 3'}]
 
 export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAssignedServiceRequest>>>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
@@ -62,8 +65,8 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
         setForm({...form, [e.target.name]: e.target.value});
     }
 
-    const handleLevelChange = (e: any, val: number) => {
-        setForm({...form, skillLevelOfTechnicians: val});
+    const handleLevelChange = (e: SelectChangeEvent<number>) => {
+        setForm({...form, skillLevelOfTechnicians: +e.target.value});
     }
     const handleSave = async () => {
         if (!payload) {
@@ -103,7 +106,7 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
             <Grid container spacing={3} alignItems="flex-end">
                 <Grid item xs={12}>
                     <TextField
-                        label="Service Ops Code name"
+                        label="Ops Code"
                         disabled
                         fullWidth
                         value={payload?.serviceRequest.code || ""}
@@ -124,7 +127,7 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
                 <Grid item xs={6}>
                     <TextField
                         fullWidth
-                        label="Duration (hours)"
+                        label="Labor Hours"
                         name="durationInHours"
                         id="durationInHours"
                         autoComplete="duration-number duration"
@@ -136,36 +139,21 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        label="Number of technicians"
-                        name="countOfTechnicians"
-                        id="countOfTechnicians"
-                        autoComplete="technicians-count"
-                        value={form.countOfTechnicians}
-                        placeholder={payload ? String(payload.serviceRequest.countOfTechnicians) : ""}
-                        onChange={handleChange}
-                        type="number"
-                        inputProps={{min: 1}}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <ToggleButtons
+                    <Select
                         value={form.skillLevelOfTechnicians}
-                        label="Technician Level"
-                        buttons={[
-                            {id: "1", label: "1", value: 1},
-                            {id: "2", label: "2", value: 2},
-                            {id: "3", label: "3", value: 3}
-                        ]}
-                        exclusive
-                        onChange={handleLevelChange}
-                    />
+                        variant="standard"
+                        fullWidth
+                        disableUnderline
+                        style={{color: form.skillLevelOfTechnicians ? "inherit" : '#858585'}}
+                        onChange={handleLevelChange}>
+                        <EmptyMenuItem value={0}>Technician Level</EmptyMenuItem>
+                        {levels.map(level => <MenuItem value={level.value} key={level.name}>{level.name}</MenuItem>)}
+                    </Select>
                 </Grid>
                 <Grid item xs={6}>
                     <TextField
                         fullWidth
-                        label="Warranty invoice"
+                        label="Labor Amount"
                         startAdornment="$"
                         name="warrantyInvoiceAmount"
                         id="warrantyInvoiceAmount"
@@ -181,7 +169,7 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
                     <TextField
                         fullWidth
                         startAdornment="$"
-                        label="Invoice Amount"
+                        label="Total Amount"
                         name="invoiceAmount"
                         id="invoiceAmount"
                         autoComplete="invoice-amount"
@@ -195,7 +183,7 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
                 <Grid item xs={6}>
                     <TextField
                         fullWidth
-                        label="Parts Unit Cost"
+                        label="Label Price"
                         startAdornment="$"
                         name="partsUnitCost"
                         id="partsUnitCost"

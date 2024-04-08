@@ -115,8 +115,8 @@ const EditTimeRangeAndCapacityModal: React.FC<React.PropsWithChildren<React.Prop
 
     return (
         <BaseModal onClose={onCancel} open={open} width={575}>
-            <DialogTitle onClose={onCancel}>Edit Time Ranges & Capacity of
-                <span style={{color: '#7898FF'}}> {editingElement.dayOfWeek ? dayjs().set('day', editingElement.dayOfWeek).format('dddd').toUpperCase() : ''}
+            <DialogTitle onClose={onCancel}>Edit Time Ranges & Capacity Of
+                <span> {editingElement.dayOfWeek ? dayjs().set('day', editingElement.dayOfWeek).format('dddd').toUpperCase() : ''}
                 </span></DialogTitle>
             <DialogContent style={{padding: '16px 120px'}}>
                 <Grid container spacing={4}>

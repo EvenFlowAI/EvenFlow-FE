@@ -56,4 +56,5 @@ export const ZipCode = styled('div')({
     borderRadius: 4,
     padding: '2px 6px',
     color: '#FFFFFF',
+    fontWeight: 'bold',
 })

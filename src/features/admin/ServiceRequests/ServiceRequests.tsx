@@ -22,7 +22,7 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 
-export const ServiceRequestsScreen = () => {
+export const ServiceRequests = () => {
     const {
         assignedPageData,
         assignedFilter: {searchTerm},

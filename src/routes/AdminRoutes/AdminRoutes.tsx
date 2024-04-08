@@ -16,6 +16,7 @@ import {useCurrentUser} from "../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../constants";
 import EmployeesRoutes from "../EmployeesRoutes/EmployeesRoutes";
 import {DealerOperations} from "../../pages/admin/DealerOperations/Dashboard";
+import ServicesRoutes from "../ServicesRoutes/ServicesRoutes";
 
 export const AdminRoutes = () => {
     const currentUser = useCurrentUser();
@@ -52,6 +53,9 @@ export const AdminRoutes = () => {
                 : null}
             {!currentUser.isSuperUser && !currentRoleIsRestricted
                 ? <PrivateRoute path={Routes.CapacityManagement.Base} component={CapacityRoutes} />
+                : null}
+            {!currentUser.isSuperUser && !currentRoleIsRestricted
+                ? <PrivateRoute path={Routes.Services.Base} component={ServicesRoutes} />
                 : null}
             <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>

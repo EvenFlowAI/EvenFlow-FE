@@ -13,8 +13,13 @@ import {IDistancePriceSettings, TDistanceRange} from "../../../store/reducers/se
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {NoData} from "../../../components/wrappers/NoData/NoData";
 import {AncillaryPriceSlider} from "../../../components/styled/AncillaryPriceSlider";
-import {FirstCell, HeaderTableCell, TableCell} from "../../../components/styled/AncillaryPriceComponents";
-import {ButtonWrapper, STextField, WideButton} from "./styles";
+import {
+    FirstCell,
+    HeaderTableCell,
+    LastTableCell,
+    TableCell
+} from "../../../components/styled/AncillaryPriceComponents";
+import {ButtonWrapper, STextField} from "./styles";
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
 import {useModal} from "../../../hooks/useModal/useModal";
@@ -135,7 +140,7 @@ const AncillaryPriceByDistance: React.FC<React.PropsWithChildren<React.PropsWith
     return (
         <div>
             <ButtonWrapper>
-                <WideButton color="primary" onClick={onOpen} variant="contained">Add Range</WideButton>
+                <Button color="primary" onClick={onOpen} variant="contained">Add Range</Button>
             </ButtonWrapper>
             {isLoading
                 ? <Loading/>
@@ -144,22 +149,21 @@ const AncillaryPriceByDistance: React.FC<React.PropsWithChildren<React.PropsWith
                     : <DemandTable>
                         <TableHead>
                             <TableRow>
-                                <HeaderTableCell align="left" size="small">
+                                <HeaderTableCell align="left" size="small" width={50}>
                                     <div className="distanceCell">№</div>
                                 </HeaderTableCell>
-                                <HeaderTableCell align="left" size="small">
+                                <HeaderTableCell align="left" size="small" width={120}>
                                     <div className="distanceCell">
-                                        Distance
-                                        <span>(Range min)</span>
+                                        Distance <span style={{fontSize: 12}}> (Range min)</span>
                                     </div>
                                 </HeaderTableCell>
-                                <HeaderTableCell align="left" size="small">
+                                <HeaderTableCell align="left" size="small" width={120}>
                                     <div className="distanceCell">
                                         Distance
-                                        <span>(Range max)</span>
+                                        <span style={{fontSize: 12}}> (Range max)</span>
                                     </div>
                                 </HeaderTableCell>
-                                <HeaderTableCell align="left" size="small">
+                                <HeaderTableCell align="left" size="small" width={190}>
                                     <div className="distanceCell">
                                         Cost Per Mile ($)
                                     </div>
@@ -169,7 +173,7 @@ const AncillaryPriceByDistance: React.FC<React.PropsWithChildren<React.PropsWith
                                         Service Multiplier
                                     </div>
                                 </HeaderTableCell>
-                                <HeaderTableCell align="left" size="small" width={170}>
+                                <LastTableCell align="left" size="small" width={130}>
                                     {isEdit
                                         ? <>
                                             <Button
@@ -188,13 +192,13 @@ const AncillaryPriceByDistance: React.FC<React.PropsWithChildren<React.PropsWith
                                             </Button>
                                         </>
                                         : null}
-                                </HeaderTableCell>
+                                </LastTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {distanceData.map((item, index) => (
                                 <TableRow key={item.id}>
-                                    <FirstCell size="small">{index + 1}.</FirstCell>
+                                    <FirstCell size="small" align="center">{index + 1}.</FirstCell>
                                     <TableCell size="small">
                                         {isEdit && (editedItem?.id === item.id)
                                             ? <STextField
@@ -254,7 +258,7 @@ const AncillaryPriceByDistance: React.FC<React.PropsWithChildren<React.PropsWith
                                             onChange={handleSlide(item.id)}
                                         />
                                     </TableCell>
-                                    <TableCell size="small" align="right">
+                                    <TableCell size="small" align="center">
                                         <IconButton
                                             size="small"
                                             onClick={handleMenuOpen(item)}>

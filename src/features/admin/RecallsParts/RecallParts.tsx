@@ -1,38 +1,18 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import RecallTable from "./RecallTable/RecallTable";
-import {Button} from "@mui/material";
-import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
+import {Autocomplete, Button} from "@mui/material";
 import AddRecallModal from "./AddRecallModal/AddRecallModal";
 import {IRecall} from "../../../store/reducers/recall/types";
-import { makeStyles } from 'tss-react/mui';
-import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadAllAssignedServiceRequests} from "../../../store/reducers/serviceRequests/actions";
 import {IAssignedServiceRequest} from "../../../store/reducers/serviceRequests/types";
 import {updateDefaultRecallOpsCode} from "../../../store/reducers/serviceCenters/actions";
-import {capacityManagementRoot} from "../../../utils/constants";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
-
-const useStyles = makeStyles()(() => ({
-    wrapper: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: "bold",
-        textTransform: "capitalize",
-        marginRight: 10
-    },
-    button: {
-        marginLeft: 20
-    }
-}));
+import {useStyles} from "./styles";
 
 const RecallParts = () => {
     const [currentItem, setCurrentItem] = useState<IRecall | null>(null);
@@ -76,36 +56,32 @@ const RecallParts = () => {
     }
 
     return <>
-        <TitleContainer
-            pad
-            parent={capacityManagementRoot}
-            actions={<div className={classes.wrapper}>
-                <div className={classes.title}>
-                    default recall ops code:
-                </div>
-                <Autocomplete
-                    style={{width: 200}}
-                    loading={loading}
-                    value={selectedOpsCode}
-                    options={allAssignedList}
-                    isOptionEqualToValue={(o, v) => o.id === v.id}
-                    getOptionLabel={o => o.serviceRequest.code}
-                    onChange={onSRChange}
-                    renderInput={autocompleteRender({
-                        label: "",
-                        placeholder: 'Select Ops Code'
-                    })}
-                />
-                <Button
-                    className={classes.button}
-                    color="primary"
-                    variant="contained"
-                    onClick={handleAddRecall}
-                >
-                    Add Recall
-                </Button>
-            </div>}
-        />
+        <div className={classes.wrapper}>
+            <div className={classes.title}>
+                default recall ops code:
+            </div>
+            <Autocomplete
+                style={{width: 335}}
+                loading={loading}
+                value={selectedOpsCode}
+                options={allAssignedList}
+                isOptionEqualToValue={(o, v) => o.id === v.id}
+                getOptionLabel={o => o.serviceRequest.code}
+                onChange={onSRChange}
+                renderInput={autocompleteRender({
+                    label: "",
+                    placeholder: 'Select Ops Code'
+                })}
+            />
+            <Button
+                className={classes.button}
+                color="primary"
+                variant="contained"
+                onClick={handleAddRecall}
+            >
+                Add Recall
+            </Button>
+        </div>
         <RecallTable onOpenModal={handleAddRecall} currentItem={currentItem} setCurrentItem={setCurrentItem}/>
         <AddRecallModal open={isOpen} editingItem={currentItem} onClose={onClose} setEditingItem={setCurrentItem}/>
     </>;
