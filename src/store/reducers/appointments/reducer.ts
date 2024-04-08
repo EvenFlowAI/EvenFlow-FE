@@ -1,11 +1,12 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
+    getAdvisorsList,
     getAllAppointments,
     getAppointments,
     getAppointmentsPageData,
     getPackageByVehicle,
     getScheduler,
-    getServiceBookList,
+    getServiceBookList, getTechnicians,
     setAllAppointmentsCount,
     setAppointmentsCount,
     setAppointmentsLoading,
@@ -26,7 +27,9 @@ const initialState: TState = {
     pageData: {
         pageIndex: 0,
         pageSize: 10,
-    }
+    },
+    serviceAdvisors: [],
+    technicians: [],
 }
 
 export const appointmentsReducer = createReducer(initialState, builder => builder
@@ -59,5 +62,11 @@ export const appointmentsReducer = createReducer(initialState, builder => builde
     })
     .addCase(getAppointmentsPageData, (state, { payload} ) => {
         return {...state, pageData: {...state.pageData, ...payload}}
+    })
+    .addCase(getAdvisorsList, (state, { payload} ) => {
+        return {...state, serviceAdvisors: payload}
+    })
+    .addCase(getTechnicians, (state, { payload} ) => {
+        return {...state, technicians: payload}
     })
 )

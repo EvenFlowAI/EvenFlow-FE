@@ -40,7 +40,7 @@ export class Api {
             GetByKey: {route: "/appointments/{key}/by-key", method: "get"},
             CheckPodChanged: {route: "/appointments/{key}/check-pod-changed", method: "post"},
             GetServiceBooks: {route: "/appointments-filter/{id}/service-book-list", method: "get"},
-            GetSchedulers: {route: "/appointments-filter/{id}/scheduler-list", method: "get"},
+            GetSchedulers: {route: "/appointments-filter/scheduler-list", method: "get"},
         },
         AppointmentAllocation: {
             SetTimeWindows: {route: "/appointment-allocations/time-windows", method: "put"},
@@ -344,6 +344,7 @@ export class Api {
             Retrieve: {route: "/service-consultants/{id}", method: "get"},
             GetByQuery: {route: "/service-consultants/by-query", method: "post"},
             GetDmsAdvisors: {route: "/service-consultants/{id}/dms-service-advisors", method: "get"},
+            GetByRole: {route: "/service-consultants", method: "get"},
         },
         ServiceRequests: {
             Create: {route: "/service-requests", method: "post"},

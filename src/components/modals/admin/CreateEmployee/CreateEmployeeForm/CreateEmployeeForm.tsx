@@ -72,12 +72,12 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
 
     const handleDMSConsultantChange:TDMSConsultantChange = (e, value) => {
         setFormIsChecked(false);
-        setEmployeeForm(prev => ({...prev, dmsId: value ? value.id : null}));
+        setEmployeeForm(prev => ({...prev, dmsId: value ? value.dmsId : null}));
     }
 
     const handleRoleChange = (e: any, value: string) => {
         setFormIsChecked(false);
-        setEmployeeForm(prev => ({...prev, role: value as TRole}));
+        setEmployeeForm(prev => ({...prev, role: value as TRole, dmsId: null}));
     }
 
     const handleSwitchChange = (e: React.ChangeEvent<{}>, newVal: number) => {
@@ -191,11 +191,11 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
                 <Autocomplete
                     options={dmsAdvisors.filter(el => el.role && form.role && DmsRoles[el.role] === form.role)}
                     onChange={handleDMSConsultantChange}
-                    getOptionLabel={i => i.name ? `${i.name} - ${i.id}` : i.id}
+                    getOptionLabel={i => i.fullName ? `${i.fullName} - ${i.dmsId}` : `${i.dmsId}`}
                     isOptionEqualToValue={(o, s) => o.id === s.id}
                     disabled={!form.role || shortLoading || loadingDMSAdvisors}
                     loading={shortLoading || loadingDMSAdvisors}
-                    value={form?.dmsId ? dmsAdvisors.find(item => item.id.toString() === form.dmsId) : null}
+                    value={form?.dmsId ? dmsAdvisors.find(item => item.dmsId === form.dmsId) : null}
                     renderInput={autocompleteRender({label: "Assign Employee from DMS", fullWidth: true, placeholder: "Assign Employee from DMS"})}
                 />
             </Grid>

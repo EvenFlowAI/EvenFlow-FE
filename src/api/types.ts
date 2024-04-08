@@ -271,6 +271,7 @@ export interface IAppointment {
     scheduler: TScheduler;
     isEditable: boolean;
     modificationInfo: TDateAppointmentData[];
+    technician?: string;
 }
 
 export interface IServiceCategoryShort {

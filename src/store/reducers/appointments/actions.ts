@@ -1,6 +1,13 @@
 import {createAction} from "@reduxjs/toolkit";
 import {IAppointment, IPackageAppointments, IVehicleForRequest} from "../../../api/types";
-import {IAppointmentsRequest, ICheckPodRequest, TScheduler, TServiceBook} from "./types";
+import {
+    EConsultantRole,
+    IAppointmentsRequest,
+    ICheckPodRequest,
+    TScheduler,
+    TServiceBook,
+    TServiceConsultant
+} from "./types";
 import {AppThunk, IPageRequest, TArgCallback} from "../../../types/types";
 import {API} from "../../../api/api";
 import {EServiceType} from "../appointmentFrameReducer/types";
@@ -20,12 +27,14 @@ export const getPackageByVehicle = createAction<IPackageAppointments[]>("Appoint
 export const getServiceBookList = createAction<TServiceBook[]>("Appointments/GetServiceBookList");
 export const getScheduler = createAction<TScheduler[]>("Appointments/GetSchedulerList");
 export const getAppointmentsPageData = createAction<Partial<IPageRequest>>("Appointments/GetPageData");
+export const getAdvisorsList = createAction<TServiceConsultant[]>("Appointments/GetServiceAdvisors");
+export const getTechnicians = createAction<TServiceConsultant[]>("Appointments/GetTechnicians");
 
 export const loadAppointments = (data: IAppointmentsRequest): AppThunk => dispatch => {
     dispatch(setAppointmentsLoading(true));
     API.appointment.list(data)
         .then(({data: {paging, result}}) => {
-            if (data.pageIndex === 0 && data.pageSize === 0 && !data.date) {
+            if (data.pageIndex === 0 && data.pageSize === 0 && !data.startDate && !data.endDate) {
                 dispatch(getAllAppointments(result));
                 dispatch(setAllAppointmentsCount(paging.numberOfRecords));
             } else {
@@ -130,9 +139,9 @@ export const loadServiceBookList = (id: number): AppThunk => dispatch => {
         .finally(() => dispatch(setAppointmentsLoading(false)))
 }
 
-export const loadSchedulerList = (id: number): AppThunk => dispatch => {
+export const loadSchedulerList = (): AppThunk => dispatch => {
     dispatch(setAppointmentsLoading(true))
-    Api.call(Api.endpoints.Appointments.GetSchedulers, {urlParams: {id}})
+    Api.call(Api.endpoints.Appointments.GetSchedulers)
         .then(result => {
             if (result) dispatch(getScheduler(result.data))
         })
@@ -141,3 +150,19 @@ export const loadSchedulerList = (id: number): AppThunk => dispatch => {
         })
         .finally(() => dispatch(setAppointmentsLoading(false)))
 }
+
+export const loadServiceConsultants = (serviceCenterId: number): AppThunk => dispatch => {
+    dispatch(setAppointmentsLoading(true))
+    Api.call<TServiceConsultant[]>(Api.endpoints.ServiceConsultants.GetByRole, {params: {serviceCenterId, roles: ["Advisor", "Technician"]}})
+        .then(result => {
+            if (result?.data) {
+                dispatch(getAdvisorsList(result.data.filter(item => item.role === EConsultantRole.Advisor)))
+                dispatch(getTechnicians(result.data.filter(item => item.role === EConsultantRole.Technician)))
+            }
+        })
+        .catch(e => {
+            console.log('load Service Consultants error', e)
+        })
+        .finally(() => dispatch(setAppointmentsLoading(false)))
+}
+
