@@ -90,7 +90,7 @@ export const CustomerLifetimesModal: React.FC<React.PropsWithChildren<React.Prop
                         name="low-value-f"
                         inputProps={{min: 0}}
                         value={form.from}
-                        label="Customer Lifetime From"
+                        label="Value Definition From"
                         onChange={handleChange("from")}
                     />
                 </div>
@@ -104,7 +104,7 @@ export const CustomerLifetimesModal: React.FC<React.PropsWithChildren<React.Prop
                         id="high-value"
                         name="high-value-t"
                         value={form.to}
-                        label="Customer Lifetime To"
+                        label="Value Definition To"
                         onChange={handleChange("to")}
                     />
                 </div>

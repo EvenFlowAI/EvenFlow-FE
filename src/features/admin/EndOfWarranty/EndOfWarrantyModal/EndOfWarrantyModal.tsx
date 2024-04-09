@@ -64,7 +64,7 @@ export const EndOfWarrantyModal: React.FC<React.PropsWithChildren<React.PropsWit
                 fullWidth
                 id="warranty-months"
                 name="months"
-                label="Considered near the end of warranty within"
+                label="Time Period"
                 autoComplete="warranty-months months"
                 endAdornment="months"
                 type="number"
