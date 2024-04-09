@@ -46,7 +46,8 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
     const rowData: TableRowDataType<IRecall>[] = [
         {
             header: "Campaign #",
-            val: el => el.recallCampaignNumber
+            val: el => el.recallCampaignNumber,
+            width: 150,
         },
         {
             header: "Make",
