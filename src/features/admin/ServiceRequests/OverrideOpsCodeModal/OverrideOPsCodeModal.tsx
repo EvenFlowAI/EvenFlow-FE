@@ -144,6 +144,7 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
                         variant="standard"
                         fullWidth
                         disableUnderline
+                        input={<TextField label="Technician Level" placeholder="Technician Level"/>}
                         style={{color: form.skillLevelOfTechnicians ? "inherit" : '#858585'}}
                         onChange={handleLevelChange}>
                         <EmptyMenuItem value={0}>Technician Level</EmptyMenuItem>
@@ -183,7 +184,7 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
                 <Grid item xs={6}>
                     <TextField
                         fullWidth
-                        label="Label Price"
+                        label="Parts Price"
                         startAdornment="$"
                         name="partsUnitCost"
                         id="partsUnitCost"
