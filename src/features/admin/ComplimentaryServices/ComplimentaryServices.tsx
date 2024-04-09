@@ -185,7 +185,7 @@ export const ComplimentaryServices = () => {
                     <Button
                         style={{marginLeft: 16}}
                         color="primary"
-                        variant="contained"
+                        variant="outlined"
                         onClick={onAddManuallyOpen}
                     >
                         Add Manually

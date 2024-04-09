@@ -94,16 +94,17 @@ const AddServiceManually: React.FC<React.PropsWithChildren<React.PropsWithChildr
                     value={description}/>
                 <TextField
                     type="number"
-                    label='Duration'
-                    placeholder='Duration'
+                    label='Labor Hours'
+                    placeholder='Labor Hours'
                     value={duration}
                     inputProps={{min: 0}}
+                    style={{ marginBottom: 10 }}
                     className={classes.halfWidth}
                     onChange={onDurationChange}/>
                 <TextField
                     type="number"
-                    label='Total'
-                    placeholder='Total'
+                    label='Total Amount'
+                    placeholder='Total Amount'
                     inputProps={{min: 1, step: 0.01}}
                     value={total}
                     className={classes.halfWidth}
