@@ -103,7 +103,7 @@ const IntervalUpsellModal: React.FC<React.PropsWithChildren<React.PropsWithChild
             <Grid container spacing={3} alignItems="flex-end">
                 <Grid item xs={12}>
                     <TextField
-                        label="Service Ops Code name"
+                        label="Ops Code Name"
                         disabled
                         fullWidth
                         value={payload?.code || payload?.serviceRequest?.code || ""}
@@ -112,7 +112,7 @@ const IntervalUpsellModal: React.FC<React.PropsWithChildren<React.PropsWithChild
                 <Grid item xs={12}>
                     <TextField
                         fullWidth
-                        label="Service description"
+                        label="Service Description"
                         value={form.description}
                         placeholder={payload?.description}
                         name="description"
@@ -124,7 +124,7 @@ const IntervalUpsellModal: React.FC<React.PropsWithChildren<React.PropsWithChild
                 <Grid item xs={6}>
                     <TextField
                         fullWidth
-                        label="Duration (hours)"
+                        label="Labor Hours"
                         name="durationInHours"
                         id="durationInHours"
                         autoComplete="duration-number duration"
@@ -140,7 +140,7 @@ const IntervalUpsellModal: React.FC<React.PropsWithChildren<React.PropsWithChild
                     <TextField
                         fullWidth
                         startAdornment="$"
-                        label="Invoice Amount"
+                        label="Labor Amount"
                         name="invoiceAmount"
                         id="invoiceAmount"
                         autoComplete="invoice-amount"
@@ -155,7 +155,7 @@ const IntervalUpsellModal: React.FC<React.PropsWithChildren<React.PropsWithChild
                 <Grid item xs={6}>
                     <TextField
                         fullWidth
-                        label="Parts Unit Cost"
+                        label="Parts Price"
                         startAdornment="$"
                         name="partsUnitCost"
                         id="partsUnitCost"
@@ -171,7 +171,7 @@ const IntervalUpsellModal: React.FC<React.PropsWithChildren<React.PropsWithChild
                 <Grid item xs={6}>
                     <TextField
                         fullWidth
-                        label="Number Of Parts"
+                        label="Total Amount"
                         name="numberOfParts"
                         id="numberOfParts"
                         autoComplete="number-of-parts"
