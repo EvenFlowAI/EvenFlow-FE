@@ -91,7 +91,7 @@ const TimeRangesAndCapacity = () => {
     return <div>
         {isLoading
         ? <Loading/>
-        : <div style={{width: 'fit-content', overflowX: 'auto'}}>
+        : <div style={{overflowX: 'auto'}}>
             <Table<ITimeRangeAndCapacity>
                 data={tableData}
                 index={"dayOfWeek"}

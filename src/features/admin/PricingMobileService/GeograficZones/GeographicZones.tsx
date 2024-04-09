@@ -69,7 +69,7 @@ const GeographicZones: React.FC<React.PropsWithChildren<React.PropsWithChildren<
             </TabHeaderWrapper>
             <EligibleTitle>Eligible Customer Type</EligibleTitle>
             <GeographicZonesWrapper>
-                <div style={{width: '30%'}}>
+                <div style={{width: '33%'}}>
                     <EligibleCustomerSegment/>
                 </div>
                 <Zones

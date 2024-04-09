@@ -8,7 +8,6 @@ import {IPackageByQuery} from "../../../api/types";
 import {loadPackages} from "../../../store/reducers/packages/actions";
 import {updateAvailablePackageOptions, updatePackagePriceDetails} from "../../../store/reducers/serviceCenters/actions";
 import AddPackageModal from "./AddPackageModal/AddPackageModal";
-import LaborRate from "./LaborRate/LaborRate";
 import Disclaimer from "./Disclaimer/Disclaimer";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {autocompleteRender} from "../../../utils/autocompleteRenders";
@@ -156,13 +155,11 @@ export const MaintenancePackages = () => {
                 </Button>
             </div>
         </div>
-        <div className={classes.topLineWrapper}>
-            <LaborRate/>
-            <div style={{display: "flex", alignItems: "center", width: '50%'}}>
+        <div className={classes.selectWrapper}>
+            <div style={{display: "flex", alignItems: "flex-end", width: '50%'}}>
                 {packagesOptionsLoading
                     ? <Loading/>
                     : <React.Fragment>
-                        <p className={classes.optionsLabel}>Available Package Options</p>
                         <Autocomplete
                             fullWidth
                             multiple
@@ -175,7 +172,7 @@ export const MaintenancePackages = () => {
                             value={presentedOptions}
                             onChange={onPresentedOptionsChange}
                             renderInput={autocompleteRender({
-                                label: "",
+                                label: "Available Package Options",
                                 placeholder: 'Select Available Package Options'
                             })}
                         />

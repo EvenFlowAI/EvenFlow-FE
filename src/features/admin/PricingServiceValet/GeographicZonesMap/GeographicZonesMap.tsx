@@ -34,12 +34,12 @@ const GeographicZonesMap = () => {
         <div>
             <TabHeaderWrapper>
                 <ButtonsWrapper>
-                    <Button onClick={onOpen} variant="contained" color="primary" style={{width: 160}}>Update Map</Button>
+                    <Button onClick={onOpen} variant="contained" color="primary">Update Map</Button>
                 </ButtonsWrapper>
             </TabHeaderWrapper>
             <EligibleTitle>Eligible Customer Type</EligibleTitle>
             <GeographicZonesWrapper>
-                <div style={{width: '30%'}}>
+                <div style={{width: '33%'}}>
                     <EligibleCustomerSegment/>
                 </div>
                 <div className={classes.wrapper}>

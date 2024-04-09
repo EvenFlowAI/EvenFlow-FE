@@ -36,6 +36,11 @@ export const capacityManagementRoot: TTitle = {
     title: "Capacity Optimization"
 }
 
+export const servicesRoot: TTitle = {
+    to: Routes.Services.Base,
+    title: "Services"
+}
+
 export const bookingFlowRoot: TTitle = {
     to: Routes.BookingFlow.Base,
     title: "Booking Flow"

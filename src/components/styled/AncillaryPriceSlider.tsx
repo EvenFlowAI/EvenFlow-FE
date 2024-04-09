@@ -3,11 +3,11 @@ import {ValueSlider} from "./ValueSlider";
 
 export const AncillaryPriceSlider = withStyles(ValueSlider, (theme) => ({
     rail: {
-        background: "#3261FB",
+        background: "#B8B9BF",
         opacity: 1
     },
     track: {
-        background: "transparent",
+        background: "#7898FF",
     },
     mark: {
         height: 4,
@@ -20,13 +20,15 @@ export const AncillaryPriceSlider = withStyles(ValueSlider, (theme) => ({
         fontSize: 12,
     },
     thumb: {
-        width: 18,
-        height: 18,
-        background: "#3261FB",
-        border: '2px solid #FFFFFF',
-        '&.Mui-disabled': {
-            width: 10,
-            height: 10,
+        width: 22,
+        height: 22,
+        background: "#7898FF",
+        border: '3px solid #FFFFFF',
+        '&:hover': {
+            width: 22,
+            height: 22,
+            background: "#7898FF",
+            border: '3px solid #FFFFFF',
         }
     },
     valueLabel: {

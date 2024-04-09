@@ -80,9 +80,9 @@ const EligibleCustomerSegment = () => {
             <TableHead>
                 <TableRow>
                     <HeaderTableCell align="left">
-                        Customer (Segment)
+                        CUSTOMER (SEGMENT)
                     </HeaderTableCell>
-                    <HeaderTableCell>
+                    <HeaderTableCell align="center">
                         OFF/ON
                     </HeaderTableCell>
                 </TableRow>

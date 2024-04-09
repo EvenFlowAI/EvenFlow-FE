@@ -157,6 +157,7 @@ const AncillaryPrice = () => {
 
             <TabContext value={selectedTab}>
                 <TabList
+                    style={{margin: 0, padding: 0, width: '100%'}}
                     variant="scrollable"
                     scrollButtons="auto"
                     onChange={handleTabChange}
@@ -168,7 +169,7 @@ const AncillaryPrice = () => {
                 </TabList>
                 {tabs.map(t => {
                     return <TabPanel
-                        style={{width: "100%"}}
+                        style={{width: "100%", padding: '32px 0 0 0'}}
                         key={t.id}
                         value={t.id}>
                         {t.component}

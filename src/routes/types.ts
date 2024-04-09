@@ -28,8 +28,6 @@ export enum OfferManagementRoutes {
 
 export enum CapacityManagementRoutes {
     Base = "/admin/capacity-management",
-
-    ServiceRequests = "/admin/capacity-management/service-requests",
     AppointmentValue = "/admin/capacity-management/appointment-value",
     CapacitySettings = "/admin/capacity-management/capacity-settings",
     EmployeeSchedule = "/admin/capacity-management/employee-schedule",
@@ -40,8 +38,6 @@ export enum CapacityManagementRoutes {
     MobileService = "/admin/capacity-management/mobile-service",
     Pods = "/admin/capacity-management/pods",
     ManageEXEvenFlowAppointments = "/admin/capacity-management/manage-ex-evenflow-appointments",
-    PartsAvailability = "/admin/capacity-management/parts-availability",
-    ServiceValet = "/admin/capacity-management/service-valet",
 }
 
 export enum BookingFlowConfigRoutes {
@@ -96,4 +92,12 @@ export enum EndUser {
 
 export enum DealerRoutes {
     Base = "/admin/dealer-operations"
+}
+
+export enum ServicesRoutes {
+    Base = "/admin/services",
+    VehicleServices = "/admin/services/vehicle-services",
+    ServiceValet = "/admin/services/service-valet",
+    MobileService = "/admin/services/mobile-service",
+    OtherTransportation = "/admin/services/other-transportation",
 }

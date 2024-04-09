@@ -4,14 +4,12 @@ import {DemandTable} from "../../../../components/styled/DemandTable";
 
 export const TableCell = withStyles(TC, {
     root: {
-        border: "none !important",
-        padding: "12px 16px !important",
+        padding: "24px 16px !important",
     }
 });
 
 export const HeaderTableCell = withStyles(TableCell, {
     root: {
-        color: '#9FA2B4',
         textTransform: "none",
     }
 });
