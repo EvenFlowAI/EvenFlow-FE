@@ -1,5 +1,4 @@
 import {LinkType, LinkTypeWithSub} from "../../../types/types";
-
 import {Routes} from "../../../routes/constants";
 
 export const SULinks: LinkType[] = [
@@ -107,6 +106,12 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
             {
                 to: Routes.CapacityManagement.RequestDifferentiation,
                 name: "Request Differentiation",
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
+            },
+            {
+                to: Routes.CapacityManagement.TimeDifferentiation,
+                name: "Time Differentiation",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },

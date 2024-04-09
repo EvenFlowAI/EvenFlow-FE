@@ -10,6 +10,7 @@ import ManageExEFAppointments from "../../features/admin/ManageExEFAppointments/
 import Pods from "../../pages/admin/Pods/Pods";
 import {Routes} from "../constants";
 import RequestDifferentiation from "../../pages/admin/RequestDifferentiation/RequestDifferentiation";
+import TimeDifferentiation from "../../pages/admin/TimeDifferentiation/TimeDifferentiation";
 
 export const CapacityRoutes = () => {
     return <ContentContainer>
@@ -21,6 +22,7 @@ export const CapacityRoutes = () => {
             <PrivateRoute path={Routes.CapacityManagement.Pods} component={Pods} />
             <PrivateRoute path={Routes.CapacityManagement.ManageEXEvenFlowAppointments} component={ManageExEFAppointments} />
             <PrivateRoute path={Routes.CapacityManagement.RequestDifferentiation} component={RequestDifferentiation} />
+            <PrivateRoute path={Routes.CapacityManagement.TimeDifferentiation} component={TimeDifferentiation} />
             <Redirect to={Routes.CapacityManagement.Pods} />
         </Switch>
     </ContentContainer>

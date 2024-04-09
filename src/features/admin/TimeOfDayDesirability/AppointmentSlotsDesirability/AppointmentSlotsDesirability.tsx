@@ -2,9 +2,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import {
     Box,
     Button,
-    Checkbox,
     CircularProgress,
-    FormControlLabel,
     Grid,
     Paper,
     useMediaQuery,
@@ -20,12 +18,9 @@ import {
     saveDesirability
 } from "../../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../../store/rootReducer";
-import {CheckBoxOutlined} from "@mui/icons-material";
-import {Caption} from "../../../../components/wrappers/Caption/Caption";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {useStyles} from "./styles";
 import {TForm} from "./types";
-import {gaps} from "./constants";
 import {ButtonRow} from "./ButtonRow/ButtonRow";
 import {TitleRow} from "./TitleRow/TitileRow";
 
@@ -53,6 +48,7 @@ export const AppointmentSlotsDesirability = () => {
     const showError = useException();
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
+    const { classes  } = useStyles();
 
     useEffect(() => {
         if (selectedSC) {
@@ -89,7 +85,9 @@ export const AppointmentSlotsDesirability = () => {
     };
 
     const handleEditCancel = () => {
-        const t = desirabilityItems[0]?.timeSlotType || ETimeSlotType.ThirtyMinutes
+        const t = desirabilityItems[0]
+            ? desirabilityItems[0].timeSlotType
+            : ETimeSlotType.ThirtyMinutes;
         setForm({
             ...form,
             timeSlotType: t,
@@ -101,15 +99,6 @@ export const AppointmentSlotsDesirability = () => {
             )
         });
         setEdit(false);
-    }
-
-    const handleGapChange = (g: ETimeSlotType) => () => {
-        if (isEdit) {
-            setForm({
-                timeSlotType: g,
-                items: generateSlots(g, desirabilityItems, desirabilityItems[0]?.timeSlotType, slotRange?.start, slotRange?.end, true)
-            });
-        }
     }
 
     const onSuccess = () => {
@@ -150,8 +139,6 @@ export const AppointmentSlotsDesirability = () => {
         }
     }
 
-    const { classes  } = useStyles();
-
     return <Paper className={classes.paper} variant="outlined">
         <h2 className={classes.title}>
             Please indicate the desirability of appointment slots
@@ -177,28 +164,13 @@ export const AppointmentSlotsDesirability = () => {
                     color="primary"
                     className={classes.editButton}
                     onClick={() => setEdit(true)}>
-                    Edit
+                    EDIT
                 </Button>
             }
         </div>
-        <div className={classes.checkRow}>
-            {gaps.map(g => {
-                return <FormControlLabel
-                    key={g.type}
-                    label={g.label}
-                    onChange={handleGapChange(g.type)}
-                    control={
-                        <Checkbox
-                            color="primary"
-                            checkedIcon={<CheckBoxOutlined />}
-                            checked={form.timeSlotType === g.type} />
-                    }
-                />
-            })}
-        </div>
         {isLoading
             ? <Loading/>
-            : slots1.length ? <Grid className={classes.gridContainer} container spacing={4} alignItems="stretch">
+            : slots1.length ? <Grid className={classes.gridContainer} container spacing={2} alignItems="stretch">
                     <Grid className={classes.row} item xs={12} sm={6}>
                         <TitleRow />
                         {slots1.map((slot) =>
@@ -214,6 +186,5 @@ export const AppointmentSlotsDesirability = () => {
                 </Grid>
                 : <Box p={2} textAlign="center">No items...</Box>
         }
-        <Caption title="e.g. 30 min slots will show open slots at 8:00, 8:30, 9:00 etc" />
     </Paper>
 }
