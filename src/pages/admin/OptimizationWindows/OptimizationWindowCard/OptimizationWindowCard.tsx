@@ -25,7 +25,7 @@ export const OptimizationWindowCard: React.FC<React.PropsWithChildren<React.Prop
 
     return <Paper className={classes.paper} variant={"outlined"} >
         <h3 className={classes.title}>{title}</h3>
-        <Button className={classes.edit} color="primary" onClick={onEdit}>Edit</Button>
+        <Button className={classes.edit} color="primary" onClick={onEdit}>EDIT</Button>
         <div className={classes.value}>
             {prefix}{count}{suffix}
         </div>
