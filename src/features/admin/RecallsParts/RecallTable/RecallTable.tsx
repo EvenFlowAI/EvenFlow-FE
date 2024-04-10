@@ -22,7 +22,7 @@ type TRecallTableProps = {
 
 const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>> = ({onOpenModal, currentItem, setCurrentItem}) => {
     const {recalls, recallsCount} = useSelector((state: RootState) => state.recalls);
-    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement|null|undefined>(null);
 
     const dispatch = useDispatch();
     const showError = useException();
@@ -47,7 +47,7 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         {
             header: "Campaign #",
             val: el => el.recallCampaignNumber,
-            width: 150,
+            width: 130,
         },
         {
             header: "Make",
@@ -67,14 +67,15 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         },
         {
             header: "Recall Component",
-            val: el => el.recallComponent
+            val: el => el.recallComponent,
+            width: 200,
         },
         {
             header: "Recall Instructions",
             val: el => <Button
                 variant="text"
                 color="info"
-                style={{textTransform: "none", color: "#7898FF", fontWeight: 400, fontSize: 16}}
+                style={{textTransform: "none", color: "#7898FF", fontWeight: 400, fontSize: 16, textAlign: 'left'}}
                 onClick={() => onSummaryClick(el)}>
                 Recall Summary
             </Button>
