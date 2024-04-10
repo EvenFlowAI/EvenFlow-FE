@@ -9,6 +9,7 @@ export const SULinks: LinkType[] = [
 
 export const MainLinksWithSub: LinkTypeWithSub[] = [
     {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Owner", "Service Director"]},
+    {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager", "Service Director"]},
     {
         to: Routes.Employees.Base,
         name: "Employees",
@@ -67,7 +68,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
             },
         ],
     },
-    {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager", "Service Director"]},
     {
         to: Routes.CapacityManagement.Base,
         name: "Capacity Optimization",
