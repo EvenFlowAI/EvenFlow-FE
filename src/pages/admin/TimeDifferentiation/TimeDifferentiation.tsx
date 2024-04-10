@@ -6,6 +6,7 @@ import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@mui/material";
 import {TimeOfDayDesirability} from "../../../features/admin/TimeOfDayDesirability/TimeOfDayDesirability";
 import SearchWindows from "../../../features/admin/SearchWindows/SearchWindows";
+import TimeWindows from "../../../features/admin/TimeWindows/TimeWindows";
 
 type TTab = {
     id: string;
@@ -16,7 +17,7 @@ type TTab = {
 const tabs: TTab[] = [
     {id: "0", label: "Time Of Day Desirability", component: <TimeOfDayDesirability />},
     {id: "1", label: "Search Windows", component: <SearchWindows/> },
-    {id: "2", label: "Time Windows", component: <div/>},
+    {id: "2", label: "Time Windows", component: <TimeWindows/>},
 ]
 
 const TimeDifferentiation = () => {

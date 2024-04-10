@@ -1,112 +1,21 @@
 import React, {useEffect, useState} from "react";
-import {
-    Button as Bt,
-    CircularProgress,
-    TableBody,
-    TableCell as TC,
-    TableRow,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material";
-import { withStyles } from 'tss-react/mui';
-import {loadTimeWindow, setTimeWindow} from "../../../store/reducers/demandSegments/actions";
+import {CircularProgress, TableBody, TableRow,} from "@mui/material";
+import {loadTimeWindow, setTimeWindow} from "../../../../store/reducers/demandSegments/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
-import {ITimeWindow} from "../../../store/reducers/demandSegments/types";
-import {SC_UNDEFINED} from "../../../utils/constants";
-import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
-import {StyledTable} from "../../../components/styled/StyledTable";
+import {RootState} from "../../../../store/rootReducer";
+import {SC_UNDEFINED} from "../../../../utils/constants";
+import {StyledTable} from "../../../../components/styled/StyledTable";
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {useException} from "../../../../hooks/useException/useException";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
+import {InputOrValue} from "./TableInput";
+import {Button, TableCell} from "./styles";
+import {TForm} from "./types";
+import {defaultForm, rows, theadStyle} from "./constants";
+import {getData} from "./utils";
 
-import {useMessage} from "../../../hooks/useMessage/useMessage";
-import {useException} from "../../../hooks/useException/useException";
-import {useSCs} from "../../../hooks/useSCs/useSCs";
-import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
-
-const TableCell = withStyles(TC, {
-    root: {
-        padding: "12px 16px !important",
-        textAlign: "center",
-    }
-});
-
-const theadStyle = {
-    fontWeight: "bold" as const, textTransform: "uppercase" as const
-};
-
-type TForm = {
-    start: number;
-    stop: number;
-    duration1: number;
-    duration2: number;
-}
-const defaultForm: TForm = {
-    start: 0, stop: 0, duration1: 0, duration2: 0
-}
-
-const Button = withStyles(Bt, {
-    root: {
-        fontSize: 16,
-        textTransform: "none"
-    }
-});
-const getData = (d: ITimeWindow): TForm => {
-    return {
-        start: d.startInHours,
-        stop: d.startInHours + d.durationInHours,
-        duration1: d.startInHours,
-        duration2: d.durationInHours
-    };
-}
-const InputOrValue: React.FC<React.PropsWithChildren<React.PropsWithChildren<{
-    name: string;
-    value: number;
-    onChange: React.ChangeEventHandler
-    isEdit: boolean;
-}>>> = ({name, value, isEdit, onChange}) => {
-    const theme = useTheme();
-    const isXS = useMediaQuery(theme.breakpoints.down('sm'));
-    if (!isEdit) return <span>{value ? String(value) : "0"}</span>;
-    return <TextField
-        name={name}
-        value={value}
-        type="number"
-        style={{minWidth: 80}}
-        inputProps={{
-            min: 0
-        }}
-        endAdornment={!isXS ? "hour(s)" : undefined}
-        onChange={onChange}
-        id={name}
-    />
-}
-type TItem = {
-    name?: keyof TForm;
-    value?: string;
-};
-type TRow = {
-    label: string;
-    items: TItem[];
-}
-const rows: TRow[] = [
-    {
-        label: "Start (hours)",
-        items: [
-            {value: "0"},
-            {name: "start"},
-            {name: "stop"}
-        ]
-    },
-    {
-        label: "Duration (hours)",
-        items: [
-            {name: "duration1"},
-            {name: "duration2"},
-            {value: ""}
-        ]
-    }
-]
-
-export const TimeWindows = () => {
+export const TimeWindowsTable = () => {
     const [form, setForm] = useState<TForm>(defaultForm);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
