@@ -37,7 +37,7 @@ export const ComplimentaryServices = () => {
         allComplimentary,
     } = useSelector((state: RootState) => state.packages);
 
-    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null | undefined>(null);
     const [editedItem, setEditedItem] = useState<IComplimentaryServiceByQuery | undefined>(undefined);
     const [selectedOpsCodes, setSelectedOpsCodes] = useState<number[]>([]);
 
@@ -54,10 +54,10 @@ export const ComplimentaryServices = () => {
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
 
     const tableData: TableRowDataType<IComplimentaryServiceByQuery>[] = [
-        {header: "Ops Code", val: el => el.code, align: "center", orderId: "code"},
-        {header: "Service Description", val: el => el.name, width: '57%', orderId: "name"},
-        {header: "Labor Hours", val: el => `${el.durationInHours}`, width: 85, orderId: "durationInHours"},
-        {header: "Market Rate", val: el => `$${el.price.toFixed(2)}`, width: 85, orderId: "price" },
+        {header: "Ops Code", val: el => el.code, align: "left", orderId: "code", width: 130},
+        {header: "Description", val: el => el.name, orderId: "name"},
+        {header: "Labor Hours", val: el => `${el.durationInHours}`, width: 150, orderId: "durationInHours"},
+        {header: "Market Rate", val: el => `$${el.price.toFixed(2)}`, width: 150, orderId: "price" },
     ]
 
     useEffect(() => {
