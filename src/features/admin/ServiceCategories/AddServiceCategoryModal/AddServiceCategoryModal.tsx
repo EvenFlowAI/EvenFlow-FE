@@ -155,7 +155,10 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
 
     const onSuccessfulUpdate = () => showMessage("Category updated");
 
-    const onSuccessfulCreate = () => showMessage("Category created");
+    const onSuccessfulCreate = () => {
+        showMessage("Category created");
+        onCancel()
+    }
 
     const onSave = useCallback(() => {
         if (selectedSC) {
@@ -370,7 +373,7 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
                         disabled={disabledOpsCodes}/>}
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCancel} className={classes.cancelButton}>
+                <Button onClick={onCancel} color="info">
                     Cancel
                 </Button>
                 <Button onClick={onSave} color="primary" variant="contained">
