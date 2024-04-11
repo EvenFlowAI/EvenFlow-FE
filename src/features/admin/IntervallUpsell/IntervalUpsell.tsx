@@ -68,6 +68,7 @@ const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {
         header: "Total Amount",
         val: el => <ServiceRequestCellData
+            prefix="$"
             override={el.numberOfParts?.toString()}
             data={el.serviceRequest?.numberOfParts?.toString()}
         />,
