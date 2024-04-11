@@ -28,6 +28,7 @@ import {categoryOptions, findMissingNumbers, getOptionLabel, getPageOptions} fro
 import {visitCenterTabs} from "../constants";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
 
 type TAddServiceCategoryProps = DialogProps & {
     editingItem: ICategory | null;
@@ -57,6 +58,7 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
+    const showMessage = useMessage();
     const { classes  } = useStyles();
 
     const disabledOpsCodes = useMemo(() => categoryType?.value === EServiceCategoryType.MaintenancePackage
@@ -151,6 +153,10 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
         showError(err)
     }
 
+    const onSuccessfulUpdate = () => showMessage("Category updated");
+
+    const onSuccessfulCreate = () => showMessage("Category created");
+
     const onSave = useCallback(() => {
         if (selectedSC) {
             setFormIsChecked(true);
@@ -197,14 +203,17 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
                 }
                 if (editingItem) {
                     if (fileState.file) {
-                        dispatch(updateCategory(editingItem.id, data, tabServiceType, onError));
+                        dispatch(updateCategory(editingItem.id, data, tabServiceType, onError, onSuccessfulUpdate));
                         dispatch(updateCategoryIcon(editingItem.id, fileState.file, tabServiceType, onError, onCancel));
                     } else {
-                        dispatch(updateCategory(editingItem.id, data, tabServiceType, onError, onCancel));
+                        dispatch(updateCategory(editingItem.id, data, tabServiceType, onError, () => {
+                            onCancel();
+                            onSuccessfulUpdate();
+                        }));
                     }
                 } else {
                     const newData: TNewCategory = {...data, serviceCenterId: selectedSC.id};
-                    dispatch(createCategory(newData, onSuccessCreate, tabServiceType, onError));
+                    dispatch(createCategory(newData, onSuccessCreate, tabServiceType, onError, onSuccessfulCreate));
                 }
             }
         }
