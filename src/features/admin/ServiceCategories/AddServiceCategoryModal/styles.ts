@@ -50,9 +50,6 @@ export const useStyles = makeStyles()(() => ({
         display: 'flex',
         flexDirection: 'column',
     },
-    cancelButton: {
-        color: '#9FA2B4'
-    },
     radioGroup: {
         display: 'flex',
         justifyContent: 'flex-end'

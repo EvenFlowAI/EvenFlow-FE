@@ -90,12 +90,12 @@ const AncillaryPrice = () => {
     const tabs: TTab[] = [
         {
             id: "0",
-            label: "Ancillary Price By Zone",
+            label: "Zone Fee Settings",
             component: <AncillaryPriceByZone onUpdate={onSaveZonePricing} data={pricingByZones} isLoading={isLoading}/>
         },
         {
             id: "1",
-            label: "Ancillary Price By Distance",
+            label: "Distance Fee Settings",
             component: <AncillaryPriceByDistance
                 data={pricingByDistance}
                 isLoading={isLoading}
@@ -131,7 +131,7 @@ const AncillaryPrice = () => {
             {isPricingByZoneLoading
                 ? <Loading/>
                 : <div className={classes.wrapper}>
-                    <div className={classes.optionsTitleWrapper}>Pricing Settings: </div>
+                    <div className={classes.optionsTitleWrapper}>Convenience Fees Based On: </div>
                     <RadioGroup
                         row
                         aria-label="countType"
@@ -142,13 +142,13 @@ const AncillaryPrice = () => {
                         <FormControlLabel
                             value="byZone"
                             control={<Radio color="primary"/>}
-                            label="By Zone"
+                            label="Zone"
                             labelPlacement="end"
                         />
                         <FormControlLabel
                             value="byDistance"
                             control={<Radio color="primary"/>}
-                            label="By Distance"
+                            label="Distance"
                             labelPlacement="end"
                         />
                     </RadioGroup>
