@@ -46,6 +46,8 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                 yearFrom: editingItem.yearRange?.from?.toString() ?? '',
                 yearTo: editingItem.yearRange?.to?.toString() ?? '',
                 recallComponent: editingItem.recallComponent,
+                partLeadDaysCount: editingItem.partLeadDaysCount?.toString() ?? '',
+                dailyPartsCount: editingItem.dailyPartsCount?.toString() ?? '',
                 recallSummary: editingItem.recallSummary,
                 serviceRequest: sr ?? null,
             }))
@@ -73,8 +75,8 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                 },
                 recallComponent: form.recallComponent,
                 recallSummary: form.recallSummary,
-                partLeadDaysCount: 0,
-                dailyPartsCount: 0,
+                partLeadDaysCount: +form.partLeadDaysCount,
+                dailyPartsCount: +form.dailyPartsCount,
                 serviceRequestId: form.serviceRequest?.id ?? null,
                 serviceCenterId: selectedSC.id,
             }
@@ -221,13 +223,37 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                         placeholder: 'Select Ops Code Assignment'
                     })}
                 />
+                <TextField
+                    fullWidth
+                    type="number"
+                    style={{ marginBottom: 10 }}
+                    label='Part Lead Time (Days)'
+                    id="partLeadDaysCount"
+                    name="partLeadDaysCount"
+                    placeholder='Type Part Lead Days Count'
+                    error={formIsChecked && (!form.partLeadDaysCount || !Number.isInteger(+form.partLeadDaysCount) || +form.partLeadDaysCount < 0) }
+                    onChange={onFormChange}
+                    value={form.partLeadDaysCount}/>
+                <TextField
+                    fullWidth
+                    type="number"
+                    style={{ marginBottom: 10 }}
+                    label='Daily Parts'
+                    id="dailyPartsCount"
+                    name="dailyPartsCount"
+                    placeholder='Type Daily Parts'
+                    error={formIsChecked && (!form.dailyPartsCount || !Number.isInteger(+form.dailyPartsCount) || +form.dailyPartsCount < 0)}
+                    onChange={onFormChange}
+                    value={form.dailyPartsCount}/>
             </DialogContent>
             <DialogActions>
                 <div className={classes.actionsWrapper}>
                     <div className={classes.buttonsWrapper}>
                         <Button
                             onClick={onCancel}
-                            className={classes.cancelButton}>
+                            variant="text"
+                            className={classes.cancelButton}
+                            color="info">
                             Cancel
                         </Button>
                         <Button

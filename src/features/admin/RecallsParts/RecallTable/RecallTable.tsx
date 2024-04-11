@@ -82,6 +82,14 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
             val: el => el.serviceRequest?.name ?? '',
             width: 150,
         },
+        {
+            header: "Part Lead Time (days)",
+            val: el => el.partLeadDaysCount?.toString() ?? '',
+        },
+        {
+            header: "Daily Parts",
+            val: el => el.dailyPartsCount?.toString() ?? ''
+        }
     ]
 
     const openMenu = (el: IRecall) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
