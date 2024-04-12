@@ -224,10 +224,10 @@ export const AppointmentFlow = () => {
     const onCarIsValid = useCallback(() => {
         const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
         const requestDataIsValid = serviceTypeOption?.type === EServiceType.VisitCenter || Boolean(address && zipCode)
-        if (someRequestsSelected && requestDataIsValid) {
+        if (someRequestsSelected && requestDataIsValid && !customerLoadedData?.isUpdating) {
             dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
         }
-    }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id, address, zipCode])
+    }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id, address, zipCode, customerLoadedData])
 
     useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
 
