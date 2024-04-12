@@ -1,8 +1,5 @@
 import {TForm, TRow} from "./types";
 
-export const theadStyle = {
-    fontWeight: "bold" as const, textTransform: "uppercase" as const
-};
 export const defaultForm: TForm = {
     start: 0, stop: 0, duration1: 0, duration2: 0
 }
