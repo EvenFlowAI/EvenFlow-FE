@@ -115,7 +115,7 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
                 <Grid item xs={12}>
                     <TextField
                         fullWidth
-                        label="Service description"
+                        label="Description"
                         value={form.description}
                         placeholder={payload?.serviceRequest.description}
                         name="description"

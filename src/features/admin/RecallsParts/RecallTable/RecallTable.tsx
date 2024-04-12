@@ -3,7 +3,7 @@ import {IRecall} from "../../../../store/reducers/recall/types";
 import {Table} from "../../../../components/tables/Table/Table";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Button, IconButton, Menu, MenuItem} from "@mui/material";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {MoreHoriz} from "@mui/icons-material";
 import {deleteRecall, loadRecalls, setRecallPageData} from "../../../../store/reducers/recall/actions";
 import {RecallSummary} from "../RecallSummary/RecallSummary";
@@ -22,7 +22,7 @@ type TRecallTableProps = {
 
 const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>> = ({onOpenModal, currentItem, setCurrentItem}) => {
     const {recalls, recallsCount} = useSelector((state: RootState) => state.recalls);
-    const [anchorEl, setAnchorEl] = useState<HTMLElement|null|undefined>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 
     const dispatch = useDispatch();
     const showError = useException();
@@ -47,7 +47,7 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         {
             header: "Campaign #",
             val: el => el.recallCampaignNumber,
-            width: 130,
+            width: 150,
         },
         {
             header: "Make",
@@ -67,23 +67,29 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         },
         {
             header: "Recall Component",
-            val: el => el.recallComponent,
-            width: 200,
+            val: el => el.recallComponent
         },
         {
-            header: "Recall Instructions",
-            val: el => <Button
-                variant="text"
-                color="info"
-                style={{textTransform: "none", color: "#7898FF", fontWeight: 400, fontSize: 16, textAlign: 'left'}}
+            header: "Summary",
+            val: el => <div
+                style={{color: "#7898FF", cursor: 'pointer'}}
                 onClick={() => onSummaryClick(el)}>
                 Recall Summary
-            </Button>
+            </div>
         },
         {
             header: "Ops Code",
             val: el => el.serviceRequest?.name ?? '',
+            width: 150,
         },
+        {
+            header: "Part Lead Time (days)",
+            val: el => el.partLeadDaysCount?.toString() ?? '',
+        },
+        {
+            header: "Daily Parts",
+            val: el => el.dailyPartsCount?.toString() ?? ''
+        }
     ]
 
     const openMenu = (el: IRecall) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

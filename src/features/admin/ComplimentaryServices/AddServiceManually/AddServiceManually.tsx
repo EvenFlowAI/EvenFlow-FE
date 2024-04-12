@@ -87,8 +87,8 @@ const AddServiceManually: React.FC<React.PropsWithChildren<React.PropsWithChildr
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <TextField
-                            label='Service Description'
-                            placeholder='Type Service Description'
+                            label='Description'
+                            placeholder='Type Description'
                             error={!description && formIsChecked}
                             onChange={onDescriptionChange}
                             fullWidth

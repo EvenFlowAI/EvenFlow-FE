@@ -102,16 +102,16 @@ const AncillaryPriceByZone: React.FC<React.PropsWithChildren<React.PropsWithChil
             ? <DemandTable>
                 <TableHead>
                     <TableRow>
-                        <HeaderTableCell align="center" size="small">
+                        <HeaderTableCell align="center" size="small" width={50}>
                             <div className="distanceCell">№</div>
                         </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small">
+                        <HeaderTableCell align="left" size="small" width={100}>
                             <div className="distanceCell">Zone</div>
                         </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small">
+                        <HeaderTableCell align="left" size="small" width={130}>
                             <div className="distanceCell">Flat Fee ($)</div>
                         </HeaderTableCell>
-                        <HeaderTableCell align="left" size="small" width={450}>
+                        <HeaderTableCell align="left" size="small">
                             <div className="distanceCell">Service Multiplier</div>
                         </HeaderTableCell>
                         <LastTableCell align="left" size="small" width={130}>
@@ -155,17 +155,19 @@ const AncillaryPriceByZone: React.FC<React.PropsWithChildren<React.PropsWithChil
                                     : item.flatFee.toFixed(2)}
                             </TableCell>
                             <TableCell size="small">
-                                <AncillaryPriceSlider
-                                    min={0}
-                                    max={1}
-                                    valueLabelDisplay="on"
-                                    step={0.01}
-                                    disabled={!isEdit || editedItem?.geographicZoneId !== item.geographicZoneId}
-                                    valueLabelFormat={value => value.toFixed(2)}
-                                    value={item.serviceMultiplier}
-                                    marks={[{label: '0.00', value: 0}, {label: '0.20', value: 0.2}, {label: '0.40', value: 0.4}, {label: '0.60', value: 0.6}, {label: '0.80', value: 0.8}, {label: '1.00', value: 1}]}
-                                    onChange={handleSlide(item.geographicZoneId)}
-                                />
+                                <div style={{width: '60%', paddingLeft: 10}}>
+                                    <AncillaryPriceSlider
+                                        min={0}
+                                        max={1}
+                                        valueLabelDisplay="on"
+                                        step={0.01}
+                                        disabled={!isEdit || editedItem?.geographicZoneId !== item.geographicZoneId}
+                                        valueLabelFormat={value => value.toFixed(2)}
+                                        value={item.serviceMultiplier}
+                                        marks={[{label: '0.00', value: 0}, {label: '0.20', value: 0.2}, {label: '0.40', value: 0.4}, {label: '0.60', value: 0.6}, {label: '0.80', value: 0.8}, {label: '1.00', value: 1}]}
+                                        onChange={handleSlide(item.geographicZoneId)}
+                                    />
+                                </div>
                             </TableCell>
                             <TableCell size="small" align="center">
                                 <IconButton

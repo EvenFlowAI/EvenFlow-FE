@@ -9,6 +9,8 @@ export const initialForm: TForm = {
     yearFrom: '',
     recallComponent: '',
     recallSummary: '',
+    partLeadDaysCount: '',
+    dailyPartsCount: '',
     serviceRequest: null,
 }
 export const yearOptions = getYearOptions()
