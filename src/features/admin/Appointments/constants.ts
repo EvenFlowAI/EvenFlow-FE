@@ -1,5 +1,5 @@
 import {TFilters} from "./types";
-import {EReportingStatus, IAppointment, reportingStatuses} from "../../../api/types";
+import {IAppointment, reportingStatuses} from "../../../api/types";
 import {TableRowDataType} from "../../../types/types";
 import dayjs from "dayjs";
 import {time12HourFormat} from "../../../utils/constants";
@@ -15,9 +15,9 @@ export const initialFilters: TFilters = {
     searchTerm: '',
     serviceBook: null,
     scheduler: null,
-    reportingStatus: [EReportingStatus.Active],
-    dateFrom: null,
-    dateTo: null,
+    reportingStatus: [],
+    dateFrom: dayjs().startOf('day'),
+    dateTo: dayjs().endOf('day'),
     scId: null,
     pageData: initialPaging,
     advisor: null,

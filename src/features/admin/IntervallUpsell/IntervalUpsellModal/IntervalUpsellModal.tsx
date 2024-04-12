@@ -112,7 +112,7 @@ const IntervalUpsellModal: React.FC<React.PropsWithChildren<React.PropsWithChild
                 <Grid item xs={12}>
                     <TextField
                         fullWidth
-                        label="Service Description"
+                        label="Description"
                         value={form.description}
                         placeholder={payload?.description}
                         name="description"

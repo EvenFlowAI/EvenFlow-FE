@@ -35,7 +35,7 @@ type TByDistanceProps = {
 
 const AncillaryPriceByDistance: React.FC<React.PropsWithChildren<React.PropsWithChildren<TByDistanceProps>>> = ({ data, onItemDelete, onItemSave, onAddRange, isLoading }) => {
     const [distanceData, setDistanceData] = useState<IDistancePriceSettings[]>([]);
-    const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
+    const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null|undefined>(null);
     const [editedItem, setEditedItem] = useState<IDistancePriceSettings|null>(null);
     const [nextEditedItem, setNextEditedItem] = useState<IDistancePriceSettings|null>(null);
     const [isEdit, setIsEdit] = useState<boolean>(false);

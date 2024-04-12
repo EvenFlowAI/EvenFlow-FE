@@ -3,7 +3,7 @@ import {IRecall} from "../../../../store/reducers/recall/types";
 import {Table} from "../../../../components/tables/Table/Table";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Button, IconButton, Menu, MenuItem} from "@mui/material";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {MoreHoriz} from "@mui/icons-material";
 import {deleteRecall, loadRecalls, setRecallPageData} from "../../../../store/reducers/recall/actions";
 import {RecallSummary} from "../RecallSummary/RecallSummary";
@@ -70,19 +70,26 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
             val: el => el.recallComponent
         },
         {
-            header: "Recall Instructions",
-            val: el => <Button
-                variant="text"
-                color="info"
-                style={{textTransform: "none", color: "#7898FF", fontWeight: 400, fontSize: 16}}
+            header: "Summary",
+            val: el => <div
+                style={{color: "#7898FF", cursor: 'pointer'}}
                 onClick={() => onSummaryClick(el)}>
                 Recall Summary
-            </Button>
+            </div>
         },
         {
             header: "Ops Code",
             val: el => el.serviceRequest?.name ?? '',
+            width: 150,
         },
+        {
+            header: "Part Lead Time (days)",
+            val: el => el.partLeadDaysCount?.toString() ?? '',
+        },
+        {
+            header: "Daily Parts",
+            val: el => el.dailyPartsCount?.toString() ?? ''
+        }
     ]
 
     const openMenu = (el: IRecall) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
