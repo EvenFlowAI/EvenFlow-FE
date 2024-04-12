@@ -131,7 +131,7 @@ const AncillaryPrice = () => {
             {isPricingByZoneLoading
                 ? <Loading/>
                 : <div className={classes.wrapper}>
-                    <div className={classes.optionsTitleWrapper}>Convenience Fees Based On: </div>
+                    <div className={classes.optionsTitleWrapper}>Convenience Fees Based On </div>
                     <RadioGroup
                         row
                         aria-label="countType"
