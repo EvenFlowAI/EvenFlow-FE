@@ -48,7 +48,7 @@ const ZoneRouting = () => {
     const getRowData = (): TableRowDataType<IZonesRoutingByDay>[] => {
         const data: TableRowDataType<IZonesRoutingByDay>[] = [
             {
-                header: "DAY OF WEEK",
+                header: "Day Of Week",
                 width: 200,
                 val: el => dayNames[el.dayOfWeek].toString()
             }
