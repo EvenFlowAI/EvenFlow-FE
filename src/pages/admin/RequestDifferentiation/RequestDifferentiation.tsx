@@ -17,20 +17,22 @@ type TTab = {
     component: JSX.Element
 }
 
-const tabs: TTab[] = [
-    {id: "0", label: "Demand Segments", component: <DemandSegments />},
-    {id: "1", label: "Value Indicators", component: <ValueIndicatorsTable />},
-    {id: "2", label: "Customer Lifetime Rules", component: <CustomerLifetimeRules/>},
-    {id: "3", label: "Urgent Requests", component: <UrgentRequests/>},
-    {id: "4", label: "New/Lost Customer", component: <NewLostCustomer/>},
-    {id: "5", label: "End of Warranty", component: <EndOfWarranty/>},
-]
-
 const RequestDifferentiation = () => {
     const [selectedTab, selectTab] = useState<string>("0");
+
+    const tabs: TTab[] = [
+        {id: "0", label: "Demand Segments", component: <DemandSegments />},
+        {id: "1", label: "Value Indicators", component: <ValueIndicatorsTable onTabChange={() => selectTab('4')}/>},
+        {id: "2", label: "Customer Lifetime Rules", component: <CustomerLifetimeRules/>},
+        {id: "3", label: "Urgent Requests", component: <UrgentRequests/>},
+        {id: "4", label: "New/Lost Customer", component: <NewLostCustomer/>},
+        {id: "5", label: "End of Warranty", component: <EndOfWarranty/>},
+    ]
+
     const handleTabChange = (e: any, value: string) => {
         selectTab(value);
     }
+
     return <TabContext value={selectedTab}>
         <TitleContainer title="Request Differentiation" pad parent={capacityManagementRoot}/>
         <TabList
