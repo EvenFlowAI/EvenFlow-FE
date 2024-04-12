@@ -27,13 +27,9 @@ export const Slider = withStyles(ValueSlider, {
 
 export const useStyles = makeStyles()({
     table: {
-        "& .MuiTableCell-head": {
-            textAlign: "center"
-        },
         "& .MuiTableCell-body": {
-            textAlign: "center",
             padding: "10px !important",
-            fontSize: 12
+            fontSize: 14
         }
     },
     segment: {
@@ -73,11 +69,11 @@ export const useStyles = makeStyles()({
         justifyContent: 'space-between',
         alignItems: 'center',
         textTransform: 'uppercase',
-    }
+    },
 });
 
 export const StyledTableCell = styled(TableCell)({
-    borderWidth: '0px 1px 0px 1px !important'
+    padding: "5px 10px !important",
 })
 
 export const BorderedTableCell = styled(TableCell)({

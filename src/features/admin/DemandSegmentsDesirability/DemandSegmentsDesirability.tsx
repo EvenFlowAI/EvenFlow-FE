@@ -19,7 +19,7 @@ import {
     IOptimizationSettingValueForm
 } from "../../../store/reducers/slotScoring/types";
 import {SC_UNDEFINED} from "../../../utils/constants";
-import {BorderedTableCell, Slider, StyledTableCell, UpperTableCell, useStyles} from "./styles";
+import {Slider, StyledTableCell, useStyles} from "./styles";
 import {SliderRange, TForm} from "./types";
 import {initialForm} from "./constants";
 import {useModal} from "../../../hooks/useModal/useModal";
@@ -119,31 +119,33 @@ export const DemandSegmentsDesirability = () => {
         <StyledTable className={classes.table}>
             <TableHead>
                 <TableRow>
-                    <StyledTableCell className={classes.buttonCell} colSpan={3}>
-                        <div className={classes.cellInnerWrapper}>
-                            Demand Segment
-                            <Button className={classes.edit} onClick={handleOpen} color="primary">Edit</Button>
-                        </div>
-                    </StyledTableCell>
-                    <UpperTableCell width={550} colSpan={2} style={{minWidth: 400}} className={classes.buttonCell}>
-                        <div className={classes.cellInnerWrapper}>
+                    <TableCell className={classes.buttonCell} colSpan={2}>
+                        Demand Segment
+                        <Button className={classes.edit} onClick={handleOpen} color="primary">Edit</Button>
+                    </TableCell>
+                    <TableCell width={135} rowSpan={2}>Time Windows</TableCell>
+                    <TableCell
+                        width={550}
+                        colSpan={2}
+                        style={{minWidth: 400}}
+                        className={classes.buttonCell} align="left">
                         Optimization Settings
                         {edit
                             ? saving ?
                                 <div className={classes.editWrapper}><CircularProgress /></div>
                                 : <div className={classes.editWrapper}>
-                                <Button color="secondary"
+                                    <Button color="secondary"
+                                            className={classes.editN}
+                                            onClick={() => setEdit(false)}>
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        color="primary"
                                         className={classes.editN}
-                                        onClick={() => setEdit(false)}>
-                                    Cancel
-                                </Button>
-                                <Button
-                                    color="primary"
-                                    className={classes.editN}
-                                    onClick={handleSave}>
-                                    Save
-                                </Button>
-                            </div>
+                                        onClick={handleSave}>
+                                        Save
+                                    </Button>
+                                </div>
                             : <Button
                                 color="primary"
                                 disabled={!optSettings.length}
@@ -152,31 +154,29 @@ export const DemandSegmentsDesirability = () => {
                                 Edit
                             </Button>
                         }
-                        </div>
-                    </UpperTableCell>
+                    </TableCell>
                 </TableRow>
                 <TableRow>
-                    <StyledTableCell className={classes.subtitleCell}>Segment Start</StyledTableCell>
-                    <StyledTableCell className={classes.subtitleCell}>Segment End</StyledTableCell>
-                    <StyledTableCell className={classes.subtitleCell}>Time Windows</StyledTableCell>
-                    <BorderedTableCell className={classes.subtitleCell} align="left">Undesirable</BorderedTableCell>
-                    <BorderedTableCell className={classes.subtitleCell} align="left">Desirable</BorderedTableCell>
+                    <TableCell className={classes.subtitleCell}>Segment Start</TableCell>
+                    <TableCell className={classes.subtitleCell}>Segment End</TableCell>
+                    <TableCell className={classes.subtitleCell} align="left">Undesirable</TableCell>
+                    <TableCell className={classes.subtitleCell} align="left">Desirable</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
                 {optSettings.map((seg, idx) =>
                     <React.Fragment key={seg.id}>
                         <TableRow key={`${seg.id}-1`}>
-                            <StyledTableCell rowSpan={2} style={{fontSize: 14}}>
+                            <TableCell rowSpan={2}>
                                 from <span className={classes.segment}>{seg.from}</span>
-                            </StyledTableCell>
-                            <StyledTableCell rowSpan={2} style={{fontSize: 14}}>
+                            </TableCell>
+                            <TableCell rowSpan={2}>
                                 to <span className={classes.segment}>{seg.to}</span>
-                            </StyledTableCell>
-                            <StyledTableCell style={{fontSize: 14}}>
-                                {"< W3"}
-                            </StyledTableCell>
+                            </TableCell>
                             <TableCell>
+                                {"< Window3"}
+                            </TableCell>
+                            <StyledTableCell>
                                 <Slider
                                     min={SliderRange.Min}
                                     max={SliderRange.Max}
@@ -189,8 +189,8 @@ export const DemandSegmentsDesirability = () => {
                                     value={form[idx*2].undesirable}
                                     valueLabelDisplay="on"
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </StyledTableCell>
+                            <StyledTableCell>
                                 <Slider
                                     min={SliderRange.Min}
                                     max={SliderRange.Max}
@@ -203,13 +203,13 @@ export const DemandSegmentsDesirability = () => {
                                     value={form[idx*2].desirable}
                                     valueLabelDisplay="on"
                                 />
-                            </TableCell>
+                            </StyledTableCell>
                         </TableRow>
                         <TableRow key={`${seg.id}-2`}>
-                            <StyledTableCell style={{fontSize: 14}}>
-                                {">= W3"}
-                            </StyledTableCell>
                             <TableCell>
+                                {">= Window3"}
+                            </TableCell>
+                            <StyledTableCell>
                                 <Slider
                                     min={SliderRange.Min}
                                     max={SliderRange.Max}
@@ -222,8 +222,8 @@ export const DemandSegmentsDesirability = () => {
                                     value={form[idx*2+1].undesirable}
                                     valueLabelDisplay="on"
                                 />
-                            </TableCell>
-                            <TableCell>
+                            </StyledTableCell>
+                            <StyledTableCell>
                                 <Slider
                                     min={SliderRange.Min}
                                     max={SliderRange.Max}
@@ -236,7 +236,7 @@ export const DemandSegmentsDesirability = () => {
                                     value={form[idx*2+1].desirable}
                                     valueLabelDisplay="on"
                                 />
-                            </TableCell>
+                            </StyledTableCell>
                         </TableRow>
                     </React.Fragment>
                 )}
