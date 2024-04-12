@@ -1,12 +1,19 @@
 import {styled} from "@mui/material";
 
-export const ButtonContainer = styled('div')({
+export const UpperLineContainer = styled('div')({
     width: '100%',
     display: 'flex',
-    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
     paddingBottom: 24,
 })
 
 export const TableContainer = styled("div")({
     overflowX: "auto"
+})
+
+export const TableTitle = styled('div')({
+    fontWeight: 700,
+    fontSize: 18,
+    textTransform: 'uppercase',
 })

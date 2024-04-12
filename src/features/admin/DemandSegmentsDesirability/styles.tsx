@@ -27,10 +27,6 @@ export const Slider = withStyles(ValueSlider, {
 
 export const useStyles = makeStyles()({
     table: {
-        "& .MuiTableCell-body": {
-            padding: "10px !important",
-            fontSize: 14
-        }
     },
     segment: {
         fontWeight: "bold"
@@ -74,6 +70,11 @@ export const useStyles = makeStyles()({
 
 export const StyledTableCell = styled(TableCell)({
     padding: "5px 10px !important",
+})
+
+export const NormalTableCell = styled(TableCell)({
+    padding: "10px !important",
+    fontSize: 14
 })
 
 export const BorderedTableCell = styled(TableCell)({

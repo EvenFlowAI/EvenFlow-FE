@@ -19,7 +19,7 @@ import {
     IOptimizationSettingValueForm
 } from "../../../store/reducers/slotScoring/types";
 import {SC_UNDEFINED} from "../../../utils/constants";
-import {Slider, StyledTableCell, useStyles} from "./styles";
+import {NormalTableCell, Slider, StyledTableCell, useStyles} from "./styles";
 import {SliderRange, TForm} from "./types";
 import {initialForm} from "./constants";
 import {useModal} from "../../../hooks/useModal/useModal";
@@ -167,15 +167,15 @@ export const DemandSegmentsDesirability = () => {
                 {optSettings.map((seg, idx) =>
                     <React.Fragment key={seg.id}>
                         <TableRow key={`${seg.id}-1`}>
-                            <TableCell rowSpan={2}>
+                            <NormalTableCell rowSpan={2} style={{fontWeight: 300}}>
                                 from <span className={classes.segment}>{seg.from}</span>
-                            </TableCell>
-                            <TableCell rowSpan={2}>
+                            </NormalTableCell>
+                            <NormalTableCell rowSpan={2} style={{fontWeight: 300}}>
                                 to <span className={classes.segment}>{seg.to}</span>
-                            </TableCell>
-                            <TableCell>
+                            </NormalTableCell>
+                            <StyledTableCell style={{fontWeight: 300}}>
                                 {"< Window3"}
-                            </TableCell>
+                            </StyledTableCell>
                             <StyledTableCell>
                                 <Slider
                                     min={SliderRange.Min}
@@ -206,9 +206,9 @@ export const DemandSegmentsDesirability = () => {
                             </StyledTableCell>
                         </TableRow>
                         <TableRow key={`${seg.id}-2`}>
-                            <TableCell>
+                            <StyledTableCell style={{fontWeight: 300}}>
                                 {">= Window3"}
-                            </TableCell>
+                            </StyledTableCell>
                             <StyledTableCell>
                                 <Slider
                                     min={SliderRange.Min}

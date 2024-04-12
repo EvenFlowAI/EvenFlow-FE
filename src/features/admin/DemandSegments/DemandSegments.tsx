@@ -1,5 +1,5 @@
 import React from 'react';
-import {ButtonContainer, TableContainer} from "./styles";
+import {UpperLineContainer, TableContainer, TableTitle} from "./styles";
 import {Button} from "@mui/material";
 import {
     DemandSegmentsDesirability
@@ -13,16 +13,19 @@ const DemandSegments = () => {
 
     return (
         <div>
-            <ButtonContainer>
+            <UpperLineContainer>
+                <TableTitle>Capacity Allocation to Demand Segment</TableTitle>
                 <Button
                     variant="contained"
                     color="primary"
                     onClick={onDemandOpen}>
                     Manage Segments
                 </Button>
-            </ButtonContainer>
+            </UpperLineContainer>
             <TableContainer><DemandSegmentsTable/></TableContainer>
-            <div style={{padding: 16}} />
+            <div style={{padding: 18}} />
+            <TableTitle>Time of Day Desirability Scoring by Demand Segment</TableTitle>
+            <div style={{padding: 6}} />
             <TableContainer><DemandSegmentsDesirability/></TableContainer>
             <DemandSegmentsModal open={isDemandOpen} onClose={onDemandClose} />
         </div>
