@@ -6,6 +6,7 @@ const TimeWindows = () => {
     return (
         <div>
             <ProximityTable/>
+            <div style={{padding: 16}}></div>
             <TimeWindowsTable/>
         </div>
     );

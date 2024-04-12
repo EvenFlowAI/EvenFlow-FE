@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {CircularProgress, TableBody, TableRow,} from "@mui/material";
+import {CircularProgress, TableBody, TableCell, TableRow,} from "@mui/material";
 import {loadTimeWindow, setTimeWindow} from "../../../../store/reducers/demandSegments/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -10,9 +10,9 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 import {InputOrValue} from "./TableInput";
-import {Button, TableCell} from "./styles";
+import {Button, TableBodyCell, TableHeadCell} from "./styles";
 import {TForm} from "./types";
-import {defaultForm, rows, theadStyle} from "./constants";
+import {defaultForm, rows} from "./constants";
 import {getData} from "./utils";
 
 export const TimeWindowsTable = () => {
@@ -88,38 +88,38 @@ export const TimeWindowsTable = () => {
     return <StyledTable>
         <TableBody>
             <TableRow>
-                <TableCell style={theadStyle}>Time windows</TableCell>
-                <TableCell style={theadStyle}>Window 1</TableCell>
-                <TableCell style={theadStyle}>Window 2</TableCell>
-                <TableCell style={theadStyle}>Window 3</TableCell>
-                <TableCell rowSpan={3} width={100}>
+                <TableHeadCell width={300}>Time windows</TableHeadCell>
+                <TableHeadCell>Window 1</TableHeadCell>
+                <TableHeadCell>Window 2</TableHeadCell>
+                <TableHeadCell>Window 3</TableHeadCell>
+                <TableCell rowSpan={3} width={160} align="right" style={{padding: 12}}>
                     {!isEdit
-                        ? <Button color="primary" onClick={() => setEdit(true)}>
-                            Edit
+                        ? <Button color="primary" onClick={() => setEdit(true)} style={{fontSize: 14}}>
+                            EDIT
                         </Button>
                         : !saving ? <>
-                            <Button color="primary" onClick={handleSave}>
-                                Save
+                            <Button color="secondary" onClick={handleCancel} style={{fontSize: 14}}>
+                                CANCEL
                             </Button>
-                            <Button color="secondary" onClick={handleCancel}>
-                                Cancel
-                            </Button>
+                                <Button color="primary" onClick={handleSave} style={{fontSize: 14}}>
+                                    SAVE
+                                </Button>
                         </>
                     : <CircularProgress />}
                 </TableCell>
             </TableRow>
             {rows.map(row =>
                 <TableRow key={row.label}>
-                    <TableCell>{row.label}</TableCell>
+                    <TableBodyCell  align="left">{row.label}</TableBodyCell>
                     {row.items.map((item, idx) =>
-                        <TableCell key={idx}>{!item.name ? item.value :
+                        <TableBodyCell key={idx} align="left">{!item.name ? item.value :
                             <InputOrValue
                                 name={item.name}
                                 value={form[item.name]}
                                 onChange={handleChange}
                                 isEdit={isEdit}
                             />
-                        }</TableCell>
+                        }</TableBodyCell>
                     )}
                 </TableRow>
             )}
