@@ -11,7 +11,7 @@ import {
     EOptimizationWindowType,
     optimizationWindowsList, TOptContentData,
 } from "../../../store/reducers/optimizationWindows/types";
-import {OptimizationModal} from "../../../features/admin/OptimizationWindows/OptimizationModal/OptimizationModal";
+import {OptimizationModal} from "../../../components/modals/admin/OptimizationModal/OptimizationModal";
 import {AppointmentCutoffModal} from "../../../features/admin/OptimizationWindows/AppointmentCutoffModal/AppointmentCutoffModal";
 import {capacityManagementRoot, timeSpanString} from "../../../utils/constants";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
@@ -78,7 +78,9 @@ export const OptimizationWindowsPage = () => {
     return <>
         <TitleContainer title="Optimization Windows" pad parent={capacityManagementRoot} />
         <Grid container spacing={3}>
-            {optimizationWindowsList.map(k => {
+            {optimizationWindowsList
+                .filter(el => el !== EOptimizationWindowType.FirstAvailable && el !== EOptimizationWindowType.SpecificDate)
+                .map(k => {
                 const plate = optContent[k];
                     return <Grid item xs={12} sm={6} md={4} key={plate.title}>
                         <OptimizationWindowCard

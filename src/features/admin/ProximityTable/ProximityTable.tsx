@@ -24,6 +24,7 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
+import {SliderCell, TableBodyCell} from "./styles";
 
 export const ProximityTable = () => {
     const {proximity} = useSelector((state: RootState) => state.slotScoring);
@@ -121,16 +122,16 @@ export const ProximityTable = () => {
         <StyledTable>
             <TableHead>
                 <TableRow>
-                    {!isXS ? <TableCell>Proximity Search</TableCell> : null}
-                    <TableCell align="center">Optimization setting</TableCell>
+                    {!isXS ? <TableCell width={300}>Proximity Search</TableCell> : null}
+                    <TableCell>Optimization setting</TableCell>
                     <TableCell />
                 </TableRow>
             </TableHead>
             <TableBody>
                 {rows.map(row =>
                     <TableRow key={row.id}>
-                        {!isXS ? <TableCell>{row.label}</TableCell> : null}
-                        <TableCell>
+                        {!isXS ? <TableBodyCell>{row.label}</TableBodyCell> : null}
+                        <SliderCell>
                             {isXS ? <span>{row.label}</span> : null}
                             <Box p={isXS ? 1 : 0}>
                                 <ValueSlider
@@ -146,8 +147,8 @@ export const ProximityTable = () => {
                                     valueLabelDisplay="on"
                                 />
                             </Box>
-                        </TableCell>
-                        <TableCell align="right">
+                        </SliderCell>
+                        <TableCell align="right" width={160} style={{padding: 12}}>
                             {editButton(row.id)}
                         </TableCell>
                     </TableRow>

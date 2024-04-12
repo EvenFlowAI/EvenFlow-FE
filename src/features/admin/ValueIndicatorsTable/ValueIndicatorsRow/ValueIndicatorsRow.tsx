@@ -3,13 +3,12 @@ import {
     Box,
     CircularProgress,
     Switch,
-    TableCell,
     TableRow,
 } from "@mui/material";
 import {ValueSlider} from "../../../../components/styled/ValueSlider";
 import {IValueSettings} from "../../../../store/reducers/valueSettings/types";
 import {SliderRange, TRow} from "../types";
-import {Button, SliderCell} from "./styles";
+import {Button, SliderCell, TCell} from "./styles";
 
 type TRowProps = {
     rowData: TRow;
@@ -29,7 +28,7 @@ type TRowProps = {
 
 export const ValueIndicatorsRow: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRowProps>>> = props => {
     return <TableRow>
-        {!props.isXS ? <TableCell>{props.rowData.title}</TableCell> : null}
+        {!props.isXS ? <TCell>{props.rowData.title}</TCell> : null}
         <SliderCell>
             {props.isXS ? <Box mb={1}>{props.rowData.title}</Box> : null}
             <ValueSlider
@@ -45,15 +44,15 @@ export const ValueIndicatorsRow: React.FC<React.PropsWithChildren<React.PropsWit
                 value={props.value.point}
             />
         </SliderCell>
-        <TableCell align="center">
+        <TCell align="center">
             <Switch
                 color="primary"
                 disabled={props.isNotSet}
                 onChange={props.onSwitch}
                 checked={Boolean(props.value.state)}
             />
-        </TableCell>
-        <TableCell align={props.isXS ? "center" : "right"}>
+        </TCell>
+        <TCell align={props.isXS ? "center" : "right"}>
             {props.isNotSet
                 ? <Button color="primary" onClick={props.onTabChange}>
                     Adjust the value
@@ -63,23 +62,23 @@ export const ValueIndicatorsRow: React.FC<React.PropsWithChildren<React.PropsWit
                         color="primary"
                         onClick={props.onEdit}
                     >
-                        Edit
+                        EDIT
                     </Button>
                     : props.loading ? <CircularProgress /> : <>
                         <Button
                             color="secondary"
                             onClick={props.onCancel}
                         >
-                            Cancel
+                            CANCEL
                         </Button>
                         <Button
                             color="primary"
                             onClick={props.onSave}
                         >
-                            Save
+                            SAVE
                         </Button>
                     </>
             }
-        </TableCell>
+        </TCell>
     </TableRow>
 }

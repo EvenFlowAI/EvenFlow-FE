@@ -1,6 +1,7 @@
 import { withStyles } from 'tss-react/mui';
-import {ValueSlider} from "../../../../components/styled/ValueSlider";
+import {ValueSlider} from "../../../components/styled/ValueSlider";
 import { makeStyles } from 'tss-react/mui';
+import {styled, TableCell} from "@mui/material";
 
 export const Slider = withStyles(ValueSlider, {
     root: {
@@ -15,19 +16,17 @@ export const Slider = withStyles(ValueSlider, {
             right: -25
         }
     },
+    track: {
+        backgroundColor: '#858585',
+        borderColor: "#858585"
+    },
+    marked: {
+        marginTop: 3
+    }
 });
 
-// 
 export const useStyles = makeStyles()({
     table: {
-        "& .MuiTableCell-head": {
-            textAlign: "center"
-        },
-        "& .MuiTableCell-body": {
-            textAlign: "center",
-            padding: "10px !important",
-            fontSize: 12
-        }
     },
     segment: {
         fontWeight: "bold"
@@ -39,7 +38,7 @@ export const useStyles = makeStyles()({
     },
     edit: {
         fontSize: 14,
-        textTransform: "none",
+        textTransform: "uppercase",
         padding: 5,
         position: "absolute",
         top: "50%",
@@ -59,6 +58,30 @@ export const useStyles = makeStyles()({
     },
     buttonCell: {
         position: "relative",
-        paddingRight: "56px !important"
-    }
+        paddingRight: "56px !important",
+    },
+    cellInnerWrapper: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        textTransform: 'uppercase',
+    },
 });
+
+export const StyledTableCell = styled(TableCell)({
+    padding: "5px 10px !important",
+})
+
+export const NormalTableCell = styled(TableCell)({
+    padding: "10px !important",
+    fontSize: 14
+})
+
+export const BorderedTableCell = styled(TableCell)({
+    borderWidth: '0px 1px 1px 1px !important'
+})
+
+export const UpperTableCell = styled(TableCell)({
+    borderWidth: '0 1px 0 1px !important'
+})
+

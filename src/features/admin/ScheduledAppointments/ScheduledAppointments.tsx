@@ -1,12 +1,10 @@
 import React from "react";
-import {TimeWindows} from "../AppointmentAllocation/TimeWindows";
-import {DemandSegments} from "../AppointmentAllocation/DemandSegments";
 import {Caption} from "../../../components/wrappers/Caption/Caption";
 import {TextLink} from "../../../components/wrappers/TextLink/TextLink";
 import {useDispatch, useSelector} from "react-redux";
 import {recalculateCapacity} from "../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../store/rootReducer";
-import {ButtonContainer, TableContainer} from "./styles";
+import {ButtonContainer} from "./styles";
 import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 
 import {useMessage} from "../../../hooks/useMessage/useMessage";
@@ -39,10 +37,6 @@ export const ScheduledAppointments = () => {
                 Recalculate Capacity
             </LoadingButton>
         </ButtonContainer>
-        <TableContainer><TimeWindows/></TableContainer>
-        <div style={{padding: 10}} />
-        <TableContainer><DemandSegments/></TableContainer>
-        <div style={{padding: 10}} />
         <Caption title={<>
             <span>You can change the number of Demand Segments on </span>
             <TextLink

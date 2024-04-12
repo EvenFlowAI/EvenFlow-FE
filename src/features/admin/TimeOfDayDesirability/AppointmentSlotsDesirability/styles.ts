@@ -1,11 +1,10 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
 export const useStyles = makeStyles()(theme => ({
     paper: {
         marginBottom: 20,
         borderRadius: 0,
-        padding: 16,
+        padding: '16px 0 16px 32px',
         position: "relative"
     },
     controlButtons: {

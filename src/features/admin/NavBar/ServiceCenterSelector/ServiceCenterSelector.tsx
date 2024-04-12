@@ -14,7 +14,7 @@ export const ServiceCenterSelector = () => {
     const {selectSC, selectedSC, scList} = useSCs();
     const currentUser = useCurrentUser();
     const history = useHistory();
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null | undefined>(null);
     const handleMenuOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(e.currentTarget);
     }
