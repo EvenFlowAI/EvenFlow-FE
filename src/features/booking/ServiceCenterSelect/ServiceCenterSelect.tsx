@@ -11,7 +11,7 @@ import {ServiceCenterCard} from "./ServiceCenterCard/ServiceCenterCard";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../routes/constants";
 
-const restrictedRoles: TRole[] = ["Manager", "Advisor"];
+const restrictedRoles: TRole[] = ["Manager", "Advisor", "Technician"];
 
 const ServiceCenterSelect = () => {
     const {scProfile, isProfileLoading} = useSelector((state: RootState) => state.appointment);
