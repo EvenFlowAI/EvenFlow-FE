@@ -52,13 +52,13 @@ export const NewLostCustomer = () => {
                 <TableRow>
                     <TableCell>New Customer</TableCell>
                     <TableCell>Considered new up to</TableCell>
-                    <TableCell className="primary">
+                    <TableCell className="primary" width={180}>
                         {newValue
                             ? `${newValue.periodInMonth} month${newValue.periodInMonth > 1 ? "s" : ""}`
                             : "-"
                         }
                     </TableCell>
-                    <TableCell align="right">
+                    <TableCell align="right" width={180}>
                         <Button onClick={handleOpen(NewLostEnum.New)} color="primary">Edit</Button>
                     </TableCell>
                 </TableRow>

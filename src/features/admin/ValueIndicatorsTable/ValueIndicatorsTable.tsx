@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from "react";
 import {
     TableBody,
     TableCell,
@@ -20,7 +20,7 @@ import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
-type TProps = {onTabChange?: (e: any, idx: string) => void}
+type TProps = {onTabChange: Dispatch<SetStateAction<string>>}
 
 export const ValueIndicatorsTable = ({onTabChange}: TProps) => {
     const dispatch = useDispatch();
@@ -53,9 +53,9 @@ export const ValueIndicatorsTable = ({onTabChange}: TProps) => {
         }
     }, [selectedSC, selectedPod, dispatch]);
 
-    const handleTabChange = useCallback((idx: string) => (): void => {
+    const handleTabChange = useCallback((tabIndex: string) => (): void => {
         if (onTabChange) {
-            onTabChange(null, idx);
+            onTabChange(tabIndex);
         }
     }, [onTabChange])
 
