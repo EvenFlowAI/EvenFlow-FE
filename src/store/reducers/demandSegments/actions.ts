@@ -36,12 +36,15 @@ export const setDemandSegments = (data: ISetDemandSegmentRequest): AppThunk => a
     dispatch(loadDemandSegments(data.serviceCenterId, data.podId));
 }
 export const getTimeWindow = createAction<ITimeWindow>("DemandSegments/GetTimeWindows");
+export const setTimeWindowsLoading = createAction<boolean>("DemandSegments/SetTimeWindowsLoading");
 export const loadTimeWindow = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
+    dispatch(setTimeWindowsLoading(true))
     const {data} = await Api.call<ITimeWindow>(
         Api.endpoints.AppointmentAllocation.GetTimeWindows,
         {params: {serviceCenterId, podId}}
     );
     dispatch(getTimeWindow(data));
+    dispatch(setTimeWindowsLoading(false))
 }
 export const setTimeWindow = (data: ITimeWindow): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.AppointmentAllocation.SetTimeWindows, {data});

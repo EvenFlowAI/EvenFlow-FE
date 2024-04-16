@@ -28,6 +28,7 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 
 export const DemandSegmentsDesirability = () => {
     const {onOpen, onClose, isOpen} = useModal();
@@ -116,132 +117,141 @@ export const DemandSegmentsDesirability = () => {
     }
 
     return <Paper variant="outlined" style={{borderRadius: 0, overflowX: "auto"}}>
-        <StyledTable className={classes.table}>
-            <TableHead>
-                <TableRow>
-                    <TableCell className={classes.buttonCell} colSpan={2}>
-                        Demand Segment
-                        <Button className={classes.edit} onClick={handleOpen} color="primary">Edit</Button>
-                    </TableCell>
-                    <TableCell width={135} rowSpan={2}>Time Windows</TableCell>
-                    <TableCell
-                        width={550}
-                        colSpan={2}
-                        style={{minWidth: 400}}
-                        className={classes.buttonCell} align="left">
-                        Optimization Settings
-                        {edit
-                            ? saving ?
-                                <div className={classes.editWrapper}><CircularProgress /></div>
-                                : <div className={classes.editWrapper}>
-                                    <Button color="secondary"
-                                            className={classes.editN}
-                                            onClick={() => setEdit(false)}>
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        color="primary"
-                                        className={classes.editN}
-                                        onClick={handleSave}>
-                                        Save
-                                    </Button>
-                                </div>
-                            : <Button
-                                color="primary"
-                                disabled={!optSettings.length}
+        {saving
+            ? <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}><Loading/></div>
+            : <StyledTable className={classes.table}>
+                <TableHead>
+                    <TableRow>
+                        <TableCell className={classes.buttonCell} colSpan={2}>
+                            Demand Segment
+                            <Button
                                 className={classes.edit}
-                                onClick={() => setEdit(true)}>
+                                onClick={handleOpen}
+                                color="primary"
+                                disabled={!optSettings.length}>
                                 Edit
                             </Button>
-                        }
-                    </TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell className={classes.subtitleCell}>Segment Start</TableCell>
-                    <TableCell className={classes.subtitleCell}>Segment End</TableCell>
-                    <TableCell className={classes.subtitleCell} align="left">Undesirable</TableCell>
-                    <TableCell className={classes.subtitleCell} align="left">Desirable</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {optSettings.map((seg, idx) =>
-                    <React.Fragment key={seg.id}>
-                        <TableRow key={`${seg.id}-1`}>
-                            <NormalTableCell rowSpan={2} style={{fontWeight: 300}}>
-                                from <span className={classes.segment}>{seg.from}</span>
-                            </NormalTableCell>
-                            <NormalTableCell rowSpan={2} style={{fontWeight: 300}}>
-                                to <span className={classes.segment}>{seg.to}</span>
-                            </NormalTableCell>
-                            <StyledTableCell style={{fontWeight: 300}}>
-                                {"< Window3"}
-                            </StyledTableCell>
-                            <StyledTableCell>
-                                <Slider
-                                    min={SliderRange.Min}
-                                    max={SliderRange.Max}
-                                    disabled={!edit}
-                                    onChange={handleChange(idx * 2, "undesirable")}
-                                    marks={[
-                                        {value: SliderRange.Min, label: SliderRange.Min},
-                                        {value: SliderRange.Max, label: SliderRange.Max}
-                                    ]}
-                                    value={form[idx*2].undesirable}
-                                    valueLabelDisplay="on"
-                                />
-                            </StyledTableCell>
-                            <StyledTableCell>
-                                <Slider
-                                    min={SliderRange.Min}
-                                    max={SliderRange.Max}
-                                    disabled={!edit}
-                                    onChange={handleChange(idx * 2, "desirable")}
-                                    marks={[
-                                        {value: SliderRange.Min, label: SliderRange.Min},
-                                        {value: SliderRange.Max, label: SliderRange.Max}
-                                    ]}
-                                    value={form[idx*2].desirable}
-                                    valueLabelDisplay="on"
-                                />
-                            </StyledTableCell>
-                        </TableRow>
-                        <TableRow key={`${seg.id}-2`}>
-                            <StyledTableCell style={{fontWeight: 300}}>
-                                {">= Window3"}
-                            </StyledTableCell>
-                            <StyledTableCell>
-                                <Slider
-                                    min={SliderRange.Min}
-                                    max={SliderRange.Max}
-                                    disabled={!edit}
-                                    onChange={handleChange(idx * 2 + 1, "undesirable")}
-                                    marks={[
-                                        {value: SliderRange.Min, label: SliderRange.Min},
-                                        {value: SliderRange.Max, label: SliderRange.Max}
-                                    ]}
-                                    value={form[idx*2+1].undesirable}
-                                    valueLabelDisplay="on"
-                                />
-                            </StyledTableCell>
-                            <StyledTableCell>
-                                <Slider
-                                    min={SliderRange.Min}
-                                    max={SliderRange.Max}
-                                    disabled={!edit}
-                                    onChange={handleChange(idx * 2 + 1, "desirable")}
-                                    marks={[
-                                        {value: SliderRange.Min, label: SliderRange.Min},
-                                        {value: SliderRange.Max, label: SliderRange.Max}
-                                    ]}
-                                    value={form[idx*2+1].desirable}
-                                    valueLabelDisplay="on"
-                                />
-                            </StyledTableCell>
-                        </TableRow>
-                    </React.Fragment>
-                )}
-            </TableBody>
-        </StyledTable>
+                        </TableCell>
+                        <TableCell width={135} rowSpan={2}>Time Windows</TableCell>
+                        <TableCell
+                            width={550}
+                            colSpan={2}
+                            style={{minWidth: 400}}
+                            className={classes.buttonCell} align="left">
+                            Optimization Settings
+                            {edit
+                                ? saving ?
+                                    <div className={classes.editWrapper}><CircularProgress /></div>
+                                    : <div className={classes.editWrapper}>
+                                        <Button color="secondary"
+                                                className={classes.editN}
+                                                onClick={() => setEdit(false)}>
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            color="primary"
+                                            className={classes.editN}
+                                            onClick={handleSave}>
+                                            Save
+                                        </Button>
+                                    </div>
+                                : <Button
+                                    color="primary"
+                                    disabled={!optSettings.length}
+                                    className={classes.edit}
+                                    onClick={() => setEdit(true)}>
+                                    Edit
+                                </Button>
+                            }
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell className={classes.subtitleCell}>Segment Start</TableCell>
+                        <TableCell className={classes.subtitleCell}>Segment End</TableCell>
+                        <TableCell className={classes.subtitleCell} align="left">Undesirable</TableCell>
+                        <TableCell className={classes.subtitleCell} align="left">Desirable</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {optSettings.map((seg, idx) =>
+                        <React.Fragment key={seg.id}>
+                            <TableRow key={`${seg.id}-1`}>
+                                <NormalTableCell rowSpan={2} style={{fontWeight: 300}}>
+                                    from <span className={classes.segment}>{seg.from}</span>
+                                </NormalTableCell>
+                                <NormalTableCell rowSpan={2} style={{fontWeight: 300}}>
+                                    to <span className={classes.segment}>{seg.to}</span>
+                                </NormalTableCell>
+                                <StyledTableCell style={{fontWeight: 300}}>
+                                    {"< Window3"}
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                    <Slider
+                                        min={SliderRange.Min}
+                                        max={SliderRange.Max}
+                                        disabled={!edit}
+                                        onChange={handleChange(idx * 2, "undesirable")}
+                                        marks={[
+                                            {value: SliderRange.Min, label: SliderRange.Min},
+                                            {value: SliderRange.Max, label: SliderRange.Max}
+                                        ]}
+                                        value={form[idx*2].undesirable}
+                                        valueLabelDisplay="on"
+                                    />
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                    <Slider
+                                        min={SliderRange.Min}
+                                        max={SliderRange.Max}
+                                        disabled={!edit}
+                                        onChange={handleChange(idx * 2, "desirable")}
+                                        marks={[
+                                            {value: SliderRange.Min, label: SliderRange.Min},
+                                            {value: SliderRange.Max, label: SliderRange.Max}
+                                        ]}
+                                        value={form[idx*2].desirable}
+                                        valueLabelDisplay="on"
+                                    />
+                                </StyledTableCell>
+                            </TableRow>
+                            <TableRow key={`${seg.id}-2`}>
+                                <StyledTableCell style={{fontWeight: 300}}>
+                                    {">= Window3"}
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                    <Slider
+                                        min={SliderRange.Min}
+                                        max={SliderRange.Max}
+                                        disabled={!edit}
+                                        onChange={handleChange(idx * 2 + 1, "undesirable")}
+                                        marks={[
+                                            {value: SliderRange.Min, label: SliderRange.Min},
+                                            {value: SliderRange.Max, label: SliderRange.Max}
+                                        ]}
+                                        value={form[idx*2+1].undesirable}
+                                        valueLabelDisplay="on"
+                                    />
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                    <Slider
+                                        min={SliderRange.Min}
+                                        max={SliderRange.Max}
+                                        disabled={!edit}
+                                        onChange={handleChange(idx * 2 + 1, "desirable")}
+                                        marks={[
+                                            {value: SliderRange.Min, label: SliderRange.Min},
+                                            {value: SliderRange.Max, label: SliderRange.Max}
+                                        ]}
+                                        value={form[idx*2+1].desirable}
+                                        valueLabelDisplay="on"
+                                    />
+                                </StyledTableCell>
+                            </TableRow>
+                        </React.Fragment>
+                    )}
+                </TableBody>
+            </StyledTable>
+        }
         <EditDemandSegmentsModal payload={optSettings} onClose={onClose} open={isOpen} />
     </Paper>
 };
