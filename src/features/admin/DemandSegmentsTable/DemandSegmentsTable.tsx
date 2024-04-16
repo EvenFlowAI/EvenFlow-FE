@@ -8,16 +8,16 @@ import {TextField} from "../../../components/formControls/TextFieldStyled/TextFi
 import {ISetDemandSegmentForm} from "../../../store/reducers/demandSegments/types";
 import {DemandTable} from "../../../components/styled/DemandTable";
 import {TableRow} from "../../../components/styled/TableRow";
-import {TableCell} from "../../../components/styled/TableCell";
+import {EditingCell, TableCell} from "./styles";
 import {SaveEditBlock} from "../../../components/buttons/SaveEditBlock/SaveEditBlock";
-
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 
 type TForm = number[][];
-export const DemandSegments = () => {
+
+export const DemandSegmentsTable = () => {
     const [form, setForm] = useState<TForm>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [isSaving, setSaving] = useState<boolean>(false);
@@ -111,11 +111,11 @@ export const DemandSegments = () => {
                     : isEdit
                         ? form.map((el, idx) => {
                             return <TableRow key={idx}>
-                                <TableCell>
+                                <EditingCell>
                                     {idx + 1}
-                                </TableCell>
+                                </EditingCell>
                                 {el.map((item, iIdx) => {
-                                    return <TableCell
+                                    return <EditingCell
                                         key={`item-${iIdx}`}
                                     >
                                         <TextField
@@ -130,9 +130,9 @@ export const DemandSegments = () => {
                                             }}
                                             onChange={handleChange(idx, iIdx)}
                                         />
-                                    </TableCell>
+                                    </EditingCell>
                                 })}
-                                <TableCell />
+                                <EditingCell />
                             </TableRow>
                         })
                         : segments.map((segment, idx) => {

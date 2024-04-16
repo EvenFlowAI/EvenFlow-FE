@@ -1,7 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
-export const useStyles = makeStyles()({
+export const useStyles = makeStyles()(() => ({
     paper: {
         height: "100%",
         borderRadius: 0,
@@ -18,24 +17,25 @@ export const useStyles = makeStyles()({
         fontSize: 48,
         fontWeight: "bold",
         textOverflow: "ellipsis",
-        overflow: "hidden"
+        overflow: "hidden",
+        lineHeight: '48px',
     },
     helperText: {
         fontSize: 14,
         lineHeight: "17px",
-        fontWeight: 300,
-        marginTop: 73,
+        fontWeight: 400,
+        marginTop: 24,
     },
     label: {
-        fontWeight: 300,
+        fontWeight: 400,
         fontSize: 19,
-        marginTop: 16
+        marginTop: 4,
+        color: "#252733"
     },
     edit: {
         position: "absolute",
         top: 10,
         right: 6,
-        textTransform: "none",
         fontSize: 16
     }
-});
+}));

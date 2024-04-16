@@ -15,6 +15,7 @@ export const useStylesBR = makeStyles()(theme => ({
     },
     buttons: {
         textAlign: "right",
+        paddingRight: 32,
         [theme.breakpoints.down('sm')]: {
             textAlign: "left",
             marginBottom: theme.spacing(1),

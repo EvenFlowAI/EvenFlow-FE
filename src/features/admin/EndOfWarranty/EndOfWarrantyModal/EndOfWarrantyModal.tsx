@@ -57,14 +57,14 @@ export const EndOfWarrantyModal: React.FC<React.PropsWithChildren<React.PropsWit
         }
     }
 
-    return <BaseModal {...props} maxWidth="xs">
+    return <BaseModal {...props} width={490}>
         <DialogTitle onClose={props.onClose}>Edit End of Warranty</DialogTitle>
         <DialogContent>
             <TextField
                 fullWidth
                 id="warranty-months"
                 name="months"
-                label="Considered near the end of warranty within"
+                label="Time Period"
                 autoComplete="warranty-months months"
                 endAdornment="months"
                 type="number"

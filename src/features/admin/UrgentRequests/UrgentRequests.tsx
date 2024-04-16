@@ -104,6 +104,7 @@ export const UrgentRequests = () => {
             data={urgentList}
             rowData={rowData}
             index="id"
+            hidePagination={numberOfRecords < pageSize}
             count={numberOfRecords}
             isLoading={urgentLoading}
             page={pageIndex}
