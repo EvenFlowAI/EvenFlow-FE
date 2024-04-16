@@ -5,6 +5,7 @@ export type TRow = {
     id: Indicators;
     title: string;
     tab: string;
+    idx?: string;
 }
 
 export type TData = {
