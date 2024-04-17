@@ -153,7 +153,7 @@ export const setRequiredSkills = (
 export const getUrgentServiceRequests = createAction<IAssignedServiceRequestShort[]>("ServiceRequestsScreen/getUrgent");
 export const loadingUrgentServiceRequests = createAction<boolean>("ServiceRequestsScreen/loadingUrgent");
 export const pagingUrgentServiceRequests = createAction<IPagingResponse>("ServiceRequestsScreen/pagingUrgent");
-export const pageDataUrgentServiceRequests = createAction<Partial<IPageRequest>>("ServiceRequestsScreen/pageDataUrgent");
+export const setPageDataUrgentServiceRequests = createAction<Partial<IPageRequest>>("ServiceRequestsScreen/pageDataUrgent");
 
 export const loadUrgentServiceRequests = (serviceCenterId: number, podId?: number): AppThunk =>
 async (dispatch, getState) => {
@@ -190,11 +190,11 @@ export const setUrgentRequests = (ids: number[], serviceCenterId?: number, podId
 export const getNonUrgentServiceRequests = createAction<IAssignedServiceRequestShort[]>("ServiceRequestsScreen/getNonUrgent");
 export const loadingNonUrgentServiceRequests = createAction<boolean>("ServiceRequestsScreen/loadingNonUrgent");
 export const pagingNonUrgentServiceRequests = createAction<IPagingResponse>("ServiceRequestsScreen/pagingNonUrgent");
-export const pageDataNonUrgentServiceRequests = createAction<Partial<IPageRequest>>("ServiceRequestsScreen/pageDataNonUrgent");
+export const setPageDataNonUrgentServiceRequests = createAction<Partial<IPageRequest>>("ServiceRequestsScreen/pageDataNonUrgent");
 
 export const loadNonUrgentServiceRequests = (serviceCenterId: number, podId?: number): AppThunk =>
 async (dispatch, getState) => {
-    const pageData = getState().serviceRequests.urgentPageData;
+    const pageData = getState().serviceRequests.nonUrgentPageData;
     dispatch(loadingNonUrgentServiceRequests(true));
     try {
         const {data: {result, paging}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequestShort>>(
