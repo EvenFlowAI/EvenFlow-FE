@@ -22,16 +22,15 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 import dayjs from "dayjs";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {getOptions} from "../../../../utils/utils";
 import {TOption} from "../../../../utils/types";
-import {days, initialForm} from "./constants";
+import {allDaysOption, dayOfWeekOptions, initialForm} from "./constants";
 
 export const AppointmentSlotsDesirability = () => {
     const {slotRange, isLoading, desirability: desirabilityItems} = useSelector((state: RootState) => state.slotScoring);
     const [form, setForm] = useState<TForm>(initialForm);
     const [saving, setSaving] = useState<boolean>(false);
     const [isEdit, setEdit] = useState<boolean>(false);
-    const [dayOfWeek, setDayOfWeek] = useState<TOption|null>(null);
+    const [dayOfWeek, setDayOfWeek] = useState<TOption>(allDaysOption);
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
 
@@ -41,17 +40,16 @@ export const AppointmentSlotsDesirability = () => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     const { classes  } = useStyles();
-    const dayOfWeekOptions = getOptions(days).slice(1).concat({name: "Sunday", value: 0});
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadDesirability(selectedSC.id, dayOfWeek ? dayOfWeek.value : null, selectedPod?.id, (e) => showError(e)));
-            dispatch(loadRange(selectedSC.id, dayOfWeek ? dayOfWeek.value : null, selectedPod?.id))
+            dispatch(loadDesirability(selectedSC.id, dayOfWeek.value !== allDaysOption.value ? dayOfWeek.value : null, selectedPod?.id, (e) => showError(e)));
+            dispatch(loadRange(selectedSC.id, dayOfWeek.value !== allDaysOption.value ? dayOfWeek.value : null, selectedPod?.id))
         }
     }, [dispatch, selectedSC, selectedPod, dayOfWeek]);
 
     useEffect(() => {
-        setDayOfWeek(null)
+        setDayOfWeek(allDaysOption)
     }, [selectedSC])
 
     useEffect(() => {
@@ -127,7 +125,7 @@ export const AppointmentSlotsDesirability = () => {
                         )),
                     form.timeSlotType,
                     selectedSC.id,
-                    dayOfWeek ? dayOfWeek.value : null,
+                    dayOfWeek.value !== allDaysOption.value ? dayOfWeek.value : null,
                     selectedPod?.id,
                     onSuccess,
                     (e) => onError(e)));
@@ -139,7 +137,7 @@ export const AppointmentSlotsDesirability = () => {
         }
     }
 
-    const onDayOfWeekChange = (e: ChangeEvent<{}>, value: TOption|null) => {
+    const onDayOfWeekChange = (e: ChangeEvent<{}>, value: TOption) => {
          setDayOfWeek(value)
     }
 
@@ -178,10 +176,11 @@ export const AppointmentSlotsDesirability = () => {
             getOptionLabel={option => option.name}
             isOptionEqualToValue={(o, v) => o.value === v.value}
             value={dayOfWeek}
+            disableClearable
             onChange={onDayOfWeekChange}
             renderInput={autocompleteRender({
                 label: 'Day Of Week',
-                placeholder: 'All days',
+                placeholder: 'Select',
             })}
         />
         {isLoading || saving
