@@ -1,9 +1,8 @@
 import {ETimeSlotType} from "../../../../store/reducers/slotScoring/types";
-import {TGap} from "./types";
+import {EDesirabilityDays} from "./types";
 
-export const gaps: TGap[] = [
-    {label: "10-minutes Gap Slots", type: ETimeSlotType.TenMinutes},
-    {label: "15-minutes Gap Slots", type: ETimeSlotType.FifteenMinutes},
-    {label: "30-minutes Gap Slots", type: ETimeSlotType.ThirtyMinutes},
-    {label: "60-minutes Gap Slots", type: ETimeSlotType.SixtyMinutes}
-];
+export const initialForm = {
+    timeSlotType: ETimeSlotType.ThirtyMinutes,
+    items: []
+};
+export const days = Object.keys(EDesirabilityDays).filter(key => Number.isNaN(+key));

@@ -35,7 +35,7 @@ export const ScreenSettings = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadConsentsList(selectedSC.id, selectedPod?.id))
-            dispatch(loadRange(selectedSC.id, selectedPod?.id))
+            dispatch(loadRange(selectedSC.id, null, selectedPod?.id))
         }
     }, [selectedSC, selectedPod])
 

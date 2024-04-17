@@ -22,12 +22,12 @@ export const AppointmentAllocation = () => {
             variant="scrollable"
             scrollButtons="auto"
         >
-            <Tab label="Unplanned Demand" value="1" />
-            <Tab label="RO Prediction Parameters" value="2" />
-            <Tab label="Overbooking Factor" value="3" />
+            <Tab label="Unplanned Demand" value="0" />
+            <Tab label="RO Prediction Parameters" value="1" />
+            <Tab label="Overbooking Factor" value="2" />
         </TabList>
-        <TabPanel style={{width: "100%", padding: "24px 0"}} value="1"><UnplannedDemand /></TabPanel>
-        <TabPanel style={{width: "100%", padding: "24px 0"}} value="2"><RoPredictionParameters /></TabPanel>
-        <TabPanel style={{width: "100%", padding: "24px 0"}} value="3"><OverbookingFactor/></TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="0"><UnplannedDemand /></TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="1"><RoPredictionParameters /></TabPanel>
+        <TabPanel style={{width: "100%", padding: "24px 0"}} value="2"><OverbookingFactor/></TabPanel>
     </TabContext>
 }

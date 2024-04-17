@@ -1,3 +1,5 @@
+import {EDesirabilityDays} from "../../../features/admin/TimeOfDayDesirability/AppointmentSlotsDesirability/types";
+
 export enum EProximityType {
     Closest,
     Earliest,
@@ -45,6 +47,7 @@ export interface IDesirabilityForm {
     podId?: number;
     timeSlotType: ETimeSlotType;
     items: IDesirabilityItem[];
+    dayOfWeek?: EDesirabilityDays;
 }
 
 export interface IOptimizationSettingsItem {
