@@ -12,7 +12,6 @@ import {Routes} from "../../../../routes/constants";
 const selectedRoutes: string[] = [
     Routes.CapacityManagement.RequestDifferentiation,
     Routes.CapacityManagement.TimeDifferentiation,
-    Routes.CapacityManagement.AppointmentSlotScoring,
     Routes.CapacityManagement.AppointmentAllocation,
     Routes.CapacityManagement.OptimizationWindows
 ];
