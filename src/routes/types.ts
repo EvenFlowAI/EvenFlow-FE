@@ -31,7 +31,6 @@ export enum CapacityManagementRoutes {
     AppointmentValue = "/admin/capacity-management/appointment-value",
     CapacitySettings = "/admin/capacity-management/capacity-settings",
     EmployeeSchedule = "/admin/capacity-management/employee-schedule",
-    AppointmentSlotScoring = "/admin/capacity-management/appointment-slot-scoring",
     AppointmentAllocation = "/admin/capacity-management/appointment-allocation",
     OptimizationWindows = "/admin/capacity-management/optimization-windows",
     PricingSettings = "/admin/capacity-management/pricing-settings",
