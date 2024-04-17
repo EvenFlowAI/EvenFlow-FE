@@ -19,6 +19,7 @@ import {useAutocompleteClasses} from "./styles";
 import {initialPaging} from "../constants";
 import {statusOptions} from "./constants";
 import {TAppointmentFilterProps} from "./types";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                           status,
@@ -39,6 +40,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     const [isOpenTo, setOpenTo] = useState<boolean>(false);
     const [selectedStatus, setSelectedStatus] = useState<TOption[]>([])
     const {selectedSC} = useSCs();
+    const currentUser = useCurrentUser();
     const dispatch = useDispatch();
     const { classes: autocompleteClasses } = useAutocompleteClasses();
 
@@ -49,6 +51,16 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
             dispatch(loadServiceConsultants(selectedSC.id))
         }
     }, [selectedSC])
+
+    useEffect(() => {
+        if (currentUser?.role === "Advisor" && serviceAdvisors.length) {
+            const currentAdvisor = serviceAdvisors.find(el => el.id.toString() === currentUser.id);
+            if (currentAdvisor) setFilters(prev => ({...prev, advisor: currentAdvisor}))
+        } else if (currentUser?.role === "Technician" && technicians.length) {
+            const currentTechnician = technicians.find(el => el.dmsId.toString() === currentUser.id);
+            if (currentTechnician) setFilters(prev => ({...prev, technician: currentTechnician}))
+        }
+    }, [currentUser, serviceAdvisors, technicians])
 
     useEffect(() => {
         setSelectedStatus(statusOptions.filter(el => status.includes(+el.value)))
