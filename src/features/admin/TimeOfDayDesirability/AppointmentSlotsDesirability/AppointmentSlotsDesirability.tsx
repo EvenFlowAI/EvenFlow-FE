@@ -45,8 +45,8 @@ export const AppointmentSlotsDesirability = () => {
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadDesirability(selectedSC.id, dayOfWeek?.value ?? null, selectedPod?.id, (e) => showError(e)));
-            dispatch(loadRange(selectedSC.id, dayOfWeek?.value ?? null, selectedPod?.id))
+            dispatch(loadDesirability(selectedSC.id, dayOfWeek ? dayOfWeek.value : null, selectedPod?.id, (e) => showError(e)));
+            dispatch(loadRange(selectedSC.id, dayOfWeek ? dayOfWeek.value : null, selectedPod?.id))
         }
     }, [dispatch, selectedSC, selectedPod, dayOfWeek]);
 
@@ -127,7 +127,7 @@ export const AppointmentSlotsDesirability = () => {
                         )),
                     form.timeSlotType,
                     selectedSC.id,
-                    dayOfWeek?.value ?? null,
+                    dayOfWeek ? dayOfWeek.value : null,
                     selectedPod?.id,
                     onSuccess,
                     (e) => onError(e)));
