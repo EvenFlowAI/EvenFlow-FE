@@ -14,18 +14,19 @@ import {Button, TableBodyCell, TableHeadCell} from "./styles";
 import {TForm} from "./types";
 import {defaultForm, rows} from "./constants";
 import {getData} from "./utils";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 
 export const TimeWindowsTable = () => {
+    const {timeWindow, isTimeWindowLoading} = useSelector((state: RootState) => state.demandSegments);
     const [form, setForm] = useState<TForm>(defaultForm);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
+
     const showMessage = useMessage();
     const showError = useException();
     const dispatch = useDispatch();
-
-    const timeWindow = useSelector((state: RootState) => state.demandSegments.timeWindow);
 
     useEffect(() => {
         setForm(getData(timeWindow));
@@ -85,44 +86,46 @@ export const TimeWindowsTable = () => {
         }
     }
 
-    return <StyledTable>
-        <TableBody>
-            <TableRow>
-                <TableHeadCell width={300}>Time windows</TableHeadCell>
-                <TableHeadCell>Window 1</TableHeadCell>
-                <TableHeadCell>Window 2</TableHeadCell>
-                <TableHeadCell>Window 3</TableHeadCell>
-                <TableCell rowSpan={3} width={160} align="right" style={{padding: 12}}>
-                    {!isEdit
-                        ? <Button color="primary" onClick={() => setEdit(true)} style={{fontSize: 14}}>
-                            EDIT
-                        </Button>
-                        : !saving ? <>
-                            <Button color="secondary" onClick={handleCancel} style={{fontSize: 14}}>
-                                CANCEL
+    return isTimeWindowLoading || saving
+        ? <Loading/>
+        : <StyledTable>
+            <TableBody>
+                <TableRow>
+                    <TableHeadCell width={300}>Time windows</TableHeadCell>
+                    <TableHeadCell>Window 1</TableHeadCell>
+                    <TableHeadCell>Window 2</TableHeadCell>
+                    <TableHeadCell>Window 3</TableHeadCell>
+                    <TableCell rowSpan={3} width={160} align="right" style={{padding: 12}}>
+                        {!isEdit
+                            ? <Button color="primary" onClick={() => setEdit(true)} style={{fontSize: 14}}>
+                                EDIT
                             </Button>
-                                <Button color="primary" onClick={handleSave} style={{fontSize: 14}}>
-                                    SAVE
-                                </Button>
-                        </>
-                    : <CircularProgress />}
-                </TableCell>
-            </TableRow>
-            {rows.map(row =>
-                <TableRow key={row.label}>
-                    <TableBodyCell  align="left">{row.label}</TableBodyCell>
-                    {row.items.map((item, idx) =>
-                        <TableBodyCell key={idx} align="left">{!item.name ? item.value :
-                            <InputOrValue
-                                name={item.name}
-                                value={form[item.name]}
-                                onChange={handleChange}
-                                isEdit={isEdit}
-                            />
-                        }</TableBodyCell>
-                    )}
+                            : !saving ? <>
+                                    <Button color="secondary" onClick={handleCancel} style={{fontSize: 14}}>
+                                        CANCEL
+                                    </Button>
+                                    <Button color="primary" onClick={handleSave} style={{fontSize: 14}}>
+                                        SAVE
+                                    </Button>
+                                </>
+                                : <CircularProgress />}
+                    </TableCell>
                 </TableRow>
-            )}
-        </TableBody>
-    </StyledTable>
+                {rows.map(row =>
+                    <TableRow key={row.label}>
+                        <TableBodyCell  align="left">{row.label}</TableBodyCell>
+                        {row.items.map((item, idx) =>
+                            <TableBodyCell key={idx} align="left">{!item.name ? item.value :
+                                <InputOrValue
+                                    name={item.name}
+                                    value={form[item.name]}
+                                    onChange={handleChange}
+                                    isEdit={isEdit}
+                                />
+                            }</TableBodyCell>
+                        )}
+                    </TableRow>
+                )}
+            </TableBody>
+        </StyledTable>
 }

@@ -22,7 +22,7 @@ const RequestDifferentiation = () => {
 
     const tabs: TTab[] = [
         {id: "0", label: "Demand Segments", component: <DemandSegments />},
-        {id: "1", label: "Value Indicators", component: <ValueIndicatorsTable onTabChange={() => selectTab('4')}/>},
+        {id: "1", label: "Value Indicators", component: <ValueIndicatorsTable onTabChange={selectTab}/>},
         {id: "2", label: "Customer Lifetime Rules", component: <CustomerLifetimeRules/>},
         {id: "3", label: "Urgent Requests", component: <UrgentRequests/>},
         {id: "4", label: "New/Lost Customer", component: <NewLostCustomer/>},

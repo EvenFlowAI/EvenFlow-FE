@@ -89,6 +89,7 @@ export const DemandSegmentsTable = () => {
                 <TableCell width={200} style={{textAlign: "right"}}>
                     <SaveEditBlock
                         onSave={handleSave}
+                        disabled={!segments.length}
                         onEdit={() => setEdit(true)}
                         onCancel={handleCancel}
                         isSaving={isSaving}

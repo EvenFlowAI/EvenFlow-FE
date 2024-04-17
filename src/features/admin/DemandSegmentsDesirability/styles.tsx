@@ -16,10 +16,6 @@ export const Slider = withStyles(ValueSlider, {
             right: -25
         }
     },
-    track: {
-        backgroundColor: '#858585',
-        borderColor: "#858585"
-    },
     marked: {
         marginTop: 3
     }

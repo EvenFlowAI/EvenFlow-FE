@@ -12,7 +12,7 @@ import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {copyTextToClipboard} from "./utils";
 import {Routes} from "../../../../routes/constants";
 
-const restrictedRoles: TRole[] = ["Call Center Rep", "Advisor", "Manager"]
+const restrictedRoles: TRole[] = ["Call Center Rep", "Advisor", "Manager", "Technician"]
 
 export const BookingModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onAction, payload, ...props}) => {
     const {selectedSC} = useSCs();

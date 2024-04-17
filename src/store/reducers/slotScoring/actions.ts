@@ -17,11 +17,13 @@ export const setLoading = createAction<boolean>("SlotScoring/SetLoading");
 
 export const getProximity = createAction<IProximity[]>("SlotScoring/GetProximity");
 export const loadProximity = (serviceCenterId?: number, podId?: number): AppThunk => async dispatch => {
+    dispatch(setLoading(true))
     const {data} = await Api.call<IProximity[]>(
         Api.endpoints.SlotScoring.GetProximity,
         {params: {serviceCenterId, podId}}
     );
     dispatch(getProximity(data));
+    dispatch(setLoading(false))
 }
 export const createProximity = (data: IProximity): AppThunk => async dispatch => {
     await Api.call(

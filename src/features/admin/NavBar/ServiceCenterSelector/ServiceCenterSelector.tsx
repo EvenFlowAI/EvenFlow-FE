@@ -8,7 +8,7 @@ import {useStyles} from "./styles";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
-const restrictedRoles: TRole[] = ["Advisor", "Super Admin", "Manager"];
+const restrictedRoles: TRole[] = ["Advisor", "Super Admin", "Manager", "Technician"];
 
 export const ServiceCenterSelector = () => {
     const {selectSC, selectedSC, scList} = useSCs();

@@ -25,9 +25,10 @@ import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 import {SliderCell, TableBodyCell} from "./styles";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 
 export const ProximityTable = () => {
-    const {proximity} = useSelector((state: RootState) => state.slotScoring);
+    const {proximity, isLoading} = useSelector((state: RootState) => state.slotScoring);
     const [edit, setEdit] = useState<EProximityType|null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>(initialForm);
@@ -119,41 +120,44 @@ export const ProximityTable = () => {
     }
 
     return <div>
-        <StyledTable>
-            <TableHead>
-                <TableRow>
-                    {!isXS ? <TableCell width={300}>Proximity Search</TableCell> : null}
-                    <TableCell>Optimization setting</TableCell>
-                    <TableCell />
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {rows.map(row =>
-                    <TableRow key={row.id}>
-                        {!isXS ? <TableBodyCell>{row.label}</TableBodyCell> : null}
-                        <SliderCell>
-                            {isXS ? <span>{row.label}</span> : null}
-                            <Box p={isXS ? 1 : 0}>
-                                <ValueSlider
-                                    min={SliderRange.Min}
-                                    max={SliderRange.Max}
-                                    onChange={handleSlide}
-                                    disabled={edit !== row.id}
-                                    marks={[
-                                        {value: SliderRange.Min, label: SliderRange.Min},
-                                        {value: SliderRange.Max, label: SliderRange.Max}
-                                    ]}
-                                    value={form[row.id].point}
-                                    valueLabelDisplay="on"
-                                />
-                            </Box>
-                        </SliderCell>
-                        <TableCell align="right" width={160} style={{padding: 12}}>
-                            {editButton(row.id)}
-                        </TableCell>
+        {loading || isLoading
+            ? <Loading/>
+            : <StyledTable>
+                <TableHead>
+                    <TableRow>
+                        {!isXS ? <TableCell width={300}>Proximity Search</TableCell> : null}
+                        <TableCell>Optimization setting</TableCell>
+                        <TableCell />
                     </TableRow>
-                )}
-            </TableBody>
-        </StyledTable>
+                </TableHead>
+                <TableBody>
+                    {rows.map(row =>
+                        <TableRow key={row.id}>
+                            {!isXS ? <TableBodyCell>{row.label}</TableBodyCell> : null}
+                            <SliderCell>
+                                {isXS ? <span>{row.label}</span> : null}
+                                <Box p={isXS ? 1 : 0}>
+                                    <ValueSlider
+                                        min={SliderRange.Min}
+                                        max={SliderRange.Max}
+                                        onChange={handleSlide}
+                                        disabled={edit !== row.id}
+                                        marks={[
+                                            {value: SliderRange.Min, label: SliderRange.Min},
+                                            {value: SliderRange.Max, label: SliderRange.Max}
+                                        ]}
+                                        value={form[row.id].point}
+                                        valueLabelDisplay="on"
+                                    />
+                                </Box>
+                            </SliderCell>
+                            <TableCell align="right" width={160} style={{padding: 12}}>
+                                {editButton(row.id)}
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </StyledTable>
+        }
     </div>
 }

@@ -10,8 +10,8 @@ import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 import {Routes} from "../../../../routes/constants";
 
 const selectedRoutes: string[] = [
-    Routes.CapacityManagement.AppointmentValue,
-    Routes.CapacityManagement.AppointmentSlotScoring,
+    Routes.CapacityManagement.RequestDifferentiation,
+    Routes.CapacityManagement.TimeDifferentiation,
     Routes.CapacityManagement.AppointmentAllocation,
     Routes.CapacityManagement.OptimizationWindows
 ];
