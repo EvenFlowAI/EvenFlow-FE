@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {
     loadNonUrgentServiceRequests,
-    pageDataNonUrgentServiceRequests,
+    setPageDataNonUrgentServiceRequests,
     setUrgentRequests
 } from "../../../../store/reducers/serviceRequests/actions";
 import {Table} from "../../../../components/tables/Table/Table";
@@ -41,7 +41,7 @@ export const UrgentRequestModal: React.FC<React.PropsWithChildren<React.PropsWit
     } = useSelector(({serviceRequests}: RootState) => serviceRequests);
     const {pageIndex, pageSize, changePage, changeRowsPerPage} = usePagination(
         state => state.serviceRequests.nonUrgentPageData,
-        pageDataNonUrgentServiceRequests
+        setPageDataNonUrgentServiceRequests
     );
 
     useEffect(() => {

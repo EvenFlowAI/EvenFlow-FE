@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
     loadUrgentServiceRequests,
-    pageDataUrgentServiceRequests
+    setPageDataUrgentServiceRequests
 } from "../../../store/reducers/serviceRequests/actions";
 import {Table} from "../../../components/tables/Table/Table";
 import {
@@ -46,7 +46,7 @@ export const UrgentRequests = () => {
     const {onOpen, onClose, isOpen} = useModal();
     const {pageIndex, pageSize, changePage, changeRowsPerPage} = usePagination(
         state => state.serviceRequests.urgentPageData,
-        pageDataUrgentServiceRequests
+        setPageDataUrgentServiceRequests
     )
     const dispatch = useDispatch();
 
