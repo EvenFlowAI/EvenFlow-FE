@@ -1,11 +1,9 @@
-import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {ICreateUpdateRecall, IRecall} from "../../../../store/reducers/recall/types";
-import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button} from "@mui/material";
+import {ICreateUpdateRecall} from "../../../../store/reducers/recall/types";
+import {Autocomplete, Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import { Autocomplete } from '@mui/material';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {RootState} from "../../../../store/rootReducer";
 import {IMakeExtended, IModel} from "../../../../api/types";
@@ -13,19 +11,11 @@ import {IAssignedServiceRequest} from "../../../../store/reducers/serviceRequest
 import {loadMakesForPods} from "../../../../store/reducers/vehicleDetails/actions";
 import {createRecall, updateRecall} from "../../../../store/reducers/recall/actions";
 import {Textarea, useStyles} from "./styles";
-import {TForm} from "./types";
-import {getYearOptions} from "../../../../utils/utils";
+import {TAddRecallProps, TForm} from "./types";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {checkIsValid} from "./utils";
-import {initialForm} from "./constants";
-
-type TAddRecallProps = DialogProps & {
-    editingItem: IRecall|null;
-    setEditingItem: Dispatch<SetStateAction<IRecall|null>>;
-}
-
-const yearOptions = getYearOptions()
+import {initialForm, yearOptions} from "./constants";
 
 const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddRecallProps>>> = ({editingItem, open, onClose, setEditingItem}) => {
     const {makesModels} = useSelector((state: RootState) => state.vehicleDetails);
@@ -56,9 +46,9 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                 yearFrom: editingItem.yearRange?.from?.toString() ?? '',
                 yearTo: editingItem.yearRange?.to?.toString() ?? '',
                 recallComponent: editingItem.recallComponent,
+                partLeadDaysCount: editingItem.partLeadDaysCount?.toString() ?? '',
+                dailyPartsCount: editingItem.dailyPartsCount?.toString() ?? '',
                 recallSummary: editingItem.recallSummary,
-                partLeadDaysCount: editingItem.partLeadDaysCount.toString(),
-                dailyPartsCount: editingItem.dailyPartsCount.toString(),
                 serviceRequest: sr ?? null,
             }))
         }
@@ -218,7 +208,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     label="Recall Summary"
                     onChange={onSummaryChange}
                     value={form.recallSummary}
-                    rows={5}
+                    rows={3}
                 />
                 <Autocomplete
                     style={{ marginBottom: 10 }}
@@ -261,7 +251,9 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     <div className={classes.buttonsWrapper}>
                         <Button
                             onClick={onCancel}
-                            className={classes.cancelButton}>
+                            variant="text"
+                            className={classes.cancelButton}
+                            color="info">
                             Cancel
                         </Button>
                         <Button

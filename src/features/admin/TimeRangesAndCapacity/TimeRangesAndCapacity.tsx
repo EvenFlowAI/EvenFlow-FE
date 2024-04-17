@@ -53,31 +53,31 @@ const TimeRangesAndCapacity = () => {
 
     const RowData: TableRowDataType<ITimeRangeAndCapacity>[] = [
             {
-                header: 'Day Of Week'.toUpperCase(),
-                val: el => el.dayOfWeek?.toString().length ? dayjs().set('day', el.dayOfWeek).format('dddd') : '',
+                header: 'Day Of Week',
+                val: el => typeof el.dayOfWeek !== 'undefined' ? dayjs().set('day', el.dayOfWeek).format('dddd') : '',
             },
             {
-                header: 'Pick Up Min'.toUpperCase(),
+                header: 'Pick Up Min',
                 align: 'center',
                 val: el => el.pickUpMin,
             },
             {
-                header: 'Pick Up Max'.toUpperCase(),
+                header: 'Pick Up Max',
                 align: 'center',
                 val: el => el.pickUpMax,
             },
             {
-                header: 'Drop Off Min'.toUpperCase(),
+                header: 'Drop Off Min',
                 align: 'center',
                 val: el => el.dropOffMin,
             },
             {
-                header: 'Drop Off Max'.toUpperCase(),
+                header: 'Drop Off Max',
                 align: 'center',
                 val: el => el.dropOffMax,
             },
             {
-                header: 'Daily Capacity'.toUpperCase(),
+                header: 'Daily Capacity',
                 align: 'center',
                 val: el => el.capacity.toString(),
             },
@@ -91,7 +91,7 @@ const TimeRangesAndCapacity = () => {
     return <div>
         {isLoading
         ? <Loading/>
-        : <div style={{width: 'fit-content', overflowX: 'auto'}}>
+        : <div style={{overflowX: 'auto'}}>
             <Table<ITimeRangeAndCapacity>
                 data={tableData}
                 index={"dayOfWeek"}

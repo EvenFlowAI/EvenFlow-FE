@@ -3,7 +3,7 @@ import {IRecall} from "../../../../store/reducers/recall/types";
 import {Table} from "../../../../components/tables/Table/Table";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
-import {Button, IconButton, Menu, MenuItem} from "@mui/material";
+import {IconButton, Menu, MenuItem} from "@mui/material";
 import {MoreHoriz} from "@mui/icons-material";
 import {deleteRecall, loadRecalls, setRecallPageData} from "../../../../store/reducers/recall/actions";
 import {RecallSummary} from "../RecallSummary/RecallSummary";
@@ -45,8 +45,9 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
 
     const rowData: TableRowDataType<IRecall>[] = [
         {
-            header: "Recall Campaign Number",
-            val: el => el.recallCampaignNumber
+            header: "Campaign #",
+            val: el => el.recallCampaignNumber,
+            width: 150,
         },
         {
             header: "Make",
@@ -57,11 +58,11 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
             val: el => el.model?.name ?? ''
         },
         {
-            header: "Year From",
+            header: "From",
             val: el => el.yearRange?.from?.toString() ?? '',
         },
         {
-            header: "Year To",
+            header: "To",
             val: el => el.yearRange?.to?.toString() ?? '',
         },
         {
@@ -69,18 +70,17 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
             val: el => el.recallComponent
         },
         {
-            header: "Recall Summary",
-            val: el => <Button
-                variant="text"
-                color="info"
-                style={{textTransform: "none", textDecoration: "underline"}}
+            header: "Summary",
+            val: el => <div
+                style={{color: "#7898FF", cursor: 'pointer'}}
                 onClick={() => onSummaryClick(el)}>
-                See Recall Summary
-            </Button>
+                Recall Summary
+            </div>
         },
         {
-            header: "Ops Code Assignment",
+            header: "Ops Code",
             val: el => el.serviceRequest?.name ?? '',
+            width: 150,
         },
         {
             header: "Part Lead Time (days)",

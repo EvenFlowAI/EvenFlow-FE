@@ -33,7 +33,12 @@ export const calendarDateFormat = "ddd, MMM D";
 
 export const capacityManagementRoot: TTitle = {
     to: Routes.CapacityManagement.Base,
-    title: "Capacity Optimization"
+    title: "Capacity Management"
+}
+
+export const servicesRoot: TTitle = {
+    to: Routes.Services.Base,
+    title: "Services"
 }
 
 export const bookingFlowRoot: TTitle = {

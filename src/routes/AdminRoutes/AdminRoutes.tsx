@@ -16,10 +16,11 @@ import {useCurrentUser} from "../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../constants";
 import EmployeesRoutes from "../EmployeesRoutes/EmployeesRoutes";
 import {DealerOperations} from "../../pages/admin/DealerOperations/Dashboard";
+import ServicesRoutes from "../ServicesRoutes/ServicesRoutes";
 
 export const AdminRoutes = () => {
     const currentUser = useCurrentUser();
-    const currentRoleIsRestricted = !!currentUser && ["Call Center Rep", "Advisor"].includes(currentUser?.role);
+    const currentRoleIsRestricted = !!currentUser && ["Call Center Rep", "Advisor", "Technician"].includes(currentUser?.role);
 
     if (!currentUser) return null;
 
@@ -41,10 +42,10 @@ export const AdminRoutes = () => {
             {!currentUser.isSuperUser && !currentRoleIsRestricted
                 ? <PrivateRoute path={Routes.Dealer.Base} exact component={DealerOperations}/>
                 : null}
-            {!currentUser.isSuperUser
+            {!currentUser.isSuperUser && !currentRoleIsRestricted
                 ? <PrivateRoute path={Routes.Pricing.Base} component={PricingRoutes}/>
                 : null}
-            {!currentUser.isSuperUser
+            {!currentUser.isSuperUser && !currentRoleIsRestricted
                 ? <PrivateRoute path={Routes.BookingFlow.Base} component={BookingFlowSettingsRoutes}/>
                 : null}
             {!currentUser.isSuperUser && !currentRoleIsRestricted
@@ -52,6 +53,9 @@ export const AdminRoutes = () => {
                 : null}
             {!currentUser.isSuperUser && !currentRoleIsRestricted
                 ? <PrivateRoute path={Routes.CapacityManagement.Base} component={CapacityRoutes} />
+                : null}
+            {!currentUser.isSuperUser && !currentRoleIsRestricted
+                ? <PrivateRoute path={Routes.Services.Base} component={ServicesRoutes} />
                 : null}
             <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
             <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>

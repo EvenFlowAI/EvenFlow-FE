@@ -6,12 +6,24 @@ import { withStyles } from 'tss-react/mui';
 export const ValueSlider = withStyles(Slider, {
     track: {
         height: 2,
+        '&.Mui-disabled': {
+            backgroundColor: "#858585",
+            borderColor: "#858585"
+        },
+        backgroundColor: "#7898FF",
+        borderColor: "#7898FF"
     },
     root: {
         height: 4,
+        '&.Mui-disabled': {
+            '& > .MuiSlider-track': {
+                backgroundColor: "#858585",
+                borderColor: "#858585"
+            }
+        },
     },
     rail: {
-        height: 4
+        height: 4,
     },
     marked: {
         marginBottom: 0,

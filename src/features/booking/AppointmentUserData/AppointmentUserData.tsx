@@ -54,7 +54,7 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
             <TextField
                 onChange={handleChange}
                 value={customer?.phoneNumber}
-                disabled={userType === EUserType.Existing}
+                disabled={userType === EUserType.Existing && !!customerLoadedData?.phoneNumbers.length}
                 name="phoneNumber"
                 fullWidth
                 error={errors.includes('phonenumber')}

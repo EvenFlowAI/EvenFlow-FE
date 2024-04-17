@@ -28,49 +28,51 @@ import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {
-        header: "Service Ops Code",
-        val: el => el.code ?? el.serviceRequest.code, orderId: "code"
+        header: "Ops Code",
+        val: el => el.code ?? el.serviceRequest.code, orderId: "code",
+        width: 130
     },
     {
         header: "Description",
         val: el => <ServiceRequestCellData data={el.serviceRequest?.description} override={el.description}/>,
-        orderId: "description"
+        orderId: "description",
     },
     {
-        header: "Duration (hours)",
-        align: "center",
+        header: "Labor Hours",
         val: el => <ServiceRequestCellData
             override={el.durationInHours?.toFixed(1)}
             data={el.serviceRequest?.durationInHours?.toFixed(1)}
         />,
-        orderId: "duration"
+        orderId: "duration",
+        width: 100,
     },
     {
-        header: "Regular Invoice",
-        align: "center",
+        header: "Labor Amount",
         val: el => <ServiceRequestCellData
             prefix="$"
             override={el.invoiceAmount?.toFixed(2)}
             data={el.serviceRequest?.invoiceAmount?.toFixed(2)}
         />,
-        orderId: "invoiceAmount"
+        orderId: "invoiceAmount",
+        width: 100,
     },
     {
-        header: "Parts Unit Cost",
-        align: "center",
+        header: "Parts Price",
         val: el => <ServiceRequestCellData
             prefix="$"
             override={el.partsUnitCost?.toFixed(2)}
             data={el.serviceRequest?.partsUnitCost?.toFixed(2)}
         />,
+        width: 100,
     },
     {
-        header: "Number of Parts",
-        align: "center",
+        header: "Total Amount",
         val: el => <ServiceRequestCellData
+            prefix="$"
             override={el.numberOfParts?.toString()}
             data={el.serviceRequest?.numberOfParts?.toString()}
         />,
+        width: 100,
     }
 ]
 

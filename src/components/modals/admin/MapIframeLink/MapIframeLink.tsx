@@ -58,7 +58,7 @@ const MapIframeLink: React.FC<React.PropsWithChildren<React.PropsWithChildren<TM
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCancel}>
+                <Button onClick={onCancel} color="info">
                     Cancel
                 </Button>
                 <LoadingButton

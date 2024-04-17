@@ -20,7 +20,6 @@ export const useStyles = makeStyles()(() => ({
         paddingTop: 14,
     },
     cancelButton: {
-        color: '#9FA2B4',
         marginRight: 20,
         border: 'none',
         outline: 'none',

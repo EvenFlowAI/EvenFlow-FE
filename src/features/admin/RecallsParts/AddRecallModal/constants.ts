@@ -1,4 +1,5 @@
 import {TForm} from "./types";
+import {getYearOptions} from "../../../../utils/utils";
 
 export const initialForm: TForm = {
     recallCampaignNumber: '',
@@ -12,3 +13,4 @@ export const initialForm: TForm = {
     dailyPartsCount: '',
     serviceRequest: null,
 }
+export const yearOptions = getYearOptions()

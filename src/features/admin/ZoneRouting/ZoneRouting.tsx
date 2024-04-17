@@ -9,6 +9,7 @@ import {loadZonesRouting, updateZonesRouting} from "../../../store/reducers/capa
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {TableRowDataType} from "../../../types/types";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {CheckBox} from "@mui/icons-material";
 
 const dayNames = Object.keys(EDay).filter(key => Number.isNaN(+key));
 
@@ -47,17 +48,19 @@ const ZoneRouting = () => {
     const getRowData = (): TableRowDataType<IZonesRoutingByDay>[] => {
         const data: TableRowDataType<IZonesRoutingByDay>[] = [
             {
-                header: "DAY OF WEEK",
+                header: "Day Of Week",
                 width: 200,
                 val: el => dayNames[el.dayOfWeek].toString()
             }
         ]
         const zonesData: TableRowDataType<IZonesRoutingByDay>[] = zones.map(item => {
             return {
-                header: item.name.toUpperCase(),
+                header: item.name,
                 width: 100,
                 val: el => <Checkbox
                     color="primary"
+                    style={{padding: '0'}}
+                    checkedIcon={<CheckBox/>}
                     checked={Boolean(el.geographicZoneIds.find(zoneId => item.id === zoneId))}
                     onChange={onCheckboxChange(item.id, el.dayOfWeek)}
                 />
@@ -68,7 +71,7 @@ const ZoneRouting = () => {
     
     return isLoading || isZonesLoading
         ? <Loading/>
-        : <div style={{width: 'fit-content', overflowX: 'auto'}}>
+        : <div style={{overflowX: 'auto'}}>
             <Table<IZonesRoutingByDay>
                 data={initialZones}
                 index={"dayOfWeek"}

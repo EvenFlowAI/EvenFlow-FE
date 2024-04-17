@@ -1,5 +1,4 @@
 import {LinkType, LinkTypeWithSub} from "../../../types/types";
-
 import {Routes} from "../../../routes/constants";
 
 export const SULinks: LinkType[] = [
@@ -9,6 +8,7 @@ export const SULinks: LinkType[] = [
 
 export const MainLinksWithSub: LinkTypeWithSub[] = [
     {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Owner", "Service Director"]},
+    {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager", "Service Director"]},
     {
         to: Routes.Employees.Base,
         name: "Employees",
@@ -34,21 +34,48 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
             }
         ]
     },
-    {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager", "Service Director"]},
+    {
+        to: Routes.Services.Base,
+        name: "Services",
+        roles: ["Owner", "Manager", "Service Director"],
+        subLinks: [
+            {
+                to: Routes.Services.VehicleServices,
+                name: "Vehicle Services",
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
+            },
+            {
+                to: Routes.Services.ServiceValet,
+                name: "Service Valet",
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
+            },
+            {
+                to: Routes.Services.MobileService,
+                name: "Mobile Service",
+                exact: true,
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
+            },
+            {
+                to: Routes.Services.OtherTransportation,
+                name: "Other Transportation",
+                exact: true,
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
+            },
+        ],
+    },
     {
         to: Routes.CapacityManagement.Base,
         name: "Capacity Optimization",
         roles: ["Owner", "Manager", "Service Director"],
         subLinks: [
+            {to: Routes.CapacityManagement.Pods, name: "Service Books", sub: true, roles: ["Owner", "Manager", "Service Director"]},
             {
-                to: Routes.CapacityManagement.ServiceRequests,
-                name: "Service Requests",
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
-                to: Routes.CapacityManagement.AppointmentValue,
-                name: "Appointment Value Settings",
+                to: Routes.CapacityManagement.CapacitySettings,
+                name: "Capacity Settings",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
@@ -70,7 +97,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
-            {to: Routes.CapacityManagement.Pods, name: "Pods", sub: true, roles: ["Owner", "Manager", "Service Director"]},
             {
                 to: Routes.CapacityManagement.ManageEXEvenFlowAppointments,
                 name: "Manage Ex EvenFlow Appointments",
@@ -78,20 +104,14 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.CapacityManagement.CapacitySettings,
-                name: "Capacity Settings",
+                to: Routes.CapacityManagement.RequestDifferentiation,
+                name: "Request Differentiation",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.CapacityManagement.PartsAvailability,
-                name: "Parts Availability",
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
-                to: Routes.CapacityManagement.ServiceValet,
-                name: "Service Valet",
+                to: Routes.CapacityManagement.TimeDifferentiation,
+                name: "Time Differentiation",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
             },
@@ -102,20 +122,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
             {
                 to: Routes.Pricing.ServicePricingSettings,
                 name: "Service Price Settings",
-                exact: true,
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
-                to: Routes.Pricing.MobileService,
-                name: "Mobile Service",
-                exact: true,
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
-                to: Routes.Pricing.ServiceValet,
-                name: "Service Valet",
                 exact: true,
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
@@ -156,13 +162,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
             {
                 to: Routes.BookingFlow.ScreenSettings,
                 name: "Screen Settings",
-                exact: true,
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
-                to: Routes.BookingFlow.TransportationOptions,
-                name: "Transportation Options",
                 exact: true,
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]

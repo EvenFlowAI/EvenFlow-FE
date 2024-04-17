@@ -90,12 +90,12 @@ const AncillaryPrice = () => {
     const tabs: TTab[] = [
         {
             id: "0",
-            label: "Ancillary Price By Zone",
+            label: "Zone Fee Settings",
             component: <AncillaryPriceByZone onUpdate={onSaveZonePricing} data={pricingByZones} isLoading={isLoading}/>
         },
         {
             id: "1",
-            label: "Ancillary Price By Distance",
+            label: "Distance Fee Settings",
             component: <AncillaryPriceByDistance
                 data={pricingByDistance}
                 onItemSave={onSave}
@@ -133,8 +133,8 @@ const AncillaryPrice = () => {
             {isPricingByZoneLoading
                 ? <Loading/>
                 : <div className={classes.wrapper}>
-                    <div className={classes.optionsTitleWrapper}>Pricing Settings: </div>
-                    : <RadioGroup
+                    <div className={classes.optionsTitleWrapper}>Convenience Fees Based On: </div>
+                    <RadioGroup
                     row
                     aria-label="countType"
                     name="countType"
@@ -143,13 +143,13 @@ const AncillaryPrice = () => {
                     <FormControlLabel
                         value="byZone"
                         control={<Radio color="primary"/>}
-                        label="By Zone"
+                        label="Zone"
                         labelPlacement="end"
                     />
                     <FormControlLabel
                         value="byDistance"
                         control={<Radio color="primary"/>}
-                        label="By Distance"
+                        label="Distance"
                         labelPlacement="end"
                     />
                 </RadioGroup>
@@ -158,6 +158,7 @@ const AncillaryPrice = () => {
 
             <TabContext value={selectedTab}>
                 <TabList
+                    style={{margin: 0, padding: 0, width: '100%'}}
                     variant="scrollable"
                     scrollButtons="auto"
                     onChange={handleTabChange}
@@ -169,7 +170,7 @@ const AncillaryPrice = () => {
                 </TabList>
                 {tabs.map(t => {
                     return <TabPanel
-                        style={{width: "100%"}}
+                        style={{width: "100%", padding: '24px 0 0 0'}}
                         key={t.id}
                         value={t.id}>
                         {t.component}
