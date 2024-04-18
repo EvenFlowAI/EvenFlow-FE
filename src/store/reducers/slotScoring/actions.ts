@@ -27,17 +27,19 @@ export const loadProximity = (serviceCenterId?: number, podId?: number): AppThun
     dispatch(setLoading(false))
 }
 export const createProximity = (data: IProximity): AppThunk => async dispatch => {
+    dispatch(setLoading(true))
     await Api.call(
         Api.endpoints.SlotScoring.SetProximity,
         {data}
     );
     dispatch(loadProximity(data.serviceCenterId, data.podId));
+    dispatch(setLoading(false))
 }
 
 export const getDesirability = createAction<IDesirability[]>("SlotScoring/GetDesirability");
 export const loadDesirability = (serviceCenterId: number, dayOfWeek: EDesirabilityDays|null, podId?: number, errorCallback?: (err: {errorCode: number; message: string}) => void): AppThunk => async dispatch => {
     dispatch(setLoading(true))
-    let params =  dayOfWeek
+    let params =  dayOfWeek !== null
         ? {serviceCenterId, podId, dayOfWeek}
         : {serviceCenterId, podId};
     Api.call<IDesirability[]>(
@@ -79,11 +81,13 @@ export const saveDesirability = (
 
 export const getOptimizationSettings = createAction<IOptimizationSetting[]>("SlotScoring/GetOptimizationSettings");
 export const loadOptimizationSettings = (serviceCenterId:number, podId?:number): AppThunk => async dispatch => {
+    dispatch(setLoading(true))
     const {data} = await Api.call<IOptimizationSetting[]>(
         Api.endpoints.SlotScoring.GetOptimization,
         {params: {serviceCenterId, podId}}
     );
     dispatch(getOptimizationSettings(data));
+    dispatch(setLoading(false))
 }
 
 export const setOptimizationSettings = (data: IOptimizationSettingsCreateForm): AppThunk => async dispatch => {
@@ -92,13 +96,15 @@ export const setOptimizationSettings = (data: IOptimizationSettingsCreateForm): 
 }
 
 export const setSettingValues = (data: IOptimizationSettingValueForm, serviceCenterId:number, podId?: number): AppThunk => async dispatch => {
+    dispatch(setLoading(true))
     await Api.call(Api.endpoints.SlotScoring.SetValues, {data});
     dispatch(loadOptimizationSettings(serviceCenterId, podId));
+    dispatch(setLoading(false))
 }
 
 export const getRange = createAction<ISlotRange>("SlotScoring/GetRange");
 export const loadRange = (serviceCenterId: number, dayOfWeek: EDesirabilityDays|null, podId?: number): AppThunk => dispatch => {
-    const data = dayOfWeek ? {dayOfWeek, serviceCenterId, podId} : {serviceCenterId, podId}
+    const data = dayOfWeek !== null ? {dayOfWeek, serviceCenterId, podId} : {serviceCenterId, podId}
     Api.call(Api.endpoints.SlotScoring.GetRange, {params: data})
         .then(result => {
             if (result?.data) {
