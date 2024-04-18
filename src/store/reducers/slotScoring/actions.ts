@@ -66,7 +66,7 @@ export const saveDesirability = (
     const data: IDesirabilityForm = {
         podId, serviceCenterId, timeSlotType: type, items
     };
-    if (dayOfWeek) data.dayOfWeek = dayOfWeek
+    if (dayOfWeek !== null) data.dayOfWeek = dayOfWeek
    Api.call(Api.endpoints.SlotScoring.SetDesirability, {data})
        .then(() => {
            callback && callback()
