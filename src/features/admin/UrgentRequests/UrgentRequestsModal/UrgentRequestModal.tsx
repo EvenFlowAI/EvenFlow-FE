@@ -104,6 +104,7 @@ export const UrgentRequestModal: React.FC<React.PropsWithChildren<React.PropsWit
                 onChangePage={changePage}
                 onChangeRowsPerPage={changeRowsPerPage}
                 actions={actions}
+                hidePagination={numberOfRecords < 11}
                 count={numberOfRecords}
             />
         </DialogContent>
