@@ -40,7 +40,7 @@ export const CustomerLifetimeRules = () => {
                 <TableRow>
                     <TableCell>Medium Value</TableCell>
                     <TableCell>Medium Value</TableCell>
-                    <TableCell className="primary">{data ? `$${data.from} - $${data.to}` : '-'}</TableCell>
+                    <TableCell className="primary" width={230}>{data ? `$${data.from} - $${data.to}` : '-'}</TableCell>
                     <TableCell align="right">
                         <Button
                             onClick={onOpen}

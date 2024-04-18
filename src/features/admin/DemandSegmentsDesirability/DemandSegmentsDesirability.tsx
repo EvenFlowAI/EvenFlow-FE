@@ -11,7 +11,7 @@ import {
 import {StyledTable} from '../../../components/styled/StyledTable'
 import {EditDemandSegmentsModal} from '../TimeOfDayDesirability/EditDemandSegmentsModal/EditDemandSegmentsModal';
 import {useDispatch, useSelector} from "react-redux";
-import {loadOptimizationSettings, setSettingValues} from "../../../store/reducers/slotScoring/actions";
+import {loadOptimizationSettings, setLoading, setSettingValues} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
 import {
     EOptimizationSettingValueType,
@@ -33,12 +33,11 @@ import {Loading} from "../../../components/wrappers/Loading/Loading";
 export const DemandSegmentsDesirability = () => {
     const {onOpen, onClose, isOpen} = useModal();
     const [form, setForm] = useState<TForm[]>(initialForm);
-    const [saving, setSaving] = useState<boolean>(false);
     const [edit, setEdit] = useState<boolean>(false);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
-    const optSettings = useSelector((state: RootState) => state.slotScoring.optimizationSettings);
+    const {optimizationSettings: optSettings, isLoading} = useSelector((state: RootState) => state.slotScoring);
     const showError = useException();
     const showMessage = useMessage();
     const { classes  } = useStyles();
@@ -50,24 +49,28 @@ export const DemandSegmentsDesirability = () => {
     }, [dispatch, selectedSC, selectedPod]);
 
     useEffect(() => {
-        const nForm: TForm[] = [];
-        for (let i = 0; i < 3; i++) {
-            const row = optSettings[i];
-            const r1 = row?.values.find(v => v.type === EOptimizationSettingValueType.LessThanW3);
-            const r2 = row?.values.find(v => v.type === EOptimizationSettingValueType.GreaterOrEqualW3);
-            nForm.push({
-                undesirable: r1?.undesirablePoint || 0,
-                desirable: r1?.desirablePoint || 0,
-                id: r1?.optimizationSettingsId || row?.id || 0
-            });
-            nForm.push({
-                undesirable: r2?.undesirablePoint || 0,
-                desirable: r2?.desirablePoint || 0,
-                id: r2?.optimizationSettingsId || row?.id || 0
-            });
+        if (optSettings.length) {
+            dispatch(setLoading(true))
+            const nForm: TForm[] = [];
+            for (let i = 0; i < 3; i++) {
+                const row = optSettings[i];
+                const r1 = row?.values.find(v => v.type === EOptimizationSettingValueType.LessThanW3);
+                const r2 = row?.values.find(v => v.type === EOptimizationSettingValueType.GreaterOrEqualW3);
+                nForm.push({
+                    undesirable: r1?.undesirablePoint || 0,
+                    desirable: r1?.desirablePoint || 0,
+                    id: r1?.optimizationSettingsId || row?.id || 0
+                });
+                nForm.push({
+                    undesirable: r2?.undesirablePoint || 0,
+                    desirable: r2?.desirablePoint || 0,
+                    id: r2?.optimizationSettingsId || row?.id || 0
+                });
+            }
+            setForm(nForm);
+            dispatch(setLoading(false))
         }
-        setForm(nForm);
-    }, [optSettings, edit]);
+    }, [optSettings]);
 
     const handleOpen = () => {
         onOpen();
@@ -85,7 +88,7 @@ export const DemandSegmentsDesirability = () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
-            setSaving(true);
+            dispatch(setLoading(true))
             try {
                 const items: IOptimizationSettingValue[] = [];
                 for (let i = 0; i < 3; i++) {
@@ -107,17 +110,16 @@ export const DemandSegmentsDesirability = () => {
                 const data: IOptimizationSettingValueForm = {items};
                 await dispatch(setSettingValues(data, selectedSC.id, selectedPod?.id));
                 setEdit(false);
-                setSaving(false);
                 showMessage("Saved");
             } catch (e) {
-                setSaving(false);
+                dispatch(setLoading(false));
                 showError(e);
             }
         }
     }
 
     return <Paper variant="outlined" style={{borderRadius: 0, overflowX: "auto"}}>
-        {saving
+        {isLoading
             ? <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}><Loading/></div>
             : <StyledTable className={classes.table}>
                 <TableHead>
@@ -128,7 +130,7 @@ export const DemandSegmentsDesirability = () => {
                                 className={classes.edit}
                                 onClick={handleOpen}
                                 color="primary"
-                                disabled={!optSettings.length}>
+                                disabled={!optSettings.length || isLoading}>
                                 Edit
                             </Button>
                         </TableCell>
@@ -140,7 +142,7 @@ export const DemandSegmentsDesirability = () => {
                             className={classes.buttonCell} align="left">
                             Optimization Settings
                             {edit
-                                ? saving ?
+                                ? isLoading ?
                                     <div className={classes.editWrapper}><CircularProgress /></div>
                                     : <div className={classes.editWrapper}>
                                         <Button color="secondary"

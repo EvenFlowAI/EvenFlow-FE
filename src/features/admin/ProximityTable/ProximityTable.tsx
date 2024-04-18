@@ -12,7 +12,7 @@ import {
     useTheme
 } from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {createProximity, loadProximity} from "../../../store/reducers/slotScoring/actions";
+import {createProximity, loadProximity, setLoading} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
 import {EProximityType, IProximity} from "../../../store/reducers/slotScoring/types";
 import {SOMETHING_WRONG} from "../../../utils/constants";
@@ -30,11 +30,10 @@ import {Loading} from "../../../components/wrappers/Loading/Loading";
 export const ProximityTable = () => {
     const {proximity, isLoading} = useSelector((state: RootState) => state.slotScoring);
     const [edit, setEdit] = useState<EProximityType|null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>(initialForm);
-
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
+
     const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();
@@ -79,7 +78,6 @@ export const ProximityTable = () => {
         if (edit === null) {
             showError(SOMETHING_WRONG);
         } else {
-            setLoading(true);
             const data: IProximity = {
                 point: form[edit].point,
                 serviceCenterId: selectedSC?.id,
@@ -88,11 +86,10 @@ export const ProximityTable = () => {
             };
             try {
                 await dispatch(createProximity(data));
-                setLoading(false);
                 setEdit(null);
                 showMessage("Saved")
             } catch (e) {
-                setLoading(false);
+                dispatch(setLoading(false));
                 handleCancel();
                 showError(e);
             }
@@ -100,7 +97,7 @@ export const ProximityTable = () => {
     }
 
     const editButton = (t: EProximityType) => {
-        return loading
+        return isLoading
             ? <CircularProgress color="primary"/>
             : edit === t
                 ? <>
@@ -120,7 +117,7 @@ export const ProximityTable = () => {
     }
 
     return <div>
-        {loading || isLoading
+        {isLoading
             ? <Loading/>
             : <StyledTable>
                 <TableHead>
