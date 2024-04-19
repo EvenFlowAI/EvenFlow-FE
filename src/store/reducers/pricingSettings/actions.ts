@@ -11,7 +11,7 @@ import {
     ITimeOfYearSetting,
     ITimeWindowEl, TNewRequestsToPricing, TNewPackagesToPricing, EPricingDisplayType
 } from "./types";
-import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, PaginatedAPIResponse, TArgCallback} from "../../../types/types";
 import {IAssignedServiceRequest} from "../serviceRequests/types";
 import {IPackageOptionShort, IPackageShort} from "../packages/types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
@@ -239,12 +239,15 @@ export const loadRoundPriceSetting = (id: number): AppThunk => dispatch => {
         .finally(() => dispatch(setRoundPriceLoading(false)))
 }
 
-export const changeRoundPriceSetting = (id: number, isRoundPrice: boolean): AppThunk => dispatch => {
+export const changeRoundPriceSetting = (id: number, isRoundPrice: boolean, onError: TArgCallback<any>): AppThunk => dispatch => {
+    dispatch(setRoundPriceLoading(true))
     Api.call(Api.endpoints.ServiceCenters.ChangeRoundPrice, {urlParams: {id}, data: {isRoundPrice}})
         .then(result => {
             if (result) dispatch(loadRoundPriceSetting(id))
         })
         .catch(err => {
+            onError(err)
+            dispatch(setRoundPriceLoading(false))
             console.log('change round price setting error', err)
         })
 }

@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 import {Button, Grid, Paper} from "@mui/material";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
-import {useCenterSettingsStyles} from "../../../../hooks/styling/useCenterSettingsStyles";
+import {useZonePlateStyles} from "../../../../hooks/styling/useZonePlateStyles";
 import {useStyles} from "./styles";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -14,7 +14,7 @@ type TProps = {
 export const ZonesOpsCodesPlate: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onEdit, isLoading}) => {
     const {centerSettings} = useSelector((state: RootState) => state.capacityServiceValet);
     const {zones} = useSelector((state: RootState) => state.serviceValet);
-    const { classes: centerSettingsClasses } = useCenterSettingsStyles();
+    const { classes: centerSettingsClasses } = useZonePlateStyles();
     const { classes  } = useStyles();
 
     const zonesData = useMemo(() => {
