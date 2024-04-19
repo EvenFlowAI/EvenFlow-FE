@@ -76,6 +76,7 @@ export const UrgentRequests = () => {
             try {
                 await Api.call(Api.endpoints.ServiceRequests.Prioritize, {data});
                 showMessage("Ops Code removed");
+                dispatch(setPageDataUrgentServiceRequests({pageSize, pageIndex: 0}))
                 dispatch(loadUrgentServiceRequests(selectedSC.id, selectedPod?.id));
             } catch (e) {
                 showError(e);
