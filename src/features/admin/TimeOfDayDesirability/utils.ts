@@ -58,7 +58,7 @@ export const generateSlots = (gap: ETimeSlotType,
             slots.push({
                 idx,
                 id: idxMod === 1 ? mappedItems[idxToLook]?.id : undefined,
-                desirability: mappedItems[idxToLook]
+                desirability: mappedItems[idxToLook]?.desirability
                     ? items[idxToLook].desirability : EDesirabilityState.Neutral,
                 start: items[idx]?.start && !createNewSlots ? dayjs.utc(items[idx].start, 'HH:mm:ss') : dayjs.utc(st),
                 end: items[idx]?.end && !createNewSlots ? dayjs.utc(items[idx].end, 'HH:mm:ss') : dayjs.utc(nd)
