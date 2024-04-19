@@ -3,7 +3,6 @@ import {ContentContainer} from "../../components/wrappers/ContentContainer/Conte
 import {Switch, Redirect} from "react-router-dom";
 import {PrivateRoute} from "../PrivateRoute/PrivateRoute";
 import {CapacitySettings} from "../../pages/admin/CapacitySettings/CapacitySettings";
-import {AppointmentSlotScoring} from "../../pages/admin/AppointmentSlotScoring/AppointmentSlotScoring";
 import { OptimizationWindowsPage } from "../../pages/admin/OptimizationWindows/OptimizationWindowsPage";
 import {AppointmentAllocation} from "../../pages/admin/AppointmentAllocation/AppointmentAllocation";
 import ManageExEFAppointments from "../../features/admin/ManageExEFAppointments/ManageExEFAppointments";
@@ -16,7 +15,6 @@ export const CapacityRoutes = () => {
     return <ContentContainer>
         <Switch>
             <PrivateRoute path={Routes.CapacityManagement.CapacitySettings} component={CapacitySettings} />
-            <PrivateRoute path={Routes.CapacityManagement.AppointmentSlotScoring} component={AppointmentSlotScoring} />
             <PrivateRoute path={Routes.CapacityManagement.AppointmentAllocation} component={AppointmentAllocation} />
             <PrivateRoute path={Routes.CapacityManagement.OptimizationWindows} component={OptimizationWindowsPage} />
             <PrivateRoute path={Routes.CapacityManagement.Pods} component={Pods} />

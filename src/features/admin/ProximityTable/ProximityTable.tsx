@@ -12,7 +12,7 @@ import {
     useTheme
 } from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {createProximity, loadProximity} from "../../../store/reducers/slotScoring/actions";
+import {createProximity, loadProximity, setLoading} from "../../../store/reducers/slotScoring/actions";
 import {RootState} from "../../../store/rootReducer";
 import {EProximityType, IProximity} from "../../../store/reducers/slotScoring/types";
 import {SOMETHING_WRONG} from "../../../utils/constants";
@@ -25,15 +25,15 @@ import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 import {SliderCell, TableBodyCell} from "./styles";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 
 export const ProximityTable = () => {
-    const {proximity} = useSelector((state: RootState) => state.slotScoring);
+    const {proximity, isLoading} = useSelector((state: RootState) => state.slotScoring);
     const [edit, setEdit] = useState<EProximityType|null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
     const [form, setForm] = useState<TForm>(initialForm);
-
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
+
     const dispatch = useDispatch();
     const showMessage = useMessage();
     const showError = useException();
@@ -78,7 +78,6 @@ export const ProximityTable = () => {
         if (edit === null) {
             showError(SOMETHING_WRONG);
         } else {
-            setLoading(true);
             const data: IProximity = {
                 point: form[edit].point,
                 serviceCenterId: selectedSC?.id,
@@ -87,11 +86,10 @@ export const ProximityTable = () => {
             };
             try {
                 await dispatch(createProximity(data));
-                setLoading(false);
                 setEdit(null);
                 showMessage("Saved")
             } catch (e) {
-                setLoading(false);
+                dispatch(setLoading(false));
                 handleCancel();
                 showError(e);
             }
@@ -99,7 +97,7 @@ export const ProximityTable = () => {
     }
 
     const editButton = (t: EProximityType) => {
-        return loading
+        return isLoading
             ? <CircularProgress color="primary"/>
             : edit === t
                 ? <>
@@ -119,41 +117,44 @@ export const ProximityTable = () => {
     }
 
     return <div>
-        <StyledTable>
-            <TableHead>
-                <TableRow>
-                    {!isXS ? <TableCell width={300}>Proximity Search</TableCell> : null}
-                    <TableCell>Optimization setting</TableCell>
-                    <TableCell />
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {rows.map(row =>
-                    <TableRow key={row.id}>
-                        {!isXS ? <TableBodyCell>{row.label}</TableBodyCell> : null}
-                        <SliderCell>
-                            {isXS ? <span>{row.label}</span> : null}
-                            <Box p={isXS ? 1 : 0}>
-                                <ValueSlider
-                                    min={SliderRange.Min}
-                                    max={SliderRange.Max}
-                                    onChange={handleSlide}
-                                    disabled={edit !== row.id}
-                                    marks={[
-                                        {value: SliderRange.Min, label: SliderRange.Min},
-                                        {value: SliderRange.Max, label: SliderRange.Max}
-                                    ]}
-                                    value={form[row.id].point}
-                                    valueLabelDisplay="on"
-                                />
-                            </Box>
-                        </SliderCell>
-                        <TableCell align="right" width={160} style={{padding: 12}}>
-                            {editButton(row.id)}
-                        </TableCell>
+        {isLoading
+            ? <Loading/>
+            : <StyledTable>
+                <TableHead>
+                    <TableRow>
+                        {!isXS ? <TableCell width={300}>Proximity Search</TableCell> : null}
+                        <TableCell>Optimization setting</TableCell>
+                        <TableCell />
                     </TableRow>
-                )}
-            </TableBody>
-        </StyledTable>
+                </TableHead>
+                <TableBody>
+                    {rows.map(row =>
+                        <TableRow key={row.id}>
+                            {!isXS ? <TableBodyCell>{row.label}</TableBodyCell> : null}
+                            <SliderCell>
+                                {isXS ? <span>{row.label}</span> : null}
+                                <Box p={isXS ? 1 : 0}>
+                                    <ValueSlider
+                                        min={SliderRange.Min}
+                                        max={SliderRange.Max}
+                                        onChange={handleSlide}
+                                        disabled={edit !== row.id}
+                                        marks={[
+                                            {value: SliderRange.Min, label: SliderRange.Min},
+                                            {value: SliderRange.Max, label: SliderRange.Max}
+                                        ]}
+                                        value={form[row.id].point}
+                                        valueLabelDisplay="on"
+                                    />
+                                </Box>
+                            </SliderCell>
+                            <TableCell align="right" width={160} style={{padding: 12}}>
+                                {editButton(row.id)}
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </StyledTable>
+        }
     </div>
 }

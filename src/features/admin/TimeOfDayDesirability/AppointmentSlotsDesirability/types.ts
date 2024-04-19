@@ -10,3 +10,13 @@ export type TGap = {
     label: string;
     type: ETimeSlotType;
 }
+
+export enum EDesirabilityDays {
+    Sunday,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
+}

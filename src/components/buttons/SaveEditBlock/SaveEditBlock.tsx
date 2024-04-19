@@ -8,12 +8,21 @@ type TSaveEditProps = {
     isEdit: boolean;
     isSaving: boolean;
     isLowerCase?:boolean;
+    disabled?: boolean;
 }
 
-export const SaveEditBlock: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSaveEditProps>>> = ({isEdit, isSaving, onEdit, onCancel, onSave, isLowerCase}) => {
+export const SaveEditBlock: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSaveEditProps>>> = ({
+                                                                                                              isEdit,
+                                                                                                              isSaving,
+                                                                                                              onEdit,
+                                                                                                              onCancel,
+                                                                                                              onSave,
+                                                                                                              isLowerCase,
+                                                                                                              disabled}) => {
     if (!isEdit) {
         return <Button
             onClick={onEdit}
+            disabled={disabled}
             color='primary'
             style={{textTransform: isLowerCase ? "none" : "uppercase"}}
         >

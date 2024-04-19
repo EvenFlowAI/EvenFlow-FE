@@ -58,6 +58,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
 
     const [form, setForm] = useState<TForm>(initialForm);
     const [loading, setLoading] = useState<boolean>();
+    const [formIsChecked, setFormIsChecked] = useState<boolean>();
     const [selectedMakes, setSelectedMakes] = useState<IMakeExtended[]>([]);
     const [modelsOptions, setModelsOptions] = useState<IModel[]>([]);
     const [selectedModels, setSelectedModels] = useState<IModel[]>([]);
@@ -166,72 +167,97 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
     }, [selectedSC, dispatch, props.open]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormIsChecked(false);
         setForm({...form, [e.target.name]: e.target.value});
     }
     const handleSelectAdv = (e: React.ChangeEvent<{}>, val: IAdvisorShort[]) => {
+        setFormIsChecked(false);
         setForm({...form, advisors: val});
     }
     const handleTechniciansChange = (e: any, val: IAdvisorShort[]) => {
+        setFormIsChecked(false);
         setForm({...form, technicians: val});
     }
     const handleSCChange = (e: any, val: IAssignedServiceRequestShort[]) => {
+        setFormIsChecked(false);
         setForm({...form, serviceRequests: val});
     }
     const handleZoneChange = (e: any, val: TZone[]) => {
+        setFormIsChecked(false);
         setMobileZones(val);
     }
 
     const handleEngineTypesChange = (e: any, val: IEngineType[]) => {
+        setFormIsChecked(false);
         setSelectedEngineTypes(val);
     }
 
     const handleServiceValetZoneChange = (e: any, val: TZone[]) => {
+        setFormIsChecked(false);
         setSelectedServiceValetZones(val);
     }
 
     const handleBaysChange = (e: any, val: IBayShort[]) => {
+        setFormIsChecked(false);
         setForm({...form, bays: val});
     }
 
     const handleTransportationsChange = (e: any, val: ITransportationOptionFull[]) => {
+        setFormIsChecked(false);
         setTransportationOptions(val);
+    }
+
+    const checkIsValid = (): boolean => {
+        setFormIsChecked(true);
+        let isValid = true;
+        if (!form.name.length) {
+            isValid = false;
+            showError('"Name" must not be empty')
+        }
+        if (!form.technicians.length) {
+            isValid = false;
+            showError('"Technicians" must not be empty')
+        }
+        return isValid;
     }
 
     const handleSave = async () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
-            setLoading(true);
-            try {
-                const data: IPodForm = {
-                    advisors: form.advisors.map(el => el.id),
-                    bays: form.bays.map(item => item.id),
-                    description: form.description,
-                    name: form.name,
-                    serviceCenterId: selectedSC.id,
-                    serviceRequests: form.serviceRequests.map(sr => sr.id),
-                    technicians: form.technicians.map(t => t.id),
-                    vehicleMakes: selectedMakes.map(item => item.id),
-                    vehicleModels: selectedModels.map(item => item.id),
-                    mobileZones: mobileZones.map(zone => zone.id),
-                    serviceValetZones: selectedServiceValetZones.map(zone => zone.id),
-                    engineTypes: selectedEngineTypes.map(type => type.id),
-                    isVisitCenter: form.isVisitCenter,
-                };
-                if (jobType) data.jobType = jobType.value;
-                if (appointmentType) data.appointmentType = appointmentType.value;
-                if (transportationOptions?.length) data.transportationOptionIds = transportationOptions.map(el => el.id);
-                if (editingItemId && podById) {
-                    await dispatch(updatePod(data, podById.id));
-                } else {
-                    await dispatch(createPod(data));
+            if (checkIsValid()) {
+                setLoading(true);
+                try {
+                    const data: IPodForm = {
+                        advisors: form.advisors.map(el => el.id),
+                        bays: form.bays.map(item => item.id),
+                        description: form.description,
+                        name: form.name,
+                        serviceCenterId: selectedSC.id,
+                        serviceRequests: form.serviceRequests.map(sr => sr.id),
+                        technicians: form.technicians.map(t => t.id),
+                        vehicleMakes: selectedMakes.map(item => item.id),
+                        vehicleModels: selectedModels.map(item => item.id),
+                        mobileZones: mobileZones.map(zone => zone.id),
+                        serviceValetZones: selectedServiceValetZones.map(zone => zone.id),
+                        engineTypes: selectedEngineTypes.map(type => type.id),
+                        isVisitCenter: form.isVisitCenter,
+                    };
+                    if (jobType) data.jobType = jobType.value;
+                    if (appointmentType) data.appointmentType = appointmentType.value;
+                    if (transportationOptions?.length) data.transportationOptionIds = transportationOptions.map(el => el.id);
+                    if (editingItemId && podById) {
+                        await dispatch(updatePod(data, podById.id));
+                    } else {
+                        await dispatch(createPod(data));
+                    }
+                    setLoading(false);
+                    showMessage(`Service Book ${podById ? "updated" : "created"}`);
+                    props.onClose();
+                } catch (e) {
+                    setLoading(false);
+                    showError(e);
                 }
-                setLoading(false);
-                showMessage(`Service Book ${podById ? "updated" : "created"}`);
-                props.onClose();
-            } catch (e) {
-                setLoading(false);
-                showError(e);
             }
         }
     }
@@ -271,6 +297,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
     }
 
     const onCancel = () => {
+        setFormIsChecked(false);
         dispatch(setPodById(null))
         props.onClose()
     }
@@ -293,6 +320,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                             autoComplete="pod-name pod"
                             onChange={handleChange}
                             value={form.name}
+                            error={!form.name.length && formIsChecked}
                             disabled={podsLoading || loading}
                         />
                     </Grid>
@@ -492,7 +520,12 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                             renderOption={autocompleteOptionsRender((e) => e.fullName)}
                             loading={false}
                             value={form.technicians}
-                            renderInput={autocompleteRender({label: "Technicians", fullWidth: true, placeholder: "Select Technicians"})}
+                            renderInput={autocompleteRender({
+                                label: "Technicians",
+                                fullWidth: true,
+                                placeholder: "Select Technicians",
+                                error: !form.technicians.length && formIsChecked
+                            })}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={6}>

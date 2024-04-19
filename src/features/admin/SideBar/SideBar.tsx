@@ -95,7 +95,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     endIcon={<ArrowForwardIos/>}
                     className={classes.link}
                     onClick={onOpen}>
-                    Booking UI
+                    Open Scheduler
                 </Button>
                 : null}
             <BookingModal open={isOpen} onClose={onModalClose} />

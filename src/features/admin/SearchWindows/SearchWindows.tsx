@@ -49,7 +49,7 @@ const SearchWindows = () => {
                 <OptimizationWindowCard
                     onEdit={onFirstOpen}
                     title={windowsContent[EOptimizationWindowType.FirstAvailable].title}
-                    count={firstAvailable?.value ?? ''}
+                    count={firstAvailable ? firstAvailable.value : ''}
                     label={windowsContent[EOptimizationWindowType.FirstAvailable].label}
                     prefix={windowsContent[EOptimizationWindowType.FirstAvailable].prefix}
                     suffix={windowsContent[EOptimizationWindowType.FirstAvailable].suffix}
@@ -60,7 +60,7 @@ const SearchWindows = () => {
                 <OptimizationWindowCard
                     onEdit={onSpecificOpen}
                     title={windowsContent[EOptimizationWindowType.SpecificDate].title}
-                    count={specificDate?.value ?? ''}
+                    count={specificDate ? specificDate.value : ''}
                     label={windowsContent[EOptimizationWindowType.SpecificDate].label}
                     prefix={windowsContent[EOptimizationWindowType.SpecificDate].prefix}
                     suffix={windowsContent[EOptimizationWindowType.SpecificDate].suffix}

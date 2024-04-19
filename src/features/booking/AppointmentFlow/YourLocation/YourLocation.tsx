@@ -117,7 +117,7 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
             dispatch(setAddress(customerLoadedData?.address?.fullAddress  ?? customerLoadedData?.address?.originalFullAddress ?? null))
         }
         if (customerLoadedData?.address?.zipCode && !zipCodeValue) {
-            dispatch(setZipCode(customerLoadedData?.address?.zipCode))
+            dispatch(setZipCode(customerLoadedData?.address?.zipCode ? customerLoadedData?.address?.zipCode.slice(0, 5) : ''))
         }
     }, [customerLoadedData, address, zipCodeValue])
 

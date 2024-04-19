@@ -143,7 +143,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
            : customerData?.address ?? null;
         data.address = addressData
         if (addressData?.fullAddress) await dispatch(setAddress(addressData.fullAddress));
-        if (addressData?.zipCode) await dispatch(setZipCode(addressData.zipCode));
+        if (addressData?.zipCode) await dispatch(setZipCode(addressData.zipCode.slice(0, 5)));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(vehicle));
@@ -286,7 +286,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
         }
         if (customer?.address) data.address = customer.address;
         if (customer?.address?.fullAddress) await dispatch(setAddress(customer.address.fullAddress));
-        if (customer?.address?.zipCode) await dispatch(setZipCode(customer.address.zipCode));
+        if (customer?.address?.zipCode) await dispatch(setZipCode(customer.address.zipCode.slice(0, 5)));
         await dispatch(setCustomerLoadedData(data));
         await setUserType(EUserType.Existing);
         await dispatch(setVehicle(getBlankVehicle()))

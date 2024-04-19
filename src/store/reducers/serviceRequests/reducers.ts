@@ -22,11 +22,11 @@ import {
     getUrgentServiceRequests,
     loadingUrgentServiceRequests,
     pagingUrgentServiceRequests,
-    pageDataUrgentServiceRequests,
+    setPageDataUrgentServiceRequests,
     getNonUrgentServiceRequests,
     loadingNonUrgentServiceRequests,
     pagingNonUrgentServiceRequests,
-    pageDataNonUrgentServiceRequests,
+    setPageDataNonUrgentServiceRequests,
     getSCRequestsShort,
     setAssignedOrdering,
     setNonSelectedOrder,
@@ -150,8 +150,8 @@ export const serviceRequestsReducer = createReducer(
         .addCase(pagingUrgentServiceRequests, (state, {payload}) => {
             return {...state, urgentPaging: payload};
         })
-        .addCase(pageDataUrgentServiceRequests, (state, {payload}) => {
-            return {...state, urgentPageData: {...state.urgentPageData, payload}};
+        .addCase(setPageDataUrgentServiceRequests, (state, {payload}) => {
+            return {...state, urgentPageData: {...state.urgentPageData, ...payload}};
         })
         .addCase(getNonUrgentServiceRequests, (state, {payload}) => {
             return {...state, nonUrgentList: payload};
@@ -162,8 +162,8 @@ export const serviceRequestsReducer = createReducer(
         .addCase(pagingNonUrgentServiceRequests, (state, {payload}) => {
             return {...state, nonUrgentPaging: payload};
         })
-        .addCase(pageDataNonUrgentServiceRequests, (state, {payload}) => {
-            return {...state, nonUrgentPageData: {...state.urgentPageData, payload}};
+        .addCase(setPageDataNonUrgentServiceRequests, (state, {payload}) => {
+            return {...state, nonUrgentPageData: {...state.nonUrgentPageData, ...payload}};
         })
         .addCase(getSCRequestsShort, (state, {payload}) => {
             return {...state, scRequestsShort: payload};
