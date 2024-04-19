@@ -53,13 +53,15 @@ export const AppointmentSlotsDesirability = () => {
     }, [selectedSC])
 
     useEffect(() => {
-        const t = desirabilityItems[0]
-            ? desirabilityItems[0].timeSlotType
-            : ETimeSlotType.ThirtyMinutes;
-        setForm({
-            timeSlotType: t,
-            items: generateSlots(t, desirabilityItems, desirabilityItems[0]?.timeSlotType, slotRange?.start, slotRange?.end)
-        });
+        if (desirabilityItems.length) {
+            const t = desirabilityItems[0]
+                ? desirabilityItems[0].timeSlotType
+                : ETimeSlotType.ThirtyMinutes;
+            setForm({
+                timeSlotType: t,
+                items: generateSlots(t, desirabilityItems, desirabilityItems[0]?.timeSlotType, slotRange?.start, slotRange?.end)
+            });
+        }
         setTimeout(() => dispatch(setLoading(false)), 100)
     }, [desirabilityItems, slotRange]);
 
