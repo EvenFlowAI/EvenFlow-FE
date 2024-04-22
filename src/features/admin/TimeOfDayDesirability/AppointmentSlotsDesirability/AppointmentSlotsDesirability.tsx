@@ -124,7 +124,7 @@ export const AppointmentSlotsDesirability = () => {
                             start: dayjs(i.start).format('HH:mm:ss'),
                             end: dayjs(i.end).format('HH:mm:ss')
                         }
-                        )),
+                    )),
                     form.timeSlotType,
                     selectedSC.id,
                     dayOfWeek.value !== allDaysOption.value ? dayOfWeek.value : null,
@@ -140,51 +140,53 @@ export const AppointmentSlotsDesirability = () => {
     }
 
     const onDayOfWeekChange = (e: ChangeEvent<{}>, value: TOption) => {
-         setDayOfWeek(value)
+        setDayOfWeek(value)
     }
 
     return <Paper className={classes.paper} variant="outlined">
-        <h2 className={classes.title}>
-            Please indicate the desirability of appointment slots
-        </h2>
-        <div className={classes.controlButtons}>
-            {isEdit
-                ? saving ? <CircularProgress color="primary" className={classes.progress} />
-                : <>
-                    <Button
-                        className={classes.editButton}
-                        color="secondary"
-                        onClick={handleEditCancel}>
-                        Cancel
-                    </Button>
-                    <Button
-                        className={classes.editButton}
+        <div className={classes.upLineWrapper}>
+            <Autocomplete
+                options={dayOfWeekOptions}
+                style={{ marginBottom: 20, width: 250 }}
+                getOptionLabel={option => option.name}
+                isOptionEqualToValue={(o, v) => o.value === v.value}
+                value={dayOfWeek}
+                disableClearable
+                onChange={onDayOfWeekChange}
+                renderInput={autocompleteRender({
+                    label: 'Day Of Week',
+                    placeholder: 'Select',
+                })}
+            />
+            <h2 className={classes.title}>
+                Please indicate the desirability of appointment slots
+            </h2>
+            <div className={classes.controlButtons}>
+                {isEdit
+                    ? saving ? <CircularProgress color="primary" className={classes.progress} />
+                        : <>
+                            <Button
+                                className={classes.editButton}
+                                color="secondary"
+                                onClick={handleEditCancel}>
+                                Cancel
+                            </Button>
+                            <Button
+                                className={classes.editButton}
+                                color="primary"
+                                onClick={handleSave}>
+                                Save
+                            </Button>
+                        </>
+                    : <Button
                         color="primary"
-                        onClick={handleSave}>
-                        Save
+                        className={classes.editButton}
+                        onClick={() => setEdit(true)}>
+                        EDIT
                     </Button>
-                </>
-                : <Button
-                    color="primary"
-                    className={classes.editButton}
-                    onClick={() => setEdit(true)}>
-                    EDIT
-                </Button>
-            }
+                }
+            </div>
         </div>
-        <Autocomplete
-            options={dayOfWeekOptions}
-            style={{ marginBottom: 20, width: 250 }}
-            getOptionLabel={option => option.name}
-            isOptionEqualToValue={(o, v) => o.value === v.value}
-            value={dayOfWeek}
-            disableClearable
-            onChange={onDayOfWeekChange}
-            renderInput={autocompleteRender({
-                label: 'Day Of Week',
-                placeholder: 'Select',
-            })}
-        />
         {isLoading || saving
             ? <Loading/>
             : slots1.length ? <Grid className={classes.gridContainer} container spacing={2} alignItems="stretch">
