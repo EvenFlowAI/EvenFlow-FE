@@ -29,6 +29,7 @@ import ColumnsSelectionModal
 export const Appointments = () => {
     const { isLoading } = useSelector((state: RootState) => state.appointments);
     const [viewItem, setViewItem] = useState<IAppointment|undefined>(undefined);
+    const {serviceAdvisors, technicians} = useSelector((state: RootState) => state.appointments);
     const [filters, setFilters] = useState<TFilters>(initialFilters)
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(true);
     const [selectedView, setSelectedView] = useState<TView>("list");
@@ -41,7 +42,7 @@ export const Appointments = () => {
     const dispatch = useDispatch();
 
     const getAppointments = useCallback(() => {
-        if (filters.scId && selectedView === 'list') {
+        if (filters.scId && selectedView === 'list' && serviceAdvisors.length && technicians.length) {
             const serviceBookId = filters.serviceBook?.id ??  null;
             const isServiceBookServiceCenter = Boolean(filters.serviceBook && !serviceBookId);
             const data: IAppointmentsRequest = {
@@ -62,10 +63,10 @@ export const Appointments = () => {
             if (filters.technician) data.technicianDmsId = filters.technician.dmsId;
             dispatch(loadAppointments(data));
         }
-    }, [filters, selectedView, order]);
+    }, [filters, selectedView, order, serviceAdvisors, technicians]);
 
     useEffect(() => {
-        getAppointments();
+        getAppointments()
     }, [getAppointments]);
 
     useEffect(() => {

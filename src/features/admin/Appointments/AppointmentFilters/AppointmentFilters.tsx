@@ -55,10 +55,14 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     useEffect(() => {
         if (currentUser?.role === "Advisor" && serviceAdvisors.length) {
             const currentAdvisor = serviceAdvisors.find(el => el.dmsId.toString() === currentUser.dmsId);
-            if (currentAdvisor) setFilters(prev => ({...prev, advisor: currentAdvisor}))
+            if (currentAdvisor) {
+                setFilters(prev => ({...prev, advisor: currentAdvisor}))
+            }
         } else if (currentUser?.role === "Technician" && technicians.length) {
             const currentTechnician = technicians.find(el => el.dmsId.toString() === currentUser.dmsId);
-            if (currentTechnician) setFilters(prev => ({...prev, technician: currentTechnician}))
+            if (currentTechnician) {
+                setFilters(prev => ({...prev, technician: currentTechnician}))
+            }
         }
     }, [currentUser, serviceAdvisors, technicians])
 
