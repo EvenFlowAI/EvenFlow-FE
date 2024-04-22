@@ -99,7 +99,10 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
         return !Boolean(err.length)
     }
 
-    const onSuccess = () => showMessage(`Employee ${isEdit ? "updated" : "created"}`);
+    const onSuccess = () => {
+        showMessage(`Employee ${isEdit ? "updated" : "created"}`);
+        props.onClose();
+    }
 
     const handleCreate = async () => {
         setFormIsChecked(true);
@@ -152,7 +155,6 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
                 if (onAction) {
                     onAction();
                 }
-                props.onClose();
             } catch (e) {
                 showError(e);
             }
