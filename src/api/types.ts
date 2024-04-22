@@ -41,6 +41,7 @@ export enum EServiceCenterName {
     LexusCincinnati,
     LexusRiverCenter,
     DealerBuilt,
+    Bountiful,
 }
 
 export enum ECustomerCriteria {
