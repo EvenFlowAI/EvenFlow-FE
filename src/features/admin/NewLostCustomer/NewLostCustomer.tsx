@@ -52,7 +52,7 @@ export const NewLostCustomer = () => {
                 <TableRow>
                     <TableCell>New Customer</TableCell>
                     <TableCell>Considered new up to</TableCell>
-                    <TableCell className="primary" width={180}>
+                    <TableCell width={180}>
                         {newValue
                             ? `${newValue.periodInMonth} month${newValue.periodInMonth > 1 ? "s" : ""}`
                             : "-"
@@ -65,7 +65,7 @@ export const NewLostCustomer = () => {
                 <TableRow>
                     <TableCell>Lost Customer</TableCell>
                     <TableCell>Considered lost after</TableCell>
-                    <TableCell className="primary">
+                    <TableCell>
                         {lostValue
                             ? `${lostValue.periodInMonth} month${lostValue.periodInMonth > 1 ? "s" : ""}`
                             : "-"
