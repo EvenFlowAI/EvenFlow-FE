@@ -134,7 +134,7 @@ export type TSearchInputProps = TextInputProps & {
 };
 export type AlignTypes = "inherit" | "left" | "center" | "right" | "justify";
 export type TableRowDataType<DataEl> = {
-    header: string;
+    header: string|ReactElement;
     orderId?: keyof DataEl | string;
     val: (el: DataEl, idx: number) => string | JSX.Element | undefined | null;
     align?: AlignTypes;
