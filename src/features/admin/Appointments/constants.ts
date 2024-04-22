@@ -22,6 +22,7 @@ export const initialFilters: TFilters = {
     pageData: initialPaging,
     advisor: null,
     technician: null,
+    initialFiltersSet: false,
 }
 
 export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [

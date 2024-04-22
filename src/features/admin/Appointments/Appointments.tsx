@@ -41,7 +41,7 @@ export const Appointments = () => {
     const {selectedSC} = useSCs();
 
     const getAppointments = useCallback(() => {
-        if (filters.scId && selectedView === 'list') {
+        if (filters.scId && selectedView === 'list' && filters.initialFiltersSet) {
             const serviceBookId = filters.serviceBook?.id ??  null;
             const isServiceBookServiceCenter = Boolean(filters.serviceBook && !serviceBookId);
             const data: IAppointmentsRequest = {
