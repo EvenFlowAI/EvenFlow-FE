@@ -7,7 +7,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {MoreHoriz} from "@mui/icons-material";
 import {ICustomerConsent} from "../../../../store/reducers/screenSettings/types";
-import {useStyles} from "./styles";
+import {useStyles} from "../styles";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {TableRowDataType} from "../../../../types/types";
 import {Table} from "../../../../components/tables/Table/Table";
