@@ -9,6 +9,7 @@ type TAddressInputFieldProps = {
     fieldName: keyof IAddressData;
     customer: ICustomerWithPhones;
     onFieldChange: (fieldName: keyof IAddressData) => (e: React.ChangeEvent<HTMLInputElement>) => void;
+    error?: boolean;
 }
 
 export const AddressInputField:React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddressInputFieldProps>>> = ({
@@ -16,11 +17,13 @@ export const AddressInputField:React.FC<React.PropsWithChildren<React.PropsWithC
                                                                         isEdit,
                                                                         onFieldChange,
                                                                         fieldName,
-                                                                        customer
+                                                                        customer,
+                                                                        error
                                                                     }) => {
     return isEdit && editingElement?.vehicleId === customer.vehicleId && editingElement?.customerId === customer.customerId
         ? <CustomerInput
             value={editingElement.address ? editingElement.address[fieldName] ?? "" : ""}
+            error={error}
             onChange={onFieldChange(fieldName)}/>
         : <React.Fragment>{customer.address ? customer.address[fieldName] ?? "" : ""}</React.Fragment>;
 };

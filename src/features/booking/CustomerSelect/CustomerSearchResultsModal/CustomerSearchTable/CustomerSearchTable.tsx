@@ -69,6 +69,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<ICustomerWithPhones|null>(null);
     const [offset, setOffset] = useState<TOffset>(initialColumnOffset);
+    const [formIsChecked, setFormChecked] = useState<boolean>(false);
 
     const {changeRowsPerPage, changePage} = usePagination((s: RootState) => s.customers.pageData, changePageData);
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
@@ -155,6 +156,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
     }
 
     const onCreateNewForCar = async (item: ICustomerWithPhones) => {
+        setFormChecked(false)
         await dispatch(clearAppointmentData());
         dispatch(setServiceOptionChanged(false));
         await dispatch(setSideBarSteps([]));
@@ -179,6 +181,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
     }
 
     const onUpdateAppForCar = (item: ICustomerWithPhones) => {
+        setFormChecked(false)
         if (scProfile) {
             dispatch(setUserType(EUserType.Existing));
             const id = encodeSCID(scProfile.id)
@@ -190,16 +193,19 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
     }
 
     const onViewRepairHistory = async (item: ICustomerWithPhones) => {
+        setFormChecked(false)
         await setEditingElement(item);
         await onOpenHistory();
     }
 
     const onEditData = async (item: ICustomerWithPhones) => {
+        setFormChecked(false)
         await setEditingElement(item);
         await setEdit(true);
     }
 
     const onCancelAppointment = async (item: ICustomerWithPhones) => {
+        setFormChecked(false)
         if (item.appointmentHashKey) {
             await setEditingElement(item);
             await onOpenConfirm()
@@ -208,6 +214,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
 
     const onAddressChange = (fieldName: keyof IAddressData) => (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
+        setFormChecked(false)
         if (editingElement) {
             setEditingElement(prevState => {
                 if (prevState) {
@@ -222,6 +229,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
 
     const onFieldChange = (fieldName: keyof ICustomerWithPhones) => (e: React.ChangeEvent<HTMLInputElement>) => {
         e.persist()
+        setFormChecked(false)
         setEditingElement(prevState => {
             return prevState
                 ? {...prevState, [fieldName]: e.target.value}
@@ -247,33 +255,49 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
     }
 
     const onCancelEditing = () => {
+        setFormChecked(false)
         setData(customers.slice().sort(sortCustomers))
         setEdit(false)
     }
 
+    const checkInfoIsValid = () => {
+        let isValid = true;
+        if (editingElement?.address?.zipCode && editingElement.address.zipCode.length > 10) {
+           isValid = false;
+           showError('The "Zip Code" must not be longer than 10 numbers')
+        }
+        return isValid
+    }
+
     const onSaveInfo = async () => {
-        if (editingElement) {
-            if (checkPhonesChanged()) {
-                askConfirm({
-                    isRemove: false,
-                    title: t("Please confirm the changes you made to the Customer Profile"),
-                    onConfirm: () => dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err))),
-                    onCancel: onCancelEditing
-                })
-            } else {
-                dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err)));
+        setFormChecked(true)
+        if (checkInfoIsValid()) {
+            if (editingElement) {
+                if (checkPhonesChanged()) {
+                    askConfirm({
+                        isRemove: false,
+                        title: t("Please confirm the changes you made to the Customer Profile"),
+                        onConfirm: () => dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err))),
+                        onCancel: onCancelEditing
+                    })
+                } else {
+                    dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err)));
+                }
             }
         }
     }
 
     const handleChangePage = async (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
+        setFormChecked(false)
         await changePage(e, pageNumber);
     }
     const handleChangeRows = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormChecked(false)
         await changeRowsPerPage(e);
     }
 
     const onSelectCustomerForNewVehicle = (customer: ICustomerWithPhones) => async () => {
+        setFormChecked(false)
         const phoneNumber = customer.cellPhone || customer.homePhone || '';
         const data: ICustomerLoadedData = {
             emails: customer?.email ? [customer.email] : [],
@@ -566,6 +590,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
+                                            error={formIsChecked && !!editingElement?.address?.zipCode && editingElement?.address?.zipCode?.length > 10}
                                             fieldName="zipCode"
                                             isEdit={isEdit}
                                             onFieldChange={onAddressChange}/>
