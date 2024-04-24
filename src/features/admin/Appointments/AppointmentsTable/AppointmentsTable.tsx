@@ -134,7 +134,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
             isAscending={order.isAscending}
             noDataTitle="No upcoming appointments scheduled"
             isLoading={isLoading}
-            rowData={AppointmentsColumns.filter(col => selectedColumns.includes(col.header))}
+            rowData={AppointmentsColumns.filter(col => selectedColumns.includes(col.header.toString()))}
             hidePagination={count < 11}
             onChangePage={onChangePage}
             onChangeRowsPerPage={onChangeRowsPerPage}

@@ -40,6 +40,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
         superCompact: Boolean(props.superCompact),
         borderHeader: Boolean(props.borderHeader),
         withBorders: Boolean(props.withBorders),
+        compactBody: Boolean(props.compactBody),
     }), [props])
 
     const handleChangePage = (e: React.MouseEvent | null, newPage: number) => {

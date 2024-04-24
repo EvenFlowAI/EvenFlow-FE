@@ -1,11 +1,15 @@
-export type TAdvisorPerPodCapacity = {
+export type TAdvisorPerPodBase = {
     id?: number;
     value: number;
+}
+
+export type TAdvisorPerPodCapacity = TAdvisorPerPodBase & {
     isEditable: boolean;
 }
 
 export interface IAdvisorCapacity {
     employeeId: string;
+    employeeName: string;
     capacityPerServiceBook: TAdvisorPerPodCapacity[]
 }
 
@@ -34,4 +38,20 @@ export type TState = {
 export type TTechniciansResponse = {
     technicianCapacitySettings: ITechnicianCapacity[];
     capacityTypeOption: ECapacityType;
+}
+
+export type IAdvisorsPayload = {
+    serviceCenterId: number;
+    capacitySettings: IAdvisorCapacity[];
+}
+
+export type TTechnicianEfficiency = {
+    employeeId: string;
+    efficiency: number;
+    serviceBookId?: number;
+}
+
+export type ITechniciansPayload = {
+    serviceCenterId: number;
+    techniciansEfficiency: TTechnicianEfficiency[];
 }

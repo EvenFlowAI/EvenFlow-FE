@@ -1,6 +1,6 @@
 import {TState} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
-import {setLoading} from "./actions";
+import {getAdvisorsCapacity, getCapacityTypeOption, getTechniciansCapacity, setLoading} from "./actions";
 
 const initialState: TState = {
     isLoading: false,
@@ -12,5 +12,14 @@ const initialState: TState = {
 export const employeesCapacity = createReducer(initialState, builder => builder
     .addCase(setLoading, (state, {payload}) => {
         return {...state, isLoading: payload};
+    })
+    .addCase(getAdvisorsCapacity, (state, {payload}) => {
+        return {...state, advisors: payload};
+    })
+    .addCase(getTechniciansCapacity, (state, {payload}) => {
+        return {...state, technicians: payload};
+    })
+    .addCase(getCapacityTypeOption, (state, {payload}) => {
+        return {...state, capacityTypeOption: payload};
     })
 )

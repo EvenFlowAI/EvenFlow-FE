@@ -1,4 +1,3 @@
-import {ActionCreator} from "redux";
 import {
     AppThunk,
     TArgCallback,
@@ -6,7 +5,14 @@ import {
 } from "../../../types/types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import {createAction} from "@reduxjs/toolkit";
-import {ECapacityType, IAdvisorCapacity, ITechnicianCapacity, TTechniciansResponse} from "./types";
+import {
+    ECapacityType,
+    IAdvisorCapacity,
+    IAdvisorsPayload,
+    ITechnicianCapacity,
+    ITechniciansPayload,
+    TTechniciansResponse
+} from "./types";
 
 export const setLoading = createAction<boolean>("EmployeeCapacity/SetLoading");
 export const getAdvisorsCapacity = createAction<IAdvisorCapacity[]>("EmployeeCapacity/GetAdvisorsCapacity");
@@ -38,5 +44,53 @@ export const loadTechniciansCapacity = (serviceCenterId: number): AppThunk => di
             console.log('get advisors capacity error', err)
         })
         .finally(() => dispatch(setLoading(false)))
+}
+
+export const updateAdvisorsCapacity = (data: IAdvisorsPayload, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.EmployeeCapacity.UpdateAdvisorsCapacity, {data})
+        .then(res => {
+            if (res) {
+                dispatch(loadAdvisorsCapacity(data.serviceCenterId))
+                onSuccess && onSuccess()
+            }
+        })
+        .catch(err => {
+            console.log('update advisors capacity error', err)
+            onError(err)
+            dispatch(setLoading(false))
+        })
+}
+
+export const updateTechniciansCapacity = (data: ITechniciansPayload, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.EmployeeCapacity.UpdateTechniciansCapacity, {data})
+        .then(res => {
+            if (res) {
+                dispatch(loadTechniciansCapacity(data.serviceCenterId))
+                onSuccess && onSuccess()
+            }
+        })
+        .catch(err => {
+            console.log('update technicians capacity error', err)
+            onError(err)
+            dispatch(setLoading(false))
+        })
+}
+
+export const updateTechniciansSettings = (serviceCenterId: number, type: ECapacityType, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.EmployeeCapacity.UpdateTechniciansCapacity, {data: {serviceCenterId, type}})
+        .then(res => {
+            if (res) {
+                dispatch(loadTechniciansCapacity(serviceCenterId))
+                onSuccess && onSuccess()
+            }
+        })
+        .catch(err => {
+            console.log('update technicians settings error', err)
+            onError(err)
+            dispatch(setLoading(false))
+        })
 }
 

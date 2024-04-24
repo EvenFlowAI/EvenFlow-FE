@@ -149,6 +149,7 @@ export interface ITableProps<Data> {
     smallHeaderFont?: boolean;
     superCompact?: boolean;
     compact?: boolean;
+    compactBody?: boolean;
     order?: keyof Data | string;
     onSort?: (order: IOrder<Data>) => () => void;
     isAscending?: boolean;
