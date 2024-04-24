@@ -20,7 +20,6 @@ export const useStyles = makeStyles()(theme => ({
         padding: 10,
     },
     editButton: {
-        textTransform: "none",
         fontSize: 14
     },
     gridContainer: {
@@ -47,4 +46,11 @@ export const useStyles = makeStyles()(theme => ({
         textTransform: "uppercase",
         margin: "0 0 16px",
     },
+    upLineWrapper: {
+        display: 'flex',
+        alignItems: 'flex-start',
+        "& > h2": {
+            marginLeft: "10%"
+        }
+    }
 }));

@@ -45,7 +45,7 @@ export const loadAppointments = (data: IAppointmentsRequest): AppThunk => dispat
         .catch(err => {
             console.log('load appointments for calendar', err)
         })
-        .finally(() => dispatch(setAppointmentsLoading(false)))
+        .finally(() => setTimeout(() => dispatch(setAppointmentsLoading(false)), 500))
 }
 
 export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<any>, onPodKept?: () => void): AppThunk => (dispatch, getState) => {

@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Paper} from "@mui/material";
-import {useStyles} from "./styles";
+import {useCardStyles} from "../../../../hooks/styling/useCardStyles";
 
 export type TOptimizationPlateProps = {
     onEdit: () => void;
@@ -21,7 +21,7 @@ export const OptimizationWindowCard: React.FC<React.PropsWithChildren<React.Prop
     label,
     helperText,
 }) => {
-    const { classes  } = useStyles();
+    const { classes  } = useCardStyles();
 
     return <Paper className={classes.paper} variant={"outlined"} >
         <h3 className={classes.title}>{title}</h3>

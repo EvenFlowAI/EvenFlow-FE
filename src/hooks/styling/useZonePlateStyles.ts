@@ -1,6 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles()(() => ({
+export const useZonePlateStyles = makeStyles()({
     paper: {
         height: "100%",
         borderRadius: 0,
@@ -17,25 +17,25 @@ export const useStyles = makeStyles()(() => ({
         fontSize: 48,
         fontWeight: "bold",
         textOverflow: "ellipsis",
-        overflow: "hidden",
-        lineHeight: '48px',
+        overflow: "hidden"
     },
     helperText: {
         fontSize: 14,
         lineHeight: "17px",
-        fontWeight: 400,
-        marginTop: 24,
+        fontWeight: 300,
+        marginTop: 73,
     },
     label: {
-        fontWeight: 400,
+        fontWeight: 300,
         fontSize: 19,
-        marginTop: 4,
-        color: "#252733"
+        marginTop: 14,
+        color: "#A8ABBB",
     },
     edit: {
         position: "absolute",
         top: 10,
         right: 6,
+        textTransform: "none",
         fontSize: 16
     }
-}));
+});
