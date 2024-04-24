@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {InputWrapper, Title} from "./styles";
+import {InputWrapper} from "./styles";
 import {useDispatch, useSelector} from "react-redux";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {loadServiceBookList} from "../../../../store/reducers/appointments/actions";
@@ -9,13 +9,20 @@ import {InputOrValue} from "../../../../components/wrappers/TableInput/TableInpu
 import {Table} from "../../../../components/tables/Table/Table";
 import {SaveEditBlock} from "../../../../components/buttons/SaveEditBlock/SaveEditBlock";
 import dayjs from "dayjs";
+import {ITechnicianCapacity} from "../../../../store/reducers/employeeCapacity/types";
+import {loadTechniciansCapacity, setDateRange} from "../../../../store/reducers/employeeCapacity/actions";
+import {CALENDAR_FORMAT} from "../../../../utils/constants";
 
 const daysOfWeek = [1, 2, 3, 4, 5, 6, 7, 0]
 
+const sortAdvisors = (a: ITechnicianCapacity, b: ITechnicianCapacity): number => a.employeeName
+    ? a.employeeName.localeCompare(b.employeeName)
+    : a.employeeId.localeCompare(b.employeeId)
+
 const CapacityTechniciansTable = () => {
-    const {shortPodsList} = useSelector((state: RootState) => state.pods);
+    const {technicians, isLoading, dateRange} = useSelector((state: RootState) => state.employeesCapacity);
     const [isEdit, setEdit] = useState<boolean>(false);
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<ITechnicianCapacity[]>([]);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
 
@@ -23,63 +30,103 @@ const CapacityTechniciansTable = () => {
         if (selectedSC) dispatch(loadServiceBookList(selectedSC.id))
     }, [selectedSC])
 
-    const onChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        if (selectedSC)  dispatch(loadTechniciansCapacity(selectedSC.id))
+    }, [selectedSC, dateRange])
 
+    useEffect(() => {
+        const dateFrom = dayjs().set('day', 1).format(CALENDAR_FORMAT)
+        dispatch(setDateRange({
+            from: dateFrom,
+            to: dayjs(dateFrom, CALENDAR_FORMAT).add(1, 'week').subtract(1, 'day').format(CALENDAR_FORMAT)
+        }))
+    }, [])
+
+    useEffect(() => {
+        setData([...technicians].sort(sortAdvisors))
+    }, [technicians])
+
+    const onChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+        const [employeeId, serviceBookId] = name.split('/');
+        setData(prev => {
+            let employee = prev.find(el => el.employeeId === employeeId)
+            if (serviceBookId) {
+                employee = prev.find(el => el.employeeId === employeeId && +serviceBookId === el.serviceBookId)
+            }
+            if (employee) {
+                const updated = {...employee, efficiency: +value}
+                return prev
+                    .filter(item => serviceBookId
+                        ? item.serviceBookId !== +serviceBookId && item.employeeId !== employeeId
+                        : item.employeeId !== employeeId)
+                    .concat(updated)
+                    .sort(sortAdvisors)
+            }
+            return prev;
+        })
     }
 
-    const onCancel = () => {}
+    const onCancel = () => {
+        setData([...technicians].sort(sortAdvisors))
+        setEdit(false);
+    }
 
     const onSave = () => {}
 
-    const DaysData: TableRowDataType<any>[] = daysOfWeek.map(day => ({
+    const DaysData: TableRowDataType<ITechnicianCapacity>[] = daysOfWeek.map(day => ({
         header: dayjs().set('day', day).format("ddd"),
-        width: 64,
-        val: (el) => '',
+        val: (el) => `${el.dailyCapacity[dayjs(day).format("dddd")]}`
     }))
 
-    const RowData:TableRowDataType<any>[] = [
+    const RowData:TableRowDataType<ITechnicianCapacity>[] = [
         {
             header: "Name",
-            val: (el) => el.fullName,
+            val: (el) => el.employeeName,
+            width: 148,
         },
         {
             header: "Service Book",
-            val: (el) => el.serviceBook,
+            val: (el) => el.serviceBookName,
+            width: 100,
         },
         {
             header: "Average Bill Hours per RO",
-            val: (el) => el.averageBillHoursPerRO,
+            val: (el) => el.avarageBillHoursPerRO ? el.avarageBillHoursPerRO.toString() : '',
         },
         {
             header: "Efficiency",
+            width: 135,
             val: (el) => <InputWrapper>
                 <InputOrValue
-                value={`${el.efficiency}%`}
-                isEdit={isEdit}
-                defaultValue={"0%"}
-                disabled={false}
-                name={el.id}
-                onChange={onChange}/>
-                {isEdit ? null : <span>%</span>}
+                    value={`${el.efficiency}`}
+                    isEdit={isEdit}
+                    defaultValue={"0%"}
+                    disabled={false}
+                    name={el.serviceBookId ? `${el.employeeId}/${el.serviceBookId}` : `${el.employeeId}`}
+                    onChange={onChange}/>
+                <div style={{marginLeft: 4, padding: 0}}>%</div>
             </InputWrapper>,
         },
         ...DaysData,
         {
-            header: <SaveEditBlock
-                onCancel={onCancel}
-                onSave={onSave}
-                isEdit={isEdit}
-                isSaving={false}
-                onEdit={() => setEdit(true)}/>,
-            width: 142,
-            val: () => '',
+            header: <div style={{margin: '0 -16px'}}>
+                <SaveEditBlock
+                    onCancel={onCancel}
+                    onSave={onSave}
+                    isEdit={isEdit}
+                    isSaving={isLoading}
+                    withoutPadding
+                    onEdit={() => setEdit(true)}/>
+            </div>,
+            align: 'right',
+            width: 130,
+            val: () => ' ',
         }
     ]
 
     return (
         <div>
-            <Title>Service Advisor Daily Capacity</Title>
-            <Table data={data} index="id" rowData={RowData}/>
+            <Table data={data} index="employeeId" rowData={RowData} hidePagination/>
         </div>
     );
 };

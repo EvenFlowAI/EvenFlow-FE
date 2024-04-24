@@ -9,5 +9,6 @@ export const Title = styled('div')({
 
 export const InputWrapper = styled('div')({
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    margin: '-12px 0'
 })

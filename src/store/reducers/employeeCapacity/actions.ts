@@ -10,7 +10,7 @@ import {
     IAdvisorCapacity,
     IAdvisorsPayload,
     ITechnicianCapacity,
-    ITechniciansPayload,
+    ITechniciansPayload, TCapacityDateRange,
     TTechniciansResponse
 } from "./types";
 
@@ -18,6 +18,7 @@ export const setLoading = createAction<boolean>("EmployeeCapacity/SetLoading");
 export const getAdvisorsCapacity = createAction<IAdvisorCapacity[]>("EmployeeCapacity/GetAdvisorsCapacity");
 export const getTechniciansCapacity = createAction<ITechnicianCapacity[]>("EmployeeCapacity/GetTechniciansCapacity");
 export const getCapacityTypeOption = createAction<ECapacityType|null>("EmployeeCapacity/GetCapacityTypeOption");
+export const setDateRange = createAction<TCapacityDateRange>("EmployeeCapacity?SetCapacityDateRange");
 
 export const loadAdvisorsCapacity = (serviceCenterId: number): AppThunk => dispatch => {
     dispatch(setLoading(true))
@@ -31,9 +32,11 @@ export const loadAdvisorsCapacity = (serviceCenterId: number): AppThunk => dispa
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const loadTechniciansCapacity = (serviceCenterId: number): AppThunk => dispatch => {
+export const loadTechniciansCapacity = (serviceCenterId: number): AppThunk => (dispatch, getState) => {
     dispatch(setLoading(true))
-    Api.call<TTechniciansResponse>(Api.endpoints.EmployeeCapacity.GetTechniciansCapacity, {params: {serviceCenterId}})
+    const {to, from} = getState().employeesCapacity.dateRange
+    Api.call<TTechniciansResponse>(Api.endpoints.EmployeeCapacity.GetTechniciansCapacity,
+        {params: {serviceCenterId, dateTo: to, dateFrom: from}})
         .then(res => {
             if (res.data) {
                 dispatch(getTechniciansCapacity(res.data.technicianCapacitySettings))

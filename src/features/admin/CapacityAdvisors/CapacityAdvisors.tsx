@@ -13,7 +13,9 @@ import {IAdvisorCapacity} from "../../../store/reducers/employeeCapacity/types";
 import {useException} from "../../../hooks/useException/useException";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 
-const sortAdvisors = (a: IAdvisorCapacity, b: IAdvisorCapacity): number => a.employeeName.localeCompare(b.employeeName)
+const sortAdvisors = (a: IAdvisorCapacity, b: IAdvisorCapacity): number => a.employeeName
+    ? a.employeeName.localeCompare(b.employeeName)
+    : a.employeeId.localeCompare(b.employeeId)
 
 const CapacityAdvisors = () => {
     const {shortPodsList} = useSelector((state: RootState) => state.pods);
@@ -123,13 +125,16 @@ const CapacityAdvisors = () => {
         },
         ...ServiceRowsData,
         {
-            header: <SaveEditBlock
-                onCancel={onCancel}
-                onSave={onSave}
-                isEdit={isEdit}
-                isSaving={isLoading}
-                onEdit={() => setEdit(true)}/>,
-            width: 200,
+            header: <div style={{margin: '0 -16px'}}>
+                <SaveEditBlock
+                    onCancel={onCancel}
+                    onSave={onSave}
+                    isEdit={isEdit}
+                    isSaving={isLoading}
+                    withoutPadding
+                    onEdit={() => setEdit(true)}/>
+            </div>,
+            width: 130,
             align: 'right',
             val: () => ' ',
         }
@@ -140,6 +145,7 @@ const CapacityAdvisors = () => {
             <Title>Service Advisor Daily Capacity</Title>
             <Table
                 data={data}
+                isLoading={isLoading}
                 index="employeeId"
                 rowData={RowData}
                 compact={isEdit}

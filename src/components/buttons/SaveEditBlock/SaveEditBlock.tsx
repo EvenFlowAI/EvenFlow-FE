@@ -9,6 +9,7 @@ type TSaveEditProps = {
     isSaving: boolean;
     isLowerCase?:boolean;
     disabled?: boolean;
+    withoutPadding?: boolean;
 }
 
 export const SaveEditBlock: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSaveEditProps>>> = ({
@@ -18,13 +19,17 @@ export const SaveEditBlock: React.FC<React.PropsWithChildren<React.PropsWithChil
                                                                                                               onCancel,
                                                                                                               onSave,
                                                                                                               isLowerCase,
-                                                                                                              disabled}) => {
+                                                                                                              disabled, withoutPadding}) => {
     if (!isEdit) {
         return <Button
             onClick={onEdit}
             disabled={disabled}
             color='primary'
-            style={{textTransform: isLowerCase ? "none" : "uppercase"}}
+            style={{
+                textTransform: isLowerCase ? "none" : "uppercase",
+                padding: withoutPadding ? 0 : 'unset',
+                minWidth: withoutPadding ? 56 : "unset",
+        }}
         >
             Edit
         </Button>
@@ -35,13 +40,22 @@ export const SaveEditBlock: React.FC<React.PropsWithChildren<React.PropsWithChil
         <Button
             onClick={onCancel}
             color="secondary"
-            style={{textTransform: isLowerCase ? "none" : "uppercase"}}
+            style={{
+                minWidth: withoutPadding ? 56 : "unset",
+                textTransform: isLowerCase ? "none" : "uppercase",
+                padding: withoutPadding ? 0 : 'unset',
+                marginRight: withoutPadding ? 16 : 'unset'
+        }}
         >
             Cancel
         </Button>
         <Button
             onClick={onSave}
-            style={{textTransform: isLowerCase ? "none" : "uppercase"}}
+            style={{
+                minWidth: withoutPadding ? 56 : "unset",
+                textTransform: isLowerCase ? "none" : "uppercase",
+                padding: withoutPadding ? 0 : 'unset'
+        }}
             color="primary"
         >
             Save

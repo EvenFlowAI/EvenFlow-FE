@@ -1,3 +1,5 @@
+import {TParsableDate} from "../../../types/types";
+
 export type TAdvisorPerPodBase = {
     id?: number;
     value: number;
@@ -28,11 +30,17 @@ export enum ECapacityType {
     AvailableBillHours,
 }
 
+export type TCapacityDateRange = {
+    from: TParsableDate;
+    to: TParsableDate;
+}
+
 export type TState = {
     advisors: IAdvisorCapacity[];
     capacityTypeOption: ECapacityType|null,
     technicians: ITechnicianCapacity[],
     isLoading: boolean;
+    dateRange: TCapacityDateRange;
 }
 
 export type TTechniciansResponse = {
