@@ -131,6 +131,13 @@ export class Api {
             GetAssignmentSettings: {route: "/employees/assignment-settings/{serviceCenterId}", method: "get"},
             UpdateAssignmentSettings: {route: "/employees/assignment-settings", method: "put"},
         },
+        EmployeeCapacity: {
+            GetAdvisorsCapacity: {route: "/employee-capacity/advisors", method: "get"},
+            UpdateAdvisorsCapacity: {route: "/employee-capacity/advisors", method: "put"},
+            GetTechniciansCapacity: {route: "/employee-capacity/technicians", method: "get"},
+            UpdateTechniciansCapacity: {route: "/employee-capacity/technicians", method: "put"},
+            UpdateTechniciansSettings: {route: "/employee-capacity/technicians/settings", method: "put"},
+        },
         EmployeeSchedule: {
             Create: {route: "/employee-schedules", method: "post"},
             Retrieve: {route: "/employee-schedules/{id}", method: "get"},

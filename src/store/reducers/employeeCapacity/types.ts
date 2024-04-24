@@ -1,6 +1,7 @@
 export type TAdvisorPerPodCapacity = {
-    id: number;
+    id?: number;
     value: number;
+    isEditable: boolean;
 }
 
 export interface IAdvisorCapacity {
@@ -28,4 +29,9 @@ export type TState = {
     capacityTypeOption: ECapacityType|null,
     technicians: ITechnicianCapacity[],
     isLoading: boolean;
+}
+
+export type TTechniciansResponse = {
+    technicianCapacitySettings: ITechnicianCapacity[];
+    capacityTypeOption: ECapacityType;
 }
