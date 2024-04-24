@@ -118,6 +118,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
             && typeof form.gapSlotsType !== "undefined"
             && form.gapSlotsType?.value !== currentSetting.gapSlotsType) {
             showMessage("The Unplanned Demand Settings were reset", "warning")
+            showMessage("Capacity data allocations were reset", "warning")
         }
         setFormChecked(false);
         onClose();

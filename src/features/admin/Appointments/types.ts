@@ -15,6 +15,7 @@ export type TFilters = {
     pageData: IPageRequest;
     advisor: TServiceConsultant|null;
     technician: TServiceConsultant|null;
+    initialFiltersSet: boolean;
 }
 
 export type TViewButton = { label: string, type: TView };

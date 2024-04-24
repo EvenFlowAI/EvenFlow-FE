@@ -12,38 +12,45 @@ import {IHOODataForm} from "../serviceCenters/types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 import {loadingEmployeesSchedule} from "../schedules/actions";
+import {EDesirabilityDays} from "../../../features/admin/TimeOfDayDesirability/AppointmentSlotsDesirability/types";
 
 export const setLoading = createAction<boolean>("SlotScoring/SetLoading");
 
 export const getProximity = createAction<IProximity[]>("SlotScoring/GetProximity");
 export const loadProximity = (serviceCenterId?: number, podId?: number): AppThunk => async dispatch => {
+    dispatch(setLoading(true))
     const {data} = await Api.call<IProximity[]>(
         Api.endpoints.SlotScoring.GetProximity,
         {params: {serviceCenterId, podId}}
     );
     dispatch(getProximity(data));
+    dispatch(setLoading(false))
 }
 export const createProximity = (data: IProximity): AppThunk => async dispatch => {
+    dispatch(setLoading(true))
     await Api.call(
         Api.endpoints.SlotScoring.SetProximity,
         {data}
     );
     dispatch(loadProximity(data.serviceCenterId, data.podId));
+    dispatch(setLoading(false))
 }
 
 export const getDesirability = createAction<IDesirability[]>("SlotScoring/GetDesirability");
-export const loadDesirability = (serviceCenterId: number, podId?: number, errorCallback?: (err: {errorCode: number; message: string}) => void): AppThunk => async dispatch => {
+export const loadDesirability = (serviceCenterId: number, dayOfWeek: EDesirabilityDays|null, podId?: number, errorCallback?: (err: {errorCode: number; message: string}) => void): AppThunk => async dispatch => {
     dispatch(setLoading(true))
+    let params =  dayOfWeek !== null
+        ? {serviceCenterId, podId, dayOfWeek}
+        : {serviceCenterId, podId};
     Api.call<IDesirability[]>(
         Api.endpoints.SlotScoring.GetDesirability,
-        {params: {serviceCenterId, podId}}
+        {params}
     ).then(({data}) => {
         dispatch(getDesirability(data));
     }).catch(err => {
         console.log('err load desirability', err)
         dispatch(getDesirability([]));
         errorCallback && errorCallback(err);
-    }).finally(() => {
         dispatch(setLoading(false));
     })
 }
@@ -51,6 +58,7 @@ export const saveDesirability = (
     items: IDesirabilityItem[],
     type: ETimeSlotType,
     serviceCenterId: number,
+    dayOfWeek: EDesirabilityDays|null,
     podId?: number,
     callback?: () => void,
     errCallback?: (err: {errorCode: number; message: string}) => void,
@@ -58,10 +66,11 @@ export const saveDesirability = (
     const data: IDesirabilityForm = {
         podId, serviceCenterId, timeSlotType: type, items
     };
+    if (dayOfWeek !== null) data.dayOfWeek = dayOfWeek
    Api.call(Api.endpoints.SlotScoring.SetDesirability, {data})
        .then(() => {
            callback && callback()
-           dispatch(loadDesirability(serviceCenterId, podId));
+           dispatch(loadDesirability(serviceCenterId, dayOfWeek, podId));
            }
        )
        .catch(err => {
@@ -72,11 +81,13 @@ export const saveDesirability = (
 
 export const getOptimizationSettings = createAction<IOptimizationSetting[]>("SlotScoring/GetOptimizationSettings");
 export const loadOptimizationSettings = (serviceCenterId:number, podId?:number): AppThunk => async dispatch => {
+    dispatch(setLoading(true))
     const {data} = await Api.call<IOptimizationSetting[]>(
         Api.endpoints.SlotScoring.GetOptimization,
         {params: {serviceCenterId, podId}}
     );
     dispatch(getOptimizationSettings(data));
+    dispatch(setLoading(false))
 }
 
 export const setOptimizationSettings = (data: IOptimizationSettingsCreateForm): AppThunk => async dispatch => {
@@ -85,14 +96,15 @@ export const setOptimizationSettings = (data: IOptimizationSettingsCreateForm): 
 }
 
 export const setSettingValues = (data: IOptimizationSettingValueForm, serviceCenterId:number, podId?: number): AppThunk => async dispatch => {
+    dispatch(setLoading(true))
     await Api.call(Api.endpoints.SlotScoring.SetValues, {data});
     dispatch(loadOptimizationSettings(serviceCenterId, podId));
+    dispatch(setLoading(false))
 }
 
 export const getRange = createAction<ISlotRange>("SlotScoring/GetRange");
-export const loadRange = (serviceCenterId: number, podId?: number): AppThunk => dispatch => {
-    dispatch(setLoading(true))
-    const data = {serviceCenterId, podId}
+export const loadRange = (serviceCenterId: number, dayOfWeek: EDesirabilityDays|null, podId?: number): AppThunk => dispatch => {
+    const data = dayOfWeek !== null ? {dayOfWeek, serviceCenterId, podId} : {serviceCenterId, podId}
     Api.call(Api.endpoints.SlotScoring.GetRange, {params: data})
         .then(result => {
             if (result?.data) {
@@ -102,7 +114,6 @@ export const loadRange = (serviceCenterId: number, podId?: number): AppThunk => 
         .catch(err => {
             console.log('load slot range error', err)
         })
-        .finally(() => dispatch(setLoading(false)))
 }
 
 export const loadHoursOfOperations = (id: number): AppThunk => dispatch => {

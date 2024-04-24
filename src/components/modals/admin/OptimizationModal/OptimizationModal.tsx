@@ -31,9 +31,7 @@ export const OptimizationModal: React.FC<TProps> = ({
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     useEffect(() => {
-        if (payload) {
-            setVal(payload.value || 0);
-        }
+        setVal(payload?.value ?? 0);
     }, [payload]);
     const handleChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
         setVal(Number(value));

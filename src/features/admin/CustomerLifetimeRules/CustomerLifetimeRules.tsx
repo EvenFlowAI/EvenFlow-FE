@@ -35,12 +35,12 @@ export const CustomerLifetimeRules = () => {
                 <TableRow>
                     <TableCell>Low Value</TableCell>
                     <TableCell>Less than</TableCell>
-                    <TableCell colSpan={2} className="primary">{data ? `$${data.from}`: '-'}</TableCell>
+                    <TableCell colSpan={2}>{data ? `$${data.from}`: '-'}</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell>Medium Value</TableCell>
                     <TableCell>Medium Value</TableCell>
-                    <TableCell className="primary">{data ? `$${data.from} - $${data.to}` : '-'}</TableCell>
+                    <TableCell width={230}>{data ? `$${data.from} - $${data.to}` : '-'}</TableCell>
                     <TableCell align="right">
                         <Button
                             onClick={onOpen}
@@ -53,7 +53,7 @@ export const CustomerLifetimeRules = () => {
                 <TableRow>
                     <TableCell>High Value</TableCell>
                     <TableCell>More than</TableCell>
-                    <TableCell colSpan={2} className="primary">{data ? `$${data.to}` : "-"}</TableCell>
+                    <TableCell colSpan={2}>{data ? `$${data.to}` : "-"}</TableCell>
                 </TableRow>
             </TableBody>
         </StyledTable>

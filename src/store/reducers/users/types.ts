@@ -13,6 +13,7 @@ export interface ICurrentUser {
     emailConfirmed: boolean;
     avatarPath: string;
     isSuperUser: boolean;
+    dmsId?: string;
 }
 export interface IUserForm {
     firstName: string;

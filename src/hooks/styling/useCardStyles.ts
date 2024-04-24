@@ -1,6 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
-export const useCenterSettingsStyles = makeStyles()({
+export const useCardStyles = makeStyles()(() => ({
     paper: {
         height: "100%",
         borderRadius: 0,
@@ -14,23 +14,23 @@ export const useCenterSettingsStyles = makeStyles()({
     },
     value: {
         marginTop: 20,
-        fontSize: 24,
+        fontSize: 48,
         fontWeight: "bold",
         textOverflow: "ellipsis",
-        overflow: "hidden"
+        overflow: "hidden",
+        lineHeight: '48px',
     },
     helperText: {
         fontSize: 14,
         lineHeight: "17px",
+        fontWeight: 400,
         marginTop: 24,
-        paddingBottom: 24,
-        color: "#252733",
     },
     label: {
-        fontWeight: 300,
+        fontWeight: 400,
         fontSize: 19,
-        marginTop: 14,
-        color: "#252733",
+        marginTop: 4,
+        color: "#252733"
     },
     edit: {
         position: "absolute",
@@ -38,4 +38,4 @@ export const useCenterSettingsStyles = makeStyles()({
         right: 6,
         fontSize: 16
     }
-});
+}));

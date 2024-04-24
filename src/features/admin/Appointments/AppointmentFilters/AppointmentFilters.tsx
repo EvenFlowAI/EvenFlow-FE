@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     loadSchedulerList,
     loadServiceBookList,
-    loadServiceConsultants
+    loadServiceConsultants, setAppointmentsLoading
 } from "../../../../store/reducers/appointments/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {TScheduler, TServiceBook, TServiceConsultant} from "../../../../store/reducers/appointments/types";
@@ -19,6 +19,7 @@ import {useAutocompleteClasses} from "./styles";
 import {initialPaging} from "../constants";
 import {statusOptions} from "./constants";
 import {TAppointmentFilterProps} from "./types";
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 
 export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                           status,
@@ -39,6 +40,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     const [isOpenTo, setOpenTo] = useState<boolean>(false);
     const [selectedStatus, setSelectedStatus] = useState<TOption[]>([])
     const {selectedSC} = useSCs();
+    const currentUser = useCurrentUser();
     const dispatch = useDispatch();
     const { classes: autocompleteClasses } = useAutocompleteClasses();
 
@@ -49,6 +51,26 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
             dispatch(loadServiceConsultants(selectedSC.id))
         }
     }, [selectedSC])
+
+    useEffect(() => {
+        if (currentUser) {
+            if (currentUser?.role === "Advisor" && serviceAdvisors.length) {
+                const currentAdvisor = serviceAdvisors.find(el => el.dmsId.toString() === currentUser.dmsId);
+                if (currentAdvisor) {
+                    dispatch(setAppointmentsLoading(true))
+                    setFilters(prev => ({...prev, advisor: currentAdvisor, initialFiltersSet: true}))
+                }
+            } else if (currentUser?.role === "Technician" && technicians.length) {
+                const currentTechnician = technicians.find(el => el.dmsId.toString() === currentUser.dmsId);
+                if (currentTechnician) {
+                    dispatch(setAppointmentsLoading(true))
+                    setFilters(prev => ({...prev, technician: currentTechnician, initialFiltersSet: true}))
+                }
+            } else {
+                setFilters(prev => ({...prev, initialFiltersSet: true}))
+            }
+        }
+    }, [currentUser, serviceAdvisors, technicians])
 
     useEffect(() => {
         setSelectedStatus(statusOptions.filter(el => status.includes(+el.value)))

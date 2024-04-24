@@ -12,6 +12,7 @@ import {useModal} from "../../../hooks/useModal/useModal";
 import {EditEmailRequirementModal} from "./EditEmailRequirementModal/EditEmailRequirementModal";
 import {CustomerConsentsModal} from "./CustomerConsentsModal/CustomerConsentsModal";
 import {loadRange} from "../../../store/reducers/slotScoring/actions";
+import PriceDisplayModal from "./PriceDisplayModal/PriceDisplayModal";
 
 export const ScreenSettings = () => {
     const {
@@ -20,11 +21,13 @@ export const ScreenSettings = () => {
         consentsList,
         isConsentLoading
     } = useSelector((state: RootState) => state.screenSettingsBooking);
+    const {roundPrice, isRoundPriceLoading} = useSelector((state: RootState) => state.pricingSettings);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const {selectedPod} = useSelectedPod()
     const {onOpen: onEmailEditOpen, isOpen: isEmailEditOpen, onClose: onEmailEditClose} = useModal();
     const {onOpen: onConsentOpen, isOpen: isConsentOpen, onClose: onConsentClose} = useModal();
+    const {onOpen: onPricingOpen, isOpen: isPricingOpen, onClose: onPricingClose} = useModal();
 
     useEffect(() => {
         if (selectedSC) {
@@ -35,7 +38,7 @@ export const ScreenSettings = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadConsentsList(selectedSC.id, selectedPod?.id))
-            dispatch(loadRange(selectedSC.id, selectedPod?.id))
+            dispatch(loadRange(selectedSC.id, null, selectedPod?.id))
         }
     }, [selectedSC, selectedPod])
 
@@ -58,12 +61,18 @@ export const ScreenSettings = () => {
         return allConsentsAreOn ? "On" : someConsentsAreOn ? "[On / Off]" : "Off"
     }
 
+    const getPriceDisplayValue = () => {
+        return roundPrice ? 'Rounded' : "Fractional"
+    }
+
     const getCount = (k: EScreenSettingsType): string|number => {
         switch (k) {
             case EScreenSettingsType.EmailRequirement:
                 return getEmailRequirementLabel();
             case EScreenSettingsType.CustomerConsent:
                 return getCustomerConsentValue();
+            case EScreenSettingsType.PriceDisplay:
+                return getPriceDisplayValue();
             default:
                 return "No data"
         }
@@ -82,6 +91,12 @@ export const ScreenSettings = () => {
             title: "Customer Consent",
             isLoading: isConsentLoading
         },
+        [EScreenSettingsType.PriceDisplay]: {
+            helperText: "Display configuration for prices in the booking experience",
+            label: getPriceDisplayValue(),
+            title: "Price Display",
+            isLoading: isRoundPriceLoading
+        },
     }
 
     const getPlateEdit = (k: EScreenSettingsType): void => {
@@ -91,6 +106,9 @@ export const ScreenSettings = () => {
                 break;
             case EScreenSettingsType.CustomerConsent:
                 onConsentOpen();
+                break;
+                case EScreenSettingsType.PriceDisplay:
+                onPricingOpen();
                 break;
             default:
                 return;
@@ -117,6 +135,7 @@ export const ScreenSettings = () => {
             </Grid>
             <EditEmailRequirementModal open={isEmailEditOpen} onClose={onEmailEditClose}/>
             <CustomerConsentsModal open={isConsentOpen} onClose={onConsentClose}/>
+            <PriceDisplayModal open={isPricingOpen} onClose={onPricingClose}/>
         </>
     );
 };

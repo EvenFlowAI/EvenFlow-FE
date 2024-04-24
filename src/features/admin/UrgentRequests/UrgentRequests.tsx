@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
     loadUrgentServiceRequests,
-    pageDataUrgentServiceRequests
+    setPageDataUrgentServiceRequests
 } from "../../../store/reducers/serviceRequests/actions";
 import {Table} from "../../../components/tables/Table/Table";
 import {
@@ -46,7 +46,7 @@ export const UrgentRequests = () => {
     const {onOpen, onClose, isOpen} = useModal();
     const {pageIndex, pageSize, changePage, changeRowsPerPage} = usePagination(
         state => state.serviceRequests.urgentPageData,
-        pageDataUrgentServiceRequests
+        setPageDataUrgentServiceRequests
     )
     const dispatch = useDispatch();
 
@@ -76,6 +76,7 @@ export const UrgentRequests = () => {
             try {
                 await Api.call(Api.endpoints.ServiceRequests.Prioritize, {data});
                 showMessage("Ops Code removed");
+                dispatch(setPageDataUrgentServiceRequests({pageSize, pageIndex: 0}))
                 dispatch(loadUrgentServiceRequests(selectedSC.id, selectedPod?.id));
             } catch (e) {
                 showError(e);
@@ -104,7 +105,7 @@ export const UrgentRequests = () => {
             data={urgentList}
             rowData={rowData}
             index="id"
-            hidePagination={numberOfRecords < pageSize}
+            hidePagination={numberOfRecords < 11}
             count={numberOfRecords}
             isLoading={urgentLoading}
             page={pageIndex}

@@ -20,6 +20,7 @@ export const FrameWelcomeLayout: React.FC<React.PropsWithChildren<React.PropsWit
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
         || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt
+        || scProfile?.serviceCenterFlag === EServiceCenterName.Bountiful
         || welcomeScreenView === 'serviceCenterSelect', [scProfile, welcomeScreenView]);
     return (
         <MainWrapper style={{height: isTopAligning ? "100%" : "100vh"}}>
