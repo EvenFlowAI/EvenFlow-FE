@@ -26,7 +26,7 @@ import {CustomWeekPicker} from "../../../../components/pickers/CustomWeekPicker/
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {sortEmployees} from "../../../../utils/utils";
 
-const daysOfWeek = [1, 2, 3, 4, 5, 6, 7, 0]
+const daysOfWeek = [1, 2, 3, 4, 5, 6, 0]
 
 const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}) => {
     const {technicians, isLoading, dateRange} = useSelector((state: RootState) => state.employeesCapacity);
@@ -52,14 +52,6 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
             ))
         }
     }, [selectedSC, dateRange, selectedTab])
-
-    useEffect(() => {
-        const dateFrom = dayjs().set('day', 1).format(CALENDAR_FORMAT)
-        dispatch(setDateRange({
-            from: dateFrom,
-            to: dayjs(dateFrom, CALENDAR_FORMAT).add(1, 'week').subtract(1, 'day').format(CALENDAR_FORMAT)
-        }))
-    }, [])
 
     useEffect(() => {
         setData([...technicians].sort(sortEmployees))
