@@ -21,6 +21,7 @@ import i18n from "../i18n";
 import {TOption} from "./types";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import {IAdvisorCapacity, ITechnicianCapacity} from "../store/reducers/employeeCapacity/types";
 
 dayjs.extend(utc);
 
@@ -468,3 +469,6 @@ export const disableEmotionWarning = () => {
         consoleError(msg, ...args);
     };
 }
+export const sortEmployees = (a: IAdvisorCapacity | ITechnicianCapacity, b: IAdvisorCapacity | ITechnicianCapacity): number => a.employeeName
+    ? a.employeeName.localeCompare(b.employeeName)
+    : a.employeeId.localeCompare(b.employeeId)

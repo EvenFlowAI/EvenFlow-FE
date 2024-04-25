@@ -31,6 +31,12 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
                 name: "Schedule Management",
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
+            },
+            {
+                to: Routes.Employees.EmployeeCapacity,
+                name: "Employee Capacity",
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
             }
         ]
     },

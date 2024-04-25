@@ -134,7 +134,7 @@ export type TSearchInputProps = TextInputProps & {
 };
 export type AlignTypes = "inherit" | "left" | "center" | "right" | "justify";
 export type TableRowDataType<DataEl> = {
-    header: string;
+    header: string|ReactElement;
     orderId?: keyof DataEl | string;
     val: (el: DataEl, idx: number) => string | JSX.Element | undefined | null;
     align?: AlignTypes;
@@ -149,6 +149,7 @@ export interface ITableProps<Data> {
     smallHeaderFont?: boolean;
     superCompact?: boolean;
     compact?: boolean;
+    compactBodyPadding?: boolean;
     order?: keyof Data | string;
     onSort?: (order: IOrder<Data>) => () => void;
     isAscending?: boolean;
@@ -171,7 +172,8 @@ export interface ITableProps<Data> {
     hideHeader?: boolean;
     borderHeader?: boolean;
     withBorders?: boolean;
-    actionsAlign?: "center"|"left"|"right"
+    actionsAlign?: "center"|"left"|"right";
+    withoutOverflow?: boolean;
 }
 
 export type TScreen =

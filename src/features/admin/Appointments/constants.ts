@@ -67,6 +67,6 @@ export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
         orderId: "reportingStatus"
     },
 ]
-export const allColumns = AppointmentsColumns.map(el => el.header);
-export const requiredColumns = AppointmentsColumns.filter(el => el.required).map(el => el.header);
+export const allColumns = AppointmentsColumns.map(el => el.header.toString());
+export const requiredColumns = AppointmentsColumns.filter(el => el.required).map(el => el.header.toString());
 export const localStorageItemName = "appointmentsColumns";

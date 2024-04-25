@@ -8,15 +8,18 @@ export type TStyleProps = {
     superCompact: boolean;
     borderHeader: boolean;
     withBorders?: boolean;
+    compactBodyPadding?: boolean;
 }
 
 export const StyledTableCell = styled(TableCell, {
-    shouldForwardProp: (prop) => prop !== "compact" && prop !== "smallHeaderFont" && prop !== "superCompact" && prop !== "borderHeader" && prop !== "withBorders"
-})<TStyleProps>(({theme, compact, superCompact, withBorders}) => ({
+    shouldForwardProp: (prop) => prop !== "compact" && prop !== "smallHeaderFont"
+        && prop !== "superCompact" && prop !== "borderHeader" && prop !== "withBorders"
+    && prop !== "compactBodyPadding"
+})<TStyleProps>(({theme, compact, compactBodyPadding, superCompact, withBorders}) => ({
     fontSize: compact ? 14 : 16,
     border: withBorders ? '1px solid #DADADA' : "none",
     // borderBottomColor: "#000000",
-    padding: compact ? compactPadding : superCompact ? superCompactPadding : cellPadding,
+    padding: compact || compactBodyPadding ? compactPadding : superCompact ? superCompactPadding : cellPadding,
     [theme.breakpoints.down('sm')]: {
         fontSize: 12,
         padding: theme.spacing(1)
@@ -24,7 +27,8 @@ export const StyledTableCell = styled(TableCell, {
 }))
 
 export const StyledTableHead = styled(TableCell, {
-    shouldForwardProp: (prop) => prop !== "compact" && prop !== "smallHeaderFont" && prop !== "superCompact" && prop !== "borderHeader" && prop !== "withBorders"
+    shouldForwardProp: (prop) => prop !== "compact" && prop !== "smallHeaderFont"
+        && prop !== "superCompact" && prop !== "borderHeader" && prop !== "withBorders"
 })<TStyleProps>(({theme, compact, smallHeaderFont, superCompact, borderHeader, withBorders}) => ({
     fontSize: smallHeaderFont ? 12 : compact ? 14 : 16,
     border: withBorders ? '1px solid #DADADA' : "none",
@@ -38,7 +42,6 @@ export const StyledTableHead = styled(TableCell, {
     }
 }))
 
-// 
 export const useStyles = makeStyles()(theme => ({
     root: {
         maxWidth: theme.breakpoints.values.lg,

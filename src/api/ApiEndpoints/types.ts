@@ -34,6 +34,8 @@ export interface IApiEndpoints {
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiEndpoint>,
     Employees: Record<"Create" | "Update" | "GetAll" | "GetAssignmentSettings" | "UpdateAssignmentSettings", TApiEndpoint>,
+    EmployeeCapacity: Record< "GetAdvisorsCapacity" | "UpdateAdvisorsCapacity" | "GetTechniciansCapacity"
+        | "UpdateTechniciansCapacity" | "UpdateTechniciansSettings", TApiEndpoint>,
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove" | "SetForWeek" | "GetCalendarSummary"
         | "GetByDate" | "UpdateByDate" | "GetBaseSummary" | "GetSummaryByEmployee" | "GetTimeScheduleByEmployee"
         | "SetTimeScheduleByEmployee", TApiEndpoint>,
