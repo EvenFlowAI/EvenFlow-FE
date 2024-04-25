@@ -40,7 +40,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
         superCompact: Boolean(props.superCompact),
         borderHeader: Boolean(props.borderHeader),
         withBorders: Boolean(props.withBorders),
-        compactBody: Boolean(props.compactBody),
+        compactBodyPadding: Boolean(props.compactBodyPadding),
     }), [props])
 
     const handleChangePage = (e: React.MouseEvent | null, newPage: number) => {
@@ -65,7 +65,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
     if (!props.data.length) return <NoData title={props.noDataTitle} />;
 
     return <>
-        <TableContainer className={classes.root}>
+        <TableContainer className={classes.root} style={props.withoutOverflow ? {overflowX: 'unset'} : {}}>
             <BaseTable>
                 {!props.hideHeader && <TableHead>
                     <TableRow>

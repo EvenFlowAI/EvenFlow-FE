@@ -126,7 +126,7 @@ const CapacityTechniciansTable = () => {
 
     return (
         <div>
-            <Table data={data} index="employeeId" rowData={RowData} hidePagination/>
+            <Table data={data} index="employeeId" rowData={RowData} hidePagination withoutOverflow/>
         </div>
     );
 };

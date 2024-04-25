@@ -31,6 +31,7 @@ const CapacityAdvisors = () => {
         if (selectedSC) {
             dispatch(loadServiceBookList(selectedSC.id))
             dispatch(loadAdvisorsCapacity(selectedSC.id))
+            setEdit(false);
         }
     }, [selectedSC])
 
@@ -74,8 +75,13 @@ const CapacityAdvisors = () => {
         setEdit(false)
     }
 
+    const onSuccess = () => {
+        setEdit(false)
+        showMessage("Advisors Capacity updated")
+    }
+
     const checkIsValid = (): boolean => {
-        return !data.find(el => !el.capacityPerServiceBook.find(item => item.value < 0))
+        return !data.find(el => el.capacityPerServiceBook.find(item => item.value < 0))
     }
 
     const onSave = () => {
@@ -84,7 +90,7 @@ const CapacityAdvisors = () => {
                 dispatch(updateAdvisorsCapacity({
                     serviceCenterId: selectedSC.id,
                     capacitySettings: data
-                }, showError))
+                }, showError, onSuccess))
             }
         } else {
             showError("Employee Capacity must not be less than 0")
@@ -148,9 +154,10 @@ const CapacityAdvisors = () => {
                 isLoading={isLoading}
                 index="employeeId"
                 rowData={RowData}
-                compact={isEdit}
-                compactBody={isEdit}
-                hidePagination/>
+                hidePagination
+                withoutOverflow
+                compactBodyPadding={isEdit}
+            />
         </div>
     );
 };

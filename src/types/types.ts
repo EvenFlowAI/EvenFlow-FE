@@ -149,7 +149,7 @@ export interface ITableProps<Data> {
     smallHeaderFont?: boolean;
     superCompact?: boolean;
     compact?: boolean;
-    compactBody?: boolean;
+    compactBodyPadding?: boolean;
     order?: keyof Data | string;
     onSort?: (order: IOrder<Data>) => () => void;
     isAscending?: boolean;
@@ -172,7 +172,8 @@ export interface ITableProps<Data> {
     hideHeader?: boolean;
     borderHeader?: boolean;
     withBorders?: boolean;
-    actionsAlign?: "center"|"left"|"right"
+    actionsAlign?: "center"|"left"|"right";
+    withoutOverflow?: boolean;
 }
 
 export type TScreen =
