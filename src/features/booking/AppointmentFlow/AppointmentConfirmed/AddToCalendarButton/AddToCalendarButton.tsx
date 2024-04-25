@@ -81,8 +81,8 @@ const AddToCalendarButton: React.FC<React.PropsWithChildren<React.PropsWithChild
         let dateFrom = dayjs.utc(date).format(G_CALENDAR_FORMAT);
         let dateTo = dayjs.utc(date).add(1, "hour").format(G_CALENDAR_FORMAT);
         if (isServiceValetApp) {
-            dateFrom = dateFrom + serviceValetAppointment?.pickUpMin;
-            dateTo = dateTo + serviceValetAppointment?.pickUpMax;
+            dateFrom = dateFrom + serviceValetAppointment?.pickUpMin.split(":").join("");
+            dateTo = dateTo + serviceValetAppointment?.pickUpMax.split(":").join("");
         } else {
             if (serviceTypeOption?.type === EServiceType.PickUpDropOff
                 && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {

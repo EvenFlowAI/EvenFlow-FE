@@ -26,7 +26,9 @@ const App = () => {
     const history = useHistory();
     const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
     const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
-        || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt, [scProfile]);
+        || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord
+        || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt
+        || scProfile?.serviceCenterFlag === EServiceCenterName.Bountiful, [scProfile]);
 
     useEffect(() => {
         window.addEventListener('focus', () => {
