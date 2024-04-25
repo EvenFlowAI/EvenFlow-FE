@@ -13,7 +13,7 @@ import {updateTechniciansCapacityType} from "../../../store/reducers/employeeCap
 import {useException} from "../../../hooks/useException/useException";
 
 const CapacityTechnicians = () => {
-    const {isLoading, capacityTypeOption} = useSelector((state: RootState) => state.employeesCapacity);
+    const {capacityTypeOption, isSettingLoading} = useSelector((state: RootState) => state.employeesCapacity);
     const [selectedTab, setTab] = useState<string>("0");
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
@@ -36,7 +36,7 @@ const CapacityTechnicians = () => {
 
     return (
         <div>
-            {isLoading
+            {isSettingLoading
                 ? <Loading/>
                 : <RadioBlock>
                     <RadioGroupLabel>Capacity Based On</RadioGroupLabel>

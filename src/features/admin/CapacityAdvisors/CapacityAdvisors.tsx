@@ -12,10 +12,7 @@ import {loadAdvisorsCapacity, updateAdvisorsCapacity} from "../../../store/reduc
 import {IAdvisorCapacity} from "../../../store/reducers/employeeCapacity/types";
 import {useException} from "../../../hooks/useException/useException";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
-
-const sortAdvisors = (a: IAdvisorCapacity, b: IAdvisorCapacity): number => a.employeeName
-    ? a.employeeName.localeCompare(b.employeeName)
-    : a.employeeId.localeCompare(b.employeeId)
+import {sortEmployees} from "../../../utils/utils";
 
 const CapacityAdvisors = () => {
     const {shortPodsList} = useSelector((state: RootState) => state.pods);
@@ -36,7 +33,7 @@ const CapacityAdvisors = () => {
     }, [selectedSC])
 
     useEffect(() => {
-        setData([...advisors].sort(sortAdvisors))
+        setData([...advisors].sort(sortEmployees))
     }, [advisors])
 
     const onChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,14 +61,14 @@ const CapacityAdvisors = () => {
                 return prev
                     .filter(el => el.employeeId !== itemToChange?.employeeId)
                     .concat(itemToChange)
-                    .sort(sortAdvisors)
+                    .sort(sortEmployees)
             }
             return prev
         })
     }
 
     const onCancel = () => {
-        setData([...advisors].sort(sortAdvisors))
+        setData([...advisors].sort(sortEmployees))
         setEdit(false)
     }
 

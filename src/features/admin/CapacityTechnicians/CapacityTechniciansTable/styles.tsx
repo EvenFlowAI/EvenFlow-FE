@@ -12,3 +12,10 @@ export const InputWrapper = styled('div')({
     alignItems: 'center',
     margin: '-12px 0'
 })
+
+export const PickerWrapper = styled("div")({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingRight: '23%'
+})

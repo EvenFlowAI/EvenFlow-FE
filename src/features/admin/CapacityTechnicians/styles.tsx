@@ -4,6 +4,7 @@ export const RadioBlock = styled('div')({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
+    marginBottom: -24,
 })
 
 export const RadioGroupLabel = styled("div")({

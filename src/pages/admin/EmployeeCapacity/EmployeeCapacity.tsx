@@ -32,7 +32,7 @@ const EmployeeCapacity = () => {
             <TabPanel style={{width: "100%", padding: "24px 0"}} value="0" key="0">
                 <CapacityAdvisors/>
             </TabPanel>
-            <TabPanel style={{width: "100%", padding: "24px 0"}} value="1" key="1">
+            <TabPanel style={{width: "100%", padding: "12px 0"}} value="1" key="1">
                 <CapacityTechnicians/>
             </TabPanel>
         </TabContext>

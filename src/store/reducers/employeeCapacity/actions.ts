@@ -15,6 +15,7 @@ import {
 } from "./types";
 
 export const setLoading = createAction<boolean>("EmployeeCapacity/SetLoading");
+export const setSettingLoading = createAction<boolean>("EmployeeCapacity/SetSettingLoading");
 export const getAdvisorsCapacity = createAction<IAdvisorCapacity[]>("EmployeeCapacity/GetAdvisorsCapacity");
 export const getTechniciansCapacity = createAction<ITechnicianCapacity[]>("EmployeeCapacity/GetTechniciansCapacity");
 export const getCapacityTypeOption = createAction<ECapacityType|null>("EmployeeCapacity/GetCapacityTypeOption");
@@ -46,7 +47,10 @@ export const loadTechniciansCapacity = (serviceCenterId: number, capacityType: E
         .catch(err => {
             console.log('get advisors capacity error', err)
         })
-        .finally(() => dispatch(setLoading(false)))
+        .finally(() => {
+            dispatch(setLoading(false))
+            dispatch(setSettingLoading(false))
+        })
 }
 
 export const updateAdvisorsCapacity = (data: IAdvisorsPayload, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
@@ -82,7 +86,7 @@ export const updateTechniciansCapacity = (data: ITechniciansPayload, capacityTyp
 }
 
 export const updateTechniciansCapacityType = (serviceCenterId: number, type: ECapacityType, tab: ECapacityType, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
-    dispatch(setLoading(true));
+    dispatch(setSettingLoading(true))
     Api.call(Api.endpoints.EmployeeCapacity.UpdateTechniciansSettings, {data: {serviceCenterId, type}})
         .then(res => {
             if (res) {
@@ -93,7 +97,7 @@ export const updateTechniciansCapacityType = (serviceCenterId: number, type: ECa
         .catch(err => {
             console.log('update technicians settings error', err)
             onError(err)
-            dispatch(setLoading(false))
+            dispatch(setSettingLoading(false))
         })
 }
 

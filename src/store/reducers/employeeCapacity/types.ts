@@ -41,6 +41,7 @@ export type TState = {
     technicians: ITechnicianCapacity[],
     isLoading: boolean;
     dateRange: TCapacityDateRange;
+    isSettingLoading: boolean;
 }
 
 export type TTechniciansResponse = {
