@@ -32,11 +32,11 @@ export const loadAdvisorsCapacity = (serviceCenterId: number): AppThunk => dispa
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const loadTechniciansCapacity = (serviceCenterId: number): AppThunk => (dispatch, getState) => {
+export const loadTechniciansCapacity = (serviceCenterId: number, capacityType: ECapacityType): AppThunk => (dispatch, getState) => {
     dispatch(setLoading(true))
     const {to, from} = getState().employeesCapacity.dateRange
     Api.call<TTechniciansResponse>(Api.endpoints.EmployeeCapacity.GetTechniciansCapacity,
-        {params: {serviceCenterId, dateTo: to, dateFrom: from}})
+        {params: {serviceCenterId, dateTo: to, dateFrom: from, capacityType}})
         .then(res => {
             if (res.data) {
                 dispatch(getTechniciansCapacity(res.data.technicianCapacitySettings))
@@ -65,12 +65,12 @@ export const updateAdvisorsCapacity = (data: IAdvisorsPayload, onError: TArgCall
         })
 }
 
-export const updateTechniciansCapacity = (data: ITechniciansPayload, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
+export const updateTechniciansCapacity = (data: ITechniciansPayload, capacityType: ECapacityType, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.EmployeeCapacity.UpdateTechniciansCapacity, {data})
         .then(res => {
             if (res) {
-                dispatch(loadTechniciansCapacity(data.serviceCenterId))
+                dispatch(loadTechniciansCapacity(data.serviceCenterId, capacityType))
                 onSuccess && onSuccess()
             }
         })
@@ -81,12 +81,12 @@ export const updateTechniciansCapacity = (data: ITechniciansPayload, onError: TA
         })
 }
 
-export const updateTechniciansSettings = (serviceCenterId: number, type: ECapacityType, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
+export const updateTechniciansCapacityType = (serviceCenterId: number, type: ECapacityType, tab: ECapacityType, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
     dispatch(setLoading(true));
-    Api.call(Api.endpoints.EmployeeCapacity.UpdateTechniciansCapacity, {data: {serviceCenterId, type}})
+    Api.call(Api.endpoints.EmployeeCapacity.UpdateTechniciansSettings, {data: {serviceCenterId, type}})
         .then(res => {
             if (res) {
-                dispatch(loadTechniciansCapacity(serviceCenterId))
+                dispatch(loadTechniciansCapacity(serviceCenterId, tab))
                 onSuccess && onSuccess()
             }
         })

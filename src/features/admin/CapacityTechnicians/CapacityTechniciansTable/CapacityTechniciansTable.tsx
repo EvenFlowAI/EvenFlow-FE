@@ -9,7 +9,7 @@ import {InputOrValue} from "../../../../components/wrappers/TableInput/TableInpu
 import {Table} from "../../../../components/tables/Table/Table";
 import {SaveEditBlock} from "../../../../components/buttons/SaveEditBlock/SaveEditBlock";
 import dayjs from "dayjs";
-import {ITechnicianCapacity} from "../../../../store/reducers/employeeCapacity/types";
+import {ECapacityType, ITechnicianCapacity} from "../../../../store/reducers/employeeCapacity/types";
 import {loadTechniciansCapacity, setDateRange} from "../../../../store/reducers/employeeCapacity/actions";
 import {CALENDAR_FORMAT} from "../../../../utils/constants";
 
@@ -19,7 +19,7 @@ const sortAdvisors = (a: ITechnicianCapacity, b: ITechnicianCapacity): number =>
     ? a.employeeName.localeCompare(b.employeeName)
     : a.employeeId.localeCompare(b.employeeId)
 
-const CapacityTechniciansTable = () => {
+const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}) => {
     const {technicians, isLoading, dateRange} = useSelector((state: RootState) => state.employeesCapacity);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [data, setData] = useState<ITechnicianCapacity[]>([]);
@@ -31,8 +31,13 @@ const CapacityTechniciansTable = () => {
     }, [selectedSC])
 
     useEffect(() => {
-        if (selectedSC)  dispatch(loadTechniciansCapacity(selectedSC.id))
-    }, [selectedSC, dateRange])
+        if (selectedSC && dateRange.from && dateRange.to) {
+            dispatch(loadTechniciansCapacity(
+                selectedSC.id,
+                selectedTab === "0" ? ECapacityType.DailyVehicles : ECapacityType.AvailableBillHours,
+            ))
+        }
+    }, [selectedSC, dateRange, selectedTab])
 
     useEffect(() => {
         const dateFrom = dayjs().set('day', 1).format(CALENDAR_FORMAT)
@@ -75,7 +80,9 @@ const CapacityTechniciansTable = () => {
 
     const DaysData: TableRowDataType<ITechnicianCapacity>[] = daysOfWeek.map(day => ({
         header: dayjs().set('day', day).format("ddd"),
-        val: (el) => `${el.dailyCapacity[dayjs(day).format("dddd")]}`
+        val: (el) => selectedTab === '0'
+            ? `${el.dailyCapacity[dayjs(day).format("dddd")].toFixed(0)}`
+            : `${el.dailyCapacity[dayjs(day).format("dddd")].toFixed(1)}`
     }))
 
     const RowData:TableRowDataType<ITechnicianCapacity>[] = [

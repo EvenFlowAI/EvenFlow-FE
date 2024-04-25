@@ -5,7 +5,7 @@ import {Tab} from "@mui/material";
 import {TabList} from "../../../components/styled/Tabs";
 import {TabContext, TabPanel} from "@mui/lab";
 import CapacityAdvisors from "../../../features/admin/CapacityAdvisors/CapacityAdvisors";
-import CapacityTechniciansTable from "../../../features/admin/CapacityTechnicians/CapacityTechniciansTable/CapacityTechniciansTable";
+import CapacityTechnicians from "../../../features/admin/CapacityTechnicians/CapacityTechnicians";
 
 const tabNames = [
     "Service Advisors",
@@ -33,7 +33,7 @@ const EmployeeCapacity = () => {
                 <CapacityAdvisors/>
             </TabPanel>
             <TabPanel style={{width: "100%", padding: "24px 0"}} value="1" key="1">
-                <CapacityTechniciansTable/>
+                <CapacityTechnicians/>
             </TabPanel>
         </TabContext>
         </>;
