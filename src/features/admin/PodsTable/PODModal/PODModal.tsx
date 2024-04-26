@@ -35,6 +35,7 @@ import {LoadingButton} from "../../../../components/buttons/LoadingButton/Loadin
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {Loading} from "../../../../components/wrappers/Loading/Loading";
 
 const initialForm: TForm = {
     name: "",
@@ -308,278 +309,280 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                 {editingItemId ? "Configure Service Book" : "Add Service Book"}
             </DialogTitle>
             <DialogContent>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            id="name"
-                            name="name"
-                            label="Name"
-                            placeholder="Type Name"
-                            fullWidth
-                            required
-                            autoComplete="pod-name pod"
-                            onChange={handleChange}
-                            value={form.name}
-                            error={!form.name.length && formIsChecked}
-                            disabled={podsLoading || loading}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Autocomplete
-                            options={advisorsList}
-                            multiple
-                            onChange={handleSelectAdv}
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            disabled={podsLoading || loading}
-                            getOptionLabel={i => i.fullName}
-                            isOptionEqualToValue={(o, s) => o.id === s.id}
-                            loading={false}
-                            value={form.advisors}
-                            renderOption={autocompleteOptionsRender((e) => e.fullName)}
-                            renderInput={autocompleteRender({label: "Advisors", fullWidth: true, placeholder: "Select Advisors"})}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            options={appointmentTypeOptions}
-                            getOptionLabel={i => i.name}
-                            disabled={podsLoading || loading}
-                            value={appointmentType}
-                            isOptionEqualToValue={(o, v) => o.value === v.value}
-                            onChange={onAppointmentTypeChange}
-                            renderInput={autocompleteRender({
-                                label: "Appointment Type",
-                                placeholder: 'Appointment Type'
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            options={serviceRequests}
-                            multiple
-                            fullWidth
-                            disabled={podsLoading || loading}
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            onChange={handleSCChange}
-                            getOptionLabel={i => i.code}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            renderOption={autocompleteOptionsRender((e) => e.code)}
-                            loading={false}
-                            value={form.serviceRequests}
-                            renderInput={autocompleteRender({label: "Service Requests", fullWidth: true, placeholder: "Select Service Requests"})}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            multiple
-                            style={{ marginBottom: 10 }}
-                            disabled={podsLoading || loading}
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            options={getSortedMakes()}
-                            disableCloseOnSelect
-                            getOptionLabel={i => i.name}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            renderOption={autocompleteOptionsRender((e) => e.name)}
-                            value={selectedMakes}
-                            onChange={onMakeChange}
-                            renderInput={autocompleteRender({
-                                label: "Makes",
-                                placeholder: 'Select Makes'
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            multiple
-                            disabled={podsLoading || loading}
-                            style={{ marginBottom: 10 }}
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            options={getSortedModels()}
-                            disableCloseOnSelect
-                            getOptionLabel={i => i.name}
-                            renderOption={autocompleteOptionsRender((e) => e.name)}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            value={selectedModels}
-                            onChange={onModelChange}
-                            renderInput={autocompleteRender({
-                                label: "Models",
-                                placeholder: 'Select Models'
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            disabled={podsLoading || loading}
-                            options={jobTypeOptions}
-                            isOptionEqualToValue={(o, v) => o.value === v.value}
-                            getOptionLabel={i => i.name}
-                            value={jobType}
-                            onChange={onJobTypeChange}
-                            renderInput={autocompleteRender({
-                                label: "Job Type",
-                                placeholder: 'Job Type'
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            disabled={podsLoading || loading}
-                            options={engineTypes}
-                            multiple
-                            fullWidth
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            onChange={handleEngineTypesChange}
-                            getOptionLabel={i => i.name}
-                            renderOption={autocompleteOptionsRender((e) => e.name)}
-                            loading={false}
-                            value={selectedEngineTypes}
-                            renderInput={autocompleteRender({label: "Engine Types", fullWidth: true, placeholder: "Select Engine Types"})}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            disabled={podsLoading || loading}
-                            options={serviceValetZones}
-                            multiple
-                            fullWidth
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            onChange={handleServiceValetZoneChange}
-                            getOptionLabel={i => i.name}
-                            renderOption={autocompleteOptionsRender((e) => e.name)}
-                            loading={false}
-                            value={selectedServiceValetZones}
-                            renderInput={autocompleteRender({label: "Service Valet Zones", fullWidth: true, placeholder: "Select Service Valet Zones"})}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            disabled={podsLoading || loading}
-                            options={zones}
-                            multiple
-                            fullWidth
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            onChange={handleZoneChange}
-                            getOptionLabel={i => i.name}
-                            renderOption={autocompleteOptionsRender((e) => e.name)}
-                            loading={false}
-                            value={mobileZones}
-                            renderInput={autocompleteRender({label: "Mobile Zones", fullWidth: true, placeholder: "Select Mobile Zones"})}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            disabled={podsLoading || loading}
-                            options={techniciansList}
-                            multiple
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            onChange={handleTechniciansChange}
-                            getOptionLabel={i => i.fullName}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            renderOption={autocompleteOptionsRender((e) => e.fullName)}
-                            loading={false}
-                            value={form.technicians}
-                            renderInput={autocompleteRender({
-                                label: "Technicians",
-                                fullWidth: true,
-                                placeholder: "Select Technicians",
-                                error: !form.technicians.length && formIsChecked
-                            })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Autocomplete
-                            disabled={podsLoading || loading}
-                            options={baysList}
-                            multiple
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            onChange={handleBaysChange}
-                            getOptionLabel={i => i.name}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            renderOption={autocompleteOptionsRender((e) => e.name)}
-                            loading={false}
-                            value={form.bays}
-                            renderInput={autocompleteRender({label: "Bays", fullWidth: true, placeholder: "Select Bays"})}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12}>
-                        <Autocomplete
-                            disabled={podsLoading || loading}
-                            options={transportations}
-                            multiple
-                            ChipProps={{
-                                color: "primary",
-                                style: {borderRadius: 4},
-                                size: "small"
-                            }}
-                            disableCloseOnSelect
-                            onChange={handleTransportationsChange}
-                            getOptionLabel={i => getTransportationOptionString(i.type)}
-                            isOptionEqualToValue={(o, v) => o.id === v.id}
-                            renderOption={autocompleteOptionsRender((e) => getTransportationOptionString(e.type))}
-                            loading={isTransportationLoading}
-                            value={transportationOptions}
-                            renderInput={autocompleteRender({label: "Transportation Options", fullWidth: true, placeholder: "Select Transportation Options"})}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <div style={{height: '100%', display: 'flex', alignItems: 'flex-end'}}>
-                            <Label
-                                checked={form.isVisitCenter}
-                                onChange={() => onIsVisitCenterChange()}
-                                label={"For Visit Center Only"}
-                                labelPlacement="start"
-                                control={<Switch color="primary" disabled={podsLoading}/>}
+                {podsLoading ? <Loading/>
+                    :                 <Grid container spacing={3}>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="name"
+                                name="name"
+                                label="Name"
+                                placeholder="Type Name"
+                                fullWidth
+                                required
+                                autoComplete="pod-name pod"
+                                onChange={handleChange}
+                                value={form.name}
+                                error={!form.name.length && formIsChecked}
+                                disabled={podsLoading || loading}
                             />
-                        </div>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Autocomplete
+                                options={advisorsList}
+                                multiple
+                                onChange={handleSelectAdv}
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                disabled={podsLoading || loading}
+                                getOptionLabel={i => i.fullName}
+                                isOptionEqualToValue={(o, s) => o.id === s.id}
+                                loading={false}
+                                value={form.advisors}
+                                renderOption={autocompleteOptionsRender((e) => e.fullName)}
+                                renderInput={autocompleteRender({label: "Advisors", fullWidth: true, placeholder: "Select Advisors"})}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                options={appointmentTypeOptions}
+                                getOptionLabel={i => i.name}
+                                disabled={podsLoading || loading}
+                                value={appointmentType}
+                                isOptionEqualToValue={(o, v) => o.value === v.value}
+                                onChange={onAppointmentTypeChange}
+                                renderInput={autocompleteRender({
+                                    label: "Appointment Type",
+                                    placeholder: 'Appointment Type'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                options={serviceRequests}
+                                multiple
+                                fullWidth
+                                disabled={podsLoading || loading}
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                onChange={handleSCChange}
+                                getOptionLabel={i => i.code}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                renderOption={autocompleteOptionsRender((e) => e.code)}
+                                loading={false}
+                                value={form.serviceRequests}
+                                renderInput={autocompleteRender({label: "Service Requests", fullWidth: true, placeholder: "Select Service Requests"})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                style={{ marginBottom: 10 }}
+                                disabled={podsLoading || loading}
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                options={getSortedMakes()}
+                                disableCloseOnSelect
+                                getOptionLabel={i => i.name}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                renderOption={autocompleteOptionsRender((e) => e.name)}
+                                value={selectedMakes}
+                                onChange={onMakeChange}
+                                renderInput={autocompleteRender({
+                                    label: "Makes",
+                                    placeholder: 'Select Makes'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                multiple
+                                disabled={podsLoading || loading}
+                                style={{ marginBottom: 10 }}
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                options={getSortedModels()}
+                                disableCloseOnSelect
+                                getOptionLabel={i => i.name}
+                                renderOption={autocompleteOptionsRender((e) => e.name)}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                value={selectedModels}
+                                onChange={onModelChange}
+                                renderInput={autocompleteRender({
+                                    label: "Models",
+                                    placeholder: 'Select Models'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                disabled={podsLoading || loading}
+                                options={jobTypeOptions}
+                                isOptionEqualToValue={(o, v) => o.value === v.value}
+                                getOptionLabel={i => i.name}
+                                value={jobType}
+                                onChange={onJobTypeChange}
+                                renderInput={autocompleteRender({
+                                    label: "Job Type",
+                                    placeholder: 'Job Type'
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                disabled={podsLoading || loading}
+                                options={engineTypes}
+                                multiple
+                                fullWidth
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                onChange={handleEngineTypesChange}
+                                getOptionLabel={i => i.name}
+                                renderOption={autocompleteOptionsRender((e) => e.name)}
+                                loading={false}
+                                value={selectedEngineTypes}
+                                renderInput={autocompleteRender({label: "Engine Types", fullWidth: true, placeholder: "Select Engine Types"})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                disabled={podsLoading || loading}
+                                options={serviceValetZones}
+                                multiple
+                                fullWidth
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                onChange={handleServiceValetZoneChange}
+                                getOptionLabel={i => i.name}
+                                renderOption={autocompleteOptionsRender((e) => e.name)}
+                                loading={false}
+                                value={selectedServiceValetZones}
+                                renderInput={autocompleteRender({label: "Service Valet Zones", fullWidth: true, placeholder: "Select Service Valet Zones"})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                disabled={podsLoading || loading}
+                                options={zones}
+                                multiple
+                                fullWidth
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                onChange={handleZoneChange}
+                                getOptionLabel={i => i.name}
+                                renderOption={autocompleteOptionsRender((e) => e.name)}
+                                loading={false}
+                                value={mobileZones}
+                                renderInput={autocompleteRender({label: "Mobile Zones", fullWidth: true, placeholder: "Select Mobile Zones"})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                disabled={podsLoading || loading}
+                                options={techniciansList}
+                                multiple
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                onChange={handleTechniciansChange}
+                                getOptionLabel={i => i.fullName}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                renderOption={autocompleteOptionsRender((e) => e.fullName)}
+                                loading={false}
+                                value={form.technicians}
+                                renderInput={autocompleteRender({
+                                    label: "Technicians",
+                                    fullWidth: true,
+                                    placeholder: "Select Technicians",
+                                    error: !form.technicians.length && formIsChecked
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                disabled={podsLoading || loading}
+                                options={baysList}
+                                multiple
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                onChange={handleBaysChange}
+                                getOptionLabel={i => i.name}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                renderOption={autocompleteOptionsRender((e) => e.name)}
+                                loading={false}
+                                value={form.bays}
+                                renderInput={autocompleteRender({label: "Bays", fullWidth: true, placeholder: "Select Bays"})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <Autocomplete
+                                disabled={podsLoading || loading}
+                                options={transportations}
+                                multiple
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                onChange={handleTransportationsChange}
+                                getOptionLabel={i => getTransportationOptionString(i.type)}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                renderOption={autocompleteOptionsRender((e) => getTransportationOptionString(e.type))}
+                                loading={isTransportationLoading}
+                                value={transportationOptions}
+                                renderInput={autocompleteRender({label: "Transportation Options", fullWidth: true, placeholder: "Select Transportation Options"})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <div style={{height: '100%', display: 'flex', alignItems: 'flex-end'}}>
+                                <Label
+                                    checked={form.isVisitCenter}
+                                    onChange={() => onIsVisitCenterChange()}
+                                    label={"For Visit Center Only"}
+                                    labelPlacement="start"
+                                    control={<Switch color="primary" disabled={podsLoading}/>}
+                                />
+                            </div>
+                        </Grid>
                     </Grid>
-                </Grid>
+                }
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCancel} color="info" disabled={podsLoading}>
