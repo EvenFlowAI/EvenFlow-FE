@@ -68,7 +68,7 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
                 const updated = {...employee, efficiency: +value}
                 return prev
                     .filter(item => serviceBookId
-                        ? item.serviceBookId !== +serviceBookId && item.employeeId !== employeeId
+                        ? item.serviceBookId !== +serviceBookId || item.employeeId !== employeeId
                         : item.employeeId !== employeeId)
                     .concat(updated)
                     .sort(sortEmployees)
