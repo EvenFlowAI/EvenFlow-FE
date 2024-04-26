@@ -47,7 +47,7 @@ const CapacityTechnicians = () => {
             {isSettingLoading
                 ? <Loading/>
                 : <RadioBlock>
-                    <RadioGroupLabel>Capacity Based On</RadioGroupLabel>
+                    <RadioGroupLabel>Capacity Based On:</RadioGroupLabel>
                     <RadioGroup
                         row
                         aria-label="countType"
@@ -77,10 +77,10 @@ const CapacityTechnicians = () => {
                     <Tab label="Daily Vehicles" value="0" key="Daily Vehicles"/>
                     <Tab label="Available Bill Hour Capacity" value="1" key="Available Bill Hour Capacity"/>
                 </TabList>
-                <TabPanel style={{width: "100%", padding: "24px 0"}} value="0" key="0">
+                <TabPanel style={{width: "100%", padding: "4px 0"}} value="0" key="0">
                     <CapacityTechniciansTable selectedTab={selectedTab}/>
                 </TabPanel>
-                <TabPanel style={{width: "100%", padding: "24px 0"}} value="1" key="1">
+                <TabPanel style={{width: "100%", padding: "4px 0"}} value="1" key="1">
                     <CapacityTechniciansTable selectedTab={selectedTab}/>
                 </TabPanel>
             </TabContext>
