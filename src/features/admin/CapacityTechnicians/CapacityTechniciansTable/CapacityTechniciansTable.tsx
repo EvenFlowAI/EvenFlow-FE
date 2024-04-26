@@ -120,16 +120,17 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
         {
             header: "Name",
             val: (el) => el.employeeName,
-            width: 148,
+            width: 150,
         },
         {
             header: "Service Book",
             val: (el) => el.serviceBookName,
-            width: 100,
+            width: 150
         },
         {
-            header: "Average Bill Hours per RO",
+            header: "Average Hours per RO",
             val: (el) => el.avarageBillHoursPerRO ? el.avarageBillHoursPerRO.toString() : '',
+            width: 130
         },
         {
             header: "Efficiency",
