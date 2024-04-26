@@ -32,7 +32,7 @@ export const CustomWeekPicker = (props: TProps) => {
             <ChevronLeft />
         </Button>
         <Button className={clsx(classes.controlButton, classes.controlDay)}  variant="text" color="info">
-            Week of {dayjs(props.date).format("MMM, Do")}
+            Week of {dayjs(props.date).format("MMM Do")}
         </Button>
         <Button
             className={classes.controlButton}

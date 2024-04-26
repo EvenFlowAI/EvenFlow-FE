@@ -5,6 +5,10 @@ export const RadioBlock = styled('div')({
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginBottom: -24,
+    "& .MuiFormControlLabel-label": {
+        fontWeight: 700,
+        fontSize: 14,
+    }
 })
 
 export const RadioGroupLabel = styled("div")({

@@ -68,7 +68,7 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
                 const updated = {...employee, efficiency: +value}
                 return prev
                     .filter(item => serviceBookId
-                        ? item.serviceBookId !== +serviceBookId && item.employeeId !== employeeId
+                        ? item.serviceBookId !== +serviceBookId || item.employeeId !== employeeId
                         : item.employeeId !== employeeId)
                     .concat(updated)
                     .sort(sortEmployees)
@@ -112,8 +112,8 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
     const DaysData: TableRowDataType<ITechnicianCapacity>[] = daysOfWeek.map(day => ({
         header: dayjs().set('day', day).format("ddd"),
         val: (el) => selectedTab === '0'
-            ? `${el.dailyCapacity[dayjs(day).format("dddd")].toFixed(0)}`
-            : `${el.dailyCapacity[dayjs(day).format("dddd")].toFixed(1)}`
+            ? `${el.dailyCapacity[dayjs().set('day', day).format("dddd")].toFixed(0)}`
+            : `${el.dailyCapacity[dayjs().set('day', day).format("dddd")].toFixed(1)}`
     }))
 
     const RowData:TableRowDataType<ITechnicianCapacity>[] = [
