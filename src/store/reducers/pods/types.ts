@@ -90,4 +90,24 @@ export type TState = {
     shortPodsList: IPodShort[];
     selectedPod: IPodShort | null;
     podById: IPod|null;
+    summary: IPodSummary[];
+}
+
+export enum EPodSummaryOption {
+    OpsCodes,
+    ServiceType,
+    JobType,
+    Make,
+    Model,
+    EngineType,
+    ServiceValet,
+    MobileService,
+    TransportOptions,
+    Advisors
+}
+
+export interface IPodSummary {
+    serviceBookId: number;
+    options: EPodSummaryOption[];
+    serviceBookName?: string;
 }

@@ -174,6 +174,7 @@ export interface ITableProps<Data> {
     withBorders?: boolean;
     actionsAlign?: "center"|"left"|"right";
     withoutOverflow?: boolean;
+    verticalAlign?: string;
 }
 
 export type TScreen =

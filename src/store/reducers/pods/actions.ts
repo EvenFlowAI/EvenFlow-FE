@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IPod, IPodFilters, IPodForm, IPodShort} from "./types";
-import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
+import {IPod, IPodFilters, IPodForm, IPodShort, IPodSummary} from "./types";
+import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse, TArgCallback} from "../../../types/types";
 
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
@@ -12,6 +12,7 @@ export const setPodsFilters = createAction<Partial<IPodFilters>>("Pods/Filters")
 export const getPodsShort = createAction<IPodShort[]>("Pods/GetPodsShort");
 export const setSelectedPod = createAction<IPodShort|null>("Pods/SetSelectedPod");
 export const setPodById = createAction<IPod|null>("Pods/SetPodById");
+export const setPodsSummary = createAction<IPodSummary[]>("Pods/SetPodsSummary");
 
 export const loadPods = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
     const {podsFilters, podsPageData} = getState().pods;
@@ -39,15 +40,20 @@ export const updatePod = (data: IPodForm, id: number): AppThunk => async dispatc
     dispatch(loadPods(data.serviceCenterId));
     dispatch(loadPodsShort(data.serviceCenterId))
 }
-export const removePod = (id: number, serviceCenterId?: number): AppThunk => async (dispatch, getState) => {
-    await Api.call(Api.endpoints.Pods.Remove, {urlParams: {id}});
-    if (getState().pods.selectedPod?.id === id) {
-        dispatch(setSelectedPod(null));
-    }
-    if (serviceCenterId) {
-        dispatch(loadPods(serviceCenterId));
-        dispatch(loadPodsShort(serviceCenterId));
-    }
+export const removePod = (id: number, serviceCenterId?: number, onError?: TArgCallback<any>): AppThunk => async (dispatch, getState) => {
+    dispatch(setPodsLoading(true))
+    Api.call(Api.endpoints.Pods.Remove, {urlParams: {id}})
+        .then(() => {
+            if (getState().pods.selectedPod?.id === id) {
+                dispatch(setSelectedPod(null));
+            }
+            if (serviceCenterId) {
+                dispatch(loadPodsSummary(serviceCenterId))
+            }
+        }).catch(err => {
+            onError && onError(err)
+        dispatch(setPodsLoading(false))
+    })
 }
 
 export const loadPodsShort = (serviceCenterId: number): AppThunk => async dispatch => {
@@ -66,6 +72,18 @@ export const loadPodById = (id: number): AppThunk => async dispatch => {
         })
         .catch(err => {
             console.log('get pod by id err', err)
+        })
+        .finally(() => dispatch(setPodsLoading(false)))
+}
+
+export const loadPodsSummary = (serviceCenterId: number): AppThunk => dispatch => {
+    dispatch(setPodsLoading(true))
+    Api.call<IPodSummary[]>(Api.endpoints.Pods.GetSummary, {params: {serviceCenterId}})
+        .then(res => {
+            if (res.data) dispatch(setPodsSummary(res.data))
+        })
+        .catch(err => {
+            console.log('get pod summary error', err)
         })
         .finally(() => dispatch(setPodsLoading(false)))
 }
