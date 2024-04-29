@@ -75,6 +75,7 @@ export enum EmployeeRoutes {
     AddDelete = "/admin/employees/add-delete",
     ScheduleSetUp = "/admin/employees/schedule-set-up",
     ScheduleManagement = "/admin/employees/schedule-management",
+    EmployeeCapacity = "/admin/employees/employee-capacity",
 }
 
 export enum EndUser {

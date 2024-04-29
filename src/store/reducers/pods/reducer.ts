@@ -5,7 +5,7 @@ import {
     setPodsFilters,
     setPodsLoading,
     setPodsPageData,
-    setPodsPaging,
+    setPodsPaging, setPodsSummary,
     setSelectedPod
 } from "./actions";
 import {defaultPageData, defaultPaging} from "../constants";
@@ -23,6 +23,7 @@ const initialState: TState = {
     selectedPod: null,
     shortPodsList: [],
     podById: null,
+    summary: [],
 }
 
 export const podsReducer = createReducer(initialState, builder => builder
@@ -49,5 +50,8 @@ export const podsReducer = createReducer(initialState, builder => builder
     })
     .addCase(setPodById, (state, {payload}) => {
         return {...state, podById: payload};
+    })
+    .addCase(setPodsSummary, (state, {payload}) => {
+        return {...state, summary: payload};
     })
 )

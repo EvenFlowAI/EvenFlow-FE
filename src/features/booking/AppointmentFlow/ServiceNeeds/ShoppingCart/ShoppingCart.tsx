@@ -123,7 +123,7 @@ const ShoppingCart = () => {
                     {isOpen ? <ExpandLess/> : <ExpandMore/>}
                 </IconButton>}
             </div>
-            {isOpen && selectedServices.map(item => <CartItem key={item.nhtsaRecallNumber ?? item.id} item={item} onClick={onClick}/>)}
+            {isOpen && selectedServices.map(item => <CartItem key={item.campaignNumber ?? item.id} item={item} onClick={onClick}/>)}
         </div>
         : null;
 };
