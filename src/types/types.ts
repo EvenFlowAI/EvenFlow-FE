@@ -218,19 +218,19 @@ export type IMaintenanceItem = {
     id?: number;
     name: string;
     type: EMaintenanceItemType;
-    nhtsaRecallNumber?: string;
+    campaignNumber?: string;
 }
 
 export interface IRecallByVin {
-    shortDescription: string;
-    recallOpenDate: string;
-    recallComponent: string;
-    nhtsaRecallNumber: string;
-    recallStatus: string;
-    summary: string;
-    safetyRisk: string;
-    serviceRequestId: number;
     id: number | null;
+    serviceRequestId: number;
+    campaignNumber: string;
+    recallComponent: string;
+    recallStatus: string;
+    shortDescription: string;
+    recallOpenDate?: string;
+    summary?: string;
+    safetyRisk?: string;
 }
 
 export type TActionProps = {

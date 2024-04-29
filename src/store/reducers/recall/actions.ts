@@ -90,7 +90,7 @@ export const updateSelectedRecalls = (serviceCenterId: number, vin: string, vehi
             if (result.data) {
                 const data: IRecallByVin[] = result.data
                 dispatch(getRecallsByVin(data))
-                const selected = data.filter(item => recallsNumbers.includes(item.nhtsaRecallNumber))
+                const selected = data.filter(item => recallsNumbers.includes(item.campaignNumber))
                 dispatch(setSelectedRecalls(selected));
             }
         })
