@@ -32,13 +32,11 @@ export const loadPods = (serviceCenterId: number): AppThunk => async (dispatch, 
 }
 export const createPod = (data: IPodForm): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.Pods.Create, {data});
-    dispatch(loadPods(data.serviceCenterId));
-    dispatch(loadPodsShort(data.serviceCenterId));
+    dispatch(loadPodsSummary(data.serviceCenterId))
 }
 export const updatePod = (data: IPodForm, id: number): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.Pods.Update, {data, urlParams: {id}});
-    dispatch(loadPods(data.serviceCenterId));
-    dispatch(loadPodsShort(data.serviceCenterId))
+    dispatch(loadPodsSummary(data.serviceCenterId))
 }
 export const removePod = (id: number, serviceCenterId?: number, onError?: TArgCallback<any>): AppThunk => async (dispatch, getState) => {
     dispatch(setPodsLoading(true))

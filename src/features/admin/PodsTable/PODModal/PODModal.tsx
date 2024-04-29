@@ -253,6 +253,7 @@ export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}>
                         await dispatch(createPod(data));
                     }
                     setLoading(false);
+                    setFormIsChecked(false);
                     showMessage(`Service Book ${podById ? "updated" : "created"}`);
                     props.onClose();
                 } catch (e) {
