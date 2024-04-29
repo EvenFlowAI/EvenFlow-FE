@@ -2,7 +2,6 @@ import { FormControlLabel, Switch } from "@mui/material";
 import { withStyles } from 'tss-react/mui';
 import { makeStyles } from 'tss-react/mui';
 
-//
 export const useStyles = makeStyles()(() => ({
     mainTitle: {
         fontSize: 24,
