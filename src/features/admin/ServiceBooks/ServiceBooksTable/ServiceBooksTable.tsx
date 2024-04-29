@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useDispatch, useSelector} from "react-redux";
-import {loadPodsSummary, removePod} from "../../../../store/reducers/pods/actions";
+import {loadPodsSummary, removePod, setPodById} from "../../../../store/reducers/pods/actions";
 import {Table} from "../../../../components/tables/Table/Table";
 import {RootState} from "../../../../store/rootReducer";
 import {rowData} from "./constants";
@@ -71,6 +71,12 @@ const ServiceBooksTable = () => {
         }
     }
 
+    const onEditClose = () => {
+        setCurrentItem(null);
+        dispatch(setPodById(null));
+        onClose()
+    }
+
     return (
         <div style={{paddingTop: 32}}>
             <Table
@@ -89,7 +95,7 @@ const ServiceBooksTable = () => {
                 <MenuItem onClick={openEdit} disabled={podsLoading}>Edit</MenuItem>
                 <MenuItem onClick={askRemove} disabled={podsLoading}>Remove</MenuItem>
             </Menu>
-            <PODModal open={isOpen} onClose={onClose} editingItemId={currentItem?.serviceBookId} />
+            <PODModal open={isOpen} onClose={onEditClose} editingItemId={currentItem?.serviceBookId} />
         </div>
     );
 };
