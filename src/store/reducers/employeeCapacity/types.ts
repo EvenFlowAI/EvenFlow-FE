@@ -49,6 +49,16 @@ export type TTechniciansResponse = {
     capacityTypeOption: ECapacityType;
 }
 
+export type TCapacitySettingPayload = {
+    employeeId: string;
+    capacityPerServiceBook: TAdvisorPerPodBase[];
+}
+
+export type TAdvisorCapacityPayload = {
+    serviceCenterId: number;
+    capacitySettings: TCapacitySettingPayload[];
+}
+
 export type IAdvisorsPayload = {
     serviceCenterId: number;
     capacitySettings: IAdvisorCapacity[];

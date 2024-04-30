@@ -8,9 +8,8 @@ import {createAction} from "@reduxjs/toolkit";
 import {
     ECapacityType,
     IAdvisorCapacity,
-    IAdvisorsPayload,
     ITechnicianCapacity,
-    ITechniciansPayload, TCapacityDateRange,
+    ITechniciansPayload, TAdvisorCapacityPayload, TCapacityDateRange,
     TTechniciansResponse
 } from "./types";
 
@@ -53,7 +52,7 @@ export const loadTechniciansCapacity = (serviceCenterId: number, capacityType: E
         })
 }
 
-export const updateAdvisorsCapacity = (data: IAdvisorsPayload, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
+export const updateAdvisorsCapacity = (data: TAdvisorCapacityPayload, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.EmployeeCapacity.UpdateAdvisorsCapacity, {data})
         .then(res => {
