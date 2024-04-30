@@ -5,7 +5,6 @@ import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {loadServiceBookList} from "../../../store/reducers/appointments/actions";
 import {RootState} from "../../../store/rootReducer";
 import {TableRowDataType} from "../../../types/types";
-import {InputOrValue} from "../../../components/wrappers/TableInput/TableInput";
 import {Table} from "../../../components/tables/Table/Table";
 import {SaveEditBlock} from "../../../components/buttons/SaveEditBlock/SaveEditBlock";
 import {loadAdvisorsCapacity, updateAdvisorsCapacity} from "../../../store/reducers/employeeCapacity/actions";
@@ -16,6 +15,7 @@ import {
 import {useException} from "../../../hooks/useException/useException";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {sortEmployees} from "../../../utils/utils";
+import {EditableTableCell} from "./EditableTableCell";
 
 const CapacityAdvisors = () => {
     const {shortPodsList} = useSelector((state: RootState) => state.pods);
@@ -113,7 +113,7 @@ const CapacityAdvisors = () => {
     const ServiceRowsData: TableRowDataType<IAdvisorCapacity>[] = shortPodsList.map(serviceBook => ({
         header: serviceBook.name,
         width: 220,
-        val: (el) => <InputOrValue
+        val: (el) => <EditableTableCell
             value={el.capacityPerServiceBook.find(item => item.id && item.id === serviceBook.id)?.value ?? '0'}
             name={serviceBook?.id ? `${el.employeeId}/${serviceBook.id}` : `${el.employeeId}`}
             onChange={onChange}
@@ -135,7 +135,7 @@ const CapacityAdvisors = () => {
         {
             header: "Service Center",
             width: 220,
-            val: (el) => <InputOrValue
+            val: (el) => <EditableTableCell
                 value={el.capacityPerServiceBook.find(item => !item.id)?.value ?? '0'}
                 name={`${el.employeeId}`}
                 onChange={onChange}

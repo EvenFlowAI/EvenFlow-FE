@@ -5,7 +5,7 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {loadServiceBookList} from "../../../../store/reducers/appointments/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {TableRowDataType, TParsableDate} from "../../../../types/types";
-import {InputOrValue} from "../../../../components/wrappers/TableInput/TableInput";
+import {TableInput} from "../../../../components/wrappers/TableInput/TableInput";
 import {Table} from "../../../../components/tables/Table/Table";
 import {SaveEditBlock} from "../../../../components/buttons/SaveEditBlock/SaveEditBlock";
 import dayjs from "dayjs";
@@ -136,7 +136,7 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
             header: "Efficiency",
             width: 135,
             val: (el) => <InputWrapper>
-                <InputOrValue
+                <TableInput
                     value={`${el.efficiency}`}
                     isEdit={isEdit}
                     defaultValue={"0%"}
