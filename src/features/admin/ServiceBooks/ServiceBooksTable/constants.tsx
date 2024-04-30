@@ -22,7 +22,7 @@ export const rowData: TableRowDataTypeResp<IPodSummary>[] = [
     },
     {
         header: "Job Type",
-        val: el => el.options.includes(EPodSummaryOption.ServiceType) ? <Checked/> : <Unchecked/>,
+        val: el => el.options.includes(EPodSummaryOption.JobType) ? <Checked/> : <Unchecked/>,
         align: 'center',
     },
     {
