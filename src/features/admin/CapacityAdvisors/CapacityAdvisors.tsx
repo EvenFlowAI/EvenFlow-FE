@@ -9,7 +9,10 @@ import {InputOrValue} from "../../../components/wrappers/TableInput/TableInput";
 import {Table} from "../../../components/tables/Table/Table";
 import {SaveEditBlock} from "../../../components/buttons/SaveEditBlock/SaveEditBlock";
 import {loadAdvisorsCapacity, updateAdvisorsCapacity} from "../../../store/reducers/employeeCapacity/actions";
-import {IAdvisorCapacity} from "../../../store/reducers/employeeCapacity/types";
+import {
+    IAdvisorCapacity,
+    TAdvisorCapacityPayload, TAdvisorPerPodBase
+} from "../../../store/reducers/employeeCapacity/types";
 import {useException} from "../../../hooks/useException/useException";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {sortEmployees} from "../../../utils/utils";
@@ -84,10 +87,21 @@ const CapacityAdvisors = () => {
     const onSave = () => {
         if (checkIsValid()) {
             if (selectedSC) {
-                dispatch(updateAdvisorsCapacity({
+                const capacitySettings = data.map(el => {
+                    return {
+                        employeeId: el.employeeId,
+                        capacityPerServiceBook: el.capacityPerServiceBook.map(item => {
+                            let setting: TAdvisorPerPodBase = {value: item.value}
+                            if (item.id) setting = {...setting, id: item.id};
+                            return setting;
+                        })
+                    }
+                })
+                const payload: TAdvisorCapacityPayload = {
                     serviceCenterId: selectedSC.id,
-                    capacitySettings: data
-                }, showError, onSuccess))
+                    capacitySettings,
+                }
+                dispatch(updateAdvisorsCapacity(payload, showError, onSuccess))
             }
         } else {
             showError("Employee Capacity must not be less than 0")
@@ -146,7 +160,7 @@ const CapacityAdvisors = () => {
     return (
         <div>
             <Title>Service Advisor Daily Capacity</Title>
-            <Table
+            <Table<IAdvisorCapacity>
                 data={data}
                 isLoading={isLoading}
                 index="employeeId"
