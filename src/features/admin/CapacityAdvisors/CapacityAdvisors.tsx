@@ -11,7 +11,6 @@ import {SaveEditBlock} from "../../../components/buttons/SaveEditBlock/SaveEditB
 import {loadAdvisorsCapacity, updateAdvisorsCapacity} from "../../../store/reducers/employeeCapacity/actions";
 import {
     IAdvisorCapacity,
-    IAdvisorsPayload,
     TAdvisorCapacityPayload, TAdvisorPerPodBase
 } from "../../../store/reducers/employeeCapacity/types";
 import {useException} from "../../../hooks/useException/useException";
@@ -161,7 +160,7 @@ const CapacityAdvisors = () => {
     return (
         <div>
             <Title>Service Advisor Daily Capacity</Title>
-            <Table
+            <Table<IAdvisorCapacity>
                 data={data}
                 isLoading={isLoading}
                 index="employeeId"
