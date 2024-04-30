@@ -112,6 +112,7 @@ const CapacityAdvisors = () => {
 
     const ServiceRowsData: TableRowDataType<IAdvisorCapacity>[] = shortPodsList.map(serviceBook => ({
         header: serviceBook.name,
+        width: 220,
         val: (el) => <InputOrValue
             value={el.capacityPerServiceBook.find(item => item.id && item.id === serviceBook.id)?.value ?? '0'}
             name={serviceBook?.id ? `${el.employeeId}/${serviceBook.id}` : `${el.employeeId}`}
@@ -133,6 +134,7 @@ const CapacityAdvisors = () => {
         },
         {
             header: "Service Center",
+            width: 220,
             val: (el) => <InputOrValue
                 value={el.capacityPerServiceBook.find(item => !item.id)?.value ?? '0'}
                 name={`${el.employeeId}`}
