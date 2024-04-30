@@ -125,6 +125,10 @@ const ServiceCenters = {
     FremontLanderFord: 26,
     FremontLanderCDJR: 27,
     BeloitAutoAndTruck: 30,
+    PerformanceHondaBountiful: 163,
+    PerformanceFordLincolnBountiful: 164,
+    PerformanceFordTruckCountry: 165,
+    PerformanceToyotaBountiful: 166,
 }
 
 export const getTrackerById = (id: string): string => {
@@ -154,6 +158,10 @@ export const getTrackerById = (id: string): string => {
         if (decodedId === ServiceCenters.FremontLanderFord) return "G-VSQ7H51M2D";
         if (decodedId === ServiceCenters.FremontLanderCDJR) return "G-5BV7X721KQ";
         if (decodedId === ServiceCenters.BeloitAutoAndTruck) return "G-0YK1QM06NR";
+        if (decodedId === ServiceCenters.PerformanceHondaBountiful) return "G-5JYPV2SJRT";
+        if (decodedId === ServiceCenters.PerformanceFordLincolnBountiful) return "G-TT0L0LN92Z";
+        if (decodedId === ServiceCenters.PerformanceFordTruckCountry) return "G-S3Y40YJ5T1";
+        if (decodedId === ServiceCenters.PerformanceToyotaBountiful) return "G-YEYXB53XXG";
         return "G-DWX0X9CBTT";
     } else {
         return "G-LS5EEY1SRM";
