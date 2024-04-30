@@ -14,7 +14,7 @@ import {TForm} from "./types";
 import {defaultForm, rows} from "./constants";
 import {getData} from "./utils";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
-import {InputOrValue} from "../../../../components/wrappers/TableInput/TableInput";
+import {TableInput} from "../../../../components/wrappers/TableInput/TableInput";
 
 export const TimeWindowsTable = () => {
     const {timeWindow, isTimeWindowLoading} = useSelector((state: RootState) => state.demandSegments);
@@ -116,7 +116,7 @@ export const TimeWindowsTable = () => {
                         <TableBodyCell  align="left">{row.label}</TableBodyCell>
                         {row.items.map((item, idx) =>
                             <TableBodyCell key={idx} align="left">{!item.name ? item.value :
-                                <InputOrValue
+                                <TableInput
                                     name={item.name}
                                     value={form[item.name]}
                                     onChange={handleChange}

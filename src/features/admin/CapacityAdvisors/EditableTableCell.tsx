@@ -1,8 +1,8 @@
 import React, {ReactElement} from "react";
 import {useMediaQuery, useTheme} from "@mui/material";
-import {TextField} from "../../formControls/TextFieldStyled/TextField";
+import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 
-export const TableInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<{
+export const EditableTableCell: React.FC<React.PropsWithChildren<React.PropsWithChildren<{
     name: string;
     value: number|string;
     onChange: React.ChangeEventHandler
@@ -12,15 +12,15 @@ export const TableInput: React.FC<React.PropsWithChildren<React.PropsWithChildre
     type?: string;
     disabled?: boolean;
 }>>> = ({
-                                       name,
-                                       value,
-                                       isEdit,
-                                       onChange,
-                                       endAdornment,
-                                       defaultValue,
-                                       type,
-                                       disabled
-}) => {
+            name,
+            value,
+            isEdit,
+            onChange,
+            endAdornment,
+            defaultValue,
+            type,
+            disabled
+        }) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
     if (!isEdit) return <span>{value ? String(value) : defaultValue ? defaultValue :  "0"}</span>;
@@ -28,7 +28,12 @@ export const TableInput: React.FC<React.PropsWithChildren<React.PropsWithChildre
         name={name}
         value={value}
         type={type ?? "number"}
-        style={{minWidth: 80}}
+        style={{
+            minWidth: 80,
+            border: disabled ? '1px solid #DADADA' : "1px solid #5E5F66",
+            color: disabled ? "#DADADA" : "#5E5F66",
+            opacity: disabled ? '0.5' : 'unset',
+            borderRadius: 3}}
         inputProps={{
             min: 0
         }}
