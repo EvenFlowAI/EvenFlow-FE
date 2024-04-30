@@ -90,7 +90,9 @@ const CapacityAdvisors = () => {
                 const capacitySettings = data.map(el => {
                     return {
                         employeeId: el.employeeId,
-                        capacityPerServiceBook: el.capacityPerServiceBook.map(item => {
+                        capacityPerServiceBook: el.capacityPerServiceBook
+                            .filter(item => item.isEditable)
+                            .map(item => {
                             let setting: TAdvisorPerPodBase = {value: item.value}
                             if (item.id) setting = {...setting, id: item.id};
                             return setting;
