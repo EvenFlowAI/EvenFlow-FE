@@ -5,14 +5,17 @@ import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {loadServiceBookList} from "../../../store/reducers/appointments/actions";
 import {RootState} from "../../../store/rootReducer";
 import {TableRowDataType} from "../../../types/types";
-import {InputOrValue} from "../../../components/wrappers/TableInput/TableInput";
 import {Table} from "../../../components/tables/Table/Table";
 import {SaveEditBlock} from "../../../components/buttons/SaveEditBlock/SaveEditBlock";
 import {loadAdvisorsCapacity, updateAdvisorsCapacity} from "../../../store/reducers/employeeCapacity/actions";
-import {IAdvisorCapacity} from "../../../store/reducers/employeeCapacity/types";
+import {
+    IAdvisorCapacity,
+    TAdvisorCapacityPayload, TAdvisorPerPodBase
+} from "../../../store/reducers/employeeCapacity/types";
 import {useException} from "../../../hooks/useException/useException";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {sortEmployees} from "../../../utils/utils";
+import {EditableTableCell} from "./EditableTableCell";
 
 const CapacityAdvisors = () => {
     const {shortPodsList} = useSelector((state: RootState) => state.pods);
@@ -84,10 +87,23 @@ const CapacityAdvisors = () => {
     const onSave = () => {
         if (checkIsValid()) {
             if (selectedSC) {
-                dispatch(updateAdvisorsCapacity({
+                const capacitySettings = data.map(el => {
+                    return {
+                        employeeId: el.employeeId,
+                        capacityPerServiceBook: el.capacityPerServiceBook
+                            .filter(item => item.isEditable)
+                            .map(item => {
+                            let setting: TAdvisorPerPodBase = {value: item.value}
+                            if (item.id) setting = {...setting, id: item.id};
+                            return setting;
+                        })
+                    }
+                })
+                const payload: TAdvisorCapacityPayload = {
                     serviceCenterId: selectedSC.id,
-                    capacitySettings: data
-                }, showError, onSuccess))
+                    capacitySettings,
+                }
+                dispatch(updateAdvisorsCapacity(payload, showError, onSuccess))
             }
         } else {
             showError("Employee Capacity must not be less than 0")
@@ -96,7 +112,8 @@ const CapacityAdvisors = () => {
 
     const ServiceRowsData: TableRowDataType<IAdvisorCapacity>[] = shortPodsList.map(serviceBook => ({
         header: serviceBook.name,
-        val: (el) => <InputOrValue
+        width: 120,
+        val: (el) => <EditableTableCell
             value={el.capacityPerServiceBook.find(item => item.id && item.id === serviceBook.id)?.value ?? '0'}
             name={serviceBook?.id ? `${el.employeeId}/${serviceBook.id}` : `${el.employeeId}`}
             onChange={onChange}
@@ -117,7 +134,8 @@ const CapacityAdvisors = () => {
         },
         {
             header: "Service Center",
-            val: (el) => <InputOrValue
+            width: 120,
+            val: (el) => <EditableTableCell
                 value={el.capacityPerServiceBook.find(item => !item.id)?.value ?? '0'}
                 name={`${el.employeeId}`}
                 onChange={onChange}
@@ -146,7 +164,7 @@ const CapacityAdvisors = () => {
     return (
         <div>
             <Title>Service Advisor Daily Capacity</Title>
-            <Table
+            <Table<IAdvisorCapacity>
                 data={data}
                 isLoading={isLoading}
                 index="employeeId"
