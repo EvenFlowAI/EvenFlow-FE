@@ -1,5 +1,5 @@
-import React from 'react';
-import {Route, Switch} from "react-router-dom";
+import React, {useState} from 'react';
+import {Route, Switch, useParams} from "react-router-dom";
 import {AppointmentFlow} from "../../pages/booking/AppointmentFlow/AppointmentFlow";
 import {BookingFlow} from "../../pages/booking/BookingFlow/BookingFlow";
 import PaymentBill from "../../features/booking/PaymentBill/PaymentBill";
@@ -11,6 +11,7 @@ import {setCurrentFrameScreen, setValueService} from "../../store/reducers/appoi
 import {TScreen} from "../../types/types";
 import {useDispatch} from "react-redux";
 import {Routes} from "../constants";
+import {useAnalyticsForParentSite} from "../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 
 type TProps = {
     valueServicePreviousScreen: TScreen;
@@ -18,7 +19,13 @@ type TProps = {
 }
 
 const AppRoutes: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({valueServicePreviousScreen, valueServiceNextScreen}) => {
+    const [trackerCreated, setTrackerCreated] = useState<boolean>(false);
     const dispatch = useDispatch();
+    const {id} = useParams<{id: string}>();
+
+    const setTracker = () => setTrackerCreated(true);
+
+    useAnalyticsForParentSite(id, trackerCreated, setTracker);
 
     const onValueServiceBack = async () => {
         await dispatch(setValueService(null));
