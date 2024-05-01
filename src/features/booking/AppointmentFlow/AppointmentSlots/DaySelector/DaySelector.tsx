@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {EAppointmentTimingType} from "../../../../../store/reducers/appointment/types";
 import PromptNewSearchModal from "../PromptNewSearchModal/PromptNewSearchModal";
-import {setCurrentFrameScreen} from "../../../../../store/reducers/appointmentFrameReducer/actions";
+import {setCurrentFrameScreen, setTiming} from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {selectAppointment, selectServiceValetAppointment,} from "../../../../../store/reducers/appointment/actions";
 import {WHILE_LIMIT} from "../constants";
 import {DaySelectorWrapper} from "../../../../../components/styled/DaySelectorWrapper";
@@ -129,9 +129,9 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
     }
 
     const handleYes = () => {
+        dispatch(setTiming(EAppointmentTimingType.PreferredDate));
         dispatch(setCurrentFrameScreen('appointmentTiming'));
         dispatch(selectAppointment(null));
-        //dispatch(setWaitListSettings(null));
         dispatch(selectServiceValetAppointment(null));
     }
 
