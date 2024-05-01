@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {Button} from "@mui/material";
 import {concatAddress} from "../../../../../utils/utils";
 import {
@@ -14,7 +14,6 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {TItem} from "../types";
 import {getCalendarUrl} from "./utils";
-import {TServiceValetSlot} from "../../../../../api/types";
 import dayjs from "dayjs";
 import {TParsableDate} from "../../../../../types/types";
 
@@ -41,7 +40,6 @@ const AddToCalendarButton: React.FC<React.PropsWithChildren<React.PropsWithChild
     } = useSelector((state: RootState) => state.appointment)
     const {t} = useTranslation();
     const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails)
-    const [serviceValetTime, setServiceValetTime] = useState<TServiceValetSlot|null>(null);
 
     const engine = useMemo(() => engineTypes.find(item => item.id === Number(selectedVehicle?.engineTypeId)), [engineTypes, selectedVehicle])
 
@@ -58,25 +56,6 @@ const AddToCalendarButton: React.FC<React.PropsWithChildren<React.PropsWithChild
                 ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
                 : ''
     }, [selectedVehicle, engine, valueService])
-
-    useEffect(() => {
-        if (serviceValetAppointment) {
-            setServiceValetTime({
-                pickUpMin: serviceValetAppointment.pickUpMin,
-                pickUpMax: serviceValetAppointment.pickUpMax,
-                dropOffMin: serviceValetAppointment.dropOffMin,
-                dropOffMax: serviceValetAppointment.dropOffMax,
-            })
-        } else if (appointmentByKey?.serviceValetTime) {
-            const {serviceValetTime} = appointmentByKey;
-            setServiceValetTime({
-                pickUpMin: serviceValetTime.pickUpMin,
-                pickUpMax: serviceValetTime.pickUpMax,
-                dropOffMin: serviceValetTime.dropOffMin,
-                dropOffMax: serviceValetTime.dropOffMax,
-            })
-        }
-    }, [serviceValetAppointment, appointmentByKey])
 
     const getDateForUpdate = (): TParsableDate => {
         if (customerLoadedData?.isUpdating && appointmentByKey) {
@@ -98,7 +77,30 @@ const AddToCalendarButton: React.FC<React.PropsWithChildren<React.PropsWithChild
                 : getDateForUpdate()
             : dayjs.utc(appointment?.date)
 
-    const getDateForCalendar = useCallback(() => {
+    const getDateForCalendarHeader = (): string[] => {
+        let dateFrom = dayjs.utc(date).format(G_CALENDAR_FORMAT);
+        let dateTo = dayjs.utc(date).add(1, "hour").format(G_CALENDAR_FORMAT);
+        if (isServiceValetApp) {
+            dateFrom = dateFrom + serviceValetAppointment?.pickUpMin.split(":").join("");
+            dateTo = dateTo + serviceValetAppointment?.pickUpMax.split(":").join("");
+        } else {
+            if (serviceTypeOption?.type === EServiceType.PickUpDropOff
+                && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+                const pickUpMin = appointmentByKey?.serviceValetTime?.pickUpMin;
+                const pickUpMax = appointmentByKey?.serviceValetTime?.pickUpMax;
+                if (pickUpMin && pickUpMax) {
+                    dateFrom = dateFrom + pickUpMin.split(":").join("")
+                    dateTo = dateTo + pickUpMax.split(":").join("");
+                }
+            } else {
+                dateFrom = dateFrom + dayjs.utc(date).format("HHmmss")
+                dateTo = dateTo + dayjs.utc(date).add(1, "hour").format("HHmmss")
+            }
+        }
+        return [dateFrom, dateTo]
+    }
+
+    const getDateForCalendarDetails = useCallback(() => {
         let dateString: string;
         if (isServiceValetApp) {
             dateString = dayjs(date).format(calendarDateFormat);
@@ -137,8 +139,8 @@ const AddToCalendarButton: React.FC<React.PropsWithChildren<React.PropsWithChild
             {
                 label: t('SELECTED DATE & TIME'),
                 content: isWaitList
-                    ? `${getDateForCalendar()}\n${waitListSettings?.text ?? t("Waitlist Only")}`
-                    : getDateForCalendar(),
+                    ? `${getDateForCalendarDetails()}\n${waitListSettings?.text ?? t("Waitlist Only")}`
+                    : getDateForCalendarDetails(),
             },
             {
                 label: t('SERVICE REQUESTS'),
@@ -158,15 +160,10 @@ const AddToCalendarButton: React.FC<React.PropsWithChildren<React.PropsWithChild
             if (advisorIndex > -1) data.splice(advisorIndex, 1);
         }
         return data
-    }, [vehicleData, serviceName, getDateForCalendar, isServiceValetApp, servicesList, advisor, scProfile, serviceTypeOption, getDateForCalendar])
+    }, [vehicleData, serviceName, getDateForCalendarDetails, isServiceValetApp, servicesList, advisor, scProfile, serviceTypeOption, getDateForCalendarDetails])
 
     const handleAddToCalendar = () => {
-        const dateFrom = dayjs.utc(date).format(G_CALENDAR_FORMAT) + `${isServiceValetApp 
-            ? serviceValetTime?.pickUpMin.split(":").join('') ?? "000000" 
-            : appointment?.time.split(":").join("")}`;
-        const dateTo = dayjs.utc(date).add(1, "hour").format(G_CALENDAR_FORMAT) + `${isServiceValetApp 
-            ? serviceValetTime?.pickUpMax?.split(":").join('') ?? "000000" 
-            : appointment?.time.split(":").join("")}`;
+        const [dateFrom, dateTo] = getDateForCalendarHeader();
         const url = getCalendarUrl({
             dates: [dateFrom, dateTo],
             text: `${scProfile?.name} ${t("Service Appointment")}`,

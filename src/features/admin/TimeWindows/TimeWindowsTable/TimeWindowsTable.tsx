@@ -9,12 +9,12 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
-import {InputOrValue} from "./TableInput";
 import {Button, TableBodyCell, TableHeadCell} from "./styles";
 import {TForm} from "./types";
 import {defaultForm, rows} from "./constants";
 import {getData} from "./utils";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
+import {TableInput} from "../../../../components/wrappers/TableInput/TableInput";
 
 export const TimeWindowsTable = () => {
     const {timeWindow, isTimeWindowLoading} = useSelector((state: RootState) => state.demandSegments);
@@ -116,11 +116,13 @@ export const TimeWindowsTable = () => {
                         <TableBodyCell  align="left">{row.label}</TableBodyCell>
                         {row.items.map((item, idx) =>
                             <TableBodyCell key={idx} align="left">{!item.name ? item.value :
-                                <InputOrValue
+                                <TableInput
                                     name={item.name}
                                     value={form[item.name]}
                                     onChange={handleChange}
                                     isEdit={isEdit}
+                                    endAdornment="hour(s)"
+                                    defaultValue={"0"}
                                 />
                             }</TableBodyCell>
                         )}

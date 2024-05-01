@@ -34,6 +34,8 @@ export interface IApiEndpoints {
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiEndpoint>,
     Employees: Record<"Create" | "Update" | "GetAll" | "GetAssignmentSettings" | "UpdateAssignmentSettings", TApiEndpoint>,
+    EmployeeCapacity: Record< "GetAdvisorsCapacity" | "UpdateAdvisorsCapacity" | "GetTechniciansCapacity"
+        | "UpdateTechniciansCapacity" | "UpdateTechniciansSettings", TApiEndpoint>,
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove" | "SetForWeek" | "GetCalendarSummary"
         | "GetByDate" | "UpdateByDate" | "GetBaseSummary" | "GetSummaryByEmployee" | "GetTimeScheduleByEmployee"
         | "SetTimeScheduleByEmployee", TApiEndpoint>,
@@ -49,7 +51,7 @@ export interface IApiEndpoints {
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiEndpoint>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiEndpoint>,
-    Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort" | "GetMakes", TApiEndpoint>,
+    Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort" | "GetMakes" | "GetSummary", TApiEndpoint>,
     PricingSettings: Record<"GetList" | "Edit" | "GetDayOfWeek" | "SetDayOfWeek"
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"

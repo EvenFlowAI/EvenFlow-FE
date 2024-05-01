@@ -46,8 +46,8 @@ export const getScheduleByDate = createAction<IScheduleByDate[]>("Employees/GetS
 export const loadScheduleCalendar = (serviceCenterId: number, startDate: string, endDate: string): AppThunk => dispatch => {
     dispatch(loadingEmployeesSchedule(true))
     Api.call<ICalendarItem[]>(Api.endpoints.EmployeeSchedule.GetCalendarSummary, {data: {serviceCenterId, startDate, endDate}})
-        .then(result => {
-            if (result.data) dispatch(getScheduleCalendar(result.data))
+        .then(({data}) => {
+            if (data) dispatch(getScheduleCalendar(data))
         })
         .catch(err => {
             console.log('load schedule calendar', err)

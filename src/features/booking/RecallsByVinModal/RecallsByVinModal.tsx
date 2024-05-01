@@ -54,8 +54,8 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
     }, [recallsByVin, open])
 
     const onAddService = (item: IRecallByVin) => {
-        const data = recalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber)
-            ? recalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)
+        const data = recalls.find(el => el.campaignNumber === item.campaignNumber)
+            ? recalls.filter(el => el.campaignNumber !== item.campaignNumber)
             : [...recalls, item]
         setRecalls(data)
     }
@@ -107,52 +107,60 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
                         <div className={classes.mainTitle}>{recallsByVin.length} {t("Unrepaired")} {recallsByVin.length > 1 ? t("Recalls") : t("Recall")}</div>
                         <div className={classes.vinData}>{t("associated with VIN")}: {selectedVehicle?.vin}</div>
                         {recallsByVin.map((item, index) => (
-                            <React.Fragment key={item.nhtsaRecallNumber}>
-                            <div>
-                                <div className={classes.recallTitleWrapper}>
-                                    <div>
-                                        <div className={classes.title}>{index + 1} {t("Recall")}</div>
-                                        <div className={classes.recallComponent}>{item.shortDescription}</div>
+                            <React.Fragment key={item.campaignNumber}>
+                                <div>
+                                    <div className={classes.recallTitleWrapper}>
+                                        <div>
+                                            <div className={classes.title}>{index + 1} {t("Recall")}</div>
+                                            <div className={classes.recallComponent}>{item.shortDescription}</div>
+                                        </div>
+                                        <div className={classes.serviceAddedBtn}>
+                                            <Label
+                                                checked={Boolean(recalls.find(el => el.campaignNumber === item.campaignNumber))}
+                                                onChange={() => onAddService(item)}
+                                                label={recalls.find(el => el.campaignNumber === item.campaignNumber)
+                                                    ? t("Service Added")
+                                                    : t("Service Declined")}
+                                                labelPlacement="start"
+                                                control={<CustomSwitch color="primary" />}
+                                            />
+                                        </div>
                                     </div>
-                                    <div className={classes.serviceAddedBtn}>
-                                        <Label
-                                            checked={Boolean(recalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber))}
-                                            onChange={() => onAddService(item)}
-                                            label={recalls.find(el => el.nhtsaRecallNumber === item.nhtsaRecallNumber)
-                                                ? t("Service Added")
-                                                : t("Service Declined")}
-                                            labelPlacement="start"
-                                            control={<CustomSwitch color="primary" />}
-                                        />
+                                    <div className={classes.recallDetailsWrapper}>
+                                        {item.recallOpenDate
+                                            ? <div>
+                                                <div className={classes.label}>{t("Recall Open Date")}</div>
+                                                <div className={classes.data}>
+                                                    {dayjs(item.recallOpenDate).format("MMM DD, YYYY")}
+                                                </div>
+                                            </div>
+                                            : null}
+                                        <div>
+                                            <div className={classes.label}>{t("Campaign Number")}</div>
+                                            <div className={classes.data}>{item.campaignNumber}</div>
+                                        </div>
+                                        <div>
+                                            <div className={classes.label}>{t("Recall Component")}</div>
+                                            <div className={classes.data}>{item.recallComponent}</div>
+                                        </div>
+                                        <div>
+                                            <div className={classes.label}>{t("Recall Status")}</div>
+                                            <div className={classes.data} style={{color: 'red'}}>{item.recallStatus}</div>
+                                        </div>
                                     </div>
+                                    {item.summary
+                                        ? <div className={classes.textBox}>
+                                            <div className={classes.label}>{t("Summary")}</div>
+                                            <div>{item.summary}</div>
+                                        </div>
+                                        : null}
+                                    {item.safetyRisk
+                                        ? <div className={classes.textBox}>
+                                            <div className={classes.label}>{t("Safety Risk")}</div>
+                                            <div>{item.safetyRisk}</div>
+                                        </div>
+                                        : null}
                                 </div>
-                                <div className={classes.recallDetailsWrapper}>
-                                    <div>
-                                        <div className={classes.label}>{t("Recall Open Date")}</div>
-                                        <div className={classes.data}>{dayjs(item.recallOpenDate).format("MMM DD, YYYY")}</div>
-                                    </div>
-                                    <div>
-                                        <div className={classes.label}>{t("NHTSA Recall Number")}</div>
-                                        <div className={classes.data}>{item.nhtsaRecallNumber}</div>
-                                    </div>
-                                    <div>
-                                        <div className={classes.label}>{t("Recall Component")}</div>
-                                        <div className={classes.data}>{item.recallComponent}</div>
-                                    </div>
-                                    <div>
-                                        <div className={classes.label}>{t("Recall Status")}</div>
-                                        <div className={classes.data} style={{color: 'red'}}>{item.recallStatus}</div>
-                                    </div>
-                                </div>
-                                <div className={classes.textBox}>
-                                    <div className={classes.label}>{t("Summary")}</div>
-                                    <div>{item.summary}</div>
-                                </div>
-                                <div className={classes.textBox}>
-                                    <div className={classes.label}>{t("Safety Risk")}</div>
-                                    <div>{item.safetyRisk}</div>
-                                </div>
-                            </div>
                                 {recallsByVin.length > 1 && index < recallsByVin.length - 1 ? <Divider style={{marginBottom: 20}}/> : null}
                             </React.Fragment>))}
                     </DialogContent>

@@ -18,6 +18,7 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import localeData from "dayjs/plugin/localeData";
 import advancedFormat from "dayjs/plugin/advancedFormat";
+import weekday from "dayjs/plugin/weekday";
 
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
@@ -26,6 +27,7 @@ dayjs.extend(isSameOrBefore)
 dayjs.extend(advancedFormat)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(localeData)
+dayjs.extend(weekday)
 
 const container = document.getElementById('root');
 const root = createRoot(container!);

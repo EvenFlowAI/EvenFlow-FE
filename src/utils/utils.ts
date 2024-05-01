@@ -21,6 +21,7 @@ import i18n from "../i18n";
 import {TOption} from "./types";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import {IAdvisorCapacity, ITechnicianCapacity} from "../store/reducers/employeeCapacity/types";
 
 dayjs.extend(utc);
 
@@ -297,7 +298,7 @@ export const mapRecallsForRequest = (selectedRecalls: IRecallByVin[]): TRecallFo
     return selectedRecalls.map(recall => {
         const data: TRecallForRequest = {
             serviceRequestId: recall.serviceRequestId,
-            number: recall.nhtsaRecallNumber,
+            number: recall.campaignNumber,
         }
         if (recall.id) data.id = recall.id;
         return data;
@@ -451,7 +452,7 @@ export const getMaintenanceList = (
                 id: item.serviceRequestId,
                 name: item.shortDescription,
                 type: "recall",
-                nhtsaRecallNumber: item.nhtsaRecallNumber,
+                campaignNumber: item.campaignNumber,
             })
         })
     }
@@ -468,3 +469,6 @@ export const disableEmotionWarning = () => {
         consoleError(msg, ...args);
     };
 }
+export const sortEmployees = (a: IAdvisorCapacity | ITechnicianCapacity, b: IAdvisorCapacity | ITechnicianCapacity): number => a.employeeName
+    ? a.employeeName.localeCompare(b.employeeName)
+    : a.employeeId.localeCompare(b.employeeId)

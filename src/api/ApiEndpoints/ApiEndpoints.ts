@@ -131,6 +131,13 @@ export class Api {
             GetAssignmentSettings: {route: "/employees/assignment-settings/{serviceCenterId}", method: "get"},
             UpdateAssignmentSettings: {route: "/employees/assignment-settings", method: "put"},
         },
+        EmployeeCapacity: {
+            GetAdvisorsCapacity: {route: "/employee-capacity/advisors", method: "get"},
+            UpdateAdvisorsCapacity: {route: "/employee-capacity/advisors", method: "put"},
+            GetTechniciansCapacity: {route: "/employee-capacity/technicians", method: "get"},
+            UpdateTechniciansCapacity: {route: "/employee-capacity/technicians", method: "put"},
+            UpdateTechniciansSettings: {route: "/employee-capacity/technicians/settings", method: "put"},
+        },
         EmployeeSchedule: {
             Create: {route: "/employee-schedules", method: "post"},
             Retrieve: {route: "/employee-schedules/{id}", method: "get"},
@@ -228,6 +235,7 @@ export class Api {
             GetShort: {route: "/pods/short-by-query", method: "post"},
             // todo change to real endpoint
             GetMakes: {route: "/pods/makes", method: "get"},
+            GetSummary: {route: "/pods/summary", method: 'get'}
         },
         PricingSettings: {
             GetList: {route: "/pricing-settings", method: "get"},

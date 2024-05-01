@@ -134,7 +134,7 @@ export type TSearchInputProps = TextInputProps & {
 };
 export type AlignTypes = "inherit" | "left" | "center" | "right" | "justify";
 export type TableRowDataType<DataEl> = {
-    header: string;
+    header: string|ReactElement;
     orderId?: keyof DataEl | string;
     val: (el: DataEl, idx: number) => string | JSX.Element | undefined | null;
     align?: AlignTypes;
@@ -149,6 +149,7 @@ export interface ITableProps<Data> {
     smallHeaderFont?: boolean;
     superCompact?: boolean;
     compact?: boolean;
+    compactBodyPadding?: boolean;
     order?: keyof Data | string;
     onSort?: (order: IOrder<Data>) => () => void;
     isAscending?: boolean;
@@ -171,7 +172,9 @@ export interface ITableProps<Data> {
     hideHeader?: boolean;
     borderHeader?: boolean;
     withBorders?: boolean;
-    actionsAlign?: "center"|"left"|"right"
+    actionsAlign?: "center"|"left"|"right";
+    withoutOverflow?: boolean;
+    verticalAlign?: string;
 }
 
 export type TScreen =
@@ -216,19 +219,19 @@ export type IMaintenanceItem = {
     id?: number;
     name: string;
     type: EMaintenanceItemType;
-    nhtsaRecallNumber?: string;
+    campaignNumber?: string;
 }
 
 export interface IRecallByVin {
-    shortDescription: string;
-    recallOpenDate: string;
-    recallComponent: string;
-    nhtsaRecallNumber: string;
-    recallStatus: string;
-    summary: string;
-    safetyRisk: string;
-    serviceRequestId: number;
     id: number | null;
+    serviceRequestId: number;
+    campaignNumber: string;
+    recallComponent: string;
+    recallStatus: string;
+    shortDescription: string;
+    recallOpenDate?: string;
+    summary?: string;
+    safetyRisk?: string;
 }
 
 export type TActionProps = {

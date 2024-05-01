@@ -631,9 +631,9 @@ export const deleteRecall = (item: IMaintenanceItem): AppThunk => (dispatch, get
         sideBarSteps,
         serviceTypeOption
     } = getState().appointmentFrame
-    const recalls = selectedRecalls.filter(el => el.nhtsaRecallNumber !== item.nhtsaRecallNumber)
+    const recalls = selectedRecalls.filter(el => el.campaignNumber !== item.campaignNumber)
     const serviceType = serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter
-    item.nhtsaRecallNumber && dispatch(setSelectedRecalls(recalls))
+    item.campaignNumber && dispatch(setSelectedRecalls(recalls))
 
     if (!recalls.length) {
         dispatch(setRecallsAreShown(false));

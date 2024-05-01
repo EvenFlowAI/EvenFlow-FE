@@ -32,6 +32,7 @@ import {customerReducer} from "./reducers/enhancedCustomerSearch/reducer";
 import {screenSettingsReducer} from "./reducers/screenSettings/reducer";
 import {notificationsReducer} from "./reducers/notifications/reducer";
 import {capacityManagementReducer} from "./reducers/capacityManagement/reducer";
+import {employeesCapacity} from "./reducers/employeeCapacity/reducer";
 
 export const rootReducer = combineReducers({
     appointment: appointmentReducer,
@@ -40,6 +41,7 @@ export const rootReducer = combineReducers({
     dealershipGroups: dealershipGroupsReducer,
     demandSegments: demandSegmentsReducer,
     employees: employeesReducer,
+    employeesCapacity: employeesCapacity,
     employeesSchedule: schedulesReducer,
     appointments: appointmentsReducer,
     optimizationWindows: optimizationWindowsReducer,
