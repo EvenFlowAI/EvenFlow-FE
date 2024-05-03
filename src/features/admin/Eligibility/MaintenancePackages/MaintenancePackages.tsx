@@ -10,13 +10,14 @@ import {
 import {RootState} from "../../../../store/rootReducer";
 import {Caption} from "../../../../components/wrappers/Caption/Caption";
 import {EPricingDisplayType} from "../../../../store/reducers/pricingSettings/types";
-import {headCellStyles, leftAlign} from "../styles";
+import {blackFont, headCellStyles, leftAlign} from "../styles";
 import {TableWrapper} from "./styles";
 import {DemandTable} from "../../../../components/styled/DemandTable";
 import {TableRow} from "../../../../components/styled/TableRow";
 import {TableCell} from "../../../../components/styled/TableCell";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {StyledTableCell} from "../EligibilityStatuses/styles";
 
 const MaintenancePackages = () => {
     const {isLoading, mpList} = useSelector((state: RootState) => state.pricingSettings);
@@ -49,30 +50,43 @@ const MaintenancePackages = () => {
                     <DemandTable>
                         <TableHead>
                             <TableRow>
-                                <TableCell
-                                    width={430}
-                                    style={{...headCellStyles, ...leftAlign}}>
+                                <StyledTableCell
+                                    style={{...headCellStyles, ...blackFont, ...leftAlign, textTransform: 'capitalize'}}>
                                     Package Name
-                                </TableCell>
-                                <TableCell style={headCellStyles}>Base Market Price</TableCell>
-                                <TableCell style={headCellStyles}>Value Market Price</TableCell>
-                                <TableCell style={headCellStyles}>Preferred Market Price</TableCell>
-                                <TableCell style={headCellStyles}>Pricing optimization status</TableCell>
+                                </StyledTableCell>
+                                <StyledTableCell
+                                    style={{...headCellStyles, ...leftAlign, textTransform: 'capitalize', lineHeight: 'normal'}}
+                                    width={130}>
+                                    Base Market Price
+                                </StyledTableCell>
+                                <StyledTableCell
+                                    style={{...headCellStyles, ...leftAlign, textTransform: 'capitalize', lineHeight: 'normal'}}
+                                    width={130}>
+                                    Value Market Price
+                                </StyledTableCell>
+                                <StyledTableCell
+                                    style={{...headCellStyles, ...leftAlign, textTransform: 'capitalize', lineHeight: 'normal'}}
+                                    width={130}>
+                                    Preferred Market Price
+                                </StyledTableCell>
+                                <StyledTableCell style={headCellStyles}>
+                                    Pricing optimization status
+                                </StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {mpList.map(el => {
                                 return <TableRow key={el.id}>
-                                    <TableCell style={leftAlign}>{el.name}</TableCell>
-                                    <TableCell>
+                                    <StyledTableCell style={leftAlign}>{el.name}</StyledTableCell>
+                                    <StyledTableCell>
                                         $ {el.baseMarketPrice}
-                                    </TableCell>
-                                    <TableCell>
+                                    </StyledTableCell>
+                                    <StyledTableCell>
                                         $ {el.valueMarketPrice}
-                                    </TableCell>
-                                    <TableCell>
+                                    </StyledTableCell>
+                                    <StyledTableCell>
                                         $ {el.preferredMarketPrice}
-                                    </TableCell>
+                                    </StyledTableCell>
 
                                     <TableCell>
                                         <RadioGroup

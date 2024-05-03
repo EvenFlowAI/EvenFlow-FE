@@ -3,7 +3,7 @@ import {TableCell} from "../../../../components/styled/TableCell";
 import {withStyles} from "tss-react/mui";
 
 export const Wrapper = styled("div")({
-    padding: '12px 16px 0 12px'
+    padding: '0 16px'
 })
 
 export const SubHeaderCell = styled("span")({
