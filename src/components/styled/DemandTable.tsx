@@ -23,3 +23,11 @@ export const DenseTableNormalFont = withStyles(DemandTable, {
         }
     }
 });
+
+export const DenseTableWithoutBorder = withStyles(StyledTable, {
+    root: {
+        "& .MuiTableCell-root": {
+            padding: 16,
+        }
+    }
+});
