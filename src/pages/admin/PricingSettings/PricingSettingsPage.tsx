@@ -26,8 +26,8 @@ type Tab = {
 }
 
 const tabs: Tab[] = [
-    {id: "0", label: "Variable Demand", component: <VariableDemand />},
-    {id: "1", label: "Eligibility", component: <Eligibility />},
+    {id: "0", label: "Eligibility", component: <Eligibility />},
+    {id: "1", label: "Variable Demand", component: <VariableDemand />},
     {id: "2", label: "Pricing Levels", component: <PricingLevels />},
     {id: "3", label: "Price Calculations", component: <PricingOptimization />},
 ]
@@ -70,7 +70,7 @@ export const PricingSettingsPage = () => {
     }
 
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Service Price Settings" pad parent={pricingRoot} actions={
+        <TitleContainer title="Service Price" pad parent={pricingRoot} actions={
             <ButtonsWrapper>
             <ControlLabel labelPlacement="start" control={
                 <Switch
