@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {SquarePaper} from "../../../../components/styled/Paper";
 import {Box, Switch, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {loadTimeWindows, setTimeWindows} from "../../../../store/reducers/pricingSettings/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -7,11 +6,12 @@ import {RootState} from "../../../../store/rootReducer";
 import {EWindowType, TTimeWindow} from "../../../../store/reducers/pricingSettings/types";
 import {Caption} from "../../../../components/wrappers/Caption/Caption";
 import {TextLink} from "../../../../components/wrappers/TextLink/TextLink";
-import {TableTitle, useStyles} from "./styles";
+import {useStyles} from "./styles";
 import {DenseTableWithPadding} from "../../../../components/styled/DemandTable";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Routes} from "../../../../routes/constants";
+import {TableTitle} from "../../../../components/wrappers/TableTitle/TableTitle";
 
 export const DemandWindows = () => {
     const {timeWindows} = useSelector((state: RootState) => state.pricingSettings);
@@ -40,7 +40,7 @@ export const DemandWindows = () => {
                 setSaving(true);
                 await dispatch(setTimeWindows({
                     ...mappedTW[t],
-                    serviceCenterId: mappedTW[t]?.serviceCenterId ?? selectedSC.id,
+                    serviceCenterId: selectedSC.id,
                     type: mappedTW[t]?.type ?? t,
                     isEligibility: checked
                 }));
@@ -53,7 +53,6 @@ export const DemandWindows = () => {
     }
 
     return <div>
-        <SquarePaper variant="outlined">
             <TableTitle>Demand windows Eligibility status</TableTitle>
             <div className={classes.tableWrapper}>
                 <DenseTableWithPadding>
@@ -121,7 +120,6 @@ export const DemandWindows = () => {
                     </TableBody>
                 </DenseTableWithPadding>
             </div>
-        </SquarePaper>
         <Box mt={2}>
             <Caption
                 title={<span>

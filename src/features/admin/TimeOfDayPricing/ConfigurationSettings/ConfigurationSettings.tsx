@@ -6,10 +6,11 @@ import {EDemandCategory, IPricingLevel, TPricingLevels} from "../../../../store/
 import {useDispatch, useSelector} from "react-redux";
 import {loadPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
 import {RootState} from "../../../../store/rootReducer";
-import {Title, useStyles} from "./styles";
+import {useStyles} from "./styles";
 import {DenseTableNormalFont} from "../../../../components/styled/DemandTable";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {TableTitle} from "../../../../components/wrappers/TableTitle/TableTitle";
 
 export const ConfigurationSettings = () => {
     const {pricingLevels} = useSelector((state: RootState) => state.pricingSettings)
@@ -45,7 +46,7 @@ export const ConfigurationSettings = () => {
     }
 
     return <div>
-        <Title>Configuration Settings for All Services</Title>
+        <TableTitle>Configuration Settings for All Services</TableTitle>
             <DenseTableNormalFont>
                 <TableHead>
                     <TableRow>

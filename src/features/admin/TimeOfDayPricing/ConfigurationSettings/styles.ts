@@ -1,5 +1,4 @@
-import { makeStyles } from 'tss-react/mui';
-import {styled} from "@mui/material";
+import {makeStyles} from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     inputCell: {
@@ -17,12 +16,3 @@ export const useStyles = makeStyles()(theme => ({
     }
 }));
 
-export const Title = styled("div")({
-    fontSize: 16,
-    fontWeight: 700,
-    textTransform: 'uppercase',
-    padding: '20px 16px',
-    backgroundColor: 'white',
-    border: "1px solid #DADADA",
-    borderBottomWidth: 0,
-})

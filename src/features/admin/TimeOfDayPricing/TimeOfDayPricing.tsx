@@ -3,9 +3,9 @@ import {Box} from "@mui/material";
 import {TimeOfDayPricingRules} from "./TimeOfDayPricingRules/TimeOfDayPricingRules";
 import {useDispatch} from "react-redux";
 import {loadPricingDemand} from "../../../store/reducers/pricingSettings/actions";
-import DayOfWeekTabs from "../VariableDemand/DayOfWeekTabs/DayOFWeekTabs";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {ConfigurationSettings} from "./ConfigurationSettings/ConfigurationSettings";
+import PricingLevelsBy from "../PricingLevels/PricingLevelsBy/PricingLevelsBy";
 
 export const TimeOfDayPricing = () => {
     const dispatch = useDispatch();
@@ -21,6 +21,6 @@ export const TimeOfDayPricing = () => {
         <Box p={1.5} />
         <ConfigurationSettings />
         <Box p={1.5} />
-        <DayOfWeekTabs/>
+        <PricingLevelsBy/>
     </div>
 };

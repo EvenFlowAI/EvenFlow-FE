@@ -14,11 +14,11 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const RowData: TableRowDataType<TPackagePricingLevel>[] = [
     {val: (el: TPackagePricingLevel, index: number) => `${index + 1}`, header: "#"},
-    {val: (el: TPackagePricingLevel) => el.maintenancePackageName, header: "MAINTENANCE PACKAGE NAME", width: '25%'},
-    {val: (el: TPackagePricingLevel) => `${el.maintenancePackageId}`, header: "MAINTENANCE PACKAGE ID", align: "center"},
-    {val: (el: TPackagePricingLevel) => el.maintenancePackageOptionName, header: "MAINTENANCE PACKAGE LEVEL", width: '20%'},
-    {val: (el: TPackagePricingLevel) => el.discount ? `${el.discount} %` : 'Default', header: "DISCOUNT"},
-    {val: (el: TPackagePricingLevel) => el.premium ? `${el.premium} %` : 'Default', header: "PREMIUM"},
+    {val: (el: TPackagePricingLevel) => el.maintenancePackageName, header: "Maintenance Package Name", width: '25%'},
+    {val: (el: TPackagePricingLevel) => `${el.maintenancePackageId}`, header: "Maintenance Package ID"},
+    {val: (el: TPackagePricingLevel) => el.maintenancePackageOptionName, header: "Maintenance Package Level", width: '20%'},
+    {val: (el: TPackagePricingLevel) => el.discount ? `${el.discount} %` : 'Default', header: "Discount"},
+    {val: (el: TPackagePricingLevel) => el.premium ? `${el.premium} %` : 'Default', header: "Premium"},
 ];
 
 const PricingLevelsByPackage = () => {
@@ -87,10 +87,9 @@ const PricingLevelsByPackage = () => {
                 rowData={RowData}
                 actions={tableActions}
                 isLoading={isLoading}
-                smallHeaderFont
                 hidePagination
-                borderHeader
-                compact
+                withBorders
+                compactBodyPadding
             />
             <EditPackagePricingLevelModal open={isOpen} prisingLevel={editElement} onClose={onClose}/>
         </div>

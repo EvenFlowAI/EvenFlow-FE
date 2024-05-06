@@ -15,10 +15,10 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const RowData: TableRowDataType<TPricingLevel>[] = [
     {val: (el: TPricingLevel, index: number) => `${index + 1}`, header: "#"},
-    {val: (el: TPricingLevel) => el.serviceRequest, header: "INDIVIDUAL SERVICE", width: '55%'},
-    {val: (el: TPricingLevel) => el.opsCode, header: "OPS CODE"},
-    {val: (el: TPricingLevel) => el.discount ? `${el.discount} %` : 'Default', header: "DISCOUNT"},
-    {val: (el: TPricingLevel) => el.premium ? `${el.premium} %` : 'Default', header: "PREMIUM"},
+    {val: (el: TPricingLevel) => el.serviceRequest, header: "Individual Service", width: '55%'},
+    {val: (el: TPricingLevel) => el.opsCode, header: "Ops Code"},
+    {val: (el: TPricingLevel) => el.discount ? `${el.discount} %` : 'Default', header: "Discount"},
+    {val: (el: TPricingLevel) => el.premium ? `${el.premium} %` : 'Default', header: "Premium"},
 ];
 
 const PricingLevelsByOpsCode = () => {
@@ -94,10 +94,9 @@ const PricingLevelsByOpsCode = () => {
             rowData={RowData}
             actions={tableActions}
             isLoading={isLoading}
-            smallHeaderFont
             hidePagination
-            borderHeader
-            compact
+            withBorders
+            compactBodyPadding
         />
         <EditPricingLevelModal open={isOpen} prisingLevel={editElement} onClose={onClose}/>
     </div>
