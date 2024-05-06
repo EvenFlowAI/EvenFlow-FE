@@ -8,7 +8,7 @@ import {EWindowType, TTimeWindow} from "../../../../store/reducers/pricingSettin
 import {Caption} from "../../../../components/wrappers/Caption/Caption";
 import {TextLink} from "../../../../components/wrappers/TextLink/TextLink";
 import {TableTitle, useStyles} from "./styles";
-import {DenseTableNormalFont} from "../../../../components/styled/DemandTable";
+import {DenseTableWithPadding} from "../../../../components/styled/DemandTable";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Routes} from "../../../../routes/constants";
@@ -56,7 +56,7 @@ export const DemandWindows = () => {
         <SquarePaper variant="outlined">
             <TableTitle>Demand windows Eligibility status</TableTitle>
             <div className={classes.tableWrapper}>
-                <DenseTableNormalFont>
+                <DenseTableWithPadding>
                     <TableHead>
                         <TableRow>
                             <TableCell className={classes.headerCell} style={{textTransform: 'capitalize'}}>Time Windows</TableCell>
@@ -119,7 +119,7 @@ export const DemandWindows = () => {
                             </TableCell>
                         </TableRow>
                     </TableBody>
-                </DenseTableNormalFont>
+                </DenseTableWithPadding>
             </div>
         </SquarePaper>
         <Box mt={2}>

@@ -1,19 +1,17 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Divider, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
+import {TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {EditButton} from "../../../../components/buttons/EditButton/EditButton";
-import {PriceLevelsModal} from "../PriceLevelsModal/PriceLevelsModal";
+import {PriceLevelsModal} from "../../PricingLevels/PriceLevelsModal/PriceLevelsModal";
 import {EDemandCategory, IPricingLevel, TPricingLevels} from "../../../../store/reducers/pricingSettings/types";
 import {useDispatch, useSelector} from "react-redux";
 import {loadPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
 import {RootState} from "../../../../store/rootReducer";
-import {PaperTitle, TableContainer} from "../../../../pages/admin/PricingSettings/UI";
-import {SquarePaper} from "../../../../components/styled/Paper";
-import {useStyles} from "./styles";
-import {DenseTable} from "../../../../components/styled/DemandTable";
+import {Title, useStyles} from "./styles";
+import {DenseTableNormalFont} from "../../../../components/styled/DemandTable";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-export const DemandWindows = () => {
+export const ConfigurationSettings = () => {
     const {pricingLevels} = useSelector((state: RootState) => state.pricingSettings)
     const [editedItem, setEditedItem] = useState<IPricingLevel|undefined>(undefined);
     const {onClose, onOpen, isOpen} = useModal();
@@ -46,22 +44,20 @@ export const DemandWindows = () => {
         }
     }
 
-    return <SquarePaper variant="outlined">
-        <PaperTitle>Demand Windows Eligibility Status</PaperTitle>
-        <Divider />
-        <TableContainer>
-            <DenseTable>
+    return <div>
+        <Title>Configuration Settings for All Services</Title>
+            <DenseTableNormalFont>
                 <TableHead>
                     <TableRow>
-                        <TableCell colSpan={2}>Price levels</TableCell>
-                        <TableCell>Price percentage</TableCell>
+                        <TableCell colSpan={2} style={{textTransform: "none"}} width={"50%"}>Price levels</TableCell>
+                        <TableCell style={{textTransform: "none"}}>Price percentage</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     <TableRow>
-                        <TableCell>Discount</TableCell>
+                        <TableCell width={100}>Discount</TableCell>
                         <TableCell align="center">from 0% to 100%</TableCell>
-                        <TableCell className={classes.inputCell}>
+                        <TableCell>
                             <div className={classes.editCell}>
                                 <span>
                                     {mappedPricingLevels[EDemandCategory.Low]?.percentage
@@ -77,12 +73,12 @@ export const DemandWindows = () => {
                     <TableRow>
                         <TableCell style={{padding: "18px 12px"}}>Base</TableCell>
                         <TableCell align="center">fixed to 100%</TableCell>
-                        <TableCell className={classes.inputCell}>100%</TableCell>
+                        <TableCell>100%</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Premium</TableCell>
                         <TableCell align="center">from 100% to 200%</TableCell>
-                        <TableCell className={classes.inputCell}>
+                        <TableCell>
                             <div className={classes.editCell}>
                                 <span>
                                     {mappedPricingLevels[EDemandCategory.High]?.percentage
@@ -96,8 +92,7 @@ export const DemandWindows = () => {
                         </TableCell>
                     </TableRow>
                 </TableBody>
-            </DenseTable>
-        </TableContainer>
+            </DenseTableNormalFont>
         <PriceLevelsModal payload={editedItem} open={isOpen} onClose={onClose} />
-    </SquarePaper>
+    </div>
 };

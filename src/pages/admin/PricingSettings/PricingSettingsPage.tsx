@@ -6,7 +6,7 @@ import {TabContext, TabPanel} from "@mui/lab";
 import { PricingLevels } from '../../../features/admin/PricingLevels/PricingLevels';
 import {Eligibility} from "../../../features/admin/Eligibility/Eligibility";
 import {PricingOptimization} from "../../../features/admin/PricingOptimization/PricingOptimization";
-import {VariableDemand} from "../../../features/admin/VariableDemand/VariableDemand";
+import {TimeOfDayPricing} from "../../../features/admin/TimeOfDayPricing/TimeOfDayPricing";
 import { changePricingOpt } from '../../../store/reducers/serviceCenters/actions';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -27,7 +27,7 @@ type Tab = {
 
 const tabs: Tab[] = [
     {id: "0", label: "Eligibility", component: <Eligibility />},
-    {id: "1", label: "Variable Demand", component: <VariableDemand />},
+    {id: "1", label: "Time Of Day", component: <TimeOfDayPricing />},
     {id: "2", label: "Pricing Levels", component: <PricingLevels />},
     {id: "3", label: "Price Calculations", component: <PricingOptimization />},
 ]

@@ -1,11 +1,11 @@
 import React from 'react';
-import {DemandWindows} from "./DemandWindows/DemandsWindows";
+import {ConfigurationSettings} from "../TimeOfDayPricing/ConfigurationSettings/ConfigurationSettings";
 import {Box} from "@mui/material";
 import PricingLevelsBy from "./PricingLevelsBy/PricingLevelsBy";
 
 export const PricingLevels = () => {
     return <div>
-        <DemandWindows/>
+        <ConfigurationSettings/>
         <Box p={2} />
         <Box p={2} />
         <PricingLevelsBy/>

@@ -1,6 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
+import {styled} from "@mui/material";
 
-// 
 export const useStyles = makeStyles()(theme => ({
     inputCell: {
         fontSize: 16,
@@ -16,3 +16,13 @@ export const useStyles = makeStyles()(theme => ({
         justifyContent: "space-between"
     }
 }));
+
+export const Title = styled("div")({
+    fontSize: 16,
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    padding: '20px 16px',
+    backgroundColor: 'white',
+    border: "1px solid #DADADA",
+    borderBottomWidth: 0,
+})
