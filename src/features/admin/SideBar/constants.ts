@@ -118,10 +118,10 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
         ]
     },
     {
-        to: Routes.Pricing.Base, name: "Pricing", roles: ["Owner", "Manager"], subLinks: [
+        to: Routes.Pricing.Base, name: "Dynamic Pricing", roles: ["Owner", "Manager"], subLinks: [
             {
                 to: Routes.Pricing.ServicePricingSettings,
-                name: "Service Price Settings",
+                name: "Service Price",
                 exact: true,
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
