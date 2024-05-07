@@ -18,6 +18,7 @@ import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingBu
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {TimeOfYear} from "../../../features/admin/VariableDemand/TimeOfYear/TimeOfYear";
 
 type Tab = {
     id: string;
@@ -29,7 +30,8 @@ const tabs: Tab[] = [
     {id: "0", label: "Eligibility", component: <Eligibility />},
     {id: "1", label: "Time Of Day", component: <TimeOfDayPricing />},
     {id: "2", label: "Day Of Week", component: <DayOfWeekTab />},
-    {id: "3", label: "Price Calculations", component: <PricingOptimization />},
+    {id: "3", label: "Time Of Year", component: <TimeOfYear />},
+    {id: "4", label: "Price Calculations", component: <PricingOptimization />},
 ]
 
 export const PricingSettingsPage = () => {

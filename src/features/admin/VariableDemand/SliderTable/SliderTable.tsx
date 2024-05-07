@@ -1,14 +1,12 @@
 import React, {useEffect, useState} from 'react';
+import {Box, TableBody, TableCell, TableHead, TableRow, useMediaQuery, useTheme,} from "@mui/material";
 import {
-    Box,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material";
-import {dayDemands, EDayDemand, EDemandCategory, EDemandType} from "../../../../store/reducers/pricingSettings/types";
+    dayDemands,
+    EDayDemand,
+    EDemandCategory,
+    EDemandType,
+    yearDemands
+} from "../../../../store/reducers/pricingSettings/types";
 import {EditButton} from "../../../../components/buttons/EditButton/EditButton";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {setPricingDemand} from "../../../../store/reducers/pricingSettings/actions";
@@ -41,6 +39,7 @@ export const SliderTable: React.FC<React.PropsWithChildren<React.PropsWithChildr
 
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
+    const demands = type === EDemandType.DayOfWeek ? dayDemands : yearDemands;
 
     useEffect(() => {
         setForm({
@@ -109,7 +108,7 @@ export const SliderTable: React.FC<React.PropsWithChildren<React.PropsWithChildr
             </TableRow>
         </TableHead>
         <TableBody>
-            {dayDemands.map(d => {
+            {demands.map(d => {
                 return <TableRow key={d.id}>
                     {!isXS ? <TableCell>{d.label}</TableCell> : null}
                     <TableCell>

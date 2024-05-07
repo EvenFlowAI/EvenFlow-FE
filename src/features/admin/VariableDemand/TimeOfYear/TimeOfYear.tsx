@@ -2,30 +2,27 @@ import {useSelector} from "react-redux";
 import {
     mappedPricingDemandsSelectorDYear
 } from "../../../../store/reducers/pricingSettings/selectors";
-import {SquarePaper} from "../../../../components/styled/Paper";
-import {PaperTitle} from "../../../../pages/admin/PricingSettings/UI";
-import {Box, Button, Divider} from "@mui/material";
+import {Button} from "@mui/material";
 import {SliderTable} from "../SliderTable/SliderTable";
 import {EDemandType} from "../../../../store/reducers/pricingSettings/types";
 import React from "react";
 import {TimeOfYearModal} from "../TimeOfYearModal/TimeOfYearModal";
 
 import {useModal} from "../../../../hooks/useModal/useModal";
+import {TableTitle} from "../../../../components/wrappers/TableTitle/TableTitle";
 
 export const TimeOfYear = () => {
     const {onOpen, isOpen, onClose} = useModal();
     const demand = useSelector(mappedPricingDemandsSelectorDYear);
 
-    return <SquarePaper variant="outlined">
-        <Box display="flex" mr={2} alignItems="center">
-            <PaperTitle>Time of Year</PaperTitle>
-            <div className="grow" />
+    return <div>
+        <TableTitle style={{display: "flex", justifyContent: 'space-between', alignItems: "center"}}>
+            <div>Time of Year</div>
             <Button color="primary" onClick={onOpen} variant="contained">
                 Set up a calendar
             </Button>
-        </Box>
-        <Divider />
+        </TableTitle>
         <SliderTable demand={demand} type={EDemandType.TimeOfYear} />
         <TimeOfYearModal open={isOpen} onClose={onClose} />
-    </SquarePaper>
+    </div>
 };
