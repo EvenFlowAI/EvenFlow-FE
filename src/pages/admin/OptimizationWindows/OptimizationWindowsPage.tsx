@@ -15,7 +15,6 @@ import {OptimizationModal} from "../../../components/modals/admin/OptimizationMo
 import {AppointmentCutoffModal} from "../../../features/admin/OptimizationWindows/AppointmentCutoffModal/AppointmentCutoffModal";
 import {capacityManagementRoot, timeSpanString} from "../../../utils/constants";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
-import {MaxPriceDateRangeModal} from "../../../features/admin/OptimizationWindows/MaxPriceDateRangeModal/MaxPriceDateRangeModal";
 import {TOptParam} from "./types";
 import {blankWindowParam, optContent} from "./constants";
 import {useModal} from "../../../hooks/useModal/useModal";
@@ -28,11 +27,9 @@ export const OptimizationWindowsPage = () => {
     const {isOpen: isDemandOpen, onClose: onDemandClose, onOpen: onDemandOpen} = useModal();
     const {isOpen: isCutoffOpen, onClose: onCutoffClose, onOpen: onCutoffOpen} = useModal();
     const {isOpen: isOptOpen, onClose: onOptClose, onOpen: onOptOpen} = useModal();
-    const {isOpen: isMaxPriceOpen, onClose: onMaxPriceClose, onOpen: onMaxPriceOpen} = useModal();
     const optParams = useSelector((state: RootState) =>
         state.optimizationWindows.dataList
     );
-    const {maxPriceDateRange} = useSelector((state: RootState) => state.optimizationWindows);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
@@ -54,8 +51,6 @@ export const OptimizationWindowsPage = () => {
                 return onDemandOpen;
             case EOptimizationWindowType.AppointmentCutoff:
                 return onCutoffOpen;
-            case EOptimizationWindowType.MaxPriceDateRange:
-                return onMaxPriceOpen;
             default:
                 return handleEdit(k);
         }
@@ -91,10 +86,6 @@ export const OptimizationWindowsPage = () => {
                                     ? optMapped[k].value
                                         ? dayjs.utc(optMapped[k].value, timeSpanString).format("h:mm")
                                         : "-"
-                                    : k === EOptimizationWindowType.MaxPriceDateRange
-                                        ? maxPriceDateRange
-                                            ? maxPriceDateRange
-                                            : "-"
                                         : optMapped[k].value
                             }
                             label={k === EOptimizationWindowType.AppointmentCutoff
@@ -117,7 +108,6 @@ export const OptimizationWindowsPage = () => {
             />
             <DemandSegmentsModal open={isDemandOpen} onClose={onDemandClose} />
             <AppointmentCutoffModal open={isCutoffOpen} onClose={onCutoffClose} />
-            <MaxPriceDateRangeModal open={isMaxPriceOpen} onClose={onMaxPriceClose}/>
         </Grid>
     </>
 }
