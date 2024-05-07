@@ -3,7 +3,7 @@ import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleC
 import {TabList} from "../../../components/styled/Tabs";
 import {Switch, Tab} from "@mui/material";
 import {TabContext, TabPanel} from "@mui/lab";
-import { PricingLevels } from '../../../features/admin/PricingLevels/PricingLevels';
+import { DayOfWeekTab } from '../../../features/admin/PricingLevels/DayOfWeekTab';
 import {Eligibility} from "../../../features/admin/Eligibility/Eligibility";
 import {PricingOptimization} from "../../../features/admin/PricingOptimization/PricingOptimization";
 import {TimeOfDayPricing} from "../../../features/admin/TimeOfDayPricing/TimeOfDayPricing";
@@ -28,7 +28,7 @@ type Tab = {
 const tabs: Tab[] = [
     {id: "0", label: "Eligibility", component: <Eligibility />},
     {id: "1", label: "Time Of Day", component: <TimeOfDayPricing />},
-    {id: "2", label: "Pricing Levels", component: <PricingLevels />},
+    {id: "2", label: "Day Of Week", component: <DayOfWeekTab />},
     {id: "3", label: "Price Calculations", component: <PricingOptimization />},
 ]
 
