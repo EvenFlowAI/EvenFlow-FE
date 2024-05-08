@@ -12,7 +12,7 @@ import {SC_UNDEFINED} from "../../../../utils/constants";
 import {setPricingDemand} from "../../../../store/reducers/pricingSettings/actions";
 import {useDispatch} from "react-redux";
 import {TMappedDemands} from "../../../../store/reducers/pricingSettings/selectors";
-import {InvertedSlider, Slider} from "./styles";
+import {ColorfulSlider} from "./styles";
 import {initialForm, sliderMarks, sliderRange} from "./constants";
 import {TForm} from "./types";
 import {DenseTableWithPadding} from "../../../../components/styled/DemandTable";
@@ -114,28 +114,16 @@ export const SliderTable: React.FC<React.PropsWithChildren<React.PropsWithChildr
                     <TableCell>
                         {isXS ? <Box mt={2}>{d.label}</Box> : null}
                         <Box ml={2} mr={2}>
-                            {sliderRange[d.id].Inverted ?
-                                <InvertedSlider
-                                    min={sliderRange[d.id].Min}
-                                    max={sliderRange[d.id].Max}
-                                    disabled={edit !== d.id}
-                                    valueLabelDisplay="on"
-                                    step={sliderRange[d.id].Step}
-                                    value={form[d.id]}
-                                    marks={sliderMarks(d.id)}
-                                    onChange={handleSlide(d.id)}
-                                />
-                                : <Slider
-                                    min={sliderRange[d.id].Min}
-                                    max={sliderRange[d.id].Max}
-                                    disabled={edit !== d.id}
-                                    valueLabelDisplay="on"
-                                    step={sliderRange[d.id].Step}
-                                    value={form[d.id]}
-                                    marks={sliderMarks(d.id)}
-                                    onChange={handleSlide(d.id)}
-                                />
-                            }
+                            <ColorfulSlider
+                                min={sliderRange[d.id].Min}
+                                max={sliderRange[d.id].Max}
+                                disabled={edit !== d.id}
+                                valueLabelDisplay="on"
+                                step={sliderRange[d.id].Step}
+                                value={form[d.id]}
+                                marks={sliderMarks(d.id)}
+                                onChange={handleSlide(d.id)}
+                            />
                         </Box>
                     </TableCell>
                     <TableCell align="right">
