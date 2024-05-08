@@ -174,7 +174,12 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
         serviceCategories,
         address,
     } = appointment;
-    const {selectedVehicle, selectedRecalls, valueService, sideBarSteps} = getState().appointmentFrame;
+    const {
+        selectedVehicle,
+        selectedRecalls,
+        valueService,
+        sideBarSteps,
+        appointmentByKey} = getState().appointmentFrame;
     const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
     const recalls = mapRecallsForRequest(selectedRecalls);
     if (selectedVehicle) {
@@ -202,6 +207,9 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
             }
             if (valueService?.selectedService) {
                 data.valueServiceOfferIds = [valueService.selectedService.id];
+            }
+            if (appointmentByKey?.hashKey) {
+                data.appointmentHashKey = appointmentByKey?.hashKey;
             }
             Api.call<PaginatedAPIResponse<IServiceConsultant>>(
                 Api.endpoints.ServiceConsultants.GetByQuery, {data})
