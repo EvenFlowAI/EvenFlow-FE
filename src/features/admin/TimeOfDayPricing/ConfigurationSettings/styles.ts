@@ -1,6 +1,5 @@
-import { makeStyles } from 'tss-react/mui';
+import {makeStyles} from 'tss-react/mui';
 
-// 
 export const useStyles = makeStyles()(theme => ({
     inputCell: {
         fontSize: 16,
@@ -16,3 +15,4 @@ export const useStyles = makeStyles()(theme => ({
         justifyContent: "space-between"
     }
 }));
+

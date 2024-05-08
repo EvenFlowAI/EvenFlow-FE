@@ -56,9 +56,15 @@ export enum EDayDemand {
 }
 
 export const dayDemands: TEnumMap<EDayDemand>[] = [
+    {id: EDayDemand.High, label: "Closest available"},
+    {id: EDayDemand.Low, label: "Earliest available"}
+];
+
+export const yearDemands: TEnumMap<EDayDemand>[] = [
     {id: EDayDemand.High, label: "High"},
     {id: EDayDemand.Low, label: "Low"}
 ];
+
 export enum EDemandType {
     TimeOfDay, DayOfWeek, TimeOfYear
 }

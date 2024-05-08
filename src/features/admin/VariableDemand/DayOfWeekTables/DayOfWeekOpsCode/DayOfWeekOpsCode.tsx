@@ -19,7 +19,7 @@ import {loadAssignedServiceRequests, setAssignedPageData} from "../../../../../s
 import EditDayOfWeekOpsCode from "../../EditDayOFWeekOpsCode/EditDayOFWeekOpsCode";
 import {SliderObject, SliderRange, TOpsCode} from "../../types";
 import {Slider} from "../../../../../components/styled/Slider";
-import {useStyles} from "./styles";
+import {useStyles} from "../styles";
 import {DenseTable} from "../../../../../components/styled/DemandTable";
 import {useModal} from "../../../../../hooks/useModal/useModal";
 import {useConfirm} from "../../../../../hooks/useConfirm/useConfirm";
@@ -160,13 +160,13 @@ const DayOfWeekOpsCode = () => {
                     ? <DenseTable>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell className={classes.headerCell} width="22%">
+                                    <TableCell className={classes.headerCell} width="185" style={{textTransform: "capitalize"}}>
                                         Ops Code
                                     </TableCell>
-                                    <TableCell className={classes.headerCell} width="26%">
+                                    <TableCell className={classes.headerCell} style={{textTransform: "capitalize"}}>
                                         Low
                                     </TableCell>
-                                    <TableCell className={classes.headerCell} width="26%">
+                                    <TableCell className={classes.headerCell} style={{textTransform: "capitalize"}}>
                                         High
                                     </TableCell>
                                     <TableCell width="8%"/>

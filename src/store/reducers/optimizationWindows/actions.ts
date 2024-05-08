@@ -6,7 +6,7 @@ import {
     IOverbookingFactor,
     IWaitListSettings
 } from "./types";
-import {AppThunk} from "../../../types/types";
+import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 
@@ -90,12 +90,14 @@ export const loadMaxPriceDateRange = (id: number): AppThunk => dispatch => {
         })
 }
 
-export const updateMaxPriceDateRange = (id: number, daysCount: number): AppThunk => dispatch => {
+export const updateMaxPriceDateRange = (id: number, daysCount: number, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
     Api.call(Api.endpoints.ServiceCenters.UpdateMaxPriceDateRange, {urlParams: {id}, data: {daysCount}})
         .then(result => {
             if (result) dispatch(loadMaxPriceDateRange(id))
+            onSuccess()
         })
         .catch(err => {
+            onError(err)
             console.log('update max price date range error', err)
         })
 }

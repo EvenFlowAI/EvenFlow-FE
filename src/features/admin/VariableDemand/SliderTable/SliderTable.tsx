@@ -1,24 +1,21 @@
 import React, {useEffect, useState} from 'react';
+import {Box, TableBody, TableCell, TableHead, TableRow, useMediaQuery, useTheme,} from "@mui/material";
 import {
-    Box,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material";
-import {dayDemands, EDayDemand, EDemandCategory, EDemandType} from "../../../../store/reducers/pricingSettings/types";
+    dayDemands,
+    EDayDemand,
+    EDemandCategory,
+    EDemandType,
+    yearDemands
+} from "../../../../store/reducers/pricingSettings/types";
 import {EditButton} from "../../../../components/buttons/EditButton/EditButton";
-import {TableContainer} from "../../../../pages/admin/PricingSettings/UI";
 import {SC_UNDEFINED} from "../../../../utils/constants";
 import {setPricingDemand} from "../../../../store/reducers/pricingSettings/actions";
 import {useDispatch} from "react-redux";
 import {TMappedDemands} from "../../../../store/reducers/pricingSettings/selectors";
-import {InvertedSlider, Slider} from "./styles";
+import {InvertedSlider, ColorfulSlider} from "./styles";
 import {initialForm, sliderMarks, sliderRange} from "./constants";
 import {TForm} from "./types";
-import {DenseTable} from "../../../../components/styled/DemandTable";
+import {DenseTableWithPadding} from "../../../../components/styled/DemandTable";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
@@ -42,6 +39,7 @@ export const SliderTable: React.FC<React.PropsWithChildren<React.PropsWithChildr
 
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
+    const demands = type === EDemandType.DayOfWeek ? dayDemands : yearDemands;
 
     useEffect(() => {
         setForm({
@@ -101,64 +99,61 @@ export const SliderTable: React.FC<React.PropsWithChildren<React.PropsWithChildr
         }
     }
 
-    return <TableContainer>
-        <DenseTable>
-            <TableHead>
-                <TableRow>
-                    {!isXS ? <TableCell>Value</TableCell> : null}
-                    <TableCell width={!isXS ? "50%" : "80%"}>Pricing Settings</TableCell>
-                    <TableCell width="20%" />
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {dayDemands.map(d => {
-                    return <TableRow key={d.id}>
-                        {!isXS ? <TableCell>{d.label}</TableCell> : null}
-                        <TableCell>
-                            {isXS ? <Box mt={2}>{d.label}</Box> : null}
-                            <Box ml={2} mr={2}>
-                                {sliderRange[d.id].Inverted ?
-                                    <InvertedSlider
-                                        min={sliderRange[d.id].Min}
-                                        max={sliderRange[d.id].Max}
-                                        disabled={edit !== d.id}
-                                        valueLabelDisplay="on"
-                                        step={sliderRange[d.id].Step}
-                                        value={form[d.id]}
-                                        marks={sliderMarks(d.id)}
-                                        onChange={handleSlide(d.id)}
-                                    />
-                                    : <Slider
-                                        min={sliderRange[d.id].Min}
-                                        max={sliderRange[d.id].Max}
-                                        disabled={edit !== d.id}
-                                        valueLabelDisplay="on"
-                                        step={sliderRange[d.id].Step}
-                                        value={form[d.id]}
-                                        marks={sliderMarks(d.id)}
-                                        onChange={handleSlide(d.id)}
-                                    />
-                                }
-                            </Box>
-                        </TableCell>
-                        <TableCell align="right">
-                            {(edit === d.id) ?
-                                <>
-                                    <EditButton
-                                        color="secondary"
-                                        onClick={handleEdit(null)}>Cancel</EditButton>
-                                    <EditButton
-                                        color="primary"
-                                        onClick={askSave(d.id)}>Save</EditButton>
-                                </>
-                                : <EditButton
+    return <DenseTableWithPadding>
+        <TableHead>
+            <TableRow>
+                {!isXS ? <TableCell>Value</TableCell> : null}
+                <TableCell width={!isXS ? "50%" : "80%"}>Pricing Settings</TableCell>
+                <TableCell width="20%" />
+            </TableRow>
+        </TableHead>
+        <TableBody>
+            {demands.map(d => {
+                return <TableRow key={d.id}>
+                    {!isXS ? <TableCell>{d.label}</TableCell> : null}
+                    <TableCell>
+                        {isXS ? <Box mt={2}>{d.label}</Box> : null}
+                        <Box ml={2} mr={2}>
+                            {sliderRange[d.id].Inverted ?
+                                <InvertedSlider
+                                    min={sliderRange[d.id].Min}
+                                    max={sliderRange[d.id].Max}
+                                    disabled={edit !== d.id}
+                                    valueLabelDisplay="on"
+                                    step={sliderRange[d.id].Step}
+                                    value={form[d.id]}
+                                    marks={sliderMarks(d.id)}
+                                    onChange={handleSlide(d.id)}
+                                />
+                                : <ColorfulSlider
+                                    min={sliderRange[d.id].Min}
+                                    max={sliderRange[d.id].Max}
+                                    disabled={edit !== d.id}
+                                    valueLabelDisplay="on"
+                                    step={sliderRange[d.id].Step}
+                                    value={form[d.id]}
+                                    marks={sliderMarks(d.id)}
+                                    onChange={handleSlide(d.id)}
+                                />
+                            }
+                        </Box>
+                    </TableCell>
+                    <TableCell align="right">
+                        {(edit === d.id) ?
+                            <>
+                                <EditButton
+                                    color="secondary"
+                                    onClick={handleEdit(null)}>CANCEL</EditButton>
+                                <EditButton
                                     color="primary"
-                                    onClick={handleEdit(d.id)}
-                                >Edit</EditButton>}
-                        </TableCell>
-                    </TableRow>
-                })}
-            </TableBody>
-        </DenseTable>
-    </TableContainer>
+                                    onClick={askSave(d.id)}>SAVE</EditButton>
+                            </>
+                            : <EditButton
+                                color="primary"
+                                onClick={handleEdit(d.id)}>EDIT</EditButton>}
+                    </TableCell>
+                </TableRow>
+            })}
+        </TableBody>
+    </DenseTableWithPadding>
 };

@@ -16,15 +16,15 @@ export const DenseTable = withStyles(DemandTable, {
     }
 });
 
-export const DenseTableNormalFont = withStyles(DemandTable, {
+export const DenseTableNormalFont = withStyles(DenseTable, {
     root: {
         "& .MuiTableCell-root": {
-            padding: 16,
+            fontSize: 16,
         }
     }
 });
 
-export const DenseTableWithoutBorder = withStyles(StyledTable, {
+export const DenseTableWithPadding = withStyles(StyledTable, {
     root: {
         "& .MuiTableCell-root": {
             padding: 16,

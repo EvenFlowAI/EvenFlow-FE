@@ -1,14 +1,13 @@
 import React, {useEffect} from 'react';
 import {Box} from "@mui/material";
-import {TimeOfDay} from "./TimeOfDay/TimeOfDay";
-import {DayOfWeek} from "./DayOfWeek/DayOfWeek";
+import {TimeOfDayPricingRules} from "./TimeOfDayPricingRules/TimeOfDayPricingRules";
 import {useDispatch} from "react-redux";
 import {loadPricingDemand} from "../../../store/reducers/pricingSettings/actions";
-import {TimeOfYear} from "./TimeOfYear/TimeOfYear";
-import DayOfWeekTabs from "./DayOfWeekTabs/DayOFWeekTabs";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {ConfigurationSettings} from "./ConfigurationSettings/ConfigurationSettings";
+import PricingLevelsBy from "../PricingLevels/PricingLevelsBy/PricingLevelsBy";
 
-export const VariableDemand = () => {
+export const TimeOfDayPricing = () => {
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     useEffect(() => {
@@ -18,12 +17,10 @@ export const VariableDemand = () => {
     }, [dispatch, selectedSC]);
 
     return <div>
-        <TimeOfDay />
+        <TimeOfDayPricingRules />
         <Box p={1.5} />
-        <DayOfWeek />
+        <ConfigurationSettings />
         <Box p={1.5} />
-        <TimeOfYear />
-        <Box p={1.5} />
-        <DayOfWeekTabs/>
+        <PricingLevelsBy/>
     </div>
 };

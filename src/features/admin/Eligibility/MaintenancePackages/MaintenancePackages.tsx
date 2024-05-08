@@ -10,7 +10,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {Caption} from "../../../../components/wrappers/Caption/Caption";
 import {EPricingDisplayType} from "../../../../store/reducers/pricingSettings/types";
 import {blackFont, headCellStyles, leftAlign} from "../styles";
-import {DenseTableWithoutBorder} from "../../../../components/styled/DemandTable";
+import {DenseTableWithPadding} from "../../../../components/styled/DemandTable";
 import {TableRow} from "../../../../components/styled/TableRow";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
@@ -49,7 +49,7 @@ const MaintenancePackages = () => {
         <div>
             <NoItemsLoading items={mpList} loading={isLoading} />
             {mpList.length
-                ? <DenseTableWithoutBorder>
+                ? <DenseTableWithPadding>
                     <TableHead>
                         <TableRow>
                             <StyledTableCell
@@ -119,7 +119,7 @@ const MaintenancePackages = () => {
                             </TableRow>
                         })}
                     </TableBody>
-                </DenseTableWithoutBorder>
+                </DenseTableWithPadding>
                 : null}
             <Box m={2} mt={1}>
                 <Caption

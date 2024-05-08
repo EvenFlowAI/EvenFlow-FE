@@ -10,7 +10,7 @@ import {TableBody, TableHead, Radio} from "@mui/material";
 import {EPricingDisplayType} from "../../../../store/reducers/pricingSettings/types";
 import {blackFont, headCellStyles, leftAlign} from "../styles";
 import {
-    DenseTableWithoutBorder
+    DenseTableWithPadding
 } from "../../../../components/styled/DemandTable";
 import {TableRow} from "../../../../components/styled/TableRow";
 import {useException} from "../../../../hooks/useException/useException";
@@ -51,7 +51,7 @@ export const ServiceCodes = () => {
 
     return <div>
             <NoItemsLoading items={srList} loading={loading} />
-            {srList.length ? <DenseTableWithoutBorder>
+            {srList.length ? <DenseTableWithPadding>
                 <TableHead style={{borderBottom: 'none'}}>
                     <TableRow>
                         <StyledTableCell
@@ -105,6 +105,6 @@ export const ServiceCodes = () => {
                         </TableRow>
                     })}
                 </TableBody>
-            </DenseTableWithoutBorder> : null}
+            </DenseTableWithPadding> : null}
         </div>
 };
