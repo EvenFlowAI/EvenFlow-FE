@@ -109,6 +109,7 @@ theme.components = {
         styleOverrides: {
             root: {
                 padding: '6px 12px',
+                color: "#858585",
                 '&.Mui-selected': {
                     color: '#000000'
                 }
