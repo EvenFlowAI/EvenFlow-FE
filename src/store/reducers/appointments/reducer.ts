@@ -3,11 +3,11 @@ import {
     getAdvisorsList,
     getAllAppointments,
     getAppointments,
-    getAppointmentsPageData,
+    getAppointmentsPageData, getCurrentAppointment,
     getPackageByVehicle,
     getScheduler,
     getServiceBookList, getTechnicians,
-    setAllAppointmentsCount,
+    setAllAppointmentsCount, setCurrentAppointmentLoading,
     setAppointmentsCount,
     setAppointmentsLoading,
     setAppointmentsModalLoading
@@ -30,6 +30,8 @@ const initialState: TState = {
     },
     serviceAdvisors: [],
     technicians: [],
+    currentAppointment: null,
+    isAppointmentLoading: false,
 }
 
 export const appointmentsReducer = createReducer(initialState, builder => builder
@@ -68,5 +70,11 @@ export const appointmentsReducer = createReducer(initialState, builder => builde
     })
     .addCase(getTechnicians, (state, { payload} ) => {
         return {...state, technicians: payload}
+    })
+    .addCase(getCurrentAppointment, (state, { payload} ) => {
+        return {...state, currentAppointment: payload}
+    })
+    .addCase(setCurrentAppointmentLoading, (state, { payload} ) => {
+        return {...state, isAppointmentLoading: payload}
     })
 )

@@ -11,6 +11,8 @@ import {VehicleDetails} from "./VehicleDetails/VehicleDetails";
 import {CustomerInfo} from "./CustomerInfo/CustomerInfo";
 import {OperationalDetails} from "./OperationalDetails/OperationalDetails";
 import {Wrapper} from "./styles";
+import {useDispatch} from "react-redux";
+import {loadAppointmentByKey} from "../../../../store/reducers/appointments/actions";
 
 type TCallbackProps = {
     onEditAppointment: () => void;
@@ -18,6 +20,12 @@ type TCallbackProps = {
 }
 
 export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAppointment>&TCallbackProps>>> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
+    const dispatch = useDispatch()
+
+    const onClone = () => {
+       if (payload?.hashKey) dispatch(loadAppointmentByKey(payload?.hashKey))
+    }
+
     return <BaseModal {...props} width={940}>
         <DialogTitle onClose={props.onClose}>View Appointment</DialogTitle>
         <DialogContent>
@@ -35,6 +43,9 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
             </>}
         </DialogContent>
         <DialogActions>
+            <Button onClick={onClone} color="info" variant="outlined">
+                Clone
+            </Button>
             <Button
                 onClick={onCancelAppointment}
                 disabled={

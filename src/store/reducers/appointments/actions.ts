@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IAppointment, IPackageAppointments, IVehicleForRequest} from "../../../api/types";
+import {IAppointment, IAppointmentByKey, IPackageAppointments, IVehicleForRequest} from "../../../api/types";
 import {
     EConsultantRole,
     IAppointmentsRequest,
@@ -29,6 +29,8 @@ export const getScheduler = createAction<TScheduler[]>("Appointments/GetSchedule
 export const getAppointmentsPageData = createAction<Partial<IPageRequest>>("Appointments/GetPageData");
 export const getAdvisorsList = createAction<TServiceConsultant[]>("Appointments/GetServiceAdvisors");
 export const getTechnicians = createAction<TServiceConsultant[]>("Appointments/GetTechnicians");
+export const getCurrentAppointment = createAction<IAppointmentByKey|null>("Appointments/getCurrentAppointment");
+export const setCurrentAppointmentLoading = createAction<boolean>("Appointments/SetCurrentAppointmentLoading");
 
 export const loadAppointments = (data: IAppointmentsRequest): AppThunk => dispatch => {
     dispatch(setAppointmentsLoading(true));
@@ -164,5 +166,12 @@ export const loadServiceConsultants = (serviceCenterId: number): AppThunk => dis
             console.log('load Service Consultants error', e)
         })
         .finally(() => dispatch(setAppointmentsLoading(false)))
+}
+
+export const loadAppointmentByKey = (key: string): AppThunk => async dispatch => {
+    dispatch(setCurrentAppointmentLoading(true))
+    const {data} = await API.appointment.getByKey(key);
+    if (data) dispatch(getCurrentAppointment(data))
+    dispatch(setCurrentAppointmentLoading(false))
 }
 
