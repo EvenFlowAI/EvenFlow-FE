@@ -324,6 +324,7 @@ export interface IConsultantsRequestData {
     valueServiceOfferIds?: number[];
     address?: string;
     zipCode?: string;
+    appointmentHashKey?: string;
 }
 
 export interface ICustomer {

@@ -223,8 +223,21 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
 }
 
 export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void, onSuccess?: (data: IServiceConsultant[]) => void): AppThunk => async (dispatch, getState) => {
-    const {selectedPackage, packagePricingType, packageEMenuType, selectedRecalls, selectedVehicle, address, zipCode, valueService,
-        service, subService, categoriesIds, sideBarSteps, advisor} = getState().appointmentFrame;
+    const {
+        selectedPackage,
+        packagePricingType,
+        packageEMenuType,
+        selectedRecalls,
+        selectedVehicle,
+        address,
+        zipCode,
+        valueService,
+        service,
+        subService,
+        categoriesIds,
+        sideBarSteps,
+        advisor,
+        appointmentByKey} = getState().appointmentFrame;
     const {selectedSR} = getState().appointment;
     const {allCategories} = getState().categories;
     const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
@@ -266,6 +279,9 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
             }
             if (valueService?.selectedService) {
                 data.valueServiceOfferIds = [valueService.selectedService.id];
+            }
+            if (appointmentByKey?.hashKey) {
+                data.appointmentHashKey = appointmentByKey?.hashKey;
             }
             Api.call<PaginatedAPIResponse<IServiceConsultant>>(
                 Api.endpoints.ServiceConsultants.GetByQuery, {data})
