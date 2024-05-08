@@ -918,6 +918,7 @@ export const loadAppointmentRequestsPrices = (serviceCenterId: number): AppThunk
         zipCode: appointmentFrame.zipCode ?? null,
         serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
         vehicle,
+        appointmentHashKey: appointmentFrame.appointmentByKey?.hashKey ?? '',
     }
     if (serviceRequestIds.length || data.serviceCategoryIds.length || data.valueServiceOfferIds.length
         || data.recalls.length || maintenancePackageOption) {
