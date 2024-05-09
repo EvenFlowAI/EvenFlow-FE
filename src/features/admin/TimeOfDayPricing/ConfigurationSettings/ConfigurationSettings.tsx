@@ -46,12 +46,12 @@ export const ConfigurationSettings = () => {
     }
 
     return <div>
-        <TableTitle>Configuration Settings for All Services</TableTitle>
+        <TableTitle style={{textTransform: 'none'}}>Configuration Settings for All Services</TableTitle>
             <DenseTableNormalFont>
                 <TableHead>
                     <TableRow>
-                        <TableCell colSpan={2} style={{textTransform: "none"}} width={"50%"}>Price levels</TableCell>
-                        <TableCell style={{textTransform: "none"}}>Price percentage</TableCell>
+                        <TableCell colSpan={2} style={{textTransform: "capitalize"}} width={"50%"}>Price levels</TableCell>
+                        <TableCell style={{textTransform: "capitalize"}}>Price percentage</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

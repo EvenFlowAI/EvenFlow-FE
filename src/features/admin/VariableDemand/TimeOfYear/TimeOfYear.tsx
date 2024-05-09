@@ -17,7 +17,7 @@ export const TimeOfYear = () => {
 
     return <div>
         <TableTitle style={{display: "flex", justifyContent: 'space-between', alignItems: "center"}}>
-            <div>Time of Year</div>
+            <div>Configuration Settings for All Services</div>
             <Button color="primary" onClick={onOpen} variant="contained">
                 Set up a calendar
             </Button>

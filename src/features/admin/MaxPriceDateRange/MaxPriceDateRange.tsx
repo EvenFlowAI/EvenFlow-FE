@@ -5,7 +5,7 @@ import {RootState} from "../../../store/rootReducer";
 import {useException} from "../../../hooks/useException/useException";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {SC_UNDEFINED} from "../../../utils/constants";
-import {updateMaxPriceDateRange} from "../../../store/reducers/optimizationWindows/actions";
+import {loadMaxPriceDateRange, updateMaxPriceDateRange} from "../../../store/reducers/optimizationWindows/actions";
 import {StyledInput, Title, Value, Wrapper} from "./styles";
 import {SaveEditBlock} from "../../../components/buttons/SaveEditBlock/SaveEditBlock";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
@@ -21,6 +21,10 @@ const MaxPriceDateRange = () => {
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
+
+    useEffect(() => {
+        if (selectedSC) dispatch(loadMaxPriceDateRange(selectedSC.id))
+    }, [selectedSC])
 
     useEffect(() => {
         if (maxPriceDateRange) setVal(maxPriceDateRange)

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {SquarePaper} from "../../../components/styled/Paper";
-import {loadPricingCalculations} from "../../../store/reducers/pricingSettings/actions";
+import {getPricingCalculations, loadPricingCalculations} from "../../../store/reducers/pricingSettings/actions";
 import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 import {useDispatch, useSelector} from "react-redux";
 import {PaperTitle, TableContainer} from "../../../pages/admin/PricingSettings/UI";
@@ -39,6 +39,7 @@ export const PricingOptimization = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadSCRequestsShort(selectedSC.id, EPricingDisplayType.Dynamic));
+            setSr(null)
         }
     }, [selectedSC, dispatch]);
 
@@ -49,6 +50,8 @@ export const PricingOptimization = () => {
             } catch (e) {
                 showError(e);
             }
+        } else {
+            dispatch(getPricingCalculations([]));
         }
     }, [sr, demand, dispatch, showError]);
 
