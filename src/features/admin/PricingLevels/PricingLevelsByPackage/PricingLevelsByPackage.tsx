@@ -14,9 +14,9 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const RowData: TableRowDataType<TPackagePricingLevel>[] = [
     {val: (el: TPackagePricingLevel, index: number) => `${index + 1}`, header: "#"},
-    {val: (el: TPackagePricingLevel) => el.maintenancePackageName, header: "Maintenance Package Name", width: '25%'},
-    {val: (el: TPackagePricingLevel) => `${el.maintenancePackageId}`, header: "Maintenance Package ID"},
-    {val: (el: TPackagePricingLevel) => el.maintenancePackageOptionName, header: "Maintenance Package Level", width: '20%'},
+    {val: (el: TPackagePricingLevel) => el.maintenancePackageName, header: "Package Name", width: '25%'},
+    {val: (el: TPackagePricingLevel) => `${el.maintenancePackageId}`, header: "ID"},
+    {val: (el: TPackagePricingLevel) => el.maintenancePackageOptionName, header: "Package Option Name", width: '20%'},
     {val: (el: TPackagePricingLevel) => el.discount ? `${el.discount} %` : 'Default', header: "Discount"},
     {val: (el: TPackagePricingLevel) => el.premium ? `${el.premium} %` : 'Default', header: "Premium"},
 ];

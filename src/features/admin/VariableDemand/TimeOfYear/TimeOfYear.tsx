@@ -16,7 +16,7 @@ export const TimeOfYear = () => {
     const demand = useSelector(mappedPricingDemandsSelectorDYear);
 
     return <div>
-        <TableTitle style={{display: "flex", justifyContent: 'space-between', alignItems: "center"}}>
+        <TableTitle style={{display: "flex", justifyContent: 'space-between', alignItems: "center", textTransform: 'none'}}>
             <div>Configuration Settings for All Services</div>
             <Button color="primary" onClick={onOpen} variant="contained">
                 Set up a calendar

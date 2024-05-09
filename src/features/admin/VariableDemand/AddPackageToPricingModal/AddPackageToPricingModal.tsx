@@ -29,8 +29,13 @@ const AddPackageToPricingModal: React.FC<React.PropsWithChildren<React.PropsWith
     const dispatch = useDispatch();
 
     useEffect(() => {
-        props.open && setFilteredPackages(mpOptionsList);
-    }, [mpOptionsList, props.open]);
+        if (props.open) {
+            setFilteredPackages(mpOptionsList);
+            setSelectedPackages(() => {
+                return mpOptionsList.filter(el => mpPricingSettings.map(p => p.maintenancePackageOptionId).includes(el.maintenancePackageOptionId))
+            })
+        }
+    }, [mpOptionsList, mpPricingSettings, props.open]);
 
     const handleAddPackage = () => {
         if (selectedSC && selectedPackages.length) {

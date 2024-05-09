@@ -117,19 +117,19 @@ const DayOfWeekPackage = () => {
                     ? <DenseTable>
                         <TableHead>
                             <TableRow>
-                                <TableCell className={classes.headerCell} width="152" style={{textTransform: "capitalize"}}>
+                                <TableCell className={classes.headerCell} width="200" style={{textTransform: "capitalize"}}>
                                    Package Name
                                 </TableCell>
-                                <TableCell className={classes.headerCell} width="120" style={{textTransform: "capitalize"}}>
-                                    Package ID
+                                <TableCell className={classes.headerCell} width="75" style={{textTransform: "capitalize"}}>
+                                    ID
                                 </TableCell>
-                                <TableCell className={classes.headerCell} width="19%" style={{textTransform: "capitalize"}}>
+                                <TableCell className={classes.headerCell} width="200" style={{textTransform: "capitalize"}}>
                                     Package Option Name
                                 </TableCell>
-                                <TableCell className={classes.headerCell} width="19%" style={{textTransform: "capitalize"}}>
+                                <TableCell className={classes.headerCell} width="210" style={{textTransform: "capitalize"}}>
                                     Low
                                 </TableCell>
-                                <TableCell className={classes.headerCell} width="19%" style={{textTransform: "capitalize"}}>
+                                <TableCell className={classes.headerCell} width="210" style={{textTransform: "capitalize"}}>
                                     High
                                 </TableCell>
                                 <TableCell width="8%"/>
