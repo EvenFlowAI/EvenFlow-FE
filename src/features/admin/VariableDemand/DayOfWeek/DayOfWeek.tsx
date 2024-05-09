@@ -14,7 +14,7 @@ export const DayOfWeek = () => {
     const demand = useSelector(mappedPricingDemandsSelectorDWeek);
 
     return <div>
-        <TableTitle style={{display: "flex", justifyContent: 'space-between', alignItems: "center"}}>
+        <TableTitle style={{display: "flex", justifyContent: 'space-between', alignItems: "center", textTransform: 'none'}}>
             <div>Configuration Settings for All Services</div>
             <Button color="primary" variant="contained" onClick={onOpen}>
                 Set up a Work Week
