@@ -13,6 +13,8 @@ import {OperationalDetails} from "./OperationalDetails/OperationalDetails";
 import {Wrapper} from "./styles";
 import {useDispatch} from "react-redux";
 import {loadAppointmentByKey} from "../../../../store/reducers/appointments/actions";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {encodeSCID} from "../../../../utils/utils";
 
 type TCallbackProps = {
     onEditAppointment: () => void;
@@ -21,9 +23,10 @@ type TCallbackProps = {
 
 export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAppointment>&TCallbackProps>>> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
     const dispatch = useDispatch()
+    const {selectedSC} = useSCs();
 
     const onClone = () => {
-       if (payload?.hashKey) dispatch(loadAppointmentByKey(payload?.hashKey))
+       if (payload?.hashKey && selectedSC) dispatch(loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id)))
     }
 
     return <BaseModal {...props} width={940}>
