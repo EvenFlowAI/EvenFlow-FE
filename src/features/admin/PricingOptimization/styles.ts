@@ -14,10 +14,17 @@ export const TableWrapper = styled("div")(({theme}) => ({
 
 export const Label = withStyles(FormLabel, {
     root: {
-        fontSize: 15,
+        fontSize: 12,
         fontWeight: "bold",
         textAlign: "right",
         textTransform: "uppercase",
         color: "#9FA2B4",
     }
 });
+
+export const Title = styled("h4")({
+    fontSize: 16,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    margin: 16
+})

@@ -89,6 +89,7 @@ const UnplannedDemandEditing: React.FC<React.PropsWithChildren<React.PropsWithCh
                 <div className={classes.title}>Enter The Unplanned Demand By Appointment Slot</div>
                 <div>
                     <SaveEditBlock
+                        withoutPadding
                         isLowerCase
                         onSave={handleSave}
                         onEdit={() => setEdit(true)}

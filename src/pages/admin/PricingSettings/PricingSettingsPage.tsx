@@ -3,10 +3,10 @@ import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleC
 import {TabList} from "../../../components/styled/Tabs";
 import {Switch, Tab} from "@mui/material";
 import {TabContext, TabPanel} from "@mui/lab";
-import { PricingLevels } from '../../../features/admin/PricingLevels/PricingLevels';
+import { DayOfWeekTab } from '../../../features/admin/PricingLevels/DayOfWeekTab';
 import {Eligibility} from "../../../features/admin/Eligibility/Eligibility";
 import {PricingOptimization} from "../../../features/admin/PricingOptimization/PricingOptimization";
-import {VariableDemand} from "../../../features/admin/VariableDemand/VariableDemand";
+import {TimeOfDayPricing} from "../../../features/admin/TimeOfDayPricing/TimeOfDayPricing";
 import { changePricingOpt } from '../../../store/reducers/serviceCenters/actions';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -18,6 +18,7 @@ import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingBu
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {TimeOfYear} from "../../../features/admin/VariableDemand/TimeOfYear/TimeOfYear";
 
 type Tab = {
     id: string;
@@ -26,10 +27,11 @@ type Tab = {
 }
 
 const tabs: Tab[] = [
-    {id: "0", label: "Variable Demand", component: <VariableDemand />},
-    {id: "1", label: "Eligibility", component: <Eligibility />},
-    {id: "2", label: "Pricing Levels", component: <PricingLevels />},
-    {id: "3", label: "Price Calculations", component: <PricingOptimization />},
+    {id: "0", label: "Eligibility", component: <Eligibility />},
+    {id: "1", label: "Time Of Day", component: <TimeOfDayPricing />},
+    {id: "2", label: "Day Of Week", component: <DayOfWeekTab />},
+    {id: "3", label: "Time Of Year", component: <TimeOfYear />},
+    {id: "4", label: "Price Calculations", component: <PricingOptimization />},
 ]
 
 export const PricingSettingsPage = () => {
@@ -70,7 +72,7 @@ export const PricingSettingsPage = () => {
     }
 
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Service Price Settings" pad parent={pricingRoot} actions={
+        <TitleContainer title="Service Price" pad parent={pricingRoot} actions={
             <ButtonsWrapper>
             <ControlLabel labelPlacement="start" control={
                 <Switch

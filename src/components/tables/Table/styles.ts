@@ -17,7 +17,7 @@ export const StyledTableCell = styled(TableCell, {
         && prop !== "superCompact" && prop !== "borderHeader" && prop !== "withBorders"
     && prop !== "compactBodyPadding"
 })<TStyleProps>(({theme, compact, compactBodyPadding, superCompact, withBorders}) => ({
-    fontSize: compact ? 14 : 16,
+    fontSize: 16,
     border: withBorders ? '1px solid #DADADA' : "none",
     // borderBottomColor: "#000000",
     padding: compact || compactBodyPadding ? compactPadding : superCompact ? superCompactPadding : cellPadding,
@@ -32,12 +32,12 @@ export const StyledTableHead = styled(TableCell, {
         && prop !== "superCompact" && prop !== "borderHeader" && prop !== "withBorders" && prop !== "verticalAlign"
 })<TStyleProps>(({theme, compact, smallHeaderFont, superCompact,
                                                           borderHeader, withBorders, verticalAlign}) => ({
-    fontSize: smallHeaderFont ? 12 : compact ? 14 : 16,
+    fontSize: smallHeaderFont ? 12 : 16,
     border: withBorders ? '1px solid #DADADA' : "none",
     borderBottom: borderHeader ? '1px solid #DADADA' : "none",
     padding: compact ? compactPadding : superCompact ? superCompactPadding : cellPadding,
     fontWeight: "bold",
-    color: "#9DA8B5",
+    color: "#858585",
     [theme.breakpoints.down('sm')]: {
         fontSize: 12,
         padding: theme.spacing(1)

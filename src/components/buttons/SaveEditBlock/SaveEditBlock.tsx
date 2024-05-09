@@ -44,7 +44,7 @@ export const SaveEditBlock: React.FC<React.PropsWithChildren<React.PropsWithChil
                 minWidth: withoutPadding ? 56 : "unset",
                 textTransform: isLowerCase ? "none" : "uppercase",
                 padding: withoutPadding ? 0 : 'unset',
-                marginRight: withoutPadding ? 16 : 'unset'
+                marginRight: !withoutPadding ? 16 : 'unset'
         }}
         >
             Cancel

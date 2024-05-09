@@ -1,7 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {SquarePaper} from "../../../../components/styled/Paper";
-import {PaperTitle, TableContainer} from "../../../../pages/admin/PricingSettings/UI";
-import {Box, Divider, Switch, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
+import {Box, Switch, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {loadTimeWindows, setTimeWindows} from "../../../../store/reducers/pricingSettings/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -9,10 +7,11 @@ import {EWindowType, TTimeWindow} from "../../../../store/reducers/pricingSettin
 import {Caption} from "../../../../components/wrappers/Caption/Caption";
 import {TextLink} from "../../../../components/wrappers/TextLink/TextLink";
 import {useStyles} from "./styles";
-import {DenseTable} from "../../../../components/styled/DemandTable";
+import {DenseTableWithPadding} from "../../../../components/styled/DemandTable";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Routes} from "../../../../routes/constants";
+import {TableTitle} from "../../../../components/wrappers/TableTitle/TableTitle";
 
 export const DemandWindows = () => {
     const {timeWindows} = useSelector((state: RootState) => state.pricingSettings);
@@ -41,7 +40,7 @@ export const DemandWindows = () => {
                 setSaving(true);
                 await dispatch(setTimeWindows({
                     ...mappedTW[t],
-                    serviceCenterId: mappedTW[t]?.serviceCenterId ?? selectedSC.id,
+                    serviceCenterId: selectedSC.id,
                     type: mappedTW[t]?.type ?? t,
                     isEligibility: checked
                 }));
@@ -53,46 +52,44 @@ export const DemandWindows = () => {
         }
     }
 
-    return <SquarePaper variant="outlined">
-        <PaperTitle>Demand windows Eligibility status</PaperTitle>
-        <Divider />
-        <TableContainer>
+    return <div>
+            <TableTitle>Demand windows Eligibility status</TableTitle>
             <div className={classes.tableWrapper}>
-                <DenseTable>
+                <DenseTableWithPadding>
                     <TableHead>
                         <TableRow>
-                            <TableCell className={classes.headerCell}>Time Windows</TableCell>
-                            <TableCell className={classes.headerCell} align="center">Window 1</TableCell>
-                            <TableCell className={classes.headerCell} align="center">Window 2</TableCell>
-                            <TableCell className={classes.headerCell} align="center">Window 3</TableCell>
+                            <TableCell className={classes.headerCell} style={{textTransform: 'capitalize'}}>Time Windows</TableCell>
+                            <TableCell className={classes.headerCell} style={{textTransform: 'capitalize'}}>Window 1</TableCell>
+                            <TableCell className={classes.headerCell} style={{textTransform: 'capitalize'}}>Window 2</TableCell>
+                            <TableCell className={classes.headerCell} style={{textTransform: 'capitalize'}}>Window 3</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         <TableRow>
                             <TableCell>Start (hours)</TableCell>
-                            <TableCell align="center">
+                            <TableCell>
                                 {mappedTW[EWindowType.Window1]?.startInHours || 0}
                             </TableCell>
-                            <TableCell align="center">
+                            <TableCell>
                                 {mappedTW[EWindowType.Window2]?.startInHours || "-"}
                             </TableCell>
-                            <TableCell align="center">
+                            <TableCell>
                                 {mappedTW[EWindowType.Window3]?.startInHours || "-"}
                             </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Duration (hours)</TableCell>
-                            <TableCell align="center">
+                            <TableCell>
                                 {mappedTW[EWindowType.Window1]?.durationInHours || "-"}
                             </TableCell>
-                            <TableCell align="center">
+                            <TableCell>
                                 {mappedTW[EWindowType.Window2]?.durationInHours || "-"}
                             </TableCell>
-                            <TableCell align="center"/>
+                            <TableCell/>
                         </TableRow>
                         <TableRow>
                             <TableCell>Eligibility Status</TableCell>
-                            <TableCell className={classes.switchCell} align="center">
+                            <TableCell className={classes.switchCell}>
                                 <strong>OFF</strong>
                                 <Switch
                                     disabled={saving}
@@ -101,7 +98,7 @@ export const DemandWindows = () => {
                                     color="primary"/>
                                 <strong>ON</strong>
                             </TableCell>
-                            <TableCell className={classes.switchCell} align="center">
+                            <TableCell className={classes.switchCell}>
                                 <strong>OFF</strong>
                                 <Switch
                                     disabled={saving}
@@ -110,7 +107,7 @@ export const DemandWindows = () => {
                                     color="primary"/>
                                 <strong>ON</strong>
                             </TableCell>
-                            <TableCell className={classes.switchCell} align="center">
+                            <TableCell className={classes.switchCell}>
                                 <strong>OFF</strong>
                                 <Switch
                                     disabled={saving}
@@ -121,17 +118,16 @@ export const DemandWindows = () => {
                             </TableCell>
                         </TableRow>
                     </TableBody>
-                </DenseTable>
+                </DenseTableWithPadding>
             </div>
-            <Box mt={2}>
-                <Caption
-                    title={<span>
-                        You can edit the Demand Segment values on <TextLink to={Routes.CapacityManagement.AppointmentAllocation}>
-                            Appointment Allocation
+        <Box mt={2}>
+            <Caption
+                title={<span>
+                        The Demand Windows can be edited on the <TextLink to={Routes.CapacityManagement.RequestDifferentiation}>
+                            Request Differentiation
                         </TextLink> page
                     </span>}
-                />
-            </Box>
-        </TableContainer>
-    </SquarePaper>
+            />
+        </Box>
+    </div>
 };

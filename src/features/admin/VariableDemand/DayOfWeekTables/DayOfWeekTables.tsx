@@ -13,11 +13,11 @@ type Tab = {
     component: JSX.Element
 }
 const tabs: Tab[] = [
-    {id: "0", label: "DAY OF WEEK OPS CODE", component: <DayOfWeekOpsCode />},
-    {id: "1", label: "DAY OF WEEK MAINTENANCE PACKAGE", component: <DayOfWeekPackage />},
+    {id: "0", label: "Day Of Week Ops Code", component: <DayOfWeekOpsCode />},
+    {id: "1", label: "Day Of Week Maintenance Package", component: <DayOfWeekPackage />},
 ]
 
-const DayOfWeekTabs = () => {
+const DayOfWeekTables = () => {
     const [selectedTab, selectTab] = useState<string>("0");
 
     const handleTabChange = (e: any, value: string) => {
@@ -53,4 +53,4 @@ const DayOfWeekTabs = () => {
     );
 };
 
-export default DayOfWeekTabs;
+export default DayOfWeekTables;

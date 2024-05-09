@@ -90,12 +90,12 @@ export const WorkWeekModal: React.FC<React.PropsWithChildren<React.PropsWithChil
         return days;
     }
     return (
-        <BaseModal {...props} width={400}>
+        <BaseModal {...props} width={345}>
             <DialogTitle onClose={props.onClose}>Work Week Settings</DialogTitle>
-            <DialogContent>
-                <Box display="grid" gap={'10px'} gridTemplateColumns="1fr 220px">
-                    <Box component="span" fontWeight="bold" color={"text.disabled"}>Day</Box>
-                    <Box component="span" fontWeight="bold" color={"text.disabled"}>Demand Category</Box>
+            <DialogContent style={{paddingBottom: 20, paddingTop: 16}}>
+                <Box display="grid" gap={'10px'} gridTemplateColumns="1fr 197px">
+                    <Box component="span" fontWeight="bold" color={"text.disabled"}>SLOT STARTS</Box>
+                    <Box component="span" fontWeight="bold" color={"text.disabled"}/>
                     {getContent()}
                 </Box>
             </DialogContent>

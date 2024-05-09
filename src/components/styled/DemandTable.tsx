@@ -15,3 +15,19 @@ export const DenseTable = withStyles(DemandTable, {
         }
     }
 });
+
+export const DenseTableNormalFont = withStyles(DenseTable, {
+    root: {
+        "& .MuiTableCell-root": {
+            fontSize: 16,
+        }
+    }
+});
+
+export const DenseTableWithPadding = withStyles(StyledTable, {
+    root: {
+        "& .MuiTableCell-root": {
+            padding: 16,
+        }
+    }
+});

@@ -10,7 +10,7 @@ import {Box, Button, TableBody, TableCell, TableHead, TableRow} from "@mui/mater
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import EditDayOFWeekPackage from "../../EditDayOFWeekPackageModal/EditDayOFWeekPackageModal";
 import {TMPackage, SliderObject, SliderRange} from "../../types";
-import {useStyles} from "./styles";
+import {useStyles} from "../styles";
 import {Slider} from "../../../../../components/styled/Slider";
 import AddPackageToPricingModal from "../../AddPackageToPricingModal/AddPackageToPricingModal";
 import {DenseTable} from "../../../../../components/styled/DemandTable";
@@ -117,19 +117,19 @@ const DayOfWeekPackage = () => {
                     ? <DenseTable>
                         <TableHead>
                             <TableRow>
-                                <TableCell className={classes.headerCell} width="19%">
+                                <TableCell className={classes.headerCell} width="200" style={{textTransform: "capitalize"}}>
                                    Package Name
                                 </TableCell>
-                                <TableCell className={classes.headerCell} width="8%">
-                                    Package ID
+                                <TableCell className={classes.headerCell} width="75" style={{textTransform: "capitalize"}}>
+                                    ID
                                 </TableCell>
-                                <TableCell className={classes.headerCell} width="19%">
+                                <TableCell className={classes.headerCell} width="200" style={{textTransform: "capitalize"}}>
                                     Package Option Name
                                 </TableCell>
-                                <TableCell className={classes.headerCell} width="19%">
+                                <TableCell className={classes.headerCell} width="210" style={{textTransform: "capitalize"}}>
                                     Low
                                 </TableCell>
-                                <TableCell className={classes.headerCell} width="19%">
+                                <TableCell className={classes.headerCell} width="210" style={{textTransform: "capitalize"}}>
                                     High
                                 </TableCell>
                                 <TableCell width="8%"/>

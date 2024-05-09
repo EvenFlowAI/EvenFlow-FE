@@ -174,7 +174,12 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
         serviceCategories,
         address,
     } = appointment;
-    const {selectedVehicle, selectedRecalls, valueService, sideBarSteps} = getState().appointmentFrame;
+    const {
+        selectedVehicle,
+        selectedRecalls,
+        valueService,
+        sideBarSteps,
+        appointmentByKey} = getState().appointmentFrame;
     const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
     const recalls = mapRecallsForRequest(selectedRecalls);
     if (selectedVehicle) {
@@ -203,6 +208,9 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
             if (valueService?.selectedService) {
                 data.valueServiceOfferIds = [valueService.selectedService.id];
             }
+            if (appointmentByKey?.hashKey) {
+                data.appointmentHashKey = appointmentByKey?.hashKey;
+            }
             Api.call<PaginatedAPIResponse<IServiceConsultant>>(
                 Api.endpoints.ServiceConsultants.GetByQuery, {data})
                 .then(({data: {result}}) => {
@@ -223,8 +231,21 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
 }
 
 export const loadConsultants = (id: string, serviceTypeOptionId: number|null, onEmptyList?: () => void, onSuccess?: (data: IServiceConsultant[]) => void): AppThunk => async (dispatch, getState) => {
-    const {selectedPackage, packagePricingType, packageEMenuType, selectedRecalls, selectedVehicle, address, zipCode, valueService,
-        service, subService, categoriesIds, sideBarSteps, advisor} = getState().appointmentFrame;
+    const {
+        selectedPackage,
+        packagePricingType,
+        packageEMenuType,
+        selectedRecalls,
+        selectedVehicle,
+        address,
+        zipCode,
+        valueService,
+        service,
+        subService,
+        categoriesIds,
+        sideBarSteps,
+        advisor,
+        appointmentByKey} = getState().appointmentFrame;
     const {selectedSR} = getState().appointment;
     const {allCategories} = getState().categories;
     const {isAdvisorAvailable, currentConfig} = getState().bookingFlowConfig;
@@ -266,6 +287,9 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
             }
             if (valueService?.selectedService) {
                 data.valueServiceOfferIds = [valueService.selectedService.id];
+            }
+            if (appointmentByKey?.hashKey) {
+                data.appointmentHashKey = appointmentByKey?.hashKey;
             }
             Api.call<PaginatedAPIResponse<IServiceConsultant>>(
                 Api.endpoints.ServiceConsultants.GetByQuery, {data})
@@ -894,6 +918,7 @@ export const loadAppointmentRequestsPrices = (serviceCenterId: number): AppThunk
         zipCode: appointmentFrame.zipCode ?? null,
         serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
         vehicle,
+        appointmentHashKey: appointmentFrame.appointmentByKey?.hashKey ?? '',
     }
     if (serviceRequestIds.length || data.serviceCategoryIds.length || data.valueServiceOfferIds.length
         || data.recalls.length || maintenancePackageOption) {

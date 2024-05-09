@@ -1,9 +1,8 @@
 import { makeStyles } from 'tss-react/mui';
 
-//
 export const useStyles = makeStyles()(theme => ({
     switchCell: {
-        fontSize: "12px !important",
+        fontSize: "14px !important",
         padding: "2px 12px !important"
     },
     tableWrapper: {
