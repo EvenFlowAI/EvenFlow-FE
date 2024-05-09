@@ -24,7 +24,7 @@ export const TimeOfDayPricingRules = () => {
     return (
         <div>
             <SquarePaper variant="outlined">
-                <Title>Pricing rules: Time of Day</Title>
+                <Title>Pricing Rules: Time of Day</Title>
                 <Divider/>
                 <div className={classes.tableWrapper}>
                     <Grid
