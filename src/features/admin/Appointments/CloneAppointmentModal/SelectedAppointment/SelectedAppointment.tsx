@@ -4,7 +4,7 @@ import {RootState} from "../../../../../store/rootReducer";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import ServiceValetDateTime from "./ServiceValetDateTime/ServiceValetDateTime";
-import ServicesList from "./ServicesWithPrices/ServicesWithPrices";
+import ServicesList from "./Services/Services";
 import Prices from "./Prices/Prices";
 import ServiceOption from "./ServiceOption/ServiceOption";
 import Address from "./Address/Address";
