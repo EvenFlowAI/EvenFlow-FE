@@ -1,39 +1,28 @@
-import React, {useMemo} from 'react';
-import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
+import React, {useEffect, useState} from 'react';
+import {MenuItem, Select, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
-import {
-    selectAppointment,
-    selectServiceValetAppointment,
-} from "../../../../../../store/reducers/appointment/actions";
-import {setAdvisor, setAnyAdvisorSelected} from "../../../../../../store/reducers/appointmentFrameReducer/actions";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
-import {EServiceCenterName} from "../../../../../../api/types";
+import {IServiceConsultant} from "../../../../../../api/types";
 import {useSelectedAppointmentStyles} from "../../../../../../hooks/styling/useSelectedAppointmentStyles";
 
 const SelectedConsultant = () => {
-    const { advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
+    const {consultants} = useSelector((state: RootState) => state.appointmentFrame);
     const {currentAppointment} = useSelector((state: RootState) => state.appointments);
-    const { scProfile } = useSelector((state: RootState) => state.appointment);
+    const [advisor, setAdvisor] = useState<IServiceConsultant|null>(null);
+
     const {t} = useTranslation();
-    const dispatch = useDispatch();
-    const { classes  } = useSelectedAppointmentStyles();
+    const {classes  } = useSelectedAppointmentStyles();
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('md'));
-    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
-    const handleConsultantChange = (e: SelectChangeEvent<unknown>) => {
-        const consultant = consultants.find(item => item.id === e.target.value);
-        if (isBmWService && e.target.value !== advisor?.id) {
-            dispatch(selectAppointment(null));
-            dispatch(selectServiceValetAppointment(null));
+    useEffect(() => {
+        if (currentAppointment?.advisor?.id) {
+            setAdvisor(() => consultants.find(el => el.id === currentAppointment?.advisor?.id) ?? null)
         }
-        dispatch(setAdvisor(consultant ? consultant : null))
-        dispatch(setAnyAdvisorSelected(!Boolean(e.target.value)))
-    }
+    }, [consultants, currentAppointment])
 
-    return currentAppointment?.advisor
+    return currentAppointment?.advisor && consultants.length
         ? <div className={classes.selectWrapper}>
             <div className={classes.selectWrapper}>
                 {t("Advisor")}: {isSm ? <br/> : null}
@@ -43,7 +32,7 @@ const SelectedConsultant = () => {
                     variant="standard"
                     disableUnderline
                     disabled
-                    onChange={handleConsultantChange}>`
+                    onChange={() => {}}>
                     {consultants
                         .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
                         .concat([<MenuItem value="Any" key="any">{t("Any Available")}</MenuItem>])}

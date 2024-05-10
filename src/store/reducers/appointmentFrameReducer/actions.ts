@@ -166,6 +166,43 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
     }
 }
 
+export const loadConsultantsForCloning = (serviceCenterId: string, appointment: IAppointmentByKey): AppThunk => (dispatch, getState) => {
+    dispatch(setConsultantsLoading(true))
+    const {selectedRecalls} = getState().appointmentFrame;
+    const {serviceRequests, serviceCategories, maintenancePackageOption, serviceTypeOption, vehicle, address, hashKey} = appointment;
+    const data: IConsultantsRequestData = {
+        serviceCenterId: decodeSCID(serviceCenterId),
+        pageIndex: 0,
+        pageSize: 0,
+        serviceRequestIds: serviceRequests ? serviceRequests.map(el => el.id) : [],
+        recalls: mapRecallsForRequest(selectedRecalls),
+        serviceCategoryIds: serviceCategories ? serviceCategories.map(el => el.id) : [],
+        maintenancePackageOption: maintenancePackageOption,
+        serviceTypeOptionId: serviceTypeOption?.id ?? null,
+        searchTerm: "",
+        vehicle: {
+            vin: vehicle.vin,
+            year: vehicle.year,
+            make: vehicle.make,
+            model: vehicle.model,
+            mileage: vehicle.mileage,
+            engineTypeId: vehicle.engineTypeId,
+        },
+        address: address?.fullAddress ?? '',
+        zipCode: address?.zipCode ?? '',
+    }
+    if (hashKey) {
+        data.appointmentHashKey = hashKey;
+    }
+    Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+        Api.endpoints.ServiceConsultants.GetByQuery, {data})
+        .then(({data: {result}}) => {
+            dispatch(setConsultants(result));
+        })
+        .catch(err => console.log(err))
+        .finally(() => dispatch(setConsultantsLoading(false)))
+}
+
 export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: number|null, appointment: IAppointmentByKey): AppThunk => (dispatch, getState) => {
     dispatch(setConsultantsLoading(true))
     const {

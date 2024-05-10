@@ -12,7 +12,11 @@ import {AppThunk, IPageRequest, TArgCallback} from "../../../types/types";
 import {API} from "../../../api/api";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType} from "../appointment/types";
-import {loadConsultantsForUpdating, setAppointmentSaving, updateRecalls} from "../appointmentFrameReducer/actions";
+import {
+    loadConsultantsForCloning,
+    setAppointmentSaving,
+    updateRecalls
+} from "../appointmentFrameReducer/actions";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../modals/actions";
 import {collectServiceRequestIds, getCategories, getVehicleData, mapRecallsForRequest} from "../../../utils/utils";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
@@ -174,7 +178,7 @@ export const loadAppointmentByKey = (key: string, serviceCenterId: string): AppT
     if (data) {
         dispatch(getCurrentAppointment(data));
         dispatch(updateRecalls(data, serviceCenterId));
-        dispatch(loadConsultantsForUpdating(serviceCenterId, data.serviceTypeOption ? data.serviceTypeOption.id : null, data))
+        dispatch(loadConsultantsForCloning(serviceCenterId, data))
     }
     dispatch(setCurrentAppointmentLoading(false))
 }

@@ -14,7 +14,7 @@ import {DateWrapper} from "../../../../../components/styled/DateWrapper";
 import {List, PriceWrapper, Wrapper} from "./styles";
 import dayjs from "dayjs";
 import SelectedConsultant
-    from "../../../../booking/AppointmentFlow/AppointmentSlots/SelectedAppointment/SelectedConsultant/SelectedConsultant";
+    from "./SelectedConsultant/SelectedConsultant";
 
 export const SelectedAppointment = () => {
     const {currentAppointment} = useSelector((state: RootState) => state.appointments);
@@ -39,7 +39,7 @@ export const SelectedAppointment = () => {
                        <ServicesList/>
                     </li>
                     <li key="advisor">
-                        <SelectedConsultant disabled/>
+                        <SelectedConsultant/>
                         <Address />
                         <ServiceOption/>
                     </li>

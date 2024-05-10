@@ -1,6 +1,8 @@
-import React from 'react';
-import {useSelector} from "react-redux";
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
+import {loadRoundPriceSetting} from "../../../../../../store/reducers/pricingSettings/actions";
+import {useSCs} from "../../../../../../hooks/useSCs/useSCs";
 
 type TPricesProps = {
     ancillaryPrice: number;
@@ -8,9 +10,16 @@ type TPricesProps = {
 }
 
 const Prices: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPricesProps>>> = ({ancillaryPrice, price}) => {
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {roundPrice} = useSelector((state: RootState) => state.pricingSettings);
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        selectedSC && dispatch(loadRoundPriceSetting(selectedSC.id))
+    }, [selectedSC])
+
     return <div className="price">
-        ${scProfile?.isRoundPrice ? price + ancillaryPrice : (price + ancillaryPrice).toFixed(2)}
+        ${roundPrice ? price + ancillaryPrice : (price + ancillaryPrice).toFixed(2)}
     </div>
 };
 
