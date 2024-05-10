@@ -15,6 +15,8 @@ import {useDispatch} from "react-redux";
 import {loadAppointmentByKey} from "../../../../store/reducers/appointments/actions";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {encodeSCID} from "../../../../utils/utils";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import Informing from "../../../../components/modals/common/Informing/Informing";
 
 type TCallbackProps = {
     onEditAppointment: () => void;
@@ -24,9 +26,14 @@ type TCallbackProps = {
 export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAppointment>&TCallbackProps>>> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
     const dispatch = useDispatch()
     const {selectedSC} = useSCs();
+    const {onOpen, isOpen, onClose} = useModal();
 
     const onClone = () => {
-       if (payload?.hashKey && selectedSC) dispatch(loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id)))
+       if (payload?.hashKey && selectedSC) {
+           dispatch(loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id)))
+       } else {
+           onOpen();
+       }
     }
 
     return <BaseModal {...props} width={940}>
@@ -46,9 +53,6 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
             </>}
         </DialogContent>
         <DialogActions>
-            <Button onClick={onClone} color="info" variant="outlined">
-                Clone
-            </Button>
             <Button
                 onClick={onCancelAppointment}
                 disabled={
@@ -67,9 +71,17 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
                 variant="outlined">
                 Edit
             </Button>
+            <Button onClick={onClone} variant="outlined" style={{color: '#5FA077', borderColor: "#5FA077"}}>
+                Clone
+            </Button>
             <Button onClick={props.onClose} color="info">
                 Close
             </Button>
         </DialogActions>
+        <Informing
+            open={isOpen}
+            onClose={onClose}
+            title="We are sorry but this appointment was made outside of EvenFlow and is not able to be cloned."
+        />
     </BaseModal>
 };
