@@ -34,7 +34,7 @@ import {
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions";
-import {Wrapper} from "./styles";
+import {SlotsScreenWrapper} from "./styles";
 import {groupAppointments} from "./utils";
 import {Routes} from "../../../../routes/constants";
 import dayjs from "dayjs";
@@ -338,7 +338,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
 
     return (
         <StepWrapper>
-            <Wrapper>
+            <SlotsScreenWrapper>
                 <SelectedAppointment />
                 <ActionButtons
                     onBack={handleBack}
@@ -373,7 +373,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                         }
                         date={date}
                         loading={loading || isConsentsLoading}/>}
-            </Wrapper>
+            </SlotsScreenWrapper>
             <CustomerConsents onNext={handleConsents}/>
         </StepWrapper>
     );

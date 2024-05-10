@@ -245,6 +245,7 @@ export type TActionProps = {
     prevLabel?: string;
     hideNext?: boolean;
     hidePrev?: boolean;
+    color?: "inherit" | "primary" | "secondary" | "error" | "warning" | "info" | "success";
 };
 
 export enum Roles {

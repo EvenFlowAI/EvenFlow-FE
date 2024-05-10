@@ -11,10 +11,10 @@ import {RootState} from "../../../../../../store/rootReducer";
 import {EServiceCenterName} from "../../../../../../api/types";
 import {useSelectedAppointmentStyles} from "../../../../../../hooks/styling/useSelectedAppointmentStyles";
 
-const SelectedConsultant: React.FC<{disabled?: boolean}> = ({disabled}) => {
+const SelectedConsultant = () => {
     const { advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
+    const {currentAppointment} = useSelector((state: RootState) => state.appointments);
     const { scProfile } = useSelector((state: RootState) => state.appointment);
-    const { currentConfig, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const { classes  } = useSelectedAppointmentStyles();
@@ -33,7 +33,7 @@ const SelectedConsultant: React.FC<{disabled?: boolean}> = ({disabled}) => {
         dispatch(setAnyAdvisorSelected(!Boolean(e.target.value)))
     }
 
-    return isAdvisorAvailable && consultants?.length
+    return currentAppointment?.advisor
         ? <div className={classes.selectWrapper}>
             <div className={classes.selectWrapper}>
                 {t("Advisor")}: {isSm ? <br/> : null}
@@ -42,7 +42,7 @@ const SelectedConsultant: React.FC<{disabled?: boolean}> = ({disabled}) => {
                     className={classes.select}
                     variant="standard"
                     disableUnderline
-                    disabled={disabled || (!!currentConfig && !consultants.length)}
+                    disabled
                     onChange={handleConsultantChange}>`
                     {consultants
                         .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)

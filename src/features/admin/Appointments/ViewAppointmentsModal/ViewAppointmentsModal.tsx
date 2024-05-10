@@ -17,6 +17,7 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {encodeSCID} from "../../../../utils/utils";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import Informing from "../../../../components/modals/common/Informing/Informing";
+import CloneAppointmentModal from "../CloneAppointmentModal/CloneAppointmentModal";
 
 type TCallbackProps = {
     onEditAppointment: () => void;
@@ -27,10 +28,12 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
     const dispatch = useDispatch()
     const {selectedSC} = useSCs();
     const {onOpen, isOpen, onClose} = useModal();
+    const {onOpen: onOpenClone, isOpen: isOpenClone, onClose: onCloseClone} = useModal();
 
-    const onClone = () => {
+    const onClone = async () => {
        if (payload?.hashKey && selectedSC) {
-           dispatch(loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id)))
+           await dispatch(loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id)))
+           await onOpenClone();
        } else {
            onOpen();
        }
@@ -83,5 +86,6 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
             onClose={onClose}
             title="We are sorry but this appointment was made outside of EvenFlow and is not able to be cloned."
         />
+        <CloneAppointmentModal open={isOpenClone} onClose={onCloseClone}/>
     </BaseModal>
 };
