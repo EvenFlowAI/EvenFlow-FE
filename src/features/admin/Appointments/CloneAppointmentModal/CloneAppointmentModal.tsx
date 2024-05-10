@@ -32,10 +32,13 @@ import {
 import {
     AppointmentTimeSelector
 } from "../../../booking/AppointmentFlow/AppointmentSlots/AppointmentTimeSelector/AppointmentTimeSelector";
+import {cloneAppointment} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import Informing from "../../../../components/modals/common/Informing/Informing";
 
 const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
-    const {currentAppointment} = useSelector((state: RootState) => state.appointments);
-    const {selectedRecalls} = useSelector((state: RootState) => state.appointmentFrame);
+    const {currentAppointment, isAppointmentLoading} = useSelector((state: RootState) => state.appointments);
+    const {selectedRecalls, isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
     const {
         appointment,
         serviceValetAppointment,
@@ -43,11 +46,26 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
     } = useSelector((state: RootState) => state.appointment);
     const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
     const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
-    const initRef = useRef<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [newHashKey, setNewHashKey] = useState<string>('');
+
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const [loading, setLoading] = useState<boolean>(false);
+    const {onOpen, isOpen, onClose} = useModal();
     const showError = useException();
+    const initRef = useRef<boolean>(false);
+    const isLoading = isAppointmentLoading || isAppointmentSaving || loading;
+
+    const dateString = useMemo(() => {
+        return appointment
+            ? dayjs.utc(appointment.date).format('ddd, MMMM D, h:mm A')
+            : serviceValetAppointment
+                ? dayjs.utc(serviceValetAppointment.date)
+                    .set('hour', +serviceValetAppointment.pickUpMin.split(":")[0])
+                    .set('minute', +serviceValetAppointment.pickUpMin.split(":")[1])
+                    .format("ddd, MMMM D, h:mm A")
+                : ""
+    }, [appointment, serviceValetAppointment])
 
     const nextDisabled = useMemo(() => currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff
             ? !serviceValetAppointment
@@ -100,7 +118,15 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
     }, [selectedSC, currentAppointment])
 
     const handleCancel = () => props.onClose()
-    const handleConfirm = () => {}
+
+    const onCloneSuccess = (hashKey: string) => {
+        setNewHashKey(hashKey)
+        onOpen()
+    }
+
+    const handleConfirm = () => {
+        selectedSC && dispatch(cloneAppointment(selectedSC.id, onCloneSuccess, showError))
+    }
 
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(appointmentSlots);
@@ -119,6 +145,18 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
         }
     }, [month]);
 
+    const onRedirect = async () => {
+        if (newHashKey) {
+            const url = window.location.href.replace('/admin/appointments', `/appointment-update/${newHashKey}?fromAdmin=true`)
+            window.open(url, '_blank', 'noreferrer');
+        }
+    };
+
+    const onInformClose = () => {
+        onClose();
+        props.onClose();
+    }
+
     return <BaseModal {...props} width={900}>
         <DialogTitle onClose={props.onClose}/>
         <DialogContent style={{padding: '0 36px 36px 36px'}}>
@@ -130,14 +168,15 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
                     onNext={handleConfirm}
                     nextDisabled={nextDisabled}
                     nextLabel={"Confirm"}
-                    prevLabel={"Cancel"}/>
+                    prevLabel={"Cancel"}
+                    loading={isLoading}/>
                 {currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}
                         dateRangeUpdated={initRef.current}
                         dateChangeDisabled
                         date={date}
-                        loading={loading}
+                        loading={isLoading}
                         onDateChange={updateDate} />
                     : <AppointmentDateSelector
                         dateChangeDisabled
@@ -145,20 +184,27 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
                         date={date}
                         onDateRangeSet={handleDateRangeSet}
                         dateRangeUpdated={initRef.current}
-                        loading={loading}
+                        loading={isLoading}
                         onDateChange={updateDate} />
                 }
                 {currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentTimeSelector
                         date={date}
-                        loading={loading}/>
+                        loading={isLoading}/>
                     : <AppointmentTimeSelector
                         appointments={
                             groupedAppointments[dayjs(date).toISOString().replace('.000', '')]
                         }
                         date={date}
-                        loading={loading}/>}
+                        loading={isLoading}/>}
             </SlotsScreenWrapper>
+            <Informing
+                open={isOpen}
+                onClose={onInformClose}
+                actionButtonText="Modify Appointment"
+                onActionClick={onRedirect}
+                title={`Success! The appointment has been confirmed for ${dateString}`}
+            />
         </DialogContent>
     </BaseModal>
 };

@@ -40,7 +40,7 @@ import {
     AppThunk,
     IMaintenanceItem,
     IRecallByVin,
-    PaginatedAPIResponse,
+    PaginatedAPIResponse, TArgCallback,
     TCallback,
     TParsableDate,
     TScreen,
@@ -363,8 +363,8 @@ export const loadMakes = (serviceCenterId: number): AppThunk => async dispatch =
         }
     })
         .catch(err => {
-        console.log('get Makes error', err)
-    })
+            console.log('get Makes error', err)
+        })
 }
 
 export const loadSeriesModels = (serviceCenterId: number): AppThunk => dispatch => {
@@ -463,7 +463,7 @@ export const loadHoursOfOperations = (serviceCenterId: number): AppThunk => disp
     Api.call<IHOODataForm[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id: serviceCenterId}})
         .then(result => {
             if (result?.data) {
-               dispatch(setHoursOfOperations(result.data));
+                dispatch(setHoursOfOperations(result.data));
             }
         })
         .catch(err => {
@@ -843,7 +843,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         schedulerType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
         notes: appointmentFrame.appointmentNotes,
         address: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff
-            || appointmentFrame.serviceTypeOption?.type === EServiceType.MobileService
+        || appointmentFrame.serviceTypeOption?.type === EServiceType.MobileService
             ? addressData
             : null,
         isWaitlist: Boolean(isWaitlist),
@@ -1042,5 +1042,98 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
             .finally(() => {
                 dispatch(setConsentsLoading(false));
             })
+    }
+}
+
+export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onError: TArgCallback<any>): AppThunk => (dispatch, getState) => {
+    const {currentAppointment} = getState().appointments;
+    const appointment = getState().appointment;
+    const {selectedRecalls} = getState().appointmentFrame;
+    if (currentAppointment) {
+        dispatch(setAppointmentSaving(true))
+
+        const vehicle:TVehicleForRequest = {
+            dmsId: currentAppointment?.vehicle?.dmsId ?? null,
+            engineTypeId: currentAppointment?.vehicle?.engineTypeId ?? null,
+            model: currentAppointment?.vehicle?.model ?? null,
+            make: currentAppointment?.vehicle?.make ?? null,
+            year: currentAppointment?.vehicle?.year ? currentAppointment?.vehicle?.year.toString() : null,
+            vin: currentAppointment?.vehicle?.vin ?? '',
+            mileage: currentAppointment?.vehicle?.mileage ?? null,
+            modelDetails: '',
+        }
+
+        const driver:TDriverForRequest = {
+            fullName: currentAppointment?.driver?.fullName ?? '',
+            phoneNumber: currentAppointment?.driver?.phoneNumber ?? '',
+            city: currentAppointment?.driver?.city ?? '',
+            email: currentAppointment?.driver?.email ?? null,
+        }
+
+        const date = currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
+            ? dayjs.utc(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
+            : appointment.appointment?.id.split("|")[0] || ""
+
+        const appointmentTimingType = EAppointmentTimingType.FirstAvailable;
+        const transportationOptionId = currentAppointment?.serviceTypeOption?.transportationOption?.id ?? null;
+        const serviceRequestIds = currentAppointment?.serviceRequests
+            ? currentAppointment?.serviceRequests.map(el => el.id)
+            : [];
+        const maintenancePackageOption = currentAppointment.maintenancePackageOption
+            ? {id: currentAppointment.maintenancePackageOption.id, priceType: currentAppointment.maintenancePackageOption.priceType ?? null}
+            : null
+
+        const slot = currentAppointment.serviceTypeOption?.type === EServiceType.PickUpDropOff
+            ? "00:00:00"
+            : appointment.appointment?.id
+                ? appointment.appointment?.id.split("|")[1]
+                : "00:00:00"
+        const settingsEnabled = Boolean(appointment.waitListSettings?.isEnabled)
+        const isWaitListSlotSelected = appointment.appointment?.isOverbookingApplied && settingsEnabled;
+        const isVisitCenterAppointment = currentAppointment?.serviceTypeOption?.type === EServiceType.VisitCenter || !currentAppointment.serviceTypeOption;
+
+        const isWaitlist = isVisitCenterAppointment && isWaitListSlotSelected;
+
+        const data: ICreateAppointmentRequest = {
+            id: currentAppointment.id,
+            appointmentTimingType,
+            customerId: currentAppointment.customerId ?? null,
+            comment: currentAppointment.comment,
+            driver,
+            vehicle,
+            gmt: dayjs().utcOffset(),
+            offerId: appointment.appointment?.offer?.id ?? null,
+            reminderTypes: currentAppointment.reminderTypes,
+            serviceCenterId: id,
+            advisor: {
+                id: currentAppointment.advisor?.id ?? null,
+                isAnySelected: !(Boolean(currentAppointment.advisor))
+            },
+            transportationOptionId,
+            slot,
+            serviceRequestIds,
+            date,
+            serviceCategoryIds: currentAppointment.serviceCategories ? currentAppointment.serviceCategories.map(el => el.id) : [],
+            maintenancePackageOption,
+            searchTerm: "",
+            serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
+            recalls: mapRecallsForRequest(selectedRecalls),
+            notes: currentAppointment.notes ?? "",
+            valueServiceOfferIds: [],
+            address: currentAppointment.address ?? null,
+            isWaitlist: Boolean(isWaitlist),
+            customerConsentIds: [],
+        };
+
+        Api.call<ICreateAppointmentResp>(Api.endpoints.Appointments.Create, { data, urlParams: {id: currentAppointment.hashKey} })
+            .then(({data}) => {
+                dispatch(setEditingPosition(null))
+                onNext(data.hashKey)
+            })
+            .catch(e => {
+                onError(e)
+            }).finally(() => {
+            dispatch(setAppointmentSaving(false))
+        })
     }
 }

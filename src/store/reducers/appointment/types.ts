@@ -52,6 +52,7 @@ export interface IVehicleData {
     mileage: number;
     engineTypeId?: number;
     makeId?: number;
+    dmsId?: string;
 }
 
 export interface IVehicleShort {
