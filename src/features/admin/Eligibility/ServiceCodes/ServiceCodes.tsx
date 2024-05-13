@@ -8,7 +8,7 @@ import {
 import {NoItemsLoading} from "../../../../components/wrappers/NoItemsLoading/NoItemsLoading";
 import {TableBody, TableHead, Radio} from "@mui/material";
 import {EPricingDisplayType} from "../../../../store/reducers/pricingSettings/types";
-import {blackFont, headCellStyles, leftAlign} from "../styles";
+import {headCellStyles, leftAlign} from "../styles";
 import {
     DenseTableWithPadding
 } from "../../../../components/styled/DemandTable";
@@ -56,7 +56,7 @@ export const ServiceCodes = () => {
                     <TableRow>
                         <StyledTableCell
                             width={230}
-                            style={{...headCellStyles, ...blackFont, ...leftAlign, textTransform: 'capitalize'}}>
+                            style={{...headCellStyles, ...leftAlign, textTransform: 'capitalize'}}>
                             Service Ops Code
                         </StyledTableCell>
                         <StyledTableCell

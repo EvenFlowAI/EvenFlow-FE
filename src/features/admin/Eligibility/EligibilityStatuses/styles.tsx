@@ -10,7 +10,7 @@ export const SubHeaderCell = styled("span")({
     display: "grid",
     gridTemplateColumns: '1fr 1fr 1fr',
     alignItems: "center",
-    backgroundColor: "#EAEBEE",
+    // backgroundColor: "#EAEBEE",
     "& > span": {
         display: "flex",
         justifyContent: "center",
@@ -26,7 +26,7 @@ export const SubHeaderCell = styled("span")({
 export const SubHeaderTitle = styled("span")({
     display: 'block',
     padding: '10px 16px',
-    color: "#858585"
+    color: "#252733"
 })
 
 export const PricesCell = styled(TableCell)({
