@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {
     Button,
@@ -28,20 +28,34 @@ type TCallbackProps = {
 
 export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAppointment>&TCallbackProps>>> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
     const {isAppointmentLoading} = useSelector((state: RootState) => state.appointments);
-    const dispatch = useDispatch()
+    const [messageText, setMessageText] = useState<string>("");
+
     const {selectedSC} = useSCs();
     const {onOpen, isOpen, onClose} = useModal();
     const {onOpen: onOpenClone, isOpen: isOpenClone, onClose: onCloseClone} = useModal();
+    const dispatch = useDispatch();
+
+    const handleNoSlots = () => {
+        setMessageText("We are sorry but the appointment cannot be cloned.  The original appointment has services that are not available in EvenFlow.")
+        onOpen()
+    }
+
+    const handleExEvenFlowAppointments = () => {
+        setMessageText(`We are sorry but this appointment \n 
+            was made outside of EvenFlow \n 
+            and is not able to be cloned.`)
+        onOpen()
+    }
 
     const onGetSlots = (isEmptyList: boolean) => {
-        isEmptyList ? onOpen() : onOpenClone()
+        isEmptyList ? handleNoSlots() : onOpenClone()
     }
 
     const onClone = async () => {
        if (payload?.hashKey && selectedSC) {
            await dispatch(loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id), onGetSlots))
        } else {
-           onOpen();
+           handleExEvenFlowAppointments();
        }
     }
 
@@ -91,9 +105,7 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
             icon={<Warning/>}
             open={isOpen}
             onClose={onClose}
-            title={`We are sorry but this appointment \n 
-            was made outside of EvenFlow \n 
-            and is not able to be cloned.`}
+            title={messageText}
         />
         <CloneAppointmentModal open={isOpenClone} onClose={onCloseClone}/>
     </BaseModal>

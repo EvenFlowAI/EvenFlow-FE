@@ -71,55 +71,6 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
             : !appointment,
         [appointment, serviceValetAppointment, currentAppointment])
 
-    // useEffect(() => {
-    //     const utcOffset = dayjs().utcOffset()
-    //     try {
-    //         setLoading(true)
-    //         if (selectedSC && currentAppointment) {
-    //             const data: IAppointmentSlotsRequest = {
-    //                 appointmentTimingType: EAppointmentTimingType.FirstAvailable,
-    //                 serviceCenterId: selectedSC.id,
-    //                 advisorId: consultants.find(item => item.id === currentAppointment.advisor?.id)?.id ?? null,
-    //                 fromDate:dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),
-    //                 maintenancePackageOption: currentAppointment.maintenancePackageOption ?? null,
-    //                 serviceRequestIds: currentAppointment.serviceRequests
-    //                     ? currentAppointment.serviceRequests.map(el => el.id)
-    //                     : [],
-    //                 serviceCategoryIds: currentAppointment.serviceCategories
-    //                     ? currentAppointment.serviceCategories.map(el => el.id)
-    //                     : [],
-    //                 customerId: currentAppointment.customerId,
-    //                 serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
-    //                 recalls: mapRecallsForRequest(selectedRecalls),
-    //             }
-    //             if (currentAppointment.address?.zipCode) data.zipCode = currentAppointment.address?.zipCode;
-    //             if (currentAppointment.address) {
-    //                 data.address = currentAppointment.address.fullAddress
-    //             }
-    //             if (currentAppointment.vehicle) {
-    //                 data.vehicle = {
-    //                     vin: currentAppointment.vehicle.vin,
-    //                     year: currentAppointment.vehicle.year,
-    //                     make: currentAppointment.vehicle.make,
-    //                     model: currentAppointment.vehicle.model,
-    //                     mileage: currentAppointment.vehicle.mileage,
-    //                     engineTypeId: currentAppointment.vehicle.engineTypeId,
-    //                 }
-    //             }
-    //             if (currentAppointment.driver?.email) data.searchTerm = currentAppointment.driver?.email;
-    //             if (currentAppointment.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-    //                 if (data.address && data.zipCode) dispatch(loadServiceValetSlots(data, () => {}, () => {}, showError));
-    //             } else {
-    //                 dispatch(loadAppointmentSlots(data, () => {}, () => {}, showError));
-    //             }
-    //         }
-    //     } catch (e) {
-    //         showError(e)
-    //     } finally {
-    //         setLoading(false)
-    //     }
-    // }, [selectedSC, currentAppointment])
-
     const onCloneClose = () => {
         dispatch(clearAfterCloning())
         props.onClose()
