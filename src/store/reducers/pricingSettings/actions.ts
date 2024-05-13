@@ -18,7 +18,6 @@ import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 
 export const setLoading = createAction<boolean>("PricingSettings/SetLoading");
-export const setActiveTab = createAction<string>("PricingSettings/SetActiveTab");
 
 export const getPricingLevels = createAction<IPricingLevel[]>("PricingSettings/GetPL");
 export const loadPricingLevels = (serviceCenterId: number): AppThunk => async dispatch => {

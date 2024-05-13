@@ -10,7 +10,7 @@ import {TimeOfDayPricing} from "../../../features/admin/TimeOfDayPricing/TimeOfD
 import { changePricingOpt } from '../../../store/reducers/serviceCenters/actions';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {setActiveTab, updateMaxPrice} from "../../../store/reducers/pricingSettings/actions";
+import {updateMaxPrice} from "../../../store/reducers/pricingSettings/actions";
 import {ButtonsWrapper, ControlLabel} from "./styles";
 import {pricingRoot} from "../../../utils/constants";
 import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
@@ -36,14 +36,15 @@ const tabs: Tab[] = [
 
 export const PricingSettingsPage = () => {
     const [saving, setSaving] = useState<boolean>(false);
+    const [selectedTab, selectTab] = useState<string>("0");
     const {selectedSC} = useSCs();
-    const { isLoading, pricingActiveTab } = useSelector((state: RootState) => state.pricingSettings);
+    const { isLoading } = useSelector((state: RootState) => state.pricingSettings);
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
 
     const handleTabChange = (e: any, value: string) => {
-        dispatch(setActiveTab(value))
+        selectTab(value)
     }
     const handlePricingOptChange = async (e: any, checked: boolean) => {
         if (selectedSC) {
@@ -87,7 +88,7 @@ export const PricingSettingsPage = () => {
         </LoadingButton>
     </ButtonsWrapper>
 
-    return <TabContext value={pricingActiveTab}>
+    return <TabContext value={selectedTab}>
         <TitleContainer
             title="Service Price"
             pad

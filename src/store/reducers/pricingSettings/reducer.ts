@@ -14,7 +14,7 @@ import {
     getSrList,
     getSRPricingSettings,
     getTimeOfYearPricing,
-    getTimeWindows, setActiveTab,
+    getTimeWindows,
     setLoading,
     setRoundPriceLoading
 } from "./actions";
@@ -36,7 +36,6 @@ const initialState: TState = {
     isRoundPriceLoading: false,
     roundPrice: false,
     mpPricingLevels: [],
-    pricingActiveTab: '0'
 };
 export const pricingSettingsReducer = createReducer<TState>(initialState, builder => builder
     .addCase(getPricingLevels, (state, {payload}) => {
@@ -86,8 +85,5 @@ export const pricingSettingsReducer = createReducer<TState>(initialState, builde
     })
     .addCase(getPackageOptionsList, (state, { payload }) => {
         return {...state, mpOptionsList: payload}
-    })
-    .addCase(setActiveTab, (state, { payload }) => {
-        return {...state, pricingActiveTab: payload}
     })
 );
