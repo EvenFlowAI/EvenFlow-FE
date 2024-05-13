@@ -37,7 +37,7 @@ import {
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import Informing from "../../../../components/modals/common/Informing/Informing";
-import {onClearAfterCloning} from "../../../../store/reducers/appointments/actions";
+import {clearAfterCloning} from "../../../../store/reducers/appointments/actions";
 
 const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
     const {currentAppointment, isAppointmentLoading} = useSelector((state: RootState) => state.appointments);
@@ -125,7 +125,7 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
     }, [selectedSC, currentAppointment])
 
     const onCloneClose = () => {
-        dispatch(onClearAfterCloning())
+        dispatch(clearAfterCloning())
         props.onClose()
     }
 

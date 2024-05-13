@@ -193,7 +193,7 @@ export const loadAppointmentByKey = (key: string, serviceCenterId: string, cb: T
     }
 }
 
-export const onClearAfterCloning = (): AppThunk => dispatch => {
+export const clearAfterCloning = (): AppThunk => dispatch => {
     dispatch(getCurrentAppointment(null))
     dispatch(selectAppointment(null))
     dispatch(selectServiceValetAppointment(null))
