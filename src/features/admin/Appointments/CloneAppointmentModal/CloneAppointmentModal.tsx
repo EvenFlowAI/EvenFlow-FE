@@ -19,19 +19,19 @@ import {SlotsScreenWrapper} from "../../../booking/AppointmentFlow/AppointmentSl
 import {ActionButtons} from "../../../booking/ActionButtons/ActionButtons";
 import {
     SVAppointmentDateSelector
-} from "../../../booking/AppointmentFlow/AppointmentSlots/SVAppointmentDateSelector/SVAppointmentDateSelector";
+} from "../../../../components/bookingDateTime/SVAppointmentDateSelector/SVAppointmentDateSelector";
 import {
     AppointmentDateSelector
-} from "../../../booking/AppointmentFlow/AppointmentSlots/AppointmentDateSelector/AppointmentDateSelector";
+} from "../../../../components/bookingDateTime/AppointmentDateSelector/AppointmentDateSelector";
 import {TGroupedAppointments} from "../../../../utils/types";
 import {groupAppointments} from "../../../booking/AppointmentFlow/AppointmentSlots/utils";
 import {TParsableDate} from "../../../../types/types";
 import {
     SVAppointmentTimeSelector
-} from "../../../booking/AppointmentFlow/AppointmentSlots/SVAppointmentTimeSelector/SVAppointmentTimeSelector";
+} from "../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
     AppointmentTimeSelector
-} from "../../../booking/AppointmentFlow/AppointmentSlots/AppointmentTimeSelector/AppointmentTimeSelector";
+} from "../../../../components/bookingDateTime/AppointmentTimeSelector/AppointmentTimeSelector";
 import {cloneAppointment} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import Informing from "../../../../components/modals/common/Informing/Informing";

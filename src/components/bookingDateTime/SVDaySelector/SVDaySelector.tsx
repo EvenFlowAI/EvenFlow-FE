@@ -1,21 +1,22 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {ChevronLeft, ChevronRight} from "@mui/icons-material";
-import {TArgCallback, TParsableDate} from "../../../../../types/types";
+import {TArgCallback, TParsableDate} from "../../../types/types";
 import {useMediaQuery, useTheme} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../store/rootReducer";
-import {EAppointmentTimingType, IServiceValetAppointment} from "../../../../../store/reducers/appointment/types";
-import PromptNewSearchModal from "../PromptNewSearchModal/PromptNewSearchModal";
-import {setCurrentFrameScreen} from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import {selectServiceValetAppointment} from "../../../../../store/reducers/appointment/actions";
+import {RootState} from "../../../store/rootReducer";
+import {EAppointmentTimingType, IServiceValetAppointment} from "../../../store/reducers/appointment/types";
+import PromptNewSearchModal from "../../../features/booking/AppointmentFlow/AppointmentSlots/PromptNewSearchModal/PromptNewSearchModal";
+import {setCurrentFrameScreen} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import {SVDaySelectCard} from "../SVDaySelectCard/SVDaySelectCard";
-import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import {WHILE_LIMIT} from "../constants";
-import {DaySelectorWrapper} from "../../../../../components/styled/DaySelectorWrapper";
-import {DateSelectArrow} from "../../../../../components/styled/DateSelectArrow";
-import {getAppointmentDate} from "../utils";
-import {useModal} from "../../../../../hooks/useModal/useModal";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import {WHILE_LIMIT} from "../../../features/booking/AppointmentFlow/AppointmentSlots/constants";
+import {DaySelectorWrapper} from "../../styled/DaySelectorWrapper";
+import {DateSelectArrow} from "../../styled/DateSelectArrow";
+import {getAppointmentDate} from "../../../features/booking/AppointmentFlow/AppointmentSlots/utils";
+import {useModal} from "../../../hooks/useModal/useModal";
 import dayjs from "dayjs";
+import {useHistory} from "react-router-dom";
 
 type TProps = {
     date: TParsableDate,
@@ -38,6 +39,8 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
     const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const isMds = useMediaQuery(theme.breakpoints.down("mds"));
+    const history = useHistory();
+    const isAdminPanel = history.location.pathname.includes('admin');
     const daysPerScreen: number = useMemo(() => {
         return isSm ? 4 : isMds ? 5 : 6;
     }, [isSm, isMds]);
@@ -114,7 +117,7 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
                 return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen;
             });
         } else {
-            if (currentConfig?.appointmentSelection) onOpen();
+            if (currentConfig?.appointmentSelection && !isAdminPanel) onOpen();
         }
     }
     const handlePrev = () => {
@@ -124,7 +127,7 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
                 return pS >= 0 ? pS : 0
             })
         } else {
-            if (selectedTiming === EAppointmentTimingType.PreferredDate) {
+            if (selectedTiming === EAppointmentTimingType.PreferredDate && !isAdminPanel) {
                 onOpen();
             }
         }

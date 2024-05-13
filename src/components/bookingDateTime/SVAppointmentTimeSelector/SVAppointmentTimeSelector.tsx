@@ -1,15 +1,15 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
-import {IServiceValetAppointment,} from "../../../../../store/reducers/appointment/types";
-import {Loading} from "../../../../../components/wrappers/Loading/Loading";
+import {IServiceValetAppointment,} from "../../../store/reducers/appointment/types";
+import {Loading} from "../../wrappers/Loading/Loading";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../store/rootReducer";
-import {selectServiceValetAppointment} from "../../../../../store/reducers/appointment/actions";
+import {RootState} from "../../../store/rootReducer";
+import {selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
-import {setSideBarSteps, setTransportation} from "../../../../../store/reducers/appointmentFrameReducer/actions";
+import {setSideBarSteps, setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {PickUpSlotCard} from "../PickUpSlotCard/PickUpSlotCard";
 import {PickUpSlotsWrapper, useStyles} from "./styles";
-import {TParsableDate} from "../../../../../types/types";
+import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
 
 type TProps = {

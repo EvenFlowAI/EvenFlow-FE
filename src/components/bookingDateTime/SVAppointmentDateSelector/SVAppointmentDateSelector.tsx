@@ -1,13 +1,13 @@
 import React from 'react';
-import {TArgCallback} from "../../../../../types/types";
+import {TArgCallback} from "../../../types/types";
 import {useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../../store/rootReducer";
+import {RootState} from "../../../store/rootReducer";
 import {SVDaySelector} from "../SVDaySelector/SVDaySelector";
 
 import {MonthSelector} from "../MonthSelector/MonthSelector";
-import {TMonthProps} from "../types";
+import {TMonthProps} from "../../../features/booking/AppointmentFlow/AppointmentSlots/types";
 
 type TProps = {
     onDateRangeSet: TArgCallback<boolean>;

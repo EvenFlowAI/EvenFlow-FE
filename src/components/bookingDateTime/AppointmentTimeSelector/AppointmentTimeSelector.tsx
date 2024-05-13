@@ -1,21 +1,21 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
-import {IRemappedAppointmentSlot} from "../../../../../store/reducers/appointment/types";
+import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "../TimeSlotCard/TimeSlotCard";
-import {Loading} from "../../../../../components/wrappers/Loading/Loading";
-import {TGroupedAppointment} from "../../../../../utils/types";
+import {Loading} from "../../wrappers/Loading/Loading";
+import {TGroupedAppointment} from "../../../utils/types";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../store/rootReducer";
-import {selectAppointment} from "../../../../../store/reducers/appointment/actions";
+import {RootState} from "../../../store/rootReducer";
+import {selectAppointment} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import {
     loadHoursOfOperations,
     setSideBarSteps,
     setTransportation
-} from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import {TSlot} from "../types";
+} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {TSlot} from "../../../features/booking/AppointmentFlow/AppointmentSlots/types";
 import {TimeSlotsWrapper, useStyles} from "./styles";
-import {TParsableDate} from "../../../../../types/types";
+import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
 
 type TProps = {

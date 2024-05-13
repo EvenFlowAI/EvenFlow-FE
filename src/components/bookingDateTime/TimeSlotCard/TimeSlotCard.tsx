@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {IRemappedAppointmentSlot} from "../../../../../store/reducers/appointment/types";
-import {TArgCallback, TParsableDate} from "../../../../../types/types";
+import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
+import {TArgCallback, TParsableDate} from "../../../types/types";
 import {useTranslation} from "react-i18next";
-import {ReactComponent as ClockIcon} from "../../../../../assets/img/clock-black.svg";
-import {ReactComponent as ClockIconWhite} from "../../../../../assets/img/clock-white.svg";
+import {ReactComponent as ClockIcon} from "../../../assets/img/clock-black.svg";
+import {ReactComponent as ClockIconWhite} from "../../../assets/img/clock-white.svg";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../../store/rootReducer";
-import {TSlot} from "../types";
+import {RootState} from "../../../store/rootReducer";
+import {TSlot} from "../../../features/booking/AppointmentFlow/AppointmentSlots/types";
 import {HtmlTooltip, Wrapper} from "./styles";
 import dayjs from "dayjs";
 

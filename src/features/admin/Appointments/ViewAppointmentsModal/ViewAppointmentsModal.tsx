@@ -10,8 +10,8 @@ import {AppointmentDetails} from "./AppointmentDetails/AppointmentDetails";
 import {VehicleDetails} from "./VehicleDetails/VehicleDetails";
 import {CustomerInfo} from "./CustomerInfo/CustomerInfo";
 import {OperationalDetails} from "./OperationalDetails/OperationalDetails";
-import {Wrapper} from "./styles";
-import {useDispatch} from "react-redux";
+import {LoaderWrapper, Wrapper} from "./styles";
+import {useDispatch, useSelector} from "react-redux";
 import {loadAppointmentByKey} from "../../../../store/reducers/appointments/actions";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {encodeSCID} from "../../../../utils/utils";
@@ -19,6 +19,7 @@ import {useModal} from "../../../../hooks/useModal/useModal";
 import Informing from "../../../../components/modals/common/Informing/Informing";
 import CloneAppointmentModal from "../CloneAppointmentModal/CloneAppointmentModal";
 import {ReactComponent as Warning} from "../../../../assets/img/warning_icon.svg";
+import {RootState} from "../../../../store/rootReducer";
 
 type TCallbackProps = {
     onEditAppointment: () => void;
@@ -26,6 +27,7 @@ type TCallbackProps = {
 }
 
 export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAppointment>&TCallbackProps>>> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
+    const {isAppointmentLoading} = useSelector((state: RootState) => state.appointments);
     const dispatch = useDispatch()
     const {selectedSC} = useSCs();
     const {onOpen, isOpen, onClose} = useModal();
@@ -43,8 +45,8 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
     return <BaseModal {...props} width={940}>
         <DialogTitle onClose={props.onClose}>View Appointment</DialogTitle>
         <DialogContent>
-            {!payload
-                ? <CircularProgress />
+            {!payload || isAppointmentLoading
+                ? <LoaderWrapper><CircularProgress /></LoaderWrapper>
                 : <>
                 <Wrapper>
                     <AppointmentDetails payload={payload}/>

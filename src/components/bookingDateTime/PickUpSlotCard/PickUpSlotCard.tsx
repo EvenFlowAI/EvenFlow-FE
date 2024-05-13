@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {IServiceValetAppointment} from "../../../../../store/reducers/appointment/types";
-import {TArgCallback, TParsableDate} from "../../../../../types/types";
+import {IServiceValetAppointment} from "../../../store/reducers/appointment/types";
+import {TArgCallback, TParsableDate} from "../../../types/types";
 import {useTranslation} from "react-i18next";
 import {CheckCircleOutlined, HighlightOff, RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../../store/rootReducer";
-import {mockSlotTime} from "../constants";
+import {RootState} from "../../../store/rootReducer";
+import {mockSlotTime} from "../../../features/booking/AppointmentFlow/AppointmentSlots/constants";
 import {PickUpWrapper, useStyles} from "./styles";
 import dayjs from "dayjs";
 

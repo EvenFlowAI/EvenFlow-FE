@@ -1,12 +1,12 @@
 import React from 'react';
-import {TCallback} from "../../../../../types/types";
+import {TCallback} from "../../../types/types";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../../../store/rootReducer";
-import {EAppointmentTimingType, IServiceValetAppointment} from "../../../../../store/reducers/appointment/types";
+import {RootState} from "../../../store/rootReducer";
+import {EAppointmentTimingType, IServiceValetAppointment} from "../../../store/reducers/appointment/types";
 import {useTranslation} from "react-i18next";
-import {EPricingDisplayType} from "../../../../../store/reducers/pricingSettings/types";
-import {defaultFormat, monthFormat, XsFormat, XsMontFormat} from "../constants";
-import {Date, Day, DayCard, DayName} from "../../../../../components/styled/DayCard";
+import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
+import {defaultFormat, monthFormat, XsFormat, XsMontFormat} from "../../../features/booking/AppointmentFlow/AppointmentSlots/constants";
+import {Date, Day, DayCard, DayName} from "../../styled/DayCard";
 import dayjs from "dayjs";
 
 type TProps = {
