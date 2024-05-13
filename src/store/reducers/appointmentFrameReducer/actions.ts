@@ -198,12 +198,12 @@ export const loadConsultantsForCloning = (serviceCenterId: string, appointment: 
         Api.endpoints.ServiceConsultants.GetByQuery, {data})
         .then(({data: {result}}) => {
             dispatch(setConsultants(result));
+            cb()
         })
         .catch(err => console.log(err))
         .finally(() => {
             dispatch(setConsultantsLoading(false))
             dispatch(setCurrentAppointmentLoading(false))
-            cb()
         })
 }
 

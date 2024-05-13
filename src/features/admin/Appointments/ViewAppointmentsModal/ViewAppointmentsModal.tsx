@@ -33,9 +33,13 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
     const {onOpen, isOpen, onClose} = useModal();
     const {onOpen: onOpenClone, isOpen: isOpenClone, onClose: onCloseClone} = useModal();
 
+    const onGetSlots = (isEmptyList: boolean) => {
+        isEmptyList ? onOpen() : onOpenClone()
+    }
+
     const onClone = async () => {
        if (payload?.hashKey && selectedSC) {
-           await dispatch(loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id), onOpenClone))
+           await dispatch(loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id), onGetSlots))
        } else {
            onOpen();
        }
