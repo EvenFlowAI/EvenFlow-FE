@@ -154,4 +154,5 @@ export type TState = {
     isRoundPriceLoading: boolean;
     roundPrice: boolean;
     mpPricingLevels: IPackagePricingLevels[];
+    pricingActiveTab: string;
 }

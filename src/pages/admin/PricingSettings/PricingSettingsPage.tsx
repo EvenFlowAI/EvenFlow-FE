@@ -10,7 +10,7 @@ import {TimeOfDayPricing} from "../../../features/admin/TimeOfDayPricing/TimeOfD
 import { changePricingOpt } from '../../../store/reducers/serviceCenters/actions';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {updateMaxPrice} from "../../../store/reducers/pricingSettings/actions";
+import {setActiveTab, updateMaxPrice} from "../../../store/reducers/pricingSettings/actions";
 import {ButtonsWrapper, ControlLabel} from "./styles";
 import {pricingRoot} from "../../../utils/constants";
 import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
@@ -35,16 +35,15 @@ const tabs: Tab[] = [
 ]
 
 export const PricingSettingsPage = () => {
-    const [selectedTab, selectTab] = useState<string>("0");
     const [saving, setSaving] = useState<boolean>(false);
     const {selectedSC} = useSCs();
-    const { isLoading } = useSelector((state: RootState) => state.pricingSettings);
+    const { isLoading, pricingActiveTab } = useSelector((state: RootState) => state.pricingSettings);
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
 
     const handleTabChange = (e: any, value: string) => {
-        selectTab(value);
+        dispatch(setActiveTab(value))
     }
     const handlePricingOptChange = async (e: any, checked: boolean) => {
         if (selectedSC) {
@@ -71,22 +70,29 @@ export const PricingSettingsPage = () => {
         selectedSC && dispatch(updateMaxPrice(selectedSC.id, onSuccessUpdate, onErrorUpdate))
     }
 
-    return <TabContext value={selectedTab}>
-        <TitleContainer title="Service Price" pad parent={pricingRoot} actions={
-            <ButtonsWrapper>
-            <ControlLabel labelPlacement="start" control={
-                <Switch
-                    color="primary"
-                    disabled={saving}
-                    checked={selectedSC?.applyPricingOptimization ?? false}
-                    onChange={handlePricingOptChange}
-                />
-            } label={"Pricing optimization"} />
-                <LoadingButton loading={isLoading} onClick={onUpdateMaxPriceClick}>
-                    Update Max Price
-                </LoadingButton>
-            </ButtonsWrapper>
-        } />
+    const actions = <ButtonsWrapper>
+        <ControlLabel
+            labelPlacement="start"
+            control={<Switch
+                color="primary"
+                disabled={saving}
+                checked={selectedSC?.applyPricingOptimization ?? false}
+                onChange={handlePricingOptChange}
+            />}
+            label={"Pricing optimization"} />
+        <LoadingButton
+            loading={isLoading}
+            onClick={onUpdateMaxPriceClick}>
+            Update Max Price
+        </LoadingButton>
+    </ButtonsWrapper>
+
+    return <TabContext value={pricingActiveTab}>
+        <TitleContainer
+            title="Service Price"
+            pad
+            parent={pricingRoot}
+            actions={actions} />
         <TabList
             variant="scrollable"
             scrollButtons="auto"
