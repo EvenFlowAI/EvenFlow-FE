@@ -9,7 +9,7 @@ export const Wrapper = styled("div")({
 })
 
 export const Title = styled("div")({
-    fontSize: 12,
+    fontSize: 16,
     fontWeight: 700,
     textTransform: 'uppercase',
     marginRight: 8

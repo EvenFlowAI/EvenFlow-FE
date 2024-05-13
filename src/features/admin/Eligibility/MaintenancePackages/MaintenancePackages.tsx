@@ -9,7 +9,7 @@ import {
 import {RootState} from "../../../../store/rootReducer";
 import {Caption} from "../../../../components/wrappers/Caption/Caption";
 import {EPricingDisplayType} from "../../../../store/reducers/pricingSettings/types";
-import {blackFont, headCellStyles, leftAlign} from "../styles";
+import {headCellStyles, leftAlign} from "../styles";
 import {DenseTableWithPadding} from "../../../../components/styled/DemandTable";
 import {TableRow} from "../../../../components/styled/TableRow";
 import {useException} from "../../../../hooks/useException/useException";
@@ -53,7 +53,7 @@ const MaintenancePackages = () => {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell
-                                style={{...headCellStyles, ...blackFont, ...leftAlign, textTransform: 'capitalize'}}>
+                                style={{...headCellStyles, ...leftAlign, textTransform: 'capitalize'}}>
                                 Package Name
                             </StyledTableCell>
                             <StyledTableCell
