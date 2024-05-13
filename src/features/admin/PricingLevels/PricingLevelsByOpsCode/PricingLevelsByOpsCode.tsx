@@ -17,8 +17,8 @@ const RowData: TableRowDataType<TPricingLevel>[] = [
     {val: (el: TPricingLevel, index: number) => `${index + 1}`, header: "#"},
     {val: (el: TPricingLevel) => el.serviceRequest, header: "Individual Service", width: '55%'},
     {val: (el: TPricingLevel) => el.opsCode, header: "Ops Code"},
-    {val: (el: TPricingLevel) => el.discount ? `${el.discount} %` : 'Default', header: "Discount"},
-    {val: (el: TPricingLevel) => el.premium ? `${el.premium} %` : 'Default', header: "Premium"},
+    {val: (el: TPricingLevel) => el.discount ? `${el.discount}%` : 'Default', header: "Discount"},
+    {val: (el: TPricingLevel) => el.premium ? `${el.premium}%` : 'Default', header: "Premium"},
 ];
 
 const PricingLevelsByOpsCode = () => {

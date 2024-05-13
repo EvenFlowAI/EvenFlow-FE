@@ -35,8 +35,8 @@ const tabs: Tab[] = [
 ]
 
 export const PricingSettingsPage = () => {
-    const [selectedTab, selectTab] = useState<string>("0");
     const [saving, setSaving] = useState<boolean>(false);
+    const [selectedTab, selectTab] = useState<string>("0");
     const {selectedSC} = useSCs();
     const { isLoading } = useSelector((state: RootState) => state.pricingSettings);
     const dispatch = useDispatch();
@@ -44,7 +44,7 @@ export const PricingSettingsPage = () => {
     const showMessage = useMessage();
 
     const handleTabChange = (e: any, value: string) => {
-        selectTab(value);
+        selectTab(value)
     }
     const handlePricingOptChange = async (e: any, checked: boolean) => {
         if (selectedSC) {
@@ -71,22 +71,29 @@ export const PricingSettingsPage = () => {
         selectedSC && dispatch(updateMaxPrice(selectedSC.id, onSuccessUpdate, onErrorUpdate))
     }
 
+    const actions = <ButtonsWrapper>
+        <ControlLabel
+            labelPlacement="start"
+            control={<Switch
+                color="primary"
+                disabled={saving}
+                checked={selectedSC?.applyPricingOptimization ?? false}
+                onChange={handlePricingOptChange}
+            />}
+            label={"Pricing optimization"} />
+        <LoadingButton
+            loading={isLoading}
+            onClick={onUpdateMaxPriceClick}>
+            Update Max Price
+        </LoadingButton>
+    </ButtonsWrapper>
+
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Service Price" pad parent={pricingRoot} actions={
-            <ButtonsWrapper>
-            <ControlLabel labelPlacement="start" control={
-                <Switch
-                    color="primary"
-                    disabled={saving}
-                    checked={selectedSC?.applyPricingOptimization ?? false}
-                    onChange={handlePricingOptChange}
-                />
-            } label={"Pricing optimization"} />
-                <LoadingButton loading={isLoading} onClick={onUpdateMaxPriceClick}>
-                    Update Max Price
-                </LoadingButton>
-            </ButtonsWrapper>
-        } />
+        <TitleContainer
+            title="Service Price"
+            pad
+            parent={pricingRoot}
+            actions={actions} />
         <TabList
             variant="scrollable"
             scrollButtons="auto"

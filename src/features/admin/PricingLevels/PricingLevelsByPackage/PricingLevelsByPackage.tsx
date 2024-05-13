@@ -17,8 +17,8 @@ const RowData: TableRowDataType<TPackagePricingLevel>[] = [
     {val: (el: TPackagePricingLevel) => el.maintenancePackageName, header: "Package Name", width: '25%'},
     {val: (el: TPackagePricingLevel) => `${el.maintenancePackageId}`, header: "ID"},
     {val: (el: TPackagePricingLevel) => el.maintenancePackageOptionName, header: "Package Option Name", width: '20%'},
-    {val: (el: TPackagePricingLevel) => el.discount ? `${el.discount} %` : 'Default', header: "Discount"},
-    {val: (el: TPackagePricingLevel) => el.premium ? `${el.premium} %` : 'Default', header: "Premium"},
+    {val: (el: TPackagePricingLevel) => el.discount ? `${el.discount}%` : 'Default', header: "Discount"},
+    {val: (el: TPackagePricingLevel) => el.premium ? `${el.premium}%` : 'Default', header: "Premium"},
 ];
 
 const PricingLevelsByPackage = () => {
