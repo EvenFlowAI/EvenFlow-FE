@@ -18,6 +18,7 @@ import {encodeSCID} from "../../../../utils/utils";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import Informing from "../../../../components/modals/common/Informing/Informing";
 import CloneAppointmentModal from "../CloneAppointmentModal/CloneAppointmentModal";
+import {ReactComponent as Warning} from "../../../../assets/img/warning_icon.svg";
 
 type TCallbackProps = {
     onEditAppointment: () => void;
@@ -82,9 +83,12 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
             </Button>
         </DialogActions>
         <Informing
+            icon={<Warning/>}
             open={isOpen}
             onClose={onClose}
-            title="We are sorry but this appointment was made outside of EvenFlow and is not able to be cloned."
+            title={`We are sorry but this appointment \n 
+            was made outside of EvenFlow \n 
+            and is not able to be cloned.`}
         />
         <CloneAppointmentModal open={isOpenClone} onClose={onCloseClone}/>
     </BaseModal>

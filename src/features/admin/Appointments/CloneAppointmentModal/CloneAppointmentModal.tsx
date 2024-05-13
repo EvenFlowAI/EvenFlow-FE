@@ -203,7 +203,7 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
                 onClose={onInformClose}
                 actionButtonText="Modify Appointment"
                 onActionClick={onRedirect}
-                title={`Success! The appointment has been confirmed for ${dateString}`}
+                title={`Success! The appointment has been \n confirmed for ${dateString}`}
             />
         </DialogContent>
     </BaseModal>

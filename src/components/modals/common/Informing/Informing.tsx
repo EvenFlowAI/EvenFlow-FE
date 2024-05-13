@@ -16,7 +16,7 @@ type TProps = DialogProps & {
 const Informing: React.FC<TProps> = (props) => {
     return (
         <BaseModal {...props} width={props.width ?? 550}>
-            <DialogTitle onClose={props.onClose} style={{paddingRight: 20, paddingTop: 26, textAlign: 'left'}}>
+            <DialogTitle onClose={props.onClose} style={{padding: "26px 65px 24px 36px", textAlign: 'left', fontSize: 24}}>
                 {props.icon
                     ? <Wrapper>
                         <div>{props.icon}</div>
