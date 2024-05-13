@@ -8,18 +8,25 @@ import {
     TServiceBook,
     TServiceConsultant
 } from "./types";
-import {AppThunk, IPageRequest, TArgCallback} from "../../../types/types";
+import {AppThunk, IPageRequest, TArgCallback, TCallback} from "../../../types/types";
 import {API} from "../../../api/api";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType} from "../appointment/types";
 import {
     loadConsultantsForCloning,
-    setAppointmentSaving,
+    setAppointmentSaving, setConsultants, setSelectedRecalls,
     updateRecalls
 } from "../appointmentFrameReducer/actions";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../modals/actions";
 import {collectServiceRequestIds, getCategories, getVehicleData, mapRecallsForRequest} from "../../../utils/utils";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import {
+    getAppointmentSlots,
+    getServiceValetSlots,
+    selectAppointment,
+    selectServiceValetAppointment
+} from "../appointment/actions";
+import {getRecallsByVin} from "../recall/actions";
 
 export const getAppointments = createAction<IAppointment[]>("Appointments/GetAppointments");
 export const getAllAppointments = createAction<IAppointment[]>("Appointments/GetAllAppointments");
@@ -172,14 +179,28 @@ export const loadServiceConsultants = (serviceCenterId: number): AppThunk => dis
         .finally(() => dispatch(setAppointmentsLoading(false)))
 }
 
-export const loadAppointmentByKey = (key: string, serviceCenterId: string): AppThunk => async dispatch => {
+export const loadAppointmentByKey = (key: string, serviceCenterId: string, cb: TCallback): AppThunk => async dispatch => {
     dispatch(setCurrentAppointmentLoading(true))
-    const {data} = await API.appointment.getByKey(key);
-    if (data) {
-        dispatch(getCurrentAppointment(data));
-        dispatch(updateRecalls(data, serviceCenterId));
-        dispatch(loadConsultantsForCloning(serviceCenterId, data))
+    try {
+        const {data} = await API.appointment.getByKey(key);
+        if (data) {
+            dispatch(getCurrentAppointment(data));
+            dispatch(updateRecalls(data, serviceCenterId));
+            dispatch(loadConsultantsForCloning(serviceCenterId, data, cb))
+        }
+    } catch {
+        dispatch(setCurrentAppointmentLoading(false))
     }
-    dispatch(setCurrentAppointmentLoading(false))
+}
+
+export const onClearAfterCloning = (): AppThunk => dispatch => {
+    dispatch(getCurrentAppointment(null))
+    dispatch(selectAppointment(null))
+    dispatch(selectServiceValetAppointment(null))
+    dispatch(setConsultants([]));
+    dispatch(getAppointmentSlots([]));
+    dispatch(getServiceValetSlots([]));
+    dispatch(getRecallsByVin([]))
+    dispatch(setSelectedRecalls([]))
 }
 

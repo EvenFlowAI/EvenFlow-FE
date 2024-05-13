@@ -32,13 +32,16 @@ import {
 import {
     AppointmentTimeSelector
 } from "../../../../components/bookingDateTime/AppointmentTimeSelector/AppointmentTimeSelector";
-import {cloneAppointment} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    cloneAppointment,
+} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import Informing from "../../../../components/modals/common/Informing/Informing";
+import {onClearAfterCloning} from "../../../../store/reducers/appointments/actions";
 
 const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
     const {currentAppointment, isAppointmentLoading} = useSelector((state: RootState) => state.appointments);
-    const {selectedRecalls, isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedRecalls, isAppointmentSaving, consultants} = useSelector((state: RootState) => state.appointmentFrame);
     const {
         appointment,
         serviceValetAppointment,
@@ -74,50 +77,57 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
 
     useEffect(() => {
         const utcOffset = dayjs().utcOffset()
-        setLoading(true)
-        if (selectedSC && currentAppointment) {
-            const data: IAppointmentSlotsRequest = {
-                appointmentTimingType: EAppointmentTimingType.FirstAvailable,
-                serviceCenterId: selectedSC.id,
-                advisorId: currentAppointment.advisor?.id ?? null,
-                fromDate:dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),
-                maintenancePackageOption: currentAppointment.maintenancePackageOption ?? null,
-                serviceRequestIds: currentAppointment.serviceRequests
-                    ? currentAppointment.serviceRequests.map(el => el.id)
-                    : [],
-                serviceCategoryIds: currentAppointment.serviceCategories
-                    ? currentAppointment.serviceCategories.map(el => el.id)
-                    : [],
-                customerId: currentAppointment.customerId,
-                serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
-                recalls: mapRecallsForRequest(selectedRecalls),
-            }
-            if (currentAppointment.address?.zipCode) data.zipCode = currentAppointment.address?.zipCode;
-            if (currentAppointment.address) {
-                data.address = currentAppointment.address.fullAddress
-            }
-            if (currentAppointment.vehicle) {
-                data.vehicle = {
-                    vin: currentAppointment.vehicle.vin,
-                    year: currentAppointment.vehicle.year,
-                    make: currentAppointment.vehicle.make,
-                    model: currentAppointment.vehicle.model,
-                    mileage: currentAppointment.vehicle.mileage,
-                    engineTypeId: currentAppointment.vehicle.engineTypeId,
+        try {
+            setLoading(true)
+            if (selectedSC && currentAppointment) {
+                const data: IAppointmentSlotsRequest = {
+                    appointmentTimingType: EAppointmentTimingType.FirstAvailable,
+                    serviceCenterId: selectedSC.id,
+                    advisorId: consultants.find(item => item.id === currentAppointment.advisor?.id)?.id ?? null,
+                    fromDate:dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),
+                    maintenancePackageOption: currentAppointment.maintenancePackageOption ?? null,
+                    serviceRequestIds: currentAppointment.serviceRequests
+                        ? currentAppointment.serviceRequests.map(el => el.id)
+                        : [],
+                    serviceCategoryIds: currentAppointment.serviceCategories
+                        ? currentAppointment.serviceCategories.map(el => el.id)
+                        : [],
+                    customerId: currentAppointment.customerId,
+                    serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
+                    recalls: mapRecallsForRequest(selectedRecalls),
+                }
+                if (currentAppointment.address?.zipCode) data.zipCode = currentAppointment.address?.zipCode;
+                if (currentAppointment.address) {
+                    data.address = currentAppointment.address.fullAddress
+                }
+                if (currentAppointment.vehicle) {
+                    data.vehicle = {
+                        vin: currentAppointment.vehicle.vin,
+                        year: currentAppointment.vehicle.year,
+                        make: currentAppointment.vehicle.make,
+                        model: currentAppointment.vehicle.model,
+                        mileage: currentAppointment.vehicle.mileage,
+                        engineTypeId: currentAppointment.vehicle.engineTypeId,
+                    }
+                }
+                if (currentAppointment.driver?.email) data.searchTerm = currentAppointment.driver?.email;
+                if (currentAppointment.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+                    if (data.address && data.zipCode) dispatch(loadServiceValetSlots(data, () => {}, () => {}, showError));
+                } else {
+                    dispatch(loadAppointmentSlots(data, () => {}, () => {}, showError));
                 }
             }
-            if (currentAppointment.hashKey) data.appointmentHashKey = currentAppointment.hashKey;
-            if (currentAppointment.driver?.email) data.searchTerm = currentAppointment.driver?.email;
-            if (currentAppointment.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                if (data.address && data.zipCode) dispatch(loadServiceValetSlots(data));
-            } else {
-                dispatch(loadAppointmentSlots(data));
-            }
+        } catch (e) {
+            showError(e)
+        } finally {
+            setLoading(false)
         }
-        setLoading(false)
     }, [selectedSC, currentAppointment])
 
-    const handleCancel = () => props.onClose()
+    const onCloneClose = () => {
+        dispatch(onClearAfterCloning())
+        props.onClose()
+    }
 
     const onCloneSuccess = (hashKey: string) => {
         setNewHashKey(hashKey)
@@ -154,17 +164,17 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
 
     const onInformClose = () => {
         onClose();
-        props.onClose();
+        onCloneClose();
     }
 
     return <BaseModal {...props} width={900}>
-        <DialogTitle onClose={props.onClose}/>
+        <DialogTitle onClose={onCloneClose}/>
         <DialogContent style={{padding: '0 36px 36px 36px'}}>
             <SlotsScreenWrapper>
                 <SelectedAppointment/>
                 <ActionButtons
                     color="info"
-                    onBack={handleCancel}
+                    onBack={onCloneClose}
                     onNext={handleConfirm}
                     nextDisabled={nextDisabled}
                     nextLabel={"Confirm"}

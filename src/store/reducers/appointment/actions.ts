@@ -15,7 +15,7 @@ import {
     ISR, ISVAppointmentResponse, IWaitListData,
     TAppointmentState,
 } from "./types";
-import {AppThunk, PaginatedAPIResponse, TCallback, TParsableDate} from "../../../types/types";
+import {AppThunk, PaginatedAPIResponse, TArgCallback, TCallback, TParsableDate} from "../../../types/types";
 import {
     ICreateAppointmentResp,
     ICustomerLoadedData,
@@ -66,7 +66,7 @@ export const setAppointmentWasChanged = createAction<boolean>("Appointment/SetAp
 export const setWaitListSettings = createAction<IWaitListData|null>("Appointment/SetWaitListSettings");
 export const setSlotPodId = createAction<number|null>("Appointment/SetSlotPodId");
 
-export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: TParsableDate) => void, loadCB?: TCallback): AppThunk => async dispatch => {
+export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: TParsableDate) => void, loadCB?: TCallback, errCb?: TArgCallback<any>): AppThunk => async dispatch => {
     try {
         const {data: {items, searchedDateRange, slotGapMinutes, waitlistSettings, podId}} = await Api.call<IAppointmentResponse>(
             Api.endpoints.AppointmentSlots.GetSlots,
@@ -84,7 +84,8 @@ export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: TP
             return cb(dayjs.utc(searchedDateRange.from));
         }
         return res;
-    } catch {
+    } catch (err) {
+        errCb && errCb(err)
         return dispatch(getAppointmentSlots([]));
     }
 }
@@ -194,7 +195,7 @@ export const loadAllServiceCategories = (serviceCenterId: number): AppThunk => d
 }
 export const getServiceValetSlots = createAction<IServiceValetAppointment[]>("Appointment/GetServiceValetSlots");
 export const getDropOffSettings = createAction<IDropOffSettings>("Appointment/GetDropOffSettings");
-export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: TParsableDate) => void, loadCB?: TCallback): AppThunk => dispatch => {
+export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: TParsableDate) => void, loadCB?: TCallback, errCb?: TArgCallback<any>): AppThunk => dispatch => {
     Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
         .then(result => {
             const {items, searchedDateRange, dropOffSettings} = result.data;
@@ -204,6 +205,7 @@ export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: T
             loadCB && loadCB();
         })
         .catch(err => {
+            errCb && errCb(err)
             dispatch(getServiceValetSlots([]));
             console.log('get service valet slots err', err)
         })

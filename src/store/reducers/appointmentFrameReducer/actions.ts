@@ -71,7 +71,7 @@ import {updateSelectedRecalls} from "../recall/actions";
 import {EServiceCategoryType} from "../categories/types";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
 import {EScheduler} from "../appointments/types";
-import {setAppointmentsLoading} from "../appointments/actions";
+import {setAppointmentsLoading, setCurrentAppointmentLoading} from "../appointments/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 import {setLoading} from "../slotScoring/actions";
@@ -166,7 +166,7 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
     }
 }
 
-export const loadConsultantsForCloning = (serviceCenterId: string, appointment: IAppointmentByKey): AppThunk => (dispatch, getState) => {
+export const loadConsultantsForCloning = (serviceCenterId: string, appointment: IAppointmentByKey, cb: TCallback): AppThunk => (dispatch, getState) => {
     dispatch(setConsultantsLoading(true))
     const {selectedRecalls} = getState().appointmentFrame;
     const {serviceRequests, serviceCategories, maintenancePackageOption, serviceTypeOption, vehicle, address, hashKey} = appointment;
@@ -200,7 +200,11 @@ export const loadConsultantsForCloning = (serviceCenterId: string, appointment: 
             dispatch(setConsultants(result));
         })
         .catch(err => console.log(err))
-        .finally(() => dispatch(setConsultantsLoading(false)))
+        .finally(() => {
+            dispatch(setConsultantsLoading(false))
+            dispatch(setCurrentAppointmentLoading(false))
+            cb()
+        })
 }
 
 export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: number|null, appointment: IAppointmentByKey): AppThunk => (dispatch, getState) => {

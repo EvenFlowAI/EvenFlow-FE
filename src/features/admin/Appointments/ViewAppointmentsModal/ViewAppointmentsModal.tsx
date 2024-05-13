@@ -35,8 +35,7 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
 
     const onClone = async () => {
        if (payload?.hashKey && selectedSC) {
-           await dispatch(loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id)))
-           await onOpenClone();
+           await dispatch(loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id), onOpenClone))
        } else {
            onOpen();
        }
