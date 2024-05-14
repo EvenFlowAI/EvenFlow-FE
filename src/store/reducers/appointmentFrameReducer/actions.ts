@@ -40,7 +40,7 @@ import {
     AppThunk,
     IMaintenanceItem,
     IRecallByVin,
-    PaginatedAPIResponse,
+    PaginatedAPIResponse, TArgCallback,
     TCallback,
     TParsableDate,
     TScreen,
@@ -71,7 +71,7 @@ import {updateSelectedRecalls} from "../recall/actions";
 import {EServiceCategoryType} from "../categories/types";
 import {setAdvisorAvailable} from "../bookingFlowConfig/actions";
 import {EScheduler} from "../appointments/types";
-import {setAppointmentsLoading} from "../appointments/actions";
+import {setAppointmentsLoading, setCurrentAppointmentLoading} from "../appointments/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 import {setLoading} from "../slotScoring/actions";
@@ -164,6 +164,47 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
     } else {
         dispatch(setValueService({...emptyService, ...data}));
     }
+}
+
+export const loadConsultantsForCloning = (serviceCenterId: string, appointment: IAppointmentByKey, cb: TCallback): AppThunk => (dispatch, getState) => {
+    dispatch(setConsultantsLoading(true))
+    const {selectedRecalls} = getState().appointmentFrame;
+    const {serviceRequests, serviceCategories, maintenancePackageOption, serviceTypeOption, vehicle, address, hashKey} = appointment;
+    const data: IConsultantsRequestData = {
+        serviceCenterId: decodeSCID(serviceCenterId),
+        pageIndex: 0,
+        pageSize: 0,
+        serviceRequestIds: serviceRequests ? serviceRequests.map(el => el.id) : [],
+        recalls: mapRecallsForRequest(selectedRecalls),
+        serviceCategoryIds: serviceCategories ? serviceCategories.map(el => el.id) : [],
+        maintenancePackageOption: maintenancePackageOption,
+        serviceTypeOptionId: serviceTypeOption?.id ?? null,
+        searchTerm: "",
+        vehicle: {
+            vin: vehicle.vin,
+            year: vehicle.year,
+            make: vehicle.make,
+            model: vehicle.model,
+            mileage: vehicle.mileage,
+            engineTypeId: vehicle.engineTypeId,
+        },
+        address: address?.fullAddress ?? '',
+        zipCode: address?.zipCode ?? '',
+    }
+    if (hashKey) {
+        data.appointmentHashKey = hashKey;
+    }
+    Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+        Api.endpoints.ServiceConsultants.GetByQuery, {data})
+        .then(({data: {result}}) => {
+            dispatch(setConsultants(result));
+            cb()
+        })
+        .catch(err => console.log(err))
+        .finally(() => {
+            dispatch(setConsultantsLoading(false))
+            dispatch(setCurrentAppointmentLoading(false))
+        })
 }
 
 export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: number|null, appointment: IAppointmentByKey): AppThunk => (dispatch, getState) => {
@@ -326,8 +367,8 @@ export const loadMakes = (serviceCenterId: number): AppThunk => async dispatch =
         }
     })
         .catch(err => {
-        console.log('get Makes error', err)
-    })
+            console.log('get Makes error', err)
+        })
 }
 
 export const loadSeriesModels = (serviceCenterId: number): AppThunk => dispatch => {
@@ -426,7 +467,7 @@ export const loadHoursOfOperations = (serviceCenterId: number): AppThunk => disp
     Api.call<IHOODataForm[]>(Api.endpoints.ServiceCenters.GetHOO, {urlParams: {id: serviceCenterId}})
         .then(result => {
             if (result?.data) {
-               dispatch(setHoursOfOperations(result.data));
+                dispatch(setHoursOfOperations(result.data));
             }
         })
         .catch(err => {
@@ -806,7 +847,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         schedulerType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
         notes: appointmentFrame.appointmentNotes,
         address: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff
-            || appointmentFrame.serviceTypeOption?.type === EServiceType.MobileService
+        || appointmentFrame.serviceTypeOption?.type === EServiceType.MobileService
             ? addressData
             : null,
         isWaitlist: Boolean(isWaitlist),
@@ -1005,5 +1046,98 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
             .finally(() => {
                 dispatch(setConsentsLoading(false));
             })
+    }
+}
+
+export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onError: TArgCallback<any>): AppThunk => (dispatch, getState) => {
+    const {currentAppointment} = getState().appointments;
+    const appointment = getState().appointment;
+    const {selectedRecalls} = getState().appointmentFrame;
+    if (currentAppointment) {
+        dispatch(setAppointmentSaving(true))
+
+        const vehicle:TVehicleForRequest = {
+            dmsId: currentAppointment?.vehicle?.dmsId ?? null,
+            engineTypeId: currentAppointment?.vehicle?.engineTypeId ?? null,
+            model: currentAppointment?.vehicle?.model ?? null,
+            make: currentAppointment?.vehicle?.make ?? null,
+            year: currentAppointment?.vehicle?.year ? currentAppointment?.vehicle?.year.toString() : null,
+            vin: currentAppointment?.vehicle?.vin ?? '',
+            mileage: currentAppointment?.vehicle?.mileage ?? null,
+            modelDetails: '',
+        }
+
+        const driver:TDriverForRequest = {
+            fullName: currentAppointment?.driver?.fullName ?? '',
+            phoneNumber: currentAppointment?.driver?.phoneNumber ?? '',
+            city: currentAppointment?.driver?.city ?? '',
+            email: currentAppointment?.driver?.email ?? null,
+        }
+
+        const date = currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff && appointment.serviceValetAppointment
+            ? dayjs.utc(appointment.serviceValetAppointment.date).toISOString().split("T")[0] || ""
+            : appointment.appointment?.id.split("|")[0] || ""
+
+        const appointmentTimingType = EAppointmentTimingType.FirstAvailable;
+        const transportationOptionId = currentAppointment?.serviceTypeOption?.transportationOption?.id ?? null;
+        const serviceRequestIds = currentAppointment?.serviceRequests
+            ? currentAppointment?.serviceRequests.map(el => el.id)
+            : [];
+        const maintenancePackageOption = currentAppointment.maintenancePackageOption
+            ? {id: currentAppointment.maintenancePackageOption.id, priceType: currentAppointment.maintenancePackageOption.priceType ?? null}
+            : null
+
+        const slot = currentAppointment.serviceTypeOption?.type === EServiceType.PickUpDropOff
+            ? "00:00:00"
+            : appointment.appointment?.id
+                ? appointment.appointment?.id.split("|")[1]
+                : "00:00:00"
+        const settingsEnabled = Boolean(appointment.waitListSettings?.isEnabled)
+        const isWaitListSlotSelected = appointment.appointment?.isOverbookingApplied && settingsEnabled;
+        const isVisitCenterAppointment = currentAppointment?.serviceTypeOption?.type === EServiceType.VisitCenter || !currentAppointment.serviceTypeOption;
+
+        const isWaitlist = isVisitCenterAppointment && isWaitListSlotSelected;
+
+        const data: ICreateAppointmentRequest = {
+            id: currentAppointment.id,
+            appointmentTimingType,
+            customerId: currentAppointment.customerId ?? null,
+            comment: currentAppointment.comment,
+            driver,
+            vehicle,
+            gmt: dayjs().utcOffset(),
+            offerId: appointment.appointment?.offer?.id ?? null,
+            reminderTypes: currentAppointment.reminderTypes,
+            serviceCenterId: id,
+            advisor: {
+                id: currentAppointment.advisor?.id ?? null,
+                isAnySelected: !(Boolean(currentAppointment.advisor))
+            },
+            transportationOptionId,
+            slot,
+            serviceRequestIds,
+            date,
+            serviceCategoryIds: currentAppointment.serviceCategories ? currentAppointment.serviceCategories.map(el => el.id) : [],
+            maintenancePackageOption,
+            searchTerm: "",
+            serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
+            recalls: mapRecallsForRequest(selectedRecalls),
+            notes: currentAppointment.notes ?? "",
+            valueServiceOfferIds: [],
+            address: currentAppointment.address ?? null,
+            isWaitlist: Boolean(isWaitlist),
+            customerConsentIds: [],
+        };
+
+        Api.call<ICreateAppointmentResp>(Api.endpoints.Appointments.Create, { data, urlParams: {id: currentAppointment.hashKey} })
+            .then(({data}) => {
+                dispatch(setEditingPosition(null))
+                onNext(data.hashKey)
+            })
+            .catch(e => {
+                onError(e)
+            }).finally(() => {
+            dispatch(setAppointmentSaving(false))
+        })
     }
 }

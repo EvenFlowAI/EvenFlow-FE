@@ -15,7 +15,8 @@ export const ActionButtons: React.FC<React.PropsWithChildren<React.PropsWithChil
         prevDisabled,
         prevLabel,
         hideNext,
-        hidePrev
+        hidePrev,
+        color
     }
 ) => {
     const {t} = useTranslation();
@@ -24,7 +25,7 @@ export const ActionButtons: React.FC<React.PropsWithChildren<React.PropsWithChil
             {!loading ? <>
                 {!hidePrev && <Button
                     onClick={onBack}
-                    color={'primary'}
+                    color={color ?? 'primary'}
                     variant='outlined'
                     disabled={prevDisabled}
                     style={{backgroundColor: '#F7F8FB'}}>
@@ -33,7 +34,7 @@ export const ActionButtons: React.FC<React.PropsWithChildren<React.PropsWithChil
                 {!hideNext && <Button
                     disabled={nextDisabled}
                     onClick={onNext}
-                    color={'primary'}
+                    color={color ?? 'primary'}
                     variant='contained'>
                     {nextLabel ?? t("Submit")}
                 </Button>}

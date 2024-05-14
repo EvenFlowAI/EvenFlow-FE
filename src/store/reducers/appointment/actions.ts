@@ -66,7 +66,12 @@ export const setAppointmentWasChanged = createAction<boolean>("Appointment/SetAp
 export const setWaitListSettings = createAction<IWaitListData|null>("Appointment/SetWaitListSettings");
 export const setSlotPodId = createAction<number|null>("Appointment/SetSlotPodId");
 
-export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: TParsableDate) => void, loadCB?: TCallback): AppThunk => async dispatch => {
+export const loadAppointmentSlots = (
+    data: IAppointmentSlotsRequest,
+    cb?: (d: TParsableDate) => void,
+    loadCB?: TCallback,
+    onLoadedCb?: (isEmptyList: boolean) => void
+): AppThunk => async dispatch => {
     try {
         const {data: {items, searchedDateRange, slotGapMinutes, waitlistSettings, podId}} = await Api.call<IAppointmentResponse>(
             Api.endpoints.AppointmentSlots.GetSlots,
@@ -79,12 +84,14 @@ export const loadAppointmentSlots = (data: IAppointmentSlotsRequest, cb?: (d: TP
         if (loadCB) {
             loadCB();
         }
+        if (onLoadedCb) onLoadedCb(!Boolean(items.length))
         searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)))
         if (cb && data.appointmentTimingType === EAppointmentTimingType.FirstAvailable && searchedDateRange) {
             return cb(dayjs.utc(searchedDateRange.from));
         }
         return res;
-    } catch {
+    } catch (err) {
+        onLoadedCb && onLoadedCb(true)
         return dispatch(getAppointmentSlots([]));
     }
 }
@@ -194,7 +201,12 @@ export const loadAllServiceCategories = (serviceCenterId: number): AppThunk => d
 }
 export const getServiceValetSlots = createAction<IServiceValetAppointment[]>("Appointment/GetServiceValetSlots");
 export const getDropOffSettings = createAction<IDropOffSettings>("Appointment/GetDropOffSettings");
-export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: TParsableDate) => void, loadCB?: TCallback): AppThunk => dispatch => {
+export const loadServiceValetSlots = (
+    data: IAppointmentSlotsRequest,
+    cb?: (d: TParsableDate) => void,
+    loadCB?: TCallback,
+    onLoadedCb?: (isEmptyList: boolean) => void
+): AppThunk => dispatch => {
     Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
         .then(result => {
             const {items, searchedDateRange, dropOffSettings} = result.data;
@@ -202,8 +214,10 @@ export const loadServiceValetSlots = (data: IAppointmentSlotsRequest, cb?: (d: T
             if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange));
             if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings));
             loadCB && loadCB();
+            if (onLoadedCb) onLoadedCb(!Boolean(items.length))
         })
         .catch(err => {
+            onLoadedCb && onLoadedCb(true)
             dispatch(getServiceValetSlots([]));
             console.log('get service valet slots err', err)
         })

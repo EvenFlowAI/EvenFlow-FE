@@ -1,7 +1,7 @@
 import {
     EMaintenanceOptionType,
     EReportingStatus,
-    IAppointment,
+    IAppointment, IAppointmentByKey,
     IListAppointment,
     IPackageAppointments,
     IVehicle,
@@ -91,4 +91,6 @@ export type TState = {
     pageData: IPageRequest,
     serviceAdvisors: TServiceConsultant[];
     technicians: TServiceConsultant[];
+    currentAppointment: IAppointmentByKey|null;
+    isAppointmentLoading: boolean;
 }
