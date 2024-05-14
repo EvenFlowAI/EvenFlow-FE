@@ -45,7 +45,6 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
     } = useSelector((state: RootState) => state.appointment);
     const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
     const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
-    const [loading, setLoading] = useState<boolean>(false);
     const [newHashKey, setNewHashKey] = useState<string>('');
 
     const {selectedSC} = useSCs();
@@ -53,7 +52,7 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
     const {onOpen, isOpen, onClose} = useModal();
     const showError = useException();
     const initRef = useRef<boolean>(false);
-    const isLoading = isAppointmentLoading || isAppointmentSaving || loading;
+    const isLoading = isAppointmentLoading || isAppointmentSaving;
 
     const dateString = useMemo(() => {
         return appointment
