@@ -37,11 +37,6 @@ export const optContent: TOptContent = {
         label: "pm",
         title: "Appointment Cutoff"
     },
-    [EOptimizationWindowType.MaxPriceDateRange]: {
-        helperText: "Set the date range for which the Max Price will be calculated",
-        label: "Days",
-        title: "Max Price Date Range",
-    },
 }
 
 export const blankWindowParam: IOptimizationWindow = {

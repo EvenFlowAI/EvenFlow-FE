@@ -49,3 +49,8 @@ export type TGAOptions = {
     storage: string;
     clientId?: string;
 }
+
+export type GATrackers = {
+    measurementId: string;
+    gmtId: string;
+}

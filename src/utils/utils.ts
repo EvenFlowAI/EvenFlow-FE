@@ -18,7 +18,7 @@ import {EPackagePricingType, IValueService} from "../store/reducers/appointmentF
 import {IMaintenanceItem, IRecallByVin, TParsableDate} from "../types/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
 import i18n from "../i18n";
-import {TOption} from "./types";
+import {GATrackers, TOption} from "./types";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import {IAdvisorCapacity, ITechnicianCapacity} from "../store/reducers/employeeCapacity/types";
@@ -125,6 +125,38 @@ const ServiceCenters = {
     FremontLanderFord: 26,
     FremontLanderCDJR: 27,
     BeloitAutoAndTruck: 30,
+    PerformanceHondaBountiful: 163,
+    PerformanceFordLincolnBountiful: 164,
+    PerformanceFordTruckCountry: 165,
+    PerformanceToyotaBountiful: 166,
+}
+
+export const getTrackersForParentSite = (id: string): GATrackers[] => {
+    const decodedId = decodeSCID(id);
+    if (process.env.REACT_APP_ENV === "production") {
+        if (decodedId === ServiceCenters.FremontCDJRCasper) {
+            return [{measurementId: "G-34E3JLKYGN", gmtId: "GTM-TNB7FJ"}]
+        }
+        if (decodedId === ServiceCenters.FremontMotorCody) {
+            return [
+                {measurementId: "G-H8QNCXRRVW", gmtId: "GTM-PHGS6B"},
+                {measurementId: "G-DP0EC3VXQL", gmtId: "GTM-MG6DT7"}
+            ]
+        }
+        if (decodedId === ServiceCenters.FremontLanderCDJR) {
+            return [{measurementId: "G-88673LPKRB", gmtId: "GTM-MRXSH3"}]
+        }
+        if (decodedId === ServiceCenters.FremontCDJRRockSprings) {
+            return [{measurementId: "G-NV5842RXF3", gmtId: "GTM-P7RTQC"}]
+        }
+        if (decodedId === ServiceCenters.FremontMotorRiverton) {
+            return [{measurementId: "G-92EJQHZMGQ", gmtId: "GTM-W3DJPG"}]
+        }
+        if (decodedId === ServiceCenters.FremontMotorPowell) {
+            return [{measurementId: "G-QTPHWHLZC6", gmtId: "GTM-PBT4Q7"}]
+        }
+    }
+    return [];
 }
 
 export const getTrackerById = (id: string): string => {
@@ -154,6 +186,10 @@ export const getTrackerById = (id: string): string => {
         if (decodedId === ServiceCenters.FremontLanderFord) return "G-VSQ7H51M2D";
         if (decodedId === ServiceCenters.FremontLanderCDJR) return "G-5BV7X721KQ";
         if (decodedId === ServiceCenters.BeloitAutoAndTruck) return "G-0YK1QM06NR";
+        if (decodedId === ServiceCenters.PerformanceHondaBountiful) return "G-5JYPV2SJRT";
+        if (decodedId === ServiceCenters.PerformanceFordLincolnBountiful) return "G-TT0L0LN92Z";
+        if (decodedId === ServiceCenters.PerformanceFordTruckCountry) return "G-S3Y40YJ5T1";
+        if (decodedId === ServiceCenters.PerformanceToyotaBountiful) return "G-YEYXB53XXG";
         return "G-DWX0X9CBTT";
     } else {
         return "G-LS5EEY1SRM";

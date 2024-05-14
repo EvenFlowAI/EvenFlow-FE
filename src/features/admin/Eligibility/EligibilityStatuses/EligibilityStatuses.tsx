@@ -5,7 +5,7 @@ import MaintenancePackages from "../MaintenancePackages/MaintenancePackages";
 import {TabContext, TabPanel} from "@mui/lab";
 import {TabList} from "../../../../components/styled/Tabs";
 import {SquarePaper} from "../../../../components/styled/Paper";
-import {PaperTitle} from "../../../../pages/admin/PricingSettings/UI";
+import {Wrapper} from "./styles";
 
 type Tab = {
     id: string;
@@ -26,7 +26,7 @@ const EligibilityStatuses = () => {
 
     return (
         <SquarePaper variant="outlined">
-            <PaperTitle>
+            <Wrapper>
                 <TabContext value={selectedTab}>
                     <TabList
                         onChange={handleTabChange}
@@ -37,18 +37,18 @@ const EligibilityStatuses = () => {
                         })}
                     </TabList>
                 </TabContext>
-            </PaperTitle>
+            </Wrapper>
 
             <TabContext value={selectedTab}>
-                    {tabs.map(t => {
-                        return <TabPanel
-                            style={{width: "100%", padding: "0"}}
-                            key={t.id}
-                            value={t.id}>
-                            {t.component}
-                        </TabPanel>
-                    })}
-                </TabContext>
+                {tabs.map(t => {
+                    return <TabPanel
+                        style={{width: "100%", padding: "0"}}
+                        key={t.id}
+                        value={t.id}>
+                        {t.component}
+                    </TabPanel>
+                })}
+            </TabContext>
         </SquarePaper>
     );
 };

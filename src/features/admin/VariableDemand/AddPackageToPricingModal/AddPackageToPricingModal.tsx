@@ -14,7 +14,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const tableData: TableRowDataType<IPackageOptionShort>[] = [
-    {header: "PACKAGE LEVEL", val: el => el.maintenancePackageOptionName.toString(), align: "left"},
+    {header: "PACKAGE LEVEL", val: el => el.maintenancePackageOptionName ? el.maintenancePackageOptionName.toString() : '-', align: "left"},
     {header: "PACKAGE ID", val: el => el.maintenancePackageId.toString(), align: "left"},
     {header: "PACKAGE NAME", val: el => el.maintenancePackageName, align: "left"},
 ]
@@ -29,8 +29,13 @@ const AddPackageToPricingModal: React.FC<React.PropsWithChildren<React.PropsWith
     const dispatch = useDispatch();
 
     useEffect(() => {
-        props.open && setFilteredPackages(mpOptionsList);
-    }, [mpOptionsList, props.open]);
+        if (props.open) {
+            setFilteredPackages(mpOptionsList);
+            setSelectedPackages(() => {
+                return mpOptionsList.filter(el => mpPricingSettings.map(p => p.maintenancePackageOptionId).includes(el.maintenancePackageOptionId))
+            })
+        }
+    }, [mpOptionsList, mpPricingSettings, props.open]);
 
     const handleAddPackage = () => {
         if (selectedSC && selectedPackages.length) {

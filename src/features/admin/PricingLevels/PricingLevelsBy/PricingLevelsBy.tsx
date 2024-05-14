@@ -13,8 +13,8 @@ type Tab = {
     component: JSX.Element
 }
 const tabs: Tab[] = [
-    {id: "0", label: "PRICING LEVELS BY OPS CODE", component: <PricingLevelsByOpsCode />},
-    {id: "1", label: "PRICING LEVELS BY MAINTENANCE PACKAGE", component: <PricingLevelsByPackage />},
+    {id: "0", label: "Configuration Settings by Ops Code", component: <PricingLevelsByOpsCode />},
+    {id: "1", label: "Configuration Settings by Maintenance Package", component: <PricingLevelsByPackage />},
 ]
 
 const PricingLevelsBy = () => {
