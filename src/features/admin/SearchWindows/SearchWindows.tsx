@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {Grid} from "@mui/material";
 import {EOptimizationWindowType} from "../../../store/reducers/optimizationWindows/types";
 import {
@@ -34,8 +34,22 @@ const SearchWindows = () => {
     const dispatch = useDispatch();
     const {isOpen: isFirstOpen, onOpen: onFirstOpen, onClose: onFirstClose} = useModal();
     const {isOpen: isSpecificOpen, onOpen: onSpecificOpen, onClose: onSpecificClose} = useModal();
-    const firstAvailable = optParams.find(el => el.type === EOptimizationWindowType.FirstAvailable)
-    const specificDate = optParams.find(el => el.type === EOptimizationWindowType.SpecificDate)
+    const firstAvailable = useMemo(() => {
+        return optParams.find(el => el.type === EOptimizationWindowType.FirstAvailable) ?? {
+            type: EOptimizationWindowType.FirstAvailable,
+            value: 0,
+            serviceCenterId: selectedSC?.id ?? 0,
+            podId: selectedPod?.id ?? undefined
+        }
+    }, [optParams, selectedSC, selectedPod])
+    const specificDate = useMemo(() => {
+        return optParams.find(el => el.type === EOptimizationWindowType.SpecificDate) ?? {
+            type: EOptimizationWindowType.SpecificDate,
+            value: 0,
+            serviceCenterId: selectedSC?.id ?? 0,
+            podId: selectedPod?.id ?? undefined
+        }
+    }, [optParams, selectedSC, selectedPod])
 
     useEffect(() => {
         if (selectedSC) {
