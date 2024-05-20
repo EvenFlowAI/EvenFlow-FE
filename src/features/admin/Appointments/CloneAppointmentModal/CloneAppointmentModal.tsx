@@ -21,7 +21,7 @@ import {
 } from "../../../../components/bookingDateTime/AppointmentDateSelector/AppointmentDateSelector";
 import {TGroupedAppointments} from "../../../../utils/types";
 import {groupAppointments} from "../../../booking/AppointmentFlow/AppointmentSlots/utils";
-import {TParsableDate} from "../../../../types/types";
+import {TCallback, TParsableDate} from "../../../../types/types";
 import {
     SVAppointmentTimeSelector
 } from "../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector";
@@ -35,7 +35,7 @@ import {useModal} from "../../../../hooks/useModal/useModal";
 import Informing from "../../../../components/modals/common/Informing/Informing";
 import {clearAfterCloning} from "../../../../store/reducers/appointments/actions";
 
-const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
+const CloneAppointmentModal: React.FC<DialogProps & {onViewClose: TCallback}> = (props) => {
     const {currentAppointment, isAppointmentLoading} = useSelector((state: RootState) => state.appointments);
     const {isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
     const {
@@ -111,6 +111,7 @@ const CloneAppointmentModal: React.FC<DialogProps> = (props) => {
     const onInformClose = () => {
         onClose();
         onCloneClose();
+        props.onViewClose();
     }
 
     return <BaseModal {...props} width={900}>

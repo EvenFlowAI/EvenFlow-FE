@@ -17,7 +17,7 @@ const SelectedConsultant = () => {
     const isSm = useMediaQuery(theme.breakpoints.down('md'));
 
     useEffect(() => {
-        if (currentAppointment?.advisor?.id) {
+        if (currentAppointment?.advisor?.id && !currentAppointment?.advisor?.isAnySelected) {
             setAdvisor(() => consultants.find(el => el.id === currentAppointment?.advisor?.id) ?? null)
         }
     }, [consultants, currentAppointment])
