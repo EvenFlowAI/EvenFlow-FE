@@ -1101,7 +1101,7 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
         const data: ICreateAppointmentRequest = {
             id: currentAppointment.id,
             appointmentTimingType,
-            customerId: currentAppointment.customerId ?? null,
+            customerId: currentAppointment.driver?.id ?? null,
             comment: currentAppointment.comment,
             driver,
             vehicle,
