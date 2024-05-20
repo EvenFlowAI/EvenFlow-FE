@@ -214,7 +214,7 @@ export type TVehicleForRequest = {
 export interface ICreateAppointmentRequest {
     id?: number;
     appointmentTimingType: EAppointmentTimingType;
-    customerId: string|null;
+    customerId: string|number|null;
     comment: string;
     driver: TDriverForRequest;
     vehicle: TVehicleForRequest;
