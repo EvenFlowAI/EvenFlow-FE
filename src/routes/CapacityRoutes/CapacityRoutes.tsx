@@ -10,11 +10,13 @@ import {Routes} from "../constants";
 import RequestDifferentiation from "../../pages/admin/RequestDifferentiation/RequestDifferentiation";
 import TimeDifferentiation from "../../pages/admin/TimeDifferentiation/TimeDifferentiation";
 import ServiceBooks from "../../pages/admin/ServiceBooks/ServiceBooks";
+import DemandManagement from "../../pages/admin/DemandManagement/DemandManagement";
 
 export const CapacityRoutes = () => {
     return <ContentContainer>
         <Switch>
             <PrivateRoute path={Routes.CapacityManagement.CapacitySettings} component={CapacitySettings} />
+            <PrivateRoute path={Routes.CapacityManagement.DemandManagement} component={DemandManagement} />
             <PrivateRoute path={Routes.CapacityManagement.AppointmentAllocation} component={AppointmentAllocation} />
             <PrivateRoute path={Routes.CapacityManagement.OptimizationWindows} component={OptimizationWindowsPage} />
             <PrivateRoute path={Routes.CapacityManagement.Pods} component={ServiceBooks} />
