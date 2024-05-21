@@ -2,45 +2,17 @@ import React from 'react';
 import {DenseTableWithPadding} from "../../../components/styled/DemandTable";
 import {Radio, Switch, TableBody, TableHead, TableRow} from "@mui/material";
 import {
-    StyledTableCell,
-    RadioGroupStyled,
     RadioBtn,
-    SubCellWhite,
+    RadioGroupStyled,
+    StyledTableCell,
     SubCellGrey,
-    SwitchWrapperWhite,
-    SwitchWrapperGrey
+    SubCellWhite, SwitchWrapperGrey,
+    SwitchWrapperWhite
 } from "./styles";
-
-export enum ERequestDemandMethod {
-    AppointmentSlots, ScheduledHours
-}
-
-export enum EPredictedDemandMethod {
-    Predicted, Probability
-}
-
-export type TPredictedDemandMethod = {
-    type: EPredictedDemandMethod;
-    configured: boolean;
-}
-
-export enum EDemandPredictionType {
-    EvenFlowAppointments, ExEvenFlowAppointments, OpenROs
-}
-
-export type TDemandActivity = {
-    type: EDemandPredictionType;
-    isRequestOn: boolean;
-    isPredictionOn: boolean;
-}
-
-export interface IDemandPrediction {
-    serviceBookName: string;
-    serviceBookId?: number;
-    requestDemandMethod: ERequestDemandMethod;
-    predictedDemandMethod: TPredictedDemandMethod;
-    demandActivity: TDemandActivity[];
-}
+import {EDemandPredictionType, EPredictedDemandMethod, ERequestDemandMethod, IDemandPrediction} from "./types";
+import {ReactComponent as CheckIcon} from '../../../assets/img/checkboxSmall.svg'
+import {ReactComponent as RedCross} from '../../../assets/img/redCross.svg'
+import LabelLink from "./LabelLink/LabelLink";
 
 const mockData: IDemandPrediction[] = [
     {
@@ -66,29 +38,29 @@ const mockData: IDemandPrediction[] = [
             },
         ]
     },
-    // {
-    //     serviceBookName: 'Express',
-    //     requestDemandMethod: ERequestDemandMethod.ScheduledHours,
-    //     predictedDemandMethod:  {
-    //         type: EPredictedDemandMethod.Probability,
-    //         configured: false,
-    //     },
-    //     demandActivity: [
-    //         {
-    //             type: EDemandPredictionType.EvenFlowAppointments,
-    //             isRequestOn: false,
-    //             isPredictionOn: true,
-    //         }, {
-    //             type: EDemandPredictionType.ExEvenFlowAppointments,
-    //             isRequestOn: true,
-    //             isPredictionOn: false,
-    //         }, {
-    //             type: EDemandPredictionType.OpenROs,
-    //             isRequestOn: true,
-    //             isPredictionOn: false,
-    //         },
-    //     ]
-    // }
+    {
+        serviceBookName: 'Express',
+        requestDemandMethod: ERequestDemandMethod.ScheduledHours,
+        predictedDemandMethod:  {
+            type: EPredictedDemandMethod.Probability,
+            configured: false,
+        },
+        demandActivity: [
+            {
+                type: EDemandPredictionType.EvenFlowAppointments,
+                isRequestOn: false,
+                isPredictionOn: true,
+            }, {
+                type: EDemandPredictionType.ExEvenFlowAppointments,
+                isRequestOn: true,
+                isPredictionOn: false,
+            }, {
+                type: EDemandPredictionType.OpenROs,
+                isRequestOn: true,
+                isPredictionOn: false,
+            },
+        ]
+    }
 ]
 
 const DemandPredictionTable = () => {
@@ -105,6 +77,9 @@ const DemandPredictionTable = () => {
        // todo logic
     }
 
+    const onPredictedClick = () => {}
+
+    const onProbabilityClick = () => {}
 
     return (
         <DenseTableWithPadding>
@@ -114,10 +89,10 @@ const DemandPredictionTable = () => {
                         Service Book
                     </StyledTableCell>
                     <StyledTableCell key="Request" style={{textTransform: 'capitalize'}}>
-                        Request Demand Method
+                        Request<br/>Demand Method
                     </StyledTableCell>
                     <StyledTableCell key="Predicted" style={{textTransform: 'capitalize'}}>
-                        Predicted Demand Method
+                        Predicted<br/>Demand Method
                     </StyledTableCell>
                     <StyledTableCell key="type" style={{textTransform: 'capitalize'}}>
                        Demand Type
@@ -134,13 +109,11 @@ const DemandPredictionTable = () => {
                 {mockData.map(item => {
                     return  <TableRow key={item.serviceBookId ?? item.serviceBookName}>
                         <StyledTableCell
-                            key={item.serviceBookId ?? item.serviceBookName}
-                            rowSpan={3}>
+                            key={item.serviceBookId ?? item.serviceBookName}>
                             {item.serviceBookName}
                         </StyledTableCell>
                         <StyledTableCell
-                            key="requestDemandMethod"
-                            rowSpan={3}>
+                            key="requestDemandMethod" align="left">
                                 <RadioGroupStyled
                                     value={item.requestDemandMethod}
                                     onChange={handleChangeRequestDemandMethod(item.serviceBookId ?? item.serviceBookName)}
@@ -156,7 +129,7 @@ const DemandPredictionTable = () => {
                                         label="Scheduled Hours" />
                                 </RadioGroupStyled>
                         </StyledTableCell>
-                        <StyledTableCell key="predictedDemandMethod" rowSpan={3}>
+                        <StyledTableCell key="predictedDemandMethod" align="left">
                             <RadioGroupStyled
                                 value={item.predictedDemandMethod.type}
                                 onChange={handleChangePredictedDemandMethod(item.serviceBookId ?? item.serviceBookName)}
@@ -165,11 +138,23 @@ const DemandPredictionTable = () => {
                                 <RadioBtn
                                     value={EPredictedDemandMethod.Predicted}
                                     control={<Radio color="primary" size="small"/>}
-                                    label="Predicted" />
+                                    label={<LabelLink
+                                        text="Predicted"
+                                        subText="Configured"
+                                        icon={<CheckIcon/>}
+                                        color="#7898FF"
+                                        onClick={onPredictedClick}/>}
+                                    />
                                 <RadioBtn
                                     value={EPredictedDemandMethod.Probability}
                                     control={<Radio color="primary" size="small"/>}
-                                    label="Probability" />
+                                    label={<LabelLink
+                                        text="Probability"
+                                        subText="Not Configured"
+                                        color="#C71062"
+                                        icon={<RedCross/>}
+                                        onClick={onProbabilityClick}/>}
+                                />
                             </RadioGroupStyled>
                         </StyledTableCell>
                         <StyledTableCell key="evenflowAppontments" style={{padding: 0}} width={230}>

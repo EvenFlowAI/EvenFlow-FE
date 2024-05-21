@@ -13,11 +13,12 @@ export const StyledTableCell = withStyles(TC, {
 export const RadioGroupStyled = styled(RadioGroup)({
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'flex-start',
+    gap: 16
 })
 
 export const RadioBtn = styled(FormControlLabel)({
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     marginRight: 0,
     "& > .MuiTypography-root": {
         fontWeight: 'bold',
