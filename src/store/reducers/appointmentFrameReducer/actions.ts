@@ -1101,7 +1101,7 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
         const data: ICreateAppointmentRequest = {
             id: currentAppointment.id,
             appointmentTimingType,
-            customerId: currentAppointment.customerId ?? null,
+            customerId: currentAppointment.driver?.id ?? null,
             comment: currentAppointment.comment,
             driver,
             vehicle,
@@ -1110,8 +1110,10 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
             reminderTypes: currentAppointment.reminderTypes,
             serviceCenterId: id,
             advisor: {
-                id: currentAppointment.advisor?.id ?? null,
-                isAnySelected: !(Boolean(currentAppointment.advisor))
+                id: currentAppointment.advisor?.id && !currentAppointment.advisor?.isAnySelected
+                    ? currentAppointment.advisor?.id
+                    : null,
+                isAnySelected: currentAppointment.advisor ? Boolean(currentAppointment.advisor?.isAnySelected) : true
             },
             transportationOptionId,
             slot,

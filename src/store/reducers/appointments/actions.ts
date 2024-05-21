@@ -190,11 +190,12 @@ const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boo
     const {selectedRecalls, consultants} = getState().appointmentFrame;
     const {currentAppointment} = getState().appointments;
     const utcOffset = dayjs().utcOffset()
+    const advisorId = consultants.find(item => item.id === currentAppointment?.advisor?.id)?.id;
     if (currentAppointment) {
         const data: IAppointmentSlotsRequest = {
             appointmentTimingType: EAppointmentTimingType.FirstAvailable,
             serviceCenterId,
-            advisorId: consultants.find(item => item.id === currentAppointment.advisor?.id)?.id ?? null,
+            advisorId: !currentAppointment?.advisor?.isAnySelected && advisorId ? advisorId : null,
             fromDate:dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),
             maintenancePackageOption: currentAppointment.maintenancePackageOption ?? null,
             serviceRequestIds: currentAppointment.serviceRequests

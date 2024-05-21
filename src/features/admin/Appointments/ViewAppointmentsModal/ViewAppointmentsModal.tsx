@@ -20,13 +20,23 @@ import Informing from "../../../../components/modals/common/Informing/Informing"
 import CloneAppointmentModal from "../CloneAppointmentModal/CloneAppointmentModal";
 import {ReactComponent as Warning} from "../../../../assets/img/warning_icon.svg";
 import {RootState} from "../../../../store/rootReducer";
+import {TCallback} from "../../../../types/types";
 
 type TCallbackProps = {
-    onEditAppointment: () => void;
-    onCancelAppointment: () => void;
+    onEditAppointment: TCallback;
+    onCancelAppointment: TCallback;
+    refresh?: TCallback;
 }
 
-export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAppointment>&TCallbackProps>>> = ({onAction, onEditAppointment, onCancelAppointment, payload, ...props}) => {
+export const ViewAppointmentsModal:
+    React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAppointment>&TCallbackProps>>> = ({
+                                                                                                                                                onAction,
+                                                                                                                                                refresh,
+                                                                                                                                                onEditAppointment,
+                                                                                                                                                onCancelAppointment,
+                                                                                                                                                payload,
+                                                                                                                                                ...props
+}) => {
     const {isAppointmentLoading} = useSelector((state: RootState) => state.appointments);
     const [messageText, setMessageText] = useState<string>("");
 
@@ -57,6 +67,11 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
        } else {
            handleExEvenFlowAppointments();
        }
+    }
+
+    const onAfterClone = () => {
+        refresh && refresh()
+        props.onClose()
     }
 
     return <BaseModal {...props} width={940}>
@@ -107,6 +122,6 @@ export const ViewAppointmentsModal: React.FC<React.PropsWithChildren<React.Props
             onClose={onClose}
             title={messageText}
         />
-        <CloneAppointmentModal open={isOpenClone} onClose={onCloseClone}/>
+        <CloneAppointmentModal open={isOpenClone} onClose={onCloseClone} onViewClose={onAfterClone}/>
     </BaseModal>
 };
