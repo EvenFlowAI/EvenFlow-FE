@@ -67,19 +67,23 @@ const DemandPredictionTable = () => {
 
     const handleChangeRequestDemandMethod = (idOrName: number|string) =>  (e: React.ChangeEvent<HTMLInputElement>) => {
         // todo logic
+
     }
 
     const handleChangePredictedDemandMethod = (idOrName: number|string) =>  (e: React.ChangeEvent<HTMLInputElement>) => {
         // todo logic
+        console.log('parent')
     }
 
     const handleSwitch = (idOrName: number|string, type: EDemandPredictionType, requestType: "request"|"prediction") => async (e: any, value: boolean) => {
        // todo logic
     }
 
-    const onPredictedClick = () => {}
+    const onPredictedClick = () => {
+    }
 
-    const onProbabilityClick = () => {}
+    const onProbabilityClick = () => {
+    }
 
     return (
         <DenseTableWithPadding>
