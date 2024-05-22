@@ -37,20 +37,22 @@ export const OptimizationModal: React.FC<TProps> = ({
         setVal(Number(value));
     }
     const handleSave = async () => {
-        if (!selectedSC || !payload) {
+        if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
-            setSaving(true);
-            try {
-                await dispatch(setOptimizationWindow(
-                    payload.type, val, selectedSC.id, selectedPod?.id
-                ));
-                setSaving(false);
-                showMessage("Saved");
-                props.onClose();
-            } catch (e) {
-                setSaving(false);
-                showError(e);
+            if (payload) {
+                setSaving(true);
+                try {
+                    await dispatch(setOptimizationWindow(
+                        payload.type, val, selectedSC.id, selectedPod?.id
+                    ));
+                    setSaving(false);
+                    showMessage("Saved");
+                    props.onClose();
+                } catch (e) {
+                    setSaving(false);
+                    showError(e);
+                }
             }
         }
     }
