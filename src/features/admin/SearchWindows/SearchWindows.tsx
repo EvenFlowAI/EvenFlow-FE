@@ -94,7 +94,7 @@ const SearchWindows = () => {
             payload={specificDate}
             onClose={onSpecificClose}
         />
-        </>
+    </>
 };
 
 export default SearchWindows;
