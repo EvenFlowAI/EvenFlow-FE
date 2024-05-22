@@ -350,7 +350,8 @@
       "Please confirm the changes you made to the Customer Profile": "Please confirm the changes you made to the Customer Profile",
       "Change selections": "Change selections",
       "I acknowledge": "I acknowledge",
-      "No appointment comments have been provided": "No appointment comments have been provided"
+      "No appointment comments have been provided": "No appointment comments have been provided",
+      "Appointment Comment must not be empty": "Appointment Comment must not be empty"
     }
   },
   "es": {
