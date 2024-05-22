@@ -249,8 +249,7 @@ export const getStartEndDates = (date: TParsableDate, isXS: boolean): [string, s
 }
 
 export const getYearOptions = () => {
-    let year = dayjs().utc().year()
-    if (dayjs().month() > 6) year = dayjs().utc().add(1, 'year').year();
+    let year = dayjs().utc().add(1, 'year').year()
     const YEARS = year - 1982;
     return Array(YEARS).fill(0).map((_, idx) => String(year - idx));
 }
