@@ -14,13 +14,16 @@ import {CustomerConsentsModal} from "./CustomerConsentsModal/CustomerConsentsMod
 import {loadRange} from "../../../store/reducers/slotScoring/actions";
 import PriceDisplayModal from "./PriceDisplayModal/PriceDisplayModal";
 import {loadRoundPriceSetting} from "../../../store/reducers/pricingSettings/actions";
+import {EditCompanyNameModal} from "./EditCompanyNameModal/EditCompanyNameModal";
 
 export const ScreenSettings = () => {
     const {
         emailRequirement,
         isEmailRequirementLoading,
         consentsList,
-        isConsentLoading
+        isConsentLoading,
+        companyNameIsLoading,
+        companyName
     } = useSelector((state: RootState) => state.screenSettingsBooking);
     const {roundPrice, isRoundPriceLoading} = useSelector((state: RootState) => state.pricingSettings);
     const {selectedSC} = useSCs();
@@ -29,6 +32,7 @@ export const ScreenSettings = () => {
     const {onOpen: onEmailEditOpen, isOpen: isEmailEditOpen, onClose: onEmailEditClose} = useModal();
     const {onOpen: onConsentOpen, isOpen: isConsentOpen, onClose: onConsentClose} = useModal();
     const {onOpen: onPricingOpen, isOpen: isPricingOpen, onClose: onPricingClose} = useModal();
+    const {onOpen: onCompanyNameOpen, isOpen: isCompanyNameOpen, onClose: onCompanyNameClose} = useModal();
 
     useEffect(() => {
         if (selectedSC) {
@@ -67,6 +71,10 @@ export const ScreenSettings = () => {
         return roundPrice ? 'Rounded' : "Fractional"
     }
 
+    const getCompanyNameValue = () => {
+        return companyName ? 'On' : "Off"
+    }
+
     const getCount = (k: EScreenSettingsType): string|number => {
         switch (k) {
             case EScreenSettingsType.EmailRequirement:
@@ -75,6 +83,8 @@ export const ScreenSettings = () => {
                 return getCustomerConsentValue();
             case EScreenSettingsType.PriceDisplay:
                 return getPriceDisplayValue();
+            case EScreenSettingsType.CompanyName:
+                return getCompanyNameValue();
             default:
                 return "No data"
         }
@@ -99,6 +109,12 @@ export const ScreenSettings = () => {
             title: "Price Display",
             isLoading: isRoundPriceLoading
         },
+        [EScreenSettingsType.CompanyName]: {
+            helperText: "Display of Company Name field option on confirmation page",
+            label: getCompanyNameValue(),
+            title: "Company Name",
+            isLoading: companyNameIsLoading
+        },
     }
 
     const getPlateEdit = (k: EScreenSettingsType): void => {
@@ -109,8 +125,11 @@ export const ScreenSettings = () => {
             case EScreenSettingsType.CustomerConsent:
                 onConsentOpen();
                 break;
-                case EScreenSettingsType.PriceDisplay:
+            case EScreenSettingsType.PriceDisplay:
                 onPricingOpen();
+                break;
+            case EScreenSettingsType.CompanyName:
+                onCompanyNameOpen();
                 break;
             default:
                 return;
@@ -136,6 +155,7 @@ export const ScreenSettings = () => {
                 })}
             </Grid>
             <EditEmailRequirementModal open={isEmailEditOpen} onClose={onEmailEditClose}/>
+            <EditCompanyNameModal open={isCompanyNameOpen} onClose={onCompanyNameClose}/>
             <CustomerConsentsModal open={isConsentOpen} onClose={onConsentClose}/>
             <PriceDisplayModal open={isPricingOpen} onClose={onPricingClose}/>
         </>

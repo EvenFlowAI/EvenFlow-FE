@@ -7,13 +7,14 @@ export type TEmailRequirement = {
 }
 
 export enum EScreenSettingsType {
-    EmailRequirement, CustomerConsent, PriceDisplay
+    EmailRequirement, CustomerConsent, PriceDisplay, CompanyName
 }
 
 export const screenSettingsList: EScreenSettingsType[] = [
     EScreenSettingsType.EmailRequirement,
     EScreenSettingsType.CustomerConsent,
     EScreenSettingsType.PriceDisplay,
+    EScreenSettingsType.CompanyName,
 ];
 
 export type TOptContentData = {
@@ -42,6 +43,8 @@ export type TGeographicZone = {
 
 export type TState = {
     emailRequirement: TEmailRequirement | null;
+    companyName: boolean;
+    companyNameIsLoading: boolean;
     isEmailRequirementLoading: boolean;
     consentsList: ICustomerConsent[];
     isConsentLoading: boolean;
