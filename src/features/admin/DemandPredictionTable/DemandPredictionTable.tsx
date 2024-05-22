@@ -66,17 +66,16 @@ const mockData: IDemandPrediction[] = [
 const DemandPredictionTable = () => {
 
     const handleChangeRequestDemandMethod = (idOrName: number|string) =>  (e: React.ChangeEvent<HTMLInputElement>) => {
-        // todo logic
+        // todo request
 
     }
 
     const handleChangePredictedDemandMethod = (idOrName: number|string) =>  (e: React.ChangeEvent<HTMLInputElement>) => {
-        // todo logic
-        console.log('parent')
+        // todo request
     }
 
     const handleSwitch = (idOrName: number|string, type: EDemandPredictionType, requestType: "request"|"prediction") => async (e: any, value: boolean) => {
-       // todo logic
+        // todo request
     }
 
     const onPredictedClick = () => {

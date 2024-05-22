@@ -13,7 +13,8 @@ type TProps = {
 const LabelLink: React.FC<TProps> = (props) => {
     const onClick = (e: React.MouseEvent<HTMLElement>) => {
         e.stopPropagation()
-        console.log('child')
+        e.preventDefault()
+        e.persist()
         props.onClick()
     }
     return (
