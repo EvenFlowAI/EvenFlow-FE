@@ -24,6 +24,7 @@ import {
 import {getSlotsGap} from "../appointmentFrameReducer/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
+import {setAppointmentsLoading} from "../appointments/actions";
 
 export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLoading');
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>("Appointment/GetSCProfile");
@@ -65,6 +66,7 @@ export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment
 export const setAppointmentWasChanged = createAction<boolean>("Appointment/SetAppointmentWasChanged");
 export const setWaitListSettings = createAction<IWaitListData|null>("Appointment/SetWaitListSettings");
 export const setSlotPodId = createAction<number|null>("Appointment/SetSlotPodId");
+export const setSlotsLoading = createAction<boolean>("Appointment/setSlotsLoading");
 
 export const loadAppointmentSlots = (
     data: IAppointmentSlotsRequest,
@@ -72,6 +74,7 @@ export const loadAppointmentSlots = (
     loadCB?: TCallback,
     onLoadedCb?: (isEmptyList: boolean) => void
 ): AppThunk => async dispatch => {
+    dispatch(setSlotsLoading(true))
     try {
         const {data: {items, searchedDateRange, slotGapMinutes, waitlistSettings, podId}} = await Api.call<IAppointmentResponse>(
             Api.endpoints.AppointmentSlots.GetSlots,
@@ -93,6 +96,8 @@ export const loadAppointmentSlots = (
     } catch (err) {
         onLoadedCb && onLoadedCb(true)
         return dispatch(getAppointmentSlots([]));
+    } finally {
+        dispatch(setSlotsLoading(false))
     }
 }
 export const setLoadedReducer = createAction<TAppointmentState>("Appointment/ReloadState");

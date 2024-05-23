@@ -213,6 +213,7 @@ export type TAppointmentState = {
     appointmentWasChanged: boolean;
     waitListSettings: IWaitListData|null;
     slotPodId: number|null;
+    isAppointmentSlotsLoading: boolean;
 };
 
 export enum EReminderType {
