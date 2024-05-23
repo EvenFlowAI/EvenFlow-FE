@@ -38,6 +38,7 @@ export const ViewAppointmentsModal:
                                                                                                                                                 ...props
 }) => {
     const {isAppointmentLoading} = useSelector((state: RootState) => state.appointments);
+    const {isAppointmentSlotsLoading} = useSelector((state: RootState) => state.appointment);
     const [messageText, setMessageText] = useState<string>("");
 
     const {selectedSC} = useSCs();
@@ -77,7 +78,7 @@ export const ViewAppointmentsModal:
     return <BaseModal {...props} width={940}>
         <DialogTitle onClose={props.onClose}>View Appointment</DialogTitle>
         <DialogContent>
-            {!payload || isAppointmentLoading
+            {!payload || isAppointmentLoading || isAppointmentSlotsLoading
                 ? <LoaderWrapper><CircularProgress /></LoaderWrapper>
                 : <>
                 <Wrapper>
