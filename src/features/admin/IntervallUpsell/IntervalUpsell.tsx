@@ -57,7 +57,7 @@ const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
         width: 100,
     },
     {
-        header: "Parts Price",
+        header: "Parts Amount",
         val: el => <ServiceRequestCellData
             prefix="$"
             override={el.partsUnitCost?.toFixed(2)}
