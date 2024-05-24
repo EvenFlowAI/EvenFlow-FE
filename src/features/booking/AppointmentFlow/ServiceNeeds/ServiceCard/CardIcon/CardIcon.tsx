@@ -21,34 +21,40 @@ const CardIcon: React.FC<TProps> = ({iconPath, isSM, active}) => {
                 .then(({ data }) => {
                     setIcon(data)
                 })
+                .catch(e => {
+                    console.log(e, 'error loading icon')
+                })
                 .finally(() => setLoading(false))
         }
     }, [iconPath])
 
     return isLoading
         ? <Loading/>
-        : iconPath && icon
+        : iconPath
             ? isSM
                 ? <span
                     className="cardIcon"
                     style={{ filter: active ? "invert(100%)" : "unset"}}>
                     <img src={iconPath} style={{width: 78, height: 78}} alt={"service_category_logo"}/>
                  </span>
-                : <span
-                    className="cardIcon"
+                : icon
+                    ? <span
+                        className="cardIcon"
                     style={{ filter: active ? "invert(100%)" : "unset"}}
                     dangerouslySetInnerHTML={{__html: icon}}/>
-            : isSM
-                ? <span
-                    className="cardIcon"
-                    style={{ filter: active ? "invert(100%)" : "unset"}}>
+                    : <span
+                        className="cardIcon"
+                        style={{ filter: active ? "invert(100%)" : "unset"}}>
                     <img src={DefaultIcon} style={{width: 65, height: 65}} alt={"service_category_logo"}/>
+                </span>
+            : <span
+                className="cardIcon"
+                style={{ filter: active ? "invert(100%)" : "unset"}}>
+                    { isSM
+                        ? <img src={DefaultIcon} style={{width: 65, height: 65}} alt={"service_category_logo"}/>
+                        : <Icon />
+                    }
         </span>
-                : <span
-                    className="cardIcon"
-                    style={{ filter: active ? "invert(100%)" : "unset"}}>
-                <Icon />
-            </span>
 };
 
 export default CardIcon;
