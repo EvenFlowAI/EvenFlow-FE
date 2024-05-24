@@ -1129,6 +1129,7 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
             address: currentAppointment.address ?? null,
             isWaitlist: Boolean(isWaitlist),
             customerConsentIds: [],
+            isAppointmentClone: true,
         };
 
         Api.call<ICreateAppointmentResp>(Api.endpoints.Appointments.Create, { data, urlParams: {id: currentAppointment.hashKey} })
