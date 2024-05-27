@@ -12,7 +12,6 @@ import {
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {TCallback} from "../../../../types/types";
 import Consent from "./Consent/Consent";
-import {Routes} from "../../../../routes/constants";
 import {useHistory, useParams} from "react-router-dom";
 
 const CustomerConsents: React.FC<{onNext: TCallback, onPrev?: TCallback}> = ({onNext, onPrev}) => {

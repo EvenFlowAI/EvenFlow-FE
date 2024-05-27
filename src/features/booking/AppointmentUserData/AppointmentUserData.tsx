@@ -25,6 +25,7 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
     useEffect(() => {
         if (customerLoadedData) {
             dispatch(setCustomer({
+                ...customer,
                 fullName: customerLoadedData?.fullName ?? `${customerLoadedData.firstName} ${customerLoadedData.lastName}`,
                 email: customerLoadedData?.emails?.length ? customerLoadedData.emails[0] : "",
                 phoneNumber: customerLoadedData?.phoneNumbers?.length ? customerLoadedData.phoneNumbers[0] : "",
