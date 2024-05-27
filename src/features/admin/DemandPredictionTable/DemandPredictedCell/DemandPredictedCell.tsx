@@ -34,7 +34,7 @@ export const DemandPredictedCell: React.FC<{ item: IDemandPrediction }> = ({item
                 ? settings.find(el => el.podId === id)
                 : settings.find(el => !el.podId)
             if (itemToUpdate) {
-                const updated = {...itemToUpdate, predictedMethod: +e.target.value as EPredictedDemandMethod}
+                const updated = {...itemToUpdate, predictedDemandMethod: +e.target.value as EPredictedDemandMethod}
                 dispatch(updateDemandManagementSettings(updated))
             }
         }

@@ -10,12 +10,19 @@ import {
     SwitchWrapperGrey,
     SwitchWrapperWhite
 } from "./styles";
-import {EDemandPredictionType, ERequestDemandMethod} from "../../../store/reducers/demandManagement/types";
+import {
+    EDemandPredictionType,
+    ERequestDemandMethod
+} from "../../../store/reducers/demandManagement/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
-import {loadDemandManagementSettings} from "../../../store/reducers/demandManagement/actions";
+import {
+    loadDemandManagementSettings,
+    updateDemandManagementSettings
+} from "../../../store/reducers/demandManagement/actions";
 import {DemandPredictedCell} from "./DemandPredictedCell/DemandPredictedCell";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 
 
 const DemandPredictionTable = () => {
@@ -28,16 +35,42 @@ const DemandPredictionTable = () => {
     }, [selectedSC])
 
 
-    const handleSwitch = (idOrName: number|string, type: EDemandPredictionType, requestType: "request"|"prediction") => async (e: any, value: boolean) => {
-        // todo request
+    const handleSwitch = (id: number|undefined, type: EDemandPredictionType, requestType: "request"|"prediction") => async (e: any, value: boolean) => {
+        const itemToUpdate = id
+            ? settings.find(el => el.podId === id)
+            : settings.find(el => !el.podId)
+        if (itemToUpdate) {
+            const settingToUpdate = itemToUpdate.demandTypeSettings
+                .find(el => el.type === type)
+            if (settingToUpdate) {
+                const updated = {
+                    ...itemToUpdate,
+                    demandTypeSettings: itemToUpdate.demandTypeSettings
+                        .filter(el => el.type !== type)
+                        .concat({
+                            ...settingToUpdate,
+                            isRequestStatusOn: requestType === "request" ? value : settingToUpdate.isRequestStatusOn,
+                            isPredictedStatusOn: requestType === "prediction" ? value : settingToUpdate.isPredictedStatusOn,
+                        })}
+                dispatch(updateDemandManagementSettings(updated))
+            }
+        }
     }
 
-    const handleChangeRequestDemandMethod = (idOrName: number|string) =>  (e: React.ChangeEvent<HTMLInputElement>) => {
-        // todo request
-
+    const handleChangeRequestDemandMethod = (id: number|undefined) =>  (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (selectedSC) {
+            const itemToUpdate = id
+                ? settings.find(el => el.podId === id)
+                : settings.find(el => !el.podId)
+            if (itemToUpdate) {
+                const updated = {...itemToUpdate, requestDemandMethod: +e.target.value as ERequestDemandMethod}
+                dispatch(updateDemandManagementSettings(updated))
+            }
+        }
     }
-    return (
-        <DenseTableWithPadding>
+    return isLoading
+        ? <Loading/>
+        : <DenseTableWithPadding>
             <TableHead>
                 <TableRow>
                     <StyledTableCell key="serviceBook" style={{textTransform: 'capitalize'}} width={145}>
@@ -71,7 +104,7 @@ const DemandPredictionTable = () => {
                             key="requestDemandMethod" align="left">
                                 <RadioGroupStyled
                                     value={item.requestDemandMethod}
-                                    onChange={handleChangeRequestDemandMethod(item.podId ?? item.serviceBookName)}
+                                    onChange={handleChangeRequestDemandMethod(item.podId)}
                                     aria-labelledby="demo-controlled-radio-buttons-group"
                                     name="controlled-radio-buttons-group">
                                     <RadioBtn
@@ -97,21 +130,21 @@ const DemandPredictionTable = () => {
                         <StyledTableCell key="requestDemandStatus" style={{padding: 0}} width={146}>
                             <SwitchWrapperWhite key="evenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 <Switch
-                                    onChange={handleSwitch(item.podId ?? item.serviceBookName, EDemandPredictionType.EvenFlowAppointments, "request")}
+                                    onChange={handleSwitch(item.podId, EDemandPredictionType.EvenFlowAppointments, "request")}
                                     checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.EvenFlowAppointments)?.isRequestStatusOn)}
                                     color="primary"
                                 />
                             </SwitchWrapperWhite>
                             <SwitchWrapperGrey key="ExEvenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 <Switch
-                                    onChange={handleSwitch(item.podId ?? item.serviceBookName, EDemandPredictionType.ExEvenFlowAppointments, "request")}
+                                    onChange={handleSwitch(item.podId, EDemandPredictionType.ExEvenFlowAppointments, "request")}
                                     checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.ExEvenFlowAppointments)?.isRequestStatusOn)}
                                     color="primary"
                                 />
                             </SwitchWrapperGrey>
                             <SwitchWrapperWhite key="ROs">
                                 <Switch
-                                    onChange={handleSwitch(item.podId ?? item.serviceBookName, EDemandPredictionType.OpenROs, "request")}
+                                    onChange={handleSwitch(item.podId, EDemandPredictionType.OpenROs, "request")}
                                     checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.OpenROs)?.isRequestStatusOn)}
                                     color="primary"
                                 />
@@ -120,21 +153,21 @@ const DemandPredictionTable = () => {
                         <StyledTableCell key="predictionDemandStatus" style={{padding: 0}} width={146}>
                             <SwitchWrapperWhite key="evenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 <Switch
-                                    onChange={handleSwitch(item.podId ?? item.serviceBookName, EDemandPredictionType.EvenFlowAppointments, "prediction")}
+                                    onChange={handleSwitch(item.podId, EDemandPredictionType.EvenFlowAppointments, "prediction")}
                                     checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.EvenFlowAppointments)?.isPredictedStatusOn)}
                                     color="primary"
                                 />
                             </SwitchWrapperWhite>
                             <SwitchWrapperGrey key="ExEvenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 <Switch
-                                    onChange={handleSwitch(item.podId ?? item.serviceBookName, EDemandPredictionType.ExEvenFlowAppointments, "prediction")}
+                                    onChange={handleSwitch(item.podId, EDemandPredictionType.ExEvenFlowAppointments, "prediction")}
                                     checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.ExEvenFlowAppointments)?.isPredictedStatusOn)}
                                     color="primary"
                                 />
                             </SwitchWrapperGrey>
                             <SwitchWrapperWhite key="ROs">
                                 <Switch
-                                    onChange={handleSwitch(item.podId ?? item.serviceBookName, EDemandPredictionType.OpenROs, "prediction")}
+                                    onChange={handleSwitch(item.podId, EDemandPredictionType.OpenROs, "prediction")}
                                     checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.OpenROs)?.isPredictedStatusOn)}
                                     color="primary"
                                 />
@@ -143,8 +176,7 @@ const DemandPredictionTable = () => {
                     </TableRow>
                 })}
             </TableBody>
-        </DenseTableWithPadding>
-    );
+        </DenseTableWithPadding>;
 };
 
 export default DemandPredictionTable;
