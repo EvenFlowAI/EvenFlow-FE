@@ -7,23 +7,15 @@ import {setConsentOpen} from "../../../../store/reducers/modals/actions";
 import {useTranslation} from "react-i18next";
 import {
     setAcceptedConsentIds,
-    setCurrentFrameScreen,
-    setWelcomeScreenView
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {TCallback} from "../../../../types/types";
 import Consent from "./Consent/Consent";
-import {Routes} from "../../../../routes/constants";
-import {useHistory, useParams} from "react-router-dom";
 
 const CustomerConsents: React.FC<{onNext: TCallback, onPrev?: TCallback}> = ({onNext, onPrev}) => {
     const {isConsentOpen} = useSelector((state: RootState) => state.modals);
     const {isConsentsLoading, consents, isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData} = useSelector((state: RootState) => state.appointment)
-    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes)
     const dispatch = useDispatch();
     const {t} = useTranslation();
-    const history = useHistory();
-    const {id} = useParams<{id: string}>();
 
     const onClose = () => dispatch(setConsentOpen(false));
 
@@ -35,17 +27,6 @@ const CustomerConsents: React.FC<{onNext: TCallback, onPrev?: TCallback}> = ({on
 
     const onChange = () => {
         onClose()
-        // if (customerLoadedData?.isUpdating) {
-        //     dispatch(setCurrentFrameScreen('manageAppointment'))
-        // } else {
-        //     if (firstScreenOptions.length) {
-        //         dispatch(setWelcomeScreenView('serviceSelect'));
-        //         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
-        //     } else {
-        //         dispatch(setCurrentFrameScreen('serviceNeeds'))
-        //         history.push(Routes.EndUser.AppointmentFrame.replace(":id", id));
-        //     }
-        // }
         onPrev && onPrev()
     }
 
