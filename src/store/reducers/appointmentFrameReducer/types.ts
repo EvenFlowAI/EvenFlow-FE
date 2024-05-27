@@ -197,7 +197,7 @@ export type TDriverForRequest = {
     fullName: string;
     phoneNumber: string;
     city?: string;
-    email: string|null
+    email: string|null;
 }
 
 export type TVehicleForRequest = {
