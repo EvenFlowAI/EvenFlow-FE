@@ -207,6 +207,7 @@ const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boo
             customerId: currentAppointment.customerId,
             serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
             recalls: mapRecallsForRequest(selectedRecalls),
+            appointmentHashKey: currentAppointment.hashKey,
         }
         if (currentAppointment.address?.zipCode) data.zipCode = currentAppointment.address?.zipCode;
         if (currentAppointment.address) {

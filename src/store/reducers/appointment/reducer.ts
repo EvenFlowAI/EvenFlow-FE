@@ -25,7 +25,7 @@ import {
     setLoadedReducer,
     setOldAppointmentId,
     setProfileLoading,
-    setSessionId, setSlotPodId,
+    setSessionId, setSlotPodId, setSlotsLoading,
     setWaitListSettings
 } from "./actions";
 import {setPackage} from "../appointmentFrameReducer/actions";
@@ -62,6 +62,7 @@ const initialState: TAppointmentState = {
     appointment: null,
     serviceValetAppointment: null,
     appointmentSlots: [],
+    isAppointmentSlotsLoading: false,
     serviceValetSlots: [],
     appointmentFilters: {
         offersOnly: false,
@@ -196,5 +197,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     })
     .addCase(setSlotPodId, (state, {payload}) => {
         return {...state, slotPodId: payload};
+    })
+    .addCase(setSlotsLoading, (state, {payload}) => {
+        return {...state, isAppointmentSlotsLoading: payload};
     })
 );

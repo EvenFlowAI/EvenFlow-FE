@@ -241,6 +241,7 @@ export interface ICreateAppointmentRequest {
     address: IAddressData|null;
     isWaitlist: boolean;
     customerConsentIds: number[];
+    isAppointmentClone?: boolean;
 }
 
 export interface ISearchConsentsData {
