@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {DenseTableWithPadding} from "../../../components/styled/DemandTable";
 import {Radio, Switch, TableBody, TableHead, TableRow} from "@mui/material";
 import {
@@ -6,89 +6,41 @@ import {
     RadioGroupStyled,
     StyledTableCell,
     SubCellGrey,
-    SubCellWhite, SwitchWrapperGrey,
+    SubCellWhite,
+    SwitchWrapperGrey,
     SwitchWrapperWhite
 } from "./styles";
-import {EDemandPredictionType, EPredictedDemandMethod, ERequestDemandMethod, IDemandPrediction} from "./types";
-import {ReactComponent as CheckIcon} from '../../../assets/img/checkboxSmall.svg'
-import {ReactComponent as RedCross} from '../../../assets/img/redCross.svg'
-import LabelLink from "./LabelLink/LabelLink";
+import {EDemandPredictionType, ERequestDemandMethod} from "../../../store/reducers/demandManagement/types";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {loadDemandManagementSettings} from "../../../store/reducers/demandManagement/actions";
+import {DemandPredictedCell} from "./DemandPredictedCell/DemandPredictedCell";
 
-const mockData: IDemandPrediction[] = [
-    {
-        serviceBookName: 'Service Book Name',
-        requestDemandMethod: ERequestDemandMethod.AppointmentSlots,
-        predictedDemandMethod:  {
-            type: EPredictedDemandMethod.Predicted,
-            configured: true,
-        },
-        demandActivity: [
-            {
-                type: EDemandPredictionType.EvenFlowAppointments,
-                isRequestOn: true,
-                isPredictionOn: false,
-            }, {
-                type: EDemandPredictionType.ExEvenFlowAppointments,
-                isRequestOn: false,
-                isPredictionOn: true,
-            }, {
-                type: EDemandPredictionType.OpenROs,
-                isRequestOn: false,
-                isPredictionOn: true,
-            },
-        ]
-    },
-    {
-        serviceBookName: 'Express',
-        requestDemandMethod: ERequestDemandMethod.ScheduledHours,
-        predictedDemandMethod:  {
-            type: EPredictedDemandMethod.Probability,
-            configured: false,
-        },
-        demandActivity: [
-            {
-                type: EDemandPredictionType.EvenFlowAppointments,
-                isRequestOn: false,
-                isPredictionOn: true,
-            }, {
-                type: EDemandPredictionType.ExEvenFlowAppointments,
-                isRequestOn: true,
-                isPredictionOn: false,
-            }, {
-                type: EDemandPredictionType.OpenROs,
-                isRequestOn: true,
-                isPredictionOn: false,
-            },
-        ]
-    }
-]
 
 const DemandPredictionTable = () => {
+    const {isLoading, settings} = useSelector((state: RootState) => state.demandManagement);
+    const {selectedSC} = useSCs();
+    const dispatch = useDispatch();
 
-    const handleChangeRequestDemandMethod = (idOrName: number|string) =>  (e: React.ChangeEvent<HTMLInputElement>) => {
-        // todo request
+    useEffect(() => {
+       selectedSC && dispatch(loadDemandManagementSettings(selectedSC.id))
+    }, [selectedSC])
 
-    }
-
-    const handleChangePredictedDemandMethod = (idOrName: number|string) =>  (e: React.ChangeEvent<HTMLInputElement>) => {
-        // todo request
-    }
 
     const handleSwitch = (idOrName: number|string, type: EDemandPredictionType, requestType: "request"|"prediction") => async (e: any, value: boolean) => {
         // todo request
     }
 
-    const onPredictedClick = () => {
-    }
+    const handleChangeRequestDemandMethod = (idOrName: number|string) =>  (e: React.ChangeEvent<HTMLInputElement>) => {
+        // todo request
 
-    const onProbabilityClick = () => {
     }
-
     return (
         <DenseTableWithPadding>
             <TableHead>
                 <TableRow>
-                    <StyledTableCell key="serviceBook" style={{textTransform: 'capitalize'}}>
+                    <StyledTableCell key="serviceBook" style={{textTransform: 'capitalize'}} width={145}>
                         Service Book
                     </StyledTableCell>
                     <StyledTableCell key="Request" style={{textTransform: 'capitalize'}}>
@@ -109,17 +61,17 @@ const DemandPredictionTable = () => {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {mockData.map(item => {
-                    return  <TableRow key={item.serviceBookId ?? item.serviceBookName}>
+                {settings.map(item => {
+                    return  <TableRow key={item.podId ?? item.serviceBookName}>
                         <StyledTableCell
-                            key={item.serviceBookId ?? item.serviceBookName}>
+                            key={item.podId ?? item.serviceBookName}>
                             {item.serviceBookName}
                         </StyledTableCell>
                         <StyledTableCell
                             key="requestDemandMethod" align="left">
                                 <RadioGroupStyled
                                     value={item.requestDemandMethod}
-                                    onChange={handleChangeRequestDemandMethod(item.serviceBookId ?? item.serviceBookName)}
+                                    onChange={handleChangeRequestDemandMethod(item.podId ?? item.serviceBookName)}
                                     aria-labelledby="demo-controlled-radio-buttons-group"
                                     name="controlled-radio-buttons-group">
                                     <RadioBtn
@@ -132,34 +84,7 @@ const DemandPredictionTable = () => {
                                         label="Scheduled Hours" />
                                 </RadioGroupStyled>
                         </StyledTableCell>
-                        <StyledTableCell key="predictedDemandMethod" align="left">
-                            <RadioGroupStyled
-                                value={item.predictedDemandMethod.type}
-                                onChange={handleChangePredictedDemandMethod(item.serviceBookId ?? item.serviceBookName)}
-                                aria-labelledby="demo-controlled-radio-buttons-group"
-                                name="controlled-radio-buttons-group">
-                                <RadioBtn
-                                    value={EPredictedDemandMethod.Predicted}
-                                    control={<Radio color="primary" size="small"/>}
-                                    label={<LabelLink
-                                        text="Predicted"
-                                        subText="Configured"
-                                        icon={<CheckIcon/>}
-                                        color="#7898FF"
-                                        onClick={onPredictedClick}/>}
-                                    />
-                                <RadioBtn
-                                    value={EPredictedDemandMethod.Probability}
-                                    control={<Radio color="primary" size="small"/>}
-                                    label={<LabelLink
-                                        text="Probability"
-                                        subText="Not Configured"
-                                        color="#C71062"
-                                        icon={<RedCross/>}
-                                        onClick={onProbabilityClick}/>}
-                                />
-                            </RadioGroupStyled>
-                        </StyledTableCell>
+                        <DemandPredictedCell item={item}/>
                         <StyledTableCell key="evenflowAppontments" style={{padding: 0}} width={230}>
                             <SubCellWhite key="evenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 EvenFlow Appointments
@@ -172,22 +97,22 @@ const DemandPredictionTable = () => {
                         <StyledTableCell key="requestDemandStatus" style={{padding: 0}} width={146}>
                             <SwitchWrapperWhite key="evenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 <Switch
-                                    onChange={handleSwitch(item.serviceBookId ?? item.serviceBookName, EDemandPredictionType.EvenFlowAppointments, "request")}
-                                    checked={Boolean(item.demandActivity.find(el => el.type === EDemandPredictionType.EvenFlowAppointments)?.isRequestOn)}
+                                    onChange={handleSwitch(item.podId ?? item.serviceBookName, EDemandPredictionType.EvenFlowAppointments, "request")}
+                                    checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.EvenFlowAppointments)?.isRequestStatusOn)}
                                     color="primary"
                                 />
                             </SwitchWrapperWhite>
                             <SwitchWrapperGrey key="ExEvenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 <Switch
-                                    onChange={handleSwitch(item.serviceBookId ?? item.serviceBookName, EDemandPredictionType.ExEvenFlowAppointments, "request")}
-                                    checked={Boolean(item.demandActivity.find(el => el.type === EDemandPredictionType.ExEvenFlowAppointments)?.isRequestOn)}
+                                    onChange={handleSwitch(item.podId ?? item.serviceBookName, EDemandPredictionType.ExEvenFlowAppointments, "request")}
+                                    checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.ExEvenFlowAppointments)?.isRequestStatusOn)}
                                     color="primary"
                                 />
                             </SwitchWrapperGrey>
                             <SwitchWrapperWhite key="ROs">
                                 <Switch
-                                    onChange={handleSwitch(item.serviceBookId ?? item.serviceBookName, EDemandPredictionType.OpenROs, "request")}
-                                    checked={Boolean(item.demandActivity.find(el => el.type === EDemandPredictionType.OpenROs)?.isRequestOn)}
+                                    onChange={handleSwitch(item.podId ?? item.serviceBookName, EDemandPredictionType.OpenROs, "request")}
+                                    checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.OpenROs)?.isRequestStatusOn)}
                                     color="primary"
                                 />
                             </SwitchWrapperWhite>
@@ -195,22 +120,22 @@ const DemandPredictionTable = () => {
                         <StyledTableCell key="predictionDemandStatus" style={{padding: 0}} width={146}>
                             <SwitchWrapperWhite key="evenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 <Switch
-                                    onChange={handleSwitch(item.serviceBookId ?? item.serviceBookName, EDemandPredictionType.EvenFlowAppointments, "prediction")}
-                                    checked={Boolean(item.demandActivity.find(el => el.type === EDemandPredictionType.EvenFlowAppointments)?.isPredictionOn)}
+                                    onChange={handleSwitch(item.podId ?? item.serviceBookName, EDemandPredictionType.EvenFlowAppointments, "prediction")}
+                                    checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.EvenFlowAppointments)?.isPredictedStatusOn)}
                                     color="primary"
                                 />
                             </SwitchWrapperWhite>
                             <SwitchWrapperGrey key="ExEvenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 <Switch
-                                    onChange={handleSwitch(item.serviceBookId ?? item.serviceBookName, EDemandPredictionType.ExEvenFlowAppointments, "prediction")}
-                                    checked={Boolean(item.demandActivity.find(el => el.type === EDemandPredictionType.ExEvenFlowAppointments)?.isPredictionOn)}
+                                    onChange={handleSwitch(item.podId ?? item.serviceBookName, EDemandPredictionType.ExEvenFlowAppointments, "prediction")}
+                                    checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.ExEvenFlowAppointments)?.isPredictedStatusOn)}
                                     color="primary"
                                 />
                             </SwitchWrapperGrey>
                             <SwitchWrapperWhite key="ROs">
                                 <Switch
-                                    onChange={handleSwitch(item.serviceBookId ?? item.serviceBookName, EDemandPredictionType.OpenROs, "prediction")}
-                                    checked={Boolean(item.demandActivity.find(el => el.type === EDemandPredictionType.OpenROs)?.isPredictionOn)}
+                                    onChange={handleSwitch(item.podId ?? item.serviceBookName, EDemandPredictionType.OpenROs, "prediction")}
+                                    checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.OpenROs)?.isPredictedStatusOn)}
                                     color="primary"
                                 />
                             </SwitchWrapperWhite>
