@@ -6,22 +6,22 @@ import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleC
 import {ServiceRequests} from "../../../features/admin/ServiceRequests/ServiceRequests";
 import {MaintenancePackages} from "../../../features/admin/MaintenancePackages/MaintenancePackages";
 import {ComplimentaryServices} from "../../../features/admin/ComplimentaryServices/ComplimentaryServices";
-import {setServiceRequestsPageActiveTab} from "../../../store/reducers/serviceRequests/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {IntervalUpsell} from "../../../features/admin/IntervallUpsell/IntervalUpsell";
 import {servicesRoot} from "../../../utils/constants";
 import RecallParts from "../../../features/admin/RecallsParts/RecallParts";
+import {setVehicleServicesTab} from "../../../store/reducers/adminPanel/actions";
 
 export const VehicleServices = () => {
-    const {srPageActiveTab} = useSelector((state: RootState) => state.serviceRequests);
+    const {vehicleServicesTab} = useSelector((state: RootState) => state.adminPanel);
     const dispatch = useDispatch();
 
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
-        dispatch(setServiceRequestsPageActiveTab(tab))
+        dispatch(setVehicleServicesTab(tab))
     }
 
-    return <TabContext value={srPageActiveTab}>
+    return <TabContext value={vehicleServicesTab}>
         <TitleContainer title="Vehicle Services" pad parent={servicesRoot}/>
         <TabList
             onChange={handleTabChange}

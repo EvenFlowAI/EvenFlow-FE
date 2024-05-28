@@ -19,6 +19,7 @@ export const colors: PaletteOptions = {
     },
     info: {
         main: '#202021',
-    }
+    },
+    divider: "#DADADA"
 };
 
