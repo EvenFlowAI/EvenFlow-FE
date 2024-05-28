@@ -13,6 +13,7 @@ import {EditEmailRequirementModal} from "./EditEmailRequirementModal/EditEmailRe
 import {CustomerConsentsModal} from "./CustomerConsentsModal/CustomerConsentsModal";
 import {loadRange} from "../../../store/reducers/slotScoring/actions";
 import PriceDisplayModal from "./PriceDisplayModal/PriceDisplayModal";
+import {loadRoundPriceSetting} from "../../../store/reducers/pricingSettings/actions";
 
 export const ScreenSettings = () => {
     const {
@@ -32,6 +33,7 @@ export const ScreenSettings = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadEmailRequirement(selectedSC.id))
+            dispatch(loadRoundPriceSetting(selectedSC.id))
         }
     }, [selectedSC])
 

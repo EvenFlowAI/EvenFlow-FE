@@ -2,8 +2,8 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {StepWrapper} from '../../../../components/styled/StepWrapper';
 import {ActionButtons} from '../../ActionButtons/ActionButtons';
 import {SelectedAppointment} from "./SelectedAppointment/SelectedAppointment";
-import {AppointmentDateSelector} from "./AppointmentDateSelector/AppointmentDateSelector";
-import {AppointmentTimeSelector} from "./AppointmentTimeSelector/AppointmentTimeSelector";
+import {AppointmentDateSelector} from "../../../../components/bookingDateTime/AppointmentDateSelector/AppointmentDateSelector";
+import {AppointmentTimeSelector} from "../../../../components/bookingDateTime/AppointmentTimeSelector/AppointmentTimeSelector";
 import {useHistory, useParams} from "react-router-dom";
 import {collectServiceRequestIds, decodeSCID, mapRecallsForRequest} from "../../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
@@ -24,8 +24,8 @@ import ReactGA from "react-ga4";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {TArgCallback, TParsableDate, TScreen} from "../../../../types/types";
-import {SVAppointmentDateSelector} from "./SVAppointmentDateSelector/SVAppointmentDateSelector";
-import {SVAppointmentTimeSelector} from "./SVAppointmentTimeSelector/SVAppointmentTimeSelector";
+import {SVAppointmentDateSelector} from "../../../../components/bookingDateTime/SVAppointmentDateSelector/SVAppointmentDateSelector";
+import {SVAppointmentTimeSelector} from "../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
     clearAppointmentSteps, searchForCustomerConsents,
     setServiceTypeOption,
@@ -34,7 +34,7 @@ import {
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions";
-import {Wrapper} from "./styles";
+import {SlotsScreenWrapper} from "./styles";
 import {groupAppointments} from "./utils";
 import {Routes} from "../../../../routes/constants";
 import dayjs from "dayjs";
@@ -338,7 +338,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
 
     return (
         <StepWrapper>
-            <Wrapper>
+            <SlotsScreenWrapper>
                 <SelectedAppointment />
                 <ActionButtons
                     onBack={handleBack}
@@ -373,7 +373,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                         }
                         date={date}
                         loading={loading || isConsentsLoading}/>}
-            </Wrapper>
+            </SlotsScreenWrapper>
             <CustomerConsents onNext={handleConsents}/>
         </StepWrapper>
     );

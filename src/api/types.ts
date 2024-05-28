@@ -134,6 +134,7 @@ export interface IDriverInfo {
     phoneNumber: string;
     email: string;
     city?: string;
+    id?: number;
 }
 
 export enum AppointmentStatus {
@@ -332,6 +333,7 @@ export interface ICustomer {
     phoneNumber: string;
     email: string;
     city?: string;
+    id?: number;
 }
 
 export interface ITransportation {
@@ -556,7 +558,7 @@ export const reportingStatuses: TEnumKeyLabel<EReportingStatus> = {
     [EReportingStatus.NoShowed]: "No Showed",
     [EReportingStatus.WaitlistActive]: "Waitlist Active",
     [EReportingStatus.WaitlistRescheduled]: "Waitlist Rescheduled",
-    [EReportingStatus.WaitlistCancelled]: "Waitlist Cancelled",
+    [EReportingStatus.WaitlistCancelled]: "Waitlist Canceled",
     [EReportingStatus.WaitlistShowed]: "Waitlist Showed",
     [EReportingStatus.WaitlistWalkInWithAppointment]: "Waitlist Walk In With Appointment",
     [EReportingStatus.WaitlistNoShowed]: "Waitlist No Showed",

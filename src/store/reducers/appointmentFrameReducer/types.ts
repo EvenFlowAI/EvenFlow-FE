@@ -197,7 +197,7 @@ export type TDriverForRequest = {
     fullName: string;
     phoneNumber: string;
     city?: string;
-    email: string|null
+    email: string|null;
 }
 
 export type TVehicleForRequest = {
@@ -214,7 +214,7 @@ export type TVehicleForRequest = {
 export interface ICreateAppointmentRequest {
     id?: number;
     appointmentTimingType: EAppointmentTimingType;
-    customerId: string|null;
+    customerId: string|number|null;
     comment: string;
     driver: TDriverForRequest;
     vehicle: TVehicleForRequest;
@@ -241,6 +241,7 @@ export interface ICreateAppointmentRequest {
     address: IAddressData|null;
     isWaitlist: boolean;
     customerConsentIds: number[];
+    isAppointmentClone?: boolean;
 }
 
 export interface ISearchConsentsData {

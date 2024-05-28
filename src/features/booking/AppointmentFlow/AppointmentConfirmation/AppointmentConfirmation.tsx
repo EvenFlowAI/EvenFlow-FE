@@ -26,6 +26,8 @@ import {Wrapper} from "./styles";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
+import CommentModal from "../../../../components/modals/booking/CommentModal/CommentModal";
+import OpenModalLink from "../../../../components/wrappers/OpenModalLink/OpenModalLink";
 
 type TProps = {
     onChangeSlot: TCallback;
@@ -50,6 +52,7 @@ export const AppointmentConfirmation: React.FC<React.PropsWithChildren<React.Pro
     const {id} = useParams<{id: string}>();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
+    const {isOpen: isCommentOpen, onClose: onCommentClose, onOpen: onCommentOpen} = useModal();
 
     const showError = useException();
     const dispatch = useDispatch();
@@ -121,16 +124,12 @@ export const AppointmentConfirmation: React.FC<React.PropsWithChildren<React.Pro
                 <ServiceRequests/>
                 <Address/>
                 <SelectedPrice/>
-                <div
-                    role="presentation"
-                    style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
-                    onClick={onFeesOpen}>
-                    {t("View itemized fees of services")}
-                </div>
+                <OpenModalLink onClick={onFeesOpen} text={t("View itemized fees of services")}/>
                 <ServiceType/>
                 {transportation || serviceTypeOption?.transportationOption || isAdvisorAvailable
                     ? <Review/>
                     : null}
+                <OpenModalLink onClick={onCommentOpen} text={t("View Appointment Comments")}/>
             </div>
             <div>
                 <AppointmentUserData errors={errors} setErrors={setErrors} isEmailRequired={isEmailRequired}/>
@@ -141,6 +140,7 @@ export const AppointmentConfirmation: React.FC<React.PropsWithChildren<React.Pro
         {/*todo change to open payment window on next*/}
         <ActionButtons loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
         <DetailedFees open={isFeesOpen} onClose={onFeesClose}/>
+        <CommentModal open={isCommentOpen} onClose={onCommentClose}/>
         <PaymentTypeModal open={isPaymentOpen} onClose={onPaymentClose} onNo={handleCreateAppointment}/>
     </StepWrapper>
 };

@@ -38,8 +38,8 @@ const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChil
             </TableRow>
         </TableHead>
         <TableBody>
-            {slots.map(item => {
-                return <TableRow key={dayjs().toISOString() + item.start} className={classes.row}>
+            {slots.map((item, index) => {
+                return <TableRow key={dayjs().toISOString() + index} className={classes.row}>
                     <TableCell key={item.start} align="center" className={classes.cell}>{dayjs.utc(item.start, timeSpanString).format(time12HourFormat)}</TableCell>
                     <TableCell key={item.end} align="center" className={classes.cell}>{dayjs.utc(item.end, timeSpanString).format(time12HourFormat)}</TableCell>
                     <TableCell className={classes.cell} align="center">

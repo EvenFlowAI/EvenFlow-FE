@@ -1,6 +1,6 @@
 import {styled} from "@mui/material";
 
-export const Wrapper = styled('div')(({theme}) => ({
+export const SlotsScreenWrapper = styled('div')(({theme}) => ({
         display: "flex",
         flexDirection: "column",
         width: "100%",
@@ -19,7 +19,10 @@ export const Wrapper = styled('div')(({theme}) => ({
                 padding: 0,
                 fontWeight: "bold",
                 textTransform: "uppercase",
+            },
+            "& > button": {
+                borderRadius: 0
             }
-        }
+        },
     })
 );

@@ -100,6 +100,8 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
     }
 
     const onSuccess = () => {
+        setEmployeeForm(initialEmployeeForm);
+        setFormIsChecked(false);
         showMessage(`Employee ${isEdit ? "updated" : "created"}`);
         props.onClose();
     }
@@ -150,8 +152,6 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
                         await dispatch(createEmployee(data as IEmployeeForm, onSuccess, showError, avatar));
                     }
                 }
-                setEmployeeForm(initialEmployeeForm);
-                setFormIsChecked(false);
                 if (onAction) {
                     onAction();
                 }

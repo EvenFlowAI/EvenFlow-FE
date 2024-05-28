@@ -52,6 +52,7 @@ export interface IVehicleData {
     mileage: number;
     engineTypeId?: number;
     makeId?: number;
+    dmsId?: string;
 }
 
 export interface IVehicleShort {
@@ -212,6 +213,7 @@ export type TAppointmentState = {
     appointmentWasChanged: boolean;
     waitListSettings: IWaitListData|null;
     slotPodId: number|null;
+    isAppointmentSlotsLoading: boolean;
 };
 
 export enum EReminderType {

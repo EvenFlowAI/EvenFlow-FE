@@ -55,6 +55,8 @@ import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../../routes/constants";
 import dayjs from "dayjs";
 import CustomerConsents from "../../../../components/modals/booking/CustomerConsents/CustomerConsents";
+import OpenModalLink from "../../../../components/wrappers/OpenModalLink/OpenModalLink";
+import CommentModal from "../../../../components/modals/booking/CommentModal/CommentModal";
 
 type TProps = {
     onChangeSlot: TCallback;
@@ -87,6 +89,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
     const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
     const {isOpen: isCancelConfirmOpen, onClose: onCancelConfirmClose, onOpen: onCancelConfirmOpen} = useModal();
+    const {isOpen: isCommentOpen, onClose: onCommentClose, onOpen: onCommentOpen} = useModal();
 
     const showError = useException();
     const dispatch = useDispatch();
@@ -262,16 +265,12 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                         {isLoading ? <Loading/> : <ServiceRequestsManaging/>}
                         <AddressManaging/>
                         <SelectedPriceManaging/>
-                        <div
-                            role="presentation"
-                            style={{ fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer', fontSize: 15 }}
-                            onClick={onFeesOpen}>
-                            {t("View itemized fees of services")}
-                        </div>
+                        <OpenModalLink onClick={onFeesOpen} text={t("View itemized fees of services")}/>
                         <ServiceTypeManaging/>
                         {transportation || serviceTypeOption?.transportationOption || isAdvisorAvailable
                             ? <ReviewManaging/>
                             : null}
+                        <OpenModalLink onClick={onCommentOpen} text={t("View Appointment Comments")}/>
                     </div>
                     <div>
                         <AppointmentUserData errors={errors} setErrors={setErrors} isEmailRequired={isEmailRequired}/>
@@ -306,6 +305,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
 
         <DetailedFeesManage open={isFeesOpen} onClose={onFeesClose}/>
         <PaymentTypeModal open={isPaymentOpen} onClose={onPaymentClose} onNo={searchForConsents}/>
+        <CommentModal open={isCommentOpen} onClose={onCommentClose}/>
         <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
         <CustomerConsents onNext={handleCreateAppointment}/>
     </StepWrapper>

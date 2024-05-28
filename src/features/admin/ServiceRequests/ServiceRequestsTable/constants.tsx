@@ -33,7 +33,7 @@ export const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
         width: 95,
     },
     {
-        header: "Parts Price",
+        header: "Parts Amount",
         val: el => <ServiceRequestCellData
             prefix="$"
             data={el.serviceRequest.partsUnitCost?.toFixed(2)}
