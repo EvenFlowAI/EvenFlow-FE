@@ -73,7 +73,7 @@ const DemandPredictionTable = () => {
         : <DenseTableWithPadding>
             <TableHead>
                 <TableRow>
-                    <StyledTableCell key="serviceBook" style={{textTransform: 'capitalize'}} width={145}>
+                    <StyledTableCell key="serviceBook" style={{textTransform: 'capitalize'}} width={205}>
                         Service Book
                     </StyledTableCell>
                     <StyledTableCell key="Request" style={{textTransform: 'capitalize'}}>
@@ -117,13 +117,15 @@ const DemandPredictionTable = () => {
                                         label="Scheduled Hours" />
                                 </RadioGroupStyled>
                         </StyledTableCell>
+
                         <DemandPredictedCell item={item}/>
-                        <StyledTableCell key="evenflowAppontments" style={{padding: 0}} width={230}>
+
+                        <StyledTableCell key="evenflowAppontments" style={{padding: 0}} width={124}>
                             <SubCellWhite key="evenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
-                                EvenFlow Appointments
+                                EvenFlow
                             </SubCellWhite>
                             <SubCellGrey key="ExEvenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
-                                Ex EvenFlow Appointments
+                                Ex EvenFlow
                             </SubCellGrey>
                             <SubCellWhite key="ROs">Open ROs</SubCellWhite>
                         </StyledTableCell>

@@ -9,4 +9,5 @@ export const SubLabel = styled("div", {
     color,
     fontSize: 14,
     fontWeight: 400,
+    cursor: 'pointer'
 }))

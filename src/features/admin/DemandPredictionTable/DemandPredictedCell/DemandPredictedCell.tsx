@@ -9,11 +9,16 @@ import {useDispatch, useSelector} from "react-redux";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {RootState} from "../../../../store/rootReducer";
 import {updateDemandManagementSettings} from "../../../../store/reducers/demandManagement/actions";
+import {LinksWrapper} from "./styles";
+import {setAllocationTab} from "../../../../store/reducers/adminPanel/actions";
+import {useHistory} from "react-router-dom";
+import {Routes} from "../../../../routes/constants";
 
 export const DemandPredictedCell: React.FC<{ item: IDemandPrediction }> = ({item}) => {
     const {settings} = useSelector((state: RootState) => state.demandManagement);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
+    const history = useHistory();
 
     const predictedMethod = item.predictedDemandMethodSettings
         ?.find(el => el.method === EPredictedDemandMethod.Predicted);
@@ -21,7 +26,8 @@ export const DemandPredictedCell: React.FC<{ item: IDemandPrediction }> = ({item
         ?.find(el => el.method === EPredictedDemandMethod.Probability);
 
     const onPredictedClick = () => {
-
+        dispatch(setAllocationTab("1"));
+        history.push(Routes.CapacityManagement.AppointmentAllocation);
     }
 
     const onProbabilityClick = () => {
@@ -40,32 +46,39 @@ export const DemandPredictedCell: React.FC<{ item: IDemandPrediction }> = ({item
         }
     }
 
-    return <StyledTableCell key="predictedDemandMethod" align="left">
-        <RadioGroupStyled
-            value={item.predictedDemandMethod}
-            onChange={handleChangePredictedDemandMethod(item.podId)}
-            aria-labelledby="demo-controlled-radio-buttons-group"
-            name="controlled-radio-buttons-group">
+    return <StyledTableCell key="predictedDemandMethod" align="left" width={300}>
+        <span style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24}}>
+            <RadioGroupStyled
+                value={item.predictedDemandMethod}
+                onChange={handleChangePredictedDemandMethod(item.podId)}
+                aria-labelledby="demo-controlled-radio-buttons-group"
+                name="controlled-radio-buttons-group">
             <RadioBtn
                 value={EPredictedDemandMethod.Predicted}
                 control={<Radio color="primary" size="small"/>}
-                label={<LabelLink
-                    text="Predicted"
-                    subText={predictedMethod?.isConfigured ? "Configured" : "Not Configured"}
-                    icon={predictedMethod?.isConfigured ? <CheckIcon/> : <RedCross/>}
-                    color={predictedMethod?.isConfigured ? "#7898FF" : "#C71062"}
-                    onClick={onPredictedClick}/>}
+                label="Predicted"
             />
             <RadioBtn
                 value={EPredictedDemandMethod.Probability}
                 control={<Radio color="primary" size="small"/>}
-                label={<LabelLink
+                label="Probability"
+            />
+        </RadioGroupStyled>
+            <LinksWrapper>
+                <LabelLink
+                     text="Predicted"
+                     subText={predictedMethod?.isConfigured ? "Configured" : "Not Configured"}
+                     icon={predictedMethod?.isConfigured ? <CheckIcon/> : <RedCross/>}
+                     color={predictedMethod?.isConfigured ? "#7898FF" : "#C71062"}
+                     onClick={onPredictedClick}/>
+                <LabelLink
                     text="Probability"
                     subText={probabilityMethod?.isConfigured ? "Configured" : "Not Configured"}
                     color={probabilityMethod?.isConfigured ? "#7898FF" : "#C71062"}
                     icon={probabilityMethod?.isConfigured ? <CheckIcon/> : <RedCross/>}
-                    onClick={onProbabilityClick}/>}
-            />
-        </RadioGroupStyled>
+                    onClick={onProbabilityClick}/>
+            </LinksWrapper>
+        </span>
+
     </StyledTableCell>
 }

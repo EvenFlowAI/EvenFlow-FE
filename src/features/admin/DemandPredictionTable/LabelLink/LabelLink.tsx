@@ -1,4 +1,4 @@
-import React, {MouseEventHandler, ReactElement} from 'react';
+import React, {ReactElement} from 'react';
 import {TCallback} from "../../../../types/types";
 import {SubLabel} from "./styles";
 
@@ -18,13 +18,14 @@ const LabelLink: React.FC<TProps> = (props) => {
         props.onClick()
     }
     return (
-        <div>
-            <div>{props.text}</div>
-            <SubLabel color={props.color} role="presentation" onClick={onClick}>
-                <div>{props.icon}</div>
-                <div>{props.subText}</div>
-            </SubLabel>
-        </div>
+        <SubLabel color={props.color} role="presentation" onClick={onClick}>
+            <div>{props.icon}</div>
+            <div>{props.subText}</div>
+        </SubLabel>
+        // <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', gap: 24}}>
+        //     <div>{props.text}</div>
+        //
+        // </div>
     );
 };
 
