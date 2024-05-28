@@ -333,6 +333,7 @@ export interface ICustomer {
     phoneNumber: string;
     email: string;
     city?: string;
+    id?: number;
 }
 
 export interface ITransportation {
