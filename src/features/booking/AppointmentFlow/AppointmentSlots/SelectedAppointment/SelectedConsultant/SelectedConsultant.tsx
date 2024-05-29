@@ -11,7 +11,7 @@ import {RootState} from "../../../../../../store/rootReducer";
 import {EServiceCenterName} from "../../../../../../api/types";
 import {useSelectedAppointmentStyles} from "../../../../../../hooks/styling/useSelectedAppointmentStyles";
 
-const SelectedConsultant = () => {
+const SelectedConsultant: React.FC<{disabled?: boolean}> = ({disabled}) => {
     const { advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile } = useSelector((state: RootState) => state.appointment);
     const { currentConfig, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -42,7 +42,7 @@ const SelectedConsultant = () => {
                     className={classes.select}
                     variant="standard"
                     disableUnderline
-                    disabled={!!currentConfig && !consultants.length}
+                    disabled={disabled || (!!currentConfig && !consultants.length)}
                     onChange={handleConsultantChange}>`
                     {consultants
                         .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)

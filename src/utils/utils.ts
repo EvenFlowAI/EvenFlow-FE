@@ -2,9 +2,9 @@ import {IAddress} from "../store/reducers/dealershipGroups/types";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {PERMISSIONS} from "../permissions";
 import {matchPath} from "react-router-dom";
-import {ISR, TRecallForRequest} from "../store/reducers/appointment/types";
+import {IServiceCenterProfile, ISR, TRecallForRequest} from "../store/reducers/appointment/types";
 import {
-    EMaintenanceOptionType,
+    EMaintenanceOptionType, EServiceCenterName, IAppointmentByKey,
     ILoadedVehicle,
     IOfferForCategory,
     IPackageOptions,
@@ -375,6 +375,52 @@ export const getVehicleData = (selectedVehicle: ILoadedVehicle | null, valueServ
             ? String(valueService.year.year)
             : null;
     return [make, model, year];
+}
+
+export const getServicesForCloning = (
+    appointment: IAppointmentByKey|null,
+    scProfile: IServiceCenterProfile|undefined,
+    // packagePriceTitles: TPackagePrice[],
+) => {
+    const services: string[] = [];
+    if (appointment && scProfile) {
+        if (appointment.maintenancePackageOption) {
+            let name = '';
+            if (scProfile.serviceCenterFlag === EServiceCenterName.DealerBuilt
+                && scProfile.eMenuEnabled
+                && scProfile?.maintenancePackageOptionTypes?.length) {
+                const firstOption = scProfile?.maintenancePackageOptionTypes[0];
+                name = appointment.maintenancePackageOption.type === firstOption
+                    ? i18n.t("Factory Package")
+                    : i18n.t("Dealer Package");
+            } else {
+                name = `${appointment.maintenancePackageOption.name} ${i18n.t("package")}`;
+                // if (packagePriceTitles?.length) {
+                //     const price = packagePriceTitles
+                //         .find(item => item.type === appointment.maintenancePackageOption?.priceType);
+                //     if (price) name = name + ` (${price.title})`;
+                // }
+            }
+            services.push(name)
+        }
+        if (appointment.serviceRequests) {
+            appointment.serviceRequests.forEach(item => item && services.push(item.description));
+        }
+        if (appointment.serviceCategories) {
+            appointment.serviceCategories.forEach(item => {
+                if (item.name.includes("Going")) {
+                    services.push(i18n.t("My Description of Needs"))
+                } else {
+                    if (item.type === EServiceCategoryType.GeneralCategory) services.push(item.name)
+                }
+            });
+        }
+        if (appointment.recalls) {
+            appointment.recalls.forEach(el => services.push(el))
+        }
+    }
+
+    return services;
 }
 
 export const getMaintenanceDescription = (

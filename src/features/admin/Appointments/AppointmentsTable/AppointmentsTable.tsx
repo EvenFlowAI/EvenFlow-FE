@@ -5,7 +5,7 @@ import {IconButton, Menu, MenuItem} from "@mui/material";
 import {ViewAppointmentsModal} from "../ViewAppointmentsModal/ViewAppointmentsModal";
 import {API} from "../../../../api/api";
 import {MoreHoriz} from "@mui/icons-material";
-import {IOrder, IPageRequest} from "../../../../types/types";
+import {IOrder, IPageRequest, TCallback} from "../../../../types/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useModal} from "../../../../hooks/useModal/useModal";
@@ -19,7 +19,7 @@ import dayjs from "dayjs";
 import {AppointmentsColumns} from "../constants";
 
 type TAppointmentsTable = {
-    refresh: () => void;
+    refresh: TCallback;
     order: IOrder<IAppointment>;
     setOrder: React.Dispatch<React.SetStateAction<IOrder<IAppointment>>>
     onChangePage: (e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number) => void;
@@ -163,6 +163,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
             onEditAppointment={handleEditCallback}
             onCancelAppointment={handleCancelCallback}
             open={isOpen}
+            refresh={refresh}
             payload={viewItem}
             onClose={onClose} />
     </>

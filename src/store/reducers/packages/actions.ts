@@ -64,7 +64,7 @@ export const loadPackages = (serviceCenterId: number): AppThunk => async (dispat
             if (result?.data?.result) {
                 if (result?.data?.paging) {
                     dispatch(getPackagesPaging(result?.data?.paging))
-                    if (result.data.paging.numberOfPages < packagesPageData.pageIndex + 1) {
+                    if (result.data.paging.numberOfPages > 0 && result.data.paging.numberOfPages < packagesPageData.pageIndex + 1) {
                         dispatch(setPageData({...packagesPageData, pageIndex: result.data.paging.numberOfPages - 1}))
                     }
                 }

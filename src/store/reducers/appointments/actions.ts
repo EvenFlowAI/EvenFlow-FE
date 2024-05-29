@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IAppointment, IPackageAppointments, IVehicleForRequest} from "../../../api/types";
+import {IAppointment, IAppointmentByKey, IPackageAppointments, IVehicleForRequest} from "../../../api/types";
 import {
     EConsultantRole,
     IAppointmentsRequest,
@@ -11,11 +11,29 @@ import {
 import {AppThunk, IPageRequest, TArgCallback} from "../../../types/types";
 import {API} from "../../../api/api";
 import {EServiceType} from "../appointmentFrameReducer/types";
-import {EAppointmentTimingType} from "../appointment/types";
-import {setAppointmentSaving} from "../appointmentFrameReducer/actions";
+import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../appointment/types";
+import {
+    loadConsultantsForCloning,
+    setAppointmentSaving, setConsultants, setSelectedRecalls,
+    updateRecalls
+} from "../appointmentFrameReducer/actions";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../modals/actions";
-import {collectServiceRequestIds, getCategories, getVehicleData, mapRecallsForRequest} from "../../../utils/utils";
+import {
+    collectServiceRequestIds,
+    decodeSCID,
+    getCategories,
+    getVehicleData,
+    mapRecallsForRequest
+} from "../../../utils/utils";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import {
+    getAppointmentSlots,
+    getServiceValetSlots, loadAppointmentSlots, loadServiceValetSlots,
+    selectAppointment,
+    selectServiceValetAppointment
+} from "../appointment/actions";
+import {getRecallsByVin} from "../recall/actions";
+import dayjs from "dayjs";
 
 export const getAppointments = createAction<IAppointment[]>("Appointments/GetAppointments");
 export const getAllAppointments = createAction<IAppointment[]>("Appointments/GetAllAppointments");
@@ -29,6 +47,8 @@ export const getScheduler = createAction<TScheduler[]>("Appointments/GetSchedule
 export const getAppointmentsPageData = createAction<Partial<IPageRequest>>("Appointments/GetPageData");
 export const getAdvisorsList = createAction<TServiceConsultant[]>("Appointments/GetServiceAdvisors");
 export const getTechnicians = createAction<TServiceConsultant[]>("Appointments/GetTechnicians");
+export const getCurrentAppointment = createAction<IAppointmentByKey|null>("Appointments/getCurrentAppointment");
+export const setCurrentAppointmentLoading = createAction<boolean>("Appointments/SetCurrentAppointmentLoading");
 
 export const loadAppointments = (data: IAppointmentsRequest): AppThunk => dispatch => {
     dispatch(setAppointmentsLoading(true));
@@ -164,5 +184,79 @@ export const loadServiceConsultants = (serviceCenterId: number): AppThunk => dis
             console.log('load Service Consultants error', e)
         })
         .finally(() => dispatch(setAppointmentsLoading(false)))
+}
+
+const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boolean) => void ): AppThunk => (dispatch, getState) => {
+    const {selectedRecalls, consultants} = getState().appointmentFrame;
+    const {currentAppointment} = getState().appointments;
+    const utcOffset = dayjs().utcOffset()
+    const advisorId = consultants.find(item => item.id === currentAppointment?.advisor?.id)?.id;
+    if (currentAppointment) {
+        const data: IAppointmentSlotsRequest = {
+            appointmentTimingType: EAppointmentTimingType.FirstAvailable,
+            serviceCenterId,
+            advisorId: !currentAppointment?.advisor?.isAnySelected && advisorId ? advisorId : null,
+            fromDate:dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),
+            maintenancePackageOption: currentAppointment.maintenancePackageOption ?? null,
+            serviceRequestIds: currentAppointment.serviceRequests
+                ? currentAppointment.serviceRequests.map(el => el.id)
+                : [],
+            serviceCategoryIds: currentAppointment.serviceCategories
+                ? currentAppointment.serviceCategories.map(el => el.id)
+                : [],
+            customerId: currentAppointment.customerId,
+            serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
+            recalls: mapRecallsForRequest(selectedRecalls),
+            appointmentHashKey: currentAppointment.hashKey,
+        }
+        if (currentAppointment.address?.zipCode) data.zipCode = currentAppointment.address?.zipCode;
+        if (currentAppointment.address) {
+            data.address = currentAppointment.address.fullAddress
+        }
+        if (currentAppointment.vehicle) {
+            data.vehicle = {
+                vin: currentAppointment.vehicle.vin,
+                year: currentAppointment.vehicle.year,
+                make: currentAppointment.vehicle.make,
+                model: currentAppointment.vehicle.model,
+                mileage: currentAppointment.vehicle.mileage,
+                engineTypeId: currentAppointment.vehicle.engineTypeId,
+            }
+        }
+        if (currentAppointment.driver?.email) data.searchTerm = currentAppointment.driver?.email;
+        if (currentAppointment.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+            if (data.address && data.zipCode) dispatch(loadServiceValetSlots(data, () => {}, () => {}, onEmptyList));
+        } else {
+            dispatch(loadAppointmentSlots(data, () => {}, () => {}, onEmptyList));
+        }
+    }
+}
+
+export const loadAppointmentByKey = (key: string, serviceCenterId: string, cb: TArgCallback<boolean>): AppThunk => async dispatch => {
+    dispatch(setCurrentAppointmentLoading(true))
+    try {
+        const {data} = await API.appointment.getByKey(key);
+        if (data) {
+            dispatch(getCurrentAppointment(data));
+            dispatch(updateRecalls(data, serviceCenterId));
+            dispatch(loadConsultantsForCloning(
+                serviceCenterId,
+                data,
+                () => dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb))))
+        }
+    } catch {
+        dispatch(setCurrentAppointmentLoading(false))
+    }
+}
+
+export const clearAfterCloning = (): AppThunk => dispatch => {
+    dispatch(getCurrentAppointment(null))
+    dispatch(selectAppointment(null))
+    dispatch(selectServiceValetAppointment(null))
+    dispatch(setConsultants([]));
+    dispatch(getAppointmentSlots([]));
+    dispatch(getServiceValetSlots([]));
+    dispatch(getRecallsByVin([]))
+    dispatch(setSelectedRecalls([]))
 }
 

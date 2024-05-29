@@ -13,3 +13,19 @@ export const TextField = withStyles(TF, {
         }
     },
 });
+
+export const TextFieldWhite = withStyles(TF, {
+    root: {
+        "&::placeholder": {
+            textTransform: "uppercase"
+        },
+        "&>div": {
+            borderRadius: 2,
+            fontWeight: "bold",
+            backgroundColor: "#FFFFFF",
+            "& > textarea": {
+                backgroundColor: "#FFFFFF",
+            }
+        },
+    },
+});

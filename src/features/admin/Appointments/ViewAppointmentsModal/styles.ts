@@ -10,3 +10,10 @@ export const TitleWrapper = styled('div')({
     marginBottom: 24,
     fontSize: 14
 })
+
+export const LoaderWrapper = styled('div')({
+    height: 300,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: "center"
+})
