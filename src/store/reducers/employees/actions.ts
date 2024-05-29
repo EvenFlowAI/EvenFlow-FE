@@ -111,8 +111,12 @@ export const createEmployee = (payload: IEmployeeForm, onSuccess: () => void, on
 export const changePaging = changePagingGeneric("Employees/ChangePaging");
 
 export const removeEmployee = (id: string): AppThunk => async (dispatch) => {
-    await Api.call(Api.endpoints.Users.Remove, {urlParams: {id}});
-    dispatch(loadByFilters())
+    try {
+        await Api.call(Api.endpoints.Users.Remove, {urlParams: {id}});
+        dispatch(loadByFilters())
+    } catch (err) {
+        console.log('remove employee err', err)
+    }
 }
 export const updateEmployee = (data: IEmployeeForm, id: string, onSuccess: () => void, onError: (err: any) => void, avatar?: File): AppThunk => async dispatch => {
     dispatch(saving(true));
@@ -150,18 +154,26 @@ export const loadDealershipEmployees = (dealershipId: string, pageData: IPageReq
 export const getSCAdvisors = createAction<IAdvisorShort[]>("SCEmployees/GetAdvisors");
 export const getSCEmployees = createAction<IAdvisorShort[]>("SCEmployees/GetEmployees");
 export const loadSCAdvisors = (serviceCenterId: number): AppThunk => async dispatch => {
-    const {data: {result}} = await Api.call<PaginatedAPIResponse<IAdvisorShort>>(
-        Api.endpoints.Users.GetShort,
-        {data: {pageSize: 0, serviceCenterId, roles: [Roles.Advisor]}}
-    );
-    dispatch(getSCAdvisors(result));
+    try {
+        const {data: {result}} = await Api.call<PaginatedAPIResponse<IAdvisorShort>>(
+            Api.endpoints.Users.GetShort,
+            {data: {pageSize: 0, serviceCenterId, roles: [Roles.Advisor]}}
+        );
+        dispatch(getSCAdvisors(result));
+    } catch (err) {
+        console.log(err)
+    }
 }
 export const loadSCEmployees = (serviceCenterId: number): AppThunk => async dispatch => {
-    const {data: {result}} = await Api.call<PaginatedAPIResponse<IAdvisorShort>>(
-        Api.endpoints.Users.GetShort,
-        {data: {pageSize: 0, serviceCenterId, roles: [Roles.Technician]}}
-    );
-    dispatch(getSCEmployees(result));
+    try {
+        const {data: {result}} = await Api.call<PaginatedAPIResponse<IAdvisorShort>>(
+            Api.endpoints.Users.GetShort,
+            {data: {pageSize: 0, serviceCenterId, roles: [Roles.Technician]}}
+        );
+        dispatch(getSCEmployees(result));
+    } catch (err) {
+        console.log(err)
+    }
 }
 export const setEmplSearch = createAction<string>("SCEmployees/SetSearch");
 export const setEmplOrder = createAction<IOrder<IEmployee>>("SCEmployees/SetOrder")

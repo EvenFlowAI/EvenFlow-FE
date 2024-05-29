@@ -141,12 +141,16 @@ export const updateAssignedServiceRequest = (
 export const setRequiredSkills = (
     requiredData: IRequiredSkillData, serviceCenterId?: number
 ): AppThunk => async dispatch => {
-    const data: IRequiredSkillRequest = {
-        requiredSkills: [requiredData]
-    }
-    await Api.call(Api.endpoints.ServiceRequests.EditSkills, {data});
-    if (serviceCenterId) {
-        dispatch(loadAssignedServiceRequests(serviceCenterId));
+    try {
+        const data: IRequiredSkillRequest = {
+            requiredSkills: [requiredData]
+        }
+        await Api.call(Api.endpoints.ServiceRequests.EditSkills, {data});
+        if (serviceCenterId) {
+            dispatch(loadAssignedServiceRequests(serviceCenterId));
+        }
+    } catch (err) {
+        console.log(err)
     }
 }
 
@@ -178,12 +182,16 @@ export const setUrgentRequests = (ids: number[], serviceCenterId?: number, podId
         podId: podId,
         items: ids.map(id => ({id, priority: IServiceRequestPriority.Urgent}))
     }
-    await Api.call(
-        Api.endpoints.ServiceRequests.Prioritize, {data}
-    );
-    if (serviceCenterId) {
-        dispatch(loadNonUrgentServiceRequests(serviceCenterId, podId));
-        dispatch(loadUrgentServiceRequests(serviceCenterId, podId));
+    try {
+        await Api.call(
+            Api.endpoints.ServiceRequests.Prioritize, {data}
+        );
+        if (serviceCenterId) {
+            dispatch(loadNonUrgentServiceRequests(serviceCenterId, podId));
+            dispatch(loadUrgentServiceRequests(serviceCenterId, podId));
+        }
+    } catch (err) {
+        console.log(err)
     }
 }
 
@@ -213,11 +221,15 @@ async (dispatch, getState) => {
 
 export const getSCRequestsShort = createAction<IAssignedServiceRequestShort[]>("ServiceRequestsScreen/GetSCShort");
 export const loadSCRequestsShort = (serviceCenterId: number, pricingDisplayType?: EPricingDisplayType): AppThunk => async dispatch => {
-    const {data: {result}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequestShort>>(
-        Api.endpoints.ServiceRequests.GetShort,
-        {params: {serviceCenterId, pageSize: 0, pricingDisplayType}}
-    );
-    dispatch(getSCRequestsShort(result));
+    try {
+        const {data: {result}} = await Api.call<PaginatedAPIResponse<IAssignedServiceRequestShort>>(
+            Api.endpoints.ServiceRequests.GetShort,
+            {params: {serviceCenterId, pageSize: 0, pricingDisplayType}}
+        );
+        dispatch(getSCRequestsShort(result));
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 export const getUpsellServiceRequests = createAction<IUpsellServiceRequest[]>("ServiceRequestsScreen/GetIntervalUpsell");

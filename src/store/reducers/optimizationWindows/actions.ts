@@ -12,30 +12,42 @@ import dayjs from "dayjs";
 
 export const getOptimizationWindows = createAction<IOptimizationWindow[]>("OptimizationWindows/GetParams");
 export const loadOptimizationWindows = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
-    const {data} = await Api.call<IOptimizationWindow[]>(
-        Api.endpoints.OptimizationWindows.GetParams,
-        {params: {serviceCenterId, podId, day: dayjs().day()}}
-    );
-    dispatch(getOptimizationWindows(data));
+    try {
+        const {data} = await Api.call<IOptimizationWindow[]>(
+            Api.endpoints.OptimizationWindows.GetParams,
+            {params: {serviceCenterId, podId, day: dayjs().day()}}
+        );
+        dispatch(getOptimizationWindows(data));
+    } catch (err) {
+        console.log(err)
+    }
 }
 export const setOptimizationWindow = (
     type: EOptimizationWindowType, value: number, serviceCenterId: number, podId?: number
 ): AppThunk => async dispatch => {
-    await Api.call(
-        Api.endpoints.OptimizationWindows.SetParams,
-        {
-            data: {type, value, serviceCenterId, podId}
-        }
-    );
-    dispatch(loadOptimizationWindows(serviceCenterId, podId));
+    try {
+        await Api.call(
+            Api.endpoints.OptimizationWindows.SetParams,
+            {
+                data: {type, value, serviceCenterId, podId}
+            }
+        );
+        dispatch(loadOptimizationWindows(serviceCenterId, podId));
+    } catch (err) {
+        console.log(err)
+    }
 }
 export const getOverbookingFactor = createAction<IOverbookingFactor[]>("OptimizationWindows/GetOverbooking");
 export const loadOverbookingFactor = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
-    const {data} = await Api.call<IOverbookingFactor[]>(
-        Api.endpoints.OptimizationWindows.GetOverbooking,
-        {params: {serviceCenterId, podId}}
-    );
-    dispatch(getOverbookingFactor(data));
+   try {
+       const {data} = await Api.call<IOverbookingFactor[]>(
+           Api.endpoints.OptimizationWindows.GetOverbooking,
+           {params: {serviceCenterId, podId}}
+       );
+       dispatch(getOverbookingFactor(data));
+   } catch (err) {
+       console.log(err)
+   }
 }
 export const setOverbookingFactor = (data: IOverbookingFactor[], onSuccess?: () => void, onError?: (err: string) => void): AppThunk => dispatch => {
     Api.call(
@@ -59,24 +71,32 @@ export const setOverbookingFactor = (data: IOverbookingFactor[], onSuccess?: () 
 }
 export const getAppointmentCutoff = createAction<IAppointmentCutoff[]>("OptimizationWindows/GetAppointmentCutoff");
 export const loadAppointmentCutoff = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
-    const {data} = await Api.call<IAppointmentCutoff[]>(
-        Api.endpoints.OptimizationWindows.GetAppointmentCutoff,
-        { params: {serviceCenterId, podId} }
-    );
-    dispatch(getAppointmentCutoff(data));
+  try {
+      const {data} = await Api.call<IAppointmentCutoff[]>(
+          Api.endpoints.OptimizationWindows.GetAppointmentCutoff,
+          { params: {serviceCenterId, podId} }
+      );
+      dispatch(getAppointmentCutoff(data));
+  } catch (err) {
+      console.log(err)
+  }
 }
 export const setAppointmentCutoff = (data: IAppointmentCutoff[], serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
-    await Api.call(
-        Api.endpoints.OptimizationWindows.SetAppointmentCutoff,
-        {
-            data: {
-                items: data,
-                serviceCenterId,
-                podId
+    try {
+        await Api.call(
+            Api.endpoints.OptimizationWindows.SetAppointmentCutoff,
+            {
+                data: {
+                    items: data,
+                    serviceCenterId,
+                    podId
+                }
             }
-        }
-    )
-    dispatch(loadOptimizationWindows(serviceCenterId, podId));
+        )
+        dispatch(loadOptimizationWindows(serviceCenterId, podId));
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 export const getMaxPriceDateRange = createAction<number>("OptimizationWindows/GetMaxPriceDateRange");

@@ -28,36 +28,57 @@ export const loadDemandSegments = (serviceCenterId: number, podId?: number): App
     }
 }
 export const createDemandSegment = (data: IDemandSegmentForm): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.AppointmentAllocation.CreateDemandSegment, {data});
-    dispatch(loadDemandSegments(data.serviceCenterId, data.podId));
+    try {
+        await Api.call(Api.endpoints.AppointmentAllocation.CreateDemandSegment, {data});
+        dispatch(loadDemandSegments(data.serviceCenterId, data.podId));
+    } catch (err) {
+        console.log('create demand segment err', err)
+    }
 }
 export const setDemandSegments = (data: ISetDemandSegmentRequest): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.AppointmentAllocation.BatchUpdateDemandSegments, {data});
-    dispatch(loadDemandSegments(data.serviceCenterId, data.podId));
+    try {
+        await Api.call(Api.endpoints.AppointmentAllocation.BatchUpdateDemandSegments, {data});
+        dispatch(loadDemandSegments(data.serviceCenterId, data.podId));
+    } catch (err) {
+        console.log('set demand segments err', err)
+    }
 }
 export const getTimeWindow = createAction<ITimeWindow>("DemandSegments/GetTimeWindows");
 export const setTimeWindowsLoading = createAction<boolean>("DemandSegments/SetTimeWindowsLoading");
 export const loadTimeWindow = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
     dispatch(setTimeWindowsLoading(true))
-    const {data} = await Api.call<ITimeWindow>(
-        Api.endpoints.AppointmentAllocation.GetTimeWindows,
-        {params: {serviceCenterId, podId}}
-    );
-    dispatch(getTimeWindow(data));
-    dispatch(setTimeWindowsLoading(false))
+    try {
+        const {data} = await Api.call<ITimeWindow>(
+            Api.endpoints.AppointmentAllocation.GetTimeWindows,
+            {params: {serviceCenterId, podId}}
+        );
+        dispatch(getTimeWindow(data));
+    } catch (err) {
+        console.log('load time window err', err)
+    } finally {
+        dispatch(setTimeWindowsLoading(false))
+    }
 }
 export const setTimeWindow = (data: ITimeWindow): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.AppointmentAllocation.SetTimeWindows, {data});
-    dispatch(loadTimeWindow(data.serviceCenterId, data.podId));
+    try {
+        await Api.call(Api.endpoints.AppointmentAllocation.SetTimeWindows, {data});
+        dispatch(loadTimeWindow(data.serviceCenterId, data.podId));
+    } catch (err) {
+        console.log('set time window err', err)
+    }
 }
 
 export const getUnplannedDemand = createAction<IUnplannedDemand[]>("DemandSegments/GetUnplannedDemands");
 export const loadUnplannedDemand = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
-    const {data} = await Api.call<IUnplannedDemand[]>(
-        Api.endpoints.AppointmentAllocation.GetUnplanned,
-        {params: {serviceCenterId, podId}}
-    );
-    dispatch(getUnplannedDemand(data));
+    try {
+        const {data} = await Api.call<IUnplannedDemand[]>(
+            Api.endpoints.AppointmentAllocation.GetUnplanned,
+            {params: {serviceCenterId, podId}}
+        );
+        dispatch(getUnplannedDemand(data));
+    } catch (err) {
+        console.log('load unplanned demand err', err)
+    }
 }
 export const setUnplannedDemand = (data: IUnplannedDemandRequest): AppThunk => async dispatch => {
     await Api.call(Api.endpoints.AppointmentAllocation.SetUnplanned, {data});

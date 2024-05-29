@@ -31,12 +31,20 @@ export const loadPods = (serviceCenterId: number): AppThunk => async (dispatch, 
     }
 }
 export const createPod = (data: IPodForm): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.Pods.Create, {data});
-    dispatch(loadPodsSummary(data.serviceCenterId))
+    try {
+        await Api.call(Api.endpoints.Pods.Create, {data});
+        dispatch(loadPodsSummary(data.serviceCenterId))
+    } catch (err) {
+        console.log('create Pod error', err)
+    }
 }
 export const updatePod = (data: IPodForm, id: number): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.Pods.Update, {data, urlParams: {id}});
-    dispatch(loadPodsSummary(data.serviceCenterId))
+    try {
+        await Api.call(Api.endpoints.Pods.Update, {data, urlParams: {id}});
+        dispatch(loadPodsSummary(data.serviceCenterId))
+    } catch (err) {
+        console.log('update Pod error', err)
+    }
 }
 export const removePod = (id: number, serviceCenterId?: number, onError?: TArgCallback<any>): AppThunk => async (dispatch, getState) => {
     dispatch(setPodsLoading(true))
@@ -55,11 +63,15 @@ export const removePod = (id: number, serviceCenterId?: number, onError?: TArgCa
 }
 
 export const loadPodsShort = (serviceCenterId: number): AppThunk => async dispatch => {
-    const {data: {result}} = await Api.call<PaginatedAPIResponse<IPodShort>>(
-        Api.endpoints.Pods.GetShort,
-        {data: {serviceCenterId, pageSize: 0}}
-    );
-    dispatch(getPodsShort(result));
+    try {
+        const {data: {result}} = await Api.call<PaginatedAPIResponse<IPodShort>>(
+            Api.endpoints.Pods.GetShort,
+            {data: {serviceCenterId, pageSize: 0}}
+        );
+        dispatch(getPodsShort(result));
+    } catch (err) {
+        console.log('load Pods short error', err)
+    }
 }
 
 export const loadPodById = (id: number): AppThunk => async dispatch => {

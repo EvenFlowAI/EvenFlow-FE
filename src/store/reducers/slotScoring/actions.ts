@@ -19,21 +19,31 @@ export const setLoading = createAction<boolean>("SlotScoring/SetLoading");
 export const getProximity = createAction<IProximity[]>("SlotScoring/GetProximity");
 export const loadProximity = (serviceCenterId?: number, podId?: number): AppThunk => async dispatch => {
     dispatch(setLoading(true))
-    const {data} = await Api.call<IProximity[]>(
-        Api.endpoints.SlotScoring.GetProximity,
-        {params: {serviceCenterId, podId}}
-    );
-    dispatch(getProximity(data));
-    dispatch(setLoading(false))
+    try {
+        const {data} = await Api.call<IProximity[]>(
+            Api.endpoints.SlotScoring.GetProximity,
+            {params: {serviceCenterId, podId}}
+        );
+        dispatch(getProximity(data));
+    } catch (err) {
+        console.log(err)
+    } finally {
+        dispatch(setLoading(false))
+    }
 }
 export const createProximity = (data: IProximity): AppThunk => async dispatch => {
     dispatch(setLoading(true))
-    await Api.call(
-        Api.endpoints.SlotScoring.SetProximity,
-        {data}
-    );
-    dispatch(loadProximity(data.serviceCenterId, data.podId));
-    dispatch(setLoading(false))
+    try {
+        await Api.call(
+            Api.endpoints.SlotScoring.SetProximity,
+            {data}
+        );
+        dispatch(loadProximity(data.serviceCenterId, data.podId));
+    } catch (err) {
+        console.log(err)
+    } finally {
+        dispatch(setLoading(false))
+    }
 }
 
 export const getDesirability = createAction<IDesirability[]>("SlotScoring/GetDesirability");
@@ -82,24 +92,38 @@ export const saveDesirability = (
 export const getOptimizationSettings = createAction<IOptimizationSetting[]>("SlotScoring/GetOptimizationSettings");
 export const loadOptimizationSettings = (serviceCenterId:number, podId?:number): AppThunk => async dispatch => {
     dispatch(setLoading(true))
-    const {data} = await Api.call<IOptimizationSetting[]>(
-        Api.endpoints.SlotScoring.GetOptimization,
-        {params: {serviceCenterId, podId}}
-    );
-    dispatch(getOptimizationSettings(data));
-    dispatch(setLoading(false))
+    try {
+        const {data} = await Api.call<IOptimizationSetting[]>(
+            Api.endpoints.SlotScoring.GetOptimization,
+            {params: {serviceCenterId, podId}}
+        );
+        dispatch(getOptimizationSettings(data));
+    } catch (err) {
+        console.log(err)
+    } finally {
+        dispatch(setLoading(false))
+    }
 }
 
 export const setOptimizationSettings = (data: IOptimizationSettingsCreateForm): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.SlotScoring.SetOptimization, {data});
-    dispatch(loadOptimizationSettings(data.serviceCenterId, data.podId));
+   try {
+       await Api.call(Api.endpoints.SlotScoring.SetOptimization, {data});
+       dispatch(loadOptimizationSettings(data.serviceCenterId, data.podId));
+   } catch (err) {
+       console.log(err)
+   }
 }
 
 export const setSettingValues = (data: IOptimizationSettingValueForm, serviceCenterId:number, podId?: number): AppThunk => async dispatch => {
     dispatch(setLoading(true))
-    await Api.call(Api.endpoints.SlotScoring.SetValues, {data});
-    dispatch(loadOptimizationSettings(serviceCenterId, podId));
-    dispatch(setLoading(false))
+    try {
+        await Api.call(Api.endpoints.SlotScoring.SetValues, {data});
+        dispatch(loadOptimizationSettings(serviceCenterId, podId));
+    } catch (err) {
+        console.log(err)
+    } finally {
+        dispatch(setLoading(false))
+    }
 }
 
 export const getRange = createAction<ISlotRange>("SlotScoring/GetRange");

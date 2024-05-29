@@ -31,8 +31,12 @@ export const loadCustomerLifetimes = (serviceCenterId: number, podId?: number): 
     }
 }
 export const setCustomerLifetimes = (data: ICustomerLifetimeForm): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.ValueSettings.SetCL, {data})
-    dispatch(loadCustomerLifetimes(data.serviceCenterId, data.podId));
+    try {
+        await Api.call(Api.endpoints.ValueSettings.SetCL, {data})
+        dispatch(loadCustomerLifetimes(data.serviceCenterId, data.podId));
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 export const loadNewLostCustomers = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
@@ -50,8 +54,12 @@ export const loadNewLostCustomers = (serviceCenterId: number, podId?: number): A
     }
 }
 export const setNewLostCustomers = (data: INewLostCustomer): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.ValueSettings.SetCTS, {data});
-    dispatch(loadNewLostCustomers(data.serviceCenterId, data.podId));
+    try {
+        await Api.call(Api.endpoints.ValueSettings.SetCTS, {data});
+        dispatch(loadNewLostCustomers(data.serviceCenterId, data.podId));
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 export const loadEndOfWarranty = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
@@ -69,21 +77,33 @@ export const loadEndOfWarranty = (serviceCenterId: number, podId?: number): AppT
     }
 }
 export const setEndOfWarranty = (data: IEndOfWarranty): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.ValueSettings.SetWS, {data});
-    dispatch(loadEndOfWarranty(data.serviceCenterId, data.podId));
+    try {
+        await Api.call(Api.endpoints.ValueSettings.SetWS, {data});
+        dispatch(loadEndOfWarranty(data.serviceCenterId, data.podId));
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 export const loadValueSettings = (serviceCenterId: number, podId?: number): AppThunk => async dispatch => {
-    const {data} = await Api.call<IValueSettingsResponse>(
-        Api.endpoints.ValueSettings.GetValue,
-        {params: {serviceCenterId, podId}}
-    );
-    dispatch(getValueSettings(data.items));
-    dispatch(getConfiguredValues(data.leversToConfiguration));
+    try {
+        const {data} = await Api.call<IValueSettingsResponse>(
+            Api.endpoints.ValueSettings.GetValue,
+            {params: {serviceCenterId, podId}}
+        );
+        dispatch(getValueSettings(data.items));
+        dispatch(getConfiguredValues(data.leversToConfiguration));
+    } catch (err) {
+        console.log(err)
+    }
 }
 export const setValueSettings = (data: IValueSettings): AppThunk => async dispatch => {
-    await Api.call(
-        Api.endpoints.ValueSettings.SetValue, {data}
-    );
-    await dispatch(loadValueSettings(data.serviceCenterId, data.podId));
+    try {
+        await Api.call(
+            Api.endpoints.ValueSettings.SetValue, {data}
+        );
+        await dispatch(loadValueSettings(data.serviceCenterId, data.podId));
+    } catch (err) {
+        console.log(err)
+    }
 }
