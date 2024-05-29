@@ -66,13 +66,11 @@ export const DemandPredictedCell: React.FC<{ item: IDemandPrediction }> = ({item
         </RadioGroupStyled>
             <LinksWrapper>
                 <LabelLink
-                     text="Predicted"
                      subText={predictedMethod?.isConfigured ? "Configured" : "Not Configured"}
                      icon={predictedMethod?.isConfigured ? <CheckIcon/> : <RedCross/>}
                      color={predictedMethod?.isConfigured ? "#7898FF" : "#C71062"}
                      onClick={onPredictedClick}/>
                 <LabelLink
-                    text="Probability"
                     subText={probabilityMethod?.isConfigured ? "Configured" : "Not Configured"}
                     color={probabilityMethod?.isConfigured ? "#7898FF" : "#C71062"}
                     icon={probabilityMethod?.isConfigured ? <CheckIcon/> : <RedCross/>}
