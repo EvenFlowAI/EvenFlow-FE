@@ -169,6 +169,7 @@ const DemandPredictionTable = () => {
                             </SwitchWrapperGrey>
                             <SwitchWrapperWhite key="ROs">
                                 <Switch
+                                    disabled
                                     onChange={handleSwitch(item.podId, EDemandPredictionType.OpenROs, "prediction")}
                                     checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.OpenROs)?.isPredictedStatusOn)}
                                     color="primary"
