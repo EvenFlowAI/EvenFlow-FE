@@ -13,9 +13,11 @@ import {LinksWrapper} from "./styles";
 import {setAllocationTab} from "../../../../store/reducers/adminPanel/actions";
 import {useHistory} from "react-router-dom";
 import {Routes} from "../../../../routes/constants";
+import {setSelectedPod} from "../../../../store/reducers/pods/actions";
 
 export const DemandPredictedCell: React.FC<{ item: IDemandPrediction }> = ({item}) => {
     const {settings} = useSelector((state: RootState) => state.demandManagement);
+    const {shortPodsList} = useSelector((state: RootState) => state.pods);
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const history = useHistory();
@@ -26,6 +28,8 @@ export const DemandPredictedCell: React.FC<{ item: IDemandPrediction }> = ({item
         ?.find(el => el.method === EPredictedDemandMethod.Probability);
 
     const onPredictedClick = () => {
+        const pod = shortPodsList.find(el => el.id === item.podId)
+        if (pod) dispatch(setSelectedPod(pod))
         dispatch(setAllocationTab("1"));
         history.push(Routes.CapacityManagement.AppointmentAllocation);
     }

@@ -23,6 +23,7 @@ import {
 } from "../../../store/reducers/demandManagement/actions";
 import {DemandPredictedCell} from "./DemandPredictedCell/DemandPredictedCell";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
+import {loadPodsShort} from "../../../store/reducers/pods/actions";
 
 
 const DemandPredictionTable = () => {
@@ -31,9 +32,11 @@ const DemandPredictionTable = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-       selectedSC && dispatch(loadDemandManagementSettings(selectedSC.id))
+       if (selectedSC) {
+           dispatch(loadDemandManagementSettings(selectedSC.id))
+           dispatch(loadPodsShort(selectedSC.id))
+       }
     }, [selectedSC])
-
 
     const handleSwitch = (id: number|undefined, type: EDemandPredictionType, requestType: "request"|"prediction") => async (e: any, value: boolean) => {
         const itemToUpdate = id
