@@ -29,7 +29,7 @@ export const DemandPredictedCell: React.FC<{ item: IDemandPrediction }> = ({item
 
     const onPredictedClick = () => {
         const pod = shortPodsList.find(el => el.id === item.podId)
-        if (pod) dispatch(setSelectedPod(pod))
+        dispatch(setSelectedPod(pod ?? null))
         dispatch(setAllocationTab("1"));
         history.push(Routes.CapacityManagement.AppointmentAllocation);
     }
