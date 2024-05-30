@@ -4,7 +4,7 @@ import {PERMISSIONS} from "../permissions";
 import {matchPath} from "react-router-dom";
 import {IServiceCenterProfile, ISR, TRecallForRequest} from "../store/reducers/appointment/types";
 import {
-    EMaintenanceOptionType, EServiceCenterName, IAppointmentByKey,
+    EMaintenanceOptionType, EServiceCenterName, IAppointmentByKey, IAppointmentByQuery,
     ILoadedVehicle,
     IOfferForCategory,
     IPackageOptions,
@@ -14,7 +14,7 @@ import {decode, encode} from 'url-safe-base64';
 import {ETransportationType} from "../store/reducers/transportationNeeds/types";
 import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
 import {EOfferType} from "../store/reducers/offers/types";
-import {EPackagePricingType, IValueService} from "../store/reducers/appointmentFrameReducer/types";
+import {EPackagePricingType, EServiceType, IValueService} from "../store/reducers/appointmentFrameReducer/types";
 import {IMaintenanceItem, IRecallByVin, TParsableDate} from "../types/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
 import i18n from "../i18n";
@@ -553,3 +553,21 @@ export const disableEmotionWarning = () => {
 export const sortEmployees = (a: IAdvisorCapacity | ITechnicianCapacity, b: IAdvisorCapacity | ITechnicianCapacity): number => a.employeeName
     ? a.employeeName.localeCompare(b.employeeName)
     : a.employeeId.localeCompare(b.employeeId)
+
+export const getAppointmentDate = (appointment: IAppointmentByKey|IAppointmentByQuery|null): string => {
+    if (appointment) {
+        if (appointment.serviceValetTime) {
+            const {serviceValetTime, dateInUtc} = appointment;
+            return `${dayjs.utc(`${String(dateInUtc).split("T")[0]}`).format("dddd, MMM Do")} 
+                from ${dayjs.utc(serviceValetTime.pickUpMin, "hh:mm:ss").format('h:mm a')} 
+                to ${dayjs.utc(serviceValetTime.pickUpMax, "hh:mm:ss").format('h:mm a')}`
+        } else if (appointment.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+            return dayjs.utc(`${String(appointment.dateInUtc).split("T")[0]}`).format("dddd, MMM Do")
+        } else {
+            const {dateInUtc, timeSlot} = appointment;
+            return dayjs.utc(`${String(dateInUtc).split("T")[0]}T${timeSlot}Z`).format("dddd, MMM Do, h:mm a")
+        }
+    } else {
+        return dayjs.utc().format("dddd, MMM Do, h:mm a");
+    }
+}
