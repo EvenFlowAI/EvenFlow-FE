@@ -135,6 +135,7 @@ const DemandPredictionTable = () => {
                         <StyledTableCell key="requestDemandStatus" style={{padding: 0}} width={146}>
                             <SwitchWrapperWhite key="evenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 <Switch
+                                    disabled
                                     onChange={handleSwitch(item.podId, EDemandPredictionType.EvenFlowAppointments, "request")}
                                     checked={Boolean(item.demandTypeSettings.find(el => el.type === EDemandPredictionType.EvenFlowAppointments)?.isRequestStatusOn)}
                                     color="primary"
