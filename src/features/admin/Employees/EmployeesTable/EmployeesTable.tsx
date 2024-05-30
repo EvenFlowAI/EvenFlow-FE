@@ -163,12 +163,13 @@ const EmployeesTable:React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
             <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
                 <MenuItem onClick={editEmployee}>Edit</MenuItem>
                 <MenuItem onClick={onDeleteEmployee}>Remove</MenuItem>
-                <MenuItem onClick={onOpenResend}>Resend</MenuItem>
+                <MenuItem onClick={onOpenResend} disabled={editedItem?.emailConfirmed}>Resend</MenuItem>
             </Menu>
             <ResendEmailModal
                 open={isOpenResesnd}
                 onClose={onCloseResend}
                 employeeEmail={editedItem?.email}
+                employeeId={editedItem?.id}
                 employeeName={editedItem?.fullName}/>
         </>
     );

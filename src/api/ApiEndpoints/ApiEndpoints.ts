@@ -21,6 +21,7 @@ export class Api {
             Verification: {route: "/accounts/verification", method: "patch"},
             Profile: {route: "/accounts/profile", method: "get"},
             Dealership: {route: "/accounts/dealership", method: "get"},
+            ResendEmail: {route: "/accounts/invitation-email", method: "post"}
         },
         AncillaryPricing: {
             GetZones: {route: "/ancillary-price/geographic-zone/by-query", method: "post"},
