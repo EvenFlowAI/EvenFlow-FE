@@ -10,7 +10,7 @@ export type TApiEndpoint = {
 }
 
 export interface IApiEndpoints {
-    Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiEndpoint>,
+    Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership" | "ResendEmail", TApiEndpoint>,
     AncillaryPricing: Record<"GetZones" | "UpdateZone" | "GetDistances" | "UpdateDistance" | "CreateDistance" | "DeleteDistance" | "GetByZip", TApiEndpoint>,
     Appointments: Record<"Create" | "Update" | "UpdateByKey" | "Cancel" | "CancelByKey" | "GetByKey" | "CheckPodChanged"
         | "GetServiceBooks" | "GetSchedulers", TApiEndpoint>,
