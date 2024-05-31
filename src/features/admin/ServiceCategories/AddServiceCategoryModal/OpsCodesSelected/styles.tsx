@@ -4,6 +4,7 @@ export const Wrapper = styled('div')({
         display: 'flex',
         alignItems: 'start',
         alignContent: 'start',
+        flexWrap: 'wrap'
     }
 )
 

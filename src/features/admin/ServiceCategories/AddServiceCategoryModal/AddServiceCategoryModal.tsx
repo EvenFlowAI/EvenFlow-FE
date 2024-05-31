@@ -272,7 +272,21 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
 
     const onDelete = (serviceRequest: IAssignedServiceRequest) => {
         if (categoryHasCodesOrder) {
-            setSelectedCodesWithOrder(prev => prev.filter(el => el.id !== serviceRequest.id))
+            setSelectedCodesWithOrder(prev => {
+                const codeToChange = prev.find(item => item.id === serviceRequest.id);
+                if (codeToChange) {
+                    if (codeToChange.orderIndex) {
+                        const data = prev.map(code => ({
+                            ...code,
+                            orderIndex: +code.orderIndex > +codeToChange.orderIndex ? `${+code.orderIndex - 1}` : code.orderIndex
+                        }))
+                        return data.filter(item => item.id !== serviceRequest.id)
+                    } else {
+                        return prev.filter(item => item.id !== serviceRequest.id)
+                    }
+                }
+                return prev;
+            })
         } else {
             setSelectedCodes(prev => prev.filter(el => el.id !== serviceRequest.id))
         }
