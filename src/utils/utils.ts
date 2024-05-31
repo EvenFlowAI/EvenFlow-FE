@@ -558,7 +558,7 @@ export const getAppointmentDate = (appointment: IAppointmentByKey|IAppointmentBy
     if (appointment) {
         if (appointment.serviceValetTime) {
             const {serviceValetTime, dateInUtc} = appointment;
-            return `${dayjs.utc(`${String(dateInUtc).split("T")[0]}`).format("dddd, MMM Do")} 
+            return `${dayjs.utc(`${String(dateInUtc).split("T")[0]}`).format("dddd, MMM Do, ")} 
                 from ${dayjs.utc(serviceValetTime.pickUpMin, "hh:mm:ss").format('h:mm a')} 
                 to ${dayjs.utc(serviceValetTime.pickUpMax, "hh:mm:ss").format('h:mm a')}`
         } else if (appointment.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
