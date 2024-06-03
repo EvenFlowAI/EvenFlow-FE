@@ -13,7 +13,7 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
         roles: ["Owner", "Manager", "Service Director"],
         subLinks: [
             {
-                to: Routes.CenterProfile.Base,
+                to: Routes.CenterProfile.ServiceCenters,
                 name: "Service Centers",
                 roles: ["Owner", "Manager", "Service Director"],
                 sub: true,
