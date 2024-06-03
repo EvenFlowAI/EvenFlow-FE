@@ -13,6 +13,8 @@ import {RootState} from "../../../../store/rootReducer";
 import {useStyles} from "./styles";
 import {useException} from "../../../../hooks/useException/useException";
 import dayjs from "dayjs";
+import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {getAppointmentDate} from "../../../../utils/utils";
 
 const CancelAppointmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&{hashKey: string, loadData: TArgCallback<boolean>}>>> = ({open, onClose, hashKey, loadData}) => {
     const {customerSearchData} = useSelector((state: RootState) => state.customers);
@@ -47,6 +49,18 @@ const CancelAppointmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
             .finally(() => setLoading(false))
     }
 
+    const getDateInfo = () => {
+        return data?.serviceTypeOption?.type === EServiceType.PickUpDropOff
+            ? getAppointmentDate(data)
+            : dayjs.utc(data?.dateInUtc).format("dddd, ")
+    }
+
+    const getTimeInfo = () => {
+        return data?.serviceTypeOption?.type === EServiceType.PickUpDropOff
+            ? ` for customer ${data?.driver.fullName}`
+            : <span>{dayjs.utc(data?.dateInUtc).format("MMMM Do, YYYY")} at {dayjs(data?.timeSlot, "hh:mm:ss").format("hh:mm a")} for customer {data?.driver.fullName}</span>
+    }
+
     return (
         <BaseModal
             width={800}
@@ -61,8 +75,8 @@ const CancelAppointmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                     ? <DialogContent>
                 <div className={classes.info}>
                     <div className={classes.question}>
-                        Confirm cancellation of Appointment on {dayjs.utc(data?.dateInUtc).format("dddd")}
-                        <div>{dayjs.utc(data?.dateInUtc).format("ddd, MMMM D, YYYY")} at {dayjs(data?.timeSlot, "hh:mm:ss").format("hh:mm A")} for customer {data.driver.fullName}</div>
+                        Confirm cancellation of Appointment on <br/>
+                        {getDateInfo()} {getTimeInfo()}
                     </div>
                 </div>
             </DialogContent>
