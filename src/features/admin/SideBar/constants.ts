@@ -38,7 +38,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
             }
         ]
     },
-    {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager", "Service Director"]},
     {
         to: Routes.Employees.Base,
         name: "Employees",
@@ -198,13 +197,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
             {
                 to: Routes.BookingFlow.ScreenSettings,
                 name: "Screen Settings",
-                exact: true,
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
-                to: Routes.BookingFlow.VehicleDetails,
-                name: "Vehicle Detail Options",
                 exact: true,
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]
