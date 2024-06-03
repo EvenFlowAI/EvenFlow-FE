@@ -37,7 +37,7 @@ export const AdminRoutes = () => {
                 <PrivateRoute path={Routes.Admin.Appointments} component={AppointmentsPage} />
                 : null}
             {!currentUser.isSuperUser && !currentRoleIsRestricted
-                ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
+                ? <PrivateRoute path={Routes.CenterProfile.FacilitySetUp} exact component={AdminDashboard}/>
                 : null}
             {!currentUser.isSuperUser && !currentRoleIsRestricted
                 ? <PrivateRoute path={Routes.Dealer.Base} exact component={DealerOperations}/>
@@ -58,7 +58,7 @@ export const AdminRoutes = () => {
                 ? <PrivateRoute path={Routes.Services.Base} component={ServicesRoutes} />
                 : null}
             <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
-            <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>
+            <PrivateRoute path={Routes.CenterProfile.Base} component={ServiceCenters}/>
             {currentUser.isSuperUser
                 ? <Redirect to={Routes.Admin.DealershipGroups} />
                 : currentRoleIsRestricted

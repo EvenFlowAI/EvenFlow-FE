@@ -104,3 +104,10 @@ export enum ServicesRoutes {
     MobileService = "/admin/services/mobile-service",
     OtherTransportation = "/admin/services/other-transportation",
 }
+
+export enum CenterProfileRoutes {
+    Base = "/admin/center-profile/service-centers",
+    FacilitySetUp = "/admin/center-profile/facility-set-up",
+    Vehicles = "/admin/center-profile/vehicles",
+    Integrations = "/admin/center-profile/integrations",
+}
