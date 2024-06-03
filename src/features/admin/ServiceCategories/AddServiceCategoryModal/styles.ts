@@ -10,7 +10,7 @@ export const Label = withStyles(FormControlLabel, {
     },
     label: {
         fontWeight: "bold",
-        fontSize: 12,
+        fontSize: 14,
         textTransform: "uppercase",
     }
 });
