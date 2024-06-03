@@ -105,7 +105,9 @@ export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<React.PropsWith
                         return prev.filter(item => item.id !== el.id)
                     }
                 } else {
-                    return [...prev, {id: el.id, orderIndex: ''}]
+                    const indexes = prev.map(el => el.orderIndex ? +el.orderIndex : 0);
+                    const orderIndex = indexes.length ? String(Math.max(...indexes) + 1) : '1'
+                    return [...prev, {id: el.id, orderIndex}]
                 }
             });
         }
