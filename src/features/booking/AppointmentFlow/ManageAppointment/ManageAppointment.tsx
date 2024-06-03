@@ -6,7 +6,7 @@ import {Button} from "@mui/material";
 import {AppointmentSelectedDate} from "../../AppointmentSelectedDate/AppointmentSelectedDate";
 import {AppointmentReminders} from "../../AppointmentReminders/AppointmentReminders";
 import {TArgCallback, TCallback, TError} from "../../../../types/types";
-import {decodeSCID} from "../../../../utils/utils";
+import {decodeSCID, getAppointmentDate} from "../../../../utils/utils";
 import {
     clearAppointmentData,
     createOrUpdateAppointment,
@@ -53,7 +53,6 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../../routes/constants";
-import dayjs from "dayjs";
 import CustomerConsents from "../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 import OpenModalLink from "../../../../components/wrappers/OpenModalLink/OpenModalLink";
 import CommentModal from "../../../../components/modals/booking/CommentModal/CommentModal";
@@ -245,7 +244,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                 confirmContent: "Cancel appointment",
                 title: "Cancel appointment",
                 content: <span>
-                            Please confirm you want to cancel appointment on {dayjs.utc(appointmentByKey.dateInUtc).format("LLL")}?
+                            Please confirm you want to cancel appointment on {getAppointmentDate(appointmentByKey)}?
                         </span>,
                 onConfirm: handleCancelAppointment
             });
