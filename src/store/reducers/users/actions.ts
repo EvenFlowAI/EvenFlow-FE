@@ -32,10 +32,14 @@ export const getCurrentUser = (keepWelcomeScreen?: boolean): AppThunk => async (
     }
 }
 export const saveEmployeeAvatar = (avatar: File, id: string): AppThunk => async dispatch => {
-    const fd = new FormData();
-    fd.append("file", avatar, avatar.name);
-    await Api.call(Api.endpoints.Users.Avatar, {urlParams: {id}, data: fd});
-    dispatch(getCurrentUser());
+    try {
+        const fd = new FormData();
+        fd.append("file", avatar, avatar.name);
+        await Api.call(Api.endpoints.Users.Avatar, {urlParams: {id}, data: fd});
+        dispatch(getCurrentUser());
+    } catch (err) {
+        console.log('save employee avatar err', err)
+    }
 }
 const saving = (payload: boolean): TUserActions => ({type: "User/Saving", payload});
 export const createUser = (payload: IUserForm, onSuccess: () => void, onError: (err: any) => void, avatar?: File): AppThunk => async dispatch => {

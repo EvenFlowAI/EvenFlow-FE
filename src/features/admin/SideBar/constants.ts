@@ -86,6 +86,12 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
+                to: Routes.CapacityManagement.DemandManagement,
+                name: "Demand Management",
+                sub: true,
+                roles: ["Owner", "Manager", "Service Director"]
+            },
+            {
                 to: Routes.CapacityManagement.AppointmentAllocation,
                 name: "Appointment Allocation",
                 sub: true,

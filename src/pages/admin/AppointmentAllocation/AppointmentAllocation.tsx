@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect} from "react";
 import {TabContext, TabPanel} from "@mui/lab";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {TabList} from "../../../components/styled/Tabs";
@@ -7,14 +7,25 @@ import RoPredictionParameters from "../../../features/admin/RoPredictionParamete
 import {OverbookingFactor} from "../../../features/admin/OverbookingFactor/OverbookingFactor";
 import {UnplannedDemand} from "../../../features/admin/UnplannedDemand/UnplannedDemand";
 import {capacityManagementRoot} from "../../../utils/constants";
+import {RootState} from "../../../store/rootReducer";
+import {useDispatch, useSelector} from "react-redux";
+import {setAllocationTab} from "../../../store/reducers/adminPanel/actions";
 
 export const AppointmentAllocation = () => {
-    const [selectedTab, setTab] = useState<string>("0");
+    const {appointmentAllocationTab} = useSelector((state: RootState) => state.adminPanel);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        return () => {
+            dispatch(setAllocationTab("0"))
+        }
+    }, [])
+
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
-        setTab(tab);
+        dispatch(setAllocationTab(tab))
     }
 
-    return <TabContext value={selectedTab}>
+    return <TabContext value={appointmentAllocationTab}>
         <TitleContainer title="Appointment Allocation" pad parent={capacityManagementRoot} />
         <TabList
             onChange={handleTabChange}

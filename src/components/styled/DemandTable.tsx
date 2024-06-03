@@ -28,6 +28,7 @@ export const DenseTableWithPadding = withStyles(StyledTable, {
     root: {
         "& .MuiTableCell-root": {
             padding: 16,
-        }
+            border: `1px solid #DADADA`,
+        },
     }
 });
