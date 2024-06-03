@@ -32,6 +32,7 @@ export interface IEmployee {
     position?: string;
     showOnBooking?: boolean;
     dmsId?: string | number;
+    emailConfirmed: boolean;
 }
 
 export interface IEmployeeFilters {
