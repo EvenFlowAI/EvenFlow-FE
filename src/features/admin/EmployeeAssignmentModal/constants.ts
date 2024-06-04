@@ -1,4 +1,4 @@
-import {TOption} from "../PodsTable/PODModal/types";
+import {TOption} from "../ServiceBookModal/types";
 import {getOptions} from "../../../utils/utils";
 import {EAdvisorAssignMethod} from "../../../store/reducers/employees/types";
 

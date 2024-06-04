@@ -9,7 +9,7 @@ import {TableRow} from "../../../components/styled/TableRow";
 import {SubCellsWrapper, SubCellTitle, THeadCell, THeadCellWithSub, useStyles} from "./styles";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
-import {TOption} from "../PodsTable/PODModal/types";
+import {TOption} from "../ServiceBookModal/types";
 import {
     EAdvisorAssignMethod,
     EAssignmentLevel,

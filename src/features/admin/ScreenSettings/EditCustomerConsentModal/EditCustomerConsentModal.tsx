@@ -18,7 +18,7 @@ import {Autocomplete, Button, Grid} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {autocompleteOptionsRender, autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {IMakeExtended, IModel} from "../../../../api/types";
-import {TOption} from "../../PodsTable/PODModal/types";
+import {TOption} from "../../ServiceBookModal/types";
 import {EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {IPodShort} from "../../../../store/reducers/pods/types";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
