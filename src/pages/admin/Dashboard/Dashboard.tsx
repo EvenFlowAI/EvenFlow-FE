@@ -1,32 +1,24 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {Box, Grid, Paper} from "@mui/material";
-import {useSelector} from "react-redux";
-import {EditAddressModal} from "../../../features/admin/EditAddressModal/EditAddressModal";
+import React, {useMemo} from "react";
+import {Grid, Paper} from "@mui/material";
 import {HourOfOperationsModal} from "../../../features/admin/HourOfOperationsModal/HourOfOperationsModal";
 import {HolidaysModal} from "../../../features/admin/HolidaysModal/HolidaysModal";
 import {BreaksModal} from "../../../features/admin/BreaksModal/BreaksModal";
 import {Bays} from "../../../components/modals/admin/Bays/Bays";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
-import {concatAddress} from "../../../utils/utils";
-import {SquarePaper} from "../../../components/styled/Paper";
-import {RootState} from "../../../store/rootReducer";
 import {ReactComponent as LaborRateIcon} from "../../../assets/img/labor_rate.svg";
 import {ReactComponent as HoursIcon} from "../../../assets/img/Icon 2 Hours of operation.svg";
-import {ReactComponent as AddressIcon} from "../../../assets/img/Icon_1_Address.svg";
 import {ReactComponent as BaysIcon} from "../../../assets/img/Icon_6 _Bays.svg";
 import {ReactComponent as BreaksIcon} from "../../../assets/img/Icon 4 Breaks.svg";
 import {ReactComponent as LockOutlined} from "../../../assets/img/Icon 5 Holidays.svg";
 import LaborRateModal from "../../../features/admin/LaborRateModal/LaborRateModal";
 import {useStyles} from "./styles";
-import {TCountData, TItem} from "./types";
+import {TItem} from "./types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
-import {blankCountData, overallData} from "./constants";
+import {centerProfileRoot} from "../../../utils/constants";
 
 export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChildren>> = () => {
-    const {analytics} = useSelector((state:RootState) => state.serviceCenters);
-    const [countData, setCountData] = useState<TCountData>(blankCountData)
     const {selectedSC} = useSCs();
     const currentUser = useCurrentUser();
     const { classes  } = useStyles();
@@ -39,11 +31,6 @@ export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChi
         return ["Manager"].includes(currentUser?.role || "")
     }, [currentUser]);
 
-    const {
-        onClose: onCloseAddress,
-        onOpen: onOpenAddress,
-        isOpen: isAddressOpen
-    } = useModal();
     const {
         onClose: onCloseHOO,
         onOpen: onOpenHOO,
@@ -71,39 +58,17 @@ export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChi
     } = useModal();
 
     const items: TItem[] = [
-        {label: "Address", icon: <AddressIcon />, action: onOpenAddress},
         {label: "Hours of operation", icon: <HoursIcon />, action: onOpenHOO},
         {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
         {label: "Breaks", icon: <BreaksIcon />, action: onOpenB},
         {label: "Bays", icon: <BaysIcon />, action: onOpenBays},
-        {label: "Labor Rate", icon: <LaborRateIcon />, action: onOpenLaborRate},
+        // {label: "Labor Rate", icon: <LaborRateIcon />, action: onOpenLaborRate},
     ];
 
-    useEffect(() => {
-        setCountData({
-            technicians: analytics.countOfTechnicians,
-            bays: analytics.countOfBays,
-            appointments: analytics.countOfAppointmentsToday,
-            pods: analytics.countOfPods
-        })
-    }, [analytics]);
+    // todo replace Labor rate
 
     return <div className={classes.container}>
-        {selectedSC ? <TitleContainer pad title={selectedSC.name}/> : null}
-        <Box mb={2} className={classes.address}>
-            {selectedSC ? concatAddress(selectedSC.address) : null}
-        </Box>
-        <SquarePaper variant="outlined">
-            <Box className={classes.countWrapper} p={2}>
-                {overallData.map(d =>
-                    <Box key={d.label} display="flex" flexDirection="column" alignItems="center" sx={{fontSize: 14}}>
-                        <span>{d.label}</span>
-                        <strong>{countData[d.value]}</strong>
-                    </Box>
-                )}
-            </Box>
-        </SquarePaper>
-        <Box p={1.5} />
+        {selectedSC ? <TitleContainer pad title="Facility Set Up" parent={centerProfileRoot}/> : null}
         <Grid container spacing={2}>
             {items.map(item =>
                 <Grid item xs={12} sm={4} md={3} key={item.label}>
@@ -120,7 +85,6 @@ export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChi
                 </Grid>
             )}
         </Grid>
-        <EditAddressModal open={isAddressOpen} viewMode={isCCRView} onClose={onCloseAddress} />
         <HourOfOperationsModal viewMode={isCCRView} open={isHOOOpen} onClose={onCloseHOO} />
         <HolidaysModal viewMode={isCCRView} open={isHOpen} onClose={onCloseH} />
         <BreaksModal viewMode={isCCRView} open={isBOpen} onClose={onCloseB} />

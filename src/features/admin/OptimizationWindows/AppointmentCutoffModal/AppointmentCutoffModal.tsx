@@ -18,6 +18,8 @@ import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 import {ParsableDate, TParsableDate} from "../../../../types/types";
 import dayjs from "dayjs";
 import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
+import localeData from "dayjs/plugin/localeData";
+dayjs.extend(localeData)
 
 type TForm = {
     [k in EDay]: TParsableDate;

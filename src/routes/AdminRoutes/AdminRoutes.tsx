@@ -1,9 +1,7 @@
 import React from "react";
 import {Switch, Redirect} from "react-router-dom";
-import {ServiceCenters} from "../../pages/admin/ServiceCenters/ServiceCenters";
 import {ContentContainer} from "../../components/wrappers/ContentContainer/ContentContainer";
 import {PrivateRoute} from "../PrivateRoute/PrivateRoute";
-import {AdminDashboard} from "../../pages/admin/Dashboard/Dashboard";
 import {DealershipGroupDetails} from "../../pages/admin/DealerShipGroupDetails/DealershipGroupDetails";
 import {Profile} from "../../pages/admin/Profile/Profile";
 import AppointmentsPage from "../../pages/admin/Appointments/AppointmentsPage";
@@ -17,6 +15,7 @@ import {Routes} from "../constants";
 import EmployeesRoutes from "../EmployeesRoutes/EmployeesRoutes";
 import {DealerOperations} from "../../pages/admin/DealerOperations/Dashboard";
 import ServicesRoutes from "../ServicesRoutes/ServicesRoutes";
+import CenterProfileRoutes from "../CenterProfileRoutes/CenterProfileRoutes";
 
 export const AdminRoutes = () => {
     const currentUser = useCurrentUser();
@@ -33,11 +32,9 @@ export const AdminRoutes = () => {
                 ? <PrivateRoute path={`${Routes.Admin.DealershipGroups}/:id`} component={DealershipGroupDetails} />
                 : null}
             {!currentRoleIsRestricted && <PrivateRoute path={Routes.Employees.Base} component={EmployeesRoutes}/>}
+            {!currentRoleIsRestricted && <PrivateRoute path={Routes.CenterProfile.Base} component={CenterProfileRoutes}/>}
             {!currentUser.isSuperUser ?
                 <PrivateRoute path={Routes.Admin.Appointments} component={AppointmentsPage} />
-                : null}
-            {!currentUser.isSuperUser && !currentRoleIsRestricted
-                ? <PrivateRoute path={Routes.Admin.Base} exact component={AdminDashboard}/>
                 : null}
             {!currentUser.isSuperUser && !currentRoleIsRestricted
                 ? <PrivateRoute path={Routes.Dealer.Base} exact component={DealerOperations}/>
@@ -58,7 +55,6 @@ export const AdminRoutes = () => {
                 ? <PrivateRoute path={Routes.Services.Base} component={ServicesRoutes} />
                 : null}
             <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
-            <PrivateRoute path={Routes.Admin.ServiceCenters} component={ServiceCenters}/>
             {currentUser.isSuperUser
                 ? <Redirect to={Routes.Admin.DealershipGroups} />
                 : currentRoleIsRestricted

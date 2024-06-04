@@ -45,9 +45,7 @@ export enum CapacityManagementRoutes {
 export enum BookingFlowConfigRoutes {
     Base = "/admin/booking-flow-config",
     BookingFlowConfigDetails = "/admin/booking-flow-config/details",
-    TransportationOptions = "/admin/booking-flow-config/transportation-options",
     ServiceOpsCodesMapping = "/admin/booking-flow-config/service-codes-mapping",
-    VehicleDetails = "/admin/booking-flow-config/vehicle-details",
     FirstScreen = "/admin/booking-flow-config/first-screen",
     ScreenSettings = "/admin/booking-flow-config/screen-settings",
 }
@@ -103,4 +101,12 @@ export enum ServicesRoutes {
     ServiceValet = "/admin/services/service-valet",
     MobileService = "/admin/services/mobile-service",
     OtherTransportation = "/admin/services/other-transportation",
+}
+
+export enum CenterProfileRoutes {
+    Base = "/admin/center-profile",
+    ServiceCenters = "/admin/center-profile/service-centers",
+    FacilitySetUp = "/admin/center-profile/facility-set-up",
+    Vehicles = "/admin/center-profile/vehicles",
+    Integrations = "/admin/center-profile/integrations",
 }
