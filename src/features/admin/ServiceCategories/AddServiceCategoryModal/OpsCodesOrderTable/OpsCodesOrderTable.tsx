@@ -50,7 +50,7 @@ export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<React.PropsWith
 
     const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
         {
-            header: "Booking Flow Order",
+            header: "ORDER",
             val: (el) => <TextField
                 fullWidth
                 error={checkError(el)}
@@ -74,7 +74,7 @@ export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<React.PropsWith
             val: el => `$${el.serviceRequestOverride?.partsUnitCost ?? el.serviceRequest.partsUnitCost}`
         },
         {
-            header: "# Of PARTS",
+            header: "LABOR AMOUNT",
             align: "center",
             val: el => `${el.serviceRequestOverride?.numberOfParts ?? el.serviceRequest.numberOfParts}`
         },
@@ -84,7 +84,7 @@ export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<React.PropsWith
             val: el => `$${el.serviceRequestOverride?.partsAmount ?? 0}`
         },
         {
-            header: "INVOICE AMOUNT",
+            header: "TOTAL AMOUNT",
             align: "center",
             val: el => `$${el.serviceRequestOverride?.invoiceAmount ?? el.serviceRequest.invoiceAmount}`
         },
