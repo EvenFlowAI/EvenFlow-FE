@@ -6,15 +6,15 @@ import {ReactComponent as NotificationsIcon} from "../../../assets/img/notificat
 import RemindersModal from "../../../features/admin/RemindersModal/RemindersModal";
 import EmployeeAssignmentModal from "../../../features/admin/EmployeeAssignmentModal/EmployeeAssignmentModal";
 import NotificationsModal from "../../../features/admin/NotificationsModal/NotificationsModal";
-import {useStyles} from "./styles";
-import {TItem} from "./types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
+import {useDashboardStyles} from "../../../hooks/styling/useDashboardStyles";
+import {TDashboardItem} from "../../../types/types";
 
 export const DealerOperations: React.FC<React.PropsWithChildren<React.PropsWithChildren>> = () => {
     const currentUser = useCurrentUser();
-    const { classes  } = useStyles();
+    const { classes  } = useDashboardStyles();
 
     const isCCRView: boolean = useMemo(() => {
         return ["Call Center Rep", "Advisor"].includes(currentUser?.role || "")
@@ -40,7 +40,7 @@ export const DealerOperations: React.FC<React.PropsWithChildren<React.PropsWithC
         isOpen: isOpenManageNotifications,
     } = useModal();
 
-    const items: TItem[] = [
+    const items: TDashboardItem[] = [
         {label: "Employee Assignment", icon: <AdvisorIcon />, action: onOpenAdvisorAssignment},
         {label: "Service Center Notifications", icon: <NotificationsIcon />, action: onOpenManageNotifications},
         {label: "Appointment Reminders", icon: <RemindersIcon />, action: onOpenReminders},

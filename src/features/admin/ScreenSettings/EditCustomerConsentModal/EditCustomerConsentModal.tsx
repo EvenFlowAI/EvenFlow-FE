@@ -363,8 +363,8 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                                 renderOption={autocompleteOptionsRender((e) => e.name)}
                                 getOptionLabel={i => i.name}
                                 renderInput={autocompleteRender({
-                                    label: "PODs (Service Books) Assignment",
-                                    placeholder: "PODs (Service Books) Assignment",
+                                    label: "Service Books Assignment",
+                                    placeholder: "Service Books Assignment",
                                 })}
                             />
                         </Grid>

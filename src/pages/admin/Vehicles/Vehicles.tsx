@@ -8,7 +8,7 @@ import {centerProfileRoot} from "../../../utils/constants";
 import {EngineTypes} from "../../../features/admin/EngineTypes/EngineTypes";
 import {MakesModels} from "../../../features/admin/MakesModels/MakesModels";
 
-export const VehicleDetails = () => {
+export const Vehicles = () => {
     const [selectedTab, setTab] = useState<string>("0");
 
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {

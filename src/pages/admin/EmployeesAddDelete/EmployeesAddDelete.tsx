@@ -7,7 +7,7 @@ import EmployeesTable from "../../../features/admin/Employees/EmployeesTable/Emp
 import {useModal} from "../../../hooks/useModal/useModal";
 import {employeesRoot} from "../../../utils/constants";
 
-export const Employees = () => {
+export const EmployeesAddDelete = () => {
     const [editedItem, setEditedItem] = useState<IEmployee|undefined>();
     const {onOpen, isOpen, onClose} = useModal();
 

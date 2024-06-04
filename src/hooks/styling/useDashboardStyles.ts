@@ -1,7 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
-export const useStyles = makeStyles()(theme => ({
+export const useDashboardStyles = makeStyles()(theme => ({
     paper: {
         display: "flex",
         padding: theme.spacing(2),
