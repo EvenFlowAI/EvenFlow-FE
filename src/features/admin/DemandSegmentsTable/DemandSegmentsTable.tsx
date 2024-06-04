@@ -33,7 +33,7 @@ export const DemandSegmentsTable = () => {
         if (selectedSC) {
             dispatch(loadDemandSegments(selectedSC.id, selectedPod?.id));
         }
-    }, [dispatch, selectedSC, selectedPod]);
+    }, [selectedSC]);
 
     useEffect(() => {
         setForm(segments.map(s => [s.window1Point, s.window2Point, s.window3Point]));

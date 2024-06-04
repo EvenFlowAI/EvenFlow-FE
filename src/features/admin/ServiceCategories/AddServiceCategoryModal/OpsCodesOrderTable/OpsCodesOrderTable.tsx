@@ -95,10 +95,12 @@ export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<React.PropsWith
             setSelectedCodes(prev => {
                 const codeToChange = prev.find(item => item.id === el.id);
                 if (codeToChange) {
-                    if (codeToChange.orderIndex) {
+                    if (typeof codeToChange.orderIndex !== 'undefined') {
                         const data = prev.map(code => ({
                             ...code,
-                            orderIndex: +code.orderIndex > +codeToChange.orderIndex ? `${+code.orderIndex - 1}` : code.orderIndex
+                            orderIndex: +code.orderIndex > +codeToChange.orderIndex && +code.orderIndex > 0
+                                ? `${+code.orderIndex - 1}`
+                                : code.orderIndex
                         }))
                         return data.filter(item => item.id !== el.id)
                     } else {
@@ -106,7 +108,7 @@ export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<React.PropsWith
                     }
                 } else {
                     const indexes = prev.map(el => el.orderIndex ? +el.orderIndex : 0);
-                    const orderIndex = indexes.length ? String(Math.max(...indexes) + 1) : '1'
+                    const orderIndex = indexes.length ? String(Math.max(...indexes) + 1) : '0'
                     return [...prev, {id: el.id, orderIndex}]
                 }
             });
