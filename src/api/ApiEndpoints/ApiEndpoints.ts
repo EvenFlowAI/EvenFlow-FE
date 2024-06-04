@@ -125,6 +125,10 @@ export class Api {
             UpdateAddress: {route: "/dealerships", method: "put"},
             UploadAvatar: {route: "/dealerships/{id}/avatar", method: "patch"}
         },
+        DemandManagement: {
+            GetSettings: {route: "/demand-management-settings", method: "get"},
+            UpdateSettings: {route: "/demand-management-settings", method: "put"},
+        },
         Employees: {
             Create: {route: "/employees", method: "post"},
             Update: {route: "/employees/{id}", method: "put"},

@@ -329,12 +329,17 @@ export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWit
             const {vin, make} = selectedVehicle;
             if (vin?.length === 17 && make && (recallsFromTheAdmin || isRecallsCategorySelected)) {
                 setLoading(true);
-                const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
-                    {data: {serviceCenterId: decodeSCID(id), vin: vin, vehicleMakeId: makeInTheList?.id}})
-                dispatch(setRecallsAreShown(true));
-                if (data.length) {
-                    await onOpen()
-                } else {
+                try {
+                    const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
+                        {data: {serviceCenterId: decodeSCID(id), vin: vin, vehicleMakeId: makeInTheList?.id}})
+                    dispatch(setRecallsAreShown(true));
+                    if (data.length) {
+                        await onOpen()
+                    } else {
+                        onEmptyRecalls()
+                    }
+                } catch (err) {
+                    console.log(err)
                     onEmptyRecalls()
                 }
             } else {

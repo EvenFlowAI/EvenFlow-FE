@@ -14,26 +14,32 @@ import {CustomerConsentsModal} from "./CustomerConsentsModal/CustomerConsentsMod
 import {loadRange} from "../../../store/reducers/slotScoring/actions";
 import PriceDisplayModal from "./PriceDisplayModal/PriceDisplayModal";
 import {loadRoundPriceSetting} from "../../../store/reducers/pricingSettings/actions";
+import {loadWaitListSettings} from "../../../store/reducers/optimizationWindows/actions";
+import WaitListSlotSettingsModal from "./WaitListSlotSettingsModal/WaitListSlotSettingsModal";
+import {getPriceDisplayValue, getWaitlistValue} from "./utils";
 
 export const ScreenSettings = () => {
     const {
         emailRequirement,
         isEmailRequirementLoading,
         consentsList,
-        isConsentLoading
+        isConsentLoading,
     } = useSelector((state: RootState) => state.screenSettingsBooking);
     const {roundPrice, isRoundPriceLoading} = useSelector((state: RootState) => state.pricingSettings);
+    const {waitListSettings, isWaitListLoading} = useSelector((state: RootState) => state.optimizationWindows);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const {selectedPod} = useSelectedPod()
     const {onOpen: onEmailEditOpen, isOpen: isEmailEditOpen, onClose: onEmailEditClose} = useModal();
     const {onOpen: onConsentOpen, isOpen: isConsentOpen, onClose: onConsentClose} = useModal();
     const {onOpen: onPricingOpen, isOpen: isPricingOpen, onClose: onPricingClose} = useModal();
+    const {onOpen: onWaitlistOpen, isOpen: isWaitlistOpen, onClose: onWaitlistClose} = useModal();
 
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadEmailRequirement(selectedSC.id))
             dispatch(loadRoundPriceSetting(selectedSC.id))
+            dispatch(loadWaitListSettings(selectedSC.id, selectedPod?.id))
         }
     }, [selectedSC])
 
@@ -63,10 +69,6 @@ export const ScreenSettings = () => {
         return allConsentsAreOn ? "On" : someConsentsAreOn ? "[On / Off]" : "Off"
     }
 
-    const getPriceDisplayValue = () => {
-        return roundPrice ? 'Rounded' : "Fractional"
-    }
-
     const getCount = (k: EScreenSettingsType): string|number => {
         switch (k) {
             case EScreenSettingsType.EmailRequirement:
@@ -74,7 +76,9 @@ export const ScreenSettings = () => {
             case EScreenSettingsType.CustomerConsent:
                 return getCustomerConsentValue();
             case EScreenSettingsType.PriceDisplay:
-                return getPriceDisplayValue();
+                return getPriceDisplayValue(roundPrice);
+            case EScreenSettingsType.Waitlist:
+                return getWaitlistValue(Boolean(waitListSettings?.isEnabled));
             default:
                 return "No data"
         }
@@ -95,9 +99,15 @@ export const ScreenSettings = () => {
         },
         [EScreenSettingsType.PriceDisplay]: {
             helperText: "Display configuration for prices in the booking experience",
-            label: getPriceDisplayValue(),
+            label: getPriceDisplayValue(roundPrice),
             title: "Price Display",
             isLoading: isRoundPriceLoading
+        },
+        [EScreenSettingsType.Waitlist]: {
+            helperText: "Require customer consent for specific appointment requests",
+            label: getWaitlistValue(Boolean(waitListSettings?.isEnabled)),
+            title: "Waitlist",
+            isLoading: isWaitListLoading
         },
     }
 
@@ -109,8 +119,11 @@ export const ScreenSettings = () => {
             case EScreenSettingsType.CustomerConsent:
                 onConsentOpen();
                 break;
-                case EScreenSettingsType.PriceDisplay:
+            case EScreenSettingsType.PriceDisplay:
                 onPricingOpen();
+                break;
+            case EScreenSettingsType.Waitlist:
+                onWaitlistOpen();
                 break;
             default:
                 return;
@@ -138,6 +151,7 @@ export const ScreenSettings = () => {
             <EditEmailRequirementModal open={isEmailEditOpen} onClose={onEmailEditClose}/>
             <CustomerConsentsModal open={isConsentOpen} onClose={onConsentClose}/>
             <PriceDisplayModal open={isPricingOpen} onClose={onPricingClose}/>
+            <WaitListSlotSettingsModal open={isWaitlistOpen} onClose={onWaitlistClose}/>
         </>
     );
 };

@@ -39,6 +39,7 @@ export enum CapacityManagementRoutes {
     ManageEXEvenFlowAppointments = "/admin/capacity-management/manage-ex-evenflow-appointments",
     RequestDifferentiation = "/admin/capacity-management/request-differentiation",
     TimeDifferentiation = "/admin/capacity-management/time-differentiation",
+    DemandManagement= "/admin/capacity-management/demand-management",
 }
 
 export enum BookingFlowConfigRoutes {

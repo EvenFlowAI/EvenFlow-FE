@@ -32,6 +32,7 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
     const {technicians, isLoading, dateRange} = useSelector((state: RootState) => state.employeesCapacity);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [data, setData] = useState<ITechnicianCapacity[]>([]);
+    const [tableIsChecked, setTableChecked] = useState<boolean>(false);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
@@ -58,6 +59,7 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
     }, [technicians])
 
     const onChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+        setTableChecked(false)
         const [employeeId, serviceBookId] = name.split('/');
         setData(prev => {
             let employee = prev.find(el => el.employeeId === employeeId)
@@ -78,6 +80,7 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
     }
 
     const onCancel = () => {
+        setTableChecked(false)
         setData([...technicians].sort(sortEmployees))
         setEdit(false);
     }
@@ -88,8 +91,11 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
     }
 
     const onSave = () => {
-        if (data.find(el => el.efficiency < 0)) {
-            showError("Efficiency must not be less than 0")
+        setTableChecked(true)
+        if (data.find(el => el.efficiency < 1)) {
+            showError("Efficiency must be more than 0")
+        } else if (data.find(el => el.efficiency > 999)) {
+            showError("Efficiency must be more than 999")
         } else {
             if (selectedSC) {
                 const payload: ITechniciansPayload = {
@@ -139,8 +145,9 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
                 <TableInput
                     value={`${el.efficiency}`}
                     isEdit={isEdit}
-                    defaultValue={"0%"}
+                    defaultValue={"100%"}
                     disabled={false}
+                    error={(el.efficiency > 999 || el.efficiency < 1) && tableIsChecked}
                     name={el.serviceBookId ? `${el.employeeId}/${el.serviceBookId}` : `${el.employeeId}`}
                     onChange={onChange}/>
                 <div style={{marginLeft: 4, padding: 0}}>%</div>
@@ -164,6 +171,7 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
     ]
 
     const onDateChange = (date: TParsableDate) => {
+        setTableChecked(false)
         dispatch(setDateRange({
             from: dayjs(date).format(CALENDAR_FORMAT),
             to: dayjs(date).add(6, 'days').format(CALENDAR_FORMAT)

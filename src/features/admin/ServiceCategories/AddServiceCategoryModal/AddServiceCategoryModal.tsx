@@ -29,6 +29,7 @@ import {visitCenterTabs} from "../constants";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import OpsCodesSelected from "./OpsCodesSelected/OpsCodesSelected";
 
 type TAddServiceCategoryProps = DialogProps & {
     editingItem: ICategory | null;
@@ -70,6 +71,12 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
         const currentServiceType = selectedServiceType === EServiceType.VisitCenter ? EServiceType.VisitCenter : EServiceType.MobileService;
         return config.find(item => item.serviceType === currentServiceType)
     }, [config, selectedServiceType])
+
+    const filteredIndCodes = useMemo(() => allAssignedList.filter(el => selectedCodesWithOrder.find(item => item.id === el.id)),
+        [allAssignedList, selectedCodesWithOrder])
+
+    const categoryHasCodesOrder = useMemo(() => categoryType?.value === EServiceCategoryType.IndividualServices || categoryType?.value === EServiceCategoryType.Diagnose,
+        [categoryType])
 
     useEffect(() => {
         setSelectedServiceType(filter);
@@ -146,7 +153,7 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
     }, [fileState, tabServiceType])
 
     const onError = (err: any) => {
-        if (categoryType?.value === EServiceCategoryType.IndividualServices || categoryType?.value === EServiceCategoryType.Diagnose) {
+        if (categoryHasCodesOrder) {
             const orderIndexes = selectedCodesWithOrder.map(item => +item.orderIndex);
             setWrongOrderIndexes(findMissingNumbers(orderIndexes))
         }
@@ -192,8 +199,7 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
                     } else {
                         data.serviceRequests = selectedCodes.map(({id}) => ({id}));
                     }
-                } else if (categoryType.value === EServiceCategoryType.Diagnose
-                    || categoryType.value === EServiceCategoryType.IndividualServices) {
+                } else if (categoryHasCodesOrder) {
                     if (!selectedCodesWithOrder.length) {
                         return showError('Please choose service requests for category')
                     } else {
@@ -220,7 +226,7 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
                 }
             }
         }
-    }, [selectedSC, categoryName, definedPage, categoryType, orderIndex, selectedCodes,
+    }, [selectedSC, categoryName, definedPage, categoryType, categoryHasCodesOrder, orderIndex, selectedCodes,
         editingItem, fileState, visitCenterConfig, description, isCommentRequired, selectedServiceType, tabServiceType, selectedCodesWithOrder])
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
@@ -262,6 +268,28 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
 
     const handleSwitch = (e: any, value: boolean) => {
         setIsCommentRequired(value);
+    }
+
+    const onDelete = (serviceRequest: IAssignedServiceRequest) => {
+        if (categoryHasCodesOrder) {
+            setSelectedCodesWithOrder(prev => {
+                const codeToChange = prev.find(item => item.id === serviceRequest.id);
+                if (codeToChange) {
+                    if (codeToChange.orderIndex) {
+                        const data = prev.map(code => ({
+                            ...code,
+                            orderIndex: +code.orderIndex > +codeToChange.orderIndex ? `${+code.orderIndex - 1}` : code.orderIndex
+                        }))
+                        return data.filter(item => item.id !== serviceRequest.id)
+                    } else {
+                        return prev.filter(item => item.id !== serviceRequest.id)
+                    }
+                }
+                return prev;
+            })
+        } else {
+            setSelectedCodes(prev => prev.filter(el => el.id !== serviceRequest.id))
+        }
     }
 
     return (
@@ -349,18 +377,19 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
                         label="Comment Field Is Required"
                         labelPlacement="start"
                     />
+                    <OpsCodesSelected
+                        selectedCodes={categoryHasCodesOrder ? filteredIndCodes : selectedCodes}
+                        onDelete={onDelete}/>
                 </div>
                 <TextField
                     fullWidth
-                    multiline
-                    rows={4}
                     value={description}
                     label="Service Category Description"
                     placeholder="Enter Description"
                     onChange={onDescriptionChange}
                 />
                 <Divider/>
-                {categoryType?.value === EServiceCategoryType.IndividualServices || categoryType?.value === EServiceCategoryType.Diagnose
+                {categoryHasCodesOrder
                     ? <OpsCodesOrderTable
                         selectedCodes={selectedCodesWithOrder}
                         setSelectedCodes={setSelectedCodesWithOrder}

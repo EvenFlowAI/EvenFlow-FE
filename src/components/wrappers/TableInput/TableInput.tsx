@@ -11,6 +11,7 @@ export const TableInput: React.FC<React.PropsWithChildren<React.PropsWithChildre
     defaultValue?: string;
     type?: string;
     disabled?: boolean;
+    error?: boolean;
 }>>> = ({
                                        name,
                                        value,
@@ -19,7 +20,8 @@ export const TableInput: React.FC<React.PropsWithChildren<React.PropsWithChildre
                                        endAdornment,
                                        defaultValue,
                                        type,
-                                       disabled
+                                       disabled,
+    error
 }) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
@@ -32,6 +34,7 @@ export const TableInput: React.FC<React.PropsWithChildren<React.PropsWithChildre
         inputProps={{
             min: 0
         }}
+        error={error}
         disabled={disabled}
         endAdornment={!isXS ? endAdornment : undefined}
         onChange={onChange}

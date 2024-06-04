@@ -7,8 +7,7 @@ import {TextField} from "../../../../components/formControls/TextFieldStyled/Tex
 import {Button, Switch} from "@mui/material";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {SwitcherLabel} from "../styles";
-import {useStyles} from "./styles";
+import {SwitcherLabel, useStyles} from "./styles";
 
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";

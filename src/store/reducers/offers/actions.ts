@@ -57,41 +57,57 @@ export const loadArchivedOffers = (serviceCenterId: number): AppThunk => async (
 }
 
 export const createOffer = (data: IOfferForm): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.Offers.Create, {data});
-    dispatch(loadOffers(data.serviceCenterId));
+    try {
+        await Api.call(Api.endpoints.Offers.Create, {data});
+        dispatch(loadOffers(data.serviceCenterId));
+    } catch (err) {
+        console.log(err)
+    }
 }
 export const updateOffer = (data: IOfferForm, archive?: boolean): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.Offers.Edit, {data, urlParams: {id: data?.id || 0}});
-    if (archive) {
-        dispatch(loadArchivedOffers(data.serviceCenterId));
-    } else {
-        dispatch(loadOffers(data.serviceCenterId));
+    try {
+        await Api.call(Api.endpoints.Offers.Edit, {data, urlParams: {id: data?.id || 0}});
+        if (archive) {
+            dispatch(loadArchivedOffers(data.serviceCenterId));
+        } else {
+            dispatch(loadOffers(data.serviceCenterId));
+        }
+    } catch (err) {
+        console.log(err)
     }
 }
 export const removeOffer = (offer: IOffer, archive?: boolean): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.Offers.ChangeStatus, {
-        urlParams: {id: offer.id}, data: {status: EOfferStatus.Deleted}
-    });
-    if (archive) {
-        dispatch(loadArchivedOffers(offer.serviceCenterId));
-    } else {
-        dispatch(loadOffers(offer.serviceCenterId));
+    try {
+        await Api.call(Api.endpoints.Offers.ChangeStatus, {
+            urlParams: {id: offer.id}, data: {status: EOfferStatus.Deleted}
+        });
+        if (archive) {
+            dispatch(loadArchivedOffers(offer.serviceCenterId));
+        } else {
+            dispatch(loadOffers(offer.serviceCenterId));
+        }
+    } catch (err) {
+        console.log(err)
     }
 }
 export const setArchiveOffer = (data: IOffer, archive?: boolean): AppThunk => async dispatch => {
-    await Api.call(
-        Api.endpoints.Offers.ChangeStatus,
-        {
-            data: {
-                status: data.status === EOfferStatus.Archived ? EOfferStatus.None : EOfferStatus.Archived
-            },
-            urlParams: {
-                id: data.id
-            }
-        });
-    if (archive) {
-        dispatch(loadArchivedOffers(data.serviceCenterId));
-    } else {
-        dispatch(loadOffers(data.serviceCenterId));
+    try {
+        await Api.call(
+            Api.endpoints.Offers.ChangeStatus,
+            {
+                data: {
+                    status: data.status === EOfferStatus.Archived ? EOfferStatus.None : EOfferStatus.Archived
+                },
+                urlParams: {
+                    id: data.id
+                }
+            });
+        if (archive) {
+            dispatch(loadArchivedOffers(data.serviceCenterId));
+        } else {
+            dispatch(loadOffers(data.serviceCenterId));
+        }
+    } catch (err) {
+        console.log(err)
     }
 }
