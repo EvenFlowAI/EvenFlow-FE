@@ -4,7 +4,7 @@ import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingBu
 import {useActionButtonsStyles} from "../../../hooks/styling/useActionButtonsStyles";
 import {Autocomplete, Grid, InputAdornment, Switch} from "@mui/material";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
-import {TOption} from "../PodsTable/PODModal/types";
+import {TOption} from "../ServiceBookModal/types";
 import {autocompleteRender} from "../../../utils/autocompleteRenders";
 import {Label, SubTitle} from "./styles";
 import ClockTimePicker from "../../../components/pickers/ClockTimePicker/ClockTimePicker";

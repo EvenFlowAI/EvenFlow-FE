@@ -5,7 +5,7 @@ import {Switch, Tab} from "@mui/material";
 import {TabContext, TabPanel} from "@mui/lab";
 import { DayOfWeekTab } from '../../../features/admin/PricingLevels/DayOfWeekTab';
 import {Eligibility} from "../../../features/admin/Eligibility/Eligibility";
-import {PricingOptimization} from "../../../features/admin/PricingOptimization/PricingOptimization";
+import {PriceCalculations} from "../../../features/admin/PriceCalculations/PriceCalculations";
 import {TimeOfDayPricing} from "../../../features/admin/TimeOfDayPricing/TimeOfDayPricing";
 import { changePricingOpt } from '../../../store/reducers/serviceCenters/actions';
 import {useDispatch, useSelector} from "react-redux";
@@ -31,10 +31,10 @@ const tabs: Tab[] = [
     {id: "1", label: "Time Of Day", component: <TimeOfDayPricing />},
     {id: "2", label: "Day Of Week", component: <DayOfWeekTab />},
     {id: "3", label: "Time Of Year", component: <TimeOfYear />},
-    {id: "4", label: "Price Calculations", component: <PricingOptimization />},
+    {id: "4", label: "Price Calculations", component: <PriceCalculations />},
 ]
 
-export const PricingSettingsPage = () => {
+export const ServicePricingSettings = () => {
     const [saving, setSaving] = useState<boolean>(false);
     const [selectedTab, selectTab] = useState<string>("0");
     const {selectedSC} = useSCs();

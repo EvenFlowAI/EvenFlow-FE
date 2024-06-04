@@ -13,7 +13,7 @@ import DealershipGroups from "../../pages/admin/DealershipGroups/DealershipGroup
 import {useCurrentUser} from "../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../constants";
 import EmployeesRoutes from "../EmployeesRoutes/EmployeesRoutes";
-import {DealerOperations} from "../../pages/admin/DealerOperations/Dashboard";
+import {DealerOperations} from "../../pages/admin/DealerOperations/DealerOperations";
 import ServicesRoutes from "../ServicesRoutes/ServicesRoutes";
 import CenterProfileRoutes from "../CenterProfileRoutes/CenterProfileRoutes";
 

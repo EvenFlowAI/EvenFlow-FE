@@ -11,17 +11,17 @@ import {ReactComponent as BaysIcon} from "../../../assets/img/Icon_6 _Bays.svg";
 import {ReactComponent as BreaksIcon} from "../../../assets/img/Icon 4 Breaks.svg";
 import {ReactComponent as LockOutlined} from "../../../assets/img/Icon 5 Holidays.svg";
 import LaborRateModal from "../../../features/admin/LaborRateModal/LaborRateModal";
-import {useStyles} from "./styles";
-import {TItem} from "./types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {centerProfileRoot} from "../../../utils/constants";
+import {useDashboardStyles} from "../../../hooks/styling/useDashboardStyles";
+import {TDashboardItem} from "../../../types/types";
 
-export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChildren>> = () => {
+export const FacilitySetUp: React.FC<React.PropsWithChildren<React.PropsWithChildren>> = () => {
     const {selectedSC} = useSCs();
     const currentUser = useCurrentUser();
-    const { classes  } = useStyles();
+    const { classes  } = useDashboardStyles();
 
     const isCCRView: boolean = useMemo(() => {
         return ["Call Center Rep", "Advisor"].includes(currentUser?.role || "")
@@ -57,7 +57,7 @@ export const AdminDashboard: React.FC<React.PropsWithChildren<React.PropsWithChi
         isOpen: isOpenLaborRate,
     } = useModal();
 
-    const items: TItem[] = [
+    const items: TDashboardItem[] = [
         {label: "Hours of operation", icon: <HoursIcon />, action: onOpenHOO},
         {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
         {label: "Breaks", icon: <BreaksIcon />, action: onOpenB},
