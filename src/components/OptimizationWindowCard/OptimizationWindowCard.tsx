@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Paper} from "@mui/material";
-import {useCardStyles} from "../../../../hooks/styling/useCardStyles";
+import {useCardStyles} from "../../hooks/styling/useCardStyles";
 
 export type TOptimizationPlateProps = {
     onEdit: () => void;

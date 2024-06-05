@@ -3,7 +3,7 @@ import {Grid} from "@mui/material";
 import {EOptimizationWindowType} from "../../../store/reducers/optimizationWindows/types";
 import {
     OptimizationWindowCard
-} from "../../../pages/admin/OptimizationWindows/OptimizationWindowCard/OptimizationWindowCard";
+} from "../../../components/OptimizationWindowCard/OptimizationWindowCard";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadOptimizationWindows} from "../../../store/reducers/optimizationWindows/actions";

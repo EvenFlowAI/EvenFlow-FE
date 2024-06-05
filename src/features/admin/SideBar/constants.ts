@@ -127,12 +127,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.CapacityManagement.OptimizationWindows,
-                name: "Optimization Windows",
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
                 to: Routes.CapacityManagement.ManageEXEvenFlowAppointments,
                 name: "Manage Ex EvenFlow Appointments",
                 sub: true,
