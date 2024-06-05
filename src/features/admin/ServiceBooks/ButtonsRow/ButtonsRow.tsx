@@ -4,7 +4,7 @@ import {ReactComponent as Checked} from '../../../../assets/img/checkmark.svg'
 import {ReactComponent as Unchecked} from '../../../../assets/img/radiobutton_unchecked.svg'
 import {Button} from "@mui/material";
 import {useModal} from "../../../../hooks/useModal/useModal";
-import {PODModal} from "../../PodsTable/PODModal/PODModal";
+import {ServiceBookModal} from "../../ServiceBookModal/ServiceBookModal";
 import RecalculateCapacity from "../../../../components/buttons/RecalculateCapacity/RecalculateCapacity";
 
 const ButtonsRow = () => {
@@ -22,7 +22,7 @@ const ButtonsRow = () => {
                 <Button variant="contained" onClick={onOpen}>Create Service Book</Button>
                 <RecalculateCapacity/>
             </ButtonsWrapper>
-            <PODModal open={isOpen} onClose={onClose} editingItemId={undefined} />
+            <ServiceBookModal open={isOpen} onClose={onClose} editingItemId={undefined} />
         </Wrapper>
     );
 };

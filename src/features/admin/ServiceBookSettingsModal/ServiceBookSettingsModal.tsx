@@ -4,7 +4,7 @@ import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingBu
 import {useActionButtonsStyles} from "../../../hooks/styling/useActionButtonsStyles";
 import {Autocomplete, Grid, InputAdornment, Switch} from "@mui/material";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
-import {TOption} from "../PodsTable/PODModal/types";
+import {TOption} from "../ServiceBookModal/types";
 import {autocompleteRender} from "../../../utils/autocompleteRenders";
 import {Label, SubTitle} from "./styles";
 import ClockTimePicker from "../../../components/pickers/ClockTimePicker/ClockTimePicker";
@@ -161,13 +161,13 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
             showError('"Appointments Per Slots" must be equal or more than 0')
         }
         if (form.technicianEfficiency) {
-            if (form.technicianEfficiency < 0) {
+            if (form.technicianEfficiency < 1) {
                 isValid = false
-                showError('"Technician Efficiency" must be equal or more than 0')
+                showError('"Technician Efficiency" must be more than 0')
             }
             if (form.technicianEfficiency > 999) {
                 isValid = false
-                showError('"Technician Efficiency" must be less than 1000')
+                showError('"Technician Efficiency" must be  more than 999')
             }
             if (!Number.isInteger(+form.technicianEfficiency)) {
                 showError('"Technician Efficiency" must be a whole number')
