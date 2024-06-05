@@ -71,8 +71,12 @@ export const AppointmentComment: React.FC<React.PropsWithChildren<React.PropsWit
 
     const onSubmit = () => {
         const isCommentRequired = subService ? subService?.isCommentRequired : service?.isCommentRequired;
-        if (isCommentRequired && !description.length) {
-            return onErrorOpen();
+        if (!description.trim().length) {
+            if (isCommentRequired) {
+                return onErrorOpen();
+            } else {
+                dispatch(setFrameDescription(''))
+            }
         }
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
             dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid))

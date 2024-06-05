@@ -59,7 +59,7 @@ export const AdminRoutes = () => {
                 ? <Redirect to={Routes.Admin.DealershipGroups} />
                 : currentRoleIsRestricted
                     ? <Redirect to={Routes.Admin.Appointments} />
-                    : <Redirect to={Routes.Admin.Base} />}
+                    : <Redirect to={Routes.Admin.Appointments} />}
         </Switch>
     </ContentContainer>;
 }
