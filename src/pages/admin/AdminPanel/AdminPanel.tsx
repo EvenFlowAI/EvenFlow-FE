@@ -59,7 +59,7 @@ export const AdminPanel = () => {
             <Toolbar id="backToTopAnchor" style={{height: navBarHeight || undefined}} />
             <Switch>
                 <PrivateRoute path={Routes.Admin.Base} component={AdminRoutes} />
-                <Redirect to={Routes.Admin.Base} />
+                <Redirect to={Routes.Admin.Appointments} />
             </Switch>
         </div>
     </div>

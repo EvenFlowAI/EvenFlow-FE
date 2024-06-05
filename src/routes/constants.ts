@@ -11,7 +11,6 @@ import {
 } from "./types";
 
 export const Routes = {
-    Home: "/",
     Admin: AdminRoutes,
     Login: AdminLogin,
     EndUser: EndUser,
