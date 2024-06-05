@@ -18,24 +18,24 @@ const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
         val: el => el.serviceRequestOverride?.description?.length ?  el.serviceRequestOverride.description : el.serviceRequest.description
     },
     {
-        header: "PARTS UNIT COST",
+        header: "LABOR HOURS",
         align: "center",
-        val: el => `$${el.serviceRequestOverride?.partsUnitCost ?? el.serviceRequest.partsUnitCost}`
+        val: el => `${el.serviceRequestOverride?.durationInHours?.toFixed(1) ?? el.serviceRequest.durationInHours.toFixed(1)}`
     },
     {
-        header: "# Of PARTS",
+        header: "LABOR AMOUNT",
         align: "center",
-        val: el => `${el.serviceRequestOverride?.numberOfParts ?? el.serviceRequest.numberOfParts}`
+        val: el => `${el.serviceRequestOverride?.warrantyInvoiceAmount?.toFixed(2) ?? el.serviceRequest.warrantyInvoiceAmount.toFixed(2)}`
     },
     {
         header: "PARTS AMOUNT",
         align: "center",
-        val: el => `$${el.serviceRequestOverride?.partsAmount ?? 0}`
+        val: el => `$${el.serviceRequestOverride?.partsUnitCost?.toFixed(2) ?? el.serviceRequest?.partsUnitCost?.toFixed(2)}`
     },
     {
-        header: "INVOICE AMOUNT",
+        header: "TOTAL AMOUNT",
         align: "center",
-        val: el => `$${el.serviceRequestOverride?.invoiceAmount ?? el.serviceRequest.invoiceAmount}`
+        val: el => `$${el.serviceRequestOverride?.invoiceAmount?.toFixed(2) ?? el.serviceRequest.invoiceAmount?.toFixed(2)}`
     },
 ]
 
