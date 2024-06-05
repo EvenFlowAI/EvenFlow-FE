@@ -2,8 +2,8 @@ import React, {useEffect, useMemo} from 'react';
 import {Grid} from "@mui/material";
 import {EOptimizationWindowType} from "../../../store/reducers/optimizationWindows/types";
 import {
-    OptimizationWindowCard
-} from "../../../components/OptimizationWindowCard/OptimizationWindowCard";
+    ShowEditDataCard
+} from "../../../components/wrappers/ShowEditDataCard/ShowEditDataCard";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {loadOptimizationWindows} from "../../../store/reducers/optimizationWindows/actions";
@@ -60,7 +60,7 @@ const SearchWindows = () => {
     return <>
         <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={4} key={'First Available Search'}>
-                <OptimizationWindowCard
+                <ShowEditDataCard
                     onEdit={onFirstOpen}
                     title={windowsContent[EOptimizationWindowType.FirstAvailable].title}
                     count={firstAvailable ? firstAvailable.value : ''}
@@ -71,7 +71,7 @@ const SearchWindows = () => {
                 />
             </Grid>
             <Grid item xs={12} sm={6} md={4} key={'First Available Search'}>
-                <OptimizationWindowCard
+                <ShowEditDataCard
                     onEdit={onSpecificOpen}
                     title={windowsContent[EOptimizationWindowType.SpecificDate].title}
                     count={specificDate ? specificDate.value : ''}
