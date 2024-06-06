@@ -67,10 +67,14 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                     }
                 }
             } else if (currentUser?.role === "Technician" && technicians.length) {
-                const currentTechnician = technicians.find(el => el.dmsId.toString() === currentUser.dmsId);
-                if (currentTechnician) {
-                    dispatch(setAppointmentsLoading(true))
-                    setFilters(prev => ({...prev, technician: currentTechnician, initialFiltersSet: true}))
+                if (!currentUser.dmsId) {
+                    showError("The user does not have DMS ID assigned")
+                } else {
+                    const currentTechnician = technicians.find(el => el.dmsId.toString() === currentUser.dmsId);
+                    if (currentTechnician) {
+                        dispatch(setAppointmentsLoading(true))
+                        setFilters(prev => ({...prev, technician: currentTechnician, initialFiltersSet: true}))
+                    }
                 }
             } else {
                 setFilters(prev => ({...prev, initialFiltersSet: true}))

@@ -29,7 +29,7 @@ const rowData: TableRowDataType<IHoliday>[] = [
 ]
 
 export const HolidaysModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TViewMode>>> = ({viewMode, ...props}) => {
-    const {holidaysList, loading} = useSelector(({holidays}: RootState) => holidays);
+    const {holidaysList, loading, pageData} = useSelector(({holidays}: RootState) => holidays);
     const {currentUser} = useSelector(({users}: RootState) => users);
     const [editedItem, setEditedItem] = useState<IHoliday|undefined>();
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
@@ -50,7 +50,7 @@ export const HolidaysModal: React.FC<React.PropsWithChildren<React.PropsWithChil
         if (props.open && selectedSC) {
             dispatch(loadAllHolidays(selectedSC.id));
         }
-    }, [dispatch, props.open, selectedSC]);
+    }, [dispatch, props.open, selectedSC, pageData]);
 
     const reloadHolidays = () => {
         if (selectedSC) {
