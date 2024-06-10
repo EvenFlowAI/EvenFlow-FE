@@ -98,7 +98,7 @@ export const AppointmentComment: React.FC<React.PropsWithChildren<React.PropsWit
     }
 
     const handleBack = () => {
-        removeLastCategory();
+        // removeLastCategory();
         clearData();
         handleSetScreen("serviceNeeds");
     }
