@@ -30,12 +30,12 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
                 roles: ["Owner", "Manager", "Service Director"],
                 sub: true,
             },
-            {
-                to: Routes.CenterProfile.Integrations,
-                name: "Integrations",
-                roles: ["Owner", "Manager", "Service Director"],
-                sub: true,
-            }
+            // {
+            //     to: Routes.CenterProfile.Integrations,
+            //     name: "Integrations",
+            //     roles: ["Owner", "Manager", "Service Director"],
+            //     sub: true,
+            // }
         ]
     },
     {
