@@ -66,6 +66,12 @@ export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
         val: el => typeof el.reportingStatus !== 'undefined' && Number.isInteger(el.reportingStatus) ? reportingStatuses[el.reportingStatus] : "",
         orderId: "reportingStatus"
     },
+    {
+        header: "Created Date",
+        required: true,
+        val: el => el.createdDateTime ? dayjs.utc(el.createdDateTime).format("ddd, MMMM D, YYYY") : "",
+        orderId: "createdDateTime"
+    },
 ]
 export const allColumns = AppointmentsColumns.map(el => el.header.toString());
 export const requiredColumns = AppointmentsColumns.filter(el => el.required).map(el => el.header.toString());
