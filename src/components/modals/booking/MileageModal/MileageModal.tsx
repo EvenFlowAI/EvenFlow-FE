@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     BaseModal,
     DialogActions,
@@ -19,9 +19,19 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback}> = ({open, onClos
     const {selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {t} = useTranslation();
+    const [value, setValue] = useState<string>('')
+
+    useEffect(() => {
+        setValue(selectedVehicle?.mileage ? selectedVehicle.mileage.toString() : '')
+    }, [selectedVehicle])
 
     const handleChange = (e: React.ChangeEvent<{}>, option: string) => {
-        dispatch(updateVehicle({mileage: +option}))
+        setValue(option)
+    }
+
+    const handleSave = () => {
+        dispatch(updateVehicle({mileage: +value}))
+        onSave()
     }
 
     return (
@@ -39,13 +49,13 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback}> = ({open, onClos
                             label: t("Estimated mileage"),
                             required: true
                         })}
-                        value={selectedVehicle?.mileage ? selectedVehicle.mileage.toString() : ''}
+                        value={value}
                     />
                 </div>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} variant="outlined">Cancel</Button>
-                <Button onClick={onSave} variant="contained" color="info">Save</Button>
+                <Button onClick={handleSave} variant="contained" color="info">Save</Button>
             </DialogActions>
         </BaseModal>
     );
