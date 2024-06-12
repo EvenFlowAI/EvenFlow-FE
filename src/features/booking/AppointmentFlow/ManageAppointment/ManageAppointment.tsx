@@ -48,7 +48,6 @@ import AddressManaging from "./AddressManaging/AddressManaging";
 import {ButtonWrapper, ManageTitle, Wrapper} from "./styles";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
-
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
@@ -56,6 +55,7 @@ import {Routes} from "../../../../routes/constants";
 import CustomerConsents from "../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 import OpenModalLink from "../../../../components/wrappers/OpenModalLink/OpenModalLink";
 import CommentModal from "../../../../components/modals/booking/CommentModal/CommentModal";
+import MileageModal from "../../../../components/modals/booking/MileageModal/MileageModal";
 
 type TProps = {
     onChangeSlot: TCallback;
@@ -80,12 +80,14 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         isConsentsLoading,
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const {isLoading} = useSelector(({recalls}: RootState) => recalls);
+    const {mileage} = useSelector(({vehicleDetails}: RootState) => vehicleDetails);
 
     const [errors, setErrors] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const currentUser = useCurrentUser();
     const {id} = useParams<{id: string}>();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
+    const {isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen} = useModal();
     const {isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen} = useModal();
     const {isOpen: isCancelConfirmOpen, onClose: onCancelConfirmClose, onOpen: onCancelConfirmOpen} = useModal();
     const {isOpen: isCommentOpen, onClose: onCommentClose, onOpen: onCommentOpen} = useModal();
@@ -93,7 +95,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     const showError = useException();
     const dispatch = useDispatch();
     const {t} = useTranslation();
-    const {askConfirm} = useConfirm();
+    const {askConfirm, closeConfirm} = useConfirm();
     const showMessage = useMessage();
     const history = useHistory();
 
@@ -183,8 +185,13 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     }
 
     const handleCreateAppointment = () => {
-        if (checkIsValid()) {
-            dispatch(createOrUpdateAppointment(decodeSCID(id), onNext, handleError, isMobile, Boolean(currentUser)))
+        const mileageIsValid = selectedVehicle?.mileage && mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString())
+        if (mileageIsValid) {
+            onMileageOpen()
+        } else {
+            if (checkIsValid()) {
+                dispatch(createOrUpdateAppointment(decodeSCID(id), onNext, handleError, isMobile, Boolean(currentUser)))
+            }
         }
     }
 
@@ -307,5 +314,6 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         <CommentModal open={isCommentOpen} onClose={onCommentClose}/>
         <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
         <CustomerConsents onNext={handleCreateAppointment}/>
+        <MileageModal open={isMileageOpen} onClose={onMileageClose} onSave={handleCreateAppointment}/>
     </StepWrapper>
 };
