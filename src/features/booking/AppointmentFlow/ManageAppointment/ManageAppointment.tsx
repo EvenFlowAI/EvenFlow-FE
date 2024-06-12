@@ -186,7 +186,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
 
     const handleCreateAppointment = () => {
         const mileageIsValid = selectedVehicle?.mileage && mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString())
-        if (mileageIsValid) {
+        if (!mileageIsValid) {
             onMileageOpen()
         } else {
             if (checkIsValid()) {

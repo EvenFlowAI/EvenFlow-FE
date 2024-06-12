@@ -91,6 +91,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     } = useSelector((state: RootState) => state.bookingFlowConfig)
 
     const {allCategories} = useSelector((state: RootState) => state.categories);
+    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
 
     const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
     const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
@@ -268,7 +269,9 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     }, [])
 
     useEffect(() => {
-        if (!selectedVehicle?.mileage) {
+        const mileageIsValid = selectedVehicle?.mileage
+            && mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString())
+        if (!mileageIsValid) {
             setLoading(true);
             setTimeout(() => {
                 setLoading(false)
@@ -280,7 +283,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     }, [
         dispatch, id, selectedTiming,
         selectedVehicle, customerLoadedData, service, packagePricingType, packageEMenuType, serviceTypeOption,
-        subService, selectedPackage, selectedSR, advisor, valueService, serviceType, selectedTime, zipCode, address,
+        subService, selectedPackage, selectedSR, advisor, valueService, serviceType, selectedTime, zipCode, address, mileage
     ]);
 
     const handleGANext = useCallback(() => {
