@@ -95,7 +95,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     const showError = useException();
     const dispatch = useDispatch();
     const {t} = useTranslation();
-    const {askConfirm, closeConfirm} = useConfirm();
+    const {askConfirm} = useConfirm();
     const showMessage = useMessage();
     const history = useHistory();
 
