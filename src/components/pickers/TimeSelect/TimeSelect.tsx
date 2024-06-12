@@ -7,7 +7,14 @@ import {ReactComponent as CounterUpDisabled} from '../../../assets/img/counter1_
 import {ReactComponent as CounterDown} from '../../../assets/img/counter2.svg'
 import {ReactComponent as CounterDownDisabled} from '../../../assets/img/counter2_disabled.svg'
 import {TDayPeriod} from "../../../types/types";
-import {hourFormat, time12HourFormat, timeSpanString, twelveHourFormat} from "../../../utils/constants";
+import {
+    hourFormat,
+    time12HourFormat,
+    time24HourFormat,
+    timeSpanString,
+    twelveHourFormat
+} from "../../../utils/constants";
+import {useException} from "../../../hooks/useException/useException";
 
 type TProps = {
     start: string;
@@ -19,6 +26,8 @@ type TProps = {
     error?: boolean;
     width?: number|string;
     disableClearable: boolean;
+    downArrowErrorText?: string;
+    upArrowErrorText?: string;
 }
 
 const TimeSelect: React.FC<TProps> = ({
@@ -30,12 +39,15 @@ const TimeSelect: React.FC<TProps> = ({
                                           disabled,
                                           error,
                                           width,
-                                          disableClearable}) => {
+                                          disableClearable,
+                                          downArrowErrorText,
+                                          upArrowErrorText}) => {
     const [period, setPeriod] = useState<TDayPeriod>("am")
+    const showError = useException();
 
     const timeOptions = useMemo(() => {
-        const startTime = dayjs("01:00", hourFormat)
-        const endTime = dayjs("12:00", hourFormat)
+        const startTime = dayjs().startOf('day')
+        const endTime = dayjs("11:30 AM", time24HourFormat)
         const options: string[] = [];
         let currentTime = startTime;
         while (currentTime.isSameOrBefore(endTime)) {
@@ -43,7 +55,7 @@ const TimeSelect: React.FC<TProps> = ({
             currentTime = currentTime.add(gap, 'minute')
         }
         return options;
-    }, [gap, start, end])
+    }, [gap])
 
     useEffect(() => {
         if (value) {
@@ -76,13 +88,17 @@ const TimeSelect: React.FC<TProps> = ({
     }
 
     const onClickUp = () => {
-        if (upEnabled && !disabled) {
-            onChange(dayjs(value, timeSpanString).add(gap, 'minute').format(timeSpanString))
+        if (!disabled) {
+            upEnabled
+                ? onChange(dayjs(value, timeSpanString).add(gap, 'minute').format(timeSpanString))
+                : showError(upArrowErrorText ?? `The maximum possible value is ${dayjs(end, timeSpanString).format(time24HourFormat)}`)
         }
     }
     const onClickDown = () => {
-        if (downEnabled && !disabled) {
-            onChange(dayjs(value, timeSpanString).subtract(gap, 'minute').format(timeSpanString))
+        if (!disabled) {
+            downEnabled
+                ? onChange(dayjs(value, timeSpanString).subtract(gap, 'minute').format(timeSpanString))
+                : showError(downArrowErrorText ?? `The minimum possible value is ${dayjs(start, timeSpanString).format(time24HourFormat)}`)
         }
     }
 
