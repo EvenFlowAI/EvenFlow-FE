@@ -29,14 +29,14 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback}> = ({open, onClos
         setValue(option)
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
         dispatch(updateVehicle({mileage: +value}))
         onSave()
     }
 
     return (
         <BaseModal open={open} onClose={onClose} width={550}>
-            <DialogTitle onClose={onClose}>Please select the mileage value to proceed</DialogTitle>
+            <DialogTitle onClose={onClose}>{t("Please select your estimated mileage")}</DialogTitle>
             <DialogContent>
                 <div style={{margin: '20px auto', width: '70%',}}>
                     <Autocomplete
@@ -54,8 +54,8 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback}> = ({open, onClos
                 </div>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} variant="outlined">Cancel</Button>
-                <Button onClick={handleSave} variant="contained" color="info">Save</Button>
+                <Button onClick={onClose} variant="outlined">{t("Cancel")}</Button>
+                <Button onClick={handleSave} variant="contained" color="info">{t("Next")}</Button>
             </DialogActions>
         </BaseModal>
     );
