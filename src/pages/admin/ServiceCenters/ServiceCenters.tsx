@@ -15,7 +15,17 @@ export const ServiceCenters = () => {
     const {onOpen, onClose, isOpen} = useModal();
 
     return <>
-        <TitleContainer title={Titles.ServiceCenters} parent={centerProfileRoot} actions={<ServiceCenterActions/>} pad />
+        {currentUser?.isSuperUser
+            ? <TitleContainer
+                title={Titles.ServiceCenters}
+                actions={<ServiceCenterActions/>}
+                pad/>
+            : <TitleContainer
+            title={Titles.ServiceCenters}
+            parent={centerProfileRoot}
+            actions={<ServiceCenterActions/>}
+                         pad/>
+        }
         <ServiceCentersTable editedItem={editedItem} setEditedItem={setEditedItem} onOpen={onOpen}/>
         <CreateServiceCenterModal
             readOnly={currentUser?.isSuperUser}
