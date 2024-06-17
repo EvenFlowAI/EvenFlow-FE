@@ -16,6 +16,7 @@ import EmployeesRoutes from "../EmployeesRoutes/EmployeesRoutes";
 import {DealerOperations} from "../../pages/admin/DealerOperations/DealerOperations";
 import ServicesRoutes from "../ServicesRoutes/ServicesRoutes";
 import CenterProfileRoutes from "../CenterProfileRoutes/CenterProfileRoutes";
+import {ServiceCenters} from "../../pages/admin/ServiceCenters/ServiceCenters";
 
 export const AdminRoutes = () => {
     const currentUser = useCurrentUser();
@@ -27,6 +28,9 @@ export const AdminRoutes = () => {
         <Switch>
             {currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.Admin.DealershipGroups} exact component={DealershipGroups}/>
+                : null}
+            {currentUser.isSuperUser
+                ? <PrivateRoute path={Routes.Admin.ServiceCenters} exact component={ServiceCenters}/>
                 : null}
             {currentUser.isSuperUser
                 ? <PrivateRoute path={`${Routes.Admin.DealershipGroups}/:id`} component={DealershipGroupDetails} />
