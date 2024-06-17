@@ -101,7 +101,8 @@ export function DataCalendar<U>({
                                     d.type === "cur"
                                         ? isEnabled
                                             ? classes.currentMonth
-                                            : classes.nonWorking
+                                            //classes.nonWorking
+                                            : classes.currentMonth
                                         : classes.prevMonth,
                                     dayjs(d.date).isSame(today, "day") ? classes.today : ""
                                 )}
