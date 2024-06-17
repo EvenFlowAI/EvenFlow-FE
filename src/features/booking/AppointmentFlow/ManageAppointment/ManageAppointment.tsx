@@ -10,14 +10,14 @@ import {decodeSCID, getAppointmentDate} from "../../../../utils/utils";
 import {
     clearAppointmentData,
     createOrUpdateAppointment,
-    loadAppointmentRequestsPrices, searchForCustomerConsents,
+    loadAppointmentRequestsPrices, loadConsultantsForUpdating, searchForCustomerConsents, setAnyAdvisorSelected,
     setAppointmentSaving,
     setCurrentFrameScreen,
     setReminders,
     setServiceOptionChanged,
     setSideBarSteps,
     setVehicle,
-    setWelcomeScreenView
+    setWelcomeScreenView, updateConsultant
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -78,6 +78,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         appointmentByKey,
         transportation,
         isConsentsLoading,
+        advisor
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const {isLoading} = useSelector(({recalls}: RootState) => recalls);
     const {mileage} = useSelector(({vehicleDetails}: RootState) => vehicleDetails);
@@ -133,6 +134,22 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         dispatch(setReminders([0, 2]));
     }, [])
 
+    const handleConsultants = async () => {
+        if (appointmentByKey) {
+            await dispatch(loadConsultantsForUpdating(
+                id,
+                appointmentByKey?.serviceTypeOption ? appointmentByKey?.serviceTypeOption.id : null,
+                appointmentByKey))
+            await dispatch(updateConsultant(appointmentByKey.advisor))
+            await dispatch(setAnyAdvisorSelected(appointmentByKey?.advisor?.isAnySelected ?? true))
+        }
+    }
+
+    useEffect(() => {
+        const advisorShouldBeSelected = appointmentByKey?.advisor?.id && !advisor;
+        if (advisorShouldBeSelected && selectedVehicle?.mileage) handleConsultants().then()
+    }, [selectedVehicle, appointmentByKey, advisor])
+
     const checkIsValid = () => {
         let isValid = true;
         const localErrors: string[] = [];
@@ -186,10 +203,11 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
 
     const handleCreateAppointment = () => {
         const mileageIsValid = selectedVehicle?.mileage && mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString())
-        if (!mileageIsValid) {
+        if (!mileageIsValid && !isMileageOpen) {
             onMileageOpen()
         } else {
             if (checkIsValid()) {
+                onMileageClose()
                 dispatch(createOrUpdateAppointment(decodeSCID(id), onNext, handleError, isMobile, Boolean(currentUser)))
             }
         }
@@ -256,7 +274,6 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                 onConfirm: handleCancelAppointment
             });
         }
-
     }
 
     return <StepWrapper>

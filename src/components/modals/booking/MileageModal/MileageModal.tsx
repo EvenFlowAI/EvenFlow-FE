@@ -14,7 +14,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {updateVehicle} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 
-const MileageModal: React.FC<DialogProps & {onSave: TCallback}> = ({open, onClose, onSave}) => {
+const MileageModal: React.FC<DialogProps & {onSave: TCallback, isManagePage?: boolean}> = ({open, onClose, isManagePage, onSave}) => {
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const {selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
@@ -29,9 +29,14 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback}> = ({open, onClos
         setValue(option)
     }
 
-    const handleSave = async () => {
-        dispatch(updateVehicle({mileage: +value}))
-        onSave()
+    const updateData = async () => {
+        await dispatch(updateVehicle({mileage: +value}))
+    }
+
+    const handleSave = () => {
+        isManagePage
+            ? updateData().then(onClose)
+            : updateData().then(onSave)
     }
 
     return (
@@ -55,7 +60,7 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback}> = ({open, onClos
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} variant="outlined">{t("Cancel")}</Button>
-                <Button onClick={handleSave} variant="contained" color="info">{t("Next")}</Button>
+                <Button onClick={handleSave} variant="contained" color="info">{isManagePage ? t("Save") : t("Next")}</Button>
             </DialogActions>
         </BaseModal>
     );
