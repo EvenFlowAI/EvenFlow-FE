@@ -1,4 +1,4 @@
-import {TFilters} from "./types";
+import {EDate, TFilters} from "./types";
 import {IAppointment, reportingStatuses} from "../../../api/types";
 import {TableRowDataType} from "../../../types/types";
 import dayjs from "dayjs";
@@ -23,6 +23,7 @@ export const initialFilters: TFilters = {
     advisor: null,
     technician: null,
     initialFiltersSet: false,
+    dateRangeFilterBy: EDate.AppointmentDate,
 }
 
 export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
@@ -70,7 +71,7 @@ export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
         header: "Created Date",
         required: true,
         val: el => el.createdDateTime ? dayjs.utc(el.createdDateTime).format("ddd, MMMM D, YYYY") : "",
-        orderId: "createdDateTime"
+        orderId: "requestDate"
     },
 ]
 export const allColumns = AppointmentsColumns.map(el => el.header.toString());

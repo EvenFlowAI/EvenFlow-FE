@@ -4,6 +4,11 @@ import {IPageRequest, TParsableDate} from "../../../types/types";
 
 export type TView = "calendar" | "list";
 
+export enum EDate {
+    AppointmentDate,
+    CreatedDate
+}
+
 export type TFilters = {
     searchTerm: string;
     serviceBook: TServiceBook|null;
@@ -16,6 +21,7 @@ export type TFilters = {
     advisor: TServiceConsultant|null;
     technician: TServiceConsultant|null;
     initialFiltersSet: boolean;
+    dateRangeFilterBy: EDate;
 }
 
 export type TViewButton = { label: string, type: TView };

@@ -1,5 +1,4 @@
-import { MenuItem } from "@mui/material";
-
+import {MenuItem, styled} from "@mui/material";
 import {makeStyles, withStyles} from 'tss-react/mui';
 
 export const EmptyMenuItem = withStyles(MenuItem, {
@@ -33,3 +32,21 @@ export const useAutocompleteClasses = makeStyles()(() => ({
         paddingRight: 8,
     },
 }));
+
+export const RadioBlock = styled('div')({
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: 23,
+    "& .MuiFormControlLabel-label": {
+        fontWeight: 700,
+        fontSize: 14,
+    }
+})
+
+export const RadioGroupLabel = styled("div")({
+    fontSize: 14,
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    marginRight: 24,
+})

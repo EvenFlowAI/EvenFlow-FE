@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Autocomplete, Grid, IconButton, Paper} from "@mui/material";
+import {Autocomplete, FormControlLabel, Grid, IconButton, Paper, Radio, RadioGroup} from "@mui/material";
 import {Clear, DateRange} from '@mui/icons-material';
 import {useDispatch, useSelector} from "react-redux";
 import {
     loadSchedulerList,
     loadServiceBookList,
-    loadServiceConsultants, setAppointmentsLoading
+    loadServiceConsultants,
+    setAppointmentsLoading
 } from "../../../../store/reducers/appointments/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {TScheduler, TServiceBook, TServiceConsultant} from "../../../../store/reducers/appointments/types";
@@ -15,12 +16,13 @@ import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/
 import {TOption, TParsableDate} from "../../../../types/types";
 import dayjs from "dayjs";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {useAutocompleteClasses} from "./styles";
+import {RadioBlock, RadioGroupLabel, useAutocompleteClasses} from "./styles";
 import {initialPaging} from "../constants";
 import {statusOptions} from "./constants";
 import {TAppointmentFilterProps} from "./types";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {useException} from "../../../../hooks/useException/useException";
+import {EDate} from "../types";
 
 export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                           status,
@@ -30,7 +32,8 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                           scheduler,
                                                                           serviceBook,
                                                                           advisor,
-                                                                          technician
+                                                                          technician,
+    dateRangeType,
                                                                       }) => {
     const {schedulerList,
         serviceBookList,
@@ -129,10 +132,38 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         setFilters(prev => ({...prev, technician: value, pageData: initialPaging}))
     }
 
+    const handleType = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
+        setFilters(prev => ({
+            ...prev,
+            dateRangeFilterBy: value === "AppointmentDate" ? EDate.AppointmentDate : EDate.CreatedDate
+        }))
+    }
+
     return (
         <Paper variant="outlined" style={{
             borderRadius: 0, marginBottom: 18, padding: 18, width: '100%'
         }}>
+            <RadioBlock>
+                <RadioGroupLabel>Date Search:</RadioGroupLabel>
+                <RadioGroup
+                    row
+                    aria-label="countType"
+                    name="countType"
+                    value={dateRangeType === EDate.AppointmentDate ? 'AppointmentDate' : 'CreatedDate'}
+                    onChange={handleType}
+                >
+                    <FormControlLabel
+                        value={"CreatedDate"}
+                        control={<Radio color="primary"/>}
+                        label="Created Date"
+                    />
+                    <FormControlLabel
+                        value={"AppointmentDate"}
+                        control={<Radio color="primary"/>}
+                        label="Appointment Date"
+                    />
+                </RadioGroup>
+            </RadioBlock>
             <Grid container spacing={2} justifyContent="space-between" alignItems='flex-start'>
                 <Grid item xs={3} key="datepickerFrom">
                     <CustomDatePicker
@@ -141,7 +172,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         open={isOpenFrom}
                         format="MMMM Do"
                         fullWidth
-                        label="Appointment Date From"
+                        label="Date From"
                         InputProps={{
                             placeholder: "Not selected",
                             disabled: isLoading,
@@ -165,7 +196,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         format="MMMM Do"
                         fullWidth
                         shouldDisableDate={day => dayjs(day).isBefore(dateFrom)}
-                        label="Appointment Date To"
+                        label="Date To"
                         InputProps={{
                             placeholder: "Not selected",
                             disabled: isLoading,
