@@ -22,7 +22,7 @@ export const time12HourSeconds = "hh:mm:ss";
 export const time12HourFormat = "h:mm a";
 export const dateTimeString = "ddd, MMM D, h:mm A";
 export const time24HourFormat = "hh:mm A";
-export const hourFormat = "HH:mm";
+export const hourFormat = "h:mm";
 export const twelveHourFormat = "hh:mm";
 
 export const SC_UNDEFINED = "Service center is not loaded";
@@ -54,6 +54,11 @@ export const pricingRoot: TTitle = {
 export const employeesRoot: TTitle = {
     to: Routes.Employees.Base,
     title: "Employees"
+}
+
+export const centerProfileRoot: TTitle = {
+    to: Routes.CenterProfile.Base,
+    title: "Center Profile"
 }
 
 export const SCREENS = {

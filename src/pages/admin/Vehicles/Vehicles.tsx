@@ -4,11 +4,11 @@ import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleC
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@mui/material";
 import {Mileage} from "../../../features/admin/Mileage/Mileage";
-import {bookingFlowRoot} from "../../../utils/constants";
+import {centerProfileRoot} from "../../../utils/constants";
 import {EngineTypes} from "../../../features/admin/EngineTypes/EngineTypes";
 import {MakesModels} from "../../../features/admin/MakesModels/MakesModels";
 
-export const VehicleDetails = () => {
+export const Vehicles = () => {
     const [selectedTab, setTab] = useState<string>("0");
 
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
@@ -16,7 +16,7 @@ export const VehicleDetails = () => {
     }
 
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Vehicle Detail Options" pad parent={bookingFlowRoot}/>
+        <TitleContainer title="Vehicles" pad parent={centerProfileRoot}/>
         <TabList
             onChange={handleTabChange}
             variant="scrollable"

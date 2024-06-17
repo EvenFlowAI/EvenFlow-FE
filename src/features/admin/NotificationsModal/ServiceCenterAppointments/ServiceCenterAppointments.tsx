@@ -133,7 +133,7 @@ const ServiceCenterAppointments: React.FC<React.PropsWithChildren<React.PropsWit
             <div className={classes.tabWrapper}>
                 <div className={classes.tabTitle}>Service Center Appointments</div>
                 <div className={classes.switcherWrapper}>
-                    <p className={classes.notificationsLabel}>on/off Service center and PODs notifications</p>
+                    <p className={classes.notificationsLabel}>on/off Service center and Service Books notifications</p>
                     <Switch
                         onChange={handleSwitch}
                         disabled={loading || isLoading}

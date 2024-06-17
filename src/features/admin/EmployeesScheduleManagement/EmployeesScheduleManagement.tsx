@@ -59,7 +59,7 @@ const EmployeesScheduleManagement = () => {
             return (d.isSame(dayjs.utc(dayjs(date).toDate()), "date") && holiday.isRecurring)
                 || originalDate.isSame(dayjs.utc(date).toDate(), "date");
         });
-        return workingDays.includes(dayjs.utc(date).day() as EDay) && !holiday;
+        return !holiday && workingDays.includes(dayjs.utc(date).day() as EDay);
     }, [workingDays, holidaysList])
 
     const disabledDates = calendarData.filter(el => !checkIsWorkingDay(el.date)).map(el => el.date)

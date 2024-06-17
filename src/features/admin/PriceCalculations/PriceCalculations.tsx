@@ -3,7 +3,7 @@ import {SquarePaper} from "../../../components/styled/Paper";
 import {getPricingCalculations, loadPricingCalculations} from "../../../store/reducers/pricingSettings/actions";
 import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 import {useDispatch, useSelector} from "react-redux";
-import {PaperTitle, TableContainer} from "../../../pages/admin/PricingSettings/UI";
+import {PaperTitle, TableContainer} from "../../../pages/admin/ServicePricingSettings/UI";
 import {Box, Divider, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {mappedCalculationsSelector} from "../../../store/reducers/pricingSettings/selectors";
 import {
@@ -27,7 +27,7 @@ import MaxPriceDateRange from "../MaxPriceDateRange/MaxPriceDateRange";
 
 const fieldStyles = {padding: "4px 10px", border: 0, fontWeight: 400}
 
-export const PricingOptimization = () => {
+export const PriceCalculations = () => {
     const [sr, setSr] = useState<IAssignedServiceRequestShort|null>(null);
     const [demand, setDemand] = useState<TEnumMap<EDemandCategory>|null>({id: EDemandCategory.Average, label: "Average"});
     const dispatch = useDispatch();

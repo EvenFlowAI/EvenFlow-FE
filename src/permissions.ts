@@ -11,7 +11,10 @@ export const PERMISSIONS: TRouteRoleMap[] = [
     {route: Routes.Employees.Base, roles: ["Manager", "Owner", "Service Director"]},
     {route: Routes.Employees.AddDelete, roles: ["Manager", "Owner", "Service Director"]},
     {route: Routes.Admin.Profile, roles: true},
-    {route: Routes.Admin.ServiceCenters, roles: ["Super Admin", "Owner", "Manager",  "Service Director"]},
+    {route: Routes.CenterProfile.Base, roles: ["Super Admin", "Owner", "Manager",  "Service Director"]},
+    {route: Routes.CenterProfile.FacilitySetUp, roles: ["Super Admin", "Owner", "Manager",  "Service Director"]},
+    {route: Routes.CenterProfile.Vehicles, roles: ["Super Admin", "Owner", "Manager",  "Service Director"]},
+    {route: Routes.CenterProfile.Integrations, roles: ["Super Admin", "Owner", "Manager",  "Service Director"]},
     {route: Routes.Admin.ServiceRequests, roles: ["Owner", "Manager", "Service Director"]},
 
     {route: Routes.Account.ResetPassword, roles: true},

@@ -1,6 +1,6 @@
-import {IAdvisorShort} from "../../../../store/reducers/users/types";
-import {IBayShort} from "../../../../store/reducers/bays/types";
-import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
+import {IAdvisorShort} from "../../../store/reducers/users/types";
+import {IBayShort} from "../../../store/reducers/bays/types";
+import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 
 export type TOption = {
     value: number;

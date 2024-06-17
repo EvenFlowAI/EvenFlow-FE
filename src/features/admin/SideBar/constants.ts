@@ -7,8 +7,37 @@ export const SULinks: LinkType[] = [
 ];
 
 export const MainLinksWithSub: LinkTypeWithSub[] = [
-    {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Owner", "Service Director"]},
-    {to: Routes.Admin.Base, name: "Operational Set Up", exact: true, roles: ["Owner", "Manager", "Service Director"]},
+    {
+        to: Routes.CenterProfile.Base,
+        name: "Center Profile",
+        roles: ["Owner", "Manager", "Service Director"],
+        subLinks: [
+            {
+                to: Routes.CenterProfile.ServiceCenters,
+                name: "Service Centers",
+                roles: ["Owner", "Manager", "Service Director"],
+                sub: true,
+            },
+            {
+                to: Routes.CenterProfile.FacilitySetUp,
+                name: "Facility Set Up",
+                roles: ["Owner", "Manager", "Service Director"],
+                sub: true,
+            },
+            {
+                to: Routes.CenterProfile.Vehicles,
+                name: "Vehicles",
+                roles: ["Owner", "Manager", "Service Director"],
+                sub: true,
+            },
+            // {
+            //     to: Routes.CenterProfile.Integrations,
+            //     name: "Integrations",
+            //     roles: ["Owner", "Manager", "Service Director"],
+            //     sub: true,
+            // }
+        ]
+    },
     {
         to: Routes.Employees.Base,
         name: "Employees",
@@ -98,12 +127,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
                 roles: ["Owner", "Manager", "Service Director"]
             },
             {
-                to: Routes.CapacityManagement.OptimizationWindows,
-                name: "Optimization Windows",
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
                 to: Routes.CapacityManagement.ManageEXEvenFlowAppointments,
                 name: "Manage Ex EvenFlow Appointments",
                 sub: true,
@@ -168,13 +191,6 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
             {
                 to: Routes.BookingFlow.ScreenSettings,
                 name: "Screen Settings",
-                exact: true,
-                sub: true,
-                roles: ["Owner", "Manager", "Service Director"]
-            },
-            {
-                to: Routes.BookingFlow.VehicleDetails,
-                name: "Vehicle Detail Options",
                 exact: true,
                 sub: true,
                 roles: ["Owner", "Manager", "Service Director"]

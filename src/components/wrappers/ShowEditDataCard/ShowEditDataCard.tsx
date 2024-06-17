@@ -1,8 +1,8 @@
 import React from "react";
 import {Button, Paper} from "@mui/material";
-import {useCardStyles} from "../../../../hooks/styling/useCardStyles";
+import {useCardStyles} from "../../../hooks/styling/useCardStyles";
 
-export type TOptimizationPlateProps = {
+export type TShowEditDataCardProps = {
     onEdit: () => void;
     title: string;
     count: number|string;
@@ -12,7 +12,7 @@ export type TOptimizationPlateProps = {
     helperText: string;
 }
 
-export const OptimizationWindowCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TOptimizationPlateProps>>> = ({
+export const ShowEditDataCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TShowEditDataCardProps>>> = ({
     onEdit,
     title,
     count,

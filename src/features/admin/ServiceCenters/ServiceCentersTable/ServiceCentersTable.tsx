@@ -20,14 +20,14 @@ const rowDataSU: TableRowDataType<IServiceCenterExtended>[] = [
     {val: (el: IServiceCenterExtended) => el.dealership.name, header: "Dealership group"},
     {val: (el: IServiceCenterExtended) => el.name, header: "Service center name", orderId: "name"},
     {val: (el: IServiceCenterExtended) => concatAddress(el.address), header: "Service center address"},
-    {val: (el: IServiceCenterExtended) => el.countOfBays.toString(), header: "Bays", align: "center", orderId: "countOfBays"},
+    {val: (el: IServiceCenterExtended) => el.countOfBays.toString(), header: "Bays", orderId: "countOfBays"},
 ];
 
 const rowDataA: TableRowDataType<IServiceCenterExtended>[] = [
     {val: v => v.name, header: "Name", orderId: "name"},
     {val: v => concatAddress(v.address), header: "Address"},
-    {val: v => v.countOfEmployees.toString(), header: "Employees", align: "center", orderId: "countOfEmployees"},
-    {val: v => v.countOfBays.toString(), header: "Bays", align: "center", orderId: "countOfBays"}
+    {val: v => v.countOfEmployees.toString(), header: "Employees", orderId: "countOfEmployees"},
+    {val: v => v.countOfBays.toString(), header: "Bays", orderId: "countOfBays"}
 ];
 
 type TProps = {

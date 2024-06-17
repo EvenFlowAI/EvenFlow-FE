@@ -81,7 +81,7 @@ const NotificationsModal:React.FC<React.PropsWithChildren<React.PropsWithChildre
                         variant="fullWidth"
                     >
                         <Tab label="Service Center Appointments" value="0"/>
-                        <Tab label="POD Appointments" value="1"/>
+                        <Tab label="Service Book Appointments" value="1"/>
                         <Tab label="Recall Appointments" value="2"/>
                         <Tab label="Transportation Requests" value="3"/>
                     </TabList>
