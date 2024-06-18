@@ -62,7 +62,7 @@ export const FacilitySetUp: React.FC<React.PropsWithChildren<React.PropsWithChil
         {label: "Holidays", icon: <LockOutlined />, action: onOpenH},
         {label: "Breaks", icon: <BreaksIcon />, action: onOpenB},
         {label: "Bays", icon: <BaysIcon />, action: onOpenBays},
-        // {label: "Labor Rate", icon: <LaborRateIcon />, action: onOpenLaborRate},
+        {label: "Labor Rate", icon: <LaborRateIcon />, action: onOpenLaborRate},
     ];
 
     // todo replace Labor rate
