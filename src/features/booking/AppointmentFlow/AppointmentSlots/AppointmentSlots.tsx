@@ -30,7 +30,7 @@ import {
     clearAppointmentSteps, searchForCustomerConsents,
     setServiceTypeOption,
     setTransportation,
-    setWelcomeScreenView, updateVehicle
+    setWelcomeScreenView
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions";
@@ -263,10 +263,6 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             }
         }
     }
-
-    useEffect(() => {
-        dispatch(updateVehicle({mileage: null}))
-    }, [])
 
     useEffect(() => {
         const mileageIsValid = selectedVehicle?.mileage
