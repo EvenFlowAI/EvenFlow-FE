@@ -11,12 +11,14 @@ export const initialOrder = {
 
 export const initialPaging = {pageIndex: 0, pageSize: 10}
 
+const utcOffset = dayjs().utcOffset()
+
 export const initialFilters: TFilters = {
     searchTerm: '',
     serviceBook: null,
     scheduler: null,
     reportingStatus: [],
-    dateFrom: dayjs().startOf('day'),
+    dateFrom: dayjs().startOf('day').add(utcOffset, 'minute'),
     dateTo: null,
     scId: null,
     pageData: initialPaging,
