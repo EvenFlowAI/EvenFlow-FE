@@ -36,7 +36,8 @@ export const AdminRoutes = () => {
                 ? <PrivateRoute path={`${Routes.Admin.DealershipGroups}/:id`} component={DealershipGroupDetails} />
                 : null}
             {!currentRoleIsRestricted && <PrivateRoute path={Routes.Employees.Base} component={EmployeesRoutes}/>}
-            {!currentRoleIsRestricted && <PrivateRoute path={Routes.CenterProfile.Base} component={CenterProfileRoutes}/>}
+            {!currentUser.isSuperUser ? <PrivateRoute path={Routes.CenterProfile.Base} component={CenterProfileRoutes}/>
+                : null}
             {!currentUser.isSuperUser ?
                 <PrivateRoute path={Routes.Admin.Appointments} component={AppointmentsPage} />
                 : null}
