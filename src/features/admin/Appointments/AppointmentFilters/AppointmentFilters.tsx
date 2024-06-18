@@ -135,7 +135,8 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     const handleType = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
         setFilters(prev => ({
             ...prev,
-            dateRangeFilterBy: value === "AppointmentDate" ? EDate.AppointmentDate : EDate.CreatedDate
+            dateRangeFilterBy: value === "AppointmentDate" ? EDate.AppointmentDate : EDate.CreatedDate,
+            pageData: {pageIndex: 0, pageSize: 10}
         }))
     }
 
