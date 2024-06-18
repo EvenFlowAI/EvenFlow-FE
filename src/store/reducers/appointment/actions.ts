@@ -29,26 +29,35 @@ export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLo
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>("Appointment/GetSCProfile");
 export const loadSCProfile = (id: number): AppThunk => async dispatch => {
     dispatch(setProfileLoading(true))
-    const {data} = await Api.call<IServiceCenterProfile>(
-        Api.endpoints.ServiceCenters.Retrieve,
-        {urlParams: {id}}
-    )
-    dispatch(getServiceCenterProfile(data));
-    await dispatch(setProfileLoading(false))
+    try {
+        const {data} = await Api.call<IServiceCenterProfile>(
+            Api.endpoints.ServiceCenters.Retrieve,
+            {urlParams: {id}}
+        )
+        dispatch(getServiceCenterProfile(data));
+    } catch (err) {
+        console.log('load sc profile err', err)
+    } finally {
+        await dispatch(setProfileLoading(false))
+    }
 }
 export const getSRs = createAction<ISR[]>("Appointment/GetSRs");
 export const loadSRs = (serviceCenterId: number): AppThunk => async (dispatch, getState) => {
-    const {data: {result}} = await Api.call<PaginatedAPIResponse<ISR>>(
-        Api.endpoints.ServiceRequests.GetShort,
-        {
-            params: {
-                serviceCenterId, pageSize: 0,
-                searchTerm: getState().appointment.search,
-                isOnlyIndividual: true,
+    try {
+        const {data: {result}} = await Api.call<PaginatedAPIResponse<ISR>>(
+            Api.endpoints.ServiceRequests.GetShort,
+            {
+                params: {
+                    serviceCenterId, pageSize: 0,
+                    searchTerm: getState().appointment.search,
+                    isOnlyIndividual: true,
+                }
             }
-        }
-    );
-    dispatch(getSRs(result));
+        );
+        dispatch(getSRs(result));
+    } catch (err) {
+        console.log('load sr list err', err)
+    }
 }
 export const selectSR = createAction<number|null>("Appointment/SelectSR");
 export const selectSRMultiple = createAction<number[]>("Appointment/SelectSRMultiple")
@@ -65,6 +74,7 @@ export const getAppointmentSlots = createAction<IAppointmentSlot[]>("Appointment
 export const setAppointmentWasChanged = createAction<boolean>("Appointment/SetAppointmentWasChanged");
 export const setWaitListSettings = createAction<IWaitListData|null>("Appointment/SetWaitListSettings");
 export const setSlotPodId = createAction<number|null>("Appointment/SetSlotPodId");
+export const setSlotsLoading = createAction<boolean>("Appointment/setSlotsLoading");
 
 export const loadAppointmentSlots = (
     data: IAppointmentSlotsRequest,
@@ -72,6 +82,7 @@ export const loadAppointmentSlots = (
     loadCB?: TCallback,
     onLoadedCb?: (isEmptyList: boolean) => void
 ): AppThunk => async dispatch => {
+    dispatch(setSlotsLoading(true))
     try {
         const {data: {items, searchedDateRange, slotGapMinutes, waitlistSettings, podId}} = await Api.call<IAppointmentResponse>(
             Api.endpoints.AppointmentSlots.GetSlots,
@@ -93,6 +104,8 @@ export const loadAppointmentSlots = (
     } catch (err) {
         onLoadedCb && onLoadedCb(true)
         return dispatch(getAppointmentSlots([]));
+    } finally {
+        dispatch(setSlotsLoading(false))
     }
 }
 export const setLoadedReducer = createAction<TAppointmentState>("Appointment/ReloadState");

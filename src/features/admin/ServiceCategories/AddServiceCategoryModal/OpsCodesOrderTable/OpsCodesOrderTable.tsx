@@ -50,7 +50,7 @@ export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<React.PropsWith
 
     const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
         {
-            header: "Booking Flow Order",
+            header: "ORDER INDEX",
             val: (el) => <TextField
                 fullWidth
                 error={checkError(el)}
@@ -69,24 +69,24 @@ export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<React.PropsWith
             val: el => el.serviceRequestOverride?.description?.length ?  el.serviceRequestOverride.description : el.serviceRequest.description
         },
         {
-            header: "PARTS UNIT COST",
+            header: "LABOR HOURS",
             align: "center",
-            val: el => `$${el.serviceRequestOverride?.partsUnitCost ?? el.serviceRequest.partsUnitCost}`
+            val: el => `${el.serviceRequestOverride?.durationInHours?.toFixed(1) ?? el.serviceRequest.durationInHours.toFixed(1)}`
         },
         {
-            header: "# Of PARTS",
+            header: "LABOR AMOUNT",
             align: "center",
-            val: el => `${el.serviceRequestOverride?.numberOfParts ?? el.serviceRequest.numberOfParts}`
+            val: el => `${el.serviceRequestOverride?.warrantyInvoiceAmount?.toFixed(2) ?? el.serviceRequest.warrantyInvoiceAmount.toFixed(2)}`
         },
         {
             header: "PARTS AMOUNT",
             align: "center",
-            val: el => `$${el.serviceRequestOverride?.partsAmount ?? 0}`
+            val: el => `$${el.serviceRequestOverride?.partsUnitCost?.toFixed(2) ?? el.serviceRequest?.partsUnitCost?.toFixed(2)}`
         },
         {
-            header: "INVOICE AMOUNT",
+            header: "TOTAL AMOUNT",
             align: "center",
-            val: el => `$${el.serviceRequestOverride?.invoiceAmount ?? el.serviceRequest.invoiceAmount}`
+            val: el => `$${el.serviceRequestOverride?.invoiceAmount?.toFixed(2) ?? el.serviceRequest.invoiceAmount?.toFixed(2)}`
         },
     ]
 
@@ -95,17 +95,21 @@ export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<React.PropsWith
             setSelectedCodes(prev => {
                 const codeToChange = prev.find(item => item.id === el.id);
                 if (codeToChange) {
-                    if (codeToChange.orderIndex) {
+                    if (typeof codeToChange.orderIndex !== 'undefined') {
                         const data = prev.map(code => ({
                             ...code,
-                            orderIndex: +code.orderIndex > +codeToChange.orderIndex ? `${+code.orderIndex - 1}` : code.orderIndex
+                            orderIndex: +code.orderIndex > +codeToChange.orderIndex && +code.orderIndex > 0
+                                ? `${+code.orderIndex - 1}`
+                                : code.orderIndex
                         }))
                         return data.filter(item => item.id !== el.id)
                     } else {
                         return prev.filter(item => item.id !== el.id)
                     }
                 } else {
-                    return [...prev, {id: el.id, orderIndex: ''}]
+                    const indexes = prev.map(el => el.orderIndex ? +el.orderIndex : 0);
+                    const orderIndex = indexes.length ? String(Math.max(...indexes) + 1) : '0'
+                    return [...prev, {id: el.id, orderIndex}]
                 }
             });
         }

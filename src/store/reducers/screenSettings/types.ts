@@ -7,7 +7,7 @@ export type TEmailRequirement = {
 }
 
 export enum EScreenSettingsType {
-    EmailRequirement, CustomerConsent, PriceDisplay, CompanyName
+    EmailRequirement, CustomerConsent, PriceDisplay, CompanyName, Waitlist
 }
 
 export const screenSettingsList: EScreenSettingsType[] = [
@@ -15,6 +15,7 @@ export const screenSettingsList: EScreenSettingsType[] = [
     EScreenSettingsType.CustomerConsent,
     EScreenSettingsType.PriceDisplay,
     EScreenSettingsType.CompanyName,
+    EScreenSettingsType.Waitlist,
 ];
 
 export type TOptContentData = {

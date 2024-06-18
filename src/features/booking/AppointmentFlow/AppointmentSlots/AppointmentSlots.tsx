@@ -30,7 +30,7 @@ import {
     clearAppointmentSteps, searchForCustomerConsents,
     setServiceTypeOption,
     setTransportation,
-    setWelcomeScreenView
+    setWelcomeScreenView, updateVehicle
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions";
@@ -39,6 +39,8 @@ import {groupAppointments} from "./utils";
 import {Routes} from "../../../../routes/constants";
 import dayjs from "dayjs";
 import CustomerConsents from "../../../../components/modals/booking/CustomerConsents/CustomerConsents";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import MileageModal from "../../../../components/modals/booking/MileageModal/MileageModal";
 
 type TAppointmentSelectionProps = {
     handleSetScreen: TArgCallback<TScreen>;
@@ -89,6 +91,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     } = useSelector((state: RootState) => state.bookingFlowConfig)
 
     const {allCategories} = useSelector((state: RootState) => state.categories);
+    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
 
     const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
     const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
@@ -101,6 +104,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const history = useHistory();
+    const {isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen} = useModal();
     const nextDisabled = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? !serviceValetAppointment
         : !appointment,
@@ -193,78 +197,93 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             .map(item => item.id)
     }, [allCategories, EServiceCategoryType, categoriesIds])
 
-    useEffect(() => {
-        async function loadData () {
-            if (id) {
-                const utcOffset = dayjs().utcOffset()
-                setLoading(true);
-                try {
-                    const maintenancePackageOption: MPOptionShort|null = selectedPackage
-                        ? {id: selectedPackage?.id, priceType: packagePricingType}
-                        : packageEMenuType !== null
-                            ? {optionType: packageEMenuType}
-                            : null;
-                    const data: IAppointmentSlotsRequest = {
-                        appointmentTimingType: serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTiming
-                            ? EAppointmentTimingType.FirstAvailable
-                            : selectedTiming,
-                        serviceCenterId: decodeSCID(id),
-                        advisorId: advisor?.id ?? null,
-                        fromDate: selectedTime
-                            ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
-                            : dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),
-                        maintenancePackageOption,
-                        serviceRequestIds: collectServiceRequestIds(
-                            service, subService, selectedPackage, selectedSR
-                        ),
-                        serviceCategoryIds: getCategories(),
-                        customerId: customerLoadedData?.id,
-                        warrantyExpiration: selectedVehicle?.warrantyExpiration,
-                        serviceTypeOptionId: serviceTypeOption?.id ?? null,
-                        recalls: mapRecallsForRequest(selectedRecalls),
-                    }
-                    if (valueService?.selectedService) {
-                        data.valueServiceOfferIds = [valueService.selectedService.id];
-                    }
-                    if (zipCode?.length) data.zipCode = zipCode;
-                    if (address) {
-                        if (address?.label) {
-                            data.address = address.label;
-                        } else if (typeof address === 'string') {
-                            data.address = address;
-                        }
-                    }
-                    if (selectedVehicle) {
-                        data.vehicle = {
-                            vin: selectedVehicle.vin,
-                            year: selectedVehicle.year,
-                            make: selectedVehicle.make,
-                            model: selectedVehicle.model,
-                            mileage: selectedVehicle.mileage,
-                            engineTypeId: selectedVehicle.engineTypeId,
-                        }
-                    }
-                    if (hashKey) data.appointmentHashKey = hashKey;
-                    if (userType === EUserType.Existing && customerEnteredEmail) data.searchTerm = customerEnteredEmail;
-                    if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                        if (data.address && data.zipCode) await dispatch(loadServiceValetSlots(data));
-                    } else {
-                        await dispatch(loadAppointmentSlots(
-                            data,
-                            setDateCallback,
-                            () => handleDateRangeSet(false)
-                        ));
-                    }
-                } finally {
-                    setLoading(false);
+    const loadData = async () => {
+        if (id) {
+            const utcOffset = dayjs().utcOffset()
+            setLoading(true);
+            try {
+                const maintenancePackageOption: MPOptionShort|null = selectedPackage
+                    ? {id: selectedPackage?.id, priceType: packagePricingType}
+                    : packageEMenuType !== null
+                        ? {optionType: packageEMenuType}
+                        : null;
+                const data: IAppointmentSlotsRequest = {
+                    appointmentTimingType: serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTiming
+                        ? EAppointmentTimingType.FirstAvailable
+                        : selectedTiming,
+                    serviceCenterId: decodeSCID(id),
+                    advisorId: advisor?.id ?? null,
+                    fromDate: selectedTime
+                        ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
+                        : dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),
+                    maintenancePackageOption,
+                    serviceRequestIds: collectServiceRequestIds(
+                        service, subService, selectedPackage, selectedSR
+                    ),
+                    serviceCategoryIds: getCategories(),
+                    customerId: customerLoadedData?.id,
+                    warrantyExpiration: selectedVehicle?.warrantyExpiration,
+                    serviceTypeOptionId: serviceTypeOption?.id ?? null,
+                    recalls: mapRecallsForRequest(selectedRecalls),
                 }
+                if (valueService?.selectedService) {
+                    data.valueServiceOfferIds = [valueService.selectedService.id];
+                }
+                if (zipCode?.length) data.zipCode = zipCode;
+                if (address) {
+                    if (address?.label) {
+                        data.address = address.label;
+                    } else if (typeof address === 'string') {
+                        data.address = address;
+                    }
+                }
+                if (selectedVehicle) {
+                    data.vehicle = {
+                        vin: selectedVehicle.vin,
+                        year: selectedVehicle.year,
+                        make: selectedVehicle.make,
+                        model: selectedVehicle.model,
+                        mileage: selectedVehicle.mileage,
+                        engineTypeId: selectedVehicle.engineTypeId,
+                    }
+                }
+                if (hashKey) data.appointmentHashKey = hashKey;
+                if (userType === EUserType.Existing && customerEnteredEmail) data.searchTerm = customerEnteredEmail;
+                if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+                    if (data.address && data.zipCode) await dispatch(loadServiceValetSlots(data));
+                } else {
+                    await dispatch(loadAppointmentSlots(
+                        data,
+                        setDateCallback,
+                        () => handleDateRangeSet(false)
+                    ));
+                }
+            } finally {
+                setLoading(false);
             }
         }
-        loadData().finally();
+    }
+
+    useEffect(() => {
+        dispatch(updateVehicle({mileage: null}))
+    }, [])
+
+    useEffect(() => {
+        const mileageIsValid = selectedVehicle?.mileage
+            && mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString())
+        if (!mileageIsValid) {
+            setLoading(true);
+            setTimeout(() => {
+                setLoading(false)
+                onMileageOpen()
+            }, 1000)
+        } else {
+            loadData().finally();
+        }
     }, [
         dispatch, id, selectedTiming,
         selectedVehicle, customerLoadedData, service, packagePricingType, packageEMenuType, serviceTypeOption,
-        subService, selectedPackage, selectedSR, advisor, valueService, serviceType, selectedTime, zipCode, address,
+        subService, selectedPackage, selectedSR, advisor, valueService, serviceType, selectedTime, zipCode, address, mileage
     ]);
 
     const handleGANext = useCallback(() => {
@@ -336,6 +355,11 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         }
     }, [currentConfig, history, fromServiceValetToVisitCenter, definePrevScreen])
 
+    const loadDataForMileage = () => {
+        onMileageClose()
+        loadData().finally()
+    }
+
     return (
         <StepWrapper>
             <SlotsScreenWrapper>
@@ -375,6 +399,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                         loading={loading || isConsentsLoading}/>}
             </SlotsScreenWrapper>
             <CustomerConsents onNext={handleConsents}/>
+            <MileageModal open={isMileageOpen} onClose={onMileageClose} onSave={loadDataForMileage}/>
         </StepWrapper>
     );
 };

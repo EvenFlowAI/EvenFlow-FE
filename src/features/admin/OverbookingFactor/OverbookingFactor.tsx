@@ -4,13 +4,11 @@ import {SC_UNDEFINED} from "../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {
     loadOverbookingFactor,
-    loadWaitListSettings,
     setOverbookingFactor
 } from "../../../store/reducers/optimizationWindows/actions";
 import {RootState} from "../../../store/rootReducer";
 import {EDay} from "../../../store/reducers/demandSegments/types";
 import {IOverbookingFactor} from "../../../store/reducers/optimizationWindows/types";
-import WaitlistSwitcher from "../WaitlistSwitcher/WaitlistSwitcher";
 import {STextField} from "../AncillaryPriceByDistance/styles";
 import {initialState, tableHead} from "./constants";
 import {TForm} from "./types";
@@ -40,7 +38,6 @@ export const OverbookingFactor = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadOverbookingFactor(selectedSC.id, selectedPod?.id));
-            dispatch(loadWaitListSettings(selectedSC.id, selectedPod?.id))
         }
     }, [selectedSC, selectedPod, dispatch]);
 
@@ -96,7 +93,6 @@ export const OverbookingFactor = () => {
     }
 
     return <div>
-        <WaitlistSwitcher/>
             <DemandTable>
                 <TableHead>
                     <TableRow>

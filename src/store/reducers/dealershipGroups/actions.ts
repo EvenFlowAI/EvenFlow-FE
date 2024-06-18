@@ -106,24 +106,36 @@ export const remove: ActionCreator<ThunkAction<
 
 const _loadDealershipProfile = (payload: IDealershipProfile): DealershipActions => ({type: "Dealership/Profile", payload});
 export const loadDealershipProfile = (): AppThunk => async dispatch => {
-    const {data} = await Api.call<IDealershipProfile>(Api.endpoints.Accounts.Dealership);
-    dispatch(_loadDealershipProfile(data));
+    try {
+        const {data} = await Api.call<IDealershipProfile>(Api.endpoints.Accounts.Dealership);
+        dispatch(_loadDealershipProfile(data));
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 export const updateDealership = (payload: IDealershipProfileForm, id: number): AppThunk => async dispatch => {
-    await Api.call(
-        Api.endpoints.Dealerships.Update,
-        {urlParams: {id}, data: payload}
-    );
-    await dispatch(loadDealershipProfile());
+    try {
+        await Api.call(
+            Api.endpoints.Dealerships.Update,
+            {urlParams: {id}, data: payload}
+        );
+        await dispatch(loadDealershipProfile());
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 export const updateDealershipAvatar = (avatar: File, id: number): AppThunk => async dispatch => {
-    const data = new FormData();
-    data.append("file", avatar, avatar.name);
-    await Api.call(
-        Api.endpoints.Dealerships.UploadAvatar,
-        {urlParams: {id}, data}
-    );
-    dispatch(loadDealershipProfile());
+    try {
+        const data = new FormData();
+        data.append("file", avatar, avatar.name);
+        await Api.call(
+            Api.endpoints.Dealerships.UploadAvatar,
+            {urlParams: {id}, data}
+        );
+        dispatch(loadDealershipProfile());
+    } catch (err) {
+        console.log(err)
+    }
 }

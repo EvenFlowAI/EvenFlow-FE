@@ -10,13 +10,11 @@ export const Label = withStyles(FormControlLabel, {
     },
     label: {
         fontWeight: "bold",
-        fontSize: 12,
+        fontSize: 14,
         textTransform: "uppercase",
-        //transform: "translate(0, 1.5px) scale(0.75)",
     }
 });
 
-// 
 export const useStyles = makeStyles()(() => ({
     inputsWrapper: {
         display: "grid",

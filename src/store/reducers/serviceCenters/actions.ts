@@ -73,11 +73,15 @@ export const setSCOrder = createAction<IOrder<IServiceCenterExtended>>("ServiceC
 export const setSCSearch = createAction<string>("ServiceCenters/SetSearch");
 
 export const saveAvatar = (avatar: File, id: number): AppThunk => async () => {
-    const data = new FormData();
-    data.append("file", avatar, avatar?.name || "");
-    await Api.call(Api.endpoints.ServiceCenters.Avatar, {
-        urlParams: {id}, data
-    });
+    try {
+        const data = new FormData();
+        data.append("file", avatar, avatar?.name || "");
+        await Api.call(Api.endpoints.ServiceCenters.Avatar, {
+            urlParams: {id}, data
+        });
+    } catch (err) {
+        console.log(err)
+    }
 }
 export const createSC = (payload: IServiceCenterForm, avatar: File | null): AppThunk => async (dispatch) => {
     dispatch(saving(true));
@@ -183,48 +187,64 @@ export const clearSC = (): AppThunk => dispatch => {
     dispatch(_selectSc(undefined));
 }
 export const loadAllSCs = (): AppThunk => async (dispatch, getState) => {
-    const {data: {result}} = await Api.call<PaginatedAPIResponse<IServiceCenter>>(Api.endpoints.ServiceCenters.GetShort, {params: {pageSize: 0, pageIndex: 0}});
-    if (result.length) {
-        dispatch(_loadAllSCS(result));
-        const user = getState().users.currentUser;
-        if (!user?.isSuperUser) {
-            const prevSelected = localStorage.getItem(LocalItems.selectedSC);
-            const assignedTo = result.find(i => i.id === user?.serviceCenterId);
-            if (prevSelected || assignedTo) {
-                const selected = result.find(i => i.id === Number(prevSelected));
-                if (assignedTo && user?.role !== "Service Director") {
-                    dispatch(selectSC(assignedTo));
-                } else if (selected) {
-                    dispatch(selectSC(selected));
+    try {
+        const {data: {result}} = await Api.call<PaginatedAPIResponse<IServiceCenter>>(Api.endpoints.ServiceCenters.GetShort, {params: {pageSize: 0, pageIndex: 0}});
+        if (result.length) {
+            dispatch(_loadAllSCS(result));
+            const user = getState().users.currentUser;
+            if (!user?.isSuperUser) {
+                const prevSelected = localStorage.getItem(LocalItems.selectedSC);
+                const assignedTo = result.find(i => i.id === user?.serviceCenterId);
+                if (prevSelected || assignedTo) {
+                    const selected = result.find(i => i.id === Number(prevSelected));
+                    if (assignedTo && user?.role !== "Service Director") {
+                        dispatch(selectSC(assignedTo));
+                    } else if (selected) {
+                        dispatch(selectSC(selected));
+                    } else {
+                        dispatch(selectSC(result[0]));
+                    }
                 } else {
-                    dispatch(selectSC(result[0]));
+                    dispatch(selectSC(result[0]))
                 }
-            } else {
-                dispatch(selectSC(result[0]))
             }
         }
+    } catch (err) {
+        console.log(err)
     }
 }
 export const getWorkingDays = createAction<EDay[]>("ServiceCenters/WorkingDays");
 export const loadWorkingDays = (serviceCenterId: number): AppThunk => async dispatch => {
-    const {data} = await Api.call<EDay[]>(
-        Api.endpoints.ServiceCenters.WorkingDays,
-        {urlParams: {id: serviceCenterId}}
-    );
-    dispatch(getWorkingDays(data));
+    try {
+        const {data} = await Api.call<EDay[]>(
+            Api.endpoints.ServiceCenters.WorkingDays,
+            {urlParams: {id: serviceCenterId}}
+        );
+        dispatch(getWorkingDays(data));
+    } catch (err) {
+        console.log(err)
+    }
 }
 export const getSCAnalytics = createAction<ISCAnalytics>("ServiceCenters/Analytics");
 export const loadSCAnalytics = (id: number): AppThunk => async dispatch => {
-    const {data} = await Api.call<ISCAnalytics>(
-        Api.endpoints.ServiceCenters.Analytics,
-        {urlParams: {id}}
-    );
-    dispatch(getSCAnalytics(data));
+    try {
+        const {data} = await Api.call<ISCAnalytics>(
+            Api.endpoints.ServiceCenters.Analytics,
+            {urlParams: {id}}
+        );
+        dispatch(getSCAnalytics(data));
+    } catch (err) {
+        console.log(err)
+    }
 }
 export const setPricingOpt = createAction<{id: number, checked: boolean}>("ServiceCenters/ApplyPricingOpt");
 export const changePricingOpt = (id: number, applyPricingOptimization: boolean): AppThunk => async dispatch => {
-    await Api.call(Api.endpoints.ServiceCenters.ChangePricingOpt, {urlParams: {id}, data: {applyPricingOptimization}});
-    await dispatch(setPricingOpt({id, checked: applyPricingOptimization}));
+    try {
+        await Api.call(Api.endpoints.ServiceCenters.ChangePricingOpt, {urlParams: {id}, data: {applyPricingOptimization}});
+        await dispatch(setPricingOpt({id, checked: applyPricingOptimization}));
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 export const setReminders = createAction<boolean>("ServiceCenters/SetReminders");

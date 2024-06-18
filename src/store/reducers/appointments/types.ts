@@ -10,11 +10,13 @@ import {
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType, TRecallForRequest} from "../appointment/types";
 import {IPageRequest, TParsableDate} from "../../../types/types";
+import {EDate} from "../../../features/admin/Appointments/types";
 
 export interface IAppointmentsRequest {
     pageIndex: number;
     pageSize: number;
     serviceCenterId: number;
+    dateRangeFilterBy: EDate;
     orderBy?: keyof IListAppointment | string | undefined;
     isAscending?: boolean;
     startDate?: TParsableDate;
@@ -26,6 +28,7 @@ export interface IAppointmentsRequest {
     isServiceBookServiceCenter?: boolean;
     advisorId?: number;
     technicianDmsId?: string;
+
 }
 
 type TPackageOptionRequest = {

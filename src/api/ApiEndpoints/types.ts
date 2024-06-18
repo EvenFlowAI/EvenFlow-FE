@@ -10,7 +10,7 @@ export type TApiEndpoint = {
 }
 
 export interface IApiEndpoints {
-    Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership", TApiEndpoint>,
+    Accounts: Record<"Recovery" | "Reset" | "Change" | "Verification" | "Profile" | "Dealership" | "ResendEmail", TApiEndpoint>,
     AncillaryPricing: Record<"GetZones" | "UpdateZone" | "GetDistances" | "UpdateDistance" | "CreateDistance" | "DeleteDistance" | "GetByZip", TApiEndpoint>,
     Appointments: Record<"Create" | "Update" | "UpdateByKey" | "Cancel" | "CancelByKey" | "GetByKey" | "CheckPodChanged"
         | "GetServiceBooks" | "GetSchedulers", TApiEndpoint>,
@@ -33,6 +33,7 @@ export interface IApiEndpoints {
     CustomerConsent: Record<"GetAll" | "Update" | "GetById" | "Create" | "Remove" | "Search" | "Toggle", TApiEndpoint>,
     Dealerships: Record<"Create" | "GetShort" | "Retrieve" | "Remove" | "Update" | "GetAll"
         | "UpdateAddress" | "UploadAvatar", TApiEndpoint>,
+    DemandManagement: Record<"GetSettings" | "UpdateSettings", TApiEndpoint>,
     Employees: Record<"Create" | "Update" | "GetAll" | "GetAssignmentSettings" | "UpdateAssignmentSettings", TApiEndpoint>,
     EmployeeCapacity: Record< "GetAdvisorsCapacity" | "UpdateAdvisorsCapacity" | "GetTechniciansCapacity"
         | "UpdateTechniciansCapacity" | "UpdateTechniciansSettings", TApiEndpoint>,

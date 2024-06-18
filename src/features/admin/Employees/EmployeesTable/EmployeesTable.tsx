@@ -23,6 +23,8 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {getServiceCentersNames} from "./utils";
+import {useModal} from "../../../../hooks/useModal/useModal";
+import ResendEmailModal from "../ResendEmailModal/ResendEmailModal";
 
 // todo uncomment multiple centers fucntionality
 // todo add multiple centers field to all requests
@@ -66,6 +68,7 @@ const EmployeesTable:React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const showError = useException();
     const showMessage = useMessage();
     const dispatch = useDispatch();
+    const {onOpen: onOpenResend, onClose: onCloseResend, isOpen: isOpenResesnd} = useModal();
 
     const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
         (s: RootState) => s.employees.pageData,
@@ -115,6 +118,7 @@ const EmployeesTable:React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
             });
         }
     }
+
     const handleOrder = (order: IOrder<IEmployee>) => () => {
         dispatch(setEmplOrder(order));
     }
@@ -158,8 +162,15 @@ const EmployeesTable:React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
             />
             <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
                 <MenuItem onClick={editEmployee}>Edit</MenuItem>
-                <MenuItem onClick={onDeleteEmployee}>Delete</MenuItem>
+                <MenuItem onClick={onDeleteEmployee}>Remove</MenuItem>
+                <MenuItem onClick={onOpenResend} disabled={editedItem?.emailConfirmed}>Resend</MenuItem>
             </Menu>
+            <ResendEmailModal
+                open={isOpenResesnd}
+                onClose={onCloseResend}
+                employeeEmail={editedItem?.email}
+                employeeId={editedItem?.id}
+                employeeName={editedItem?.fullName}/>
         </>
     );
 };

@@ -240,7 +240,9 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
                     year: selectedVehicle.year,
                     make: selectedVehicle.make,
                     model: selectedVehicle.model,
-                    mileage: selectedVehicle.mileage,
+                    mileage: maintenancePackageOption
+                        ? selectedVehicle.mileage
+                        : selectedVehicle.mileage ?? appointmentByKey?.vehicle?.mileage ?? null,
                     engineTypeId: selectedVehicle.engineTypeId,
                 },
                 address: address?.fullAddress ?? '',
@@ -820,7 +822,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
     const data: ICreateAppointmentRequest = {
         id: appointmentFrame.id,
         appointmentTimingType,
-        customerId: appointment.customerLoadedData?.id ?? null,
+        customerId: appointment.customerLoadedData?.id ?? appointmentFrame?.customer?.id ?? null,
         comment: appointmentFrame.description,
         driver,
         vehicle,
@@ -1129,6 +1131,7 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
             address: currentAppointment.address ?? null,
             isWaitlist: Boolean(isWaitlist),
             customerConsentIds: [],
+            isAppointmentClone: true,
         };
 
         Api.call<ICreateAppointmentResp>(Api.endpoints.Appointments.Create, { data, urlParams: {id: currentAppointment.hashKey} })

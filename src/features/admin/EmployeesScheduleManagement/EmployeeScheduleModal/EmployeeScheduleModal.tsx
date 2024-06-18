@@ -9,7 +9,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {IScheduleByDate, IUpdateByDateRequest} from "../../../../store/reducers/schedules/types";
 import {SwitcherLabel, SwitcherWrapper} from "./styles";
 import TimeSelect from "../../../../components/pickers/TimeSelect/TimeSelect";
-import {CALENDAR_FORMAT, timeSpanString} from "../../../../utils/constants";
+import {CALENDAR_FORMAT, time24HourFormat, timeSpanString} from "../../../../utils/constants";
 import {loadHoursOfOperations} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Table} from "../../../../components/tables/Table/Table";
@@ -51,7 +51,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     }, [selectedSC])
 
     useEffect(() => {
-        setCurrentSchedule([...scheduleByDate].sort(compareName))
+        setCurrentSchedule(scheduleByDate.map(el => ({...el, id: `${Math.random()}`})).sort(compareName))
     }, [scheduleByDate])
 
     const handleShowOnBookingChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -139,6 +139,12 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                         start={schedule?.from ?? "09:00:00"}
                         end={schedule?.to ?? "17:00:00"}
                         value={el.startAt}
+                        downArrowErrorText={schedule?.from
+                            ? `The Service Center opens at ${dayjs(schedule?.from, timeSpanString).format(time24HourFormat)}`
+                            : ''}
+                        upArrowErrorText={schedule?.to
+                            ? `The Service Center closes at ${dayjs(schedule?.to, timeSpanString).format(time24HourFormat)}`
+                            : ''}
                         onChange={(value) => onTimeChange(el, 'startAt', value)}/>
                     <div>TO</div>
                     <TimeSelect
@@ -154,6 +160,12 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                         start={schedule?.from ?? "09:00:00"}
                         end={schedule?.to ?? "17:00:00"}
                         value={el.finishAt}
+                        downArrowErrorText={schedule?.from
+                            ? `The Service Center opens at ${dayjs(schedule?.from, timeSpanString).format(time24HourFormat)}`
+                            : ''}
+                        upArrowErrorText={schedule?.to
+                            ? `The Service Center closes at ${dayjs(schedule?.to, timeSpanString).format(time24HourFormat)}`
+                            : ''}
                         onChange={(value) => onTimeChange(el, 'finishAt', value)}/>
                 </PickersWrapper>
             )
@@ -217,7 +229,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                     ? <Loading/>
                     :  <Table<IScheduleByDate>
                         data={currentSchedule}
-                        index={"employeeId"}
+                        index={"id"}
                         isLoading={employeesLoading}
                         hidePagination
                         rowData={rowData}/>}

@@ -7,11 +7,10 @@ import {
     OfferManagementRoutes,
     CapacityManagementRoutes,
     PricingRoutes,
-    ReportingRoutes, EmployeeRoutes, DealerRoutes, ServicesRoutes
+    ReportingRoutes, EmployeeRoutes, DealerRoutes, ServicesRoutes, CenterProfileRoutes
 } from "./types";
 
 export const Routes = {
-    Home: "/",
     Admin: AdminRoutes,
     Login: AdminLogin,
     EndUser: EndUser,
@@ -24,4 +23,5 @@ export const Routes = {
     Employees: EmployeeRoutes,
     Dealer: DealerRoutes,
     Services: ServicesRoutes,
+    CenterProfile: CenterProfileRoutes,
 }

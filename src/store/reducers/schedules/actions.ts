@@ -32,12 +32,16 @@ export const loadEmployeesSchedule = (start: string, end: string, serviceCenterI
     }
 }
 export const setEmployeesSchedule = (data: IScheduleForm, isXS: boolean): AppThunk => async dispatch => {
-    await Api.call(
-        data.id ? Api.endpoints.EmployeeSchedule.Update : Api.endpoints.EmployeeSchedule.Create,
-        {data, urlParams: {id: data.id}}
-    );
-    const [st, nd] = getStartEndDates(dayjs(data.date), isXS);
-    dispatch(loadEmployeesSchedule(st, nd, data.serviceCenterId));
+   try {
+       await Api.call(
+           data.id ? Api.endpoints.EmployeeSchedule.Update : Api.endpoints.EmployeeSchedule.Create,
+           {data, urlParams: {id: data.id}}
+       );
+       const [st, nd] = getStartEndDates(dayjs(data.date), isXS);
+       dispatch(loadEmployeesSchedule(st, nd, data.serviceCenterId));
+   } catch (err) {
+       console.log(err)
+   }
 }
 
 export const getScheduleCalendar = createAction<ICalendarItem[]>("Employees/GetCalendarData");

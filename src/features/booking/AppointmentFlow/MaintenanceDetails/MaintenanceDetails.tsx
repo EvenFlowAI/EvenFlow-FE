@@ -1,13 +1,12 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import { Autocomplete } from '@mui/material';
-import {useMediaQuery, useTheme} from "@mui/material";
+import {Autocomplete, useMediaQuery, useTheme} from '@mui/material';
 import {StepWrapper} from "../../../../components/styled/StepWrapper";
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {useDispatch, useSelector} from "react-redux";
 import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {
-    clearAppointmentSteps,
+    clearAppointmentSteps, selectCategoriesIds, selectService, selectSubService,
     setRecallsAreShown,
     setSelectedRecalls,
     setVehicle,
@@ -36,11 +35,13 @@ import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
 type TMaintenanceDetailsProps = {
     onBack: TArgCallback<TScreen>;
     onNext: TArgCallback<TScreen>;
+    serviceCategoryPage: EServiceCategoryPage;
 }
 
 const blankOptions: TOptionsState = {};
 
-export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>> = ({onNext, onBack}) => {
+export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>> =
+    ({onNext, onBack, serviceCategoryPage}) => {
     const {
         selectedVehicle,
         makes,
@@ -53,7 +54,8 @@ export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWit
         selectedPackage,
         serviceTypeOption,
         appointmentByKey,
-        advisor
+        advisor,
+        selectedRecalls
     }= useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
@@ -278,7 +280,19 @@ export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWit
         }
     }
 
+    const removeRecallCategory = () => {
+        if (service?.type === EServiceCategoryType.OpenRecalls && serviceCategoryPage === EServiceCategoryPage.Page1) {
+            dispatch(selectService(null));
+            dispatch(selectCategoriesIds(categoriesIds.filter(el => el !== service.id)))
+        }
+        if (subService?.type === EServiceCategoryType.OpenRecalls && serviceCategoryPage === EServiceCategoryPage.Page2) {
+            dispatch(selectSubService(null));
+            dispatch(selectCategoriesIds(categoriesIds.filter(el => el !== subService.id)))
+        }
+    }
+
     const handleBack = () => {
+        if (isRecallsCategorySelected && !selectedRecalls.length) removeRecallCategory()
         onBack(service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
             ? 'opsCode' : 'serviceNeeds');
     }
@@ -329,12 +343,17 @@ export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWit
             const {vin, make} = selectedVehicle;
             if (vin?.length === 17 && make && (recallsFromTheAdmin || isRecallsCategorySelected)) {
                 setLoading(true);
-                const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
-                    {data: {serviceCenterId: decodeSCID(id), vin: vin, vehicleMakeId: makeInTheList?.id}})
-                dispatch(setRecallsAreShown(true));
-                if (data.length) {
-                    await onOpen()
-                } else {
+                try {
+                    const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
+                        {data: {serviceCenterId: decodeSCID(id), vin: vin, vehicleMakeId: makeInTheList?.id}})
+                    dispatch(setRecallsAreShown(true));
+                    if (data.length) {
+                        await onOpen()
+                    } else {
+                        onEmptyRecalls()
+                    }
+                } catch (err) {
+                    console.log(err)
                     onEmptyRecalls()
                 }
             } else {

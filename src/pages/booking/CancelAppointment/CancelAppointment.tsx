@@ -6,29 +6,20 @@ import {AppointmentStatus, IAppointmentByQuery} from "../../../api/types";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useDispatch} from "react-redux";
 import {clearStorage, loadSCProfile} from "../../../store/reducers/appointment/actions";
-import {Button, styled} from "@mui/material";
+import {Button} from "@mui/material";
 import {Edit} from "@mui/icons-material";
 import {NotFoundError} from "../../../components/wrappers/NotFoundError/NotFoundError";
-import {encodeSCID} from "../../../utils/utils";
+import {encodeSCID, getAppointmentDate} from "../../../utils/utils";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {useException} from "../../../hooks/useException/useException";
 import {Routes} from "../../../routes/constants";
 import dayjs from "dayjs";
+import {ContentContainer, Info} from "./styles";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 type TState = "loading" | "new" | "canceled" | "already_canceled" | "error";
-
-const ContentContainer = styled("div")({
-    fontSize: 22,
-    textAlign: "center",
-    fontWeight: "bold"
-});
-
-const Info = styled("p")({
-    fontSize: 12,
-    fontWeight: "normal"
-})
 
 export const CancelAppointment = () => {
     const [appointment, setAppointment] = useState<IAppointmentByQuery|null>(null);
@@ -87,15 +78,6 @@ export const CancelAppointment = () => {
         }
     }
 
-    const getDate = () => {
-        if (appointment) {
-            const {dateInUtc, timeSlot} = appointment;
-            return dayjs.utc(`${String(dateInUtc).split("T")[0]}T${timeSlot}Z`)
-        } else {
-            return dayjs.utc();
-        }
-    }
-
     const getData = (): JSX.Element|null => {
         switch (tState) {
             case "already_canceled":
@@ -118,7 +100,7 @@ export const CancelAppointment = () => {
                 return <NotFoundError />
             case "new":
                 return <div>
-                    <p>{t("Please confirm you want to cancel your appointment for")} {getDate().format("dddd, MMM Do, h:mm a")}?</p>
+                    <p>{t("Please confirm you want to cancel your appointment for")} {getAppointmentDate(appointment)}?</p>
                     <LoadingButton
                         onClick={handleCancel}
                         loading={saving}

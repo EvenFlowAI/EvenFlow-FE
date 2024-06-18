@@ -2,7 +2,7 @@ import React from "react";
 import {ContentContainer} from "../../components/wrappers/ContentContainer/ContentContainer";
 import {Redirect, Switch} from "react-router-dom";
 import {PrivateRoute} from "../PrivateRoute/PrivateRoute";
-import {PricingSettingsPage} from "../../pages/admin/PricingSettings/PricingSettingsPage";
+import {ServicePricingSettings} from "../../pages/admin/ServicePricingSettings/ServicePricingSettings";
 import {OfferManagementPage} from "../../pages/admin/OfferManagement/OfferManagementPage";
 
 import {useCurrentUser} from "../../hooks/useCurrentUser/useCurrentUser";
@@ -13,7 +13,7 @@ const PricingRoutes = () => {
     return <ContentContainer>
         <Switch>
             <PrivateRoute path={Routes.Pricing.OfferManagement} component={OfferManagementPage} />
-            <PrivateRoute path={Routes.Pricing.ServicePricingSettings} component={PricingSettingsPage} />
+            <PrivateRoute path={Routes.Pricing.ServicePricingSettings} component={ServicePricingSettings} />
             <Redirect
                 to={currentUser && ["Advisor", "Call Center Rep"].includes(currentUser?.role)
                 ? Routes.Pricing.OfferManagement

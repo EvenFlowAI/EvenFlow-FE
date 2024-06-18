@@ -21,6 +21,7 @@ export class Api {
             Verification: {route: "/accounts/verification", method: "patch"},
             Profile: {route: "/accounts/profile", method: "get"},
             Dealership: {route: "/accounts/dealership", method: "get"},
+            ResendEmail: {route: "/accounts/invitation-email", method: "post"}
         },
         AncillaryPricing: {
             GetZones: {route: "/ancillary-price/geographic-zone/by-query", method: "post"},
@@ -123,6 +124,10 @@ export class Api {
             Update: {route: "/dealerships/{id}", method: "put"},
             UpdateAddress: {route: "/dealerships", method: "put"},
             UploadAvatar: {route: "/dealerships/{id}/avatar", method: "patch"}
+        },
+        DemandManagement: {
+            GetSettings: {route: "/demand-management-settings", method: "get"},
+            UpdateSettings: {route: "/demand-management-settings", method: "put"},
         },
         Employees: {
             Create: {route: "/employees", method: "post"},

@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect} from 'react';
-import {DialogTitle, BaseModal, DialogContent} from "../../../../components/modals/BaseModal/BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {IAppointmentsRequest} from "../../../../store/reducers/appointments/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,6 +11,7 @@ import {useStatePagination} from "../../../../hooks/usePaginations/usePagination
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import dayjs from "dayjs";
 import {allColumns} from "../constants";
+import {EDate} from "../types";
 
 type TDialogProps = DialogProps & {
     date: TParsableDate;
@@ -42,6 +43,7 @@ export const AppointmentsListModal: React.FC<React.PropsWithChildren<React.Props
                 startDate: dayjs(date).add(dayjs(date).utcOffset(), 'minute'),
                 endDate: dayjs(date).endOf('day'),
                 serviceCenterId: selectedSC.id,
+                dateRangeFilterBy: EDate.AppointmentDate,
             }
             // todo uncomment for calendar functionality
          //   dispatch(loadAppointmentsForModal(data))

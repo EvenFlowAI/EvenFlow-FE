@@ -93,11 +93,17 @@ export function DataCalendar<U>({
                                     return dayjs(formatted).isSame(dayjs.utc(d.date), "date")
                                 }
                             })
+                        const isEnabled = !disabledDates?.find(el => dayjs(d.date).isSame(dayjs(el), 'date'))
 
-                            return <div
+                        return <div
                                 className={clsx(
                                     classes.dayCell,
-                                    d.type === "cur" ? classes.currentMonth : classes.prevMonth,
+                                    d.type === "cur"
+                                        ? isEnabled
+                                            ? classes.currentMonth
+                                            //classes.nonWorking
+                                            : classes.currentMonth
+                                        : classes.prevMonth,
                                     dayjs(d.date).isSame(today, "day") ? classes.today : ""
                                 )}
                                 onClick={() => {

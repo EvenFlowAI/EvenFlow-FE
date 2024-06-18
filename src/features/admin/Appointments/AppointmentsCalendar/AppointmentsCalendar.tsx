@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {IAppointmentsRequest} from "../../../../store/reducers/appointments/types";
 import {loadAppointments} from "../../../../store/reducers/appointments/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {TAppointmentsByDate, TDay, TView} from "../types";
+import {EDate, TAppointmentsByDate, TDay, TView} from "../types";
 import {RootState} from "../../../../store/rootReducer";
 import {CalendarControls} from "../../../../components/DataCalendar/CalendarControls/CalendarControls";
 import {WeekDayNames} from "../../../../utils/constants";
@@ -72,6 +72,7 @@ export const AppointmentsCalendar: React.FC<React.PropsWithChildren<React.PropsW
                 pageIndex: 0,
                 pageSize: 0,
                 serviceCenterId: selectedSC.id,
+                dateRangeFilterBy: EDate.AppointmentDate,
             }
             dispatch(loadAppointments(data));
         }

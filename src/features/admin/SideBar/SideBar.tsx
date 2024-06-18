@@ -60,7 +60,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     }, [MainLinksWithSub, window, currentUser])
 
     const handleLogoClick = () => {
-        history.push(Routes.Admin.Base);
+        history.push(Routes.Admin.Appointments);
     }
 
     const closeSidebar = () => {

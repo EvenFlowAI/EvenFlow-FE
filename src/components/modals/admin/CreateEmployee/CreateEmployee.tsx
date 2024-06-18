@@ -99,11 +99,16 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
         return !Boolean(err.length)
     }
 
-    const onSuccess = () => {
+    const onClose = () => {
+        setAvatar(undefined);
         setEmployeeForm(initialEmployeeForm);
         setFormIsChecked(false);
+        props.onClose()
+    }
+
+    const onSuccess = () => {
         showMessage(`Employee ${isEdit ? "updated" : "created"}`);
-        props.onClose();
+        onClose()
     }
 
     const handleCreate = async () => {
@@ -159,11 +164,6 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
                 showError(e);
             }
         }
-    }
-
-    const onClose = () => {
-        props.onClose();
-        setFormIsChecked(false);
     }
 
     return <BaseModal {...props} width={940} onClose={onClose}>

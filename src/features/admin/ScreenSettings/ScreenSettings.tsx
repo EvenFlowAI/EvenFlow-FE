@@ -14,6 +14,9 @@ import {CustomerConsentsModal} from "./CustomerConsentsModal/CustomerConsentsMod
 import {loadRange} from "../../../store/reducers/slotScoring/actions";
 import PriceDisplayModal from "./PriceDisplayModal/PriceDisplayModal";
 import {loadRoundPriceSetting} from "../../../store/reducers/pricingSettings/actions";
+import {loadWaitListSettings} from "../../../store/reducers/optimizationWindows/actions";
+import WaitListSlotSettingsModal from "./WaitListSlotSettingsModal/WaitListSlotSettingsModal";
+import {getPriceDisplayValue, getWaitlistValue} from "./utils";
 import {EditCompanyNameModal} from "./EditCompanyNameModal/EditCompanyNameModal";
 
 export const ScreenSettings = () => {
@@ -26,6 +29,7 @@ export const ScreenSettings = () => {
         companyName
     } = useSelector((state: RootState) => state.screenSettingsBooking);
     const {roundPrice, isRoundPriceLoading} = useSelector((state: RootState) => state.pricingSettings);
+    const {waitListSettings, isWaitListLoading} = useSelector((state: RootState) => state.optimizationWindows);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const {selectedPod} = useSelectedPod()
@@ -33,11 +37,13 @@ export const ScreenSettings = () => {
     const {onOpen: onConsentOpen, isOpen: isConsentOpen, onClose: onConsentClose} = useModal();
     const {onOpen: onPricingOpen, isOpen: isPricingOpen, onClose: onPricingClose} = useModal();
     const {onOpen: onCompanyNameOpen, isOpen: isCompanyNameOpen, onClose: onCompanyNameClose} = useModal();
+    const {onOpen: onWaitlistOpen, isOpen: isWaitlistOpen, onClose: onWaitlistClose} = useModal();
 
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadEmailRequirement(selectedSC.id))
             dispatch(loadRoundPriceSetting(selectedSC.id))
+            dispatch(loadWaitListSettings(selectedSC.id, selectedPod?.id))
         }
     }, [selectedSC])
 
@@ -82,7 +88,9 @@ export const ScreenSettings = () => {
             case EScreenSettingsType.CustomerConsent:
                 return getCustomerConsentValue();
             case EScreenSettingsType.PriceDisplay:
-                return getPriceDisplayValue();
+                return getPriceDisplayValue(roundPrice);
+            case EScreenSettingsType.Waitlist:
+                return getWaitlistValue(Boolean(waitListSettings?.isEnabled));
             case EScreenSettingsType.CompanyName:
                 return getCompanyNameValue();
             default:
@@ -105,9 +113,15 @@ export const ScreenSettings = () => {
         },
         [EScreenSettingsType.PriceDisplay]: {
             helperText: "Display configuration for prices in the booking experience",
-            label: getPriceDisplayValue(),
+            label: getPriceDisplayValue(roundPrice),
             title: "Price Display",
             isLoading: isRoundPriceLoading
+        },
+        [EScreenSettingsType.Waitlist]: {
+            helperText: "Require customer consent for specific appointment requests",
+            label: getWaitlistValue(Boolean(waitListSettings?.isEnabled)),
+            title: "Waitlist",
+            isLoading: isWaitListLoading
         },
         [EScreenSettingsType.CompanyName]: {
             helperText: "Display of Company Name field option on confirmation page",
@@ -130,6 +144,9 @@ export const ScreenSettings = () => {
                 break;
             case EScreenSettingsType.CompanyName:
                 onCompanyNameOpen();
+                break;
+            case EScreenSettingsType.Waitlist:
+                onWaitlistOpen();
                 break;
             default:
                 return;
@@ -158,6 +175,7 @@ export const ScreenSettings = () => {
             <EditCompanyNameModal open={isCompanyNameOpen} onClose={onCompanyNameClose}/>
             <CustomerConsentsModal open={isConsentOpen} onClose={onConsentClose}/>
             <PriceDisplayModal open={isPricingOpen} onClose={onPricingClose}/>
+            <WaitListSlotSettingsModal open={isWaitlistOpen} onClose={onWaitlistClose}/>
         </>
     );
 };
