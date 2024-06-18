@@ -33,7 +33,7 @@ export const AdminLogin = () => {
             await authService.login(credentials);
             // Loading here because of history unmounts component
             setLoading(false);
-            history.replace(locationState && locationState.from ? locationState.from : "/");
+            history.replace(locationState && locationState.from ? locationState.from : Routes.Admin.Appointments);
         } catch (e) {
             enqueueSnackbar(getAPIException(e), {variant: "error"});
             setLoading(false);

@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {SquarePaper} from "../../../components/styled/Paper";
-import {TableContainer} from "../../../pages/admin/PricingSettings/UI";
+import {TableContainer} from "../../../pages/admin/ServicePricingSettings/UI";
 import {Box, Button, Switch, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {TServiceTypeSettings} from "../../../store/reducers/bookingFlowConfig/types";

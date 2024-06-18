@@ -29,7 +29,7 @@ const rowData: TableRowDataType<IHoliday>[] = [
 ]
 
 export const HolidaysModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TViewMode>>> = ({viewMode, ...props}) => {
-    const {holidaysList, loading} = useSelector(({holidays}: RootState) => holidays);
+    const {holidaysList, loading, pageData, paging} = useSelector(({holidays}: RootState) => holidays);
     const {currentUser} = useSelector(({users}: RootState) => users);
     const [editedItem, setEditedItem] = useState<IHoliday|undefined>();
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
@@ -50,7 +50,7 @@ export const HolidaysModal: React.FC<React.PropsWithChildren<React.PropsWithChil
         if (props.open && selectedSC) {
             dispatch(loadAllHolidays(selectedSC.id));
         }
-    }, [dispatch, props.open, selectedSC]);
+    }, [dispatch, props.open, selectedSC, pageData]);
 
     const reloadHolidays = () => {
         if (selectedSC) {
@@ -68,13 +68,17 @@ export const HolidaysModal: React.FC<React.PropsWithChildren<React.PropsWithChil
     }
 
     const handleRemove = async () => {
-        if (editedItem) {
+        if (editedItem && selectedSC) {
             try {
                 await Api.call(
                     Api.endpoints.Holidays.Remove,
                     {urlParams: {id: editedItem.id}}
                 ).then(res => {
-                    if (res) showMessage("Holiday removed");
+                    if (res) {
+                        showMessage("Holiday removed");
+                        dispatch(setHolidayPageData({pageIndex: 0}))
+                        dispatch(loadAllHolidays(selectedSC.id));
+                    }
                 })
             } catch (e) {
                 showError(e);
@@ -116,8 +120,13 @@ export const HolidaysModal: React.FC<React.PropsWithChildren<React.PropsWithChil
         onOpen();
     }
 
-    return <BaseModal {...props} width={720}>
-        <DialogTitle onClose={props.onClose}>Holidays</DialogTitle>
+    const onCloseModal = () => {
+        dispatch(setHolidayPageData({pageSize: 10, pageIndex: 0}))
+        props.onClose()
+    }
+
+    return <BaseModal {...props} onClose={onCloseModal} width={720}>
+        <DialogTitle onClose={onCloseModal}>Holidays</DialogTitle>
         {!viewMode && currentUser?.role !== Roles.Manager ? <div className={classes.addHoliday}>
             <Button variant="contained" color="primary" onClick={handleOpenCreate}>Add Holiday</Button>
         </div> : null}
@@ -128,6 +137,7 @@ export const HolidaysModal: React.FC<React.PropsWithChildren<React.PropsWithChil
             rowsPerPage={pageSize}
             onChangeRowsPerPage={changeRowsPerPage}
             compact
+            count={paging.numberOfRecords}
             isLoading={loading}
             data={holidaysList}
             index={"id"}
@@ -135,7 +145,7 @@ export const HolidaysModal: React.FC<React.PropsWithChildren<React.PropsWithChil
             actions={actions}
         />
         <DialogActions>
-            <Button onClick={props.onClose} variant="contained" color="primary">
+            <Button onClick={onCloseModal} variant="contained" color="primary">
                 Close
             </Button>
         </DialogActions>

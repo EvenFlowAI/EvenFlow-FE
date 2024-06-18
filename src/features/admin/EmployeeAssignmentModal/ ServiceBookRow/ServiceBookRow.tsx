@@ -8,7 +8,7 @@ import {
     IEmployeeAssignmentSetting
 } from "../../../../store/reducers/employees/types";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {TOption} from "../../PodsTable/PODModal/types";
+import {TOption} from "../../ServiceBookModal/types";
 import {methodOptions, secondaryOptions} from "../constants";
 import {getOptionsByRole} from "../utils";
 

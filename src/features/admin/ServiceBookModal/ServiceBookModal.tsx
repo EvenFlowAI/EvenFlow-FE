@@ -1,41 +1,41 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
-import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {EAppointmentType, EJobType, IPodForm} from "../../../../store/reducers/pods/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
+import {DialogProps} from "../../../components/modals/BaseModal/types";
+import {EAppointmentType, EJobType, IPodForm} from "../../../store/reducers/pods/types";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {Button, Grid, Switch} from "@mui/material";
-import {SC_UNDEFINED} from "../../../../utils/constants";
+import {SC_UNDEFINED} from "../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
-import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {IAdvisorShort} from "../../../../store/reducers/users/types";
-import {IBayShort} from "../../../../store/reducers/bays/types";
-import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
-import {autocompleteOptionsRender, autocompleteRender} from "../../../../utils/autocompleteRenders";
+import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
+import {IAdvisorShort} from "../../../store/reducers/users/types";
+import {IBayShort} from "../../../store/reducers/bays/types";
+import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
+import {autocompleteOptionsRender, autocompleteRender} from "../../../utils/autocompleteRenders";
 import { Autocomplete } from '@mui/material';
-import {RootState} from "../../../../store/rootReducer";
+import {RootState} from "../../../store/rootReducer";
 import {
     loadSCAdvisors,
     loadSCEmployees
-} from "../../../../store/reducers/employees/actions";
-import {loadSCRequestsShort} from "../../../../store/reducers/serviceRequests/actions";
-import {createPod, loadPodById, setPodById, updatePod} from "../../../../store/reducers/pods/actions";
-import {loadBaysShort} from "../../../../store/reducers/bays/actions";
-import {IMakeExtended, IModel} from "../../../../api/types";
-import {getOptions, getTransportationOptionString} from "../../../../utils/utils";
-import {loadEngineType, loadMakesForPods} from "../../../../store/reducers/vehicleDetails/actions";
-import {TZone} from "../../../../store/reducers/mobileService/types";
-import {loadMobServiceZones} from "../../../../store/reducers/mobileService/actions";
-import {loadServiceValetZones} from "../../../../store/reducers/serviceValet/actions";
-import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
-import {ITransportationOptionFull} from "../../../../store/reducers/transportationNeeds/types";
-import {loadTransportationOptions} from "../../../../store/reducers/transportationNeeds/actions";
+} from "../../../store/reducers/employees/actions";
+import {loadSCRequestsShort} from "../../../store/reducers/serviceRequests/actions";
+import {createPod, loadPodById, setPodById, updatePod} from "../../../store/reducers/pods/actions";
+import {loadBaysShort} from "../../../store/reducers/bays/actions";
+import {IMakeExtended, IModel} from "../../../api/types";
+import {getOptions, getTransportationOptionString} from "../../../utils/utils";
+import {loadEngineType, loadMakesForPods} from "../../../store/reducers/vehicleDetails/actions";
+import {TZone} from "../../../store/reducers/mobileService/types";
+import {loadMobServiceZones} from "../../../store/reducers/mobileService/actions";
+import {loadServiceValetZones} from "../../../store/reducers/serviceValet/actions";
+import {IEngineType} from "../../../store/reducers/vehicleDetails/types";
+import {ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
+import {loadTransportationOptions} from "../../../store/reducers/transportationNeeds/actions";
 import {Label} from "./styles";
 import {TForm, TOption} from "./types";
-import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
+import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingButton";
 
-import {useMessage} from "../../../../hooks/useMessage/useMessage";
-import {useException} from "../../../../hooks/useException/useException";
-import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {Loading} from "../../../../components/wrappers/Loading/Loading";
+import {useMessage} from "../../../hooks/useMessage/useMessage";
+import {useException} from "../../../hooks/useException/useException";
+import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {Loading} from "../../../components/wrappers/Loading/Loading";
 
 const initialForm: TForm = {
     name: "",
@@ -47,7 +47,7 @@ const initialForm: TForm = {
     isVisitCenter: true,
 }
 
-export const PODModal: React.FC<DialogProps & {editingItemId: number|undefined}> = ({onAction, editingItemId, ...props}) => {
+export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|undefined}> = ({onAction, editingItemId, ...props}) => {
     const {advisorsList, techniciansList} = useSelector(({scEmployees}: RootState) => scEmployees);
     const {scRequestsShort: serviceRequests} = useSelector(({serviceRequests}: RootState) => serviceRequests);
     const {baysShort: baysList} = useSelector(({bays}: RootState) => bays);

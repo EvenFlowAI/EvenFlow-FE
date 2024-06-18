@@ -32,6 +32,7 @@ export const CreateServiceCenterForm = <Item extends {}>(props: TModalFormProps<
                            return <Grid item xs={item.xs || 12} sm={item.sm || 6} key={item.id}>
                                 {!item.variant || item.variant === 'input'
                                     ? <TextField
+                                        placeholder={item.label}
                                         label={item.label}
                                         name={item.name || item.id}
                                         value={item.value(props.values)}
@@ -49,7 +50,8 @@ export const CreateServiceCenterForm = <Item extends {}>(props: TModalFormProps<
                                             disabled={props.readOnly}
                                             renderInput={autocompleteRender({
                                                 label: item.label || "",
-                                                error: item.required && props.formIsChecked && !item.value(props.values)
+                                                error: item.required && props.formIsChecked && !item.value(props.values),
+                                                placeholder: item.label
                                             })}
                                         />
                                         : null}

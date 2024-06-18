@@ -359,3 +359,18 @@ export type TGeographicZoneShort = {
     name: string;
     serviceType: EServiceType;
 }
+export type TDashboardItem = {
+    label: string;
+    icon: JSX.Element;
+    action: () => void;
+}
+export type TDashboardCountData = {
+    technicians: number;
+    bays: number;
+    pods: number;
+    appointments: number;
+}
+export type TDashboardDataMap = {
+    label: string;
+    value: keyof TDashboardCountData;
+}

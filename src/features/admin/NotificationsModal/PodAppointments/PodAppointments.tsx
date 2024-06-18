@@ -105,7 +105,7 @@ const PodAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                 isRemove: true,
                 confirmContent: "Cancel changes",
                 cancelContent: "Save changes",
-                title: "Cancel Pod Notifications changes",
+                title: "Cancel Service Book Notifications changes",
                 content: <span>
                        By clicking Cancel, your entries across all Pods will not be saved.<br />
                      Click Save Changes to store your inputs.
@@ -117,7 +117,7 @@ const PodAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<
     }
 
     const onSuccess = () => {
-        showMessage("Notifications for Pod Appointments updated")
+        showMessage("Notifications for Service Book Appointments updated")
         setCurrentEmployee(null);
         setFormChecked(false)
     }
@@ -159,7 +159,7 @@ const PodAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                 {loading || isLoading || podsLoading
                     ? <Loading/>
                     : <React.Fragment>
-                        <div className={classes.tabTitle}>POD Appointments</div>
+                        <div className={classes.tabTitle}>Service Book Appointments</div>
                         <Autocomplete
                             options={shortPodsList}
                             fullWidth
@@ -171,7 +171,7 @@ const PodAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                             style={{marginBottom: 24}}
                             renderInput={autocompleteRender({
                                 label: '',
-                                placeholder: 'Select POD'
+                                placeholder: 'Select Service Book'
                             })}
                         />
                         <div className={classes.selectWrapper}>

@@ -331,6 +331,7 @@ export const AppointmentFlow = () => {
                 onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
             maintenanceDetails: <MaintenanceDetails
+                serviceCategoryPage={serviceCategoryPage}
                 onBack={handleSetScreen}
                 onNext={handleSetScreen}
             />,

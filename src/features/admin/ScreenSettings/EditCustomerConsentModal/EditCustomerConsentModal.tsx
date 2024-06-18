@@ -18,7 +18,7 @@ import {Autocomplete, Button, Grid} from "@mui/material";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {autocompleteOptionsRender, autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {IMakeExtended, IModel} from "../../../../api/types";
-import {TOption} from "../../PodsTable/PODModal/types";
+import {TOption} from "../../ServiceBookModal/types";
 import {EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {IPodShort} from "../../../../store/reducers/pods/types";
 import {IAssignedServiceRequestShort} from "../../../../store/reducers/serviceRequests/types";
@@ -363,8 +363,8 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                                 renderOption={autocompleteOptionsRender((e) => e.name)}
                                 getOptionLabel={i => i.name}
                                 renderInput={autocompleteRender({
-                                    label: "PODs (Service Books) Assignment",
-                                    placeholder: "PODs (Service Books) Assignment",
+                                    label: "Service Books Assignment",
+                                    placeholder: "Service Books Assignment",
                                 })}
                             />
                         </Grid>

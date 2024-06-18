@@ -13,7 +13,7 @@ import {RowData} from "./constants";
 import ServiceBookSettingsModal from "../ServiceBookSettingsModal/ServiceBookSettingsModal";
 import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {PODModal} from "../PodsTable/PODModal/PODModal";
+import {ServiceBookModal} from "../ServiceBookModal/ServiceBookModal";
 import {setPodById} from "../../../store/reducers/pods/actions";
 
 const CapacitySettingsTable = () => {
@@ -79,7 +79,7 @@ const CapacitySettingsTable = () => {
                 <MenuItem onClick={handleEdit}>Edit</MenuItem>
             </Menu>
             <ServiceBookSettingsModal open={isEditOpen} onClose={onEditClose} editingItem={editedItem}/>
-            <PODModal open={isConfigureOpen} editingItemId={editedItem?.serviceBookId} onClose={onCloseConfigureModal}/>
+            <ServiceBookModal open={isConfigureOpen} editingItemId={editedItem?.serviceBookId} onClose={onCloseConfigureModal}/>
         </div>
     );
 };

@@ -82,6 +82,26 @@ export const useStyles = makeStyles()(theme => ({
             background: lighten(theme.palette.primary.light, .9),
         },
     },
+    nonWorking: {
+        color: theme.palette.error.light,
+        "& svg, & > span": {
+            color: '#ef5350 !important',
+        },
+        "& > span > svg > g > path, & > span > svg, & > svg": {
+            fill: '#ef5350',
+            color: '#ef5350',
+        }
+    },
+    nonWorkingGrey: {
+        color: theme.palette.text.secondary,
+        "& svg, & > span": {
+            color: '#B8B9BF !important',
+        },
+        "& > span > svg > g > path, & > span > svg, & > svg": {
+            fill: '#B8B9BF',
+            color: '#B8B9BF',
+        }
+    },
     calendarWrapper: {
         marginTop: 11,
         overflowX: "auto",
