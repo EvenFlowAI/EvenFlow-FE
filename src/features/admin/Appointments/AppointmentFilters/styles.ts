@@ -37,7 +37,7 @@ export const RadioBlock = styled('div')({
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginBottom: 23,
+    marginBottom: 20,
     "& .MuiFormControlLabel-label": {
         fontWeight: 700,
         fontSize: 14,
