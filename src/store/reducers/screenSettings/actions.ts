@@ -18,8 +18,6 @@ export const setConsentLoading = createAction<boolean>("ScreenSettings/SetConsen
 export const setLoading = createAction<boolean>("ScreenSettings/SetLoading");
 export const setConsentsList = createAction<ICustomerConsent[]>("ScreenSettings/SetConsentsList");
 export const getCurrentConsent = createAction<ICustomerConsentById|null>("ScreenSettings/SetConsentById")
-export const getCompanyName = createAction<boolean>("ScreenSettings/GetCompanyName");
-export const setCompanyNameLoading = createAction<boolean>("ScreenSettings/SetCompanyNameLoading");
 
 export const loadConsentsList = (serviceCenterId: number, podId?: number|null): AppThunk => (dispatch) => {
     dispatch(setConsentLoading(true));

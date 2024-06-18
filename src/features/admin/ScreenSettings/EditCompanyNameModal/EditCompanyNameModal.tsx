@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {Button, TableBody, TableHead} from "@mui/material";
@@ -13,22 +13,29 @@ import {TableCellWithPadding} from "../../../../components/styled/TableCellWithP
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
+import {ESettingType, IGeneralSetting} from "../../../../store/reducers/generalSettings/types";
+import {updateGeneralSettings} from "../../../../store/reducers/generalSettings/actions";
 
 export const EditCompanyNameModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onClose, ...props}) => {
-    const {companyName, companyNameIsLoading} = useSelector((state: RootState) => state.screenSettingsBooking);
+    const {settings, isLoading} = useSelector((state: RootState) => state.generalSettings);
     const [isCompanyNameActive, setCompanyNameActive] = useState<boolean>(false);
     const {selectedSC} = useSCs();
+    const {selectedPod} = useSelectedPod()
     const dispatch = useDispatch();
     const { classes  } = useStyles();
     const showError = useException();
     const showMessage = useMessage();
+    const companyNameSetting = useMemo(() => settings
+        .find(el => el.settingType === ESettingType.CompanyName && (selectedPod ? el.podId === selectedPod?.id : true))
+        , [settings, selectedPod])
 
     useEffect(() => {
-        setCompanyNameActive(companyName)
-    }, [companyName])
+        setCompanyNameActive(companyNameSetting?.data?.isOn ?? false)
+    }, [companyNameSetting])
 
     const onCancel = () => {
-        setCompanyNameActive(companyName)
+        setCompanyNameActive(companyNameSetting?.data?.isOn ?? false)
         onClose();
     }
 
@@ -42,8 +49,13 @@ export const EditCompanyNameModal: React.FC<React.PropsWithChildren<React.PropsW
     }
 
     const onSave = () => {
-        if (selectedSC) {
-
+        if (selectedSC && companyNameSetting) {
+            const data: IGeneralSetting = {
+                ...companyNameSetting,
+                data: {isOn: isCompanyNameActive},
+                podId: selectedPod?.id ?? null,
+            }
+            dispatch(updateGeneralSettings(selectedSC.id, selectedPod?.id ?? null, [data], showError, onSuccess))
         }
     }
 
@@ -55,7 +67,7 @@ export const EditCompanyNameModal: React.FC<React.PropsWithChildren<React.PropsW
                 Display Setting Of Company Name
             </DialogTitle>
             <DialogContent>
-                {companyNameIsLoading
+                {isLoading
                     ? <Loading/>
                     : <DemandTable>
                         <TableHead>
@@ -102,7 +114,7 @@ export const EditCompanyNameModal: React.FC<React.PropsWithChildren<React.PropsW
                 <div className={classes.actionsWrapper}>
                     <div className={classes.buttonsWrapper}>
                         <Button
-                            disabled={companyNameIsLoading}
+                            disabled={isLoading}
                             onClick={onCancel}
                             style={{marginRight: 12}}
                             color="info">
@@ -110,7 +122,7 @@ export const EditCompanyNameModal: React.FC<React.PropsWithChildren<React.PropsW
                         </Button>
                         <Button
                             onClick={onSave}
-                            disabled={companyNameIsLoading}
+                            disabled={isLoading}
                             className={classes.saveButton}>
                             Save
                         </Button>

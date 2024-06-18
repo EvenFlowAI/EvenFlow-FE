@@ -40,6 +40,7 @@ export interface IApiEndpoints {
     EmployeeSchedule: Record<"Create" | "Update" | "GetAll" | "Retrieve" | "Remove" | "SetForWeek" | "GetCalendarSummary"
         | "GetByDate" | "UpdateByDate" | "GetBaseSummary" | "GetSummaryByEmployee" | "GetTimeScheduleByEmployee"
         | "SetTimeScheduleByEmployee", TApiEndpoint>,
+    GeneralSettings: Record<"Get" | "Update", TApiEndpoint>,
     GeographicZones: Record<"Create" | "Update" | "GetZones" | "ReassignZipCode"
         | "RemoveZipCode" | "Remove" | "GetById" | "GetShort", TApiEndpoint>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiEndpoint>,

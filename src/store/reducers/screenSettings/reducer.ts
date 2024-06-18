@@ -5,14 +5,12 @@ import {
     setEmailRequirementLoading,
     setConsentsList,
     setConsentLoading,
-    setLoading, getCurrentConsent, setCompanyNameLoading, getCompanyName
+    setLoading, getCurrentConsent,
 } from "./actions";
 
 const initialState: TState = {
     emailRequirement: null,
     isEmailRequirementLoading: false,
-    companyName: false,
-    companyNameIsLoading: false,
     consentsList: [],
     isConsentLoading: false,
     isLoading: false,
@@ -36,11 +34,5 @@ export const screenSettingsReducer = createReducer(initialState, builder => buil
     })
     .addCase(getCurrentConsent, (state, { payload }) => {
         return {...state, currentConsent: payload};
-    })
-    .addCase(setCompanyNameLoading, (state, { payload }) => {
-        return {...state, companyNameIsLoading: payload};
-    })
-    .addCase(getCompanyName, (state, { payload }) => {
-        return {...state, companyName: payload};
     })
 );

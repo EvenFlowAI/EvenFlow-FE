@@ -44,17 +44,12 @@ export type TGeographicZone = {
 
 export type TState = {
     emailRequirement: TEmailRequirement | null;
-    companyName: boolean;
-    companyNameIsLoading: boolean;
     isEmailRequirementLoading: boolean;
     consentsList: ICustomerConsent[];
     isConsentLoading: boolean;
     isLoading: boolean;
     currentConsent: ICustomerConsentById|null;
 }
-
-export enum ECustomerType {
-    New}
 
 export interface IBaseCustomerConsent {
     serviceCenterId: number;
