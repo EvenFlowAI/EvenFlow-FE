@@ -151,6 +151,7 @@ export const updateCustomer = (data: ICustomerWithPhones, onSuccess: () => void,
                     lastName: res.data.lastName,
                     email: res.data.email,
                     address: res.data.address,
+                    companyName: res.data.companyName,
                 }
                 const filtered = [...customers].map(item => item.customerId === data.customerId ? {...item, ...customerData} : item)
                 dispatch(getCustomers(filtered))

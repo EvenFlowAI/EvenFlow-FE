@@ -70,6 +70,7 @@ export interface ICustomerLoadedData {
     fromSearchByName?: boolean;
     isUpdating?: boolean;
     address?: IAddressData|null;
+    companyName?: string;
 }
 
 export interface IVehicle {
@@ -334,6 +335,7 @@ export interface ICustomer {
     email: string;
     city?: string;
     id?: number;
+    companyName?: string;
 }
 
 export interface ITransportation {
