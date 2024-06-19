@@ -11,6 +11,9 @@ export const customerDataColumns: TColumn[] = [
         order: "firstName",
     },
     {
+        name: "Company Name",
+    },
+    {
         name: "Home",
         order: "homePhone",
     },

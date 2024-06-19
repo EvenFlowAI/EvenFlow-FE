@@ -80,7 +80,8 @@ const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWit
             customerSearchData.lastName,
             customerEnteredEmail,
             customerSearchData.address,
-            customerSearchData.lastVINCharacters
+            customerSearchData.lastVINCharacters,
+            customerSearchData.companyName
         ))
     }
 
@@ -192,16 +193,19 @@ const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWit
             : null }
             {isExpanded
                 ? <React.Fragment>
-                    {/*<InputLabel label={t("Search by Company Name")}/>*/}
-                    {/*<TextField*/}
-                    {/*onKeyUp={onKeyUp}*/}
-                    {/*    placeholder={t("Enter Company Name")}*/}
-                    {/*    error={formIsChecked && (customerSearchData.companyName.length === 1 || !formIsValid)}*/}
-                    {/*    onChange={onTextChange('companyName')}*/}
-                    {/*    InputProps={{disableUnderline: true}}*/}
-                    {/*    fullWidth*/}
-                    {/*    style={{ marginBottom: 16 }}*/}
-                    {/*    value={customerSearchData.companyName}/>*/}
+                    <InputLabel label={t("Search by Company Name")}/>
+                    <TextField
+                        onKeyUp={onKeyUp}
+                        placeholder={t("Enter Company Name")}
+                        error={formIsChecked && (customerSearchData.companyName.length === 1 || !formIsValid)}
+                        onChange={onTextChange('companyName')}
+                        InputProps={{disableUnderline: true, endAdornment: isLoading && customerSearchData.address.length ?  <LoadingProcess /> : null }}
+                        fullWidth
+                        variant="standard"
+                        name="companyName"
+                        disabled={isLoading}
+                        style={{ marginBottom: 16 }}
+                        value={customerSearchData.companyName}/>
                     <InputLabel label={t("Search by Address")}/>
                     <TextField
                         onKeyUp={onKeyUp}

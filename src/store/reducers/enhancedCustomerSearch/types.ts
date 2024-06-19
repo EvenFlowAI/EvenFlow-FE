@@ -38,6 +38,7 @@ export interface ICustomerWithPhones extends ICustomerByName {
     engineTypeId: number|null;
     warrantyExpiration: ParsableDate|null;
     sortOrder?: number;
+    companyName?: string;
 }
 
 export interface ICustomerForTable extends Omit<ICustomerWithPhones, 'communications'|"warrantyExpiration"|"address"|"appointmentAddress"> {}

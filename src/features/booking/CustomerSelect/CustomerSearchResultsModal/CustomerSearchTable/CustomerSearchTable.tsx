@@ -522,8 +522,25 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             isEdit={isEdit}
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
+                                {selectedColumns.find(el => el.name === "Company Name")
+                                    ? <TableCell
+                                        key="companyName"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                        <CustomerInputField
+                                            editingElement={editingElement}
+                                            customer={customer}
+                                            fieldName="companyName"
+                                            isEdit={isEdit}
+                                            onFieldChange={onFieldChange}/>
+                                    </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Home")
-                                    ? <TableCell key="home" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="home"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -532,7 +549,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Cell")
-                                    ? <TableCell key="cell" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="cell"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -541,7 +562,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Other")
-                                    ? <TableCell key="otherPhone" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="otherPhone"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -550,7 +575,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Email")
-                                    ? <TableCell key="email" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="email"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -559,7 +588,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Address")
-                                    ? <TableCell key="address" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="address"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -568,7 +601,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "City")
-                                    ? <TableCell key="city" className={classes.bodyCell} width={120} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="city"
+                                        className={classes.bodyCell}
+                                        width={120}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -577,7 +614,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "State")
-                                    ? <TableCell key="state" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="state"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -586,7 +627,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "ZIP")
-                                    ? <TableCell key="zip" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="zip"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
