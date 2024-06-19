@@ -216,6 +216,7 @@ export interface IAppointmentByKey extends IBaseAppointment {
     address?: IAddressData;
     isWaitlist?: boolean;
     waitlistTextSettings?: Partial<IWaitListData>;
+    podId?: number;
 }
 
 export interface IAppointmentByQuery extends IBaseAppointment {

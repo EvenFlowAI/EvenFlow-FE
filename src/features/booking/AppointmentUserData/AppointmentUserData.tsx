@@ -45,7 +45,7 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
     }, [customerLoadedData, dispatch]);
 
     useEffect(() => {
-        dispatch(loadGeneralSettings(decodeSCID(id), [ESettingType.CompanyName], slotPodId))
+        dispatch(loadGeneralSettings(decodeSCID(id), [ESettingType.CompanyName], slotPodId ?? appointmentByKey?.podId))
     }, [id, slotPodId])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
