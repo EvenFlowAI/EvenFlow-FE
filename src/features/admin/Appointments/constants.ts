@@ -13,12 +13,15 @@ export const initialPaging = {pageIndex: 0, pageSize: 10}
 
 const utcOffset = dayjs().utcOffset()
 
+console.log(dayjs())
+console.log(dayjs().startOf('day'))
+
 export const initialFilters: TFilters = {
     searchTerm: '',
     serviceBook: null,
     scheduler: null,
     reportingStatus: [],
-    dateFrom: dayjs().startOf('day').add(utcOffset, 'minute'),
+    dateFrom: dayjs().startOf('day'),
     dateTo: null,
     scId: null,
     pageData: initialPaging,
@@ -71,7 +74,6 @@ export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
     },
     {
         header: "Created Date",
-        required: true,
         val: el => el.createdDateTime ? dayjs.utc(el.createdDateTime).format("ddd, MMMM D, YYYY") : "",
         orderId: "requestDate"
     },
