@@ -40,7 +40,7 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback, isManagePage?: bo
     }
 
     return (
-        <BaseModal open={open} onClose={onClose} width={550}>
+        <BaseModal open={open} onClose={() => {}} width={550}>
             <DialogTitle onClose={onClose}>{t("Please select your estimated mileage")}</DialogTitle>
             <DialogContent>
                 <div style={{margin: '20px auto', width: '70%',}}>
