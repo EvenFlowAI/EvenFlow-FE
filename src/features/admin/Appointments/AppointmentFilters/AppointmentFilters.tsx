@@ -194,6 +194,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         onOpen={handleOpenTo(true)}
                         onClose={handleOpenTo(false)}
                         open={isOpenTo}
+                        minDate={dateFrom}
                         format="MMMM Do"
                         fullWidth
                         shouldDisableDate={day => dayjs(day).isBefore(dateFrom)}
