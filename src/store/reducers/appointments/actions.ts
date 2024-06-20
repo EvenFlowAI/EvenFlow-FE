@@ -8,7 +8,7 @@ import {
     TServiceBook,
     TServiceConsultant
 } from "./types";
-import {AppThunk, IPageRequest, TArgCallback} from "../../../types/types";
+import {AppThunk, IPageRequest, TArgCallback, TCallback} from "../../../types/types";
 import {API} from "../../../api/api";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../appointment/types";
@@ -140,7 +140,7 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
             .catch(e => {
                 console.log(e)
                 onError(e)
-        })
+            })
             .finally(() => {
                 dispatch(setAppointmentSaving(false))
             })
@@ -232,22 +232,47 @@ const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boo
     }
 }
 
-export const loadAppointmentByKey = (key: string, serviceCenterId: string, cb: TArgCallback<boolean>): AppThunk => async dispatch => {
-    dispatch(setCurrentAppointmentLoading(true))
-    try {
-        const {data} = await API.appointment.getByKey(key);
-        if (data) {
-            dispatch(getCurrentAppointment(data));
-            dispatch(updateRecalls(data, serviceCenterId));
+export const handleUpdatedMileageForCloning = (serviceCenterId: string, cb: TArgCallback<boolean>):AppThunk => (dispatch, getState) => {
+    const {currentAppointment} = getState().appointments;
+    if (currentAppointment) {
+        try {
+            dispatch(setCurrentAppointmentLoading(true))
             dispatch(loadConsultantsForCloning(
                 serviceCenterId,
-                data,
+                currentAppointment,
                 () => dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb))))
+        } catch {
+            dispatch(setCurrentAppointmentLoading(false))
         }
-    } catch {
-        dispatch(setCurrentAppointmentLoading(false))
     }
 }
+
+export const loadAppointmentByKey =
+    (key: string, serviceCenterId: string, cb: TArgCallback<boolean>, onEmptyMileage?: TCallback): AppThunk =>
+        async (dispatch, getState) => {
+            dispatch(setCurrentAppointmentLoading(true))
+            const {mileage} = getState().vehicleDetails
+            try {
+                const {data} = await API.appointment.getByKey(key);
+                if (data) {
+                    const mileageIsValid = data?.vehicle?.mileage
+                        && mileage.find(item => item.value.toString() === data?.vehicle?.mileage?.toString())
+                    dispatch(getCurrentAppointment(data));
+                    dispatch(updateRecalls(data, serviceCenterId));
+                    if (onEmptyMileage && !mileageIsValid) {
+                        onEmptyMileage()
+                        dispatch(setCurrentAppointmentLoading(false))
+                    } else {
+                        dispatch(loadConsultantsForCloning(
+                            serviceCenterId,
+                            data,
+                            () => dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb))))
+                    }
+                }
+            } catch {
+                dispatch(setCurrentAppointmentLoading(false))
+            }
+        }
 
 export const clearAfterCloning = (): AppThunk => dispatch => {
     dispatch(getCurrentAppointment(null))
