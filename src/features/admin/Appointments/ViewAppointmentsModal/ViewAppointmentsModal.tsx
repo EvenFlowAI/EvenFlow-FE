@@ -41,6 +41,7 @@ export const ViewAppointmentsModal:
 }) => {
     const {isAppointmentLoading} = useSelector((state: RootState) => state.appointments);
     const {isAppointmentSlotsLoading} = useSelector((state: RootState) => state.appointment);
+    const {selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
     const [messageText, setMessageText] = useState<string>("");
 
     const {selectedSC} = useSCs();
@@ -52,6 +53,8 @@ export const ViewAppointmentsModal:
     useEffect(() => {
         selectedSC && dispatch(loadMileage(selectedSC.id))
     }, [selectedSC])
+
+    console.log('modal', selectedVehicle?.mileage)
 
     const handleNoSlots = () => {
         setMessageText("We are sorry but the appointment cannot be cloned.  The original appointment has services that are not available in EvenFlow.")
@@ -84,6 +87,7 @@ export const ViewAppointmentsModal:
 
     const onMileageSave = () => {
         selectedSC && dispatch(handleUpdatedMileageForCloning(encodeSCID(selectedSC.id), onGetSlots))
+        onMileageClose()
     }
 
     return <BaseModal {...props} width={940}>
@@ -135,6 +139,6 @@ export const ViewAppointmentsModal:
             title={messageText}
         />
         <CloneAppointmentModal open={isOpenClone} onClose={onCloseClone} onViewClose={onAfterClone}/>
-        <MileageModal open={isMileageOpen} onSave={onMileageSave} onClose={onMileageClose}/>
+        <MileageModal open={isMileageOpen} onSave={onMileageSave} onClose={onMileageClose} isAdminPanel/>
     </BaseModal>
 };

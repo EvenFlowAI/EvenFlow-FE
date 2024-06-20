@@ -168,7 +168,7 @@ export const setValueServicePartial = (data: Partial<IValueService>): AppThunk =
 
 export const loadConsultantsForCloning = (serviceCenterId: string, appointment: IAppointmentByKey, cb: TCallback): AppThunk => (dispatch, getState) => {
     dispatch(setConsultantsLoading(true))
-    const {selectedRecalls, selectedVehicle} = getState().appointmentFrame;
+    const {selectedRecalls} = getState().appointmentFrame;
     const {serviceRequests, serviceCategories, maintenancePackageOption, serviceTypeOption, vehicle, address, hashKey} = appointment;
     const data: IConsultantsRequestData = {
         serviceCenterId: decodeSCID(serviceCenterId),
@@ -185,7 +185,7 @@ export const loadConsultantsForCloning = (serviceCenterId: string, appointment: 
             year: vehicle.year,
             make: vehicle.make,
             model: vehicle.model,
-            mileage: selectedVehicle?.mileage ?? vehicle.mileage,
+            mileage: vehicle.mileage,
             engineTypeId: vehicle.engineTypeId,
         },
         address: address?.fullAddress ?? '',
