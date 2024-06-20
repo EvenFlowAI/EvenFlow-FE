@@ -15,6 +15,7 @@ import {loadWorkingDays} from "../../../store/reducers/serviceCenters/actions";
 import {loadHoursOfOperations} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {ServiceBookModal} from "../ServiceBookModal/ServiceBookModal";
 import {setPodById} from "../../../store/reducers/pods/actions";
+import {useException} from "../../../hooks/useException/useException";
 
 const CapacitySettingsTable = () => {
     const {capacitySettings} = useSelector((state: RootState) => state.capacityManagement);
@@ -24,10 +25,11 @@ const CapacitySettingsTable = () => {
     const {isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose} = useModal()
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const showError = useException();
 
     useEffect(() => {
         if (selectedSC) {
-            dispatch(loadCapacitySettings(selectedSC.id, dayjs().format("dddd")))
+            dispatch(loadCapacitySettings(selectedSC.id, dayjs().format("dddd"), showError))
             dispatch(loadWorkingDays(selectedSC.id))
             dispatch(loadHoursOfOperations(selectedSC.id))
         }
@@ -62,7 +64,7 @@ const CapacitySettingsTable = () => {
     const onCloseConfigureModal = () => {
         onConfigureClose();
         dispatch(setPodById(null));
-        if (selectedSC) dispatch(loadCapacitySettings(selectedSC.id, dayjs().format("dddd")))
+        if (selectedSC) dispatch(loadCapacitySettings(selectedSC.id, dayjs().format("dddd"), showError))
     }
 
     return (
