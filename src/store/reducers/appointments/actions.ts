@@ -187,7 +187,7 @@ export const loadServiceConsultants = (serviceCenterId: number): AppThunk => dis
 }
 
 const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boolean) => void ): AppThunk => (dispatch, getState) => {
-    const {selectedRecalls, consultants, selectedVehicle} = getState().appointmentFrame;
+    const {selectedRecalls, consultants} = getState().appointmentFrame;
     const {currentAppointment} = getState().appointments;
     const utcOffset = dayjs().utcOffset()
     const advisorId = consultants.find(item => item.id === currentAppointment?.advisor?.id)?.id;
@@ -219,7 +219,7 @@ const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boo
                 year: currentAppointment.vehicle.year,
                 make: currentAppointment.vehicle.make,
                 model: currentAppointment.vehicle.model,
-                mileage: selectedVehicle?.mileage ?? currentAppointment.vehicle.mileage,
+                mileage: currentAppointment.vehicle.mileage,
                 engineTypeId: currentAppointment.vehicle.engineTypeId,
             }
         }

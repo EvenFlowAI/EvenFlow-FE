@@ -13,10 +13,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {updateVehicle} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
+import {getCurrentAppointment} from "../../../../store/reducers/appointments/actions";
 
-const MileageModal: React.FC<DialogProps & {onSave: TCallback, isManagePage?: boolean}> = ({open, onClose, isManagePage, onSave}) => {
+const MileageModal: React.FC<DialogProps & {onSave: TCallback, isAdminPanel?: boolean}> = ({open, onClose, isAdminPanel, onSave}) => {
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const {selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame);
+    const {currentAppointment} = useSelector((state: RootState) => state.appointments);
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const [value, setValue] = useState<string>('')
@@ -30,13 +32,13 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback, isManagePage?: bo
     }
 
     const updateData = async () => {
-        await dispatch(updateVehicle({mileage: +value}))
+        isAdminPanel && currentAppointment?.vehicle
+            ? await dispatch(getCurrentAppointment({...currentAppointment, vehicle: {...currentAppointment.vehicle, mileage: +value}}))
+            : await dispatch(updateVehicle({mileage: +value}))
     }
 
     const handleSave = () => {
-        isManagePage
-            ? updateData().then(onClose)
-            : updateData().then(onSave)
+        updateData().then(onSave)
     }
 
     return (
@@ -52,7 +54,8 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback, isManagePage?: bo
                         autoComplete={true}
                         renderInput={autocompleteRender({
                             label: t("Estimated mileage"),
-                            required: true
+                            required: true,
+                            placeholder: `${t("Select")} ${t("Estimated mileage")}`
                         })}
                         value={value}
                     />
@@ -60,7 +63,7 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback, isManagePage?: bo
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} variant="outlined">{t("Cancel")}</Button>
-                <Button onClick={handleSave} variant="contained" color="info">{isManagePage ? t("Save") : t("Next")}</Button>
+                <Button onClick={handleSave} variant="contained" color="info">{t("Next")}</Button>
             </DialogActions>
         </BaseModal>
     );
