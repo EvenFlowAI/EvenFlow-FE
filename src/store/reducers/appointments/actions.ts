@@ -261,6 +261,7 @@ export const loadAppointmentByKey =
                     dispatch(updateRecalls(data, serviceCenterId));
                     if (onEmptyMileage && !mileageIsValid) {
                         onEmptyMileage()
+                        dispatch(setCurrentAppointmentLoading(false))
                     } else {
                         dispatch(loadConsultantsForCloning(
                             serviceCenterId,
