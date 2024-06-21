@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {AppThunk} from "../../../types/types";
+import {AppThunk, TArgCallback} from "../../../types/types";
 
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import {ICapacitySetting, ICapacitySettingById, ICapacitySettingRequestData} from "./types";
@@ -9,7 +9,7 @@ export const setLoading = createAction<boolean>('CapacitySettings/SetLoading');
 export const getCapacitySettings = createAction<ICapacitySetting[]>('CapacitySettings/GetCapacitySettings');
 export const setCurrentSetting = createAction<ICapacitySettingById|null>('CapacitySettings/GetCapacitySettingById')
 
-export const loadCapacitySettings = (serviceCenterId: number, day: string): AppThunk => dispatch => {
+export const loadCapacitySettings = (serviceCenterId: number, day: string, onError?: TArgCallback<any>): AppThunk => dispatch => {
     dispatch(setLoading(true))
     Api.call(Api.endpoints.CapacitySettings.GetAll, {params: {serviceCenterId, day}})
         .then(res => {
@@ -17,6 +17,7 @@ export const loadCapacitySettings = (serviceCenterId: number, day: string): AppT
         })
         .catch(err => {
             console.log('load capacity settings err', err)
+            onError && onError(err)
         })
         .finally(() => dispatch(setLoading(false)))
 }
@@ -38,7 +39,7 @@ export const updateCapacitySettingById = (data: ICapacitySettingRequestData, onE
     Api.call(Api.endpoints.CapacitySettings.Update, {data})
         .then(res => {
             if (res) {
-                dispatch(loadCapacitySettings(data.serviceCenterId, dayjs().format("dddd")))
+                dispatch(loadCapacitySettings(data.serviceCenterId, dayjs().format("dddd"), onError))
                 onSuccess()
             }
         })

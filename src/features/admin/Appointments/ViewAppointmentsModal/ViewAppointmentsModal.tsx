@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {
     Button,
@@ -12,7 +12,7 @@ import {CustomerInfo} from "./CustomerInfo/CustomerInfo";
 import {OperationalDetails} from "./OperationalDetails/OperationalDetails";
 import {LoaderWrapper, Wrapper} from "./styles";
 import {useDispatch, useSelector} from "react-redux";
-import {loadAppointmentByKey} from "../../../../store/reducers/appointments/actions";
+import {handleUpdatedMileageForCloning, loadAppointmentByKey} from "../../../../store/reducers/appointments/actions";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {encodeSCID} from "../../../../utils/utils";
 import {useModal} from "../../../../hooks/useModal/useModal";
@@ -21,6 +21,8 @@ import CloneAppointmentModal from "../CloneAppointmentModal/CloneAppointmentModa
 import {ReactComponent as Warning} from "../../../../assets/img/warning_icon.svg";
 import {RootState} from "../../../../store/rootReducer";
 import {TCallback} from "../../../../types/types";
+import {loadMileage} from "../../../../store/reducers/vehicleDetails/actions";
+import MileageModal from "../../../../components/modals/booking/MileageModal/MileageModal";
 
 type TCallbackProps = {
     onEditAppointment: TCallback;
@@ -44,7 +46,12 @@ export const ViewAppointmentsModal:
     const {selectedSC} = useSCs();
     const {onOpen, isOpen, onClose} = useModal();
     const {onOpen: onOpenClone, isOpen: isOpenClone, onClose: onCloseClone} = useModal();
+    const {isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen} = useModal();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        selectedSC && dispatch(loadMileage(selectedSC.id))
+    }, [selectedSC])
 
     const handleNoSlots = () => {
         setMessageText("We are sorry but the appointment cannot be cloned.  The original appointment has services that are not available in EvenFlow.")
@@ -64,7 +71,7 @@ export const ViewAppointmentsModal:
 
     const onClone = async () => {
        if (payload?.hashKey && selectedSC) {
-           await dispatch(loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id), onGetSlots))
+           await dispatch(loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id), onGetSlots, onMileageOpen))
        } else {
            handleExEvenFlowAppointments();
        }
@@ -73,6 +80,11 @@ export const ViewAppointmentsModal:
     const onAfterClone = () => {
         refresh && refresh()
         props.onClose()
+    }
+
+    const onMileageSave = () => {
+        selectedSC && dispatch(handleUpdatedMileageForCloning(encodeSCID(selectedSC.id), onGetSlots))
+        onMileageClose()
     }
 
     return <BaseModal {...props} width={940}>
@@ -124,5 +136,6 @@ export const ViewAppointmentsModal:
             title={messageText}
         />
         <CloneAppointmentModal open={isOpenClone} onClose={onCloseClone} onViewClose={onAfterClone}/>
+        <MileageModal open={isMileageOpen} onSave={onMileageSave} onClose={onMileageClose} isAdminPanel/>
     </BaseModal>
 };

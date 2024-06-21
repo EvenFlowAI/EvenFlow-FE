@@ -1054,7 +1054,7 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
 export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onError: TArgCallback<any>): AppThunk => (dispatch, getState) => {
     const {currentAppointment} = getState().appointments;
     const appointment = getState().appointment;
-    const {selectedRecalls} = getState().appointmentFrame;
+    const {selectedRecalls, consultants} = getState().appointmentFrame;
     if (currentAppointment) {
         dispatch(setAppointmentSaving(true))
 
@@ -1100,6 +1100,8 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
 
         const isWaitlist = isVisitCenterAppointment && isWaitListSlotSelected;
 
+        const advisor = consultants.find(el => el.id === currentAppointment?.advisor?.id)
+
         const data: ICreateAppointmentRequest = {
             id: currentAppointment.id,
             appointmentTimingType,
@@ -1112,10 +1114,10 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
             reminderTypes: currentAppointment.reminderTypes,
             serviceCenterId: id,
             advisor: {
-                id: currentAppointment.advisor?.id && !currentAppointment.advisor?.isAnySelected
-                    ? currentAppointment.advisor?.id
+                id: currentAppointment.advisor?.id && !currentAppointment.advisor?.isAnySelected && advisor
+                    ? advisor?.id
                     : null,
-                isAnySelected: currentAppointment.advisor ? Boolean(currentAppointment.advisor?.isAnySelected) : true
+                isAnySelected: advisor ? Boolean(currentAppointment.advisor?.isAnySelected) : true
             },
             transportationOptionId,
             slot,
