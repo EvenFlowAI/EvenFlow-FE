@@ -55,6 +55,7 @@ export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWi
         packageOptionType,
         packageEMenuType,
         isUsualFlowNeeded,
+        trackerData
     } = useSelector((state: RootState) => state.appointmentFrame);
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -122,7 +123,7 @@ export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWi
             category: 'EvenFlow User',
             action: 'Went back',
             label: 'From Selection Package Page',
-        })
+        }, trackerData.ids)
         onBack();
     }
 
@@ -162,7 +163,7 @@ export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWi
             category: 'EvenFlow User',
             action: `Selected Package`,
             label: `With ${packageOptions[selectedPackage.type]} Option`,
-        });
+        }, trackerData.ids);
     }
 
     const handleNext = (localSelectedPackage: IPackageOptions|null): void => {
@@ -187,7 +188,7 @@ export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWi
             category: 'EvenFlow User',
             action: `Selected eMenu Package`,
             label: `With ${packageEMenuType === firstOption ? 'Factory' : "Dealer"} Option`,
-        });
+        }, trackerData.ids);
         onSelectionCompleted();
     }
 

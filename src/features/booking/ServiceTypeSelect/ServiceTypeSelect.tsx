@@ -54,7 +54,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
         userType,
         selectedVehicle,
         serviceTypeOption,
-        appointmentByKey
+        appointmentByKey,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -147,7 +147,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
             category: 'EvenFlow User',
             action: 'Enters Page',
             label: `As New User`,
-        });
+        }, trackerData.ids);
     }
 
     const handleUser = (service: IFirstScreenOption) => {

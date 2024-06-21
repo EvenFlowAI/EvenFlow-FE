@@ -81,6 +81,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         appointmentByKey,
         isConsultantsLoading,
         isConsentsLoading,
+        trackerData
     } = useSelector((state: RootState) => state.appointmentFrame)
 
     const {
@@ -126,7 +127,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 action: 'Selected advisor',
                 label: advisor ? advisor.name : 'Any available',
                 nonInteraction: true
-            });
+            }, trackerData.ids);
         }
         if (appointment) {
             ReactGA.event({
@@ -135,9 +136,9 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 label: `Requests Codes: 
                 ${appointment?.serviceRequestPrices?.map(item => item.requestName).join(', ')}
                 ${!isNaN(appointment?.price?.value) ? `with Total Price $${+appointment.price.value}` : ''}`,
-            });
+            }, trackerData.ids);
         }
-    }, [advisor, appointment, consultants, currentConfig])
+    }, [advisor, appointment, consultants, currentConfig, trackerData])
 
     useEffect(() => {
         handleGALandingOnPage();
@@ -288,17 +289,17 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 category: 'EvenFlow User',
                 action: serviceTypeOption?.type === EServiceType.PickUpDropOff ? 'Selected Service Valet Appointment Slot' : 'Selected Appointment Slot',
                 label: `On ${dayjs.utc(appointment.date).format('MM-DD-YYYY')} at ${dayjs.utc(appointment.date).format('hh:mm A')}`,
-            });
+            }, trackerData.ids);
         }
-    }, [appointment])
+    }, [appointment, trackerData])
 
     const handleGABack = useCallback(() => {
         ReactGA.event({
             category: 'EvenFlow User',
             action: 'Went back',
             label: 'From Selection Date & Time Page',
-        });
-    }, [])
+        }, trackerData.ids);
+    }, [trackerData])
 
     const handleTransportation = useCallback(() => {
         if (serviceTypeOption?.transportationOption || !isTransportationAvailable) {

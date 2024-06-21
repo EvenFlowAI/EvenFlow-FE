@@ -289,7 +289,7 @@ export const AppointmentFlow = () => {
                     action: 'Abandoned Page',
                     label: `From Page ${SCREENS[currentScreen]}`,
                     nonInteraction: true
-                })
+                }, trackerData.ids)
             }
         } else {
             currentFrameScreen && setCurrentScreen(currentFrameScreen);
