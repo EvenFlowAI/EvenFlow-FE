@@ -3,14 +3,14 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: 18.x
+      nodejs: 18
 
   pre_build:
     commands:
       - echo Restore started on 'date'
       - yarn install
       
-      
+
   build:
     commands:
       - echo Publish started on 'date'
