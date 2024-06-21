@@ -1,6 +1,10 @@
 version: 0.2
     
 phases:
+  install:
+    runtime-versions:
+      nodejs: 18.x
+
   pre_build:
     commands:
       - echo Restore started on 'date'
@@ -9,4 +13,4 @@ phases:
   build:
     commands:
       - echo Publish started on 'date'
-      - yarn start
+      - yarn run buildProduction
