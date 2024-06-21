@@ -102,7 +102,7 @@ const initialState: TState = {
     prevScreen: '',
     makes: [],
     models: [],
-    trackerCreated: false,
+    trackerData: {isCreated: false, ids: []},
     isAdditionalServices: false,
     packageIsSelected: false,
     categoriesIds: [],
@@ -262,7 +262,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
         return {...state, models: payload }
     })
     .addCase(setTrackerCreated, (state, { payload }) => {
-        return {...state, trackerCreated: payload}
+        return {...state, trackerData: payload}
     })
     .addCase(setAdditionalServicesChosen, (state, {payload}) => {
         return {...state, isAdditionalServices: payload};

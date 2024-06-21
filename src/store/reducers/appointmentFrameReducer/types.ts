@@ -127,7 +127,7 @@ export type TState = {
     prevScreen: TScreen | '';
     makes: IMake[];
     models: string[];
-    trackerCreated: boolean;
+    trackerData: TTrackerState;
     isAdditionalServices: boolean;
     packageIsSelected: boolean;
     packageOptionType: number | null;
@@ -268,4 +268,9 @@ export interface ICustomerConsentBooking {
     title: string;
     isEnabled: boolean;
     message: string;
+}
+
+export type TTrackerState = {
+    isCreated: boolean;
+    ids: string[];
 }
