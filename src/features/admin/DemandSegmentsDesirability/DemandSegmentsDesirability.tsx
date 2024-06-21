@@ -130,7 +130,7 @@ export const DemandSegmentsDesirability = () => {
                                 className={classes.edit}
                                 onClick={handleOpen}
                                 color="primary"
-                                disabled={!optSettings.length || isLoading}>
+                                disabled={isLoading}>
                                 Edit
                             </Button>
                         </TableCell>

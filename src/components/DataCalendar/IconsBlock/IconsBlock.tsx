@@ -18,6 +18,8 @@ export function IconsBlock<U> ({icon, tooltipText, value, index}: TProps<U>) {
                 dangerouslySetInnerHTML={{__html: tooltipText}}
                 onClick={(e) => e.stopPropagation()}/>}
             enterTouchDelay={0}
+            enterDelay={500}
+            enterNextDelay={500}
             key={index}>
             <span className={classes.iconBlock}><>{icon} - {value ?? 0}</></span>
         </AdminHTMLTooltip>

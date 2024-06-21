@@ -1,6 +1,6 @@
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {ICapacitySetting} from "../../../store/reducers/capacityManagement/types";
-import {TOption} from "../PodsTable/PODModal/types";
+import {TOption} from "../ServiceBookModal/types";
 import {EDayOfWeek} from "../../../store/reducers/offers/types";
 
 export type TProps = DialogProps & { editingItem: ICapacitySetting|null };

@@ -1,6 +1,6 @@
 import {EAdvisorAssignMethod, IEmployeeAssignmentSetting} from "../../../store/reducers/employees/types";
 import {TRole} from "../../../store/reducers/users/types";
-import {TOption} from "../PodsTable/PODModal/types";
+import {TOption} from "../ServiceBookModal/types";
 
 export const sortServiceBooks = (a: IEmployeeAssignmentSetting, b: IEmployeeAssignmentSetting) => {
     return a.serviceBookId && b.serviceBookId

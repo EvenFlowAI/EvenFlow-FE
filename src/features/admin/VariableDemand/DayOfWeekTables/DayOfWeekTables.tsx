@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {SquarePaper} from "../../../../components/styled/Paper";
-import {PaperTitle} from "../../../../pages/admin/PricingSettings/UI";
+import {PaperTitle} from "../../../../pages/admin/ServicePricingSettings/UI";
 import {TabContext, TabPanel} from "@mui/lab";
 import {TabList} from "../../../../components/styled/Tabs";
 import {Tab} from "@mui/material";

@@ -11,7 +11,7 @@ import {IPodSummary} from "../../../../store/reducers/pods/types";
 import {useException} from "../../../../hooks/useException/useException";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {useModal} from "../../../../hooks/useModal/useModal";
-import {PODModal} from "../../PodsTable/PODModal/PODModal";
+import {ServiceBookModal} from "../../ServiceBookModal/ServiceBookModal";
 
 const ServiceBooksTable = () => {
     const {summary, podsLoading} = useSelector((state: RootState) => state.pods);
@@ -95,7 +95,7 @@ const ServiceBooksTable = () => {
                 <MenuItem onClick={openEdit} disabled={podsLoading}>Edit</MenuItem>
                 <MenuItem onClick={askRemove} disabled={podsLoading}>Remove</MenuItem>
             </Menu>
-            <PODModal open={isOpen} onClose={onEditClose} editingItemId={currentItem?.serviceBookId} />
+            <ServiceBookModal open={isOpen} onClose={onEditClose} editingItemId={currentItem?.serviceBookId} />
         </div>
     );
 };

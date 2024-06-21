@@ -11,6 +11,6 @@ export const useStyles = makeStyles()(theme => ({
         minWidth: 24,
     },
     controlDay: {
-
+        minWidth: 120,
     }
 }));

@@ -7,6 +7,7 @@ import {ServiceCenterActions} from "../../../features/admin/ServiceCenters";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {Titles} from "../../../types/types";
+import {centerProfileRoot} from "../../../utils/constants";
 
 export const ServiceCenters = () => {
     const [editedItem, setEditedItem] = useState<IServiceCenterForm|undefined>();
@@ -14,7 +15,17 @@ export const ServiceCenters = () => {
     const {onOpen, onClose, isOpen} = useModal();
 
     return <>
-        <TitleContainer title={Titles.ServiceCenters} actions={<ServiceCenterActions/>} pad />
+        {currentUser?.isSuperUser
+            ? <TitleContainer
+                title={Titles.ServiceCenters}
+                actions={<ServiceCenterActions/>}
+                pad/>
+            : <TitleContainer
+            title={Titles.ServiceCenters}
+            parent={centerProfileRoot}
+            actions={<ServiceCenterActions/>}
+                         pad/>
+        }
         <ServiceCentersTable editedItem={editedItem} setEditedItem={setEditedItem} onOpen={onOpen}/>
         <CreateServiceCenterModal
             readOnly={currentUser?.isSuperUser}

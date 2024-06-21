@@ -20,6 +20,7 @@ import {initialPaging} from "../constants";
 import {statusOptions} from "./constants";
 import {TAppointmentFilterProps} from "./types";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
+import {useException} from "../../../../hooks/useException/useException";
 
 export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                           status,
@@ -42,6 +43,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     const {selectedSC} = useSCs();
     const currentUser = useCurrentUser();
     const dispatch = useDispatch();
+    const showError = useException();
     const { classes: autocompleteClasses } = useAutocompleteClasses();
 
     useEffect(() => {
@@ -55,16 +57,24 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     useEffect(() => {
         if (currentUser) {
             if (currentUser?.role === "Advisor" && serviceAdvisors.length) {
-                const currentAdvisor = serviceAdvisors.find(el => el.dmsId.toString() === currentUser.dmsId);
-                if (currentAdvisor) {
-                    dispatch(setAppointmentsLoading(true))
-                    setFilters(prev => ({...prev, advisor: currentAdvisor, initialFiltersSet: true}))
+                if (!currentUser.dmsId) {
+                    showError("The user does not have DMS ID assigned")
+                } else {
+                    const currentAdvisor = serviceAdvisors.find(el => el.dmsId.toString() === currentUser.dmsId);
+                    if (currentAdvisor) {
+                        dispatch(setAppointmentsLoading(true))
+                        setFilters(prev => ({...prev, advisor: currentAdvisor, initialFiltersSet: true}))
+                    }
                 }
             } else if (currentUser?.role === "Technician" && technicians.length) {
-                const currentTechnician = technicians.find(el => el.dmsId.toString() === currentUser.dmsId);
-                if (currentTechnician) {
-                    dispatch(setAppointmentsLoading(true))
-                    setFilters(prev => ({...prev, technician: currentTechnician, initialFiltersSet: true}))
+                if (!currentUser.dmsId) {
+                    showError("The user does not have DMS ID assigned")
+                } else {
+                    const currentTechnician = technicians.find(el => el.dmsId.toString() === currentUser.dmsId);
+                    if (currentTechnician) {
+                        dispatch(setAppointmentsLoading(true))
+                        setFilters(prev => ({...prev, technician: currentTechnician, initialFiltersSet: true}))
+                    }
                 }
             } else {
                 setFilters(prev => ({...prev, initialFiltersSet: true}))

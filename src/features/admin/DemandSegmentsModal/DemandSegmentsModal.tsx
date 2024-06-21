@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {Button} from "@mui/material";
@@ -37,12 +37,6 @@ export const DemandSegmentsModal: React.FC<React.PropsWithChildren<React.PropsWi
     const {selectedSC} = useSCs();
     const {selectedPod} = useSelectedPod();
     const {askConfirm} = useConfirm();
-
-    useEffect(() => {
-        if (selectedSC) {
-            dispatch(loadDemandSegments(selectedSC.id, selectedPod?.id));
-        }
-    }, [dispatch, selectedSC, selectedPod]);
 
     const handleAddSegment = async () => {
         if (!selectedSC) {
