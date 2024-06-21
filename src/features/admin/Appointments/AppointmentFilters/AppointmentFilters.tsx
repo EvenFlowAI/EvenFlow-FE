@@ -173,6 +173,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         open={isOpenFrom}
                         format="MMMM Do"
                         fullWidth
+                        maxDate={dateTo}
                         label="Date From"
                         InputProps={{
                             placeholder: "Not selected",
