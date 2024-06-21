@@ -63,7 +63,7 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback, isAdminPanel?: bo
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} variant="outlined">{t("Cancel")}</Button>
-                <Button onClick={handleSave} variant="contained" color="info">{t("Next")}</Button>
+                <Button onClick={handleSave} variant="contained" color="info" disabled={!value}>{t("Next")}</Button>
             </DialogActions>
         </BaseModal>
     );
