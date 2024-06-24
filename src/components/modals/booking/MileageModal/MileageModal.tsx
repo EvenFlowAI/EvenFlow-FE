@@ -24,8 +24,9 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback, isAdminPanel?: bo
     const [value, setValue] = useState<string>('')
 
     useEffect(() => {
-        setValue(selectedVehicle?.mileage ? selectedVehicle.mileage.toString() : '')
-    }, [selectedVehicle])
+        const selectedMileage = mileage.find(el => el.value.toString() === selectedVehicle?.mileage?.toString())
+        setValue(selectedMileage?.value ? selectedMileage.value?.toString() : '')
+    }, [selectedVehicle, mileage])
 
     const handleChange = (e: React.ChangeEvent<{}>, option: string) => {
         setValue(option)
@@ -41,9 +42,14 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback, isAdminPanel?: bo
         updateData().then(onSave)
     }
 
+    const onCancel = () => {
+        setValue('');
+        onClose()
+    }
+
     return (
         <BaseModal open={open} onClose={() => {}} width={550}>
-            <DialogTitle onClose={onClose}>{t("Please select your estimated mileage")}</DialogTitle>
+            <DialogTitle onClose={onCancel}>{t("Please select your estimated mileage")}</DialogTitle>
             <DialogContent>
                 <div style={{margin: '20px auto', width: '70%',}}>
                     <Autocomplete
@@ -62,7 +68,7 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback, isAdminPanel?: bo
                 </div>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} variant="outlined">{t("Cancel")}</Button>
+                <Button onClick={onCancel} variant="outlined">{t("Cancel")}</Button>
                 <Button onClick={handleSave} variant="contained" color="info" disabled={!value}>{t("Next")}</Button>
             </DialogActions>
         </BaseModal>
