@@ -298,7 +298,6 @@ export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWit
 
     const handleBack = () => {
         if (isRecallsCategorySelected && !selectedRecalls.length) removeRecallCategory()
-        if (appointmentByKey && customerLoadedData?.isUpdating) dispatch(updateVehicle({mileage: appointmentByKey.vehicle.mileage}))
         onBack(service?.type === EServiceCategoryType.Diagnose || subService?.type === EServiceCategoryType.IndividualServices
             ? 'opsCode' : 'serviceNeeds');
     }
