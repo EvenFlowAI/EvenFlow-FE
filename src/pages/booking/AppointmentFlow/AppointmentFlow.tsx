@@ -79,7 +79,7 @@ import {Container, SidebarWrapper} from "./styles";
 import {AppointmentScreenTitle} from "../../../components/wrappers/AppointmentScreenTitle/AppointmentScreenTitle";
 import {Subtitle} from "../../../components/wrappers/AppointmentScreenSubtitle/AppointmentScreenSubtitle";
 import {SCREENS} from "../../../utils/constants";
-import {useAnalyticsBySCId} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
+import {useAnalyticsForParentSite} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {useException} from "../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
@@ -88,7 +88,7 @@ import {Routes} from "../../../routes/constants";
 export const AppointmentFlow = () => {
     const {
         selectedVehicle,
-        trackerCreated,
+        trackerData,
         valueService,
         currentScreen: currentFrameScreen,
         makes,
@@ -229,7 +229,9 @@ export const AppointmentFlow = () => {
         }
     }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id, address, zipCode, customerLoadedData])
 
-    useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
+    const setTracker = (ids: string[]) => dispatch(setTrackerCreated({isCreated: true, ids}))
+
+    useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
 
     useStorage();
 
@@ -287,7 +289,7 @@ export const AppointmentFlow = () => {
                     action: 'Abandoned Page',
                     label: `From Page ${SCREENS[currentScreen]}`,
                     nonInteraction: true
-                })
+                }, trackerData.ids)
             }
         } else {
             currentFrameScreen && setCurrentScreen(currentFrameScreen);

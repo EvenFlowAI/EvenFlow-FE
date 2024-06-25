@@ -32,7 +32,7 @@ import {
     TEditingPosition,
     TLanguage,
     TMaintenanceDetails,
-    TMaintenanceOption,
+    TMaintenanceOption, TTrackerState,
     TVehicleForRequest,
     TYear
 } from "./types";
@@ -101,7 +101,7 @@ export const setConsultantsLoading = createAction<boolean>('fAppointment/setCons
 export const setCurrentFrameScreen = createAction<TScreen>('fAppointment/setCurrentScreen');
 export const getMakes = createAction<IMake[]>('fAppointment/GetMakes');
 export const getModels = createAction<string[]>('fAppointment/GetModels');
-export const setTrackerCreated = createAction<boolean>('fAppointment/SetTrackerCreated');
+export const setTrackerCreated = createAction<TTrackerState>('fAppointment/SetTrackerCreated');
 export const setAdditionalServicesChosen = createAction<boolean>('fAppointment/SetAdditionalServicesChosen');
 export const setPackageIsSelected = createAction<boolean>('fAppointment/SetPackageIsSelected');
 export const setSelectedPackageOptionType = createAction<number | null>('fAppointment/SetSelectedPackageOptionType');

@@ -19,7 +19,7 @@ import NewCustomerForAdmin from "./NewCustomerForAdmin/NewCustomerForAdmin";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {useParams} from "react-router-dom";
 import {useStyles} from "./styles";
-import {useAnalyticsBySCId} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
+import {useAnalyticsForParentSite} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 type TProps = {
@@ -36,7 +36,7 @@ export const CustomerSelect: React.FC<React.PropsWithChildren<React.PropsWithChi
     redirect,
                                                  }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {trackerCreated} = useSelector((state: RootState) => state.appointmentFrame);
+    const {trackerData} = useSelector((state: RootState) => state.appointmentFrame);
     const {shortSC} = useSelector((state: RootState) => state.serviceCenters);
 
     const {id} = useParams<{id: string}>();
@@ -46,7 +46,9 @@ export const CustomerSelect: React.FC<React.PropsWithChildren<React.PropsWithChi
     const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
         [currentUser, scProfile])
 
-    useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
+    const setTracker = (ids: string[]) => dispatch(setTrackerCreated({isCreated: true, ids}))
+
+    useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
 
     useEffect(() => {
         const uid = uuidv4();

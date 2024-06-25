@@ -27,7 +27,7 @@ type TOfferProductPageProps = {
 }
 
 const OfferProductPage: React.FC<React.PropsWithChildren<React.PropsWithChildren<TOfferProductPageProps>>> = ({category, onChangeVehicle, handleSetScreen, lastCategory}) => {
-    const {selectedVehicle, categoriesIds, subService, service} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, categoriesIds, subService, service, trackerData} = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {t} = useTranslation();
@@ -46,7 +46,7 @@ const OfferProductPage: React.FC<React.PropsWithChildren<React.PropsWithChildren
                 category: 'EvenFlow User',
                 action: 'Selected Service',
                 label: `With Name ${service.name} And Service Requests ${requestsString}`,
-            })
+            }, trackerData.ids)
         } else {
             if (subService && subService?.id === lastCategory?.id) {
                 if (categoriesIds && subService.type !== EServiceCategoryType.LinkToPage2) {
@@ -58,7 +58,7 @@ const OfferProductPage: React.FC<React.PropsWithChildren<React.PropsWithChildren
                     category: 'EvenFlow User',
                     action: 'Selected Sub Service',
                     label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
-                })
+                }, trackerData.ids)
             }
         }
     }

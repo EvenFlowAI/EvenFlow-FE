@@ -20,7 +20,7 @@ type TProps = {
 export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =
     ({date, loading}) => {
         const {serviceValetAppointment: selectedAppointment, serviceValetSlots} = useSelector((state: RootState) => state.appointment);
-        const {selectedTiming, sideBarSteps} = useSelector((state : RootState) => state.appointmentFrame);
+        const {selectedTiming, sideBarSteps, trackerData} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const firstCardRef = useRef<HTMLDivElement|null>(null);
         const { classes  } = useStyles();
@@ -38,8 +38,8 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
                 category: 'EvenFlow User',
                 action: 'Clicked on Service Valet Appointment Slot',
                 label: a?.price?.value ? `With Price $${a.price.value}` : '',
-            });
-        }, [])
+            }, trackerData.ids);
+        }, [trackerData])
 
         const handleSideBar = () => {
             const index = sideBarSteps.indexOf("appointmentSelection");

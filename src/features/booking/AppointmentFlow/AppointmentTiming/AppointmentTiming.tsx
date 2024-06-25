@@ -55,7 +55,8 @@ export const AppointmentTiming: React.FC<React.PropsWithChildren<React.PropsWith
         sideBarSteps,
         consultants,
         appointmentByKey,
-        editingPosition
+        editingPosition,
+        trackerData
     } = useSelector((state: RootState) => state.appointmentFrame)
     const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
 
@@ -126,12 +127,12 @@ export const AppointmentTiming: React.FC<React.PropsWithChildren<React.PropsWith
                 category: 'EvenFlow User',
                 action: 'Selected Timing Type',
                 label: `Selected ${timingTypes[selectedTiming]}`,
-            });
+            }, trackerData.ids);
         }
         if (appointment?.timingType !== selectedTiming) clearAppointmentSlots()
         handleSideBar();
         onNext();
-    }, [appointment, dispatch, onNext, selectedTiming])
+    }, [appointment, dispatch, onNext, selectedTiming, trackerData])
 
     return (
         <StepWrapper>
