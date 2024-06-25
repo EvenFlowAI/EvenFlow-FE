@@ -291,7 +291,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 label: `On ${dayjs.utc(appointment.date).format('MM-DD-YYYY')} at ${dayjs.utc(appointment.date).format('hh:mm A')}`,
             }, trackerData.ids);
         }
-    }, [appointment, trackerData])
+    }, [appointment, serviceTypeOption, trackerData])
 
     const handleGABack = useCallback(() => {
         ReactGA.event({
