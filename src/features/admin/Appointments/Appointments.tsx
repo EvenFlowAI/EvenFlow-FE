@@ -57,6 +57,7 @@ export const Appointments = () => {
                 serviceBookId,
                 searchTerm: filters.searchTerm,
                 isServiceBookServiceCenter,
+                dateRangeFilterBy: filters.dateRangeFilterBy,
             }
             if (filters.advisor) data.advisorId = filters.advisor.id;
             if (filters.technician) data.technicianDmsId = filters.technician.dmsId;
@@ -142,6 +143,7 @@ export const Appointments = () => {
                 dateTo={filters.dateTo}
                 advisor={filters.advisor}
                 technician={filters.technician}
+                dateRangeType={filters.dateRangeFilterBy}
             />
             : null}
         {selectedView === "list"

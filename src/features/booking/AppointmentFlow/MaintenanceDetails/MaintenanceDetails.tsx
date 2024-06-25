@@ -131,8 +131,13 @@ export const MaintenanceDetails: React.FC<React.PropsWithChildren<React.PropsWit
         const selectedMileage = mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
         const mileageIsValid = selectedMileage && selectedMileage?.value.toString() === selectedVehicle?.mileage?.toString();
         if (selectedVehicle) {
-            if (selectedMileage?.value && mileageIsValid && selectedVehicle.mileage !== selectedMileage?.value) {
-                dispatch(updateVehicle({mileage: selectedMileage.value}))
+            if (selectedMileage?.value) {
+                const theSameMileageSelected = selectedVehicle?.mileage === selectedMileage?.value
+                if (mileageIsValid && !theSameMileageSelected) {
+                    dispatch(updateVehicle({mileage: selectedMileage.value}))
+                }
+            } else if (selectedVehicle.mileage) {
+                dispatch(updateVehicle({mileage: null}))
             }
         }
     }, [dispatch, mileage, selectedVehicle]);

@@ -49,8 +49,8 @@ const CloneAppointmentModal: React.FC<DialogProps & {onViewClose: TCallback}> = 
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
-    const {onOpen, isOpen, onClose} = useModal();
     const showError = useException();
+    const {onOpen, isOpen, onClose} = useModal();
     const initRef = useRef<boolean>(false);
     const isLoading = isAppointmentLoading || isAppointmentSaving;
 
