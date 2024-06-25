@@ -70,6 +70,7 @@ export interface ICustomerLoadedData {
     fromSearchByName?: boolean;
     isUpdating?: boolean;
     address?: IAddressData|null;
+    companyName?: string;
 }
 
 export interface IVehicle {
@@ -215,6 +216,7 @@ export interface IAppointmentByKey extends IBaseAppointment {
     address?: IAddressData;
     isWaitlist?: boolean;
     waitlistTextSettings?: Partial<IWaitListData>;
+    podId?: number;
 }
 
 export interface IAppointmentByQuery extends IBaseAppointment {
@@ -334,6 +336,7 @@ export interface ICustomer {
     email: string;
     city?: string;
     id?: number;
+    companyName?: string;
 }
 
 export interface ITransportation {

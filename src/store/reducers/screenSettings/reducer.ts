@@ -5,7 +5,7 @@ import {
     setEmailRequirementLoading,
     setConsentsList,
     setConsentLoading,
-    setLoading, getCurrentConsent
+    setLoading, getCurrentConsent,
 } from "./actions";
 
 const initialState: TState = {

@@ -7,13 +7,14 @@ export type TEmailRequirement = {
 }
 
 export enum EScreenSettingsType {
-    EmailRequirement, CustomerConsent, PriceDisplay, Waitlist
+    EmailRequirement, CustomerConsent, PriceDisplay, CompanyName, Waitlist
 }
 
 export const screenSettingsList: EScreenSettingsType[] = [
     EScreenSettingsType.EmailRequirement,
     EScreenSettingsType.CustomerConsent,
     EScreenSettingsType.PriceDisplay,
+    EScreenSettingsType.CompanyName,
     EScreenSettingsType.Waitlist,
 ];
 
@@ -49,9 +50,6 @@ export type TState = {
     isLoading: boolean;
     currentConsent: ICustomerConsentById|null;
 }
-
-export enum ECustomerType {
-    New}
 
 export interface IBaseCustomerConsent {
     serviceCenterId: number;

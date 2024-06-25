@@ -62,7 +62,6 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
     const {customers, isLoading, paging, pageData} = useSelector((state: RootState) => state.customers);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
 
     const [data, setData] = useState<ICustomerWithPhones[]>([]);
     const [sorting, setSorting] = useState<TSortOrder>({isAscending: true, order: null});
@@ -116,14 +115,13 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
         const phoneNumbers = phoneNumber ? [phoneNumber] : [];
         const customerData = customers.find(el => el.vehicleId === item.vehicleId && el.customerId === item.customerId);
         if (customerData?.homePhone) phoneNumbers.push(customerData.homePhone);
-        const selectedMileage = mileage.find(el => el.value.toString() === item?.mileage?.toString());
         const vehicle = {
             vin: item.vin,
             make: item.make,
             model: item.model,
             year: item.year,
             appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
-            mileage: selectedMileage?.value ?? null,
+            mileage: item?.mileage ?? null,
             dmsId: item.vehicleDmsId,
             hasRepairOrders: Boolean(item.hasOrders),
             engineTypeId: item.engineTypeId ?? null,
@@ -134,6 +132,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
             firstName: item?.firstName ?? "",
             lastName: item?.lastName ?? "",
             id: item.customerId?.toString() ?? null,
+            companyName: item?.companyName ?? "",
             phoneNumbers,
             vehicles: [vehicle],
             fromSearchByName: true,
@@ -303,6 +302,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
             emails: customer?.email ? [customer.email] : [],
             firstName: customer?.firstName ?? "",
             lastName: customer?.lastName ?? "",
+            companyName: customer?.companyName ?? '',
             id: customer.customerId?.toString() ?? null,
             phoneNumbers: phoneNumber ? [phoneNumber] : [],
             vehicles: [],
@@ -522,8 +522,25 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             isEdit={isEdit}
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
+                                {selectedColumns.find(el => el.name === "Company Name")
+                                    ? <TableCell
+                                        key="companyName"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                        <CustomerInputField
+                                            editingElement={editingElement}
+                                            customer={customer}
+                                            fieldName="companyName"
+                                            isEdit={isEdit}
+                                            onFieldChange={onFieldChange}/>
+                                    </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Home")
-                                    ? <TableCell key="home" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="home"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -532,7 +549,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Cell")
-                                    ? <TableCell key="cell" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="cell"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -541,7 +562,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Other")
-                                    ? <TableCell key="otherPhone" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="otherPhone"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -550,7 +575,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Email")
-                                    ? <TableCell key="email" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="email"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <CustomerInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -559,7 +588,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onFieldChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "Address")
-                                    ? <TableCell key="address" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="address"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -568,7 +601,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "City")
-                                    ? <TableCell key="city" className={classes.bodyCell} width={120} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="city"
+                                        className={classes.bodyCell}
+                                        width={120}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -577,7 +614,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "State")
-                                    ? <TableCell key="state" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="state"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
@@ -586,7 +627,11 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                             onFieldChange={onAddressChange}/>
                                     </TableCell> : null}
                                 {selectedColumns.find(el => el.name === "ZIP")
-                                    ? <TableCell key="zip" className={classes.bodyCell} width={150} style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
+                                    ? <TableCell
+                                        key="zip"
+                                        className={classes.bodyCell}
+                                        width={150}
+                                        style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px'}}>
                                         <AddressInputField
                                             editingElement={editingElement}
                                             customer={customer}
