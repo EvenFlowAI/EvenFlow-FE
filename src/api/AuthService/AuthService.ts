@@ -65,13 +65,9 @@ class AuthService {
     }
 
     async login(data: ICredentials) {
-        try {
-            const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Request, {data});
-            this.setTokens(resp.data);
-            this.refreshRequest();
-        } catch (e) {
-            console.error('login error', e);
-        }
+        const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Request, {data});
+        this.setTokens(resp.data);
+        this.refreshRequest();
     }
 
     logout(): void {

@@ -21,6 +21,7 @@ const AppointmentVehicleInfo = () => {
                 {valueService?.year?.year} <span style={{textTransform: 'uppercase'}}>{valueService?.series?.name}</span> {valueService?.model?.name}
             </> : <>
                 {selectedVehicle?.year} <span style={{textTransform: 'uppercase'}}>{selectedVehicle?.make}</span> {selectedVehicle?.model} {engine?.name ?? ""}
+                {selectedVehicle?.mileage ? <div style={{marginTop: 8}}>{selectedVehicle?.mileage} {t("miles")}</div> : null}
             </>}
         </ConfirmationItemWrapper>
     );
