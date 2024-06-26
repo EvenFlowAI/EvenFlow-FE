@@ -19,10 +19,18 @@ import {updateScheduleByDate} from "../../../../store/reducers/schedules/actions
 import {useException} from "../../../../hooks/useException/useException";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {PickersWrapper} from "../../../../components/styled/PickersWrapper";
+import EmployeeScheduleFilters from "../EmployeeScheduleFilters/EmployeeScheduleFilters";
+import {TFilters} from "../types";
 
 type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean, startDate?: TParsableDate, endDate?: TParsableDate}
 
 const compareName = (a: IScheduleByDate, b: IScheduleByDate) => a.employeeName.localeCompare(b.employeeName)
+
+const initialFilters:TFilters = {
+    serviceBook: null,
+    name: null,
+    role: null
+}
 
 const EmployeeScheduleModal: React.FC<TProps> = ({
                                                      date,
@@ -38,6 +46,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     const [isForWeek, setForWeek] = useState<boolean>(false);
     const [formIsChecked, setFormChecked] = useState<boolean>(false);
     const [currentSchedule, setCurrentSchedule] = useState<IScheduleByDate[]>([]);
+    const [filters, setFilters] = useState<TFilters>(initialFilters);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException()
@@ -227,12 +236,18 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
             <DialogContent style={{padding: "12px 32px"}}>
                 {loading
                     ? <Loading/>
-                    :  <Table<IScheduleByDate>
-                        data={currentSchedule}
-                        index={"id"}
-                        isLoading={employeesLoading}
-                        hidePagination
-                        rowData={rowData}/>}
+                    :  <>
+                        <EmployeeScheduleFilters
+                            isLoading={loading}
+                            filters={filters}
+                            setFilters={setFilters}/>
+                        <Table<IScheduleByDate>
+                            data={currentSchedule}
+                            index={"id"}
+                            isLoading={employeesLoading}
+                            hidePagination
+                            rowData={rowData}/>
+                    </>}
                 {/*<FormControlLabel*/}
                 {/*    style={{width: '35%', display: 'flex', justifyContent: 'space-between', marginBottom: 20}}*/}
                 {/*    labelPlacement="start"*/}
