@@ -134,6 +134,7 @@ export interface IDriverInfo {
     fullName: string;
     phoneNumber: string;
     email: string;
+    companyName?: string;
     city?: string;
     id?: number;
 }

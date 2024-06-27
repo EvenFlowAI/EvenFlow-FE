@@ -13,6 +13,7 @@ import {loadGeneralSettings} from "../../../store/reducers/generalSettings/actio
 import {useParams} from "react-router-dom";
 import {decodeSCID} from "../../../utils/utils";
 import {ESettingType} from "../../../store/reducers/generalSettings/types";
+import {ICustomer} from "../../../api/types";
 
 type TUserDataProps = {
     errors: string[],
@@ -33,14 +34,15 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
 
     useEffect(() => {
         if (customerLoadedData) {
-            dispatch(setCustomer({
+            const data: ICustomer = {
                 ...customer,
                 fullName: customerLoadedData?.fullName ?? `${customerLoadedData.firstName} ${customerLoadedData.lastName}`,
                 email: customerLoadedData?.emails?.length ? customerLoadedData.emails[0] : "",
                 phoneNumber: customerLoadedData?.phoneNumbers?.length ? customerLoadedData.phoneNumbers[0] : "",
                 city: customerLoadedData?.address?.city,
-                companyName: customerLoadedData?.companyName ?? '',
-            }));
+                companyName: customerLoadedData.companyName,
+            }
+            dispatch(setCustomer(data));
         }
     }, [customerLoadedData, dispatch]);
 
@@ -69,8 +71,8 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
             {companyNameIsOn
                 ? <TextField
                     onChange={handleChange}
-                    value={customer?.companyName}
-                    disabled={customerLoadedData?.isUpdating && Boolean(customer?.companyName?.length)}
+                    value={customer?.companyName ?? ''}
+                    disabled={customerLoadedData?.isUpdating && Boolean(customerLoadedData?.companyName?.length)}
                     name="companyName"
                     fullWidth
                     error={errors.includes('companyname')}

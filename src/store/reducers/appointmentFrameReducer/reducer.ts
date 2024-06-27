@@ -90,6 +90,7 @@ const initialState: TState = {
         phoneNumber: "",
         email: "",
         city: "",
+        companyName: "",
     },
     reminders: [],
     transportation: null,
