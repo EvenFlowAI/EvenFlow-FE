@@ -238,6 +238,7 @@ export interface IAppointmentCustomerInfo {
     email?: string;
     phoneNumber?: string;
     dmsId?: string;
+    companyName?: string;
 }
 
 export interface IAppointmentVehicle {

@@ -8,8 +8,11 @@ export const CustomerInfo:React.FC<React.PropsWithChildren<React.PropsWithChildr
     return (
         <div>
             <TitleWrapper>Customer Information</TitleWrapper>
+            {payload.customerInformation?.fullName
+                ? <div style={{color: "#252733", fontSize: 14,}}>{payload.customerInformation?.fullName}</div>
+                : null}
             <DetailsItem
-                title={payload.customerInformation?.fullName ?? ''}
+                title={payload.customerInformation?.companyName ?? ''}
                 text={`${payload.customerInformation?.email ?? ''} ${payload.customerInformation?.phoneNumber ?? ''}`}/>
             {payload.customerInformation?.dmsId
                 ? <div style={{color: "#252733", fontSize: 14,}}>Customer ID: {payload.customerInformation?.dmsId}</div>
