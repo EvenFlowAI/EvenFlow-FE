@@ -1,7 +1,6 @@
 import React, {Dispatch, SetStateAction, useMemo, useState} from 'react';
 import {Autocomplete, Grid} from "@mui/material";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {TServiceConsultant} from "../../../../store/reducers/appointments/types";
 import {TFilters} from "../types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -16,17 +15,18 @@ type TProps = {
 const EmployeeScheduleFilters: React.FC<TProps> = ({isLoading, filters, setFilters}) => {
     const {scheduleByDate} = useSelector((state: RootState) => state.employeesSchedule);
     const [search, setSearch] = useState<string>('');
+
     const serviceBooksList = useMemo(() => Array.from(new Set(scheduleByDate.map(el => el.serviceBook))),
         [scheduleByDate])
     const rolesList = useMemo(() => Array.from(new Set(scheduleByDate.map(el => el.role))),
         [scheduleByDate])
 
     const onServiceBookChange = (e: React.SyntheticEvent, value: string|null) => {
-        setFilters(prev => ({...prev, serviceBook: value}))
+        setFilters(prev => ({...prev, serviceBook: value ?? ''}))
     }
 
     const onRoleChange = (e: React.SyntheticEvent, value: string|null) => {
-        setFilters(prev => ({...prev, role: value}))
+        setFilters(prev => ({...prev, role: value ?? ''}))
     }
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

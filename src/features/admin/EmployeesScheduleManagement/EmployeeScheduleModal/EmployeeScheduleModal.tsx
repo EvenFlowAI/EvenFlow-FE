@@ -27,9 +27,9 @@ type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean, startDa
 const compareName = (a: IScheduleByDate, b: IScheduleByDate) => a.employeeName.localeCompare(b.employeeName)
 
 const initialFilters:TFilters = {
-    serviceBook: null,
-    name: null,
-    role: null
+    serviceBook: '',
+    name: '',
+    role: ''
 }
 
 const EmployeeScheduleModal: React.FC<TProps> = ({
@@ -53,6 +53,8 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     const schedule = useMemo(() => {
         return hoursOfOperations.find(el => el.dayOfWeek === dayjs(date).day());
     }, [hoursOfOperations, date])
+    const sorted = useMemo(() => scheduleByDate.map(el => ({...el, id: `${Math.random()}`})).sort(compareName),
+        [scheduleByDate])
     const {classes} = useActionButtonsStyles();
 
     useEffect(() => {
@@ -60,8 +62,18 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     }, [selectedSC])
 
     useEffect(() => {
-        setCurrentSchedule(scheduleByDate.map(el => ({...el, id: `${Math.random()}`})).sort(compareName))
-    }, [scheduleByDate])
+        setCurrentSchedule(sorted)
+    }, [sorted])
+
+    useEffect(() => {
+        setCurrentSchedule(() => {
+            return sorted.filter(el => {
+                return el.employeeName.toLowerCase().includes(filters.name.trim().toLowerCase())
+                && el.role.toLowerCase().startsWith(filters.role.trim().toLowerCase())
+                && el.serviceBook.toLowerCase().startsWith(filters.serviceBook.trim().toLowerCase())
+            })
+        })
+    }, [filters, sorted])
 
     const handleShowOnBookingChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         setForWeek(checked)
