@@ -22,9 +22,9 @@ type TUserDataProps = {
 };
 
 export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUserDataProps>>> = ({ errors, setErrors, isEmailRequired }) => {
-    const {customerLoadedData, slotPodId} = useSelector((state: RootState) => state.appointment);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {settings} = useSelector((state: RootState) => state.generalSettings);
-    const {customer, userType, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customer, userType} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const {id} = useParams<{id: string}>();
@@ -47,8 +47,8 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
     }, [customerLoadedData, dispatch]);
 
     useEffect(() => {
-        dispatch(loadGeneralSettings(decodeSCID(id), [ESettingType.CompanyName], slotPodId ?? appointmentByKey?.podId))
-    }, [id, slotPodId])
+        dispatch(loadGeneralSettings(decodeSCID(id), [ESettingType.CompanyName]))
+    }, [id])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         if (customer) {
