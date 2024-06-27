@@ -19,10 +19,18 @@ import {updateScheduleByDate} from "../../../../store/reducers/schedules/actions
 import {useException} from "../../../../hooks/useException/useException";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {PickersWrapper} from "../../../../components/styled/PickersWrapper";
+import EmployeeScheduleFilters from "../EmployeeScheduleFilters/EmployeeScheduleFilters";
+import {TFilters} from "../types";
 
 type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean, startDate?: TParsableDate, endDate?: TParsableDate}
 
 const compareName = (a: IScheduleByDate, b: IScheduleByDate) => a.employeeName.localeCompare(b.employeeName)
+
+const initialFilters:TFilters = {
+    serviceBook: '',
+    name: '',
+    role: ''
+}
 
 const EmployeeScheduleModal: React.FC<TProps> = ({
                                                      date,
@@ -38,12 +46,15 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     const [isForWeek, setForWeek] = useState<boolean>(false);
     const [formIsChecked, setFormChecked] = useState<boolean>(false);
     const [currentSchedule, setCurrentSchedule] = useState<IScheduleByDate[]>([]);
+    const [filters, setFilters] = useState<TFilters>(initialFilters);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException()
     const schedule = useMemo(() => {
         return hoursOfOperations.find(el => el.dayOfWeek === dayjs(date).day());
     }, [hoursOfOperations, date])
+    const sorted = useMemo(() => scheduleByDate.map(el => ({...el, id: `${Math.random()}`})).sort(compareName),
+        [scheduleByDate])
     const {classes} = useActionButtonsStyles();
 
     useEffect(() => {
@@ -51,8 +62,18 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     }, [selectedSC])
 
     useEffect(() => {
-        setCurrentSchedule(scheduleByDate.map(el => ({...el, id: `${Math.random()}`})).sort(compareName))
-    }, [scheduleByDate])
+        setCurrentSchedule(sorted)
+    }, [sorted])
+
+    useEffect(() => {
+        setCurrentSchedule(() => {
+            return sorted.filter(el => {
+                return el.employeeName.toLowerCase().includes(filters.name.trim().toLowerCase())
+                && el.role.toLowerCase().startsWith(filters.role.trim().toLowerCase())
+                && el.serviceBook.toLowerCase().startsWith(filters.serviceBook.trim().toLowerCase())
+            })
+        })
+    }, [filters, sorted])
 
     const handleShowOnBookingChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         setForWeek(checked)
@@ -227,12 +248,18 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
             <DialogContent style={{padding: "12px 32px"}}>
                 {loading
                     ? <Loading/>
-                    :  <Table<IScheduleByDate>
-                        data={currentSchedule}
-                        index={"id"}
-                        isLoading={employeesLoading}
-                        hidePagination
-                        rowData={rowData}/>}
+                    :  <>
+                        <EmployeeScheduleFilters
+                            isLoading={loading}
+                            filters={filters}
+                            setFilters={setFilters}/>
+                        <Table<IScheduleByDate>
+                            data={currentSchedule}
+                            index={"id"}
+                            isLoading={employeesLoading}
+                            hidePagination
+                            rowData={rowData}/>
+                    </>}
                 {/*<FormControlLabel*/}
                 {/*    style={{width: '35%', display: 'flex', justifyContent: 'space-between', marginBottom: 20}}*/}
                 {/*    labelPlacement="start"*/}
