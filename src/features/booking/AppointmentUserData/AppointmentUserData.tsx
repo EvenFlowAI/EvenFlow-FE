@@ -9,10 +9,8 @@ import {setCustomer} from "../../../store/reducers/appointmentFrameReducer/actio
 import {useTranslation} from "react-i18next";
 import {Wrapper} from "./styles";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {loadGeneralSettings} from "../../../store/reducers/generalSettings/actions";
-import {useParams} from "react-router-dom";
-import {decodeSCID} from "../../../utils/utils";
 import {ESettingType} from "../../../store/reducers/generalSettings/types";
+import {ICustomer} from "../../../api/types";
 
 type TUserDataProps = {
     errors: string[],
@@ -21,32 +19,28 @@ type TUserDataProps = {
 };
 
 export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUserDataProps>>> = ({ errors, setErrors, isEmailRequired }) => {
-    const {customerLoadedData, slotPodId} = useSelector((state: RootState) => state.appointment);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {settings} = useSelector((state: RootState) => state.generalSettings);
-    const {customer, userType, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customer, userType} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {t} = useTranslation();
-    const {id} = useParams<{id: string}>();
     const companyNameIsOn = useMemo(() => {
         return settings.find(el => el.settingType === ESettingType.CompanyName)?.data?.isOn
     }, [settings])
 
     useEffect(() => {
         if (customerLoadedData) {
-            dispatch(setCustomer({
+            const data: ICustomer = {
                 ...customer,
                 fullName: customerLoadedData?.fullName ?? `${customerLoadedData.firstName} ${customerLoadedData.lastName}`,
                 email: customerLoadedData?.emails?.length ? customerLoadedData.emails[0] : "",
                 phoneNumber: customerLoadedData?.phoneNumbers?.length ? customerLoadedData.phoneNumbers[0] : "",
                 city: customerLoadedData?.address?.city,
-                companyName: customerLoadedData?.companyName ?? '',
-            }));
+                companyName: customerLoadedData.companyName,
+            }
+            dispatch(setCustomer(data));
         }
     }, [customerLoadedData, dispatch]);
-
-    useEffect(() => {
-        dispatch(loadGeneralSettings(decodeSCID(id), [ESettingType.CompanyName], slotPodId ?? appointmentByKey?.podId))
-    }, [id, slotPodId])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         if (customer) {
@@ -66,6 +60,17 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
                 fullWidth
                 placeholder={t("Type here")}
                 label={`${t("Full Name")}:`} />
+            {companyNameIsOn
+                ? <TextField
+                    onChange={handleChange}
+                    value={customer?.companyName ?? ''}
+                    disabled={customerLoadedData?.isUpdating && Boolean(customerLoadedData?.companyName?.length)}
+                    name="companyName"
+                    fullWidth
+                    error={errors.includes('companyname')}
+                    placeholder={t("Type here")}
+                    label={`${t("Company Name")}:`}/>
+                : null}
             <TextField
                 onChange={handleChange}
                 value={customer?.phoneNumber}
@@ -75,17 +80,6 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
                 error={errors.includes('phonenumber')}
                 placeholder={t("Type here")}
                 label={`${t("Phone Number")}:`} />
-            {companyNameIsOn
-                ? <TextField
-                    onChange={handleChange}
-                    value={customer?.companyName}
-                    disabled={userType === EUserType.Existing}
-                    name="companyName"
-                    fullWidth
-                    error={errors.includes('companyname')}
-                    placeholder={t("Type here")}
-                    label={`${t("Company Name")}:`}/>
-                : null}
             <TextField
                 onChange={handleChange}
                 value={customer?.email}

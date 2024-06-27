@@ -134,6 +134,7 @@ export interface IDriverInfo {
     fullName: string;
     phoneNumber: string;
     email: string;
+    companyName?: string;
     city?: string;
     id?: number;
 }
@@ -237,6 +238,7 @@ export interface IAppointmentCustomerInfo {
     email?: string;
     phoneNumber?: string;
     dmsId?: string;
+    companyName?: string;
 }
 
 export interface IAppointmentVehicle {

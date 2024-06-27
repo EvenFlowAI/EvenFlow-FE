@@ -93,6 +93,7 @@ export const EditAppointment = () => {
                     emails: [data.driver.email],
                     fullName: data.driver.fullName,
                     fromSearchByName: isFromAdmin,
+                    companyName: data.driver.companyName,
                     isUpdating: true,
                 }
                 if (data.address) customer.address = data.address

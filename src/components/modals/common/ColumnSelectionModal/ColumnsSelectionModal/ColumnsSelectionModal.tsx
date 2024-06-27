@@ -39,7 +39,7 @@ const ColumnsSelectionModal: React.FC<DialogProps&TProps> = ({
 
     useEffect(() => {
         setCheckedColumns(selectedColumns)
-    }, [])
+    }, [selectedColumns])
 
     const onCheck = (name: string) => () => {
         if (!requiredColumnsNames.includes(name)) {

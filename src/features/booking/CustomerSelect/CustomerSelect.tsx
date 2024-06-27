@@ -21,6 +21,8 @@ import {useParams} from "react-router-dom";
 import {useStyles} from "./styles";
 import {useAnalyticsForParentSite} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
+import {loadGeneralSettings} from "../../../store/reducers/generalSettings/actions";
+import {ESettingType} from "../../../store/reducers/generalSettings/types";
 
 type TProps = {
     onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
@@ -59,7 +61,10 @@ export const CustomerSelect: React.FC<React.PropsWithChildren<React.PropsWithChi
     }, [sessionStorage])
     
     useEffect(() => {
-        scProfile && dispatch(loadMileage(scProfile.id))
+        if (scProfile) {
+            dispatch(loadMileage(scProfile.id))
+            dispatch(loadGeneralSettings(scProfile.id, [ESettingType.CompanyName]))
+        }
     }, [scProfile])
 
     useEffect(() => {

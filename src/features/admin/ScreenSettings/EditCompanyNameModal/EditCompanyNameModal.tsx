@@ -13,7 +13,6 @@ import {TableCellWithPadding} from "../../../../components/styled/TableCellWithP
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 import {ESettingType, IGeneralSetting} from "../../../../store/reducers/generalSettings/types";
 import {updateGeneralSettings} from "../../../../store/reducers/generalSettings/actions";
 
@@ -21,14 +20,13 @@ export const EditCompanyNameModal: React.FC<React.PropsWithChildren<React.PropsW
     const {settings, isLoading} = useSelector((state: RootState) => state.generalSettings);
     const [isCompanyNameActive, setCompanyNameActive] = useState<boolean>(false);
     const {selectedSC} = useSCs();
-    const {selectedPod} = useSelectedPod()
     const dispatch = useDispatch();
     const { classes  } = useStyles();
     const showError = useException();
     const showMessage = useMessage();
     const companyNameSetting = useMemo(() => settings
-        .find(el => el.settingType === ESettingType.CompanyName && (selectedPod ? el.podId === selectedPod?.id : true))
-        , [settings, selectedPod])
+        .find(el => el.settingType === ESettingType.CompanyName)
+        , [settings])
 
     useEffect(() => {
         setCompanyNameActive(companyNameSetting?.data?.isOn ?? false)
@@ -53,9 +51,9 @@ export const EditCompanyNameModal: React.FC<React.PropsWithChildren<React.PropsW
             const data: IGeneralSetting = {
                 ...companyNameSetting,
                 data: {isOn: isCompanyNameActive},
-                podId: selectedPod?.id ?? null,
+                podId: null,
             }
-            dispatch(updateGeneralSettings(selectedSC.id, selectedPod?.id ?? null, [data], showError, onSuccess))
+            dispatch(updateGeneralSettings(selectedSC.id,  null, [data], showError, onSuccess))
         }
     }
 
