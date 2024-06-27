@@ -9,9 +9,6 @@ import {setCustomer} from "../../../store/reducers/appointmentFrameReducer/actio
 import {useTranslation} from "react-i18next";
 import {Wrapper} from "./styles";
 import {EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {loadGeneralSettings} from "../../../store/reducers/generalSettings/actions";
-import {useParams} from "react-router-dom";
-import {decodeSCID} from "../../../utils/utils";
 import {ESettingType} from "../../../store/reducers/generalSettings/types";
 import {ICustomer} from "../../../api/types";
 
@@ -27,7 +24,6 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
     const {customer, userType} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {t} = useTranslation();
-    const {id} = useParams<{id: string}>();
     const companyNameIsOn = useMemo(() => {
         return settings.find(el => el.settingType === ESettingType.CompanyName)?.data?.isOn
     }, [settings])
@@ -45,10 +41,6 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
             dispatch(setCustomer(data));
         }
     }, [customerLoadedData, dispatch]);
-
-    useEffect(() => {
-        dispatch(loadGeneralSettings(decodeSCID(id), [ESettingType.CompanyName]))
-    }, [id])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
         if (customer) {
