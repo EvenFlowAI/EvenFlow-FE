@@ -66,6 +66,17 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
                 fullWidth
                 placeholder={t("Type here")}
                 label={`${t("Full Name")}:`} />
+            {companyNameIsOn
+                ? <TextField
+                    onChange={handleChange}
+                    value={customer?.companyName}
+                    disabled={customerLoadedData?.isUpdating && Boolean(customer?.companyName?.length)}
+                    name="companyName"
+                    fullWidth
+                    error={errors.includes('companyname')}
+                    placeholder={t("Type here")}
+                    label={`${t("Company Name")}:`}/>
+                : null}
             <TextField
                 onChange={handleChange}
                 value={customer?.phoneNumber}
@@ -75,17 +86,6 @@ export const AppointmentUserData: React.FC<React.PropsWithChildren<React.PropsWi
                 error={errors.includes('phonenumber')}
                 placeholder={t("Type here")}
                 label={`${t("Phone Number")}:`} />
-            {companyNameIsOn
-                ? <TextField
-                    onChange={handleChange}
-                    value={customer?.companyName}
-                    disabled={userType === EUserType.Existing}
-                    name="companyName"
-                    fullWidth
-                    error={errors.includes('companyname')}
-                    placeholder={t("Type here")}
-                    label={`${t("Company Name")}:`}/>
-                : null}
             <TextField
                 onChange={handleChange}
                 value={customer?.email}
