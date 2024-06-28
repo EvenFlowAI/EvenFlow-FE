@@ -84,6 +84,8 @@ import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {useException} from "../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../routes/constants";
+import {loadGeneralSettings} from "../../../store/reducers/generalSettings/actions";
+import {ESettingType} from "../../../store/reducers/generalSettings/types";
 
 export const AppointmentFlow = () => {
     const {
@@ -238,6 +240,7 @@ export const AppointmentFlow = () => {
     useEffect(() => {
         dispatch(loadEngineType(decodeSCID(id)));
         dispatch(loadMakes(decodeSCID(id)));
+        dispatch(loadGeneralSettings(decodeSCID(id), [ESettingType.CompanyName]))
     }, [id])
 
     useEffect(() => {

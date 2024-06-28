@@ -51,7 +51,7 @@ export const ScreenSettings = () => {
             dispatch(loadConsentsList(selectedSC.id, selectedPod?.id))
             dispatch(loadRange(selectedSC.id, null, selectedPod?.id))
             dispatch(loadWaitListSettings(selectedSC.id, selectedPod?.id))
-            dispatch(loadGeneralSettings(selectedSC.id, [ESettingType.CompanyName], null))
+            dispatch(loadGeneralSettings(selectedSC.id, [ESettingType.CompanyName]))
         }
     }, [selectedSC, selectedPod])
 

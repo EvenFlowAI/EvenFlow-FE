@@ -6,7 +6,7 @@ import {
     IAppointmentByKey,
     IConsultantsRequestData,
     ICreateAppointmentResp,
-    ICustomer,
+    ICustomer, ICustomerLoadedData,
     ILoadedVehicle,
     IPackage,
     IPackageOptions,
@@ -514,7 +514,7 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
     if (data.detailedPriceList) dispatch(getAppointmentRequestsPrices(data.detailedPriceList))
     dispatch(getTransactionValue(data.transactionValue ?? 0))
     if (customerLoadedData && endpoint === Api.endpoints.Appointments.Create) {
-        const updatedData = {...customerLoadedData};
+        const updatedData: ICustomerLoadedData = {...customerLoadedData};
         let vehicle = updatedData.vehicles.find(
             car => car.vin === data.vehicle?.vin
         );
@@ -531,6 +531,7 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
             updatedData.fullName = data.driver?.fullName;
             updatedData.id = data.customerId;
             updatedData.phoneNumbers = [data.driver?.phoneNumber];
+            updatedData.companyName = data.driver.companyName;
         }
         dispatch(setCustomerLoadedData(updatedData));
         dispatch(setCustomer(data.driver));
