@@ -48,7 +48,7 @@ export const BookingModal: React.FC<React.PropsWithChildren<React.PropsWithChild
     }
 
     return <BaseModal {...props} maxWidth={"sm"}>
-        <DialogTitle onClose={props.onClose}>Booking Info</DialogTitle>
+        <DialogTitle onClose={props.onClose}>Open Scheduler</DialogTitle>
         <DialogContent>
             <TextField
                 label={"Direct link"}
