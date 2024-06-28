@@ -6,9 +6,12 @@ import {ESettingType, IGeneralSetting} from "./types";
 export const getSettings = createAction<IGeneralSetting[]>("GeneralSettings/GetSettings");
 export const setSettingsLoading = createAction<boolean>("GeneralSettings/SetLoading");
 
-export const loadGeneralSettings = (serviceCenterId: number, settingTypes: ESettingType[], podId?: number|null): AppThunk => (dispatch) => {
+export const loadGeneralSettings = (serviceCenterId: number, settingTypes: ESettingType[]): AppThunk => (dispatch) => {
     dispatch(setSettingsLoading(true));
-    Api.call<IGeneralSetting[]>(Api.endpoints.GeneralSettings.Get, {params: {serviceCenterId, podId, settingTypes}})
+    let params = new URLSearchParams();
+    params.append('serviceCenterId', `${serviceCenterId}`);
+    settingTypes.forEach(el => params.append('settingTypes', `${el}`))
+    Api.call<IGeneralSetting[]>(Api.endpoints.GeneralSettings.Get, {params})
         .then(result => {
             if (result) {
                 dispatch(getSettings(result.data))
@@ -27,7 +30,7 @@ export const updateGeneralSettings = (serviceCenterId: number, podId: number|nul
     Api.call<IGeneralSetting[]>(Api.endpoints.GeneralSettings.Update, {data})
         .then(result => {
             if (result) {
-                dispatch(loadGeneralSettings(serviceCenterId, data.map(el => el.settingType), podId))
+                dispatch(loadGeneralSettings(serviceCenterId, data.map(el => el.settingType)))
                 onSuccess()
             }
         })
