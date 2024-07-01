@@ -7,6 +7,8 @@ export type TConfirmModalPayload = {
     cancelContent?: string;
     onConfirm: () => void;
     onCancel?: () => void;
+    additionalContent?: string;
+    onAdditional?: () => void;
 }
 export type TOpenConfirmModal = {type: "Modals/OpenConfirm", payload: TConfirmModalPayload};
 export type TCloseConfirmModal = {type: "Modals/CloseConfirm"};

@@ -6,6 +6,47 @@ import {RootState} from "../../../../store/rootReducer";
 import {ReportProblemOutlined} from "@mui/icons-material";
 import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+import {TCallback} from "../../../../types/types";
+
+type TProps = {
+    loading: boolean;
+    onClose: TCallback;
+    onConfirm: TCallback;
+    onCancel?: TCallback;
+    cancelContent?: string;
+    isRemove?: boolean;
+    confirmContent?: JSX.Element | string;
+}
+
+const MainButtonsBlock: React.FC<TProps> = ({
+                                                loading,
+                                                onConfirm,
+                                                onClose,
+                                                cancelContent,
+                                                onCancel,
+                                                confirmContent,
+                                                isRemove}) => {
+    return <>
+        {cancelContent && onCancel
+            ? <LoadingButton
+                loading={loading}
+                onClick={onClose}
+                variant="contained">
+                {cancelContent}
+            </LoadingButton>
+            : <Button onClick={onClose} color="info">
+                {cancelContent ?? "Cancel"}
+            </Button>}
+
+        <LoadingButton
+            loading={loading}
+            onClick={onConfirm}
+            variant="contained"
+            color={isRemove ? "secondary" : "primary"}>
+            {confirmContent ? confirmContent : isRemove ? "Remove" : "Confirm"}
+        </LoadingButton>
+    </>
+}
 
 export const ConfirmModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = () => {
     const {open, payload} = useSelector((state: RootState) => state.modals.confirm);
@@ -62,25 +103,38 @@ export const ConfirmModal: React.FC<React.PropsWithChildren<React.PropsWithChild
         }</DialogTitle>
         {payload.content ? <DialogContent>{payload.content}</DialogContent> : null}
         {payload.isRemove ? <Divider style={{margin: "0 0 10px"}} /> : null}
-        <DialogActions>
-            {payload.cancelContent && payload.onCancel
+        <DialogActions style={{justifyContent: payload.additionalContent && payload.onAdditional ? 'space-between' : "flex-end"}}>
+            {payload.additionalContent && payload.onAdditional
                 ? <LoadingButton
                     loading={loading}
-                    onClick={onClose}
-                    variant="contained">
-                    {payload.cancelContent}
+                    onClick={payload.onAdditional}
+                    color="secondary"
+                    variant="outlined">
+                    {payload.additionalContent}
                 </LoadingButton>
-                : <Button onClick={onClose} color="info">
-                    {payload.cancelContent ?? "Cancel"}
-                </Button>}
+                : null}
 
-            <LoadingButton
-                loading={loading}
-                onClick={onConfirm}
-                variant="contained"
-                color={payload.isRemove ? "secondary" : "primary"}>
-                {payload.confirmContent ? payload.confirmContent : payload.isRemove ? "Remove" : "Confirm"}
-            </LoadingButton>
+            {payload.additionalContent && payload.onAdditional
+                ? <div>
+                    <MainButtonsBlock
+                    loading={loading}
+                    onClose={onClose}
+                    onConfirm={onConfirm}
+                    isRemove={payload.isRemove}
+                    onCancel={payload.onCancel}
+                    confirmContent={payload.confirmContent}
+                    cancelContent={payload.cancelContent}/>
+            </div>
+                : <MainButtonsBlock
+                    loading={loading}
+                    onClose={onClose}
+                    onConfirm={onConfirm}
+                    isRemove={payload.isRemove}
+                    onCancel={payload.onCancel}
+                    confirmContent={payload.confirmContent}
+                    cancelContent={payload.cancelContent}
+                />
+            }
         </DialogActions>
     </BaseModal>
 };

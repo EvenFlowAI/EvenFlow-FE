@@ -5,6 +5,7 @@ import {RootState} from "../../../../../store/rootReducer";
 import {loadSRs, setAppointmentWasChanged} from "../../../../../store/reducers/appointment/actions";
 import {ExpandLess, ExpandMore} from '@mui/icons-material';
 import {
+    clearSelectedServices,
     deleteGeneralService,
     deleteIndService,
     deletePackage,
@@ -106,12 +107,19 @@ const ShoppingCart = () => {
         }
     }
 
+    const onRemoveAll = () => {
+        dispatch(clearSelectedServices());
+        closeConfirm()
+    }
+
     const onClick = (item: IMaintenanceItem) => {
         askConfirm({
             isRemove: true,
             title: t("Do you want to remove selected service?"),
             onConfirm: () => deleteService(item),
             onCancel: closeConfirm,
+            onAdditional: onRemoveAll,
+            additionalContent: t("Remove all")
         })
     }
 
