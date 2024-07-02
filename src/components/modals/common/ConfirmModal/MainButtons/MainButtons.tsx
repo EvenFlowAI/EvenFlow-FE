@@ -49,7 +49,13 @@ export const MainButtons: React.FC<TProps> = ({
             onClick={onConfirm}
             variant="contained"
             style={isBooking ? {borderRadius: 0} : {}}
-            color={isRemove ? isBooking ? "error" : "secondary" : "primary"}>
+            color={isRemove
+                ? isBooking
+                    ? "error"
+                    : "secondary"
+                : isBooking
+                    ? "info"
+                    : "primary"}>
             {confirmContent ? confirmContent : isRemove ? "Remove" : "Confirm"}
         </LoadingButton>
     </>
