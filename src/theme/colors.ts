@@ -20,6 +20,10 @@ export const colors: PaletteOptions = {
     info: {
         main: '#202021',
     },
-    divider: "#DADADA"
+    divider: "#DADADA",
+    error: {
+        main: "#FF0000",
+        contrastText: "#FFFFFF"
+    }
 };
 

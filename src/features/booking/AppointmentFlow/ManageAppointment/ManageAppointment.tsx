@@ -271,7 +271,8 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                 content: <span>
                             Please confirm you want to cancel appointment on {getAppointmentDate(appointmentByKey)}?
                         </span>,
-                onConfirm: handleCancelAppointment
+                onConfirm: handleCancelAppointment,
+                isBooking: true
             });
         }
     }

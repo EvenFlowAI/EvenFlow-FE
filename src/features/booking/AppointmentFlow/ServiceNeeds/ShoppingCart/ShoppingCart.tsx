@@ -119,7 +119,10 @@ const ShoppingCart = () => {
             onConfirm: () => deleteService(item),
             onCancel: closeConfirm,
             onAdditional: onRemoveAll,
-            additionalContent: t("Remove all")
+            additionalContent: t("Remove all"),
+            cancelBtnVariant: 'outlined',
+            width: 500,
+            isBooking: true
         })
     }
 
