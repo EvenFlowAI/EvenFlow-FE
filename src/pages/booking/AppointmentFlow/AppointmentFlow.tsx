@@ -3,7 +3,6 @@ import { ThemeProvider, StyledEngineProvider, useMediaQuery, useTheme } from "@m
 import {Cars} from "../../../features/booking/AppointmentFlow/Cars/Cars";
 import {frameTheme} from "../../../theme/theme";
 import {SideBar} from "../../../features/booking/SideBar/SideBar";
-import {Consultants} from '../../../features/booking/AppointmentFlow/Consultants/Consultants';
 import {AppointmentTiming} from '../../../features/booking/AppointmentFlow/AppointmentTiming/AppointmentTiming';
 import {AppointmentSlots} from '../../../features/booking/AppointmentFlow/AppointmentSlots/AppointmentSlots';
 import {
@@ -86,6 +85,7 @@ import {loadGeneralSettings} from "../../../store/reducers/generalSettings/actio
 import {ESettingType} from "../../../store/reducers/generalSettings/types";
 import {ServiceNeedsCreateFlow} from "../../../features/booking/AppointmentFlow/ServiceNeeds/ServiceNeedsCreateFlow";
 import MaintenanceCreate from "../../../features/booking/AppointmentFlow/MaintenanceDetails/MaintenanceCreate";
+import ConsultantsCreate from "../../../features/booking/AppointmentFlow/Consultants/ConsultantsCreate";
 
 export const AppointmentFlow = () => {
     const {
@@ -368,7 +368,7 @@ export const AppointmentFlow = () => {
                 page={serviceCategoryPage}
                 isManagingFlow={false}
             />,
-            consultantSelection: <Consultants
+            consultantSelection: <ConsultantsCreate
                 onBack={handleChangeScreen('serviceNeeds')}
                 onNext={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
             />,
