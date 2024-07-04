@@ -10,7 +10,7 @@ export const OperationalDetails: React.FC<React.PropsWithChildren<React.PropsWit
     const date = payload.createdDateTime
         ? payload.createdDateTime.toString().split('.')[0]
         : payload.createdDateTime
-    const createdText = [dayjs.utc(date).format(dateTimeFormat), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
+    const createdText = [dayjs.utc(date).format("ddd, MMM DD, YYYY"), `Scheduler: ${payload.scheduler?.fullName ?? ''}`]
 
     return (
         <div>
