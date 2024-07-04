@@ -2,9 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import { ThemeProvider, StyledEngineProvider, useMediaQuery, useTheme } from "@mui/material";
 import {Cars} from "../../../features/booking/AppointmentFlow/Cars/Cars";
 import {frameTheme} from "../../../theme/theme";
-import {ServiceNeedsFrame} from "../../../features/booking/AppointmentFlow/ServiceNeeds/ServiceNeedsFrame";
 import {SideBar} from "../../../features/booking/SideBar/SideBar";
-import {MaintenanceDetails} from "../../../features/booking/AppointmentFlow/MaintenanceDetails/MaintenanceDetails";
 import {Consultants} from '../../../features/booking/AppointmentFlow/Consultants/Consultants';
 import {AppointmentTiming} from '../../../features/booking/AppointmentFlow/AppointmentTiming/AppointmentTiming';
 import {AppointmentSlots} from '../../../features/booking/AppointmentFlow/AppointmentSlots/AppointmentSlots';
@@ -86,6 +84,8 @@ import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../routes/constants";
 import {loadGeneralSettings} from "../../../store/reducers/generalSettings/actions";
 import {ESettingType} from "../../../store/reducers/generalSettings/types";
+import {ServiceNeedsCreateFlow} from "../../../features/booking/AppointmentFlow/ServiceNeeds/ServiceNeedsCreateFlow";
+import MaintenanceCreate from "../../../features/booking/AppointmentFlow/MaintenanceDetails/MaintenanceCreate";
 
 export const AppointmentFlow = () => {
     const {
@@ -339,15 +339,14 @@ export const AppointmentFlow = () => {
                 needToShowServiceSelection={needToShowServiceTypes}
                 handleSetScreen={handleSetScreen}
                 onSelectAppointment={onSelectAppointment}/>,
-            serviceNeeds: <ServiceNeedsFrame
+            serviceNeeds: <ServiceNeedsCreateFlow
                 page={serviceCategoryPage}
-                isManagingAppointment={isManagingAppointment}
                 setPage={setServiceCategoryPage}
                 setLastSelectedCategory={setLastSelectedCategory}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
                 onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
-            maintenanceDetails: <MaintenanceDetails
+            maintenanceDetails: <MaintenanceCreate
                 serviceCategoryPage={serviceCategoryPage}
                 onBack={handleSetScreen}
                 onNext={handleSetScreen}
