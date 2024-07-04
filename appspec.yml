@@ -2,5 +2,5 @@ version: 0.0
 os: linux
 
 files: 
-  - source: app
-    destination: /home/ubuntu/app
+  - source: build
+    destination: /home/ubuntu/app/client
