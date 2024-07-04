@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {useMediaQuery, useTheme} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
@@ -43,10 +43,13 @@ type TPackageSelectionProps = {
     onNext: TArgCallback<TScreen>;
     onBack: () => void;
     onAddServices: () => void;
+    isManagingFlow?: boolean;
 }
 
-export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPackageSelectionProps>>> = ({onBack, onNext, onAddServices}) => {
-    const {scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
+export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
+                                                                          onBack, onNext, onAddServices, isManagingFlow
+}) => {
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {
         selectedPackage,
@@ -54,7 +57,6 @@ export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWi
         packagePricingType,
         packageOptionType,
         packageEMenuType,
-        isUsualFlowNeeded,
         trackerData
     } = useSelector((state: RootState) => state.appointmentFrame);
 
@@ -66,9 +68,11 @@ export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWi
     const theme = useTheme();
     const { isOpen, onOpen, onClose } = useModal();
     const { isOpen: isAdditionalOpen, onOpen: onAdditionalOpen, onClose: onAdditionalClose } = useModal();
-    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+    const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const showError = useException();
+    const dispatch = useDispatch();
 
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
@@ -76,8 +80,6 @@ export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWi
     const [packages, services, complimentary, upsells]: [TPackage[], TService[], TComplimentary[], TUpsell[]] = useMemo(() => getPackagesData(loadedPackages),
         [loadedPackages]);
 
-    const dispatch = useDispatch();
-    const {id} = useParams<{id: string}>();
 
     useEffect(() => {
         setLocalSelectedPackage(selectedPackage);
@@ -141,7 +143,7 @@ export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWi
     }
 
     const onSelectionCompleted = () => {
-        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+        if (isManagingFlow) {
             dispatch(checkPodChanged(decodeSCID(id), showError))
         } else {
             onAdditionalOpen()
@@ -166,6 +168,15 @@ export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWi
         }, trackerData.ids);
     }
 
+    const handleEMenuGA = () => {
+        const firstOption = scProfile?.maintenancePackageOptionTypes[0];
+        ReactGA.event({
+            category: 'EvenFlow User',
+            action: `Selected eMenu Package`,
+            label: `With ${packageEMenuType === firstOption ? 'Factory' : "Dealer"} Option`,
+        }, trackerData.ids);
+    }
+
     const handleNext = (localSelectedPackage: IPackageOptions|null): void => {
         if (localSelectedPackage) {
             dispatch(setPackageIsSelected(true));
@@ -183,12 +194,7 @@ export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWi
 
     const onEMenuNext = () => {
         dispatch(setPackageIsSelected(true));
-        const firstOption = scProfile?.maintenancePackageOptionTypes[0];
-        ReactGA.event({
-            category: 'EvenFlow User',
-            action: `Selected eMenu Package`,
-            label: `With ${packageEMenuType === firstOption ? 'Factory' : "Dealer"} Option`,
-        }, trackerData.ids);
+        handleEMenuGA();
         onSelectionCompleted();
     }
 
@@ -213,129 +219,129 @@ export const MaintenancePackages: React.FC<React.PropsWithChildren<React.PropsWi
         handleNextScreen();
     }
 
-    const getTitle = (type: EPackagePricingType) => {
+    const getTitle = useCallback((type: EPackagePricingType) => {
         let title = '';
         if (loadedPackages[0]) {
             const price = loadedPackages[0].priceTitles?.find(el => el.type === type);
             if (price) title = price.title;
         }
         return title;
-    }
+    }, [loadedPackages])
 
     return (
         <PackagesStepWrapper>
             {!scProfile?.eMenuEnabled
                 ?  <NoItemsLoading
-                wrapperStyles={{marginTop: 20}}
-                items={packages}
-                loading={loading}
-                label={t("There are no packages available")}
-            />
+                    wrapperStyles={{marginTop: 20}}
+                    items={packages}
+                    loading={loading}
+                    label={t("There are no packages available")}
+                />
                 : null}
             {scProfile?.eMenuEnabled
                 ? <React.Fragment>
                     <PackagesEmenu onBack={handleBack} onNext={onEMenuNext}/>
                 </React.Fragment>
                 : packages.length ? <React.Fragment>
-                {isXs
-                    ? <MaintenancePackagesMobile
-                        loadedPackages={loadedPackages}
-                        getTitle={getTitle}
-                        withUpsells={!!upsells.length}
-                        data={packages}
-                        isBmWService={isBmWService}
-                        selectedPackage={localSelectedPackage}
-                        setLocalPackage={setLocalSelectedPackage}
-                        setLocalPricingType={setLocalSelectedPricingType}
-                        localSelectedPricingType={localSelectedPricingType}
-                    />
-                    : <React.Fragment>
-                        <Wrapper count={packages.length}>
-                            <PackageTitles
-                                packages={packages}
-                                handleClick={handleClick}
-                                setClasses={setClasses}/>
-
-                            <PackagesServiceRequests
-                                packages={packages}
-                                services={services}
-                                handleClick={handleClick}
-                                setClasses={setClasses}
-                                isBmWService={isBmWService}
-                            />
-
-                            {scProfile?.isShowPriceDetails
-                                && <PackagesTotalMaintenance
-                                    isBmWService={isBmWService}
-                                    setClasses={setClasses}
-                                    packages={packages}/>
-                            }
-
-                            <PackagesIntervalUpsells
-                                packages={packages}
-                                services={services}
-                                upsell={upsells}
-                                handleClick={handleClick}
-                                setClasses={setClasses}
-                                loadedPackages={loadedPackages}
-                                isBmWService={isBmWService}/>
-
-                            <PackagesComplimentary
-                                loadedPackages={loadedPackages}
-                                packages={packages}
-                                services={services}
-                                complimentary={complimentary}
-                                handleClick={handleClick}
-                                setClasses={setClasses}
-                                isBmWService={isBmWService}/>
-
-                            {scProfile?.isShowPriceDetails ? <PackagesTotalComplimentary
-                                packages={packages}
-                                handleClick={handleClick}
-                                setClasses={setClasses}
-                                isBmWService={isBmWService}
-                            /> : null}
-
-                        </Wrapper>
-                        {loadedPackages[0].priceTitles?.length && Boolean(upsells.length)
-                            ? <FeesText count={packages.length}>
-                                <div>{t("Total")}<span className="info"> ({t("Excluding taxes & fees")}):</span></div>
-                            </FeesText>
-                            : null}
-                        <PackagesTotalPriceRow
-                            packages={packages}
-                            title={getTitle(EPackagePricingType.BasePrice)}
-                            isUpsells={Boolean(upsells.length)}
-                            handleClick={handleClick}
+                    {isXs
+                        ? <MaintenancePackagesMobile
+                            loadedPackages={loadedPackages}
+                            getTitle={getTitle}
+                            withUpsells={!!upsells.length}
+                            data={packages}
+                            isBmWService={isBmWService}
                             selectedPackage={localSelectedPackage}
-                            packagePricingType={localSelectedPricingType}
+                            setLocalPackage={setLocalSelectedPackage}
+                            setLocalPricingType={setLocalSelectedPricingType}
+                            localSelectedPricingType={localSelectedPricingType}
                         />
-                        {upsells.length > 0
-                            ? <PackagesTotalPriceWithFee
+                        : <React.Fragment>
+                            <Wrapper count={packages.length}>
+                                <PackageTitles
+                                    packages={packages}
+                                    handleClick={handleClick}
+                                    setClasses={setClasses}/>
+
+                                <PackagesServiceRequests
+                                    packages={packages}
+                                    services={services}
+                                    handleClick={handleClick}
+                                    setClasses={setClasses}
+                                    isBmWService={isBmWService}
+                                />
+
+                                {scProfile?.isShowPriceDetails
+                                    && <PackagesTotalMaintenance
+                                        isBmWService={isBmWService}
+                                        setClasses={setClasses}
+                                        packages={packages}/>
+                                }
+
+                                <PackagesIntervalUpsells
+                                    packages={packages}
+                                    services={services}
+                                    upsell={upsells}
+                                    handleClick={handleClick}
+                                    setClasses={setClasses}
+                                    loadedPackages={loadedPackages}
+                                    isBmWService={isBmWService}/>
+
+                                <PackagesComplimentary
+                                    loadedPackages={loadedPackages}
+                                    packages={packages}
+                                    services={services}
+                                    complimentary={complimentary}
+                                    handleClick={handleClick}
+                                    setClasses={setClasses}
+                                    isBmWService={isBmWService}/>
+
+                                {scProfile?.isShowPriceDetails ? <PackagesTotalComplimentary
+                                    packages={packages}
+                                    handleClick={handleClick}
+                                    setClasses={setClasses}
+                                    isBmWService={isBmWService}
+                                /> : null}
+
+                            </Wrapper>
+                            {loadedPackages[0].priceTitles?.length && Boolean(upsells.length)
+                                ? <FeesText count={packages.length}>
+                                    <div>{t("Total")}<span className="info"> ({t("Excluding taxes & fees")}):</span></div>
+                                </FeesText>
+                                : null}
+                            <PackagesTotalPriceRow
                                 packages={packages}
+                                title={getTitle(EPackagePricingType.BasePrice)}
+                                isUpsells={Boolean(upsells.length)}
+                                handleClick={handleClick}
                                 selectedPackage={localSelectedPackage}
                                 packagePricingType={localSelectedPricingType}
-                                title={getTitle(EPackagePricingType.PriceWithFee)}
-                                handleClick={handleClick}/>
-                            : null}
-                        <Info>
-                            {scProfile?.maintenancePackageDisclaimer
-                                ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <div key={line}>{line}</div>)
-                                :  isBmWService
-                                    ? t("Please ask your service advisor")
-                                    : t("The maintenance packages may not be available")
-                            }
-                        </Info>
-                    </React.Fragment>
-                }
-            </React.Fragment> : null}
+                            />
+                            {upsells.length > 0
+                                ? <PackagesTotalPriceWithFee
+                                    packages={packages}
+                                    selectedPackage={localSelectedPackage}
+                                    packagePricingType={localSelectedPricingType}
+                                    title={getTitle(EPackagePricingType.PriceWithFee)}
+                                    handleClick={handleClick}/>
+                                : null}
+                            <Info>
+                                {scProfile?.maintenancePackageDisclaimer
+                                    ? scProfile.maintenancePackageDisclaimer.split('\n').map(line => <div key={line}>{line}</div>)
+                                    :  isBmWService
+                                        ? t("Please ask your service advisor")
+                                        : t("The maintenance packages may not be available")
+                                }
+                            </Info>
+                        </React.Fragment>
+                    }
+                </React.Fragment> : null}
             {scProfile?.eMenuEnabled
                 ? null
                 : <ActionButtons
-                onBack={handleBack}
-                nextLabel={t("Next")}
-                nextDisabled={!localSelectedPackage || localSelectedPricingType === null}
-                onNext={() => handleNext(localSelectedPackage)}/>}
+                    onBack={handleBack}
+                    nextLabel={t("Next")}
+                    nextDisabled={!localSelectedPackage || localSelectedPricingType === null}
+                    onNext={() => handleNext(localSelectedPackage)}/>}
             <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen}/>
         </PackagesStepWrapper>

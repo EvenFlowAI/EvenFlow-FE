@@ -352,6 +352,7 @@ export const AppointmentFlow = () => {
                 onNext={handleSetScreen}
             />,
             packageSelection: <MaintenancePackages
+                isManagingFlow={false}
                 onBack={handleChangeScreen('maintenanceDetails')}
                 onNext={handleSetScreen}
                 onAddServices={handleChangeScreen('serviceNeeds')}
