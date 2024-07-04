@@ -7,11 +7,14 @@ phases:
 
   pre_build:
     commands:
-      - echo Restore started on 'date'
       - yarn install
-      
 
   build:
     commands:
-      - echo Publish started on 'date'
       - yarn run buildProduction
+
+  artifacts:
+    files:
+      - build/**/*
+      - deploy/*
+      - appspec.yml
