@@ -11,7 +11,6 @@ import {ILoadedVehicle} from "../../../../api/types";
 import {
     clearAppointmentData,
     setAppointmentByKey,
-    setCurrentFrameScreen,
     setEditingPosition,
     setHashKey,
     setServiceOptionChanged,
@@ -22,7 +21,7 @@ import {
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {getBlankVehicle, selectSR, setCustomerLoadedData} from "../../../../store/reducers/appointment/actions";
+import {getBlankVehicle} from "../../../../store/reducers/appointment/actions";
 import {useHistory, useParams} from "react-router-dom";
 import {Arrow, CarsWrapper, Info} from "./styles";
 import {AppointmentScreenTitle} from "../../../../components/wrappers/AppointmentScreenTitle/AppointmentScreenTitle";
@@ -37,11 +36,11 @@ type TProps = {
     needToShowServiceSelection: boolean;
     handleSetScreen: TArgCallback<TScreen>;
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
-    onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
+    onSelectAppointment?: (car: ILoadedVehicle) => Promise<void>;
 }
 
 export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
-                                                              onUpdateAppointment, onBack, loading, handleSetScreen,
+                                                                                             onSelectAppointment, onBack, loading, handleSetScreen,
                                                               needToShowServiceSelection, setNeedToShowServiceSelection
                                                           }) => {
 
@@ -102,6 +101,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
                 handleServiceTypeSelection()
             } else {
                 if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+                    // todo redirect to manage url
                     handleSetScreen("manageAppointment")
                 } else handleSetScreen(getNextScreen());
             }
@@ -175,24 +175,26 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
         }
     }, [dispatch, handleSetScreen, firstScreenOptions, handleFirstScreen]);
 
+    const clearPrevAppointmentData = useCallback(() => {
+        dispatch(setHashKey(''));
+        dispatch(setAppointmentByKey(null));
+        dispatch(setEditingPosition(null));
+    }, [])
+
     const onSelectCar = useCallback(async (car: ILoadedVehicle) => {
-        dispatch(selectSR(null));
         clearAllData()
-        if (car?.appointmentHashKeys.length) {
-            customerLoadedData && dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
-            await onUpdateAppointment(car)
-            dispatch(setCurrentFrameScreen("manageAppointment"))
+        if (car?.appointmentHashKeys.length && onSelectAppointment) {
+            onSelectAppointment(car).then(() => {})
         } else {
-            dispatch(setHashKey(''));
-            dispatch(setAppointmentByKey(null));
-            dispatch(setEditingPosition(null));
+            clearPrevAppointmentData();
             if (needToShowServiceSelection) {
                 handleServiceTypeSelection()
             } else {
                 handleSetScreen(getNextScreen());
             }
         }
-    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile, onUpdateAppointment, needToShowServiceSelection, selectedVehicle]);
+    }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
+        onSelectAppointment, needToShowServiceSelection, selectedVehicle, clearPrevAppointmentData]);
 
     const onNext = useCallback( () => {
         selectedVehicle && onSelectCar(selectedVehicle)

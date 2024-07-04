@@ -223,6 +223,13 @@ export const AppointmentFlow = () => {
         isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable,
         selectedVehicle, engineTypes, isAuth])
 
+    const onSelectAppointment = async (car: ILoadedVehicle) => {
+        customerLoadedData && dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
+        await onUpdateAppointment(car)
+        // todo redirect to manage url
+        dispatch(setCurrentFrameScreen("manageAppointment"))
+    }
+
     const onCarIsValid = useCallback(() => {
         const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
         const requestDataIsValid = serviceTypeOption?.type === EServiceType.VisitCenter || Boolean(address && zipCode)
@@ -327,7 +334,7 @@ export const AppointmentFlow = () => {
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
                 needToShowServiceSelection={needToShowServiceTypes}
                 handleSetScreen={handleSetScreen}
-                onUpdateAppointment={onUpdateAppointment}/>,
+                onSelectAppointment={onSelectAppointment}/>,
             serviceNeeds: <ServiceNeedsFrame
                 page={serviceCategoryPage}
                 setPage={setServiceCategoryPage}
