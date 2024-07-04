@@ -7,7 +7,6 @@ import {RootState} from "../../../../store/rootReducer";
 import {
     checkCarIsValid,
     clearAppointmentSteps,
-    selectCategoriesIds,
     setAdditionalServicesChosen,
     setFrameDescription
 } from '../../../../store/reducers/appointmentFrameReducer/actions';
@@ -29,16 +28,15 @@ type TProps = {
     nextLabel?: string;
     loading?: boolean;
     onAddServices: () => void;
+    isManagingFlow?: boolean;
 };
 
-export const AppointmentComment: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({handleSetScreen, onAddServices}) => {
+export const AppointmentComment: React.FC<TProps> = ({isManagingFlow, handleSetScreen, onAddServices}) => {
     const {
         subService,
         service,
-        categoriesIds,
-        isUsualFlowNeeded,
         description} = useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {scProfile} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const {isOpen, onClose, onOpen} = useModal();
     const {isOpen: isErrorOpen, onClose: onErrorClose, onOpen: onErrorOpen} = useModal();
@@ -78,17 +76,11 @@ export const AppointmentComment: React.FC<React.PropsWithChildren<React.PropsWit
                 dispatch(setFrameDescription(''))
             }
         }
-        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+        if (isManagingFlow) {
             dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid))
         } else {
             onOpen()
         }
-    }
-
-    const removeLastCategory = () => {
-        let categories = [...categoriesIds];
-        categories.pop()
-        dispatch(selectCategoriesIds(categories))
     }
 
     const clearData = () => {
@@ -98,7 +90,6 @@ export const AppointmentComment: React.FC<React.PropsWithChildren<React.PropsWit
     }
 
     const handleBack = () => {
-        // removeLastCategory();
         clearData();
         handleSetScreen("serviceNeeds");
     }

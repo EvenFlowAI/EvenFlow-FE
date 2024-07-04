@@ -360,6 +360,7 @@ export const AppointmentFlow = () => {
             describeMore: <AppointmentComment
                 handleSetScreen={handleSetScreen}
                 onAddServices={handleChangeScreen('serviceNeeds')}
+                isManagingFlow={false}
             />,
             opsCode: <SelectOpsCode
                 onAddServices={handleChangeScreen('serviceNeeds')}
