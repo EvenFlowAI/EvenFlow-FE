@@ -366,6 +366,7 @@ export const AppointmentFlow = () => {
                 onAddServices={handleChangeScreen('serviceNeeds')}
                 handleSetScreen={handleSetScreen}
                 page={serviceCategoryPage}
+                isManagingFlow={false}
             />,
             consultantSelection: <Consultants
                 onBack={handleChangeScreen('serviceNeeds')}

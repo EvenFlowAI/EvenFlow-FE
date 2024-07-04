@@ -30,21 +30,25 @@ type TProps = {
     handleSetScreen: TArgCallback<TScreen>;
     onAddServices?: () => void;
     page: EServiceCategoryPage;
+    isManagingFlow?: boolean;
 }
 
-export const SelectOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({handleSetScreen, onAddServices, page}) => {
+export const SelectOpsCode: React.FC<TProps> = ({
+                                                    isManagingFlow,
+                                                    handleSetScreen,
+                                                    onAddServices,
+                                                    page
+}) => {
     const {
         selectedSR,
         serviceRequests,
         search,
         scProfile,
-        customerLoadedData,
     } = useSelector(({appointment}: RootState) => appointment)
     const {
         subService,
         service,
         categoriesIds,
-        isUsualFlowNeeded,
         trackerData
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
     const {allCategories} = useSelector(({categories}: RootState) => categories)
@@ -145,14 +149,18 @@ export const SelectOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
 
     const onCarIsValid = () => scProfile && dispatch(checkPodChanged(scProfile.id, showError))
 
-    const handleNext = () => {
+    const handleGA = () => {
         ReactGA.event({
             category: 'EvenFlow User',
             action: 'Selected Individual Service Requests',
             label: `With Codes ${serviceRequests.filter(item => selectedOpsCodes.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
         }, trackerData.ids)
+    }
+
+    const handleNext = () => {
+        handleGA();
         dispatch(selectSRMultiple(selectedOpsCodes))
-        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
+        if (isManagingFlow) {
             dispatch(checkCarIsValid(onCarIsValid, goNext))
         } else {
             onAdditionalOpen()
