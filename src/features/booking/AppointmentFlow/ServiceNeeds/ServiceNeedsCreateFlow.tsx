@@ -43,60 +43,30 @@ type TProps = {
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
     page: EServiceCategoryPage;
     setPage: Dispatch<SetStateAction<EServiceCategoryPage>>;
-    isManagingAppointment?: boolean;
 }
-export const ServiceNeedsFrame: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
-                                                        onSelect,
-                                                        onBack,
-                                                        setLastSelectedCategory,
-                                                        setNeedToShowServiceSelection,
-                                                        page,
-                                                        setPage,
-                                                                                                          isManagingAppointment
-}) => {
-    const {
-        categoriesIds,
-        selectedPackage,
-        valueService,
-        userType,
-        serviceTypeOption,
-        packageEMenuType,
-        selectedRecalls,
-    } = useSelector((state: RootState) => state.appointmentFrame);
-    const {selectedSR, serviceRequests, scProfile} = useSelector((state: RootState) => state.appointment);
+export const ServiceNeedsCreateFlow: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
+                                                                                                          onSelect,
+                                                                                                          onBack,
+                                                                                                          setLastSelectedCategory,
+                                                                                                          setNeedToShowServiceSelection,
+                                                                                                          page,
+                                                                                                          setPage
+                                                                                                      }) => {
+    const {userType, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const { allCategories } = useSelector((state: RootState) => state.categories);
     const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
     const history = useHistory();
-    const {t} = useTranslation();
     const currentUser = useCurrentUser();
-    const showError = useException();
 
-    const isServiceOptionSelected = !serviceTypeOption || firstScreenOptions.find(el => el.id === serviceTypeOption?.id)
     const onlyVisitCenterOptionExists = useMemo(() => firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,
         [firstScreenOptions])
-    const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterOptionExists || (isManagingAppointment && isServiceOptionSelected);
-
-    const selectedServices = useMemo(() => {
-            return getMaintenanceList(
-                serviceRequests,
-                selectedRecalls,
-                selectedSR,
-                selectedPackage,
-                allCategories,
-                categoriesIds,
-                valueService,
-                packageEMenuType,
-                scProfile?.maintenancePackageOptionTypes)
-        },
-        [serviceRequests, selectedSR, selectedPackage, allCategories, categoriesIds, valueService,
-            selectedRecalls, packageEMenuType, scProfile])
+    const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterOptionExists;
 
     const handleBackScreen = () => {
         setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
         const notVisitCenterSelected = serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter;
-        const firstScreenOptionsUnavailable = !firstScreenOptions.length || onlyVisitCenterOptionExists || isManagingAppointment;
+        const firstScreenOptionsUnavailable = !firstScreenOptions.length || onlyVisitCenterOptionExists;
         const needsToShowCarsSelection = userType === EUserType.Existing && !currentUser && firstScreenOptionsUnavailable;
         if (notVisitCenterSelected || needsToShowCarsSelection) {
             onBack()
@@ -106,29 +76,12 @@ export const ServiceNeedsFrame: React.FC<React.PropsWithChildren<React.PropsWith
     }
 
     const handleBack = () => {
-        if (isManagingAppointment) {
-            // todo redirect to manage url
-            dispatch(setCurrentFrameScreen("manageAppointment"))
-        } else {
-            if (currentUser) dispatch(setShowServiceCentersList(false));
-            handleBackScreen()
-        }
+        if (currentUser) dispatch(setShowServiceCentersList(false));
+        handleBackScreen()
     }
 
-    const goNext = () => onSelect('maintenanceDetails');
-
-    const onCarIsValid = () => scProfile && dispatch(checkPodChanged(scProfile.id, showError));
-
     const handleNext = () => {
-        if (isManagingAppointment) {
-            if (!selectedServices.length) {
-                showError(t("You do not have any services selected in your appointment. Please add items you wish to have serviced"))
-            } else {
-                dispatch(checkCarIsValid(onCarIsValid, goNext))
-            }
-        } else {
-            goNext()
-        }
+        onSelect('maintenanceDetails');
     }
 
     return (
@@ -138,7 +91,6 @@ export const ServiceNeedsFrame: React.FC<React.PropsWithChildren<React.PropsWith
             page={page}
             setPage={setPage}
             goNext={handleNext}
-            goBack={handleBack}
-            isManagingAppointment={isManagingAppointment}/>
+            goBack={handleBack}/>
     );
 };

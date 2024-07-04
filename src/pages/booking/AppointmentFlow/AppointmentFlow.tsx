@@ -101,6 +101,7 @@ export const AppointmentFlow = () => {
         categoriesIds,
         address,
         zipCode,
+        isUsualFlowNeeded,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -130,6 +131,9 @@ export const AppointmentFlow = () => {
         [firstScreenOptions])
 
     const isAuth = useMemo(() => currentUser?.dealershipId === scProfile?.dealershipId, [currentUser, scProfile]);
+
+    const isManagingAppointment = useMemo(() => customerLoadedData?.isUpdating && !isUsualFlowNeeded,
+        [customerLoadedData, isUsualFlowNeeded]);
 
     const onGoToFirstScreen = useCallback((screen: TView) => {
         dispatch(setWelcomeScreenView(screen))
@@ -337,6 +341,7 @@ export const AppointmentFlow = () => {
                 onSelectAppointment={onSelectAppointment}/>,
             serviceNeeds: <ServiceNeedsFrame
                 page={serviceCategoryPage}
+                isManagingAppointment={isManagingAppointment}
                 setPage={setServiceCategoryPage}
                 setLastSelectedCategory={setLastSelectedCategory}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
