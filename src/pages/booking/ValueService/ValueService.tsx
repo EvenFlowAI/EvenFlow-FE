@@ -1,15 +1,15 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import { ThemeProvider, StyledEngineProvider } from "@mui/material";
 import {frameTheme} from "../../../theme/theme";
-import {YearModel} from "../../../features/booking/ValueService/YearModel/YearModel";
+import {YearModel} from "../../../features/booking/AppointmentFlow/Screens/ValueService/YearModel/YearModel";
 import {
     setCurrentFrameScreen,
     setVehicleDataFromValueService
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory, useParams} from "react-router-dom";
-import ServiceSelection from "../../../features/booking/ValueService/ServiceSelection/ServiceSelection";
-import ServiceDetails from "../../../features/booking/ValueService/ServiceDetails/ServiceDetails";
+import ServiceSelection from "../../../features/booking/AppointmentFlow/Screens/ValueService/ServiceSelection/ServiceSelection";
+import ServiceDetails from "../../../features/booking/AppointmentFlow/Screens/ValueService/ServiceDetails/ServiceDetails";
 import {RootState} from "../../../store/rootReducer";
 import {loadSCProfile} from "../../../store/reducers/appointment/actions";
 import {decodeSCID} from "../../../utils/utils";

@@ -1,16 +1,16 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import { ThemeProvider, StyledEngineProvider, useMediaQuery, useTheme } from "@mui/material";
-import {Cars} from "../../../features/booking/Cars/Cars";
+import {Cars} from "../../../features/booking/AppointmentFlow/Screens/Cars/Cars";
 import {frameTheme} from "../../../theme/theme";
 import {SideBar} from "../../../features/booking/SideBar/SideBar";
 import {
     AppointmentConfirmation
-} from '../../../features/booking/AppointmentCreateFlow/AppointmentConfirmation/AppointmentConfirmation';
-import {AppointmentComment} from "../../../features/booking/AppointmentComment/AppointmentComment";
+} from '../../../features/booking/AppointmentFlow/Create/AppointmentConfirmation/AppointmentConfirmation';
+import {AppointmentComment} from "../../../features/booking/AppointmentFlow/Screens/AppointmentComment/AppointmentComment";
 import {
     MaintenancePackages
-} from "../../../features/booking/MaintenancePackages/MaintenancePackages";
-import {SelectOpsCode} from "../../../features/booking/ServiceOpsCodes/SelectOpsCode";
+} from "../../../features/booking/AppointmentFlow/Screens/MaintenancePackages/MaintenancePackages";
+import {SelectOpsCode} from "../../../features/booking/AppointmentFlow/Screens/ServiceOpsCodes/SelectOpsCode";
 import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -25,7 +25,7 @@ import {
 import {decodeSCID, encodeSCID} from "../../../utils/utils";
 import {
     AppointmentConfirmed
-} from "../../../features/booking/AppointmentConfirmed/AppointmentConfirmed";
+} from "../../../features/booking/AppointmentFlow/Screens/AppointmentConfirmed/AppointmentConfirmed";
 import {API} from "../../../api/api";
 import {
     checkCarIsValid,
@@ -51,16 +51,16 @@ import {EServiceCategoryPage, IAppointmentByKey, ILoadedVehicle, IServiceCategor
 import './AppointmentFlow.css';
 import ReactGA from "react-ga4";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
-import PaymentScreen from "../../../features/booking/PaymentScreen/PaymentScreen";
+import PaymentScreen from "../../../features/booking/AppointmentFlow/Screens/PaymentScreen/PaymentScreen";
 import {useTranslation} from "react-i18next";
-import OfferProductPage from "../../../features/booking/OfferProductPage/OfferProductPage";
+import OfferProductPage from "../../../features/booking/AppointmentFlow/Screens/OfferProductPage/OfferProductPage";
 import {ServiceCenterSwitcher} from "../../../features/booking/ServiceCenterSwitcher/ServiceCenterSwitcher";
 import {IServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 import {setTransportationAvailable} from "../../../store/reducers/bookingFlowConfig/actions";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {getCurrentUser} from "../../../store/reducers/users/actions";
 import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetails/actions";
-import {ManageAppointment} from "../../../features/booking/AppointmentManageFlow/ManageAppointment/ManageAppointment";
+import {ManageAppointment} from "../../../features/booking/AppointmentFlow/Manage/ManageAppointment/ManageAppointment";
 import AskChangesCompleted from "../../../components/modals/booking/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../../components/modals/booking/SlotImpactedWarning/SlotImpactedWarning";
 import ServiceImpactedWarning from "../../../components/modals/booking/ServiceImpactedWarning/ServiceImpactedWarning";
@@ -77,14 +77,14 @@ import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../routes/constants";
 import {loadGeneralSettings} from "../../../store/reducers/generalSettings/actions";
 import {ESettingType} from "../../../store/reducers/generalSettings/types";
-import {ServiceNeedsCreate} from "../../../features/booking/AppointmentCreateFlow/ServiceNeedsCreate/ServiceNeedsCreate";
-import MaintenanceCreate from "../../../features/booking/AppointmentCreateFlow/MaintenanceCreate/MaintenanceCreate";
-import ConsultantsCreate from "../../../features/booking/AppointmentCreateFlow/ConsultantsCreate/ConsultantsCreate";
+import {ServiceNeedsCreate} from "../../../features/booking/AppointmentFlow/Create/ServiceNeedsCreate/ServiceNeedsCreate";
+import MaintenanceCreate from "../../../features/booking/AppointmentFlow/Create/MaintenanceCreate/MaintenanceCreate";
+import ConsultantsCreate from "../../../features/booking/AppointmentFlow/Create/ConsultantsCreate/ConsultantsCreate";
 import AppointmentTimingCreate
-    from "../../../features/booking/AppointmentCreateFlow/AppointmentTimingCreate/AppointmentTimingCreate";
-import AppointmentSlotsCreate from "../../../features/booking/AppointmentCreateFlow/AppointmentSlotsCreate/AppointmentSlotsCreate";
-import TransportationsCreate from "../../../features/booking/AppointmentCreateFlow/TransportationsCreate/TransportationsCreate";
-import YourLocationCreate from "../../../features/booking/AppointmentCreateFlow/YourLocationCreate/YourLocationCreate";
+    from "../../../features/booking/AppointmentFlow/Create/AppointmentTimingCreate/AppointmentTimingCreate";
+import AppointmentSlotsCreate from "../../../features/booking/AppointmentFlow/Create/AppointmentSlotsCreate/AppointmentSlotsCreate";
+import TransportationsCreate from "../../../features/booking/AppointmentFlow/Create/TransportationsCreate/TransportationsCreate";
+import YourLocationCreate from "../../../features/booking/AppointmentFlow/Create/YourLocationCreate/YourLocationCreate";
 
 export const AppointmentFlow = () => {
     const {

@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import {CheckCircleOutlined, HighlightOff, RadioButtonChecked, RadioButtonUnchecked} from "@mui/icons-material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {mockSlotTime} from "../../../features/booking/AppointmentSlots/constants";
+import {mockSlotTime} from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/constants";
 import {PickUpWrapper, useStyles} from "./styles";
 import dayjs from "dayjs";
 

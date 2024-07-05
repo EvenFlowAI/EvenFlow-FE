@@ -1,7 +1,7 @@
 import React from "react";
 import {ChevronLeft, ChevronRight} from "@mui/icons-material";
 import {MonthSelectorWrapper} from "./styles";
-import {TMonthProps} from "../../../features/booking/AppointmentSlots/types";
+import {TMonthProps} from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/types";
 import dayjs from "dayjs";
 
 export const MonthSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMonthProps>>> = ({date, onDateChange, loading}) => {
