@@ -4,9 +4,6 @@ import {Cars} from "../../../features/booking/AppointmentFlow/Cars/Cars";
 import {frameTheme} from "../../../theme/theme";
 import {SideBar} from "../../../features/booking/SideBar/SideBar";
 import {
-    TransportationNeeds
-} from '../../../features/booking/AppointmentFlow/TransportationNeeds/TransportationNeeds';
-import {
     AppointmentConfirmation
 } from '../../../features/booking/AppointmentFlow/AppointmentConfirmation/AppointmentConfirmation';
 import {AppointmentComment} from "../../../features/booking/AppointmentFlow/AppointmentComment/AppointmentComment";
@@ -87,6 +84,7 @@ import ConsultantsCreate from "../../../features/booking/AppointmentFlow/Consult
 import AppointmentTimingCreate
     from "../../../features/booking/AppointmentFlow/AppointmentTiming/AppointmentTimingCreate";
 import AppointmentSlotsCreate from "../../../features/booking/AppointmentFlow/AppointmentSlots/AppointmentSlotsCreate";
+import TransportationsCreate from "../../../features/booking/AppointmentFlow/TransportationNeeds/TransportationsCreate";
 
 export const AppointmentFlow = () => {
     const {
@@ -375,7 +373,7 @@ export const AppointmentFlow = () => {
             />,
             appointmentTiming: <AppointmentTimingCreate handleSetScreen={handleSetScreen}/>,
             appointmentSelection: <AppointmentSlotsCreate handleSetScreen={handleSetScreen}/>,
-            transportationNeeds: <TransportationNeeds
+            transportationNeeds: <TransportationsCreate
                 onBack={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmation')}
             />,

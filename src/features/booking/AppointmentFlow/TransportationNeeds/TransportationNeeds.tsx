@@ -8,7 +8,6 @@ import {RootState} from "../../../../store/rootReducer";
 import {ITransportation} from '../../../../api/types';
 import {
     searchForCustomerConsents,
-    setCurrentFrameScreen,
     setTransportation
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
@@ -16,21 +15,23 @@ import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import {ETransportColumn} from "../../../../store/reducers/transportationNeeds/types";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
-import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions";
 import {TextWrapper, TransportationsWrapper} from "./styles";
 import {TransportationCard} from "./TransportationCard/TransportationCard";
 import {TTransportationData} from "./types";
-import {TActionProps} from "../../../../types/types";
+import {TActionProps, TCallback} from "../../../../types/types";
 import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
-import dayjs from "dayjs";
 import CustomerConsents from "../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 
-export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWithChildren<TActionProps>>> = ({onNext, onBack}) => {
+export type TProps = TActionProps & {
+    handleConsentsAccepted: TCallback;
+    date: string|undefined
+}
+
+export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleConsentsAccepted, date}) => {
     const {
         subService,
         service,
         categoriesIds,
-        isUsualFlowNeeded,
         hashKey,
         selectedRecalls,
         transportation,
@@ -38,37 +39,23 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
         selectedPackage,
         selectedVehicle,
         packageEMenuType,
-        appointmentByKey,
         isConsentsLoading,
         trackerData
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
-    const {selectedSR, customerLoadedData, appointment} = useSelector(({appointment}: RootState) => appointment)
+    const {selectedSR} = useSelector(({appointment}: RootState) => appointment)
     const {allCategories} = useSelector(({categories}: RootState) => categories)
-    const {id} = useParams<{id: string}>();
-    const {t} = useTranslation();
     const [transportations, setTransportations] = useState<ITransportation[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-
+    const {id} = useParams<{id: string}>();
+    const {t} = useTranslation();
     const dispatch = useDispatch();
+
+    const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
+    const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])
 
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(service, subService, null, selectedSR);
     }, [service, subService, selectedSR]);
-    const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
-    const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])
-
-    const date = useMemo(() => {
-        let fullDateString = ''
-        if (appointmentByKey) {
-            const [hh, mm] = appointmentByKey?.timeSlot.split(":");
-            fullDateString = dayjs.utc(appointmentByKey?.dateInUtc).set('hour', hh ? +hh : 0).set('minute', mm ? +mm : 0).toISOString()
-        }
-        if (appointment) {
-            return appointment.appointmentDate
-        } else {
-            return appointmentByKey ? fullDateString : '';
-        }
-    }, [appointmentByKey, appointment])
 
     const getCategories = useCallback((): number[] => {
         return allCategories
@@ -80,7 +67,6 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
 
     useEffect(() => {
         if (selectedVehicle) {
-            // setLoading(true);
             const maintenancePackageOption = selectedPackage
                 ? {id: selectedPackage?.id, priceType: packagePricingType}
                 : packageEMenuType !== null
@@ -117,35 +103,22 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
     }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls,
         packagePricingType, packageEMenuType, selectedPackage, categoriesIds, hashKey, date]);
 
-    const handleConsentsAccepted = () => {
-        if (customerLoadedData?.isUpdating) {
-            dispatch(setChangesCompletedOpen(true))
-        } else {
-            onNext();
-        }
-    }
-
-    const handleNext = (transportation: ITransportation|null): void => {
+    const handleGA = (transportation: ITransportation|null) => {
         ReactGA.event({
             category: 'EvenFlow User',
             action: 'Selected Transportation Need',
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
         }, trackerData.ids)
+    }
+
+    const handleNext = (transportation: ITransportation|null): void => {
+        handleGA(transportation);
         dispatch(searchForCustomerConsents(handleConsentsAccepted))
     }
 
     const handleSelectOption = (o: ITransportation|null) => {
         dispatch(setTransportation(o));
         handleNext(o);
-    }
-
-    const handleBack = () => {
-        if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-            dispatch(setCurrentFrameScreen("manageAppointment"))
-        } else {
-            dispatch(setTransportation(null));
-            onBack();
-        }
     }
 
     return <StepWrapper>
@@ -171,7 +144,7 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
                 </TextWrapper>
         }
         <ActionButtons
-            onBack={handleBack}
+            onBack={onBack}
             nextLabel={t("Next")}
             hideNext={!!transportations.length}
             onNext={onNext}
