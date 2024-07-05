@@ -26,6 +26,7 @@ import {InputLabel} from "../InputLabel/InputLabel";
 import {LoadingProcess} from "../LoadingProcess/LoadingProcess";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";
+import {ESettingType} from "../../../../store/reducers/generalSettings/types";
 
 type TProps = {
     handleNew: () => void;
@@ -33,11 +34,12 @@ type TProps = {
 };
 
 const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
-                                                         handleNew,
-                                                         redirect
-}) => {
+                                                                                                           handleNew,
+                                                                                                           redirect
+                                                                                                       }) => {
     const {customerEnteredEmail, scProfile} = useSelector((state: RootState) => state.appointment);
     const {customerSearchData, isLoading} = useSelector((state: RootState) => state.customers);
+    const {settings} = useSelector((state: RootState) => state.generalSettings);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [isExpanded, setExpanded] = useState<boolean>(false);
     const [errors, setErrors] = useState<string[]>([])
@@ -53,11 +55,14 @@ const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWit
     const { classes  } = useStyles();
     const { classes: returningClasses } = useCustomerSelectStyles();
     const formIsValid = useMemo(() => {
-             return !!customerEnteredEmail.length
-             || Object.values(customerSearchData).find(item => item.length)
+            return !!customerEnteredEmail.length
+                || Object.values(customerSearchData).find(item => item.length)
                 || customerSearchData.lastVINCharacters.length === 8
         },
         [customerEnteredEmail, customerSearchData])
+    const companyNameIsOn = useMemo(() => {
+        return settings.find(el => el.settingType === ESettingType.CompanyName)?.data?.isOn
+    }, [settings])
 
     const onSuccess = (count: number) => {
         count > 0 ? onOpenSearchResults() : onOpenNotFound()
@@ -80,7 +85,8 @@ const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWit
             customerSearchData.lastName,
             customerEnteredEmail,
             customerSearchData.address,
-            customerSearchData.lastVINCharacters
+            customerSearchData.lastVINCharacters,
+            customerSearchData.companyName
         ))
     }
 
@@ -189,19 +195,28 @@ const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWit
                 >
                     {t("Search")}
                 </Button>
-            : null }
+                : null }
             {isExpanded
                 ? <React.Fragment>
-                    {/*<InputLabel label={t("Search by Company Name")}/>*/}
-                    {/*<TextField*/}
-                    {/*onKeyUp={onKeyUp}*/}
-                    {/*    placeholder={t("Enter Company Name")}*/}
-                    {/*    error={formIsChecked && (customerSearchData.companyName.length === 1 || !formIsValid)}*/}
-                    {/*    onChange={onTextChange('companyName')}*/}
-                    {/*    InputProps={{disableUnderline: true}}*/}
-                    {/*    fullWidth*/}
-                    {/*    style={{ marginBottom: 16 }}*/}
-                    {/*    value={customerSearchData.companyName}/>*/}
+                    {companyNameIsOn ? <>
+                            <InputLabel label={t("Search by Company Name")}/>
+                            <TextField
+                                onKeyUp={onKeyUp}
+                                placeholder={t("Enter Company Name")}
+                                error={formIsChecked && (customerSearchData.companyName.length === 1 || !formIsValid)}
+                                onChange={onTextChange('companyName')}
+                                InputProps={{
+                                    disableUnderline: true,
+                                    endAdornment: isLoading && customerSearchData.address.length ? <LoadingProcess/> : null
+                                }}
+                                fullWidth
+                                variant="standard"
+                                name="companyName"
+                                disabled={isLoading}
+                                style={{marginBottom: 16}}
+                                value={customerSearchData.companyName}/>
+                        </>
+                        : null}
                     <InputLabel label={t("Search by Address")}/>
                     <TextField
                         onKeyUp={onKeyUp}
@@ -240,7 +255,7 @@ const ReturningCustomerForAdmin: React.FC<React.PropsWithChildren<React.PropsWit
                         {t("Search")}
                     </Button>
 
-            </React.Fragment>
+                </React.Fragment>
                 : null}
             <CustomerSearchResults
                 handleNew={handleNew}

@@ -62,6 +62,7 @@ export const ServiceNeedsFrame: React.FC<React.PropsWithChildren<React.PropsWith
         packageEMenuType,
         selectedRecalls,
         isUsualFlowNeeded,
+        trackerData
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, serviceRequests, scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -152,7 +153,7 @@ export const ServiceNeedsFrame: React.FC<React.PropsWithChildren<React.PropsWith
             category: 'EvenFlow User',
             action: `Selected ${page === EServiceCategoryPage.Page1 ? 'Service' : 'Sub Service'} `,
             label: `With Name ${selectedCategory.name} And Service Requests ${requestsString}`,
-        })
+        }, trackerData.ids)
     }
 
     const handleCategoryHighlight = (selectedCategory: IServiceCategory) => {

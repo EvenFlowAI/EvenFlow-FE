@@ -48,9 +48,15 @@ export type TGAOptions = {
     allowLinker: boolean;
     storage: string;
     clientId?: string;
+    name?: string;
 }
 
 export type GATrackers = {
     measurementId: string;
-    gmtId: string;
+    gmtId?: string;
+}
+
+export type TReactGATracker = {
+    trackingId: string;
+    gaOptions: TGAOptions
 }

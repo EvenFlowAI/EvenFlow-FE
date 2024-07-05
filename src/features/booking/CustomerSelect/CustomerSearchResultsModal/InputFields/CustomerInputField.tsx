@@ -21,5 +21,5 @@ export const CustomerInputField: React.FC<React.PropsWithChildren<React.PropsWit
         ? <CustomerInput
             value={editingElement[fieldName] ?? ""}
             onChange={onFieldChange(fieldName)}/>
-        : <React.Fragment>{customer[fieldName] ?? ""}</React.Fragment>;
+        : <React.Fragment key={fieldName}>{customer[fieldName] ?? ""}</React.Fragment>;
 };

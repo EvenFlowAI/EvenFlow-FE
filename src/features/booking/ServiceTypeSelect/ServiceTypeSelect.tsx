@@ -38,7 +38,7 @@ import ServiceImpactedWarning from "../../../components/modals/booking/ServiceIm
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 import {ServiceTypeButton, ServiceTypeCardsWrapper, Tagline, useServiceTypeStyles} from "./styles";
 import {HtmlTooltip} from "../../../components/styled/HtmlTooltip";
-import {useAnalyticsBySCId} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
+import {useAnalyticsForParentSite} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {useException} from "../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../routes/constants";
@@ -50,11 +50,11 @@ type TProps = {
 
 const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({handleValueServiceConfig, loading }) => {
     const {
-        trackerCreated,
+        trackerData,
         userType,
         selectedVehicle,
         serviceTypeOption,
-        appointmentByKey
+        appointmentByKey,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -68,7 +68,9 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     const showError = useException();
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
 
-    useAnalyticsBySCId(id, trackerCreated, () => dispatch(setTrackerCreated(true)))
+    const setTracker = (ids: string[]) => dispatch(setTrackerCreated({isCreated: true, ids}))
+
+    useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
 
     const redirect = () => {
         if (id) {
@@ -145,7 +147,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
             category: 'EvenFlow User',
             action: 'Enters Page',
             label: `As New User`,
-        });
+        }, trackerData.ids);
     }
 
     const handleUser = (service: IFirstScreenOption) => {

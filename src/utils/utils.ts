@@ -133,30 +133,85 @@ const ServiceCenters = {
 
 export const getTrackersForParentSite = (id: string): GATrackers[] => {
     const decodedId = decodeSCID(id);
+    if (process.env.REACT_APP_ENV === "uat") return [{measurementId: "G-ZW2CJN5R98"}];
     if (process.env.REACT_APP_ENV === "production") {
         if (decodedId === ServiceCenters.FremontCDJRCasper) {
-            return [{measurementId: "G-34E3JLKYGN", gmtId: "GTM-TNB7FJ"}]
+            return [{measurementId: "G-34E3JLKYGN", gmtId: "GTM-TNB7FJ"}, {measurementId: "G-FBF51NY0TY"}]
         }
         if (decodedId === ServiceCenters.FremontMotorCody) {
             return [
                 {measurementId: "G-H8QNCXRRVW", gmtId: "GTM-PHGS6B"},
-                {measurementId: "G-DP0EC3VXQL", gmtId: "GTM-MG6DT7"}
+                {measurementId: "G-DP0EC3VXQL", gmtId: "GTM-MG6DT7"},
+                {measurementId: "G-JZ5SG376SH"}
             ]
         }
         if (decodedId === ServiceCenters.FremontLanderCDJR) {
-            return [{measurementId: "G-88673LPKRB", gmtId: "GTM-MRXSH3"}]
+            return [{measurementId: "G-88673LPKRB", gmtId: "GTM-MRXSH3"}, {measurementId: "G-5BV7X721KQ"}]
         }
         if (decodedId === ServiceCenters.FremontCDJRRockSprings) {
-            return [{measurementId: "G-NV5842RXF3", gmtId: "GTM-P7RTQC"}]
+            return [{measurementId: "G-NV5842RXF3", gmtId: "GTM-P7RTQC"}, {measurementId: "G-9DVYXDJ45M"}]
         }
         if (decodedId === ServiceCenters.FremontMotorRiverton) {
-            return [{measurementId: "G-92EJQHZMGQ", gmtId: "GTM-W3DJPG"}]
+            return [{measurementId: "G-92EJQHZMGQ", gmtId: "GTM-W3DJPG"}, {measurementId: "G-YT0WTD548Z"}]
         }
         if (decodedId === ServiceCenters.FremontMotorPowell) {
-            return [{measurementId: "G-QTPHWHLZC6", gmtId: "GTM-PBT4Q7"}]
+            return [{measurementId: "G-QTPHWHLZC6", gmtId: "GTM-PBT4Q7"}, {measurementId: "G-4853N7VZ21"}]
         }
+        if (decodedId === ServiceCenters.HennessysRiverViewFordQuickLane || decodedId === ServiceCenters.HennessysRiverViewFordMainServiceDrive) {
+            return [{measurementId: "G-NBXVY09B7S"}]
+        }
+        if (decodedId === ServiceCenters.JanssenCDJRofNorthPlatte) {
+            return [{measurementId: "G-7177QY7LH2"}]
+        }
+        if (decodedId === ServiceCenters.JanssenSonsFord) {
+            return [{measurementId: "G-YXMH70Q2JX"}]
+        }
+        if (decodedId === ServiceCenters.LakePowellFord) {
+            return [{measurementId: "G-HS4HDY3376"}]
+        }
+        if (decodedId === ServiceCenters.MorrisSmithFordOfLarned) {
+            return [{measurementId: "G-4BFDSPFKH6"}]
+        }
+        if (decodedId === ServiceCenters.PerformanceKingsHondaCincinnati) {
+            return [{measurementId: "G-P3DH15MW8P"}]
+        }
+        if (decodedId === ServiceCenters.PerformanceHondaFairfield) {
+            return [{measurementId: "G-JFFE7XLTF5"}]
+        }
+        if (decodedId === ServiceCenters.PerformanceLexusRiverCenter) {
+            return [{measurementId: "G-3074D59PM3"}]
+        }
+        if (decodedId === ServiceCenters.PerformanceLexusCincinnati) {
+            return [{measurementId: "G-5XJ8256YEZ"}]
+        }
+        if (decodedId === ServiceCenters.PerformanceCDJRCenterville) {
+            return [{measurementId: "G-EEJPTXTVF2"}]
+        }
+        if (decodedId === ServiceCenters.PerformanceToyotaFairfield) {
+            return [{measurementId: "G-HXLXXZQ4YB"}]
+        }
+        if (decodedId === ServiceCenters.BeloitAutoAndTruck) {
+            return [{measurementId: "G-0YK1QM06NR"}]
+        }
+        if (decodedId === ServiceCenters.PerformanceHondaBountiful) {
+            return [{measurementId: "G-5JYPV2SJRT"}]
+        }
+        if (decodedId === ServiceCenters.PerformanceFordLincolnBountiful) {
+            return [{measurementId: "G-TT0L0LN92Z"}]
+        }
+        if (decodedId === ServiceCenters.PerformanceFordTruckCountry) {
+            return [{measurementId: "G-S3Y40YJ5T1"}]
+        }
+        if (decodedId === ServiceCenters.PerformanceToyotaBountiful) {
+            return [{measurementId: "G-YEYXB53XXG"}]
+        }
+        if (decodedId === ServiceCenters.FremontLanderFord) {
+            return [{measurementId: "G-VSQ7H51M2D"}]
+        }
+        return [{measurementId: "G-DWX0X9CBTT"}]
+    } else {
+        return [{measurementId: "G-LS5EEY1SRM"}];
     }
-    return [];
 }
 
 export const getTrackerById = (id: string): string => {

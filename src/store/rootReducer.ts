@@ -35,6 +35,7 @@ import {capacityManagementReducer} from "./reducers/capacityManagement/reducer";
 import {employeesCapacity} from "./reducers/employeeCapacity/reducer";
 import {demandManagementReducer} from "./reducers/demandManagement/reducer";
 import {adminPanelReducer} from "./reducers/adminPanel/reducer";
+import {generalSettingsReducer} from "./reducers/generalSettings/reducer";
 
 export const rootReducer = combineReducers({
     appointment: appointmentReducer,
@@ -74,5 +75,6 @@ export const rootReducer = combineReducers({
     capacityManagement: capacityManagementReducer,
     demandManagement: demandManagementReducer,
     adminPanel: adminPanelReducer,
+    generalSettings: generalSettingsReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;

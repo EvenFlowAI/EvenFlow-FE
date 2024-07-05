@@ -44,7 +44,8 @@ export const SelectOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
         subService,
         service,
         categoriesIds,
-        isUsualFlowNeeded
+        isUsualFlowNeeded,
+        trackerData
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
     const {allCategories} = useSelector(({categories}: RootState) => categories)
 
@@ -149,7 +150,7 @@ export const SelectOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
             category: 'EvenFlow User',
             action: 'Selected Individual Service Requests',
             label: `With Codes ${serviceRequests.filter(item => selectedOpsCodes.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
-        })
+        }, trackerData.ids)
         dispatch(selectSRMultiple(selectedOpsCodes))
         if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
             dispatch(checkCarIsValid(onCarIsValid, goNext))
