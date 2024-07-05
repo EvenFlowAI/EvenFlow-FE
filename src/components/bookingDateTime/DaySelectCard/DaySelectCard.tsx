@@ -6,7 +6,7 @@ import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {ReactComponent as CalendarIcon} from "../../../assets/img/empty_calendar.svg";
 import {ReactComponent as CalendarIconWhite} from "../../../assets/img/empty_calendar_white.svg";
-import {monthFormat, XsMontFormat} from "../../../features/booking/AppointmentFlow/AppointmentSlots/constants";
+import {monthFormat, XsMontFormat} from "../../../features/booking/AppointmentSlots/constants";
 import {Date, Day, DayCard, DayName} from "../../styled/DayCard";
 import dayjs from "dayjs";
 

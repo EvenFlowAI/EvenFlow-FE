@@ -10,7 +10,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
-import {getCurrentMenu, getStepsMap, getStepsScreen} from "../AppointmentFlow/utils";
+import {getCurrentMenu, getStepsMap, getStepsScreen} from "../utils/utils";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TScreen} from "../../../types/types";

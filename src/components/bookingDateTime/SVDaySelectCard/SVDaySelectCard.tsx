@@ -5,7 +5,7 @@ import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType, IServiceValetAppointment} from "../../../store/reducers/appointment/types";
 import {useTranslation} from "react-i18next";
 import {EPricingDisplayType} from "../../../store/reducers/pricingSettings/types";
-import {defaultFormat, monthFormat, XsFormat, XsMontFormat} from "../../../features/booking/AppointmentFlow/AppointmentSlots/constants";
+import {defaultFormat, monthFormat, XsFormat, XsMontFormat} from "../../../features/booking/AppointmentSlots/constants";
 import {Date, Day, DayCard, DayName} from "../../styled/DayCard";
 import dayjs from "dayjs";
 

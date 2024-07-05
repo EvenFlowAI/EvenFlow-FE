@@ -8,7 +8,7 @@ import {useTranslation} from "react-i18next";
 import {StyledLabel} from "./styles";
 import {ReactComponent as CheckboxIcon} from '../../../assets/img/checkbox_outlined.svg'
 import {ReactComponent as CheckboxEmptyIcon} from '../../../assets/img/checkbox_empty1.svg'
-import {Info} from "../AppointmentFlow/AppointmentConfirmation/styles";
+import {Info} from "../AppointmentCreateFlow/AppointmentConfirmation/styles";
 
 export const AppointmentReminders: React.FC<{isEmailRequired: boolean}> = ({isEmailRequired}) => {
     const {reminders, customer}= useSelector((state: RootState) => state.appointmentFrame);
