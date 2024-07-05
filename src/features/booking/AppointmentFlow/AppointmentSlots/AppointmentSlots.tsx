@@ -23,17 +23,16 @@ import {TGroupedAppointments} from "../../../../utils/types";
 import ReactGA from "react-ga4";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
 import {EServiceType, EUserType} from "../../../../store/reducers/appointmentFrameReducer/types";
-import {TArgCallback, TParsableDate, TScreen} from "../../../../types/types";
+import {TArgCallback, TCallback, TParsableDate, TScreen} from "../../../../types/types";
 import {SVAppointmentDateSelector} from "../../../../components/bookingDateTime/SVAppointmentDateSelector/SVAppointmentDateSelector";
 import {SVAppointmentTimeSelector} from "../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
-    clearAppointmentSteps, searchForCustomerConsents,
+    clearAppointmentSteps,
     setServiceTypeOption,
     setTransportation,
     setWelcomeScreenView
 } from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
-import {setChangesCompletedOpen} from "../../../../store/reducers/modals/actions";
 import {SlotsScreenWrapper} from "./styles";
 import {groupAppointments} from "./utils";
 import {Routes} from "../../../../routes/constants";
@@ -44,9 +43,17 @@ import MileageModal from "../../../../components/modals/booking/MileageModal/Mil
 
 type TAppointmentSelectionProps = {
     handleSetScreen: TArgCallback<TScreen>;
+    onNext: TCallback;
+    prevLogicalScreen: TScreen;
+    fromServiceValetToVisitCenter?: boolean;
 }
 
-export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAppointmentSelectionProps>>> = ({handleSetScreen}) => {
+export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAppointmentSelectionProps>>> = ({
+                                                                                                                             handleSetScreen,
+                                                                                                                             onNext,
+                                                                                                                             prevLogicalScreen,
+                                                                                                                             fromServiceValetToVisitCenter,
+}) => {
     const {
         appointmentSlots,
         serviceValetSlots,
@@ -76,20 +83,13 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         packagePricingType,
         packageEMenuType,
         consultants,
-        isUsualFlowNeeded,
-        prevScreen,
         appointmentByKey,
         isConsultantsLoading,
         isConsentsLoading,
         trackerData
     } = useSelector((state: RootState) => state.appointmentFrame)
 
-    const {
-        currentConfig,
-        isTransportationAvailable,
-        isAppointmentTimingAvailable,
-        isAdvisorAvailable,
-    } = useSelector((state: RootState) => state.bookingFlowConfig)
+    const {currentConfig, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
 
     const {allCategories} = useSelector((state: RootState) => state.categories);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
@@ -110,11 +110,6 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         ? !serviceValetAppointment
         : !appointment,
         [appointment, serviceValetAppointment])
-
-    const fromServiceValetToVisitCenter = useMemo(() => {
-        return serviceTypeOption?.type === EServiceType.VisitCenter
-        && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff
-    }, [serviceTypeOption, appointmentByKey])
 
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(appointmentSlots);
@@ -301,14 +296,6 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         }, trackerData.ids);
     }, [trackerData])
 
-    const handleTransportation = useCallback(() => {
-        if (serviceTypeOption?.transportationOption || !isTransportationAvailable) {
-            dispatch(setChangesCompletedOpen(true))
-        } else {
-            handleSetScreen('transportationNeeds')
-        }
-    }, [serviceTypeOption, isTransportationAvailable])
-
     const handleConsents = () => {
         handleSetScreen("appointmentConfirmation")
     }
@@ -316,41 +303,19 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     const handleNext = useCallback((): void => {
         handleGANext();
         dispatch(setTransportation(null))
-        if (customerLoadedData?.isUpdating) {
-            handleTransportation()
-        } else {
-            if (isTransportationAvailable && !serviceTypeOption?.transportationOption) {
-                handleSetScreen("transportationNeeds")
-            } else {
-                dispatch(searchForCustomerConsents(handleConsents))
-            }
-        }
-    }, [isTransportationAvailable, serviceTypeOption, handleTransportation, customerLoadedData, handleGANext])
-
-    const definePrevScreen = useCallback((): TScreen => {
-        let previousLogicalScreen: TScreen = currentConfig?.appointmentSelection
-            ? 'appointmentTiming'
-            : isAdvisorAvailable
-                ? 'consultantSelection'
-                : "serviceNeeds"
-        const isManageFlow = customerLoadedData?.isUpdating && !isUsualFlowNeeded
-        if (prevScreen && isManageFlow) {
-            previousLogicalScreen = prevScreen
-        }
-        return previousLogicalScreen
-    }, [currentConfig, isAdvisorAvailable, customerLoadedData, isUsualFlowNeeded, prevScreen])
+        onNext();
+    }, [onNext, handleGANext])
 
     const handleBack = useCallback((): void => {
         handleGABack();
-        const prevScreen = definePrevScreen()
-        if (prevScreen === "appointmentSelection" || (fromServiceValetToVisitCenter && !isAppointmentTimingAvailable)) {
+        if (prevLogicalScreen === "appointmentSelection" || (fromServiceValetToVisitCenter && !isAppointmentTimingAvailable)) {
             dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
             dispatch(setWelcomeScreenView("serviceSelect"))
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
-            handleSetScreen(prevScreen);
+            handleSetScreen(prevLogicalScreen);
         }
-    }, [currentConfig, history, fromServiceValetToVisitCenter, definePrevScreen])
+    }, [currentConfig, history, fromServiceValetToVisitCenter, prevLogicalScreen])
 
     const loadDataForMileage = () => {
         onMileageClose()

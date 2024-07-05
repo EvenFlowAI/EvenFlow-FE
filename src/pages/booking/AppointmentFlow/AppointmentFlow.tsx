@@ -3,7 +3,6 @@ import { ThemeProvider, StyledEngineProvider, useMediaQuery, useTheme } from "@m
 import {Cars} from "../../../features/booking/AppointmentFlow/Cars/Cars";
 import {frameTheme} from "../../../theme/theme";
 import {SideBar} from "../../../features/booking/SideBar/SideBar";
-import {AppointmentSlots} from '../../../features/booking/AppointmentFlow/AppointmentSlots/AppointmentSlots';
 import {
     TransportationNeeds
 } from '../../../features/booking/AppointmentFlow/TransportationNeeds/TransportationNeeds';
@@ -87,6 +86,7 @@ import MaintenanceCreate from "../../../features/booking/AppointmentFlow/Mainten
 import ConsultantsCreate from "../../../features/booking/AppointmentFlow/Consultants/ConsultantsCreate";
 import AppointmentTimingCreate
     from "../../../features/booking/AppointmentFlow/AppointmentTiming/AppointmentTimingCreate";
+import AppointmentSlotsCreate from "../../../features/booking/AppointmentFlow/AppointmentSlots/AppointmentSlotsCreate";
 
 export const AppointmentFlow = () => {
     const {
@@ -374,7 +374,7 @@ export const AppointmentFlow = () => {
                 onNext={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
             />,
             appointmentTiming: <AppointmentTimingCreate handleSetScreen={handleSetScreen}/>,
-            appointmentSelection: <AppointmentSlots handleSetScreen={handleSetScreen}/>,
+            appointmentSelection: <AppointmentSlotsCreate handleSetScreen={handleSetScreen}/>,
             transportationNeeds: <TransportationNeeds
                 onBack={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmation')}
