@@ -1149,3 +1149,30 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
         })
     }
 }
+
+export const clearAddress = (): AppThunk => dispatch => {
+    dispatch(setAddress(null));
+    dispatch(setPoliticalState(""))
+    dispatch(setCity(""))
+    dispatch(setZipCode(""));
+}
+
+export const goToSlotsSelection = (prevOption?: IFirstScreenOption|undefined): AppThunk => (dispatch, getState) => {
+    const {isAdvisorAvailable, isAppointmentTimingAvailable, config} = getState().bookingFlowConfig;
+    const {sideBarSteps, advisor} = getState().appointmentFrame;
+    if (prevOption) {
+        const prevConfig = config.find(el => el.serviceType === prevOption.type)
+        const advisorsStepNeeded = prevConfig?.advisorSelection && sideBarSteps[sideBarSteps.length - 1] === "consultantSelection";
+        dispatch(setCurrentFrameScreen( advisorsStepNeeded
+            ? 'consultantSelection'
+            : prevConfig?.appointmentSelection
+                ? "appointmentTiming"
+                : 'appointmentSelection'))
+    } else {
+        dispatch(setCurrentFrameScreen(isAdvisorAvailable && !advisor
+            ? 'consultantSelection'
+            : isAppointmentTimingAvailable
+                ? "appointmentTiming"
+                : 'appointmentSelection'))
+    }
+}

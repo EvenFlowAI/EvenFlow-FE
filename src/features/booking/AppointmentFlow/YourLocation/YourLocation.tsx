@@ -7,12 +7,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import GooglePlacesAutocomplete, {geocodeByPlaceId} from 'react-google-places-autocomplete';
 import {
-    clearAppointmentData,
+    clearAddress,
+    clearAppointmentData, goToSlotsSelection,
     loadAncillaryPriceByZip,
     loadFilteredZip,
     setAddress,
     setCity,
-    setCurrentFrameScreen,
     setDefaultVisitCenterOption,
     setPoliticalState,
     setServiceTypeOption,
@@ -32,49 +32,39 @@ import {useTranslation} from "react-i18next";
 import AncillaryPriceModal from "./AncillaryPriceModal/AncillaryPriceModal";
 import UnavailableServiceModal from "./UnavailableServiceModal/UnavailableServiceModal";
 import {KeyboardArrowDown} from "@mui/icons-material";
-import {TActionProps, TArgCallback, TView} from "../../../../types/types";
+import {TActionProps, TArgCallback, TCallback, TView} from "../../../../types/types";
 import {useHistory, useParams} from "react-router-dom";
-import {
-    setServiceWarningOpen,
-    setSlotsWarningOpen,
-    setUnavailableServiceOpen
-} from "../../../../store/reducers/modals/actions";
-import {checkPodChanged} from "../../../../store/reducers/appointments/actions";
-import {ILoadedVehicle} from "../../../../api/types";
-import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
-
+import {setUnavailableServiceOpen} from "../../../../store/reducers/modals/actions";
 import {parseGeoCode} from "./utils";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {useException} from "../../../../hooks/useException/useException";
-import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../../routes/constants";
 import {SelectWrapper, useAutocompleteStyles, useStyles} from "./styles";
 
 type TYourLocationProps = TActionProps & {
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
     onGoToFirstScreen: TArgCallback<TView>;
-    onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
+    isManagingFlow?: boolean;
+    restoreAddress?: TCallback;
 }
 
-const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYourLocationProps>>> = ({onBack, onNext, setNeedToShowServiceSelection, onGoToFirstScreen, onUpdateAppointment}) => {
+const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYourLocationProps>>> = ({
+                                                                                                          onBack,
+                                                                                                          onNext,
+                                                                                                          isManagingFlow,
+                                                                                                          restoreAddress,
+                                                                                                      }) => {
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {
         zipCode: zipCodeValue,
         address,
         filteredZipCodes,
         serviceTypeOption,
-        selectedVehicle,
         appointmentByKey,
-        editingPosition,
         serviceOptionChangedFromSlotPage,
         prevSelectedOption,
         ancillaryPriceLoading,
-        sideBarSteps,
-        advisor,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
-    const {isAdvisorAvailable, isAppointmentTimingAvailable, config} = useSelector((state: RootState) => state.bookingFlowConfig);
-
     const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
 
@@ -85,7 +75,6 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
     const error = isFormChecked && !zip;
     const { classes: autocompleteClasses } = useAutocompleteStyles({"error": error});
     const {t} = useTranslation();
-    const currentUser = useCurrentUser();
     const {id} = useParams<{id: string}>();
     const history = useHistory();
 
@@ -95,21 +84,10 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
         ? t('Enter pick up address')
         : t('Enter your requested location'), [serviceTypeOption])
 
-    const mobileServiceSelected = useMemo(() => serviceTypeOption?.type === EServiceType.MobileService
-        && appointmentByKey?.serviceTypeOption
-        && appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
-    const mobileServiceChanged = useMemo(() => serviceTypeOption?.type !== EServiceType.MobileService
-        && appointmentByKey?.serviceTypeOption?.type === EServiceType.MobileService, [serviceTypeOption, appointmentByKey]);
-    const managedToPickUp = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
-        && appointmentByKey?.serviceTypeOption
-        && appointmentByKey?.serviceTypeOption?.type !== EServiceType.PickUpDropOff, [serviceTypeOption, appointmentByKey]);
-    const changedToPickUpFromSlots = useMemo(() => serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff,
-        [serviceOptionChangedFromSlotPage, serviceTypeOption]);
-
     useEffect(() => {
-         if (!zip && zipCodeValue) {
-             setZip(zipCodeValue)
-         }
+        if (!zip && zipCodeValue) {
+            setZip(zipCodeValue)
+        }
     }, [zipCodeValue])
 
     useEffect(() => {
@@ -122,61 +100,8 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
     }, [customerLoadedData, address, zipCodeValue])
 
     const clearSelectedData = () => {
-        if (!customerLoadedData?.isUpdating) {
-            dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
-            dispatch(clearAppointmentData())
-        }
-    }
-
-    const handleManagingFlow = () => {
-        if ((mobileServiceSelected || mobileServiceChanged) && editingPosition === 'serviceOption') {
-            dispatch(setServiceWarningOpen(true))
-        } else if (managedToPickUp) {
-            dispatch(setSlotsWarningOpen(true))
-        } else {
-            scProfile && dispatch(checkPodChanged(scProfile.id, showError))
-        }
-    }
-
-    const goToSlotsSelection = (prevOption?: IFirstScreenOption|undefined) => {
-        if (prevOption) {
-            const prevConfig = config.find(el => el.serviceType === prevOption.type)
-            const advisorsStepNeeded = prevConfig?.advisorSelection && sideBarSteps[sideBarSteps.length - 1] === "consultantSelection";
-            dispatch(setCurrentFrameScreen( advisorsStepNeeded
-                ? 'consultantSelection'
-                : prevConfig?.appointmentSelection
-                    ? "appointmentTiming"
-                    : 'appointmentSelection'))
-        } else {
-            dispatch(setCurrentFrameScreen(isAdvisorAvailable && !advisor
-                ? 'consultantSelection'
-                : isAppointmentTimingAvailable
-                    ? "appointmentTiming"
-                    : 'appointmentSelection'))
-        }
-    }
-
-    const onNextStep = () => {
-        if (customerLoadedData?.isUpdating) {
-            if ((mobileServiceSelected || mobileServiceChanged) && editingPosition === 'serviceOption') {
-                handleManagingFlow();
-            } else {
-                changedToPickUpFromSlots || (appointmentByKey?.address?.zipCode && zipCodeValue !== appointmentByKey?.address?.zipCode)
-                    ? scProfile && dispatch(checkPodChanged(scProfile.id, showError))
-                    : handleManagingFlow();
-            }
-        } else {
-            changedToPickUpFromSlots
-                ? goToSlotsSelection()
-                : onNext();
-        }
-    }
-
-    const clearAddress = () => {
-        dispatch(setAddress(null));
-        dispatch(setPoliticalState(""))
-        dispatch(setCity(""))
-        dispatch(setZipCode(""));
+        dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location"]));
+        dispatch(clearAppointmentData())
     }
 
     const onGetZipCodesList = (list: string[], postalCode: string) => {
@@ -184,50 +109,39 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
     }
 
     const handleChangeAddress = async (e: any) => {
-        if (!serviceOptionChangedFromSlotPage) clearSelectedData();
+        if (!serviceOptionChangedFromSlotPage && !isManagingFlow) clearSelectedData();
         setFormChecked(false);
         dispatch(setAddress(e ?? null))
         dispatch(setZipCode(''))
         if (e?.value?.place_id && e?.label) {
-           geocodeByPlaceId(e.value.place_id).then(res => {
-               const data = parseGeoCode(res[0].address_components, e.label, e.value?.structured_formatting?.main_text, e.value?.structured_formatting?.secondary_text)
-               if (data.city) dispatch(setCity(data.city))
-               if (data.state) dispatch(setPoliticalState(data.state))
-               if (data.address) dispatch(setStreetName(data.address))
-               if (data.postalCode && scProfile) {
-                   dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: data.postalCode}, onGetZipCodesList))
-               }
+            geocodeByPlaceId(e.value.place_id).then(res => {
+                const data = parseGeoCode(res[0].address_components, e.label, e.value?.structured_formatting?.main_text, e.value?.structured_formatting?.secondary_text)
+                if (data.city) dispatch(setCity(data.city))
+                if (data.state) dispatch(setPoliticalState(data.state))
+                if (data.address) dispatch(setStreetName(data.address))
+                if (data.postalCode && scProfile) {
+                    dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: data.postalCode}, onGetZipCodesList))
+                }
             })
         }
     }
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
-        if (!serviceOptionChangedFromSlotPage) clearSelectedData();
+        if (!serviceOptionChangedFromSlotPage && !isManagingFlow) clearSelectedData();
         setFormChecked(false);
         setZip(option ?? "");
-    }
-
-    const setPrevServiceType = () => {
-        if (mobileServiceSelected || mobileServiceChanged) {
-            selectedVehicle && onUpdateAppointment(selectedVehicle)
-        }
-    }
-
-    const restoreAddress = () => {
-        dispatch(setAddress(appointmentByKey?.address?.fullAddress ?? null))
-        dispatch(setZipCode(appointmentByKey?.address?.zipCode ?? ""))
     }
 
     const setPrevSelectedOption = () => {
         if (prevSelectedOption) {
             dispatch(setServiceTypeOption(prevSelectedOption))
-            goToSlotsSelection(prevSelectedOption)
+            dispatch(goToSlotsSelection(prevSelectedOption))
         }
     }
 
     const onGoToSlotsForVisitCenter = () => {
-        appointmentByKey
+        appointmentByKey && restoreAddress
             ? restoreAddress()
-            : clearAddress()
+            : dispatch(clearAddress())
         setPrevSelectedOption()
     }
 
@@ -237,62 +151,15 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     }
 
-    const onBackFromManage = () => {
-        setPrevServiceType()
-        restoreAddress()
-        if (editingPosition === 'address') {
-           dispatch(setCurrentFrameScreen('manageAppointment'))
-        } else {
-            goToFirstScreen().then()
-        }
-    }
-
-    const handleFirstScreenForCustomer = (shouldSkipServiceTypeSelect: boolean, prevScreen: TView) => {
-        setNeedToShowServiceSelection(!shouldSkipServiceTypeSelect)
-        if (shouldSkipServiceTypeSelect) {
-            if (customerLoadedData && selectedVehicle) {
-                onBack()
-            } else {
-                history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`)
-            }
-        } else {
-            onGoToFirstScreen(prevScreen)
-        }
-    }
-
-    const handleFirstScreenForAdmin = (prevScreen: TView) => {
-        dispatch(setShowServiceCentersList(false));
-        onGoToFirstScreen(prevScreen)
-    }
-
-    const handlePrevScreen = () => {
-        const onlyVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter
-        const shouldSkipServiceTypeSelect = !firstScreenOptions?.length || onlyVisitCenterExists;
-        const prevScreen = shouldSkipServiceTypeSelect ? "select" : "serviceSelect";
-        if (currentUser) {
-            handleFirstScreenForAdmin(prevScreen)
-        } else {
-            handleFirstScreenForCustomer(shouldSkipServiceTypeSelect, prevScreen)
-        }
-    }
-
     const handleBack = () => {
-        if (serviceOptionChangedFromSlotPage) {
-            setPrevSelectedOption()
-        } else {
-            if (customerLoadedData?.isUpdating && appointmentByKey) {
-                onBackFromManage()
-            } else {
-                clearAddress();
-                clearSelectedData();
-                handlePrevScreen();
-            }
-        }
+        serviceOptionChangedFromSlotPage
+            ? setPrevSelectedOption()
+            : onBack();
     }
 
     const onSuccess = (data: TAncillaryPriceByZip) => {
         if (data.feeAmount === 0 && data.feeType === EAncillaryType.Amount) {
-            onNextStep();
+            onNext();
         } else {
             onOpen();
         }
@@ -387,8 +254,8 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
                         label: t('Your ZIP'),
                         placeholder: isFormChecked && !zip
                             ? t("zip code required")
-                                : serviceTypeOption?.type === EServiceType.PickUpDropOff
-                                 ? t("Enter pick up zip code")
+                            : serviceTypeOption?.type === EServiceType.PickUpDropOff
+                                ? t("Enter pick up zip code")
                                 : t("Enter your requested zip code"),
                         error: isFormChecked && !zip,
                         required: true,
@@ -400,7 +267,7 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
             </SelectWrapper>
             <ActionButtons onBack={handleBack} onNext={handleNext} nextLabel={t("Next")} loading={ancillaryPriceLoading}/>
             <AncillaryPriceModal
-                onNext={onNextStep}
+                onNext={onNext}
                 open={isOpen}
                 onClose={onClose}
                 onBackToSelectSlotsForVisitCenter={onGoToSlotsForVisitCenter}

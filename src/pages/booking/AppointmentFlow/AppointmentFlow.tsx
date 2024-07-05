@@ -50,7 +50,6 @@ import {
 import {EServiceCategoryPage, IAppointmentByKey, ILoadedVehicle, IServiceCategory} from "../../../api/types";
 import './AppointmentFlow.css';
 import ReactGA from "react-ga4";
-import YourLocation from "../../../features/booking/AppointmentFlow/YourLocation/YourLocation";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import PaymentScreen from "../../../features/booking/AppointmentFlow/PaymentScreen/PaymentScreen";
 import {useTranslation} from "react-i18next";
@@ -85,6 +84,7 @@ import AppointmentTimingCreate
     from "../../../features/booking/AppointmentFlow/AppointmentTiming/AppointmentTimingCreate";
 import AppointmentSlotsCreate from "../../../features/booking/AppointmentFlow/AppointmentSlots/AppointmentSlotsCreate";
 import TransportationsCreate from "../../../features/booking/AppointmentFlow/TransportationNeeds/TransportationsCreate";
+import YourLocationCreate from "../../../features/booking/AppointmentFlow/YourLocation/YourLocationCreate";
 
 export const AppointmentFlow = () => {
     const {
@@ -385,8 +385,7 @@ export const AppointmentFlow = () => {
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
             appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment}/>,
-            location: <YourLocation
-                onUpdateAppointment={onUpdateAppointment}
+            location: <YourLocationCreate
                 onBack={handleChangeScreen('carSelection')}
                 onNext={handleChangeScreen('serviceNeeds')}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
