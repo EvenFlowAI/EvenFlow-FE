@@ -41,7 +41,7 @@ import {
     IMaintenanceItem,
     IRecallByVin,
     PaginatedAPIResponse, TArgCallback,
-    TCallback,
+    TCallback, TManageScreen,
     TParsableDate,
     TScreen,
     TView
@@ -98,7 +98,7 @@ export const setLoadingPackages = createAction<boolean>("fAppointment/loadingPac
 export const setPackages = createAction<IPackage[]>('fAppointment/setPackages');
 export const setConsultants = createAction<IServiceConsultant[]>('fAppointment/setConsultants');
 export const setConsultantsLoading = createAction<boolean>('fAppointment/setConsultantsLoading');
-export const setCurrentFrameScreen = createAction<TScreen>('fAppointment/setCurrentScreen');
+export const setCurrentFrameScreen = createAction<TScreen|TManageScreen>('fAppointment/setCurrentScreen');
 export const getMakes = createAction<IMake[]>('fAppointment/GetMakes');
 export const getModels = createAction<string[]>('fAppointment/GetModels');
 export const setTrackerCreated = createAction<TTrackerState>('fAppointment/SetTrackerCreated');

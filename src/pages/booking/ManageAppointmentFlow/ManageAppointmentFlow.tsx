@@ -60,7 +60,6 @@ import {setTransportationAvailable} from "../../../store/reducers/bookingFlowCon
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {getCurrentUser} from "../../../store/reducers/users/actions";
 import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetails/actions";
-import {ManageAppointment} from "../../../features/booking/AppointmentFlow/Manage/ManageAppointment/ManageAppointment";
 import AskChangesCompleted from "../../../components/modals/booking/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../../components/modals/booking/SlotImpactedWarning/SlotImpactedWarning";
 import ServiceImpactedWarning from "../../../components/modals/booking/ServiceImpactedWarning/ServiceImpactedWarning";
@@ -77,16 +76,20 @@ import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../routes/constants";
 import {loadGeneralSettings} from "../../../store/reducers/generalSettings/actions";
 import {ESettingType} from "../../../store/reducers/generalSettings/types";
-import {ServiceNeedsCreate} from "../../../features/booking/AppointmentFlow/Create/ServiceNeedsCreate/ServiceNeedsCreate";
-import MaintenanceCreate from "../../../features/booking/AppointmentFlow/Create/MaintenanceCreate/MaintenanceCreate";
-import ConsultantsCreate from "../../../features/booking/AppointmentFlow/Create/ConsultantsCreate/ConsultantsCreate";
-import AppointmentTimingCreate
-    from "../../../features/booking/AppointmentFlow/Create/AppointmentTimingCreate/AppointmentTimingCreate";
-import AppointmentSlotsCreate from "../../../features/booking/AppointmentFlow/Create/AppointmentSlotsCreate/AppointmentSlotsCreate";
-import TransportationsCreate from "../../../features/booking/AppointmentFlow/Create/TransportationsCreate/TransportationsCreate";
-import YourLocationCreate from "../../../features/booking/AppointmentFlow/Create/YourLocationCreate/YourLocationCreate";
+import YourLocationManage from "../../../features/booking/AppointmentFlow/Manage/YourLocationManage/YourLocationManage";
+import TransportationsManage
+    from "../../../features/booking/AppointmentFlow/Manage/TransportationsManage/TransportationsManage";
+import AppointmentSlotsManage
+    from "../../../features/booking/AppointmentFlow/Manage/AppointmentSlotsManage/AppointmentSlotsManage";
+import AppointmentTimingManage
+    from "../../../features/booking/AppointmentFlow/Manage/AppointmentTimingManage/AppointmentTimingManage";
+import ConsultantsManage from "../../../features/booking/AppointmentFlow/Manage/ConsultantsManage/ConsultantsManage";
+import MaintenanceManage from "../../../features/booking/AppointmentFlow/Manage/MaintenanceManage/MaintenanceManage";
+import {
+    ServiceNeedsManage
+} from "../../../features/booking/AppointmentFlow/Manage/ServiceNeedsManage/ServiceNeedsManage";
 
-export const AppointmentFlow = () => {
+export const ManageAppointmentFlow = () => {
     const {
         selectedVehicle,
         trackerData,
@@ -330,7 +333,7 @@ export const AppointmentFlow = () => {
     }, []);
 
     const component = useMemo(() => {
-        const carSelections: {[k in TScreen]: JSX.Element} = {
+        const carSelections: {[k in TScreen]?: JSX.Element} = {
             carSelection: <Cars
                 onBack={handleLogin}
                 loading={loadingCar}
@@ -338,14 +341,12 @@ export const AppointmentFlow = () => {
                 needToShowServiceSelection={needToShowServiceTypes}
                 handleSetScreen={handleSetScreen}
                 onSelectAppointment={onSelectAppointment}/>,
-            serviceNeeds: <ServiceNeedsCreate
+            serviceNeeds: <ServiceNeedsManage
                 page={serviceCategoryPage}
                 setPage={setServiceCategoryPage}
                 setLastSelectedCategory={setLastSelectedCategory}
-                setNeedToShowServiceSelection={setNeedToShowServiceTypes}
-                onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
-            maintenanceDetails: <MaintenanceCreate
+            maintenanceDetails: <MaintenanceManage
                 serviceCategoryPage={serviceCategoryPage}
                 onBack={handleSetScreen}
                 onNext={handleSetScreen}
@@ -367,13 +368,12 @@ export const AppointmentFlow = () => {
                 page={serviceCategoryPage}
                 isManagingFlow={false}
             />,
-            consultantSelection: <ConsultantsCreate
-                onBack={handleChangeScreen('serviceNeeds')}
+            consultantSelection: <ConsultantsManage
                 onNext={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
             />,
-            appointmentTiming: <AppointmentTimingCreate handleSetScreen={handleSetScreen}/>,
-            appointmentSelection: <AppointmentSlotsCreate handleSetScreen={handleSetScreen}/>,
-            transportationNeeds: <TransportationsCreate
+            appointmentTiming: <AppointmentTimingManage handleSetScreen={handleSetScreen}/>,
+            appointmentSelection: <AppointmentSlotsManage handleSetScreen={handleSetScreen}/>,
+            transportationNeeds: <TransportationsManage
                 onBack={handleChangeScreen('appointmentSelection')}
                 onNext={handleChangeScreen('appointmentConfirmation')}
             />,
@@ -385,9 +385,8 @@ export const AppointmentFlow = () => {
                 onNext={handleChangeScreen('appointmentConfirmed')}
             />,
             appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment}/>,
-            location: <YourLocationCreate
-                onBack={handleChangeScreen('carSelection')}
-                onNext={handleChangeScreen('serviceNeeds')}
+            location: <YourLocationManage
+                onUpdateAppointment={onUpdateAppointment}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
                 onGoToFirstScreen={onGoToFirstScreen}
             />,
@@ -398,9 +397,6 @@ export const AppointmentFlow = () => {
                 lastCategory={lastSelectedCategory}
                 onChangeVehicle={handleChangeScreen('maintenanceDetails')}
             />,
-            manageAppointment: <ManageAppointment
-                onUpdateAppointment={onUpdateAppointment}
-                onChangeSlot={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}/>,
         }
         return carSelections[currentScreen];
 
