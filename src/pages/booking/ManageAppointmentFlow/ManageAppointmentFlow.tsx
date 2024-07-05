@@ -134,9 +134,6 @@ export const ManageAppointmentFlow = () => {
 
     const isAuth = useMemo(() => currentUser?.dealershipId === scProfile?.dealershipId, [currentUser, scProfile]);
 
-    const isManagingAppointment = useMemo(() => customerLoadedData?.isUpdating && !isUsualFlowNeeded,
-        [customerLoadedData, isUsualFlowNeeded]);
-
     const onGoToFirstScreen = useCallback((screen: TView) => {
         dispatch(setWelcomeScreenView(screen))
         if (id) {
@@ -352,7 +349,7 @@ export const ManageAppointmentFlow = () => {
                 onNext={handleSetScreen}
             />,
             packageSelection: <MaintenancePackages
-                isManagingFlow={false}
+                isManagingFlow={!isUsualFlowNeeded}
                 onBack={handleChangeScreen('maintenanceDetails')}
                 onNext={handleSetScreen}
                 onAddServices={handleChangeScreen('serviceNeeds')}
@@ -360,13 +357,13 @@ export const ManageAppointmentFlow = () => {
             describeMore: <AppointmentComment
                 handleSetScreen={handleSetScreen}
                 onAddServices={handleChangeScreen('serviceNeeds')}
-                isManagingFlow={false}
+                isManagingFlow={!isUsualFlowNeeded}
             />,
             opsCode: <SelectOpsCode
                 onAddServices={handleChangeScreen('serviceNeeds')}
                 handleSetScreen={handleSetScreen}
                 page={serviceCategoryPage}
-                isManagingFlow={false}
+                isManagingFlow={!isUsualFlowNeeded}
             />,
             consultantSelection: <ConsultantsManage
                 onNext={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
