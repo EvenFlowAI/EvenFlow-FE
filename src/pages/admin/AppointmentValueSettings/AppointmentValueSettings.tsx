@@ -21,7 +21,7 @@ export const AppointmentValueSettings = () => {
     }
     const { classes  } = useStyles();
     return <TabContext value={selectedTab}>
-        <TitleContainer title="Appointment Value Settings" pad parent={capacityManagementRoot} />
+        <TitleContainer title="AppointmentFlow Value Settings" pad parent={capacityManagementRoot} />
         <TabList
             onChange={handleTabChange}
             indicatorColor="primary"

@@ -448,7 +448,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                                 </Button>
                                             </IconsBlock>
                                             : <IconsBlock>
-                                                <HtmlTooltip title="Create Appointment">
+                                                <HtmlTooltip title="Create AppointmentFlow">
                                                     <IconButton
                                                         style={{padding: 4}}
                                                         onClick={() => onCreateNewForCar(customer)}
@@ -457,7 +457,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                                     </IconButton>
                                                 </HtmlTooltip>
                                                 {customer.appointmentHashKey?.length
-                                                    ? <HtmlTooltip title="Edit Appointment">
+                                                    ? <HtmlTooltip title="Edit AppointmentFlow">
                                                         <IconButton
                                                             style={{padding: 4}}
                                                             onClick={() => onUpdateAppForCar(customer)}
@@ -468,7 +468,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                                     : <IconButton style={{padding: 4}} disabled size="large"><EditDisabled/></IconButton>
                                                 }
                                                 {customer.appointmentHashKey?.length
-                                                    ? <HtmlTooltip title="Cancel Appointment">
+                                                    ? <HtmlTooltip title="Cancel AppointmentFlow">
                                                         <IconButton
                                                             style={{padding: 4}}
                                                             onClick={() => onCancelAppointment(customer)}

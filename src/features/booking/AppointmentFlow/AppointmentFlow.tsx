@@ -2,11 +2,12 @@ import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo} from '
 import {StyledEngineProvider, ThemeProvider, useMediaQuery, useTheme} from "@mui/material";
 import {frameTheme} from "../../../theme/theme";
 import {Container, SidebarWrapper} from "./styles";
-import {ServiceCenterSwitcher} from "../../../features/booking/ServiceCenterSwitcher/ServiceCenterSwitcher";
-import {SideBar} from "../../../features/booking/SideBar/SideBar";
+import './AppointmentFlow.css';
+import {ServiceCenterSwitcher} from "../ServiceCenterSwitcher/ServiceCenterSwitcher";
+import {SideBar} from "../SideBar/SideBar";
 import {AppointmentScreenTitle} from "../../../components/wrappers/AppointmentScreenTitle/AppointmentScreenTitle";
 import {Subtitle} from "../../../components/wrappers/AppointmentScreenSubtitle/AppointmentScreenSubtitle";
-import SideBarSection from "../../../features/booking/SideBarSection/SideBarSection";
+import SideBarSection from "../SideBarSection/SideBarSection";
 import AskChangesCompleted from "../../../components/modals/booking/AskChangesCompleted/AskChangesCompleted";
 import SlotImpactedWarning from "../../../components/modals/booking/SlotImpactedWarning/SlotImpactedWarning";
 import ServiceImpactedWarning from "../../../components/modals/booking/ServiceImpactedWarning/ServiceImpactedWarning";
@@ -44,7 +45,7 @@ type TProps = {
     setNeedToShowServiceTypes: Dispatch<SetStateAction<boolean>>
 }
 
-const Appointment: React.FC<TProps> = ({
+const AppointmentFlow: React.FC<TProps> = ({
                                            currentScreen,
                                            component,
                                            handleSetScreen,
@@ -228,4 +229,4 @@ const Appointment: React.FC<TProps> = ({
     );
 };
 
-export default Appointment;
+export default AppointmentFlow;

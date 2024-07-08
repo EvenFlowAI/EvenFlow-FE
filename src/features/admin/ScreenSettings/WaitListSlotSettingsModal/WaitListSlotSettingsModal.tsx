@@ -131,7 +131,7 @@ const WaitListSlotSettingsModal: React.FC<React.PropsWithChildren<React.PropsWit
                     <TextField
                         fullWidth
                         disabled={isWaitListLoading}
-                        label='Appointment Slot Text'
+                        label='AppointmentFlow Slot Text'
                         placeholder='Waitlist Only'
                         error={formIsChecked && !slotText}
                         onChange={onSlotTextChange}
@@ -144,7 +144,7 @@ const WaitListSlotSettingsModal: React.FC<React.PropsWithChildren<React.PropsWit
                         value={slotTextHex}
                         inputProps={{maxLength: 6}}
                         startAdornment="#"
-                        label="Appointment Slot Text Color"
+                        label="AppointmentFlow Slot Text Color"
                         placeholder="Enter font color 6 symbols (HEX)"
                         onChange={onSlotTextColorChange}
                     />
@@ -156,7 +156,7 @@ const WaitListSlotSettingsModal: React.FC<React.PropsWithChildren<React.PropsWit
                         value={slotTextBoxHex}
                         inputProps={{maxLength: 6}}
                         startAdornment="#"
-                        label="Appointment Slot Background Color"
+                        label="AppointmentFlow Slot Background Color"
                         placeholder="Enter background color 6 symbols (HEX)"
                         onChange={onSlotBoxColorChange}
                     />
