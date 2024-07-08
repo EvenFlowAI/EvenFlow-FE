@@ -14,9 +14,10 @@ import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 type TProps = {
     screen: TScreen;
     handleSetScreen: (screen: TScreen) => void;
+    isManaging: boolean;
 }
 
-const SideBarSection: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({screen, handleSetScreen}) => {
+const SideBarSection: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({screen, handleSetScreen, isManaging}) => {
     const {scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment)
     const {selectedVehicle} = useSelector((state: RootState) => state.appointmentFrame)
     const {onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory} = useModal();
@@ -28,7 +29,7 @@ const SideBarSection: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
 
     return currentUser && currentUser.dealershipId === scProfile?.dealershipId
         ? <SectionWrapper>
-            <SideBar screen={screen} handleSetScreen={handleSetScreen}/>
+            <SideBar screen={screen} handleSetScreen={handleSetScreen} isManagingFlow={isManaging}/>
             <CustomerInfo/>
             <RoHistoryLink
                 onClick={onOpenHistory}
@@ -45,7 +46,7 @@ const SideBarSection: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     vehicleId={selectedVehicle.id}/>
                 : null}
         </SectionWrapper>
-        : <SideBar screen={screen} handleSetScreen={handleSetScreen}/>
+        : <SideBar screen={screen} handleSetScreen={handleSetScreen} isManagingFlow={isManaging}/>
 };
 
 export default SideBarSection;

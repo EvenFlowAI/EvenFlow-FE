@@ -42,7 +42,8 @@ type TProps = {
     component: JSX.Element|undefined;
     handleSetScreen: (screen: TScreen) => void;
     handleLogin: TCallback;
-    setNeedToShowServiceTypes: Dispatch<SetStateAction<boolean>>
+    setNeedToShowServiceTypes: Dispatch<SetStateAction<boolean>>;
+    isManaging?: boolean;
 }
 
 const AppointmentFlow: React.FC<TProps> = ({
@@ -52,6 +53,7 @@ const AppointmentFlow: React.FC<TProps> = ({
                                            setCurrentScreen,
                                            handleLogin,
                                            setNeedToShowServiceTypes,
+                                               isManaging
                                        }) => {
     const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
@@ -129,7 +131,9 @@ const AppointmentFlow: React.FC<TProps> = ({
             } else {
                 if (!valueService) {
                     handleLogin()
-                    const nextScreen = serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter ? "location" : "serviceNeeds"
+                    const nextScreen = serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter
+                        ? "location"
+                        : "serviceNeeds"
                     dispatch(setCurrentFrameScreen(nextScreen))
                 }
             }
@@ -203,7 +207,7 @@ const AppointmentFlow: React.FC<TProps> = ({
                 <Container>
                     <ServiceCenterSwitcher/>
                     {isSm && !['carSelection', 'appointmentConfirmed', 'packageSelection'].includes(currentScreen)
-                        ? <SideBar screen={currentScreen} handleSetScreen={handleSetScreen}/> : null}
+                        ? <SideBar screen={currentScreen} handleSetScreen={handleSetScreen} isManagingFlow={isManaging}/> : null}
                     {!['carSelection', 'appointmentConfirmed'].includes(currentScreen)
                         ? <AppointmentScreenTitle>{getTitle()}</AppointmentScreenTitle> : null}
                     {isXs && currentScreen === 'packageSelection'
@@ -216,7 +220,7 @@ const AppointmentFlow: React.FC<TProps> = ({
                     {['carSelection', 'packageSelection', 'appointmentConfirmed'].includes(currentScreen)
                         ? component
                         : !isSm ? <SidebarWrapper>
-                            <SideBarSection screen={currentScreen} handleSetScreen={handleSetScreen}/>
+                            <SideBarSection screen={currentScreen} handleSetScreen={handleSetScreen} isManaging={Boolean(isManaging)}/>
                             {component}
                         </SidebarWrapper> : component
                     }

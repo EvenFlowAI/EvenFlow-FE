@@ -1,25 +1,25 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {Route, Switch, useHistory, useParams} from "react-router-dom";
-import {Routes} from "../constants";
-import {CreateAppointmentFlow} from "../../pages/booking/CreateAppointmentFlow/CreateAppointmentFlow";
-import {ManageAppointmentFlow} from "../../pages/booking/ManageAppointmentFlow/ManageAppointmentFlow";
-import {EServiceCategoryPage, IAppointmentByKey, ILoadedVehicle} from "../../api/types";
-import {clearCustomerCache, setCustomerLoadedData} from "../../store/reducers/appointment/actions";
+import {Routes} from "../../../routes/constants";
+import {CreateAppointmentFlow} from "../CreateAppointmentFlow/CreateAppointmentFlow";
+import {ManageAppointmentFlow} from "../ManageAppointmentFlow/ManageAppointmentFlow";
+import {EServiceCategoryPage, IAppointmentByKey, ILoadedVehicle} from "../../../api/types";
+import {clearCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {
     handleAppointmentUpdate,
     setCurrentFrameScreen, setServiceTypeOption, setWelcomeScreenView, updatePackageOption,
     updateRecalls
-} from "../../store/reducers/appointmentFrameReducer/actions";
-import {TMobileScreen, TScreen, TView} from "../../types/types";
-import {encodeSCID} from "../../utils/utils";
-import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
-import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig/actions";
+} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {TMobileScreen, TScreen, TView} from "../../../types/types";
+import {encodeSCID} from "../../../utils/utils";
+import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
+import {setTransportationAvailable} from "../../../store/reducers/bookingFlowConfig/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../store/rootReducer";
-import {useException} from "../../hooks/useException/useException";
-import {useCurrentUser} from "../../hooks/useCurrentUser/useCurrentUser";
+import {RootState} from "../../../store/rootReducer";
+import {useException} from "../../../hooks/useException/useException";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
-const AppointmentRoutes = () => {
+const AppointmentFlow = () => {
     const {
         selectedVehicle,
         makes,
@@ -101,7 +101,8 @@ const AppointmentRoutes = () => {
     const onSelectAppointment = async (car: ILoadedVehicle) => {
         customerLoadedData && dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
         await onUpdateAppointment(car)
-        dispatch(setCurrentFrameScreen("manageAppointment"))
+        dispatch(setCurrentFrameScreen("manageAppointment"));
+        history.push( "/f/appointment-manage/" + id);
     }
 
     return (
@@ -138,4 +139,4 @@ const AppointmentRoutes = () => {
     );
 };
 
-export default AppointmentRoutes;
+export default AppointmentFlow;

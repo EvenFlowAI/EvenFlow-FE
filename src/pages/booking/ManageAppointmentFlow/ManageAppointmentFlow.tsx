@@ -151,6 +151,7 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
             component={component}
             setNeedToShowServiceTypes={setNeedToShowServiceTypes}
             handleSetScreen={handleSetScreen}
+            isManaging
             setCurrentScreen={setCurrentScreen}/>
     );
 };

@@ -94,6 +94,10 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
         return nextScreen;
     }, [serviceType, valueService, isAdvisorAvailable, consultants])
 
+    const redirectToManageFlow = () => history.push( "/f/appointment-manage/" + id);
+    const redirectToCreateFlow = () => history.push( "/f/appointment/" + id);
+    const redirectToWelcomeScreens = () =>  history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+
     useEffect(() => {
         if (shouldHideScreen) {
             if (needToShowServiceSelection) {
@@ -101,8 +105,8 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
                 handleServiceTypeSelection()
             } else {
                 if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
-                    // todo redirect to manage url
                     handleSetScreen("manageAppointment")
+                    redirectToManageFlow();
                 } else handleSetScreen(getNextScreen());
             }
         }
@@ -140,7 +144,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
         if (needToShowServiceSelection) {
             setNeedToShowServiceSelection(false);
             dispatch(setWelcomeScreenView('serviceSelect'))
-            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+            redirectToWelcomeScreens();
         }
     }, [history, needToShowServiceSelection])
 
@@ -152,12 +156,13 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
         } else {
             handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
         }
+        redirectToCreateFlow();
     }, [dispatch, handleSetScreen, needToShowServiceSelection, serviceType, handleServiceTypeSelection, clearAllData]);
 
     const handleFirstScreen = useCallback(() => {
         setNeedToShowServiceSelection(false);
         dispatch(setWelcomeScreenView('serviceSelect'))
-        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        redirectToWelcomeScreens();
     }, [history, id])
 
     const handleAddNewVehicle = useCallback(() => {
@@ -173,6 +178,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
         } else {
             handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
         }
+        redirectToCreateFlow();
     }, [dispatch, handleSetScreen, firstScreenOptions, handleFirstScreen]);
 
     const clearPrevAppointmentData = useCallback(() => {
@@ -190,6 +196,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
             if (needToShowServiceSelection) {
                 handleServiceTypeSelection()
             } else {
+                redirectToCreateFlow()
                 handleSetScreen(getNextScreen());
             }
         }

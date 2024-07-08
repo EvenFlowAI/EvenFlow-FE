@@ -16,7 +16,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Routes} from "../constants";
 import {useAnalyticsForParentSite} from "../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {RootState} from "../../store/rootReducer";
-import AppointmentRoutes from "../AppointmentRoutes/AppointmentRoutes";
+import AppointmentFlow from "../../pages/booking/AppointmentFlow/AppointmentFlow";
 
 type TProps = {
     valueServicePreviousScreen: TScreen;
@@ -39,8 +39,8 @@ const AppRoutes: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps
 
     return (
         <Switch>
-            <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentRoutes} />
-            <Route path={Routes.EndUser.ManageAppointmentFrame} exact component={AppointmentRoutes} />
+            <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentFlow} />
+            <Route path={Routes.EndUser.ManageAppointmentFrame} exact component={AppointmentFlow} />
             <Route path={Routes.EndUser.CancelAppointment} exact component={BookingFlow} />
             <Route path={Routes.EndUser.CancelAppointmentFromEmail} exact component={BookingFlow} />
             <Route path={Routes.EndUser.EditAppointment} exact component={BookingFlow} />

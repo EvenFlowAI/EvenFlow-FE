@@ -35,6 +35,7 @@ import TransportationsCreate
 import YourLocationCreate from "../../../features/booking/AppointmentFlow/Create/YourLocationCreate/YourLocationCreate";
 import AppointmentFlow from "../../../features/booking/AppointmentFlow/AppointmentFlow";
 import {TFlowProps} from "../types";
+import {useHistory, useParams} from "react-router-dom";
 
 export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
                                                           onUpdateAppointment,
@@ -52,10 +53,17 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
 }) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
-
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory|null>(null);
 
+    const {id} = useParams<{id: string}>();
+    const history = useHistory();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
+
+    const onBackFromServiceNeeds = () => {
+        if (customerLoadedData?.isUpdating) history.push( "/f/appointment-manage/" + id);
+        handleSetScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')
+    }
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]?: JSX.Element} = {
@@ -71,7 +79,7 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
                 setPage={setServiceCategoryPage}
                 setLastSelectedCategory={setLastSelectedCategory}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
-                onBack={() => handleSetScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
+                onBack={onBackFromServiceNeeds}
                 onSelect={handleSetScreen} />,
             maintenanceDetails: <MaintenanceCreate
                 serviceCategoryPage={serviceCategoryPage}
