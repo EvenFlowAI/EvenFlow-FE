@@ -26,6 +26,7 @@ type TValueServiceProps = {
 const ValueService: React.FC<React.PropsWithChildren<React.PropsWithChildren<TValueServiceProps>>> = ({onBack, nextScreen}) => {
     const [screen, setScreen] = useState<TValueServiceScreen>("vehicleDetails");
     const { serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams<{id: string}>();
@@ -40,14 +41,24 @@ const ValueService: React.FC<React.PropsWithChildren<React.PropsWithChildren<TVa
         dispatch(loadSCProfile(decodeSCID(id)));
     }, [id])
 
+    const redirect = () => {
+        if (id) {
+            if (customerLoadedData?.isUpdating) {
+                history.push( "/f/appointment-manage/" + id);
+            } else {
+                history.push( "/f/appointment/" + id);
+            }
+        }
+    }
+
     const onNext = async () => {
         await dispatch(setVehicleDataFromValueService())
         await dispatch(setCurrentFrameScreen(nextScreen));
-        history.push( "/f/appointment/" + id);
+        redirect()
     };
 
     const onBackClick = () => {
-        if (id) history.push( "/f/appointment/" + id);
+        redirect();
         onBack();
     }
 

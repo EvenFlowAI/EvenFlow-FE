@@ -185,7 +185,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
             dispatch(setUserType(EUserType.Existing));
             const id = encodeSCID(scProfile.id)
             setCustomerData(item, true).then(() => {
-                history.push(`/f/appointment/${id}`)
+                history.push(`/f/appointment-manage/${id}`)
                 onClose()
             })
         }

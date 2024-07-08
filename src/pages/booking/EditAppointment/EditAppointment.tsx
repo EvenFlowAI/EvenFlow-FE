@@ -3,7 +3,7 @@ import {WelcomeLayout} from "../../../features/booking/WelcomeLayout/WelcomeLayo
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import {API} from "../../../api/api";
-import {Button, styled} from "@mui/material";
+import {Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {
     clearStorage,
@@ -26,16 +26,13 @@ import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions"
 import {useTranslation} from "react-i18next";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {dateTimeFormat} from "../../../features/admin/Appointments/ViewAppointmentsModal/AppointmentDetails/AppointmentDetails";
+import {
+    dateTimeFormat
+} from "../../../features/admin/Appointments/ViewAppointmentsModal/AppointmentDetails/AppointmentDetails";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {Routes} from "../../../routes/constants";
 import dayjs from "dayjs";
-
-const ContentContainer = styled("div")({
-    fontSize: 22,
-    textAlign: "center",
-    fontWeight: "bold"
-});
+import {ContentContainer} from "./styles";
 
 type TState = "loading" | "error" | "canceled" | "passed";
 
@@ -45,7 +42,7 @@ type TLParams = {
 
 export const EditAppointment = () => {
     const [state, setState] = useState<TState>("loading");
-    const selectedSC: number|undefined = useSelector((state: RootState) => {
+    const selectedScId: number|undefined = useSelector((state: RootState) => {
         return state.appointment.scProfile?.id
     });
     const { allCategories } = useSelector((state: RootState) => state.categories);
@@ -67,10 +64,10 @@ export const EditAppointment = () => {
     }
 
     useEffect(() => {
-        if (selectedSC) {
-            dispatch(loadCategoriesByQuery(selectedSC))
+        if (selectedScId) {
+            dispatch(loadCategoriesByQuery(selectedScId))
         }
-    }, [selectedSC])
+    }, [selectedScId])
 
     useEffect(() => {
         const requestFunc = isFromAdmin || !id.includes('by-key')
@@ -112,7 +109,7 @@ export const EditAppointment = () => {
                     setState("passed");
                     return;
                 }
-                history.replace(`${Routes.EndUser.AppointmentFrameBase}/${encodeSCID(data.serviceCenterId)}`);
+                if (selectedScId) history.push(Routes.EndUser.ManageAppointmentFrame.replace(":id", encodeSCID(selectedScId)))
             })
             .catch((e) => {
                 setState("error");
@@ -120,9 +117,9 @@ export const EditAppointment = () => {
     }, [id, dispatch, history, allCategories]);
 
     const handleCreateNew = () => {
-        if (selectedSC) {
+        if (selectedScId) {
             clearStorage();
-            history.replace(`${Routes.EndUser.Welcome}/${encodeSCID(selectedSC)}?frame=1`);
+            history.replace(`${Routes.EndUser.Welcome}/${encodeSCID(selectedScId)}?frame=1`);
         }
     }
 

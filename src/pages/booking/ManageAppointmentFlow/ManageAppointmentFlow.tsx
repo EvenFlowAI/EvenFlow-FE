@@ -50,6 +50,7 @@ import {
     ServiceNeedsManage
 } from "../../../features/booking/AppointmentFlow/Manage/ServiceNeedsManage/ServiceNeedsManage";
 import Appointment from "../Appointment/Appointment";
+import {ManageAppointment} from "../../../features/booking/AppointmentFlow/Manage/ManageAppointment/ManageAppointment";
 
 export const ManageAppointmentFlow = () => {
     const {
@@ -215,6 +216,9 @@ export const ManageAppointmentFlow = () => {
                 lastCategory={lastSelectedCategory}
                 onChangeVehicle={handleChangeScreen('maintenanceDetails')}
             />,
+            manageAppointment: <ManageAppointment
+                onUpdateAppointment={onUpdateAppointment}
+                onChangeSlot={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}/>,
         }
         return carSelections[currentScreen];
 

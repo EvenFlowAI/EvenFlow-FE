@@ -133,8 +133,8 @@ export const AppointmentFlow = () => {
     const onSelectAppointment = async (car: ILoadedVehicle) => {
         customerLoadedData && dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: true}))
         await onUpdateAppointment(car)
-        // todo redirect to manage url
         dispatch(setCurrentFrameScreen("manageAppointment"))
+        history.push( "/f/appointment-manage/" + id);
     }
 
     const handleChangeScreen = useCallback((name: TScreen) => () => {

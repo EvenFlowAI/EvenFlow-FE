@@ -11,6 +11,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {TArgCallback} from "../../../../../../types/types";
 import {ILoadedVehicle} from "../../../../../../api/types";
 import {RootState} from "../../../../../../store/rootReducer";
+import {useHistory, useParams} from "react-router-dom";
 
 type TProps = {
     onUpdateAppointment: TArgCallback<ILoadedVehicle>;
@@ -21,6 +22,8 @@ const ModifyButton: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPr
     const { customerLoadedData } = useSelector((state: RootState) => state.appointment)
     const dispatch = useDispatch();
     const {t} = useTranslation();
+    const {id} = useParams<{id: string}>();
+    const history = useHistory();
 
     const onModify = async () => {
         if (selectedVehicle) {
@@ -32,6 +35,7 @@ const ModifyButton: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPr
             }
             await onUpdateAppointment(selectedVehicle)
             await dispatch(setCurrentFrameScreen("manageAppointment"))
+            history.push( "/f/appointment-manage/" + id);
         }
     }
 
