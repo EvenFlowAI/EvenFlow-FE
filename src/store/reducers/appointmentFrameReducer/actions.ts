@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    EMaintenanceOptionType,
+    EMaintenanceOptionType, EServiceCategoryPage,
     EServiceCenterName,
     IAddressData,
     IAppointmentByKey,
@@ -41,7 +41,7 @@ import {
     IMaintenanceItem,
     IRecallByVin,
     PaginatedAPIResponse, TArgCallback,
-    TCallback, TManageScreen,
+    TCallback,
     TParsableDate,
     TScreen,
     TView
@@ -59,7 +59,7 @@ import {
     saveCustomerCache,
     selectAppointment,
     selectServiceValetAppointment,
-    selectSR,
+    selectSR, selectSRMultiple,
     setAppointmentWasChanged,
     setCustomerLoadedData,
     setWaitListSettings
@@ -76,6 +76,8 @@ import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 import {setLoading} from "../slotScoring/actions";
 import {setConsentOpen} from "../modals/actions";
+import {API} from "../../../api/api";
+import {Dispatch, SetStateAction} from "react";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -98,7 +100,7 @@ export const setLoadingPackages = createAction<boolean>("fAppointment/loadingPac
 export const setPackages = createAction<IPackage[]>('fAppointment/setPackages');
 export const setConsultants = createAction<IServiceConsultant[]>('fAppointment/setConsultants');
 export const setConsultantsLoading = createAction<boolean>('fAppointment/setConsultantsLoading');
-export const setCurrentFrameScreen = createAction<TScreen|TManageScreen>('fAppointment/setCurrentScreen');
+export const setCurrentFrameScreen = createAction<TScreen>('fAppointment/setCurrentScreen');
 export const getMakes = createAction<IMake[]>('fAppointment/GetMakes');
 export const getModels = createAction<string[]>('fAppointment/GetModels');
 export const setTrackerCreated = createAction<TTrackerState>('fAppointment/SetTrackerCreated');
@@ -1174,5 +1176,54 @@ export const goToSlotsSelection = (prevOption?: IFirstScreenOption|undefined): A
             : isAppointmentTimingAvailable
                 ? "appointmentTiming"
                 : 'appointmentSelection'))
+    }
+}
+
+export const handleAppointmentUpdate = (
+    car: ILoadedVehicle,
+    setLoadingCar: Dispatch<SetStateAction<boolean>>,
+    setServiceCategoryPage: Dispatch<SetStateAction<EServiceCategoryPage>>,
+    isAuth: boolean,
+    id: string,
+    handleServiceTypeOption: TArgCallback<IAppointmentByKey>,
+    showError: TArgCallback<any>,
+    ): AppThunk => (dispatch, getState) => {
+    const {firstScreenOptions} = getState().serviceTypes;
+    const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
+
+    setLoadingCar(true);
+    dispatch(setAppointmentSaving(true))
+    setServiceCategoryPage(EServiceCategoryPage.Page1)
+    if (key) {
+        API.appointment.getByKey(key)
+            .then(({data}) => {
+                if (data) {
+                    if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
+                    const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
+                    if (data.waitlistTextSettings) {
+                        dispatch(setWaitListSettings({
+                            text: data.waitlistTextSettings.text ?? '',
+                            textHex: data.waitlistTextSettings.textHex ?? ''
+                        }))
+                    }
+                    dispatch(updateRecalls(data, id));
+                    dispatch(setUpdateAppointment(data));
+                    dispatch(setAppointmentByKey(data));
+                    dispatch(updatePackageOption(data.maintenancePackageOption))
+                    dispatch(selectSRMultiple(data.serviceRequests.map(el => el.id)));
+                    handleServiceTypeOption(data)
+                    dispatch(handleSideBarAppointmentUpdate());
+                    dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data))
+                    dispatch(updateConsultant(data.advisor))
+                    dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
+                    dispatch(checkCarIsValid());
+                }
+            }).catch(e => {
+            console.log(e)
+            showError(e);
+        }).finally(() => {
+            setLoadingCar(false);
+            dispatch(setAppointmentSaving(false))
+        })
     }
 }
