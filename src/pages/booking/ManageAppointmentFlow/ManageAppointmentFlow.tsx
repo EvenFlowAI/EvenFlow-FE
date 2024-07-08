@@ -37,7 +37,6 @@ import {ManageAppointment} from "../../../features/booking/AppointmentFlow/Manag
 import {TFlowProps} from "../types";
 
 export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
-                                                                handleChangeScreen,
                                                                 onUpdateAppointment,
                                                                 onSelectAppointment,
                                                                 handleSetScreen,
@@ -91,36 +90,36 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
             />,
             packageSelection: <MaintenancePackages
                 isManagingFlow={!isUsualFlowNeeded}
-                onBack={handleChangeScreen('maintenanceDetails')}
+                onBack={() => handleSetScreen('maintenanceDetails')}
                 onNext={handleSetScreen}
-                onAddServices={handleChangeScreen('serviceNeeds')}
+                onAddServices={() => handleSetScreen('serviceNeeds')}
             />,
             describeMore: <AppointmentComment
                 handleSetScreen={handleSetScreen}
-                onAddServices={handleChangeScreen('serviceNeeds')}
+                onAddServices={() => handleSetScreen('serviceNeeds')}
                 isManagingFlow={!isUsualFlowNeeded}
             />,
             opsCode: <SelectOpsCode
-                onAddServices={handleChangeScreen('serviceNeeds')}
+                onAddServices={() => handleSetScreen('serviceNeeds')}
                 handleSetScreen={handleSetScreen}
                 page={serviceCategoryPage}
                 isManagingFlow={!isUsualFlowNeeded}
             />,
             consultantSelection: <ConsultantsManage
-                onNext={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
+                onNext={() => handleSetScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
             />,
             appointmentTiming: <AppointmentTimingManage handleSetScreen={handleSetScreen}/>,
             appointmentSelection: <AppointmentSlotsManage handleSetScreen={handleSetScreen}/>,
             transportationNeeds: <TransportationsManage
-                onBack={handleChangeScreen('appointmentSelection')}
-                onNext={handleChangeScreen('appointmentConfirmation')}
+                onBack={() => handleSetScreen('appointmentSelection')}
+                onNext={() => handleSetScreen('appointmentConfirmation')}
             />,
             appointmentConfirmation: <AppointmentConfirmation
-                onBack={handleChangeScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption
+                onBack={() => handleSetScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption
                     ? 'transportationNeeds'
                     : 'appointmentSelection')}
-                onChangeSlot={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
-                onNext={handleChangeScreen('appointmentConfirmed')}
+                onChangeSlot={() => handleSetScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
+                onNext={() => handleSetScreen('appointmentConfirmed')}
             />,
             appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment}/>,
             location: <YourLocationManage
@@ -133,15 +132,15 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
                 handleSetScreen={handleSetScreen}
                 category={lastSelectedCategory}
                 lastCategory={lastSelectedCategory}
-                onChangeVehicle={handleChangeScreen('maintenanceDetails')}
+                onChangeVehicle={() => handleSetScreen('maintenanceDetails')}
             />,
             manageAppointment: <ManageAppointment
                 onUpdateAppointment={onUpdateAppointment}
-                onChangeSlot={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}/>,
+                onChangeSlot={() => handleSetScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}/>,
         }
         return carSelections[currentScreen];
 
-    }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,
+    }, [currentScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,
         needToShowServiceTypes, onUpdateAppointment, serviceCategoryPage, isTransportationAvailable,
         isAdvisorAvailable, isAppointmentTimingAvailable]);
 

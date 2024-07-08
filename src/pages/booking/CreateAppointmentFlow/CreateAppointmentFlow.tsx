@@ -37,7 +37,6 @@ import AppointmentFlow from "../../../features/booking/AppointmentFlow/Appointme
 import {TFlowProps} from "../types";
 
 export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
-                                                          handleChangeScreen,
                                                           onUpdateAppointment,
                                                           onSelectAppointment,
                                                           handleSetScreen,
@@ -72,7 +71,7 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
                 setPage={setServiceCategoryPage}
                 setLastSelectedCategory={setLastSelectedCategory}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
-                onBack={handleChangeScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
+                onBack={() => handleSetScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')}
                 onSelect={handleSetScreen} />,
             maintenanceDetails: <MaintenanceCreate
                 serviceCategoryPage={serviceCategoryPage}
@@ -81,42 +80,42 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
             />,
             packageSelection: <MaintenancePackages
                 isManagingFlow={false}
-                onBack={handleChangeScreen('maintenanceDetails')}
+                onBack={() => handleSetScreen('maintenanceDetails')}
                 onNext={handleSetScreen}
-                onAddServices={handleChangeScreen('serviceNeeds')}
+                onAddServices={() => handleSetScreen('serviceNeeds')}
             />,
             describeMore: <AppointmentComment
                 handleSetScreen={handleSetScreen}
-                onAddServices={handleChangeScreen('serviceNeeds')}
+                onAddServices={() => handleSetScreen('serviceNeeds')}
                 isManagingFlow={false}
             />,
             opsCode: <SelectOpsCode
-                onAddServices={handleChangeScreen('serviceNeeds')}
+                onAddServices={() => handleSetScreen('serviceNeeds')}
                 handleSetScreen={handleSetScreen}
                 page={serviceCategoryPage}
                 isManagingFlow={false}
             />,
             consultantSelection: <ConsultantsCreate
-                onBack={handleChangeScreen('serviceNeeds')}
-                onNext={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
+                onBack={() => handleSetScreen('serviceNeeds')}
+                onNext={() => handleSetScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
             />,
             appointmentTiming: <AppointmentTimingCreate handleSetScreen={handleSetScreen}/>,
             appointmentSelection: <AppointmentSlotsCreate handleSetScreen={handleSetScreen}/>,
             transportationNeeds: <TransportationsCreate
-                onBack={handleChangeScreen('appointmentSelection')}
-                onNext={handleChangeScreen('appointmentConfirmation')}
+                onBack={() => handleSetScreen('appointmentSelection')}
+                onNext={() => handleSetScreen('appointmentConfirmation')}
             />,
             appointmentConfirmation: <AppointmentConfirmation
-                onBack={handleChangeScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption
+                onBack={() => handleSetScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption
                     ? 'transportationNeeds'
                     : 'appointmentSelection')}
-                onChangeSlot={handleChangeScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
-                onNext={handleChangeScreen('appointmentConfirmed')}
+                onChangeSlot={() => handleSetScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
+                onNext={() => handleSetScreen('appointmentConfirmed')}
             />,
             appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment}/>,
             location: <YourLocationCreate
-                onBack={handleChangeScreen('carSelection')}
-                onNext={handleChangeScreen('serviceNeeds')}
+                onBack={() => handleSetScreen('carSelection')}
+                onNext={() => handleSetScreen('serviceNeeds')}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}
                 onGoToFirstScreen={onGoToFirstScreen}
             />,
@@ -125,12 +124,12 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
                 handleSetScreen={handleSetScreen}
                 category={lastSelectedCategory}
                 lastCategory={lastSelectedCategory}
-                onChangeVehicle={handleChangeScreen('maintenanceDetails')}
+                onChangeVehicle={() => handleSetScreen('maintenanceDetails')}
             />,
         }
         return carSelections[currentScreen];
 
-    }, [currentScreen, handleChangeScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,
+    }, [currentScreen, handleSetScreen, handleLogin, loadingCar, serviceTypeOption,
         needToShowServiceTypes, onUpdateAppointment, serviceCategoryPage, isTransportationAvailable,
         isAdvisorAvailable, isAppointmentTimingAvailable]);
 

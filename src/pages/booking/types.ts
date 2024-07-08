@@ -3,7 +3,6 @@ import {EServiceCategoryPage, ILoadedVehicle} from "../../api/types";
 import {Dispatch, SetStateAction} from "react";
 
 export type TFlowProps = {
-    handleChangeScreen: (screen: TScreen) => () => void;
     onUpdateAppointment: (car: ILoadedVehicle) => Promise<void>;
     onSelectAppointment: (car: ILoadedVehicle) => Promise<void>;
     handleSetScreen: TArgCallback<TScreen>;

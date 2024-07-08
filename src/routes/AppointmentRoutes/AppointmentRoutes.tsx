@@ -104,15 +104,9 @@ const AppointmentRoutes = () => {
         dispatch(setCurrentFrameScreen("manageAppointment"))
     }
 
-    const handleChangeScreen = useCallback((name: TScreen) => () => {
-        setCurrentScreen(name);
-        dispatch(setCurrentFrameScreen(name));
-    }, []);
-
     return (
         <Switch>
             <Route path={Routes.EndUser.AppointmentFrame} exact render={() => <CreateAppointmentFlow
-                handleChangeScreen={handleChangeScreen}
                 onUpdateAppointment={onUpdateAppointment}
                 onSelectAppointment={onSelectAppointment}
                 handleLogin={handleLogin}
@@ -127,7 +121,6 @@ const AppointmentRoutes = () => {
                 setNeedToShowServiceTypes={setNeedToShowServiceTypes}
             />} />
             <Route path={Routes.EndUser.ManageAppointmentFrame} exact render={() => <ManageAppointmentFlow
-                handleChangeScreen={handleChangeScreen}
                 onUpdateAppointment={onUpdateAppointment}
                 onSelectAppointment={onSelectAppointment}
                 handleLogin={handleLogin}
