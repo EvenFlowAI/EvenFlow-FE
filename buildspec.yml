@@ -13,8 +13,8 @@ phases:
     commands:
       - yarn run buildProduction
 
-  artifacts:
-    files:
-      - build/**/*
-      - deploy-scripts/*
-      - appspec.yml
+artifacts:
+  files:
+    - build/**/*
+    - deploy-scripts/*
+    - appspec.yml
