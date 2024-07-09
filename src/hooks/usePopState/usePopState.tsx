@@ -12,7 +12,6 @@ const usePopState = (onPopState?: TCallback) => {
     const dispatch = useDispatch();
 
     const listenToPopState = () => {
-        debugger
         dispatch(setWelcomeScreenView("select"))
         onPopState && onPopState();
     }
