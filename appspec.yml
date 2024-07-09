@@ -3,4 +3,10 @@ os: linux
 
 files: 
   - source: build
-    destination: /home/ubuntu/app/client
+    destination: /home/ubuntu/evenflow/client
+
+hooks:
+    BeforeInstall:
+      - location: deploy-scripts/before_install.sh
+        timeout: 120
+        runas: root
