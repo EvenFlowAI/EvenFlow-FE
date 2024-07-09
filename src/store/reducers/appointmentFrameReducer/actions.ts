@@ -398,7 +398,7 @@ export const loadServiceOffers = (year: number, seriesId: number, modelId: numbe
 }
 
 export const clearSelectedServices = (keepCategories?: boolean): AppThunk => (dispatch) => {
-    !keepCategories && dispatch(selectCategoriesIds([]));
+    if (!keepCategories) dispatch(selectCategoriesIds([]));
     dispatch(setPackage(null));
     dispatch(setPackageIsSelected(false));
     dispatch(setSelectedPackageOptionType(null));

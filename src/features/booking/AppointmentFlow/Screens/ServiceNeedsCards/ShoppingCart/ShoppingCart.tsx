@@ -109,6 +109,7 @@ const ShoppingCart = () => {
 
     const onRemoveAll = () => {
         dispatch(clearSelectedServices());
+        dispatch(setSideBarSteps([]));
         closeConfirm()
     }
 
