@@ -82,7 +82,7 @@ export const Welcome = () => {
         clearStorage();
     }, []);
 
-    usePopState();
+    usePopState('select');
 
     const redirect = () => {
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;

@@ -169,6 +169,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
 
     const handleBackWhileUpdating = () => {
         dispatch(setCurrentFrameScreen("manageAppointment"))
+        dispatch(setWelcomeScreenView("serviceCenterSelect"))
         dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
         redirect();
     }

@@ -4,15 +4,15 @@ import {decodeSCID} from "../../utils/utils";
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
-import {TCallback} from "../../types/types";
+import {TCallback, TView} from "../../types/types";
 
-const usePopState = (onPopState?: TCallback) => {
+const usePopState = (screen: TView, onPopState?: TCallback) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
 
     const listenToPopState = () => {
-        dispatch(setWelcomeScreenView("select"))
+        dispatch(setWelcomeScreenView(screen))
         onPopState && onPopState();
     }
 

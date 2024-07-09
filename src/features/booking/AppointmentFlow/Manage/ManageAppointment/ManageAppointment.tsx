@@ -111,7 +111,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     }
 
-    usePopState(redirectToWelcomeScreens);
+    usePopState('serviceCenterSelect', redirectToWelcomeScreens);
 
     useEffect(() => {
         if (scProfile) {

@@ -99,7 +99,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     const redirectToCreateFlow = () => history.push( "/f/appointment/" + id);
     const redirectToWelcomeScreens = () => history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
 
-    usePopState(redirectToWelcomeScreens);
+    usePopState('select', redirectToWelcomeScreens);
 
     useEffect(() => {
         if (shouldHideScreen) {
