@@ -29,6 +29,7 @@ import {checkSelectedCar} from "./utils";
 import {useException} from "../../../../../hooks/useException/useException";
 import {Routes} from "../../../../../routes/constants";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
+import usePopState from "../../../../../hooks/usePopState/usePopState";
 
 type TProps = {
     onBack: TCallback;
@@ -96,7 +97,9 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
 
     const redirectToManageFlow = () => history.push( "/f/appointment-manage/" + id);
     const redirectToCreateFlow = () => history.push( "/f/appointment/" + id);
-    const redirectToWelcomeScreens = () =>  history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+    const redirectToWelcomeScreens = () => history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+
+    usePopState(redirectToWelcomeScreens);
 
     useEffect(() => {
         if (shouldHideScreen) {
@@ -155,8 +158,8 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
             handleServiceTypeSelection()
         } else {
             handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+            redirectToCreateFlow();
         }
-        redirectToCreateFlow();
     }, [dispatch, handleSetScreen, needToShowServiceSelection, serviceType, handleServiceTypeSelection, clearAllData]);
 
     const handleFirstScreen = useCallback(() => {
@@ -164,6 +167,11 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
         dispatch(setWelcomeScreenView('serviceSelect'))
         redirectToWelcomeScreens();
     }, [history, id])
+
+    const handleCreateNewAppointment = useCallback(() => {
+        handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+        redirectToCreateFlow();
+    }, [serviceType, redirectToCreateFlow])
 
     const handleAddNewVehicle = useCallback(() => {
         clearData()
@@ -173,13 +181,12 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
                 handleFirstScreen()
             } else {
                 dispatch(setServiceTypeOption(firstScreenOptions[0]))
-                handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+                handleCreateNewAppointment()
             }
         } else {
-            handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+            handleCreateNewAppointment()
         }
-        redirectToCreateFlow();
-    }, [dispatch, handleSetScreen, firstScreenOptions, handleFirstScreen]);
+    }, [dispatch, handleSetScreen, firstScreenOptions, handleFirstScreen, redirectToCreateFlow, serviceType]);
 
     const clearPrevAppointmentData = useCallback(() => {
         dispatch(setHashKey(''));

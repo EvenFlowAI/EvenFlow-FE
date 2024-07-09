@@ -45,6 +45,7 @@ import {useLayout} from "../../../hooks/useLayout/useLayout";
 import {useException} from "../../../hooks/useException/useException";
 import {Routes} from "../../../routes/constants";
 import {initialCustomerSearch} from "../../../store/reducers/constants";
+import usePopState from "../../../hooks/usePopState/usePopState";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
@@ -81,15 +82,7 @@ export const Welcome = () => {
         clearStorage();
     }, []);
 
-    const listenToPopState = () => dispatch(setWelcomeScreenView("select"))
-
-    useEffect(() => {
-        if ((!id || !decodeSCID(id) && !scProfile?.id)) {
-            window.location.href = "/";
-        }
-        window.addEventListener("popstate", listenToPopState);
-        return () => window.removeEventListener("popstate", listenToPopState);
-    }, [id, scProfile]);
+    usePopState();
 
     const redirect = () => {
         const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;

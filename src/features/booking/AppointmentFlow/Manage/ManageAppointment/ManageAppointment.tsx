@@ -56,6 +56,7 @@ import CustomerConsents from "../../../../../components/modals/booking/CustomerC
 import OpenModalLink from "../../../../../components/wrappers/OpenModalLink/OpenModalLink";
 import CommentModal from "../../../../../components/modals/booking/CommentModal/CommentModal";
 import MileageModal from "../../../../../components/modals/booking/MileageModal/MileageModal";
+import usePopState from "../../../../../hooks/usePopState/usePopState";
 
 type TProps = {
     onChangeSlot: TCallback;
@@ -106,6 +107,11 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
             : Boolean(scProfile?.emailRequirement?.customerSelfServiceEnabled)
     }, [currentUser, scProfile])
 
+    const redirectToWelcomeScreens = () => {
+        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+    }
+
+    usePopState(redirectToWelcomeScreens);
 
     useEffect(() => {
         if (scProfile) {
