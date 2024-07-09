@@ -163,7 +163,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
         if (form.technicianEfficiency) {
             if (form.technicianEfficiency < 25) {
                 isValid = false
-                showError('"Technician Efficiency" must be more than 25')
+                showError('"Technician Efficiency" must be equal or more than 25')
             }
             if (form.technicianEfficiency > 999) {
                 isValid = false
