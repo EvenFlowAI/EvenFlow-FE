@@ -10,7 +10,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
-import {getCurrentMenu, getStepsMap, getStepsScreen} from "../AppointmentFlow/utils";
+import {getCurrentMenu, getStepsMap, getStepsScreen} from "../utils/utils";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {TScreen} from "../../../types/types";
@@ -20,9 +20,10 @@ import {Index, Wrapper} from "./styles";
 type TProps = {
     screen: TScreen;
     handleSetScreen: (screen: TScreen) => void;
+    isManagingFlow?: boolean;
 }
 
-export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({screen, handleSetScreen}) => {
+export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({screen, handleSetScreen, isManagingFlow}) => {
     const {
         sideBarSteps,
         sideBarMenu,
@@ -31,7 +32,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
         serviceTypeOption,
         isAppointmentSaving,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {currentConfig, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const theme = useTheme();
     const dispatch = useDispatch();
@@ -41,12 +41,12 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useEffect(() => {
-        dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable, Boolean(customerLoadedData?.isUpdating))))
+        dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable, Boolean(isManagingFlow))))
     }, [serviceType, isAdvisorAvailable, isTransportationAvailable, getCurrentMenu])
 
     useEffect(() => {
         dispatch(setSideBarActualSteps(getStepsMap(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable)))
-        dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, Boolean(customerLoadedData?.isUpdating))))
+        dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, Boolean(isManagingFlow))))
     }, [serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, getStepsMap])
 
     useEffect(() => {
@@ -65,7 +65,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     }
 
     const getButtonState = useCallback((index: number) => {
-        if (isAppointmentSaving || customerLoadedData?.isUpdating) return true;
+        if (isAppointmentSaving || isManagingFlow) return true;
         if (index > 0 && sideBarSteps.length < 2) return true;
         if (sideBarActualSteps) {
             const currentScreenNumberValue = sideBarActualSteps[screen];
@@ -74,7 +74,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
             return (currentScreenNumberValue < index + 1 && lastPassedScreenNumberValue < index + 1);
         }
         return false;
-    }, [customerLoadedData, serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, sideBarSteps, sideBarActualSteps, screen, isAppointmentSaving])
+    }, [isManagingFlow, serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, sideBarSteps, sideBarActualSteps, screen, isAppointmentSaving])
 
     const activeButtonStyles = {
         background: '#E6FCEC',

@@ -18,6 +18,7 @@ import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 const ServiceImpactedWarning = () => {
     const {isServiceWarningOpen} = useSelector((state: RootState) => state.modals);
     const {appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const { classes  } = useStyles();
     const {t} = useTranslation();
@@ -34,7 +35,11 @@ const ServiceImpactedWarning = () => {
         dispatch(setCurrentFrameScreen("serviceNeeds"));
         onClose()
         if (history.location.pathname.includes("welcome")) {
-            history.push( "/f/appointment/" + id);
+            if (customerLoadedData?.isUpdating) {
+                history.push( "/f/appointment-manage/" + id);
+            } else {
+                history.push( "/f/appointment/" + id);
+            }
         }
     }
 

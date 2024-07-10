@@ -66,6 +66,8 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     const dispatch = useDispatch();
     const history = useHistory();
     const showError = useException();
+    const scId = useMemo(() => id ? id : scProfile?.id ? encodeSCID(scProfile.id) : '',
+        [scProfile, id])
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
 
     const setTracker = (ids: string[]) => dispatch(setTrackerCreated({isCreated: true, ids}))
@@ -73,10 +75,10 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
 
     const redirect = () => {
-        if (id) {
-            history.push(Routes.EndUser.AppointmentFrame.replace(":id", id));
-        } else if (scProfile?.id) {
-            history.push(Routes.EndUser.AppointmentFrame.replace(":id", encodeSCID(scProfile.id)));
+        if (scId) {
+            customerLoadedData?.isUpdating
+                ? history.push(Routes.EndUser.ManageAppointmentFrame.replace(":id", scId))
+                : history.push(Routes.EndUser.AppointmentFrame.replace(":id", scId));
         }
     }
 
@@ -167,6 +169,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
 
     const handleBackWhileUpdating = () => {
         dispatch(setCurrentFrameScreen("manageAppointment"))
+        dispatch(setWelcomeScreenView("serviceCenterSelect"))
         dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
         redirect();
     }

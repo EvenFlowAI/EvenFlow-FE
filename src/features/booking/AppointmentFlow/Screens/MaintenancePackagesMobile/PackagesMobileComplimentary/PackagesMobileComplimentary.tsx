@@ -1,0 +1,48 @@
+import React from 'react';
+import {useTranslation} from "react-i18next";
+import {ESegmentTitle, IPackage, TExtendedComplimentary} from "../../../../../../api/types";
+import {usePackageMobileStyles} from "../../../../../../hooks/styling/usePackageMobileStyles";
+import {HtmlTooltip} from "../../../../../../components/styled/HtmlTooltip";
+
+type TProps = {
+    isBmWService: boolean;
+    complimentaryServices: TExtendedComplimentary[];
+    loadedPackages: IPackage[];
+}
+
+const PackagesMobileComplimentary: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isBmWService, complimentaryServices, loadedPackages}) => {
+    const { classes  } = usePackageMobileStyles();
+    const {t} = useTranslation();
+    const title = loadedPackages[0]?.segmentTitles?.find(el => el.type === ESegmentTitle.Complimentary)?.title
+
+    return (
+        <React.Fragment>
+            <div className={classes.complimentaryTitle} style={isBmWService ? {fontSize: 16} : {}}>
+                {title?.trim().length ? title : t("Complimentary")}
+            </div>
+
+            <div className={classes.complimentaryServices}>
+                {complimentaryServices
+                    .slice()
+                    .sort((a, b) => a.orderIndex - b.orderIndex)
+                    .map(item => {
+                        return item.detailedDescription?.length
+                            ? <HtmlTooltip
+                                key={item.id}
+                                placement="top"
+                                enterTouchDelay={0}
+                                title={<div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>}
+                            >
+                                <p className={classes.serviceRequestUnderlined}
+                                   style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
+                            </HtmlTooltip>
+                            : <p className={classes.serviceRequest}
+                                 key={item.id}
+                                 style={isBmWService ? {fontSize: 18} : {}}>{item.name}</p>
+                    })}
+            </div>
+        </React.Fragment>
+    );
+};
+
+export default PackagesMobileComplimentary;
