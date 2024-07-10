@@ -7,8 +7,8 @@ export const getCurrentMenu = (serviceType: EServiceType, advisor: boolean, tran
         yourLocation: "Your Location",
         serviceNeeds: "Service Needs",
         advisorSelection: "Advisor Selection",
-        appointmentSelection: "Appointment Selection",
         transportationNeeds: "Transportation Needs",
+        appointmentSelection: "Appointment Selection",
         appointmentConfirmation: "Appointment Confirmation",
         manageAppointment: "Manage Appointment",
     }
@@ -29,8 +29,8 @@ export const getStepsScreen = (serviceType: EServiceType, advisorSelection: bool
         location: "location",
         serviceNeeds: "serviceNeeds",
         consultantSelection: "consultantSelection",
-        appointmentSelection: appointmentSelection ? "appointmentTiming" : "appointmentSelection",
         transportationNeeds: "transportationNeeds",
+        appointmentSelection: appointmentSelection ? "appointmentTiming" : "appointmentSelection",
         appointmentConfirmation: "appointmentConfirmation",
         manageAppointment: "manageAppointment",
     }
@@ -56,14 +56,14 @@ export const getStepsMap = (serviceType: EServiceType, isAdvisorAvailable: boole
         opsCode: serviceType === EServiceType.VisitCenter ? 1 : 2,
         serviceOfferProductPage: serviceType === EServiceType.VisitCenter ? 1 : 2,
         consultantSelection: serviceType === EServiceType.VisitCenter ? 2 : serviceType === EServiceType.MobileService ? -1 : 3,
-        appointmentTiming: serviceType === EServiceType.PickUpDropOff ? 4 : 3,
-        appointmentSelection: serviceType === EServiceType.PickUpDropOff ? 4 : 3,
-        transportationNeeds: serviceType === EServiceType.VisitCenter ? 4 : -1,
-        appointmentConfirmation: serviceType === EServiceType.MobileService ? 4 : 5,
-        manageAppointment: serviceType === EServiceType.MobileService ? 4 : 5,
-        appointmentConfirmed: serviceType === EServiceType.MobileService ? 4 : 5,
+        appointmentTiming: serviceType === EServiceType.PickUpDropOff ? 5 : 4,
+        appointmentSelection: serviceType === EServiceType.PickUpDropOff ? 5 : 4,
+        transportationNeeds: serviceType === EServiceType.VisitCenter ? 3 : -1,
+        appointmentConfirmation: serviceType === EServiceType.MobileService ? 5 : 6,
+        manageAppointment: serviceType === EServiceType.MobileService ? 5 : 6,
+        appointmentConfirmed: serviceType === EServiceType.MobileService ? 5 : 6,
         location: 1,
-        payment: 5,
+        payment: 6,
     }
     if (!isAdvisorAvailable && data.consultantSelection > -1) {
         for (let key in data) {

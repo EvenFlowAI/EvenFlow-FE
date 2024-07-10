@@ -29,23 +29,21 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({handleSet
             ? prevScreen
             : currentConfig?.appointmentSelection
                 ? 'appointmentTiming'
-                : isAdvisorAvailable
-                    ? 'consultantSelection'
-                    : "serviceNeeds",
-        [currentConfig, isAdvisorAvailable])
+                : !serviceTypeOption?.transportationOption && isTransportationAvailable
+                    ? "transportationNeeds"
+                    : isAdvisorAvailable
+                        ? 'consultantSelection'
+                        : "serviceNeeds",
+        [currentConfig, isAdvisorAvailable, isTransportationAvailable])
 
-    const handleTransportation = useCallback(() => {
-        if (serviceTypeOption?.transportationOption || !isTransportationAvailable) {
-            dispatch(setChangesCompletedOpen(true))
-        } else {
-            handleSetScreen('transportationNeeds')
-        }
-    }, [serviceTypeOption, isTransportationAvailable])
+    const askChangesCompleted = useCallback(() => {
+        dispatch(setChangesCompletedOpen(true))
+    }, [])
 
     return (
         <AppointmentSlots
             handleSetScreen={handleSetScreen}
-            onNext={handleTransportation}
+            onNext={askChangesCompleted}
             fromServiceValetToVisitCenter={fromServiceValetToVisitCenter}
             prevLogicalScreen={previousLogicalScreen}/>
     );

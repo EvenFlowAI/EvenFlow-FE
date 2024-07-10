@@ -86,7 +86,8 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         appointmentByKey,
         isConsultantsLoading,
         isConsentsLoading,
-        trackerData
+        trackerData,
+        transportation
     } = useSelector((state: RootState) => state.appointmentFrame)
 
     const {currentConfig, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
@@ -221,6 +222,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     warrantyExpiration: selectedVehicle?.warrantyExpiration,
                     serviceTypeOptionId: serviceTypeOption?.id ?? null,
                     recalls: mapRecallsForRequest(selectedRecalls),
+                    transportationId: transportation?.id ?? null,
                 }
                 if (valueService?.selectedService) {
                     data.valueServiceOfferIds = [valueService.selectedService.id];
@@ -275,7 +277,8 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     }, [
         dispatch, id, selectedTiming,
         selectedVehicle, customerLoadedData, service, packagePricingType, packageEMenuType, serviceTypeOption,
-        subService, selectedPackage, selectedSR, advisor, valueService, serviceType, selectedTime, zipCode, address, mileage
+        subService, selectedPackage, selectedSR, advisor, valueService, serviceType, selectedTime, zipCode, address, mileage,
+        transportation
     ]);
 
     const handleGANext = useCallback(() => {

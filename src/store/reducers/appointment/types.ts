@@ -172,6 +172,7 @@ export interface IAppointmentSlotsRequest {
     zipCode?: string;
     address?: string;
     recalls: TRecallForRequest[];
+    transportationId: number|null;
 }
 
 export interface IRemappedAppointmentSlot extends IAppointmentSlot {
