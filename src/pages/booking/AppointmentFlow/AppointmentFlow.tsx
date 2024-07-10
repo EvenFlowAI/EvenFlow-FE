@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {Route, Switch, useHistory, useParams} from "react-router-dom";
+import {Redirect, Route, Switch, useHistory, useParams} from "react-router-dom";
 import {Routes} from "../../../routes/constants";
 import {CreateAppointmentFlow} from "../CreateAppointmentFlow/CreateAppointmentFlow";
 import {ManageAppointmentFlow} from "../ManageAppointmentFlow/ManageAppointmentFlow";
@@ -135,6 +135,7 @@ const AppointmentFlow = () => {
                 needToShowServiceTypes={needToShowServiceTypes}
                 setNeedToShowServiceTypes={setNeedToShowServiceTypes}
             />} />
+            <Redirect to={Routes.EndUser.Welcome}/>
         </Switch>
     );
 };
