@@ -101,6 +101,9 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     const showMessage = useMessage();
     const history = useHistory();
 
+    const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
+        [currentUser, scProfile])
+
     const isEmailRequired = useMemo(() => {
         return currentUser
             ? Boolean(scProfile?.emailRequirement?.adminAndEmployeesEnabled)
@@ -111,7 +114,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     }
 
-    usePopState('serviceCenterSelect', redirectToWelcomeScreens);
+    usePopState(isAuthorized ? "serviceCenterSelect" : 'select', redirectToWelcomeScreens);
 
     useEffect(() => {
         if (scProfile) {

@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {TCallback, TView} from "../../types/types";
 
-const usePopState = (screen: TView, onPopState?: TCallback) => {
+const usePopState = (screen: TView, onPopState?: TCallback, keepListener?: boolean) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const usePopState = (screen: TView, onPopState?: TCallback) => {
         }
         window.addEventListener("popstate", listenToPopState);
         return () => {
-            window.removeEventListener("popstate", listenToPopState);
+            keepListener && window.removeEventListener("popstate", listenToPopState);
         }
     }, [id, scProfile]);
 };
