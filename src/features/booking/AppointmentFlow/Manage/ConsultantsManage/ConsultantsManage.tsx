@@ -23,7 +23,7 @@ const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
     const {id} = useParams<{id: string}>();
     const showError = useException();
 
-    const handleSelectConsultant = (consultant: IServiceConsultant|null) => () => {
+    const handleSelectConsultant = (consultant: IServiceConsultant|null) => {
         dispatch(setAdvisor(consultant));
         dispatch(setAnyAdvisorSelected(!Boolean(consultant)))
     }
