@@ -18,6 +18,7 @@ import {TItem} from "./types";
 import {getAddressLabel, getServiceName} from "./utils";
 import {calendarDateFormat, dateTimeString, time24HourFormat, timeSpanString} from "../../../../utils/constants";
 import dayjs from "dayjs";
+import {ESettingType} from "../../../../store/reducers/generalSettings/types";
 
 type TProps = {
     onUpdateAppointment: TArgCallback<ILoadedVehicle>;
@@ -51,9 +52,14 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsW
         isAppointmentSaving,
         appointmentByKey,
         transactionValue,
+        trackerData
     } = useSelector((state: RootState) => state.appointmentFrame)
     const {allCategories} = useSelector((state: RootState) => state.categories)
     const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails)
+    const {settings} = useSelector((state: RootState) => state.generalSettings);
+    const companyNameIsOn = useMemo(() => {
+        return settings.find(el => el.settingType === ESettingType.CompanyName)?.data?.isOn
+    }, [settings])
 
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -99,9 +105,9 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsW
             category: 'EvenFlow User',
             action: 'Created Appointment',
             nonInteraction: true,
-        })
+        }, trackerData.ids)
         dispatch(setWelcomeScreenView("select"));
-    }, [dispatch])
+    }, [dispatch, trackerData])
 
     const getAddress = (): string => {
         if (serviceType === EServiceType.VisitCenter) {
@@ -233,6 +239,10 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsW
                 content: customer.fullName
             },
             {
+                label: t("Company Name"),
+                content: companyNameIsOn && customer.companyName ? customer.companyName : ''
+            },
+            {
                 label: t("Vehicle"),
                 content: vehicleData,
             },
@@ -248,7 +258,8 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsW
 
         return insertPickUpTime(list);
     }, [ appointment, scProfile, service, subService, customer, selectedVehicle, serviceRequests, selectedPackage, selectedSR,
-        isServiceValetApp, isServiceValetManage, insertPickUpTime, serviceName, serviceType, waitListSettings, appointmentByKey]);
+        isServiceValetApp, isServiceValetManage, insertPickUpTime, serviceName, serviceType, waitListSettings, appointmentByKey,
+        companyNameIsOn]);
 
     return <StepWrapper>
         <Paper>

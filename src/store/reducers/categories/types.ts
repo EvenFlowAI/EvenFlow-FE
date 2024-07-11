@@ -12,8 +12,6 @@ export interface ICategory {
     orderIndex?: number;
     description?: string;
     isCommentRequired?: boolean;
-    taglineText?: string;
-    taglineFontColorHex?: string;
 }
 
 export type TCategoryServiceRequest = {
@@ -29,8 +27,6 @@ export type TUpdateCategoryData = {
     orderIndex?: number;
     description?: string;
     isCommentRequired?: boolean;
-    taglineText?: string;
-    taglineFontColorHex?: string;
     serviceType: EServiceType;
 }
 

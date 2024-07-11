@@ -48,7 +48,7 @@ import {initialCustomerSearch} from "../../../store/reducers/constants";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
-    const {welcomeScreenView, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {welcomeScreenView, serviceTypeOption, trackerData} = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {isLoading} = useSelector((state: RootState) => state.customers);
@@ -111,7 +111,7 @@ export const Welcome = () => {
             category: 'EvenFlow User',
             action: 'Enters Page',
             label: `As Returning Customer`,
-        });
+        }, trackerData.ids);
     }
 
     const onSuccessForCustomer = () => {
@@ -180,7 +180,7 @@ export const Welcome = () => {
             category: 'EvenFlow User',
             action: 'Enters Page',
             label: `As ${userType} Customer`,
-        });
+        }, trackerData.ids);
     }
 
     const handleNew = () => {
