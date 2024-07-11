@@ -31,7 +31,8 @@ const ColumnsSelectionModal: React.FC<DialogProps&TProps> = ({
                                                                  defaultCheckboxes,
                                                                  titleAlign,
                                                                  cancelBtnType,
-                                                                 cancelBtnColor
+                                                                 cancelBtnColor,
+                                                                 storageItemName
                                                              }) => {
     const [checkedColumns, setCheckedColumns] = useState<string[]>([]);
     const { classes  } = useStyles();
@@ -39,7 +40,7 @@ const ColumnsSelectionModal: React.FC<DialogProps&TProps> = ({
 
     useEffect(() => {
         setCheckedColumns(selectedColumns)
-    }, [])
+    }, [selectedColumns])
 
     const onCheck = (name: string) => () => {
         if (!requiredColumnsNames.includes(name)) {
@@ -61,7 +62,7 @@ const ColumnsSelectionModal: React.FC<DialogProps&TProps> = ({
 
     const onSave = () => {
         setSelectedColumns(checkedColumns)
-        localStorage.setItem('storageItemName', JSON.stringify(checkedColumns))
+        localStorage.setItem(storageItemName, JSON.stringify(checkedColumns))
         onClose()
     }
 

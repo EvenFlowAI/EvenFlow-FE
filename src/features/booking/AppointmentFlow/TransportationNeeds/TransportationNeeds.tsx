@@ -39,7 +39,8 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
         selectedVehicle,
         packageEMenuType,
         appointmentByKey,
-        isConsentsLoading
+        isConsentsLoading,
+        trackerData
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
     const {selectedSR, customerLoadedData, appointment} = useSelector(({appointment}: RootState) => appointment)
     const {allCategories} = useSelector(({categories}: RootState) => categories)
@@ -129,7 +130,7 @@ export const TransportationNeeds: React.FC<React.PropsWithChildren<React.PropsWi
             category: 'EvenFlow User',
             action: 'Selected Transportation Need',
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
-        })
+        }, trackerData.ids)
         dispatch(searchForCustomerConsents(handleConsentsAccepted))
     }
 

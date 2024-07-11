@@ -31,7 +31,13 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
             scProfile,
             customerLoadedData,
         } = useSelector((state: RootState) => state.appointment);
-        const {selectedTiming, gap, hoursOfOperations, sideBarSteps, appointmentByKey} = useSelector((state : RootState) => state.appointmentFrame);
+        const {
+            selectedTiming,
+            gap,
+            hoursOfOperations,
+            sideBarSteps,
+            appointmentByKey,
+            trackerData} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const titleRef = useRef<HTMLDivElement|null>(null);
         const { classes  } = useStyles();
@@ -79,8 +85,8 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
                 category: 'EvenFlow User',
                 action: 'Clicked on Appointment Slot',
                 label: a?.price?.value ? `With Price $${a.price.value}` : '',
-            });
-        }, [])
+            }, trackerData.ids);
+        }, [trackerData])
 
         const handleSideBar = () => {
             const index = sideBarSteps.indexOf("appointmentSelection");

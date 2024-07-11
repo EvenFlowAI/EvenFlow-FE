@@ -13,7 +13,8 @@ const selectedRoutes: string[] = [
     Routes.CapacityManagement.RequestDifferentiation,
     Routes.CapacityManagement.TimeDifferentiation,
     Routes.CapacityManagement.AppointmentAllocation,
-    Routes.CapacityManagement.OptimizationWindows
+    Routes.CapacityManagement.OptimizationWindows,
+    Routes.BookingFlow.ScreenSettings
 ];
 
 export const PodSelector = () => {

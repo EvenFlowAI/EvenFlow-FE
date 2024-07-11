@@ -161,9 +161,9 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
             showError('"Appointments Per Slots" must be equal or more than 0')
         }
         if (form.technicianEfficiency) {
-            if (form.technicianEfficiency < 1) {
+            if (form.technicianEfficiency < 25) {
                 isValid = false
-                showError('"Technician Efficiency" must be more than 0')
+                showError('"Technician Efficiency" must be equal or more than 25')
             }
             if (form.technicianEfficiency > 999) {
                 isValid = false
@@ -303,7 +303,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                             type="number"
                             startAdornment={<InputAdornment position="start">%</InputAdornment>}
                             error={formIsChecked && form.technicianEfficiency !== null
-                                && (form.technicianEfficiency < 0 || form.technicianEfficiency > 999 || !Number.isInteger(+form.technicianEfficiency))}
+                                && (form.technicianEfficiency < 25 || form.technicianEfficiency > 999 || !Number.isInteger(+form.technicianEfficiency))}
                             inputProps={{min: 0, step: 1}}
                             onChange={handleChange}
                             value={form.technicianEfficiency}

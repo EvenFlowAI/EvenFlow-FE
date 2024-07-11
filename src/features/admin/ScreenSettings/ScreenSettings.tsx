@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
 import {Grid} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {loadEmailRequirement} from "../../../store/reducers/screenSettings/actions";
+import {loadConsentsList, loadEmailRequirement} from "../../../store/reducers/screenSettings/actions";
 import {EScreenSettingsType, screenSettingsList, TOptContent} from "../../../store/reducers/screenSettings/types";
 import {RootState} from "../../../store/rootReducer";
 import {CenterSettingsPlate} from "../CenterSettings/CenterSettingsPlate/CenterSettingsPlate";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
-import {loadConsentsList} from "../../../store/reducers/screenSettings/actions";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {EditEmailRequirementModal} from "./EditEmailRequirementModal/EditEmailRequirementModal";
 import {CustomerConsentsModal} from "./CustomerConsentsModal/CustomerConsentsModal";
@@ -16,7 +15,10 @@ import PriceDisplayModal from "./PriceDisplayModal/PriceDisplayModal";
 import {loadRoundPriceSetting} from "../../../store/reducers/pricingSettings/actions";
 import {loadWaitListSettings} from "../../../store/reducers/optimizationWindows/actions";
 import WaitListSlotSettingsModal from "./WaitListSlotSettingsModal/WaitListSlotSettingsModal";
-import {getPriceDisplayValue, getWaitlistValue} from "./utils";
+import {getWaitlistValue} from "./utils";
+import {EditCompanyNameModal} from "./EditCompanyNameModal/EditCompanyNameModal";
+import {loadGeneralSettings} from "../../../store/reducers/generalSettings/actions";
+import {ESettingType} from "../../../store/reducers/generalSettings/types";
 
 export const ScreenSettings = () => {
     const {
@@ -27,19 +29,20 @@ export const ScreenSettings = () => {
     } = useSelector((state: RootState) => state.screenSettingsBooking);
     const {roundPrice, isRoundPriceLoading} = useSelector((state: RootState) => state.pricingSettings);
     const {waitListSettings, isWaitListLoading} = useSelector((state: RootState) => state.optimizationWindows);
+    const {settings, isLoading} = useSelector((state: RootState) => state.generalSettings)
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const {selectedPod} = useSelectedPod()
     const {onOpen: onEmailEditOpen, isOpen: isEmailEditOpen, onClose: onEmailEditClose} = useModal();
     const {onOpen: onConsentOpen, isOpen: isConsentOpen, onClose: onConsentClose} = useModal();
     const {onOpen: onPricingOpen, isOpen: isPricingOpen, onClose: onPricingClose} = useModal();
+    const {onOpen: onCompanyNameOpen, isOpen: isCompanyNameOpen, onClose: onCompanyNameClose} = useModal();
     const {onOpen: onWaitlistOpen, isOpen: isWaitlistOpen, onClose: onWaitlistClose} = useModal();
 
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadEmailRequirement(selectedSC.id))
             dispatch(loadRoundPriceSetting(selectedSC.id))
-            dispatch(loadWaitListSettings(selectedSC.id, selectedPod?.id))
         }
     }, [selectedSC])
 
@@ -47,6 +50,8 @@ export const ScreenSettings = () => {
         if (selectedSC) {
             dispatch(loadConsentsList(selectedSC.id, selectedPod?.id))
             dispatch(loadRange(selectedSC.id, null, selectedPod?.id))
+            dispatch(loadWaitListSettings(selectedSC.id, selectedPod?.id))
+            dispatch(loadGeneralSettings(selectedSC.id, [ESettingType.CompanyName]))
         }
     }, [selectedSC, selectedPod])
 
@@ -69,6 +74,16 @@ export const ScreenSettings = () => {
         return allConsentsAreOn ? "On" : someConsentsAreOn ? "[On / Off]" : "Off"
     }
 
+    const getPriceDisplayValue = (roundPrice: boolean) => {
+        return roundPrice ? 'Rounded' : "Fractional"
+    }
+
+    const getCompanyNameValue = () => {
+        const companyNameSetting = settings
+            .find(el => el.settingType === ESettingType.CompanyName && (selectedPod ? el.podId === selectedPod?.id : true))
+        return companyNameSetting?.data?.isOn ? 'On' : "Off"
+    }
+
     const getCount = (k: EScreenSettingsType): string|number => {
         switch (k) {
             case EScreenSettingsType.EmailRequirement:
@@ -79,6 +94,8 @@ export const ScreenSettings = () => {
                 return getPriceDisplayValue(roundPrice);
             case EScreenSettingsType.Waitlist:
                 return getWaitlistValue(Boolean(waitListSettings?.isEnabled));
+            case EScreenSettingsType.CompanyName:
+                return getCompanyNameValue();
             default:
                 return "No data"
         }
@@ -109,6 +126,12 @@ export const ScreenSettings = () => {
             title: "Waitlist",
             isLoading: isWaitListLoading
         },
+        [EScreenSettingsType.CompanyName]: {
+            helperText: "Display of Company Name field option on confirmation page",
+            label: getCompanyNameValue(),
+            title: "Company Name",
+            isLoading: isLoading
+        },
     }
 
     const getPlateEdit = (k: EScreenSettingsType): void => {
@@ -121,6 +144,9 @@ export const ScreenSettings = () => {
                 break;
             case EScreenSettingsType.PriceDisplay:
                 onPricingOpen();
+                break;
+            case EScreenSettingsType.CompanyName:
+                onCompanyNameOpen();
                 break;
             case EScreenSettingsType.Waitlist:
                 onWaitlistOpen();
@@ -149,6 +175,7 @@ export const ScreenSettings = () => {
                 })}
             </Grid>
             <EditEmailRequirementModal open={isEmailEditOpen} onClose={onEmailEditClose}/>
+            <EditCompanyNameModal open={isCompanyNameOpen} onClose={onCompanyNameClose}/>
             <CustomerConsentsModal open={isConsentOpen} onClose={onConsentClose}/>
             <PriceDisplayModal open={isPricingOpen} onClose={onPricingClose}/>
             <WaitListSlotSettingsModal open={isWaitlistOpen} onClose={onWaitlistClose}/>

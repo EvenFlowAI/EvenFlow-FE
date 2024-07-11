@@ -37,7 +37,7 @@ const ServiceCenterSelect = () => {
     }, [currentUser, scProfile])
 
     useEffect(() => {
-        dispatch(setTrackerCreated(false))
+        dispatch(setTrackerCreated({isCreated: false, ids: []}))
     }, [])
 
     return !scProfile || isProfileLoading || shortLoading

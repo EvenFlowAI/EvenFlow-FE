@@ -158,6 +158,10 @@ export class Api {
             GetTimeScheduleByEmployee: {route: "/employee-schedules/get-base-schedule-by-service-book", method: "get"},
             SetTimeScheduleByEmployee: {route: "/employee-schedules/set-base-schedule-by-service-book", method: "post"},
         },
+        GeneralSettings: {
+          Get: {route: "/general-settings", method: 'get'},
+          Update: {route: "/general-settings", method: 'post'},
+        },
         GeographicZones: {
             GetZones: {route: "/geographic-zones/by-query", method: "post"},
             Create: {route: "/geographic-zones", method: "post"},

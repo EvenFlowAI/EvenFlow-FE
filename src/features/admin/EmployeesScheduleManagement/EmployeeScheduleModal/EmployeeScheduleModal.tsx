@@ -3,13 +3,12 @@ import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {TableRowDataType, TParsableDate} from "../../../../types/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import dayjs from "dayjs";
-import {FormControlLabel, Switch} from "@mui/material";
+import {Switch} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IScheduleByDate, IUpdateByDateRequest} from "../../../../store/reducers/schedules/types";
 import {SwitcherLabel, SwitcherWrapper} from "./styles";
-import TimeSelect from "../../../../components/pickers/TimeSelect/TimeSelect";
-import {CALENDAR_FORMAT, time24HourFormat, timeSpanString} from "../../../../utils/constants";
+import {CALENDAR_FORMAT, timeSpanString} from "../../../../utils/constants";
 import {loadHoursOfOperations} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Table} from "../../../../components/tables/Table/Table";
@@ -18,11 +17,13 @@ import {LoadingButton} from "../../../../components/buttons/LoadingButton/Loadin
 import {updateScheduleByDate} from "../../../../store/reducers/schedules/actions";
 import {useException} from "../../../../hooks/useException/useException";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
-import {PickersWrapper} from "../../../../components/styled/PickersWrapper";
+import EmployeeScheduleFilters from "../EmployeeScheduleFilters/EmployeeScheduleFilters";
+import {TFilters} from "../types";
+import {compareName} from "./utils";
+import {initialFilters} from "./constants";
+import TimeBlock from "./TimeBlock/TimeBlock";
 
 type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean, startDate?: TParsableDate, endDate?: TParsableDate}
-
-const compareName = (a: IScheduleByDate, b: IScheduleByDate) => a.employeeName.localeCompare(b.employeeName)
 
 const EmployeeScheduleModal: React.FC<TProps> = ({
                                                      date,
@@ -38,21 +39,36 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     const [isForWeek, setForWeek] = useState<boolean>(false);
     const [formIsChecked, setFormChecked] = useState<boolean>(false);
     const [currentSchedule, setCurrentSchedule] = useState<IScheduleByDate[]>([]);
+    const [filters, setFilters] = useState<TFilters>(initialFilters);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException()
+    const {classes} = useActionButtonsStyles();
+
     const schedule = useMemo(() => {
         return hoursOfOperations.find(el => el.dayOfWeek === dayjs(date).day());
     }, [hoursOfOperations, date])
-    const {classes} = useActionButtonsStyles();
+
+    const sorted = useMemo(() => scheduleByDate.map(el => ({...el, id: `${Math.random()}`})).sort(compareName),
+        [scheduleByDate])
 
     useEffect(() => {
         if (selectedSC) dispatch(loadHoursOfOperations(selectedSC.id))
     }, [selectedSC])
 
     useEffect(() => {
-        setCurrentSchedule(scheduleByDate.map(el => ({...el, id: `${Math.random()}`})).sort(compareName))
-    }, [scheduleByDate])
+        setCurrentSchedule(sorted)
+    }, [sorted])
+
+    useEffect(() => {
+        setCurrentSchedule(() => {
+            return sorted.filter(el => {
+                return el.employeeName.toLowerCase().includes(filters.name.trim().toLowerCase())
+                && el.role.toLowerCase().startsWith(filters.role.trim().toLowerCase())
+                && el.serviceBook.toLowerCase().startsWith(filters.serviceBook.trim().toLowerCase())
+            })
+        })
+    }, [filters, sorted])
 
     const handleShowOnBookingChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
         setForWeek(checked)
@@ -124,51 +140,12 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
         },
         {
             header: "Scheduled Hours",
-            val: el => (
-                <PickersWrapper>
-                    <TimeSelect
-                        disableClearable
-                        error={
-                            formIsChecked && el.isOnSchedule
-                            && (!el.startAt
-                                || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString), 'minute')
-                                || dayjs(el.startAt, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString), 'minute')
-                                || dayjs(el.startAt, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString), 'minute'))
-                        }
-                        disabled={!el.isOnSchedule || disabledDate}
-                        start={schedule?.from ?? "09:00:00"}
-                        end={schedule?.to ?? "17:00:00"}
-                        value={el.startAt}
-                        downArrowErrorText={schedule?.from
-                            ? `The Service Center opens at ${dayjs(schedule?.from, timeSpanString).format(time24HourFormat)}`
-                            : ''}
-                        upArrowErrorText={schedule?.to
-                            ? `The Service Center closes at ${dayjs(schedule?.to, timeSpanString).format(time24HourFormat)}`
-                            : ''}
-                        onChange={(value) => onTimeChange(el, 'startAt', value)}/>
-                    <div>TO</div>
-                    <TimeSelect
-                        disableClearable
-                        error={
-                            formIsChecked && el.isOnSchedule
-                            && (!el.finishAt
-                                || dayjs(el.finishAt, timeSpanString).isSameOrBefore(dayjs(el.startAt, timeSpanString), 'minute')
-                                || dayjs(el.finishAt, timeSpanString).isAfter(dayjs(schedule?.to, timeSpanString), 'minute')
-                                || dayjs(el.finishAt, timeSpanString).isBefore(dayjs(schedule?.from, timeSpanString), 'minute'))
-                        }
-                        disabled={!el.isOnSchedule || disabledDate}
-                        start={schedule?.from ?? "09:00:00"}
-                        end={schedule?.to ?? "17:00:00"}
-                        value={el.finishAt}
-                        downArrowErrorText={schedule?.from
-                            ? `The Service Center opens at ${dayjs(schedule?.from, timeSpanString).format(time24HourFormat)}`
-                            : ''}
-                        upArrowErrorText={schedule?.to
-                            ? `The Service Center closes at ${dayjs(schedule?.to, timeSpanString).format(time24HourFormat)}`
-                            : ''}
-                        onChange={(value) => onTimeChange(el, 'finishAt', value)}/>
-                </PickersWrapper>
-            )
+            val: el => <TimeBlock
+                onTimeChange={onTimeChange}
+                el={el}
+                schedule={schedule}
+                disabledDate={disabledDate}
+                formIsChecked={formIsChecked}/>
         },
     ]
 
@@ -227,12 +204,18 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
             <DialogContent style={{padding: "12px 32px"}}>
                 {loading
                     ? <Loading/>
-                    :  <Table<IScheduleByDate>
-                        data={currentSchedule}
-                        index={"id"}
-                        isLoading={employeesLoading}
-                        hidePagination
-                        rowData={rowData}/>}
+                    :  <>
+                        <EmployeeScheduleFilters
+                            isLoading={loading}
+                            filters={filters}
+                            setFilters={setFilters}/>
+                        <Table<IScheduleByDate>
+                            data={currentSchedule}
+                            index={"id"}
+                            isLoading={employeesLoading}
+                            hidePagination
+                            rowData={rowData}/>
+                    </>}
                 {/*<FormControlLabel*/}
                 {/*    style={{width: '35%', display: 'flex', justifyContent: 'space-between', marginBottom: 20}}*/}
                 {/*    labelPlacement="start"*/}
