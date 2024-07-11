@@ -80,18 +80,22 @@ export const Consultants: React.FC<TProps> = ({isManagingFlow, handleNext, handl
         dispatch(setSideBarStepsList(getStepsScreen(serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, Boolean(isManagingFlow))))
     }, [serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, getStepsMap, getStepsScreen])
 
+    const onClick = (c: IServiceConsultant|null) => {
+        handleSelectConsultant(c)
+    }
+
     return (<StepWrapper>
         {isConsultantsLoading || !isAdvisorAvailable
             ? <div style={{display: 'flex', justifyContent: 'center', width: "100%"}}><Loading/></div>
             : <ConsultantsWrapper>
                 <ConsultantCard
                     blank
-                    onClick={() => handleSelectConsultant(null)}
+                    onClick={() => onClick(null)}
                     active={selectedConsultant === null}
                 />
                 {consultants.map(c =>
                     <ConsultantCard
-                        onClick={() => handleSelectConsultant(c)}
+                        onClick={() => onClick(c)}
                         advisor={c}
                         key={c.id}
                         active={selectedConsultant?.id === c.id} />
