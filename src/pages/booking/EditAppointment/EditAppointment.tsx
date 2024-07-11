@@ -17,7 +17,8 @@ import {RootState} from "../../../store/rootReducer";
 import {NotFoundError} from "../../../components/wrappers/NotFoundError/NotFoundError";
 import {encodeSCID} from "../../../utils/utils";
 import {
-    setCurrentFrameScreen,
+    clearAppointmentData,
+    setCurrentFrameScreen, setServiceTypeOption,
     setUpdateAppointment,
     setUserType,
     setVehicle
@@ -45,6 +46,7 @@ export const EditAppointment = () => {
     const selectedScId: number|undefined = useSelector((state: RootState) => {
         return state.appointment.scProfile?.id
     });
+    const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
 
     const history = useHistory();
@@ -119,6 +121,11 @@ export const EditAppointment = () => {
     const handleCreateNew = () => {
         if (selectedScId) {
             clearStorage();
+            dispatch(clearAppointmentData());
+            dispatch(setServiceTypeOption(null));
+            if (customerLoadedData) {
+                dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: false}));
+            }
             history.replace(`${Routes.EndUser.Welcome}/${encodeSCID(selectedScId)}?frame=1`);
         }
     }
