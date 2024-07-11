@@ -53,6 +53,7 @@
   "scripts": {
     "start": "react-scripts --max_old_space_size=4096 start",
     "build": "react-scripts build",
+    "buildQA": "REACT_APP_ENV=QA react-scripts build",
     "buildUAT": "REACT_APP_ENV=uat react-scripts build",
     "buildProduction": "REACT_APP_ENV=production react-scripts build",
     "test": "react-scripts test",
