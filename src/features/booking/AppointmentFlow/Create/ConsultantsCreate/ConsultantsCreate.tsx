@@ -9,7 +9,7 @@ import {Consultants} from "../../Screens/Consultants/Consultants";
 const ConsultantsCreate: React.FC<TActionProps> = ({onNext, onBack}) => {
     const dispatch = useDispatch();
 
-    const handleSelectConsultant = (consultant: IServiceConsultant|null) => () => {
+    const handleSelectConsultant = (consultant: IServiceConsultant|null) => {
         dispatch(setAdvisor(consultant));
         dispatch(setAnyAdvisorSelected(!Boolean(consultant)))
         dispatch(selectAppointment(null));
