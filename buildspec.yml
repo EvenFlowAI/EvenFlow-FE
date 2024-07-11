@@ -7,11 +7,12 @@ phases:
 
   pre_build:
     commands:
+      - echo REACT_APP_ENV=${REACT_APP_ENV} >> .env
       - yarn install
 
   build:
     commands:
-      - yarn run buildQA
+      - yarn run build
 
 artifacts:
   files:
