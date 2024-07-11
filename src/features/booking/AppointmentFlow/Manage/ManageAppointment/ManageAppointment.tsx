@@ -14,7 +14,7 @@ import {
     setAppointmentSaving,
     setCurrentFrameScreen,
     setReminders,
-    setServiceOptionChanged,
+    setServiceOptionChanged, setServiceTypeOption,
     setSideBarSteps,
     setVehicle,
     setWelcomeScreenView, updateConsultant
@@ -259,6 +259,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                 dispatch(setServiceOptionChanged(false));
                 dispatch(setVehicle(null));
                 dispatch(clearAppointmentData());
+                dispatch(setServiceTypeOption(null))
                 dispatch(setCustomerLoadedData(null));
                 dispatch(setWelcomeScreenView("select"))
                 history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1")
