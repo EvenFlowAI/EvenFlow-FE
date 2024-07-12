@@ -14,7 +14,7 @@ import {
     setCustomerLoadedData,
     setSessionId
 } from "../../../store/reducers/appointment/actions";
-import {decodeSCID, encodeSCID} from "../../../utils/utils";
+import {encodeSCID} from "../../../utils/utils";
 import {FrameWelcomeLayout} from "../../../features/booking/FrameWelcomeLayout/FrameWelcomeLayout";
 import { ThemeProvider, StyledEngineProvider } from "@mui/material";
 import {frameTheme} from "../../../theme/theme";
@@ -33,7 +33,6 @@ import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import ExistingCustomerError from "../../../components/modals/booking/ExistingCustomerError/ExistingCustomerError";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
 import {
     loadCustomersByPhoneOrEmail, setCustomerSearchData,
 } from "../../../store/reducers/enhancedCustomerSearch/actions";
@@ -46,6 +45,7 @@ import {useException} from "../../../hooks/useException/useException";
 import {Routes} from "../../../routes/constants";
 import {initialCustomerSearch} from "../../../store/reducers/constants";
 import usePopState from "../../../hooks/usePopState/usePopState";
+import {loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
@@ -69,18 +69,18 @@ export const Welcome = () => {
     useStorage();
 
     useEffect(() => {
-       if (id && config?.length) {
-           dispatch(loadFirstScreenOptionsByQuery(decodeSCID(id)))
-       }
-    }, [id, config])
-
-    useEffect(() => {
         setLoading(isLoading || shortLoading || isProfileLoading)
     }, [isLoading, shortLoading, isProfileLoading])
 
     useEffect(() => {
         clearStorage();
     }, []);
+
+    useEffect(() => {
+        if (scProfile?.id && config?.length) {
+            dispatch(loadFirstScreenOptionsByQuery(scProfile?.id))
+        }
+    }, [scProfile, config])
 
     usePopState('select');
 
