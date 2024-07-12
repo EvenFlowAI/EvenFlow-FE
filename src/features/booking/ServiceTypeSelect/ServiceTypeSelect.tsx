@@ -175,7 +175,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     }
 
     const handleBack = () => {
-        const userIsNew = (!customerLoadedData?.id && !selectedVehicle?.make) || userType === EUserType.New;
+        const userIsNew = (!customerLoadedData && !selectedVehicle?.make) || userType === EUserType.New;
         if (customerLoadedData?.isUpdating) {
             handleBackWhileUpdating()
         } else {
