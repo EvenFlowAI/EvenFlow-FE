@@ -158,7 +158,8 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
             if (needToShowServiceSelection) {
                 handleServiceTypeSelection()
             } else {
-                handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+                // handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+                handleSetScreen("serviceNeeds")
                 redirectToCreateFlow();
             }
         });
