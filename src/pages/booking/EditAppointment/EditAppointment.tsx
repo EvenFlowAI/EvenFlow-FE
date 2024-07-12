@@ -34,6 +34,7 @@ import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {Routes} from "../../../routes/constants";
 import dayjs from "dayjs";
 import {ContentContainer} from "./styles";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 type TState = "loading" | "error" | "canceled" | "passed";
 
@@ -46,7 +47,7 @@ export const EditAppointment = () => {
     const selectedScId: number|undefined = useSelector((state: RootState) => {
         return state.appointment.scProfile?.id
     });
-    const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
+    const { customerLoadedData, scProfile } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
 
     const history = useHistory();
@@ -54,10 +55,13 @@ export const EditAppointment = () => {
     const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const {search} = useLocation<TLParams>();
+    const currentUser = useCurrentUser()
     const isFromAdmin = useMemo(() => {
         const isFromAdmin = new URLSearchParams(search).get('fromAdmin')?.toLowerCase();
         return isFromAdmin === 'true' || isFromAdmin === '1';
     }, [search])
+
+    const isAuth = useMemo(() => currentUser?.dealershipId === scProfile?.dealershipId, [currentUser, scProfile]);
 
     useStorage();
 
@@ -93,7 +97,7 @@ export const EditAppointment = () => {
                     fullName: data.driver.fullName,
                     fromSearchByName: isFromAdmin,
                     companyName: data.driver.companyName,
-                    isUpdating: true,
+                    isUpdating: isAuth,
                 }
                 if (data.address) customer.address = data.address
                 dispatch(setCustomerLoadedData(customer));
@@ -116,7 +120,7 @@ export const EditAppointment = () => {
             .catch((e) => {
                 setState("error");
             })
-    }, [id, dispatch, history, allCategories]);
+    }, [id, dispatch, history, allCategories, isAuth]);
 
     const handleCreateNew = () => {
         if (selectedScId) {
