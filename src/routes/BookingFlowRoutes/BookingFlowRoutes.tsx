@@ -9,15 +9,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 
 const BookingFlowRoutes = () => {
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (scProfile?.id && config?.length) {
-            dispatch(loadFirstScreenOptionsByQuery(scProfile?.id))
-        }
-    }, [scProfile, config])
+    // const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    // const {scProfile} = useSelector((state: RootState) => state.appointment);
+    // const dispatch = useDispatch();
+    //
+    // useEffect(() => {
+    //     if (scProfile?.id && config?.length) {
+    //         dispatch(loadFirstScreenOptionsByQuery(scProfile?.id))
+    //     }
+    // }, [scProfile, config])
 
     return (
         <Switch>

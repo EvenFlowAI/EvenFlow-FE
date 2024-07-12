@@ -21,7 +21,7 @@ import {
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import {getBlankVehicle} from "../../../../../store/reducers/appointment/actions";
+import {getBlankVehicle, setCustomerLoadedData} from "../../../../../store/reducers/appointment/actions";
 import {useHistory, useParams} from "react-router-dom";
 import {Arrow, CarsWrapper, Info} from "./styles";
 import {AppointmentScreenTitle} from "../../../../../components/wrappers/AppointmentScreenTitle/AppointmentScreenTitle";
@@ -154,6 +154,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     const handleAddNewCarAppointment = useCallback((vehicle: ILoadedVehicle) => {
         clearAllData().then(() => {
             dispatch(setVehicle(vehicle));
+            // customerLoadedData && dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: false}))
             if (needToShowServiceSelection) {
                 handleServiceTypeSelection()
             } else {
@@ -161,7 +162,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
                 redirectToCreateFlow();
             }
         });
-    }, [dispatch, handleSetScreen, needToShowServiceSelection, serviceType, handleServiceTypeSelection, clearAllData]);
+    }, [dispatch, handleSetScreen, needToShowServiceSelection, serviceType, handleServiceTypeSelection, clearAllData, customerLoadedData]);
 
     const handleFirstScreen = useCallback(() => {
         setNeedToShowServiceSelection(false);
@@ -172,9 +173,10 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     const handleCreateNewAppointment = useCallback(() => {
         handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
         redirectToCreateFlow();
-    }, [serviceType, redirectToCreateFlow])
+    }, [serviceType, redirectToCreateFlow, customerLoadedData])
 
     const handleAddNewVehicle = useCallback(() => {
+        // customerLoadedData && dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: false}))
         clearData().then(() => {
             if (firstScreenOptions.length) {
                 const onlyNotVisitCenterExists = firstScreenOptions.length === 1 && firstScreenOptions[0].type !== EServiceType.VisitCenter;

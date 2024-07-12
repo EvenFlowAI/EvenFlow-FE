@@ -45,6 +45,7 @@ import {useException} from "../../../hooks/useException/useException";
 import {Routes} from "../../../routes/constants";
 import {initialCustomerSearch} from "../../../store/reducers/constants";
 import usePopState from "../../../hooks/usePopState/usePopState";
+import {loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
 
 export const Welcome = () => {
     const {scProfile, customerEnteredEmail, isProfileLoading} = useSelector((state: RootState) => state.appointment);
@@ -74,6 +75,12 @@ export const Welcome = () => {
     useEffect(() => {
         clearStorage();
     }, []);
+
+    useEffect(() => {
+        if (scProfile?.id && config?.length) {
+            dispatch(loadFirstScreenOptionsByQuery(scProfile?.id))
+        }
+    }, [scProfile, config])
 
     usePopState('select');
 
