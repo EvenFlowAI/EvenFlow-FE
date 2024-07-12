@@ -14,7 +14,7 @@ import {
     setCustomerLoadedData,
     setSessionId
 } from "../../../store/reducers/appointment/actions";
-import {decodeSCID, encodeSCID} from "../../../utils/utils";
+import {encodeSCID} from "../../../utils/utils";
 import {FrameWelcomeLayout} from "../../../features/booking/FrameWelcomeLayout/FrameWelcomeLayout";
 import { ThemeProvider, StyledEngineProvider } from "@mui/material";
 import {frameTheme} from "../../../theme/theme";
@@ -33,7 +33,6 @@ import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import ExistingCustomerError from "../../../components/modals/booking/ExistingCustomerError/ExistingCustomerError";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {loadFirstScreenOptionsByQuery} from "../../../store/reducers/serviceTypes/actions";
 import {
     loadCustomersByPhoneOrEmail, setCustomerSearchData,
 } from "../../../store/reducers/enhancedCustomerSearch/actions";
@@ -67,12 +66,6 @@ export const Welcome = () => {
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     useStorage();
-
-    useEffect(() => {
-       if (id && config?.length) {
-           dispatch(loadFirstScreenOptionsByQuery(decodeSCID(id)))
-       }
-    }, [id, config])
 
     useEffect(() => {
         setLoading(isLoading || shortLoading || isProfileLoading)
