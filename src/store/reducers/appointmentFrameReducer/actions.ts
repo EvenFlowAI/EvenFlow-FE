@@ -1192,9 +1192,9 @@ export const handleAppointmentUpdate = (
     const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
 
     setLoadingCar(true);
-    dispatch(setAppointmentSaving(true))
     setServiceCategoryPage(EServiceCategoryPage.Page1)
     if (key) {
+        dispatch(setAppointmentSaving(true))
         API.appointment.getByKey(key)
             .then(({data}) => {
                 if (data) {
