@@ -245,8 +245,8 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
 
     const handleCancelAppointment = async () => {
         if (appointmentByKey) {
-            dispatch(setAppointmentSaving(true))
             try {
+                dispatch(setAppointmentSaving(true))
                 const key = appointmentByKey.hashKey;
                 await API.appointment.cancelByKey(key);
                 showMessage(

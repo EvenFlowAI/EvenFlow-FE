@@ -75,12 +75,6 @@ export const Welcome = () => {
         clearStorage();
     }, []);
 
-    // useEffect(() => {
-    //     if (scProfile?.id && config?.length) {
-    //         dispatch(loadFirstScreenOptionsByQuery(scProfile?.id))
-    //     }
-    // }, [scProfile, config])
-
     usePopState('select');
 
     const redirect = () => {
@@ -180,6 +174,7 @@ export const Welcome = () => {
         handleReactGA('A New');
         dispatch(setCustomerEnteredEmail(''));
         dispatch(setCustomerSearchData(initialCustomerSearch))
+        dispatch(setCustomerLoadedData(null));
         dispatch(setAddress(null));
         dispatch(setZipCode(''));
         dispatch(setShowServiceCentersList(false));
