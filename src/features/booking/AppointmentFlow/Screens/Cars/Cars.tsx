@@ -171,7 +171,8 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     }, [history, id])
 
     const handleCreateNewAppointment = useCallback(() => {
-        handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+        //handleSetScreen(serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location');
+        handleSetScreen("serviceNeeds");
         redirectToCreateFlow();
     }, [serviceType, redirectToCreateFlow, customerLoadedData])
 
