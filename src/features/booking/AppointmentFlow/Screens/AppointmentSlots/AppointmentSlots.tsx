@@ -222,7 +222,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     warrantyExpiration: selectedVehicle?.warrantyExpiration,
                     serviceTypeOptionId: serviceTypeOption?.id ?? null,
                     recalls: mapRecallsForRequest(selectedRecalls),
-                    transportationId: transportation?.id ?? null,
+                    transportationOptionId: transportation?.id ?? null,
                 }
                 if (valueService?.selectedService) {
                     data.valueServiceOfferIds = [valueService.selectedService.id];
