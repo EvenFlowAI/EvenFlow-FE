@@ -14,7 +14,7 @@ import {
     setAppointmentSaving,
     setCurrentFrameScreen,
     setReminders,
-    setServiceOptionChanged,
+    setServiceOptionChanged, setServiceTypeOption,
     setSideBarSteps,
     setVehicle,
     setWelcomeScreenView, updateConsultant
@@ -101,6 +101,9 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     const showMessage = useMessage();
     const history = useHistory();
 
+    const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
+        [currentUser, scProfile])
+
     const isEmailRequired = useMemo(() => {
         return currentUser
             ? Boolean(scProfile?.emailRequirement?.adminAndEmployeesEnabled)
@@ -111,7 +114,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     }
 
-    usePopState('serviceCenterSelect', redirectToWelcomeScreens);
+    usePopState(isAuthorized ? "serviceCenterSelect" : 'select', redirectToWelcomeScreens);
 
     useEffect(() => {
         if (scProfile) {
@@ -242,8 +245,8 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
 
     const handleCancelAppointment = async () => {
         if (appointmentByKey) {
-            dispatch(setAppointmentSaving(true))
             try {
+                dispatch(setAppointmentSaving(true))
                 const key = appointmentByKey.hashKey;
                 await API.appointment.cancelByKey(key);
                 showMessage(
@@ -256,6 +259,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
                 dispatch(setServiceOptionChanged(false));
                 dispatch(setVehicle(null));
                 dispatch(clearAppointmentData());
+                dispatch(setServiceTypeOption(null))
                 dispatch(setCustomerLoadedData(null));
                 dispatch(setWelcomeScreenView("select"))
                 history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1")

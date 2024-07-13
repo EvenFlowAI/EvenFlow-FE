@@ -158,7 +158,10 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     }
 
     const handleSelectOption = (card: IFirstScreenOption) => {
-        if (!customerLoadedData?.isUpdating) dispatch(clearAppointmentData())
+        if (!customerLoadedData?.isUpdating) {
+            dispatch(clearAppointmentData())
+            dispatch(setSideBarSteps([]))
+        }
         dispatch(setServiceTypeOption(card))
         if (card.type === EServiceType.General) {
             if (card.externalLink) window.location.href = card.externalLink;
@@ -175,7 +178,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     }
 
     const handleBack = () => {
-        const userIsNew = (!customerLoadedData?.id && !selectedVehicle?.make) || userType === EUserType.New;
+        const userIsNew = (!customerLoadedData && !selectedVehicle?.make) || userType === EUserType.New;
         if (customerLoadedData?.isUpdating) {
             handleBackWhileUpdating()
         } else {

@@ -74,7 +74,8 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
             return (currentScreenNumberValue < index + 1 && lastPassedScreenNumberValue < index + 1);
         }
         return false;
-    }, [isManagingFlow, serviceType, isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, sideBarSteps, sideBarActualSteps, screen, isAppointmentSaving])
+    }, [isManagingFlow, serviceType, isAdvisorAvailable, isAppointmentTimingAvailable,
+        isTransportationAvailable, sideBarSteps, sideBarActualSteps, screen, isAppointmentSaving])
 
     const activeButtonStyles = {
         background: '#E6FCEC',
