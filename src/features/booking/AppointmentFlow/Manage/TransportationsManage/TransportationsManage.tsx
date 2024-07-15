@@ -32,6 +32,7 @@ const TransportationsManage: React.FC<TActionProps> = ({onBack, onNext}) => {
 
     const handleBack = () => {
         if (!isUsualFlowNeeded) {
+            dispatch(setTransportation(appointmentByKey?.transportationOption ?? null))
             dispatch(setCurrentFrameScreen("manageAppointment"))
         } else {
             dispatch(setTransportation(null));

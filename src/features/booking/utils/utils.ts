@@ -49,6 +49,7 @@ export const getStepsMap = (serviceType: EServiceType, isAdvisorAvailable: boole
                             isTransportationNeeds: boolean): {[K in TScreen]: number} => {
     const data: { [K in TScreen]: number } = {
         carSelection: 0,
+        location: 1,
         serviceNeeds: serviceType === EServiceType.VisitCenter ? 1 : 2,
         maintenanceDetails: serviceType === EServiceType.VisitCenter ? 1 : 2,
         packageSelection: serviceType === EServiceType.VisitCenter ? 1 : 2,
@@ -56,13 +57,12 @@ export const getStepsMap = (serviceType: EServiceType, isAdvisorAvailable: boole
         opsCode: serviceType === EServiceType.VisitCenter ? 1 : 2,
         serviceOfferProductPage: serviceType === EServiceType.VisitCenter ? 1 : 2,
         consultantSelection: serviceType === EServiceType.VisitCenter ? 2 : serviceType === EServiceType.MobileService ? -1 : 3,
-        appointmentTiming: serviceType === EServiceType.PickUpDropOff ? 5 : 4,
-        appointmentSelection: serviceType === EServiceType.PickUpDropOff ? 5 : 4,
         transportationNeeds: serviceType === EServiceType.VisitCenter ? 3 : -1,
-        appointmentConfirmation: serviceType === EServiceType.MobileService ? 5 : 6,
-        manageAppointment: serviceType === EServiceType.MobileService ? 5 : 6,
-        appointmentConfirmed: serviceType === EServiceType.MobileService ? 5 : 6,
-        location: 1,
+        appointmentTiming: serviceType === EServiceType.PickUpDropOff || isTransportationNeeds ? 4 : 3,
+        appointmentSelection: serviceType === EServiceType.PickUpDropOff || isTransportationNeeds ? 4 : 3,
+        appointmentConfirmation: serviceType === EServiceType.MobileService ? 4 : 5,
+        manageAppointment: serviceType === EServiceType.MobileService ? 4 : 5,
+        appointmentConfirmed: serviceType === EServiceType.MobileService ? 4 : 5,
         payment: 6,
     }
     if (!isAdvisorAvailable && data.consultantSelection > -1) {
