@@ -29,7 +29,6 @@ import {SVAppointmentTimeSelector} from "../../../../../components/bookingDateTi
 import {
     clearAppointmentSteps,
     setServiceTypeOption,
-    setTransportation,
     setWelcomeScreenView
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
@@ -86,10 +85,11 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         appointmentByKey,
         isConsultantsLoading,
         isConsentsLoading,
-        trackerData
+        trackerData,
+        transportation
     } = useSelector((state: RootState) => state.appointmentFrame)
 
-    const {currentConfig, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
+    const {currentConfig, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
 
     const {allCategories} = useSelector((state: RootState) => state.categories);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
@@ -163,7 +163,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     const clearData = () => {
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
-        dispatch(clearAppointmentSteps("appointmentSelection"));
+        dispatch(clearAppointmentSteps(isTransportationAvailable ? "transportationNeeds" : "appointmentSelection"));
     }
 
     const updateDate = useCallback((d: TParsableDate) => {
@@ -221,6 +221,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     warrantyExpiration: selectedVehicle?.warrantyExpiration,
                     serviceTypeOptionId: serviceTypeOption?.id ?? null,
                     recalls: mapRecallsForRequest(selectedRecalls),
+                    transportationOptionId: transportation?.id ?? null,
                 }
                 if (valueService?.selectedService) {
                     data.valueServiceOfferIds = [valueService.selectedService.id];
@@ -275,7 +276,8 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     }, [
         dispatch, id, selectedTiming,
         selectedVehicle, customerLoadedData, service, packagePricingType, packageEMenuType, serviceTypeOption,
-        subService, selectedPackage, selectedSR, advisor, valueService, serviceType, selectedTime, zipCode, address, mileage
+        subService, selectedPackage, selectedSR, advisor, valueService, serviceType, selectedTime, zipCode, address, mileage,
+        transportation
     ]);
 
     const handleGANext = useCallback(() => {
@@ -302,7 +304,6 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
 
     const handleNext = useCallback((): void => {
         handleGANext();
-        dispatch(setTransportation(null))
         onNext();
     }, [onNext, handleGANext])
 

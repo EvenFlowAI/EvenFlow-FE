@@ -104,6 +104,7 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
         : appointmentFrame.packageEMenuType !== null
             ? {optionType: appointmentFrame.packageEMenuType}
             : null;
+
     const data: ICheckPodRequest = {
         serviceRequestIds,
         serviceCategoryIds: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
@@ -122,6 +123,7 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
             isAnySelected: !(Boolean(appointmentFrame.advisor))
         },
         vehicle,
+        transportationOptionId: appointmentFrame.transportation?.id ?? null,
     }
     if (appointmentFrame?.appointmentByKey?.hashKey) {
         dispatch(setAppointmentSaving(true))
@@ -187,7 +189,7 @@ export const loadServiceConsultants = (serviceCenterId: number): AppThunk => dis
 }
 
 const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boolean) => void ): AppThunk => (dispatch, getState) => {
-    const {selectedRecalls, consultants} = getState().appointmentFrame;
+    const {selectedRecalls, consultants, transportation} = getState().appointmentFrame;
     const {currentAppointment} = getState().appointments;
     const utcOffset = dayjs().utcOffset()
     const advisorId = consultants.find(item => item.id === currentAppointment?.advisor?.id)?.id;
@@ -208,6 +210,7 @@ const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boo
             serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
             recalls: mapRecallsForRequest(selectedRecalls),
             appointmentHashKey: currentAppointment.hashKey,
+            transportationOptionId: transportation?.id ?? null,
         }
         if (currentAppointment.address?.zipCode) data.zipCode = currentAppointment.address?.zipCode;
         if (currentAppointment.address) {

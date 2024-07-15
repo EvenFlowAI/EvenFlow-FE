@@ -16,20 +16,18 @@ const AppointmentSlotsCreate: React.FC<TAppointmentSelectionProps> = ({handleSet
 
     const previousLogicalScreen: TScreen = useMemo(() => currentConfig?.appointmentSelection
         ? 'appointmentTiming'
-        : isAdvisorAvailable
-            ? 'consultantSelection'
-            : "serviceNeeds",
-        [currentConfig, isAdvisorAvailable])
+        : !serviceTypeOption?.transportationOption && isTransportationAvailable
+            ? "transportationNeeds"
+            : isAdvisorAvailable
+                ? 'consultantSelection'
+                : "serviceNeeds",
+        [currentConfig, isAdvisorAvailable, isTransportationAvailable, serviceTypeOption])
 
     const onEmptyConsents = () => handleSetScreen("appointmentConfirmation")
 
     const handleNext = useCallback((): void => {
-        if (isTransportationAvailable && !serviceTypeOption?.transportationOption) {
-            handleSetScreen("transportationNeeds")
-        } else {
-            dispatch(searchForCustomerConsents(onEmptyConsents))
-        }
-    }, [isTransportationAvailable, serviceTypeOption])
+        dispatch(searchForCustomerConsents(onEmptyConsents))
+    }, [onEmptyConsents])
 
     return (
         <AppointmentSlots

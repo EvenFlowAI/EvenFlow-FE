@@ -15,7 +15,7 @@ const AppointmentTimingManage: React.FC<{handleSetScreen: TArgCallback<TScreen>}
         appointmentByKey,
         editingPosition,
     } = useSelector((state: RootState) => state.appointmentFrame)
-    const {isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
+    const {isAdvisorAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
 
     const dispatch = useDispatch();
     const {id} = useParams<{id: string}>();
@@ -39,7 +39,12 @@ const AppointmentTimingManage: React.FC<{handleSetScreen: TArgCallback<TScreen>}
             if (editingPosition === 'slot') {
                 handleSetScreen("manageAppointment")
             } else {
-                handleSetScreen(isAdvisorAvailable && consultants.length ? 'consultantSelection' : 'serviceNeeds')
+                const prev: TScreen = isTransportationAvailable && !serviceTypeOption?.transportationOption
+                    ? "transportationNeeds"
+                    : isAdvisorAvailable && consultants.length
+                        ? 'consultantSelection'
+                        : 'serviceNeeds'
+                handleSetScreen(prev)
             }
         }
     }

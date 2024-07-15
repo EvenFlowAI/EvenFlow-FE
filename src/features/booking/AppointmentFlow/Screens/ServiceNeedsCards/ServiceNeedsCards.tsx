@@ -62,6 +62,7 @@ export const ServiceNeedsCards: React.FC<React.PropsWithChildren<React.PropsWith
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {selectedSR, serviceRequests, scProfile} = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
+    const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
     const [loading, setLoading] = useState<boolean>(false);
     const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
     const {id} = useParams<{id: string}>();
@@ -137,7 +138,7 @@ export const ServiceNeedsCards: React.FC<React.PropsWithChildren<React.PropsWith
         dispatch(setAdditionalServicesChosen(false));
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
-        dispatch(clearAppointmentSteps("appointmentSelection"));
+        dispatch(clearAppointmentSteps(isTransportationAvailable ? "transportationNeeds" : "appointmentSelection"));
     }
 
     const handleSubmit = (selectedCategory: IServiceCategory) => {
