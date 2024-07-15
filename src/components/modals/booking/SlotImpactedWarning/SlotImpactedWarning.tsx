@@ -12,17 +12,26 @@ import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 const SlotImpactedWarning = () => {
     const {isSlotsWarningOpen} = useSelector((state: RootState) => state.modals);
     const {isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const { classes  } = useStyles();
     const {t} = useTranslation();
     const {id} = useParams<{id: string}>();
     const history = useHistory();
 
+    const redirect = () => {
+        if (customerLoadedData?.isUpdating) {
+            history.push( "/f/appointment-manage/" + id);
+        } else {
+            history.push( "/f/appointment/" + id);
+        }
+    }
+
     const onNext = () => {
         dispatch(setCurrentFrameScreen(isAppointmentTimingAvailable ? "appointmentTiming" : "appointmentSelection"));
         dispatch(setSlotsWarningOpen(false))
         if (history.location.pathname.includes("welcome")) {
-            history.push( "/f/appointment/" + id);
+            redirect();
         }
     }
 

@@ -86,6 +86,7 @@ export enum EndUser {
     EditAppointmentFromEmail = "/appointment-update/:id/by-key",
     Appointment = "/appointment/:id",
     AppointmentFrame = "/f/appointment/:id",
+    ManageAppointmentFrame = "/f/appointment-manage/:id",
     AppointmentFrameBase = "/f/appointment",
     ValueService = "/f/appointment/:id/valueService",
     PaymentBill = "/f/appointment/:id/payment-bill",

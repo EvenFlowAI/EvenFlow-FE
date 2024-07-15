@@ -177,7 +177,7 @@ export interface ITableProps<Data> {
     verticalAlign?: string;
 }
 
-export type TScreen =
+export type TBaseScreen =
     | "carSelection"
     | "serviceNeeds"
     | "maintenanceDetails"
@@ -188,12 +188,13 @@ export type TScreen =
     | "appointmentTiming"
     | "appointmentSelection"
     | "transportationNeeds"
-    | "appointmentConfirmation"
     | "appointmentConfirmed"
     | "location"
     | "payment"
     | "serviceOfferProductPage"
-    | "manageAppointment"
+
+export type TScreen = TBaseScreen | "appointmentConfirmation" | "manageAppointment"
+
 export type TMobileScreen =
     | "carSelection"
     | "serviceNeeds"

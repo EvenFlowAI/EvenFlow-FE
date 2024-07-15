@@ -13,7 +13,7 @@ import {
     setSideBarSteps,
     setTransportation
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import {TSlot} from "../../../features/booking/AppointmentFlow/AppointmentSlots/types";
+import {TSlot} from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/types";
 import {TimeSlotsWrapper, useStyles} from "./styles";
 import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";

@@ -262,7 +262,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                         <TextField
                             id="appointmentLeadTime"
                             name="appointmentLeadTime"
-                            label="Appointment Lead Time"
+                            label="AppointmentFlow Lead Time"
                             placeholder="Type Time"
                             error={formIsChecked && form.appointmentLeadTime !== null && form.appointmentLeadTime < 0}
                             fullWidth
@@ -272,7 +272,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                             value={form.appointmentLeadTime}
                         />
                     </Grid>
-                    <Grid xs={12} item><SubTitle>Appointment Cut Off</SubTitle></Grid>
+                    <Grid xs={12} item><SubTitle>AppointmentFlow Cut Off</SubTitle></Grid>
                     {daysList.map(day => {
                         const existingTime = form.cutOffTime.find(el => el.day === day);
                         return <Grid item xs={6} md={3}>

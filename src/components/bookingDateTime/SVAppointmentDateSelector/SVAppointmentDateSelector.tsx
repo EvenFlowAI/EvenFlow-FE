@@ -7,7 +7,7 @@ import {RootState} from "../../../store/rootReducer";
 import {SVDaySelector} from "../SVDaySelector/SVDaySelector";
 
 import {MonthSelector} from "../MonthSelector/MonthSelector";
-import {TMonthProps} from "../../../features/booking/AppointmentFlow/AppointmentSlots/types";
+import {TMonthProps} from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/types";
 
 type TProps = {
     onDateRangeSet: TArgCallback<boolean>;
