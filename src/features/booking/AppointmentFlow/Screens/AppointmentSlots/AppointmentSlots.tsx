@@ -326,7 +326,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     return (
         <StepWrapper>
             <SlotsScreenWrapper>
-                <SelectedAppointment />
+                <SelectedAppointment handleSetScreen={handleSetScreen}/>
                 <ActionButtons
                     onBack={handleBack}
                     onNext={handleNext}

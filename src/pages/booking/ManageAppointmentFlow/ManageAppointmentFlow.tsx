@@ -138,7 +138,7 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
             />,
             manageAppointment: <ManageAppointment
                 onUpdateAppointment={onUpdateAppointment}
-                onChangeSlot={() => handleSetScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}/>,
+                onChangeSlot={() => handleSetScreen(isAppointmentTimingAvailable ? "appointmentTiming" : "appointmentSelection")}/>,
         }
         return carSelections[currentScreen];
 

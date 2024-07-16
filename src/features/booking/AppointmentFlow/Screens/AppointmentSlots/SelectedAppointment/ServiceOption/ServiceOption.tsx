@@ -1,8 +1,5 @@
 import React, {useMemo} from 'react';
-import {
-    EServiceType,
-    IAncillaryByZipRequest,
-} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
+import {EServiceType, IAncillaryByZipRequest,} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
 import {MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
@@ -12,7 +9,8 @@ import {
     selectServiceValetAppointment,
 } from "../../../../../../../store/reducers/appointment/actions";
 import {
-    checkCarIsValid, loadAncillaryPriceByZip,
+    checkCarIsValid,
+    loadAncillaryPriceByZip,
     loadConsultants,
     setAdvisor,
     setCurrentFrameScreen,
@@ -28,8 +26,14 @@ import {IServiceConsultant} from "../../../../../../../api/types";
 import {useSelectedAppointmentStyles} from "../../../../../../../hooks/styling/useSelectedAppointmentStyles";
 import {useException} from "../../../../../../../hooks/useException/useException";
 import {setUnavailableServiceOpen} from "../../../../../../../store/reducers/modals/actions";
+import {TArgCallback, TScreen} from "../../../../../../../types/types";
 
-const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{isSm: boolean}>>> = ({isSm}) => {
+type TProps = {
+    isSm: boolean;
+    handleSetScreen: TArgCallback<TScreen>;
+}
+
+const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isSm, handleSetScreen}) => {
     const {
         serviceTypeOption,
         sideBarSteps,
@@ -37,7 +41,8 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{i
         address,
         zipCode,
         selectedServiceOptions,
-        advisor
+        advisor,
+        transportation
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const { scProfile } = useSelector(({appointment}: RootState) => appointment);
@@ -136,8 +141,8 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{i
         }
     }
 
-    const clearAppointmentSlot = (option: IFirstScreenOption) => {
-        if (option?.type === EServiceType.PickUpDropOff) {
+    const clearAppointmentSlot = (newOption: IFirstScreenOption) => {
+        if (newOption?.type === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));
         } else {
             dispatch(selectServiceValetAppointment(null));
@@ -185,27 +190,33 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<{i
         }
     }
 
-    const clearTransportation = ()=> {
-        dispatch(setTransportation(null));
+    const handleTransportation = (newOption: IFirstScreenOption)=> {
+        const newConfig = config.find(item => item.serviceType === newOption.type);
+        const isTransportationAvailable = Boolean(newConfig?.transportationNeeds) && !newOption?.transportationOption;
+        if (isTransportationAvailable) {
+            handleSetScreen("transportationNeeds")
+        } else if (transportation) {
+            dispatch(setTransportation(null));
+        }
     }
 
-    const handleAdvisors = (option: IFirstScreenOption) => {
-        const shouldLoadAdvisors = option?.type === EServiceType.VisitCenter
-            || Boolean(option?.type === EServiceType.PickUpDropOff && address && zipCode);
-        let isAdvisorSelectionOn = Boolean(config.find(item => item.serviceType === option.type)?.advisorSelection);
+    const handleAdvisors = (newOption: IFirstScreenOption) => {
+        const shouldLoadAdvisors = newOption?.type === EServiceType.VisitCenter
+            || Boolean(newOption?.type === EServiceType.PickUpDropOff && address && zipCode);
+        let isAdvisorSelectionOn = Boolean(config.find(item => item.serviceType === newOption.type)?.advisorSelection);
         dispatch(checkCarIsValid(
-            () => onCarIsValid(option, shouldLoadAdvisors, isAdvisorSelectionOn),
+            () => onCarIsValid(newOption, shouldLoadAdvisors, isAdvisorSelectionOn),
             undefined,
             true))
     }
 
     const handleServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
-        clearTransportation()
-        const option = firstScreenOptions.find(item => item.id === e.target.value);
-        if (option) {
-            dispatch(setServiceTypeOption(option));
-            handleAdvisors(option);
-            clearAppointmentSlot(option);
+        const newOption = firstScreenOptions.find(item => item.id === e.target.value);
+        if (newOption) {
+            handleTransportation(newOption)
+            dispatch(setServiceTypeOption(newOption));
+            handleAdvisors(newOption);
+            clearAppointmentSlot(newOption);
             dispatch(setServiceOptionChanged(true))
         }
     }

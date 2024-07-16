@@ -16,8 +16,9 @@ import {DateWrapper} from "../../../../../../components/styled/DateWrapper";
 import {List, PriceWrapper, Wrapper} from "./styles";
 import {WaitListLabel} from "../WaitListLabel/WaitListLabel";
 import dayjs from "dayjs";
+import {TArgCallback, TScreen} from "../../../../../../types/types";
 
-export const SelectedAppointment = () => {
+export const SelectedAppointment: React.FC<{handleSetScreen: TArgCallback<TScreen>}> = ({handleSetScreen}) => {
     const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
     const { appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const { classes  } = useSelectedAppointmentStyles();
@@ -46,7 +47,7 @@ export const SelectedAppointment = () => {
                     <li key="advisor">
                         <SelectedConsultant />
                         <Address />
-                        <ServiceOption isSm={isSm}/>
+                        <ServiceOption isSm={isSm} handleSetScreen={handleSetScreen}/>
                         {appointment && isSm
                             ? <DateWrapper>
                                 {dayjs.utc(appointment.date).format('ddd, MMMM D, h:mm A')}
