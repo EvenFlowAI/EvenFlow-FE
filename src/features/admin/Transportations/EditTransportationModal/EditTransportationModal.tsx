@@ -13,7 +13,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import { Autocomplete } from '@mui/material';
 import Checkbox from "../../../../components/formControls/Checkbox/Checkbox";
-import {CheckBoxOutlineBlank, CheckBoxOutlined, DateRange, QueryBuilder} from "@mui/icons-material";
+import {CheckBoxOutlineBlank, CheckBoxOutlined, QueryBuilder} from "@mui/icons-material";
 import {Button, Divider} from "@mui/material";
 import {editTransportationOptionRules} from "../../../../store/reducers/transportationNeeds/actions";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
@@ -25,7 +25,6 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import ClockTimePicker from "../../../../components/pickers/ClockTimePicker/ClockTimePicker";
 import {TParsableDate} from "../../../../types/types";
 import dayjs from "dayjs";
-import {CustomDatePicker} from "../../../../components/pickers/CustomDatePicker/CustomDatePicker";
 
 type TEditTransportationOptionDialogProps = {
     editingElement: ITransportationOptionFull | null;
@@ -38,11 +37,9 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
     const [segmentOptions, setSegmentOptions] = useState<TOption[]>([]);
     const [dayOFWeekOptions, setDayOfWeekOptions] = useState<TOption[]>([]);
     const [timeOfDay, setTimeOfDay] = useState<TTimeObject | null>(null);
-    const [duration, setDuration] = useState<TTimeObject | null>(null);
     const [serviceRequests, setServiceRequests] = useState<TOption[]>([]);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [capacity, setCapacity] = useState<string>('');
-    const [slotsCount, setSlotsCount] = useState<string>('');
 
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
@@ -97,7 +94,6 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                     setServiceRequests(rules.serviceRequests.map(item => ({ value: item.id, name: item.code})));
                 }
                 if (rules.capacity) setCapacity(rules.capacity.toString())
-                if (rules.slotsCount) setSlotsCount(rules.slotsCount.toString());
 
                 const [startHours, startMinutes, startSeconds] = rules.timeOfDay.start.split(':');
                 const [endHours, endMinutes, endSeconds] = rules.timeOfDay.end.split(':');
@@ -111,10 +107,6 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                         .hour(+endHours)
                         .minute(+endMinutes)
                         .second(+endSeconds),
-                }));
-                setDuration(() => ({
-                    start: dayjs.utc(rules.duration.start),
-                    end: dayjs.utc(rules.duration.end),
                 }));
             }
         }
@@ -136,22 +128,6 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                 return {...prev, [type as keyof TTimeObject]: dayjs(date)};
             } else {
                 return {[type as keyof TTimeObject]: dayjs(date)}
-            }
-        })
-    }, [])
-
-    const handleDateChange = useCallback((type: keyof TTimeObject) => (date: TParsableDate): void => {
-        setFormIsChecked(false);
-        setDuration((prev) => {
-            const value = dayjs.utc(date).hour(type === 'start' ? 0 : 1);
-            if (prev) {
-                if (prev.start && type === 'end' && dayjs(date).diff(prev.start) / 1000 / 60 / 60 < -24) {
-                    showError('The End Duration Date needs to be more than the Start Date');
-                    return prev;
-                }
-                return {...prev, [type as keyof TTimeObject]: value};
-            } else {
-                return {[type as keyof TTimeObject]: value}
             }
         })
     }, [])
@@ -236,18 +212,15 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
     const onCancel = () => {
         setFormIsChecked(false);
         setCustomerSegment(null);
-        setDuration(null);
         setTimeOfDay(null);
         setServiceRequests([]);
         setDaysOfWeek([]);
-        setSlotsCount('');
         setCapacity('');
         props.onClose();
     }
 
     const isValid = () => {
-        return (serviceRequests.length || allRequestsSelected) && timeOfDay?.start && timeOfDay?.end && duration?.start && duration?.end &&
-            daysOfWeek.length && customerSegment;
+        return (serviceRequests.length || allRequestsSelected) && timeOfDay?.start && timeOfDay?.end && daysOfWeek.length && customerSegment;
     }
 
     const onSave = useCallback(() => {
@@ -255,10 +228,6 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
         if (selectedSC && editingElement && isValid()) {
             const data: ITransportationOptionRules = {
                 isAllServiceRequestsIncluded: allRequestsSelected,
-            }
-            if (duration) data.duration = {
-                start: dayjs(duration.start).toISOString(),
-                end: dayjs(duration.end).toISOString(),
             }
             if (timeOfDay) data.timeOfDay = {
                 start: dayjs(timeOfDay.start).format("HH:mm:ss"),
@@ -274,7 +243,6 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                 data.dayOfWeeks = daysOfWeek.map(item => item.value);
             }
             if (capacity) data.capacity = Number(capacity);
-            if (slotsCount) data.slotsCount = Number(slotsCount);
 
             if (editingElement.id) {
                 dispatch(editTransportationOptionRules(editingElement.id, selectedSC.id, data, onCancel, showError))
@@ -282,15 +250,11 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
         } else {
             showError('Please fill all required fields')
         }
-    }, [selectedSC, editingElement, isValid, allRequestsSelected, duration, timeOfDay, customerSegment,
+    }, [selectedSC, editingElement, isValid, allRequestsSelected, timeOfDay, customerSegment,
         serviceRequests, daysOfWeek, dayOFWeekOptions, onCancel])
 
     const onCapacityChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (Number.isInteger(+e.target.value) && +e.target.value >= 0) setCapacity(e.target.value);
-    }
-
-    const onSlotsCountChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        if (Number.isInteger(+e.target.value) && +e.target.value >= 0) setSlotsCount(e.target.value);
     }
 
     return (
@@ -376,49 +340,18 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                             }}
                         />
                     </div>
-                    <div className={classes.label}>Duration</div>
-                    <div className={classes.smallWrapper}>
-                        <CustomDatePicker
-                            value={duration?.start ?? null}
-                            format="MMM D, YYYY"
-                            onChange={handleDateChange('start')}
-                            InputProps={{
-                                endAdornment: <DateRange htmlColor="rgba(0, 0, 0, 0.54)" cursor="pointer"/>,
-                                error: !duration?.start && formIsChecked,
-                                style: {marginBottom: 20}
-                            }}
-                        />
-                        <CustomDatePicker
-                            value={duration?.end ?? null}
-                            format="MMM D, YYYY"
-                            onChange={handleDateChange('end')}
-                            InputProps={{
-                                endAdornment: <DateRange htmlColor="rgba(0, 0, 0, 0.54)" cursor="pointer"/>,
-                                error: !duration?.end && formIsChecked,
-                            }}
-                        />
-                    </div>
                     <div className={classes.bigLabel}>CONSTRAINTS</div>
                     <Divider style={{ margin: '0 0 10px 0' }}/>
                     <TextField
                         fullWidth
                         type="number"
                         inputProps={{min: 1, step: 1}}
-                        label='Capacity'
+                        label='Daily Capacity'
                         style={{ marginBottom: 20}}
                         placeholder='Type Number'
                         error={Boolean(capacity) && !Number.isInteger(+capacity)}
                         onChange={onCapacityChange}
                         value={capacity ?? ''}/>
-                    <TextField
-                        fullWidth
-                        type="number"
-                        inputProps={{min: 1, step: 1}}
-                        label='Per appointment slots'
-                        placeholder='Type Number'
-                        error={Boolean(slotsCount) && !Number.isInteger(+slotsCount)}
-                        onChange={onSlotsCountChange}
-                        value={slotsCount ?? ''}/>
                 </div>
             </DialogContent>
             <Divider style={{ margin: 0 }}/>
