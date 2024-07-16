@@ -122,19 +122,19 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
         }
     }
 
-    const onServiceTypeSelect = (serviceOption: IFirstScreenOption) => {
-        handleValueServiceConfig(serviceOption.type);
+    const onServiceTypeSelect = (newServiceOption: IFirstScreenOption) => {
+        handleValueServiceConfig(newServiceOption.type);
         dispatch(setUsualFlowNeeded(false));
         if (customerLoadedData?.isUpdating) {
-            dispatch(setTransportation(null));
-            handleUpdateOption(serviceOption)
+            // handleTransportation(newServiceOption)
+            handleUpdateOption(newServiceOption)
         } else {
-            if (serviceTypeOption?.id !== serviceOption.id) {
+            if (serviceTypeOption?.id !== newServiceOption.id) {
                 dispatch(clearAppointmentData());
                 dispatch(setServiceOptionChanged(false));
                 dispatch(setSideBarSteps([]))
             }
-            const nextScreen = serviceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
+            const nextScreen = newServiceOption.type === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
             dispatch(setCurrentFrameScreen(nextScreen));
             redirect();
         }
