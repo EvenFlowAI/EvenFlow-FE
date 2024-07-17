@@ -16,7 +16,7 @@ type TMaintenanceDetailsProps = {
 }
 
 const MaintenanceManage:React.FC<TMaintenanceDetailsProps> = ({onBack, onNext, serviceCategoryPage}) => {
-    const {isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {
         service,
         serviceTypeOption,
@@ -33,6 +33,7 @@ const MaintenanceManage:React.FC<TMaintenanceDetailsProps> = ({onBack, onNext, s
             onNext("packageSelection")
         } else {
             const advisorNotSelected = !advisor && isAdvisorAvailable;
+
             const pickUpSelected = serviceTypeOption?.type === EServiceType.PickUpDropOff
                 && appointmentByKey?.serviceTypeOption
                 && appointmentByKey?.serviceTypeOption?.type !== EServiceType.PickUpDropOff;
@@ -42,9 +43,11 @@ const MaintenanceManage:React.FC<TMaintenanceDetailsProps> = ({onBack, onNext, s
             if (pickUpSelected || pickUpChanged) {
                 onNext(advisorNotSelected
                     ? "consultantSelection"
-                    : isAppointmentTimingAvailable
-                        ? "appointmentTiming"
-                        : "appointmentSelection")
+                    : isTransportationAvailable && !serviceTypeOption?.transportationOption
+                        ? "transportationNeeds"
+                        : isAppointmentTimingAvailable
+                            ? "appointmentTiming"
+                            : "appointmentSelection")
             } else {
                 if (advisorNotSelected) {
                     onNext("consultantSelection");

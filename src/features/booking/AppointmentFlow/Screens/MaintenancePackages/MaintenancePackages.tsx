@@ -50,14 +50,15 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
                                                                           onBack, onNext, onAddServices, isManagingFlow
 }) => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {isAdvisorAvailable, isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {
         selectedPackage,
         selectedVehicle,
         packagePricingType,
         packageOptionType,
         packageEMenuType,
-        trackerData
+        trackerData,
+        serviceTypeOption,
     } = useSelector((state: RootState) => state.appointmentFrame);
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -135,11 +136,15 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
     }
 
     const handleNextScreen = (): void => {
-        onNext(isAdvisorAvailable
-            ? 'consultantSelection'
-            : isAppointmentTimingAvailable
-                ? 'appointmentTiming'
-                : "appointmentSelection")
+        let nextScreen: TScreen = "appointmentSelection"
+        if (isAdvisorAvailable) {
+            nextScreen = 'consultantSelection';
+        } else if (isTransportationAvailable && !serviceTypeOption?.transportationOption) {
+            nextScreen = 'transportationNeeds';
+        } else if (isAppointmentTimingAvailable) {
+            nextScreen = 'appointmentTiming';
+        }
+        onNext(nextScreen);
     }
 
     const onSelectionCompleted = () => {

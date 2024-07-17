@@ -783,9 +783,9 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         ? appointmentFrame.selectedTiming
         : EAppointmentTimingType.FirstAvailable;
 
-    const transportationOptionId = appointmentFrame.serviceTypeOption?.transportationOption?.id
-        ?? appointmentFrame.transportation?.id
-        ?? null;
+    const transportationOptionId = appointmentFrame.serviceTypeOption?.type === EServiceType.VisitCenter && appointmentFrame.transportation
+        ? appointmentFrame.transportation?.id
+        : null;
 
     const serviceRequestIds = collectServiceRequestIds(
         appointmentFrame.service,
@@ -1012,7 +1012,7 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
         const date = appointment?.appointmentDate
             ?? `${dayjs(serviceValetAppointment?.date).format("YYYY-MM-DD")}T00:00:00.000Z`
             ?? ""
-
+   // todo check transportation logic
         const data: ISearchConsentsData = {
             serviceCenterId: scProfile.id,
             podId: slotPodId,
@@ -1084,7 +1084,7 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
             : appointment.appointment?.id.split("|")[0] || ""
 
         const appointmentTimingType = EAppointmentTimingType.FirstAvailable;
-        const transportationOptionId = currentAppointment?.serviceTypeOption?.transportationOption?.id ?? null;
+        const transportationOptionId = currentAppointment?.transportationOption?.id ?? null;
         const serviceRequestIds = currentAppointment?.serviceRequests
             ? currentAppointment?.serviceRequests.map(el => el.id)
             : [];

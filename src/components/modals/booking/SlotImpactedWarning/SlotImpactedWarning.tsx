@@ -8,10 +8,11 @@ import {RootState} from "../../../../store/rootReducer";
 import {useHistory, useParams} from "react-router-dom";
 import {useStyles} from "./styles";
 import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
+import {TScreen} from "../../../../types/types";
 
 const SlotImpactedWarning = () => {
     const {isSlotsWarningOpen} = useSelector((state: RootState) => state.modals);
-    const {isAppointmentTimingAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const dispatch = useDispatch();
     const { classes  } = useStyles();
@@ -28,7 +29,12 @@ const SlotImpactedWarning = () => {
     }
 
     const onNext = () => {
-        dispatch(setCurrentFrameScreen(isAppointmentTimingAvailable ? "appointmentTiming" : "appointmentSelection"));
+        const nextScreen: TScreen = isTransportationAvailable
+            ? "transportationNeeds"
+            : isAppointmentTimingAvailable
+                ? "appointmentTiming"
+                : "appointmentSelection"
+        dispatch(setCurrentFrameScreen(nextScreen));
         dispatch(setSlotsWarningOpen(false))
         if (history.location.pathname.includes("welcome")) {
             redirect();
@@ -47,26 +53,30 @@ const SlotImpactedWarning = () => {
         >
             <DialogTitle onClose={onCancel}>
                 <div>{t("Appointment availability depends on the service requested.")}</div>
-                <div>{t("Please continue to see available dates and times for you requested change")}</div>
-            </DialogTitle>
-                <div className={classes.wrapper}>
-                    <LoadingButton
-                        loading={false}
-                        fullWidth
-                        onClick={onCancel}
-                        variant="outlined"
-                        color="primary">
-                        {t("Cancel")}
-                    </LoadingButton>
-                    <LoadingButton
-                        loading={false}
-                        fullWidth
-                        onClick={onNext}
-                        variant="contained"
-                        color="primary">
-                        {t("Next")}
-                    </LoadingButton>
+                <div>
+                    {isTransportationAvailable
+                        ? t("Please continue to update your transportation selection")
+                        : t("Please continue to see available dates and times for you requested change")}
                 </div>
+            </DialogTitle>
+            <div className={classes.wrapper}>
+                <LoadingButton
+                    loading={false}
+                    fullWidth
+                    onClick={onCancel}
+                    variant="outlined"
+                    color="primary">
+                    {t("Cancel")}
+                </LoadingButton>
+                <LoadingButton
+                    loading={false}
+                    fullWidth
+                    onClick={onNext}
+                    variant="contained"
+                    color="primary">
+                    {t("Next")}
+                </LoadingButton>
+            </div>
         </BaseModal>
     );
 };

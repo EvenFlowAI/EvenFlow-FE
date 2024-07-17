@@ -7,7 +7,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {ITransportation} from '../../../../../api/types';
 import {
-    searchForCustomerConsents,
     setTransportation
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
@@ -76,7 +75,6 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
             const data: TTransportationData = {
                 serviceCenterId: decodeSCID(id),
                 serviceRequestIds,
-                slot: date,
                 serviceCategoryIds: getCategories(),
                 recalls: mapRecallsForRequest(selectedRecalls),
                 maintenancePackageOption,
@@ -101,7 +99,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
             setTimeout(() => setLoading(false), 500)
         }
     }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls,
-        packagePricingType, packageEMenuType, selectedPackage, categoriesIds, hashKey, date]);
+        packagePricingType, packageEMenuType, selectedPackage, categoriesIds, hashKey]);
 
     const handleGA = (transportation: ITransportation|null) => {
         ReactGA.event({
@@ -113,7 +111,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
 
     const handleNext = (transportation: ITransportation|null): void => {
         handleGA(transportation);
-        dispatch(searchForCustomerConsents(handleConsentsAccepted))
+        onNext();
     }
 
     const handleSelectOption = (o: ITransportation|null) => {

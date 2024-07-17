@@ -105,18 +105,20 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
             />,
             consultantSelection: <ConsultantsCreate
                 onBack={() => handleSetScreen('serviceNeeds')}
-                onNext={() => handleSetScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
+                onNext={() => handleSetScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption
+                    ? "transportationNeeds"
+                    : isAppointmentTimingAvailable
+                        ? 'appointmentTiming'
+                        : "appointmentSelection")}
             />,
             appointmentTiming: <AppointmentTimingCreate handleSetScreen={handleSetScreen}/>,
             appointmentSelection: <AppointmentSlotsCreate handleSetScreen={handleSetScreen}/>,
             transportationNeeds: <TransportationsCreate
-                onBack={() => handleSetScreen('appointmentSelection')}
-                onNext={() => handleSetScreen('appointmentConfirmation')}
+                onBack={() => handleSetScreen(isAdvisorAvailable ? "consultantSelection" : 'serviceNeeds')}
+                onNext={() => handleSetScreen(isAppointmentTimingAvailable ? "appointmentTiming" : 'appointmentSelection')}
             />,
             appointmentConfirmation: <AppointmentConfirmation
-                onBack={() => handleSetScreen(isTransportationAvailable && !serviceTypeOption?.transportationOption
-                    ? 'transportationNeeds'
-                    : 'appointmentSelection')}
+                onBack={() => handleSetScreen('appointmentSelection')}
                 onChangeSlot={() => handleSetScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
                 onNext={() => handleSetScreen('appointmentConfirmed')}
             />,

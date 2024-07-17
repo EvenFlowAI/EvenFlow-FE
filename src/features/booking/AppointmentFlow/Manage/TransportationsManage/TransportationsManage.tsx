@@ -4,13 +4,18 @@ import {TransportationNeeds} from "../../Screens/TransportationNeeds/Transportat
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {setCurrentFrameScreen, setTransportation} from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import {setChangesCompletedOpen} from "../../../../../store/reducers/modals/actions";
 import dayjs from "dayjs";
+import {checkPodChanged} from "../../../../../store/reducers/appointments/actions";
+import {useParams} from "react-router-dom";
+import {decodeSCID} from "../../../../../utils/utils";
+import {useException} from "../../../../../hooks/useException/useException";
 
 const TransportationsManage: React.FC<TActionProps> = ({onBack, onNext}) => {
     const {isUsualFlowNeeded, appointmentByKey} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const {appointment} = useSelector(({appointment}: RootState) => appointment)
+    const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
+    const showError = useException();
 
     const date = useMemo(() => {
         let fullDateString = ''
@@ -27,6 +32,7 @@ const TransportationsManage: React.FC<TActionProps> = ({onBack, onNext}) => {
 
     const handleBack = () => {
         if (!isUsualFlowNeeded) {
+            dispatch(setTransportation(appointmentByKey?.transportationOption ?? null))
             dispatch(setCurrentFrameScreen("manageAppointment"))
         } else {
             dispatch(setTransportation(null));
@@ -34,11 +40,11 @@ const TransportationsManage: React.FC<TActionProps> = ({onBack, onNext}) => {
         }
     }
 
-    const handleConsentsAccepted = () => {
-        dispatch(setChangesCompletedOpen(true))
+    const checkPod = () => {
+        dispatch(checkPodChanged(decodeSCID(id), showError))
     }
 
-    return <TransportationNeeds onBack={handleBack} onNext={onNext} handleConsentsAccepted={handleConsentsAccepted} date={date}/>
+    return <TransportationNeeds onBack={handleBack} onNext={onNext} handleConsentsAccepted={checkPod} date={date}/>
 };
 
 export default TransportationsManage;

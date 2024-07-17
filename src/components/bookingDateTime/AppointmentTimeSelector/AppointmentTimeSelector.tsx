@@ -11,7 +11,6 @@ import {useTranslation} from "react-i18next";
 import {
     loadHoursOfOperations,
     setSideBarSteps,
-    setTransportation
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TSlot} from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/types";
 import {TimeSlotsWrapper, useStyles} from "./styles";
@@ -101,8 +100,6 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
             handleGA(a);
             dispatch(selectAppointment(data));
             if (!customerLoadedData?.isUpdating && !appointmentByKey) {
-                // todo change logic
-                dispatch(setTransportation(null));
                 handleSideBar();
             }
         }, [selectedTiming])
