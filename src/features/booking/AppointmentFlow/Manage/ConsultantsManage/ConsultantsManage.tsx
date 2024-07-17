@@ -17,7 +17,8 @@ import {Consultants} from "../../Screens/Consultants/Consultants";
 const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
     const {
         serviceOptionChangedFromSlotPage,
-        prevSelectedOption
+        appointmentByKey,
+        editingPosition
     } = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {id} = useParams<{id: string}>();
@@ -28,12 +29,12 @@ const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
         dispatch(setAnyAdvisorSelected(!Boolean(consultant)))
     }
     const onBackToPrevServiceOption = () => {
-        if (prevSelectedOption) dispatch(setServiceTypeOption(prevSelectedOption))
+        if (appointmentByKey?.serviceTypeOption) dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption))
         dispatch(setCurrentFrameScreen("appointmentSelection"))
     }
 
     const handleBack = () => {
-        serviceOptionChangedFromSlotPage
+        serviceOptionChangedFromSlotPage && editingPosition === "slot"
             ? onBackToPrevServiceOption()
             : dispatch(setCurrentFrameScreen("manageAppointment"))
     }

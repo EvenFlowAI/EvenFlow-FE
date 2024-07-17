@@ -52,6 +52,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                                                                                                                              onNext,
                                                                                                                              prevLogicalScreen,
                                                                                                                              fromServiceValetToVisitCenter,
+
 }) => {
     const {
         appointmentSlots,
@@ -86,7 +87,9 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         isConsultantsLoading,
         isConsentsLoading,
         trackerData,
-        transportation
+        transportation,
+        editingPosition,
+        serviceOptionChangedFromSlotPage
     } = useSelector((state: RootState) => state.appointmentFrame)
 
     const {currentConfig, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
@@ -314,6 +317,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             dispatch(setWelcomeScreenView("serviceSelect"))
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
+            if (editingPosition === "slot" && serviceOptionChangedFromSlotPage) dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
             handleSetScreen(prevLogicalScreen);
         }
     }, [currentConfig, history, fromServiceValetToVisitCenter, prevLogicalScreen])

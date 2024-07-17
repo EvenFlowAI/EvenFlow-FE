@@ -14,6 +14,7 @@ const AppointmentTimingManage: React.FC<{handleSetScreen: TArgCallback<TScreen>}
         consultants,
         appointmentByKey,
         editingPosition,
+        serviceOptionChangedFromSlotPage
     } = useSelector((state: RootState) => state.appointmentFrame)
     const {isAdvisorAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
 
@@ -32,12 +33,17 @@ const AppointmentTimingManage: React.FC<{handleSetScreen: TArgCallback<TScreen>}
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     }
 
+    const getBackToManage = () => {
+        dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+        handleSetScreen("manageAppointment")
+    }
+
     const onBack = () => {
-        if (fromServiceValetToVisitCenter) {
-            redirectToServiceTypeOptions()
+        if (editingPosition === 'slot' && serviceOptionChangedFromSlotPage) {
+            getBackToManage();
         } else {
-            if (editingPosition === 'slot') {
-                handleSetScreen("manageAppointment")
+            if (fromServiceValetToVisitCenter) {
+                redirectToServiceTypeOptions()
             } else {
                 const prev: TScreen = isTransportationAvailable && !serviceTypeOption?.transportationOption
                     ? "transportationNeeds"
