@@ -14,15 +14,27 @@ import {TServiceValetSlot} from "../../../../../../api/types";
 import {TitleWrapper} from "./styles";
 import dayjs from "dayjs";
 import {ConfirmationItemWrapper} from "../../../../../../components/styled/ConfirmationItemWrapper";
+import {setSlotsWarningOpen} from "../../../../../../store/reducers/modals/actions";
 
 type TProps = {
     onChangeSlot: TCallback;
 }
 
 export const AppointmentSelectedDate: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onChangeSlot}) => {
-    const {appointment, serviceValetAppointment, waitListSettings} = useSelector((state: RootState) => state.appointment);
-    const { dropOffSettings, customerLoadedData } = useSelector((state: RootState) => state.appointment);
-    const {serviceTypeOption, isAppointmentSaving, appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        appointment,
+        serviceValetAppointment,
+        waitListSettings,
+        dropOffSettings,
+        customerLoadedData
+    } = useSelector((state: RootState) => state.appointment);
+    const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {
+        serviceTypeOption,
+        isAppointmentSaving,
+        appointmentByKey,
+        transportation,
+    } = useSelector((state: RootState) => state.appointmentFrame);
     const [serviceValetTime, setServiceValetTime] = useState<TServiceValetSlot|null>(null);
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -81,7 +93,13 @@ export const AppointmentSelectedDate: React.FC<React.PropsWithChildren<React.Pro
             dispatch(setEditingPosition('slot'))
             dispatch(setServiceOptionChanged(false))
         }
-        if (!isAppointmentSaving) onChangeSlot();
+        if (!isAppointmentSaving) {
+            if (isTransportationAvailable && !transportation) {
+                dispatch(setSlotsWarningOpen(true))
+            } else {
+                onChangeSlot();
+            }
+        }
     }
     return <ConfirmationItemWrapper>
         <TitleWrapper>
