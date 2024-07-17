@@ -53,26 +53,30 @@ const SlotImpactedWarning = () => {
         >
             <DialogTitle onClose={onCancel}>
                 <div>{t("Appointment availability depends on the service requested.")}</div>
-                <div>{t("Please continue to see available dates and times for you requested change")}</div>
-            </DialogTitle>
-                <div className={classes.wrapper}>
-                    <LoadingButton
-                        loading={false}
-                        fullWidth
-                        onClick={onCancel}
-                        variant="outlined"
-                        color="primary">
-                        {t("Cancel")}
-                    </LoadingButton>
-                    <LoadingButton
-                        loading={false}
-                        fullWidth
-                        onClick={onNext}
-                        variant="contained"
-                        color="primary">
-                        {t("Next")}
-                    </LoadingButton>
+                <div>
+                    {isTransportationAvailable
+                        ? t("Please continue to update your transportation selection")
+                        : t("Please continue to see available dates and times for you requested change")}
                 </div>
+            </DialogTitle>
+            <div className={classes.wrapper}>
+                <LoadingButton
+                    loading={false}
+                    fullWidth
+                    onClick={onCancel}
+                    variant="outlined"
+                    color="primary">
+                    {t("Cancel")}
+                </LoadingButton>
+                <LoadingButton
+                    loading={false}
+                    fullWidth
+                    onClick={onNext}
+                    variant="contained"
+                    color="primary">
+                    {t("Next")}
+                </LoadingButton>
+            </div>
         </BaseModal>
     );
 };
