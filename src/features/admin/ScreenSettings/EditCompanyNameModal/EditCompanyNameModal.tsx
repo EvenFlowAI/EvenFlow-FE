@@ -25,8 +25,7 @@ export const EditCompanyNameModal: React.FC<React.PropsWithChildren<React.PropsW
     const showError = useException();
     const showMessage = useMessage();
     const companyNameSetting = useMemo(() => settings
-        .find(el => el.settingType === ESettingType.CompanyName)
-        , [settings])
+        .find(el => el.settingType === ESettingType.CompanyName), [settings])
 
     useEffect(() => {
         setCompanyNameActive(companyNameSetting?.data?.isOn ?? false)
