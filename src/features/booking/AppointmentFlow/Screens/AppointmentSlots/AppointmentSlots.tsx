@@ -2,8 +2,12 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {StepWrapper} from '../../../../../components/styled/StepWrapper';
 import {ActionButtons} from '../../../ActionButtons/ActionButtons';
 import {SelectedAppointment} from "./SelectedAppointment/SelectedAppointment";
-import {AppointmentDateSelector} from "../../../../../components/bookingDateTime/AppointmentDateSelector/AppointmentDateSelector";
-import {AppointmentTimeSelector} from "../../../../../components/bookingDateTime/AppointmentTimeSelector/AppointmentTimeSelector";
+import {
+    AppointmentDateSelector
+} from "../../../../../components/bookingDateTime/AppointmentDateSelector/AppointmentDateSelector";
+import {
+    AppointmentTimeSelector
+} from "../../../../../components/bookingDateTime/AppointmentTimeSelector/AppointmentTimeSelector";
 import {useHistory, useParams} from "react-router-dom";
 import {collectServiceRequestIds, decodeSCID, mapRecallsForRequest} from "../../../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
@@ -24,8 +28,12 @@ import ReactGA from "react-ga4";
 import {EServiceCategoryType} from "../../../../../store/reducers/categories/types";
 import {EServiceType, EUserType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {TArgCallback, TCallback, TParsableDate, TScreen} from "../../../../../types/types";
-import {SVAppointmentDateSelector} from "../../../../../components/bookingDateTime/SVAppointmentDateSelector/SVAppointmentDateSelector";
-import {SVAppointmentTimeSelector} from "../../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector";
+import {
+    SVAppointmentDateSelector
+} from "../../../../../components/bookingDateTime/SVAppointmentDateSelector/SVAppointmentDateSelector";
+import {
+    SVAppointmentTimeSelector
+} from "../../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
     clearAppointmentSteps,
     setServiceTypeOption,
@@ -224,7 +232,9 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     warrantyExpiration: selectedVehicle?.warrantyExpiration,
                     serviceTypeOptionId: serviceTypeOption?.id ?? null,
                     recalls: mapRecallsForRequest(selectedRecalls),
-                    transportationOptionId: transportation?.id ?? null,
+                    transportationOptionId: serviceTypeOption?.type === EServiceType.VisitCenter && transportation?.id
+                        ? transportation?.id
+                        : null,
                 }
                 if (valueService?.selectedService) {
                     data.valueServiceOfferIds = [valueService.selectedService.id];

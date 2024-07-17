@@ -14,7 +14,9 @@ import {EServiceType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../appointment/types";
 import {
     loadConsultantsForCloning,
-    setAppointmentSaving, setConsultants, setSelectedRecalls,
+    setAppointmentSaving,
+    setConsultants,
+    setSelectedRecalls,
     updateRecalls
 } from "../appointmentFrameReducer/actions";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../modals/actions";
@@ -28,7 +30,9 @@ import {
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import {
     getAppointmentSlots,
-    getServiceValetSlots, loadAppointmentSlots, loadServiceValetSlots,
+    getServiceValetSlots,
+    loadAppointmentSlots,
+    loadServiceValetSlots,
     selectAppointment,
     selectServiceValetAppointment
 } from "../appointment/actions";
@@ -189,7 +193,7 @@ export const loadServiceConsultants = (serviceCenterId: number): AppThunk => dis
 }
 
 const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boolean) => void ): AppThunk => (dispatch, getState) => {
-    const {selectedRecalls, consultants, transportation} = getState().appointmentFrame;
+    const {selectedRecalls, consultants} = getState().appointmentFrame;
     const {currentAppointment} = getState().appointments;
     const utcOffset = dayjs().utcOffset()
     const advisorId = consultants.find(item => item.id === currentAppointment?.advisor?.id)?.id;
@@ -210,7 +214,9 @@ const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boo
             serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
             recalls: mapRecallsForRequest(selectedRecalls),
             appointmentHashKey: currentAppointment.hashKey,
-            transportationOptionId: transportation?.id ?? null,
+            transportationOptionId: currentAppointment.serviceTypeOption?.type === EServiceType.VisitCenter && currentAppointment?.transportationOption
+                ? currentAppointment?.transportationOption.id
+                : null,
         }
         if (currentAppointment.address?.zipCode) data.zipCode = currentAppointment.address?.zipCode;
         if (currentAppointment.address) {
