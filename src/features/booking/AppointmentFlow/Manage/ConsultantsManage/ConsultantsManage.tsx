@@ -39,7 +39,13 @@ const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
             : dispatch(setCurrentFrameScreen("manageAppointment"))
     }
 
-    const handleNext = () => dispatch(checkPodChanged(decodeSCID(id), showError))
+    const handleNext = () => {
+        if (editingPosition === 'advisor') {
+            dispatch(checkPodChanged(decodeSCID(id), showError))
+        } else {
+            onNext()
+        }
+    }
 
     return <Consultants
         onNext={onNext}
