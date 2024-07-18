@@ -1,9 +1,9 @@
 import React from 'react';
-import {TCallback} from "../../../../../types/types";
+import {TCallback, TScreen} from "../../../../../types/types";
 import {
     setAdvisor, setAnyAdvisorSelected,
     setCurrentFrameScreen,
-    setServiceTypeOption
+    setServiceTypeOption, setTransportation
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {checkPodChanged} from "../../../../../store/reducers/appointments/actions";
 import {decodeSCID} from "../../../../../utils/utils";
@@ -18,7 +18,8 @@ const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
     const {
         serviceOptionChangedFromSlotPage,
         prevSelectedOption,
-        editingPosition
+        editingPosition,
+        appointmentByKey
     } = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {id} = useParams<{id: string}>();
@@ -28,14 +29,27 @@ const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
         dispatch(setAdvisor(consultant));
         dispatch(setAnyAdvisorSelected(!Boolean(consultant)))
     }
-    const onBackToPrevServiceOption = () => {
-        if (prevSelectedOption) dispatch(setServiceTypeOption(prevSelectedOption))
-        dispatch(setCurrentFrameScreen(editingPosition === "slot" ? "manageAppointment" : 'appointmentSelection'))
+
+    const restoreOriginalTransportation = () => {
+        if (appointmentByKey?.transportationOption) {
+            dispatch(setTransportation(appointmentByKey?.transportationOption))
+        }
+    }
+
+    const restoreToPrevServiceOption = () => {
+        if (prevSelectedOption) {
+            dispatch(setServiceTypeOption(prevSelectedOption))
+            restoreOriginalTransportation()
+        }
+        const nextScreen: TScreen = editingPosition === "slot" || editingPosition === "transportation"
+            ? "manageAppointment"
+            : 'appointmentSelection'
+        dispatch(setCurrentFrameScreen(nextScreen))
     }
 
     const handleBack = () => {
         serviceOptionChangedFromSlotPage
-            ? onBackToPrevServiceOption()
+            ? restoreToPrevServiceOption()
             : dispatch(setCurrentFrameScreen("manageAppointment"))
     }
 
