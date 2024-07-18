@@ -14,6 +14,7 @@ const SlotImpactedWarning = () => {
     const {isSlotsWarningOpen} = useSelector((state: RootState) => state.modals);
     const {isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
+    const {currentScreen} = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const { classes  } = useStyles();
     const {t} = useTranslation();
@@ -29,7 +30,7 @@ const SlotImpactedWarning = () => {
     }
 
     const onNext = () => {
-        const nextScreen: TScreen = isTransportationAvailable
+        const nextScreen: TScreen = isTransportationAvailable && currentScreen !== "transportationNeeds"
             ? "transportationNeeds"
             : isAppointmentTimingAvailable
                 ? "appointmentTiming"
@@ -54,7 +55,7 @@ const SlotImpactedWarning = () => {
             <DialogTitle onClose={onCancel}>
                 <div>{t("Appointment availability depends on the service requested.")}</div>
                 <div>
-                    {isTransportationAvailable
+                    {isTransportationAvailable && currentScreen !== "transportationNeeds"
                         ? t("Please continue to update your transportation selection")
                         : t("Please continue to see available dates and times for you requested change")}
                 </div>
