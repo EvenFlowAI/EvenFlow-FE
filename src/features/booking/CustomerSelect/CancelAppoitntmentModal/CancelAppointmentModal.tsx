@@ -87,7 +87,7 @@ const CancelAppointmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                     prevDisabled={loading}
                     onBack={onClose}
                     onNext={handleSubmit}
-                    nextLabel="Cancel AppointmentFlow"
+                    nextLabel="Cancel Appointment"
                     prevLabel="Back"
                 />
             </div>
