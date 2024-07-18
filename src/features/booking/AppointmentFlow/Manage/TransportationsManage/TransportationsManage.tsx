@@ -1,5 +1,5 @@
 import React from 'react';
-import {TCallback} from "../../../../../types/types";
+import {TActionProps, TCallback} from "../../../../../types/types";
 import {TransportationNeeds} from "../../Screens/TransportationNeeds/TransportationNeeds";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
@@ -10,8 +10,8 @@ import {decodeSCID} from "../../../../../utils/utils";
 import {useException} from "../../../../../hooks/useException/useException";
 import {setSlotsWarningOpen} from "../../../../../store/reducers/modals/actions";
 
-const TransportationsManage: React.FC<{onBack: TCallback}> = ({onBack}) => {
-    const {isUsualFlowNeeded, appointmentByKey} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
+const TransportationsManage: React.FC<TActionProps> = ({onBack, onNext}) => {
+    const {isUsualFlowNeeded, appointmentByKey, editingPosition} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
     const showError = useException();
@@ -30,7 +30,11 @@ const TransportationsManage: React.FC<{onBack: TCallback}> = ({onBack}) => {
         dispatch(checkPodChanged(decodeSCID(id), showError))
     }
 
-    const handleNext = () => dispatch(setSlotsWarningOpen(true))
+    const handleNext = () => {
+        editingPosition === 'slot'
+            ? onNext()
+            : dispatch(setSlotsWarningOpen(true))
+    }
 
     return <TransportationNeeds onBack={handleBack} onNext={handleNext} handleConsentsAccepted={checkPod}/>
 };
