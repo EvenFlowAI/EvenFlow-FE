@@ -14,7 +14,7 @@ import {
     IDealershipForm,
     IDealershipGroupForm
 } from "../../../../store/reducers/dealershipGroups/types";
-import {create} from "../../../../store/reducers/dealershipGroups/actions";
+import {createDealership} from "../../../../store/reducers/dealershipGroups/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {validatePhoneNumber} from "../../../../utils/utils";
@@ -33,8 +33,8 @@ export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.
     const [contactPerson, setCP] = useState<IContactPersonForm>({...initialCPState});
     const dispatch = useDispatch();
     const saving = useSelector((state: RootState) => state.dealershipGroups.saving);
-    const setException = useException();
     const showMessage = useMessage();
+    const showError = useException();
     const validate = useValidation(
         requiredFields, {...dealership, ...contactPerson}
     );
@@ -55,19 +55,18 @@ export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.
         }
     }
 
-    const handleCreate = async () => {
+    const onSuccess = () => {
+        showMessage("Dealership created")
+        props.onClose();
+    }
+
+    const handleCreate = () => {
         const errors = validate();
         if (errors.length) {
             return;
         }
         const data: IDealershipGroupForm = {contactPerson, dealership};
-        try {
-            await dispatch(create(data));
-            showMessage("Dealership Created");
-            props.onClose();
-        } catch (e) {
-            setException(e);
-        }
+        dispatch(createDealership(data, showError, onSuccess));
 
     }
 

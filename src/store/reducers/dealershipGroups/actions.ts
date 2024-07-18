@@ -7,7 +7,14 @@ import {
 } from "./types";
 import {ThunkAction} from "redux-thunk";
 import {ActionCreator} from "redux";
-import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse} from "../../../types/types";
+import {
+    AppThunk,
+    IPageRequest,
+    IPagingResponse,
+    PaginatedAPIResponse,
+    TArgCallback,
+    TCallback
+} from "../../../types/types";
 import {RootState} from "../../rootReducer";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
@@ -40,7 +47,7 @@ export const changePageData: ActionCreator<ThunkAction<
     RootState,
     void,
     DealershipActions
-    >> = (payload: Partial<IPageRequest>) => {
+>> = (payload: Partial<IPageRequest>) => {
     return async dispatch => {
         dispatch(_changePageData(payload));
         dispatch(loadAll());
@@ -54,7 +61,7 @@ export const loadAll = (): AppThunk => (dispatch, getState) => {
     const data = {...pageData, searchTerm};
     Api.call<
         PaginatedAPIResponse<IDealershipGroupExtended>
-        >(Api.endpoints.Dealerships.GetAll, {data})
+    >(Api.endpoints.Dealerships.GetAll, {data})
         .then(result => {
             const { result: dealerships, paging } = result?.data
             paging && dispatch(changePaging(paging));
@@ -67,23 +74,23 @@ export const loadAll = (): AppThunk => (dispatch, getState) => {
         })
 }
 
-export const create: ActionCreator<ThunkAction<
+export const createDealership: ActionCreator<ThunkAction<
     void,
     RootState,
     void,
-    DealershipActions>> = (data: IDealershipGroupForm) => async (dispatch) => {
+    DealershipActions>> = (data: IDealershipGroupForm, onError: TArgCallback<any>, onSuccess: TCallback) => async (dispatch) => {
     dispatch(saving(true));
-
-    try {
-        await Api.call<number>(Api.endpoints.Dealerships.Create, {data});
-        // TODO: Talk about full object response not id
-        // const {data: rData} = await Api.call<number>(Api.endpoints.Dealerships.Create, {data});
+    Api.call<number>(Api.endpoints.Dealerships.Create, {data})
+        .then(() => {
+            onSuccess()
+            dispatch(loadAll());
+        })
+        .catch(err => {
+            onError(err)
+            console.log('create dealership error', err)
+        }).finally(() => {
         dispatch(saving(false));
-        dispatch(loadAll());
-    } catch (e) {
-        dispatch(saving(false));
-        console.log('create dealership error', e)
-    }
+    })
 }
 
 
