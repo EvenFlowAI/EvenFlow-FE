@@ -185,7 +185,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
             dispatch(setUserType(EUserType.Existing));
             const id = encodeSCID(scProfile.id)
             setCustomerData(item, true).then(() => {
-                history.push(`/f/appointment/${id}`)
+                history.push(`/f/appointment-manage/${id}`)
                 onClose()
             })
         }
@@ -277,7 +277,8 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                         isRemove: false,
                         title: t("Please confirm the changes you made to the Customer Profile"),
                         onConfirm: () => dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err))),
-                        onCancel: onCancelEditing
+                        onCancel: onCancelEditing,
+                        isBooking: true,
                     })
                 } else {
                     dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err)));
@@ -447,7 +448,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                                 </Button>
                                             </IconsBlock>
                                             : <IconsBlock>
-                                                <HtmlTooltip title="Create Appointment">
+                                                <HtmlTooltip title="Create AppointmentFlow">
                                                     <IconButton
                                                         style={{padding: 4}}
                                                         onClick={() => onCreateNewForCar(customer)}
@@ -456,7 +457,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                                     </IconButton>
                                                 </HtmlTooltip>
                                                 {customer.appointmentHashKey?.length
-                                                    ? <HtmlTooltip title="Edit Appointment">
+                                                    ? <HtmlTooltip title="Edit AppointmentFlow">
                                                         <IconButton
                                                             style={{padding: 4}}
                                                             onClick={() => onUpdateAppForCar(customer)}
@@ -467,7 +468,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                                     : <IconButton style={{padding: 4}} disabled size="large"><EditDisabled/></IconButton>
                                                 }
                                                 {customer.appointmentHashKey?.length
-                                                    ? <HtmlTooltip title="Cancel Appointment">
+                                                    ? <HtmlTooltip title="Cancel AppointmentFlow">
                                                         <IconButton
                                                             style={{padding: 4}}
                                                             onClick={() => onCancelAppointment(customer)}

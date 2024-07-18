@@ -14,7 +14,9 @@ import {EServiceType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../appointment/types";
 import {
     loadConsultantsForCloning,
-    setAppointmentSaving, setConsultants, setSelectedRecalls,
+    setAppointmentSaving,
+    setConsultants,
+    setSelectedRecalls,
     updateRecalls
 } from "../appointmentFrameReducer/actions";
 import {setChangesCompletedOpen, setSlotsWarningOpen} from "../modals/actions";
@@ -28,7 +30,9 @@ import {
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import {
     getAppointmentSlots,
-    getServiceValetSlots, loadAppointmentSlots, loadServiceValetSlots,
+    getServiceValetSlots,
+    loadAppointmentSlots,
+    loadServiceValetSlots,
     selectAppointment,
     selectServiceValetAppointment
 } from "../appointment/actions";
@@ -104,6 +108,7 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
         : appointmentFrame.packageEMenuType !== null
             ? {optionType: appointmentFrame.packageEMenuType}
             : null;
+
     const data: ICheckPodRequest = {
         serviceRequestIds,
         serviceCategoryIds: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
@@ -122,6 +127,7 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
             isAnySelected: !(Boolean(appointmentFrame.advisor))
         },
         vehicle,
+        transportationOptionId: appointmentFrame.transportation?.id ?? null,
     }
     if (appointmentFrame?.appointmentByKey?.hashKey) {
         dispatch(setAppointmentSaving(true))
@@ -208,6 +214,9 @@ const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boo
             serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
             recalls: mapRecallsForRequest(selectedRecalls),
             appointmentHashKey: currentAppointment.hashKey,
+            transportationOptionId: currentAppointment.serviceTypeOption?.type === EServiceType.VisitCenter && currentAppointment?.transportationOption
+                ? currentAppointment?.transportationOption.id
+                : null,
         }
         if (currentAppointment.address?.zipCode) data.zipCode = currentAppointment.address?.zipCode;
         if (currentAppointment.address) {

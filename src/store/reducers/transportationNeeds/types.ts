@@ -26,10 +26,6 @@ export interface ITrOptionServiceTRequest {
 export interface ITransportationOptionRule {
     id: number;
     transportationOptionId: number;
-    duration: {
-        start: string;
-        end: string;
-    };
     timeOfDay: {
         start: string;
         end: string;
@@ -39,7 +35,6 @@ export interface ITransportationOptionRule {
     isAllServiceRequestsIncluded?: boolean;
     serviceRequests: ITrOptionServiceTRequest[];
     capacity?: number;
-    slotsCount?: number;
 }
 
 export interface INewTransportationOption {

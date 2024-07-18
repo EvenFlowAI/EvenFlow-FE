@@ -6,7 +6,7 @@ import {RootState} from "../../../store/rootReducer";
 import {selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
-import {setSideBarSteps, setTransportation} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setSideBarSteps} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {PickUpSlotCard} from "../PickUpSlotCard/PickUpSlotCard";
 import {PickUpSlotsWrapper, useStyles} from "./styles";
 import {TParsableDate} from "../../../types/types";
@@ -53,7 +53,6 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
             const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
             handleGA(a);
             dispatch(selectServiceValetAppointment(data));
-            dispatch(setTransportation(null));
             handleSideBar();
         }, [selectedTiming])
 

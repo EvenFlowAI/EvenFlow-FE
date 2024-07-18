@@ -47,7 +47,7 @@ const AskChangesCompleted = () => {
 
     const redirectToAppointmentFrame = () => {
         if (history.location.pathname.includes("welcome")) {
-            history.push( "/f/appointment/" + id);
+            history.push( "/f/appointment-manage/" + id);
         }
     }
 

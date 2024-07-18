@@ -19,10 +19,10 @@ export const dateTimeFormat = "ddd, MMM DD, YYYY h:mm a"
 export const AppointmentDetails: React.FC<React.PropsWithChildren<React.PropsWithChildren<{payload: IAppointment}>>> = ({payload}) => {
         return (
             <div>
-                    <TitleWrapper>Appointment Details</TitleWrapper>
-                    <DetailsItem title="Appointment Number" text={payload.appointmentNumber} icon={<NumberIcon/>} key="number"/>
+                    <TitleWrapper>AppointmentFlow Details</TitleWrapper>
+                    <DetailsItem title="AppointmentFlow Number" text={payload.appointmentNumber} icon={<NumberIcon/>} key="number"/>
                     <DetailsItem
-                        title="Appointment Status"
+                        title="AppointmentFlow Status"
                         text={typeof payload.appointmentStatus !== 'undefined' && Number.isInteger(payload.appointmentStatus)
                             ? appointmentStatuses[payload.appointmentStatus]
                             : ""}
@@ -30,7 +30,7 @@ export const AppointmentDetails: React.FC<React.PropsWithChildren<React.PropsWit
                         key="Status"
                     />
                     <DetailsItem
-                        title="Scheduled Appointment"
+                        title="Scheduled AppointmentFlow"
                         text={dayjs.utc(payload.dateTime).format(dateTimeFormat)}
                         icon={<Clock/>}
                         key="Scheduled"
