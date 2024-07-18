@@ -36,11 +36,15 @@ const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
         }
     }
 
-    const restoreToPrevServiceOption = () => {
+    const restoreServiceOption = () => {
         if (prevSelectedOption) {
             dispatch(setServiceTypeOption(prevSelectedOption))
             restoreOriginalTransportation()
         }
+    }
+
+    const onBackToPrevServiceOption = () => {
+        if (prevSelectedOption) restoreServiceOption()
         const nextScreen: TScreen = editingPosition === "slot" || editingPosition === "transportation"
             ? "manageAppointment"
             : 'appointmentSelection'
@@ -49,7 +53,7 @@ const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
 
     const handleBack = () => {
         serviceOptionChangedFromSlotPage
-            ? restoreToPrevServiceOption()
+            ? onBackToPrevServiceOption()
             : dispatch(setCurrentFrameScreen("manageAppointment"))
     }
 
