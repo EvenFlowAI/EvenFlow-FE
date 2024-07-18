@@ -116,7 +116,6 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
             appointmentSelection: <AppointmentSlotsManage handleSetScreen={handleSetScreen}/>,
             transportationNeeds: <TransportationsManage
                 onBack={() => handleSetScreen(isAdvisorAvailable ? "consultantSelection" : 'serviceNeeds')}
-                onNext={() => handleSetScreen(isAppointmentTimingAvailable ? "appointmentTiming" : 'appointmentSelection')}
             />,
             appointmentConfirmation: <AppointmentConfirmation
                 onBack={() => handleSetScreen('appointmentSelection')}
