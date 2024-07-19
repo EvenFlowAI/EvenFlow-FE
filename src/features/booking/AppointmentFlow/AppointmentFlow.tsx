@@ -21,7 +21,6 @@ import {
     setTrackerCreated,
     setVehicle
 } from "../../../store/reducers/appointmentFrameReducer/actions";
-import {setTransportationAvailable} from "../../../store/reducers/bookingFlowConfig/actions";
 import {getCurrentUser} from "../../../store/reducers/users/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -55,7 +54,6 @@ const AppointmentFlow: React.FC<TProps> = ({
                                            setNeedToShowServiceTypes,
                                                isManaging
                                        }) => {
-    const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
@@ -113,10 +111,6 @@ const AppointmentFlow: React.FC<TProps> = ({
             setCurrentScreen("location");
         }
     }, [serviceType, customerLoadedData, valueService])
-
-    useEffect(() => {
-        if (currentConfig && serviceTypeOption?.transportationOption) dispatch(setTransportationAvailable(false));
-    }, [serviceTypeOption, currentConfig])
 
     useEffect(() => {
         dispatch(getCurrentUser(true))

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Route, Switch, useParams} from "react-router-dom";
 import {BookingFlow} from "../../pages/booking/BookingFlow/BookingFlow";
 import PaymentBill from "../../features/booking/PaymentBill/PaymentBill";
@@ -17,6 +17,7 @@ import {Routes} from "../constants";
 import {useAnalyticsForParentSite} from "../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {RootState} from "../../store/rootReducer";
 import AppointmentFlow from "../../pages/booking/AppointmentFlow/AppointmentFlow";
+import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig/actions";
 
 type TProps = {
     valueServicePreviousScreen: TScreen;
@@ -24,13 +25,18 @@ type TProps = {
 }
 
 const AppRoutes: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({valueServicePreviousScreen, valueServiceNextScreen}) => {
-    const dispatch = useDispatch();
+    const {trackerData, serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {id} = useParams<{id: string}>();
-    const {trackerData} = useSelector((state: RootState) => state.appointmentFrame);
+    const dispatch = useDispatch();
 
     const setTracker = (ids: string[]) => dispatch(setTrackerCreated({isCreated: true, ids}))
 
     useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
+
+    useEffect(() => {
+        if (currentConfig && serviceTypeOption?.transportationOption) dispatch(setTransportationAvailable(false));
+    }, [serviceTypeOption, currentConfig])
 
     const onValueServiceBack = async () => {
         await dispatch(setValueService(null));
