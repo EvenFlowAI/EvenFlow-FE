@@ -16,7 +16,6 @@ import {setSlotsWarningOpen} from "../../../../../store/reducers/modals/actions"
 
 const TransportationsManage: React.FC<TActionProps> = ({onBack, onNext}) => {
     const {isUsualFlowNeeded, appointmentByKey, serviceOptionChangedFromSlotPage, editingPosition} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
-    const {appointment} = useSelector(({appointment}: RootState) => appointment)
     const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
     const showError = useException();
