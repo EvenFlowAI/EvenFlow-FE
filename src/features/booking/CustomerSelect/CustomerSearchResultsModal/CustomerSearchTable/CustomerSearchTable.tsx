@@ -468,7 +468,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                                                     : <IconButton style={{padding: 4}} disabled size="large"><EditDisabled/></IconButton>
                                                 }
                                                 {customer.appointmentHashKey?.length
-                                                    ? <HtmlTooltip title="Cancel AppointmentFlow">
+                                                    ? <HtmlTooltip title="Cancel Appointment">
                                                         <IconButton
                                                             style={{padding: 4}}
                                                             onClick={() => onCancelAppointment(customer)}

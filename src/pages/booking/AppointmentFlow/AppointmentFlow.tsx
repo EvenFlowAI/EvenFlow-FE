@@ -28,7 +28,11 @@ const AppointmentFlow = () => {
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
-    const {isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {
+        isTransportationAvailable,
+        isAppointmentTimingAvailable,
+        isAdvisorAvailable
+    } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
