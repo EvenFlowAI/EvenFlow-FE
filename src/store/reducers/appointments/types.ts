@@ -50,6 +50,7 @@ export interface ICheckPodRequest {
     vehicle: IVehicle;
     serviceTypeOptionId: number|null;
     advisor: TAppointmentAdvisor;
+    transportationOptionId: number|null;
 }
 
 export type TServiceBook = {

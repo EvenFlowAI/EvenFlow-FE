@@ -1,15 +1,15 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import { ThemeProvider, StyledEngineProvider } from "@mui/material";
 import {frameTheme} from "../../../theme/theme";
-import {YearModel} from "../../../features/booking/ValueService/YearModel/YearModel";
+import {YearModel} from "../../../features/booking/AppointmentFlow/Screens/ValueService/YearModel/YearModel";
 import {
     setCurrentFrameScreen,
     setVehicleDataFromValueService
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory, useParams} from "react-router-dom";
-import ServiceSelection from "../../../features/booking/ValueService/ServiceSelection/ServiceSelection";
-import ServiceDetails from "../../../features/booking/ValueService/ServiceDetails/ServiceDetails";
+import ServiceSelection from "../../../features/booking/AppointmentFlow/Screens/ValueService/ServiceSelection/ServiceSelection";
+import ServiceDetails from "../../../features/booking/AppointmentFlow/Screens/ValueService/ServiceDetails/ServiceDetails";
 import {RootState} from "../../../store/rootReducer";
 import {loadSCProfile} from "../../../store/reducers/appointment/actions";
 import {decodeSCID} from "../../../utils/utils";
@@ -26,6 +26,7 @@ type TValueServiceProps = {
 const ValueService: React.FC<React.PropsWithChildren<React.PropsWithChildren<TValueServiceProps>>> = ({onBack, nextScreen}) => {
     const [screen, setScreen] = useState<TValueServiceScreen>("vehicleDetails");
     const { serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams<{id: string}>();
@@ -40,14 +41,24 @@ const ValueService: React.FC<React.PropsWithChildren<React.PropsWithChildren<TVa
         dispatch(loadSCProfile(decodeSCID(id)));
     }, [id])
 
+    const redirect = () => {
+        if (id) {
+            if (customerLoadedData?.isUpdating) {
+                history.push( "/f/appointment-manage/" + id);
+            } else {
+                history.push( "/f/appointment/" + id);
+            }
+        }
+    }
+
     const onNext = async () => {
         await dispatch(setVehicleDataFromValueService())
         await dispatch(setCurrentFrameScreen(nextScreen));
-        history.push( "/f/appointment/" + id);
+        redirect()
     };
 
     const onBackClick = () => {
-        if (id) history.push( "/f/appointment/" + id);
+        redirect();
         onBack();
     }
 

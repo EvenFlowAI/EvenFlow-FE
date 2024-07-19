@@ -7,6 +7,11 @@ export type TConfirmModalPayload = {
     cancelContent?: string;
     onConfirm: () => void;
     onCancel?: () => void;
+    additionalContent?: string;
+    onAdditional?: () => void;
+    cancelBtnVariant?: "outlined"|"text";
+    width?: number;
+    isBooking?: boolean;
 }
 export type TOpenConfirmModal = {type: "Modals/OpenConfirm", payload: TConfirmModalPayload};
 export type TCloseConfirmModal = {type: "Modals/CloseConfirm"};

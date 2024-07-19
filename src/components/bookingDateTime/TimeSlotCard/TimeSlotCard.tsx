@@ -6,7 +6,7 @@ import {ReactComponent as ClockIcon} from "../../../assets/img/clock-black.svg";
 import {ReactComponent as ClockIconWhite} from "../../../assets/img/clock-white.svg";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
-import {TSlot} from "../../../features/booking/AppointmentFlow/AppointmentSlots/types";
+import {TSlot} from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/types";
 import {HtmlTooltip, Wrapper} from "./styles";
 import dayjs from "dayjs";
 

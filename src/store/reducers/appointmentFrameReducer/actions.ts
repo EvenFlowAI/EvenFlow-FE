@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    EMaintenanceOptionType,
+    EMaintenanceOptionType, EServiceCategoryPage,
     EServiceCenterName,
     IAddressData,
     IAppointmentByKey,
@@ -59,7 +59,7 @@ import {
     saveCustomerCache,
     selectAppointment,
     selectServiceValetAppointment,
-    selectSR,
+    selectSR, selectSRMultiple,
     setAppointmentWasChanged,
     setCustomerLoadedData,
     setWaitListSettings
@@ -76,6 +76,8 @@ import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 import {setLoading} from "../slotScoring/actions";
 import {setConsentOpen} from "../modals/actions";
+import {API} from "../../../api/api";
+import {Dispatch, SetStateAction} from "react";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -396,7 +398,7 @@ export const loadServiceOffers = (year: number, seriesId: number, modelId: numbe
 }
 
 export const clearSelectedServices = (keepCategories?: boolean): AppThunk => (dispatch) => {
-    !keepCategories && dispatch(selectCategoriesIds([]));
+    if (!keepCategories) dispatch(selectCategoriesIds([]));
     dispatch(setPackage(null));
     dispatch(setPackageIsSelected(false));
     dispatch(setSelectedPackageOptionType(null));
@@ -781,9 +783,11 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         ? appointmentFrame.selectedTiming
         : EAppointmentTimingType.FirstAvailable;
 
-    const transportationOptionId = appointmentFrame.serviceTypeOption?.transportationOption?.id
-        ?? appointmentFrame.transportation?.id
-        ?? null;
+    const transportationOptionId = appointmentFrame.serviceTypeOption?.type === EServiceType.VisitCenter
+    && !appointmentFrame.serviceTypeOption?.transportationOption
+    && appointmentFrame.transportation
+        ? appointmentFrame.transportation?.id
+        : null;
 
     const serviceRequestIds = collectServiceRequestIds(
         appointmentFrame.service,
@@ -1010,7 +1014,7 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
         const date = appointment?.appointmentDate
             ?? `${dayjs(serviceValetAppointment?.date).format("YYYY-MM-DD")}T00:00:00.000Z`
             ?? ""
-
+   // todo check transportation logic
         const data: ISearchConsentsData = {
             serviceCenterId: scProfile.id,
             podId: slotPodId,
@@ -1082,7 +1086,7 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
             : appointment.appointment?.id.split("|")[0] || ""
 
         const appointmentTimingType = EAppointmentTimingType.FirstAvailable;
-        const transportationOptionId = currentAppointment?.serviceTypeOption?.transportationOption?.id ?? null;
+        const transportationOptionId = currentAppointment?.transportationOption?.id ?? null;
         const serviceRequestIds = currentAppointment?.serviceRequests
             ? currentAppointment?.serviceRequests.map(el => el.id)
             : [];
@@ -1145,6 +1149,82 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
             .catch(e => {
                 onError(e)
             }).finally(() => {
+            dispatch(setAppointmentSaving(false))
+        })
+    }
+}
+
+export const clearAddress = (): AppThunk => dispatch => {
+    dispatch(setAddress(null));
+    dispatch(setPoliticalState(""))
+    dispatch(setCity(""))
+    dispatch(setZipCode(""));
+}
+
+export const goToSlotsSelection = (prevOption?: IFirstScreenOption|undefined): AppThunk => (dispatch, getState) => {
+    const {isAdvisorAvailable, isAppointmentTimingAvailable, config} = getState().bookingFlowConfig;
+    const {sideBarSteps, advisor} = getState().appointmentFrame;
+    if (prevOption) {
+        const prevConfig = config.find(el => el.serviceType === prevOption.type)
+        const advisorsStepNeeded = prevConfig?.advisorSelection && sideBarSteps[sideBarSteps.length - 1] === "consultantSelection";
+        dispatch(setCurrentFrameScreen( advisorsStepNeeded
+            ? 'consultantSelection'
+            : prevConfig?.appointmentSelection
+                ? "appointmentTiming"
+                : 'appointmentSelection'))
+    } else {
+        dispatch(setCurrentFrameScreen(isAdvisorAvailable && !advisor
+            ? 'consultantSelection'
+            : isAppointmentTimingAvailable
+                ? "appointmentTiming"
+                : 'appointmentSelection'))
+    }
+}
+
+export const handleAppointmentUpdate = (
+    car: ILoadedVehicle,
+    setLoadingCar: Dispatch<SetStateAction<boolean>>,
+    setServiceCategoryPage: Dispatch<SetStateAction<EServiceCategoryPage>>,
+    isAuth: boolean,
+    id: string,
+    handleServiceTypeOption: TArgCallback<IAppointmentByKey>,
+    showError: TArgCallback<any>,
+    ): AppThunk => (dispatch, getState) => {
+    const {firstScreenOptions} = getState().serviceTypes;
+    const key = car.appointmentHashKeys[car.appointmentHashKeys.length-1];
+
+    setLoadingCar(true);
+    setServiceCategoryPage(EServiceCategoryPage.Page1)
+    if (key) {
+        dispatch(setAppointmentSaving(true))
+        API.appointment.getByKey(key)
+            .then(({data}) => {
+                if (data) {
+                    if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''))
+                    const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
+                    if (data.waitlistTextSettings) {
+                        dispatch(setWaitListSettings({
+                            text: data.waitlistTextSettings.text ?? '',
+                            textHex: data.waitlistTextSettings.textHex ?? ''
+                        }))
+                    }
+                    dispatch(updateRecalls(data, id));
+                    dispatch(setUpdateAppointment(data));
+                    dispatch(setAppointmentByKey(data));
+                    dispatch(updatePackageOption(data.maintenancePackageOption))
+                    dispatch(selectSRMultiple(data.serviceRequests.map(el => el.id)));
+                    handleServiceTypeOption(data)
+                    dispatch(handleSideBarAppointmentUpdate());
+                    dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data))
+                    dispatch(updateConsultant(data.advisor))
+                    dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true))
+                    dispatch(checkCarIsValid());
+                }
+            }).catch(e => {
+            console.log(e)
+            showError(e);
+        }).finally(() => {
+            setLoadingCar(false);
             dispatch(setAppointmentSaving(false))
         })
     }

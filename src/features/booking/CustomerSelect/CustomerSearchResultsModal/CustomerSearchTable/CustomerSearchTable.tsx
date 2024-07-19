@@ -185,7 +185,7 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
             dispatch(setUserType(EUserType.Existing));
             const id = encodeSCID(scProfile.id)
             setCustomerData(item, true).then(() => {
-                history.push(`/f/appointment/${id}`)
+                history.push(`/f/appointment-manage/${id}`)
                 onClose()
             })
         }
@@ -277,7 +277,8 @@ const CustomerSearchTable: React.FC<React.PropsWithChildren<React.PropsWithChild
                         isRemove: false,
                         title: t("Please confirm the changes you made to the Customer Profile"),
                         onConfirm: () => dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err))),
-                        onCancel: onCancelEditing
+                        onCancel: onCancelEditing,
+                        isBooking: true,
                     })
                 } else {
                     dispatch(updateCustomer(editingElement, onSuccess, (err) => showError(err)));

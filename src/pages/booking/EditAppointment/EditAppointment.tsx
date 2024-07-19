@@ -3,7 +3,7 @@ import {WelcomeLayout} from "../../../features/booking/WelcomeLayout/WelcomeLayo
 import {Loading} from "../../../components/wrappers/Loading/Loading";
 import {useHistory, useLocation, useParams} from "react-router-dom";
 import {API} from "../../../api/api";
-import {Button, styled} from "@mui/material";
+import {Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {
     clearStorage,
@@ -17,7 +17,8 @@ import {RootState} from "../../../store/rootReducer";
 import {NotFoundError} from "../../../components/wrappers/NotFoundError/NotFoundError";
 import {encodeSCID} from "../../../utils/utils";
 import {
-    setCurrentFrameScreen,
+    clearAppointmentData,
+    setCurrentFrameScreen, setServiceTypeOption,
     setUpdateAppointment,
     setUserType,
     setVehicle
@@ -26,16 +27,14 @@ import {loadCategoriesByQuery} from "../../../store/reducers/categories/actions"
 import {useTranslation} from "react-i18next";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
-import {dateTimeFormat} from "../../../features/admin/Appointments/ViewAppointmentsModal/AppointmentDetails/AppointmentDetails";
+import {
+    dateTimeFormat
+} from "../../../features/admin/Appointments/ViewAppointmentsModal/AppointmentDetails/AppointmentDetails";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {Routes} from "../../../routes/constants";
 import dayjs from "dayjs";
-
-const ContentContainer = styled("div")({
-    fontSize: 22,
-    textAlign: "center",
-    fontWeight: "bold"
-});
+import {ContentContainer} from "./styles";
+import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 
 type TState = "loading" | "error" | "canceled" | "passed";
 
@@ -45,9 +44,10 @@ type TLParams = {
 
 export const EditAppointment = () => {
     const [state, setState] = useState<TState>("loading");
-    const selectedSC: number|undefined = useSelector((state: RootState) => {
+    const selectedScId: number|undefined = useSelector((state: RootState) => {
         return state.appointment.scProfile?.id
     });
+    const { customerLoadedData, scProfile } = useSelector((state: RootState) => state.appointment);
     const { allCategories } = useSelector((state: RootState) => state.categories);
 
     const history = useHistory();
@@ -55,10 +55,13 @@ export const EditAppointment = () => {
     const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const {search} = useLocation<TLParams>();
+    const currentUser = useCurrentUser()
     const isFromAdmin = useMemo(() => {
         const isFromAdmin = new URLSearchParams(search).get('fromAdmin')?.toLowerCase();
         return isFromAdmin === 'true' || isFromAdmin === '1';
     }, [search])
+
+    const isAuth = useMemo(() => currentUser?.dealershipId === scProfile?.dealershipId, [currentUser, scProfile]);
 
     useStorage();
 
@@ -67,10 +70,10 @@ export const EditAppointment = () => {
     }
 
     useEffect(() => {
-        if (selectedSC) {
-            dispatch(loadCategoriesByQuery(selectedSC))
+        if (selectedScId) {
+            dispatch(loadCategoriesByQuery(selectedScId))
         }
-    }, [selectedSC])
+    }, [selectedScId])
 
     useEffect(() => {
         const requestFunc = isFromAdmin || !id.includes('by-key')
@@ -94,7 +97,7 @@ export const EditAppointment = () => {
                     fullName: data.driver.fullName,
                     fromSearchByName: isFromAdmin,
                     companyName: data.driver.companyName,
-                    isUpdating: true,
+                    isUpdating: isAuth,
                 }
                 if (data.address) customer.address = data.address
                 dispatch(setCustomerLoadedData(customer));
@@ -112,17 +115,22 @@ export const EditAppointment = () => {
                     setState("passed");
                     return;
                 }
-                history.replace(`${Routes.EndUser.AppointmentFrameBase}/${encodeSCID(data.serviceCenterId)}`);
+                if (selectedScId) history.push(Routes.EndUser.ManageAppointmentFrame.replace(":id", encodeSCID(selectedScId)))
             })
             .catch((e) => {
                 setState("error");
             })
-    }, [id, dispatch, history, allCategories]);
+    }, [id, dispatch, history, allCategories, isAuth]);
 
     const handleCreateNew = () => {
-        if (selectedSC) {
+        if (selectedScId) {
             clearStorage();
-            history.replace(`${Routes.EndUser.Welcome}/${encodeSCID(selectedSC)}?frame=1`);
+            dispatch(clearAppointmentData());
+            dispatch(setServiceTypeOption(null));
+            if (customerLoadedData) {
+                dispatch(setCustomerLoadedData({...customerLoadedData, isUpdating: false}));
+            }
+            history.replace(`${Routes.EndUser.Welcome}/${encodeSCID(selectedScId)}?frame=1`);
         }
     }
 

@@ -74,17 +74,21 @@ export const CustomerSelect: React.FC<React.PropsWithChildren<React.PropsWithChi
 
     const handleBack = () => dispatch(setWelcomeScreenView("serviceCenterSelect"))
 
+    const onSelectNewCustomer = () => {
+        handleNew();
+    }
+
     return <div className={classes.wrapper}>
         <Grid className={classes.buttonsContainer}
               alignItems="stretch"
               container
               spacing={4}>
             {isAuthorized
-                ? <ReturningCustomerForAdmin handleNew={handleNew} redirect={redirect}/>
+                ? <ReturningCustomerForAdmin handleNew={onSelectNewCustomer} redirect={redirect}/>
                 : <ReturningSelfCustomer onComplete={onComplete} loading={loading} />}
             {isAuthorized
-                ? <NewCustomerForAdmin handleNew={handleNew}/>
-                : <NewSelfCustomer handleNew={handleNew}/>}
+                ? <NewCustomerForAdmin handleNew={onSelectNewCustomer}/>
+                : <NewSelfCustomer handleNew={onSelectNewCustomer}/>}
         </Grid>
         {isAuthorized && !!shortSC?.length && <ActionButtons onBack={handleBack} onNext={() => {}} hideNext prevLabel="Change Service Center"/>}
     </div>

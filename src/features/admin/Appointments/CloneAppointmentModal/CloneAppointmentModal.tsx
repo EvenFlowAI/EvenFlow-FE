@@ -11,7 +11,7 @@ import {
     selectAppointment, selectServiceValetAppointment
 } from "../../../../store/reducers/appointment/actions";
 import {SelectedAppointment} from "./SelectedAppointment/SelectedAppointment";
-import {SlotsScreenWrapper} from "../../../booking/AppointmentFlow/AppointmentSlots/styles";
+import {SlotsScreenWrapper} from "../../../booking/AppointmentFlow/Screens/AppointmentSlots/styles";
 import {ActionButtons} from "../../../booking/ActionButtons/ActionButtons";
 import {
     SVAppointmentDateSelector
@@ -20,7 +20,7 @@ import {
     AppointmentDateSelector
 } from "../../../../components/bookingDateTime/AppointmentDateSelector/AppointmentDateSelector";
 import {TGroupedAppointments} from "../../../../utils/types";
-import {groupAppointments} from "../../../booking/AppointmentFlow/AppointmentSlots/utils";
+import {groupAppointments} from "../../../booking/AppointmentFlow/Screens/AppointmentSlots/utils";
 import {TCallback, TParsableDate} from "../../../../types/types";
 import {
     SVAppointmentTimeSelector
