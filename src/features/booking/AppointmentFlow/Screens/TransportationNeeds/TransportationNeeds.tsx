@@ -38,7 +38,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         selectedVehicle,
         packageEMenuType,
         isConsentsLoading,
-        trackerData
+        trackerData,
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
     const {selectedSR} = useSelector(({appointment}: RootState) => appointment)
     const {allCategories} = useSelector(({categories}: RootState) => categories)
