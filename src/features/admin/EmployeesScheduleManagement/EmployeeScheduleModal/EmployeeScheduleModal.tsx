@@ -67,7 +67,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
             return sorted.filter(el => {
                 return el.employeeName.toLowerCase().includes(filters.name.trim().toLowerCase())
                 && el.role.toLowerCase().startsWith(filters.role.trim().toLowerCase())
-                && el.serviceBook.toLowerCase().startsWith(filters.serviceBook.trim().toLowerCase())
+                    && filters.serviceBook ? el.serviceBooks.includes(filters.serviceBook.trim()) : true
             })
         })
         setLoading(false)
@@ -125,8 +125,8 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
             val: el => el.role
         },
         {
-            header: "Service Book",
-            val: el => el.serviceBook
+            header: "Service Books",
+            val: el => el.serviceBooks.join(', ')
         },
         {
             header: "On Schedule",
@@ -197,10 +197,9 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                 serviceCenterId: selectedSC.id,
                 isSetForWeek: isForWeek,
                 employeeScheduledHours: currentSchedule.map(
-                    ({isOnSchedule, employeeId, serviceBookId, startAt, finishAt}) => ({
+                    ({isOnSchedule, employeeId, startAt, finishAt}) => ({
                         isOnSchedule,
                         employeeId,
-                        serviceBookId,
                         startAt,
                         finishAt
                     }))
