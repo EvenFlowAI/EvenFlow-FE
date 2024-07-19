@@ -267,9 +267,8 @@ export const loadBaseSummaryByEmployee = (data: TScheduleByEmployeeRequestData):
 }
 
 export const getBaseEmployeeSchedule = createAction<IEmployeeSchedule>("Employees/GetScheduleTimeByEmployee");
-export const loadBaseEmployeeSchedule = (serviceCenterId: number, employeeId: string, serviceBookId?: number): AppThunk => dispatch => {
+export const loadBaseEmployeeSchedule = (serviceCenterId: number, employeeId: string): AppThunk => dispatch => {
     const data: TBaseScheduleRequest = {serviceCenterId, employeeId}
-    if (serviceBookId) data.serviceBookId = serviceBookId;
     dispatch(loading(true))
     Api.call<IEmployeeSchedule>(Api.endpoints.EmployeeSchedule.GetTimeScheduleByEmployee, {params: data})
         .then(res => {
@@ -285,7 +284,7 @@ export const updateBaseEmployeeSchedule = (data: TSetScheduleData, onSuccess: ()
     dispatch(loading(true))
     Api.call(Api.endpoints.EmployeeSchedule.SetTimeScheduleByEmployee, {data})
         .then(() => {
-            dispatch(loadBaseEmployeeSchedule(data.serviceCenterId, data.employeeId, data.serviceBookId ?? undefined))
+            dispatch(loadBaseEmployeeSchedule(data.serviceCenterId, data.employeeId))
             onSuccess()
         })
         .catch(err => {
