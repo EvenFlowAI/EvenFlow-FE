@@ -785,7 +785,9 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         ? appointmentFrame.selectedTiming
         : EAppointmentTimingType.FirstAvailable;
 
-    const transportationOptionId = appointmentFrame.serviceTypeOption?.type === EServiceType.VisitCenter && appointmentFrame.transportation
+    const transportationOptionId = appointmentFrame.serviceTypeOption?.type === EServiceType.VisitCenter
+    && !appointmentFrame.serviceTypeOption?.transportationOption
+    && appointmentFrame.transportation
         ? appointmentFrame.transportation?.id
         : null;
 

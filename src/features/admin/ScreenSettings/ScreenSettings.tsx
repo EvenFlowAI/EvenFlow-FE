@@ -80,7 +80,7 @@ export const ScreenSettings = () => {
 
     const getCompanyNameValue = () => {
         const companyNameSetting = settings
-            .find(el => el.settingType === ESettingType.CompanyName && (selectedPod ? el.podId === selectedPod?.id : true))
+            .find(el => el.settingType === ESettingType.CompanyName)
         return companyNameSetting?.data?.isOn ? 'On' : "Off"
     }
 
