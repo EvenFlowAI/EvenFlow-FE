@@ -211,6 +211,12 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     : packageEMenuType !== null
                         ? {optionType: packageEMenuType}
                         : null;
+
+                const transportationOptionId: number|null = serviceTypeOption?.type === EServiceType.VisitCenter
+                    && !serviceTypeOption?.transportationOption
+                    && transportation
+                        ? transportation.id
+                        : null;
                 const data: IAppointmentSlotsRequest = {
                     appointmentTimingType: serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTiming
                         ? EAppointmentTimingType.FirstAvailable
@@ -229,9 +235,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     warrantyExpiration: selectedVehicle?.warrantyExpiration,
                     serviceTypeOptionId: serviceTypeOption?.id ?? null,
                     recalls: mapRecallsForRequest(selectedRecalls),
-                    transportationOptionId: serviceTypeOption?.type === EServiceType.VisitCenter && transportation?.id
-                        ? transportation?.id
-                        : null,
+                    transportationOptionId,
                 }
                 if (valueService?.selectedService) {
                     data.valueServiceOfferIds = [valueService.selectedService.id];

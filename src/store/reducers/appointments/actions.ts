@@ -216,7 +216,9 @@ const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boo
             serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
             recalls: mapRecallsForRequest(selectedRecalls),
             appointmentHashKey: currentAppointment.hashKey,
-            transportationOptionId: currentAppointment.serviceTypeOption?.type === EServiceType.VisitCenter && currentAppointment?.transportationOption
+            transportationOptionId: currentAppointment.serviceTypeOption?.type === EServiceType.VisitCenter
+            && !currentAppointment.serviceTypeOption?.transportationOption
+            && currentAppointment?.transportationOption
                 ? currentAppointment?.transportationOption.id
                 : null,
         }
