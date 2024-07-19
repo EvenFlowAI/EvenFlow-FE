@@ -1,9 +1,9 @@
 import React from 'react';
-import {TCallback} from "../../../../../types/types";
+import {TCallback, TScreen} from "../../../../../types/types";
 import {
     setAdvisor, setAnyAdvisorSelected,
     setCurrentFrameScreen,
-    setServiceTypeOption
+    setServiceTypeOption, setTransportation
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {checkPodChanged} from "../../../../../store/reducers/appointments/actions";
 import {decodeSCID} from "../../../../../utils/utils";
@@ -17,8 +17,9 @@ import {Consultants} from "../../Screens/Consultants/Consultants";
 const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
     const {
         serviceOptionChangedFromSlotPage,
+        prevSelectedOption,
         editingPosition,
-        appointmentByKey,
+        appointmentByKey
     } = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {id} = useParams<{id: string}>();
@@ -28,9 +29,26 @@ const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
         dispatch(setAdvisor(consultant));
         dispatch(setAnyAdvisorSelected(!Boolean(consultant)))
     }
+
+    const restoreOriginalTransportation = () => {
+        if (appointmentByKey?.transportationOption) {
+            dispatch(setTransportation(appointmentByKey?.transportationOption))
+        }
+    }
+
+    const restoreServiceOption = () => {
+        if (appointmentByKey?.serviceTypeOption) {
+            dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption))
+            restoreOriginalTransportation()
+        }
+    }
+
     const onBackToPrevServiceOption = () => {
-        if (appointmentByKey?.serviceTypeOption) dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption))
-        dispatch(setCurrentFrameScreen("appointmentSelection"))
+        if (prevSelectedOption) restoreServiceOption()
+        const nextScreen: TScreen = editingPosition === "slot" || editingPosition === "transportation"
+            ? "manageAppointment"
+            : 'appointmentSelection'
+        dispatch(setCurrentFrameScreen(nextScreen))
     }
 
     const handleBack = () => {
