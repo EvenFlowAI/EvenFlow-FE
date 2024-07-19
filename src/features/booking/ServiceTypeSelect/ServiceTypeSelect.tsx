@@ -55,6 +55,8 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
         selectedVehicle,
         serviceTypeOption,
         appointmentByKey,
+        address,
+        zipCode,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -114,7 +116,8 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     }
 
     const handleUpdateOption = (serviceOption: IFirstScreenOption) => {
-        dispatch(checkCarIsValid(() => dispatch(loadConsultants(id, serviceOption.id))))
+        const requestDataIsValid = serviceOption?.type === EServiceType.VisitCenter || Boolean(address && zipCode)
+        requestDataIsValid && dispatch(checkCarIsValid(() => dispatch(loadConsultants(id, serviceOption.id))))
         if (serviceOption?.type === EServiceType.VisitCenter) {
             changeToVisitCenter(serviceOption)
         } else {

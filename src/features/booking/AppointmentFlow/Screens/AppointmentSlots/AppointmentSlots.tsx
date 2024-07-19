@@ -60,6 +60,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                                                                                                                              onNext,
                                                                                                                              prevLogicalScreen,
                                                                                                                              fromServiceValetToVisitCenter,
+
 }) => {
     const {
         appointmentSlots,
@@ -94,7 +95,9 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         isConsultantsLoading,
         isConsentsLoading,
         trackerData,
-        transportation
+        transportation,
+        editingPosition,
+        serviceOptionChangedFromSlotPage
     } = useSelector((state: RootState) => state.appointmentFrame)
 
     const {currentConfig, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
@@ -211,6 +214,12 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     : packageEMenuType !== null
                         ? {optionType: packageEMenuType}
                         : null;
+
+                const transportationOptionId: number|null = serviceTypeOption?.type === EServiceType.VisitCenter
+                    && !serviceTypeOption?.transportationOption
+                    && transportation
+                        ? transportation.id
+                        : null;
                 const data: IAppointmentSlotsRequest = {
                     appointmentTimingType: serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTiming
                         ? EAppointmentTimingType.FirstAvailable
@@ -229,9 +238,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     warrantyExpiration: selectedVehicle?.warrantyExpiration,
                     serviceTypeOptionId: serviceTypeOption?.id ?? null,
                     recalls: mapRecallsForRequest(selectedRecalls),
-                    transportationOptionId: serviceTypeOption?.type === EServiceType.VisitCenter && transportation?.id
-                        ? transportation?.id
-                        : null,
+                    transportationOptionId,
                 }
                 if (valueService?.selectedService) {
                     data.valueServiceOfferIds = [valueService.selectedService.id];
@@ -324,6 +331,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             dispatch(setWelcomeScreenView("serviceSelect"))
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
+            if (editingPosition === "slot" && serviceOptionChangedFromSlotPage) dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
             handleSetScreen(prevLogicalScreen);
         }
     }, [currentConfig, history, fromServiceValetToVisitCenter, prevLogicalScreen])

@@ -23,10 +23,9 @@ import CustomerConsents from "../../../../../components/modals/booking/CustomerC
 
 export type TProps = TActionProps & {
     handleConsentsAccepted: TCallback;
-    date: string|undefined
 }
 
-export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleConsentsAccepted, date}) => {
+export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleConsentsAccepted}) => {
     const {
         subService,
         service,
@@ -39,7 +38,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         selectedVehicle,
         packageEMenuType,
         isConsentsLoading,
-        trackerData
+        trackerData,
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
     const {selectedSR} = useSelector(({appointment}: RootState) => appointment)
     const {allCategories} = useSelector(({categories}: RootState) => categories)

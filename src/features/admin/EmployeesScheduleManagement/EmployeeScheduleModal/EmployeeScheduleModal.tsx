@@ -36,6 +36,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     const {hoursOfOperations} = useSelector((state: RootState) => state.appointmentFrame);
     const {scheduleByDate, employeesLoading} = useSelector((state: RootState) => state.employeesSchedule);
     const {loading} = useSelector((state: RootState) => state.employees);
+    const [isLoading, setLoading] = useState<boolean>(false);
     const [isForWeek, setForWeek] = useState<boolean>(false);
     const [formIsChecked, setFormChecked] = useState<boolean>(false);
     const [currentSchedule, setCurrentSchedule] = useState<IScheduleByDate[]>([]);
@@ -61,6 +62,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     }, [sorted])
 
     useEffect(() => {
+        setLoading(true)
         setCurrentSchedule(() => {
             return sorted.filter(el => {
                 return el.employeeName.toLowerCase().includes(filters.name.trim().toLowerCase())
@@ -68,6 +70,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                     && filters.serviceBook ? el.serviceBooks.includes(filters.serviceBook.trim()) : true
             })
         })
+        setLoading(false)
     }, [filters, sorted])
 
     const handleShowOnBookingChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -75,9 +78,11 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     }
 
     const onCancel = () => {
-        setFormChecked(false)
-        setCurrentSchedule([...scheduleByDate].sort(compareName))
         onClose()
+        setLoading(true)
+        setFormChecked(false)
+        setFilters(initialFilters);
+        setLoading(false)
     }
 
     const handleSwitch = (el: IScheduleByDate) => (e: any, value: boolean) => {
@@ -175,8 +180,14 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
         return valid
     }
 
+    const onError = (err: any) => {
+        setLoading(false)
+        showError(err)
+    }
+
     const onSave = () => {
         setFormChecked(true)
+        setLoading(true)
         if (selectedSC && checkIsValid() && startDate && endDate) {
             const utcOffset = dayjs().utcOffset()
             const start = dayjs(startDate).startOf("day").add(utcOffset, 'minute').format(CALENDAR_FORMAT)
@@ -193,7 +204,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                         finishAt
                     }))
             }
-            dispatch(updateScheduleByDate(data, start, end, onCancel, showError))
+            dispatch(updateScheduleByDate(data, start, end, onCancel, onError))
         }
     }
 
@@ -201,17 +212,17 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
         <BaseModal open={open} onClose={onCancel} width={1050}>
             <DialogTitle onClose={onCancel}>Employee Schedule: {dayjs(date).format("dddd, MMMM D, YYYY")}</DialogTitle>
             <DialogContent style={{padding: "12px 32px"}}>
-                {loading
+                {loading || isLoading || employeesLoading
                     ? <Loading/>
                     :  <>
                         <EmployeeScheduleFilters
-                            isLoading={loading}
+                            isLoading={employeesLoading || loading || isLoading}
                             filters={filters}
                             setFilters={setFilters}/>
                         <Table<IScheduleByDate>
                             data={currentSchedule}
                             index={"id"}
-                            isLoading={employeesLoading}
+                            isLoading={employeesLoading || loading || isLoading}
                             hidePagination
                             rowData={rowData}/>
                     </>}
