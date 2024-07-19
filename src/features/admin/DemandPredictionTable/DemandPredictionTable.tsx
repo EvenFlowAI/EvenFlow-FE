@@ -113,7 +113,7 @@ const DemandPredictionTable = () => {
                                     <RadioBtn
                                         value={ERequestDemandMethod.AppointmentSlots}
                                         control={<Radio color="primary" size="small"/>}
-                                        label="AppointmentFlow Slots" />
+                                        label="Appointment Slots" />
                                     <RadioBtn
                                         value={ERequestDemandMethod.ScheduledHours}
                                         control={<Radio color="primary" size="small"/>}

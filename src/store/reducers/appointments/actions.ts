@@ -127,7 +127,9 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
             isAnySelected: !(Boolean(appointmentFrame.advisor))
         },
         vehicle,
-        transportationOptionId: appointmentFrame.transportation?.id ?? null,
+        transportationOptionId: !appointmentFrame.serviceTypeOption?.transportationOption && appointmentFrame.transportation
+            ? appointmentFrame.transportation?.id
+            : null,
     }
     if (appointmentFrame?.appointmentByKey?.hashKey) {
         dispatch(setAppointmentSaving(true))

@@ -75,7 +75,7 @@ const CancelAppointmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
                     ? <DialogContent>
                 <div className={classes.info}>
                     <div className={classes.question}>
-                        Confirm cancellation of AppointmentFlow on <br/>
+                        Confirm cancellation of Appointment on <br/>
                         {getDateInfo()} {getTimeInfo()}
                     </div>
                 </div>
