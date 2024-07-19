@@ -127,7 +127,9 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
             isAnySelected: !(Boolean(appointmentFrame.advisor))
         },
         vehicle,
-        transportationOptionId: appointmentFrame.transportation?.id ?? null,
+        transportationOptionId: !appointmentFrame.serviceTypeOption?.transportationOption && appointmentFrame.transportation
+            ? appointmentFrame.transportation?.id
+            : null,
     }
     if (appointmentFrame?.appointmentByKey?.hashKey) {
         dispatch(setAppointmentSaving(true))
@@ -214,7 +216,9 @@ const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boo
             serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
             recalls: mapRecallsForRequest(selectedRecalls),
             appointmentHashKey: currentAppointment.hashKey,
-            transportationOptionId: currentAppointment.serviceTypeOption?.type === EServiceType.VisitCenter && currentAppointment?.transportationOption
+            transportationOptionId: currentAppointment.serviceTypeOption?.type === EServiceType.VisitCenter
+            && !currentAppointment.serviceTypeOption?.transportationOption
+            && currentAppointment?.transportationOption
                 ? currentAppointment?.transportationOption.id
                 : null,
         }
