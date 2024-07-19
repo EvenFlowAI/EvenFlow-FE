@@ -17,7 +17,8 @@ import {Consultants} from "../../Screens/Consultants/Consultants";
 const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
     const {
         serviceOptionChangedFromSlotPage,
-        prevSelectedOption
+        prevSelectedOption,
+        editingPosition
     } = useSelector((state: RootState) => state.appointmentFrame);
     const dispatch = useDispatch();
     const {id} = useParams<{id: string}>();
@@ -38,7 +39,13 @@ const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
             : dispatch(setCurrentFrameScreen("manageAppointment"))
     }
 
-    const handleNext = () => dispatch(checkPodChanged(decodeSCID(id), showError))
+    const handleNext = () => {
+        if (editingPosition === 'advisor') {
+            dispatch(checkPodChanged(decodeSCID(id), showError))
+        } else {
+            onNext()
+        }
+    }
 
     return <Consultants
         onNext={onNext}
