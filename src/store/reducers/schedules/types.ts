@@ -72,14 +72,13 @@ export interface IBaseEmployeeSchedule {
 }
 
 export interface IEmployeeScheduledHours extends IBaseEmployeeSchedule {
-    serviceBookId: number|null;
+
 }
 
 export interface IScheduleByDate extends IBaseEmployeeSchedule {
     employeeName: string;
     role: string;
-    serviceBook: string;
-    serviceBookId: number;
+    serviceBooks: string[];
     id?: string;
 }
 

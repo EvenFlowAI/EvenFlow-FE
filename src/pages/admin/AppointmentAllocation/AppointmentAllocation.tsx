@@ -26,7 +26,7 @@ export const AppointmentAllocation = () => {
     }
 
     return <TabContext value={appointmentAllocationTab}>
-        <TitleContainer title="AppointmentFlow Allocation" pad parent={capacityManagementRoot} />
+        <TitleContainer title="Appointment Allocation" pad parent={capacityManagementRoot} />
         <TabList
             onChange={handleTabChange}
             indicatorColor="primary"

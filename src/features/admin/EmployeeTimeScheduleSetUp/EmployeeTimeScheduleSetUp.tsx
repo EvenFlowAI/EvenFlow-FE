@@ -42,7 +42,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
 
     useEffect(() => {
         if (editingItem && selectedSC && open) {
-            dispatch(loadBaseEmployeeSchedule(selectedSC.id, editingItem.employeeId, editingItem.serviceBookId ?? undefined))
+            dispatch(loadBaseEmployeeSchedule(selectedSC.id, editingItem.employeeId))
         }
     }, [selectedSC, editingItem, open])
 
@@ -125,7 +125,6 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({open, onClose, editingItem
                     employeeId: editingItem?.employeeId,
                     dayOfWeekSchedules: currentSchedule.filter(item => item.isOnSchedule),
                 }
-                if (editingItem.serviceBookId) data.serviceBookId = employeeSchedule?.serviceBookId
                 dispatch(updateBaseEmployeeSchedule(data, onSuccess, showError))
             } else {
                 showError('"To" must be later then "From" and inside of the Hours Of Operations')

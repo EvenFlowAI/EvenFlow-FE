@@ -17,7 +17,7 @@ export const OperationalDetails: React.FC<React.PropsWithChildren<React.PropsWit
             <DetailsItem title="Created" text={createdText} key="date"/>
             <ModifiedData data={payload.modificationInfo}/>
             <DetailsItem title="Service Book" text={payload.serviceBook?.name ?? ''} key="Service"/>
-            <DetailsItem title="AppointmentFlow Notes" text={payload.notes ?? ''} key="AppointmentFlow"/>
+            <DetailsItem title="Appointment Notes" text={payload.notes ?? ''} key="AppointmentFlow"/>
         </div>
     );
 };

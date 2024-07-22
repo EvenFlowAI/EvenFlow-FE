@@ -34,7 +34,7 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({handleSet
                     : isAdvisorAvailable
                         ? 'consultantSelection'
                         : "serviceNeeds",
-        [currentConfig, isAdvisorAvailable, isTransportationAvailable])
+        [currentConfig, isAdvisorAvailable, isTransportationAvailable, serviceTypeOption])
 
     const askChangesCompleted = useCallback(() => {
         dispatch(setChangesCompletedOpen(true))

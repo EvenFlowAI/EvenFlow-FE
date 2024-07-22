@@ -2,11 +2,9 @@ import React from 'react';
 import {TActionProps} from "../../../../../types/types";
 import {TransportationNeeds} from "../../Screens/TransportationNeeds/TransportationNeeds";
 import {setTransportation} from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../store/rootReducer";
+import {useDispatch} from "react-redux";
 
 const TransportationsCreate: React.FC<TActionProps> = ({onBack, onNext}) => {
-    const {appointment} = useSelector(({appointment}: RootState) => appointment)
     const dispatch = useDispatch();
 
     const handleBack = () => {
@@ -17,8 +15,7 @@ const TransportationsCreate: React.FC<TActionProps> = ({onBack, onNext}) => {
     return <TransportationNeeds
         onBack={handleBack}
         onNext={onNext}
-        handleConsentsAccepted={onNext}
-        date={appointment?.appointmentDate ?? ''}/>
+        handleConsentsAccepted={onNext}/>
 };
 
 export default TransportationsCreate;
