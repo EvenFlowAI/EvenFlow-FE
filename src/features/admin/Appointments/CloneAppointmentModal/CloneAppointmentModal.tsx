@@ -158,7 +158,7 @@ const CloneAppointmentModal: React.FC<DialogProps & {onViewClose: TCallback}> = 
             <Informing
                 open={isOpen}
                 onClose={onInformClose}
-                actionButtonText="Modify AppointmentFlow"
+                actionButtonText="Modify Appointment"
                 onActionClick={onRedirect}
                 title={`Success! The appointment has been \n confirmed for ${dateString}`}
             />

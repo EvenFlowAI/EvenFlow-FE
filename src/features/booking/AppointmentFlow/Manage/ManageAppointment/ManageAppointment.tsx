@@ -191,8 +191,9 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
 
     const handleError = (e: any) => {
         const timeSlotUnavailable = e.response?.data?.message?.toLowerCase().includes("time slot");
+        const transportationUnavailable = e.response?.data?.message?.toLowerCase().includes("transportation option");
         const dateForZoneUnavailable = e.response?.data?.message?.toLowerCase().includes("is not available for this geographic zone or for the date");
-        if (timeSlotUnavailable || dateForZoneUnavailable) {
+        if (timeSlotUnavailable || dateForZoneUnavailable || transportationUnavailable) {
             dispatch(setChangesCompletedOpen(false))
             dispatch(setSlotsWarningOpen(true))
         } else {

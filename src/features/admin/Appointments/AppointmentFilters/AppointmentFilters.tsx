@@ -161,7 +161,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                     <FormControlLabel
                         value={"AppointmentDate"}
                         control={<Radio color="primary"/>}
-                        label="AppointmentFlow Date"
+                        label="Appointment Date"
                     />
                 </RadioGroup>
             </RadioBlock>
