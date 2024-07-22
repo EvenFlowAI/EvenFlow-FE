@@ -176,7 +176,6 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
             valid = false;
             showError('"Start" value must be inside of the Hours Of Operations')
         }
-
         return valid
     }
 
@@ -188,23 +187,27 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     const onSave = () => {
         setFormChecked(true)
         setLoading(true)
-        if (selectedSC && checkIsValid() && startDate && endDate) {
-            const utcOffset = dayjs().utcOffset()
-            const start = dayjs(startDate).startOf("day").add(utcOffset, 'minute').format(CALENDAR_FORMAT)
-            const end = dayjs(endDate).endOf("day").subtract(utcOffset, 'minute').format(CALENDAR_FORMAT)
-            const data: IUpdateByDateRequest = {
-                date: dayjs(date).format(CALENDAR_FORMAT),
-                serviceCenterId: selectedSC.id,
-                isSetForWeek: isForWeek,
-                employeeScheduledHours: currentSchedule.map(
-                    ({isOnSchedule, employeeId, startAt, finishAt}) => ({
-                        isOnSchedule,
-                        employeeId,
-                        startAt,
-                        finishAt
-                    }))
+        if (checkIsValid()) {
+            if (selectedSC && startDate && endDate) {
+                const utcOffset = dayjs().utcOffset()
+                const start = dayjs(startDate).startOf("day").add(utcOffset, 'minute').format(CALENDAR_FORMAT)
+                const end = dayjs(endDate).endOf("day").subtract(utcOffset, 'minute').format(CALENDAR_FORMAT)
+                const data: IUpdateByDateRequest = {
+                    date: dayjs(date).format(CALENDAR_FORMAT),
+                    serviceCenterId: selectedSC.id,
+                    isSetForWeek: isForWeek,
+                    employeeScheduledHours: currentSchedule.map(
+                        ({isOnSchedule, employeeId, startAt, finishAt}) => ({
+                            isOnSchedule,
+                            employeeId,
+                            startAt,
+                            finishAt
+                        }))
+                }
+                dispatch(updateScheduleByDate(data, start, end, onCancel, onError))
             }
-            dispatch(updateScheduleByDate(data, start, end, onCancel, onError))
+        } else {
+            setLoading(false)
         }
     }
 
