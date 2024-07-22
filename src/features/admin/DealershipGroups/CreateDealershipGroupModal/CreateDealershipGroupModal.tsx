@@ -28,6 +28,11 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useValidation} from "../../../../hooks/useValidation/useValidation";
 import {useException} from "../../../../hooks/useException/useException";
 
+type TError = {
+    field: string;
+    message: string
+}
+
 export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = props => {
     const [dealership, setDealership] = useState<IDealershipForm>({...initialStateDealershipState});
     const [contactPerson, setContactPerson] = useState<IContactPersonForm>({...initialCPState});
@@ -64,6 +69,17 @@ export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.
         props.onClose();
     }
 
+    const onError = (err: any) => {
+        if (err.response?.data?.errors?.length) {
+            const list: string[] = [];
+            err.response?.data?.errors.forEach((obj: TError) => {
+                list.push(obj.field.split('.')[1].toLowerCase())
+            })
+            setErrorFields(list)
+        }
+        showError(err)
+    }
+
     const handleCreate = () => {
         const errors = validate();
         if (errors.length) {
@@ -71,8 +87,7 @@ export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.
             return;
         }
         const data: IDealershipGroupForm = {contactPerson, dealership};
-        dispatch(createDealership(data, showError, onSuccess));
-
+        dispatch(createDealership(data, onError, onSuccess));
     }
 
     const onClose = () => {
