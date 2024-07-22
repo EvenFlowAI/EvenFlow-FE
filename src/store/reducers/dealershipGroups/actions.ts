@@ -80,7 +80,11 @@ export const createDealership: ActionCreator<ThunkAction<
     void,
     DealershipActions>> = (data: IDealershipGroupForm, onError: TArgCallback<any>, onSuccess: TArgCallback<number>) => async (dispatch) => {
     dispatch(saving(true));
-    Api.call(Api.endpoints.Dealerships.Create, {data})
+    const mappedData = {
+        contactPerson: {...data.contactPerson, phoneNumber: data.contactPerson.personPhoneNumber},
+        dealership: {...data.dealership, phoneNumber: data.dealership.dealershipPhoneNumber},
+    }
+    Api.call(Api.endpoints.Dealerships.Create, {data: mappedData})
         .then((res) => {
             if (res?.data?.id) onSuccess(res.data.id)
             dispatch(loadAll());
