@@ -64,11 +64,13 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     useEffect(() => {
         setLoading(true)
         setCurrentSchedule(() => {
-            return sorted.filter(el => {
+            const filtered = sorted.filter(el => {
                 return el.employeeName.toLowerCase().includes(filters.name.trim().toLowerCase())
                 && el.role.toLowerCase().startsWith(filters.role.trim().toLowerCase())
-                    && filters.serviceBook ? el.serviceBooks.includes(filters.serviceBook.trim()) : true
             })
+            return filtered.filter(el => filters.serviceBook?.length
+                ? el.serviceBooks.includes(filters.serviceBook.trim())
+                : true)
         })
         setLoading(false)
     }, [filters, sorted])
