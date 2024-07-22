@@ -31,6 +31,10 @@ export const requiredFields: ValidationKeyPairs<IDealershipForm & IContactPerson
         field: "email",
         message: "Contact Person Email is required"
     },
+    {
+        field: "name",
+        message: "Dealership Name is required"
+    },
 ];
 
 export const initialStateDealershipState: IDealershipForm = {

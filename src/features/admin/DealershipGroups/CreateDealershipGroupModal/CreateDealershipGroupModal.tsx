@@ -14,7 +14,7 @@ import {
     IDealershipForm,
     IDealershipGroupForm
 } from "../../../../store/reducers/dealershipGroups/types";
-import {createDealership} from "../../../../store/reducers/dealershipGroups/actions";
+import {createDealership, updateDealershipAvatar} from "../../../../store/reducers/dealershipGroups/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {validatePhoneNumber} from "../../../../utils/utils";
@@ -37,6 +37,8 @@ export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.
     const [dealership, setDealership] = useState<IDealershipForm>({...initialStateDealershipState});
     const [contactPerson, setContactPerson] = useState<IContactPersonForm>({...initialCPState});
     const [errorFields, setErrorFields] = useState<string[]>([]);
+    const [avatar, setAvatar] = useState<File | undefined>();
+
     const dispatch = useDispatch();
     const saving = useSelector((state: RootState) => state.dealershipGroups.saving);
     const showMessage = useMessage();
@@ -63,10 +65,18 @@ export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.
         }
     }
 
-    const onSuccess = () => {
+    const onCreate = () => {
         setErrorFields([])
         showMessage("Dealership created")
         props.onClose();
+    }
+
+    const onSuccess = (id: number) => {
+        if (avatar) {
+            dispatch(updateDealershipAvatar(avatar, id, showError, onCreate));
+        } else {
+            onCreate()
+        }
     }
 
     const onError = (err: any) => {
@@ -97,7 +107,7 @@ export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.
     return <BaseModal {...props} onClose={onClose}>
         <DialogTitle onClose={onClose}>Add Dealership Group</DialogTitle>
         <DialogContent>
-            <AvatarWrapper />
+            <AvatarWrapper onChange={(f) => setAvatar(f)} />
 
             <DialogContentTitle
                 title="Dealership group info"

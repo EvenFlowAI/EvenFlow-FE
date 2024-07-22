@@ -78,11 +78,11 @@ export const createDealership: ActionCreator<ThunkAction<
     void,
     RootState,
     void,
-    DealershipActions>> = (data: IDealershipGroupForm, onError: TArgCallback<any>, onSuccess: TCallback) => async (dispatch) => {
+    DealershipActions>> = (data: IDealershipGroupForm, onError: TArgCallback<any>, onSuccess: TArgCallback<number>) => async (dispatch) => {
     dispatch(saving(true));
-    Api.call<number>(Api.endpoints.Dealerships.Create, {data})
-        .then(() => {
-            onSuccess()
+    Api.call(Api.endpoints.Dealerships.Create, {data})
+        .then((res) => {
+            if (res?.data?.id) onSuccess(res.data.id)
             dispatch(loadAll());
         })
         .catch(err => {
@@ -133,7 +133,7 @@ export const updateDealership = (payload: IDealershipProfileForm, id: number): A
     }
 }
 
-export const updateDealershipAvatar = (avatar: File, id: number): AppThunk => async dispatch => {
+export const updateDealershipAvatar = (avatar: File, id: number, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => async dispatch => {
     try {
         const data = new FormData();
         data.append("file", avatar, avatar.name);
@@ -141,8 +141,10 @@ export const updateDealershipAvatar = (avatar: File, id: number): AppThunk => as
             Api.endpoints.Dealerships.UploadAvatar,
             {urlParams: {id}, data}
         );
+        onSuccess && onSuccess()
         dispatch(loadDealershipProfile());
     } catch (err) {
         console.log(err)
+        onError(err)
     }
 }
