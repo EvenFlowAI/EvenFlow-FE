@@ -9,7 +9,6 @@ import {ICurrentUser} from "../store/reducers/users/types";
 import {EServiceCategoryType, ICategory} from "../store/reducers/categories/types";
 import {EJobType} from "../store/reducers/pods/types";
 import {EPackagePricingType} from "../store/reducers/appointmentFrameReducer/types";
-import {ETransportColumn} from "../store/reducers/transportationNeeds/types";
 import {IFirstScreenOption} from "../store/reducers/serviceTypes/types";
 import {TPackagePrice} from "../store/reducers/packages/types";
 import {TScheduler, TServiceBook} from "../store/reducers/appointments/types";
@@ -346,7 +345,7 @@ export interface ITransportation {
     type: number;
     name: string;
     description: string;
-    column: ETransportColumn;
+    iconPath?: string;
 }
 
 export interface IYearRange {

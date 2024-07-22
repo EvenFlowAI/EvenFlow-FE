@@ -12,7 +12,6 @@ import {
     setAdditionalServicesChosen,
     setUserType
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import {CardsWrapper} from "./styles";
 import {ServiceCard} from "./ServiceCard/ServiceCard";
 import {decodeSCID, getMaintenanceList} from "../../../../../utils/utils";
 import {useHistory, useParams} from "react-router-dom";
@@ -29,6 +28,7 @@ import {
 } from "../../../../../store/reducers/appointment/actions";
 import {Routes} from "../../../../../routes/constants";
 import {Api} from "../../../../../api/ApiEndpoints/ApiEndpoints";
+import {CardsWrapper} from "../../../../../components/wrappers/CardsWrapper/CardsWrapper";
 
 type TProps = {
     onSelect: TArgCallback<TScreen>;
