@@ -30,7 +30,8 @@ import {useException} from "../../../../hooks/useException/useException";
 
 export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = props => {
     const [dealership, setDealership] = useState<IDealershipForm>({...initialStateDealershipState});
-    const [contactPerson, setCP] = useState<IContactPersonForm>({...initialCPState});
+    const [contactPerson, setContactPerson] = useState<IContactPersonForm>({...initialCPState});
+    const [errorFields, setErrorFields] = useState<string[]>([]);
     const dispatch = useDispatch();
     const saving = useSelector((state: RootState) => state.dealershipGroups.saving);
     const showMessage = useMessage();
@@ -41,21 +42,24 @@ export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.
 
     useEffect(() => {
         setDealership({...initialStateDealershipState});
-        setCP({...initialCPState});
+        setContactPerson({...initialCPState});
+        setErrorFields([])
     }, [props.open]);
 
     const handleChange = (v: "dealership" | "cp") => ({target: {value, name}}: React.ChangeEvent<HTMLInputElement>) => {
+        setErrorFields([])
         if (name === "phoneNumber") {
             value = validatePhoneNumber(value);
         }
         if (v === "dealership") {
             setDealership({...dealership, [name]: value});
         } else {
-            setCP({...contactPerson, [name]: value});
+            setContactPerson({...contactPerson, [name]: value});
         }
     }
 
     const onSuccess = () => {
+        setErrorFields([])
         showMessage("Dealership created")
         props.onClose();
     }
@@ -63,6 +67,7 @@ export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.
     const handleCreate = () => {
         const errors = validate();
         if (errors.length) {
+            setErrorFields(errors.map(el => el.field))
             return;
         }
         const data: IDealershipGroupForm = {contactPerson, dealership};
@@ -70,8 +75,12 @@ export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.
 
     }
 
-    return <BaseModal {...props} onClose={props.onClose}>
-        <DialogTitle onClose={props.onClose}>Add Dealership Group</DialogTitle>
+    const onClose = () => {
+        props.onClose()
+    }
+
+    return <BaseModal {...props} onClose={onClose}>
+        <DialogTitle onClose={onClose}>Add Dealership Group</DialogTitle>
         <DialogContent>
             <AvatarWrapper />
 
@@ -80,6 +89,7 @@ export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.
             />
             <FormElements<IDealershipForm>
                 elements={elementsGroup1}
+                errors={errorFields}
                 data={dealership}
                 onChange={handleChange("dealership")} />
 
@@ -89,12 +99,13 @@ export const CreateDealershipGroupModal: React.FC<React.PropsWithChildren<React.
             <FormElements<IContactPersonForm>
                 elements={elementsGroup2}
                 data={contactPerson}
+                errors={errorFields}
                 onChange={handleChange("cp")} />
 
 
         </DialogContent>
         <DialogActions>
-            <Button onClick={props.onClose}>Cancel</Button>
+            <Button onClick={onClose}>Cancel</Button>
             <LoadingButton
                 onClick={handleCreate}
                 loading={saving}

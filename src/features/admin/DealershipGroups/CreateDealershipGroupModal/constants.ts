@@ -15,6 +15,22 @@ export const elementsGroup2: KeyPair<IContactPersonForm>[] = [
 ];
 
 export const requiredFields: ValidationKeyPairs<IDealershipForm & IContactPersonForm>[] = [
+    {
+        field: "firstName",
+        message: "Contact Person First Name is required"
+    },
+    {
+        field: "lastName",
+        message: "Contact Person Last Name is required"
+    },
+    {
+        field: "phoneNumber",
+        message: "Phone is required"
+    },
+    {
+        field: "email",
+        message: "Contact Person Email is required"
+    },
 ];
 
 export const initialStateDealershipState: IDealershipForm = {
