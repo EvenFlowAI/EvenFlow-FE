@@ -26,12 +26,12 @@ export interface IDealershipGroupExtended extends IDealershipGroupShort {
 
 export interface IDealershipForm {
     name: string;
-    phoneNumber: string;
+    dealershipPhoneNumber: string;
 }
 export interface IContactPersonForm {
     firstName: string;
     lastName: string;
-    phoneNumber: string;
+    personPhoneNumber: string;
     email: string;
 }
 
