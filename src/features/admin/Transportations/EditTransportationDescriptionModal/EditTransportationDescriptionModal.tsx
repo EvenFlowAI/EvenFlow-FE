@@ -2,53 +2,45 @@ import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {
-    ETransportColumn,
     ITransportationOptionFull
 } from "../../../../store/reducers/transportationNeeds/types";
-import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import { Autocomplete } from '@mui/material';
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Button} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {updateTransportationDescription} from "../../../../store/reducers/transportationNeeds/actions";
 import {useStyles} from "./styles";
-import {TOption} from "../types";
 import {useException} from "../../../../hooks/useException/useException";
-
-const initialColumn = {name: "Yes", value: ETransportColumn.Yes}
 
 export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {editingElement: ITransportationOptionFull|null}>>> = (props) => {
     const [description, setDescription] = useState<string>('')
-    const [column, setColumn] = useState<TOption>(initialColumn);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+    const [orderIndex, setOrderIndex] = useState<string>('');
     const { classes  } = useStyles();
-    const columnOptions = Object.keys(ETransportColumn).filter(key => Number.isNaN(+key)).map((op, index) => ({name: op, value: index}));
     const dispatch = useDispatch();
     const showError = useException();
 
     useEffect(() => {
         if (props.editingElement && props.open) {
             props.editingElement.description && setDescription(props.editingElement.description)
-            const selected = columnOptions.find(el => el.value === props.editingElement?.column)
-            if (selected) setColumn(selected)
+            props.editingElement.orderIndex && setOrderIndex(props.editingElement.orderIndex.toString())
         }
     }, [props.editingElement, props.open])
 
     const onCancel = () => {
         setFormIsChecked(false);
-        setColumn(initialColumn);
         setDescription('');
+        setOrderIndex('');
         props.onClose();
-    }
-
-    const onColumnChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
-        setFormIsChecked(false);
-        setColumn(value ?? initialColumn);
     }
 
     const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setFormIsChecked(false);
         setDescription(e.target.value)
+    }
+
+    const onOrderChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        setFormIsChecked(false);
+        setOrderIndex(e.target.value)
     }
 
     const onSave = () => {
@@ -57,7 +49,7 @@ export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildre
             if (description.trim().length) {
                 dispatch(updateTransportationDescription(
                     props.editingElement.id,
-                    {...props.editingElement, column: column.value, description: description.trim()},
+                    {...props.editingElement, description: description.trim()},
                     onCancel
                 ))
             } else {
@@ -67,23 +59,20 @@ export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildre
     }
 
     return (
-        <BaseModal {...props} width={500} onClose={onCancel}>
+        <BaseModal {...props} width={600} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>Manage Option</DialogTitle>
             <DialogContent>
-                <Autocomplete
-                    fullWidth
-                    style={{ marginBottom: 20 }}
-                    getOptionLabel={option => option.name}
-                    options={columnOptions}
-                    disableClearable
-                    isOptionEqualToValue={(option, value) => option.name === ETransportColumn[+value]}
-                    value={column}
-                    onChange={onColumnChange}
-                    renderInput={autocompleteRender({
-                        label: 'Booking Flow Column',
-                        placeholder: 'Select Booking Flow Column',
-                    })}
-                />
+                <div style={{marginBottom: 24}}>
+                    <TextField
+                        fullWidth
+                        type="number"
+                        style={{width: '45%'}}
+                        label='Booking Flow Order Index'
+                        placeholder='Type Booking Flow Order Index'
+                        error={formIsChecked && +orderIndex <= 0}
+                        onChange={onOrderChange}
+                        value={orderIndex}/>
+                </div>
                 <TextField
                     fullWidth
                     label='Description'

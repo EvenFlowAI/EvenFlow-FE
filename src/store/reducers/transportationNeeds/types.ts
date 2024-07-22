@@ -45,8 +45,8 @@ export interface INewTransportationOption {
 
 export interface ITransportationOptionFull extends INewTransportationOption {
     id: number;
-    description: string
-    column: ETransportColumn;
+    description: string;
+    orderIndex: number;
     rules?: ITransportationOptionRule;
 }
 
@@ -79,10 +79,6 @@ export enum ETransportationDays {
     Friday,
     Saturday,
     EveryDay,
-}
-
-export enum ETransportColumn {
-    Yes, No
 }
 
 export type TState = {
