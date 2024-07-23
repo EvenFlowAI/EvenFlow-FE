@@ -79,6 +79,7 @@ export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildre
                         value={orderIndex}/>
                     </div>
                     <FileInput
+                        type="outlined"
                         setState={setFileState}
                         label={`${fileState.file || props.editingElement?.iconPath ? 'Update' : 'Upload' } Transportation Icon`}
                     />
