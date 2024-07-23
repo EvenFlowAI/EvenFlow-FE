@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
 export const useStyles = makeStyles()(() => ({
     actionsWrapper: {
         display: 'flex',
@@ -27,4 +26,9 @@ export const useStyles = makeStyles()(() => ({
             color: '#7898FF'
         }
     },
+    upperRowWrapper: {
+        display: 'flex',
+        justifyContent: "space-between",
+        marginBottom: 24
+    }
 }));

@@ -229,7 +229,7 @@ export const AddFirstScreenOptionModal: React.FC<React.PropsWithChildren<React.P
                             placeholder: 'Select Booking Flow Config',
                         })}
                     />
-                    <FileInput setState={setFileState} label={`${fileState.file || editingItem?.iconPath ? 'Update' : 'Upload' } Service Category Icon`}/>
+                    <FileInput setState={setFileState} label={`${fileState.file || editingItem?.iconPath ? 'Update' : 'Upload' } Option Icon`}/>
                     <Autocomplete
                         disableClearable
                         options={['1', '2', '3', '4', '5', '6', '7', '8']}

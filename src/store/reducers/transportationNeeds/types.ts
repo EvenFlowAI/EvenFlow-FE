@@ -47,6 +47,7 @@ export interface ITransportationOptionFull extends INewTransportationOption {
     id: number;
     description: string;
     orderIndex: number;
+    iconPath?: string;
     rules?: ITransportationOptionRule;
 }
 

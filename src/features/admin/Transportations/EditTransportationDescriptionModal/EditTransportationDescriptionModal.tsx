@@ -10,11 +10,16 @@ import {useDispatch} from "react-redux";
 import {updateTransportationDescription} from "../../../../store/reducers/transportationNeeds/actions";
 import {useStyles} from "./styles";
 import {useException} from "../../../../hooks/useException/useException";
+import {FileInput} from "../../../../components/formControls/FileInput/FileInput";
+import {IIconState} from "../../ServiceCategories/AddServiceCategoryModal/types";
+
+const initialFileState = {file: null, dataUrl: undefined};
 
 export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {editingElement: ITransportationOptionFull|null}>>> = (props) => {
     const [description, setDescription] = useState<string>('')
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [orderIndex, setOrderIndex] = useState<string>('');
+    const [fileState, setFileState] = useState<IIconState>(initialFileState);
     const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
@@ -62,16 +67,21 @@ export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildre
         <BaseModal {...props} width={600} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>Manage Option</DialogTitle>
             <DialogContent>
-                <div style={{marginBottom: 24}}>
-                    <TextField
+                <div className={classes.upperRowWrapper}>
+                    <div>
+                        <TextField
                         fullWidth
                         type="number"
-                        style={{width: '45%'}}
                         label='Booking Flow Order Index'
                         placeholder='Type Booking Flow Order Index'
                         error={formIsChecked && +orderIndex <= 0}
                         onChange={onOrderChange}
                         value={orderIndex}/>
+                    </div>
+                    <FileInput
+                        setState={setFileState}
+                        label={`${fileState.file || props.editingElement?.iconPath ? 'Update' : 'Upload' } Transportation Icon`}
+                    />
                 </div>
                 <TextField
                     fullWidth
