@@ -29,6 +29,10 @@ export const useStyles = makeStyles()(() => ({
     upperRowWrapper: {
         display: 'flex',
         justifyContent: "space-between",
-        marginBottom: 24
+        marginBottom: 24,
+        gap: 20,
+        "& > div": {
+            width: '100%'
+        }
     }
 }));
