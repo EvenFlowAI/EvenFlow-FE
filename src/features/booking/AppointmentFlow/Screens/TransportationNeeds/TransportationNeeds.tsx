@@ -19,7 +19,7 @@ import {TActionProps, TCallback} from "../../../../../types/types";
 import {Api} from "../../../../../api/ApiEndpoints/ApiEndpoints";
 import CustomerConsents from "../../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 import {CardsWrapper} from "../../../../../components/wrappers/CardsWrapper/CardsWrapper";
-import {TransportationOptionCard} from "./ServiceCard/TransportationOptionCard";
+import {TransportationOptionCard} from "./TransportationCard/TransportationOptionCard";
 
 export type TProps = TActionProps & {
     handleConsentsAccepted: TCallback;

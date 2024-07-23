@@ -1,6 +1,6 @@
 import React from 'react';
-import {ReactComponent as Icon} from "../../../../../../../assets/img/oil-icon.svg";
-import DefaultIcon from "../../../../../../../assets/img/oil-icon.svg";
+import {NoIcon} from "../styles";
+import {useTranslation} from "react-i18next";
 
 type TProps = {
     iconPath?: string;
@@ -9,6 +9,7 @@ type TProps = {
 }
 
 const CardIcon: React.FC<TProps> = ({iconPath, isSM, active}) => {
+    const {t} = useTranslation();
     return iconPath
         ? <span
             className="cardIcon"
@@ -18,16 +19,7 @@ const CardIcon: React.FC<TProps> = ({iconPath, isSM, active}) => {
                         style={{width: isSM ? 78 : 110, height: isSM ? 78 : 110}}
                         alt={"service_category_logo"}/>
                  </span>
-        : <span
-            className="cardIcon"
-            style={{ filter: active ? "invert(100%)" : "unset"}}>
-                    { isSM
-                        ? <img
-                            src={DefaultIcon}
-                            style={{width: 65, height: 65}}
-                            alt={"service_category_logo"}/>
-                        : <Icon />}
-        </span>
+        : <NoIcon>{t("No Icon")}</NoIcon>
 };
 
 export default CardIcon;
