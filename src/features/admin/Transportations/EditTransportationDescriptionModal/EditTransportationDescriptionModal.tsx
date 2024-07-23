@@ -7,29 +7,36 @@ import {
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
 import {Button} from "@mui/material";
 import {useDispatch} from "react-redux";
-import {updateTransportationDescription} from "../../../../store/reducers/transportationNeeds/actions";
+import {
+    updateTransportationDescription,
+    updateTransportationIcon
+} from "../../../../store/reducers/transportationNeeds/actions";
 import {useStyles} from "./styles";
 import {useException} from "../../../../hooks/useException/useException";
 import {FileInput} from "../../../../components/formControls/FileInput/FileInput";
 import {IIconState} from "../../ServiceCategories/AddServiceCategoryModal/types";
+import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import {useMessage} from "../../../../hooks/useMessage/useMessage";
 
 const initialFileState = {file: null, dataUrl: undefined};
 
-export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {editingElement: ITransportationOptionFull|null}>>> = (props) => {
+export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {editingElement: ITransportationOptionFull|null}>>> = ({editingElement, ...props}) => {
     const [description, setDescription] = useState<string>('')
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
     const [orderIndex, setOrderIndex] = useState<string>('');
     const [fileState, setFileState] = useState<IIconState>(initialFileState);
     const { classes  } = useStyles();
+    const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException();
+    const showMessage = useMessage();
 
     useEffect(() => {
-        if (props.editingElement && props.open) {
-            props.editingElement.description && setDescription(props.editingElement.description)
-            props.editingElement.orderIndex && setOrderIndex(props.editingElement.orderIndex.toString())
+        if (editingElement && props.open) {
+            editingElement.description && setDescription(editingElement.description)
+            editingElement.orderIndex && setOrderIndex(editingElement.orderIndex.toString())
         }
-    }, [props.editingElement, props.open])
+    }, [editingElement, props.open])
 
     const onCancel = () => {
         setFormIsChecked(false);
@@ -48,19 +55,50 @@ export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildre
         setOrderIndex(e.target.value)
     }
 
-    const onSave = () => {
-        setFormIsChecked(true);
-        if (props.editingElement) {
-            if (description.trim().length) {
+    const onIconSaved = () => {
+        showMessage("Icon is saved")
+    }
+
+    const onDataSaved = () => {
+        showMessage("Transportation Option Description and Order Index are saved")
+        onCancel()
+    }
+
+    const saveIcon = () => {
+        if (editingElement && selectedSC && fileState?.file) {
+            dispatch(updateTransportationIcon(
+                editingElement.id,
+                selectedSC.id,
+                fileState.file,
+                showError,
+                onIconSaved
+            ));
+        }
+    }
+
+    const saveData = () => {
+        if (editingElement) {
+            if (description.trim().length && +orderIndex > 0) {
                 dispatch(updateTransportationDescription(
-                    props.editingElement.id,
-                    {...props.editingElement, description: description.trim()},
-                    onCancel
+                    editingElement.id,
+                    {...editingElement, description: description.trim()},
+                    onDataSaved,
+                    showError,
                 ))
             } else {
-                showError('"Description" must not be empty')
+                if (+orderIndex <= 0) {
+                    showError('"Booking Flow Order Index" must be more than 0')
+                } else {
+                    showError('"Description" must not be empty')
+                }
             }
         }
+    }
+
+    const onSave = () => {
+        setFormIsChecked(true);
+        saveData();
+        saveIcon();
     }
 
     return (
@@ -81,7 +119,7 @@ export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildre
                     <FileInput
                         type="outlined"
                         setState={setFileState}
-                        label={`${fileState.file || props.editingElement?.iconPath ? 'Update' : 'Upload' } Transportation Icon`}
+                        label={`${fileState.file || editingElement?.iconPath ? 'Update' : 'Upload' } Transportation Icon`}
                     />
                 </div>
                 <TextField

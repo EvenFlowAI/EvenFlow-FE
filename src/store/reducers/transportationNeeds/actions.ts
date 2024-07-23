@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {ITransportationOptionFull, ITransportationOptionRules, TTransportationShort} from "./types";
-import {AppThunk} from "../../../types/types";
+import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
 
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
@@ -54,7 +54,7 @@ export const editTransportationOptionRules = (
         })
 }
 
-export const updateTransportationDescription = (optionId: number, data: ITransportationOptionFull, onSuccess: () => void): AppThunk => dispatch => {
+export const updateTransportationDescription = (optionId: number, data: ITransportationOptionFull, onSuccess: () => void, onError: TArgCallback<any>): AppThunk => dispatch => {
     Api.call(Api.endpoints.TransportationOptions.UpdateById, {urlParams: {id: optionId}, data})
         .then(result => {
             if (result) {
@@ -63,6 +63,7 @@ export const updateTransportationDescription = (optionId: number, data: ITranspo
             }
         })
         .catch(err => {
+            onError(err)
             console.log('update transportation description error', err)
         })
 }
@@ -79,4 +80,20 @@ export const loadTransportationOptionsShort = (serviceCenterId: number, podId?: 
             console.log('load transportation options short error', err)
         })
         .finally(() => dispatch(setTransportationLoading(false)));
+}
+
+export const updateTransportationIcon = (id: number, serviceCenterId: number, file: File, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
+    const data = new FormData();
+    data.append("file", file, file.name);
+    Api.call(Api.endpoints.TransportationOptions.UpdateIcon, {urlParams: {id}, data})
+        .then(result => {
+            if (result) {
+                dispatch(loadTransportationOptions(serviceCenterId))
+                onSuccess()
+            }
+        })
+        .catch(err => {
+            onError(err)
+            console.log('update transportation option icon error', err)
+        })
 }

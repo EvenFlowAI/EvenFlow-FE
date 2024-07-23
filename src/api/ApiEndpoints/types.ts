@@ -86,7 +86,7 @@ export interface IApiEndpoints {
         | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange" | "GetSlotsGap", TApiEndpoint>,
     ServiceValet: Record<"GetZoneRouting" | "UpdateZoneRouting" | "GatAllCapacity" | "GetCapacityById" | "CreateCapacity" | "UpdateCapacity"
         | "ChangeShowDropOffTime" | "ChangeServiceRequest" | "ChangeDmsTimeStamp" | "GetServiceValetSettings" | "UpdateZonesServiceRequests", TApiEndpoint>,
-    TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules" | "UpdateById" | "GetShort", TApiEndpoint>,
+    TransportationOptions: Record<"Edit" | "Get" | "GetActive" | "Rules" | "UpdateById" | "GetShort" | "UpdateIcon", TApiEndpoint>,
     Users: Record<"GetAll" | "Create" | "Update" | "Remove" | "Retrieve" | "Avatar" | "GetShort", TApiEndpoint>,
     ValueSettings: Record<"GetValue" | "SetValue" | "GetCL" | "SetCL" | "GetCTS" | "SetCTS"
         | "GetWS" | "SetWS", TApiEndpoint>,
