@@ -6,7 +6,7 @@ import {options} from "../../utils/constants";
 import {TReactGATracker} from "../../utils/types";
 import {TArgCallback} from "../../types/types";
 
-export const useAnalyticsBySCId = (id: string, trackerCreated: boolean, setTrackerCreated: () => void) => {
+export const useAnalyticsBySCId = (id: string, trackerCreated: boolean, setTrackerCreated: TArgCallback<string[]>) => {
     function createTracker(opt_clientId = '', trackerCreated: boolean) {
         const TRACKER = getTrackerById(id);
         if (!trackerCreated) {
@@ -18,7 +18,7 @@ export const useAnalyticsBySCId = (id: string, trackerCreated: boolean, setTrack
             TagManager.initialize({
                 gtmId: TRACKER
             })
-            setTrackerCreated();
+            setTrackerCreated([TRACKER]);
         }
     }
 

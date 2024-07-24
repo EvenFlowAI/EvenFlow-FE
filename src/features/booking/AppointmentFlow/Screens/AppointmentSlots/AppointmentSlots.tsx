@@ -130,7 +130,8 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 action: 'Selected advisor',
                 label: advisor ? advisor.name : 'Any available',
                 nonInteraction: true
-            }, trackerData.ids);
+            });
+            // , trackerData.ids
         }
         if (appointment) {
             ReactGA.event({
@@ -139,7 +140,8 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 label: `Requests Codes: 
                 ${appointment?.serviceRequestPrices?.map(item => item.requestName).join(', ')}
                 ${!isNaN(appointment?.price?.value) ? `with Total Price $${+appointment.price.value}` : ''}`,
-            }, trackerData.ids);
+            });
+            //, trackerData.ids
         }
     }, [advisor, appointment, consultants, currentConfig, trackerData])
 
@@ -300,7 +302,8 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 category: 'EvenFlow User',
                 action: serviceTypeOption?.type === EServiceType.PickUpDropOff ? 'Selected Service Valet Appointment Slot' : 'Selected Appointment Slot',
                 label: `On ${dayjs.utc(appointment.date).format('MM-DD-YYYY')} at ${dayjs.utc(appointment.date).format('hh:mm A')}`,
-            }, trackerData.ids);
+            });
+            //, trackerData.ids
         }
     }, [appointment, serviceTypeOption, trackerData])
 
@@ -309,7 +312,8 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             category: 'EvenFlow User',
             action: 'Went back',
             label: 'From Selection Date & Time Page',
-        }, trackerData.ids);
+        });
+        //, trackerData.ids
     }, [trackerData])
 
     const handleConsents = () => {

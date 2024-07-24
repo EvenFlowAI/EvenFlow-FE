@@ -14,7 +14,7 @@ import {
 import {TScreen} from "../../types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {Routes} from "../constants";
-import {useAnalyticsForParentSite} from "../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
+import {useAnalyticsBySCId, useAnalyticsForParentSite} from "../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {RootState} from "../../store/rootReducer";
 import AppointmentFlow from "../../pages/booking/AppointmentFlow/AppointmentFlow";
 import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig/actions";
@@ -32,7 +32,8 @@ const AppRoutes: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps
 
     const setTracker = (ids: string[]) => dispatch(setTrackerCreated({isCreated: true, ids}))
 
-    useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
+    //useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
+    useAnalyticsBySCId(id, trackerData.isCreated, setTracker)
 
     useEffect(() => {
         if (currentConfig && serviceTypeOption?.transportationOption) dispatch(setTransportationAvailable(false));

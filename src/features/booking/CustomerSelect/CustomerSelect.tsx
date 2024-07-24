@@ -19,7 +19,7 @@ import NewCustomerForAdmin from "./NewCustomerForAdmin/NewCustomerForAdmin";
 import {loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {useParams} from "react-router-dom";
 import {useStyles} from "./styles";
-import {useAnalyticsForParentSite} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
+import {useAnalyticsBySCId, useAnalyticsForParentSite} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {loadGeneralSettings} from "../../../store/reducers/generalSettings/actions";
 import {ESettingType} from "../../../store/reducers/generalSettings/types";
@@ -50,7 +50,8 @@ export const CustomerSelect: React.FC<React.PropsWithChildren<React.PropsWithChi
 
     const setTracker = (ids: string[]) => dispatch(setTrackerCreated({isCreated: true, ids}))
 
-    useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
+    // useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
+    useAnalyticsBySCId(id, trackerData.isCreated, setTracker)
 
     useEffect(() => {
         const uid = uuidv4();

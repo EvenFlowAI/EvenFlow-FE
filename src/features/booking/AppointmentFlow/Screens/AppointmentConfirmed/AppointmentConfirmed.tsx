@@ -105,7 +105,8 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsW
             category: 'EvenFlow User',
             action: 'Created Appointment',
             nonInteraction: true,
-        }, trackerData.ids)
+        })
+        //, trackerData.ids
         dispatch(setWelcomeScreenView("select"));
     }, [dispatch, trackerData])
 

@@ -106,7 +106,8 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
             category: 'EvenFlow User',
             action: 'Selected Transportation Need',
             label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
-        }, trackerData.ids)
+        })
+        // , trackerData.ids
     }
 
     const handleNext = (transportation: ITransportation|null): void => {

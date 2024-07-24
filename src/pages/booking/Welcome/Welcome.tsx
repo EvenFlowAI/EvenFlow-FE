@@ -97,7 +97,8 @@ export const Welcome = () => {
             category: 'EvenFlow User',
             action: 'Enters Page',
             label: `As Returning Customer`,
-        }, trackerData.ids);
+        });
+        //, trackerData.ids
     }
 
     const onSuccessForCustomer = () => {
@@ -166,7 +167,8 @@ export const Welcome = () => {
             category: 'EvenFlow User',
             action: 'Enters Page',
             label: `As ${userType} Customer`,
-        }, trackerData.ids);
+        });
+        //, trackerData.ids
     }
 
     const handleNew = () => {

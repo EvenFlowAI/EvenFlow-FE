@@ -154,7 +154,8 @@ export const SelectOpsCode: React.FC<TProps> = ({
             category: 'EvenFlow User',
             action: 'Selected Individual Service Requests',
             label: `With Codes ${serviceRequests.filter(item => selectedOpsCodes.includes(item.id)).map(sr => `${sr.code} (${sr.description})`).join(', ')}`,
-        }, trackerData.ids)
+        })
+        //, trackerData.ids
     }
 
     const handleNext = () => {

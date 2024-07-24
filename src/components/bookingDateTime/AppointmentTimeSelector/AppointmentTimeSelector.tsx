@@ -84,7 +84,8 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
                 category: 'EvenFlow User',
                 action: 'Clicked on Appointment Slot',
                 label: a?.price?.value ? `With Price $${a.price.value}` : '',
-            }, trackerData.ids);
+            });
+            //, trackerData.ids
         }, [trackerData])
 
         const handleSideBar = () => {

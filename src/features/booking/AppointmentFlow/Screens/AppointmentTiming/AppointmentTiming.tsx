@@ -71,7 +71,8 @@ export const AppointmentTiming: React.FC<TProps> = ({handleSetScreen, onBack}) =
                 category: 'EvenFlow User',
                 action: 'Selected Timing Type',
                 label: `Selected ${timingTypes[selectedTiming]}`,
-            }, trackerData.ids);
+            });
+            // , trackerData.ids
         }
     }
 

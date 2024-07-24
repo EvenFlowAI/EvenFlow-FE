@@ -29,7 +29,7 @@ import {SCREENS} from "../../../utils/constants";
 import {getBlankVehicle, getCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {loadEngineType, loadMileage} from "../../../store/reducers/vehicleDetails/actions";
 import {decodeSCID} from "../../../utils/utils";
-import {useAnalyticsForParentSite} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
+import {useAnalyticsBySCId, useAnalyticsForParentSite} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {useStorage} from "../../../hooks/useStorage/useStorage";
 import {loadGeneralSettings} from "../../../store/reducers/generalSettings/actions";
 import {ESettingType} from "../../../store/reducers/generalSettings/types";
@@ -83,7 +83,8 @@ const AppointmentFlow: React.FC<TProps> = ({
 
     const setTracker = (ids: string[]) => dispatch(setTrackerCreated({isCreated: true, ids}))
 
-    useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
+    //useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
+    useAnalyticsBySCId(id, trackerData.isCreated, setTracker)
 
     useStorage();
 
@@ -142,7 +143,8 @@ const AppointmentFlow: React.FC<TProps> = ({
                     action: 'Abandoned Page',
                     label: `From Page ${SCREENS[currentScreen]}`,
                     nonInteraction: true
-                }, trackerData.ids)
+                })
+                //, trackerData.ids
             }
         } else {
             currentFrameScreen && setCurrentScreen(currentFrameScreen);

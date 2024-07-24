@@ -126,7 +126,8 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
             category: 'EvenFlow User',
             action: 'Went back',
             label: 'From Selection Package Page',
-        }, trackerData.ids)
+        })
+        //, trackerData.ids
         onBack();
     }
 
@@ -170,7 +171,8 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
             category: 'EvenFlow User',
             action: `Selected Package`,
             label: `With ${packageOptions[selectedPackage.type]} Option`,
-        }, trackerData.ids);
+        });
+        //, trackerData.ids
     }
 
     const handleEMenuGA = () => {
@@ -179,7 +181,8 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
             category: 'EvenFlow User',
             action: `Selected eMenu Package`,
             label: `With ${packageEMenuType === firstOption ? 'Factory' : "Dealer"} Option`,
-        }, trackerData.ids);
+        });
+        //, trackerData.ids
     }
 
     const handleNext = (localSelectedPackage: IPackageOptions|null): void => {

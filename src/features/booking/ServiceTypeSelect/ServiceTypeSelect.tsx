@@ -38,7 +38,7 @@ import ServiceImpactedWarning from "../../../components/modals/booking/ServiceIm
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
 import {ServiceTypeButton, ServiceTypeCardsWrapper, Tagline, useServiceTypeStyles} from "./styles";
 import {HtmlTooltip} from "../../../components/styled/HtmlTooltip";
-import {useAnalyticsForParentSite} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
+import {useAnalyticsBySCId, useAnalyticsForParentSite} from "../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId";
 import {useException} from "../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../routes/constants";
@@ -72,7 +72,8 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
 
     const setTracker = (ids: string[]) => dispatch(setTrackerCreated({isCreated: true, ids}))
 
-    useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
+    // useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
+    useAnalyticsBySCId(id, trackerData.isCreated, setTracker)
 
     const redirect = () => {
         if (scId) {
@@ -149,7 +150,8 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
             category: 'EvenFlow User',
             action: 'Enters Page',
             label: `As New User`,
-        }, trackerData.ids);
+        });
+        //, trackerData.ids
     }
 
     const handleUser = (service: IFirstScreenOption) => {

@@ -46,7 +46,8 @@ const OfferProductPage: React.FC<React.PropsWithChildren<React.PropsWithChildren
                 category: 'EvenFlow User',
                 action: 'Selected Service',
                 label: `With Name ${service.name} And Service Requests ${requestsString}`,
-            }, trackerData.ids)
+            })
+        //}, trackerData.ids)
         } else {
             if (subService && subService?.id === lastCategory?.id) {
                 if (categoriesIds && subService.type !== EServiceCategoryType.LinkToPage2) {
@@ -58,7 +59,8 @@ const OfferProductPage: React.FC<React.PropsWithChildren<React.PropsWithChildren
                     category: 'EvenFlow User',
                     action: 'Selected Sub Service',
                     label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
-                }, trackerData.ids)
+                })
+                //                }, trackerData.ids)
             }
         }
     }

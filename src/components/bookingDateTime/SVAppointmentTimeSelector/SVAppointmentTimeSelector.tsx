@@ -38,7 +38,8 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
                 category: 'EvenFlow User',
                 action: 'Clicked on Service Valet Appointment Slot',
                 label: a?.price?.value ? `With Price $${a.price.value}` : '',
-            }, trackerData.ids);
+            });
+            //, trackerData.ids
         }, [trackerData])
 
         const handleSideBar = () => {
