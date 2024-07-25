@@ -323,7 +323,6 @@ export class Api {
             GetBreaks: {route: "/service-centers/{id}/breaks", method: "get"},
             SetBreaks: {route: "/service-centers/{id}/breaks", method: "put"},
             WorkingDays: {route: "/service-centers/{id}/working-days", method: "get"},
-            Analytics: {route: "/service-centers/{id}/analytics", method: "get"},
             GetRoundPrice: {route: "/service-centers/{id}/round-price", method: "get"},
             ChangeRoundPrice: {route: "/service-centers/{id}/round-price", method: "patch"},
             GetMaxPriceDateRange: {route: "/service-centers/{id}/max-price-date-range", method: "get"},

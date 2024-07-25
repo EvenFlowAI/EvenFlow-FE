@@ -1,6 +1,6 @@
 import {TServiceCenterActions, TServiceCenterState} from "./types";
 import {blankAnalytics, defaultPageData, defaultPaging} from "../constants";
-import {getSCAnalytics, getWorkingDays, setPricingOpt, setSCOrder, setSCSearch} from "./actions";
+import {getWorkingDays, setPricingOpt, setSCOrder, setSCSearch} from "./actions";
 import {defaultOrder} from "../../../config/config";
 
 const initialState: TServiceCenterState = {
@@ -89,11 +89,6 @@ export const serviceCenterReducer = (state=initialState, action: TServiceCenterA
         case getWorkingDays.type:
             if (getWorkingDays.match(action)) {
                 return {...state, workingDays: action.payload};
-            }
-            return state;
-        case getSCAnalytics.type:
-            if (getSCAnalytics.match(action)) {
-                return {...state, analytics: action.payload};
             }
             return state;
         case setPricingOpt.type:

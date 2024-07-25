@@ -8,7 +8,7 @@ import {PrivateRoute} from "../../../routes/PrivateRoute/PrivateRoute";
 import {useDispatch} from "react-redux";
 import {getCurrentUser} from "../../../store/reducers/users/actions";
 import {loadDealershipProfile} from "../../../store/reducers/dealershipGroups/actions";
-import {loadAllSCs, loadSCAnalytics} from "../../../store/reducers/serviceCenters/actions";
+import {loadAllSCs} from "../../../store/reducers/serviceCenters/actions";
 import {getPodsShort, loadPodsShort} from "../../../store/reducers/pods/actions";
 import clsx from "clsx";
 import {useStyles} from "./styles";
@@ -43,7 +43,6 @@ export const AdminPanel = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadPodsShort(selectedSC.id));
-            dispatch(loadSCAnalytics(selectedSC.id));
         } else {
             dispatch(getPodsShort([]));
         }
