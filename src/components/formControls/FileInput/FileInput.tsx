@@ -8,9 +8,10 @@ const allowedFileTypes = ['image/svg+xml', 'image/svg', 'image/png', 'image/jpeg
 type TFileInputProps = {
     setState: Dispatch<SetStateAction<IIconState>>,
     label: string;
+    type?: "outlined"|"contained"
 }
 
-export const FileInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TFileInputProps>>> = ({ setState, label }) => {
+export const FileInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TFileInputProps>>> = ({type, setState, label }) => {
     const ref = createRef<HTMLInputElement>();
     const showError = useException();
     const { classes  } = useStyles();
@@ -41,7 +42,7 @@ export const FileInput: React.FC<React.PropsWithChildren<React.PropsWithChildren
     return (
         <div className={classes.buttonWrapper}>
             <label htmlFor="fileInput" className={classes.fileLabel}>
-                <div className={classes.uploadBtn}>
+                <div className={type === "outlined" ? classes.uploadOutlined : classes.uploadContained}>
                     {label}
                 </div>
                 <input

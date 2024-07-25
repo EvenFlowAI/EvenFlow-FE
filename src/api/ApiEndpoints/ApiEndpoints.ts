@@ -422,6 +422,7 @@ export class Api {
             GetActive: {route: "/transportation-options/active/by-query", method: "post"},
             Rules: {route: "/transportation-options/{id}/rules", method: "put"},
             UpdateById: {route: "/transportation-options/{id}", method: "put"},
+            UpdateIcon: {route: "/transportation-options/{id}/icon", method: "patch"}
         },
         Users: {
             GetAll: {route: "/users/by-query", method: "post"},

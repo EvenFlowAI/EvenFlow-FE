@@ -2,54 +2,105 @@ import {styled} from "@mui/material";
 import React from "react";
 import theme from "../../../../../../theme/theme";
 
-export const CardWrapper = styled("div")<{ active?: boolean }>
-(({theme, active}) => ({
-    width: 287,
-    minHeight: 264,
-    fontSize: 22,
-    cursor: "pointer",
-    fontWeight: 700,
-    textAlign: "center",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 12,
-    background: active ? "#000000" : "transparent",
-    color: active ? "#FFFFFF" : theme.palette.text.primary,
-    border: `1px solid ${active ? "#000000" : "#DADADA"}`,
-    transition: "all .2s",
-    [theme.breakpoints.down('md')]: {
-        minHeight: 100
-    }
-}));
-
-export const CardOptions = styled('ul')({
-    listStyle: "none",
-    margin: 0,
-    padding: 0,
-    fontSize: 14,
-    display: "flex",
-    alignItems: "stretch",
-    flexDirection: "column",
-    gap: "8px",
-    fontWeight: "normal",
-    width: "100%",
-    "&>li": {
-        border: '1px solid #DADADA',
-        cursor: "pointer",
-        textAlign: "left",
-        padding: 8,
-        display: "flex",
-        alignItems: "center",
-        gap: "6px",
+export const CardWrapper = styled("div")<{
+    active?: boolean,
+    selected?: boolean
+}>(({theme, active, selected}) => {
+    return {
+        display: "grid",
+        gridTemplateColumns: "1fr",
+        gridTemplateRows: "1fr 4fr 3fr 2fr",
+        width: "100%",
+        maxWidth: 250,
         transition: "all .2s",
-        color: theme.palette.text.primary,
-        background: "#FFFFFF",
-        "&.active": {
-            border: "1px solid #FFFFFF",
-            color: "#FFFFFF",
-            background: "#000000"
-        }
-    }
+        fontSize: 24,
+        textAlign: "center",
+        alignItems: "center",
+        padding: 10,
+        background: active ? '#000000' : selected ? "#DEFFDF" : "transparent",
+        border: `1px solid ${active ? '#000000' : selected ? '#89E5AB' : '#DADADA'}`,
+        cursor: "pointer",
+        [theme.breakpoints.down('md')]: {
+            position: 'relative',
+            maxWidth: 300,
+            gridTemplateColumns: "26% 1fr",
+            gridTemplateRows: "1fr",
+            fontSize: 18,
+            ".cardIcon": {
+                width: 78,
+                height: 78
+            }
+        },
+        "& .priceWrapper": {
+            height: 30,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            padding: "0 12px",
+            [theme.breakpoints.down('md')]: {
+                gridColumn: "1/3",
+            }
+        },
+        "& .price": {
+            color: active ? "#FFFFFF" : "#202021",
+            fontSize: 20,
+            fontWeight: "bold",
+        },
+        "& .bluePrice": {
+            color: "#142EA1",
+            fontSize: 20,
+            fontWeight: "bold",
+        },
+        "& .blueStrikePrice": {
+            color: "#142EA1",
+            fontSize: 20,
+            fontWeight: "bold",
+            textDecoration: 'line-through',
+        },
+        "& .expiringDate": {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            color: "#202021",
+            fontWeight: 'bold',
+            fontSize: 9,
+        },
+        "& .text": {
+            color: active ? "#DADADA" : "#828282",
+            fontSize: 11,
+            fontWeight: "bold",
+            fontFamily: "Proxima Nova",
+            textTransform: "uppercase",
+        },
+        "& .infoIcon": {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            [theme.breakpoints.down('md')]: {
+                position: 'absolute',
+                top: 5,
+                right: 5,
+            }
+        },
+    };
+});
+
+export const NoIcon = styled('div')({
+    width: '100%',
+    minHeight: 105,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: "#DADADA",
+    fontWeight: 'bold',
+    fontSize: 32,
+    padding: '10%',
+    backgroundColor: "#F1F1F1",
+    [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
+        width: 224,
+        height: 112,
+        maxWidth: '90%'
+    },
+    [`${theme.breakpoints.down('md')} and (orientation: landscape)`]: {
+        padding: '7%'
+    },
 })

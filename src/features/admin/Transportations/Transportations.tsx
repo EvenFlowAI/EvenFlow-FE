@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {NoItemsLoading} from "../../../components/wrappers/NoItemsLoading/NoItemsLoading";
 import {IconButton, Menu, MenuItem, Switch, TableBody, TableHead, TableCell} from "@mui/material";
 import {getTransportationOptionString} from "../../../utils/utils";
-import {ETransportColumn, ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
+import {ITransportationOptionFull} from "../../../store/reducers/transportationNeeds/types";
 import {MoreHoriz} from "@mui/icons-material";
 import {
     loadTransportationOptions,
@@ -88,13 +88,22 @@ export const Transportations = () => {
                                 <TableRow>
                                     <HeaderCell
                                         key="1"
+                                        style={{textTransform: 'capitalize'}}
                                         align="left">
-                                        Transportation Option
+                                        Service Needs
                                     </HeaderCell>
-                                    <HeaderCell key="3" align="left">Description</HeaderCell>
-                                    <HeaderCell key="2" align="left">Rules Configured</HeaderCell>
-                                    <HeaderCell key="4" align="left">Manage</HeaderCell>
-                                    <HeaderCell key="5" align="left" width={150}>Status (Off/ON)</HeaderCell>
+                                    <HeaderCell key="3" align="left" style={{textTransform: 'capitalize'}}>
+                                        Description
+                                    </HeaderCell>
+                                    <HeaderCell key="2" align="left" style={{textTransform: 'capitalize'}}>
+                                        Order Index
+                                    </HeaderCell>
+                                    <HeaderCell key="4" align="left" style={{textTransform: 'capitalize'}}>
+                                        Manage
+                                    </HeaderCell>
+                                    <HeaderCell key="5" align="left" width={150} style={{textTransform: 'capitalize'}}>
+                                        Status (Off/ON)
+                                    </HeaderCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -105,7 +114,7 @@ export const Transportations = () => {
                                             {el.description}
                                         </TableCell>
                                         <TableCell key="2" align="left">
-                                            {el.column === ETransportColumn.Yes ? "Yes" : "No"}
+                                            {el.orderIndex}
                                         </TableCell>
                                         <TableCell key="4" align="left">
                                             <IconButton size="small" onClick={openMenu(el)} >
