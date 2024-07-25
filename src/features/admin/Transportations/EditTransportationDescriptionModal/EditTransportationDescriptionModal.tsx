@@ -42,6 +42,7 @@ export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildre
         setFormIsChecked(false);
         setDescription('');
         setOrderIndex('');
+        setFileState(initialFileState);
         props.onClose();
     }
 
