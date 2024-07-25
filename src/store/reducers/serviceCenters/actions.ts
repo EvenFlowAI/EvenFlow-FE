@@ -137,11 +137,13 @@ export const loadShortSC: ActionCreator<ThunkAction<void, RootState, void, TServ
     }
 }
 
-export const removeSC: ActionCreator<AppThunk> = (serviceCenterId: number) => async (dispatch) => {
+export const removeSC: ActionCreator<AppThunk> = (serviceCenterId: number, onSuccess: TCallback, onError: TArgCallback<any>) => async (dispatch) => {
     try {
         await Api.call(Api.endpoints.ServiceCenters.Remove, {urlParams: {id: serviceCenterId}});
         dispatch(loadAll())
+        onSuccess()
     } catch (e) {
+        onError(e)
         console.log('removeSC error', e)
     }
 }
