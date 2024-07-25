@@ -42,7 +42,7 @@ const AppointmentTimingManage: React.FC<{handleSetScreen: TArgCallback<TScreen>}
         if (editingPosition === 'slot' && serviceOptionChangedFromSlotPage) {
             getBackToManage();
         } else {
-            if (fromServiceValetToVisitCenter) {
+            if (fromServiceValetToVisitCenter || editingPosition === "serviceOption") {
                 redirectToServiceTypeOptions()
             } else {
                 const prev: TScreen = isTransportationAvailable && !serviceTypeOption?.transportationOption
