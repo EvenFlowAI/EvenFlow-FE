@@ -5,7 +5,6 @@ import {ReactComponent as Unchecked} from '../../../../assets/img/radiobutton_un
 import {Button} from "@mui/material";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import {ServiceBookModal} from "../../ServiceBookModal/ServiceBookModal";
-import RecalculateCapacity from "../../../../components/buttons/RecalculateCapacity/RecalculateCapacity";
 
 const ButtonsRow = () => {
     const {isOpen, onClose, onOpen} = useModal();
@@ -20,7 +19,6 @@ const ButtonsRow = () => {
             </Definition>
             <ButtonsWrapper>
                 <Button variant="contained" onClick={onOpen}>Create Service Book</Button>
-                <RecalculateCapacity/>
             </ButtonsWrapper>
             <ServiceBookModal open={isOpen} onClose={onClose} editingItemId={undefined} />
         </Wrapper>
