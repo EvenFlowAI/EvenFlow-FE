@@ -67,7 +67,7 @@ export interface IApiEndpoints {
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiEndpoint>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"
         | "GetAll" | "Avatar" | "GetSelection" | "GetHOO" | "SetHOO" | "GetWS" | "SetWS" | "WorkingDays"
-        | "GetBreaks" | "SetBreaks" | "Analytics" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
+        | "GetBreaks" | "SetBreaks" | "ChangePricingOpt" | "GetRoundPrice" | "ChangeRoundPrice"
         | "GetMaxPriceDateRange" | "UpdateMaxPriceDateRange" | "GetReminders" | "UpdateReminders" | "UpdateAuth"
         | "UpdateAdvisor" | "UpdatePredictionParams" | "GetPredictionParams" | "GetLaborRate" | "UpdateLaborRate"
         | "UpdatePackageDisclaimer" | "GetAncillaryPriceType" | "UpdateAncillaryPriceType" | "UpdatePackagePriceDetails"
