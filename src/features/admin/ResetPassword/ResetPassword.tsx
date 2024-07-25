@@ -34,7 +34,7 @@ export const ResetPassword = () => {
         if (!newPassword) {
             enqueueSnackbar("Invalid Password", {variant: "error"});
         }
-        if (newPassword !== confirmPassword) {
+        if (newPassword !== confirmPassword || !confirmPassword.length) {
             enqueueSnackbar("Passwords do not match", {variant: "error"});
         }
         setLoading(true);
