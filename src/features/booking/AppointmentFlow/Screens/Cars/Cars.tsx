@@ -53,7 +53,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
         serviceTypeOption,
         consultants,
         makes,
-        isUsualFlowNeeded
+        isUsualFlowNeeded,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const { isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -68,8 +68,12 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     const {id} = useParams<{id: string}>();
     const history = useHistory();
     const currentUser = useCurrentUser();
+
     const isAuthorized = useMemo(() => currentUser && currentUser.dealershipId === scProfile?.dealershipId,
         [currentUser, scProfile])
+    const shouldHideScreen = useMemo(() => {
+        return customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)
+    }, [customerLoadedData])
 
     const vehiclesPerScreen = useMemo(() => {
         return isXs ? 1 : 2;
@@ -103,10 +107,11 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     usePopState('select', redirectToWelcomeScreens, true);
 
     useEffect(() => {
-        if (isAuthorized) {
+        if (isAuthorized) return;
+        if (shouldHideScreen) {
             if (needToShowServiceSelection) {
-                setNeedToShowServiceSelection(false);
                 handleServiceTypeSelection()
+                setNeedToShowServiceSelection(false);
             } else {
                 if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
                     handleSetScreen("manageAppointment")
@@ -115,7 +120,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isAuthorized, selectedVehicle, scProfile, needToShowServiceSelection]);
+    }, [isAuthorized, shouldHideScreen, selectedVehicle, scProfile, needToShowServiceSelection, customerLoadedData, isUsualFlowNeeded, getNextScreen]);
 
     const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - vehiclesPerScreen;
     const prevDisabled = () => idx <= 0;
