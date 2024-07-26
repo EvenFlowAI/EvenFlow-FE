@@ -47,6 +47,12 @@ export const ServiceRequests = () => {
         }
     }, [selectedSC, dispatch, assignedPageData, assignedOrdering]);
 
+    useEffect(() => {
+        return () => {
+            dispatch(setAssignedFilter({searchTerm: ''}));
+        }
+    }, [])
+
     const handleAddOpsCode = () => {
         setEditedItem(undefined);
         onOpen();
