@@ -1,12 +1,14 @@
 import {createAction} from "@reduxjs/toolkit";
 import {
-    EMaintenanceOptionType, EServiceCategoryPage,
+    EMaintenanceOptionType,
+    EServiceCategoryPage,
     EServiceCenterName,
     IAddressData,
     IAppointmentByKey,
     IConsultantsRequestData,
     ICreateAppointmentResp,
-    ICustomer, ICustomerLoadedData,
+    ICustomer,
+    ICustomerLoadedData,
     ILoadedVehicle,
     IPackage,
     IPackageOptions,
@@ -32,7 +34,8 @@ import {
     TEditingPosition,
     TLanguage,
     TMaintenanceDetails,
-    TMaintenanceOption, TTrackerState,
+    TMaintenanceOption,
+    TTrackerState,
     TVehicleForRequest,
     TYear
 } from "./types";
@@ -40,14 +43,16 @@ import {
     AppThunk,
     IMaintenanceItem,
     IRecallByVin,
-    PaginatedAPIResponse, TArgCallback,
+    PaginatedAPIResponse,
+    TArgCallback,
     TCallback,
     TParsableDate,
     TScreen,
     TView
 } from "../../../types/types";
 import {
-    collectServiceRequestIds, collectServiceRequestsForSearch,
+    collectServiceRequestIds,
+    collectServiceRequestsForSearch,
     decodeSCID,
     getCategories,
     getCategoriesForAppointment,
@@ -59,7 +64,8 @@ import {
     saveCustomerCache,
     selectAppointment,
     selectServiceValetAppointment,
-    selectSR, selectSRMultiple,
+    selectSR,
+    selectSRMultiple,
     setAppointmentWasChanged,
     setCustomerLoadedData,
     setWaitListSettings
@@ -759,6 +765,8 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
     const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
     dispatch(setAppointmentSaving(true))
 
+    const serviceType: EServiceType = appointmentFrame?.serviceTypeOption?.type ?? EServiceType.VisitCenter
+
     const vehicle:TVehicleForRequest = {
         dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
         engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId ? Number(appointmentFrame.selectedVehicle?.engineTypeId) : null,
@@ -785,7 +793,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         ? appointmentFrame.selectedTiming
         : EAppointmentTimingType.FirstAvailable;
 
-    const transportationOptionId = appointmentFrame.serviceTypeOption?.type === EServiceType.VisitCenter
+    const transportationOptionId = serviceType === EServiceType.VisitCenter
     && !appointmentFrame.serviceTypeOption?.transportationOption
     && appointmentFrame.transportation
         ? appointmentFrame.transportation?.id
@@ -868,7 +876,6 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
     const endpoint = appointmentFrame.hashKey
         ? Api.endpoints.Appointments.UpdateByKey
         : Api.endpoints.Appointments.Create;
-
 
     Api.call<ICreateAppointmentResp>(endpoint, { data, urlParams: {id: appointmentFrame.hashKey} })
         .then(({data}) => {
