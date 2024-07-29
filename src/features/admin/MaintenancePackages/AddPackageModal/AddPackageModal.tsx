@@ -271,7 +271,7 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                         <span> Add Existing Maintenance Package</span>
                     </div>
 
-                    <div className={classes.label}>Assigned Ops Codes</div>
+                    <div className={classes.label}>Assigned Op Codes</div>
                     <div className={
                         assignedOpsCodes?.length
                             ? classes.opsCodesWrapper
@@ -281,7 +281,7 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                     }>
                     { assignedOpsCodes?.length
                         ? <AssignedOpsCodes codes={assignedOpsCodes}/>
-                        : <p>There are no Ops Codes in this list yet</p>
+                        : <p>There are no Op Codes in this list yet</p>
                     }
                     </div>
 
@@ -290,10 +290,10 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                         color="primary"
                         style={{width: '100%'}}
                         onClick={onAssignOpsCodeOpen}>
-                        Assign Ops Code To Package
+                        Assign Op Code To Package
                     </Button>
 
-                    <div className={classes.label}>Ops Codes</div>
+                    <div className={classes.label}>Op Codes</div>
                     <div className={opsCodes?.length
                         ? classes.opsCodesWrapper
                         : formIsChecked
@@ -304,7 +304,7 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                                 serviceRequest={item.serviceRequest}
                                 onDelete={onDelete}
                                 key={`${item.serviceRequest.id}+${index}`}/>)
-                            : <p>There are no Ops Codes in this list yet</p>
+                            : <p>There are no Op Codes in this list yet</p>
                         }
                     </div>
 
@@ -313,7 +313,7 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                             color="primary"
                             className={classes.wideButton}
                             onClick={onAddOpsCodeOpen}>
-                            Add Ops Codes
+                            Add Op Codes
                         </Button>
                         <Button
                             color="primary"
@@ -427,7 +427,7 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
             </DialogActions>
 
             <AssignOpsCode
-                title="ASSIGN OPS CODES TO MAINTENANCE PACKAGE OPTIONS"
+                title="ASSIGN OP CODES TO MAINTENANCE PACKAGE OPTIONS"
                 open={isAssignOpsCodeOpen}
                 optionError={optionError}
                 setOptionError={setOptionError}

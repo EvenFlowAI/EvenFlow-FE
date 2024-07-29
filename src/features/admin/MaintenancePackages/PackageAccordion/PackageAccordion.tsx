@@ -378,7 +378,7 @@ export const PackageAccordion: React.FC<React.PropsWithChildren<React.PropsWithC
                                     variant="contained"
                                     color="primary"
                                     onClick={onDescriptionOpen}>
-                                    To Describe Ops Codes
+                                    To Describe Op Codes
                                 </Button>
                             </>
                             : null

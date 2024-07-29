@@ -34,7 +34,7 @@ export const ZonesOpsCodesPlate: React.FC<React.PropsWithChildren<React.PropsWit
 
     return <Grid item xs={6} md={4}>
         <Paper className={centerSettingsClasses.paper} variant={"outlined"} >
-            <h3 className={centerSettingsClasses.title}>Service Valet Ops Code</h3>
+            <h3 className={centerSettingsClasses.title}>Service Valet Op Code</h3>
             <Button className={centerSettingsClasses.edit} color="primary" onClick={() => onEdit()} disabled={!zonesData.length}>Edit</Button>
             {isLoading
                 ? <Loading/>

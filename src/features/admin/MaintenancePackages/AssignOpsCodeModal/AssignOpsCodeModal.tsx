@@ -26,7 +26,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
-    {header: "OPS CODE", val: el => el.code},
+    {header: "OP CODE", val: el => el.code},
     {header: "DESCRIPTION", val: el => el.description, width: '80%'},
 ]
 
@@ -144,7 +144,7 @@ const AssignOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildr
 
     return (
         <BaseModal {...props}>
-            <DialogTitle onClose={handleClose}>ASSIGN OPS CODES TO MAINTENANCE PACKAGE OPTIONS</DialogTitle>
+            <DialogTitle onClose={handleClose}>ASSIGN OP CODES TO MAINTENANCE PACKAGE OPTIONS</DialogTitle>
             <div className={classes.subTitle}>{packageName}</div>
             <DialogContent>
                 <div className={classes.wrapper}>

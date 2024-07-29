@@ -290,9 +290,9 @@ export const EditTransportationModal:React.FC<React.PropsWithChildren<React.Prop
                         value={serviceRequests}
                         onChange={onRequestChange}
                         renderInput={autocompleteRender({
-                            label: "Service Requests",
+                            label: "Op Codes",
                             error: !serviceRequests.length && formIsChecked,
-                            placeholder: 'Select Service Requests'
+                            placeholder: 'Select Op Codes'
                         })}
                     />
                         <Autocomplete

@@ -58,7 +58,7 @@ const RecallParts = () => {
     return <>
         <div className={classes.wrapper}>
             <div className={classes.title}>
-                default recall ops code:
+                default recall op code:
             </div>
             <Autocomplete
                 style={{width: 335}}
@@ -70,7 +70,7 @@ const RecallParts = () => {
                 onChange={onSRChange}
                 renderInput={autocompleteRender({
                     label: "",
-                    placeholder: 'Select Ops Code'
+                    placeholder: 'Select Op Code'
                 })}
             />
             <Button

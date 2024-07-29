@@ -70,7 +70,7 @@ const DescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren
 
     return (
         <BaseModal open={open} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Describe Maintenance Package's Ops Codes</DialogTitle>
+            <DialogTitle onClose={onCancel}>Describe Maintenance Package's Op Codes</DialogTitle>
             {isPackageLoading
                 ? <Loading/>
                 : <DialogContent sx={{fontSize: 14}}>

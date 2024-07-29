@@ -103,7 +103,7 @@ const IntervalUpsellModal: React.FC<React.PropsWithChildren<React.PropsWithChild
             <Grid container spacing={3} alignItems="flex-end">
                 <Grid item xs={12}>
                     <TextField
-                        label="Ops Code Name"
+                        label="Op Code Name"
                         disabled
                         fullWidth
                         value={payload?.code || payload?.serviceRequest?.code || ""}

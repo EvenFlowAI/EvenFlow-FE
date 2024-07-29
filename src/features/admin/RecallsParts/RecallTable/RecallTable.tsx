@@ -78,7 +78,7 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
             </div>
         },
         {
-            header: "Ops Code",
+            header: "Op Code",
             val: el => el.serviceRequest?.name ?? '',
             width: 150,
         },

@@ -11,7 +11,7 @@ export const rowData: TableRowDataTypeResp<IPodSummary>[] = [
         width: 190,
     },
     {
-        header: "Ops Codes",
+        header: "Op Codes",
         val: el => el.options.includes(EPodSummaryOption.OpsCodes) ? <Checked/> : <Unchecked/>,
         align: 'center',
     },

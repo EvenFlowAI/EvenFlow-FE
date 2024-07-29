@@ -61,7 +61,7 @@ const AddServiceManually: React.FC<React.PropsWithChildren<React.PropsWithChildr
     }, [])
 
     const onSuccess = () => {
-        showMessage(editedItem ? 'Ops Code updated' : '1 Ops Code added')
+        showMessage(editedItem ? 'Op Code updated' : '1 Op Code added')
         onCancel()
     }
 

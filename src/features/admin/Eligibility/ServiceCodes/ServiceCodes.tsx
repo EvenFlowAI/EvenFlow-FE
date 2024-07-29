@@ -57,7 +57,7 @@ export const ServiceCodes = () => {
                         <StyledTableCell
                             width={230}
                             style={{...headCellStyles, ...leftAlign, textTransform: 'capitalize'}}>
-                            Service Ops Code
+                            Service Op Code
                         </StyledTableCell>
                         <StyledTableCell
                             style={{...headCellStyles, ...leftAlign, textTransform: 'capitalize'}}>
