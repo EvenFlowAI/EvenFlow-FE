@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useState} from "react";
+import React, {Dispatch, SetStateAction, useMemo, useState} from "react";
 import { Autocomplete } from '@mui/material';
 import {Divider, FormControlLabel, Grid, Switch} from "@mui/material";
 import {TextField} from "../../../../formControls/TextFieldStyled/TextField";
@@ -44,6 +44,10 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
 
     // todo multiple service centers
     const autocompleteClasses = useMultipleAutocompleteStyles();
+    const dmsOptions = useMemo(() => dmsAdvisors.filter(el => el.role && form.role && DmsRoles[el.role] === form.role),
+        [dmsAdvisors, form.role])
+    const dmsAdvisor = useMemo(() => form?.dmsId && dmsAdvisors.length ? dmsAdvisors.find(item => item.dmsId === form.dmsId) : null,
+        [form?.dmsId, dmsAdvisors])
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}})  => {
         setFormIsChecked(false);
@@ -189,13 +193,13 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
             </Grid>
             <Grid item xs={12} sm={6}>
                 <Autocomplete
-                    options={dmsAdvisors.filter(el => el.role && form.role && DmsRoles[el.role] === form.role)}
+                    options={dmsOptions}
                     onChange={handleDMSConsultantChange}
                     getOptionLabel={i => i.fullName ? `${i.fullName} - ${i.dmsId}` : `${i.dmsId}`}
                     isOptionEqualToValue={(o, s) => o.id === s.id}
                     disabled={!form.role || shortLoading || loadingDMSAdvisors}
                     loading={shortLoading || loadingDMSAdvisors}
-                    value={form?.dmsId ? dmsAdvisors.find(item => item.dmsId === form.dmsId) : null}
+                    value={dmsAdvisor}
                     renderInput={autocompleteRender({label: "Assign Employee from DMS", fullWidth: true, placeholder: "Assign Employee from DMS"})}
                 />
             </Grid>
