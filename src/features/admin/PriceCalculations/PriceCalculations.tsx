@@ -71,7 +71,7 @@ export const PriceCalculations = () => {
                 <Box display="flex" flexWrap={"wrap"}>
                     <Box p={2} width={300}>
                         <Label style={{color: "#252733"}} htmlFor="serviceRequest">
-                            Select Service Request
+                            Select Op Code
                         </Label>
                         <Autocomplete
                             style={{marginTop: 4}}

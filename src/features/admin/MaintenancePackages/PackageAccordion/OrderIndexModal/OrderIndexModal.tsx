@@ -115,7 +115,7 @@ const OrderIndexModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
             {isPackageLoading
                 ? <Loading/>
                 : <DialogContent>
-                    <h3 className={classes.title}>Service Requests</h3>
+                    <h3 className={classes.title}>Op Codes</h3>
                     <TableContainer style={{ overflowX: 'unset' }}>
                         <Table>
                             <TableHead>

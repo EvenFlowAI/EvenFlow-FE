@@ -160,7 +160,7 @@ export const OfferForm: React.FC<React.PropsWithChildren<React.PropsWithChildren
                     loading={false}
                     value={form.serviceRequests}
                     renderInput={autocompleteRender({
-                        label: "Service request included",
+                        label: "Op Code included",
                         fullWidth: true,
                         error: formIsChecked && !form.serviceRequests.length
                     })}

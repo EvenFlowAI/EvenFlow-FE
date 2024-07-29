@@ -74,9 +74,9 @@ const DescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren
             {isPackageLoading
                 ? <Loading/>
                 : <DialogContent sx={{fontSize: 14}}>
-                    <h3 className={classes.title}>Service Requests</h3>
+                    <h3 className={classes.title}>Op Codes</h3>
                     <div className={classes.wrapper}>
-                        <h4>Code</h4>
+                        <h4>Op Code</h4>
                         <h4>Title</h4>
                         <h4>Description</h4>
                         <h4 className={classes.title}>Edit</h4>
