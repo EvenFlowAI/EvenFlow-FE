@@ -151,7 +151,7 @@ const BaseScheduleByEmployee = () => {
                                         ROLE
                                     </TableSortLabel>
                                 </ScheduleTableHeaderCell>
-                                <ScheduleTableHeaderCell key="serviceBook">
+                                <ScheduleTableHeaderCell key="serviceBook" width={270}>
                                     SERVICE BOOKS
                                 </ScheduleTableHeaderCell>
                                 {/*<ScheduleTableHeaderCell key="breakHours" width={75}>*/}
