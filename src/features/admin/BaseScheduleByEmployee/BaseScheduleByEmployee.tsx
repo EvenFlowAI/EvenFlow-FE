@@ -59,13 +59,11 @@ const BaseScheduleByEmployee = () => {
     const getData = useCallback(() => {
         if (selectedSC?.id) {
             setLoader(true)
-            const isServiceBookServiceCenter = Boolean(serviceBook && !serviceBook.id);
             const data: TScheduleByEmployeeRequestData = {
                 serviceCenterId: selectedSC.id,
                 orderBy: order.orderBy,
                 isAscending: order.isAscending,
                 serviceBookId: serviceBook?.id ?? null,
-                isServiceBookServiceCenter,
             }
             if (name) data.name = name;
             if (role) data.role = role;
@@ -153,14 +151,8 @@ const BaseScheduleByEmployee = () => {
                                         ROLE
                                     </TableSortLabel>
                                 </ScheduleTableHeaderCell>
-                                <ScheduleTableHeaderCell key="serviceBook" width={100}>
-                                    <TableSortLabel
-                                        direction={order.isAscending ? "desc" : "asc"}
-                                        onClick={() => onSort("ServiceBook")}
-                                        active={order.orderBy === "ServiceBook"}
-                                    >
-                                        SERVICE BOOK
-                                    </TableSortLabel>
+                                <ScheduleTableHeaderCell key="serviceBook" width={270}>
+                                    SERVICE BOOKS
                                 </ScheduleTableHeaderCell>
                                 {/*<ScheduleTableHeaderCell key="breakHours" width={75}>*/}
                                 {/*    BREAK HOURS*/}
@@ -180,7 +172,7 @@ const BaseScheduleByEmployee = () => {
                                         {item.role}
                                     </StyledScheduleCell>
                                     <StyledScheduleCell key="serviceBook">
-                                        {item.serviceBook}
+                                        {item.serviceBooks.join(', ')}
                                     </StyledScheduleCell>
                                     {/*<ScheduleDataCell key="breakHours">*/}
                                     {/*    0.0*/}

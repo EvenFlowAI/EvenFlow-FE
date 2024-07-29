@@ -155,12 +155,12 @@ export class Api {
             UpdateByDate: {route: "/employee-schedules/set-for-date-range", method: "put"},
             GetBaseSummary: {route: "/employee-schedules/base-summary", method: "post"},
             GetSummaryByEmployee: {route: "/employee-schedules/base-summary-by-employee", method: "post"},
-            GetTimeScheduleByEmployee: {route: "/employee-schedules/get-base-schedule-by-service-book", method: "get"},
-            SetTimeScheduleByEmployee: {route: "/employee-schedules/set-base-schedule-by-service-book", method: "post"},
+            GetTimeScheduleByEmployee: {route: "/employee-schedules/get-base-schedule-by-employee", method: "get"},
+            SetTimeScheduleByEmployee: {route: "/employee-schedules/set-base-schedule-by-employee", method: "post"},
         },
         GeneralSettings: {
-          Get: {route: "/general-settings", method: 'get'},
-          Update: {route: "/general-settings", method: 'post'},
+            Get: {route: "/general-settings", method: 'get'},
+            Update: {route: "/general-settings", method: 'post'},
         },
         GeographicZones: {
             GetZones: {route: "/geographic-zones/by-query", method: "post"},

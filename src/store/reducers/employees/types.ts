@@ -169,6 +169,9 @@ export interface IBaseSummary {
 }
 
 export interface IEmployeeRoleHours extends IRoleHours {
+    role: string;
+    serviceBooks: string[];
+    dailyHours: TDayHours[];
     employeeId: string;
     employeeName: string;
 }
@@ -182,7 +185,6 @@ export type TScheduleByEmployeeRequestData = {
     orderBy: string;
     isAscending: boolean;
     serviceBookId: number|null;
-    isServiceBookServiceCenter: boolean;
     name?: string;
     role?: string;
 }
@@ -207,14 +209,12 @@ export interface IEmployeeSchedule {
 export type TBaseScheduleRequest = {
     serviceCenterId: number;
     employeeId: string;
-    serviceBookId?: number;
 }
 
 export type TSetScheduleData = {
     serviceCenterId: number;
     employeeId: string;
     dayOfWeekSchedules: TDaySchedule[];
-    serviceBookId?: number;
 }
 
 export enum EDmsRole {

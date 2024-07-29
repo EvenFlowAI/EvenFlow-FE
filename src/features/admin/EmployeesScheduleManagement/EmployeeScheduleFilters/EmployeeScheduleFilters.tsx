@@ -16,7 +16,10 @@ const EmployeeScheduleFilters: React.FC<TProps> = ({isLoading, filters, setFilte
     const {scheduleByDate} = useSelector((state: RootState) => state.employeesSchedule);
     const [search, setSearch] = useState<string>('');
 
-    const serviceBooksList = useMemo(() => Array.from(new Set(scheduleByDate.map(el => el.serviceBook))),
+    const serviceBooksList = useMemo(() => {
+            const list = scheduleByDate.map(el => el.serviceBooks).flat(1);
+            return Array.from(new Set(list))
+        },
         [scheduleByDate])
     const rolesList = useMemo(() => Array.from(new Set(scheduleByDate.map(el => el.role))),
         [scheduleByDate])

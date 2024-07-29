@@ -29,7 +29,7 @@ import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import {TServiceConsultant} from "../appointments/types";
 
 export const getAll = (payload: IEmployee[]): TEmployeeActions => ({
-   type: "Employees/GetAll", payload
+    type: "Employees/GetAll", payload
 });
 export const _changePageData = changePageDataGeneric("Employees/ChangePageData");
 
@@ -54,10 +54,10 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
         const {data: {result: employees, paging}} = await Api.call<PaginatedAPIResponse<IEmployee>>(
             Api.endpoints.Users.GetAll,
             {data: {
-                ...state.employees.pageData,
-                ...state.employees.order,
-                searchTerm: state.employees.searchTerm
-            }}
+                    ...state.employees.pageData,
+                    ...state.employees.order,
+                    searchTerm: state.employees.searchTerm
+                }}
         );
         dispatch(loading(false));
         dispatch(changePaging(paging));
@@ -72,25 +72,25 @@ const _loadTechnicians = (payload: IEmployee[]): TEmployeeActions => ({type: "Em
 export const loadTechnicians = (serviceCenterId: number): AppThunk =>
     async (dispatch) => {
 
-    dispatch(loadingTechnicians(true));
-    try {
-        const {data: {result: employees}} = await Api.call<PaginatedAPIResponse<IEmployee>>(
-            Api.endpoints.Employees.GetAll,
-            {
-                data: {
-                    serviceCenterId,
-                    pageIndex: 0,
-                    pageSize: 0
+        dispatch(loadingTechnicians(true));
+        try {
+            const {data: {result: employees}} = await Api.call<PaginatedAPIResponse<IEmployee>>(
+                Api.endpoints.Employees.GetAll,
+                {
+                    data: {
+                        serviceCenterId,
+                        pageIndex: 0,
+                        pageSize: 0
+                    }
                 }
-            }
-        );
-        dispatch(loadingTechnicians(false));
-        dispatch(_loadTechnicians(employees));
-    } catch (e) {
-        dispatch(loadingTechnicians(false));
-        console.log('loadTechnicians', e)
-    }
-};
+            );
+            dispatch(loadingTechnicians(false));
+            dispatch(_loadTechnicians(employees));
+        } catch (e) {
+            dispatch(loadingTechnicians(false));
+            console.log('loadTechnicians', e)
+        }
+    };
 export const createEmployee = (payload: IEmployeeForm, onSuccess: () => void, onError: (err: any) => void, avatar?: File): AppThunk => async dispatch => {
     dispatch(saving(true));
     try {
@@ -242,7 +242,7 @@ export const loadBaseSummary = (serviceCenterId: number, orderBy: string, isAsce
     Api.call<IBaseSummary>(Api.endpoints.EmployeeSchedule.GetBaseSummary, {data: {serviceCenterId, isAscending, orderBy}})
         .then(result => {
             if (result) {
-               dispatch(getBaseSummary(result.data))
+                dispatch(getBaseSummary(result.data))
             }
         })
         .catch(err => {
@@ -267,9 +267,8 @@ export const loadBaseSummaryByEmployee = (data: TScheduleByEmployeeRequestData):
 }
 
 export const getBaseEmployeeSchedule = createAction<IEmployeeSchedule>("Employees/GetScheduleTimeByEmployee");
-export const loadBaseEmployeeSchedule = (serviceCenterId: number, employeeId: string, serviceBookId?: number): AppThunk => dispatch => {
+export const loadBaseEmployeeSchedule = (serviceCenterId: number, employeeId: string): AppThunk => dispatch => {
     const data: TBaseScheduleRequest = {serviceCenterId, employeeId}
-    if (serviceBookId) data.serviceBookId = serviceBookId;
     dispatch(loading(true))
     Api.call<IEmployeeSchedule>(Api.endpoints.EmployeeSchedule.GetTimeScheduleByEmployee, {params: data})
         .then(res => {
@@ -285,7 +284,7 @@ export const updateBaseEmployeeSchedule = (data: TSetScheduleData, onSuccess: ()
     dispatch(loading(true))
     Api.call(Api.endpoints.EmployeeSchedule.SetTimeScheduleByEmployee, {data})
         .then(() => {
-            dispatch(loadBaseEmployeeSchedule(data.serviceCenterId, data.employeeId, data.serviceBookId ?? undefined))
+            dispatch(loadBaseEmployeeSchedule(data.serviceCenterId, data.employeeId))
             onSuccess()
         })
         .catch(err => {
