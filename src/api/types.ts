@@ -246,6 +246,7 @@ export interface IAppointmentVehicle {
     model: string;
     year: number;
     dmsId?: string;
+    mileage?: string;
 }
 
 export type TDateAppointmentData = {
