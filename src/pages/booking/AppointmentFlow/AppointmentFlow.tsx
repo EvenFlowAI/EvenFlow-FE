@@ -75,6 +75,7 @@ const AppointmentFlow = () => {
 
     const handleServiceTypeOption = useCallback((data:IAppointmentByKey) => {
         let needToShowService = needToShowServiceTypes;
+
         if (data.serviceTypeOption) {
             const optionExists = Boolean(firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id))
             if (optionExists) {
