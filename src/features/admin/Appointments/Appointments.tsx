@@ -131,6 +131,7 @@ export const Appointments = () => {
                 onFilterOpen={onFilterOpen}
                 handleSearchChange={handleSearchChange}
                 onColumnsOpen={onColumnsOpen}
+                isFiltersOpen={isFiltersOpen}
                 onSearch={onSearch}/>}
         />
         {isFiltersOpen ?

@@ -8,6 +8,7 @@ import {SearchDebounced} from "../../../../components/formControls/SearchDebounc
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Routes} from "../../../../routes/constants";
 import {TCallback} from "../../../../types/types";
+import {ReactComponent as Arrow} from "../../../../assets/img/dropdown-alternate-down.svg";
 
 type TProps = {
     searchTerm: string;
@@ -17,6 +18,7 @@ type TProps = {
     selectedView: TView;
     handleChangeView: (type: TView) => () => void;
     onColumnsOpen: TCallback;
+    isFiltersOpen: boolean;
 }
 
 export const AppointmentActions: React.FC<TProps> = ({
@@ -27,6 +29,7 @@ export const AppointmentActions: React.FC<TProps> = ({
                                                          onSearch,
                                                          onFilterOpen,
                                                          onColumnsOpen,
+                                                         isFiltersOpen,
                                                      }) => {
     const { classes  } = useStyles();
     const {selectedSC} = useSCs();
@@ -52,6 +55,7 @@ export const AppointmentActions: React.FC<TProps> = ({
                 onClick={onFilterOpen}
                 style={{ marginLeft: 20 }}
                 variant="outlined"
+                endIcon={<Arrow style={{transform: isFiltersOpen ? 'rotate(180deg)' : 'none'}}/>}
                 disabled={selectedView === "calendar"}
                 color="primary">
                 Filters
