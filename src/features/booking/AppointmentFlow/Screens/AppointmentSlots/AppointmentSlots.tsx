@@ -215,7 +215,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                         ? {optionType: packageEMenuType}
                         : null;
 
-                const transportationOptionId: number|null = serviceTypeOption?.type === EServiceType.VisitCenter
+                const transportationOptionId: number|null = (serviceTypeOption?.type === EServiceType.VisitCenter || !serviceTypeOption)
                     && !serviceTypeOption?.transportationOption
                     && transportation
                         ? transportation.id
