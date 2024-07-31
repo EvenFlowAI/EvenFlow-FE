@@ -30,12 +30,15 @@ export const ResetPassword = () => {
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = e => {
         setPassword({newPassword, confirmPassword, [e.target.name]: e.target.value});
     };
+
     const handleResetPassword = async () => {
         if (!newPassword) {
             enqueueSnackbar("Invalid Password", {variant: "error"});
+            return;
         }
         if (newPassword !== confirmPassword || !confirmPassword.length) {
             enqueueSnackbar("Passwords do not match", {variant: "error"});
+            return;
         }
         setLoading(true);
         try {
