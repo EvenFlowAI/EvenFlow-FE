@@ -102,8 +102,8 @@ export const Appointments = () => {
     const handleChangeView = (type: TView) => () => {
         if (type === "calendar") {
             setFiltersOpen(false);
-            setSelectedView(type);
         }
+        setSelectedView(type);
     }
 
     const handleOpenDetails = (date: TParsableDate): void => {

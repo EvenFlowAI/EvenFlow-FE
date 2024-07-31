@@ -9,6 +9,8 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {Routes} from "../../../../routes/constants";
 import {TCallback} from "../../../../types/types";
 import {ReactComponent as Arrow} from "../../../../assets/img/dropdown-alternate-down.svg";
+import {ReactComponent as ArrowDisabled} from "../../../../assets/img/dropdown-alternate-down_grey.svg";
+import ChangeViewButtons from "./ChangeViewButtons/ChangeViewButtons";
 
 type TProps = {
     searchTerm: string;
@@ -37,25 +39,31 @@ export const AppointmentActions: React.FC<TProps> = ({
     const url = Routes.EndUser.Welcome + "/" + encoded + "?frame=1";
 
     return <Box>
-        <NavLink to={url} className={classes.linkBtn} target="_blank">Book Appointment</NavLink>
+        <NavLink to={url} className={classes.linkBtn} target="_blank" style={{height: 40}}>Book Appointment</NavLink>
         {selectedView === 'list' && <SearchDebounced
             onSearch={onSearch}
             onChange={handleSearchChange}
+            style={{height: 40}}
             value={searchTerm}
             placeholder="Search customer..."/>
         }
         <Button
             onClick={onColumnsOpen}
-            style={{ marginLeft: 20 }}
+            style={{ marginLeft: 20, height: 40 }}
             variant="outlined"
             color="primary">
             Select Columns
         </Button>
+
+        <ChangeViewButtons handleChangeView={handleChangeView} selectedView={selectedView}/>
+
         <Button
                 onClick={onFilterOpen}
-                style={{ marginLeft: 20 }}
+                style={{ marginLeft: 20, height: 40 }}
                 variant="outlined"
-                endIcon={<Arrow style={{transform: isFiltersOpen ? 'rotate(180deg)' : 'none'}}/>}
+                endIcon={selectedView === 'list'
+                    ? <Arrow style={{transform: isFiltersOpen ? 'rotate(180deg) translate(0px, 3px)' : 'none'}}/> :
+                    <ArrowDisabled/>}
                 disabled={selectedView === "calendar"}
                 color="primary">
                 Filters
