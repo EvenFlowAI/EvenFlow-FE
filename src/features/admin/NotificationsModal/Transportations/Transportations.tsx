@@ -311,7 +311,7 @@ const Transportations: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                     Close
                 </Button>
                 <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || isSaving || isLoading}>
-                    Cancel Changes
+                    Cancel
                 </Button>
                 <Button onClick={onSave} variant="contained" color="primary" disabled={loading || isSaving || isLoading}>
                     Save

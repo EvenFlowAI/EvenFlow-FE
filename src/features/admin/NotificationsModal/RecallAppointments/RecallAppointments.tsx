@@ -180,7 +180,7 @@ const RecallAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildr
                     Close
                 </Button>
                 <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || isLoading}>
-                    Cancel Changes
+                    Cancel
                 </Button>
                 <Button onClick={onSave} variant="contained" color="primary" disabled={loading || isLoading}>
                     Save

@@ -221,7 +221,7 @@ const PodAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                     Close
                 </Button>
                 <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || podsLoading || isLoading}>
-                    Cancel Changes
+                    Cancel
                 </Button>
                 <Button onClick={onSave} variant="contained" color="primary" disabled={loading || podsLoading || isLoading}>
                     Save
