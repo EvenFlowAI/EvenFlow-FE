@@ -21,7 +21,7 @@ const TransportationsManage: React.FC<TActionProps> = ({onBack, onNext}) => {
     const showError = useException();
 
     const handleBack = () => {
-        if (serviceOptionChangedFromSlotPage && editingPosition === 'slot') {
+        if ((serviceOptionChangedFromSlotPage && editingPosition === 'slot') || editingPosition === 'serviceOption') {
             dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
         }
         if (!isUsualFlowNeeded) {
