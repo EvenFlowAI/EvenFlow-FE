@@ -89,14 +89,13 @@ const ServiceCentersTable: React.FC<React.PropsWithChildren<React.PropsWithChild
         <TableAvatar name={el.name} src={el.avatarPath} />
     )
 
-    const handleRemove = async () => {
-        try {
-            await dispatch(removeSC(editedItem?.id));
-            showMessage(`Service Center removed`);
-            setEditedItem(undefined);
-        } catch (e) {
-            showError(e);
-        }
+    const onSuccess = () => {
+        showMessage(`Service Center removed`);
+        setEditedItem(undefined);
+    }
+
+    const handleRemove = () => {
+        dispatch(removeSC(editedItem?.id, onSuccess, showError));
     }
 
     const openRemove = () => {

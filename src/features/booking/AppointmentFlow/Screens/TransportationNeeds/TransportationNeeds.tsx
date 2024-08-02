@@ -12,21 +12,20 @@ import {
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
-import {ETransportColumn} from "../../../../../store/reducers/transportationNeeds/types";
 import {EServiceCategoryType} from "../../../../../store/reducers/categories/types";
-import {TextWrapper, TransportationsWrapper} from "./styles";
-import {TransportationCard} from "./TransportationCard/TransportationCard";
+import {TextWrapper} from "./styles";
 import {TTransportationData} from "./types";
 import {TActionProps, TCallback} from "../../../../../types/types";
 import {Api} from "../../../../../api/ApiEndpoints/ApiEndpoints";
 import CustomerConsents from "../../../../../components/modals/booking/CustomerConsents/CustomerConsents";
+import {CardsWrapper} from "../../../../../components/wrappers/CardsWrapper/CardsWrapper";
+import {TransportationOptionCard} from "./TransportationCard/TransportationOptionCard";
 
 export type TProps = TActionProps & {
     handleConsentsAccepted: TCallback;
-    date: string|undefined
 }
 
-export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleConsentsAccepted, date}) => {
+export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleConsentsAccepted}) => {
     const {
         subService,
         service,
@@ -39,7 +38,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         selectedVehicle,
         packageEMenuType,
         isConsentsLoading,
-        trackerData
+        trackerData,
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
     const {selectedSR} = useSelector(({appointment}: RootState) => appointment)
     const {allCategories} = useSelector(({categories}: RootState) => categories)
@@ -48,9 +47,6 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
     const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const dispatch = useDispatch();
-
-    const transportationNo = useMemo(() => transportations.filter(item => item.column === ETransportColumn.No), [transportations])
-    const transportationYes = useMemo(() => transportations.filter(item => item.column === ETransportColumn.Yes), [transportations])
 
     const serviceRequestIds = useMemo(() => {
         return collectServiceRequestIds(service, subService, null, selectedSR);
@@ -116,37 +112,30 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
 
     const handleSelectOption = (o: ITransportation|null) => {
         dispatch(setTransportation(o));
-        handleNext(o);
     }
 
     return <StepWrapper>
-        {loading || isConsentsLoading ? <Loading/>
-            : transportations.length ? <TransportationsWrapper>
-                    {transportationNo.length ? <TransportationCard
-                        active
-                        selectedTransportation={transportation}
-                        transportation={`${t("No, I will")}:`}
-                        options={transportationNo}
-                        onSelectOption={handleSelectOption}
-                    /> : null}
-                    {transportationYes.length ? <TransportationCard
-                        active
-                        options={transportationYes}
-                        selectedTransportation={transportation}
-                        transportation={`${t("Yes, I would like")}:`}
-                        onSelectOption={handleSelectOption}
-                    /> : null}
-            </TransportationsWrapper>
+        {loading || isConsentsLoading
+            ? <Loading/>
+            : transportations.length
+                ? <CardsWrapper>
+                    {transportations.map(item => {
+                        return <TransportationOptionCard
+                            active={transportation?.id === item.id}
+                            onSelect={() => handleSelectOption(item)}
+                            card={item}
+                        />
+                    })}
+                </CardsWrapper>
                 : <TextWrapper>
                     {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
                 </TextWrapper>
         }
         <ActionButtons
             onBack={onBack}
-            nextLabel={t("Next")}
-            hideNext={!!transportations.length}
-            onNext={onNext}
-            nextDisabled={loading || isConsentsLoading || Boolean(transportations.length) && !transportation}
+            nextLabel={t("Submit")}
+            onNext={() => handleNext(transportation)}
+            nextDisabled={loading || isConsentsLoading || !transportation}
         />
         <CustomerConsents onNext={handleConsentsAccepted}/>
     </StepWrapper>

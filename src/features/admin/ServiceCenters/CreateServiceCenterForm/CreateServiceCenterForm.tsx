@@ -26,7 +26,7 @@ export const CreateServiceCenterForm = <Item extends {}>(props: TModalFormProps<
                         const error = item.inputType === "number"
                             ? item.required && props.formIsChecked && (item.value(props.values).length < 11)
                             : item.inputType === "email"
-                                ?item.required && props.formIsChecked && (!checkEmail(item.value(props.values)) || !item.value(props.values))
+                                ?item.required && props.formIsChecked && (!checkEmail(item.value(props.values).trim()) || !item.value(props.values))
                                 : item.required && props.formIsChecked && !item.value(props.values)
 
                            return <Grid item xs={item.xs || 12} sm={item.sm || 6} key={item.id}>

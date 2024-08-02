@@ -21,7 +21,7 @@ import {
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import {getBlankVehicle, setCustomerLoadedData} from "../../../../../store/reducers/appointment/actions";
+import {getBlankVehicle} from "../../../../../store/reducers/appointment/actions";
 import {useHistory, useParams} from "react-router-dom";
 import {Arrow, CarsWrapper, Info} from "./styles";
 import {AppointmentScreenTitle} from "../../../../../components/wrappers/AppointmentScreenTitle/AppointmentScreenTitle";
@@ -30,6 +30,7 @@ import {useException} from "../../../../../hooks/useException/useException";
 import {Routes} from "../../../../../routes/constants";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import usePopState from "../../../../../hooks/usePopState/usePopState";
+import {useCurrentUser} from "../../../../../hooks/useCurrentUser/useCurrentUser";
 
 type TProps = {
     onBack: TCallback;
@@ -52,7 +53,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
         serviceTypeOption,
         consultants,
         makes,
-        isUsualFlowNeeded
+        isUsualFlowNeeded,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const { isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -66,8 +67,12 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     const {t} = useTranslation();
     const {id} = useParams<{id: string}>();
     const history = useHistory();
+    const currentUser = useCurrentUser();
+
+    const isAuthorized = useMemo(() => currentUser && currentUser.dealershipId === scProfile?.dealershipId,
+        [currentUser, scProfile])
     const shouldHideScreen = useMemo(() => {
-       return customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)
+        return customerLoadedData && (!customerLoadedData.vehicles?.length || customerLoadedData?.fromSearchByName)
     }, [customerLoadedData])
 
     const vehiclesPerScreen = useMemo(() => {
@@ -102,10 +107,11 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     usePopState('select', redirectToWelcomeScreens, true);
 
     useEffect(() => {
+        if (isAuthorized) return;
         if (shouldHideScreen) {
             if (needToShowServiceSelection) {
-                setNeedToShowServiceSelection(false);
                 handleServiceTypeSelection()
+                setNeedToShowServiceSelection(false);
             } else {
                 if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
                     handleSetScreen("manageAppointment")
@@ -114,7 +120,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [shouldHideScreen, selectedVehicle, scProfile, needToShowServiceSelection]);
+    }, [isAuthorized, shouldHideScreen, selectedVehicle, scProfile, needToShowServiceSelection, customerLoadedData, isUsualFlowNeeded, getNextScreen]);
 
     const nextDisabled = () => idx >= (customerLoadedData?.vehicles.length ?? 0) - vehiclesPerScreen;
     const prevDisabled = () => idx <= 0;
@@ -223,7 +229,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
 
     return (
         <StepWrapper>
-            {loading || shouldHideScreen
+            {loading || isAuthorized
                 ? <Loading/>
                 : <>
                     <AppointmentScreenTitle>{t("Which vehicle are you coming in for?")}</AppointmentScreenTitle>

@@ -6,7 +6,8 @@ import {KeyPair} from "../types";
 type FormElementProps<U> = {
     elements: KeyPair<U>[];
     data: U,
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    errors: string[];
 }
 
 export const FormElements: <T>(p: FormElementProps<T>) => React.ReactElement<FormElementProps<T>>
@@ -20,6 +21,8 @@ export const FormElements: <T>(p: FormElementProps<T>) => React.ReactElement<For
                     name={element.name as string}
                     id={element.name as string}
                     value={props.data[element.name]}
+                    placeholder={element.label}
+                    error={props.errors.includes(element.name as string)}
                     onChange={props.onChange}
                 />
             </Grid>

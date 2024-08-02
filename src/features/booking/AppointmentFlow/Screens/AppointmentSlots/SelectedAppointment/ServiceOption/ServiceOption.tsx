@@ -177,7 +177,8 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     }
 
     const onCarIsValid = (option: IFirstScreenOption, shouldLoadAdvisors: boolean, showAdvisorScreen: boolean) => {
-        if (shouldLoadAdvisors) {
+        const requestDataIsValid = option?.type === EServiceType.VisitCenter || Boolean(address && zipCode)
+        if (shouldLoadAdvisors && requestDataIsValid) {
             dispatch(loadConsultants(
                 id,
                 option.id,

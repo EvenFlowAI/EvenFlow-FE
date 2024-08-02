@@ -70,7 +70,7 @@ export const DealershipGroupProfile = () => {
     const handleChangeAvatar = async (f: File) => {
         if (profile) {
             try {
-                await dispatch(updateDealershipAvatar(f, profile.id));
+                await dispatch(updateDealershipAvatar(f, profile.id, showError));
                 showMessage("Avatar updated");
             } catch (e) {
                 showError(e);

@@ -1,23 +1,35 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
 export const useStyles = makeStyles()(() => ({
     buttonWrapper: {
         display: 'flex',
         alignItems: 'flex-end',
         justifyContent: 'stretch',
     },
-    uploadBtn: {
+    uploadContained: {
         width: '100%',
         display: 'flex',
         justifyContent: 'center',
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: 'bold',
-        textTransform: 'none',
+        textTransform: 'uppercase',
         color: 'white',
         backgroundColor: '#7898FF',
-        padding: 10,
+        padding: '9px 16px',
         border: 'none',
+        borderRadius: 4,
+        cursor: 'pointer',
+    },
+    uploadOutlined: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        fontSize: 14,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        color: '#7898FF',
+        border: '1px solid #7898FF',
+        padding: '9px 16px',
         borderRadius: 4,
         cursor: 'pointer',
     },

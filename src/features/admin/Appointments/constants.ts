@@ -11,11 +11,6 @@ export const initialOrder = {
 
 export const initialPaging = {pageIndex: 0, pageSize: 10}
 
-const utcOffset = dayjs().utcOffset()
-
-console.log(dayjs())
-console.log(dayjs().startOf('day'))
-
 export const initialFilters: TFilters = {
     searchTerm: '',
     serviceBook: null,

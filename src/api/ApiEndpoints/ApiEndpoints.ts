@@ -155,8 +155,8 @@ export class Api {
             UpdateByDate: {route: "/employee-schedules/set-for-date-range", method: "put"},
             GetBaseSummary: {route: "/employee-schedules/base-summary", method: "post"},
             GetSummaryByEmployee: {route: "/employee-schedules/base-summary-by-employee", method: "post"},
-            GetTimeScheduleByEmployee: {route: "/employee-schedules/get-base-schedule-by-service-book", method: "get"},
-            SetTimeScheduleByEmployee: {route: "/employee-schedules/set-base-schedule-by-service-book", method: "post"},
+            GetTimeScheduleByEmployee: {route: "/employee-schedules/get-base-schedule-by-employee", method: "get"},
+            SetTimeScheduleByEmployee: {route: "/employee-schedules/set-base-schedule-by-employee", method: "post"},
         },
         GeneralSettings: {
           Get: {route: "/general-settings", method: 'get'},
@@ -323,7 +323,6 @@ export class Api {
             GetBreaks: {route: "/service-centers/{id}/breaks", method: "get"},
             SetBreaks: {route: "/service-centers/{id}/breaks", method: "put"},
             WorkingDays: {route: "/service-centers/{id}/working-days", method: "get"},
-            Analytics: {route: "/service-centers/{id}/analytics", method: "get"},
             GetRoundPrice: {route: "/service-centers/{id}/round-price", method: "get"},
             ChangeRoundPrice: {route: "/service-centers/{id}/round-price", method: "patch"},
             GetMaxPriceDateRange: {route: "/service-centers/{id}/max-price-date-range", method: "get"},
@@ -422,6 +421,7 @@ export class Api {
             GetActive: {route: "/transportation-options/active/by-query", method: "post"},
             Rules: {route: "/transportation-options/{id}/rules", method: "put"},
             UpdateById: {route: "/transportation-options/{id}", method: "put"},
+            UpdateIcon: {route: "/transportation-options/{id}/icon", method: "patch"}
         },
         Users: {
             GetAll: {route: "/users/by-query", method: "post"},

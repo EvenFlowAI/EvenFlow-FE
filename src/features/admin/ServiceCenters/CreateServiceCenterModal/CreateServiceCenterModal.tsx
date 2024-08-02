@@ -71,7 +71,7 @@ export const CreateServiceCenterModal:
                 {id: "cpEmail", label: "Contact person email", inputType: "email", value: v => v.cpEmail, required: true}
             ],
             [
-                {id: "street", label: "Street", value: v => v.street},
+                {id: "street", label: "Street", value: v => v.street, required: true},
                 {id: "city", label: "City", value: v => v.city, required: true},
                 {id: "state", label: "State", variant: "select", value: v => v.state, selectOptions: states, sm: 6, required: true},
                 {id: "zipCode", label: "Zip code", value: v => v.zipCode, sm: 3, required: true},
@@ -116,29 +116,34 @@ export const CreateServiceCenterModal:
 
         const validateData = (): boolean => {
             let err: string[] = [];
-            if (!formState.scEmail.length) {
+            if (!formState.scEmail.trim().length) {
                 err = [...err, '"Service Center Email" must not be empty'];
             } else {
-                if (!checkEmail(formState.scEmail)) err = [...err, '"Service Center Email" is not valid']
+                if (!checkEmail(formState.scEmail.trim())) err = [...err, '"Service Center Email" is not valid']
             }
-            if (!formState.cpEmail.length) {
+            if (!formState.cpEmail.trim().length) {
                 err = [...err, '"Contact Person Email" must not be empty'];
             } else {
-                if (!checkEmail(formState.cpEmail)) err = [...err, '"Contact Person Email" is not valid'];
+                if (!checkEmail(formState.cpEmail.trim())) err = [...err, '"Contact Person Email" is not valid'];
             }
-            if (!formState.zipCode.length) err = [...err, '"Zip Code" must not be empty'];
+            if (!formState.zipCode.trim().length) err = [...err, '"Zip Code" must not be empty'];
             if (!formState.timeZoneId) err = [...err, '"Time Zone" must not be empty']
-            if (!formState.scPhoneNumber.length) {
+            if (!formState.scPhoneNumber.trim().length) {
                 err = [...err, '"Service Center Phone Number" must not be empty'];
             } else {
-                if (formState.scPhoneNumber.length < 11) err = [...err, '"Service Center Phone Number" is not valid'];
+                if (formState.scPhoneNumber.trim().length < 11) err = [...err, '"Service Center Phone Number" is not valid'];
             }
             if (!formState.state.length) err = [...err, '"State" must not be empty'];
-            if (!formState.city.length) err = [...err, '"City" must not be empty'];
-            if (!formState.scName) err = [...err, '"Service Center Name" must not be empty'];
+            if (!formState.city.trim().length) err = [...err, '"City" must not be empty'];
+            if (!formState.street.trim().length) err = [...err, '"Street" must not be empty'];
+            if (!formState.scName.trim().length) err = [...err, '"Service Center Name" must not be empty'];
 
             err.map(err => showError(err))
             return !Boolean(err.length)
+        }
+
+        const onSuccess = () => {
+            showMessage(`Service Center ${isEdit ? "updated" : "created"}`);
         }
 
         const handleCreate = async () => {
@@ -146,25 +151,24 @@ export const CreateServiceCenterModal:
             const isValid = validateData();
             if (isValid) {
                 const data: IServiceCenterForm = {
-                    name: formState.scName,
-                    serviceCenterEmail: formState.scEmail,
-                    contactPersonalEmail: formState.cpEmail,
-                    phoneNumber: formState.scPhoneNumber,
+                    name: formState.scName.trim(),
+                    serviceCenterEmail: formState.scEmail.trim(),
+                    contactPersonalEmail: formState.cpEmail.trim(),
+                    phoneNumber: formState.scPhoneNumber.trim(),
                     address: {
-                        street: formState.street,
-                        city: formState.city,
+                        street: formState.street.trim(),
+                        city: formState.city.trim(),
                         state: formState.state,
-                        zipCode: formState.zipCode
+                        zipCode: formState.zipCode.trim()
                     },
                     timeZoneId: formState.timeZoneId
                 }
                 try {
                     if (payload?.id) {
-                        await dispatch(updateSC(data, payload.id, avatar));
+                        await dispatch(updateSC(data, payload.id, avatar, onSuccess, showError));
                     } else {
-                        await dispatch(createSC(data, avatar));
+                        await dispatch(createSC(data, avatar, onSuccess, showError));
                     }
-                    showMessage(`Service Center ${isEdit ? "updated" : "created"}`);
                     setFormState(initialFormState);
                     setFormIsChecked(false);
                     props.onClose();

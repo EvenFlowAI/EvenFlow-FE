@@ -1,7 +1,6 @@
 import {
     IAdvisorAssignment, ILaborRate,
     IPredictionParams,
-    ISCAnalytics,
     IServiceCenter,
     IServiceCenterExtended,
     IServiceCenterForm,
@@ -10,7 +9,15 @@ import {
 import {Action, ActionCreator} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {RootState} from "../../rootReducer";
-import {AppThunk, IOrder, IPageRequest, LocalItems, PaginatedAPIResponse} from "../../../types/types";
+import {
+    AppThunk,
+    IOrder,
+    IPageRequest,
+    LocalItems,
+    PaginatedAPIResponse,
+    TArgCallback,
+    TCallback
+} from "../../../types/types";
 import {changePageDataGeneric, changePagingGeneric} from "../utils";
 import {setSelectedPod} from "../pods/actions";
 import {createAction} from "@reduxjs/toolkit";
@@ -83,7 +90,7 @@ export const saveAvatar = (avatar: File, id: number): AppThunk => async () => {
         console.log(err)
     }
 }
-export const createSC = (payload: IServiceCenterForm, avatar: File | null): AppThunk => async (dispatch) => {
+export const createSC = (payload: IServiceCenterForm, avatar: File | null, onSuccess: TCallback, onError: TArgCallback<any>): AppThunk => async (dispatch) => {
     dispatch(saving(true));
     try {
         const {data} = await Api.call<IServiceCenterExtended>(
@@ -95,7 +102,9 @@ export const createSC = (payload: IServiceCenterForm, avatar: File | null): AppT
         dispatch(saving(false));
         dispatch(loadAll());
         dispatch(loadAllSCs());
+        onSuccess()
     } catch (e) {
+        onError(e)
         dispatch(saving(false));
         console.log('createSC', e)
     }
@@ -128,16 +137,18 @@ export const loadShortSC: ActionCreator<ThunkAction<void, RootState, void, TServ
     }
 }
 
-export const removeSC: ActionCreator<AppThunk> = (serviceCenterId: number) => async (dispatch) => {
+export const removeSC: ActionCreator<AppThunk> = (serviceCenterId: number, onSuccess: TCallback, onError: TArgCallback<any>) => async (dispatch) => {
     try {
         await Api.call(Api.endpoints.ServiceCenters.Remove, {urlParams: {id: serviceCenterId}});
         dispatch(loadAll())
+        onSuccess()
     } catch (e) {
+        onError(e)
         console.log('removeSC error', e)
     }
 }
 
-export const updateSC = (payload: IServiceCenterForm, id: number, avatar: File | null): AppThunk => async (dispatch) => {
+export const updateSC = (payload: IServiceCenterForm, id: number, avatar: File | null, onSuccess: TCallback, onError: TArgCallback<any>): AppThunk => async (dispatch) => {
     dispatch(saving(true));
     try {
         await Api.call(Api.endpoints.ServiceCenters.Update, {
@@ -150,8 +161,10 @@ export const updateSC = (payload: IServiceCenterForm, id: number, avatar: File |
         dispatch(saving(false));
         dispatch(loadAll());
         dispatch(loadAllSCs());
+        onSuccess()
     } catch (e) {
         dispatch(saving(false));
+        onError(e)
         console.log('updateSC error', e)
     }
 }
@@ -221,18 +234,6 @@ export const loadWorkingDays = (serviceCenterId: number): AppThunk => async disp
             {urlParams: {id: serviceCenterId}}
         );
         dispatch(getWorkingDays(data));
-    } catch (err) {
-        console.log(err)
-    }
-}
-export const getSCAnalytics = createAction<ISCAnalytics>("ServiceCenters/Analytics");
-export const loadSCAnalytics = (id: number): AppThunk => async dispatch => {
-    try {
-        const {data} = await Api.call<ISCAnalytics>(
-            Api.endpoints.ServiceCenters.Analytics,
-            {urlParams: {id}}
-        );
-        dispatch(getSCAnalytics(data));
     } catch (err) {
         console.log(err)
     }

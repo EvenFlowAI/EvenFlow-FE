@@ -7,8 +7,6 @@ import {Tab} from "@mui/material";
 import {TimeOfDayDesirability} from "../../../features/admin/TimeOfDayDesirability/TimeOfDayDesirability";
 import SearchWindows from "../../../features/admin/SearchWindows/SearchWindows";
 import TimeWindows from "../../../features/admin/TimeWindows/TimeWindows";
-import {ButtonContainer} from "./styles";
-import RecalculateCapacity from "../../../components/buttons/RecalculateCapacity/RecalculateCapacity";
 
 type TTab = {
     id: string;
@@ -34,9 +32,6 @@ const TimeDifferentiation = () => {
             title="Time Differentiation"
             pad
             parent={capacityManagementRoot}/>
-        <ButtonContainer>
-            <RecalculateCapacity/>
-        </ButtonContainer>
         <TabList
             variant="scrollable"
             scrollButtons="auto"
