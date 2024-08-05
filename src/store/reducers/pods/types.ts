@@ -110,4 +110,5 @@ export interface IPodSummary {
     serviceBookId: number;
     options: EPodSummaryOption[];
     serviceBookName?: string;
+    order?: number;
 }
