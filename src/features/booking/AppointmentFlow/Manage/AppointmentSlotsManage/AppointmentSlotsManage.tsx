@@ -25,7 +25,14 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({handleSet
             && appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff
     }, [serviceTypeOption, appointmentByKey])
 
-    const previousLogicalScreen: TScreen = useMemo(() => !isUsualFlowNeeded && prevScreen
+    const prevScreenIsAvailable = useMemo(() => {
+        if (prevScreen === "consultantSelection") return isAdvisorAvailable;
+        if (prevScreen === "transportationNeeds") return isTransportationAvailable;
+        if (prevScreen === "appointmentTiming") return currentConfig?.appointmentSelection;
+    }, [isAdvisorAvailable, prevScreen, currentConfig, isTransportationAvailable])
+
+    const previousLogicalScreen: TScreen = useMemo(() => {
+            return !isUsualFlowNeeded && prevScreen && prevScreenIsAvailable
             ? prevScreen
             : currentConfig?.appointmentSelection
                 ? 'appointmentTiming'
@@ -33,8 +40,9 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({handleSet
                     ? "transportationNeeds"
                     : isAdvisorAvailable
                         ? 'consultantSelection'
-                        : "serviceNeeds",
-        [currentConfig, isAdvisorAvailable, isTransportationAvailable, serviceTypeOption])
+                        : "serviceNeeds"
+        },
+        [currentConfig, isAdvisorAvailable, isTransportationAvailable, serviceTypeOption, prevScreen])
 
     const askChangesCompleted = useCallback(() => {
         dispatch(setChangesCompletedOpen(true))
