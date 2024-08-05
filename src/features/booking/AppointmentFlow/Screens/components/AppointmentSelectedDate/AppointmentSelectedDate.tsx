@@ -101,6 +101,7 @@ export const AppointmentSelectedDate: React.FC<React.PropsWithChildren<React.Pro
             }
         }
     }
+
     return <ConfirmationItemWrapper>
         <TitleWrapper>
             <AppointmentConfirmationTitle>
