@@ -81,7 +81,7 @@ const ServiceBooksTable = () => {
             align: 'center',
             val: el =>  isEdit
                 ? <StyledField
-                    type="number"
+                    type="tel"
                     error={isChecked && (el.order ? wrongOrderIndexes.includes(el.order) : !el.order)}
                     inputProps={{min: 1, step: 1, max: summary.length}}
                     value={el.order ?? ""}
@@ -89,7 +89,7 @@ const ServiceBooksTable = () => {
                 : el.order
                     ? el.order.toString()
                     : "",
-            width: 190,
+            width: 80,
         },
         {
             header: "Service Book",
@@ -119,6 +119,11 @@ const ServiceBooksTable = () => {
         {
             header: "Model",
             val: el => el.options.includes(EPodSummaryOption.Model) ? <Checked/> : <Unchecked/>,
+            align: 'center',
+        },
+        {
+            header: "Mileage",
+            val: el => el.options.includes(EPodSummaryOption.Mileage) ? <Checked/> : <Unchecked/>,
             align: 'center',
         },
         {

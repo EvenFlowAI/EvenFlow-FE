@@ -103,7 +103,8 @@ export enum EPodSummaryOption {
     ServiceValet,
     MobileService,
     TransportOptions,
-    Advisors
+    Advisors,
+    Mileage
 }
 
 export interface IPodSummary {
