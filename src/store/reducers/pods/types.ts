@@ -29,6 +29,11 @@ export type TPodTransportation = {
     type: string;
 }
 
+export type TPodMileage = {
+    from?: number;
+    to?: number;
+}
+
 export interface IPod {
     id: number;
     name: string;
@@ -48,6 +53,7 @@ export interface IPod {
     engineTypes?: IEngineType[];
     isVisitCenter?: boolean;
     transportationOptions?: TPodTransportation[];
+    mileage?: TPodMileage|null;
 }
 export interface IPodFilters {
     searchTerm: string;
@@ -71,6 +77,7 @@ export interface IPodForm {
     engineTypes?:number[];
     isVisitCenter: boolean;
     transportationOptionIds?: number[];
+    mileage?: TPodMileage;
 }
 
 export enum EJobType {
