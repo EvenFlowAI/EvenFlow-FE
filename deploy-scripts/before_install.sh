@@ -1,1 +1,1 @@
-#rm -rf /home/ubuntu/evenflow/client
+rm -rf /home/ubuntu/evenflow/client
