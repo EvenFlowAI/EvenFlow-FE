@@ -33,24 +33,36 @@ const AppointmentTimingManage: React.FC<{handleSetScreen: TArgCallback<TScreen>}
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     }
 
-    const getBackToManage = () => {
-        dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+    const handleSlotEditing = () => {
+        if (serviceOptionChangedFromSlotPage) {
+            dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+        }
         handleSetScreen("manageAppointment")
     }
 
+    const handleServiceTypeEditing = () => {
+        isTransportationAvailable
+            ? handleSetScreen("transportationNeeds")
+            : redirectToServiceTypeOptions();
+    }
+
+    const handlePrevScreen = () => {
+        const prev: TScreen = isTransportationAvailable && !serviceTypeOption?.transportationOption
+            ? "transportationNeeds"
+            : isAdvisorAvailable && consultants.length
+                ? 'consultantSelection'
+                : 'serviceNeeds'
+        handleSetScreen(prev)
+    }
+
     const onBack = () => {
-        if (editingPosition === 'slot' && serviceOptionChangedFromSlotPage) {
-            getBackToManage();
+        if (editingPosition === 'slot') {
+            handleSlotEditing()
         } else {
-            if (fromServiceValetToVisitCenter || editingPosition === "serviceOption") {
-                redirectToServiceTypeOptions()
+            if (editingPosition === "serviceOption" || fromServiceValetToVisitCenter) {
+                handleServiceTypeEditing()
             } else {
-                const prev: TScreen = isTransportationAvailable && !serviceTypeOption?.transportationOption
-                    ? "transportationNeeds"
-                    : isAdvisorAvailable && consultants.length
-                        ? 'consultantSelection'
-                        : 'serviceNeeds'
-                handleSetScreen(prev)
+                handlePrevScreen()
             }
         }
     }

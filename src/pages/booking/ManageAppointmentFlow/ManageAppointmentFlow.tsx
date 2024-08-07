@@ -54,6 +54,7 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
         selectedVehicle,
         serviceTypeOption,
         isUsualFlowNeeded,
+        advisor,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -68,6 +69,15 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
             onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
         }
     }, [customerLoadedData, selectedVehicle])
+
+    const onChangeSlot = () => {
+        const nextScreen: TScreen = isAdvisorAvailable && !advisor
+            ? "consultantSelection"
+            : isAppointmentTimingAvailable
+                ? "appointmentTiming"
+                : "appointmentSelection"
+        handleSetScreen(nextScreen)
+    }
 
     const component = useMemo(() => {
         const carSelections: {[k in TScreen]?: JSX.Element} = {
@@ -138,7 +148,7 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
             />,
             manageAppointment: <ManageAppointment
                 onUpdateAppointment={onUpdateAppointment}
-                onChangeSlot={() => handleSetScreen(isAppointmentTimingAvailable ? "appointmentTiming" : "appointmentSelection")}/>,
+                onChangeSlot={onChangeSlot}/>,
         }
         return carSelections[currentScreen];
 
