@@ -10,6 +10,7 @@ declare module "@mui/material/styles" {
         sm: true;
         mds: true;
         md: true;
+        mdl: true;
         lg: true;
         xl: true;
     }
@@ -24,8 +25,9 @@ const themeOptions: ThemeOptions = {
             sm: 600,
             mds: 720,
             md: 960,
+            mdl: 1024,
             lg: 1280,
-            xl: 1920
+            xl: 1440
         }
     },
     typography: {
