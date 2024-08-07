@@ -53,7 +53,7 @@ export const RowData: TableRowDataType<ICapacitySetting>[] = [
         align: "left"
     },
     {
-        header: "Average Bill Hours Per RO",
+        header: "Average RO Hours",
         val: (el) => el.avarageBillHoursPerRO.toString(),
         align: "left"
     },

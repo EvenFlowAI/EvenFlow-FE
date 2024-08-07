@@ -313,8 +313,8 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({open, onClose, editingItem}
                         <TextField
                             id="avarageBillHoursPerRO"
                             name="avarageBillHoursPerRO"
-                            label="Average Bill Hours Per RO"
-                            placeholder="Type Bill Hours"
+                            label="Average RO Hours"
+                            placeholder="Type RO Hours"
                             fullWidth
                             type="number"
                             inputProps={{min: 0}}
