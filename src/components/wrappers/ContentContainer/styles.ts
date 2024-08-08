@@ -9,7 +9,7 @@ export const useStyles = makeStyles()(theme => ({
         width: "100%",
         maxWidth: theme.breakpoints.values.lg,
         [theme.breakpoints.down('xl')]: {
-            padding: '0 12px'
+            padding: '0 16px'
         }
     }
 }));
