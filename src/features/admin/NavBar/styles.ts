@@ -16,6 +16,7 @@ export const useStyles = makeStyles()(theme => ({
         [theme.breakpoints.down('xl')]: {
             transition: theme.transitions.create(["width"]),
             width: "100%",
+            height: 67,
         }
     },
     openedRoot: {
