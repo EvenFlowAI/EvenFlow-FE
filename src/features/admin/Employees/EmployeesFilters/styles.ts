@@ -15,6 +15,7 @@ export const FiltersWrapper = styled('div')(({theme}) => ({
     },
     [theme.breakpoints.down('mdl')]: {
         flexDirection: "column",
+        alignItems: 'flex-start',
         '& > div': {
             marginBottom: 10
         },
