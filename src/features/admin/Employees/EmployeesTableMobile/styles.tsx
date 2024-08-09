@@ -59,4 +59,25 @@ export const useStyles = makeStyles()(() => ({
         boxShadow: "0px -8px 20px 0px rgba(0, 0, 0, 0.10)",
         border: 'none'
     },
+    disabledIcon: {
+        '& > path': {
+            fill: "lightgrey"
+        }
+    }
 }))
+
+export const TitleRow = styled('div')({
+    display: 'grid',
+    gridTemplateColumns: '1fr 2fr',
+    color: "#858585",
+    '& > div': {
+        fontWeight: 700,
+        fontSize: 14,
+        padding: '16px 8px'
+    },
+    '& > div:first-child': {
+        display: 'flex',
+        alignItems: "center",
+        gap: 4
+    }
+})

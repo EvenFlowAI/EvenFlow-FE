@@ -5,6 +5,7 @@ import {MoreHoriz, Visibility} from "@mui/icons-material";
 import {ReactComponent as Close} from "../../../../assets/img/close_grey.svg";
 import {IOrder, Roles, TCallback} from "../../../../types/types";
 import {ReactComponent as ArrowDown} from '../../../../assets/img/dropdown_closed.svg'
+import {ReactComponent as ArrowDownGrey} from '../../../../assets/img/arrow_down_grey.svg'
 import {
     changePageData,
     loadByFilters,
@@ -22,7 +23,19 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import ResendEmailModal from "../ResendEmailModal/ResendEmailModal";
-import {BtnsCell, Cell, Menu, MenuItem, Row, SubCell, SubCellWrapper, SubText, SubTitle, useStyles} from "./styles";
+import {
+    BtnsCell,
+    Cell,
+    Menu,
+    MenuItem,
+    Row,
+    SubCell,
+    SubCellWrapper,
+    SubText,
+    SubTitle,
+    TitleRow,
+    useStyles
+} from "./styles";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 
 // todo uncomment multiple centers fucntionality
@@ -131,6 +144,19 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
             {loading
                 ? <Loading/>
                 : <div>
+                    <TitleRow>
+                        <div style={{color: order.orderBy ? "#252733" : "#858585"}}>
+                            <div>Name</div>
+                            <ArrowDownGrey
+                                className={!order.orderBy ? classes.disabledIcon : ''}
+                                onClick={handleOrder({orderBy: "name", isAscending: !order.isAscending})}
+                                style={!order.isAscending
+                                    ? {transform: 'rotate(180deg)', transition: '0.6s ease'}
+                                    : {transform: 'rotate(360deg)', transition: '0.6s ease'}}
+                            />
+                        </div>
+                        <div>Service Center</div>
+                    </TitleRow>
                     {employeesList.map((item, idx) => {
                         const isOpened = item.id === openedItem?.id;
                         return <>
