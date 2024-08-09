@@ -34,8 +34,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
                 textDecoration: "underline"
             }
         },
-        [theme.breakpoints.down('sm')]: {
-            display: "block"
-        }
+        // [theme.breakpoints.down('sm')]: {
+        //     display: "block"
+        // }
     }
 }));

@@ -17,12 +17,13 @@ export const StyledContainer = styled("div")<TStyleProps>(({theme, pad}) => ({
     paddingLeft: theme.spacing(4),
     paddingRight: theme.spacing(4),
     paddingBottom: pad ? theme.spacing(3) : 0,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('mdl')]: {
         flexFlow: "column",
         "&>*:not(:first-child)": {
             marginTop: theme.spacing(1)
-        }
-    }
+        },
+        alignItems: "start"
+    },
 }))
 
 export const EmptyTitle = styled("div")({
