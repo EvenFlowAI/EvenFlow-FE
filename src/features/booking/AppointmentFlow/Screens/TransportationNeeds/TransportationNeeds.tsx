@@ -133,7 +133,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         }
         <ActionButtons
             onBack={onBack}
-            nextLabel={t("Submit")}
+            nextLabel={t("Next")}
             onNext={() => handleNext(transportation)}
             nextDisabled={loading || isConsentsLoading || (!transportation && !!transportations.length)}
         />
