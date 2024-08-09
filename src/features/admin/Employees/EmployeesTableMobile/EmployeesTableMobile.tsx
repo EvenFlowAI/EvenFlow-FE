@@ -1,8 +1,9 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {IEmployee} from "../../../../store/reducers/employees/types";
-import {IconButton, Menu, MenuItem} from "@mui/material";
+import {Drawer, IconButton} from "@mui/material";
 import {MoreHoriz, Visibility} from "@mui/icons-material";
-import {IOrder, Roles, TableRowDataType, TCallback} from "../../../../types/types";
+import {ReactComponent as Close} from "../../../../assets/img/close_grey.svg";
+import {IOrder, Roles, TCallback} from "../../../../types/types";
 import {ReactComponent as ArrowDown} from '../../../../assets/img/dropdown_closed.svg'
 import {
     changePageData,
@@ -13,17 +14,15 @@ import {
 } from "../../../../store/reducers/employees/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {concatAddress} from "../../../../utils/utils";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
-
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import ResendEmailModal from "../ResendEmailModal/ResendEmailModal";
-import {useStyles} from "./styles";
+import {BtnsCell, Cell, Menu, MenuItem, Row, SubCell, SubCellWrapper, SubText, SubTitle, useStyles} from "./styles";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 
 // todo uncomment multiple centers fucntionality
@@ -123,6 +122,10 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
             : setOpenedItem(item)
     }
 
+    const onCloseDrawer = () => {
+        setAnchorEl(null)
+    }
+
     return (
         <>
             {loading
@@ -131,10 +134,10 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
                     {employeesList.map((item, idx) => {
                         const isOpened = item.id === openedItem?.id;
                         return <>
-                            <div className={classes.row} style={{backgroundColor: idx % 2 === 0 ? '#FFFFFF' : "#F2F4FB"}}>
-                                <div className={classes.cell}>{item.fullName}</div>
-                                <div className={classes.cell}>{item.serviceCenter?.name}</div>
-                                <div className={classes.btnsCell}>
+                            <Row style={{backgroundColor: idx % 2 === 0 ? '#FFFFFF' : "#F2F4FB"}}>
+                                <Cell>{item.fullName}</Cell>
+                                <Cell>{item.serviceCenter?.name}</Cell>
+                                <BtnsCell>
                                     <div>{viewActions(item)}</div>
                                     <div>
                                         <IconButton
@@ -146,34 +149,53 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
                                             />
                                         </IconButton>
                                     </div>
-                                </div>
-                            </div>
+                                </BtnsCell>
+                            </Row>
                             {isOpened
-                                ? <div style={{backgroundColor: idx % 2 === 0 ? '#FFFFFF' : "#F2F4FB"}}>
-                                    <div className={classes.subCellWrapper}>
-                                        <div className={classes.subCell}>
-                                            <div className={classes.subTitle}>Role</div>
-                                            <div className={classes.subText}>{item.role}</div>
-                                        </div>
-                                        <div className={classes.subCell}>
-                                            <div className={classes.subTitle}>DMS ID</div>
-                                            <div className={classes.subText}>{item.dmsId ?? '-'}</div>
-                                        </div>
-                                    </div>
-                                    <div className={classes.subCell}>
-                                        <div className={classes.subTitle}>Email Address</div>
-                                        <div className={classes.subText}>{item.email ?? '-'}</div>
-                                    </div>
+                                ? <div
+                                    style={{
+                                        backgroundColor: idx % 2 === 0 ? '#FFFFFF' : "#F2F4FB",
+                                    }}>
+                                    <SubCellWrapper>
+                                        <SubCell>
+                                            <SubTitle>Role</SubTitle>
+                                            <SubText>{item.role}</SubText>
+                                        </SubCell>
+                                        <SubCell>
+                                            <SubTitle>DMS ID</SubTitle>
+                                            <SubText>{item.dmsId ?? '-'}</SubText>
+                                        </SubCell>
+                                    </SubCellWrapper>
+                                    <SubCell>
+                                        <SubTitle>Email Address</SubTitle>
+                                        <SubText>{item.email ?? '-'}</SubText>
+                                    </SubCell>
                                 </div>
                                 : null}
                         </>
                     })}
                 </div>}
-            <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
-                <MenuItem onClick={editEmployee}>Edit</MenuItem>
-                <MenuItem onClick={onDeleteEmployee}>Remove</MenuItem>
-                <MenuItem onClick={onOpenResend} disabled={editedItem?.emailConfirmed}>Resend</MenuItem>
-            </Menu>
+            <Drawer anchor="bottom" open={Boolean(anchorEl)} variant="persistent" classes={{paper: classes.drawer}}>
+                <Menu>
+                    <MenuItem>
+                        <MenuItem onClick={editEmployee}>Edit</MenuItem>
+                        <MenuItem onClick={onDeleteEmployee}>Remove</MenuItem>
+                        <MenuItem
+                            onClick={onOpenResend}
+                            style={editedItem?.emailConfirmed ? {} : {color: "#858585"}}>
+                            Resend
+                        </MenuItem>
+                    </MenuItem>
+                    <div>
+                        <IconButton
+                            onClick={onCloseDrawer}
+                            style={{padding: 0}}
+                            size="small">
+                            <Close />
+                        </IconButton>
+                    </div>
+                </Menu>
+            </Drawer>
             <ResendEmailModal
                 open={isOpenResesnd}
                 onClose={onCloseResend}
