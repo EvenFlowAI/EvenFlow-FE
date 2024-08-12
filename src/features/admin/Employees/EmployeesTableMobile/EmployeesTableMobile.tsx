@@ -1,10 +1,8 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {IEmployee} from "../../../../store/reducers/employees/types";
-import {Drawer, IconButton} from "@mui/material";
-import {MoreHoriz, Visibility} from "@mui/icons-material";
+import {Drawer, IconButton, TablePagination} from "@mui/material";
 import {ReactComponent as Close} from "../../../../assets/img/close_grey.svg";
-import {IOrder, Roles, TCallback} from "../../../../types/types";
-import {ReactComponent as ArrowDown} from '../../../../assets/img/dropdown_closed.svg'
+import {IOrder, TCallback} from "../../../../types/types";
 import {ReactComponent as ArrowDownGrey} from '../../../../assets/img/arrow_down_grey.svg'
 import {
     changePageData,
@@ -20,23 +18,17 @@ import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import ResendEmailModal from "../ResendEmailModal/ResendEmailModal";
 import {
-    BtnsCell,
-    Cell,
     Menu,
     MenuItem,
-    Row,
-    SubCell,
-    SubCellWrapper,
-    SubText,
-    SubTitle,
     TitleRow,
     useStyles
 } from "./styles";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
+import {defaultRowsPerPageOptions} from "../../../../config/config";
+import EmployeeTableRow from "./EmployeeTableRow/EmployeeTableRow";
 
 // todo uncomment multiple centers fucntionality
 // todo add multiple centers field to all requests
@@ -56,9 +48,8 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
         searchTerm
     } = useSelector(({employees}: RootState) => employees);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
-    const [openedItem, setOpenedItem] = useState<IEmployee|null>(null)
+    const [expandedItem, setExpandedItem] = useState<IEmployee|null>(null)
     const {selectedSC} = useSCs();
-    const currentUser = useCurrentUser();
     const {classes} = useStyles();
     const {askConfirm} = useConfirm();
     const showError = useException();
@@ -81,10 +72,6 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
         selectedSC && dispatch(loadByFilters())
     }, [order, searchTerm, selectedSC])
 
-    const handleMenuOpen = (item: IEmployee) => (e: React.MouseEvent<HTMLButtonElement>) => {
-        setEditedItem(item);
-        setAnchorEl(e.currentTarget);
-    }
     const editEmployee = () => {
         onOpen();
         setAnchorEl(null);
@@ -115,26 +102,6 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
         dispatch(setEmplOrder(order));
     }
 
-    const handleView = (el: IEmployee) => () => alert(`View ${el.fullName}`);
-
-    const viewActions = (el: IEmployee) => (
-        currentUser?.isSuperUser
-            ? <IconButton size="small" onClick={handleView(el)} style={{padding: 0}}><Visibility /></IconButton>
-            : <IconButton
-                disabled={el.role === Roles.Owner || el.id === currentUser?.id}
-                size="small"
-                style={{padding: 0}}
-                onClick={handleMenuOpen(el)}>
-                <MoreHoriz />
-            </IconButton>
-    );
-
-    const onOpenRow = (item: IEmployee) => () => {
-        item.id === openedItem?.id
-            ? setOpenedItem(null)
-            : setOpenedItem(item)
-    }
-
     const onCloseDrawer = () => {
         setAnchorEl(null)
     }
@@ -143,64 +110,44 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
         <>
             {loading
                 ? <Loading/>
-                : <div>
-                    <TitleRow>
-                        <div style={{color: order.orderBy ? "#252733" : "#858585"}}>
-                            <div>Name</div>
-                            <ArrowDownGrey
-                                className={!order.orderBy ? classes.disabledIcon : ''}
-                                onClick={handleOrder({orderBy: "name", isAscending: !order.isAscending})}
-                                style={!order.isAscending
-                                    ? {transform: 'rotate(180deg)', transition: '0.6s ease'}
-                                    : {transform: 'rotate(360deg)', transition: '0.6s ease'}}
-                            />
-                        </div>
-                        <div>Service Center</div>
-                    </TitleRow>
-                    {employeesList.map((item, idx) => {
-                        const isOpened = item.id === openedItem?.id;
-                        return <>
-                            <Row style={{backgroundColor: idx % 2 === 0 ? '#FFFFFF' : "#F2F4FB"}}>
-                                <Cell>{item.fullName}</Cell>
-                                <Cell>{item.serviceCenter?.name}</Cell>
-                                <BtnsCell>
-                                    <div>{viewActions(item)}</div>
-                                    <div>
-                                        <IconButton
-                                            style={{padding: 0}}
-                                            onClick={onOpenRow(item)}>
-                                            <ArrowDown style={
-                                                isOpened ? {transform: 'rotate(180deg)', transition: '0.6s ease'}
-                                                    : {transform: 'rotate(360deg)', transition: '0.6s ease'}}
-                                            />
-                                        </IconButton>
-                                    </div>
-                                </BtnsCell>
-                            </Row>
-                            {isOpened
-                                ? <div
-                                    style={{
-                                        backgroundColor: idx % 2 === 0 ? '#FFFFFF' : "#F2F4FB",
-                                    }}>
-                                    <SubCellWrapper>
-                                        <SubCell>
-                                            <SubTitle>Role</SubTitle>
-                                            <SubText>{item.role}</SubText>
-                                        </SubCell>
-                                        <SubCell>
-                                            <SubTitle>DMS ID</SubTitle>
-                                            <SubText>{item.dmsId ?? '-'}</SubText>
-                                        </SubCell>
-                                    </SubCellWrapper>
-                                    <SubCell>
-                                        <SubTitle>Email Address</SubTitle>
-                                        <SubText>{item.email ?? '-'}</SubText>
-                                    </SubCell>
-                                </div>
-                                : null}
-                        </>
-                    })}
-                </div>}
+                : <>
+                    <div style={{marginBottom: 24}}>
+                        <TitleRow>
+                            <div style={{color: order.orderBy ? "#252733" : "#858585"}}>
+                                <div>Name</div>
+                                <ArrowDownGrey
+                                    className={!order.orderBy ? classes.disabledIcon : ''}
+                                    onClick={handleOrder({orderBy: "name", isAscending: !order.isAscending})}
+                                    style={!order.isAscending
+                                        ? {transform: 'rotate(180deg)', transition: '0.6s ease'}
+                                        : {transform: 'rotate(360deg)', transition: '0.6s ease'}}
+                                />
+                            </div>
+                            <div>Service Center</div>
+                        </TitleRow>
+                        {employeesList.map((item, idx) => {
+                            const isOpened = item.id === expandedItem?.id;
+                            return <EmployeeTableRow
+                                isOpened={isOpened}
+                                item={item}
+                                idx={idx}
+                                expandedItem={expandedItem}
+                                setEditedItem={setEditedItem}
+                                setExpandedItem={setExpandedItem}
+                                setAnchorEl={setAnchorEl}/>
+                        })}
+                    </div>
+                    <TablePagination
+                        component="div"
+                        count={numberOfRecords}
+                        page={pageIndex}
+                        onPageChange={changePage}
+                        className={classes.pagination}
+                        onRowsPerPageChange={changeRowsPerPage}
+                        rowsPerPage={pageSize}
+                        hidden={numberOfRecords < pageSize}
+                        rowsPerPageOptions={defaultRowsPerPageOptions}/>
+                </>}
             <Drawer anchor="bottom" open={Boolean(anchorEl)} variant="persistent" classes={{paper: classes.drawer}}>
                 <Menu>
                     <MenuItem>

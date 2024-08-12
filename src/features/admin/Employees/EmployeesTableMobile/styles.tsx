@@ -1,6 +1,27 @@
 import {makeStyles} from "tss-react/mui";
 import {styled} from "@mui/material";
 
+export const useStyles = makeStyles()(() => ({
+    drawer: {
+        padding: '12px 16px 12px 0',
+        background: "#F7F8FB",
+        borderRadius: 4,
+        boxShadow: "0px -8px 20px 0px rgba(0, 0, 0, 0.10)",
+        border: 'none'
+    },
+    disabledIcon: {
+        '& > path': {
+            fill: "lightgrey"
+        }
+    },
+    pagination: {
+        marginBottom: 36,
+        '& > div:first-child': {
+            padding: 0
+        }
+    }
+}))
+
 export const Row = styled('div')({
     display: 'grid',
     gridTemplateColumns: '3fr 4fr 2fr',
@@ -50,21 +71,6 @@ export const MenuItem = styled('div')({
     padding: 16,
     fontSize: 18,
 })
-
-export const useStyles = makeStyles()(() => ({
-    drawer: {
-        padding: '12px 16px 12px 0',
-        background: "#F7F8FB",
-        borderRadius: 4,
-        boxShadow: "0px -8px 20px 0px rgba(0, 0, 0, 0.10)",
-        border: 'none'
-    },
-    disabledIcon: {
-        '& > path': {
-            fill: "lightgrey"
-        }
-    }
-}))
 
 export const TitleRow = styled('div')({
     display: 'grid',
