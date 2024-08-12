@@ -2,7 +2,10 @@ import {Grid, styled} from "@mui/material";
 
 export const StyledGrid = styled(Grid)({
     padding: '16px 12px',
-    fontWeight: 700
+    fontWeight: 700,
+    fontSize: 16,
+    border: '1px solid #DADADA',
+    borderBottomWidth: 0
 })
 
 export const ServiceBook = styled(Grid)({
@@ -10,5 +13,17 @@ export const ServiceBook = styled(Grid)({
     alignItems: 'center',
     justifyContent: 'space-between',
     fontWeight: 400,
+    fontSize: 16,
     padding: '22px 12px',
+    border: '1px solid #DADADA',
+    borderBottomWidth: 0
+})
+
+export const SmallGreyGrid = styled(Grid)({
+    padding: '8px 12px',
+    fontWeight: 700,
+    color: "#858585",
+    fontSize: 14,
+    border: '1px solid #DADADA',
+    borderBottomWidth: 0
 })

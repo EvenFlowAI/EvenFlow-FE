@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@mui/material";
+import {Button, useMediaQuery, useTheme} from "@mui/material";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -19,15 +19,19 @@ import {loadAssignmentSettings, updateAssignmentSettings} from "../../../store/r
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {sortServiceBooks} from "./utils";
 import EmployeeAssignmentDesktop from "./EmployeeAssignmentDesktop/EmployeeAssignmentDesktop";
+import EmployeeAssignmentMobile from "./EmployeeAssignmentMobile/EmployeeAssignmentMobile";
 
 const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {loading, assignmentSettings} = useSelector((state: RootState) => state.employees);
     const [data, setData] = useState<IEmployeeAssignmentSetting[]>([]);
+    const [expandedItem, setExpandedItem] = useState<IEmployeeAssignmentSetting|null>(null)
     const {selectedSC} = useSCs();
     const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException()
     const showMessage = useMessage();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("mdl"));
 
     const isAdvisorSecondaryEnabled = useMemo(() => {
         return data.find(item => item.employeeAssignmentSettings
@@ -51,6 +55,7 @@ const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithC
     }, [assignmentSettings])
 
     const onCancel = () => {
+        setExpandedItem(null)
         setData([])
         props.onClose();
     }
@@ -119,18 +124,20 @@ const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithC
         <BaseModal {...props} width={1100} onClose={onCancel}>
             <DialogTitle
                 onClose={onCancel}
-                style={{textTransform: 'uppercase', color: "#575757", padding: '16px 48px'}}>
+                style={{textTransform: isMobile ? 'capitalize' : 'uppercase', color: isMobile ? "#252733" : "#575757", padding: isMobile? '18px 16px 24px 16px' : '16px 48px'}}>
                 Method to assign employees to appointments
             </DialogTitle>
-            <DialogContent>
+            <DialogContent style={isMobile ? {padding: '0px 16px'}: {}}>
                 {loading
                     ? <Loading/>
-                    : <EmployeeAssignmentDesktop
-                        data={data}
-                        isAdvisorSecondaryEnabled={!!isAdvisorSecondaryEnabled}
-                        isTechSecondaryEnabled={!!isTechSecondaryEnabled}
-                        onMethodChange={onMethodChange}
-                    />}
+                    : isMobile
+                        ? <EmployeeAssignmentMobile data={data} onMethodChange={onMethodChange} expandedItem={expandedItem} setExpandedItem={setExpandedItem}/>
+                        : <EmployeeAssignmentDesktop
+                            data={data}
+                            isAdvisorSecondaryEnabled={!!isAdvisorSecondaryEnabled}
+                            isTechSecondaryEnabled={!!isTechSecondaryEnabled}
+                            onMethodChange={onMethodChange}
+                        />}
             </DialogContent>
             <DialogActions>
                 <div className={classes.actionsWrapper}>
