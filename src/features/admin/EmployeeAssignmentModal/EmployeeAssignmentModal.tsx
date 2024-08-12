@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {Button, useMediaQuery, useTheme} from "@mui/material";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
@@ -20,6 +20,7 @@ import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {sortServiceBooks} from "./utils";
 import EmployeeAssignmentDesktop from "./EmployeeAssignmentDesktop/EmployeeAssignmentDesktop";
 import EmployeeAssignmentMobile from "./EmployeeAssignmentMobile/EmployeeAssignmentMobile";
+import {StyledActions} from "./EmployeeAssignmentMobile/styles";
 
 const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {loading, assignmentSettings} = useSelector((state: RootState) => state.employees);
@@ -124,7 +125,10 @@ const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithC
         <BaseModal {...props} width={1100} onClose={onCancel}>
             <DialogTitle
                 onClose={onCancel}
-                style={{textTransform: isMobile ? 'capitalize' : 'uppercase', color: isMobile ? "#252733" : "#575757", padding: isMobile? '18px 16px 24px 16px' : '16px 48px'}}>
+                style={{
+                    textTransform: isMobile ? 'capitalize' : 'uppercase',
+                    color: isMobile ? "#252733" : "#575757",
+                    padding: isMobile? '18px 16px 24px 16px' : '16px 48px'}}>
                 Method to assign employees to appointments
             </DialogTitle>
             <DialogContent style={isMobile ? {padding: '0px 16px'}: {}}>
@@ -139,25 +143,21 @@ const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithC
                             onMethodChange={onMethodChange}
                         />}
             </DialogContent>
-            <DialogActions>
-                <div className={classes.actionsWrapper}>
-                    <div className={classes.buttonsWrapper}>
-                        <Button
-                            disabled={loading}
-                            onClick={onCancel}
-                            color="info"
-                            className={classes.cancelButton}>
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={onSave}
-                            disabled={loading}
-                            className={classes.saveButton}>
-                            Save
-                        </Button>
-                    </div>
-                </div>
-            </DialogActions>
+            <StyledActions>
+                <Button
+                    disabled={loading}
+                    onClick={onCancel}
+                    color="info"
+                    className={classes.cancelButton}>
+                    Cancel
+                </Button>
+                <Button
+                    onClick={onSave}
+                    disabled={loading}
+                    className={classes.saveButton}>
+                    Save
+                </Button>
+            </StyledActions>
         </BaseModal>
     );
 };

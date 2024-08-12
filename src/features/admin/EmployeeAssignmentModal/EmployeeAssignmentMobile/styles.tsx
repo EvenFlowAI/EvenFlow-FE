@@ -1,4 +1,5 @@
 import {Grid, styled} from "@mui/material";
+import {DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
 
 export const StyledGrid = styled(Grid)({
     padding: '16px 12px',
@@ -27,3 +28,11 @@ export const SmallGreyGrid = styled(Grid)({
     border: '1px solid #DADADA',
     borderBottomWidth: 0
 })
+
+export const StyledActions = styled(DialogActions)(({theme}) => ({
+    [theme.breakpoints.down('mdl')]: {
+        justifyContent: 'space-around',
+        padding: '10p 16px 16px 16px'
+    }
+}))
+
