@@ -1,16 +1,16 @@
 import React, {ChangeEvent} from 'react';
-import {TableRow} from "../../../../components/styled/TableRow";
+import {TableRow} from "../../../../../components/styled/TableRow";
 import {Autocomplete, TableCell} from "@mui/material";
-import {SelectsWrapper, TCellData} from "../styles";
+import {SelectsWrapper, TCellData} from "../../styles";
 import {
     EAdvisorAssignMethod,
     EAssignmentLevel,
     IEmployeeAssignmentSetting
-} from "../../../../store/reducers/employees/types";
-import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {TOption} from "../../ServiceBookModal/types";
-import {methodOptions, secondaryOptions} from "../constants";
-import {getOptionsByRole} from "../utils";
+} from "../../../../../store/reducers/employees/types";
+import {autocompleteRender} from "../../../../../utils/autocompleteRenders";
+import {TOption} from "../../../ServiceBookModal/types";
+import {methodOptions, secondaryOptions} from "../../constants";
+import {getOptionsByRole} from "../../utils";
 
 type TProps = {
     item: IEmployeeAssignmentSetting;

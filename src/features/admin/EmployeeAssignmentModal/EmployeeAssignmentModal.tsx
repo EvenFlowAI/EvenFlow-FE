@@ -1,12 +1,11 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button, Table, TableBody, TableHead} from "@mui/material";
+import {Button} from "@mui/material";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {TableRow} from "../../../components/styled/TableRow";
-import {SubCellsWrapper, SubCellTitle, THeadCell, THeadCellWithSub, useStyles} from "./styles";
+import {useStyles} from "./styles";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {TOption} from "../ServiceBookModal/types";
@@ -18,8 +17,8 @@ import {
 } from "../../../store/reducers/employees/types";
 import {loadAssignmentSettings, updateAssignmentSettings} from "../../../store/reducers/employees/actions";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
-import ServiceBookRow from "./ ServiceBookRow/ServiceBookRow";
 import {sortServiceBooks} from "./utils";
+import EmployeeAssignmentDesktop from "./EmployeeAssignmentDesktop/EmployeeAssignmentDesktop";
 
 const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {loading, assignmentSettings} = useSelector((state: RootState) => state.employees);
@@ -126,32 +125,12 @@ const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithC
             <DialogContent>
                 {loading
                     ? <Loading/>
-                    : <Table style={{border: '1px solid #DADADA'}}>
-                        <TableHead>
-                            <TableRow>
-                                <THeadCell key="serviceBook"><div>Service Book</div></THeadCell>
-                                <THeadCellWithSub key="advisors" style={{borderRight: '1px solid #DADADA', borderLeft: '1px solid #DADADA'}} width={400}>
-                                    <SubCellTitle key="title">Advisors</SubCellTitle>
-                                    <SubCellsWrapper key="subWrapper">
-                                        <div key="primary">Primary</div>
-                                        <div key="secondary" style={{backgroundColor: !isAdvisorSecondaryEnabled ? "#DADADA" : ''}}>Secondary</div>
-                                    </SubCellsWrapper>
-                                </THeadCellWithSub>
-                                <THeadCellWithSub key="technicians" width={400}>
-                                    <SubCellTitle key="title">Technicians</SubCellTitle>
-                                    <SubCellsWrapper key="subWrapper">
-                                        <div key="primary">Primary</div>
-                                        <div key="secondary" style={{backgroundColor: !isTechSecondaryEnabled ? "#DADADA" : ''}}>Secondary</div>
-                                    </SubCellsWrapper>
-                                </THeadCellWithSub>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {data.map(item => (
-                                <ServiceBookRow item={item} onMethodChange={onMethodChange} key={item.serviceBookId ?? item.serviceBookName}/>
-                            ))}
-                        </TableBody>
-                    </Table>}
+                    : <EmployeeAssignmentDesktop
+                        data={data}
+                        isAdvisorSecondaryEnabled={!!isAdvisorSecondaryEnabled}
+                        isTechSecondaryEnabled={!!isTechSecondaryEnabled}
+                        onMethodChange={onMethodChange}
+                    />}
             </DialogContent>
             <DialogActions>
                 <div className={classes.actionsWrapper}>
@@ -159,6 +138,7 @@ const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithC
                         <Button
                             disabled={loading}
                             onClick={onCancel}
+                            color="info"
                             className={classes.cancelButton}>
                             Cancel
                         </Button>
