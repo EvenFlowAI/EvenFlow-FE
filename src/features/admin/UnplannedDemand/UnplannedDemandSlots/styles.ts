@@ -15,6 +15,7 @@ export const useStyles = makeStyles()({
         fontSize: 16
     },
     row: {
+        height: 68,
         borderRight: "1px solid #D9D9D9 !important"
     },
     rowTop: {
