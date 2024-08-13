@@ -10,7 +10,7 @@ import {
 import {autocompleteRender} from "../../../../../utils/autocompleteRenders";
 import {TOption} from "../../../ServiceBookModal/types";
 import {methodOptions, secondaryOptions} from "../../constants";
-import {getOptionsByRole} from "../../utils";
+import {getMethods, getOptionsByRole} from "../../utils";
 
 type TProps = {
     item: IEmployeeAssignmentSetting;
@@ -19,14 +19,11 @@ type TProps = {
 }
 
 const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
-    const advisorPrimaryMethod = item.employeeAssignmentSettings
-        .find(el => el.role === 'Advisor')?.methods?.find(el => el.level === EAssignmentLevel.Primary)?.type;
-    const technicianPrimaryMethod = item.employeeAssignmentSettings
-        .find(el => el.role === 'Technician')?.methods?.find(el => el.level === EAssignmentLevel.Primary)?.type;
-    const advisorSecondaryMethod = item.employeeAssignmentSettings
-        .find(el => el.role === 'Advisor')?.methods?.find(el => el.level === EAssignmentLevel.Secondary)?.type;
-    const technicianSecondaryMethod = item.employeeAssignmentSettings
-        .find(el => el.role === 'Technician')?.methods?.find(el => el.level === EAssignmentLevel.Secondary)?.type;
+    const {
+        advisorPrimaryMethod,
+        technicianPrimaryMethod,
+        advisorSecondaryMethod,
+        technicianSecondaryMethod} = getMethods(item);
     const isAdvisorSecondaryDisabled = advisorPrimaryMethod !== EAdvisorAssignMethod.LastEmployee
     const isTechSecondaryDisabled = technicianPrimaryMethod !== EAdvisorAssignMethod.LastEmployee
     const advisorOptions = getOptionsByRole(methodOptions, "Advisor")
