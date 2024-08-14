@@ -52,6 +52,9 @@ const SlotImpactedWarning = () => {
         setScreen("")
     }
 
+    // todo unique text
+    // todo remove double showing of the text
+
     return (
         <BaseModal
             width={450}
@@ -59,12 +62,9 @@ const SlotImpactedWarning = () => {
             onClose={onCancel}
         >
             <DialogTitle onClose={onCancel}>
-                <div>{t("Appointment availability depends on the service requested.")}</div>
-                <div>
-                    {isTransportationAvailable && screen !== "transportationNeeds"
-                        ? t("Please continue to update your transportation selection")
-                        : t("Please continue to see available dates and times for you requested change")}
-                </div>
+                {isTransportationAvailable && screen !== "transportationNeeds"
+                    ? <div>{t("Appointment availability depends on the service requested. Please continue to see available services and appointment times")}</div>
+                    : <div>{t("Appointment availability depends on the requested transportation. Please continue to review options")}</div>}
             </DialogTitle>
             <div className={classes.wrapper}>
                 <LoadingButton
