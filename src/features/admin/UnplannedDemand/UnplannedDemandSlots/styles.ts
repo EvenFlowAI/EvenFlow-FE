@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
 export const useStyles = makeStyles()({
     headCell: {
         fontSize: 12,
@@ -12,7 +11,8 @@ export const useStyles = makeStyles()({
         padding: '18px 36px',
     },
     cell: {
-        fontSize: 16
+        fontSize: 16,
+        padding: '24px 16px'
     },
     row: {
         borderRight: "1px solid #D9D9D9 !important"
