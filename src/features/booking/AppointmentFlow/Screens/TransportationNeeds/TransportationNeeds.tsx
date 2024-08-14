@@ -128,14 +128,14 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
                     })}
                 </CardsWrapper>
                 : <TextWrapper>
-                    {t("We are sorry but no transportation options are available on the date and time you selected.")} {t("You can always drop off your vehicle and pick it up at your convenience when the service work is completed")}
+                    {t("Based on your selected services, the only available option is to drop off your vehicle and pick it up at your convenience when the service work is completed")}.
                 </TextWrapper>
         }
         <ActionButtons
             onBack={onBack}
-            nextLabel={t("Submit")}
+            nextLabel={t("Next")}
             onNext={() => handleNext(transportation)}
-            nextDisabled={loading || isConsentsLoading || !transportation}
+            nextDisabled={loading || isConsentsLoading || (!transportation && !!transportations.length)}
         />
         <CustomerConsents onNext={handleConsentsAccepted}/>
     </StepWrapper>

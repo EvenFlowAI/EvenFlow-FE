@@ -248,9 +248,7 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
                     year: selectedVehicle.year,
                     make: selectedVehicle.make,
                     model: selectedVehicle.model,
-                    mileage: maintenancePackageOption
-                        ? selectedVehicle.mileage
-                        : selectedVehicle.mileage ?? appointmentByKey?.vehicle?.mileage ?? null,
+                    mileage: selectedVehicle.mileage ?? appointmentByKey?.vehicle?.mileage ?? null,
                     engineTypeId: selectedVehicle.engineTypeId,
                 },
                 address: address?.fullAddress ?? '',

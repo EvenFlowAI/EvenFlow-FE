@@ -1,18 +1,20 @@
 import {IOrder} from "../types/types";
 import {TRole} from "../store/reducers/users/types";
 
-let apiHost = "https://be.dev.evenflow.ai";
-// apiHost = "http://localhost:5000";
-// apiHost = "https://api.evenflow.ai";
+let apiHost = "https://be.qa.evenflow.ai";
+// apiHost = "https://be.dev.evenflow.ai";
 switch(process.env.REACT_APP_ENV){
     case "production":
-        apiHost = "https://api.evenflow.ai"; 
+        apiHost = "https://api.evenflow.ai";
+        break; 
+    case "QA":
+        apiHost = "https://be.qa.evenflow.ai";
         break;
     case "uat":
         apiHost = "https://be.uat.evenflow.ai"; 
         break;
     case "local":
-        apiHost = "http://localhost:5000"; 
+        apiHost = "http://localhost:5000";
         break;
 }
 

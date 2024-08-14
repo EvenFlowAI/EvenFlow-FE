@@ -1,0 +1,21 @@
+version: 0.2
+    
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+
+  pre_build:
+    commands:
+      - echo REACT_APP_ENV=${REACT_APP_ENV} >> .env
+      - yarn install
+
+  build:
+    commands:
+      - yarn run build
+
+artifacts:
+  files:
+    - build/**/*
+    - deploy-scripts/*
+    - appspec.yml
