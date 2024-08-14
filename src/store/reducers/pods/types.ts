@@ -53,7 +53,8 @@ export interface IPod {
     engineTypes?: IEngineType[];
     isVisitCenter?: boolean;
     transportationOptions?: TPodTransportation[];
-    mileage?: TPodMileage|null;
+    mileageFrom?: number;
+    mileageTo?: number;
 }
 export interface IPodFilters {
     searchTerm: string;
@@ -77,7 +78,8 @@ export interface IPodForm {
     engineTypes?:number[];
     isVisitCenter: boolean;
     transportationOptionIds?: number[];
-    mileage?: TPodMileage;
+    mileageFrom?: number;
+    mileageTo?: number;
 }
 
 export enum EJobType {

@@ -126,8 +126,8 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
             } else {
                 setTransportationOptions([]);
             }
-            setMileageFrom(podById?.mileage?.from?.toString() ?? '')
-            setMileageTo(podById?.mileage?.to?.toString() ?? '')
+            setMileageFrom(podById?.mileageFrom?.toString() ?? '')
+            setMileageTo(podById?.mileageTo?.toString() ?? '')
         }
     }, [props.open, podById, makesModels, engineTypes, serviceValetZones, zones, transportations, editingItemId]);
 
@@ -267,10 +267,10 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
                     if (appointmentType) data.appointmentType = appointmentType.value;
                     if (transportationOptions?.length) data.transportationOptionIds = transportationOptions.map(el => el.id);
                     if (mileageFrom) {
-                        data.mileage = {...data.mileage, from: +mileageFrom}
+                        data.mileageFrom = +mileageFrom;
                     }
                     if (mileageTo) {
-                        data.mileage = {...data.mileage, to: +mileageTo}
+                        data.mileageTo = +mileageTo
                     }
                     if (editingItemId && podById) {
                         await dispatch(updatePod(data, podById.id));
