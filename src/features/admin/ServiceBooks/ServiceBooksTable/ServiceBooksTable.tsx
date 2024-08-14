@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useDispatch, useSelector} from "react-redux";
-import {loadPodsSummary, removePod, setPodById} from "../../../../store/reducers/pods/actions";
+import {loadPodsSummary, removePod, setPodById, setPodsOrderIndex} from "../../../../store/reducers/pods/actions";
 import {Table} from "../../../../components/tables/Table/Table";
 import {RootState} from "../../../../store/rootReducer";
 import {IconButton, Menu, MenuItem} from "@mui/material";
 import {MoreHoriz} from "@mui/icons-material";
-import {EPodSummaryOption, IPodSummary} from "../../../../store/reducers/pods/types";
+import {EPodSummaryOption, IPodSummary, IPodSummaryLocal, TPodOrder} from "../../../../store/reducers/pods/types";
 import {useException} from "../../../../hooks/useException/useException";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {useModal} from "../../../../hooks/useModal/useModal";
@@ -22,7 +22,7 @@ const ServiceBooksTable = () => {
     const {summary, podsLoading} = useSelector((state: RootState) => state.pods);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
     const [currentItem, setCurrentItem] = useState<IPodSummary | null>(null);
-    const [currentData, setCurrentData] = useState<IPodSummary[]>([]);
+    const [currentData, setCurrentData] = useState<IPodSummaryLocal[]>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [isChecked, setChecked] = useState<boolean>(false);
     const [wrongOrderIndexes, setWrongOrderIndexes] = useState<number[]>([]);
@@ -34,14 +34,15 @@ const ServiceBooksTable = () => {
 
     const checkIsValid = () => {
         setChecked(true)
-        const errorIndexes = findMissingNumbers(currentData.map(el => el.order ?? 0))
+        const errorIndexes = findMissingNumbers(currentData.map(el => el.orderIndex ?? 0), currentData.length)
         setWrongOrderIndexes(errorIndexes)
         return !Boolean(errorIndexes.length)
     }
 
     const onSave = () => {
         if (checkIsValid()) {
-            // todo request
+            const data: TPodOrder[] = currentData.map(el => ({id: el.serviceBookId, orderIndex: el.orderIndex ?? 0}))
+            selectedSC && dispatch(setPodsOrderIndex(selectedSC?.id, data, showError, () => setEdit(false)))
         } else {
             showError(`The "Order" is required and must to be from 1 to ${summary.length} without repeating numbers`)
         }
@@ -51,7 +52,7 @@ const ServiceBooksTable = () => {
         setEdit(false)
         setChecked(false)
         setWrongOrderIndexes([]);
-        setCurrentData([...summary].sort((a, b) => a.serviceBookId - b.serviceBookId))
+        setCurrentData(summary.map(el => ({...el, prevOrder: el.orderIndex ?? 0})))
     }
 
     useEffect(() => {
@@ -59,7 +60,7 @@ const ServiceBooksTable = () => {
     }, [selectedSC])
 
     useEffect(()=> {
-        setCurrentData([...summary].sort((a, b) => a.serviceBookId - b.serviceBookId))
+        setCurrentData(summary.map(el => ({...el, prevOrder: el.orderIndex ?? 0})))
     }, [summary])
 
     const onChangeOrder = (serviceBookId: number|null) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -67,9 +68,9 @@ const ServiceBooksTable = () => {
         setCurrentData(prev => {
             const itemToUpdate = prev.find(el => el.serviceBookId === serviceBookId)
             if (itemToUpdate) {
-                const updated = {...itemToUpdate, order: +e.target.value}
+                const updated = {...itemToUpdate, orderIndex: +e.target.value}
                 return [...prev.filter(item => item.serviceBookId !== serviceBookId), updated]
-                    .sort((a, b) => a.serviceBookId - b.serviceBookId)
+                    .sort((a, b) => a.prevOrder - b.prevOrder)
             }
             return prev
         })
@@ -82,12 +83,12 @@ const ServiceBooksTable = () => {
             val: el =>  isEdit
                 ? <StyledField
                     type="tel"
-                    error={isChecked && (el.order ? wrongOrderIndexes.includes(el.order) : !el.order)}
+                    error={isChecked && (el.orderIndex ? wrongOrderIndexes.includes(el.orderIndex) : !el.orderIndex)}
                     inputProps={{min: 1, step: 1, max: summary.length}}
-                    value={el.order ?? ""}
+                    value={el.orderIndex ?? ""}
                     onChange={onChangeOrder(el.serviceBookId)}/>
-                : el.order
-                    ? el.order.toString()
+                : el.orderIndex
+                    ? el.orderIndex.toString()
                     : "",
             width: 80,
         },

@@ -111,5 +111,14 @@ export interface IPodSummary {
     serviceBookId: number;
     options: EPodSummaryOption[];
     serviceBookName?: string;
-    order?: number;
+    orderIndex?: number;
+}
+
+export interface IPodSummaryLocal extends IPodSummary {
+    prevOrder: number;
+}
+
+export type TPodOrder = {
+    id: number;
+    orderIndex: number;
 }
