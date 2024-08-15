@@ -95,7 +95,7 @@ const ServiceBooksTable = () => {
                 <MenuItem onClick={openEdit} disabled={podsLoading}>Edit</MenuItem>
                 <MenuItem onClick={askRemove} disabled={podsLoading}>Remove</MenuItem>
             </Menu>
-            <ServiceBookModal open={isOpen} onClose={onEditClose} editingItemId={currentItem?.serviceBookId} />
+            <ServiceBookModal open={isOpen} onClose={onEditClose} editingItemId={currentItem?.serviceBookId}/>
         </div>
     );
 };
