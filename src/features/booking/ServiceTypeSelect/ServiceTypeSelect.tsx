@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {Grid} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -73,6 +73,10 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
 
     const setTracker = (ids: string[]) => dispatch(setTrackerCreated({isCreated: true, ids}))
+
+    useEffect(() => {
+        if (!firstScreenOptions.length) dispatch(setCurrentFrameScreen("serviceNeeds"));
+    }, [firstScreenOptions])
 
     useAnalyticsForParentSite(id, trackerData.isCreated, setTracker);
 
