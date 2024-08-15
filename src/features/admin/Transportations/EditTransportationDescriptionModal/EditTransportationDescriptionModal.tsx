@@ -82,7 +82,7 @@ export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildre
             if (description.trim().length && +orderIndex > 0) {
                 dispatch(updateTransportationDescription(
                     editingElement.id,
-                    {...editingElement, description: description.trim()},
+                    {...editingElement, description: description.trim(), orderIndex: +orderIndex},
                     onDataSaved,
                     showError,
                 ))

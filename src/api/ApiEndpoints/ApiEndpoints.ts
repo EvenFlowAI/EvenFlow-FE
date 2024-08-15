@@ -244,7 +244,8 @@ export class Api {
             GetShort: {route: "/pods/short-by-query", method: "post"},
             // todo change to real endpoint
             GetMakes: {route: "/pods/makes", method: "get"},
-            GetSummary: {route: "/pods/summary", method: 'get'}
+            GetSummary: {route: "/pods/summary", method: 'get'},
+            SetOrderIndex: {route: "/pods/order-index-assignment", method: 'patch'}
         },
         PricingSettings: {
             GetList: {route: "/pricing-settings", method: "get"},
