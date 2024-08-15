@@ -6,27 +6,38 @@ import {RootState} from "../../../../../store/rootReducer";
 import {
     setCurrentFrameScreen,
     setServiceTypeOption,
-    setTransportation
+    setTransportation, setWelcomeScreenView
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {checkPodChanged} from "../../../../../store/reducers/appointments/actions";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {decodeSCID} from "../../../../../utils/utils";
 import {useException} from "../../../../../hooks/useException/useException";
 import {setSlotsWarningOpen} from "../../../../../store/reducers/modals/actions";
+import {Routes} from "../../../../../routes/constants";
 
 const TransportationsManage: React.FC<TActionProps> = ({onBack, onNext}) => {
     const {isUsualFlowNeeded, appointmentByKey, serviceOptionChangedFromSlotPage, editingPosition} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
     const showError = useException();
+    const history = useHistory();
+
+    const redirect = () => {
+        if (editingPosition === 'serviceOption') {
+            dispatch(setWelcomeScreenView('serviceSelect'));
+            history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        } else {
+            dispatch(setCurrentFrameScreen("manageAppointment"))
+        }
+    }
 
     const handleBack = () => {
-        if (serviceOptionChangedFromSlotPage && editingPosition === 'slot') {
+        if ((serviceOptionChangedFromSlotPage && editingPosition === 'slot') || editingPosition === 'serviceOption') {
             dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
         }
         if (!isUsualFlowNeeded) {
             dispatch(setTransportation(appointmentByKey?.transportationOption ?? null))
-            dispatch(setCurrentFrameScreen("manageAppointment"))
+            redirect()
         } else {
             dispatch(setTransportation(null));
             onBack();
