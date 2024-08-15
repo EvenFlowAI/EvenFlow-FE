@@ -29,6 +29,11 @@ export type TPodTransportation = {
     type: string;
 }
 
+export type TPodMileage = {
+    from?: number;
+    to?: number;
+}
+
 export interface IPod {
     id: number;
     name: string;
@@ -48,6 +53,8 @@ export interface IPod {
     engineTypes?: IEngineType[];
     isVisitCenter?: boolean;
     transportationOptions?: TPodTransportation[];
+    mileageFrom?: number;
+    mileageTo?: number;
 }
 export interface IPodFilters {
     searchTerm: string;
@@ -71,6 +78,8 @@ export interface IPodForm {
     engineTypes?:number[];
     isVisitCenter: boolean;
     transportationOptionIds?: number[];
+    mileageFrom?: number;
+    mileageTo?: number;
 }
 
 export enum EJobType {
@@ -96,9 +105,9 @@ export type TState = {
 export enum EPodSummaryOption {
     OpsCodes,
     ServiceType,
-    JobType,
     Make,
     Model,
+    Mileage,
     EngineType,
     ServiceValet,
     MobileService,
@@ -110,4 +119,14 @@ export interface IPodSummary {
     serviceBookId: number;
     options: EPodSummaryOption[];
     serviceBookName?: string;
+    orderIndex?: number;
+}
+
+export interface IPodSummaryLocal extends IPodSummary {
+    prevOrder: number;
+}
+
+export type TPodOrder = {
+    id: number;
+    orderIndex: number;
 }
