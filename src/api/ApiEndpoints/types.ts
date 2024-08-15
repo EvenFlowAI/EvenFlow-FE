@@ -53,7 +53,7 @@ export interface IApiEndpoints {
     OptimizationWindows: Record<"GetParams" | "SetParams" | "GetOverbooking" | "SetOverbooking"
         | "GetAppointmentCutoff" | "SetAppointmentCutoff", TApiEndpoint>,
     Offers: Record<"Create" | "GetAll" | "Retrieve" | "Edit" | "ChangeStatus" | "Remove", TApiEndpoint>,
-    Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort" | "GetMakes" | "GetSummary", TApiEndpoint>,
+    Pods: Record<"Create" | "Update" | "Retrieve" | "GetAll" | "Remove" | "GetShort" | "GetMakes" | "GetSummary" | "SetOrderIndex", TApiEndpoint>,
     PricingSettings: Record<"GetList" | "Edit" | "GetDayOfWeek" | "SetDayOfWeek"
         | "CreateTimeOfYear" | "GetTimeOfYear" | "UpdateTimeOfYear" | "RemoveTimeOfYear"
         | "GetLevels" | "SetLevels" | "Calculation" | "GetServiceRequestsPricingLevels"
