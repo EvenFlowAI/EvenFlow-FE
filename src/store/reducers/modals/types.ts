@@ -20,6 +20,7 @@ export type TSetSlotsWarningModal = {type: "Modals/SetSlotsWarning", payload: bo
 export type TSetServiceWarningModal = {type: "Modals/SetServiceWarning", payload: boolean};
 export type TOpenUnavailableService = {type: "Modals/OpenUnavailableService", payload: boolean};
 export type TOpenConsent = {type: "Modals/OpenConsent", payload: boolean};
+export type TSlotsWarningShowed = {type: "Modals/SlotsWarningShowed", payload: boolean};
 
 export type TModalActions =
     | TCloseConfirmModal
@@ -28,7 +29,8 @@ export type TModalActions =
     | TSetSlotsWarningModal
     | TSetServiceWarningModal
     | TOpenUnavailableService
-    | TOpenConsent;
+    | TOpenConsent
+    | TSlotsWarningShowed;
 
 export type TConfirmState = {
     open: boolean;
@@ -42,4 +44,5 @@ export type TModalState = {
     isServiceWarningOpen: boolean;
     isUnavailableServiceOpen: boolean;
     isConsentOpen: boolean;
+    wasSlotsWarningShowed: boolean;
 };

@@ -17,6 +17,7 @@ import {Routes} from "../../../../../routes/constants";
 
 const TransportationsManage: React.FC<TActionProps> = ({onBack, onNext}) => {
     const {isUsualFlowNeeded, appointmentByKey, serviceOptionChangedFromSlotPage, editingPosition} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
+    const {wasSlotsWarningShowed} = useSelector((state: RootState) => state.modals);
     const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
     const showError = useException();
@@ -49,9 +50,9 @@ const TransportationsManage: React.FC<TActionProps> = ({onBack, onNext}) => {
     }
 
     const handleNext = () => {
-        editingPosition === 'slot'
-            ? onNext()
-            : dispatch(setSlotsWarningOpen(true))
+        editingPosition === 'transportation' && !wasSlotsWarningShowed
+            ? dispatch(setSlotsWarningOpen(true))
+            : onNext()
     }
 
     return <TransportationNeeds onBack={handleBack} onNext={handleNext} handleConsentsAccepted={checkPod}/>

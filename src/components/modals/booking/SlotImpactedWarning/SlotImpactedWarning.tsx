@@ -55,7 +55,7 @@ const SlotImpactedWarning = () => {
             onClose={onCancel}
         >
             <DialogTitle onClose={onCancel}>
-                {t("Appointment availability depends on the requested transportation. Please continue to review options.")}
+                {t("Appointment availability depends on your selections. Please continue to see options.")}
             </DialogTitle>
             <div className={classes.wrapper}>
                 <LoadingButton

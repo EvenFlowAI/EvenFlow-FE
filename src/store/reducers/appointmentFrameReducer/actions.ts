@@ -81,7 +81,7 @@ import {setAppointmentsLoading, setCurrentAppointmentLoading} from "../appointme
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 import {setLoading} from "../slotScoring/actions";
-import {setConsentOpen} from "../modals/actions";
+import {setConsentOpen, setSlotsWarningShowed} from "../modals/actions";
 import {API} from "../../../api/api";
 import {Dispatch, SetStateAction} from "react";
 
@@ -435,6 +435,7 @@ export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dis
     dispatch(setConsultants([]));
     dispatch(setWaitListSettings(null));
     dispatch(setAcceptedConsentIds([]));
+    dispatch(setSlotsWarningShowed(true));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
