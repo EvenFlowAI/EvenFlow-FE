@@ -108,11 +108,6 @@ const ServiceBooksTable = () => {
             align: 'center',
         },
         {
-            header: "Job Type",
-            val: el => el.options.includes(EPodSummaryOption.JobType) ? <Checked/> : <Unchecked/>,
-            align: 'center',
-        },
-        {
             header: "Make",
             val: el => el.options.includes(EPodSummaryOption.Make) ? <Checked/> : <Unchecked/>,
             align: 'center',

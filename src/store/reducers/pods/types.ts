@@ -96,15 +96,14 @@ export type TState = {
 export enum EPodSummaryOption {
     OpsCodes,
     ServiceType,
-    JobType,
     Make,
     Model,
+    Mileage,
     EngineType,
     ServiceValet,
     MobileService,
     TransportOptions,
-    Advisors,
-    Mileage
+    Advisors
 }
 
 export interface IPodSummary {
