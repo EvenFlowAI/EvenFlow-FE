@@ -1,6 +1,13 @@
 import {createAction} from "@reduxjs/toolkit";
-import {IPod, IPodFilters, IPodForm, IPodShort, IPodSummary} from "./types";
-import {AppThunk, IPageRequest, IPagingResponse, PaginatedAPIResponse, TArgCallback} from "../../../types/types";
+import {IPod, IPodFilters, IPodForm, IPodShort, IPodSummary, TPodOrder} from "./types";
+import {
+    AppThunk,
+    IPageRequest,
+    IPagingResponse,
+    PaginatedAPIResponse,
+    TArgCallback,
+    TCallback
+} from "../../../types/types";
 
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
@@ -31,20 +38,12 @@ export const loadPods = (serviceCenterId: number): AppThunk => async (dispatch, 
     }
 }
 export const createPod = (data: IPodForm): AppThunk => async dispatch => {
-    try {
-        await Api.call(Api.endpoints.Pods.Create, {data});
-        dispatch(loadPodsSummary(data.serviceCenterId))
-    } catch (err) {
-        console.log('create Pod error', err)
-    }
+    await Api.call(Api.endpoints.Pods.Create, {data});
+    dispatch(loadPodsSummary(data.serviceCenterId))
 }
 export const updatePod = (data: IPodForm, id: number): AppThunk => async dispatch => {
-    try {
-        await Api.call(Api.endpoints.Pods.Update, {data, urlParams: {id}});
-        dispatch(loadPodsSummary(data.serviceCenterId))
-    } catch (err) {
-        console.log('update Pod error', err)
-    }
+    await Api.call(Api.endpoints.Pods.Update, {data, urlParams: {id}});
+    dispatch(loadPodsSummary(data.serviceCenterId))
 }
 export const removePod = (id: number, serviceCenterId?: number, onError?: TArgCallback<any>): AppThunk => async (dispatch, getState) => {
     dispatch(setPodsLoading(true))
@@ -94,6 +93,20 @@ export const loadPodsSummary = (serviceCenterId: number): AppThunk => dispatch =
         })
         .catch(err => {
             console.log('get pod summary error', err)
+        })
+        .finally(() => dispatch(setPodsLoading(false)))
+}
+
+export const setPodsOrderIndex = (serviceCenterId: number, serviceBooks: TPodOrder[], onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
+    dispatch(setPodsLoading(true))
+    Api.call<IPodSummary[]>(Api.endpoints.Pods.SetOrderIndex, {data: {serviceCenterId, serviceBooks}})
+        .then(res => {
+            if (res.data) dispatch(loadPodsSummary(serviceCenterId))
+            onSuccess()
+        })
+        .catch(err => {
+            onError(err)
+            console.log('set pods order index error', err)
         })
         .finally(() => dispatch(setPodsLoading(false)))
 }
