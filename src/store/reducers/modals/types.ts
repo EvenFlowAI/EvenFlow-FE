@@ -44,5 +44,5 @@ export type TModalState = {
     isServiceWarningOpen: boolean;
     isUnavailableServiceOpen: boolean;
     isConsentOpen: boolean;
-    wasSlotsWarningShowed: boolean;
+    wasWarningShowed: boolean;
 };

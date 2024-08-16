@@ -75,6 +75,9 @@ export const loadAppointments = (data: IAppointmentsRequest): AppThunk => dispat
 export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<any>, onPodKept?: () => void): AppThunk => (dispatch, getState) => {
     const appointmentFrame = getState().appointmentFrame;
     const appointment = getState().appointment;
+    const {wasWarningShowed} = getState().modals;
+
+    // todo check the case when the pod has changed
     const categories = getState().categories;
 
     const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
