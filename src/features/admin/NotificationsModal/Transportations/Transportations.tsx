@@ -307,11 +307,11 @@ const Transportations: React.FC<React.PropsWithChildren<React.PropsWithChildren<
             </div>
             <Divider style={{margin: '24px 0'}}/>
             <DialogActions style={{padding: '0 24px 0 0'}}>
-                <Button onClick={onClose} variant="outlined" color="primary" disabled={loading || isSaving || isLoading}>
+                <Button onClick={onClose} variant="text" color="info" disabled={loading || isSaving || isLoading}>
                     Close
                 </Button>
                 <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || isSaving || isLoading}>
-                    Cancel Changes
+                    Cancel
                 </Button>
                 <Button onClick={onSave} variant="contained" color="primary" disabled={loading || isSaving || isLoading}>
                     Save
