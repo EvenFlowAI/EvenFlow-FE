@@ -106,7 +106,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
         if (newConfigHasTransportation && !newServiceOption?.transportationOption) {
             dispatch(checkPodChanged(decodeSCID(id), showError, redirectToTransportation))
         } else {
-            dispatch(checkPodChanged(decodeSCID(id), showError))
+            dispatch(checkPodChanged(decodeSCID(id), showError, undefined, redirect))
         }
     }
 

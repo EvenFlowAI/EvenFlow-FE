@@ -46,8 +46,6 @@ const SlotImpactedWarning = () => {
         dispatch(setSlotsWarningOpen(false))
     }
 
-    // todo remove double showing of the text
-
     return (
         <BaseModal
             width={450}
