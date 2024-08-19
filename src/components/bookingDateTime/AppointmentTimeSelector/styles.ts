@@ -1,5 +1,4 @@
 import {styled} from "@mui/material";
-import { makeStyles } from 'tss-react/mui';
 
 export const TimeSlotsWrapper = styled('div')(({theme}) => ({
     display: "grid",
@@ -18,28 +17,5 @@ export const TimeSlotsWrapper = styled('div')(({theme}) => ({
     },
     [theme.breakpoints.down('sm')]: {
         gridTemplateColumns: "repeat(2, 1fr)"
-    }
-}));
-
-export const useStyles = makeStyles()(theme => ({
-    wrapper: {
-        maxHeight: '40vh',
-        overflowY: "auto",
-        [theme.breakpoints.down('sm')]: {
-            maxHeight: '30vh',
-        }
-    },
-    titleWrapper: {
-        display: 'flex',
-        gap: 34,
-        alignItems: 'center'
-    },
-    title: {
-        fontSize: 16,
-        textTransform: 'uppercase'
-    },
-    boldText: {
-        textTransform: 'uppercase',
-        fontWeight: 700,
     }
 }));
