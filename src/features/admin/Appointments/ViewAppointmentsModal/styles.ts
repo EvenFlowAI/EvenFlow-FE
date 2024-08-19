@@ -17,3 +17,8 @@ export const LoaderWrapper = styled('div')({
     justifyContent: 'center',
     alignItems: "center"
 })
+
+export const SimpleData = styled('div')({
+    color: "#252733",
+    fontSize: 14
+})

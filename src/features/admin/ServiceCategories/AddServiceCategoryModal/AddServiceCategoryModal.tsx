@@ -155,7 +155,8 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
     const onError = (err: any) => {
         if (categoryHasCodesOrder) {
             const orderIndexes = selectedCodesWithOrder.map(item => +item.orderIndex);
-            setWrongOrderIndexes(findMissingNumbers(orderIndexes))
+            const {wrongNumbers} = findMissingNumbers(orderIndexes)
+            setWrongOrderIndexes(wrongNumbers)
         }
         showError(err)
     }

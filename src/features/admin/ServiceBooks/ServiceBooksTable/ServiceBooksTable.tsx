@@ -17,6 +17,7 @@ import {ReactComponent as Unchecked} from '../../../../assets/img/radiobutton_un
 import ButtonsRow from "../ButtonsRow/ButtonsRow";
 import {findMissingNumbers} from "../../ServiceCategories/AddServiceCategoryModal/utils";
 import {StyledField} from "./styles";
+import {EOrderError} from "../../ServiceCategories/AddServiceCategoryModal/types";
 
 const ServiceBooksTable = () => {
     const {summary, podsLoading} = useSelector((state: RootState) => state.pods);
@@ -32,26 +33,44 @@ const ServiceBooksTable = () => {
     const {askConfirm} = useConfirm();
     const {isOpen, onClose, onOpen} = useModal();
 
-    const checkIsValid = () => {
-        setChecked(true)
-        const errorIndexes = findMissingNumbers(currentData.map(el => el.orderIndex ?? 0), currentData.length)
-        setWrongOrderIndexes(errorIndexes)
-        return !Boolean(errorIndexes.length)
+    useEffect(() => {
+        setEdit(false);
+        setWrongOrderIndexes([])
+    }, [selectedSC])
+
+    const handleErrors = (errors: EOrderError[]) => {
+        if (errors.includes(EOrderError.MissingNumber)) {
+            showError("An order value was skipped while assigning. Please adjust so there are no missing values.")
+        }
+        if (errors.includes(EOrderError.SameNumber)) {
+            showError("Two or more service books have the same order value. Please adjust so each service book has a unique value.")
+        }
+        if (!currentData.every(el => el.orderIndex)) {
+            showError("A service book(s) is missing an order value. Please assign a value for all service books.")
+        }
+    }
+
+    const clearState = () => {
+        setEdit(false)
+        setChecked(false)
+        setWrongOrderIndexes([]);
     }
 
     const onSave = () => {
-        if (checkIsValid()) {
+        setChecked(true)
+        const indexes: number[] = currentData.map(el => el.orderIndex ?? 0)
+        const {wrongNumbers, errors} = findMissingNumbers(indexes, currentData.length)
+        if (!wrongNumbers.length) {
             const data: TPodOrder[] = currentData.map(el => ({id: el.serviceBookId, orderIndex: el.orderIndex ?? 0}))
-            selectedSC && dispatch(setPodsOrderIndex(selectedSC?.id, data, showError, () => setEdit(false)))
+            selectedSC && dispatch(setPodsOrderIndex(selectedSC?.id, data, showError, clearState))
         } else {
-            showError(`The "Order" is required and must to be from 1 to ${summary.length} without repeating numbers`)
+            setWrongOrderIndexes(wrongNumbers)
+            handleErrors(errors)
         }
     }
 
     const onCancel = () => {
-        setEdit(false)
-        setChecked(false)
-        setWrongOrderIndexes([]);
+        clearState()
         setCurrentData(summary.map(el => ({...el, prevOrder: el.orderIndex ?? 0})))
     }
 
@@ -100,11 +119,6 @@ const ServiceBooksTable = () => {
         {
             header: "Op Codes",
             val: el => el.options.includes(EPodSummaryOption.OpsCodes) ? <Checked/> : <Unchecked/>,
-            align: 'center',
-        },
-        {
-            header: "Service Type",
-            val: el => el.options.includes(EPodSummaryOption.ServiceType) ? <Checked/> : <Unchecked/>,
             align: 'center',
         },
         {

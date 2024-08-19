@@ -19,7 +19,7 @@ import {FrameWelcomeLayout} from "../../../features/booking/FrameWelcomeLayout/F
 import { ThemeProvider, StyledEngineProvider } from "@mui/material";
 import {frameTheme} from "../../../theme/theme";
 import {
-    setAddress,
+    setAddress, setCurrentFrameScreen,
     setServiceTypeOption, setShowServiceCentersList,
     setSideBarSteps,
     setUserType,
@@ -120,6 +120,7 @@ export const Welcome = () => {
     }
 
     const skipServiceTypeSelection = () => {
+        dispatch(setCurrentFrameScreen("serviceNeeds"));
         createBlankUser()
         redirect()
     }
