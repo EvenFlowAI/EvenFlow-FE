@@ -33,6 +33,11 @@ const ServiceBooksTable = () => {
     const {askConfirm} = useConfirm();
     const {isOpen, onClose, onOpen} = useModal();
 
+    useEffect(() => {
+        setEdit(false);
+        setWrongOrderIndexes([])
+    }, [selectedSC])
+
     const handleErrors = (errors: EOrderError[]) => {
         if (errors.includes(EOrderError.MissingNumber)) {
             showError("An order value was skipped while assigning. Please adjust so there are no missing values.")
@@ -45,13 +50,19 @@ const ServiceBooksTable = () => {
         }
     }
 
+    const clearState = () => {
+        setEdit(false)
+        setChecked(false)
+        setWrongOrderIndexes([]);
+    }
+
     const onSave = () => {
         setChecked(true)
         const indexes: number[] = currentData.map(el => el.orderIndex ?? 0)
         const {wrongNumbers, errors} = findMissingNumbers(indexes, currentData.length)
         if (!wrongNumbers.length) {
             const data: TPodOrder[] = currentData.map(el => ({id: el.serviceBookId, orderIndex: el.orderIndex ?? 0}))
-            selectedSC && dispatch(setPodsOrderIndex(selectedSC?.id, data, showError, () => setEdit(false)))
+            selectedSC && dispatch(setPodsOrderIndex(selectedSC?.id, data, showError, clearState))
         } else {
             setWrongOrderIndexes(wrongNumbers)
             handleErrors(errors)
@@ -59,9 +70,7 @@ const ServiceBooksTable = () => {
     }
 
     const onCancel = () => {
-        setEdit(false)
-        setChecked(false)
-        setWrongOrderIndexes([]);
+        clearState()
         setCurrentData(summary.map(el => ({...el, prevOrder: el.orderIndex ?? 0})))
     }
 
