@@ -106,7 +106,10 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
 
         return (
             <div className={classes.wrapper}>
-                <h4 ref={titleRef}>{t("Select Time")}</h4>
+                <div className={classes.titleWrapper}>
+                    <h4 ref={titleRef} className={classes.title}>{t("Select Time")}</h4>
+                    <div>{dayjs(date).format("ddd")}, <span className={classes.boldText}>{dayjs(date).format('MMM DD')}</span></div>
+                </div>
                 {!loading
                     ? <TimeSlotsWrapper>
                         {slots.map((timeSlot) => {
