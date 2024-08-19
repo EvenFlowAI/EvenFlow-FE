@@ -8,9 +8,10 @@ import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
 import {setSideBarSteps} from "../../../store/reducers/appointmentFrameReducer/actions";
 import {PickUpSlotCard} from "../PickUpSlotCard/PickUpSlotCard";
-import {PickUpSlotsWrapper, useStyles} from "./styles";
+import {PickUpSlotsWrapper} from "./styles";
 import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
+import {useTimeSelectorStyles} from "../../../hooks/styling/useTmeSelectorStyles";
 
 type TProps = {
     date: TParsableDate;
@@ -23,7 +24,7 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
         const {selectedTiming, sideBarSteps, trackerData} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const firstCardRef = useRef<HTMLDivElement|null>(null);
-        const { classes  } = useStyles();
+        const { classes  } = useTimeSelectorStyles();
         const {t} = useTranslation();
         const currentSlots = useMemo(() => {
             return serviceValetSlots.filter(slot => dayjs.utc(slot.date).isSame(date, 'date'))
@@ -58,7 +59,10 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
 
         return (
             <div className={classes.wrapper}>
-                <h4 ref={firstCardRef}>{t("Select Time")}</h4>
+                <div className={classes.titleWrapper}>
+                    <h4 className={classes.title}>{t("Select Time")}</h4>
+                    <div>{dayjs(date).format("ddd")}, <span className={classes.boldText}>{dayjs(date).format('MMM DD')}</span></div>
+                </div>
                 {!loading
                         ? <PickUpSlotsWrapper>
                             {currentSlots?.length ? currentSlots.map(timeSlot => {
