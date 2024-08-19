@@ -41,7 +41,7 @@ export const Appointments = () => {
     const {selectedSC} = useSCs();
 
     const getAppointments = useCallback(() => {
-        if (filters.scId && selectedView === 'list' && filters.initialFiltersSet) {
+        if (filters.scId && selectedView === 'list' && (filters.initialFiltersSet || !isFiltersOpen)) {
             const serviceBookId = filters.serviceBook?.id ??  null;
             const isServiceBookServiceCenter = Boolean(filters.serviceBook && !serviceBookId);
             const data: IAppointmentsRequest = {
@@ -63,7 +63,7 @@ export const Appointments = () => {
             if (filters.technician) data.technicianDmsId = filters.technician.dmsId;
             dispatch(loadAppointments(data));
         }
-    }, [filters, selectedView, order]);
+    }, [filters, selectedView, order, isFiltersOpen]);
 
     useEffect(() => {
         setTimeout(() => getAppointments(), 1000)
