@@ -84,15 +84,17 @@ const ServiceBooksTable = () => {
 
     const onChangeOrder = (serviceBookId: number|null) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setChecked(false)
-        setCurrentData(prev => {
-            const itemToUpdate = prev.find(el => el.serviceBookId === serviceBookId)
-            if (itemToUpdate) {
-                const updated = {...itemToUpdate, orderIndex: +e.target.value}
-                return [...prev.filter(item => item.serviceBookId !== serviceBookId), updated]
-                    .sort((a, b) => a.prevOrder - b.prevOrder)
-            }
-            return prev
-        })
+        if (Number.isInteger(+e.target.value)) {
+            setCurrentData(prev => {
+                const itemToUpdate = prev.find(el => el.serviceBookId === serviceBookId)
+                if (itemToUpdate) {
+                    const updated = {...itemToUpdate, orderIndex: +e.target.value}
+                    return [...prev.filter(item => item.serviceBookId !== serviceBookId), updated]
+                        .sort((a, b) => a.prevOrder - b.prevOrder)
+                }
+                return prev
+            })
+        }
     }
 
     const rowData: TableRowDataTypeResp<IPodSummary>[] = [
