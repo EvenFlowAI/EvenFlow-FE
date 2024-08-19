@@ -5,7 +5,6 @@ export const useDetailsItemStyles = makeStyles()({
         display: "flex",
         justifyContent: "flex-start",
         alignItems: 'center',
-        marginBottom: 12,
     },
     icon: {
         marginRight: 32

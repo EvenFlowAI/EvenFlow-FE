@@ -44,7 +44,7 @@ const AdminRowData: TableRowDataType<IEmployee>[] = [
     //     width: 170},
     {val: el => el.role === Roles.Technician ? `${el.role} (${el.employeeInfo?.skillLevel || 1})` : el.role, header: "Role", orderId: "role"},
     {val: el => el.email, header: "Email Address", width: 170},
-    {val: el => el.dmsId ? el.dmsId.toString() : '-' , header: "DMS Employee ID"}
+    {val: el => el.dmsId ? el.dmsId.toString() : '-' , header: "Employee ID"}
 ];
 
 type TProps = {
