@@ -76,6 +76,12 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
 
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
     const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);
+    const mileageFromIsInvalid = useMemo(() => {
+        return !Number.isInteger(+mileageFrom) || +mileageFrom <=0 || (mileageTo ? +mileageFrom > +mileageTo : false)
+    }, [mileageFrom, mileageTo])
+    const mileageToIsInvalid = useMemo(() => {
+        return !Number.isInteger(+mileageTo) || +mileageTo <= 0 || (mileageFrom ? +mileageFrom > +mileageTo : false)
+    }, [mileageFrom, mileageTo])
 
     useEffect(() => {
         if (props.open) {
@@ -202,12 +208,12 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
 
     const handleMileageFromChange = (e: any) => {
         setFormIsChecked(false);
-        setMileageFrom(e.target.value)
+        setMileageFrom(e.target.value.trim())
     }
 
     const handleMileageToChange = (e: any) => {
         setFormIsChecked(false);
-        setMileageTo(e.target.value)
+        setMileageTo(e.target.value.trim())
     }
 
     const handleTransportationsChange = (e: any, val: ITransportationOptionFull[]) => {
@@ -226,13 +232,25 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
             isValid = false;
             showError('"Technicians" must not be empty')
         }
-        if (mileageFrom && !Number.isInteger(+mileageFrom)) {
-            isValid = false;
-            showError('"Mileage From" must be a whole number')
+        if (mileageFrom) {
+            if (!Number.isInteger(+mileageFrom)) {
+                isValid = false;
+                showError('"Mileage From" must be a whole number')
+            }
+            if (+mileageFrom <= 0) {
+                isValid = false;
+                showError('"Mileage From" must be a positive number')
+            }
         }
-        if (mileageTo && !Number.isInteger(+mileageTo)) {
-            isValid = false;
-            showError('"Mileage To" must be a whole number')
+        if (mileageTo) {
+            if (!Number.isInteger(+mileageTo)) {
+                isValid = false;
+                showError('"Mileage To" must be a whole number')
+            }
+            if (+mileageTo <= 0) {
+                isValid = false;
+                showError('"Mileage To" must be a positive number')
+            }
         }
         if (mileageTo && mileageFrom && +mileageTo < +mileageFrom) {
             isValid = false;
@@ -503,9 +521,7 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
                                 fullWidth
                                 onChange={handleMileageFromChange}
                                 value={mileageFrom}
-                                error={mileageFrom
-                                    ? formIsChecked && (!Number.isInteger(+mileageFrom) || (mileageTo ? +mileageFrom > +mileageTo : false))
-                                    : false}
+                                error={mileageFrom ? formIsChecked && mileageFromIsInvalid : false}
                                 disabled={podsLoading || loading}
                             />
                         </Grid>
@@ -518,9 +534,7 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
                                 fullWidth
                                 onChange={handleMileageToChange}
                                 value={mileageTo}
-                                error={mileageTo
-                                    ? formIsChecked && (!Number.isInteger(+mileageTo) || (mileageFrom ? +mileageFrom > +mileageTo : false))
-                                    : false}
+                                error={mileageTo ? formIsChecked && mileageToIsInvalid : false}
                                 disabled={podsLoading || loading}
                             />
                         </Grid>
