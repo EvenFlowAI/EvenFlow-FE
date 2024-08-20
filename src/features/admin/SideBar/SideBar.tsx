@@ -47,13 +47,13 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
             && !MainLinksWithSub.find(el => el.to === Routes.Admin.Reporting)) {
             MainLinksWithSub.push(
                 {to: Routes.Admin.Reporting, name: "Reporting", roles: ["Owner", "Manager", "Service Director", "Super Admin"], subLinks: [
-                        {to: Routes.Reporting.AppointmentsSummary, name: "Appointments Summary", exact: true, sub: true, roles: ["Owner", "Manager", "Service Director", "Super Admin"]},
                         {to: Routes.Reporting.ShopLoading, name: "Shop Loading", exact: true, sub: true, roles: ["Owner", "Manager", "Service Director", "Super Admin"]},
+                        {to: Routes.Reporting.AppointmentAssignments, name: "Appointment Assignments", exact: true, sub: true, roles: ["Owner", "Manager", "Service Director", "Super Admin"]},
+                        {to: Routes.Reporting.BDCReports, name: "BDC Reports", exact: true, sub: true, roles: ["Owner", "Manager", "Service Director", "Super Admin"]},
                         {to: Routes.Reporting.ValetAppointments, name: "Valet Appointments", exact: true, sub: true, roles: ["Owner", "Manager", "Service Director", "Super Admin"]},
-                        {to: Routes.Reporting.MobileServiceAppointments, name: "Mobile Service Appointments", exact: true, sub: true, roles: ["Owner", "Manager", "Service Director", "Super Admin"]},
+                        {to: Routes.Reporting.OutboundOpportunities, name: "Outbound Opportunities", exact: true, sub: true, roles: ["Owner", "Manager", "Service Director", "Super Admin"]},
                         {to: Routes.Reporting.CustomerBehavior, name: "Customer Behavior", exact: true, sub: true, roles: ["Owner", "Manager", "Service Director", "Super Admin"]},
                         {to: Routes.Reporting.RepairOrderPerformance, name: "Repair Order Performance", exact: true, sub: true, roles: ["Owner", "Manager", "Service Director", "Super Admin"]},
-                        {to: Routes.Reporting.CapacityManagementPerformance, name: "Capacity Management Performance", exact: true, sub: true, roles: ["Owner", "Manager", "Service Director", "Super Admin"]},
                     ]},
             )
         }

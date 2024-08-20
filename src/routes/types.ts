@@ -52,13 +52,13 @@ export enum BookingFlowConfigRoutes {
 
 export enum ReportingRoutes {
     Base = "/admin/reporting",
-    AppointmentsSummary = "/admin/reporting/summary",
+    BDCReports = "/admin/reporting/bdc-reports",
     ShopLoading = "/admin/reporting/shop-loading",
     ValetAppointments = "/admin/reporting/valet-appointments",
-    MobileServiceAppointments = "/admin/reporting/mobile-service-appointments",
+    AppointmentAssignments = "/admin/reporting/appointment-assignments",
     CustomerBehavior = "/admin/reporting/customer-behavior",
     RepairOrderPerformance = "/admin/reporting/repair-order-performance",
-    CapacityManagementPerformance = "/admin/reporting/capacity-management-performance",
+    OutboundOpportunities = "/admin/reporting/outbound-opportunities",
 }
 
 export enum PricingRoutes {
