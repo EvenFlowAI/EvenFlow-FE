@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
 export const useStyles = makeStyles()(theme => ({
     root: {
         padding: `0 ${theme.spacing(4)} ${theme.spacing(4)}`,
@@ -9,5 +8,8 @@ export const useStyles = makeStyles()(theme => ({
         alignItems: "center",
         width: "100%",
         maxWidth: theme.breakpoints.values.lg,
+        [theme.breakpoints.down('xl')]: {
+            padding: '0 16px'
+        }
     }
 }));

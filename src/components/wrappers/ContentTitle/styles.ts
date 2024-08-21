@@ -7,11 +7,13 @@ const titleSt = {
     margin: 0
 }
 
-// 
 export const useStyles = makeStyles()((theme: Theme) => ({
     title: {
         ...titleSt,
         fontWeight: "bold",
+        [theme.breakpoints.down('mdl')]: {
+            fontSize: 20
+        },
         [theme.breakpoints.down('sm')]: {
             textAlign: "center"
         }
@@ -33,6 +35,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
             "&:hover": {
                 textDecoration: "underline"
             }
+        },
+        [theme.breakpoints.down('mdl')]: {
+            fontSize: 20
         },
         [theme.breakpoints.down('sm')]: {
             display: "block"

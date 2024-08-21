@@ -13,13 +13,14 @@ export const useStyles = makeStyles()(theme => ({
         flexDirection: "row",
         justifyContent: "space-between",
         transition: theme.transitions.create(["width"]),
-        [theme.breakpoints.down('lg')]: {
+        [theme.breakpoints.down('xl')]: {
             transition: theme.transitions.create(["width"]),
             width: "100%",
+            height: 67,
         }
     },
     openedRoot: {
-        [theme.breakpoints.down('lg')]: {
+        [theme.breakpoints.down('xl')]: {
             width: `calc(100% - ${sideBarWidth}px)`,
         }
     },
