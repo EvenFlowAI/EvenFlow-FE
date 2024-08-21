@@ -107,7 +107,10 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     usePopState('select', redirectToWelcomeScreens, true);
 
     useEffect(() => {
-        if (isAuthorized) return;
+        if (isAuthorized) {
+            handleSetScreen(getNextScreen());
+            return;
+        }
         if (shouldHideScreen) {
             if (needToShowServiceSelection) {
                 handleServiceTypeSelection()

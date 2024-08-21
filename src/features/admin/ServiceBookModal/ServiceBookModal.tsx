@@ -7,7 +7,6 @@ import {SC_UNDEFINED} from "../../../utils/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {IAdvisorShort} from "../../../store/reducers/users/types";
-import {IBayShort} from "../../../store/reducers/bays/types";
 import {IAssignedServiceRequestShort} from "../../../store/reducers/serviceRequests/types";
 import {autocompleteOptionsRender, autocompleteRender} from "../../../utils/autocompleteRenders";
 import { Autocomplete } from '@mui/material';
@@ -50,7 +49,6 @@ const initialForm: TForm = {
 export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|undefined}> = ({onAction, editingItemId, ...props}) => {
     const {advisorsList, techniciansList} = useSelector(({scEmployees}: RootState) => scEmployees);
     const {scRequestsShort: serviceRequests} = useSelector(({serviceRequests}: RootState) => serviceRequests);
-    const {baysShort: baysList} = useSelector(({bays}: RootState) => bays);
     const {makesModels, engineTypes} = useSelector(({vehicleDetails}: RootState) => vehicleDetails);
     const {options: transportations, isLoading: isTransportationLoading} = useSelector(({transportation}: RootState) => transportation);
     const {zones: serviceValetZones} = useSelector(({serviceValet}: RootState) => serviceValet);
@@ -64,6 +62,8 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
     const [modelsOptions, setModelsOptions] = useState<IModel[]>([]);
     const [selectedModels, setSelectedModels] = useState<IModel[]>([]);
     const [mobileZones, setMobileZones] = useState<TZone[]>([]);
+    const [mileageFrom, setMileageFrom] = useState<string>('');
+    const [mileageTo, setMileageTo] = useState<string>('');
     const [selectedServiceValetZones, setSelectedServiceValetZones] = useState<TZone[]>([]);
     const [selectedEngineTypes, setSelectedEngineTypes] = useState<IEngineType[]>([]);
     const [jobType, setJobType] = useState<TOption|null>(null);
@@ -76,6 +76,12 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
 
     const jobTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EJobType).filter(key => Number.isNaN(+key))), []);
     const appointmentTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EAppointmentType).filter(key => Number.isNaN(+key))), []);
+    const mileageFromIsInvalid = useMemo(() => {
+        return !Number.isInteger(+mileageFrom) || +mileageFrom <=0 || (mileageTo ? +mileageFrom > +mileageTo : false)
+    }, [mileageFrom, mileageTo])
+    const mileageToIsInvalid = useMemo(() => {
+        return !Number.isInteger(+mileageTo) || +mileageTo <= 0 || (mileageFrom ? +mileageFrom > +mileageTo : false)
+    }, [mileageFrom, mileageTo])
 
     useEffect(() => {
         if (props.open) {
@@ -126,6 +132,8 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
             } else {
                 setTransportationOptions([]);
             }
+            setMileageFrom(podById?.mileageFrom?.toString() ?? '')
+            setMileageTo(podById?.mileageTo?.toString() ?? '')
         }
     }, [props.open, podById, makesModels, engineTypes, serviceValetZones, zones, transportations, editingItemId]);
 
@@ -198,9 +206,14 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
         setSelectedServiceValetZones(val);
     }
 
-    const handleBaysChange = (e: any, val: IBayShort[]) => {
+    const handleMileageFromChange = (e: any) => {
         setFormIsChecked(false);
-        setForm({...form, bays: val});
+        setMileageFrom(e.target.value.trim())
+    }
+
+    const handleMileageToChange = (e: any) => {
+        setFormIsChecked(false);
+        setMileageTo(e.target.value.trim())
     }
 
     const handleTransportationsChange = (e: any, val: ITransportationOptionFull[]) => {
@@ -218,6 +231,30 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
         if (!form.technicians.length) {
             isValid = false;
             showError('"Technicians" must not be empty')
+        }
+        if (mileageFrom) {
+            if (!Number.isInteger(+mileageFrom)) {
+                isValid = false;
+                showError('"Mileage From" must be a whole number')
+            }
+            if (+mileageFrom <= 0) {
+                isValid = false;
+                showError('"Mileage From" must be a positive number')
+            }
+        }
+        if (mileageTo) {
+            if (!Number.isInteger(+mileageTo)) {
+                isValid = false;
+                showError('"Mileage To" must be a whole number')
+            }
+            if (+mileageTo <= 0) {
+                isValid = false;
+                showError('"Mileage To" must be a positive number')
+            }
+        }
+        if (mileageTo && mileageFrom && +mileageTo < +mileageFrom) {
+            isValid = false;
+            showError('"Mileage To" must be more than the "Mileage From"')
         }
         return isValid;
     }
@@ -247,6 +284,12 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
                     if (jobType) data.jobType = jobType.value;
                     if (appointmentType) data.appointmentType = appointmentType.value;
                     if (transportationOptions?.length) data.transportationOptionIds = transportationOptions.map(el => el.id);
+                    if (mileageFrom) {
+                        data.mileageFrom = +mileageFrom;
+                    }
+                    if (mileageTo) {
+                        data.mileageTo = +mileageTo
+                    }
                     if (editingItemId && podById) {
                         await dispatch(updatePod(data, podById.id));
                     } else {
@@ -329,6 +372,21 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <Autocomplete
+                                options={appointmentTypeOptions}
+                                getOptionLabel={i => i.name}
+                                disabled={podsLoading || loading}
+                                value={appointmentType}
+                                isOptionEqualToValue={(o, v) => o.value === v.value}
+                                onChange={onAppointmentTypeChange}
+                                renderInput={autocompleteRender({
+                                    label: "Appointment Type",
+                                    placeholder: 'Appointment Type'
+                                })}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
                                 options={advisorsList}
                                 multiple
                                 onChange={handleSelectAdv}
@@ -347,18 +405,28 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
                                 renderInput={autocompleteRender({label: "Advisors", fullWidth: true, placeholder: "Select Advisors"})}
                             />
                         </Grid>
-
                         <Grid item xs={12} sm={12} md={6}>
                             <Autocomplete
-                                options={appointmentTypeOptions}
-                                getOptionLabel={i => i.name}
                                 disabled={podsLoading || loading}
-                                value={appointmentType}
-                                isOptionEqualToValue={(o, v) => o.value === v.value}
-                                onChange={onAppointmentTypeChange}
+                                options={techniciansList}
+                                multiple
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                onChange={handleTechniciansChange}
+                                getOptionLabel={i => i.fullName}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                renderOption={autocompleteOptionsRender((e) => e.fullName)}
+                                loading={false}
+                                value={form.technicians}
                                 renderInput={autocompleteRender({
-                                    label: "Appointment Type",
-                                    placeholder: 'Appointment Type'
+                                    label: "Technicians",
+                                    fullWidth: true,
+                                    placeholder: "Select Technicians",
+                                    error: !form.technicians.length && formIsChecked
                                 })}
                             />
                         </Grid>
@@ -381,6 +449,20 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
                                 loading={false}
                                 value={form.serviceRequests}
                                 renderInput={autocompleteRender({label: "Service Requests", fullWidth: true, placeholder: "Select Service Requests"})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                disabled={podsLoading || loading}
+                                options={jobTypeOptions}
+                                isOptionEqualToValue={(o, v) => o.value === v.value}
+                                getOptionLabel={i => i.name}
+                                value={jobType}
+                                onChange={onJobTypeChange}
+                                renderInput={autocompleteRender({
+                                    label: "Job Type",
+                                    placeholder: 'Job Type'
+                                })}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} md={6}>
@@ -429,20 +511,34 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
                                 })}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12} md={6}>
-                            <Autocomplete
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="mileageFrom"
+                                name="mileageFrom"
+                                label="Mileage From"
+                                placeholder="Type Mileage From"
+                                fullWidth
+                                onChange={handleMileageFromChange}
+                                value={mileageFrom}
+                                error={mileageFrom ? formIsChecked && mileageFromIsInvalid : false}
                                 disabled={podsLoading || loading}
-                                options={jobTypeOptions}
-                                isOptionEqualToValue={(o, v) => o.value === v.value}
-                                getOptionLabel={i => i.name}
-                                value={jobType}
-                                onChange={onJobTypeChange}
-                                renderInput={autocompleteRender({
-                                    label: "Job Type",
-                                    placeholder: 'Job Type'
-                                })}
                             />
                         </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="mileageTo"
+                                name="mileageTo"
+                                label="Mileage To"
+                                placeholder="Type Mileage To"
+                                fullWidth
+                                onChange={handleMileageToChange}
+                                value={mileageTo}
+                                error={mileageTo ? formIsChecked && mileageToIsInvalid : false}
+                                disabled={podsLoading || loading}
+                            />
+                        </Grid>
+
                         <Grid item xs={12} sm={12} md={6}>
                             <Autocomplete
                                 disabled={podsLoading || loading}
@@ -462,6 +558,26 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
                                 loading={false}
                                 value={selectedEngineTypes}
                                 renderInput={autocompleteRender({label: "Engine Types", fullWidth: true, placeholder: "Select Engine Types"})}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={6}>
+                            <Autocomplete
+                                disabled={podsLoading || loading}
+                                options={transportations}
+                                multiple
+                                ChipProps={{
+                                    color: "primary",
+                                    style: {borderRadius: 4},
+                                    size: "small"
+                                }}
+                                disableCloseOnSelect
+                                onChange={handleTransportationsChange}
+                                getOptionLabel={i => getTransportationOptionString(i.type)}
+                                isOptionEqualToValue={(o, v) => o.id === v.id}
+                                renderOption={autocompleteOptionsRender((e) => getTransportationOptionString(e.type))}
+                                loading={isTransportationLoading}
+                                value={transportationOptions}
+                                renderInput={autocompleteRender({label: "Transportation Options", fullWidth: true, placeholder: "Select Transportation Options"})}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} md={6}>
@@ -504,71 +620,6 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
                                 loading={false}
                                 value={mobileZones}
                                 renderInput={autocompleteRender({label: "Mobile Zones", fullWidth: true, placeholder: "Select Mobile Zones"})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={6}>
-                            <Autocomplete
-                                disabled={podsLoading || loading}
-                                options={techniciansList}
-                                multiple
-                                ChipProps={{
-                                    color: "primary",
-                                    style: {borderRadius: 4},
-                                    size: "small"
-                                }}
-                                disableCloseOnSelect
-                                onChange={handleTechniciansChange}
-                                getOptionLabel={i => i.fullName}
-                                isOptionEqualToValue={(o, v) => o.id === v.id}
-                                renderOption={autocompleteOptionsRender((e) => e.fullName)}
-                                loading={false}
-                                value={form.technicians}
-                                renderInput={autocompleteRender({
-                                    label: "Technicians",
-                                    fullWidth: true,
-                                    placeholder: "Select Technicians",
-                                    error: !form.technicians.length && formIsChecked
-                                })}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={6}>
-                            <Autocomplete
-                                disabled={podsLoading || loading}
-                                options={baysList}
-                                multiple
-                                ChipProps={{
-                                    color: "primary",
-                                    style: {borderRadius: 4},
-                                    size: "small"
-                                }}
-                                disableCloseOnSelect
-                                onChange={handleBaysChange}
-                                getOptionLabel={i => i.name}
-                                isOptionEqualToValue={(o, v) => o.id === v.id}
-                                renderOption={autocompleteOptionsRender((e) => e.name)}
-                                loading={false}
-                                value={form.bays}
-                                renderInput={autocompleteRender({label: "Bays", fullWidth: true, placeholder: "Select Bays"})}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <Autocomplete
-                                disabled={podsLoading || loading}
-                                options={transportations}
-                                multiple
-                                ChipProps={{
-                                    color: "primary",
-                                    style: {borderRadius: 4},
-                                    size: "small"
-                                }}
-                                disableCloseOnSelect
-                                onChange={handleTransportationsChange}
-                                getOptionLabel={i => getTransportationOptionString(i.type)}
-                                isOptionEqualToValue={(o, v) => o.id === v.id}
-                                renderOption={autocompleteOptionsRender((e) => getTransportationOptionString(e.type))}
-                                loading={isTransportationLoading}
-                                value={transportationOptions}
-                                renderInput={autocompleteRender({label: "Transportation Options", fullWidth: true, placeholder: "Select Transportation Options"})}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} md={6}>

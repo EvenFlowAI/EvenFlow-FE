@@ -13,9 +13,10 @@ import {
     setSideBarSteps,
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TSlot} from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/types";
-import {TimeSlotsWrapper, useStyles} from "./styles";
+import {TimeSlotsWrapper} from "./styles";
 import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
+import {useTimeSelectorStyles} from "../../../hooks/styling/useTmeSelectorStyles";
 
 type TProps = {
     date: TParsableDate;
@@ -39,7 +40,7 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
             trackerData} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const titleRef = useRef<HTMLDivElement|null>(null);
-        const { classes  } = useStyles();
+        const { classes  } = useTimeSelectorStyles();
         const {t} = useTranslation();
 
         useEffect(() => {
@@ -106,7 +107,10 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
 
         return (
             <div className={classes.wrapper}>
-                <h4 ref={titleRef}>{t("Select Time")}</h4>
+                <div className={classes.titleWrapper}>
+                    <h4 ref={titleRef} className={classes.title}>{t("Select Time")}</h4>
+                    <div>{dayjs(date).format("ddd")}, <span className={classes.boldText}>{dayjs(date).format('MMM DD')}</span></div>
+                </div>
                 {!loading
                     ? <TimeSlotsWrapper>
                         {slots.map((timeSlot) => {

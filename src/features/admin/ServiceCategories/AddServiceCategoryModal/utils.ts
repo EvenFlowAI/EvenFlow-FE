@@ -1,6 +1,6 @@
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {EServiceCategoryType} from "../../../../store/reducers/categories/types";
-import {TOption} from "./types";
+import {EOrderError, TOption} from "./types";
 
 export const getPageOptions = (serviceType: EServiceType): TOption[] => {
     const typeName = serviceType === EServiceType.MobileService ? "Mobile Service" : "Visit Center";
@@ -27,11 +27,23 @@ export const getOptionLabel = (option: TOption) => {
     return array.join('');
 }
 
-export const findMissingNumbers = (numbers: number[]): number[] => {
+export const findMissingNumbers = (numbers: number[], max?:number): { wrongNumbers: number[], errors: EOrderError[] } => {
     const missed: number[] = [];
-    numbers.sort((a, b) => a - b).forEach((number, index) => {
-        if (numbers.filter(el => el === number).length > 1) missed.push(number)
-        if (number > 1 && number - numbers[index - 1] !== 1) missed.push(number)
+    const errors: EOrderError[] = [];
+    const sorted = numbers.sort((a, b) => a - b)
+    sorted.forEach((number, index) => {
+        if (numbers.filter(el => el === number).length > 1) {
+            missed.push(number)
+            errors.push(EOrderError.SameNumber)
+        }
+        if (number > 1 && number - numbers[index - 1] !== 1) {
+            missed.push(number)
+            errors.push(EOrderError.MissingNumber)
+        }
+        if (max && number > max) {
+            missed.push(number)
+            errors.push(EOrderError.MissingNumber)
+        }
     })
-    return Array.from(new Set(missed));
+    return {wrongNumbers: Array.from(new Set(missed)), errors};
 }

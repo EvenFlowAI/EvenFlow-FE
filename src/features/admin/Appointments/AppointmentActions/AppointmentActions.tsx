@@ -55,7 +55,7 @@ export const AppointmentActions: React.FC<TProps> = ({
             Select Columns
         </Button>
 
-        <ChangeViewButtons handleChangeView={handleChangeView} selectedView={selectedView}/>
+        {process.env.REACT_APP_ENV === 'production' ? null : <ChangeViewButtons handleChangeView={handleChangeView} selectedView={selectedView}/>}
 
         <Button
                 onClick={onFilterOpen}

@@ -7,3 +7,8 @@ export type TOption = {
     value: number;
     name: string;
 }
+
+export enum EOrderError {
+    MissingNumber,
+    SameNumber,
+}
