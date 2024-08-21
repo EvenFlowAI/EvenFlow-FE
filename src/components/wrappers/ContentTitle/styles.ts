@@ -22,8 +22,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     titleContainer: {
         display: "flex",
         flexDirection: "column",
-        [theme.breakpoints.down('sm')]: {
-            marginBottom: theme.spacing(2)
+        [theme.breakpoints.down('mdl')]: {
+            marginBottom: 8
         }
     },
     rootTitle: {
@@ -39,8 +39,5 @@ export const useStyles = makeStyles()((theme: Theme) => ({
         [theme.breakpoints.down('mdl')]: {
             fontSize: 20
         },
-        [theme.breakpoints.down('sm')]: {
-            display: "block"
-        }
     }
 }));

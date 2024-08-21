@@ -1,7 +1,7 @@
 import React from "react";
 import {EPredictedDemandMethod, IDemandPrediction} from "../../../../store/reducers/demandManagement/types";
-import {RadioBtn, RadioGroupStyled, StyledTableCell} from "../styles";
-import {Radio} from "@mui/material";
+import {BigLabelRadioBtn, RadioGroupStyled, StyledTableCell} from "../styles";
+import {Radio, useMediaQuery, useTheme} from "@mui/material";
 import LabelLink from "../LabelLink/LabelLink";
 import {ReactComponent as CheckIcon} from '../../../../assets/img/checkboxSmall.svg'
 import {ReactComponent as RedCross} from '../../../../assets/img/redCross.svg'
@@ -21,6 +21,8 @@ export const DemandPredictedCell: React.FC<{ item: IDemandPrediction }> = ({item
     const dispatch = useDispatch();
     const {selectedSC} = useSCs();
     const history = useHistory();
+    const theme = useTheme();
+    const isTablet = useMediaQuery(theme.breakpoints.down("xl"));
 
     const predictedMethod = item.predictedDemandMethodSettings
         ?.find(el => el.method === EPredictedDemandMethod.Predicted);
@@ -50,19 +52,19 @@ export const DemandPredictedCell: React.FC<{ item: IDemandPrediction }> = ({item
         }
     }
 
-    return <StyledTableCell key="predictedDemandMethod" align="left" width={300}>
-        <span style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24}}>
+    return <StyledTableCell key="predictedDemandMethod" align="left" width={isTablet ? 280: 300}>
+        <span style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: isTablet ? 16 : 24}}>
             <RadioGroupStyled
                 value={item.predictedDemandMethod}
                 onChange={handleChangePredictedDemandMethod(item.podId)}
                 aria-labelledby="demo-controlled-radio-buttons-group"
                 name="controlled-radio-buttons-group">
-            <RadioBtn
+            <BigLabelRadioBtn
                 value={EPredictedDemandMethod.Predicted}
                 control={<Radio color="primary" size="small"/>}
                 label="Predicted"
             />
-            <RadioBtn
+            <BigLabelRadioBtn
                 value={EPredictedDemandMethod.Probability}
                 control={<Radio color="primary" size="small"/>}
                 label="Probability"

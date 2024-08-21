@@ -60,6 +60,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {firstScreenOptions, isLoading} = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {wasWarningShowed} = useSelector((state: RootState) => state.modals);
     const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
     const currentUser = useCurrentUser();
 
@@ -105,14 +106,14 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
         if (newConfigHasTransportation && !newServiceOption?.transportationOption) {
             dispatch(checkPodChanged(decodeSCID(id), showError, redirectToTransportation))
         } else {
-            dispatch(checkPodChanged(decodeSCID(id), showError))
+            dispatch(checkPodChanged(decodeSCID(id), showError, undefined, redirect))
         }
     }
 
     const changeToVisitCenter = (newServiceOption: IFirstScreenOption) => {
-        if (serviceTypeOption?.type === EServiceType.MobileService) {
+        if (serviceTypeOption?.type === EServiceType.MobileService && !wasWarningShowed) {
             dispatch(setServiceWarningOpen(true))
-        } else if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+        } else if (serviceTypeOption?.type === EServiceType.PickUpDropOff && !wasWarningShowed) {
             dispatch(setSlotsWarningOpen(true))
         } else {
             handleVisitCenterSwitch(newServiceOption)

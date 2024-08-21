@@ -12,9 +12,14 @@ import dayjs from "dayjs";
 type TTableProps = {
     setDemandSlots: Dispatch<SetStateAction<IUnplannedDemandBySlot[]>>;
     slots: IUnplannedDemandBySlot[];
+    withEmptyRow?: boolean;
 }
 
-const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTableProps>>> = ({ slots, setDemandSlots }) => {
+const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTableProps>>> = ({
+                                                                                                           withEmptyRow,
+                                                                                                           slots,
+                                                                                                           setDemandSlots
+}) => {
     const { classes  } = useStyles();
 
     const onChange = (item: IUnplannedDemandBySlot, value: number|string) => {
@@ -32,21 +37,53 @@ const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChil
     return <Table>
         <TableHead>
             <TableRow className={classes.rowTop}>
-                <TableCell className={classes.headCell}>Slot Starts</TableCell>
-                <TableCell align="center" className={classes.headCell}>Slot Ends</TableCell>
-                <TableCell align="center" className={classes.headCell}>Unplanned Demand</TableCell>
+                <TableCell
+                    width={190}
+                    className={classes.headCell}
+                    style={{textAlign: 'left'}}>
+                    Slot Starts
+                </TableCell>
+                <TableCell
+                    width={190}
+                    style={{textAlign: 'left'}}
+                    className={classes.headCell}>
+                    Slot Ends
+                </TableCell>
+                <TableCell
+                    width={210}
+                    className={classes.headCell}>
+                    Unplanned Demand
+                </TableCell>
             </TableRow>
         </TableHead>
         <TableBody>
             {slots.map((item, index) => {
                 return <TableRow key={dayjs().toISOString() + index} className={classes.row}>
-                    <TableCell key={item.start} align="center" className={classes.cell}>{dayjs.utc(item.start, timeSpanString).format(time12HourFormat)}</TableCell>
-                    <TableCell key={item.end} align="center" className={classes.cell}>{dayjs.utc(item.end, timeSpanString).format(time12HourFormat)}</TableCell>
-                    <TableCell className={classes.cell} align="center">
+                    <TableCell
+                        key={item.start}
+                        style={{textAlign: 'left'}}
+                        className={classes.cell}>
+                        {dayjs.utc(item.start, timeSpanString).format(time12HourFormat)}
+                    </TableCell>
+                    <TableCell
+                        key={item.end}
+                        style={{textAlign: 'left'}}
+                        className={classes.cell}>
+                        {dayjs.utc(item.end, timeSpanString).format(time12HourFormat)}
+                    </TableCell>
+                    <TableCell className={classes.cell}>
                         <DemandInput item={item} onBlur={onChange}/>
                     </TableCell>
                 </TableRow>
             })}
+            {withEmptyRow
+                ? <TableRow
+                    key={dayjs().toISOString() + 1806}
+                    style={{backgroundColor: (slots.length + 1) % 2 === 0 ? '#F2F3F7' : "#FFFFFF"}}
+                    className={classes.row}>
+                    <TableCell style={{height: 68}} colSpan={3}/>
+            </TableRow>
+                : null}
         </TableBody>
     </Table>
 }

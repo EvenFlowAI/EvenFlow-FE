@@ -38,6 +38,7 @@ const YourLocationManage: React.FC<TYourLocationProps> = ({
         serviceOptionChangedFromSlotPage
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {wasWarningShowed} = useSelector((state: RootState) => state.modals);
     const dispatch = useDispatch();
     const history = useHistory();
     const {id} = useParams<{id: string}>();
@@ -84,7 +85,7 @@ const YourLocationManage: React.FC<TYourLocationProps> = ({
     const handleManagingFlow = () => {
         if ((mobileServiceSelected || mobileServiceChanged) && editingPosition === 'serviceOption') {
             dispatch(setServiceWarningOpen(true))
-        } else if (managedToPickUp) {
+        } else if (managedToPickUp && !wasWarningShowed) {
             dispatch(setSlotsWarningOpen(true))
         } else {
             scProfile && dispatch(checkPodChanged(scProfile.id, showError))

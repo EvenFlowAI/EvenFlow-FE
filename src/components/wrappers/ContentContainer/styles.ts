@@ -10,6 +10,9 @@ export const useStyles = makeStyles()(theme => ({
         maxWidth: theme.breakpoints.values.lg,
         [theme.breakpoints.down('xl')]: {
             padding: '0 16px'
+        },
+        [theme.breakpoints.down('mdl')]: {
+            padding: '0 5px'
         }
     }
 }));

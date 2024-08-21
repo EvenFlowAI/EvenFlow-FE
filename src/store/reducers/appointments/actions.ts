@@ -8,14 +8,14 @@ import {
     TServiceBook,
     TServiceConsultant
 } from "./types";
-import {AppThunk, IPageRequest, TArgCallback, TCallback} from "../../../types/types";
+import {AppThunk, IPageRequest, TArgCallback, TCallback, TScreen} from "../../../types/types";
 import {API} from "../../../api/api";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType, IAppointmentSlotsRequest} from "../appointment/types";
 import {
     loadConsultantsForCloning,
     setAppointmentSaving,
-    setConsultants,
+    setConsultants, setCurrentFrameScreen,
     setSelectedRecalls,
     updateRecalls
 } from "../appointmentFrameReducer/actions";
@@ -72,9 +72,13 @@ export const loadAppointments = (data: IAppointmentsRequest): AppThunk => dispat
         .finally(() => setTimeout(() => dispatch(setAppointmentsLoading(false)), 500))
 }
 
-export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<any>, onPodKept?: () => void): AppThunk => (dispatch, getState) => {
+export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<any>, onPodKept?: TCallback, onPodChanged?: TCallback): AppThunk => (dispatch, getState) => {
     const appointmentFrame = getState().appointmentFrame;
     const appointment = getState().appointment;
+    const {isTransportationAvailable, isAppointmentTimingAvailable} = getState().bookingFlowConfig;
+    const {wasWarningShowed} = getState().modals;
+
+    // todo check the case when the pod has changed
     const categories = getState().categories;
 
     const [make, model, year] = getVehicleData(appointmentFrame.selectedVehicle, appointmentFrame.valueService);
@@ -137,7 +141,17 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
         Api.call(Api.endpoints.Appointments.CheckPodChanged, {data, urlParams: {key: appointmentFrame?.appointmentByKey?.hashKey}})
             .then(result => {
                 if (result?.data) {
-                    dispatch(setSlotsWarningOpen(true));
+                    if (wasWarningShowed) {
+                        const nextScreen: TScreen = isTransportationAvailable && appointmentFrame.currentScreen !== "transportationNeeds"
+                            ? "transportationNeeds"
+                            : isAppointmentTimingAvailable
+                                ? "appointmentTiming"
+                                : "appointmentSelection"
+                        dispatch(setCurrentFrameScreen(nextScreen));
+                        onPodChanged && onPodChanged()
+                    } else {
+                        dispatch(setSlotsWarningOpen(true));
+                    }
                 } else {
                     if (onPodKept) {
                         onPodKept()

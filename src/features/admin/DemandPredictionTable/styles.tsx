@@ -14,7 +14,7 @@ export const RadioGroupStyled = styled(RadioGroup)({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    gap: 16
+    gap: 16,
 })
 
 export const RadioBtn = styled(FormControlLabel)({
@@ -22,6 +22,13 @@ export const RadioBtn = styled(FormControlLabel)({
     marginRight: 0,
     "& > .MuiTypography-root": {
         fontWeight: 'bold',
+        fontSize: 14
+    }
+})
+
+export const BigLabelRadioBtn = styled(RadioBtn)({
+    "& > .MuiTypography-root": {
+        fontSize: 16
     }
 })
 

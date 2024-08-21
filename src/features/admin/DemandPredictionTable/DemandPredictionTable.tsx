@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {DenseTableWithPadding} from "../../../components/styled/DemandTable";
-import {Radio, Switch, TableBody, TableHead, TableRow} from "@mui/material";
+import {Radio, Switch, TableBody, TableHead, TableRow, useMediaQuery, useTheme} from "@mui/material";
 import {
     RadioBtn,
     RadioGroupStyled,
@@ -30,6 +30,8 @@ const DemandPredictionTable = () => {
     const {isLoading, settings} = useSelector((state: RootState) => state.demandManagement);
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
+    const theme = useTheme();
+    const isTablet = useMediaQuery(theme.breakpoints.down("xl"));
 
     useEffect(() => {
        if (selectedSC) {
@@ -76,7 +78,7 @@ const DemandPredictionTable = () => {
         : <DenseTableWithPadding>
             <TableHead>
                 <TableRow>
-                    <StyledTableCell key="serviceBook" style={{textTransform: 'capitalize'}} width={205}>
+                    <StyledTableCell key="serviceBook" style={{textTransform: 'capitalize'}} width={isTablet ? 142 : 205}>
                         Service Book
                     </StyledTableCell>
                     <StyledTableCell key="Request" style={{textTransform: 'capitalize'}}>
@@ -104,7 +106,7 @@ const DemandPredictionTable = () => {
                             {item.serviceBookName}
                         </StyledTableCell>
                         <StyledTableCell
-                            key="requestDemandMethod" align="left">
+                            key="requestDemandMethod" align="left" width={isTablet ? 190 : 'unset'}>
                                 <RadioGroupStyled
                                     value={item.requestDemandMethod}
                                     onChange={handleChangeRequestDemandMethod(item.podId)}
@@ -127,12 +129,12 @@ const DemandPredictionTable = () => {
                             <SubCellWhite key="evenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 EvenFlow
                             </SubCellWhite>
-                            <SubCellGrey key="ExEvenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
+                            <SubCellGrey key="ExEvenflowAppontments" style={{borderBottom: '1px solid #DADADA', whiteSpace: 'nowrap'}}>
                                 Ex EvenFlow
                             </SubCellGrey>
                             <SubCellWhite key="ROs">Open ROs</SubCellWhite>
                         </StyledTableCell>
-                        <StyledTableCell key="requestDemandStatus" style={{padding: 0}} width={146}>
+                        <StyledTableCell key="requestDemandStatus" style={{padding: 0}} width={isTablet ? 109 : 146}>
                             <SwitchWrapperWhite key="evenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 <Switch
                                     disabled
@@ -156,7 +158,7 @@ const DemandPredictionTable = () => {
                                 />
                             </SwitchWrapperWhite>
                         </StyledTableCell>
-                        <StyledTableCell key="predictionDemandStatus" style={{padding: 0}} width={146}>
+                        <StyledTableCell key="predictionDemandStatus" style={{padding: 0}} width={isTablet ? 109 : 146}>
                             <SwitchWrapperWhite key="evenflowAppontments" style={{borderBottom: '1px solid #DADADA'}}>
                                 <Switch
                                     onChange={handleSwitch(item.podId, EDemandPredictionType.EvenFlowAppointments, "prediction")}
