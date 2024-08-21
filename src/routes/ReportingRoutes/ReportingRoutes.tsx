@@ -23,7 +23,7 @@ export const ReportingRoutes: React.FC<React.PropsWithChildren<React.PropsWithCh
         ? <Switch>
             <Route
                 exact
-                path={Routes.Reporting.AppointmentsSummary}
+                path={Routes.Reporting.BDCReports}
                 render={() => <AppointmentsSummary settings={config}/>}
             />
             <Route
@@ -36,7 +36,7 @@ export const ReportingRoutes: React.FC<React.PropsWithChildren<React.PropsWithCh
                 render={() => <ValetAppointments settings={config}/>}/>
             <Route
                 exact
-                path={Routes.Reporting.MobileServiceAppointments}
+                path={Routes.Reporting.AppointmentAssignments}
                 render={() => <MobileServiceAppointments settings={config}/>}/>
             <Route
                 exact
@@ -48,9 +48,9 @@ export const ReportingRoutes: React.FC<React.PropsWithChildren<React.PropsWithCh
                 render={() => <RepairOrderPerformance settings={config}/>}/>
             <Route
                 exact
-                path={Routes.Reporting.CapacityManagementPerformance}
+                path={Routes.Reporting.OutboundOpportunities}
                 render={() => <CapacityManagementPerformance settings={config}/>}/>
-            <Redirect to={Routes.Reporting.AppointmentsSummary} />
+            <Redirect to={Routes.Reporting.BDCReports} />
         </Switch>
         : null
 };
