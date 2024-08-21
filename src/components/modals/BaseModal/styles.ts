@@ -19,6 +19,10 @@ export const StyledDialog = styled(Dialog, {
     },
     "& .MuiDialog-paper": {
         maxWidth: mW ?? '',
+        [theme.breakpoints.down("mdl")]: {
+            margin: '36px 10px',
+            width: 'calc(100% - 20px)'
+        }
     },
 }))
 

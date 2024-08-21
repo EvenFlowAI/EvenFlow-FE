@@ -1,12 +1,11 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button, Table, TableBody, TableHead} from "@mui/material";
+import {BaseModal, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
+import {Button, useMediaQuery, useTheme} from "@mui/material";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {TableRow} from "../../../components/styled/TableRow";
-import {SubCellsWrapper, SubCellTitle, THeadCell, THeadCellWithSub, useStyles} from "./styles";
+import {useStyles} from "./styles";
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {TOption} from "../ServiceBookModal/types";
@@ -18,17 +17,22 @@ import {
 } from "../../../store/reducers/employees/types";
 import {loadAssignmentSettings, updateAssignmentSettings} from "../../../store/reducers/employees/actions";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
-import ServiceBookRow from "./ ServiceBookRow/ServiceBookRow";
 import {sortServiceBooks} from "./utils";
+import EmployeeAssignmentDesktop from "./EmployeeAssignmentDesktop/EmployeeAssignmentDesktop";
+import EmployeeAssignmentMobile from "./EmployeeAssignmentMobile/EmployeeAssignmentMobile";
+import {StyledActions} from "./EmployeeAssignmentMobile/styles";
 
 const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
     const {loading, assignmentSettings} = useSelector((state: RootState) => state.employees);
     const [data, setData] = useState<IEmployeeAssignmentSetting[]>([]);
+    const [expandedItem, setExpandedItem] = useState<IEmployeeAssignmentSetting|null>(null)
     const {selectedSC} = useSCs();
     const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException()
     const showMessage = useMessage();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("mdl"));
 
     const isAdvisorSecondaryEnabled = useMemo(() => {
         return data.find(item => item.employeeAssignmentSettings
@@ -52,6 +56,7 @@ const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithC
     }, [assignmentSettings])
 
     const onCancel = () => {
+        setExpandedItem(null)
         setData([])
         props.onClose();
     }
@@ -120,57 +125,39 @@ const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithC
         <BaseModal {...props} width={1100} onClose={onCancel}>
             <DialogTitle
                 onClose={onCancel}
-                style={{textTransform: 'uppercase', color: "#575757", padding: '16px 48px'}}>
+                style={{
+                    textTransform: isMobile ? 'capitalize' : 'uppercase',
+                    color: isMobile ? "#252733" : "#575757",
+                    padding: isMobile? '18px 16px 24px 16px' : '16px 48px'}}>
                 Method to assign employees to appointments
             </DialogTitle>
-            <DialogContent>
+            <DialogContent style={isMobile ? {padding: '0px 16px'}: {}}>
                 {loading
                     ? <Loading/>
-                    : <Table style={{border: '1px solid #DADADA'}}>
-                        <TableHead>
-                            <TableRow>
-                                <THeadCell key="serviceBook"><div>Service Book</div></THeadCell>
-                                <THeadCellWithSub key="advisors" style={{borderRight: '1px solid #DADADA', borderLeft: '1px solid #DADADA'}} width={400}>
-                                    <SubCellTitle key="title">Advisors</SubCellTitle>
-                                    <SubCellsWrapper key="subWrapper">
-                                        <div key="primary">Primary</div>
-                                        <div key="secondary" style={{backgroundColor: !isAdvisorSecondaryEnabled ? "#DADADA" : ''}}>Secondary</div>
-                                    </SubCellsWrapper>
-                                </THeadCellWithSub>
-                                <THeadCellWithSub key="technicians" width={400}>
-                                    <SubCellTitle key="title">Technicians</SubCellTitle>
-                                    <SubCellsWrapper key="subWrapper">
-                                        <div key="primary">Primary</div>
-                                        <div key="secondary" style={{backgroundColor: !isTechSecondaryEnabled ? "#DADADA" : ''}}>Secondary</div>
-                                    </SubCellsWrapper>
-                                </THeadCellWithSub>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {data.map(item => (
-                                <ServiceBookRow item={item} onMethodChange={onMethodChange} key={item.serviceBookId ?? item.serviceBookName}/>
-                            ))}
-                        </TableBody>
-                    </Table>}
+                    : isMobile
+                        ? <EmployeeAssignmentMobile data={data} onMethodChange={onMethodChange} expandedItem={expandedItem} setExpandedItem={setExpandedItem}/>
+                        : <EmployeeAssignmentDesktop
+                            data={data}
+                            isAdvisorSecondaryEnabled={!!isAdvisorSecondaryEnabled}
+                            isTechSecondaryEnabled={!!isTechSecondaryEnabled}
+                            onMethodChange={onMethodChange}
+                        />}
             </DialogContent>
-            <DialogActions>
-                <div className={classes.actionsWrapper}>
-                    <div className={classes.buttonsWrapper}>
-                        <Button
-                            disabled={loading}
-                            onClick={onCancel}
-                            className={classes.cancelButton}>
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={onSave}
-                            disabled={loading}
-                            className={classes.saveButton}>
-                            Save
-                        </Button>
-                    </div>
-                </div>
-            </DialogActions>
+            <StyledActions>
+                <Button
+                    disabled={loading}
+                    onClick={onCancel}
+                    color="info"
+                    className={classes.cancelButton}>
+                    Cancel
+                </Button>
+                <Button
+                    onClick={onSave}
+                    disabled={loading}
+                    className={classes.saveButton}>
+                    Save
+                </Button>
+            </StyledActions>
         </BaseModal>
     );
 };
