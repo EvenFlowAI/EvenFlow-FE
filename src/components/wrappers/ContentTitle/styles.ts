@@ -7,11 +7,13 @@ const titleSt = {
     margin: 0
 }
 
-// 
 export const useStyles = makeStyles()((theme: Theme) => ({
     title: {
         ...titleSt,
         fontWeight: "bold",
+        [theme.breakpoints.down('mdl')]: {
+            fontSize: 20
+        },
         [theme.breakpoints.down('sm')]: {
             textAlign: "center"
         }
@@ -20,8 +22,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     titleContainer: {
         display: "flex",
         flexDirection: "column",
-        [theme.breakpoints.down('sm')]: {
-            marginBottom: theme.spacing(2)
+        [theme.breakpoints.down('mdl')]: {
+            marginBottom: 8
         }
     },
     rootTitle: {
@@ -34,8 +36,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
                 textDecoration: "underline"
             }
         },
-        [theme.breakpoints.down('sm')]: {
-            display: "block"
-        }
+        [theme.breakpoints.down('mdl')]: {
+            fontSize: 20
+        },
     }
 }));

@@ -1,7 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 import {sideBarWidth} from "../../../theme/theme";
 
-// 
 export const useStyles = makeStyles()(theme => ({
     root: {
         display: "flex",
@@ -18,10 +17,10 @@ export const useStyles = makeStyles()(theme => ({
         position: "relative",
         marginLeft: -sideBarWidth,
         backgroundColor: theme.palette.background.default,
-        [theme.breakpoints.up("lg")]: {
+        [theme.breakpoints.up("xl")]: {
             marginLeft: 0
         },
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('mdl')]: {
             marginLeft: "-100%"
         }
     },
