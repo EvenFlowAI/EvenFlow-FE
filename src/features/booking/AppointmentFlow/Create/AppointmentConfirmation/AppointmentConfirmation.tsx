@@ -105,7 +105,9 @@ export const AppointmentConfirmation: React.FC<React.PropsWithChildren<React.Pro
         if (e.response?.data?.errors) {
             const data = [...e.response.data.errors]
             setErrors(() => {
-                return data.map((err: TError): string => err.field?.split('.')[1].toLowerCase());
+                return data.map((err: TError): string => err.field?.includes('.')
+                    ? err.field?.split('.')[1].toLowerCase()
+                    : err.field);
             })
         }
     }

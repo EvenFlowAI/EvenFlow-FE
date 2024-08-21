@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {BaseModal, DialogTitle} from "../../BaseModal/BaseModal";
 import {useTranslation} from "react-i18next";
 import {setSlotsWarningOpen} from "../../../../store/reducers/modals/actions";
@@ -15,16 +15,11 @@ const SlotImpactedWarning = () => {
     const {isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {currentScreen} = useSelector((state: RootState) => state.appointmentFrame);
-    const [screen, setScreen] = useState<TScreen|"">("")
     const dispatch = useDispatch();
     const { classes  } = useStyles();
     const {t} = useTranslation();
     const {id} = useParams<{id: string}>();
     const history = useHistory();
-
-    useEffect(() => {
-        setScreen(currentScreen);
-    }, [])
 
     const redirect = () => {
         if (customerLoadedData?.isUpdating) {
@@ -49,7 +44,6 @@ const SlotImpactedWarning = () => {
 
     const onCancel = () => {
         dispatch(setSlotsWarningOpen(false))
-        setScreen("")
     }
 
     return (
@@ -59,12 +53,7 @@ const SlotImpactedWarning = () => {
             onClose={onCancel}
         >
             <DialogTitle onClose={onCancel}>
-                <div>{t("Appointment availability depends on the service requested.")}</div>
-                <div>
-                    {isTransportationAvailable && screen !== "transportationNeeds"
-                        ? t("Please continue to update your transportation selection")
-                        : t("Please continue to see available dates and times for you requested change")}
-                </div>
+                {t("Appointment availability depends on your selections. Please continue to see options.")}
             </DialogTitle>
             <div className={classes.wrapper}>
                 <LoadingButton

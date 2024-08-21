@@ -69,7 +69,7 @@ export const AppointmentComment: React.FC<TProps> = ({isManagingFlow, handleSetS
 
     const onSubmit = () => {
         const isCommentRequired = subService ? subService?.isCommentRequired : service?.isCommentRequired;
-        if (!description.trim().length) {
+        if (!description?.trim().length) {
             if (isCommentRequired) {
                 return onErrorOpen();
             } else {
