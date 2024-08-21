@@ -7,9 +7,9 @@ import {useException} from "../../../hooks/useException/useException";
 
 const useStyles = makeStyles()({
     inputWrapper: {
-        width: 80,
+        width: 152,
         '& > input': {
-            textAlign: "center"
+            // textAlign: "center"
         }
     }
 });
