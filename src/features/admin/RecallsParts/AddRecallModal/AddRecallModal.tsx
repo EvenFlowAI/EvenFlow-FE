@@ -218,9 +218,9 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     value={form.serviceRequest}
                     onChange={onSRChange}
                     renderInput={autocompleteRender({
-                        label: "Ops Code Assignment",
+                        label: "Op Code Assignment",
                         error: formIsChecked && !form.serviceRequest,
-                        placeholder: 'Select Ops Code Assignment'
+                        placeholder: 'Select Op Code Assignment'
                     })}
                 />
                 <TextField

@@ -42,7 +42,7 @@ export const addOpsCodeFromList = (serviceRequests: number[], serviceCenterId: n
                 dispatch(loadComplimentary(serviceCenterId));
             }
         }).catch(err => {
-        console.log('add ops code to complimentary error', err)
+        console.log('add op code to complimentary error', err)
         errorCallback && errorCallback(err)
     })
 }

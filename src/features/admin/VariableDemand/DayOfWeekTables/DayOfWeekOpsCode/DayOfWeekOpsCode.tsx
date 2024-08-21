@@ -118,7 +118,7 @@ const DayOfWeekOpsCode = () => {
     const deleteOpsCode = useCallback((item: TOpsCode) => {
         if (selectedSC) {
             askConfirm({
-                title: `Please confirm you want to remove Ops Code ${item?.opsCode}?`,
+                title: `Please confirm you want to remove Op Code ${item?.opsCode}?`,
                 isRemove: true,
                 onConfirm: () => {
                     try {
@@ -150,7 +150,7 @@ const DayOfWeekOpsCode = () => {
         <Box display="flex" mr={2}  mb={2} alignItems="center">
             <div className="grow" />
             <Button color="primary" onClick={onOpen} variant="contained">
-                Add Ops Code
+                Add Op Code
             </Button>
         </Box>
         <Box display="flex" m={2} alignItems="center">
@@ -161,7 +161,7 @@ const DayOfWeekOpsCode = () => {
                             <TableHead>
                                 <TableRow>
                                     <TableCell className={classes.headerCell} width="185" style={{textTransform: "capitalize"}}>
-                                        Ops Code
+                                        Op Code
                                     </TableCell>
                                     <TableCell className={classes.headerCell} style={{textTransform: "capitalize"}}>
                                         Low

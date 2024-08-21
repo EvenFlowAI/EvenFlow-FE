@@ -40,7 +40,7 @@ export const BookingFlowConfig = () => {
 
     const isValid = (optionType: keyof TServiceTypeSettings): boolean => {
         if ((optionType === 'checkRecallsExisting' || optionType === 'checkRecallsNew') && !selectedSC?.recallServiceRequestId) {
-            showError('To enable Checking Recalls you need to select Default Recall Ops Code');
+            showError('To enable Checking Recalls you need to select Default Recall Op Code');
             return false;
         }
         if (!selectedSC?.isValueServiceAvailable && optionType === 'valueService') {

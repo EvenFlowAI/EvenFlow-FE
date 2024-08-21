@@ -175,7 +175,7 @@ const RoPredictionParameters = () => {
                                 Default Labor Hours
                             </TableCell>
                             <TableCell align="left">
-                                When an Open RO or an appointment booked outside of EvenFlow app uses Ops Codes that are not
+                                When an Open RO or an appointment booked outside of EvenFlow app uses Op Codes that are not
                                 in the Service Requests Page and the Labor Hour value cannot be found in the DMS
                             </TableCell>
                             <TableCell>

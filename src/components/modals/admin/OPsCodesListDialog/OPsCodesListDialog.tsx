@@ -19,7 +19,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
-    {header: "Ops Code", val: el => el.code, orderId: "code", width: 120},
+    {header: "Op Code", val: el => el.code, orderId: "code", width: 120},
     {header: "Description", val: el => el.description, orderId: "description"},
     {header: "Labor Hours", val: el => el.durationInHours.toFixed(1), orderId: "duration", width: 100},
     {header: "Total Amount", val: el => `$${el.invoiceAmount}`, orderId: "invoiceAmount", width: 100}
@@ -114,7 +114,7 @@ export const OPsCodesListDialog: React.FC<React.PropsWithChildren<React.PropsWit
     }, [selectedSC, onSave, selectedCodes])
 
     return <BaseModal {...props}>
-        <DialogTitle onClose={props.onClose}>Select Ops Codes</DialogTitle>
+        <DialogTitle onClose={props.onClose}>Select Op Codes</DialogTitle>
         <DialogContent>
             <div style={{display: "flex", justifyContent: isXS ? "center" : "flex-end", marginBottom: 18}}>
                 <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={searchTerm} />
@@ -148,7 +148,7 @@ export const OPsCodesListDialog: React.FC<React.PropsWithChildren<React.PropsWit
                 color="primary"
                 variant="contained"
             >
-                Add Ops Codes
+                Add Op Codes
             </LoadingButton>
         </DialogActions>
     </BaseModal>

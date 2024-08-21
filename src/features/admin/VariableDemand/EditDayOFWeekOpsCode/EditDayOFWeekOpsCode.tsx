@@ -88,7 +88,7 @@ const EditDayOfWeekOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
         setValues(prev => ({...prev, [type]: e.target.value}))
     }
     return <BaseModal  {...props} width={340} onClose={onCancel}>
-        <DialogTitle onClose={onCancel}>Edit Day of Week Ops Code</DialogTitle>
+        <DialogTitle onClose={onCancel}>Edit Day of Week Op Code</DialogTitle>
         <DialogContent>
             <TextField type="number"
                        fullWidth

@@ -61,7 +61,7 @@ export const OpsCodesOrderTable:React.FC<React.PropsWithChildren<React.PropsWith
             />
         },
         {
-            header: "OPS CODE",
+            header: "OP CODE",
             val: el => el.serviceRequest.code
         },
         {

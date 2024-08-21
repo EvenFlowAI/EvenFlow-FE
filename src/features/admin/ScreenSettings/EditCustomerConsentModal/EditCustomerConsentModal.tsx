@@ -342,8 +342,8 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number|undef
                                 onChange={onServiceRequestsChange}
                                 renderOption={autocompleteOptionsRender((e) => e.code)}
                                 renderInput={autocompleteRender({
-                                    label: "Service Requests (Ops Codes)",
-                                    placeholder: 'Service Requests (Ops Codes)'
+                                    label: "Op Codes",
+                                    placeholder: 'Op Codes'
                                 })}
                             />
                         </Grid>

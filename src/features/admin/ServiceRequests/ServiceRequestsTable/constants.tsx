@@ -4,7 +4,7 @@ import {ServiceRequestCellData} from "../../../../components/wrappers/ServiceReq
 import React from "react";
 
 export const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
-    {header: "Ops Code", val: el => el.serviceRequest.code, orderId: "code", width: 130,},
+    {header: "Op Code", val: el => el.serviceRequest.code, orderId: "code", width: 130,},
     {
         header: "Description",
         val: el => <ServiceRequestCellData

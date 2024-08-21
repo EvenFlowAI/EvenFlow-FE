@@ -71,7 +71,7 @@ export const ServiceRequests = () => {
     }, [selectedSC, dispatch]);
 
     const onSuccessAssign = useCallback((selectedCodes: number[]) => {
-        showMessage(`${selectedCodes.length} ${selectedCodes.length > 1 ? 'Ops Codes' : 'Ops Code'} added`)
+        showMessage(`${selectedCodes.length} ${selectedCodes.length > 1 ? 'Op Codes' : 'Op Code'} added`)
     }, [])
 
     const onRequestAssign = useCallback((selectedCodes: number[], serviceCenterId: number) => {
@@ -94,7 +94,7 @@ export const ServiceRequests = () => {
                     variant="contained"
                     onClick={handleAddOpsCode}
                 >
-                    Add Ops Codes
+                    Add Op Codes
                 </Button>
             </div>}
         />

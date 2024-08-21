@@ -28,7 +28,7 @@ import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 const tableRow: TableRowDataType<IUpsellServiceRequest>[] = [
     {
-        header: "Ops Code",
+        header: "Op Code",
         val: el => el.code ?? el.serviceRequest.code, orderId: "code",
         width: 130
     },
@@ -144,7 +144,7 @@ export const IntervalUpsell = () => {
         setAnchorEl(null);
         askConfirm({
             isRemove: true,
-            title: `Please confirm you want to remove Ops Code ${editedItem?.code}`,
+            title: `Please confirm you want to remove Op Code ${editedItem?.code}`,
             onConfirm: handleRemove
         });
     }
@@ -167,7 +167,7 @@ export const IntervalUpsell = () => {
         }
     }
     const onSuccessAdding = useCallback((selectedCodes: number[]) => {
-        showMessage(`${selectedCodes.length} ${selectedCodes.length > 1 ? 'Ops Codes' : 'Ops Code'} added`)
+        showMessage(`${selectedCodes.length} ${selectedCodes.length > 1 ? 'Op Codes' : 'Op Code'} added`)
     }, [])
 
     const onRequestAssign = useCallback((selectedCodes: number[], serviceCenterId: number) => {
@@ -190,7 +190,7 @@ export const IntervalUpsell = () => {
                     variant="contained"
                     onClick={handleAddOpsCode}
                 >
-                    Add Ops Codes
+                    Add Op Codes
                 </Button>
             </div>}
         />

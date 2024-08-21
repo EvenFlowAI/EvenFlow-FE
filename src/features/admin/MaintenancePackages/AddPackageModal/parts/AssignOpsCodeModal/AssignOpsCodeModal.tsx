@@ -36,7 +36,7 @@ type TAssignOpsCodeModalProps = DialogProps & {
 }
 
 const tableData: TableRowDataType<IServiceRequest>[] = [
-    {header: "OPS CODE", val: el => el.code},
+    {header: "OP CODE", val: el => el.code},
     {header: "DESCRIPTION", val: el => el.description, width: '80%'},
 ]
 
