@@ -115,7 +115,6 @@ const TimeSelect: React.FC<TProps> = ({
                 renderInput={params => <TextField {...{
                     ...params, InputProps: {
                         ...params.InputProps,
-                        disableUnderline: true,
                         style: {padding: '2px 5px', borderRadius: 2, fontSize: 14, border: 0 },
                         placeholder: "Select",
                         error,
