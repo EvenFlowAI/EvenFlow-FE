@@ -70,7 +70,7 @@ const SearchWindows = () => {
                     helperText={windowsContent[EOptimizationWindowType.FirstAvailable].helperText}
                 />
             </Grid>
-            <Grid item xs={12} sm={6} md={4} key={'First Available Search'}>
+            <Grid item xs={12} sm={6} md={4} key={'Specific Date Search'}>
                 <ShowEditDataCard
                     onEdit={onSpecificOpen}
                     title={windowsContent[EOptimizationWindowType.SpecificDate].title}

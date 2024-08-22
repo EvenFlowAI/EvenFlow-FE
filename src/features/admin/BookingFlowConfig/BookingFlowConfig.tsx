@@ -125,13 +125,13 @@ export const BookingFlowConfig = () => {
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.MobileService, 'available')}
-                                            checked={mobileServiceConfig?.available}
+                                            checked={Boolean(mobileServiceConfig?.available)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.PickUpDropOff, 'available')}
-                                            checked={pickUpDropOffConfig?.available}
+                                            checked={Boolean(pickUpDropOffConfig?.available)}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
@@ -140,21 +140,21 @@ export const BookingFlowConfig = () => {
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.VisitCenter, 'valueService')}
-                                            checked={visitCenterConfig?.valueService}
+                                            checked={Boolean(visitCenterConfig?.valueService)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.MobileService, 'valueService')}
                                             disabled={!mobileServiceConfig?.available}
-                                            checked={mobileServiceConfig?.valueService}
+                                            checked={Boolean(mobileServiceConfig?.valueService)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.PickUpDropOff, 'valueService')}
                                             disabled={!pickUpDropOffConfig?.available}
-                                            checked={pickUpDropOffConfig?.valueService}
+                                            checked={Boolean(pickUpDropOffConfig?.valueService)}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
@@ -164,7 +164,7 @@ export const BookingFlowConfig = () => {
                                         <Switch
                                             onChange={onCheck(EServiceType.VisitCenter, 'productPageForValueService')}
                                             disabled={!visitCenterConfig?.valueService}
-                                            checked={visitCenterConfig?.productPageForValueService}
+                                            checked={Boolean(visitCenterConfig?.productPageForValueService)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
@@ -172,7 +172,7 @@ export const BookingFlowConfig = () => {
                                             onChange={onCheck(EServiceType.MobileService, 'productPageForValueService')}
                                             disabled={!mobileServiceConfig?.valueService
                                             || !mobileServiceConfig?.available}
-                                            checked={mobileServiceConfig?.productPageForValueService}
+                                            checked={Boolean(mobileServiceConfig?.productPageForValueService)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
@@ -180,7 +180,7 @@ export const BookingFlowConfig = () => {
                                             onChange={onCheck(EServiceType.PickUpDropOff, 'productPageForValueService')}
                                             disabled={!pickUpDropOffConfig?.valueService
                                             || !pickUpDropOffConfig?.available}
-                                            checked={pickUpDropOffConfig?.productPageForValueService}
+                                            checked={Boolean(pickUpDropOffConfig?.productPageForValueService)}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
@@ -189,13 +189,13 @@ export const BookingFlowConfig = () => {
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.VisitCenter, 'advisorSelection')}
-                                            checked={visitCenterConfig?.advisorSelection}
+                                            checked={Boolean(visitCenterConfig?.advisorSelection)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.MobileService, 'advisorSelection')}
-                                            checked={mobileServiceConfig?.advisorSelection}
+                                            checked={Boolean(mobileServiceConfig?.advisorSelection)}
                                             disabled={true}
                                             color="primary"/>
                                     </TableCell>
@@ -203,7 +203,7 @@ export const BookingFlowConfig = () => {
                                         <Switch
                                             onChange={onCheck(EServiceType.PickUpDropOff, 'advisorSelection')}
                                             disabled={!pickUpDropOffConfig?.available}
-                                            checked={pickUpDropOffConfig?.advisorSelection}
+                                            checked={Boolean(pickUpDropOffConfig?.advisorSelection)}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
@@ -212,21 +212,21 @@ export const BookingFlowConfig = () => {
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.VisitCenter, 'engineType')}
-                                            checked={visitCenterConfig?.engineType}
+                                            checked={Boolean(visitCenterConfig?.engineType)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             disabled={!mobileServiceConfig?.available}
                                             onChange={onCheck(EServiceType.MobileService, 'engineType')}
-                                            checked={mobileServiceConfig?.engineType}
+                                            checked={Boolean(mobileServiceConfig?.engineType)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.PickUpDropOff, 'engineType')}
-                                            checked={pickUpDropOffConfig?.engineType}
                                             disabled={!pickUpDropOffConfig?.available}
+                                            checked={Boolean(pickUpDropOffConfig?.engineType)}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
@@ -235,20 +235,20 @@ export const BookingFlowConfig = () => {
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.VisitCenter, 'appointmentSelection')}
-                                            checked={visitCenterConfig?.appointmentSelection}
+                                            checked={Boolean(visitCenterConfig?.appointmentSelection)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             disabled={!mobileServiceConfig?.available}
                                             onChange={onCheck(EServiceType.MobileService, 'appointmentSelection')}
-                                            checked={mobileServiceConfig?.appointmentSelection}
+                                            checked={Boolean(mobileServiceConfig?.appointmentSelection)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.PickUpDropOff, 'appointmentSelection')}
-                                            checked={pickUpDropOffConfig?.appointmentSelection}
+                                            checked={Boolean(pickUpDropOffConfig?.appointmentSelection)}
                                             disabled={!pickUpDropOffConfig?.available}
                                             color="primary"/>
                                     </TableCell>
@@ -258,20 +258,20 @@ export const BookingFlowConfig = () => {
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.VisitCenter, 'transportationNeeds')}
-                                            checked={visitCenterConfig?.transportationNeeds}
+                                            checked={Boolean(visitCenterConfig?.transportationNeeds)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             disabled
                                             onChange={onCheck(EServiceType.MobileService, 'transportationNeeds')}
-                                            checked={mobileServiceConfig?.transportationNeeds}
+                                            checked={Boolean(mobileServiceConfig?.transportationNeeds)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.PickUpDropOff, 'transportationNeeds')}
-                                            checked={pickUpDropOffConfig?.transportationNeeds}
+                                            checked={Boolean(pickUpDropOffConfig?.transportationNeeds)}
                                             disabled
                                             color="primary"/>
                                     </TableCell>
@@ -281,19 +281,19 @@ export const BookingFlowConfig = () => {
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.VisitCenter, 'checkRecallsExisting')}
-                                            checked={visitCenterConfig?.checkRecallsExisting}
+                                            checked={Boolean(visitCenterConfig?.checkRecallsExisting)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.MobileService, 'checkRecallsExisting')}
-                                            checked={mobileServiceConfig?.checkRecallsExisting}
+                                            checked={Boolean(mobileServiceConfig?.checkRecallsExisting)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.PickUpDropOff, 'checkRecallsExisting')}
-                                            checked={pickUpDropOffConfig?.checkRecallsExisting}
+                                            checked={Boolean(pickUpDropOffConfig?.checkRecallsExisting)}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>
@@ -302,19 +302,19 @@ export const BookingFlowConfig = () => {
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.VisitCenter, 'checkRecallsNew')}
-                                            checked={visitCenterConfig?.checkRecallsNew}
+                                            checked={Boolean(visitCenterConfig?.checkRecallsNew)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.MobileService, 'checkRecallsNew')}
-                                            checked={mobileServiceConfig?.checkRecallsNew}
+                                            checked={Boolean(mobileServiceConfig?.checkRecallsNew)}
                                             color="primary"/>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Switch
                                             onChange={onCheck(EServiceType.PickUpDropOff, 'checkRecallsNew')}
-                                            checked={pickUpDropOffConfig?.checkRecallsNew}
+                                            checked={Boolean(pickUpDropOffConfig?.checkRecallsNew)}
                                             color="primary"/>
                                     </TableCell>
                                 </TableRow>

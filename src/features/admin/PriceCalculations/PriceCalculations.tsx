@@ -85,7 +85,7 @@ export const PriceCalculations = () => {
                             renderInput={params => <TextField {...{
                                 ...params, InputProps: {
                                     ...params.InputProps,
-                                    disableUnderline: true,
+                                    // disableUnderline: true,
                                     style: fieldStyles,
                                     placeholder: "Select here"
                                 }
@@ -108,7 +108,7 @@ export const PriceCalculations = () => {
                             renderInput={params => <TextField {...{
                                 ...params, InputProps: {
                                     ...params.InputProps,
-                                    disableUnderline: true,
+                                    // disableUnderline: true,
                                     style: fieldStyles,
                                     placeholder: "Select here"
                                 }

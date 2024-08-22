@@ -97,7 +97,7 @@ export const ServiceCategoriesTable: React.FC<React.PropsWithChildren<React.Prop
             </div>
             <Table
                 data={categories}
-                index="name"
+                index="id"
                 rowData={RowData}
                 actions={tableActions}
                 hidePagination
