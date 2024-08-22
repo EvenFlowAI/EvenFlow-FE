@@ -121,6 +121,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
                 ? <CardsWrapper>
                     {transportations.map(item => {
                         return <TransportationOptionCard
+                            key={item.id}
                             active={transportation?.id === item.id}
                             onSelect={() => handleSelectOption(item)}
                             card={item}
