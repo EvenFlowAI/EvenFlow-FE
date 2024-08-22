@@ -247,7 +247,6 @@ export interface IAppointmentVehicle {
     year: number;
     dmsId?: string;
     mileage?: string;
-    estimatedMileage?: string;
 }
 
 export type TDateAppointmentData = {
@@ -279,6 +278,7 @@ export interface IAppointment {
     isEditable: boolean;
     modificationInfo: TDateAppointmentData[];
     technician?: string;
+    estimatedMileage?: string;
 }
 
 export interface IServiceCategoryShort {
