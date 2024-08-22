@@ -14,8 +14,8 @@ export const VehicleDetails:React.FC<React.PropsWithChildren<React.PropsWithChil
                 text={payload.vehicle?.make || payload.vehicle?.model || Boolean(payload.vehicle?.year)
                     ? vehicleData
                     : "DMS missing vehicle data"}/>
-            {payload?.vehicle?.mileage
-                ? <SimpleData>Mileage: {payload.vehicle?.mileage} miles</SimpleData>
+            {payload?.vehicle?.estimatedMileage
+                ? <SimpleData>Estimated Mileage: {payload.vehicle?.estimatedMileage} miles</SimpleData>
                 : null}
             {payload?.vehicle?.dmsId
                 ? <SimpleData>Vehicle ID: {payload.vehicle?.dmsId}</SimpleData>
