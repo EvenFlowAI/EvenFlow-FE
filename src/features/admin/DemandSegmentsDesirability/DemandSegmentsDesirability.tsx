@@ -70,7 +70,7 @@ export const DemandSegmentsDesirability = () => {
             setForm(nForm);
             dispatch(setLoading(false))
         }
-    }, [optSettings]);
+    }, [optSettings, edit]);
 
     const handleOpen = () => {
         onOpen();
@@ -118,6 +118,10 @@ export const DemandSegmentsDesirability = () => {
         }
     }
 
+    const onCancelOptimizationSettings = () => {
+        setEdit(false)
+    }
+
     return <Paper variant="outlined" style={{borderRadius: 0, overflowX: "auto"}}>
         {isLoading
             ? <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}><Loading/></div>
@@ -147,7 +151,7 @@ export const DemandSegmentsDesirability = () => {
                                     : <div className={classes.editWrapper}>
                                         <Button color="secondary"
                                                 className={classes.editN}
-                                                onClick={() => setEdit(false)}>
+                                                onClick={onCancelOptimizationSettings}>
                                             Cancel
                                         </Button>
                                         <Button
