@@ -19,6 +19,7 @@ export const TransportationOptionCard: React.FC<React.PropsWithChildren<React.Pr
         style={{gridTemplateRows: '1fr 1fr', alignItems: 'start', padding: '20px 17px', minHeight: 260}}
         onClick={onSelect}
         selected={false}
+        key={card.id}
         active={active}>
         <CardIcon iconPath={card.iconPath} isSM={isSM} active={active}/>
         <span style={{color: active ? "#FFFFFF" : "#252733"}}>{card.description}</span>
