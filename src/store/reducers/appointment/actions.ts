@@ -40,8 +40,7 @@ export const loadSCProfile = (id: number): AppThunk => async dispatch => {
         dispatch(setTopAligning(data?.serviceCenterFlag === EServiceCenterName.Fremont
             || data?.serviceCenterFlag === EServiceCenterName.LakePowellFord
             || data?.serviceCenterFlag === EServiceCenterName.DealerBuilt
-            || data?.serviceCenterFlag === EServiceCenterName.Bountiful
-            || data?.serviceCenterFlag === EServiceCenterName.HondaMarysville))
+            || data?.serviceCenterFlag === EServiceCenterName.Bountiful))
     } catch (err) {
         console.log('load sc profile err', err)
     } finally {
