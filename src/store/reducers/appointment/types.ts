@@ -215,6 +215,7 @@ export type TAppointmentState = {
     waitListSettings: IWaitListData|null;
     slotPodId: number|null;
     isAppointmentSlotsLoading: boolean;
+    isTopAligning: boolean;
 };
 
 export enum EReminderType {

@@ -17,6 +17,7 @@ import {
 } from "./types";
 import {AppThunk, PaginatedAPIResponse, TCallback, TParsableDate} from "../../../types/types";
 import {
+    EServiceCenterName,
     ICreateAppointmentResp,
     ICustomerLoadedData,
     ILoadedVehicle, IServiceCategory, IServiceCategoryShort,
@@ -26,6 +27,7 @@ import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 
 export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLoading');
+export const setTopAligning = createAction<boolean>("Appointment/SetTopAligning");
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>("Appointment/GetSCProfile");
 export const loadSCProfile = (id: number): AppThunk => async dispatch => {
     dispatch(setProfileLoading(true))
@@ -35,6 +37,11 @@ export const loadSCProfile = (id: number): AppThunk => async dispatch => {
             {urlParams: {id}}
         )
         dispatch(getServiceCenterProfile(data));
+        dispatch(setTopAligning(data?.serviceCenterFlag === EServiceCenterName.Fremont
+            || data?.serviceCenterFlag === EServiceCenterName.LakePowellFord
+            || data?.serviceCenterFlag === EServiceCenterName.DealerBuilt
+            || data?.serviceCenterFlag === EServiceCenterName.Bountiful
+            || data?.serviceCenterFlag === EServiceCenterName.HondaMarysville))
     } catch (err) {
         console.log('load sc profile err', err)
     } finally {

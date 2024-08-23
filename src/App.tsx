@@ -9,14 +9,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "./store/rootReducer";
 import {EServiceType} from "./store/reducers/appointmentFrameReducer/types";
 import {loadBookingFlowConfig, setConfiguration} from "./store/reducers/bookingFlowConfig/actions";
-import {EServiceCenterName} from "./api/types";
 import {TScreen} from "./types/types";
 import AppRoutes from "./routes/AppRoutes/AppRoutes";
 import dayjs from "dayjs";
 import {disableEmotionWarning} from "./utils/utils";
 
 const App = () => {
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
+    const {scProfile, isTopAligning} = useSelector((state: RootState) => state.appointment);
     const {config, currentConfig, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const [valueServiceNextScreen, setValueServiceNextScreen] = useState<TScreen>("consultantSelection");
@@ -25,10 +24,6 @@ const App = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
-    const isTopAligning = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.Fremont
-        || scProfile?.serviceCenterFlag === EServiceCenterName.LakePowellFord
-        || scProfile?.serviceCenterFlag === EServiceCenterName.DealerBuilt
-        || scProfile?.serviceCenterFlag === EServiceCenterName.Bountiful, [scProfile]);
 
     useEffect(() => {
         window.addEventListener('focus', () => {

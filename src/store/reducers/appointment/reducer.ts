@@ -25,7 +25,7 @@ import {
     setLoadedReducer,
     setOldAppointmentId,
     setProfileLoading,
-    setSessionId, setSlotPodId, setSlotsLoading,
+    setSessionId, setSlotPodId, setSlotsLoading, setTopAligning,
     setWaitListSettings
 } from "./actions";
 import {setPackage} from "../appointmentFrameReducer/actions";
@@ -75,11 +75,15 @@ const initialState: TAppointmentState = {
     appointmentWasChanged: false,
     waitListSettings: null,
     slotPodId: null,
+    isTopAligning: false,
 }
 
 export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getServiceCenterProfile, (state, {payload}) => {
         return {...state, scProfile: payload};
+    })
+    .addCase(setTopAligning, (state, {payload}) => {
+        return {...state, isTopAligning: payload};
     })
     .addCase(getSRs, (state, {payload}) => {
         return {...state, serviceRequests: payload};
