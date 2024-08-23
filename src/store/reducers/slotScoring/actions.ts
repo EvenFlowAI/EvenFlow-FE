@@ -115,15 +115,8 @@ export const setOptimizationSettings = (data: IOptimizationSettingsCreateForm): 
 }
 
 export const setSettingValues = (data: IOptimizationSettingValueForm, serviceCenterId:number, podId?: number): AppThunk => async dispatch => {
-    dispatch(setLoading(true))
-    try {
-        await Api.call(Api.endpoints.SlotScoring.SetValues, {data});
-        dispatch(loadOptimizationSettings(serviceCenterId, podId));
-    } catch (err) {
-        console.log(err)
-    } finally {
-        dispatch(setLoading(false))
-    }
+    await Api.call(Api.endpoints.SlotScoring.SetValues, {data});
+    dispatch(loadOptimizationSettings(serviceCenterId, podId));
 }
 
 export const getRange = createAction<ISlotRange>("SlotScoring/GetRange");

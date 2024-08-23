@@ -92,8 +92,8 @@ export const DemandSegmentsDesirability = () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
-            dispatch(setLoading(true))
             try {
+                dispatch(setLoading(true))
                 const items: IOptimizationSettingValue[] = [];
                 for (let i = 0; i < 3; i++) {
                     const r1 = form[i*2];
@@ -118,6 +118,8 @@ export const DemandSegmentsDesirability = () => {
             } catch (e) {
                 dispatch(setLoading(false));
                 showError(e);
+            } finally {
+                dispatch(setLoading(true))
             }
         }
     }
