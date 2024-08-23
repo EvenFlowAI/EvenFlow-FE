@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
     Button,
     CircularProgress,
@@ -48,7 +48,7 @@ export const DemandSegmentsDesirability = () => {
         }
     }, [dispatch, selectedSC, selectedPod]);
 
-    useEffect(() => {
+    const setInitialData = useCallback(() => {
         if (optSettings.length) {
             dispatch(setLoading(true))
             const nForm: TForm[] = [];
@@ -70,7 +70,11 @@ export const DemandSegmentsDesirability = () => {
             setForm(nForm);
             dispatch(setLoading(false))
         }
-    }, [optSettings, edit]);
+    }, [optSettings])
+
+    useEffect(() => {
+        setInitialData()
+    }, [optSettings, setInitialData]);
 
     const handleOpen = () => {
         onOpen();
@@ -88,8 +92,8 @@ export const DemandSegmentsDesirability = () => {
         if (!selectedSC) {
             showError(SC_UNDEFINED);
         } else {
-            dispatch(setLoading(true))
             try {
+                dispatch(setLoading(true))
                 const items: IOptimizationSettingValue[] = [];
                 for (let i = 0; i < 3; i++) {
                     const r1 = form[i*2];
@@ -114,12 +118,15 @@ export const DemandSegmentsDesirability = () => {
             } catch (e) {
                 dispatch(setLoading(false));
                 showError(e);
+            } finally {
+                dispatch(setLoading(true))
             }
         }
     }
 
     const onCancelOptimizationSettings = () => {
         setEdit(false)
+        setInitialData()
     }
 
     return <Paper variant="outlined" style={{borderRadius: 0, overflowX: "auto"}}>
