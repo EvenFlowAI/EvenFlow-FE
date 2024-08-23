@@ -59,7 +59,7 @@ export const ArchiveOffers = () => {
                 <OfferPlate offer={offer} onClick={handleEdit} />
             </Grid>
         })}
-        <Grid item xs={12}>
+        {count > pageData.pageSize ? <Grid item xs={12}>
             <TablePagination
                 component="div"
                 count={count}
@@ -69,7 +69,7 @@ export const ArchiveOffers = () => {
                 rowsPerPage={pageData.pageSize}
                 rowsPerPageOptions={defaultRowsPerPageOptions}
             />
-        </Grid>
+        </Grid> : null}
         <OfferModal open={isOpen} payload={editedItem} archive onClose={onClose} />
     </Grid>
 };

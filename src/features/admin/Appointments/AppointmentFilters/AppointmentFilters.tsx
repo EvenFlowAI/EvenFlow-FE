@@ -252,6 +252,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         disabled={isLoading}
                         onChange={onSchedulerChange}
                         value={scheduler}
+                        getOptionKey={o => o.id ? o.id : o.fullName + new Date()}
                         getOptionLabel={o => o.fullName}
                         isOptionEqualToValue={(o, v) => o.id && v.id ? o.id === v.id : o.fullName === v.fullName}
                         options={[...schedulerList]
