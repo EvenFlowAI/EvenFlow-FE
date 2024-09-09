@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {AppointmentConfirmationTitle} from "../../../../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
@@ -11,23 +11,30 @@ export const SelectedPrice = () => {
     const {appointment, scProfile, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
+    const noDefinedPriceExists = useMemo(() => {
+            if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+                return serviceValetAppointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
+            }
+            return appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
+        },
+        [appointment, serviceValetAppointment, serviceTypeOption])
     return (
         <ConfirmationItemWrapper>
             <AppointmentConfirmationTitle>{t("Selected Price")}</AppointmentConfirmationTitle>
             <Price>
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
-                    ? serviceValetAppointment?.price.value ?
+                    ? serviceValetAppointment && !noDefinedPriceExists ?
                         <span>${scProfile?.isRoundPrice
                             ? serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice
                             : (serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice).toFixed(2)}
                     </span>
-                        : t('Service items will be quoted at dealership')
-                    : appointment?.price.value ?
+                        : t('A full quote of service items will be provided at the dealership')
+                    : appointment && !noDefinedPriceExists ?
                         <span>${scProfile?.isRoundPrice
                             ? appointment.price.value + appointment.price.ancillaryPrice
                             : (appointment.price.value + appointment.price.ancillaryPrice).toFixed(2)}
                     </span>
-                        : t('Service items will be quoted at dealership')
+                        : t('A full quote of service items will be provided at the dealership')
                 }
                 {/*todo uncomment for offer new functionality*/}
                 {/*{appointment?.serviceRequestPrices?.find(item => !!item.offer)*/}
