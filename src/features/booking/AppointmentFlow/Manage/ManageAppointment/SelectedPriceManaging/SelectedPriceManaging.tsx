@@ -23,7 +23,7 @@ export const SelectedPriceManaging = () => {
                         ? price
                         : price.toFixed(2)}
                     </span>
-                    : t('A full quote of service items will be provided at the dealership')
+                    : t('A full quote will be provided at the dealership')
                 }
                 {/*todo uncomment for offer new functionality*/}
                 {/*{appointment?.serviceRequestPrices?.find(item => !!item.offer)*/}

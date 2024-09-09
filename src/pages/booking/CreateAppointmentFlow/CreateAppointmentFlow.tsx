@@ -122,7 +122,7 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
                 onChangeSlot={() => handleSetScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
                 onNext={() => handleSetScreen('appointmentConfirmed')}
             />,
-            appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment}/>,
+            appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment} isManagingFlow={false}/>,
             location: <YourLocationCreate
                 onBack={() => handleSetScreen('carSelection')}
                 onNext={() => handleSetScreen('serviceNeeds')}

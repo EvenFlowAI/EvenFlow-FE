@@ -28,13 +28,13 @@ export const SelectedPrice = () => {
                             ? serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice
                             : (serviceValetAppointment.price.value + serviceValetAppointment.price.ancillaryPrice).toFixed(2)}
                     </span>
-                        : t('A full quote of service items will be provided at the dealership')
+                        : t('A full quote will be provided at the dealership')
                     : appointment && !noDefinedPriceExists ?
                         <span>${scProfile?.isRoundPrice
                             ? appointment.price.value + appointment.price.ancillaryPrice
                             : (appointment.price.value + appointment.price.ancillaryPrice).toFixed(2)}
                     </span>
-                        : t('A full quote of service items will be provided at the dealership')
+                        : t('A full quote will be provided at the dealership')
                 }
                 {/*todo uncomment for offer new functionality*/}
                 {/*{appointment?.serviceRequestPrices?.find(item => !!item.offer)*/}
